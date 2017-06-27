@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>TrayTip</title>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
@@ -11,50 +11,50 @@
 
 <h1>TrayTip</h1>
 
-<p>������ͼ�긽������������ʾ����. �� Windows 10 ��,toast ֪ͨ���������ʾ.</p>
+<p>在托盘图标附近创建气球提示窗口. 在 Windows 10 中,toast 通知将会替代显示.</p>
 
 <pre class="Syntax">TrayTip [, Title, Text, Seconds, Options]</pre>
-<h3>����</h3>
+<h3>参数</h3>
 <dl>
 
   <dt>Title</dt>
   <dd>
-    <p>�˲���Ϊ���ڱ���, ���Գ��� 73 ���ַ� (�����˳��ȵ��ַ�������ʾ����).</p>
-    <p>��� <em>Title</em> Ϊ��, ����Ƴ����򴰿��еı�����, ���������ֱ�߶ȱ��.</p>
-	<p class="warning"><strong>Note:</strong> ���ʡ�����в���, ���Ƴ��κε�ǰ��ʾ��������ʾ����.</p>
+    <p>此参数为窗口标题, 可以长达 73 个字符 (超出此长度的字符不会显示出来).</p>
+    <p>如果 <em>Title</em> 为空, 则会移除气球窗口中的标题行, 这会让它垂直高度变短.</p>
+	<p class="warning"><strong>Note:</strong> 如果省略所有参数, 则移除任何当前显示的托盘提示窗口.</p>
   </dd>
 
   <dt>Text</dt>
   <dd>
-    <p>ָ��Ҫ��ʾ����Ϣ, <em>Title</em> ����ʾ <em>Text</em> ��ǰ 265 ���ַ�. </p>
-    <p>����˲���ʡ�Ի�Ϊ��, ���Ƴ���ǰ��ʾ���κ�������ʾ����. Ȼ��, Ҫ���� Windows 10 toast ֪ͨ��Ҫ it may be necessary to <a href="#Windows10">��ʱ�Ƴ�����ͼ��</a>.</p>
-    <p>����ʹ�ûس� (`r) ���� (`n) �����������ı�. ����:<code>Line1`nLine2</code>.</p>
-      <p>��� <em>Text</em> �ϳ�, ����ͨ�� <a href="../Scripts.htm#continuation">����Ƭ��</a> �ķ�������ֽ�ɽ϶̵ļ���, �����������ӿɶ��ԺͿ�ά����.</p>
+    <p>指定要显示的消息, <em>Title</em> 仅显示 <em>Text</em> 中前 265 个字符. </p>
+    <p>如果此参数省略或为空, 则移除当前显示的任何托盘提示窗口. 然而, 要隐藏 Windows 10 toast 通知需要 it may be necessary to <a href="#Windows10">临时移除托盘图标</a>.</p>
+    <p>可以使用回车 (`r) 或换行 (`n) 来创建多行文本. 例如:<code>Line1`nLine2</code>.</p>
+      <p>如果 <em>Text</em> 较长, 可以通过 <a href="../Scripts.htm#continuation">延续片段</a> 的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p>
   </dd>
 
   <dt>Seconds</dt>
-  <dd><p><strong>ע��:</strong> ������� Windows Vista ��֮��ϵͳ��Ч.</p>
-    <p>Ҫ������ʾ�Ľ�������, �ﵽ��ʱ������ᱻ����ϵͳ�Զ��Ƴ�. ָ��С�� 10 ����� 30 ������ʱͨ����ʹ����С (10) ����� (30) ����ʾʱ�����.���Ϊ�ջ�ʡ��, ��һ��ʹ����С��ʱ��. �˲�������Ϊ <a href="../Variables.htm#Expressions">����ʽ</a>.</p>
-    <p>��ʵ��ʱ����ܲ�ͬ��ָ����ʱ��. ΢������˵, &quot;����û�ò��û��ʹ�ü����(����״̬),��ôϵͳ����������������㳬ʱ.&quot;(����ϸ�������<a href="https://msdn.microsoft.com/en-us/library/bb773352(VS.85).aspx">����</a>.) ���, Ҫ����ȷ�ؿ���������ʾ��ʾ��ʱ��,��ʹ�� <a href="Sleep.htm">Sleep</a> ���������Ų��������� TrayTip,���������ʾ������ʾ������ʹ�� <a href="SetTimer.htm">SetTimer</a>.</p>
+  <dd><p><strong>注意:</strong> 这参数在 Windows Vista 及之后系统无效.</p>
+    <p>要窗口显示的近似秒数, 达到这时间后它会被操作系统自动移除. 指定小于 10 或大于 30 的数字时通常会使用最小 (10) 或最大 (30) 的显示时间代替.如果为空或省略, 则一般使用最小的时间. 此参数可以为 <a href="../Variables.htm#Expressions">表达式</a>.</p>
+    <p>真实的时间可能不同于指定的时间. 微软解释说, &quot;如果用户貌似没有使用计算机(空闲状态),那么系统不会以这个参数计算超时.&quot;(技术细节请参阅<a href="https://msdn.microsoft.com/en-us/library/bb773352(VS.85).aspx">这里</a>.) 因此, 要更精确地控制托盘提示显示的时间,请使用 <a href="Sleep.htm">Sleep</a> 命令后面跟着不带参数的 TrayTip,或像下面的示例中演示的那样使用 <a href="SetTimer.htm">SetTimer</a>.</p>
     </dd>
 
   <dt>Options</dt>
-  <dd><p><em>Options</em> ��������Ϊ 0 (��), �������б���һ����������ֵ���ܺ�:</p>
+  <dd><p><em>Options</em> 参数可以为 0 (零), 或是下列表中一个或多个参数值的总和:</p>
     <table class="info">
-      <tr><th>����</th><th>ʮ����ֵ</th><th>ʮ������ֵ</th></tr>
-      <tr><td>��Ϣͼ��</td><td>1</td><td>0x1</td></tr>
-      <tr><td>����ͼ��</td><td>2</td><td>0x2</td></tr>
-      <tr><td>����ͼ��</td><td>3</td><td>0x3</td></tr>
-      <tr><td>Windows XP ��֮���: ��������ʾ��.</td><td>16</td><td>0x10</td></tr>
-      <tr><td>Windows Vista ��֮���: ʹ�ô�ͼ��.</td><td>32</td><td>0x20</td></tr>
+      <tr><th>功能</th><th>十进制值</th><th>十六进制值</th></tr>
+      <tr><td>信息图标</td><td>1</td><td>0x1</td></tr>
+      <tr><td>警告图标</td><td>2</td><td>0x2</td></tr>
+      <tr><td>错误图标</td><td>3</td><td>0x3</td></tr>
+      <tr><td>Windows XP 和之后的: 不发出提示声.</td><td>16</td><td>0x10</td></tr>
+      <tr><td>Windows Vista 和之后的: 使用大图标.</td><td>32</td><td>0x20</td></tr>
     </table>
-    <p>���ʡ����Ĭ��Ϊ 0 , �༴��ͼ��. ��� <em>Title</em> ʡ��, ͬ��������ʾͼ��.</p>
-    <p>�˲�����Ϊ <a href="../Variables.htm#Expressions">����ʽ</a>.</p>
+    <p>如果省略则默认为 0 , 亦即无图标. 如果 <em>Title</em> 省略, 同样不会显示图标.</p>
+    <p>此参数可为 <a href="../Variables.htm#Expressions">表达式</a>.</p>
     </dd>
 
 </dl>
-<h3>��ע</h3>
-<p id="Windows10"><strong>Windows 10</strong> Ĭ���� toast ֪ͨ�滻������ʾ����(���ܱ�����ͨ��������). TrayTip ��ε���ͨ���ᵼ�¶��֪ͨ��������һ��"����"������ÿ��֪ͨȡ��������Ǹ�. ��Ҫ����֪ͨ����ʱ�Ƴ�����ͼ���������Ч��. ����:</p>
+<h3>备注</h3>
+<p id="Windows10"><strong>Windows 10</strong> 默认以 toast 通知替换气球提示窗口(这能被重置通过主策略). TrayTip 多次调用通常会导致多个通知被放置在一个"队列"而不是每个通知取代最近的那个. 若要隐藏通知，暂时移除托盘图标可能是有效的. 例如:</p>
 <pre>TrayTip #1, This is TrayTip #1
 Sleep 3000   <em>; Let it display for 3 seconds.</em>
 HideTrayTip()
@@ -71,18 +71,18 @@ HideTrayTip() {
     }
 }
 </pre>
-<p>����ű�û������ͼ��(ʹ�� <a href="_NoTrayIcon.htm">#NoTrayIcon</a> �� <code><a href="Menu.htm">Menu</a>, tray, NoIcon</code>), �򲻻���ʾ������ʾ�����򴰿�.ͬ����, ������е� REG_DWORD ֵ�Ѿ������ұ�����Ϊ 0, �� TrayTip ��������:</p>
+<p>如果脚本没有托盘图标(使用 <a href="_NoTrayIcon.htm">#NoTrayIcon</a> 或 <code><a href="Menu.htm">Menu</a>, tray, NoIcon</code>), 则不会显示托盘提示的气球窗口.同样地, 如果下列的 REG_DWORD 值已经存在且被设置为 0, 则 TrayTip 不起作用:</p>
 <pre>HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced &gt;&gt; EnableBalloonTips</pre>
-<p>�����ʾ, ÿ���û��������ͣ�ڽű�����ͼ����ʱ����ʾ������ʾ. �˹�����ʾ�����ݿ���ʹ�������ķ����ı�:<code><a href="Menu.htm">Menu</a>, Tray, Tip, My New Text</code>.</p>
+<p>相关提示, 每当用户把鼠标悬停在脚本托盘图标上时会显示工具提示. 此工具提示的内容可以使用这样的方法改变:<code><a href="Menu.htm">Menu</a>, Tray, Tip, My New Text</code>.</p>
 
-<h3>���</h3>
+<h3>相关</h3>
 <p><a href="ToolTip.htm">ToolTip</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="Menu.htm">Menu</a>, <a href="SplashTextOn.htm">SplashTextOn</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a>, <a href="FileSelectFolder.htm">FileSelectFolder</a></p>
 
-<h3>ʾ��</h3>
+<h3>示例</h3>
 <pre class="NoIndent">TrayTip, My Title, Multiline`nText, 20, 17</pre>
 <pre class="NoIndent">
-<em>; Ҫ����ȷ�Ŀ�����ʾ��ʱ��
-; ����ʹ�� Sleep �ķ��� (��ֹͣ�˵�ǰ�߳�):</em>
+<em>; 要更精确的控制显示的时间
+; 而不使用 Sleep 的方法 (它停止了当前线程):</em>
 #Persistent
 TrayTip, Timed TrayTip, This will be displayed for 5 seconds.
 SetTimer, HideTrayTip, -5000
@@ -92,11 +92,11 @@ HideTrayTip() {  <em>; NOTE: For Windows 10, replace this function with the one 
 }
 </pre>
 <pre class="NoIndent">
-<em>; Ҫ��������ʾ������ʾ, ��ʹ�ü�ʱ�����������Ե�ˢ��:
+<em>; 要让托盘提示永久显示, 请使用计时器进行周期性的刷新:
 ; NOTE: This probably won't work well on Windows 10 for <a href="#Windows10">reasons described above</a>.</em>
 #Persistent
 SetTimer, RefreshTrayTip, 1000
-Gosub, RefreshTrayTip  <em>; ����һ��������������ʼ.</em>
+Gosub, RefreshTrayTip  <em>; 调用一次来让它立即开始.</em>
 return
 
 RefreshTrayTip:

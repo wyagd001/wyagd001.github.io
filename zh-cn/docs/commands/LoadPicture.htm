@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>LoadPicture</title>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
@@ -11,31 +11,31 @@
 
 <h1>LoadPicture <span class="ver">[v1.1.23+]</span> </h1>
 
-<p>����һ��ͼ���ļ�������һ��λͼ��ͼ����.</p>
+<p>载入一个图像文件并返回一个位图或图标句柄.</p>
 <pre class="Syntax">Handle := LoadPicture(Filename [, Options, ByRef ImageType])</pre>
 
-<h3>����</h3>
+<h3>参数</h3>
 <dl>
 
   <dt>Filename</dt>
-  <dd><p>ͼƬ���ļ���, ���δ����Ϊ����·����ͨ���ٶ�Ϊ <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> Ŀ¼��. ���� DLL �� EXE �ļ�, �������ָ�����ļ��� (����������·��), ��ô���ܻ�ӵ�ǰִ�г��� (AutoHotkey.exe �����ѱ���ĳ���) Ŀ¼, ��ϵͳ·�� (���뵽PATH�е���Щ·��) �в�����.</p></dd>
+  <dd><p>图片的文件名, 如果未设置为绝对路径则通常假定为 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 目录中. 对于 DLL 或 EXE 文件, 如果仅仅指定了文件名 (而不是完整路径), 那么可能会从当前执行程序 (AutoHotkey.exe 或是已编译的程序) 目录, 或系统路径 (加入到PATH中的那些路径) 中查找它.</p></dd>
   
   <dt>Options</dt>
   <dd>
-    <p>һ�����������������ѡ����ִ�, ÿ��ѡ��֮���Կո���Ʊ������:</p>
-    <p><strong>W</strong><em>n</em> and <strong>H</strong><em>n</em>: ������ͼ��Ŀ��Ⱥ͸߶�, <em>n</em> Ϊ����. ���ʡ��ĳ���ߴ��ָ��Ϊ -1 , �óߴ罫�ڱ��ֿ��߱ȵ�����¸�����һ���ߴ���м���. ��������ߴ綼��ʡ�Խ�ʹ��ͼ���ԭʼ�ߴ�. �����һ�ߴ类ָ��Ϊ0��óߴ��Ի�ʹ��ԭʼ�ߴ�. ����: <code>&quot;w80 h50&quot;</code>, <code>&quot;w48 h-1&quot;</code> or <code>&quot;w48&quot;</code> (���ֿ��߱�), <code>&quot;h0 w100&quot;</code> (ʹ��ԭʼ�߶ȵ����Ȳ���).</p>
-    <p><strong>Icon</strong><em>n</em>: ָ����ͼ���ļ�(һ����EXE��DLL�ļ�)�д�����ͼ������, �� <em>n</em> ����,�ļ��б������һ��ͼ��. ����, <code>&quot;Icon2&quot;</code> �������ļ��еĵڶ���ͼ��.</p>
-    <p><strong>GDI+</strong>: ����ʹ�� GDI+ �ķ�ʽ����ͼ��. ����: <code>"GDI+ w100"</code>.</p>
+    <p>一个包含零个或多个下列选项的字串, 每个选项之间以空格或制表符间隔:</p>
+    <p><strong>W</strong><em>n</em> and <strong>H</strong><em>n</em>: 待载入图像的宽度和高度, <em>n</em> 为整数. 如果省略某个尺寸或指定为 -1 , 该尺寸将在保持宽高比的情况下根据另一个尺寸进行计算. 如果两个尺寸都被省略将使用图像的原始尺寸. 如果任一尺寸被指定为0则该尺寸仍会使用原始尺寸. 例如: <code>&quot;w80 h50&quot;</code>, <code>&quot;w48 h-1&quot;</code> or <code>&quot;w48&quot;</code> (保持宽高比), <code>&quot;h0 w100&quot;</code> (使用原始高度但宽度不变).</p>
+    <p><strong>Icon</strong><em>n</em>: 指代多图标文件(一般是EXE或DLL文件)中待载入图标的序号, 若 <em>n</em> 非零,文件中必须包含一个图标. 例如, <code>&quot;Icon2&quot;</code> 会载入文件中的第二个图标.</p>
+    <p><strong>GDI+</strong>: 尝试使用 GDI+ 的方式载入图像. 例如: <code>"GDI+ w100"</code>.</p>
   </dd>
   
   <dt>ImageType</dt>
-  <dd><p>�������ŵı�����,�ñ����ᴢ��һ����ʾ���صľ�����͵�����: 0 (IMAGE_BITMAP), 1 (IMAGE_ICON) �� 2 (IMAGE_CURSOR). ������Ըñ���������һ����ȷ�ı�����,�򷵻�ֵ����λͼ��� (ͼ��/������ͻᰴ��ת��).</p></dd>
+  <dd><p>不加引号的变量名,该变量会储存一个表示返回的句柄类型的整数: 0 (IMAGE_BITMAP), 1 (IMAGE_ICON) 或 2 (IMAGE_CURSOR). 如果忽略该变量名或不是一个正确的变量名,则返回值总是位图句柄 (图标/光标类型会按需转换).</p></dd>
 
 </dl>
 
-<h3 id="Remarks">��ע</h3>
-<p>LoadPicture Ҳ֧�� <a href="../misc/ImageHandles.htm">�����ʾ��</a>, ��һ�������뵽�ڴ��е�ͼ���λͼ����һ���ص���С��ͼ��, ��һ��ͼ��ͨ������ <em>ImageType</em> �ķ�ʽת����λͼ. </p>
-<p>���ͼ����Ҫ���ڴ����ͷţ�������κ��ʺ��ھ�����͵ĺ���.</p>
+<h3 id="Remarks">备注</h3>
+<p>LoadPicture 也支持 <a href="../misc/ImageHandles.htm">句柄表示法</a>, 从一个已载入到内存中的图标或位图创建一个重调大小的图像, 或将一个图标通过忽略 <em>ImageType</em> 的方式转换成位图. </p>
+<p>如果图像需要从内存中释放，请调用任何适合于句柄类型的函数.</p>
 <pre>if (not ImageType)  <em>; IMAGE_BITMAP (0) or the ImageType parameter was omitted.</em>
     DllCall("DeleteObject", "ptr", Handle)
 else if (ImageType = 1)  <em>; IMAGE_ICON</em>
@@ -43,31 +43,31 @@ else if (ImageType = 1)  <em>; IMAGE_ICON</em>
 else if (ImageType = 2)  <em>; IMAGE_CURSOR</em>
     DllCall("DestroyCursor", "ptr", Handle)</pre>
 
-<h3>���</h3>
-<p><a href="../misc/ImageHandles.htm">Image ���</a></p>
+<h3>相关</h3>
+<p><a href="../misc/ImageHandles.htm">Image 句柄</a></p>
 
-<h3 id="Examples">ʾ��</h3>
-<pre class="NoIndent"><em>; Ԥ���ز�����һЩͼ��</em>
+<h3 id="Examples">示例</h3>
+<pre class="NoIndent"><em>; 预加载并复用一些图像</em>
 
 Pics := []
-<em>; Ѱ�Ҽ���ͼ������չʾ</em>
+<em>; 寻找几张图像用来展示</em>
 Loop, Files, %A_WinDir%\Web\Wallpaper\*.jpg, R
 {
-    <em>; �����ҵ���ͼ�����ӵ�������</em>
+    <em>; 载入找到的图像并添加到数组中</em>
     Pics.Push(LoadPicture(A_LoopFileFullPath))
 }
 if !Pics.Length()
 {
-    <em>; ��������Ҳ����ļ������Σ�����ȷ��·���ֶ����ӵ�������loopѭ����</em>
+    <em>; 如果发生找不到文件的情形，将正确的路径手动添加到上述的loop循环中</em>
     MsgBox, No pictures found!  Try a different directory.
     ExitApp
 }
-<em>; ����ͼ��ؼ�,���ֵ�һ��ͼ�Ŀ��߱�</em>
+<em>; 创建图标控件,保持第一张图的宽高比</em>
 Gui, Add, Pic, w600 h-1 vPic +Border, % "HBITMAP:*" Pics.1
 Gui, Show
 Loop 
 {
-    <em>; �л�ͼƬ!</em>
+    <em>; 切换图片!</em>
     GuiControl, , Pic, % "HBITMAP:*" Pics[Mod(A_Index, Pics.Length())+1]
     Sleep 3000
 }

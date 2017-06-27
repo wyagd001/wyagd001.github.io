@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>SetRegView</title>
-<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
@@ -10,48 +10,48 @@
 <body>
 
 <h1>SetRegView <span class="ver">[v1.1.08+]</span></h1>
-<p>���� RegRead,RegWrite,RegDelete ��ע���ѭ��ʹ�õ�ע�����ͼ.</p>
+<p>设置 RegRead,RegWrite,RegDelete 和注册表循环使用的注册表视图.</p>
 <pre class="Syntax">SetRegView, RegView</pre>
 
-<h3>����</h3>
+<h3>参数</h3>
 <dl>
 
   <dt>RegView</dt>
   <dd>
-      <p>ָ�� <strong>32</strong> �� 32 λ����ķ�ʽ���鿴ע���,�� <strong>64</strong> �� 64 λ����ķ�ʽ���ע���.</p>
-      <p>ָ������ <strong>Default</strong> ���ָ���Ĭ�ϵ���Ϊ.</p>
+      <p>指定 <strong>32</strong> 以 32 位程序的方式来查看注册表,而 <strong>64</strong> 以 64 位程序的方式浏览注册表.</p>
+      <p>指定单词 <strong>Default</strong> 来恢复到默认的行为.</p>
     </dd>
 
 </dl>
 
-<h3>һ��˵��</h3>
-<p>��������� 64 λ Windows ������.���� 32 λ Windows ��û��Ч��.</p>
-<p>�� 64 λϵͳ��,32 λ���������ڱ���Ϊ <a href="http://msdn.microsoft.com/en-us/library/aa384249">WOW64</a> �� Windows ��ϵͳ��.Ĭ�������,ϵͳ���ض���ĳЩ<a href="http://msdn.microsoft.com/en-us/library/aa384253">ע�����</a>�������ͻ.����,�� 32 λ�ű���,<code>HKLM\SOFTWARE\AutoHotkey</code> �ᱻ�ض��� <code>HKLM\SOFTWARE\Wow6432Node\AutoHotkey</code>.SetRegView ���� 32 λ�ű��е�ע������������ 64 λע�����ͼ�б��ض���ļ�,��֮��Ȼ.</p>
+<h3>一般说明</h3>
+<p>此命令仅在 64 位 Windows 上有用.它在 32 位 Windows 中没有效果.</p>
+<p>在 64 位系统中,32 位程序运行于被称为 <a href="http://msdn.microsoft.com/en-us/library/aa384249">WOW64</a> 的 Windows 子系统中.默认情况下,系统会重定向某些<a href="http://msdn.microsoft.com/en-us/library/aa384253">注册表键</a>来避免冲突.例如,在 32 位脚本中,<code>HKLM\SOFTWARE\AutoHotkey</code> 会被重定向到 <code>HKLM\SOFTWARE\Wow6432Node\AutoHotkey</code>.SetRegView 允许 32 位脚本中的注册表命令访问在 64 位注册表视图中被重定向的键,反之亦然.</p>
 
-<p>���ñ��� <em>A_RegView</em> �����˵�ǰ����.ÿ�������е�<a href="../misc/Threads.htm">�߳�</a>(����<a href="../Hotkeys.htm">�ȼ�</a>,<a href="Menu.htm">�Զ���˵���</a>��<a href="SetTimer.htm">��ʱ</a>�ӳ���)�����Դ������Ĭ�����ÿ�ʼ.ͨ���ڽű����Զ�ִ�ж� (�ű��Ķ���) ʹ�ô�������Ըı����Ĭ������.</p>
+<p>内置变量 <em>A_RegView</em> 包含了当前设置.每个新运行的<a href="../misc/Threads.htm">线程</a>(例如<a href="../Hotkeys.htm">热键</a>,<a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">定时</a>子程序)都会以此命令的默认设置开始.通过在脚本的自动执行段 (脚本的顶部) 使用此命令可以改变这个默认设置.</p>
 
-<h3>���</h3>
-<p><a href="RegRead.htm">RegRead</a>,<a href="RegWrite.htm">RegWrite</a>,<a href="RegDelete.htm">RegDelete</a>,<a href="LoopReg.htm">Loop(ע���)</a></p>
+<h3>相关</h3>
+<p><a href="RegRead.htm">RegRead</a>,<a href="RegWrite.htm">RegWrite</a>,<a href="RegDelete.htm">RegDelete</a>,<a href="LoopReg.htm">Loop(注册表)</a></p>
 
-<h3>ʾ��</h3>
-<p id="example1">ʾ�� 1 ��ʾ����������ض���ע�����ͼ�Լ�ע����ض���Խű���Ӱ��.</p>
-<pre><em>; �� 32 λ����ķ�ʽ����ע���.</em>
+<h3>示例</h3>
+<p id="example1">示例 1 演示了如何设置特定的注册表视图以及注册表重定向对脚本的影响.</p>
+<pre><em>; 以 32 位程序的方式访问注册表.</em>
 SetRegView 32
 RegWrite REG_SZ, HKLM, SOFTWARE\Test.ahk, Value, 123
 
-<em>; �� 64 λ����ķ�ʽ����ע���.</em>
+<em>; 以 64 位程序的方式访问注册表.</em>
 SetRegView 64
 RegRead value, HKLM, SOFTWARE\Wow6432Node\Test.ahk, Value
 RegDelete HKLM, SOFTWARE\Wow6432Node\Test.ahk
 
 MsgBox Read value '%value%' via Wow6432Node.
 
-<em>; �ָ�Ĭ�ϵ�ע�����ͼ,��
-; ȡ���ڽű��� 32 λ���� 64 λ��.</em>
+<em>; 恢复默认的注册表视图,这
+; 取决于脚本是 32 位还是 64 位的.</em>
 SetRegView Default
 <em>;...</em>
 </pre>
-<p id="example2">ʾ�� 2 ��ʾ������ж��������нű��� EXE �Ͳ���ϵͳ������.</p>
+<p id="example2">示例 2 演示了如何判断正在运行脚本的 EXE 和操作系统的类型.</p>
 <pre>if (A_PtrSize = 8)
     script_is := "64-bit"
 else <em>; if (A_PtrSize = 4)</em>

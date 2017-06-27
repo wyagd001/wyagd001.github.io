@@ -1,43 +1,43 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Loop(��ȡ�ļ�����)</title>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Loop(读取文件内容)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 <body>
 
-<h1>Loop(��ȡ�ļ�����)</h1>
+<h1>Loop(读取文件内容)</h1>
 
-<p>���ж�ȡ�ı��ļ�������,ÿ��һ��(�� <a href="FileReadLine.htm">FileReadLine</a> ִ�еĸ���).</p>
+<p>逐行读取文本文件的内容,每次一行(比 <a href="FileReadLine.htm">FileReadLine</a> 执行的更好).</p>
 
 <pre class="Syntax">Loop, Read, InputFile [, OutputFile]</pre>
-<h3>����</h3>
+<h3>参数</h3>
 <dl>
 
   <dt>Read</dt>
-  <dd><p>�˲�������Ϊ���� READ.</p></dd>
+  <dd><p>此参数必须为单词 READ.</p></dd>
 
   <dt>InputFile</dt>
-  <dd><p>��Ҫ��ѭ���ж�ȡ���ݵ��ı��ļ�������, ���δָ������·����ٶ��� <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> ��. ֧�� Windows �� Unix ��ʽ; ���ļ����н����������ǻس��ͻ��з� (`r`n) ��ֻ�ǻ��з� (`n).</p></dd>
+  <dd><p>需要在循环中读取内容的文本文件的名称, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中. 支持 Windows 和 Unix 格式; 即文件的行结束符可以是回车和换行符 (`r`n) 或只是换行符 (`n).</p></dd>
 
   <dt>OutputFile</dt>
-  <dd><p>(��ѡ��) ��ѭ���ڼ䱣�ִ򿪵��ļ�������, ���δָ������·����ٶ��� <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> ��.</p>
-      <p>��ѭ������, ʹ�ý���һ������ (д����ı�) �� <a href="FileAppend.htm">FileAppend</a> ������׷���ı�����ָ�����ļ�. �����ַ�ʽ׷���ı����ļ���ʹ�� 2 ������ģʽ�� <a href="FileAppend.htm">FileAppend</a> ִ�еظ���, ��Ϊÿ�β���ʱ����Ҫ�ر��ļ������´�. �����Ҫ, �ǵ���д����ı�����ϻ��з� (`n).</p>
-      <p>���û��д�����ݵ����ļ�, ��ô�����ᱻ��. �� Loop ��ѭ������Ϊ�����ѭ������û��ʹ�� <a href="FileAppend.htm">FileAppend</a> ����ʱ�ᷢ���������.</p>
-          <p><strong>�н��� (EOL) ת��</strong>: ���ļ���ǰ������Ǻſɽ��� EOL ת��. ��ʹ��ÿ�����з� (`n) ��Ϊ�������з� (LF) ������ Windows ��׼�� CR+LF д��. ����:<code><strong>*</strong>C:\My Unix File.txt</code>. ��ʹû���Ǻ�, ��� Loop ��<u>�״�</u>ʹ�� <a href="FileAppend.htm">FileAppend</a> ʱд���κλس��ͻ��з���(`r`n),��ʱEOL ת��Ҳ���Զ���ֹ.</p>
-      <p><strong>��׼��� (stdout)</strong>: ָ�� <em>OutputFile</em> Ϊ�Ǻ� (*) ���԰� <a href="FileAppend.htm">FileAppend</a> д����κ��ı����͵���׼��� (stdout). ������������������ض����ļ�, ָ����һ�� EXE �Ĺܵ��� <a href="_ErrorStdOut.htm">�߼��ı��༭��</a> ����, Ȼ���������������������������ʾ����. ����� <a href="FileAppend.htm">FileAppend</a> �˽���ϸ��Ϣ.</p>
-      <p><strong>����ת��</strong>: �������������������һ��������ͬ, �� <em>OutputFile</em> �еĶ��ű������ת�� (`,).</p></dd>
+  <dd><p>(可选的) 在循环期间保持打开的文件的名称, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p>
+      <p>在循环体内, 使用仅带一个参数 (写入的文本) 的 <a href="FileAppend.htm">FileAppend</a> 命令来追加文本到此指定的文件. 以这种方式追加文本到文件比使用 2 个参数模式的 <a href="FileAppend.htm">FileAppend</a> 执行地更好, 因为每次操作时不需要关闭文件再重新打开. 如果需要, 记得在写入的文本后加上换行符 (`n).</p>
+      <p>如果没有写入内容到此文件, 那么它不会被打开. 当 Loop 的循环次数为零或其循环体中没有使用 <a href="FileAppend.htm">FileAppend</a> 命令时会发生这种情况.</p>
+          <p><strong>行结束 (EOL) 转换</strong>: 在文件名前面加上星号可禁用 EOL 转换. 这使得每个换行符 (`n) 作为单个换行符 (LF) 而不是 Windows 标准的 CR+LF 写入. 例如:<code><strong>*</strong>C:\My Unix File.txt</code>. 即使没有星号, 如果 Loop 中<u>首次</u>使用 <a href="FileAppend.htm">FileAppend</a> 时写入任何回车和换行符对(`r`n),这时EOL 转换也会自动禁止.</p>
+      <p><strong>标准输出 (stdout)</strong>: 指定 <em>OutputFile</em> 为星号 (*) 可以把 <a href="FileAppend.htm">FileAppend</a> 写入的任何文本发送到标准输出 (stdout). 尽管这样的输出可以重定向到文件, 指向另一个 EXE 的管道或被 <a href="_ErrorStdOut.htm">高级文本编辑器</a> 捕获, 然而它不会出现在运行它的命令提示符中. 请参阅 <a href="FileAppend.htm">FileAppend</a> 了解详细信息.</p>
+      <p><strong>逗号转义</strong>: 与其他大多数命令的最后一个参数不同, 在 <em>OutputFile</em> 中的逗号必须进行转义 (`,).</p></dd>
 
 </dl>
 
-<h3>��ע</h3>
-<p>������԰������ı��ļ��е��������н��в���ʱ, �ļ���ȡѭ��������. ���� <a href="FileReadLine.htm">FileReadLine</a> ִ�еĸ���, ��Ϊ: 1) �����������������ļ�һֱ���ִ�״̬; 2) ����Ҫÿ�ζ�����ɨ���ļ������������������.</p>
-<p id="LoopReadLine">���ñ��� <strong>A_LoopReadLine</strong> �������κ��ļ���ȡѭ����.����������ȥ����β�Ļس����з� (`r`n) �ĵ�ǰ������. ���һ���ڲ��ļ���ȡѭ��������һ������ļ���ȡѭ����,�����ڲ�ѭ�����ļ��н���������Ȩ.</p>
-<p>�����Զ�ȡ���� 65,534 �ַ��ĳ���. ���ĳ�г����������, ���е�ʣ���ַ�������һ��ѭ���ж�ȡ.</p>
-<p>�������ļ���ȡѭ����ʹ�� <a href="StringSplit.htm">StringSplit</a> �� <a href="LoopParse.htm">����ѭ��</a> ������ <em>InputFile</em> ��ȡ��ÿ������. ����, ��� <em>InputFile</em> �ļ��еĸ������� tab �ָ���Ƭ��, ��ô���Ե�����ȡ��ЩƬ��, ����:</p>
+<h3>备注</h3>
+<p>当您想对包含在文本文件中的内容逐行进行操作时, 文件读取循环很有用. 它比 <a href="FileReadLine.htm">FileReadLine</a> 执行的更好, 因为: 1) 在整个操作过程中文件一直保持打开状态; 2) 不需要每次都重新扫描文件来查找请求的行内容.</p>
+<p id="LoopReadLine">内置变量 <strong>A_LoopReadLine</strong> 存在于任何文件读取循环中.它包含了已去除行尾的回车换行符 (`r`n) 的当前行内容. 如果一个内层文件读取循环包含在一个外层文件读取循环中,则最内层循环的文件行将具有优先权.</p>
+<p>最大可以读取包含 65,534 字符的长行. 如果某行超出这个长度, 此行的剩余字符将在下一次循环中读取.</p>
+<p>经常在文件读取循环中使用 <a href="StringSplit.htm">StringSplit</a> 或 <a href="LoopParse.htm">解析循环</a> 解析从 <em>InputFile</em> 读取的每行内容. 例如, 如果 <em>InputFile</em> 文件中的各行是由 tab 分隔的片段, 那么可以单独获取这些片段, 例如:</p>
 <pre>Loop, read, C:\Database Export.txt
 {
     Loop, parse, A_LoopReadLine, %A_Tab%
@@ -45,17 +45,17 @@
         MsgBox, Field number %A_Index% is %A_LoopField%.
     }
 }</pre>
-<p>Ҫ���������ļ����ݵ�������, ʹ�� <a href="FileRead.htm">FileRead</a>, ��Ϊ����ѭ��ִ�еĸ��� (������ڴ��ļ�).</p>
-<p>Ҫͬʱ�򿪶���ļ�, ��ʹ�� <a href="FileOpen.htm">FileOpen</a> ��ο� <a href="DllCall.htm#file">����</a> ʹ�� DllCall().</p>
-<p>����� <a href="Loop.htm">Loop</a> �˽����<a href="Block.htm">����</a>,<a href="Break.htm">Break</a>,<a href="Continue.htm">Continue</a> �� A_Index ����(������ڸ������͵�ѭ����)�������Ϣ.</p>
-<p>�ڲ������ֽ�˳����ʱҪ������ν����ļ�, ʹ�� <a href="FileEncoding.htm">FileEncoding</a>.</p>
+<p>要加载整个文件内容到变量中, 使用 <a href="FileRead.htm">FileRead</a>, 因为它比循环执行的更好 (尤其对于大文件).</p>
+<p>要同时打开多个文件, 请使用 <a href="FileOpen.htm">FileOpen</a> 或参考 <a href="DllCall.htm#file">此例</a> 使用 DllCall().</p>
+<p>请参阅 <a href="Loop.htm">Loop</a> 了解关于<a href="Block.htm">区块</a>,<a href="Break.htm">Break</a>,<a href="Continue.htm">Continue</a> 和 A_Index 变量(其存在于各种类型的循环中)的相关信息.</p>
+<p>在不存在字节顺序标记时要控制如何解码文件, 使用 <a href="FileEncoding.htm">FileEncoding</a>.</p>
 
-<h3>���</h3>
-<p><a href="FileEncoding.htm">FileEncoding</a>, <a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">�ļ�����</a>, <a href="FileRead.htm">FileRead</a>, <a href="FileReadLine.htm">FileReadLine</a>, <a href="FileAppend.htm">FileAppend</a>, <a href="Sort.htm">Sort</a>, <a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">����</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileSetTime.htm">FileSetTime</a></p>
+<h3>相关</h3>
+<p><a href="FileEncoding.htm">FileEncoding</a>, <a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a>, <a href="FileReadLine.htm">FileReadLine</a>, <a href="FileAppend.htm">FileAppend</a>, <a href="Sort.htm">Sort</a>, <a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">区块</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileSetTime.htm">FileSetTime</a></p>
 
-<h3>ʾ��</h3>
-<pre class="NoIndent"><em>; ʾ�� #1: ���׸��ļ���ֻ�а������� FAMILY ����Щ�вŻ�д��ڶ����ļ���.
-; ȡ��ע�����п��Ը��Ƕ���׷�ӵ��κ����е��ļ�.
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 示例 #1: 在首个文件中只有包含单词 FAMILY 的那些行才会写入第二个文件中.
+; 取消注释首行可以覆盖而不追加到任何现有的文件.
 ;FileDelete, C:\Docs\Family Addresses.txt</em>
 
 Loop, read, C:\Docs\Address List.txt, C:\Docs\Family Addresses.txt
@@ -63,15 +63,15 @@ Loop, read, C:\Docs\Address List.txt, C:\Docs\Family Addresses.txt
     IfInString, A_LoopReadLine, family, FileAppend, %A_LoopReadLine%`n
 }</pre>
 <p>&nbsp;</p>
-<pre class="NoIndent"><em>; ʾ�� #2: ��ȡ�ı��ļ������һ��.</em>
+<pre class="NoIndent"><em>; 示例 #2: 获取文本文件的最后一行.</em>
 Loop, read, C:\Log File.txt
-    last_line := A_LoopReadLine  <em>; ��ѭ������ʱ, ����ᱣ�����һ�е�����.</em></pre>
+    last_line := A_LoopReadLine  <em>; 当循环结束时, 这里会保持最后一行的内容.</em></pre>
 <p>&nbsp;</p>
-<pre class="NoIndent"><em>; ʾ�� #3: ���Դ��ı��� HTML �ļ�����ȡ
-; ���� FTP �� HTTP URL ����Ч�ű�:</em>
+<pre class="NoIndent"><em>; 示例 #3: 尝试从文本或 HTML 文件中提取
+; 所有 FTP 和 HTTP URL 的有效脚本:</em>
 FileSelectFile, SourceFile, 3,, Pick a text or HTML file to analyze.
 if SourceFile =
-    return  <em>; ��ʱ���˳�.</em>
+    return  <em>; 此时将退出.</em>
 
 SplitPath, SourceFile,, SourceFilePath,, SourceFileNoExt
 DestFile = %SourceFilePath%\%SourceFileNoExt% Extracted Links.txt
@@ -94,25 +94,25 @@ return
 
 
 URLSearch:
-<em>; ������һЩ URL ����Ƕ�������� URL, ��������������ķ������д���:</em>
+<em>; 由于在一些 URL 中内嵌有其他的 URL, 所以用这种特殊的方法进行处理:</em>
 StringGetPos, URLStart1, URLSearchString, http://
 StringGetPos, URLStart2, URLSearchString, ftp://
 StringGetPos, URLStart3, URLSearchString, www.
 
-<em>; ��������ߵ���ʼλ��:</em>
-URLStart = %URLStart1%  <em>; ����Ĭ�ϵ���ʼ��.</em>
+<em>; 查找最左边的起始位置:</em>
+URLStart = %URLStart1%  <em>; 设置默认的起始处.</em>
 Loop
 {
-    <em>; ������ "URLStart%A_Index%" һ��������</em>
-    <em>; �������� (�����ں�����������Ľű���):</em>
+    <em>; 仅解析 "URLStart%A_Index%" 一次有助于</em>
+    <em>; 改善性能 (尤其在含有许多变量的脚本中):</em>
     ArrayElement := URLStart%A_Index%
-    if ArrayElement =  <em>; ����<a href="../misc/Arrays.htm#pseudo">α����</a>��ĩβ.</em>
+    if ArrayElement =  <em>; 到达<a href="../misc/Arrays.htm#pseudo">伪数组</a>的末尾.</em>
         break
-    if ArrayElement = -1  <em>; ��Ԫ����Ч.</em>
+    if ArrayElement = -1  <em>; 此元素无效.</em>
         continue
     if URLStart = -1
         URLStart = %ArrayElement%
-    else <em>; URLStart �к�����Чλ��,���԰����� ArrayElement ���бȽ�.</em>
+    else <em>; URLStart 中含有有效位置,所以把它与 ArrayElement 进行比较.</em>
     {
         if ArrayElement &lt;&gt; -1
             if ArrayElement &lt; %URLStart%
@@ -120,31 +120,31 @@ Loop
     }
 }
 
-if URLStart = -1  <em>; �� URLSearchString �в�������ַ.</em>
+if URLStart = -1  <em>; 在 URLSearchString 中不存在网址.</em>
     return
 
-<em>; ����,��ȡ����ַ:</em>
-StringTrimLeft, URL, URLSearchString, %URLStart%  <em>; ���Կ�ʼ/��Ч����.</em>
-Loop, parse, URL, %A_Tab%%A_Space%&lt;&gt;  <em>; �ҵ��׸��ո�,tab �������(�����).</em>
+<em>; 否则,提取该网址:</em>
+StringTrimLeft, URL, URLSearchString, %URLStart%  <em>; 忽略开始/无效部分.</em>
+Loop, parse, URL, %A_Tab%%A_Space%&lt;&gt;  <em>; 找到首个空格,tab 或尖括号(如果有).</em>
 {
     URL = %A_LoopField%
-    break  <em>; ����ִ��һ��ѭ������ȡ�׸�"Ƭ��".</em>
+    break  <em>; 即仅执行一次循环来获取首个"片段".</em>
 }
-<em>; ���û���ҵ������ַ����������ѭ����û��ִ��ѭ����,
-; ��ô������ַ���������ݲ���.</em>
+<em>; 如果没有找到结束字符而在上面的循环中没有执行循环体,
+; 那么保持网址变量的内容不变.</em>
 
-; <em>�����ַ��˫���Ž���,��ô�Ƴ���.��ʱʹ�� StringReplace,����ע��
-; ˫�����ƺ����ԺϷ���������ַ��,����������
-; �����ƻ�����:</em>
+; <em>如果网址以双引号结束,那么移除它.暂时使用 StringReplace,不过注意
+; 双引号似乎可以合法存在于网址中,所以这样做
+; 可能破坏它们:</em>
 StringReplace, URLCleansed, URL, ",, All
 FileAppend, %URLCleansed%`n
 LinkCount += 1
 
-<em>; ������ǰ�����Ƿ���������ַ:</em>
+<em>; 看看当前行中是否含有其他网址:</em>
 StringLen, CharactersToOmit, URL
 CharactersToOmit += %URLStart%
 StringTrimLeft, URLSearchString, URLSearchString, %CharactersToOmit%
-Gosub, URLSearch  ; <em>�������ĵݹ����.</em>
+Gosub, URLSearch  ; <em>到自身的递归调用.</em>
 return</pre>
 
 </body>

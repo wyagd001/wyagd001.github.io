@@ -2,8 +2,8 @@
 <html>
 <head>
 <title>ListView (GUI)</title>
-<meta name="description" content="ʹ�ô���ѵĽű��������ɵش��� ListView �ؼ�. ���������Ĳ˵�, ��/��ͼ���Լ��ɵ������������б���.">
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta name="description" content="使用此免费的脚本语言轻松地创建 ListView 控件. 包含上下文菜单, 行/列图标以及可点击进行排序的列标题.">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
@@ -12,230 +12,230 @@
 <body>
 <h1>ListView</h1>
 
-<h2>Ŀ¼</h2>
+<h2>目录</h2>
 <ul>
-  <li><a href="#Intro">���źͼ�ʾ��</a></li>
-  <li><a href="#Options">ѡ�����ʽ</a></li>
-  <li><a href="#View">��ͼģʽ</a>: ���� (Ĭ��), ͼ��, ƽ��, Сͼ����б�.</li>
-  <li><a href="#BuiltIn">���ú���</a>:
+  <li><a href="#Intro">入门和简单示例</a></li>
+  <li><a href="#Options">选项和样式</a></li>
+  <li><a href="#View">视图模式</a>: 报告 (默认), 图标, 平铺, 小图标和列表.</li>
+  <li><a href="#BuiltIn">内置函数</a>:
     <ul>
-      <li><a href="#bifRow">�к��� (����, �޸ĺ�ɾ����)</a></li>
-      <li><a href="#bifCol">�к���</a></li>
-      <li><a href="#bifGet">�� ListView �л�ȡ����</a></li>
+      <li><a href="#bifRow">行函数 (添加, 修改和删除行)</a></li>
+      <li><a href="#bifCol">列函数</a></li>
+      <li><a href="#bifGet">从 ListView 中获取数据</a></li>
     </ul>
   </li>
-  <li><a href="#notify">G ��ǩ֪ͨ</a></li>
-  <li><a href="#IL">ͼ���б�</a> (��ͼ�����ӵ� ListView �ķ���)</li>
-  <li><a href="#Remarks">ListView ��ע</a></li>
-  <li><a href="#Examples">ʾ��</a></li>
+  <li><a href="#notify">G 标签通知</a></li>
+  <li><a href="#IL">图像列表</a> (把图标添加到 ListView 的方法)</li>
+  <li><a href="#Remarks">ListView 备注</a></li>
+  <li><a href="#Examples">示例</a></li>
 </ul>
-<h2 id="Intro">���źͼ�ʾ��</h2>
-<p>List-View ���ɲ���ϵͳ�ṩ�������ƵĿؼ�֮һ. ����������ʶ�����ʽ��, ����ʾһ�����ж�����ɵı�����ͼ, �������������Դ���������ļ����ļ����б� (��ϸ��Ϣ��ͼ).</p>
-<p>�����������Ǿ�ϸ��, �� ListView �Ļ�������Ҳ����ʹ��. ���� ListView ���﷨Ϊ:</p>
+<h2 id="Intro">入门和简单示例</h2>
+<p>List-View 是由操作系统提供的最精心设计的控件之一. 在其最容易识别的形式中, 它显示一个多行多列组成的表格视图, 最常见的例子是资源管理器的文件和文件夹列表 (详细信息视图).</p>
+<p>尽管它可能是精细的, 但 ListView 的基本功能也易于使用. 创建 ListView 的语法为:</p>
 <pre class="Syntax" id="GuiAdd">Gui, Add, ListView, Options, ColumnTitle1|ColumnTitle2|...</pre>
-<p>����һ�������нű�, ����������ʾ�����û� "�ҵ��ĵ�" Ŀ¼���ļ��б��� ListView:</p>
-<pre><em>; ���������ƺʹ�С���е� ListView:</em>
+<p>这是一个可运行脚本, 它创建和显示包含用户 "我的文档" 目录中文件列表的 ListView:</p>
+<pre><em>; 创建含名称和大小两列的 ListView:</em>
 Gui, Add, ListView, r20 w700 gMyListView, Name|Size (KB)
 
-<em>; ���ļ����л�ȡ�ļ����б��������Ƿ��� ListView:</em>
+<em>; 从文件夹中获取文件名列表并把它们放入 ListView:</em>
 Loop, %A_MyDocuments%\*.*
     <a href="#LV_Add">LV_Add</a>(&quot;&quot;, A_LoopFileName, A_LoopFileSizeKB)
 
-<a href="#LV_ModifyCol">LV_ModifyCol</a>()  <em>; ���������Զ�����ÿ�еĴ�С.</em>
-LV_ModifyCol(2, "Integer")  <em>; Ϊ�˽�������, ָ���� 2 ������.</em>
+<a href="#LV_ModifyCol">LV_ModifyCol</a>()  <em>; 根据内容自动调整每列的大小.</em>
+LV_ModifyCol(2, "Integer")  <em>; 为了进行排序, 指出列 2 是整数.</em>
 
-<em>; ��ʾ���ڲ�����. ÿ���û����һ��ʱ�ű��ᷢ��֪ͨ.</em>
+<em>; 显示窗口并返回. 每当用户点击一行时脚本会发出通知.</em>
 Gui, Show
 return
 
 MyListView:
 if A_GuiEvent = DoubleClick
 {
-    <a href="#LV_GetText">LV_GetText</a>(RowText, A_EventInfo)  <em>; ���еĵ�һ���ֶ��л�ȡ�ı�.</em>
+    <a href="#LV_GetText">LV_GetText</a>(RowText, A_EventInfo)  <em>; 从行的第一个字段中获取文本.</em>
     ToolTip You double-clicked row number %A_EventInfo%. Text: &quot;%RowText%&quot;
 }
 return
 
-GuiClose:  <em>; ��ʾ�����ڹر�ʱ�ű�Ӧ�Զ��˳�.</em>
+GuiClose:  <em>; 表示当窗口关闭时脚本应自动退出.</em>
 ExitApp</pre>
-<h2 id="Options">����  &quot;<em>Gui, Add, ListView, <u>Options</u></em>&quot; ��ѡ�����ʽ</h2>
-<p id="AltSubmit"><strong>AltSubmit:</strong> ֪ͨ�ű��б���������� ListView �¼�����. ���仰˵, g ��ǩ�����еظ�Ƶ��. ����� <a href="#notify">ListView ֪ͨ</a> �˽�����.</p>
-<p><strong>Background:</strong> ָ������ Background �����������ɫ���� (����� <a href="Progress.htm#colors">��ɫͼ��</a>) �� RGB ֵ (0x ǰ׺����ʡ��). ����:<code>BackgroundSilver</code>,<code>BackgroundFFDD99</code>.�����ѡ�����,�� ListView ��ʼĬ�ϵı�����ɫ�� <a href="Gui.htm#Color">Gui Color</a> �����һ����������(���û��,��ʹ��ϵͳĬ�ϵı�����ɫ).ָ�� <code>BackgroundDefault</code> ��Ӧ��ϵͳ��Ĭ�ϱ�����ɫ(ͨ��Ϊ��ɫ).����,ʹ�� <code>GuiControl, +BackgroundDefault, MyListView</code> ���԰� ListView �ָ�ΪĬ�ϵ���ɫ.</p>
-<p><strong>C</strong>: �ı���ɫ. ָ����ĸ C �����������ɫ���� (����� <a href="Progress.htm#colors">��ɫͼ��</a>) �� RGB ֵ (0x ǰ׺����ʡ��). ����:<code>cRed</code>,<code>cFF2211</code>,<code>c0xFF2211</code>,<code>cDefault</code>.</p>
-<p id="Checked"><strong>Checked:</strong> ��ÿ�е�����ṩһ����ѡ��. �� <a href="#LV_Add">����</a> ��ʱ, ����ѡ����ָ������ <em>Check</em> ���ø�ѡ���ʼΪѡ�ж�����δѡ��״̬. �û����Ե����ѡ����¿ո����ѡ�л�ȡ��ѡ��һ��.</p>
-<p id="Count"><strong>Count:</strong> ָ������ Count ������� ListView ���������������. �ⲻ������: ��������Ŀ����Ȼ����������. �෴, ��ѡ����ؼ�һ����ʾ, ������һ���ԵĶ�����ÿ������һ��ʱ�����ڴ�, ��������������������ʱ������ (��Ҳ���������������). Ҫ�������������,�������Ӵ�����֮ǰʹ�� <code>GuiControl, -Redraw, MyListView</code>.���,ʹ�� <code>GuiControl, +Redraw, MyListView</code> �����������ػ�(����Ҳ�ػ��˿ؼ�).</p>
-<p><strong>Grid:</strong> �ṩˮƽ�ĺʹ�ֱ�������������ʾ�������к�������֮��ı߽�.</p>
-<p><strong>Hdr:</strong> ָ�� <code>-Hdr</code>(�� Hdr)�����ذ����б�������ⶥ��.����Ҫ������ʾ,��ʹ�� <code>GuiControl, +Hdr, MyListView</code>.</p>
-<p id="LVS_EX"><strong>LV:</strong> ָ���ַ��� LV ��������� <a href="../misc/Styles.htm#LVS_EX">��չ ListView ��ʽ</a> ������. ��Щ��ʽ��ȫ������ͨ����չ��ʽ. ����, ָ�� <code><strong>-E</strong>0x200</code> ���Ƴ�ͨ����չ��ʽ WS_EX_CLIENTEDGE,���������Ƴ��ؼ���Ĭ�ϱ߿�. ��֮���, ָ�� <code><strong>-LV</strong>0x20</code> ���Ƴ� <a href="#frs">LVS_EX_FULLROWSELECT</a> ѡ������Ч��.</p>
-<p><strong>LV0x10</strong>:ָ�� <code>-LV0x10</code> ��ֹ�û�ͨ���϶��б��⵽��߻��ұ�����������������.Ȼ��, ͨ��û��Ҫ��ô��, ��Ϊ�е�ʵ�����Ų���Ӱ��ű���������˳��. ����, �ӽű��ĽǶȿ���һ������ column 1, ��ʹ�û�ʵ���Ѿ������ƶ��������е��ұ�.</p>
-<p id="frs"><strong>LV0x20</strong>:ָ�� <code>-LV0x20</code> ��Ҫ����һ�еĵ�һ���ֶβſ��Խ���ѡ��(���������,���<em>����</em>�ֶζ�����ѡ��).�����ĺô����û����Ը�������϶����ΰ�Χһ������ѡ������.</p>
-<p><strong>Multi:</strong>ָ�� <code>-Multi</code>(�� Multi)����ֹ�û�һ��ѡ�����.</p>
-<p><strong>NoSortHdr:</strong> ��ֹ�������. ��ʱ����ʾƽ̹����۶��������������ư�ť�����. ����������� ListView ��ʽ��ͬ, ����ʽ�� ListView �������޷��ı�.</p>
-<p id="NoSort"><strong>NoSort:</strong> �رյ��û��������ʱ�������Զ�����. Ȼ��, �������ۿ���������ť (����ָ���� NoSortHdr). ����, g ��ǩ�Ի���յ� <a href="#ColClick">ColClick ֪ͨ</a>, �������Զ��������������������������Ӧ.</p>
-<p id="ReadOnly"><strong>ReadOnly:</strong>ָ�� <code>-ReadOnly</code>(�� ReadOnly)�������༭ÿ�����е��ı�.Ҫ�༭ĳ��,����ѡ����� <a href="#WantF2">F2 ��</a>.����, �����Զ�һ�е��һ����ѡ����, ���ٵȴ�������, Ȼ���ٴε��ͬһ�н��б༭.</p>
-<p><strong>R</strong>: �и� (����ʱ). ָ����ĸ R ���������Ҫ�ڿؼ��������ռ������. ����,<code>R10</code> �����ÿؼ�Ϊ 10 �еĸ߶�.���ʹ�ñ�����ͼ�������<a href="#View">��ͼģʽ</a>���� ListView,��ؼ��������С����Ӧ��ͼ����ж������ı���.ע:����<a href="#IL">ͼ��</a>�� ListView �����л�����ÿ�еĸ߶�,����ô�ѡ�׼ȷ.</p>
-<p id="Sort"><strong>Sort:</strong> �ÿؼ��������е����ݱ��ְ���ĸ˳������.</p>
-<p id="SortDesc"><strong>SortDesc:</strong> ������һ��, ���������ǽ�������.</p>
-<p id="WantF2"><strong>WantF2</strong> <span class="ver">[v1.0.44+]:</span>ָ�� <code>-WantF2</code>(�� WantF2)����ֹʹ�� F2 ����<a href="#ReadOnly">�༭</a>��ǰ������.���� <code><a href="#ReadOnly">-ReadOnly</a></code> Ҳ��Чʱ�����òŲ��ᱻ����.���۴��������,g ��ǩ�Ի���յ� F2 <a href="#NotifyK">ͨ��</a>.</p>
-<p><strong>(δ��������ֵ��ʽ):</strong> �������������������ʽ����ʹ��, ����û��Ϊ��������. ����� <a href="../misc/Styles.htm#ListView">ListView ��ʽ��</a> �˽���Щ��ʽ.</p>
-<h2 id="View">��ͼģʽ</h2>
-<p>ListView ��������ͼģʽ, ����������Ǳ�����ͼ (����Ĭ�ϵ�). Ҫʹ������ĳ����ͼ, ����ѡ���б���ָ����������. �������ڿؼ�������ı���ͼģʽ������:<code>GuiControl, +IconSmall, MyListView</code>.</p>
-<p><strong>Icon:</strong> ��ʾ��ͼ����ͼ. �ڴ���ͼ�ͳ� <em>Report</em> �������������ͼ��, ֻ�������е��ı��ſɼ�. Ҫ�ڴ�ģʽ����ʾͼ��, ListView ��������к���ͼ��� <a href="#IL">ͼ���б�</a>.</p>
-<p><strong>Tile</strong>: ��ʾ��ͼ����ͼ, ���������幤ѧ����, ����ÿ����ı���ʾ��ͼ����ұ߶���������. <a href="#Checked">Checkbox</a> ����ʹ���ڴ���ͼ��. ����, �ڱ� Windows XP ��Ĳ���ϵͳ����ʾ����ͼû��Ч��.</p>
-<p><strong>IconSmall:</strong> ��ʾСͼ����ͼ.</p>
-<p><strong>List:</strong> ���б���ʽ��ʾСͼ����ͼ, ����ͼ����ʾ������. �е���Ŀȡ���ڿؼ��Ŀ��ȺͿؼ�������ı���Ŀ�ĸ߶�.</p>
-<p><strong>Report:</strong> �л��ᱨ����ͼ, ���������Ĭ��ģʽ. ����:<code>GuiControl, +Report, MyListView</code>.</p>
-<h2 id="BuiltIn">ListView �е����ú���</h2>
-<p>���е� ListView ���������ڵ�ǰ�̵߳�<a href="Gui.htm#DefaultWin">Ĭ�� GUI ����</a>(�����ʹ�� <a href="Gui.htm#Default"><code>Gui, 2:Default</code></a> ���иı�).���Ĭ�ϴ��ڲ����ڻ򲻺��� ListView �ؼ�, �����к���������������������.</p>
-<p id="GuiLV">������ں��ж�� ListView �ؼ�, Ĭ������º���������������ӵ��Ǹ�. Ҫ�ı��������,��ָ�� <code>Gui, ListView, ListViewName</code>,���� <em>ListViewName</em> Ϊ ListView ��<a href="Gui.htm#var">��������</a>�����ƻ� Window Spy ����ʾ���� ClassNN(�� v1.1.04+)���� HWND.һ���ı��, �������кͽ����� <a href="../misc/Threads.htm">�߳�</a> ��ʹ��ָ���� ListView. <span class="ver">[v1.1.23+]:</span> <a href="../Variables.htm#DefaultListView">A_DefaultListView</a> �����˵�ǰ������.</p>
-<p id="RowNumber">���ڴ�ҳ��ʹ�ö��� "row number", ��ָ���� ListView ���еĵ�ǰλ��. ������һ��Ϊ 1, �ڶ���Ϊ 2, ��������. ����һ�к�, ���кŻ���Ϊ����, ɾ���Ͳ��������ж������仯. ���, Ҫ�������ݲ����ض���һ�л����, ͨ�������ѭ����ʹ�� <a href="#LV_GetText">LV_GetText()</a>.</p>
-<h2 id="bifRow">�к���</h2>
+<h2 id="Options">用于  &quot;<em>Gui, Add, ListView, <u>Options</u></em>&quot; 的选项和样式</h2>
+<p id="AltSubmit"><strong>AltSubmit:</strong> 通知脚本有比正常更多的 ListView 事件类型. 换句话说, g 标签会运行地更频繁. 请参阅 <a href="#notify">ListView 通知</a> 了解详情.</p>
+<p><strong>Background:</strong> 指定单词 Background 后面紧跟着颜色名称 (请参阅 <a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值 (0x 前缀可以省略). 例如:<code>BackgroundSilver</code>,<code>BackgroundFFDD99</code>.如果此选项不存在,则 ListView 初始默认的背景颜色由 <a href="Gui.htm#Color">Gui Color</a> 的最后一个参数设置(如果没有,则使用系统默认的背景颜色).指定 <code>BackgroundDefault</code> 来应用系统的默认背景颜色(通常为白色).例如,使用 <code>GuiControl, +BackgroundDefault, MyListView</code> 可以把 ListView 恢复为默认的颜色.</p>
+<p><strong>C</strong>: 文本颜色. 指定字母 C 后面紧跟着颜色名称 (请参阅 <a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值 (0x 前缀可以省略). 例如:<code>cRed</code>,<code>cFF2211</code>,<code>c0xFF2211</code>,<code>cDefault</code>.</p>
+<p id="Checked"><strong>Checked:</strong> 在每行的左侧提供一个复选框. 当 <a href="#LV_Add">添加</a> 行时, 在其选项中指定单词 <em>Check</em> 来让复选框初始为选中而不是未选中状态. 用户可以点击复选框或按下空格键来选中或取消选中一行.</p>
+<p id="Count"><strong>Count:</strong> 指定单词 Count 后面跟着 ListView 最后会包含的总行数. 这不是限制: 超过此数目后仍然可以添加行. 相反, 此选项给控件一个暗示, 允许它一次性的而不是每次添加一行时分配内存, 这样极大地提高了添加行时的性能 (这也可以提高排序性能). 要提升更多的性能,请在添加大量行之前使用 <code>GuiControl, -Redraw, MyListView</code>.随后,使用 <code>GuiControl, +Redraw, MyListView</code> 来重新启用重绘(这样也重绘了控件).</p>
+<p><strong>Grid:</strong> 提供水平的和垂直的线以形象地显示出行与行和列与列之间的边界.</p>
+<p><strong>Hdr:</strong> 指定 <code>-Hdr</code>(负 Hdr)来隐藏包含列标题的特殊顶行.后面要让它显示,请使用 <code>GuiControl, +Hdr, MyListView</code>.</p>
+<p id="LVS_EX"><strong>LV:</strong> 指定字符串 LV 后面紧跟着 <a href="../misc/Styles.htm#LVS_EX">扩展 ListView 样式</a> 的数字. 这些样式完全独立于通用扩展样式. 例如, 指定 <code><strong>-E</strong>0x200</code> 会移除通用扩展样式 WS_EX_CLIENTEDGE,这样将会移除控件的默认边框. 与之相比, 指定 <code><strong>-LV</strong>0x20</code> 会移除 <a href="#frs">LVS_EX_FULLROWSELECT</a> 选择整行效果.</p>
+<p><strong>LV0x10</strong>:指定 <code>-LV0x10</code> 阻止用户通过拖动列标题到左边或右边来对它们重新排序.然而, 通常没必要这么做, 因为列的实际重排不会影响脚本看到的列顺序. 例如, 从脚本的角度看第一列总是 column 1, 即使用户实际已经把它移动到其他列的右边.</p>
+<p id="frs"><strong>LV0x20</strong>:指定 <code>-LV0x20</code> 来要求点击一行的第一个字段才可以进行选择(正常情况下,点击<em>任意</em>字段都可以选择).这样的好处是用户可以更方便地拖动矩形包围一组行来选择它们.</p>
+<p><strong>Multi:</strong>指定 <code>-Multi</code>(负 Multi)来禁止用户一次选择多行.</p>
+<p><strong>NoSortHdr:</strong> 禁止点击标题. 此时会显示平坦的外观而不是正常的类似按钮的外观. 与其他大多数 ListView 样式不同, 此样式在 ListView 创建后无法改变.</p>
+<p id="NoSort"><strong>NoSort:</strong> 关闭当用户点击标题时发生的自动排序. 然而, 标题的外观看起来仍像按钮 (除非指定了 NoSortHdr). 此外, g 标签仍会接收到 <a href="#ColClick">ColClick 通知</a>, 可以用自定义排序或其他动作对它进行响应.</p>
+<p id="ReadOnly"><strong>ReadOnly:</strong>指定 <code>-ReadOnly</code>(负 ReadOnly)来允许编辑每行首列的文本.要编辑某行,请在选择后按下 <a href="#WantF2">F2 键</a>.或者, 您可以对一行点击一次来选择它, 至少等待半秒钟, 然后再次点击同一行进行编辑.</p>
+<p><strong>R</strong>: 行高 (创建时). 指定字母 R 后面紧跟着要在控件中留出空间的行数. 例如,<code>R10</code> 会设置控件为 10 行的高度.如果使用报告视图外的其他<a href="#View">视图模式</a>创建 ListView,则控件会调整大小以适应含图标的行而不是文本行.注:添加<a href="#IL">图标</a>到 ListView 的行中会增加每行的高度,这会让此选项不准确.</p>
+<p id="Sort"><strong>Sort:</strong> 让控件根据首列的内容保持按字母顺序排列.</p>
+<p id="SortDesc"><strong>SortDesc:</strong> 和上面一样, 不过这里是降序排列.</p>
+<p id="WantF2"><strong>WantF2</strong> <span class="ver">[v1.0.44+]:</span>指定 <code>-WantF2</code>(负 WantF2)来禁止使用 F2 键击<a href="#ReadOnly">编辑</a>当前焦点行.仅当 <code><a href="#ReadOnly">-ReadOnly</a></code> 也有效时此设置才不会被忽略.不论此设置如何,g 标签仍会接收到 F2 <a href="#NotifyK">通告</a>.</p>
+<p><strong>(未命名的数值样式):</strong> 由于上述以外的其他样式很少使用, 所以没有为它们命名. 请参阅 <a href="../misc/Styles.htm#ListView">ListView 样式表</a> 了解这些样式.</p>
+<h2 id="View">视图模式</h2>
+<p>ListView 有五种视图模式, 其中最常见的是报告视图 (这是默认的). 要使用其他某种视图, 请在选项列表中指定它的名称. 还可以在控件创建后改变视图模式；例如:<code>GuiControl, +IconSmall, MyListView</code>.</p>
+<p><strong>Icon:</strong> 显示大图标视图. 在此视图和除 <em>Report</em> 外的其他所有视图中, 只有首列中的文本才可见. 要在此模式中显示图标, ListView 必须分配有含大图标的 <a href="#IL">图像列表</a>.</p>
+<p><strong>Tile</strong>: 显示大图标视图, 但具有人体工学差异, 例如每项的文本显示在图标的右边而不是下面. <a href="#Checked">Checkbox</a> 不能使用于此视图中. 此外, 在比 Windows XP 早的操作系统中显示此视图没有效果.</p>
+<p><strong>IconSmall:</strong> 显示小图标视图.</p>
+<p><strong>List:</strong> 以列表格式显示小图标视图, 其中图标显示在列中. 列的数目取决于控件的宽度和控件中最宽文本项目的高度.</p>
+<p><strong>Report:</strong> 切换会报告视图, 这是最初的默认模式. 例如:<code>GuiControl, +Report, MyListView</code>.</p>
+<h2 id="BuiltIn">ListView 中的内置函数</h2>
+<p>所有的 ListView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <a href="Gui.htm#Default"><code>Gui, 2:Default</code></a> 进行改变).如果默认窗口不存在或不含有 ListView 控件, 则所有函数返回零来表明此问题.</p>
+<p id="GuiLV">如果窗口含有多个 ListView 控件, 默认情况下函数操作于最近添加的那个. 要改变这种情况,请指定 <code>Gui, ListView, ListViewName</code>,其中 <em>ListViewName</em> 为 ListView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN(在 v1.1.04+)或其 HWND.一旦改变后, 所有现有和将来的 <a href="../misc/Threads.htm">线程</a> 将使用指定的 ListView. <span class="ver">[v1.1.23+]:</span> <a href="../Variables.htm#DefaultListView">A_DefaultListView</a> 包含了当前的设置.</p>
+<p id="RowNumber">当在此页面使用短语 "row number", 它指的是 ListView 中行的当前位置. 最上面一行为 1, 第二行为 2, 依此类推. 添加一行后, 其行号会因为排序, 删除和插入其他行而发生变化. 因此, 要根据内容查找特定的一行或多行, 通常最好在循环中使用 <a href="#LV_GetText">LV_GetText()</a>.</p>
+<h2 id="bifRow">行函数</h2>
 <h3 id="LV_Add">LV_Add([Options, Field1, Field2, ...])</h3>
-<p>�������е��б��ײ�.���� <em>Field1</em> �������ֶ������е�������,�������ı�������(������ֵ��<a href="../Variables.htm#Expressions">����ʽ</a>���).Ҫ���κ��ֶ�Ϊ��, ��ָ�� "" ��ȼ���. ���������̫���ֶζ��޷�����������, �����պ���ʣ�µ���. ���̫���ֶ�, ����Ժ��������ֶ�.</p>
-<p>ʧ��ʱ, LV_Add() ���� 0. �ɹ�ʱ�������� <a href="#RowNumber">�к�</a>, ��� ListView ���� <a href="#Sort">Sort</a> �� <a href="#SortDesc">SortDesc</a> ��ʽ����в�һ�������һ��.</p>
-<h4 id="RowOptions">��ѡ��</h4>
-<p><em>Options</em> ������һ��������������±��е��ʵ��ַ���(�����ִ�Сд).�ڵ��ʼ�ʹ�ÿո�� tab �ָ�. Ҫ�Ƴ�ѡ��, ����ѡ��ǰ���ϸ���. Ҫ����ѡ��, ��ѡ��ǰ�����ſ���ʡ��.</p>
-<p><strong>Check</strong>: ��������ʾѡ�б�� (��Ҫ ListView ���� <a href="#Checked">��ѡ��</a>). �Ժ�Ҫȡ��ѡ����,��ʹ�� <code>LV_Modify(RowNumber, "-Check")</code>.</p>
-<p id="ColN"><strong>ColN</strong>: ָ������ Col ��������к�, �Ӵ��п�ʼ����Ӧ�ò��� <em>Col1</em> ��������������. ��ѡ��ͨ���� <a href="#LV_Modify">LV_Modify()</a> һ��ʹ�����޸����еĸ����ֶ�, ������Ӱ�������ֶ�.</p>
-<p id="Focus"><strong>Focus</strong>: ���ü��̽��㵽���� (ͨ���� Select һ��ʹ��). �Ժ�Ҫȡ�����Ľ���,��ʹ�� <code>LV_Modify(RowNumber, "-Focus")</code>.</p>
-<p><strong>Icon</strong>: ָ������ Icon �����������ͼ��ı��, ����ͼ����ʾ�����е����. �����ѡ�����, ��ʹ�� <a href="#IL">ͼ���б�</a> �е��׸�ͼ��. Ҫ��ʾ�հ�ͼ��, ��ָ��һ������ͼ���б���ͼ����Ŀ������. ����ؼ�û��Сͼ���ͼ���б�, �� <a href="#View">������ͼ</a> �мȲ���ʾͼ��Ҳ��Ϊ�䱣���ռ�.</p>
-<p><strong>Select</strong>: ѡ����. �Ժ�Ҫȡ��ѡ��,��ʹ�� <code>LV_Modify(RowNumber, "-Select")</code>.��ѡ����ʱ,ͨ�����ȷ��������һ���ܺ���<a href="#Focus">��������</a>,��Ϊ��������Appskey�ڽ����и�����ʾ��<a href="Gui.htm#GuiContextMenu">�����Ĳ˵�</a>(�����).���� <em>Select</em>����Խ����� 0 �� 1 ����ʾ��ʼ״̬.���仰˵,<code>"Select"</code> �� <code>"Select" <strong>.</strong> VarContainingOne</code> ��һ����(�˴��ľ����<a href="../Variables.htm#concat">���������</a>).���ּ���Ҳ����������� <em>Focus</em> �� <em>Check</em>.</p>
-<p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>:��Ҫʱͨ������ ListView ��ȷ��ָ������ȫ�ɼ�.�˲������� LV_Modify() ��Ч,����:<code>LV_Modify(RowNumber, "Vis")</code>.</p>
+<p>添加新行到列表底部.参数 <em>Field1</em> 和其后的字段是新行的列内容,可以是文本或数字(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果).要让任何字段为空, 请指定 "" 或等价物. 如果参数中太少字段而无法填满所有列, 则留空后面剩下的列. 如果太多字段, 则忽略后面多出的字段.</p>
+<p>失败时, LV_Add() 返回 0. 成功时它返回新 <a href="#RowNumber">行号</a>, 如果 ListView 含有 <a href="#Sort">Sort</a> 或 <a href="#SortDesc">SortDesc</a> 样式则此行不一定是最后一行.</p>
+<h4 id="RowOptions">行选项</h4>
+<p><em>Options</em> 参数是一个包含零个或多个下表中单词的字符串(不区分大小写).在单词间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
+<p><strong>Check</strong>: 在行中显示选中标记 (需要 ListView 含有 <a href="#Checked">复选框</a>). 以后要取消选中它,请使用 <code>LV_Modify(RowNumber, "-Check")</code>.</p>
+<p id="ColN"><strong>ColN</strong>: 指定单词 Col 后紧跟着列号, 从此列开始往后应用参数 <em>Col1</em> 和其后参数的内容. 此选项通常和 <a href="#LV_Modify">LV_Modify()</a> 一起使用来修改行中的个别字段, 而不会影响其他字段.</p>
+<p id="Focus"><strong>Focus</strong>: 设置键盘焦点到此行 (通常和 Select 一起使用). 以后要取消它的焦点,请使用 <code>LV_Modify(RowNumber, "-Focus")</code>.</p>
+<p><strong>Icon</strong>: 指定单词 Icon 后紧跟着这行图标的编号, 这行图标显示在首列的左侧. 如果此选项不存在, 则使用 <a href="#IL">图像列表</a> 中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则 <a href="#View">报告视图</a> 中既不显示图标也不为其保留空间.</p>
+<p><strong>Select</strong>: 选择行. 以后要取消选择,请使用 <code>LV_Modify(RowNumber, "-Select")</code>.当选择行时,通常最好确保至少有一行总含有<a href="#Focus">焦点属性</a>,因为这样允许Appskey在焦点行附近显示其<a href="Gui.htm#GuiContextMenu">上下文菜单</a>(如果有).单词 <em>Select</em>后可以紧跟着 0 或 1 来表示初始状态.换句话说,<code>"Select"</code> 和 <code>"Select" <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>).这种技术也适用于上面的 <em>Focus</em> 和 <em>Check</em>.</p>
+<p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>:必要时通过滚动 ListView 来确保指定行完全可见.此参数仅对 LV_Modify() 有效,例如:<code>LV_Modify(RowNumber, "Vis")</code>.</p>
 <h3 id="LV_Insert">LV_Insert(RowNumber [, Options, Col1, Col2, ...])</h3>
-<p>�� LV_Add() ��Ϊһ��,�������׸�����ָ�����²����е��к�.ͨ������ <em>RowNumber</em> �����·�������Ϊ�����ڳ��ռ�.��� <em>RowNumber</em> �����б����е���Ŀ(�������Ըߴ� 2147483647),�����б����ӵ��б��ĵײ�.Ҫ�˽�<em>ѡ��</em>,�����<a href="#RowOptions">��ѡ��</a>.</p>
+<p>与 LV_Add() 行为一样,除了其首个参数指定了新插入行的行号.通过下移 <em>RowNumber</em> 及其下方的行来为新行腾出空间.如果 <em>RowNumber</em> 大于列表中行的数目(甚至可以高达 2147483647),则新行被添加到列表的底部.要了解<em>选项</em>,请参阅<a href="#RowOptions">行选项</a>.</p>
 <h3 id="LV_Modify">LV_Modify(RowNumber, Options [, NewCol1, NewCol2, ...])</h3>
-<p>�޸��е����Ժ�/���ı�, �ɹ�ʱ���� 1 ��ʧ��ʱ���� 0. ��� <em>RowNumber</em> Ϊ 0, ���޸Ŀؼ��� <u>����</u> ��(��ʱ���������ȫ�ɹ�ʱ���� 1 ������ʧ��ʱ���� 0). ���ֻ����ǰ��������, ����޸��е����Զ����ı����ı�. ͬ��, �������̫�ٵ����޷�����������, �����ʣ�µ��б��ֲ���. <a href="#ColN">Options ��Ϊ ColN</a> �ɸ���ָ�����ж���Ӱ��������. �������� Options �Ŀ�ѡ����,����� <a href="#RowOptions">��ѡ��</a> .</p>
+<p>修改行的属性和/或文本, 成功时返回 1 而失败时返回 0. 如果 <em>RowNumber</em> 为 0, 则修改控件中 <u>所有</u> 行(此时如果操作完全成功时返回 1 而部分失败时返回 0). 如果只存在前两个参数, 则仅修改行的属性而不改变其文本. 同样, 如果参数太少导致无法覆盖所有列, 则后面剩下的列保持不变. <a href="#ColN">Options 设为 ColN</a> 可更新指定的列而不影响其他列. 关于其他 Options 的可选内容,请参阅 <a href="#RowOptions">行选项</a> .</p>
 <h3 id="LV_Delete">LV_Delete([RowNumber])</h3>
-<p>���ʡ�Դ˲���,��ɾ�� ListView ��<strong>����</strong>��.����,��ɾ��ָ�� <em>RowNumber</em> ���ڵ���.�ɹ�ʱ���� 1 ��ʧ��ʱ���� 0.</p>
-<h2 id="bifCol">�к���</h2>
+<p>如果省略此参数,则删除 ListView 中<strong>所有</strong>行.否则,仅删除指定 <em>RowNumber</em> 所在的行.成功时返回 1 而失败时返回 0.</p>
+<h2 id="bifCol">列函数</h2>
 <h3 id="LV_ModifyCol">LV_ModifyCol([ColumnNumber, Options, ColumnTitle])</h3>
-<p>�޸�ָ���е����Ժ�/���ı��Լ�����.���б��Ϊ 1 (���� 0). ���ʡ�����в���, ����������еĿ�������Ӧ�е�����. ����������׸�����, �������ָ���еĴ�С. ֻ���ڱ��� (��ϸ��Ϣ) ��ͼ���Զ�������С����Ч��. �˺����ɹ�ʱ���� 1 ��ʧ��ʱ���� 0.</p>
-<h4 id="ColOptions">��ѡ��</h4>
-<p><em>Options</em> ������һ��������������±��е��ʵ��ַ���(�����ִ�Сд).�ڵ��ʼ�ʹ�ÿո�� tab �ָ�. Ҫ�Ƴ�ѡ��, ����ѡ��ǰ���ϸ���. Ҫ����ѡ��, ��ѡ��ǰ�����ſ���ʡ��.</p>
-<h4>��ѡ��: ����</h4>
-<p><strong>N</strong>: ָ�� N Ϊ�е��¿���, ��λΪ����. �������Ψһ��ѡ��, ������ֿ��Բ�������. ����,����������ʽ������Ч��:<code>LV_ModifyCol(1, 50)</code> �� <code>LV_ModifyCol(1, "50 Integer")</code>.</p>
-<p><strong>Auto</strong>: �����п�����Ӧ������. ֻ���ڱ��� (��ϸ��Ϣ) ��ͼ�д�ѡ�����Ч��.</p>
-<p><strong>AutoHdr</strong>: �����п�����Ӧ�����ݺ��б�����ı�, �����нϿ���Ϊ׼. ��Ӧ�������һ��ʱ, ����������Ϊ���ٺ� ListView ��ʣ��ռ�Ŀ���һ��. ͨ����ý������Ѿ����Ӻ��Ӧ�ô�����, ��Ϊ�����������������һ�еĴ�Сʱ���ǵ����������ӵĴ�ֱ������. ֻ���ڱ��� (��ϸ��Ϣ) ��ͼ�д�ѡ�����Ч��.</p>
-<p><strong>Icon</strong>: ָ������ Icon ������� <a href="#IL">ͼ���б�</a> ��Ҫ��ʾ���б����ı����ͼ��ı��. ָ�� <code>-Icon</code>(�� icon)���Ƴ��κ����е�ͼ��.</p>
-<p><strong>IconRight</strong>: ��ͼ������е��ұ߶��������.</p>
-<h4>��ѡ��: ��������</h4>
-<p><strong>Float</strong>: Ϊ�˽�������, ָ�����а��������� (��֧��ʮ�����Ƹ�ʽ). ���������ı��е��������������ܱ������е��� 25 ��.</p>
-<p id="Integer"><strong>Integer</strong>: Ϊ�˽�������, ָ�����а�������. Ҫ��ȷ����, ÿ������������ 32 λ��; ���ڷ�Χ -2147483648 �� 2147483647 ��. �κη�������ֵ������ʱ������Ϊ�� (���������Щֵ��һ�����ֿ�ͷ, ��ʹ���������). ���ָ�ʽ����Ϊʮ���ƻ�ʮ������(���� <code>0xF9E0</code>).</p>
-<p id="Text"><strong>Text</strong>: �����з��ص��ı�ģʽ��������, ����ÿ�г�ʼĬ�ϵ�����ʽ. ������ʱֻ���ı���ʼ�� 8190 ���ַ���������� (������ʹ���� <a href="#Logical"><em>Logical</em> ѡ��</a>, ��ʱ����Ϊ 4094).</p>
-<h4>��ѡ��: ���� / �־����</h4>
-<p><strong>Center</strong>: ���ı�����������. Ҫ�� Integer �� Float �о���, ��ѵ��� Center �ӵ� Integer �� Float ��.</p>
-<p><strong>Left</strong>: �����ı������, ����ÿ�г�ʼĬ�ϵĶ��뷽ʽ. �ڽϾɵĲ���ϵͳ��, ���п��ܻ�ǿ�ƽ��������.</p>
-<p><strong>Right</strong>: �����ı��Ҷ���. ���� Integer �� Float ���в���Ҫָ��������, ��Ϊ����Ĭ�����Ҷ����. ͨ��ָ������ <code>"Integer Left"</code> �� <code>"Float Center"</code> ���ַ������Ը��Ǵ�Ĭ�ϵĶ��뷽ʽ.</p>
-<h4>��ѡ��: ����</h4>
-<p id="Case"><strong>Case</strong>: �����������ִ�Сд (��Ӱ�� <a href="#Text">�ı�</a> ��). ��� <em>Case</em>, <em>CaseLocale</em> �Լ� <em>Logical</em> ѡ�ʡ��, ���������д�д��ĸ A-Z ����Ϊ��ͬ��������Ӧ��Сд��ʽ.</p>
-<p><strong>CaseLocale</strong> <span class="ver">[v1.0.43.03+]:</span> ����������ڵ�ǰ�û������������Ҳ����ִ�Сд (��Ӱ�� <a href="#Text">�ı�</a> ��). ����, �����Ӣ�����ŷ��������ĸ A-Z �� ANSI ��ĸ���� ? �� �� ��ͬ�����ǵ�Сд��ʽ. ���ַ���Ҳʹ�� "��������", ���ѵ����е����ַ���Ʋ������ "coop" �� "co-op" ������һ��.</p>
-<p id="Desc"><strong>Desc</strong>: ��������. �û��״ζԴ�������ʱʹ���½���˳��.</p>
-<p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]:</span> �� <em>CaseLocale</em> ��ͬ, ���˰��ı��е��κ�����λ���п������������ֶ��������ַ�. ����,�ַ���"T33"������Ϊ���� "T4".<em>Logical</em> ��Ҫ Windows XP ����߰汾 (�ڽϾɵĲ���ϵͳ��, ���Զ�ʹ�� <em>CaseLocale</em> ����). ����, <em>Logical</em> �� <em>Case</em> �ǻ����: ֻ�����ָ�����Ǹ�����Ч.</p>
-<p><strong>NoSort</strong>: �����û�������ж��Զ����������Ӱ��. Ҫ���������е���������������е��Ӽ�, ���� ListView ��ѡ���а��� <a href="#NoSort">NoSort</a>. ��� ListView ���� g ��ǩ, ���û���� no-sort ����ʱ�Ի���յ� <a href="#ColClick">ColClick ֪ͨ</a>.</p>
-<p><strong>Sort</strong>: �������а��������� (��ʹ������ <a href="#Desc">Desc</a> ѡ��).</p>
-<p><strong>SortDesc</strong>: �������а���������.</p>
-<p><strong>Uni</strong>: ��������. ��ѡ���ֹ����ͬ�н��еڶ��ε������ת������.</p>
+<p>修改指定列的属性和/或文本以及标题.首列编号为 1 (不是 0). 如果省略所有参数, 则调整所有列的宽度以适应行的内容. 如果仅存在首个参数, 则仅调整指定列的大小. 只有在报告 (详细信息) 视图中自动调整大小才有效果. 此函数成功时返回 1 而失败时返回 0.</p>
+<h4 id="ColOptions">列选项</h4>
+<p><em>Options</em> 参数是一个包含零个或多个下表中单词的字符串(不区分大小写).在单词间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
+<h4>列选项: 常规</h4>
+<p><strong>N</strong>: 指定 N 为列的新宽度, 单位为像素. 如果这是唯一的选项, 则此数字可以不加引号. 例如,后面两种形式都是有效的:<code>LV_ModifyCol(1, 50)</code> 和 <code>LV_ModifyCol(1, "50 Integer")</code>.</p>
+<p><strong>Auto</strong>: 调整列宽来适应其内容. 只有在报告 (详细信息) 视图中此选项才有效果.</p>
+<p><strong>AutoHdr</strong>: 调整列宽来适应其内容和列标题的文本, 以其中较宽的为准. 当应用于最后一列时, 它将被设置为至少和 ListView 中剩余空间的宽度一样. 通常最好仅在行已经添加后才应用此设置, 因为这样允许当调整最后一列的大小时考虑到可能新增加的垂直滚动栏. 只有在报告 (详细信息) 视图中此选项才有效果.</p>
+<p><strong>Icon</strong>: 指定单词 Icon 后紧跟着 <a href="#IL">图像列表</a> 中要显示在列标题文本后的图标的编号. 指定 <code>-Icon</code>(负 icon)来移除任何现有的图标.</p>
+<p><strong>IconRight</strong>: 把图标放在列的右边而不是左边.</p>
+<h4>列选项: 数据类型</h4>
+<p><strong>Float</strong>: 为了进行排序, 指明此列包含浮点数 (不支持十六进制格式). 浮点数和文本列的排序性能最多可能比整数列的慢 25 倍.</p>
+<p id="Integer"><strong>Integer</strong>: 为了进行排序, 指明此列包含整数. 要正确排序, 每个整数必须是 32 位的; 即在范围 -2147483648 到 2147483647 内. 任何非整数的值在排序时将被视为零 (不过如果这些值以一个数字开头, 则使用这个数字). 数字格式可以为十进制或十六进制(例如 <code>0xF9E0</code>).</p>
+<p id="Text"><strong>Text</strong>: 更改列返回到文本模式进行排序, 这是每列初始默认的排序方式. 在排序时只有文本开始的 8190 个字符是有意义的 (如果如果使用了 <a href="#Logical"><em>Logical</em> 选项</a>, 此时限制为 4094).</p>
+<h4>列选项: 对齐 / 字距调整</h4>
+<p><strong>Center</strong>: 让文本居于列中央. 要让 Integer 或 Float 列居中, 请把单词 Center 加到 Integer 或 Float 后.</p>
+<p><strong>Left</strong>: 让列文本左对齐, 这是每列初始默认的对齐方式. 在较旧的操作系统中, 首列可能会强制进行左对齐.</p>
+<p><strong>Right</strong>: 让列文本右对齐. 对于 Integer 和 Float 数列不需要指定此属性, 因为它们默认是右对齐的. 通过指定例如 <code>"Integer Left"</code> 或 <code>"Float Center"</code> 的字符串可以覆盖此默认的对齐方式.</p>
+<h4>列选项: 排序</h4>
+<p id="Case"><strong>Case</strong>: 让列排序区分大小写 (仅影响 <a href="#Text">文本</a> 列). 如果 <em>Case</em>, <em>CaseLocale</em> 以及 <em>Logical</em> 选项都省略, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
+<p><strong>CaseLocale</strong> <span class="ver">[v1.0.43.03+]:</span> 让列排序基于当前用户的区域设置且不区分大小写 (仅影响 <a href="#Text">文本</a> 列). 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 ? 和 ü 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起.</p>
+<p id="Desc"><strong>Desc</strong>: 降序排列. 用户首次对此列排序时使用下降的顺序.</p>
+<p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]:</span> 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如,字符串"T33"将被视为大于 "T4".<em>Logical</em> 需要 Windows XP 或更高版本 (在较旧的操作系统中, 会自动使用 <em>CaseLocale</em> 代替). 此外, <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
+<p><strong>NoSort</strong>: 避免用户点击此列对自动排序产生的影响. 要禁用所有列的排序而不仅是其中的子集, 请在 ListView 的选项中包含 <a href="#NoSort">NoSort</a>. 如果 ListView 含有 g 标签, 则当用户点击 no-sort 的列时仍会接收到 <a href="#ColClick">ColClick 通知</a>.</p>
+<p><strong>Sort</strong>: 立即对列按升序排列 (即使它含有 <a href="#Desc">Desc</a> 选项).</p>
+<p><strong>SortDesc</strong>: 立即对列按降序排列.</p>
+<p><strong>Uni</strong>: 单向排序. 此选项防止在相同列进行第二次点击来反转排序方向.</p>
 <h3 id="LV_InsertCol">LV_InsertCol(ColumnNumber [, Options, ColumnTitle])</h3>
-<p>��������,���뵽ָ���� <em>ColumnNumber</em>(�ƶ��������е��ұ����ڳ��ռ�).���б��Ϊ 1 (���� 0). ��� <em>ColumnNumber</em> ���ڵ�ǰ�ؼ����е���Ŀ,�����б����ӵ��б���ĩβ(���ұ�).�²�����г�ʼ����Ϊ��, Ȼ����������������̳�ԭ�����е�����, ͬʱԭ�����е����ݱ�Ϊ�յ�. ���е�����(�����Ƿ�ʹ��<a href="#Integer">��������</a>)��ʼʱ��Ϊ���ǵ�Ĭ��ֵ,��������ʹ��<em><a href="#ColOptions">ѡ��</a></em>�ı�.�˺����������е�λ�ñ�� (ʧ��ʱΪ 0). ListView �е��������Ϊ 200.</p>
+<p>创建新列,插入到指定的 <em>ColumnNumber</em>(移动其他的列到右边来腾出空间).首列编号为 1 (不是 0). 如果 <em>ColumnNumber</em> 大于当前控件中列的数目,则新列被添加到列表的末尾(最右边).新插入的列初始内容为空, 然而如果它是首列则会继承原来首列的内容, 同时原来首列的内容变为空的. 新列的属性(例如是否使用<a href="#Integer">整数排序</a>)开始时总为它们的默认值,不过可以使用<em><a href="#ColOptions">选项</a></em>改变.此函数返回新列的位置编号 (失败时为 0). ListView 中的最大列数为 200.</p>
 <h3 id="LV_DeleteCol">LV_DeleteCol(ColumnNumber)</h3>
-<p>ɾ��ָ�����м�������������.�ɹ�ʱ���� 1 ��ʧ��ʱ���� 0. ��һ���б�ɾ����, �ڴ����ұߵ��κ��еı�ż�С 1. ���,���� <code>LV_DeleteCol(2)</code> ���ν�ɾ���ڶ��к͵�����.�ڱ� Windows XP �ɵĲ���ϵͳ��, ��ͼɾ��ԭʼ�����п��ܻ�ʧ�ܲ����� 0.</p>
-<h2 id="bifGet">�� ListView �л�ȡ����</h2>
+<p>删除指定的列及其中所有内容.成功时返回 1 而失败时返回 0. 当一个列被删除后, 在此列右边的任何列的编号减小 1. 因此,调用 <code>LV_DeleteCol(2)</code> 两次将删除第二列和第三列.在比 Windows XP 旧的操作系统中, 试图删除原始的首列可能会失败并返回 0.</p>
+<h2 id="bifGet">从 ListView 中获取数据</h2>
 <h3 id="LV_GetCount">LV_GetCount(["Selected | Column"])</h3>
-<p>ʡ�Բ���ʱ,�������ؿؼ��е�������.������Ϊ "S" �� "Selected" ʱ, ����������ѡ���/��������. ������Ϊ "Col" �� "Column", �������ؿؼ��е�����. �˺������Ǽ�ʱ��, ��Ϊ�ؼ��������Щ����.</p>
-<p>�˺���������һ��ѭ���Ķ���, ��ʱ��������һ�κ��� (���״�ѭ��ǰ). ����:</p>
+<p>省略参数时,函数返回控件中的总行数.当参数为 "S" 或 "Selected" 时, 计数仅包括选择的/高亮的行. 当参数为 "Col" 或 "Column", 函数返回控件中的列数. 此函数总是即时的, 因为控件会跟踪这些计数.</p>
+<p>此函数常用在一个循环的顶行, 此时将仅调用一次函数 (在首次循环前). 例如:</p>
 <pre>Loop % LV_GetCount()
 {
     LV_GetText(RetrievedText, A_Index)
     if InStr(RetrievedText, "some filter text")
-        LV_Modify(A_Index, "Select")  <em>; ѡ���׸��ֶΰ��������ı���������.</em>
+        LV_Modify(A_Index, "Select")  <em>; 选择首个字段包含过滤文本的所有行.</em>
 }</pre>
-<p>Ҫ��ȡ ListView ���п� (�������籣�����ǵ� INI �ļ��Ա��ڻỰ�ڼ䱣��һ��), ����մ���:</p>
+<p>要获取 ListView 的列宽 (用于例如保存它们到 INI 文件以便在会话期间保持一致), 请参照此例:</p>
 <pre>Gui +LastFound
 Loop % LV_GetCount("Column")
 {
-    SendMessage, 4125, A_Index - 1, 0, SysListView321  <em>; 4125 Ϊ LVM_GETCOLUMNWIDTH.</em>
+    SendMessage, 4125, A_Index - 1, 0, SysListView321  <em>; 4125 为 LVM_GETCOLUMNWIDTH.</em>
     MsgBox Column %A_Index%'s width is %ErrorLevel%.
 }</pre>
 <h3 id="LV_GetNext">LV_GetNext([StartingRowNumber, "Checked | Focused"])</h3>
-<p>������һ��ѡ���,ѡ�еĻ򽹵��е��к�.���û���ҵ�, �򷵻���. ��� <em>StartingRowNumber</em> ʡ�Ի�С�� 1,����б��Ķ�����ʼ����.����,�� <em>StartingRowNumber</em> �к�ʼ����.���ʡ�Եڶ�������, ����������һ��ѡ���/��������. ����, ָ�� "C" �� "Checked" ��Ѱ����һ��ѡ�е���; ��ָ�� "F" �� "Focused" ��Ѱ�ҽ����� (�������б��в������ж��������, ����ʱ����û��). ��������ӱ��� ListView ������ѡ�����:</p>
-<pre>RowNumber = 0  <em>; ����ʹ���״�ѭ�����б��Ķ�����ʼ����.</em>
+<p>返回下一个选择的,选中的或焦点行的行号.如果没有找到, 则返回零. 如果 <em>StartingRowNumber</em> 省略或小于 1,则从列表的顶部开始搜索.否则,从 <em>StartingRowNumber</em> 行后开始搜索.如果省略第二个参数, 则函数搜索下一个选择的/高亮的行. 否则, 指定 "C" 或 "Checked" 来寻找下一个选中的行; 或指定 "F" 或 "Focused" 来寻找焦点行 (在整个列表中不可能有多个焦点行, 且有时甚至没有). 下面的例子报告 ListView 中所有选择的行:</p>
+<pre>RowNumber = 0  <em>; 这样使得首次循环从列表的顶部开始搜索.</em>
 Loop
 {
-    RowNumber := LV_GetNext(RowNumber)  <em>; ��ǰһ���ҵ���λ�ú��������.</em>
-    if not RowNumber  <em>; ���淵����, ����ѡ������Ѿ����ҵ���.</em>
+    RowNumber := LV_GetNext(RowNumber)  <em>; 在前一次找到的位置后继续搜索.</em>
+    if not RowNumber  <em>; 上面返回零, 所以选择的行已经都找到了.</em>
         break
     LV_GetText(Text, RowNumber)
     MsgBox The next selected row is #%RowNumber%, whose first field is "%Text%".
 }</pre>
-<p>�ж�һ���ض������Ƿ�ѡ�е���һ�ַ�������:</p>
+<p>判断一个特定的行是否被选中的另一种方法如下:</p>
 <pre>Gui +LastFound
-SendMessage, 4140, <i>RowNumber</i> - 1, 0xF000, SysListView321  <em>; 4140 Ϊ LVM_GETITEMSTATE.  0xF000 Ϊ LVIS_STATEIMAGEMASK.</em>
-IsChecked := (ErrorLevel &gt;&gt; 12) - 1  <em>; ��� <i>RowNumber</i> Ϊѡ�е������� IsChecked Ϊ��, ����Ϊ��.</em></pre>
+SendMessage, 4140, <i>RowNumber</i> - 1, 0xF000, SysListView321  <em>; 4140 为 LVM_GETITEMSTATE.  0xF000 为 LVIS_STATEIMAGEMASK.</em>
+IsChecked := (ErrorLevel &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选中的则设置 IsChecked 为真, 否则为假.</em></pre>
 <h3 id="LV_GetText">LV_GetText(OutputVar, RowNumber [, ColumnNumber])</h3>
-<p>��ȡ��ָ���� <em>RowNumber</em> �� <em>ColumnNumber</em> λ���ϵ��ı������浽 <em>OutputVar</em>.���ʡ�� <em>ColumnNumber</em>,����Ĭ��Ϊ 1(���е��ı�).��� <em>RowNumber</em> Ϊ 0,���ȡ�б�����ı�.����ı����ȳ��� 8191, �����ȡǰ 8191 ���ַ�. �˺����ɹ�ʱ���� 1 ��ʧ��ʱ���� 0. ʧ��ʱ,<em>OutputVar</em> Ҳ���ÿ�.</p>
-<p>�û������Ѿ���ɵ��ϷŲ��������޸Ľű��������б��. ����, ������еı������ 1, ��ʹ�û��Ѿ������ϵ������е��ұ�.</p>
-<h2 id="notify">G ��ǩ֪ͨ (��Ҫ)</h2>
-<p><a href="Gui.htm#label">g ��ǩ</a>���� <code><strong>g</strong>MySubroutine</code> ����ʹ���ڴ˿ؼ���ѡ����.��ʹ�õ��û��ڿؼ���ִ�ж���ʱ <em>MySubroutine</em> ��ǩ���Զ�����. ���ӳ����п��������ñ��� <a href="../Variables.htm#Gui">A_Gui</a> �� <a href="../Variables.htm#GuiControl">A_GuiControl</a> ���ҳ������¼������ĸ����ں� ListView. ����Ҫ����, �����Բο� <strong>A_GuiEvent</strong>, ����������ַ�������ĸ������һ�� (���ǵ���δ���汾�ļ�����, �ű���Ӧ�ٶ���Щ�ַ�������ĸ��Ψһ���ܵ�ֵ):</p>
-<p><strong>DoubleClick</strong>:�û��ڿؼ���˫����.���� A_EventInfo ���������к�. <a href="#LV_GetNext">LV_GetNext()</a> ��������ȡ�׸�<em>ѡ�е�</em>�к�,���û��ڿ�λ��˫��ʱΪ 0.</p>
-<p><strong>R</strong>: �û��ڿؼ��� <em>˫�����Ҽ�</em>. ���� A_EventInfo ���������к�.</p>
-<p id="ColClick"><strong>ColClick</strong>: �û�������б���. ���� A_EventInfo �����б��, �������д���ʱ�����ԭʼ���; �������ᷴӳ�κ��û�������ɵ��ϷŲ���. ���е����һ�ֿ��ܵ���Ӧ��ͨ��һ�����������Ѻø�ʽ (���� YYYYMMDD ����������) ���ݵ������� (�����) ��������. �����������п����Ը��Ѻõĸ�ʽ (���� MM/DD/YY) ��ʾ������ĳ����ͬ������. ����,�ű�����ͨ�� <code><a href="#LV_ModifyCol">LV_ModifyCol(3, 0)</a></code> ���� column 3,����ͨ�� <code>LV_ModifyCol(2, "NoSort")</code> �رտɼ��� column 2 ���Զ�����.Ȼ��Ϊ����Ӧ column 2 �� ColClick ͨ��,�ű�ͨ�� <code>LV_ModifyCol(3, "Sort")</code> ʹ�����ص��ж� ListView ��������.</p>
-<p id="Drag"><strong>D</strong>: �û����Կ�ʼ�϶��л�ͼ�� (Ŀ�껹û�����ö��϶��л�ͼ���֧��). ���� A_EventInfo ���������к�. �� v1.0.44+, ��ʹ���� <a href="#AltSubmit">AltSubmit</a> ��֪ͨҲ�����.</p>
-<p><strong>d</strong> (Сд�� D): ��������ͬ, ����ָ�Ҽ��϶����������.</p>
-<p><strong>e</strong>(Сд�� E):�û���ɱ༭һ�е��׸��ֶ�(ֻ�е� ListView ѡ���к��� <code><a href="#ReadOnly"><strong>-</strong>ReadOnly</a></code> ʱ�û��ſ��Խ��б༭).���� A_EventInfo ����Ŀ���к�.</p>
-<h2>G ��ǩ֪ͨ (��Ҫ)</h2>
-<p>��� ListView �� <a href="#Options">ѡ��</a> �к��е��� AltSubmit, ���� g ��ǩ�����еĸ�Ƶ������ <strong>A_GuiEvent</strong> �����ܰ�������ֵ:</p>
-<p><strong>Normal</strong>: �û����������һ��. ���� A_EventInfo ���������к�.</p>
-<p><strong>RightClick</strong>: �û��Ҽ�������һ��. ���� A_EventInfo ���������к�. �ڴ���������, ��ò�Ҫͨ����ʾ�˵�����Ӧ��ͨ��. ��Ӧʹ�� <a href="Gui.htm#GuiContextMenu">GuiContextMenu ��ǩ</a>, ��Ϊ������ʶ�� Appskey. ����:</p>
-<pre>GuiContextMenu:  <em>; ���д˱�ǩ����Ӧ�Ҽ�������� Appskey.</em>
-if A_GuiControl &lt;&gt; MyListView  <em>; �������ǿ�ѡ��. ����ֻΪ ListView �еĵ����ʾ�˵�.</em>
+<p>获取在指定的 <em>RowNumber</em> 和 <em>ColumnNumber</em> 位置上的文本并保存到 <em>OutputVar</em>.如果省略 <em>ColumnNumber</em>,则它默认为 1(首列的文本).如果 <em>RowNumber</em> 为 0,则获取列标题的文本.如果文本长度超过 8191, 则仅获取前 8191 个字符. 此函数成功时返回 1 而失败时返回 0. 失败时,<em>OutputVar</em> 也被置空.</p>
+<p>用户可能已经完成的拖放操作不会修改脚本看到的列编号. 例如, 最初首列的编号仍是 1, 即使用户已经把它拖到其他列的右边.</p>
+<h2 id="notify">G 标签通知 (主要)</h2>
+<p><a href="Gui.htm#label">g 标签</a>例如 <code><strong>g</strong>MySubroutine</code> 可以使用在此控件的选项中.这使得当用户在控件中执行动作时 <em>MySubroutine</em> 标签会自动运行. 此子程序中可引用内置变量 <a href="../Variables.htm#Gui">A_Gui</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a> 来找出产生事件的是哪个窗口和 ListView. 更重要的是, 它可以参考 <strong>A_GuiEvent</strong>, 其包含下列字符串或字母的其中一个 (考虑到和未来版本的兼容性, 脚本不应假定这些字符串或字母是唯一可能的值):</p>
+<p><strong>DoubleClick</strong>:用户在控件内双击了.变量 A_EventInfo 包含焦点行号. <a href="#LV_GetNext">LV_GetNext()</a> 可用来获取首个<em>选中的</em>行号,当用户在空位置双击时为 0.</p>
+<p><strong>R</strong>: 用户在控件内 <em>双击了右键</em>. 变量 A_EventInfo 包含焦点行号.</p>
+<p id="ColClick"><strong>ColClick</strong>: 用户点击了列标题. 变量 A_EventInfo 包含列编号, 这是在列创建时分配的原始编号; 即它不会反映任何用户对列完成的拖放操作. 对列点击的一种可能的响应是通过一个包含排序友好格式 (例如 YYYYMMDD 的整数日期) 数据的隐藏列 (零宽度) 进行排序. 这样的隐藏列可以以更友好的格式 (例如 MM/DD/YY) 显示与其他某列相同的数据. 例如,脚本可以通过 <code><a href="#LV_ModifyCol">LV_ModifyCol(3, 0)</a></code> 隐藏 column 3,接着通过 <code>LV_ModifyCol(2, "NoSort")</code> 关闭可见的 column 2 的自动排序.然后为了响应 column 2 的 ColClick 通告,脚本通过 <code>LV_ModifyCol(3, "Sort")</code> 使用隐藏的列对 ListView 进行排序.</p>
+<p id="Drag"><strong>D</strong>: 用户尝试开始拖动行或图标 (目标还没有内置对拖动行或图标的支持). 变量 A_EventInfo 包含焦点行号. 在 v1.0.44+, 即使不含 <a href="#AltSubmit">AltSubmit</a> 此通知也会产生.</p>
+<p><strong>d</strong> (小写的 D): 和上面相同, 除了指右键拖动而不是左键.</p>
+<p><strong>e</strong>(小写的 E):用户完成编辑一行的首个字段(只有当 ListView 选项中含有 <code><a href="#ReadOnly"><strong>-</strong>ReadOnly</a></code> 时用户才可以进行编辑).变量 A_EventInfo 包含目标行号.</p>
+<h2>G 标签通知 (次要)</h2>
+<p>如果 ListView 的 <a href="#Options">选项</a> 中含有单词 AltSubmit, 则其 g 标签会运行的更频繁并且 <strong>A_GuiEvent</strong> 还可能包含下列值:</p>
+<p><strong>Normal</strong>: 用户左键单击了一行. 变量 A_EventInfo 包含焦点行号.</p>
+<p><strong>RightClick</strong>: 用户右键单击了一行. 变量 A_EventInfo 包含焦点行号. 在大多数情况下, 最好不要通过显示菜单来响应此通过. 而应使用 <a href="Gui.htm#GuiContextMenu">GuiContextMenu 标签</a>, 因为它还能识别 Appskey. 例如:</p>
+<pre>GuiContextMenu:  <em>; 运行此标签来响应右键点击或按下 Appskey.</em>
+if A_GuiControl &lt;&gt; MyListView  <em>; 这个检查是可选的. 让它只为 ListView 中的点击显示菜单.</em>
     return
-<em>; ���ṩ�����괦��ʾ�˵�, A_GuiX �� A_GuiY.  Ӧ��ʹ����Щ
-; ��Ϊ��ʹ�û����� Appskey ����Ҳ���ṩ��ȷ������:</em>
+<em>; 在提供的坐标处显示菜单, A_GuiX 和 A_GuiY.  应该使用这些
+; 因为即使用户按下 Appskey 它们也会提供正确的坐标:</em>
 Menu, MyContextMenu, Show, %A_GuiX%, %A_GuiY%
 return</pre>
-<p><strong>A</strong>: ������һ��, �������Ĭ�Ϸ�����˫�����е�ʱ��. ���� A_EventInfo ����Ŀ���к�.</p>
-<p><strong>C</strong>: ListView �ͷ�����겶��.</p>
-<p><strong>E</strong>:�û���ʼ�༭һ�е��׸��ֶ�(ֻ���� ListView ѡ���к��� <code><a href="#ReadOnly">-ReadOnly</a></code> ʱ�û��ſ��Խ��б༭).���� A_EventInfo ����Ŀ���к�.</p>
-<p><strong>F</strong>: ListView ���յ����̽���.</p>
-<p><strong>f</strong> (Сд�� F): ListView ʧȥ�˼��̽���.</p>
-<p id="ItemChanged"><strong>I</strong>: ��Ŀ�����˱仯. ͨ�����ѡ���/δѡ���, ѡ�е�/δѡ�еĵ���һ�иı���. ����û�ѡ����һ������, �����ٻ���յ�����������֪ͨ: һ������ȡ��֮ǰ����ʱ, ����һ������ѡ������ʱ. �� v1.0.44+, ���� A_EventInfo ����Ŀ���к�. �� v1.0.46.10+, ErrorLevel �����������������ĸ����ʾ��Ŀ�����ı仯: S (ѡ��) �� s (ȡ��ѡ��), ��/�� F (��Ϊ����) �� f (ʧȥ����), ��/�� C (ѡ��) �� c (ȡ��ѡ��). ����, SF ��ʾ���б�ѡ���ҳ�Ϊ�˽���. Ҫ����Ƿ����һ���ض�����ĸ,��ʹ��<a href="LoopParse.htm">����ѭ��</a>������ִ�Сдѡ��� <a href="InStr.htm">InStr()</a>; ����:<code>InStr(ErrorLevel, "S", true)</code>.ע: ���ǵ���δ���汾�ļ�����, �ű���Ӧ�ٶ� "SsFfCc" ���������п��ܵ���ĸ����ĸ���. ����, ָ�� <a href="Critical.htm">Critical</a> ��Ϊ <a href="Gui.htm#label">g ��ǩ</a> �ӳ����������ȷ�����յ����е� "I" ֪ͨ (����, ����ű��޷�����, ����������һЩ���ܻᶪʧ).</p>
-<p id="NotifyK"><strong>K</strong>: �� ListView ӵ�н���ʱ�û�������һ����. A_EventInfo �����˼������ⰴ������, ���ǽ��� 1 �� 255 ֮�������. Ȼ�����ͨ�� <a href="GetKey.htm">GetKeyName</a> ת��Ϊ�������ƻ��ַ�. ����, <code>key := GetKeyName(<a href="Format.htm">Format</a>("vk{:x}", A_EventInfo))</code>. �ڴ�������̲�����, A-Z ��������ͨ�� <code><a href="Chr.htm">Chr(A_EventInfo)</a></code> ת��Ϊ��Ӧ���ַ�. F2 �İ����������Ǳ������Ҳ��ᱻ <a href="#WantF2">WantF2</a> Ӱ��. ����, �س������ᱻ����; ���ǰ�������ķ�������ΪĬ�ϰ�ť.</p>
-<p><strong>M</strong>: ѡȡ��. �û���ʼ��һ���л�ͼ����Χ�϶�һ������ѡ��.</p>
-<p><strong>S</strong>: �û���ʼ���� ListView.</p>
-<p><strong>s</strong> (Сд�� S): �û���ɹ��� ListView.</p>
-<h2 id="IL">ͼ���б�<span class="ver">(��������ͼ�� ListView �ķ���)</span></h2>
-<p>ͼ���б��Ǳ������ڴ��е�һ���С��ͬ��ͼ��. ����ʱÿ��ͼ���б��ǿյ�. �ű��ظ����� IL_Add() ������ͼ�굽�б���, �Ҹ�ÿ��ͼ�����һ�����, ��Ŵ� 1 ��ʼ. �ű����ô˱����һ���л��б�������ʾһ���ض���ͼ��. ���Ǹ�������ʾ��, ������ʾ������� ListView ��������ʾͼ��:</p>
-<pre>Gui, Add, ListView, h200 w180, Icon &amp; Number|Description  <em>; ���� ListView.</em>
-ImageListID := <a href="#IL_Create">IL_Create</a>(10)  <em>; �������� 10 ��Сͼ���ͼ���б�.</em>
-<a href="#LV_SetImageList">LV_SetImageList</a>(ImageListID)  <em>; �������ͼ���б�ָ������ǰ�� ListView.</em>
-Loop 10  <em>; �� DLL �е�һϵ��ͼ��װ��ͼ���б�.</em>
+<p><strong>A</strong>: 激活了一行, 这种情况默认发生在双击这行的时候. 变量 A_EventInfo 包含目标行号.</p>
+<p><strong>C</strong>: ListView 释放了鼠标捕获.</p>
+<p><strong>E</strong>:用户开始编辑一行的首个字段(只有在 ListView 选项中含有 <code><a href="#ReadOnly">-ReadOnly</a></code> 时用户才可以进行编辑).变量 A_EventInfo 包含目标行号.</p>
+<p><strong>F</strong>: ListView 接收到键盘焦点.</p>
+<p><strong>f</strong> (小写的 F): ListView 失去了键盘焦点.</p>
+<p id="ItemChanged"><strong>I</strong>: 项目发生了变化. 通过变成选择的/未选择的, 选中的/未选中的等让一行改变了. 如果用户选择了一个新行, 则至少会接收到两个这样的通知: 一个是在取消之前的行时, 而另一个是在选择新行时. 在 v1.0.44+, 变量 A_EventInfo 包含目标行号. 在 v1.0.46.10+, ErrorLevel 包含零个或多个下列字母来表示项目发生的变化: S (选择) 或 s (取消选择), 和/或 F (成为焦点) 或 f (失去焦点), 和/或 C (选中) 或 c (取消选中). 例如, SF 表示此行被选择且成为了焦点. 要检查是否存在一个特定的字母,请使用<a href="LoopParse.htm">解析循环</a>或带区分大小写选项的 <a href="InStr.htm">InStr()</a>; 例如:<code>InStr(ErrorLevel, "S", true)</code>.注: 考虑到和未来版本的兼容性, 脚本不应假定 "SsFfCc" 包含了所有可能的字母或字母组合. 此外, 指定 <a href="Critical.htm">Critical</a> 作为 <a href="Gui.htm#label">g 标签</a> 子程序的首行来确保接收到所有的 "I" 通知 (否则, 如果脚本无法跟上, 则它们其中一些可能会丢失).</p>
+<p id="NotifyK"><strong>K</strong>: 当 ListView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 然后可以通过 <a href="GetKey.htm">GetKeyName</a> 转换为按键名称或字符. 例如, <code>key := GetKeyName(<a href="Format.htm">Format</a>("vk{:x}", A_EventInfo))</code>. 在大多数键盘布局中, A-Z 键都可以通过 <code><a href="Chr.htm">Chr(A_EventInfo)</a></code> 转换为相应的字符. F2 的按键动作总是被接收且不会被 <a href="#WantF2">WantF2</a> 影响. 但是, 回车键不会被接收; 除非按照下面的方法设置为默认按钮.</p>
+<p><strong>M</strong>: 选取框. 用户开始在一组行或图标周围拖动一个矩形选区.</p>
+<p><strong>S</strong>: 用户开始滚动 ListView.</p>
+<p><strong>s</strong> (小写的 S): 用户完成滚动 ListView.</p>
+<h2 id="IL">图像列表<span class="ver">(用于添加图像到 ListView 的方法)</span></h2>
+<p>图像列表是保存在内存中的一组大小相同的图标. 创建时每个图像列表是空的. 脚本重复调用 IL_Add() 来添加图标到列表中, 且给每个图标分配一个序号, 序号从 1 开始. 脚本引用此编号在一行中或列标题中显示一个特定的图标. 这是个可运行示例, 其中演示了如何在 ListView 的行中显示图标:</p>
+<pre>Gui, Add, ListView, h200 w180, Icon &amp; Number|Description  <em>; 创建 ListView.</em>
+ImageListID := <a href="#IL_Create">IL_Create</a>(10)  <em>; 创建加载 10 个小图标的图像列表.</em>
+<a href="#LV_SetImageList">LV_SetImageList</a>(ImageListID)  <em>; 把上面的图像列表指定给当前的 ListView.</em>
+Loop 10  <em>; 把 DLL 中的一系列图标装入图像列表.</em>
     <a href="#IL_Add">IL_Add</a>(ImageListID, "shell32.dll", A_Index) 
-Loop 10  <em>; �� ListView ��������(������ʾ��Ŀ��,ÿ��ͼ��һ��).</em>
+Loop 10  <em>; 在 ListView 中添加行(出于演示的目的,每个图标一行).</em>
     LV_Add("Icon" . A_Index, A_Index, "n/a")
-LV_ModifyCol("Hdr")  <em>; �Զ������п�.</em>
+LV_ModifyCol("Hdr")  <em>; 自动调整列宽.</em>
 Gui Show
 return
 
-GuiClose:  <em>; ���û��ر� ListView ���� GUI ����ʱ�˳��ű�.</em>
+GuiClose:  <em>; 当用户关闭 ListView 所在 GUI 窗口时退出脚本.</em>
 ExitApp</pre>
 <h3 id="IL_Create">IL_Create([InitialCount, GrowCount, LargeIcons?])</h3>
-<p>�����µĳ�ʼΪ�յ�ͼ���б�,������ͼ���б���Ψһ ID(ʧ��ʱΪ 0).<em>InitialCount</em> Ϊϣ�����Ϸ����б���ͼ����(���ʡ��,����Ĭ��Ϊ 2).<em>GrowCount</em> Ϊ�б�ÿ�ν�����ʱ������ǰ�б�������ͼ����(���ʡ��,����Ĭ��Ϊ 5).<em>LargeIcons</em> Ӧ��Ϊ��ֵ:�����Ϊ��,��ͼ���б���������ͼ��.���Ϊ��, ��������Сͼ�� (����ʡ��ʱ��Ĭ�����). �ᰴ���������ӵ��б��е�ͼ���Զ����������Է���ϵͳ�д�ͼ���Сͼ��ĳߴ�.</p>
+<p>创建新的初始为空的图像列表,并返回图像列表的唯一 ID(失败时为 0).<em>InitialCount</em> 为希望马上放入列表的图标数(如果省略,则它默认为 2).<em>GrowCount</em> 为列表每次将增长时超出当前列表容量的图标数(如果省略,则它默认为 5).<em>LargeIcons</em> 应该为数值:如果不为零,则图像列表将包含大图标.如果为零, 则它包含小图标 (这是省略时的默认情况). 会按比例对添加到列表中的图标自动进行缩放以符合系统中大图标和小图标的尺寸.</p>
 <h3 id="LV_SetImageList">LV_SetImageList(ImageListID [, 0|1|2])</h3>
-<p>�˺���һ���� ListView ������֮ǰ����.�����ù�����<a href="#IL">ͼ���б�</a>,���е�ͼ�����ʾ�� ListView ������(��ѡ��,�Լ���).ImageListID Ϊǰ����� <a href="#IL_Create">IL_Create()</a> ���ص�����.���ʡ�Եڶ�������, ���Զ����ͼ���б��е�ͼ��Ϊ��ͼ�껹��Сͼ��. ����,���ڴ�ͼ��ָ�� 0,����Сͼ��ָ�� 1,��״̬ͼ����Ϊ 2(��û��ֱ��֧��״̬ͼ��,��������ͨ�� <a href="PostMessage.htm">SendMessage</a> ʹ��).</p>
-<p>һ�� ListView �����Թ�������ͼ���б�: Сͼ���/���ͼ��. ������ڽű������û��ڴ�ͼ����ͼ��������֮���л���ʱ��. Ҫ�ٹ���һ��ͼ���б��� ListView, ���ٴε��� LV_SetImageList(), ����ָ���ڶ����б��� ImageListID. ͬʱ�����д�ͼ���Сͼ��ͼ���б��� ListView Ӧ��ȷ�������б��а���ͼ���˳����ͬ. ������Ϊʹ��һ��ָ��ͼ��Ĵ�С�汾ʱ��������ͬ�� ID ���.</p>
-<p>���ܳ���ͼ��ģʽ��ƽ��ģʽ��ʾСͼ����, ���������� <a href="#View">��ͼģʽ</a> ���ǹ���, ��ͨ������һ����ͼ���б��� LV_SetImageList �����ڵڶ���������ָ�� 1 (Сͼ��) ���Ը��Ǵ���Ϊ. ��Ҳ������ ListView ��ÿ�еĸ߶����ʺϴ�ͼ��.</p>
-<p>����ɹ�, �� LV_SetImageList() ����֮ǰ�� ListView ������ ImageListID (���û����Ϊ 0). �κη����ͼ���б�һ��Ӧʹ�� <a href="#IL_Destroy">IL_Destroy(ImageListID)</a> ��������.</p>
+<p>此函数一般在 ListView 添加行之前调用.它设置关联的<a href="#IL">图像列表</a>,其中的图标会显示在 ListView 的行中(可选的,以及列).ImageListID 为前面调用 <a href="#IL_Create">IL_Create()</a> 返回的数字.如果省略第二个参数, 则自动检测图像列表中的图标为大图标还是小图标. 否则,对于大图标指定 0,对于小图标指定 1,而状态图标则为 2(还没有直接支持状态图标,不过可以通过 <a href="PostMessage.htm">SendMessage</a> 使用).</p>
+<p>一个 ListView 最多可以关联两个图像列表: 小图标和/或大图标. 这可用于脚本允许用户在大图标视图和其他视之间切换的时候. 要再关联一个图像列表到 ListView, 请再次调用 LV_SetImageList(), 其中指定第二个列表的 ImageListID. 同时关联有大图标和小图标图像列表的 ListView 应该确保两个列表中包含图标的顺序相同. 这是因为使用一个指定图标的大小版本时会引用相同的 ID 编号.</p>
+<p>尽管除了图标模式和平铺模式显示小图标外, 对于其他的 <a href="#View">视图模式</a> 这是惯例, 但通过传递一个大图标列表到 LV_SetImageList 并且在第二个参数中指定 1 (小图标) 可以覆盖此行为. 这也增加了 ListView 中每行的高度以适合大图标.</p>
+<p>如果成功, 则 LV_SetImageList() 返回之前与 ListView 关联的 ImageListID (如果没有则为 0). 任何分离的图像列表一般应使用 <a href="#IL_Destroy">IL_Destroy(ImageListID)</a> 进行销毁.</p>
 <h3 id="IL_Add">IL_Add(ImageListID, Filename [, IconNumber, ResizeNonIcon?])</h3>
-<p>����ͼ���ͼƬ��ָ���� <em>ImageListID</em> ��������ͼ�������(�׸�ͼ������Ϊ 1,�ڶ���Ϊ 2,��������).<em>Filename</em> Ϊͼ��(.ICO),���(.CUR)�򶯻����(.ANI)�ļ�������(��������� ListView ����ʾʱʵ�ʽ����ᶯ).ͼ���������Դ�����������͵��ļ�: EXE, DLL, CPL, SCR �Լ�����ͼ����Դ����������. Ҫʹ���ļ��е�ͼ����������׸�ͼ��,���� <em>IconNumber</em> ָ�����ı��.��� <em>IconNumber</em> Ϊ����,��ٶ������ֵ��ʾ��ִ���ļ���ͼ�����Դ ID.�������������,��ʹ�õڶ���ͼ�����е�Ĭ��ͼ��:<code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
-<p>�����Լ��ط�ͼ��ͼ��, ���� BMP, GIF �� JPG. Ȼ��, ��ʱӦ��ָ���������������ȷ����ȷִ��: <em>IconNumber</em> Ӧ��Ϊ���ε�/͸������ɫ���� (���ڴ����ͼƬ 0xFFFFFF [��ɫ] ��������ѵ�); �� <em>ResizeNonIcon</em> Ӧ��Ϊ����ֵ������ͼƬΪ����ͼ��, ����Ϊ������ͼ��ָ�Ϊ�������ƥ��ʵ�ʿ��ȵ�ͼ��.</p>
-<p>�����еĲ���ϵͳ�ж�֧�� GIF, JPG, BMP, ICO, CUR �� ANI ͼ��. �� Windows XP ����߰汾��, ��֧������ͼ���ʽ, ����PNG, TIF, Exif, WMF �� EMF. �� XP ��Ĳ���ϵͳ����ͨ������΢����ѵ� GDI+ DLL �� AutoHotkey.exe �ļ��������ṩ֧�� (������� <a href="Scripts.htm#ahk2exe">�ѱ���ű�</a>, ���ƴ� DLL ���ű����ļ���). Ҫ������� DLL, ���� <a href="http://www.microsoft.com">www.microsoft.com</a> �������ж���: gdi redistributable</p>
-<p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">bitmap (λͼ) �� icon (ͼ��) handle (���)</a> ����������ļ�����. ����, <code>HBITMAP:%handle%</code>.</p>
+<p>添加图标或图片到指定的 <em>ImageListID</em> 并返回新图标的索引(首个图标索引为 1,第二个为 2,依此类推).<em>Filename</em> 为图标(.ICO),光标(.CUR)或动画光标(.ANI)文件的名称(动画光标在 ListView 中显示时实际将不会动).图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR 以及包含图标资源的其他类型. 要使用文件中的图标组而不是首个图标,请在 <em>IconNumber</em> 指定它的编号.如果 <em>IconNumber</em> 为负数,则假定其绝对值表示可执行文件中图标的资源 ID.在下面的例子中,将使用第二个图标组中的默认图标:<code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
+<p>还可以加载非图标图像, 例如 BMP, GIF 和 JPG. 然而, 此时应该指定最后两个参数以确保正确执行: <em>IconNumber</em> 应该为屏蔽的/透明的颜色编码 (对于大多数图片 0xFFFFFF [白色] 可能是最佳的); 而 <em>ResizeNonIcon</em> 应该为非零值来缩放图片为单个图标, 或者为零来把图像分割为多个可以匹配实际宽度的图标.</p>
+<p>在所有的操作系统中都支持 GIF, JPG, BMP, ICO, CUR 和 ANI 图像. 在 Windows XP 或更高版本中, 还支持其他图像格式, 例如PNG, TIF, Exif, WMF 和 EMF. 比 XP 早的操作系统可以通过复制微软免费的 GDI+ DLL 到 AutoHotkey.exe 文件夹中来提供支持 (但如果是 <a href="Scripts.htm#ahk2exe">已编译脚本</a>, 则复制此 DLL 到脚本的文件夹). 要下载这个 DLL, 请在 <a href="http://www.microsoft.com">www.microsoft.com</a> 搜索下列短语: gdi redistributable</p>
+<p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">bitmap (位图) 或 icon (图标) handle (句柄)</a> 可用于替代文件名称. 例如, <code>HBITMAP:%handle%</code>.</p>
 <h3 id="IL_Destroy">IL_Destroy(ImageListID)</h3>
-<p>ɾ��ָ����ͼ���б�,�ɹ�ʱ���� 1 ��ʧ�ܷ��� 0.ͨ��û��Ҫ����ͼ���б�, ��Ϊһ�������� ListView, �� ListView ���丸��������ʱ���ǻᱻ�Զ�����. ����,���һ�� ListView ������ ListView ����ͼ���б�(ͨ����ѡ���а��� <code>0x40</code>),������ʹ�ô�ͼ���б��� ListView ���ٺ�ű�Ӧ����ȷ��������.ͬ����, ����ű�ʹ��һ���µ�ͼ���б����� ListView ��ԭ����, ��Ӧ����ȷ����ԭ����ͼ���б�.</p>
-<h2 id="Remarks">ListView ��ע</h2>
-<p><a href="Gui.htm#Submit">Gui Submit</a> ����� ListView �ؼ�û��Ч��. ���,�ű�����ʹ��ListView��<a href="Gui.htm#var">��������</a>(�����)�������������ݶ����õ������ᱻ����.</p>
-<p>�ڶ�ĳ���н��������(ͨ���û���������ķ�����ű����� <code><a href="#LV_ModifyCol">LV_ModifyCol(1, "Sort")</a></code>),�κ�������ӵ��н��������б��ĵײ���������ѭ����˳��.��������� <a href="#Sort">Sort</a> �� <a href="#SortDesc">SortDesc</a> ��ʽ,���ǻ�������ӵ����ƶ���ȷ��λ��.</p>
-<p id="Enter">�� ListView ӵ�н���ʱ���Ҫ��⵽�û����µĻس���, ��ʹ�� <a href="GuiControls.htm#DefaultButton">Ĭ�ϰ�ť</a> (�����Ҫ�����������). ����:</p>
+<p>删除指定的图像列表,成功时返回 1 而失败返回 0.通常没必要销毁图像列表, 因为一旦关联到 ListView, 当 ListView 或其父窗口销毁时它们会被自动销毁. 但是,如果一个 ListView 和其他 ListView 共享图像列表(通过在选项中包含 <code>0x40</code>),在所有使用此图像列表的 ListView 销毁后脚本应该明确地销毁它.同样地, 如果脚本使用一个新的图像列表代替 ListView 中原来的, 则应该明确销毁原来的图像列表.</p>
+<h2 id="Remarks">ListView 备注</h2>
+<p><a href="Gui.htm#Submit">Gui Submit</a> 命令对 ListView 控件没有效果. 因此,脚本可以使用ListView的<a href="Gui.htm#var">关联变量</a>(如果有)来保存其他数据而不用担心它会被覆盖.</p>
+<p>在对某个列进行排序后(通过用户点击其标题的方法或脚本调用 <code><a href="#LV_ModifyCol">LV_ModifyCol(1, "Sort")</a></code>),任何随后添加的行将出现在列表的底部而不会遵循排序顺序.例外情况是 <a href="#Sort">Sort</a> 和 <a href="#SortDesc">SortDesc</a> 样式,它们会把新添加的行移动正确的位置.</p>
+<p id="Enter">当 ListView 拥有焦点时如果要检测到用户按下的回车键, 请使用 <a href="GuiControls.htm#DefaultButton">默认按钮</a> (如果需要则可以隐藏它). 例如:</p>
 <pre>Gui, Add, Button, Hidden Default, OK
 ...
 ButtonOK:
@@ -244,208 +244,208 @@ if FocusedControl &lt;&gt; MyListView
     return
 MsgBox % &quot;Enter was pressed. The focused row number is &quot; . LV_GetNext(0, &quot;Focused&quot;)
 return</pre>
-<p>ʹ�ü��̳�����������֮�䵼����, �û�������ͨ������������һ����Ŀ���Ƶ�ǰ�����ַ���������������. ��ʹ��ѡ�������ת�����ƥ�����.</p>
-<p>���� ListView �е�ÿ���ֶο��Դ洢���ⳤ�ȵ��ı�, ������ʾ��ʼ�� 260 ���ַ�.</p>
-<p>���� ListView �п���ʹ�õ������������ϵͳ�����ڴ������, ������ <a href="#Count">Count</a> ѡ���������ķ������Լ������������е�����..</p>
-<p>����ʹ��ͼƬ��Ϊ ListView ��Χ�ı��� (����Ϊ ListView �Ŀ��). Ҫʵ�����Ч��,���� ListView �󴴽�<a href="GuiControls.htm#Picture">ͼƬ�ؼ�</a>������ͼƬ�ؼ���<em>ѡ��</em>�а��� <code>0x4000000</code>(���� WS_CLIPSIBLINGS).</p>
-<p>�ű�������ÿ�������д������ ListView. Ҫ�Է�Ĭ�ϵ� ListView ���в���, ����� <a href="#BuiltIn">���ú���</a>.</p>
-<p>���Ҫʹ�� <a href="PostMessage.htm">SendMessage</a> ֱ�Ӳ����ɾ����. ������Ϊ����Ϊÿ����ά��һ�� <a href="#Integer">�������</a> ��, ������������޷�ͬ��. ��Ϊ���, ��ʹ�� <a href="#bifCol">�����к���</a>.</p>
-<p>Ҫ�� ListView ִ��һЩ���� (���������С, ���ػ�ı�����), ��ʹ�� <a href="GuiControl.htm">GuiControl</a>.</p>
-<p>Ҫ���ⲿ�� ListView(�����ڽű���������Щ),��ʹ�� <a href="ControlGet.htm#List">ControlGet List</a>.</p>
-<h2>���</h2>
-<p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">�����ؼ�����</a>, <a href="Gui.htm">Gui</a>, <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="../misc/Styles.htm#ListView">ListView ��ʽ��</a></p>
-<h2 id="Examples">ʾ��</h2>
-<pre class="NoIndent"><em>; ָ���к�Ϊ 0 ��ѡ���ȡ��ѡ��������:</em>
-<a href="#LV_Modify">LV_Modify</a>(0, "Select")   <em>; ѡ������.</em>
-LV_Modify(0, "-Select")  <em>; ȡ��ѡ������.</em>
-LV_Modify(0, "-Check")  <em>; ȡ��ѡ������ <a href="#Checked">��ѡ��</a>.</em>
+<p>使用键盘除了在行与行之间导航外, 用户还可以通过输入首列中一个项目名称的前几个字符来进行增量搜索. 这使得选择对象跳转到最近匹配的行.</p>
+<p>尽管 ListView 中的每个字段可以存储任意长度的文本, 但仅显示开始的 260 个字符.</p>
+<p>尽管 ListView 中可以使用的最大行数仅受系统可用内存的限制, 但参照 <a href="#Count">Count</a> 选项中描述的方法可以极大地提高添加行的性能..</p>
+<p>可以使用图片作为 ListView 周围的背景 (即作为 ListView 的框架). 要实现这个效果,请在 ListView 后创建<a href="GuiControls.htm#Picture">图片控件</a>并且在图片控件的<em>选项</em>中包含 <code>0x4000000</code>(这是 WS_CLIPSIBLINGS).</p>
+<p>脚本可以在每个窗口中创建多个 ListView. 要对非默认的 ListView 进行操作, 请参阅 <a href="#BuiltIn">内置函数</a>.</p>
+<p>最后不要使用 <a href="PostMessage.htm">SendMessage</a> 直接插入或删除列. 这是因为程序为每个列维护一个 <a href="#Integer">排序参数</a> 集, 而这会让它们无法同步. 作为替代, 请使用 <a href="#bifCol">内置列函数</a>.</p>
+<p>要对 ListView 执行一些操作 (例如调整大小, 隐藏或改变字体), 请使用 <a href="GuiControl.htm">GuiControl</a>.</p>
+<p>要从外部的 ListView(不属于脚本自身的那些),请使用 <a href="ControlGet.htm#List">ControlGet List</a>.</p>
+<h2>相关</h2>
+<p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="Gui.htm">Gui</a>, <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="../misc/Styles.htm#ListView">ListView 样式表</a></p>
+<h2 id="Examples">示例</h2>
+<pre class="NoIndent"><em>; 指定行号为 0 来选择或取消选择所有行:</em>
+<a href="#LV_Modify">LV_Modify</a>(0, "Select")   <em>; 选择所有.</em>
+LV_Modify(0, "-Select")  <em>; 取消选择所有.</em>
+LV_Modify(0, "-Check")  <em>; 取消选中所有 <a href="#Checked">复选框</a>.</em>
 
-<em>; �Զ��������ݵ��������еĿ���:</em>
-<a href="#LV_ModifyCol">LV_ModifyCol</a>()  <em>; ��ʱ����Ҫ����.</em></pre>
+<em>; 自动根据内容调整所有列的宽度:</em>
+<a href="#LV_ModifyCol">LV_ModifyCol</a>()  <em>; 此时不需要参数.</em></pre>
 <p>&nbsp;</p>
-<pre class="NoIndent"><em>; ��ʾ��
-; ������һ���ȴ�ҳ�涥�������Ǹ������ɵĿ����нű�.
-; ����ʾ�û��ļ����е��ļ�, ��ÿ���ļ�����һ���������͹�����ͼ��.
-; �û���һ���ļ���˫������һ�������ļ����һ���, ����ʾ�����Ĳ˵�.</em>
+<pre class="NoIndent"><em>; 主示例
+; 下面是一个比此页面顶部附近那个更精巧的可运行脚本.
+; 它显示用户文件夹中的文件, 且每个文件分配一个与其类型关联的图标.
+; 用户在一个文件上双击或在一个或多个文件上右击后, 会显示上下文菜单.</em>
 
-<em>; �����û���󻯴��ڻ��϶����ı䴰�ڵĴ�С:</em>
+<em>; 允许用户最大化窗口或拖动来改变窗口的大小:</em>
 Gui +Resize
 
-<em>; ����һЩ��ť:</em>
+<em>; 创建一些按钮:</em>
 Gui, Add, Button, Default gButtonLoadFolder, Load a folder
 Gui, Add, Button, x+20 gButtonClear, Clear List
 Gui, Add, Button, x+20, Switch View
 
-<em>; ���� ListView ������:</em>
+<em>; 创建 ListView 及其列:</em>
 <a href="#GuiAdd">Gui, Add, ListView</a>, xm r20 w700 vMyListView gMyListView, Name|In Folder|Size (KB)|Type
-<a href="#LV_ModifyCol">LV_ModifyCol</a>(3, &quot;Integer&quot;)  <em>; Ϊ������, ��ʾ Size ���е�����������.</em>
+<a href="#LV_ModifyCol">LV_ModifyCol</a>(3, &quot;Integer&quot;)  <em>; 为了排序, 表示 Size 列中的内容是整数.</em>
 
-<em>; ����ͼ���б�, ���� ListView �ſ�����ʾͼ��:</em>
+<em>; 创建图像列表, 这样 ListView 才可以显示图标:</em>
 ImageListID1 := <a href="#IL_Create">IL_Create</a>(10)
-ImageListID2 := IL_Create(10, 10, true)  <em>; ��ͼ���б���Сͼ���б�.</em>
+ImageListID2 := IL_Create(10, 10, true)  <em>; 大图标列表和小图标列表.</em>
 
-<em>; ����ͼ���б��� ListView, Ȼ�����Ϳ�����ʾͼ����:</em>
+<em>; 关联图像列表到 ListView, 然而它就可以显示图标了:</em>
 <a href="#LV_SetImageList">LV_SetImageList</a>(ImageListID1)
 LV_SetImageList(ImageListID2)
 
-<em>; ������Ϊ�����Ĳ˵��ĵ����˵�:</em>
+<em>; 创建作为上下文菜单的弹出菜单:</em>
 <a href="Menu.htm">Menu</a>, MyContextMenu, Add, Open, ContextOpenFile
 Menu, MyContextMenu, Add, Properties, ContextProperties
 Menu, MyContextMenu, Add, Clear from ListView, ContextClearRows
-Menu, MyContextMenu, Default, Open  <em>; �� "Open" ������ʾ��ʾ˫��ʱ��ִ����ͬ�Ĳ���.</em>
+Menu, MyContextMenu, Default, Open  <em>; 让 "Open" 粗体显示表示双击时会执行相同的操作.</em>
 
-<em>; ��ʾ���ڲ�����. ���û�ִ��Ԥ�ڵĶ���ʱ
-; ����ϵͳ��֪ͨ�ű�:</em>
+<em>; 显示窗口并返回. 当用户执行预期的动作时
+; 操作系统会通知脚本:</em>
 Gui, Show
 return
 
 
 ButtonLoadFolder:
-Gui +OwnDialogs  <em>; ǿ���û�����˶Ի����ſ��Բ���������.</em>
+Gui +OwnDialogs  <em>; 强制用户解除此对话框后才可以操作主窗口.</em>
 FileSelectFolder, Folder,, 3, Select a folder to read:
-if not Folder  <em>; �û�ȡ���˶Ի���.</em>
+if not Folder  <em>; 用户取消了对话框.</em>
     return
 
-<em>; ����ļ������Ƶ����һ���ַ��Ƿ�Ϊ��б��, ���ڸ�Ŀ¼������,
-; ���� C:\. �����, ���Ƴ������б���Ա���֮�����������б��.</em>
+<em>; 检查文件夹名称的最后一个字符是否为反斜线, 对于根目录则会如此,
+; 例如 C:\. 如果是, 则移除这个反斜线以避免之后出现两个反斜线.</em>
 StringRight, LastChar, Folder, 1
 if LastChar = \
-    StringTrimRight, Folder, Folder, 1  <em>; �Ƴ�β��ķ�б��.</em>
+    StringTrimRight, Folder, Folder, 1  <em>; 移除尾随的反斜线.</em>
 
-<em>; ���� SHFILEINFO �ṹ��Ҫ�Ļ����С.</em>
+<em>; 计算 SHFILEINFO 结构需要的缓存大小.</em>
 sfi_size := A_PtrSize + 8 + (A_IsUnicode ? 680 : 340)
 VarSetCapacity(sfi, sfi_size)
 
-<em>; ��ȡ��ѡ���ļ����е��ļ����б������ӵ� ListView:</em>
-GuiControl, -Redraw, MyListView  <em>; �ڼ���ʱ�����ػ�����������.</em>
+<em>; 获取所选择文件夹中的文件名列表并添加到 ListView:</em>
+GuiControl, -Redraw, MyListView  <em>; 在加载时禁用重绘来提升性能.</em>
 Loop %Folder%\*.*
 {
-    FileName := A_LoopFileFullPath  <em>; ���뱣�浽��д�ı����й�����ʹ��.</em>
+    FileName := A_LoopFileFullPath  <em>; 必须保存到可写的变量中供后面使用.</em>
 
-    <em>; ����Ψһ����չ ID �Ա���������еķǷ��ַ�,</em>
-    <em>; �������ۺ�.  ����ʹ��Ψһ ID �ķ���Ҳ��ִ�еظ���,</em>
-    <em>; ��Ϊ�������в�����Ŀ����Ҫ��������ѭ��.</em>
-    SplitPath, FileName,,, FileExt  <em>; ��ȡ�ļ���չ��.</em>
+    <em>; 建立唯一的扩展 ID 以避免变量名中的非法字符,</em>
+    <em>; 例如破折号.  这种使用唯一 ID 的方法也会执行地更好,</em>
+    <em>; 因为在数组中查找项目不需要进行搜索循环.</em>
+    SplitPath, FileName,,, FileExt  <em>; 获取文件扩展名.</em>
     if FileExt in EXE,ICO,ANI,CUR
     {
-        ExtID := FileExt  <em>; ���� ID ��Ϊռλ��.</em>
-        IconNumber = 0  <em>; ���б������ÿ�����;ͺ���Ψһ��ͼ��.</em>
+        ExtID := FileExt  <em>; 特殊 ID 作为占位符.</em>
+        IconNumber = 0  <em>; 进行标记这样每种类型就含有唯一的图标.</em>
     }
-    else  <em>; ��������չ��/�ļ�����, �������ǵ�Ψһ ID.</em>
+    else  <em>; 其他的扩展名/文件类型, 计算它们的唯一 ID.</em>
     {
-        ExtID = 0  <em>; ���г�ʼ�����������������̵���չ��.</em>
-        Loop 7     <em>; ������չ��Ϊ 7 ���ַ�, ����֮�����Ľ�����ܴ�ŵ� 64 λֵ.</em>
+        ExtID = 0  <em>; 进行初始化来处理比其他更短的扩展名.</em>
+        Loop 7     <em>; 限制扩展名为 7 个字符, 这样之后计算的结果才能存放到 64 位值.</em>
         {
             StringMid, ExtChar, FileExt, A_Index, 1
-            if not ExtChar  <em>; û�и����ַ���.</em>
+            if not ExtChar  <em>; 没有更多字符了.</em>
                 break
-            <em>; ��ÿ���ַ��벻ͬ��λλ�ý����������õ�Ψһ ID:</em>
+            <em>; 把每个字符与不同的位位置进行运算来得到唯一 ID:</em>
             ExtID := ExtID | (Asc(ExtChar) &lt;&lt; (8 * (A_Index - 1)))
         }
-        <em>; �����ļ���չ����ͼ���Ƿ��Ѿ���ͼ���б���. �����,</em>
-        <em>; ���Ա����ε��ò������������,</em>
-        <em>; ������ڰ������԰ټ��ļ����ļ��ж���:</em>
+        <em>; 检查此文件扩展名的图标是否已经在图像列表中. 如果是,</em>
+        <em>; 可以避免多次调用并极大提高性能,</em>
+        <em>; 尤其对于包含数以百计文件的文件夹而言:</em>
         IconNumber := IconArray%ExtID%
     }
-    if not IconNumber  <em>; ����չ����û����Ӧ��ͼ��, ���Խ��м���.</em>
+    if not IconNumber  <em>; 此扩展名还没有相应的图标, 所以进行加载.</em>
     {
-        <em>; ��ȡ����ļ���չ�������ĸ�����Сͼ��:</em>
+        <em>; 获取与此文件扩展名关联的高质量小图标:</em>
         if not DllCall("Shell32\SHGetFileInfo" . (A_IsUnicode ? "W":"A"), "str", FileName
-            , "uint", 0, "ptr", &amp;sfi, "uint", sfi_size, "uint", 0x101)  <em>; 0x101 Ϊ SHGFI_ICON+SHGFI_SMALLICON</em>
-            IconNumber = 9999999  <em>; �������õ���Χ������ʾ��ͼ��.</em>
-        else <em>; �ɹ�����ͼ��.</em>
+            , "uint", 0, "ptr", &amp;sfi, "uint", sfi_size, "uint", 0x101)  <em>; 0x101 为 SHGFI_ICON+SHGFI_SMALLICON</em>
+            IconNumber = 9999999  <em>; 把它设置到范围外来显示空图标.</em>
+        else <em>; 成功加载图标.</em>
         {
-            <em>; �ӽṹ����ȡ hIcon ��Ա:</em>
+            <em>; 从结构中提取 hIcon 成员:</em>
             hIcon := NumGet(sfi, 0)
-            <em>; ֱ������ HICON ��Сͼ��ʹ�ͼ���б�.</em>
-            <em>; ������� 1 ���ѷ��ص������ӻ�����ת��������һ:</em>
+            <em>; 直接添加 HICON 到小图标和大图标列表.</em>
+            <em>; 下面加上 1 来把返回的索引从基于零转换到基于一:</em>
             IconNumber := DllCall("ImageList_ReplaceIcon", "ptr", ImageListID1, "int", -1, "ptr", hIcon) + 1
             DllCall("ImageList_ReplaceIcon", "ptr", ImageListID2, "int", -1, "ptr", hIcon)
-            <em>; �����Ѿ��������Ƶ�ͼ���б�, ����Ӧ����ԭ����:</em>
+            <em>; 现在已经把它复制到图像列表, 所以应销毁原来的:</em>
             DllCall("DestroyIcon", "ptr", hIcon)
-            <em>; ����ͼ������ʡ�ڴ沢������������:</em>
+            <em>; 缓存图标来节省内存并提升加载性能:</em>
             IconArray%ExtID% := IconNumber
         }
     }
 
-    <em>; �� ListView �д������в������������ͼ���Ž��й���:</em>
+    <em>; 在 ListView 中创建新行并把它和上面的图标编号进行关联:</em>
     <a href="#LV_Add">LV_Add</a>("Icon" . IconNumber, A_LoopFileName, A_LoopFileDir, A_LoopFileSizeKB, FileExt)
 }
-GuiControl, +Redraw, MyListView  <em>; ���������ػ� (�������������).</em>
-LV_ModifyCol()  <em>; ���������Զ�����ÿ�еĴ�С.</em>
-LV_ModifyCol(3, 60) <em>; �� Size �мӿ�һЩ�Ա���ʾ�����ı���.</em>
+GuiControl, +Redraw, MyListView  <em>; 重新启用重绘 (上面把它禁用了).</em>
+LV_ModifyCol()  <em>; 根据内容自动调整每列的大小.</em>
+LV_ModifyCol(3, 60) <em>; 把 Size 列加宽一些以便显示出它的标题.</em>
 return
 
 
 ButtonClear:
-<a href="#LV_Delete">LV_Delete</a>()  <em>; ���� ListView, ��Ϊ�˼򻯱�����ͼ�껺��.</em>
+<a href="#LV_Delete">LV_Delete</a>()  <em>; 清理 ListView, 但为了简化保留了图标缓存.</em>
 return
 
 ButtonSwitchView:
 if not IconView
-    GuiControl, +Icon, MyListView    <em>; �л���ͼ����ͼ.</em>
+    GuiControl, +Icon, MyListView    <em>; 切换到图标视图.</em>
 else
-    GuiControl, +Report, MyListView  <em>; �л�����ϸ��Ϣ��ͼ.</em>
-IconView := not IconView             <em>; ���з�ת��Ϊ�´���׼��.</em>
+    GuiControl, +Report, MyListView  <em>; 切换回详细信息视图.</em>
+IconView := not IconView             <em>; 进行反转以为下次做准备.</em>
 return
 
 MyListView:
-if A_GuiEvent = DoubleClick  <em>; �ű������Լ�����������Ŀ���ֵ.</em>
+if A_GuiEvent = DoubleClick  <em>; 脚本还可以检查许多其他的可能值.</em>
 {
-    <a href="#LV_GetText">LV_GetText</a>(FileName, A_EventInfo, 1) <em>; ���׸��ֶ��л�ȡ�ı�.</em>
-    LV_GetText(FileDir, A_EventInfo, 2)  <em>; �ӵڶ����ֶ��л�ȡ�ı�.</em>
+    <a href="#LV_GetText">LV_GetText</a>(FileName, A_EventInfo, 1) <em>; 从首个字段中获取文本.</em>
+    LV_GetText(FileDir, A_EventInfo, 2)  <em>; 从第二个字段中获取文本.</em>
     Run %FileDir%\%FileName%,, UseErrorLevel
     if ErrorLevel
         MsgBox Could not open "%FileDir%\%FileName%".
 }
 return
 
-<a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>:  <em>; ���д˱�ǩ����Ӧ�Ҽ�������� Appskey.</em>
-if A_GuiControl &lt;&gt; MyListView  <em>; ���� ListView �е��ʱ����ʾ�˵�.</em>
+<a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>:  <em>; 运行此标签来响应右键点击或按下 Appskey.</em>
+if A_GuiControl &lt;&gt; MyListView  <em>; 仅在 ListView 中点击时才显示菜单.</em>
     return
-<em>; ���ṩ�����괦��ʾ�˵�, A_GuiX �� A_GuiY.  Ӧ��ʹ����Щ
-; ��Ϊ��ʹ�û����� Appskey ����Ҳ���ṩ��ȷ������:</em>
+<em>; 在提供的坐标处显示菜单, A_GuiX 和 A_GuiY.  应该使用这些
+; 因为即使用户按下 Appskey 它们也会提供正确的坐标:</em>
 Menu, MyContextMenu, Show, %A_GuiX%, %A_GuiY%
 return
 
-ContextOpenFile:  <em>; �û��������Ĳ˵���ѡ���� "Open".</em>
-ContextProperties:  <em>; �û��������Ĳ˵���ѡ���� "Properties".
-; Ϊ�˼�, ���Խ����н��в�������������ѡ�����:</em>
-FocusedRowNumber := <a href="#LV_GetNext">LV_GetNext</a>(0, "F")  <em>; ���ҽ�����.</em>
-if not FocusedRowNumber  <em>; û�н�����.</em>
+ContextOpenFile:  <em>; 用户在上下文菜单中选择了 "Open".</em>
+ContextProperties:  <em>; 用户在上下文菜单中选择了 "Properties".
+; 为了简化, 仅对焦点行进行操作而不是所有选择的行:</em>
+FocusedRowNumber := <a href="#LV_GetNext">LV_GetNext</a>(0, "F")  <em>; 查找焦点行.</em>
+if not FocusedRowNumber  <em>; 没有焦点行.</em>
     return
-LV_GetText(FileName, FocusedRowNumber, 1) <em>; ��ȡ�׸��ֶε��ı�.</em>
-LV_GetText(FileDir, FocusedRowNumber, 2)  <em>; ��ȡ�ڶ����ֶε��ı�.</em>
-IfInString A_ThisMenuItem, Open  <em>; �û��������Ĳ˵���ѡ���� "Open".</em>
+LV_GetText(FileName, FocusedRowNumber, 1) <em>; 获取首个字段的文本.</em>
+LV_GetText(FileDir, FocusedRowNumber, 2)  <em>; 获取第二个字段的文本.</em>
+IfInString A_ThisMenuItem, Open  <em>; 用户在上下文菜单中选择了 "Open".</em>
     Run %FileDir%\%FileName%,, UseErrorLevel
-else  <em>; �û��������Ĳ˵���ѡ���� "Properties".</em>
+else  <em>; 用户在上下文菜单中选择了 "Properties".</em>
     Run Properties "%FileDir%\%FileName%",, UseErrorLevel
 if ErrorLevel
     MsgBox Could not perform requested action on "%FileDir%\%FileName%".
 return
 
-ContextClearRows:  <em>; �û��������Ĳ˵���ѡ���� "Clear".</em>
-RowNumber = 0  <em>; ���ʹ���״�ѭ���Ӷ�����ʼ����.</em>
+ContextClearRows:  <em>; 用户在上下文菜单中选择了 "Clear".</em>
+RowNumber = 0  <em>; 这会使得首次循环从顶部开始搜索.</em>
 Loop
 {
-    <em>; ����ɾ����һ��ʹ�ô�������������е��кŶ���С��,</em>
-    <em>; ���԰��кż� 1, ����������������кŲŻ���֮ǰ�ҵ����к���һ��</em>
-    <em>; (�Է�ѡ����������):</em>
+    <em>; 由于删除了一行使得此行下面的所有行的行号都减小了,</em>
+    <em>; 所以把行号减 1, 这样搜索里包含的行号才会与之前找到的行号相一致</em>
+    <em>; (以防选择了相邻行):</em>
     RowNumber := LV_GetNext(RowNumber - 1)
-    if not RowNumber  <em>; ���淵����, ����û�и���ѡ�������.</em>
+    if not RowNumber  <em>; 上面返回零, 所以没有更多选择的行了.</em>
         break
-    LV_Delete(RowNumber)  <em>; �� ListView ��ɾ����.</em>
+    LV_Delete(RowNumber)  <em>; 从 ListView 中删除行.</em>
 }
 return
 
-GuiSize:  <em>; �������С ListView ����Ӧ�û��Դ��ڴ�С�ĸı�.</em>
-if A_EventInfo = 1  <em>; ���ڱ���С����.  ������в���.</em>
+GuiSize:  <em>; 扩大或缩小 ListView 来响应用户对窗口大小的改变.</em>
+if A_EventInfo = 1  <em>; 窗口被最小化了.  无需进行操作.</em>
     return
-<em>; ����, ���ڵĴ�С���������������. ���� ListView �Ĵ�С����Ӧ.</em>
+<em>; 否则, 窗口的大小被调整过或被最大化了. 调整 ListView 的大小来适应.</em>
 GuiControl, Move, MyListView, % "W" . (A_GuiWidth - 20) . " H" . (A_GuiHeight - 40)
 return
 
-GuiClose:  <em>; �����ڹر�ʱ, �Զ��˳��ű�:</em>
+GuiClose:  <em>; 当窗口关闭时, 自动退出脚本:</em>
 ExitApp</pre>
 
 </body>

@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>#HotkeyModifierTimeout</title>
-<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
@@ -11,35 +11,35 @@
 
 <h1>#HotkeyModifierTimeout</h1>
 
-<p>Ӱ��<a href="../Hotkeys.htm">�ȼ�</a>���η�����Ϊ:CTRL,ALT,WIN �� SHIFT.</p>
+<p>影响<a href="../Hotkeys.htm">热键</a>修饰符的行为:CTRL,ALT,WIN 和 SHIFT.</p>
 
 <pre class="Syntax">#HotkeyModifierTimeout Milliseconds</pre>
-<h3>����</h3>
+<h3>参数</h3>
 <dl>
 
   <dt>Milliseconds</dt>
-  <dd><p>�������,��λΪ����.��ֵ��Ϊ -1 ʱ, ����Զ���ᳬʱ (�� Send �����μ����Ǳ��ƻص����µ�״̬), ��Ϊ 0 ʱ�����ǳ�ʱ (���μ����ǲ��ᱻ�ƻص����µ�״̬).</p></dd>
+  <dd><p>间隔长度,单位为毫秒.此值设为 -1 时, 它永远不会超时 (在 Send 后修饰键总是被推回到按下的状态), 设为 0 时则总是超时 (修饰键总是不会被推回到按下的状态).</p></dd>
 
 </dl>
-<h3>��ע</h3>
-<p>����������� <strong>����Ҫ</strong> ʹ�ô�ָ��:</p>
+<h3>备注</h3>
+<p>在下列情况中 <strong>不需要</strong> 使用此指令:</p>
 <ul>
-  <li>�ȼ�ͨ�� <a href="Send.htm#SendInput">SendInput</a> �� <a href="Send.htm#SendPlay">SendPlay</a> ģʽ���ͼ���. ����������Щģʽ���ӳ��û������������� Send ��ɺ�.</li>
-  <li>�ű���װ�˼��̹���(������ͨ���������е�"View-&gt;Key history"�˵����<a href="KeyHistory.htm">KeyHistory</a>�����ж����Ľű��Ƿ�ʹ���˹���).�������ڹ��ӿ��Լ�¼�û�ʵ�ʰ�ס�����μ� (ALT/CTRL/WIN/SHIFT), �������Ҫʹ�ó�ʱ.</li>
+  <li>热键通过 <a href="Send.htm#SendInput">SendInput</a> 或 <a href="Send.htm#SendPlay">SendPlay</a> 模式发送键击. 这是由于这些模式会延迟用户的物理键击到 Send 完成后.</li>
+  <li>脚本安装了键盘钩子(您可以通过主窗口中的"View-&gt;Key history"菜单项或<a href="KeyHistory.htm">KeyHistory</a>命令判断您的脚本是否使用了钩子).这是由于钩子可以记录用户实际按住的修饰键 (ALT/CTRL/WIN/SHIFT), 因而不需要使用超时.</li>
 </ul>
-<p>Ϊ��˵����ָ���Ч��,�뿴�������:<code>^!a::Send, abc</code>.</p>
-<p>ִ�� <a href="Send.htm">Send</a> ����ʱ, ���������ͷ� CTRL �� ALT ��, ����������ȷ������Щ�ַ�. �ڷ������м�����, �����֪�����Ƿ���԰�ȫ���ƻ� CTRL �� ALT ��ԭ���İ���״̬ (Ϊ�˺��û���Ȼ��ס������ƥ��). ����������ŵ�ʱ��С��ָ���ĺ�����, ��ô������Ϊ�û���û���ͷŰ������������ƻص����µ�״̬��ƥ������״̬. ����, ���μ����ᱻ�ƻص����µ�״̬, ���û������ٴΰ�������������ͬһ�����������ȼ�.</p>
-<p>��ʱ��ʱ��ֵӦ������ΪС���û����ͷ��ȼ����η�ǰ��ס���ǵ�ʱ��. ����, ��ʹ�û��Ѿ��ͷ������μ�ʱ�����Կ��ܱ��ָ������µ�״̬ (��ס).</p>
-<p>����������������Լ��ٻ�ʹ�ô�ָ��:</p>
+<p>为了说明此指令的效果,请看这个例子:<code>^!a::Send, abc</code>.</p>
+<p>执行 <a href="Send.htm">Send</a> 命令时, 它会首先释放 CTRL 和 ALT 键, 这样才能正确发送这些字符. 在发送所有键击后, 此命令不知道它是否可以安全的推回 CTRL 和 ALT 到原来的按下状态 (为了和用户仍然按住它们相匹配). 但是如果流逝的时间小于指定的毫秒数, 那么它会认为用户还没有释放按键并把它们推回到按下的状态以匹配物理状态. 否则, 修饰键不会被推回到按下的状态, 而用户必须再次按下它们来修饰同一个或其他的热键.</p>
+<p>超时的时间值应该设置为小于用户在释放热键修饰符前按住它们的时间. 否则, 即使用户已经释放了修饰键时它们仍可能被恢复到按下的状态 (卡住).</p>
+<p>在下列情况中您可以减少或不使用此指令:</p>
 <ul>
-  <li>�ڽű�������λ������ <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> ����װ���̹���.</li>
-  <li>ʹ�� <a href="Send.htm#SendInput">SendInput</a> �� <a href="Send.htm#SendPlay">SendPlay</a> ģʽ����ʹ�ô�ͳ�� <a href="Send.htm#SendEvent">SendEvent</a> ģʽ.</li>
-  <li>ʹ�ô�ͳ�� <a href="Send.htm#SendEvent">SendEvent</a> ģʽʱ, ��С <a href="SetKeyDelay.htm">SetKeyDelay</a> Ϊ 0 �� -1, �������Կ��ٷ��ͼ����������Щ����.</li>
+  <li>在脚本的任意位置添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 来安装键盘钩子.</li>
+  <li>使用 <a href="Send.htm#SendInput">SendInput</a> 或 <a href="Send.htm#SendPlay">SendPlay</a> 模式而不使用传统的 <a href="Send.htm#SendEvent">SendEvent</a> 模式.</li>
+  <li>使用传统的 <a href="Send.htm#SendEvent">SendEvent</a> 模式时, 减小 <a href="SetKeyDelay.htm">SetKeyDelay</a> 为 0 或 -1, 这样可以快速发送键击因而会有些帮助.</li>
 </ul>
-<p>����ű���δʹ�ô�ָ��, ��ô������ֵľ��������Ϊ 50.</p>
-<h3>���</h3>
+<p>如果脚本中未使用此指令, 那么它会表现的就像此设置为 50.</p>
+<h3>相关</h3>
 <p><a href="GetKeyState.htm">GetKeyState</a></p>
-<h3>ʾ��</h3>
+<h3>示例</h3>
 <pre class="NoIndent">#HotkeyModifierTimeout 100</pre>
 
 </body>

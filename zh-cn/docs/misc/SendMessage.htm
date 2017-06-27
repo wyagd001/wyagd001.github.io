@@ -1,65 +1,65 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>PostMessage/SendMessage �̳�</title>
-<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<title>PostMessage/SendMessage 教程</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 
 <body>
-<h1>������Ϣ�����ڻ���ؼ�<br><span class="small80">����:Rajat</span></h1>
+<h1>发送消息到窗口或其控件<br><span class="small80">作者:Rajat</span></h1>
 
-<p>��ҳ���� <a href="../commands/PostMessage.htm">PostMessage</a> �� <a href="../commands/PostMessage.htm">SendMessage</a> ������ش�����һЩ����:</p>
-<p>"��ΰ�������С�������еİ�ť?"<br>"�� <a href="../commands/WinMenuSelectItem.htm">WinMenuSelectItem</a> ��������ʱ, �����ѡ��һ���˵���?!"<br>"���Ǹ��ɸ���Ƥ���Ĵ���.... ���ȷ����ÿ�η��͵������Ч?"<br>"����� <strong>����</strong> ������?!"<br><br><br>��Ҫ:AutoHotkey v1.0.09+��Winspector Spy (<a href="http://www.softpedia.com/get/Security/Security-Related/Winspector.shtml">http://www.softpedia.com/get/Security/Security-Related/Winspector.shtml</a>)</p>
-<p>���һ����������, ��ע�� <a href="../commands/WinMenuSelectItem.htm">WinMenuSelectItem</a> �� Outlook Express �� "New Message" �����еĲ˵�����Ч. ���仰˵, ����벻������:</p>
+<p>本页讨论 <a href="../commands/PostMessage.htm">PostMessage</a> 和 <a href="../commands/PostMessage.htm">SendMessage</a> 命令并将回答这样一些问题:</p>
+<p>"如何按下已最小化窗口中的按钮?"<br>"当 <a href="../commands/WinMenuSelectItem.htm">WinMenuSelectItem</a> 不起作用时, 我如何选择一个菜单项?!"<br>"这是个可更换皮肤的窗口.... 如何确保我每次发送的命令都有效?"<br>"如果是 <strong>隐藏</strong> 窗口呢?!"<br><br><br>需要:AutoHotkey v1.0.09+和Winspector Spy (<a href="http://www.softpedia.com/get/Security/Security-Related/Winspector.shtml">http://www.softpedia.com/get/Security/Security-Related/Winspector.shtml</a>)</p>
+<p>像第一个例子那样, 请注意 <a href="../commands/WinMenuSelectItem.htm">WinMenuSelectItem</a> 对 Outlook Express 的 "New Message" 窗口中的菜单栏无效. 换句话说, 这代码不起作用:</p>
 <pre>WinMenuSelectItem, New Message,, &amp;Insert, &amp;Picture...</pre>
 <p>&nbsp;</p>
-<p>�� <a href="../commands/PostMessage.htm">PostMessage</a> ��ʵ���������:</p>
+<p>但 <a href="../commands/PostMessage.htm">PostMessage</a> 能实现这个操作:</p>
 <pre>PostMessage, 0x111, 40239, 0, , New Message</pre>
-<p>̫������!���Ǹ���ʲô? 0x111 �� <a href="SendMessageList.htm">wm_command ��Ϣ</a> ��ʮ�����ƴ���, �� 40239 ��������ⴰ������Ϊѡ�� 'Insert Picture' �˵���Ĵ���. �������Ҹ���������ҵ����� 40239 ������ֵ:</p>
+<p>太神奇了!但那个是什么? 0x111 是 <a href="SendMessageList.htm">wm_command 消息</a> 的十六进制代码, 而 40239 是这个特殊窗口理解为选择 'Insert Picture' 菜单项的代码. 现在让我告诉您如何找到类似 40239 这样的值:</p>
 <ol>
-  <li>���� Winspector Spy, �� "New Message" ����.</li>
-  <li>�϶� Winspector Spy �����е�ʮ���ߵ� "New Message" ���ڵı����� (û�б� Winspector Spy ���ǵĲ���).</li>
-  <li>����ߵ��б����Ҽ������ѡ���ڲ�ѡ�� 'Messages'.</li>
-  <li>�Ҽ�����հ״��ڲ�ѡ�� 'Edit message filter'.</li>
-  <li>��� 'filter all' ��ť, Ȼ��˫������б��е� 'wm_command'. ��������ֻ���Ӵ���Ϣ.</li>
-  <li>����ת�� "New Message" ���ڲ��ڲ˵�����ѡ��: Insert &gt; Picture.</li>
-  <li>���� Winspector Spy �������źŵư�ť��ֹͣ����.</li>
-  <li>չ���ռ����� wm_command ��Ϣ (����������).</li>
-  <li>����Ҫ�ҵ� (ͨ��) �Ǵ���Ϊ 0 ����Ϣ. ��ʱ����һЩ����Ϊ 'win activated' �� 'win destroyed' �Լ�����..�� wm_command ��Ϣ���ǲ���Ҫ������. ���ᷢ������Ϊ 'Control ID: 40239' ����Ϣ ...��������!</li>
-  <li>���ڰ���������������������������!������ wParam ֵ.</li>
+  <li>启动 Winspector Spy, 打开 "New Message" 窗口.</li>
+  <li>拖动 Winspector Spy 窗口中的十字线到 "New Message" 窗口的标题栏 (没有被 Winspector Spy 覆盖的部分).</li>
+  <li>在左边的列表中右键点击所选窗口并选择 'Messages'.</li>
+  <li>右键点击空白窗口并选择 'Edit message filter'.</li>
+  <li>点击 'filter all' 按钮, 然后双击左边列表中的 'wm_command'. 这样您将只监视此消息.</li>
+  <li>现在转到 "New Message" 窗口并在菜单栏中选择: Insert &gt; Picture.</li>
+  <li>返回 Winspector Spy 并按下信号灯按钮来停止监视.</li>
+  <li>展开收集到的 wm_command 消息 (忽略其他的).</li>
+  <li>您想要找的 (通常) 是代码为 0 的消息. 有时会有一些描述为 'win activated' 或 'win destroyed' 以及其他..的 wm_command 消息都是不需要的内容. 您会发现描述为 'Control ID: 40239' 的消息 ...就是它了!</li>
+  <li>现在把它放入上面的命令中您就完成了!它就是 wParam 值.</li>
 </ol>
-<p>����һ���������һ�ʹ�û�ͼ����, ��Ϊ�ܿ���ÿ���˶�����. ���ڼ�������Ҫʹ�� AutoHotkey �ӹ�������ѡ��һ������; ����Ҫѡ��ȡɫ����.</p>
-<p>������ô��? �ܿ�����ʹ�������������, ����? ���ǰ�ť���ܱ��ƶ���������!�����ͼ����Ĺ�����Ҳ���ܱ��ƶ�/����. �������Ŀ���û���ô����, ��ô���Ľű���������ϻ�ʧЧ. ���������������Ȼ��Ч:</p>
+<p>在下一个例子中我会使用画图程序, 因为很可能每个人都会有. 现在假设我们要使用 AutoHotkey 从工具栏中选择一个工具; 假设要选择取色工具.</p>
+<p>您会怎么做? 很可能是使用鼠标点击工具栏, 对吗? 但是按钮可能被移动且隐藏了!这个画图程序的工具栏也可能被移动/隐藏. 所以如果目标用户这么做了, 那么您的脚本在这个点上会失效. 但是下面的命令仍然有效:</p>
 <pre>PostMessage, 0x111, 639,,,untitled - Paint</pre>
-<p><a href="../commands/PostMessage.htm">PostMessage</a> ����һ���ô��Ǵ��ڿ����ں�̨; ��֮���, ���������Ҫ��Ŀ�괰�ڱ����ǻ��.</p>
-<p>����������������. ��ע��: ��ʹ�õ��� WinXP Pro (SP1) ... �����ʹ�ò�ͬ�Ĳ���ϵͳ, ��ô���Ĳ�������Ҫ�ı� (����������д�ְ�ͼ��±����� windows �Դ���Ӧ�ó���; �����ĳ���Ӧ�ò��øı�):</p>
-<pre><em>;����д�ְ�����Ϊ��ɫ</em>
+<p><a href="../commands/PostMessage.htm">PostMessage</a> 的另一个好处是窗口可以在后台; 与之相比, 发送鼠标点击要求目标窗口必须是活动的.</p>
+<p>这里有其他的例子. 请注意: 我使用的是 WinXP Pro (SP1) ... 如果您使用不同的操作系统, 那么您的参数可能要改变 (仅适用于像写字板和记事本这类 windows 自带的应用程序; 其他的程序应该不用改变):</p>
+<pre><em>;设置写字板字体为青色</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32788, 0, , Document - WordPad</pre>
-<pre><em>;�򿪼��±��Ĺ��ڶԻ���</em>
+<pre><em>;打开记事本的关于对话框</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65, 0, , Untitled - Notepad</pre>
-<pre><em>;�л����±����Զ���������</em>
+<pre><em>;切换记事本的自动换行属性</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32, 0, , Untitled - Notepad</pre>
-<pre><em>;�� Windows Media Player �в���/��ͣ</em>
+<pre><em>;在 Windows Media Player 中播放/暂停</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32808, 0, , Windows Media Player</pre>
-<pre><em>;�����������е� AHK �ű����ȼ�</em>
+<pre><em>;挂起正在运行的 AHK 脚本的热键</em>
 DetectHiddenWindows, on
 SetTitleMatchMode, 2
-<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65305,,, MyScript.ahk - AutoHotkey <em>; �͹��������ͬ,����ʹ�� 65306 ����ͣ.</em></pre>
-<p>���潲���� PostMessage. <a href="../commands/PostMessage.htm">SendMessage</a> �Ĺ�����ʽ��ͬ, ��������ȴ�����ֵ, ���ֵ������һЩ�����, �����ȡ Winamp �е�ǰ���ڲ��ŵ���Ŀ (����� <a href="Winamp.htm">�Զ��� Winamp</a> ������).</p>
-<p>������һЩע������:</p>
+<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65305,,, MyScript.ahk - AutoHotkey <em>; 和挂起操作不同,必须使用 65306 来暂停.</em></pre>
+<p>上面讲的是 PostMessage. <a href="../commands/PostMessage.htm">SendMessage</a> 的工作方式相同, 不过还会等待返回值, 这个值可用于一些情况中, 例如获取 Winamp 中当前正在播放的曲目 (请参阅 <a href="Winamp.htm">自动化 Winamp</a> 的例子).</p>
+<p>这里是一些注意事项:</p>
 <ul>
-  <li>����Ҳ�ᵽ�˲���ϵͳ�� XP ����Ҫע����Ϣֵ���Ų�ͬ�Ĳ���ϵͳ���ı�. ���������һ����Ϣ������ϵͳ����Ч (����һ��������ĳ���汾), ��ô������ϵͳ�������������������ͬ�汾��Ȼ����Ч��. ����, �����Ӧ�ó��������������ǵĲ�ͬ�汾��ʹ����ͬ����Ϣֵ (���� Windows Media Player �� Winamp).</li>
-  <li>������Ѿ��� Winspector Spy �������˹�������ֻ��ʾ wm_command ��Ϣ, ȴ��Ȼ�õ���������Ϣʱ, ���Ҽ������Щ����Ҫ����Ϣ��ѡ������ (��Ϣ��)... ��Щ��Ϣһ���ǲ�����������Ŀ��������������������Ϣ.</li>
-  <li>�� Winspector Spy �����ҵļ�ͷ��ʾ��Ϣֵ, ��ģ�������ͷ��ʾ����ֵ. ����ֵ 0 (��) Ĭ������¿��԰�ȫ����Ϊ 'û�д���' (�� SendMessage һ��ʹ��, ����ֵ��洢�� <a href="ErrorLevel.htm">%ErrorLevel%</a>).</li>
-  <li>Ҫ������Ϣ��ƥ�䲿�ֱ���Ĵ���, �����Ӵ��е��ű�:<br><code>SetTitleMatchMode, 2</code></li>
-  <li>Ҫ������Ϣ�����ش���, �����Ӵ��е��ű�:<br><code>DetectHiddenWindows, On</code></li>
+  <li>上文也提到了操作系统是 XP 且需要注意消息值随着不同的操作系统而改变. 如果您发现一个消息在您的系统上有效 (对于一个软件的某个版本), 那么在其他系统上它对于这个软件的相同版本仍然是有效的. 此外, 大多数应用程序甚至会在它们的不同版本中使用相同的消息值 (例如 Windows Media Player 和 Winamp).</li>
+  <li>如果您已经在 Winspector Spy 中设置了过滤器来只显示 wm_command 消息, 却仍然得到大量的消息时, 请右键点击那些不需要的消息并选择隐藏 (消息名)... 这些消息一般是不是由于您和目标软件交互所产生的消息.</li>
+  <li>在 Winspector Spy 中向右的箭头显示消息值, 而模糊的左箭头显示返回值. 返回值 0 (零) 默认情况下可以安全地认为 '没有错误' (与 SendMessage 一起使用, 返回值会存储在 <a href="ErrorLevel.htm">%ErrorLevel%</a>).</li>
+  <li>要传递消息到匹配部分标题的窗口, 请添加此行到脚本:<br><code>SetTitleMatchMode, 2</code></li>
+  <li>要传递消息到隐藏窗口, 请添加此行到脚本:<br><code>DetectHiddenWindows, On</code></li>
 </ul>
-<p>ע: �˼�����ĳЩӦ�ó�����Ч. �Ҷ� VB �� Delphi ��д��Ӧ�ó���ֻ�ܽ���. �˼����������� C, C++ ��д��Ӧ�ó���. ���� VB Ӧ�ó�����ͬ����� 'LParam' �����ڴ���ʱ���Ǳ仯��. ���� Delphi Ӧ�ó���... һЩ����� GUI ������ʹ�� wm_command. ������ʹ�����λ�ú͵����.</p>
-<p>ȥ̽����.... ���Ҽǵ��� AutoHotkey ��̳�������ľ���. ��ӭ����!</p>
-<p>���ָ�ϲ�����Ϊ������׼���� (û��ð������˼), ��Ϊ��Щ�����Ϊ�Ǹ߼�����. ����������걾��,������������ͷ��,����������.</p>
+<p>注: 此技术对某些应用程序无效. 我对 VB 和 Delphi 编写的应用程序只能侥幸. 此技术最适用于 C, C++ 编写的应用程序. 对于 VB 应用程序相同命令的 'LParam' 参数在传递时总是变化的. 对于 Delphi 应用程序... 一些程序的 GUI 甚至不使用 wm_command. 它或许使用鼠标位置和点击吧.</p>
+<p>去探索吧.... 并且记得在 AutoHotkey 论坛分享您的经验. 欢迎反馈!</p>
+<p>这个指南并不是为新手们准备的 (没有冒犯的意思), 因为这些命令被认为是高级功能. 所以如果读完本文,您还是摸不着头脑,请忘了它吧.</p>
 <p>-Rajat</p>
 </body>
 </html>
