@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>PixelGetColor</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>PixelGetColor</h1>
+
+<p>获取指定的 x, y 坐标处像素的颜色.</p>
+
+<pre class="Syntax">PixelGetColor, OutputVar, X, Y [, Alt|Slow|RGB]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>OutputVar</dt>
+  <dd><p>用来保存十六进制的蓝绿红 (BGR) 格式的颜色 ID 的变量名. 例如, 紫色的颜色 ID 为 0x800080, 因为其蓝色和红色成分的强度为 80, 而绿色成分的为 00.</p></dd>
+
+  <dt>X, Y</dt>
+  <dd><p>目标像素的 X 和 Y 坐标, 可以为 <a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p></dd>
+
+  <dt>Alt|Slow|RGB</dt>
+  <dd><p>此参数可以包含零个或多个下列单词. 如果含有多个单词,则它们之间使用空格分隔(例如 <code>Alt RGB</code>).</p>
+      <p><strong>Alt</strong> <span class="ver">[v1.0.43.10+]:</span> 使用另一种方法获取颜色, 当在特殊类型的窗口中正常的方法获取到无效或错误的颜色时, 应考虑使用这种方法. 此方法比正常方法大约慢 10%.</p>
+      <p><strong>Slow</strong> <span class="ver">[v1.0.43.10+]:</span> 使用一种更精细复杂的方法获取颜色, 在某些全屏应用程序中其他方法失败时, 此方法可能有效. 此方法比正常方法大约慢三倍. 注: <em>Slow</em> 方法优先于 <em>Alt</em>, 所以此时不需要指定 <em>Alt</em>.</p>
+      <p><strong>RGB</strong>: 获取 RGB 格式的颜色值而不是 BGR 格式. 即交换了其中的红色和蓝色的成分. 此选项可用在要让获取的颜色适用于 <a href="WinSet.htm">WinSet</a>,<a href="Gui.htm">Gui</a>,<a href="Progress.htm">Progress</a> 和 <a href="Progress.htm">SplashImage</a> 的时候.</p></dd>
+
+</dl>
+
+<h3>ErrorLevel</h3>
+<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
+<h3>备注</h3>
+<p>像素必须是可见的; 换句话说, 无法获取隐藏在其他窗口背后的窗口的像素颜色. 与之相比, 鼠标光标下方的像素颜色通常可以检测出来. 例外情况是游戏的指针, 在大多数情况下它会隐藏在它下方的任何像素.</p>
+<p>使用 Window Spy (从托盘图标菜单打开) 或参阅本页底部的示例可以确定当前屏幕上的颜色.</p>
+<p>已知限制:</p>
+<ul>
+  <li>在 <a href="WinSet.htm#trans">部分透明</a> 或其中某种颜色透明 (<a href="WinSet.htm#TransColor">TransColor</a>) 的窗口中实际获取的是它后面窗口的颜色而不是它自己的颜色 (即我们在屏幕上看到的颜色).</li>
+  <li>在某些应用程序中 PixelGetColor 可能得不到准确的结果. 如果发生这种情况, 请尝试在最后一个参数中指定单词 <em>Alt</em> 或 <em>Slow</em>.</li>
+</ul>
+<h3>相关</h3>
+<p><a href="PixelSearch.htm">PixelSearch</a>, <a href="ImageSearch.htm">ImageSearch</a>, <a href="CoordMode.htm">CoordMode</a>, <a href="MouseGetPos.htm">MouseGetPos</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">^!z::  <em>; Control+Alt+Z 热键.</em>
+MouseGetPos, MouseX, MouseY
+PixelGetColor, color, %MouseX%, %MouseY%
+MsgBox The color at the current cursor position is %color%.
+return</pre>
+
+</body>
+</html>

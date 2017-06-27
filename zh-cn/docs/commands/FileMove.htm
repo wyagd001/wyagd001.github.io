@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>FileMove</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>FileMove</h1>
+
+<p>移动或重命名一个或多个文件.</p>
+
+<pre class="Syntax">FileMove, SourcePattern, DestPattern [, Flag]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>SourcePattern</dt>
+  <dd><p>单个文件的名称或通配符模式, 例如 C:\Temp\*.tmp. 如果未指定绝对路径则假定 <em>SourcePattern</em> 在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p></dd>
+
+  <dt>DestPattern</dt>
+  <dd><p>目标的名称或模式, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中. 要执行简单地移动 (保留原来的文件名), 那么只需要指定文件夹名, 如下面这些功能相同的例子所演示的那样:</p>
+<pre>FileMove, C:\*.txt, C:\My Folder</pre>
+<pre>FileMove, C:\*.txt, C:\My Folder\*.*</pre>
+    </dd>
+
+  <dt>Flag</dt>
+  <dd><p>(可选参数) 此标志决定了是否覆盖现有的文件:</p>
+      <p>0 = (默认) 不覆盖现有的文件<br>
+	  	1 = 覆盖现有的文件</p>
+      <p>此参数可以为 <a href="../Variables.htm#Expressions">表达式</a>, 甚至是计算结果为真或假的表达式 (因为真和假内部分别保存为 1 和 0).</p></dd>
+
+</dl>
+
+<h3>ErrorLevel</h3>
+<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为由于错误而无法移动的文件数, 否则为 0. 但是, 如果源文件为单个文件 (没有通配符) 且此文件不存在, 则 ErrorLevel 被置为 0. 要判断这种情况, 请在移动前对源文件使用 <a href="IfExist.htm">IfExist</a> 或 <a href="FileExist.htm">FileExist()</a>.</p>
+<p>与 <a href="FileCopy.htm">FileCopy</a> 不同, 移动一个文件来覆盖它自己总被认为是成功的, 即使在改写模式没有生效的情况下.</p>
+<p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0 (零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
+
+<h3>备注</h3>
+<p>FileMove 只移动文件. 要移动整个文件夹的内容 (它的所有文件和子文件夹), 请参照下面的示例部分. 要移动或重命名单个文件夹, 请使用 <a href="FileMoveDir.htm">FileMoveDir</a>.</p>
+<p>在遇到错误后操作仍会继续进行.</p>
+<p>尽管此命令可以移动文件到不同的卷, 但这样的操作会比在相同卷上消耗更多的时间. 这是由于在相同卷上类似于重命名, 因此快速得多.</p>
+<h3>相关</h3>
+<p><a href="FileCopy.htm">FileCopy</a>, <a href="FileCopyDir.htm">FileCopyDir</a>, <a href="FileMoveDir.htm">FileMoveDir</a>, <a href="FileDelete.htm">FileDelete</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">FileMove, C:\My Documents\List1.txt, D:\Main Backup\  <em>; 移动文件而不进行重命名.</em>
+FileMove, C:\File Before.txt, C:\File After.txt  <em>; 重命名单个文件.</em>
+FileMove, C:\Folder1\*.txt, D:\New Folder\*.bkp  <em>; 移动并使用新的扩展名重命名文件.</em></pre>
+<p>&nbsp;</p>
+<pre class="NoIndent"><em>; 下面的例子移动一个文件夹中所有文件和文件夹到另一个文件夹中:</em>
+ErrorCount := MoveFilesAndFolders("C:\My Folder\*.*", "D:\Folder to receive all files &amp; folders")
+if ErrorCount &lt;&gt; 0
+    MsgBox %ErrorCount% files/folders could not be moved.
+
+MoveFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite = false)
+<em>; 移动匹配 SourcePattern 的所有文件和文件夹到 DestinationFolder 文件夹中且
+; 返回无法移动的文件/文件夹的数目. 此函数需要 v1.0.38+
+; 因为它使用了 FileMoveDir 的模式 2.</em>
+{
+    if DoOverwrite = 1
+        DoOverwrite = 2  <em>; 请参阅 <a href="FileMoveDir.htm">FileMoveDir</a> 了解模式 2 与模式 1 的区别.</em>
+    <em>; 首先移动所有文件 (不是文件夹):</em>
+    FileMove, %SourcePattern%, %DestinationFolder%, %DoOverwrite%
+    ErrorCount := ErrorLevel
+    <em>; 现在移动所有文件夹:</em>
+    Loop, %SourcePattern%, 2  <em>; 2 表示 "只获取文件夹".</em>
+    {
+        FileMoveDir, %A_LoopFileFullPath%, %DestinationFolder%\%A_LoopFileName%, %DoOverwrite%
+        ErrorCount += ErrorLevel
+        if ErrorLevel  <em>; 报告每个出现问题的文件夹名称.</em>
+            MsgBox Could not move %A_LoopFileFullPath% into %DestinationFolder%.
+    }
+    return ErrorCount
+}</pre>
+
+</body>
+</html>

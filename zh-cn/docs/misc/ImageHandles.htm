@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Image 句柄</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+
+<body>
+<h1>Image 句柄 <span class="ver">[v1.1.23+]</span></h1>
+
+<p>要在图像文件名(image filename)的位置使用一个图标或位图的句柄, 使用如下的表示法:</p>
+<pre class="Syntax">HBITMAP:<i>bitmap-handle</i>
+HICON:<i>icon-handle</i></pre>
+<p>用真实的句柄值替换 <em>bitmap-handle</em> 或 <em>icon-handle</em> . 例如, <code>hicon:%handle%</code> (或在 <a href="../Variables.htm#Expressions">表达式</a> 中 <code>"hicon:" handle</code> ), 这里的 <em>handle</em> 是一个包含图标句柄的变量.</p>
+<p>下列命令支持这种表示法:</p>
+<ul>
+  <li><a href="../commands/GuiControls.htm#Picture">Gui Add, Picture</a> (当使用 <a href="../commands/GuiControl.htm">GuiControl</a> 设置一个Picture控件的内容时).</li>
+  <li><a href="../commands/ListView.htm#IL_Add">IL_Add</a></li>
+  <li><a href="../commands/LoadPicture.htm">LoadPicture</a></li>
+  <li><a href="../commands/GuiControls.htm#SB_SetIcon">SB_SetIcon</a></li>
+  <li><a href="../commands/ImageSearch.htm">ImageSearch</a></li>
+  <li><a href="../commands/Menu.htm#Icon">Menu Tray, Icon</a> 或 <a href="../commands/Menu.htm#MenuIcon">Menu <em>MenuName</em>, Icon</a></li>
+  <li><a href="../commands/Progress.htm">SplashImage</a></li>
+</ul>
+<p>位图或图标句柄是一个标识该位图或图标所处内存的数值. 大多数脚本从没有必要处理该句柄, 就像大多数情况下AutoHotKey会自动从文件载入图像并在不用时释放. 上面的表示法是当脚本从其他资源中取得图标或位图时(如发送WM_GETICON消息到某个窗口)供脚本使用的.这也可以和 <a href="../commands/LoadPicture.htm">LoadPicture</a> 一起使用以避免从文件中多次载入同一图像.</p>
+<p>AutoHotKey默认将Image句柄当作从文件中载入图像一样, 比如, 当GUI被销毁时 用于Picture控件的位图也会被释放, 当图像需要调整尺寸时通常也会被立即释放. 为避免此种情况, 在分号和句柄之间加入一个星号, 如: <code>hbitmap:*%handle%</code> (或在表达式中 <code>"hbitmap:*" handle</code> ). 例外的是用在ImageSearch命令中会使该命令复制一份图像.</p>
+
+<h3 id="Examples">示例</h3>
+<pre class="NoIndent"><em>; 显示一个匹配前n个文件的列表菜单,菜单图标为图标文件本身.</em>
+pattern = %A_ScriptDir%\*
+n = 15
+
+<em>; 为 SHFILEINFOW 结构体申请内存.</em>
+VarSetCapacity(fileinfo, fisize := A_PtrSize + 688)
+
+Loop, Files, %pattern%, FD
+{
+    <em>; 为每个文件添加一个菜单项.</em>
+    Menu F, Add, %A_LoopFileName%, donothing
+    
+    <em>; 获取文件的图标.</em>
+    if DllCall("shell32\SHGetFileInfoW", "wstr", A_LoopFileFullPath
+        , "uint", 0, "ptr", &fileinfo, "uint", fisize, "uint", 0x100)
+    {
+        hicon := NumGet(fileinfo, 0, "ptr")
+        <em>; 设置菜单项的图标.</em>
+        Menu F, Icon, %A_Index%&, HICON:%hicon%
+        <em>; 因为我们使用了 ":" 而不是 ":*", 在程序退出或菜单被删除时
+        ; 这些图标也会被自动释放</em>
+    }
+}
+until A_Index = n
+Menu F, Show
+donothing:
+return
+</pre>
+<p>参阅: <a href="../commands/LoadPicture.htm">LoadPicture</a>.</p>
+&nbsp;
+
+</body>
+</html>

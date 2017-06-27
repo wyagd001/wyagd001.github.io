@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>RegisterCallback</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>RegisterCallback() <span class="ver">[v1.0.47+]</span></h1>
+
+<p>创建机器码地址,当它被调用时会重定向到脚本中的<a href="../Functions.htm">函数</a>.</p>
+
+<pre class="Syntax">Address := RegisterCallback("FunctionName" [, Options = "", ParamCount = FormalCount, EventInfo = Address])</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Address</dt>
+  <dd><p>成功时,RegisterCallback() 返回一个数值地址,它可以被 <a href="DllCall.htm">DllCall()</a> 或其他能调用机器码函数的东西调用.失败时, 它返回空字符串. 当 <em>FunctionName</em> 出现下列情况时会引起失败:1) 不存在；2) 接收到比 <em>ParamCount</em> 过多或过少的参数；或 3) 接收到任何一个 <a href="../Functions.htm#ByRef">ByRef 参数</a>.</p></dd>
+
+  <dt>FunctionName</dt>
+  <dd>
+      <p><a href="Functions.htm">函数</a> 名, 如果是原义的字符串, 则必须包围在双引号中. 每当调用 <em>Address</em> 时会自动调用此函数. 此函数同时会接收到传递给 <em>Address</em> 的参数.</p>
+      <p><span class="ver">[v1.1.06+]:</span> 可以传递 <a href="../objects/Func.htm">函数引用</a> 来代替函数名.</p>
+    </dd>
+
+  <dt>Options</dt>
+  <dd><p>指定零个或多个下列单词. 在选项间使用空格分隔(例如 <code>C Fast</code> ).</p>
+    <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>FunctionName</em> 时都启动新 <a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, 但必须避免调用 <em>Address</em> 的线程发生变化 (例如当回调函数被传入的消息触发时). 这是因为 <em>FunctionName</em> 能改变在它被调用时刚好在运行的线程的全局设置 (例如 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a> 和 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>). 想了解更多细节, 请参阅 <a href="#Threads">备注</a>.</p>
+    <p><strong>CDecl</strong> 或 <strong>C</strong>:让 <em>Address</em> 遵循"C"调用约定.此选项通常省略, 因为在回调函数中标准调用约定更常用.</p></dd>
+
+  <dt>ParamCount</dt>
+  <dd><p><em>Address</em> 的调用者会传递给它的参数数目. 如果完全省略, 则它默认为 <em>FunctionName</em> 的 <a href="../Functions.htm#define">定义</a> 中强制参数的数目. 在这两种情况中, 必须确保调用者准确传递此数目的参数.</p></dd>
+
+  <dt>EventInfo</dt>
+  <dd>
+      <p>每当通过此 <em>Address</em> 调用 <em>FunctionName</em> 时, 它将在 <a href="../Variables.htm#EventInfo">A_EventInfo</a> 中看到这个整数. 这可用于一个 <em>FunctionName</em> 同时被多个 <em>Address</em> 调用时. 如果省略, 则它默认为 <em>Address</em>. 注: 与其他全局设置不同, <a href="../misc/Threads.htm">当前线程</a> 的 A_EventInfo 不会受到 <a href="#Fast">快速模式</a> 的干扰.</p>
+      <p>如果运行当前脚本的主程序为 32 位, 那么此参数必须介于 0 和 4294967295 之间. 如果主程序为 64 位, 那么此参数可以为 64 位整数. 尽管 <a href="../Variables.htm#EventInfo">A_EventInfo</a> 通常返回无符号整数, 但由于 AutoHotkey 不完全支持 64 位无符号整数, 因此对这个值进行某些操作可能让它溢出从而进入有符号整数的范围.</p></dd>
+
+</dl>
+
+<h3>回调函数的参数</h3>
+<p>分配了回调地址的 <a href="Functions.htm">函数</a> 可以接受多达 31 个参数. 允许有 <a href="../Functions.htm#optional">可选参数</a>, 这可用于函数被多个调用者调用时.</p>
+<p>正确的解析此参数需要您对x86的调用转换机制有所了解.在AutoHotKey中没有形参的概念,回调的参数列表由整数和一些必要的重解析组成.</p>
+
+<p><strong>32 位:</strong> 所有传入参数都是 32 位无符号整数. 如果某个传入参数应该为有符号整数, 则可以参照下面的其中一个例子得到负数:</p>
+<p>如果传入参数被当作有符号整数, 所有的负数将被显示成下列两种形式中的一种:</p>
+<pre><em>; 方法 #1</em>
+if wParam > 0x7FFFFFFF
+    wParam := -(~wParam) - 1
+
+<em>; 方法 #2: 依赖于 AutoHotkey 有 64 位有符号整数的原生支持.</em>
+wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
+
+<p><strong>64 位:</strong> 所有传入参数都是 64 位有符号整数. AutoHotkey 没有对 64 位无符号整数的原生支持.</p>
+
+<p><strong>AutoHotkey 32位/64位:</strong> 如果传入参数被当作8位或16位 (x64上是32位) 整数,此数值的高位可能会包含杂位,可通过以下方法加以过滤:</p>
+<pre>Callback(UCharParam, UShortParam, UIntParam) {
+    UCharParam &amp;= 0xFF
+    UShortParam &amp;= 0xFFFF
+    UIntParam &amp;= 0xFFFFFFFF
+    <em>;...</em>
+}</pre>
+<p>如果某个传入参数应该为字符串, 那么它实际接收的是这个字符串的地址. 要获取这样的字符串, 请使用 <a href="StrPutGet.htm">StrGet</a>:</p>
+<pre>MyString := StrGet(MyParameter)  <em>; AHK_L 46+</em></pre>
+<p>如果某个传入参数为结构的地址, 则可以参照 <a href="DllCall.htm#struct">DllCall 结构</a> 中描述的步骤提取其中的各个成员.</p>
+
+<p id="Indirect"><strong>接收参数的地址</strong><span class="ver">[AHK_L 60+]</span>: 如果函数声明为 <a href="../Functions.htm#Variadic">可变参数的</a>, 那么它的最后一个参数被赋值为首个没有赋值给脚本参数的回调参数 <i>地址</i>. 例如:</p>
+<pre>
+callback := RegisterCallback("TheFunc", "F", 3)  <em>; 必须指定参数列表的大小.</em>
+TheFunc("TheFunc was called directly.")          <em>; 直接调用 TheFunc.</em>
+DllCall(callback, float, 10.5, int64, 42)        <em>; 通过回调调用 TheFunc.</em>
+TheFunc(params*) {
+    if IsObject(params)
+        MsgBox % params[1]
+    else
+        MsgBox % <a href="NumGet.htm">NumGet</a>(params+0, "float") ", " NumGet(params+A_PtrSize, "int64")
+}</pre>
+<p>大部分回调使用 <em>stdcall</em> 调用约定, 这种方式需要固定的参数数目. 在这种情况下, <em>ParamCount</em> 必须设置为参数列表的大小, Int64 需要两倍于 32位 的参数.</p>
+<p>对于 <em>Cdecl</em> 或64位调用约定, <em>ParamCount</em> 仅被已经赋值的参数所影响. 如果省略, 所有可选参数被设为他们的默认值,且不参与 <em>params</em> 保存地址大小的计算.</p>
+
+<h3>函数应该 <em>返回</em> 什么</h3>
+<p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 "" (甚至从不使用 Return), 则返回 0 给 <em>Address</em> 的调用者. 否则, 函数应该返回一个介于 -2147483648 和 4294967295 之间的整数, 它会被返回给 <em>Address</em> 的调用者.</p>
+
+<h3 id="Threads">快速与慢速</h3>
+<p>默认/慢速的模式会让函数以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这些默认值可以在 <a href="../Scripts.htm#auto">自动执行段</a> 改变.</p>
+<p>与之相比, <a href="#Fast">快速模式</a> 会继承在调用函数时刚好在运行的 <a href="../misc/Threads.htm">线程</a> 的全局设置. 而且, 函数对全局设置的任何修改 (包括 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 和 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在 <a href="../misc/Threads.htm">当前线程</a> 生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
+<p>要避免被自己 (或其他任何线程) 中断, 回调函数可以在它的首行使用 <a href="Critical.htm">Critical</a>. 然而, 通过小于 0x312 消息达到的间接调用函数时, 这并不是完全有效的 (增加 Critical 的 <a href="Critical.htm#Interval">间隔</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="PostMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
+
+<h3>内存</h3>
+<p>每次使用 RegisterCallback() 都会分配少量的内存 (32 字节加上系统开销). 由于当脚本退出时操作系统会自动释放这些内存, 所以任何分配少量 <em>固定</em> 数目的回调的脚本不需要明确地释放内存. 与之相比, 调用 RegisterCallback() 不确定/无限制次数的脚本应明确对任何不使用的回调执行下列操作:</p>
+<pre>DllCall(&quot;GlobalFree&quot;, &quot;Ptr&quot;, Address, &quot;Ptr&quot;)</pre>
+
+<h3>相关</h3>
+<p><a href="DllCall.htm">DllCall()</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort 的回调</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a></p>
+
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 示例: 下面是个可运行脚本, 它显示了所有顶层窗口的摘要.</em>
+
+<em>; 考虑到性能和内存的保持, 只为指定的回调调用一次 RegisterCallback():</em>
+if not EnumAddress  <em>; 由于只能从这个线程调用, 所以可以使用快速模式:</em>
+    EnumAddress := <strong>RegisterCallback</strong>("EnumWindowsProc", "Fast")
+
+DetectHiddenWindows On  <em>; 由于是快速模式, 所以此设置也会在回调中生效.</em>
+
+<em>; 把控制传给 EnumWindows(), 它会重复调用回调:</em>
+DllCall("EnumWindows", Ptr, EnumAddress, Ptr, 0)
+MsgBox %Output%  <em>; 显示由回调收集的信息.</em>
+    
+EnumWindowsProc(hwnd, lParam)
+{
+    global Output
+    WinGetTitle, title, ahk_id %hwnd%
+    WinGetClass, class, ahk_id %hwnd%
+    if title
+        Output .= &quot;HWND: &quot; . hwnd . &quot;`tTitle: &quot; . title . &quot;`tClass: &quot; . class . &quot;`n&quot;
+    return true  <em>; 告知 EnumWindows() 继续执行, 一直到枚举完所有的窗口.</em>
+}</pre>
+<p>&nbsp;</p>
+<pre class="NoIndent"><em>; 示例: 下面是个可运行脚本, 它演示了如何在脚本中通过把 GUI 窗口的
+; WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的
+; 背景颜色被改变为自定义颜色.</em>
+
+TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
+TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, UInt, TextBackgroundColor)
+
+Gui, Add, Text, HwndMyTextHwnd, Here is some text that is given`na custom background color.
+Gui +LastFound
+GuiHwnd := WinExist()
+
+<em>; 64 位脚本必须调用 SetWindowLongPtr 代替 SetWindowLong:</em>
+SetWindowLong := A_PtrSize=8 ? "SetWindowLongPtr" : "SetWindowLong"
+
+WindowProcNew := <strong>RegisterCallback</strong>("WindowProc", ""  <em>; 指定 "" 来避免子类化中使用快速模式.</em>
+    , <strong>4</strong>, MyTextHwnd)  <em>; 使用了 EventInfo 参数时必须明确指定 ParamCount.</em>
+WindowProcOld := DllCall(SetWindowLong, Ptr, GuiHwnd, Int, -4  <em>; -4 是 GWL_WNDPROC</em>
+    , Ptr, WindowProcNew, Ptr) <em>; 返回值必须设置为 Ptr 或 UPtr 而不是 Int.</em>
+
+Gui Show
+return
+
+WindowProc(hwnd, uMsg, wParam, lParam)
+{
+    Critical
+    global TextBackgroundColor, TextBackgroundBrush, WindowProcOld
+    if (uMsg = 0x138 &amp;&amp; lParam = A_EventInfo)  <em>; 0x138 为 WM_CTLCOLORSTATIC.</em>
+    {
+        DllCall(&quot;SetBkColor&quot;, Ptr, wParam, UInt, TextBackgroundColor)
+        return TextBackgroundBrush  <em>; 返回 HBRUSH 来通知操作系统我们改变了 HDC.</em>
+    }
+    <em>; 否则 (如果上面没有返回), 传递所有的未处理事件到原来的 WindowProc.</em>
+    return DllCall(&quot;CallWindowProc&quot;, Ptr, WindowProcOld, Ptr, hwnd, UInt, uMsg, Ptr, wParam, Ptr, lParam)
+}
+
+GuiClose:
+ExitApp</pre>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>ComObjQuery()</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ComObjQuery() <span class="ver">[v1.0.96.00+]</span></h1>
+<p>查询 COM 对象的接口或服务.</p>
+<pre class="Syntax">InterfacePointer := ComObjQuery(ComObject, [SID,] IID)</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>ComObject</dt>
+  <dd><p>COM 包装器对象或原始接口指针.</p></dd>
+
+  <dt>IID</dt>
+  <dd><p>格式为"{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}" 的接口标识符 (GUID).</p></dd>
+
+  <dt>SID</dt>
+  <dd><p>与 IID 格式相同的服务标识符. 省略此参数时, 必须同时省略后面跟着的逗号.</p></dd>
+
+</dl>
+
+<h3>一般说明</h3>
+<p>在此函数使用两个参数时, 它相当于 <a href="http://msdn.microsoft.com/en-us/library/ms682521.aspx">IUnknown::QueryInterface</a>. 如果同时指定了 SID 和 IID, 那么它会内部查询 <a href="http://msdn.microsoft.com/en-us/library/cc678965.aspx">IServiceProvider</a> 接口, 然后调用 <a href="http://msdn.microsoft.com/en-us/library/cc678966.aspx">IServiceProvider::QueryService</a>. 在两种形式中, 返回值为零或到被请求接口的指针. 通常在脚本结束时必须 <a href="ObjAddRef.htm">释放</a> 这种指针.</p>
+
+<h3>相关</h3>
+<a href="ObjAddRef.htm">ObjRelease</a>, <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjError.htm">ComObjError</a>
+
+<h3>示例</h3>
+
+<pre id="ExClassName" class="NoIndent"><em>; 示例: 确定对象的类名.</em>
+
+obj := ComObjCreate("Scripting.Dictionary")
+
+MsgBox % "Interface name: " ComObjType(obj, "name")
+
+IID_IProvideClassInfo := "{B196B283-BAB4-101A-B69C-00AA00341D07}"
+
+<em>; 请求到对象的 IProvideClassInfo 接口的指针.</em>
+if !(pci := ComObjQuery(obj, IID_IProvideClassInfo))
+{
+    MsgBox IProvideClassInfo interface not supported.
+    return
+}
+
+<em>; 调用 GetClassInfo 来获取到 ITypeInfo 接口的指针.</em>
+DllCall(vtable(pci, 3), "ptr", pci, "ptr*", ti)
+
+<em>; 调用 GetDocumentation 来获取对象的完整类型名称.</em>
+DllCall(vtable(ti, 12), "ptr", ti, "int", -1, "ptr*", name, "ptr", 0, "ptr", 0, "ptr", 0)
+
+<em>; 转换 BSTR 指针为可用的字符串.</em>
+name := StrGet(name, "UTF-16")
+
+<em>; 释放原始接口指针.</em>
+ObjRelease(ti)
+ObjRelease(pci)
+
+<em>; 显示类型名称!</em>
+MsgBox % "Class name: " name
+
+vtable(ptr, n) {
+    <em>; NumGet(ptr+0) 返回对象的虚函数表
+    ; (简称为 vtable) 的地址. 表达式的其余部分从
+    ; vtable 获取第 n 个函数的地址.</em>
+    return NumGet(NumGet(ptr+0), n*A_PtrSize)
+}
+</pre>
+
+<pre id="ExIE" class="NoIndent"><em>; 示例:自动化已有的Internet Explorer窗口.</em>
+
+sURL := "https://autohotkey.com/boards/"
+if webBrowser := GetWebBrowser()
+   webBrowser.Navigate(sURL)
+return
+
+GetWebBrowser()
+{
+    <em>; 获取到顶级 IE 窗口文档对象的原始指针.</em>
+    static msg := DllCall("RegisterWindowMessage", "str", "WM_HTML_GETOBJECT")
+    SendMessage msg, 0, 0, Internet Explorer_Server1, ahk_class IEFrame
+    if ErrorLevel = FAIL
+        return  <em>; 未找到 IE.</em>
+    lResult := ErrorLevel
+    DllCall("oleacc\ObjectFromLresult", "ptr", lResult
+        , "ptr", GUID(IID_IHTMLDocument2,"{332C4425-26CB-11D0-B483-00C04FD90119}")
+        , "ptr", 0, "ptr*", pdoc)
+    
+    <em>; 查询 WebBrowserApp 服务. 在这种特殊情况中,
+    ; SID 和 IID 相同, 但不总是如此.</em>
+    static IID_IWebBrowserApp := "{0002DF05-0000-0000-C000-000000000046}"
+    static SID_SWebBrowserApp := IID_IWebBrowserApp
+    pweb := ComObjQuery(pdoc, SID_SWebBrowserApp, IID_IWebBrowserApp)
+    
+    <em>; 释放文档对象指针.</em>
+    ObjRelease(pdoc)
+    
+    <em>; 返回包装过的可用的 WebBrowser 对象:</em>
+    static VT_DISPATCH := 9, F_OWNVALUE := 1
+    return ComObject(VT_DISPATCH, pweb, F_OWNVALUE)
+}
+
+GUID(ByRef GUID, sGUID) <em>; 转换字符串为二进制的 GUID 并返回其地址.</em>
+{
+    VarSetCapacity(GUID, 16, 0)
+    return DllCall("ole32\CLSIDFromString", "wstr", sGUID, "ptr", &amp;GUID) &gt;= 0 ? &amp;GUID : ""
+}
+</pre>
+
+</body>
+</html>

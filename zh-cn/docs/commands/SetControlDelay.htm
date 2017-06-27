@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SetControlDelay</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>SetControlDelay</h1>
+
+<p>设置在每次控件修改命令执行后自动的延时.</p>
+
+<pre class="Syntax">SetControlDelay, Delay</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Delay</dt>
+  <dd><p>毫秒表示的时间, 可以为 <a href="../Variables.htm#Expressions">表达式</a>. 使用 -1 表示无延时, 而 0 表示最小延时. 如果未设置, 默认延时为 20.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>在每次控件改变命令执行后, 都会自动进行短暂的延时 (休眠), 这些命令包括 <a href="Control.htm">Control</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlFocus.htm">ControlFocus</a> 和 <a href="ControlSetText.htm">ControlSetText</a> (<a href="ControlSend.htm">ControlSend</a> 例外, 它使用 <a href="SetKeyDelay.htm">SetKeyDelay</a>). 这样做提高了脚本的可靠性, 因为有时控件在被这里的其中一个命令改变后需要一个 "休息" 期. 这个休息期让它可以更新它自己, 以便为下一个可能对它进行操作的命令进行响应.</p>
+<p>虽然允许使用 -1(无延时),但是推荐至少使用 0,这样增加了 CPU 高负荷时脚本正确运行的几率.</p>
+<p>延时为 0 时实际内部会执行 Sleep(0), 这样会将脚本时间片的剩余部分分配给其他需要的进程. 如果没有进程需要, 那么 Sleep(0) 相当于完全没有延时.</p>
+<p>如果 CPU 比较慢或在负载下或启用的窗口动画, 那么可能需要较高的延迟值.</p>
+<p>内置变量 <strong>A_ControlDelay</strong> 包含了当前的设置.</p>
+<p>每个新运行的 <a href="../misc/Threads.htm">线程</a> (例如 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a> 或 <a href="SetTimer.htm">定时</a> 子程序) 都会以此命令的默认设置开始. 通过在脚本的自动执行段 (脚本的顶部) 使用此命令可以改变这个默认设置.</p>
+<h3>相关</h3>
+<p><a href="Control.htm">Control</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlFocus.htm">ControlFocus</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="SetWinDelay.htm">SetWinDelay</a>, <a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetMouseDelay.htm">SetMouseDelay</a>, <a href="SetBatchLines.htm">SetBatchLines</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">SetControlDelay, 0</pre>
+
+</body>
+</html>

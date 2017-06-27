@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>FileOpen</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<style type="text/css">.fopt{width:4em;text-align:center}.fnum{width:4em;text-align:right}</style>
+</head>
+<body>
+
+<h1>FileOpen <span class="ver">[AHK_L 42+]</span></h1>
+
+<p>打开文件.</p>
+<pre class="Syntax">file := FileOpen(Filename, Flags [, Encoding])</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>Filename</dt>
+  <dd>
+    <p>要打开文件的路径, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+    <p><span class="ver">[v1.1.17+]:</span> 特殊的一个(或两个)星号来打开标准 input/output/error 流:</p>
+    <pre>
+FileOpen("*", "r")   <em>; for stdin</em>
+FileOpen("*", "w")   <em>; for stdout</em>
+FileOpen("**", "w")  <em>; for stderr</em></pre>
+  </dd>
+
+  <dt>Flags</dt>
+  <dd><p><span class="ver">[在 AHK_L 54+]</span> 表示希望使用的访问模式的字符串, 后面跟着其他选项 (中间可以含有空格或 tab); 或 <span class="ver">[在 AHK_L 42+]</span> 数值标志的组合 (总和). 下表中描述了支持的值.</p></dd>
+
+  <dt>Encoding</dt>
+  <dd><p>读写文件时使用的代码页.这个参数仅在文件没有 UTF-8 或 UTF-16 <a href="http://en.wikipedia.org/wiki/Byte_order_mark">字节顺序标记</a>, 或者使用了 <code>h</code> (handle) 标记时有效. 如果省略本参数, 则使用 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a> 的当前值.</p></dd>
+
+</dl>
+<h3>Flags</h3>
+<table class="info">
+  <tr><th style="width:4em">&nbsp;</th><th style="width:4em">&nbsp;</th><th style="text-align:left">访问模式 (互斥的)</th></tr>
+  <tr><td class="fopt">r</td><td class="fnum">0</td><td><i>读取:</i> 当文件不存在时失败.</td></tr>
+  <tr><td class="fopt">w</td><td class="fnum">1</td><td><i>写入:</i>创建新文件,<b style="color:red">若文件已存在则覆盖它们</b>.</td></tr>
+  <tr><td class="fopt">a</td><td class="fnum">2</td><td><i>追加:</i> 如果文件不存在则创建新文件, 否则移动文件指针到文件末尾.</td></tr>
+  <tr><td class="fopt">rw</td><td class="fnum">3</td><td><i>读取/写入:</i> 当文件不存在时创建新文件.</td></tr>
+  <tr><td class="fopt">h</td><td>&nbsp;</td><td>表示 <i>Filename</i> 是包装在对象中的文件句柄. 忽略共享模式标志. 当文件对象销毁时, 文件句柄 <b>不会</b> 自动关闭并且调用 <a href="../objects/File.htm#Close">Close</a> 没有效果. 注意当 <i>Filename</i> 是到非搜寻设备 (例如管道或通信设备) 的句柄时不应该使用 <a href="../objects/File.htm#Seek">Seek</a>, <a href="../objects/File.htm#Tell">Tell</a> 和 <a href="../objects/File.htm#Length">Length</a>.</td></tr>
+  <tr><th>&nbsp;</th><th>&nbsp;</th><th style="text-align:left">共享模式标志</th></tr>
+  <tr><td class="fopt" style="white-space:nowrap">-rwd</td><td>&nbsp;</td><td>为读取, 写入和/或删除访问进行文件锁定. 可以使用 <code>r</code>, <code>w</code> 和 <code>d</code> 的任意组合. 指定 <code>-</code> 相当于指定 <code>-rwd</code>. 如果完全省略, 默认为共享所有访问.</td></tr>
+  <tr><td>&nbsp;</td><td class="fnum">0</td><td>如果 <i>Flags</i> 是数值的, 缺少共享模式标志会让文本被锁定.</td></tr>
+  <tr><td>&nbsp;</td><td class="fnum">0x100</td><td>共享 <i>读取</i> 访问.</td></tr>
+  <tr><td>&nbsp;</td><td class="fnum">0x200</td><td>共享 <i>写入</i> 访问.</td></tr>
+  <tr><td>&nbsp;</td><td class="fnum">0x400</td><td>共享 <i>删除</i> 访问.</td></tr>
+  <tr><th>&nbsp;</th><th>&nbsp;</th><th style="text-align:left">行结束符 (EOL) 选项</th></tr>
+  <tr><td class="fopt"><code>`n</code></td><td class="fnum">4</td><td>读取时把 <code>`r`n</code> 替换为 <code>`n</code> 而写入时把 <code>`n</code> 替换为 <code>`r`n</code>.</td></tr>
+  <tr><td class="fopt"><code>`r</code></td><td class="fnum">8</td><td>读取时把单独的 <code>`r</code> 替换为 <code>`n</code>.</td></tr>
+</table>
+
+<h3>返回值</h3>
+<p>如果成功打开文件, 则返回值为 <a href="../objects/File.htm">文件对象</a>.</p>
+<p>如果函数失败, 则返回值为 0 且 <span class="ver">[in AHK_L 54+]</span> <a href="../Variables.htm#LastError">A_LastError</a> 包含错误码.</p>
+<p>使用 <code>if file</code> 或 <code>IsObject(file)</code> 可以判断函数是否成功执行.</p>
+
+<h3>备注</h3>
+<p>当创建 UTF-8 或 UTF-16 文件时, 会写入字节顺序标记到文件中, <b>除非</b> <i>Encoding</i> (或 <a href="FileEncoding.htm">A_FileEncoding</a>, 当 <i>Encoding</i> 省略时) 包含 "UTF-8-RAW" 或 "UTF-16-RAW".</p>
+<p>以读取方式打开含有 UTF-8 或 UTF-16 字节顺序标记(BOM)的文件时,会把文件指针放置到这个标志后来从输出中排除 BOM.因此,在刚刚打开这样的文件时 <code>File.Position</code> 可能为 3 或 2.</p>
+
+<h3>相关</h3>
+<p><a href="FileEncoding.htm">FileEncoding</a>, <a href="../objects/File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a></p>
+
+<h3>示例</h3>
+<pre class="NoIndent" id="writeread"><em>; 示例: 这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存.
+; 它提供了与 <a href="DllCall.htm#file">此 DllCall 示例</a> 同样的功能.</em>
+
+FileSelectFile, FileName, S16,, Create a new file:
+if (FileName = "")
+	return
+file := FileOpen(FileName, "w")
+if !IsObject(file)
+{
+	MsgBox Can't open "%FileName%" for writing.
+	return
+}
+TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
+file.Write(TestString)
+file.Close()
+
+<em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
+file := FileOpen(FileName, "r-d") <em>; 读取文件 ("r"), 共享除删除 ("-d") 外的所有访问权限</em>
+if !IsObject(file)
+{
+	MsgBox Can't open "%FileName%" for reading.
+	return
+}
+CharsToRead := StrLen(TestString)
+TestString := file.Read(CharsToRead)
+file.Close()
+MsgBox The following string was read from the file: %TestString%</pre>
+
+<pre class="NoIndent"><em>; 以只读模式打开脚本并读取它的首行:</em>
+file := FileOpen(A_ScriptFullPath, "r")
+MsgBox % file.ReadLine()
+
+<em>; 打开控制台窗口以进行此次演示:</em>
+DllCall("AllocConsole")
+<em>; 在新行符转换模式中打开应用程序的 stdin/stdout 句柄.</em>
+stdin  := FileOpen("*", "r `n")  <em>; Requires v1.1.17+</em>
+stdout := FileOpen("*", "w `n")
+<em>; For older versions:
+;   stdin  := FileOpen(DllCall("GetStdHandle", "int", -10, "ptr"), "h `n")
+;   stdout := FileOpen(DllCall("GetStdHandle", "int", -11, "ptr"), "h `n")</em>
+stdout.Write("Enter your query.`n\> ")
+stdout.Read(0) <em>; Flush the write buffer.</em>
+query := RTrim(stdin.ReadLine(), "`n")
+stdout.WriteLine("Your query was '" query "'. Have a nice day.")
+stdout.Read(0) <em>; 刷新写入缓冲区.</em>
+Sleep 5000
+</pre>
+</body>
+</html>

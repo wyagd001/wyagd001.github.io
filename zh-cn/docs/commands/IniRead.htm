@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>IniRead</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>IniRead</h1>
+
+<p>从标准ini格式文件中读取一个值,一个段或段名列表.</p>
+
+<pre class="Syntax">IniRead, OutputVar, Filename, Section, Key [, Default]
+IniRead, OutputVarSection, Filename, Section
+IniRead, OutputVarSectionNames, Filename
+</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>OutputVar</dt>
+  <dd>
+      <p>存放返回值的变量名. 如果无法返回值, 此变量将被设置成 <em>Default</em> 参数所指定的值(在下文列出).</p>
+    </dd>
+  
+  <dt>OutputVarSection</dt>
+  <dd><p><span class="ver">[AHK_L 57+]:</span> 省略 <em>Key</em> 参数时会读取一整段的值.仅该段的前65,533个字符串会被返回,不包含注释和空行.</p></dd>
+  
+  <dt>OutputVarSectionNames</dt>
+  <dd><p><span class="ver">[AHK_L 57+]:</span> 省略 <em>Key</em> 和 <em>Section</em> 参数时会返回一个以换行符 (<code>`n</code>) 分隔的段名列表.</p></dd>
+
+  <dt>Filename</dt>
+  <dd><p>ini 文件名, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p></dd>
+
+  <dt>Section</dt>
+  <dd><p>ini 文件中的段名, 它是包含在方括号中的标题短语 (在此参数中不需要加方括号).</p></dd>
+
+  <dt>Key</dt>
+  <dd><p>ini 文件中的键名.</p></dd>
+
+  <dt>Default</dt>
+  <dd><p>当没有找到请求的键时保存到 <em>OutputVar</em> 中的值. 如果省略, 此参数默认为单词 ERROR. 要存储空值 (空字符串), 请指定 <a href="../Variables.htm#Space">%A_Space%</a>.</p>
+      <p><span class="ver">[AHK_L 57+]:</span> 省略 <i>Key</i> 时此参数无意义.</p>
+      </dd>
+
+</dl>
+<h3>ErrorLevel</h3>
+<p>此命令 <strong>不会</strong> 改变 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>. 如果遇到问题, <em>OutputVar</em> 将被设置为如上所述的 <em>Default</em> 值.</p>
+<h3>备注</h3>
+<p>操作系统会自动忽略获取字符串中前导和尾随空格/tab. 为避免此情况,使用单引号或双引号结束字符串.最外层的单引号或双引号被忽略,但引号内的空格被保留.</p>
+<p>超过 65,535 字符的值很可能被截短.</p>
+<p>标准的 ini 文件看起来类似下面这样:</p>
+<pre>[SectionName]
+Key=Value</pre>
+<p><b>Unicode:</b> IniRead 和 IniWrite 依靠外部函数 <a href="http://msdn.microsoft.com/en-us/library/ms724353.aspx">GetPrivateProfileString</a> 和 <a href="http://msdn.microsoft.com/en-us/library/ms725501.aspx">WritePrivateProfileString</a> 来读取和写入值. 这些函数仅支持 UTF-16 编码的 Unicode 文件; 其他所有文件都被认为使用系统默认 ANSI 代码页.</p>
+<h3>相关</h3>
+<p><a href="IniDelete.htm">IniDelete</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="RegRead.htm">RegRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="FileRead.htm">FileRead</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">IniRead, OutputVar, C:\Temp\myfile.ini, section2, key
+MsgBox, The value is %OutputVar%.</pre>
+
+</body>
+</html>

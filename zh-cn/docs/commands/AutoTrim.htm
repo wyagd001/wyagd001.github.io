@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>AutoTrim</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>AutoTrim</h1>
+
+<p>设置在 <code><a href="SetEnv.htm">Var1 = %Var2%</a></code> 这样的语句中进行赋值时是否忽略 <em>Var2</em> 的前导和尾随空格和 tab.</p>
+
+<pre class="Syntax">AutoTrim, On|Off</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>On|Off</dt>
+  <dd><p><strong>On</strong>:在类似 <code><a href="SetEnv.htm">Var1 = %Var2%</a></code> 这样的语句中,把 <em>Var2</em> 赋值给 <em>Var1</em> 时忽略其中的前导和尾随 tab 和空格.这是默认的.</p>
+      <p id="Off"><strong>Off</strong>: 不忽略这样的 tab 和空格.</p>
+      <p>不论此设置如何, 总是会忽略任何字面上的 tab 和空格. 在 v1.1.06 之前的版本中, 这里包括了 `t 和任何转义的空格和 tab. 例如,当 AutoTrim 设置为 Off 时,语句 <code>Var = `t</code> 在 v1.1.06 中则赋值一个 tab 字符,而在早期版本中会赋值空字符串.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>如果没有在脚本中使用此命令, 那么此默认设置为 ON.</p>
+<p>内置变量 <strong>A_AutoTrim</strong> 包含了此命令当前的设置 (On 或 Off).</p>
+<p>内置变量 <a href="../Variables.htm#Space">A_Space</a> 和 <a href="../Variables.htm#Tab">A_Tab</a> 分别包含单个空格和单个 tab 字符.</p>
+<p>AutoTrim 对诸如 <code>Var := " string "</code> 这样的 <a href="SetExpression.htm">表达式赋值</a>没有影响.换句话说, 在这种情况下总是会保留前导和尾随空格和 tab.</p>
+<p>每个新运行的 <a href="../misc/Threads.htm">线程</a> (例如 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a> 或 <a href="SetTimer.htm">定时</a> 子程序) 都会以此命令的默认设置开始. 通过在脚本的自动执行段 (脚本的顶部) 使用此命令可以改变这个默认设置.</p>
+<h3>相关</h3>
+<p><a href="SetEnv.htm">SetEnv</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">AutoTrim, off
+NewVar1 = %OldVar%  <em>; 如果 OldVar 包含前导和尾随空格, 那么 NewVar 也会包含它们.</em>
+NewVar2 = %A_Space%  <em>; 使用 AutoTrim off 的设置时, 可以用这种方式赋值单个空格.</em>
+
+Var1 := "`t" <strong>.</strong> Var2 <strong>.</strong> " "  <em>; AutoTrim 的设置对此语句没有影响, 因为它是 <a href="../Variables.htm#Expressions">表达式</a>.</em></pre>
+
+</body>
+</html>

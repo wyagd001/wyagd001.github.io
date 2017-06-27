@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SoundPlay</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>SoundPlay</h1>
+
+<p>播放音频,视频或其他支持的文件类型.</p>
+
+<pre class="Syntax">SoundPlay, Filename [, wait]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Filename</dt>
+  <dd><p>要播放的文件名, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p>
+    <p>要发出标准的系统声音, 请像下面显示的那样指定星号后跟着数字. 注: 在此模式中 <em>wait</em> 参数没有效果.<br><strong>*-1</strong>:简单的哔哔声.如果声卡不可用, 则使用扬声器生成这个声音..<br><strong>*16</strong>: 手型(停止/错误声)<br><strong>*32</strong>:问号声<br><strong>*48</strong>:感叹声<br><strong>*64</strong>:星号(消息声)</p></dd>
+
+  <dt>wait</dt>
+  <dd><p>如果省略, 则在播放文件时脚本的 <a href="../misc/Threads.htm">当前线程</a> 会移动到下一个命令. 要避免这种情况, 请指定 1 或单词 WAIT, 这会使得当前线程会等到文件播放结束后才继续执行. 即使在等待时, 可以通过 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a> 或 <a href="SetTimer.htm">计时器</a> 启动新的 <a href="../misc/Threads.htm">线程</a>.</p>
+      <p>已知限制: 如果省略 WAIT 参数, 则操作系统可能认为播放的文件 "在使用中", 直到脚本关闭或播放另一个文件 (甚至是不存在的文件).</p></dd>
+
+</dl>
+
+<h3>ErrorLevel</h3>
+<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
+<h3>备注</h3>
+<p>所有 Windows 操作系统应该够能播放 .wav 文件. 不过, 如果操作系统中没有安装正确的解码器或功能, 那么其他文件 (.mp3, .avi, etc.) 可能无法播放.</p>
+<p>如果在播放一个文件时当前脚本播放了第二个文件, 那么第一个文件会被停止后才可以播放第二个. 在一些系统中, 即使在完全独立的脚本中播放新文件时, 某些文件类型也可能停止播放.</p>
+<p>要停止当前正在播放的文件,请对不存在的文件使用 SoundPlay,例如:<code>SoundPlay, Nonexistent.avi</code>.</p>
+<p>如果脚本退出了, 那么任何由它启动的当前正在播放的文件将会停止.</p>
+<h3>相关</h3>
+<p><a href="SoundBeep.htm">SoundBeep</a>, <a href="SoundGet.htm">SoundGet</a>, <a href="SoundSet.htm">SoundSet</a>, <a href="SoundGetWaveVolume.htm">SoundGetWaveVolume</a>, <a href="SoundSetWaveVolume.htm">SoundSetWaveVolume</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="../misc/Threads.htm">线程</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">SoundPlay, %A_WinDir%\Media\ding.wav
+SoundPlay *-1  <em>; 简单的哗哗声. 如果声卡不可用, 则使用扬声器生成这个声音..</em></pre>
+
+</body>
+</html>

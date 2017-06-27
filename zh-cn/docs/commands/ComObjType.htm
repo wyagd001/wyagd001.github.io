@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>ComObjType()</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ComObjType() <span class="ver">[v1.0.91+]</span></h1>
+
+<p>从 COM 对象获取类型信息.</p>
+
+<pre class="Syntax">VarType := ComObjType(ComObject)
+Name    := ComObjType(ComObject, "Name")
+IID     := ComObjType(ComObject, "IID")
+Class   := ComObjType(ComObject, "Class")  <em>; v1.1.26+</em>
+CLSID   := ComObjType(ComObject, "CLSID")  <em>; v1.1.26+</em>
+</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>ComObject</dt>
+  <dd><p>包含 COM 对象或类型化值的包装器对象.</p></dd>
+
+<dt>参数2</dt>
+<dd><p>第二个参数是指示返回的类型信息的字符串.</p></dd>
+
+</dl>
+
+<h3>返回值</h3>
+<p>返回值依赖于<em>参数2 </em>的值:</p>
+<table class="info">
+<tr><th style="white-space: nowrap">参数2</th><th>返回值</th></tr>
+<tr><td>省略</td><td>整数 <a href="#vt">变量类型</a> 包装器对象包含的值的变量类型.</td></tr>
+<tr><td>"Name"</td><td>接口类型名称.</td></tr>
+<tr><td>"IID"</td><td>接口类型的全局唯一标识符 (GUID) .</td></tr>
+<tr><td>"Class"</td><td><span class="ver">[v1.1.26+]:</span> 对象的类名. 请注意,Class 与 Prog ID 是不一样的 (Prog ID 是一个在系统注册表或 ComObjCreate 中用于识别的类名称).</td></tr>
+<tr><td>"CLSID"</td><td><span class="ver">[v1.1.26+]:</span> 对象类的全局唯一标示符 (GUID) . 对象经常以 CLSID 的形式注册在<code>HKCR\CLSID</code> 注册表键下.</td></tr>
+</table>
+<p>如果参数无效或指定的类型信息无法取回, 则返回空字符串.</p>
+
+<h3 id="vt">变量类型的常量值</h3>
+<pre>
+VT_EMPTY     =      0  <em>; 没有值</em>
+VT_NULL      =      1  <em>; SQL 风格的空值</em>
+VT_I2        =      2  <em>; 16 位有符号整数</em>
+VT_I4        =      3  <em>; 32 位有符号整数</em>
+VT_R4        =      4  <em>; 32 位浮点数</em>
+VT_R8        =      5  <em>; 64 位浮点数</em>
+VT_CY        =      6  <em>; 货币</em>
+VT_DATE      =      7  <em>; 日期</em>
+VT_BSTR      =      8  <em>; COM 字符串(带长度前缀的 Unicode 字符串)</em>
+VT_DISPATCH  =      9  <em>; COM 对象</em>
+VT_ERROR     =    0xA  <em>; 错误代码(32 位整数)</em>
+VT_BOOL      =    0xB  <em>; 布尔值真(-1)或假(0)</em>
+VT_VARIANT   =    0xC  <em>; <a href="http://msdn.microsoft.com/en-us/library/ms221627.aspx">VARIANT </a>(必须与 VT_ARRAY 或 VT_BYREF 组合使用)</em>
+VT_UNKNOWN   =    0xD  <em>; IUnknown 接口指针</em>
+VT_DECIMAL   =    0xE  <em>; (不支持)</em>
+VT_I1        =   0x10  <em>; 8 位有符号整数</em>
+VT_UI1       =   0x11  <em>; 8 位无符号整数</em>
+VT_UI2       =   0x12  <em>; 16 位无符号整数</em>
+VT_UI4       =   0x13  <em>; 32 位无符号整数</em>
+VT_I8        =   0x14  <em>; 64 位有符号整数</em>
+VT_UI8       =   0x15  <em>; 64 位无符号整数</em>
+VT_INT       =   0x16  <em>; 有符号机器整数</em>
+VT_UINT      =   0x17  <em>; 无符号机器整数</em>
+VT_RECORD    =   0x24  <em>; 用户定义类型 - 不支持</em>
+VT_ARRAY     = 0x2000  <em>; <a href="http://msdn.microsoft.com/en-us/library/ms221482.aspx">SAFEARRAY (安全数组)</a></em>
+VT_BYREF     = 0x4000  <em>; 到另一种值的指针</em>
+<em>/*
+ VT_ARRAY / VT_BYREF 与另一个值组合使用 (使用按位 "或"),
+ 以表示最终的类型.例如, 0x2003 表示 32 位有符号整数的 <a href="http://msdn.microsoft.com/en-us/library/ms221482.aspx">SAFEARRAY (安全数组)</a>,
+ 而 0x400C 表示到 <a href="http://msdn.microsoft.com/en-us/library/ms221627.aspx">VARIANT</a> 的指针.
+*/</em>
+</pre>
+
+<h3>一般说明</h3>
+<p>在通常情况下, COM 对象的方法或属性的返回值会被转换成 AutoHotkey 支持的适合的数据类型. 没有明确处理的类型通过 <a href="http://msdn.microsoft.com/en-us/library/ms221258.aspx">VariantChangeType</a> 强制转换成字符串; 如果转换失败或变量类型包含 VT_ARRAY 或 VT_BYREF 标志, 则返回包含此值和其类型的对象.</p>
+<p>对于任意变量 <i>x</i>, 如果 <code>ComObjType(x)</code> 返回整数, 则 <i>x</i> 包含 COM 对象包装器.</p>
+
+
+<p>如果 <em>参数2</em> 是 "Name" 或 "IID", 类型信息是通过 <a href="https://msdn.microsoft.com/en-us/library/ms221571">IDispatch::GetTypeInfo</a> 接口方法取回的. <em>ComObject</em>的变量类型必须是 VT_DISPATCH.</p>
+ <p>如果 <em>参数2</em> 是 "Class" 或 "CLSID", 类型信息是通过 <a href="https://msdn.microsoft.com/en-us/library/ms690192">IProvideClassInfo::GetClassInfo</a> 接口方法取回的. <em>ComObject</em>的变量类型必须是 VT_DISPATCH 或 VT_UNKNOWN, 并且对象必须执行 iprovideclassinfo 接口 (一些对象不需要).</p>
+
+<h3>相关</h3>
+<p><a href="ComObjValue.htm">ComObjValue</a>, <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a></p>
+
+<h3>示例</h3>
+<pre class="NoIndent">
+d := <a href="ComObjCreate.htm">ComObjCreate</a>("Scripting.Dictionary")
+VarType := ComObjType(d)          <em>; 对于可脚本化对象总为 9.</em>
+Name    := ComObjType(d, "Name")  <em>;仅对于可脚本化对象有效.</em>
+IID     := ComObjType(d, "IID")   <em>; 同上.</em>
+CName   := ComObjType(d, "Class")  <em>; v1.1.26+</em>
+CLSID   := ComObjType(d, "CLSID")  <em>; v1.1.26+</em>
+MsgBox 变量类型:`t%VarType%`名称:`t%Name%`nIID(接口ID):`t%IID%`n类名:`t%CName%`n类标识符 (CLSID):`t%CLSID%
+</pre>
+
+</body>
+</html>

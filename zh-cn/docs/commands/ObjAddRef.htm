@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>ObjAddRef() / ObjRelease()</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+
+<h1>ObjAddRef() / ObjRelease() <span class="ver">[AHK_L 53+]</span></h1>
+
+<p>增加或减少对象的引用数.</p>
+
+<pre class="Syntax">ObjAddRef(Ptr)<br>ObjRelease(Ptr)</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Ptr</dt>
+  <dd><p>非托管对象指针或 COM 接口指针.</p></dd>
+
+</dl>
+
+<h3>返回值</h3>
+<p>这两个函数返回新的引用数. 这个值应该 <b>仅</b> 用于调试的目的.</p>
+
+<h3>相关</h3>
+<p>尽管后面的文章讨论了适用于 COM 的引用计数, 但其中也包含了通常也适用于 AutoHotkey 对象的重要概念和规则: <a href="http://msdn.microsoft.com/en-us/library/ms691379.aspx">IUnknown::AddRef</a>, <a href="http://msdn.microsoft.com/en-us/library/ms682317.aspx">IUnknown::Release</a>, <a href="http://support.microsoft.com/kb/104138">引用计数规则</a>.</p>
+
+<h3>示例</h3>
+<p>请参阅 <a href="ComObjConnect.htm#Examples">ComObjConnect</a>.</p>
+
+<pre class="NoIndent">obj := Object()
+
+<em>; 下面的两行是等同的:</em>
+ptr1 := <a href="../Objects.htm#AddressCast">Object</a>(obj)
+ptr2 := ObjectToPointer(obj)
+
+ObjectToPointer(obj) {
+    if !IsObject(obj)
+        return ""
+    ptr := &amp;obj
+    ObjAddRef(ptr)
+    return ptr
+}
+
+<em>; 由 Object() 或 ObjectToPointer() 返回的指针必须进行手动释放,
+; 这样才能最终释放对象并回收它占用的内存.</em>
+ObjRelease(ptr2)
+ObjRelease(ptr1)
+</pre>
+
+</body>
+</html>

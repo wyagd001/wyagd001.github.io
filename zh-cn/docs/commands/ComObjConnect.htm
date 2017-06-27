@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>ComObjConnect()</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ComObjConnect() <span class="ver">[AHK_L 53+]</span></h1>
+<p>链接对象的事件到给定的前缀名的响应函数.</p>
+<pre class="Syntax">ComObjConnect(ComObject [, Prefix])</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>ComObject</dt>
+  <dd>
+    <p>产生事件的对象.</p>
+    <p>如果对象不支持 IConnectionPointContainer 接口,或,无法获取对象类的类型信息,将显示一条错误信息.可通过 <a href="ComObjError.htm">ComObjError</a> 或 <a href="Try.htm">try</a>/<a href="Catch.htm">catch</a> 禁止或处理此错误信息.</p>
+    <p>在 <span class="ver">[v1.1.22]+</span> 中,如果对象支持,使用 IProvideClassInfo 接口以接收此对象类的类型信息.否则, ComObjConnect 尝试通过对象的 IDispatch 接口以接收类型信息,这可能不可靠.</p>
+  </dd>
+
+  <dt>Prefix</dt>
+  <dd>
+      <p>用于确定当事件发生时应调用哪个函数,此字符串为事件名称 (EventName) 对应的前缀 (Prefix) .</p>
+      <p>如果省略,则对象为 "未连接的"; 即脚本将不再接收其事件通知.</p>
+      <p><span class="ver">[v1.1.01+]:</span> 此参数可以为脚本定义的对象. 事件发生时, 会调用相应的方法. 首个参数,通常为隐式传递的参数<code>this</code>,其引用脚本定义的对象, 而非COM 对象.要捕获所有事件,而又不想为每个事件定义方法,可定义<a href="../Objects.htm#Meta_Functions">__Call 元函数</a>.</p>
+    </dd>
+
+</dl>
+
+<h3 id="Usage">用法</h3>
+<p>在脚本中编写处理所需事件的函数.这类函数或"事件处理程序"具有下列结构:</p>
+<pre class="Syntax Short NoIndent"><i>Prefix</i><b>EventName</b>([<i>Params...</i>, ComObject])
+{
+    <i class="dull">... event-handling code ...</i>
+    return <i>returnValue</i>
+}</pre>
+<p><i>Prefix 前缀</i> 为用户定义;而 <b>EventName 事件名称</b> 为期望此函数响应的事件名称,定义于产生事件的对象.</p>
+<p><i>Params 参数</i> 对应于事件包含的所有参数. 如果事件不含有参数, <i>Params 参数</i> 应完全省略. <i>ComObject</i> 为可选,仅当<i>参数</i>的数目正确时;它包含了到传递给 ComObjConnect 的原始包装器(转换器)对象的引用.&quot;ComObject&quot; 应被替换为与您脚本上下文相关的更有意义的名称.</p>
+<p>注意,事件处理程序可以产生返回值.要返回特定的 COM 类型的值,使用 <a href="ComObjActive.htm#param">ComObject(类型, 值)</a>. 例如, <code>return ComObject(0,0)</code> 返回类型为 VT_EMPTY 的变量,其等效于从 JavaScript 函数中返回 <code>undefined</code>(或未返回).</p>
+<p>调用 <code>ComObjConnect(目标对象, "<i>Prefix</i>")</code> 以启用事件处理.</p>
+<p>调用 <code>ComObjConnect(目标对象)</code> 以断开对象(停止事件处理).</p>
+<p>如果参数的数目未知,可用 <a href="../Functions.htm#Variadic">可变参数函数</a>.</p>
+
+<h3>相关</h3>
+<p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="http://msdn.microsoft.com/en-us/library/ccxe1xe6.aspx">WScript.ConnectObject (MSDN)</a></p>
+
+<h3 id="Examples">示例</h3>
+<pre class="NoIndent">
+ie := ComObjCreate("<a href="http://msdn.microsoft.com/en-us/library/aa752084.aspx">InternetExplorer.Application</a>")
+
+<em>;把事件连接到带"IE_"前缀的脚本函数.</em>
+<b>ComObjConnect</b>(ie, "IE_")
+
+ie.Visible := true  <em>; 已知此语句在IE7上无法正常执行.</em>
+ie.Navigate("https://autohotkey.com/")
+#Persistent
+
+<b>IE_<a href="http://msdn.microsoft.com/en-us/library/aa768329.aspx">DocumentComplete</a></b>(ieEventParam, url, ieFinalParam) {
+    global ie
+    if (ie != ieEventParam)
+        s .= <em>"第一个参数是新的包装器对象.`n"</em>
+    if (ie == ieFinalParam)
+        s .= <em>"最后一个参数是原始包装器对象.`n"</em>
+    if ((disp1:=<a href="ComObjActive.htm#enwrap">ComObjUnwrap</a>(ieEventParam)) == (disp2:=ComObjUnwrap(ieFinalParam)))
+        s .= <em>"两个包装器对象均引用同一个IDispatch实例.`n"</em>
+    <a href="ObjAddRef.htm">ObjRelease</a>(disp1), ObjRelease(disp2)
+    MsgBox % s . "完成载入" ie.Document.title " @ " url
+    ie.Quit()
+    ExitApp
+}
+</pre>
+
+</body>
+</html>

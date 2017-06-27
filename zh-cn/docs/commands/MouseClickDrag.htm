@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>MouseClickDrag</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>MouseClickDrag</h1>
+
+<p>点击并按住指定的鼠标按钮,接着移动鼠标到目标坐标,然后松开按钮.</p>
+
+<pre class="Syntax">MouseClickDrag, WhichButton, X1, Y1, X2, Y2 [, Speed, R]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>WhichButton</dt>
+  <dd><p>要点击的按钮: Left, Right, Middle (或这些单词的首个字母). 对于第四个按钮使用 X1,对第五个则用 X2.例如:<code>MouseClickDrag, X1, ...</code>.</p>
+    <p>要避免受用户通过系统控制面板对左右键功能交换的设置的影响, 请使用 <a href="Click.htm">Click 命令</a> 代替.</p></dd>
+
+  <dt>X1, Y1</dt>
+  <dd><p>拖动的起始位置的 x/y 坐标, 可以为 <a href="../Variables.htm#Expressions">表达式</a> (在开始拖动前会移动鼠标到这个坐标). 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置. 如果省略, 则使用鼠标的当前位置.</p></dd>
+
+  <dt>X2, Y2</dt>
+  <dd><p>拖动的目标位置的 x/y 坐标, 可以为 <a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p></dd>
+
+  <dt>Speed</dt>
+  <dd><p>移动鼠标的速度,介于 0(最快)和 100(最慢)之间,可以为<a href="../Variables.htm#Expressions">表达式</a>.注:速度为 0 表示瞬时移动鼠标到目标位置.如果省略,则使用默认速度(通过 <a href="SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a> 设置,若为设置则使用 2).</p>
+      <p>在 <a href="SendMode.htm">SendInput/Play 模式</a> 中会忽略 <em>Speed</em>; 它们会瞬时移动鼠标到目标位置 (不过 <a href="SetMouseDelay.htm">SetMouseDelay</a> 有适用于 SendPlay 的模式). 要显示鼠标移动轨迹(例如使用脚本向观众进行演示时),请使用 <code><a href="Send.htm#Click">SendEvent {Click 100, 200}</a></code> 或 <code><a href="SendMode.htm">SendMode Event</a></code>(可以和 <a href="BlockInput.htm">BlockInput</a> 联合使用).</p></dd>
+
+  <dt>R</dt>
+  <dd><p>如果此参数为字母 R, 则会把 X1 和 Y1 坐标视为距离当前鼠标位置的偏移. 换句话说, 会把光标从当前位置往右移动 X1 像素 (负值则往左) 且往下移动 Y1 像素 (负值则往上).</p>
+      <p>同样地, 会把 X2 和 Y2 坐标视为距离 X1 和 Y1 坐标的偏移. 例如,后面的例子中会首先把鼠标从起始位置往下和往右移动 5 个像素,然后从这个位置往下和往右拖动 10 个像素:<code>MouseClickDrag, Left, 5, 5, 10, 10, , R</code>.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>此命令的发送模式由 <a href="SendMode.htm">SendMode</a> 设置.</p>
+<p>还可以使用其他 Send 命令进行拖动, 这样更灵活, 因为可以通过命令名指定发送的模式. 例如:</p>
+<pre>SendEvent {Click 6, 52, down}{click 45, 52, up}</pre>
+<p>上面这种方法的另一个好处是与 MouseClickDrag 不同, 它不受用户通过系统控制面板对左右键功能交换的设置的影响.</p>
+<p><a href="SendMode.htm">SendPlay 模式</a> 生成的鼠标事件可以比其他模式适应更大范围的游戏. 然而, 使用 SendPlay 进行拖动操作在 RichEdit 控件中 (可能还有其他的) 例如 WordPad 和 Metapad, 可能无法工作.</p>
+<p>某些应用程序和游戏在鼠标移动过快时可能会跟踪困难. 可以使用 <a href="SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a> 的 <em>speed</em> 参数来降低鼠标的速度 (仅对默认的 <a href="SendMode.htm">SendEvent 模式</a> 有效).</p>
+<p>可以使用 <a href="BlockInput.htm">BlockInput</a> 命令防止用户对鼠标的任何物理操作扰乱由鼠标命令生成的模拟鼠标事件. 不过, 在 <a href="SendMode.htm">SendInput/Play</a> 模式中通常不需要这个命令, 因为它们会自动延迟用户对鼠标的物理操作到发送之后.</p>
+<p>在每次鼠标按下事件和鼠标弹起事件后都会有一个自动的延时 (不包括 <a href="SendMode.htm">SendInput 模式</a>). 此延时同样发生在拖动期间鼠标的移动之后. 使用 <a href="SetMouseDelay.htm">SetMouseDelay</a> 可以改变延时的长度.</p>
+<h3>相关</h3>
+<p><a href="CoordMode.htm">CoordMode</a>, <a href="SendMode.htm">SendMode</a>, <a href="SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>, <a href="SetMouseDelay.htm">SetMouseDelay</a>, <a href="Click.htm">Click</a>, <a href="MouseClick.htm">MouseClick</a>, <a href="MouseGetPos.htm">MouseGetPos</a>, 
+  <a href="MouseMove.htm">MouseMove</a>, <a href="BlockInput.htm">BlockInput</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">MouseClickDrag, left, 0, 200, 600, 400
+
+<em>; 下面的例子打开微软的画图工具并画一个小房子:</em>
+Run, mspaint.exe
+WinWaitActive, ahk_class MSPaintApp,, 2
+if ErrorLevel
+    return
+MouseClickDrag, L, 150, 250, 150, 150
+MouseClickDrag, L, 150, 150, 200, 100
+MouseClickDrag, L, 200, 100, 250, 150
+MouseClickDrag, L, 250, 150, 150, 150
+MouseClickDrag, L, 150, 150, 250, 250
+MouseClickDrag, L, 250, 250, 250, 150
+MouseClickDrag, L, 250, 150, 150, 250
+MouseClickDrag, L, 150, 250, 250, 250</pre>
+
+</body>
+</html>

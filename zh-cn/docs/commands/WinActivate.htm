@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>WinActivate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>WinActivate</h1>
+
+<p>激活指定的窗口(让它置于最前面).</p>
+
+<pre class="Syntax">WinActivate [, WinTitle, WinText, ExcludeTitle, ExcludeText]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>WinTitle</dt>
+  <dd><p>窗口标题或识别目标窗口的其他条件.请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
+
+  <dt>WinText</dt>
+  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串 (和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
+
+  <dt>ExcludeTitle</dt>
+  <dd><p>标题中含有此参数值的窗口将被排除.</p></dd>
+
+  <dt>ExcludeText</dt>
+  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>如果窗口处于最小化状态, 那么会对其还原后再进行激活.在v1.1.20及以后的版本中, 窗口即使已经是激活状态,也会被还原.</p>
+<p>在 60ms 的时间中, 会对目标窗口进行六次激活的尝试.因此, 通常不需要在 WinActivate 后使用 <a href="WinWaitActive.htm">WinWaitActive</a> 或 <a href="WinActive.htm">IfWinNotActive</a>.</p>
+<p>如果匹配窗口已经为活动窗口, 那么会让此窗口继续保持活动状态, 而不会激活此窗口下的其他任何匹配窗口. 一般而言, 如果有多个匹配窗口, 那么会激活最上面的 (最近使用的) 窗口. 您可以使用 <a href="WinActivateBottom.htm">WinActivateBottom</a> 激活最下面的 (最早使用的) 窗口.</p>
+<p><span class="ver">[v1.1.20+]:</span>如果要激活的窗口处于隐藏状态并且 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被设置为OFF时,该窗口将永远不会视为一个匹配项. 相反,只要有一个匹配窗口是可见的,它就会被激活.</p>
+<p>在激活一个窗口后立即激活其他的窗口, 在一些系统上任务栏按钮可能会闪烁 (取决于操作系统和设置). 要避免此问题, 请使用 <a href="_WinActivateForce.htm">#WinActivateForce</a>.</p>
+<p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时,才能检测到隐藏窗口.</p>
+<p><strong>已知问题:</strong> 如果脚本运行在正在被远程桌面访问的计算机或服务器上,当远程桌面客户端最小化时,WinActivate 可能会挂起.一种解决办法是使用不需要激活窗口的命令,如 <a href="ControlSend.htm">ControlSend</a> 和 <a href="ControlClick.htm">ControlClick</a>. 另一个可能的解决方法是在本地/客户端计算机的注册表上做如下设置:</p>
+<pre><em>; 将HKCU改成HKLM,并对该系统上的所有用户生效.</em>
+RegWrite REG_DWORD, HKCU, Software\Microsoft\Terminal Server Client
+    , RemoteDesktop_SuppressWhenMinimized, 2</pre>
+
+<h3>相关</h3>
+<p><a href="WinActivateBottom.htm">WinActivateBottom</a>, <a href="_WinActivateForce.htm">#WinActivateForce</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>, <a href="WinExist.htm">IfWinExist</a>, <a href="WinActive.htm">IfWinActive</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="WinClose.htm">WinClose</a>, <a href="GroupActivate.htm">GroupActivate</a>, <a href="WinSet.htm">WinSet</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">IfWinExist, Untitled - Notepad
+    WinActivate <em>; 使用前面找到的窗口</em>
+else
+    WinActivate, Calculator</pre>
+
+</body>
+</html>

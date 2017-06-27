@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>MsgBox</title>
+<meta name="description" content="在此免费的脚本语言中轻松显示 MsgBox 窗口您可以可以创建自定义数据输入窗体, 用户界面和菜单栏.">
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>MsgBox</h1>
+
+<p>在含有一个或多个按钮(例如"是"和"否")的小窗口中显示指定的文本 .</p>
+
+<pre class="Syntax">MsgBox, Text
+MsgBox [, Options, Title, Text, Timeout]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>文本</dt>
+  <dd><p>如果省略所有的参数,MsgBox 会显示"Press OK to continue."文本.否则,此参数表示消息框中显示的文本,用来引导用户如何操作或提示信息.</p>
+    <p>可以使用 <a href="_EscapeChar.htm">转义序列</a> 来显示特殊字符. 例如, `n 表示换行符, 它结束当前行并开始一个新行. 因此使用 text1`n`ntext2 会在 text1 和 text2 之间添加一个空行.</p>
+    <p>如果 <em>Text</em> 较长, 可以通过 <a href="../Scripts.htm#continuation">延续片段</a> 的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p></dd>
+
+  <dt>选项</dt>
+  <dd><p>表示消息框的类型和合适的按钮组合.如果为空或省略,则默认为 0.请参阅下表来了解允许的值.</p>
+    <p>此参数必须为原义的数字或(在 v1.1.06+)强制表达式,例如 <code>% Options</code>.其他任何非空值都不会被看做是此参数, 相反的只是被认为是单参数模式中 <em>Text</em> 的一部分.</p></dd>
+
+  <dt>标题</dt>
+  <dd><p>消息框窗口的标题.如果省略或为空, 那么它默认为脚本的名称 (不含路径).</p></dd>
+
+  <dt id="Timeout">超时</dt>
+  <dd><p>(可选)以秒为单位的超时时间,默认情况下可以为小数但不能是表达式.在 v1.1.06+,此参数可以强制为表达式,例如 <code>% mins*60</code>.</p>
+    <p>如果这个值超过 2147483(24.8 天),那么它会被设置为 2147483.经过这个超时时间后消息框将自动关闭且 <a href="IfMsgBox.htm">IfMsgBox</a> 命令将看到表示超时状态的值 TIMEOUT.</p>
+      <p>已知限制: 如果 MsgBox 仅含有一个 "确定" 按钮, 且当 MsgBox 自身的 <a href="../misc/Threads.htm">线程</a> 被其他线程中断时超时了, 那么 <a href="IfMsgBox.htm">IfMsgBox</a> 将认为用户按下了 "确定" 按钮.</p></dd>
+
+</dl>
+
+<p><em>Options</em> 参数可以为一个或多个下列值的组合(和).</p>
+<table class="info" style="width:55%">
+  <tr>
+    <th style="width:287px">功能</th>
+    <th>十进制值</th>
+    <th>十六进制值</th>
+  </tr>
+  <tr>
+    <td>确定 (即仅显示一个 "确定" 按钮)</td>
+    <td>0</td>
+    <td>0x0</td>
+  </tr>
+  <tr>
+    <td>确定/取消</td>
+    <td>1</td>
+    <td>0x1</td>
+  </tr>
+  <tr>
+    <td>终止/重试/忽略</td>
+    <td>2</td>
+    <td>0x2</td>
+  </tr>
+  <tr>
+    <td>是/否/取消</td>
+    <td>3</td>
+    <td>0x3</td>
+  </tr>
+  <tr>
+    <td>是/否</td>
+    <td>4</td>
+    <td>0x4</td>
+  </tr>
+  <tr>
+    <td>重试/取消</td>
+    <td>5</td>
+    <td>0x5</td>
+  </tr>
+  <tr>
+    <td>Cancel/Try Again/Continue</td>
+    <td>6</td>
+    <td>0x6</td>
+  </tr>
+  <tr>
+    <td>添加一个 "帮助" 按钮 (请参阅后面的备注)</td>
+    <td>16384</td>
+    <td>0x4000</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>错误图标 (停止/错误)</td>
+    <td>16</td>
+    <td>0x10</td>
+  </tr>
+  <tr>
+    <td>问号图标</td>
+    <td>32</td>
+    <td>0x20</td>
+  </tr>
+  <tr>
+    <td>惊叹号图标</td>
+    <td>48</td>
+    <td>0x30</td>
+  </tr>
+  <tr>
+    <td>星号图标 (信息)</td>
+    <td>64</td>
+    <td>0x40</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>让第二个按钮成为默认按钮</td>
+    <td>256</td>
+    <td>0x100</td>
+  </tr>
+  <tr>
+    <td>让第三个按钮成为默认按钮</td>
+    <td>512</td>
+    <td>0x200</td>
+  </tr>
+  <tr>
+    <td>使第四个按钮为默认的<br>(需要帮助按钮)</td>
+    <td>768</td>
+    <td>0x300</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>系统模态 (总是在顶部)</td>
+    <td>4096</td>
+    <td>0x1000</td>
+  </tr>
+  <tr>
+    <td>任务模态</td>
+    <td>8192</td>
+    <td>0x2000</td>
+  </tr>
+  <tr>
+    <td>置顶 (WS_EX_TOPMOST 样式)<br>
+      (和系统模态类似, 但省略了标题栏图标)</td>
+    <td>262144</td>
+    <td>0x40000</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>让文本右对齐显示</td>
+    <td>524288</td>
+    <td>0x80000</td>
+  </tr>
+  <tr>
+    <td>用于希伯来语/阿拉伯语的从右向左的阅读顺序</td>
+    <td>1048576</td>
+    <td>0x100000</td>
+  </tr>
+</table>
+<h3>备注</h3>
+<p>使用上面的表格时, 可以把您期望用于 MsgBox 的选项值加在一起. 例如, 要显示一个默认按钮为 "否" 的 "是"/"否" 消息框, 那么需要把 <em>Options</em> 的值设置为 256+4 (260). 使用十六进制表示为 0x100+0x4 (0x104).</p>
+<p>MsgBox 对逗号的处理比较智能, 所以通常不需要对 <em>Text</em> 参数中的逗号进行 <a href="_EscapeChar.htm">转义</a>.</p>
+<p>要判断用户在最近的 MsgBox 中按下了哪个按钮, 请使用 <a href="IfMsgBox.htm">IfMsgBox</a> 命令. 例如:</p>
+<pre>MsgBox, 4,, Would you like to continue? (press Yes or No)
+IfMsgBox Yes
+    MsgBox You pressed Yes.
+else
+    MsgBox You pressed No.</pre>
+<p>参照 <a href="../scripts/MsgBoxButtonNames.htm">这个例子</a> 可以自定义按钮的名称.</p>
+<p><strong>提示</strong>: 当 MsgBox 窗口活动时按下 Control-C 将复制其中的文本到剪贴板. 这适用于所有的 MsgBox, 而不仅是 AutoHotkey 生成的那些.</p>
+<p><strong>在 GUI 窗口中使用 MsgBox</strong>: 通过 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> 的方法可以在 GUI 窗口中显示 <em>模态</em> MsgBox. <em>模态</em> MsgBox 在其消失之前会阻止用户与原来的 GUI 窗口进行交互.此时, 不需要指定上表中的系统模态或任务模态选项.</p>
+<p>当 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> <em>无效</em> 时, 在用户响应 MsgBox 前可以使用任务模态选项 (8192) 来禁用所有的脚本窗口.</p>
+<p><strong>"帮助" 按钮</strong>: 在 <em>Options</em> 中使用了 "帮助" 按钮选项 (83) 时, 只有符合下面两个条件, 那么按下 "帮助" 按钮才会有效果:</p>
+<ol>
+  <li>MsgBox 是由 GUI 窗口通过 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> 的方法显示的.</li>
+  <li>脚本正在监听 WM_HELP 消息 (0x53). 例如:<code><a href="OnMessage.htm">OnMessage(0x53, "WM_HELP")</a></code>.调用 WM_HELP() 函数时, 它可以通过如显示另一个窗口或 MsgBox 的方法引导用户.</li>
+</ol>
+<p><strong>关闭按钮(在 MsgBox 的标题栏)</strong>:由于 MsgBox 窗口是操作系统内置的特性,所以它的 <strong>X</strong> 按钮仅在某些按钮存在时才会启用.如果只有一个 "确定" 按钮, 那么点击 <strong>X</strong> 按钮等同于按下 "确定" 按钮. 其他情况下, 只有含有 "取消" 按钮时才会启用 X 按钮, 此时点击 <strong>X</strong> 等同于按下 "取消" 按钮.</p>
+<h3>相关</h3>
+<p><a href="IfMsgBox.htm">IfMsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a>, <a href="FileSelectFolder.htm">FileSelectFolder</a>, <a href="ToolTip.htm">ToolTip</a>, <a href="Gui.htm">GUI</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">MsgBox This is the 1-parameter method. Commas (,) do not need to be escaped.
+MsgBox, 4, , This is the 3-parameter method. Commas (,) do not need to be escaped.
+MsgBox, 4, , Do you want to continue? (Press YES or NO)
+IfMsgBox No
+    return
+MsgBox, 4, , 4-parameter method: this MsgBox will time out in 5 seconds.  Continue?, 5
+IfMsgBox Timeout
+    MsgBox You didn't press YES or NO within the 5-second period.
+else IfMsgBox No
+    return
+    
+<em>; 通过在任何参数前加上"% ",可以让此参数支持<a href="../Variables.htm#Expressions">表达式</a>.在下面的例子中,
+; 执行数学运算,访问<a href="../misc/Arrays.htm#pseudo">伪数组</a>元素且调用函数.所有这些项
+; 都可以通过"."运算符串联成 MsgBox 可以显示的单个字符串:</em>
+MsgBox % "New width for object #" . A_Index . " is: " . RestrictWidth(ObjectWidth%A_Index% * ScalingFactor)
+
+<em>; 下面的例子提醒用户 MsgBox 即将获取焦点(此时用户正在输入).</em>
+SplashTextOn,,, A MsgBox is about to appear.
+Sleep 3000
+SplashTextOff
+MsgBox The backup process has completed.</pre>
+
+</body>
+</html>

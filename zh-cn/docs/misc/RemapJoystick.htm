@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>重映射操纵杆为键盘或鼠标</title>
+<meta name="description" content="使用这个免费的宏程序让您的操纵杆发送键击和鼠标点击. 它还允许把操纵杆作为鼠标使用.">
+<meta name="keywords" content="keyboard,keys,key,keystrokes,clicks,mouse,buttons,button,joystick,hotkeys,hotkey,macro">
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>重映射操纵杆为键盘或鼠标</h1>
+
+
+<h2>目录</h2>
+<ul>
+  <li><a href="#imp">重要事项</a></li>
+  <li><a href="#button">让游戏杆按钮发送键击或鼠标点击</a></li>
+  <li><a href="#axis">让操纵杆轴向或视点帽发送键击或鼠标点击</a></li>
+  <li><a href="#Remarks">备注</a></li>
+</ul>
+<h2 id="imp">重要事项</h2>
+<ul>
+  <li>虽然可以把操纵杆按钮或轴向重映射为按键或鼠标按钮, 但不能把它重映射为其他的操纵杆按钮或轴向. 借助游戏模拟器例如 <a href="http://www.geocities.com/deonvdw/Docs/PPJoyMain.htm">PPJoy</a> 才有可能实现这样操作.</li>
+  <li>AutoHotkey 用 1 和 32 之间的一个唯一的数字来标识操纵杆上的每个按钮. 要判断这些编号, 请使用 <a href="../scripts/JoystickTest.htm">操纵杆测试脚本</a>.</li>
+</ul>
+<h2 id="button">让游戏杆按钮发送键击或鼠标点击</h2>
+<p>下面是从最简单到最复杂的三种方法. 最复杂的方法能适用于更大范围的情况 (例如需要按下按键或鼠标按钮的游戏).</p>
+<p><strong>方法 #1</strong>:此方法简单地发送键击和鼠标点击.例如:</p>
+<pre>Joy1::<a href="../commands/Send.htm">Send</a> {Left}  <em>; 让按钮 #1 发送左方向键的键击.</em>
+Joy2::<a href="../commands/Click.htm">Click</a>  <em>; 让按钮 #2 发送鼠标左键的点击.</em>
+Joy3::Send a{Esc}{Space}{Enter}  <em>; 让按钮 #3 发送字母 "a" 后面跟着 Escape, Space 以及 Enter.</em>
+Joy4::Send Sincerely,{Enter}John Smith  <em>; 让按钮 #4 发送两行的签名.</em></pre>
+<p>要让一个按钮执行多个命令, 请把首个命令放到按钮名称的 <em>下面</em> 并使用 <a href="../commands/Return.htm">return</a> 作为最后一个命令. 例如:</p>
+<pre>Joy5::
+Run Notepad
+WinWait Untitled - Notepad
+WinActivate
+Send This is the text that will appear in Notepad.{Enter}
+return</pre>
+<p>请参阅 <a href="../KeyList.htm">按键列表</a> 来了解按键和鼠标/游戏杆按钮的完整列表.</p>
+<br>
+<p><strong>方法 #2</strong>:必须使用此方法的情况是当您在按住操纵杆按钮的整个过程中必须按住按键或鼠标按钮的时候.下面的例子把操纵杆的第二个按钮映射为左方向键:</p>
+<pre>Joy2::
+Send {Left down}  <em>; 按住左方向键.</em>
+<a href="../commands/KeyWait.htm">KeyWait</a> Joy2  <em>; 等待用户释放操纵杆按钮.</em>
+Send {Left up}  <em>; 释放左方向键.</em>
+return</pre>
+<br>
+<p><strong>方法 #3</strong>:必须使用此方法的情况是在您设置了多个方法 #2 中描述的热键类型,且有时需要同时按下和释放这些热键的时候.下面的例子把操纵杆的第三个按钮映射为鼠标左键:</p>
+<pre>Joy3::
+Send {LButton down}   <em>; 按住鼠标左键.</em>
+SetTimer, WaitForButtonUp3, 10
+return
+
+WaitForButtonUp3:
+if <a href="../commands/GetKeyState.htm">GetKeyState</a>(&quot;Joy3&quot;)  <em>; 按钮仍处于按下的状态, 所以继续等待.</em>
+    return
+<em>; 否则按钮已经松开了.</em>
+Send {LButton up}  <em>; 释放鼠标左键.</em>
+SetTimer, WaitForButtonUp3, off
+return
+</pre>
+<br>
+<p><strong>自动重复键击</strong>:有些程序或游戏可能需要您重复发送某个按键(就像您按住键盘上的那个键不放一样).下面的例子在您按住操纵杆的第二个按钮时通过重复发送空格的键击来达到此目的.</p>
+<pre>Joy2::
+Send {Space down}   <em>; 按下空格键.</em>
+SetTimer, WaitForJoy2, <strong>30</strong>  <em>; 减小数字 <strong>30</strong> 到 20 或 10 来更快地发送按键. 增加这个数字以减小发送的速度.</em>
+return
+
+WaitForJoy2:
+if not GetKeyState("Joy2")  <em>; 按钮已经释放了.</em>
+{
+    Send {Space up}  <em>; 释放空格键.</em>
+    SetTimer, WaitForJoy2, off  <em>; 停止监视按钮.</em>
+    return
+}
+<em>; 由于上面没有 "return", 所以按钮仍处于按住的状态.</em>
+Send {Space down}  <em>; 再次发送空格键击.</em>
+return</pre>
+<p><strong>上下文相关的操纵杆按钮</strong>: <a href="../commands/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以用来让选择的操纵杆按钮根据窗口是否活动或存在的不同情况执行不同的动作 (或什么都不做).</p>
+<p><strong>把操纵杆映射为鼠标</strong>: <a href="../scripts/JoystickMouse.htm">操纵杆映射到鼠标的脚本</a> 通过重映射操纵杆的按钮和轴向控制器来把操纵杆变成鼠标.</p>
+<h2 id="axis">让操纵杆轴向或视点帽发送键击或鼠标点击</h2>
+<p>要让脚本对操纵杆轴向或视点帽的移动进行响应, 请使用 <a href="../commands/SetTimer.htm">SetTimer</a> 和 <a href="../commands/GetKeyState.htm">GetKeyState</a>. 下面的例子让 X 和 Y 轴的功能像键盘上的方向键群 (左, 右, 上和下):</p>
+<pre>#Persistent  <em>; 让脚本保持运行, 直到用户明确退出.</em>
+<a href="../commands/SetTimer.htm">SetTimer</a>, WatchAxis, 5
+return
+
+WatchAxis:
+<a href="../commands/GetKeyState.htm">GetKeyState</a>, JoyX, JoyX  <em>; 获取 X 轴的位置.</em>
+GetKeyState, JoyY, JoyY  <em>; 获取 Y 轴的位置.</em>
+KeyToHoldDownPrev = %KeyToHoldDown%  <em>; Prev 现在保存了之前按下的按键(如果有).</em>
+
+if JoyX &gt; 70
+    KeyToHoldDown = Right
+else if JoyX &lt; 30
+    KeyToHoldDown = Left
+else if JoyY &gt; 70
+    KeyToHoldDown = Down
+else if JoyY &lt; 30
+    KeyToHoldDown = Up
+else
+    KeyToHoldDown =
+
+if KeyToHoldDown = %KeyToHoldDownPrev%  <em>; 已经按下了正确的按键 (或者不需要按键).</em>
+    return  <em>; 什么都不做.</em>
+
+<em>; 否则, 释放之前的按键并按下新按键:</em>
+SetKeyDelay -1  <em>; 避免键击之间的延迟.</em>
+if KeyToHoldDownPrev   <em>; 要释放之前的按键.</em>
+    Send, {%KeyToHoldDownPrev% up}  <em>; 释放它.</em>
+if KeyToHoldDown   <em>; 要按下按键.</em>
+    Send, {%KeyToHoldDown% down}  <em>; 按下它.</em>
+return</pre>
+<p>&nbsp;</p>
+<p>下面的例子让操纵杆的视点帽的功能像键盘上的方向键群; 即视点帽会发送方向键的键击 (左, 右, 上和下):</p>
+<pre>#Persistent  <em>; 让脚本保持运行,直到用户明确退出.</em>
+SetTimer, WatchPOV, 5
+return
+
+WatchPOV:
+GetKeyState, POV, JoyPOV  <em>; 获取 POV 控制器的位置.</em>
+KeyToHoldDownPrev = %KeyToHoldDown%  <em>; Prev现在保存了之前按下的按键(如果有).</em>
+
+<em>; 有些操纵杆可能有平滑/连续的视角切换而不是使用固定的增幅.; 要全部支持它们, 请使用范围:</em>
+if POV &lt; 0   <em>; 没有角度</em>
+    KeyToHoldDown =
+else if POV &gt; 31500                 <em>; 315 至 360 度: 向前</em>
+    KeyToHoldDown = Up
+else if POV between 0 and 4500      <em>; 0 至 45 度: 向前</em>
+    KeyToHoldDown = Up
+else if POV between 4501 and 13500  <em>; 45 至 135 度: 向右</em>
+    KeyToHoldDown = Right
+else if POV between 13501 and 22500 <em>; 135 至 225 度: 向下</em>
+    KeyToHoldDown = Down
+else                                <em>; 225 到 315 度: 向左</em>
+    KeyToHoldDown = Left
+
+if KeyToHoldDown = %KeyToHoldDownPrev%  <em>; 已经按下了正确的按键 (或不需要按键).</em>
+    return  <em>; 什么都不做.</em>
+
+<em>; 否则, 释放之前的按键并按下新键:</em>
+SetKeyDelay -1  <em>; 避免键击之间的延迟.</em>
+if KeyToHoldDownPrev   <em>; 要释放之前的按键.</em>
+    Send, {%KeyToHoldDownPrev% up}  <em>; 释放它.</em>
+if KeyToHoldDown   <em>; 要按下按键.</em>
+    Send, {%KeyToHoldDown% down}  <em>; 按下它.</em>
+return</pre>
+<p>&nbsp;</p>
+<p><strong>自动重复键击</strong>: 上面的两个例子都可以修改为重复发送按键, 而不只是按住它 (即它们可以模拟按住了某个按键). 要做到这点, 请把下面这行:</p>
+<pre>return  <em>; 什么都不做.</em></pre>
+<p>替换为:</p>
+<pre>{
+    if KeyToHoldDown
+        Send, {%KeyToHoldDown% down}  <em>; 自动重复的键击.</em>
+    return
+}</pre>
+<h2 id="Remarks">备注</h2>
+<p>通过在按钮或轴的名称之前加上操纵杆的编号可以使用首个外的其他操纵杆. 例如,<code>2Joy1</code> 表示第二个操纵杆的首个按钮.</p>
+<p>要找到其他有用的操纵杆脚本, 请访问 <a href="http://www.autohotkey.com/forum/">AutoHotkey 论坛</a>. 进行类似 <em>Joystick and GetKeyState and Send</em> 的关键词搜索有可能找到有趣的主题.</p>
+<h2>相关主题</h2>
+<p><a href="../scripts/JoystickMouse.htm">操纵杆到鼠标的映射脚本 (把操纵杆作为鼠标使用)</a><br><a href="../KeyList.htm#Joystick">操纵杆按钮, 轴向和控制器的列表</a><br><a href="../commands/GetKeyState.htm">GetKeyState</a>(获取按键状态)<br><a href="Remap.htm">重映射键盘和鼠标</a></p>
+</body>
+</html>

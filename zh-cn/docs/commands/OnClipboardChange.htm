@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>OnClipboardChange</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>OnClipboardChange</h1>
+
+<p>当任何程序(甚至脚本本身)改变了剪贴板内容时一个以 OnClipboardChange 命名的标签(如果存在)会自动执行. 这个标签在脚本启动时也会执行一次.</p>
+<p>内置变量 A_EventInfo 包含:<br>
+  0 剪贴板为空;<br>
+1 可以用文本表示的内容 (包括从资源管理器窗口 <a href="../misc/Clipboard.htm#CopiedFiles">复制文件</a> );<br>
+2 完全是非文本的内容, 如图片.</p>
+<p>下例是一个活动的脚本. 脚本运行时会用简短的ToolTip显示每次剪贴板的更改.</p>
+<pre id="LabelExample">#Persistent
+return
+
+OnClipboardChange:
+ToolTip Clipboard data type: %A_EventInfo%
+Sleep 1000
+ToolTip  <em>; 关闭提示.</em>
+return</pre>
+
+&nbsp;
+<h2 id="Function">OnClipboardChange() <span class="ver">[v1.1.20+]</span></h2>
+<p>注册一个每当剪贴板内容发生改变时都会运行的 <a href="../Functions.htm">函数</a> 或 <a href="../objects/Functor.htm">函数对象</a> .</p>
+
+<pre class="Syntax">OnClipboardChange(Func [, AddRemove])</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Func</dt>
+  <dd><p>要调用的 函数 或 <a href="../objects/Functor.htm">函数对象</a> 名称. 函数的参数和返回值 <a href="#Func">如下</a> 所述.</p></dd>
+  
+  <dt>AddRemove</dt>
+  <dd><p>下列数值之一:<br>
+  <strong>1</strong> (默认): 在先前任意的注册函数之后调用该函数.<br>
+  <strong>-1</strong>: 在先前任意的注册函数之前调用该函数.<br>
+  <strong>0</strong>: 不调用该函数.</p>
+  <p>如果存在 OnClipboardChange 标签, 它总是会被率先调用.</p></dd>
+
+</dl>
+
+<h3 id="Func">Func</h3>
+<pre class="Syntax"><i>FunctionName</i>(Type)</pre>
+<dl>
+  <dt>Type</dt>
+  <dd><p>下列数值之一:<br>
+    <strong>0</strong> 剪贴板为空;<br>
+    <strong>1</strong> 可以用文本表示的内容 (包括从资源管理器窗口 <a href="../misc/Clipboard.htm#CopiedFiles">复制文件</a> );<br>
+    <strong>2</strong> 完全是非文本的内容, 如图片.</p></dd>
+  
+  <dt><em>返回值</em></dt>
+  <dd><p>如果这是最近的或仅有的 OnClipboardChange 函数, 其返回值会被忽略. 否则, 此函数会返回一个非零整数来阻止随后的函数被调用.</p></dd>
+</dl>
+
+<h3 id="FunctionExample">示例</h3>
+<p>此例等同于 <a href="#LabelExample">上面的例子</a>, 不同的是此函数不会在脚本开始时就被调用而仅当剪贴板的内容发生改变时.</p>
+<pre>#Persistent
+OnClipboardChange("ClipChanged")
+return
+
+ClipChanged(Type) {
+    ToolTip Clipboard data type: %Type%
+    Sleep 1000
+    ToolTip  <em>; 关闭提示.</em>
+}</pre>
+
+<h2>备注</h2>
+<p>在 OnClipboardChange 标签或函数正在运行时如果剪贴板内容改变, 这时的剪贴板通知事件会丢失. 如果需要这些事件的话, 在标签的首行指定 <a href="../commands/Critical.htm">Critical</a> .而当OnClipboardChange线程在运行时, 这样做会缓冲/延迟其他 <a href="../misc/Threads.htm">线程</a> (像热键的按击) 的运行.</p>
+<p>如果是脚本本身改变了剪贴板内容, 脚本中的OnClipboardChange标签或函数通常不会马上执行; 也就是说紧接在改变剪贴板命令后面的命令就像提前运行了一样. 在改变剪贴板内容后使用一个像 <code><a href="../commands/Sleep.htm">Sleep 20</a></code> 这样的延时可以让OnClipboardChange标签或函数立即执行.</p>
+
+<h3>相关</h3>
+<p><a href="../misc/Clipboard.htm">Clipboard</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a></p>
+
+</body>
+</html>

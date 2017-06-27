@@ -4,7 +4,7 @@ layout: default
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
-[Link to another page](another-page).
+[AutoHotkey ÖĞÎÄ°ïÖú](zh-cn/index.html).
 
 There should be whitespace between paragraphs.
 

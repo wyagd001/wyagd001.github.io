@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Arrays</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+
+<body>
+<h1>Arrays</h1>
+
+<h2>关联数组 <span class="ver">[AHK_L 31+]</span></h2>
+<p>自包含关联数组可以调用 <a href="../Objects.htm#Arrays">Object()</a> 创建. 例如:</p>
+<pre><em>; 创建数组后, 初始为空:</em>
+Array := Object()
+
+<em>; 写入数据到数组:</em>
+Loop, Read, C:\Guest List.txt <em>; 此循环获取文件中的每行, 一次一行.</em>
+{
+    Array.Insert(A_LoopReadLine) <em>; 添加此行到数组中.</em>
+}
+
+<em>; 从数组中读取:
+; Loop % Array.MaxIndex()   ; 较传统的方式.</em>
+for index, element in Array <em>; 在大多数情况下建议使用的方式.</em>
+{
+    <em>; 使用 "Loop", 索引必须是连续的数字, 从 1 到
+    ; 数组中元素的个数 (或者必须在循环中进行计算).
+    ; MsgBox % "Element number " . A_Index . " is " . Array[A_Index]
+    
+    ; 使用"for",同时提供了索引(或"键")及与它关联
+    ; 的值,并且索引可以是您选择的*任何*值.</em>
+    MsgBox % "Element number " . index . " is " . element
+}</pre>
+<p>此例仅演示了 <a href="../Objects.htm">对象</a> 提供的 <a href="../objects/Object.htm">功能</a> 的一个小子集. 可以设置, 获取, 插入, 移除和枚举项目. 除了数字, 还可以把字符串和对象作为键使用. 对象可以作为值存储到其他对象中并且可以作为函数参数或返回值传递. 对象还可以用新功能进行 <a href="../Objects.htm#Custom_Objects">扩展</a>.</p>
+<p>尽管 Insert() 和枚举数有它们的用途, 不过一些用户可能会发现使用它们比用更传统的方式容易些:</p>
+<pre>
+  <em>; 每个数组在使用前必须进行初始化:</em>
+  Array := Object()
+
+<em>; Array%j% := A_LoopField</em>
+  Array[j] := A_LoopField
+
+<em>; Array%j%_%k% := A_LoopReadLine</em>
+  Array[j, k] := A_LoopReadLine
+
+  ArrayCount := 0                        
+  Loop, Read, C:\Guest List.txt
+  {
+      ArrayCount += 1
+    <em>; Array%ArrayCount% := A_LoopReadLine</em>
+      Array[ArrayCount] := A_LoopReadLine
+  }
+
+  Loop %ArrayCount%
+  {
+    <em>; element := Array%A_Index%</em>
+      element := Array[A_Index]
+    <em>; MsgBox % "Element number " . A_Index . " is " . Array%A_Index%</em>
+      MsgBox % "Element number " . A_Index . " is " . Array[A_Index]
+  }
+</pre>
+<p>为了方便而使用 <i>ArrayCount</i> 变量保存数组元素个数, 但可以通过 <code>Array.Count := <i>n</i></code> 保存到数组自身中, 或使用 <code>Array.<a href="../objects/Object.htm#MinMaxIndex">_MaxIndex()</a></code> 代替它. 如果希望使用 1 之外的其他值作为起始索引, 还可以使用 <code>Array.<a href="../objects/Object.htm#MinMaxIndex">_MinIndex()</a></code>.</p>
+
+<h2 id="pseudo">伪数组</h2>
+<p>伪数组主要是概念上的: 每个数组实际上只是一系列连续编号的 <a href="../Variables.htm">变量</a> 或 <a href="Functions.htm">函数</a> 的集合, 它们每个被视为数组的 <em>元素</em>. AutoHotkey 不会以任何方式把这些元素链接在一起.</p>
+<p>除了如 <a href="../commands/StringSplit.htm">StringSplit</a> 和 "<a href="../commands/WinGet.htm">WinGet List</a>" 这样的数组创建命令外, 任何接受 OutputVar 或把值赋给变量的命令都可以用来创建数组. 最简单的例子是 <a href="../commands/SetExpression.htm">赋值运算符 (:=)</a>, 如下所示:</p>
+<pre>Array%j% := A_LoopField</pre>
+<p>通过在索引间使用您选择的分隔符可以创建多维数组. 例如:</p>
+<pre>Array%j%_%k% := A_LoopReadLine</pre>
+<br>
+<p>下面的例子演示了如何创建和访问数组, 这里是从文本文件获取一系列的名称:</p>
+<pre><em><strong>; 写入到数组:</strong></em>
+ArrayCount = 0
+Loop, Read, C:\Guest List.txt   <em>; 此循环获取文件中的每行, 一次一行.</em>
+{
+    ArrayCount += 1  <em>; 记录数组中的项目数.</em>
+    Array%ArrayCount% := A_LoopReadLine  <em>; 把此行保存到数组中的下一个元素.</em>
+}
+
+<em><strong>; 从数组中读取:</strong></em>
+Loop %ArrayCount%
+{
+    <em>; 下一行使用 := 运算符获取数组元素:</em>
+    element := Array%A_Index%  <em>; <a href="../Variables.htm#Index">A_Index</a> 是内置变量.</em>
+    <em>; 可选地, 您可以使用 "% " 前缀让 MsgBox 或其他一些命令的参数中 <a href="../Variables.htm#Expressions">可以使用表达式</a>:</em>
+    MsgBox % "Element number " . A_Index . " is " . Array%A_Index%
+}</pre>
+<p>一个和数组有关的概念是使用 <a href="../commands/NumPut.htm">NumPut()</a> 和 <a href="../commands/NumGet.htm">NumGet()</a> 储存/获取一批二进制格式的数字. 这在对性能和/或内存占用有要求时比较有用.</p>
+
+</body>
+</html>

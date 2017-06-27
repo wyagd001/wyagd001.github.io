@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Sleep</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>Sleep</h1>
+
+<p>在继续前等待指定的时间量.</p>
+
+<pre class="Syntax">Sleep, DelayInMilliseconds</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Delay</dt>
+  <dd><p>要暂停的时间量 (单位为毫秒), 介于 0 和 2147483647 (24 天) 之间, 可以为 <a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>由于操作系统中计时系统的精确度, <em>Delay</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数 (取决于所安装的硬件和驱动的类型). 例如,在大部分 Windows 2000/XP 系统上介于 1 和 10(含边界)的延时都相当于 10 或 15.6.要实现更短的延时, 请参阅 <a href="#ShorterSleep">示例</a>.</p>
+<p>如果 CPU 在负载时, 那么实际的延时可能超过请求的时间. 这是因为在给脚本另一个时间片之前, 会给每个有需要的进程一个 CPU 时间片 (一般为 20 毫秒).</p>
+<p>延时为 0 会将脚本当前时间片的剩余部分分配给其他需要的进程 (只要它们的 <a href="Process.htm#Priority">优先级</a> 不是显著比脚本低). 因此, 延时为 0 实际会产生在 0 和 20ms (或更多) 之间的延时, 取决于有需要的进程的数目 (如果没有这样的进程, 则完全没有延时). 然而, 0 的 <em>Delay</em> 应该比任何更长的 <em>Delay</em> 会更早结束.</p>
+<p>当脚本休眠时, 可以通过 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a> 或 <a href="SetTimer.htm">计时器</a> 启动新的 <a href="../misc/Threads.htm">线程</a>.</p>
+<p><strong>Sleep -1</strong>:-1 的 delay 不会休眠,相反地它让脚本立即检查消息队列.这可用来强制任何迫近的<a href="../misc/Threads.htm">中断</a>在指定的位置发生,而不是在更随机的位置.请参阅 <a href="Critical.htm">Critical</a> 了解更多细节.</p>
+<h3>相关</h3>
+<p><a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetMouseDelay.htm">SetMouseDelay</a>, <a href="SetControlDelay.htm">SetControlDelay</a>, <a href="SetWinDelay.htm">SetWinDelay</a>, <a href="SetBatchLines.htm">SetBatchLines</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">Sleep, 1000  <em>; 1 秒</em></pre>
+<p>&nbsp;</p>
+<pre class="NoIndent" id="ShorterSleep"><em>; 下面是个可运行示例, 它演示了如何休眠比一般的 10 或 15.6 毫秒
+; 更短的时间.
+; 注:像这样的脚本运行时,整个操作系统和所有的应用程序
+; 都会受到下面的 timeBeginPeriod 的影响.</em>
+
+SetBatchLines -1  <em>; 确保此方法最高的效率.</em>
+
+SleepDuration = 1  <em>; 这里有时可以根据下面的值进行细微调整(例如 2 与 3 的区别).</em>
+TimePeriod = 3 <em>; 尝试 7 或 3.请参阅下面的注释.
+; 在休眠持续时间一般向上取整到 15.6 ms 的个人电脑中,尝试 TimePeriod=7 来允许
+; 稍短一点的休眠,而尝试 TimePeriod=3 或更小的值来允许最小可能的休眠.</em>
+
+DllCall("Winmm\timeBeginPeriod", uint, TimePeriod)  <em>; 作用于所有的应用程序,而不只是脚本的 DllCall("Sleep"...),但不影响 SetTimer</em>.Iterations = 50
+StartTime := A_TickCount
+
+Loop %Iterations%
+    DllCall("Sleep", UInt, SleepDuration)  <em>; 必须使用 DllCall 而不是 Sleep 命令.</em>
+
+DllCall("Winmm\timeEndPeriod", UInt, TimePeriod)  <em>; 应该进行调用来让系统恢复正常.</em>
+MsgBox % "Sleep duration = " . (A_TickCount - StartTime) / Iterations</pre>
+
+</body>
+</html>

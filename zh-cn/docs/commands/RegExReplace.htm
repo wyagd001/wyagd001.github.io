@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>RegExReplace</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>RegExReplace() <span class="ver">[v1.0.45+]</span></h1>
+
+<p>替换字符串中匹配模式(正则表达式)出现的地方.</p>
+
+<pre class="Syntax">NewStr := RegExReplace(Haystack, NeedleRegEx [, Replacement = "", OutputVarCount = "", Limit = -1, StartingPosition = 1])</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Haystack</dt>
+  <dd><p>源字符串.</p></dd>
+
+  <dt>NeedleRegEx</dt>
+  <dd><p>要搜索的模式, 它是兼容 Perl 的正则表达式 (PCRE). 模式的<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>(如果有)必须放在模式字符串的开始且后面跟着闭括号.例如, 模式 "<span class="red">i)</span>abc.*123" 将匹配不区分大小写的 "abc", 接着零个或多个任意字符, 并以 "123" 结尾的字符串. 如果不含选项, 则可以省略 ")"; 例如, ")abc" 等同于 "abc".</p></dd>
+
+  <dt>Replacement</dt>
+  <dd><p id="BackRef">用来替换每个匹配的字符串, 它是普通文本 (不是正则表达式). 此参数可以包含像 $1 这样的后向引用, 它引用了 <em>Haystack</em> 中匹配首个 <a href="../misc/RegEx-QuickRef.htm#subpat">子模式</a> 的子字符串. 最简单的后向引用是从 $0 到 $9, 其中 $0 是匹配整个模式的子字符串, $1 是匹配首个子模式的子字符串, $2 是第二个, 依此类推. 对于大于 9 的后向引用 (对于小于等于 9 的那些, 这是可选的), 需要把数字括在大括号中; 例如 ${10}, ${11}, 依此类推. 对于 <a href="RegExMatch.htm#NamedSubPat">命名子模式</a>, 需要将名称括在大括号中; 例如 ${SubpatternName}. 要指定原义的 $, 请使用 $$ (这是唯一需要特殊处理的字符; 反斜杠不需要转义).</p>
+      <p>要转换子模式的大小写, 请在 $ 后跟着下列字符的其中一个: U 或 u (大写), L 或 l (小写), T 或 t (标题格式, 此时每个单词的首字母大写, 而把其他的所有字母改成小写). 例如, $U1 和 $U{1} 都会把首个子模式转换成大写的版本.</p>
+      <p>不存在的后向引用和不匹配 <em>Haystack</em> 中任何字符串的模式,例如"(abc)|(xyz)"中的一个子模式,会被转译为空字符串.</p></dd>
+
+  <dt>OutputVarCount</dt>
+  <dd><p>用来保存替换次数 (如果没有则为 0) 的未引用的变量名 (即不需要使用百分号包围).</p></dd>
+
+  <dt>Limit</dt>
+  <dd><p>如果省略 <em>Limit</em>, 则它默认为 -1, 此时会替换 <em>Haystack</em> 中 <strong>所有</strong> 发现匹配模式的地方. 否则, 请指定允许替换的最大次数. <em>Haystack</em> 中最后一次替换位置右边的部分将保持不变.</p></dd>
+
+  <dt>StartingPosition</dt>
+  <dd><p>如果省略 <em>StartingPosition</em>, 则它默认为 1 (从 <em>Haystack</em> 的首个字符开始). 否则, 从第二个字符开始请指定 2, 第三个开始为 3, 依此类推. 如果 <em>StartingPosition</em> 超过了 <em>Haystack</em> 的长度, 则搜索会从 <em>Haystack</em> 末尾后的空字符串开始 (这通常会导致没有替换发生).</p>
+      <p>如果 <em>StartingPosition</em> 小于 1, 则它被视为从 <em>Haystack</em> 末尾开始的偏移. 例如, 0 表示从最后一个字符开始而 -1 则从倒数第二个字符开始. 如果 <em>StartingPosition</em> 超出了 <em>Haystack</em> 最左边的位置, 则会搜索整个 <em>Haystack</em>.</p>
+      <p>不论 <em>StartingPosition</em> 的值是什么, 返回值总是 <em>Haystack</em> 的完整副本, 唯一的区别是比起 <em>StartingPosition</em> 为 1 时发生的情况此时源字符串左边可能更多的部分保持不变.</p></dd>
+
+</dl>
+
+<h3>返回值</h3>
+<p>函数将返回 <em>Haystack</em> 被替换之后的值. 如果没有发生替换, 将返回 <em>Haystack</em> 的原始值. 如果发生错误 (比如 <em>NeedleRegEx</em> 出现语法错误), 同样返回 <em>Haystack</em> 的原始值 (除非是 1.0.46.06 之前的版本, 将返回 &quot;&quot; 空字符串) 同时 ErrorLevel 被设为 <a href="#ErrorLevel">下面</a> 列表中除了 0 之外的值.</p>
+
+<h3 id="ErrorLevel">ErrorLevel</h3>
+<p><span class="ver">[v1.1.04+]</span> 此函数失败时会抛出异常 (这个不会和 "没有找到匹配" 冲突, 失败表示匹配过程中遇到问题, 而 "没有找到匹配" 表示匹配过程成功完成只是没有发现匹配). 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为下列值的其中一个:</p>
+<ul>
+  <li>0, 表示没有遇到错误.</li>
+  <li>一个如下格式的字符串: <em>Compile error N at offset M: description</em>. 在此字符串中, <em>N</em> 是 PCRE 错误值, <em>M</em> 是正则表达式中出现错误的字符的位置, 而 <em>description</em> 是描述这个错误的文本.</li>
+  <li>一个负数, 表示在正则表达式 <em>执行</em> 时遇到的错误. 尽管这样的错误很罕见, 然而像这些情况就容易出现这种错误, 例如 "太多空字符串匹配" (-22), "递归太深" (-21) 以及 "达到匹配限制" (-8). 如果出现这些情况, 请尝试重新设计更严格的匹配模式, 例如无论是否可行都把每个 * 替换为 ?, + 或像 {0,3} 这样的限制.</li>
+</ul>
+<h3>选项</h3>
+<p>请参阅 <a href="../misc/RegEx-QuickRef.htm#Options">选项</a> 了解修饰符, 例如 "<span class="red">i)</span>abc", 里面的选项关闭了 "abc" 模式中的区分大小写匹配.</p>
+<h3>性能</h3>
+<p>要进行简单的子字符串替换, 请使用 <a href="StringReplace.htm">StringReplace</a>, 因为它比 RegExReplace() 执行地更快.</p>
+<p>如果您知道替换的最大次数是多少, 请在 <em>Limit</em> 参数中指定来提高性能, 因为这样可以早一些停止搜索 (这样也可能会降低在替换操作过程中占用的系统内存). 例如, 如果您知道在一个大字符串的开始处仅有一个匹配, 请指定最大次数为 1.</p>
+<p>为了提升性能, 最近使用的 100 个正则表达式会被缓存在内存中 (以已编译的形式).</p>
+<p>多次使用一个正则表达式时 (例如在循环中), 使用 <a href="../misc/RegEx-QuickRef.htm#Study">研究选项 (S)</a> 可以提高性能.</p>
+<h3>备注</h3>
+<p>大多数字符 (例如 abc123) 可以直接使用在正则表达式中. 然而, <strong>\.*?+[{|()^$</strong> 这些字符则必须在其前面加上反斜线来进行匹配. 例如, <strong>\.</strong> 表示一个原义的句点而 <strong>\\</strong> 表示一个原义的反斜线. 使用 \Q...\E 能避免转义. 例如:<code>\QLiteral Text\E</code>.</p>
+<p>在正则表达式中, 特殊字符 (如制表符和新行符) 可以使用一个重音符 (`) 或反斜线 (\) 进行转义. 例如, `t 等同于 \t.</p>
+<p>要了解正则表达式的基础 (或复习正则表达式的语法), 请参阅 <a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</p>
+<h3>相关</h3>
+<p><a href="RegExMatch.htm">RegExMatch()</a>, <a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>, <a href="../misc/RegExCallout.htm">正则表达式调出</a>, <a href="StringReplace.htm">StringReplace</a>, <a href="InStr.htm">InStr()</a></p>
+<p>文本数据的常见来源: <a href="FileRead.htm">FileRead</a>, <a href="URLDownloadToFile.htm">UrlDownloadToFile</a>, <a href="../misc/Clipboard.htm">Clipboard</a>, <a href="GuiControls.htm#Edit">GUI Edit 控件</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">NewStr := RegExReplace("abc123123", "123$", "xyz")  <em>; 返回 "abc123xyz", 因为 $ 使得只能在末尾形成匹配.</em>
+NewStr := RegExReplace(&quot;abc123&quot;, &quot;i)^ABC&quot;)  <em>; 返回 "123", 因为通过不区分大小写选项实现了匹配.</em>
+NewStr := RegExReplace("abcXYZ123", "abc<span class="red">(.*)</span>123", "aaa<span class="red">$1</span>zzz")  <em>; 返回 "aaaXYZzzz", 其中使用了 <span class="red">$1</span> <a href="#BackRef">后向引用</a>.</em>
+NewStr := RegExReplace("abc123abc456", "abc\d+", "", ReplacementCount)  <em>; 返回 "" 并保存 2 到 ReplacementCount.</em>
+
+<em>; 关于普通正则表达式的例子, 请参阅 <a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</em></pre>
+
+</body>
+</html>

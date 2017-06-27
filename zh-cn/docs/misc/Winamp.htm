@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>自动化 Winamp</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+
+<body>
+<h1>自动化 Winamp</h1>
+
+<p>这个章节演示了即使 Winamp 处于最小化或不活动状态时如何通过热键控制它. 这些代码已经在 Winamp 2.78c 上测试成功, 在其他主要版本应该也能良好运行. 请提交改进改进方法到论坛或联系作者.</p>
+<p>这个例子设置 Ctrl+Alt+P 热键为按下 Winamp 的暂停/取消暂停按钮:</p>
+<pre>^!p::
+IfWinNotExist ahk_class Winamp v1.x
+    return
+<em>; 否则, 上面设置了下面要使用的 "上次找到的" 窗口.</em>
+<a href="../commands/ControlSend.htm">ControlSend</a>, ahk_parent, c  <em>; 暂停/取消暂停</em>
+return</pre>
+<p>这里是 Winamp 2.x (在其他版本中可能也有效) 中的一些快捷键. 上面的例子可以改用这些按键:</p>
+<table class="info" style="width:50%">
+  <tr>
+    <th style="width:29%">要发送的键</th>
+    <th>效果</th>
+  </tr>
+  <tr>
+    <td>c</td>
+    <td>暂停/取消暂停</td>
+  </tr>
+  <tr>
+    <td>x</td>
+    <td>播放/重放/取消暂停</td>
+  </tr>
+  <tr>
+    <td>v</td>
+    <td>停止</td>
+  </tr>
+  <tr>
+    <td>+v</td>
+    <td>渐隐停止</td>
+  </tr>
+  <tr>
+    <td>^v</td>
+    <td>当前音轨结束后停止</td>
+  </tr>
+  <tr>
+    <td>b</td>
+    <td>下一首</td>
+  </tr>
+  <tr>
+    <td>z</td>
+    <td>上一首</td>
+  </tr>
+  <tr>
+    <td>{left}</td>
+    <td>后退 5 秒</td>
+  </tr>
+  <tr>
+    <td>{right}</td>
+    <td>前进 5 秒</td>
+  </tr>
+  <tr>
+    <td>{up}</td>
+    <td>增大音量</td>
+  </tr>
+  <tr>
+    <td>{down}</td>
+    <td>减小音量</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<pre>
+<em>; 下面这个例子获取 Winamp 中当前活动的音轨号:</em>
+<a href="../commands/PostMessage.htm">SendMessage</a>, 1024, 0, 120, ahk_class Winamp v1.x
+if ErrorLevel &lt;&gt; FAIL
+{
+    ErrorLevel += 1  <em>; Winamp 的计数从 0 开始, 所以加 1 进行调整.</em>
+    MsgBox, Track #%ErrorLevel% is active or playing.
+}</pre>
+</body>
+</html>

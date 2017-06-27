@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>EnvAdd</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>EnvAdd</h1>
+
+<p>设置<a href="../Variables.htm">变量</a>的值为它自身加上给定的值的和(还可以从<a href="FileSetTime.htm#YYYYMMDD">日期-时间</a>值中增加或减去时间).同义于:<code>var += value</code>.</p>
+
+<pre class="Syntax">EnvAdd, Var, Value [, TimeUnits]
+Var += Value [, TimeUnits]
+Var++</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Var</dt>
+  <dd><p>要运算的 <a href="../Variables.htm">变量</a> 名.</p></dd>
+
+  <dt>值</dt>
+  <dd><p>任何整数, 浮点数或 <a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
+
+  <dt>TimeUnits</dt>
+  <dd><p>如果使用此参数, 则此参数指示命令如何添加 <em>Value</em> 到 <em>Var</em>: 把 <em>Var</em> 视为 <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式中的日期时间戳并且把 <em>Value</em> 视为要添加的整数或浮点数单元 (使用负数来执行减法运算). <em>TimeUnits</em> 可以为 Seconds, Minutes, Hours 或 Days (或仅使用这些单词的首个字母).</p>
+      <p>如果 <em>Var</em> 是空变量, 则使用当前时间代替. 如果 <em>Var</em> 包含无效的时间戳或早于 1601 的年份或 <em>Value</em> 不是数值, 则 <em>Var</em> 会被置空来表示此问题.</p>
+      <p>内置变量 <strong>A_Now</strong> 包含了 <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式的当前本地时间.</p>
+      <p>要计算两个时间戳之前的间隔, 请使用 <a href="EnvSub.htm">EnvSub</a>.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>此命令等同于这种简写形式:<code>Var += Value</code>.</p>
+<p>通过使用 <code>Var++</code>,<code>Var--</code>,<code>++Var</code> 或 <code>--Var</code> 可以让变量增加或减去 1.</p>
+<p>如果 <em>Var</em> 或 <em>Value</em> 其中一个为空或不以数字开头, 那么在计算中它会被视为 0 (不过用在表达式 <em>内部</em> 或使用了 <em>TimeUnits</em> 参数时例外).</p>
+<p>如果 <em>Var</em> 或 <em>Value</em> 都为小数, 那么最后的结果将为浮点数, 而格式由 <a href="SetFormat.htm">SetFormat</a> 决定.</p>
+<h3>相关</h3>
+<p><a href="EnvSub.htm">EnvSub</a>, <a href="EnvMult.htm">EnvMult</a>, <a href="EnvDiv.htm">EnvDiv</a>, <a href="SetFormat.htm">SetFormat</a>, <a href="../Variables.htm#Expressions">表达式</a>, <a href="IfIs.htm">If var is [not] type</a>, <a href="SetEnv.htm">SetEnv</a>, <a href="FileGetTime.htm">FileGetTime</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">EnvAdd, MyCount, 2
+MyCount += 2  <em>; 等同于上面的命令</em>
+
+var1 =  <em>; 赋值为空, 这样下面将会使用当前时间代替.</em>
+var1 += 31, days
+MsgBox, %var1%  <em>; 结果将是从现在 31 天后的日期.</em></pre>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>最小化窗口到托盘菜单</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>最小化窗口到托盘菜单</h1>
+
+<p>此脚本会设置您选择的热键来隐藏任意的窗口, 让这些窗口成为脚本托盘菜单底部的条目. 通过在菜单上选择相应的项目可以显示个别隐藏的窗口或全部显示. 如果由于任何原因脚本退出了, 那么它隐藏的所有窗口都会自动显示.
+</p>
+<p><a href="MinimizeToTrayMenu.ahk">下载此脚本</a> &nbsp;| &nbsp;<a href="index.htm">其他示例脚本</a> &nbsp;| &nbsp;<a href="../AutoHotkey.htm">主页</a></p>
+
+<pre class="NoIndent"><em>; CHANGES:
+; July 22, 2005 (changes provided by egilmour):
+; - Added new hotkey to unhide the last hidden window (Win+U)
+;
+; November 3, 2004 (changes provided by trogdor):
+; - Program manager is prevented from being hidden.
+; - If there is no active window, the minimize-to-tray hotkey will have
+;   no effect rather than waiting indefinitely.
+;
+; October 23, 2004:
+; - The taskbar is prevented from being hidden.
+; - Some possible problems with long window titles have been fixed.
+; - Windows without a title can be hidden without causing problems.
+; - If the script is running under AHK v1.0.22 or greater, the
+;   maximum length of each menu item is increased from 100 to 260.</em>
+
+<em>; CONFIGURATION SECTION: Change the below values as desired.</em>
+
+<em>; This is the maximum number of windows to allow to be hidden (having a
+; limit helps performance):</em>
+mwt_MaxWindows = 50
+
+<em>; This is the hotkey used to hide the active window:</em>
+mwt_Hotkey = #h  <em>; Win+H</em>
+
+<em>; This is the hotkey used to unhide the last hidden window:</em>
+mwt_UnHotkey = #u  <em>; Win+U</em>
+
+<em>; If you prefer to have the tray menu empty of all the standard items,
+; such as Help and Pause, use N.  Otherwise, use Y:</em>
+mwt_StandardMenu = N
+
+<em>; These next few performance settings help to keep the action within the
+; #HotkeyModifierTimeout period, and thus avoid the need to release and
+; press down the hotkey's modifier if you want to hide more than one
+; window in a row.  These settings are not needed you choose to have the
+; script use the keyboard hook via #InstallKeybdHook or other means:</em>
+#HotkeyModifierTimeout 100
+SetWinDelay 10
+SetKeyDelay 0
+
+#SingleInstance  <em>; Allow only one instance of this script to be running.</em>
+
+<em>; END OF CONFIGURATION SECTION (do not make changes below this point
+; unless you want to change the basic functionality of the script).</em>
+
+Hotkey, %mwt_Hotkey%, mwt_Minimize
+Hotkey, %mwt_UnHotkey%, mwt_UnMinimize
+
+<em>; If the user terminates the script by any means, unhide all the
+; windows first:</em>
+OnExit, mwt_RestoreAllThenExit
+
+if mwt_StandardMenu = Y
+    Menu, Tray, Add
+else
+{
+    Menu, Tray, NoStandard
+    Menu, Tray, Add, E&amp;xit and Unhide All, mwt_RestoreAllThenExit
+}
+Menu, Tray, Add, &amp;Unhide All Hidden Windows, mwt_RestoreAll
+Menu, Tray, Add  <em>; Another separator line to make the above more special.</em>
+
+if a_AhkVersion =   <em>; Since it's blank, version is older than 1.0.22.</em>
+    mwt_MaxLength = 100
+else
+    mwt_MaxLength = 260  <em>; Reduce this to restrict the width of the menu.</em>
+
+return  <em>; End of auto-execute section.</em>
+
+
+mwt_Minimize:
+if mwt_WindowCount &gt;= %mwt_MaxWindows%
+{
+    MsgBox No more than %mwt_MaxWindows% may be hidden simultaneously.
+    return
+}
+
+<em>; Set the "last found window" to simplify and help performance.
+; Since in certain cases it is possible for there to be no active window,
+; a timeout has been added:</em>
+WinWait, A,, 2
+if ErrorLevel &lt;&gt; 0  <em>; It timed out, so do nothing.</em>
+    return
+
+<em>; Otherwise, the "last found window" has been set and can now be used:</em>
+WinGet, mwt_ActiveID, ID
+WinGetTitle, mwt_ActiveTitle
+WinGetClass, mwt_ActiveClass
+if mwt_ActiveClass in Shell_TrayWnd,Progman
+{
+    MsgBox The desktop and taskbar cannot be hidden.
+    return
+}
+<em>; Because hiding the window won't deactivate it, activate the window
+; beneath this one (if any). I tried other ways, but they wound up
+; activating the task bar.  This way sends the active window (which is
+; about to be hidden) to the back of the stack, which seems best:</em>
+Send, !{esc}
+<em>; Hide it only now that WinGetTitle/WinGetClass above have been run (since
+; by default, those commands cannot detect hidden windows):</em>
+WinHide
+
+<em>; If the title is blank, use the class instead.  This serves two purposes:
+; 1) A more meaningful name is used as the menu name.
+; 2) Allows the menu item to be created (otherwise, blank items wouldn't
+;    be handled correctly by the various routines below).</em>
+if mwt_ActiveTitle =
+    mwt_ActiveTitle = ahk_class %mwt_ActiveClass%
+<em>; Ensure the title is short enough to fit. mwt_ActiveTitle also serves to
+; uniquely identify this particular menu item.</em>
+StringLeft, mwt_ActiveTitle, mwt_ActiveTitle, %mwt_MaxLength%
+
+<em>; In addition to the tray menu requiring that each menu item name be
+; unique, it must also be unique so that we can reliably look it up in
+; the array when the window is later unhidden.  So make it unique if it
+; isn't already:</em>
+Loop, %mwt_MaxWindows%
+{
+    if mwt_WindowTitle%a_index% = %mwt_ActiveTitle%
+    {
+        <em>; Match found, so it's not unique.</em>
+        <em>; First remove the 0x from the hex number to conserve menu space:</em>
+        StringTrimLeft, mwt_ActiveIDShort, mwt_ActiveID, 2
+        StringLen, mwt_ActiveIDShortLength, mwt_ActiveIDShort
+        StringLen, mwt_ActiveTitleLength, mwt_ActiveTitle
+        mwt_ActiveTitleLength += %mwt_ActiveIDShortLength%
+        mwt_ActiveTitleLength += 1 <em>; +1 the 1 space between title &amp; ID.</em>
+        if mwt_ActiveTitleLength &gt; %mwt_MaxLength%
+        {
+            <em>; Since menu item names are limted in length, trim the title</em>
+            <em>; down to allow just enough room for the Window's Short ID at</em>
+            <em>; the end of its name:</em>
+            TrimCount = %mwt_ActiveTitleLength%
+            TrimCount -= %mwt_MaxLength%
+            StringTrimRight, mwt_ActiveTitle, mwt_ActiveTitle, %TrimCount%
+        }
+        <em>; Build unique title:</em>
+        mwt_ActiveTitle = %mwt_ActiveTitle% %mwt_ActiveIDShort%
+        break
+    }
+}
+
+<em>; First, ensure that this ID doesn't already exist in the list, which can
+; happen if a particular window was externally unhidden (or its app unhid
+; it) and now it's about to be re-hidden:</em>
+mwt_AlreadyExists = n
+Loop, %mwt_MaxWindows%
+{
+    if mwt_WindowID%a_index% = %mwt_ActiveID%
+    {
+        mwt_AlreadyExists = y
+        break
+    }
+}
+
+<em>; Add the item to the array and to the menu:</em>
+if mwt_AlreadyExists = n
+{
+    Menu, Tray, add, %mwt_ActiveTitle%, RestoreFromTrayMenu
+    mwt_WindowCount += 1
+    Loop, %mwt_MaxWindows%  <em>; Search for a free slot.</em>
+    {
+        <em>; It should always find a free slot if things are designed right.</em>
+        if mwt_WindowID%a_index% =  <em>; An empty slot was found.</em>
+        {
+            mwt_WindowID%a_index% = %mwt_ActiveID%
+            mwt_WindowTitle%a_index% = %mwt_ActiveTitle%
+            break
+        }
+    }
+}
+return
+
+
+RestoreFromTrayMenu:
+Menu, Tray, delete, %A_ThisMenuItem%
+<em>; Find window based on its unique title stored as the menu item name:</em>
+Loop, %mwt_MaxWindows%
+{
+    if mwt_WindowTitle%a_index% = %A_ThisMenuItem%  <em>; Match found.</em>
+    {
+        StringTrimRight, IDToRestore, mwt_WindowID%a_index%, 0
+        WinShow, ahk_id %IDToRestore%
+        WinActivate ahk_id %IDToRestore%  <em>; Sometimes needed.</em>
+        mwt_WindowID%a_index% =  <em>; Make it blank to free up a slot.</em>
+        mwt_WindowTitle%a_index% =
+        mwt_WindowCount -= 1
+        break
+    }
+}
+return
+
+
+<em>;; This will pop the last minimized window off the stack and unhide it.</em>
+mwt_UnMinimize:
+<em>;; Make sure there's something to unhide.</em>
+if mwt_WindowCount &gt; 0 
+{
+    <em>;; Get the id of the last window minimized and unhide it</em>
+    StringTrimRight, IDToRestore, mwt_WindowID%mwt_WindowCount%, 0
+    WinShow, ahk_id %IDToRestore%
+    WinActivate ahk_id %IDToRestore%
+    
+    <em>;; Get the menu name of the last window minimized and remove it</em>
+    StringTrimRight, MenuToRemove, mwt_WindowTitle%mwt_WindowCount%, 0
+    Menu, Tray, delete, %MenuToRemove%
+    
+    <em>;; clean up our 'arrays' and decrement the window count</em>
+    mwt_WindowID%mwt_WindowCount% =
+    mwt_WindowTitle%mwt_WindowCount% = 
+    mwt_WindowCount -= 1
+}
+return
+
+
+mwt_RestoreAllThenExit:
+Gosub, mwt_RestoreAll
+ExitApp  <em>; Do a true exit.</em>
+
+
+mwt_RestoreAll:
+Loop, %mwt_MaxWindows%
+{
+    if mwt_WindowID%a_index% &lt;&gt;
+    {
+        StringTrimRight, IDToRestore, mwt_WindowID%a_index%, 0
+        WinShow, ahk_id %IDToRestore%
+        WinActivate ahk_id %IDToRestore%  <em>; Sometimes needed.</em>
+        <em>; Do it this way vs. DeleteAll so that the sep. line and first</em>
+        <em>; item are retained:</em>
+        StringTrimRight, MenuToRemove, mwt_WindowTitle%a_index%, 0
+        Menu, Tray, delete, %MenuToRemove%
+        mwt_WindowID%a_index% =  <em>; Make it blank to free up a slot.</em>
+        mwt_WindowTitle%a_index% =
+        mwt_WindowCount -= 1
+    }
+    if mwt_WindowCount = 0
+        break
+}
+return
+</pre>
+</body>
+</html>

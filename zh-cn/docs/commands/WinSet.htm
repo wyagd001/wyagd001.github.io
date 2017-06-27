@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>WinSet</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>WinSet</h1>
+
+<p>对指定的窗口进行各种设置,例如"总在最前面"和透明度.</p>
+
+<pre class="Syntax">WinSet, Attribute, Value [, WinTitle, WinText,  ExcludeTitle, ExcludeText]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Attribute, Value</dt>
+  <dd><p>请参阅后面的列表.</p></dd>
+
+  <dt>WinTitle</dt>
+  <dd><p>窗口标题或识别目标窗口的其他条件.请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
+
+  <dt>WinText</dt>
+  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串 (和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
+
+  <dt>ExcludeTitle</dt>
+  <dd><p>标题中含有此参数值的窗口将被排除.</p></dd>
+
+  <dt>ExcludeText</dt>
+  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
+
+</dl>
+
+<h3>Attribute, Value</h3>
+<p id="AlwaysOnTop"><strong>AlwaysOnTop, [On|Off|Toggle]</strong>:让窗口处于置顶状态.使用 ON 打开此设置, 使用 OFF 关闭, 而使用 TOGGLE 切换到当前的相反状态. 如果省略, 默认为 TOGGLE. 可以使用单词 Topmost 代替 AlwaysOnTop.</p>
+<p><strong>Bottom</strong>: 发送窗口到堆栈的底部; 即在其他所有窗口的下面. 这个效果类似于使用 Alt-Escape. 例如:<code>WinSet, Bottom,, WinTitle</code>.</p>
+<p><strong>Top</strong>: 把窗口带回到堆栈的顶部而不进行 <a href="WinActivate.htm">激活</a>. 但是, 在大多数情况下系统默认设置会激活它. 此外, 当操作系统阻止应用程序从用户抢夺焦点时, 此命令可能没有效果 (这可能取决于当前活动窗口的类型和用户当前正在进行的操作这些因素). 一个可能的解决方法是让窗口暂时 <a href="#AlwaysOnTop">AlwaysOnTop</a>, 然后关闭 AlwaysOnTop.</p>
+<p><strong>Disable</strong> 或 <strong>Enable</strong>: 分别为禁用或启用窗口. 当窗口被禁用时, 用户不能移动它或与它的控件进行交互. 此外, 被禁用的窗口会从 alt-tab 列表中移除.</p>
+<p><strong><a name="Redraw"></a>Redraw</strong>: 通过通知操作系统窗口的矩形框需要重绘来尝试更新窗口的外观/内容. 如果此方法对特殊的窗口无效, 那么尝试使用 <a href="WinMove.htm">WinMove</a>. 如果仍然无效, 那么请尝试使用下面方法:</p>
+<pre><a href="WinHide.htm">WinHide</a>, WinTitle
+<a href="WinShow.htm">WinShow</a>, WinTitle</pre>
+<p><strong>Style, N</strong> <u>or</u> <strong>ExStyle, N</strong>:分别改变窗口的样式或扩展样式.如果 <strong>N</strong> 的首个字符为加号或减号, 那么会添加或移除 <strong>N</strong> 中的样式. 如果首个字符为脱字符 (^), 那么 N 中的样式会被切换到相反的状态. 如果首个字符为数字, 则窗口样式会被完全覆盖为 <strong>N</strong>.</p>
+<p>如果设置失败, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 成功则为 0. 没有找到目标窗口或无法应用此样式时会设置失败.</p>
+<p>改变可见窗口的某些样式后,可能需要使用 <code>WinSet Redraw</code>(请参阅下面)对窗口进行重绘.最后, <a href="../misc/Styles.htm">样式表</a> 中列出了一些常用的样式编号. 示例:</p>
+<pre>WinSet, Style, -0xC00000, A  <em>; 移除活动窗口的标题栏 (WS_CAPTION).</em>
+WinSet, ExStyle, ^0x80, WinTitle  <em>; 切换 WS_EX_TOOLWINDOW 属性, 它会移除/添加窗口到 alt-tab 列表.</em></pre>
+<h3 id="region">WinSet, Region [, Options, WinTitle, ...]</h3>
+<p>改变窗口的形状为指定的矩形, 椭圆形或多边形. 如果 <em>Options</em> 参数为空, 那么恢复窗口为原来的形状. 否则, 可以指定一个或多个的下列选项, 选项之间使用空格分隔:</p>
+<p><strong>Wn</strong>: 矩形或椭圆形的宽度. 例如: <code>w200</code>.<br>
+<strong>Hn</strong>: 矩形或椭圆形的高度. 例如: <code>h300</code>.<br>
+<strong>X-Y</strong>: 这样的一对为 X/Y 坐标对. 例如, <code>200-0</code> 表示X坐标为200, Y坐标为0.<br>
+<strong>E</strong>: 设置窗口形状为椭圆形而不是矩形. 此选项仅在同时指定了 <strong>W</strong> 和 <strong>H</strong> 时才有效.<br>
+<strong>R[w-h]</strong>: 设置窗口形状为圆角矩形. 例如, <code>R30-30</code> 表示每个角为 30x30 的椭圆. 如果 <strong>w-h</strong> 省略, 则使用 30-30. <strong>R</strong> 仅在同时指定了 <strong>W</strong> 和 <strong>H</strong> 时才有效.</p>
+<p><strong>矩形或椭圆形</strong>:如果指定了 <strong>W</strong> 和 <strong>H</strong> 选项,那么会设置窗口形状为矩形,且其左上角的坐标为首个(且唯一)的 <strong>X-Y</strong> 坐标对.但是,如果同时指定了 <strong>E</strong> 选项,那么会设置窗口形状为椭圆形而不是矩形.例如:<code>WinSet, Region, 50-0 W200 H250 E, WinTitle</code>.</p>
+<p><strong>多边形</strong>:如果 <strong>W</strong> 和 <strong>H</strong> 选项都没有指定,那么会设置窗口形状为由多个 <strong>X-Y</strong> 坐标对确定的多边形(每对坐标以窗口左上角为原点).例如, 如果指定了三对坐标, 那么在多数时候窗口形状会被设置为三角形. 坐标对彼此间的相对顺序有时很重要. 此外,可以在 <em>Options</em> 中指定单词 <strong>Wind</strong> 从而使用缠绕法代替变换方法来确定多边形的形状.</p>
+<p>如果设置失败, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 成功则为 0. 出现以下情况时会设置失败: 1) 目标窗口不存在; 2) <em>Options</em> 有一个或多个选项无效; 3) 指定了超过 2000 对坐标; 或 4) 指定的形状是无效的或不适用于目标窗口.</p>
+<p>请参阅本页底部查看使用此命令的示例.</p>
+<h3 id="trans">WinSet, Transparent, N, WinTitle</h3>
+<p>设置窗口为半透明状态. 指定 <em>N</em> 为介于 0 和 255 之间的数字来表示透明度: 0 表示完全透明, 255 表示完全不透明. 指定单词 OFF 可以完全关闭透明度. 与指定 255 的区别是, 这样可以提升性能并降低系统资源的占用.</p>
+<p id="TransLimit"><strong>Transparent 和 <a href="#TransColor">TransColor</a> 的已知限制</strong>:</p>
+<ul>
+  <li>在关闭透明度之前设置 "透明度" 为 255 可以避免像黑色背景的窗口的重绘问题. 如果窗口仍无法正确重绘, 那么请参阅 <a href="#Redraw">Redraw</a> 了解可能的解决方法.</li>
+  <li>要改变窗口现有的 <a href="#TransColor">TransColor</a>, 可能需要在改变前关闭透明度.</li>
+  <li>在 v1.1.24.04 之前, 当窗体缺乏 caption (标题栏) 且缺乏 <a href="#AlwaysOnTop">总在最上层</a> 属性时无效. 已经于 v1.1.24.05 修复.</li>
+</ul>
+<p><strong>提示</strong>:要让任务栏透明,请使用 <code>WinSet, Transparent, 150, ahk_class Shell_TrayWnd</code>.类似地, 要让开始菜单透明, 请参照此例:</p>
+<pre>DetectHiddenWindows, on
+WinSet, Transparent, 150, ahk_class BaseBar  <em>; 要让开始菜单的子菜单透明, 还必须加上下面的代码.</em></pre>
+<p>要让系统中所有的或选择的菜单透明, 则让像下面这样的脚本保持运行. 注意尽管此脚本不能让它自己的菜单透明, 但可以让其他脚本的菜单透明:</p>
+<pre>#Persistent
+SetTimer, WatchForMenu, 5
+return  <em>; 自动运行段结束.</em>
+
+WatchForMenu:
+DetectHiddenWindows, on  <em>; 才可以立即检测到菜单.</em>
+IfWinExist, ahk_class #32768
+    WinSet, Transparent, 150  <em>; 使用前一行找到的窗口.</em>
+return</pre>
+<h3 id="TransColor">WinSet, TransColor, Color [N], WinTitle</h3>
+<p>让目标窗口中指定颜色的所有像素透明,这样可以让它后面的窗口内容显示出来.如果用户点击透明部分, 那么点击会 "穿透" 此窗口传递到它后面的窗口. 在 <em>Color</em> 中指定颜色名称或 RGB 值 (请参阅 <a href="Progress.htm#colors">颜色图表</a> 进行了解或使用 <a href="PixelGetColor.htm">PixelGetColor</a> 的 RGB 模式). 此外, 要让目标窗口中符合指定颜色的部分半透明, 请在颜色参数后添加空格 (不是逗号) 和透明度等级 (0-255). 例如:<code>WinSet, TransColor, EEAA99 150, WinTitle</code>.</p>
+<p>常用 TransColor 来创建屏幕显示 (OSD) 和其他视觉效果. <a href="Gui.htm#OSD">在 Gui 页面的底部</a> 有一个屏幕显示的例子.</p>
+<p>指定单词 OFF 可以完全关闭窗口的透明度. 下面两个语句功能是相同的:</p>
+<pre>WinSet, Transparent, Off, WinTitle
+WinSet, TransColor, Off, WinTitle</pre>
+<p>已知限制: 请参阅 <a href="#TransLimit">上面的</a> 列表.</p>
+<h3>备注</h3>
+<p>除了上面明确指出的情况外, 此命令不会改变 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>.</p>
+<p>尽管 Windows 2000/XP 或更高版本中支持透明度, 但只有在 Windows XP 或更高版本中才能获取窗口的当前透明度设置 (通过 <a href="WinGet.htm">WinGet</a>).</p>
+<p>通过后面的代码可以取消脚本 <a href="SplashTextOn.htm">SplashText</a> 窗口的置顶状态:</p>
+<pre>WinSet, AlwaysOnTop, Off, My Splash Window Title</pre>
+<p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时,才能检测到隐藏窗口.</p>
+
+<h3>相关</h3>
+<p><a href="WinGet.htm">WinGet</a>, <a href="WinHide.htm">WinHide</a>, <a href="WinSetTitle.htm">WinSetTitle</a>, <a href="WinMove.htm">WinMove</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="Control.htm">Control</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">WinSet, Transparent, 200, Untitled - Notepad <em>; 让窗口稍有点透明.</em>
+WinSet, TransColor, White, Untitled - Notepad <em>; 让白色部分透明.</em>
+WinSet, AlwaysOnTop, toggle, Calculator <em>; 切换计算器的置顶状态.</em>
+
+<em>; 较长的例子:
+; 这里是一些演示 "Transparent" 和
+; "TransColor" 效果的一些热键.  注意: 如果您在鼠标悬停在设置了 TransColor 的窗口透明部分时
+; 按下了其中一个热键, 
+; 那么热键会对在那个位置后面的窗口起作用!还有, Win+G 只有在
+; Windows XP 上才有效果, 因为
+; Windows 2000 中不支持获取透明度:</em>
+
+#t::  <em>; 使用 Win+T 来让鼠标光标下的颜色透明.</em>
+MouseGetPos, MouseX, MouseY, MouseWin
+PixelGetColor, MouseRGB, %MouseX%, %MouseY%, RGB
+<em>; 似乎有必要首先关闭任何现有的透明度:</em>
+WinSet, TransColor, Off, ahk_id %MouseWin%
+WinSet, TransColor, %MouseRGB% 220, ahk_id %MouseWin%
+return
+
+#o::  <em>; 使用 Win+O 来关闭鼠标下窗口的透明度.</em>
+MouseGetPos,,, MouseWin
+WinSet, TransColor, Off, ahk_id %MouseWin%
+return
+
+#g::  <em>; 使用 Win+G 来显示鼠标下窗口的当前透明设置.</em>
+MouseGetPos,,, MouseWin
+WinGet, Transparent, Transparent, ahk_id %MouseWin%
+WinGet, TransColor, TransColor, ahk_id %MouseWin%
+ToolTip Translucency:`t%Transparent%`nTransColor:`t%TransColor%
+return
+
+<em>; "WinSet Region" 示例:</em>
+WinSet, Region, 50-0 W200 H250, WinTitle  <em>; 隐藏窗口在此矩形外的部分.</em>
+WinSet, Region, 50-0 W200 H250 R40-40, WinTitle  <em>; 与上面相同, 不过带有 40x40 的圆角.</em>
+WinSet, Region, 50-0 W200 H250 E, WinTitle  <em>; 椭圆形窗口</em>
+WinSet, Region, 50-0 250-0 150-250, WinTitle  <em>; 倒三角形窗口.</em>
+WinSet, Region,, WinTitle <em>; 将窗口恢复原来的形状.</em>
+
+<em>; 这是更复杂的形状示例. 它在窗口中创建了可以看透的矩形洞.
+; 下面指定了两个矩形: 一个外部的, 一个内部的每个矩形由 5 对
+; X/Y 坐标组成, 因为首对是用来 "闭合" 每个矩形的重复坐标.</em>
+WinSet, Region, 0-0 300-0 300-300 0-300 0-0   100-100 200-100 200-200 100-200 100-100, WinTitle</pre>
+
+</body>
+</html>

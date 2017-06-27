@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>ComObjArray()</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ComObjArray() <span class="ver">[v1.0.91+]</span></h1>
+
+<p>创建用于 COM 的安全数组(SafeArray)</p>
+
+<pre class="Syntax">ArrayObj := ComObjArray(VarType, Count1 [, Count2, ... Count8])</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>VarType</dt>
+  <dd>数组的基类型(数组中每个元素的变量类型).VarType被限制为变量类型的子集.不能设置为 VT_ARRAY 和 VT_BYREF.VT_EMPTY及VT_NULL不是数组的合法基类型. 其他所有类型是合法的.
+    <p>可用值的列表见<a href="ComObjType.htm">ComObjType</a>.</p></dd>
+
+  <dt>Count<i>N</i></dt>
+  <dd><p>每个维度的大小.支持最多 8 维的数组.</p></dd>
+
+  <dt>ArrayObj</dt>
+  <dd><p>包含 安全数组 的包装器对象.</p></dd>
+
+</dl>
+
+<h3>方法</h3>
+<p>数组包装器对象支持下列方法:</p>
+<p><code class="Syntax">Array.MaxIndex(n)</code>:返回第 <i>n</i> 维的上界.如果 <i>n</i> 省略,默认为 1.</p>
+<p><code class="Syntax">Array.MinIndex(n)</code>:返回第 <i>n</i> 维的下界.如果 <i>n</i> 省略,默认为 1.</p>
+<p><code class="Syntax">Array.Clone()</code> <span class="ver">[v1.0.96.00+]</span>:返回数组的副本.</p>
+<p><code class="Syntax">Array._NewEnum()</code> <span class="ver">[v1.0.96.00+]</span>: 通常不是由脚本调用；允许<a href="For.htm">for循环</a> 与安全数组 一起使用.</p>
+
+<h3>一般说明</h3>
+<p>COM 方法和 <a href="ComObjActive.htm">ComObjActive</a> 也可以返回数组包装器对象.脚本中可以使用如下方法判断一个值是否为数组:</p>
+<pre>if ComObjType(<i>obj</i>) &amp; 0x2000
+    MsgBox % "数组子类:" . ComObjType(obj) &amp; 0xfff
+else
+    MsgBox 非数组.</pre>
+<p>可以支持多达 8 维的数组.</p>
+<p><span class="ver">[v1.0.96.00+]:</span> 由于 安全数组 未被设计为支持多重引用,故当一个 安全数组 被赋值为另一个 安全数组 的元素时,会创建一个独立的副本.不过,仅当包装器对象含有 F_OWNVALUE 标志时才会发生这种情况,这个标志表示它负责销毁此数组.此标志可用<a href="ComObjFlags.htm">ComObjFlags</a>移除.</p>
+<p><span class="ver">[v1.1.17.00+]:</span>当被COM客户端调用的函数或方法返回一个带有F_OWNVALUE标志的 安全数组 时,将建立并返回一个副本,而原 安全数组 将自动销毁.</p>
+
+<h3>相关</h3>
+<p><a href="ComObjType.htm">ComObjType</a>, <a href="ComObjValue.htm">ComObjValue</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221145.aspx">Array Manipulation Functions(数组操作函数) (MSDN)</a></p>
+
+<h3示例</h3>
+<pre class="NoIndent" id="Ex1"><em>; 示例 #1: 简单用法.</em>
+
+arr := ComObjArray(VT_VARIANT:=12, 3)
+arr[0] := "Auto"
+arr[1] := "Hot"
+arr[2] := "key"
+Loop % arr.MaxIndex() + 1
+   t .= arr[A_Index-1]
+MsgBox % t
+</pre>
+
+<pre class="NoIndent" id="Ex2"><em>; 示例 #2: 多维数组.</em>
+
+arr := ComObjArray(VT_VARIANT:=12, 3, 4)
+
+<em>; 获取数组的维数个数:</em>
+dim := DllCall("oleaut32\SafeArrayGetDim", "ptr", ComObjValue(arr))
+
+<em>; 获取各维数的边界:</em>
+Loop %dim%
+    dims .= arr.MinIndex(A_Index) " .. " arr.MaxIndex(A_Index) "`n"
+MsgBox %dims%
+
+<em>; 简单用法:</em>
+Loop 3 {
+    x := A_Index-1
+    Loop 4 {
+        y := A_Index-1
+        arr[x, y] := x * y
+    }
+}
+MsgBox % arr[2, 3]
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>GetKeyState</title>
+<meta name="description" content="在这个免费的宏程序中使用 GetKeyState 可以方便地检查键盘按键或鼠标/操纵杆按钮当前是否按下或放开.">
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>GetKeyState</h1>
+
+<p>检查键盘按键或鼠标/操纵杆按钮是否按下或放开.也可以获取操纵杆的状态.</p>
+
+<pre class="Syntax">GetKeyState, OutputVar, KeyName [, Mode]
+KeyIsDown := GetKeyState(&quot;KeyName&quot; [, &quot;Mode&quot;])</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>OutputVar</dt>
+  <dd><p>用来保存获取的按键状态的变量名, 它的值在按下时是 D 而弹起时是 U (不过 GetKeyState() 函数在按下时返回 true (1) 而弹起时返回 false (0)). 如果按键的状态无法识别, 则此变量为空.</p>
+      <p>下面是关于操纵杆的几点说明:</p>
+    <p>1) 对于像 JoyX 这样的操纵杆轴, <em>OutputVar</em> 将被设置为介于 0 和 100 之间的浮点数, 作为该轴活动范围的百分率, 表示操纵杆的位置. 可以使用 <a href="SetFormat.htm">SetFormat</a> 改变此数字的格式. 此 <a href="../scripts/JoystickTest.htm">测试脚本</a> 可以用来分析您的操纵杆.</p>
+    <p>2) 当 <em>KeyName</em> 为 JoyPOV 时, 获取的值将介于 0 和 35900 之间. 许多操纵杆使用与下列近似的 POV 值:<br>
+    -1: 没有角度<br>
+    0: 向前 POV<br>
+9000 (即 90 度): 向右 POV<br>
+27000 (即 270 度): 向左 POV<br>
+18000 (即 180 度): 向后 POV</p></dd>
+
+  <dt>KeyName</dt>
+  <dd><p>此参数可以是键盘中任何的单个字符或 <a href="../KeyList.htm">按键列表</a> 中的其中一个键名, 例如鼠标/操纵杆按钮. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
+      <p>或者, 可以指定明确的虚拟按键代码, 例如 vkFF. 只有在一个按键没有指定名称这样少见的情况下, 这种方法才有用. 这种按键的虚拟按键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p> 
+      <p><b>已知限制:</b> 此函数无法区别共享相同虚拟按键代码的两个按键, 例如 Left 和 NumpadLeft.</p></dd>
+
+  <dt>Mode</dt>
+  <dd><p>获取操纵杆状态时, 此参数被忽略.</p>
+      <p>如果省略, 则默认的模式是获取按键的逻辑状态. 这是操作系统和活动窗口所认为的按键所处的状态, 但可能和它的物理状态不一致.</p>
+	  <p>或者, 可以指定这些字母的其中一个:</p>
+      <p><strong>P</strong>: 获取物理状态 (即用户是否实际按住了按键). 如果没有安装键盘和/或鼠标钩子,则按键或鼠标按钮的物理状态通常和逻辑状态一致(有时逻辑状态可能比物理状态滞后)；如果安装了钩子,则它会准确反映出用户是否按下了按键或鼠标按钮(只要在脚本执行时它正被按住).您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 命令或菜单项确定脚本中是否使用了钩子.通过添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 和/或 <a href="_InstallMouseHook.htm">#InstallMouseHook</a> 指令到脚本中您可以强制安装钩子.</p>
+      <p><strong>T</strong>: 获取切换状态 (仅对可以切换的按键才有效, 例如 Capslock, Numlock, Scrolllock 和 Insert). 获取的值为 D 表明按键是打开的, 而 U 表明它是关闭的 (不过 GetKeyState() 函数当打开时返回 true (1) 而关闭时返回 false (0)).</p>
+    </dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>为了等待按键或鼠标/操纵杆按钮进入新的状态, 通常用 <a href="KeyWait.htm">KeyWait</a> 代替 GetKeyState 的循环会更简单.</p>
+<p>带有不常见键盘驱动的系统更新按键的状态可能比较慢, 尤其是像 Capslock 这样按键的切换状态. 在按键状态改变后立即对其状态进行检查的脚本可以预先使用 <a href="Sleep.htm">Sleep</a>, 以便系统有时间更新按键的状态.</p>
+<p>关于对操纵杆使用 GetKeyState 的例子, 请参阅 <a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a> 和 <a href="../scripts/JoystickMouse.htm">操纵杆到鼠标的映射脚本</a>.</p>
+<h3>相关</h3>
+<p><a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">按键列表</a>, <a href="../misc/RemapJoystick.htm">操纵杆重映射</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a></p>
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 基本示例:</em>
+GetKeyState, state, RButton  <em>; 鼠标右键.</em>
+GetKeyState, state, Joy2  <em>; 第一个操纵杆的第二个按钮.</em>
+
+GetKeyState, state, Shift
+if state = D
+    MsgBox At least one Shift key is down.
+else
+    MsgBox Neither Shift key is down.
+
+GetKeyState, state, CapsLock, T <em>;  当 CapsLock 打开时为 D, 否则为 U.</em>
+state := GetKeyState("Capslock", "T")  <em>; 当 CapsLock 打开时为真, 否则为假.</em>
+
+<em>; 重映射的例子 (这里只是为了演示因为使用
+; <a href="../misc/Remap.htm">内置的重映射功能</a> 会更简单):
+; 在下面的热键中, 当 NumpadAdd 按下时鼠标按钮会保持按住的状态,
+; 这个热键把 NumpadAdd 映射为鼠标按钮. 此方法
+; 还可以用来在用户按住按键或按钮时重复一个动作:</em>
+*NumpadAdd::
+MouseClick, left,,, 1, 0, D  <em>; 按住鼠标左键.</em>
+Loop
+{
+    Sleep, 10
+    GetKeyState, state, NumpadAdd, P
+    if state = U  <em>; 按键已经被释放, 所以退出循环.</em>
+        break
+    <em>; ... 此处放置您想要重复的任何动作.</em>
+}
+MouseClick, left,,, 1, 0, U  <em>; 释放鼠标按钮.</em>
+return
+
+<em>; 示例: 让操纵杆按钮根据操纵杆轴位置产生不同的反应.</em>
+joy2:: 
+GetKeyState, joyx, JoyX 
+if joyx &gt; 75 
+    MsgBox Action #1 (button pressed while joystick was pushed to the right).
+else if joyx &lt; 25 
+    MsgBox Action #2 (button pressed while joystick was pushed to the left).
+else
+    MsgBox Action #3 (button pressed while joystick was centered horizontally).
+return
+
+<em>; 请参阅 <a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a> 和 <a href="../scripts/JoystickMouse.htm">操纵杆到鼠标的映射脚本</a> 查看其他示例.</em></pre>
+
+</body>
+</html>

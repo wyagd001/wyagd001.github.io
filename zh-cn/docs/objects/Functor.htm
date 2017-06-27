@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Function Objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>函数对象</h1>
+
+<p>"函数对象"泛指以下内容:</p>
+<ul>
+  <li><a href="Func.htm">函数对象</a>, 即<a href="../Functions.htm">函数</a>的对象形式; 包含内置函数及脚本定义的函数</li>
+  <li>支持像函数一样被调用的用户定义的对象.亦称为"函数子".</li>
+  <li>其他支持像函数一样被调用的对象,如,<a href="#BoundFunc">函数绑定对象</a>,或,COM方法返回的JavaScript函数对象.</li>
+</ul>
+<p>函数对象可被以下对象使用:</p>
+<ul>
+  <li><a href="../commands/Gui.htm#label">GUI控件事件</a>(G标签)</li>
+  <li><a href="../commands/Hotkey.htm#Functor">Hotkey</a><a href="../commands/Hotkey.htm#Functor">热键</a></li>
+  <li><a href="../commands/Menu.htm#Functor">菜单</a></li>
+  <li><a href="../commands/OnClipboardChange.htm">OnClipboardChange()</a></li>
+  <li><a href="../commands/OnExit.htm">OnExit()</a></li>
+  <li><a href="../commands/OnMessage.htm">OnMessage()</a></li>
+  <li><a href="../commands/SetTimer.htm#Functor">SetTimer</a></li>
+</ul>
+
+<h2 id="User-Defined">用户定义函数</h2>
+<!-- TODO: Explain how a user-defined object could be useful -->
+<p>用户定义函数对象应按以下模式:</p>
+<pre>class YourClassName {
+    Call(a, b) {  <em>;声明参数,或<a href="../Functions.htm#Variadic">数组*</a>.</em>
+        <em>;...</em>
+    }
+    __Call(method, args*) {
+        if (method = "")  <em>;对<a href="../Functions.htm#DynCall">%fn%()</a>或fn.()</em>
+            return this.Call(args*)
+        if (IsObject(method))  <em>; 如果此函数对象作为方法被使用.</em>
+            return this.Call(method, args*)
+    }
+    <em>;...</em>
+}
+</pre>
+<p>模式中各个部分适用于不同的使用情形,如下:</p>
+<ul>
+  <li>如果脚本按<a href="../Functions.htm#DynCall">%this%()</a>或<code>this.()</code>的形式调用,则,<code>method</code>(方法名)的值是空字符串.</li>
+  <li>如果对象作为方法被调用,则<code>IsObject(method)</code>返回真,并且<code>method</code>包含关于目标对象的引用.如:若<code>x.y</code>指向<code>this</code> 函数对象,则<code>x.y()</code> → <code>this[x]()</code> → <code>this.__Call(x)</code> → <code>this.Call(x)</code>.</li>
+  <li><span class="ver">[v1.1.20+]:</span>如果对象被某需要回调函数的内置函数所使用,如OnMessage或SetTimer,则此对象仅需支持Call方法即可.</li>
+</ul>
+<p>上述过程可以直接在__Call中完成,推荐使用__Call代替Call以便更好的迁移到V2版本,其会改变<code>%this%()</code>的行为及调用CALL的方法调用.</p>
+
+<h2 id="BoundFunc">函数绑定对象<span class="ver">[v1.1.20+]</span></h2>
+<p>行为像函数,但仅将传递给自己的参数绑定至另一个函数.</p>
+<p>有两种建立函数绑定对象的方式:</p>
+<ul>
+  <li>调用<a href="Func.htm#Bind">Func.Bind()</a>方法,其绑定参数值至一个函数</li>
+  <li>调用<a href="../commands/ObjBindMethod.htm">ObjBindMethod()</a>函数,其绑定参数值及方法名至目标对象.</li>
+</ul>
+<p>函数绑定对象可按如下实例调用.不支持其他方法.当函数绑定对象被调用时,它调用被绑定的函数或方法,传递绑定的参数,及调用时的参数.例如:</p>
+<pre>fn := Func("RealFn").Bind(1)
+
+%fn%(2)    <em>; 显示 "1, 2"</em>
+fn.Call(3) <em>; 显示 "1, 3"</em>
+
+RealFn(a, b) {
+    MsgBox %a%, %b%
+}</pre>
+<p><a href="../commands/ObjBindMethod.htm">ObjBindMethod()</a>用于绑定无法引用的方法.例如:</p>
+<pre>file := FileOpen(A_ScriptFullPath, "r")
+getLine := ObjBindMethod(file, "ReadLine")
+MsgBox % %getLine%()  <em>;显示此文件的第一行.</em></pre>
+<p>更多复杂的例子, 请参阅 <a href="../commands/SetTimer.htm#ExampleClass">SetTimer</a>.</p>
+
+</body>
+</html>

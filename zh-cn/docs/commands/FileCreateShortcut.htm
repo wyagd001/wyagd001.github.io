@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>FileCreateShortcut</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>FileCreateShortcut</h1>
+
+<p>创建快捷方式(.lnk)文件.</p>
+
+<pre class="Syntax">FileCreateShortcut, Target, LinkFile [, WorkingDir, Args, Description, IconFile, ShortcutKey, IconNumber, RunState]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>Target</dt>
+  <dd><p>快捷方式引用的文件名, 其中应该包含绝对路径, 除非文件集成到了系统中 (如 Notepad.exe). 创建快捷方式时它指向的文件不需要一定存在; 换句话说, 可以创建指向无效目标的快捷方式.</p></dd>
+
+  <dt>LinkFile</dt>
+  <dd><p>要创建的快捷方式文件名, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a>. 必须确保扩展名为 <strong>.lnk</strong>. 如果文件已经存在, 则它会被覆盖.</p></dd>
+
+  <dt>WorkingDir</dt>
+  <dd><p>启动快捷方式时 <em>Target</em> 的当前工作目录. 如果为空或省略, 则快捷方式的 "起始位置" 字段为空, 而当快捷方式启动时系统会提供默认的工作目录.</p></dd>
+
+  <dt>Args</dt>
+  <dd><p>启动快捷方式时传递给 <em>Target</em> 的参数. 参数之间使用空格分隔. 如果某个参数包含空格, 则要把它括在双引号中.</p></dd>
+
+  <dt>说明</dt>
+  <dd><p>描述快捷方式的注释 (操作系统显示在工具提示中, 等等.)</p></dd>
+
+  <dt>IconFile</dt>
+  <dd><p>显示在 <em>LinkFile</em> 中图标的完整路径和名称. 它必须为必须为 ico 文件或者 EXE 或 DLL 中的首个图标.</p></dd>
+
+  <dt>ShortcutKey</dt>
+  <dd><p>单个字母, 数字或在 <a href="../KeyList.htm">按键列表</a> 中的单个按键的名称 (可能不支持鼠标按钮或其他非标准的按键). <strong>不要</strong> 包含修饰符. 目前, 所有创建的快捷键都使用 CTRL+ALT 作为修饰键. 例如, 如果在此参数中指定字母 B, 则快捷键将为 CTRL-ALT-B.</p></dd>
+
+  <dt>IconNumber</dt>
+  <dd><p>要使用 <em>IconFile</em> 首个外的其他图标, 请在这里指定编号 (可以为 <a href="../Variables.htm#Expressions">表达式</a>). 例如, 2 表示第二个图标.</p></dd>
+
+  <dt>RunState</dt>
+  <dd><p>要最小化或最大化运行 <em>Target</em>, 请指定下列数字的其中一个:</p>
+      <p>1 - 正常 (这是默认的)3 - 最大化7 - 最小化</p></dd>
+
+</dl>
+<h3>ErrorLevel</h3>
+<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
+<h3>备注</h3>
+<p>如果 <em>Target</em> 在系统 PATH 环境变量包含的某个文件夹中, 则其中可以不包含路径.</p>
+<p>只有把快捷方式文件放在桌面或开始菜单的某个位置, 这样新建快捷方式的 <em>ShortcutKey</em> 才会生效. 如果您选择的 <em>ShortcutKey</em> 已经在使用中, 那么您新建的快捷方式具有优先权.</p>
+<p>创建到 URL 的快捷方式的另一种方法是下面这个例子, 其中创建了特殊的 URL 快捷方式. 根据您的需要改变前两个参数:<code><a href="IniWrite.htm">IniWrite</a>, http://www.google.com, C:\My Shortcut.url, InternetShortcut, URL</code>.</p>
+<p>使用下面的语句可以给上面的快捷方式添加图标:</p>
+<pre><a href="IniWrite.htm">IniWrite</a>, &lt;IconFile&gt;, C:\My Shortcut.url, InternetShortcut, IconFile
+<a href="IniWrite.htm">IniWrite</a>, 0, C:\My Shortcut.url, InternetShortcut, IconIndex</pre>
+<p>在上面的语句中, 请把 0 替换为图标的索引 (0 表示首个图标) 并把 &lt;IconFile&gt; 替换为 URL, EXE, DLL 或 ICO 文件. 例如: C:\Icons.dll, C:\App.exe, http://www.somedomain.com/ShortcutIcon.ico</p>
+<p>操作系统会被上面创建的 .URL 文件视为真正的快捷方式, 尽管它只是纯文本文件而不是 .LNK 文件.</p>
+<h3>相关</h3>
+<p><a href="FileGetShortcut.htm">FileGetShortcut</a>, <a href="FileAppend.htm">FileAppend</a></p>
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 最后一个参数中的字母 "i" 将快捷键设成 Ctrl-Alt-I:</em>
+FileCreateShortcut, Notepad.exe, %A_Desktop%\My Shortcut.lnk, C:\, "%A_ScriptFullPath%", My Description, C:\My Icon.ico, i</pre>
+
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Send/SendRaw/SendInput/SendPlay/SendEvent:发送按键和点击</title>
+<meta name="description" content="使用这个免费的宏程序发送键击和鼠标点击到任意窗口. SendInput 通常是最快并且大多数时候都比较可靠的方法.">
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<style type="text/css">
+<!--
+.red {color: #FF0000; font-weight: bold;}
+-->
+</style>
+</head>
+<body>
+
+<h1>Send / SendRaw / SendInput / SendPlay / SendEvent: 发送按键和点击</h1>
+
+<p>发送模拟键击和鼠标点击到<a href="WinActivate.htm">活动</a>窗口.</p>
+
+<pre class="Syntax">Send Keys
+SendRaw Keys
+SendInput Keys
+SendPlay Keys
+SendEvent Keys</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>键</dt>
+  <dd><p>要发送的按键序列. 和其他命令一样, 在首个参数前的逗号可以省略.</p></dd>
+
+</dl>
+
+<p id="SendRaw"><strong>原始模式</strong>: <em>SendRaw</em> 命令会原样发送所有字符, 而不把 {Enter} 转换成 ENTER 键击, 把 ^c 转换成 Control-C, 等等. 不过, 转义系列, 变量引用和表达式的一般规则仍然适用, 因为它们在命令执行前就已经被处理了. 要在 SendInput,SendPlay 或 SendEvent 中使用原始模式,请把 <a href="#Raw">{Raw}</a> 写在需发送的按键序列前面；例如:<code>SendInput {Raw}abc</code>.</p>
+<p><strong>普通模式</strong>: 不处于原始模式时, 下列字符被看成是修饰键 (这些修饰键仅影响紧跟着的下一个键):</p>
+<p><span class="red">!</span>: 发送 ALT 键击. 例如,<code>Send This is text!a</code> 将发送按键序列"This is text"并接着按下 ALT+a.<strong>注</strong>: 在某些程序中 !A 和 !a 会产生不同的效果. 这是由于 !A 按了 ALT+SHIFT+A 而 !a 按了 ALT+a. 如果不确定, 请使用小写字母.</p>
+<p><span class="red">+</span>: 发送 SHIFT 键击. 例如,<code>Send +abC</code> 会发送文本"AbC",而 <code>Send !+a</code> 会按下 ALT+SHIFT+a.</p>
+<p><span class="red">^</span>: 发送 CONTROL 键击. 例如,<code>Send ^!a</code> 会按下 CTRL+ALT+a,而 <code>Send ^{Home}</code> 则发送 CONTROL+HOME.<strong>注</strong>: 在某些程序中 ^A 和 ^a 会产生不同的效果. 这是由于 ^A 按了 CONTROL+SHIFT+A 而 ^a 按了 CONTROL+a. 如果不确定, 请使用小写字母.</p>
+<p><span class="red">#</span>:发送 WIN 键击,因此 <code>Send #e</code> 会在按住 Windows 键时按下字母"e".</p>
+<p><br>
+<strong id="SendInput">SendInput</strong> 和 <strong id="SendPlay">SendPlay</strong> <span class="ver">[v1.0.43+]:</span> SendInput 和 SendPlay 与 Send 使用相同的语法但通常更快更可靠. 此外, 它们缓存了发送期间任何物理的键盘或鼠标活动, 这样避免了在发送时夹杂用户的键击. 可以使用 <a href="SendMode.htm">SendMode</a> 让 Send 和 SendInput 或 SendPlay 执行相同的功能. 关于每种模式的更多细节, 请参阅下面的 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendPlayDetail">SendPlay</a>.</p>
+<p><a name="SendEvent"></a><strong>SendEvent</strong> <span class="ver">[v1.0.43+]:</span> SendEvent 和 1.0.43 之前版本的 <em>Send</em> 命令使用相同的方法发送键击. 键击发送的频率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定. 默认情况下, <em>Send</em> 和 <em>SendEvent</em> 功能相同; 但通过 <a href="SendMode.htm">SendMode</a> 可以让它变成和 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 一样.</p>
+<p><strong>Key Names</strong>: 下表中列出了可以发送的特殊按键 (每个按键名称必须用大括号包围):</p>
+<table class="info">
+  <tr>
+    <th>按键名称</th>
+    <th>生成的键击</th>
+  </tr>
+  <tr>
+    <td>{F1} - {F24}</td>
+    <td>功能键. 例如: {F12} 表示 F12 键.</td>
+  </tr>
+  <tr>
+    <td>{!}</td>
+    <td>!</td>
+  </tr>
+  <tr>
+    <td>{#}</td>
+    <td>#</td>
+  </tr>
+  <tr>
+    <td>{+}</td>
+    <td>+</td>
+  </tr>
+  <tr>
+    <td>{^}</td>
+    <td>^</td>
+  </tr>
+  <tr>
+    <td>{{}</td>
+    <td>{</td>
+  </tr>
+  <tr>
+    <td>{}}</td>
+    <td>}</td>
+  </tr>
+  <tr>
+    <td>{Enter}</td>
+    <td>主键盘上的 ENTER 键</td>
+  </tr>
+  <tr>
+    <td>{Escape} 或 {Esc}</td>
+    <td>ESCAPE</td>
+  </tr>
+  <tr>
+    <td>{Space}</td>
+    <td>SPACE (仅对于要发送的按键序列开始或末尾的空格才需要这样表示, 而序列中间的空格是原义的)</td>
+  </tr>
+  <tr>
+    <td>{Tab}</td>
+    <td>TAB</td>
+  </tr>
+  <tr>
+    <td>{Backspace} 或 {BS}</td>
+    <td>退格键</td>
+  </tr>
+  <tr>
+    <td>{Delete} 或 {Del}</td>
+    <td>Delete</td>
+  </tr>
+  <tr>
+    <td>{Insert} 或 {Ins}</td>
+    <td>Insert</td>
+  </tr>
+  <tr>
+    <td>{Up}</td>
+    <td>主键盘上的向上键</td>
+  </tr>
+  <tr>
+    <td>{Down}</td>
+    <td>主键盘上的向下键</td>
+  </tr>
+  <tr>
+    <td>{Left}</td>
+    <td>主键盘上的向左键</td>
+  </tr>
+  <tr>
+    <td>{Right}</td>
+    <td>主键盘上的向右键</td>
+  </tr>
+  <tr>
+    <td>{Home}</td>
+    <td>主键盘上的 Home 键</td>
+  </tr>
+  <tr>
+    <td>{End}</td>
+    <td>主键盘上的 End 键</td>
+  </tr>
+  <tr>
+    <td>{PgUp}</td>
+    <td>主键盘上的向上翻页键</td>
+  </tr>
+  <tr>
+    <td>{PgDn}</td>
+    <td>主键盘上的向下翻页键</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{CapsLock}</td>
+    <td>CapsLock (在 2k/XP 中使用 <a href="SetNumScrollCapsLockState.htm">SetCapsLockState</a> 更可靠).
+
+
+ 发送 {CapsLock} 之前可能要求 <a href="SetStoreCapslockMode.htm">SetStoreCapslockMode Off</a>.</td>
+  </tr>
+  <tr>
+    <td>{ScrollLock}</td>
+    <td>ScrollLock (另请参阅: <a href="SetNumScrollCapsLockState.htm">SetScrollLockState</a>)</td>
+  </tr>
+  <tr>
+    <td>{NumLock}</td>
+    <td>NumLock (另请参阅: <a href="SetNumScrollCapsLockState.htm">SetNumLockState</a>)</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{Control} 或 {Ctrl}</td>
+    <td>CONTROL (技术信息: 发送中性的虚拟按键代码而不是左边的扫描码)</td>
+  </tr>
+  <tr>
+    <td>{LControl} 或 {LCtrl}</td>
+    <td>左 CONTROL 键(技术信息:发送左边的虚拟按键而非中性的那个)</td>
+  </tr>
+  <tr>
+    <td>{RControl} 或 {RCtrl}</td>
+    <td>右 CONTROL 键</td>
+  </tr>
+  <tr>
+    <td>{Control Down} 或 {Ctrl Down}</td>
+    <td>按住 CONTROL 键直到发送 {Ctrl Up}. 要按住左边或右边的键,请使用 {RCtrl Down} 和 {RCtrl Up}.</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{Alt}</td>
+    <td>ALT (技术信息: 发送中性的虚拟按键而不是左边的扫描码)</td>
+  </tr>
+  <tr>
+    <td>{LAlt}</td>
+    <td>左 ALT 键(技术信息:发送左边的虚拟按键而不是中性的那个)</td>
+  </tr>
+  <tr>
+    <td>{RAlt}</td>
+    <td>右 ALT 键 (或 AltGr, 取决于键盘布局)</td>
+  </tr>
+  <tr>
+    <td>{Alt Down}</td>
+    <td>按住 ALT 键直到发送 {Alt Up}. 要按住左边或右边的键,请使用 {RAlt Down} 和 {RAlt Up}.</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{Shift}</td>
+    <td>SHIFT (技术信息: 发送中性的虚拟按键和左边的扫描码)</td>
+  </tr>
+  <tr>
+    <td>{LShift}</td>
+    <td>左 SHIFT 键(技术信息:发送左边的虚拟按键而不是中性的那个)</td>
+  </tr>
+  <tr>
+    <td>{RShift}</td>
+    <td>右 SHIFT 键</td>
+  </tr>
+  <tr>
+    <td>{Shift Down}</td>
+    <td>按住 SHIFT 键直到发送 {Shift Up}. 要按住左边或右边的键,请使用 {RShift Down} 和 {RShift Up}.</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{LWin}</td>
+    <td>左 Windows 键</td>
+  </tr>
+  <tr>
+    <td>{RWin}</td>
+    <td>右 Windows 键</td>
+  </tr>
+  <tr>
+    <td>{LWin Down}</td>
+    <td>按住左 Windows 键直到发送 {LWin Up}</td>
+  </tr>
+  <tr>
+    <td>{RWin Down}</td>
+    <td>按住右 Windows 键直到发送 {RWin Up}</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{AppsKey}</td>
+    <td>Windows Appskey (调用右键点击或上下文菜单)</td>
+  </tr>
+  <tr>
+    <td>{Sleep}</td>
+    <td>电脑 SLEEP 键.</td>
+  </tr>
+  <tr id="asc">
+    <td>{ASC nnnnn}</td>
+    <td><p>发送 ALT+nnnnn 小键盘上的按键组合, 可以用来生成键盘上不存在的特殊字符. 要生成 ASCII 字符, 请指定一个介于 1 和 255 之间的数字. 要生成 ANSI 字符 (在大多数语言中的标准), 请指定一个介于 128 和 255 之间的数字, 但需要在数字前加上一个前导零, 例如 {Asc 0133}.</p>
+    <p>要生成 Unicode 字符, 请指定一个介于 256 和 65535 之间的数字 (不带前导零). 但是, 有些应用程序不支持这种方法. 对于替代方法, 请参阅下面的部分.</p></td>
+  </tr>
+  <tr id="Unicode">
+    <td><span id="sendu"></span>{U+nnnn}</td>
+    <td><p><span class="ver">[AHK_L 24+]:</span> 发送 Unicode 字符, 其中 <em>nnnn</em> 为不包括 0x 前缀的字符的十六进制值. 在 AutoHotkey 的 Unicode 版本中通常不需要这么做, 因为它包含的 Send 和 ControlSend 自动支持 Unicode 文本.</p>
+    <p>如果这个字符没有映射为一个虚拟按键代码, 则使用 <a href="http://msdn.microsoft.com/en-us/library/ms646310.aspx">SendInput()</a> 或 <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> 发送这个字符而当前的发送模式无效.</p></td>
+  </tr>
+  <tr id="vk">
+    <td><p>{vkXX}<br>
+      {scYYY}<br>
+    {vkXXscYYY}</p></td>
+    <td><p>发送一个虚拟按键为 XX 且扫描码为 YYY 的键击. 例如:<code>Send {vkFFsc159}</code>.如果省略了 sc 或 vk 部分, 则会发送最适当的值.</p>
+      <p>XX 和 YYY 是十六进制值, 通常可以在主窗口的 <a href="KeyHistory.htm">View-&gt;Key history</a> 菜单项找到. 另请参阅: <a href="../KeyList.htm#SpecialKeys">特殊按键</a></p></td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{Numpad0} - {Numpad9}</td>
+    <td>小键盘上的数字键 (与 Numlock 打开时输入的一样). 例如: {Numpad5} 为数字 5.</td>
+  </tr>
+  <tr>
+    <td>{NumpadDot}</td>
+    <td>小键盘上的点 (与 Numlock 打开时输入的一样).</td>
+  </tr>
+  <tr>
+    <td>{NumpadEnter}</td>
+    <td>小键盘上的 Enter 键</td>
+  </tr>
+  <tr>
+    <td>{NumpadMult}</td>
+    <td>小键盘上的乘</td>
+  </tr>
+  <tr>
+    <td>{NumpadDiv}</td>
+    <td>小键盘上的除</td>
+  </tr>
+  <tr>
+    <td>{NumpadAdd}</td>
+    <td>小键盘上的加</td>
+  </tr>
+  <tr>
+    <td>{NumpadSub}</td>
+    <td>小键盘上的减</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{NumpadDel}</td>
+    <td>小键盘上的 Delete 键 (此键和后面的小键盘按键是在 Numlock 关闭时输入的)</td>
+  </tr>
+  <tr>
+    <td>{NumpadIns}</td>
+    <td>小键盘上的 Insert 键</td>
+  </tr>
+  <tr>
+    <td>{NumpadClear}</td>
+    <td>小键盘上的 Clear 键 (通常在 Numlock 关闭时输入 '5' 的键).</td>
+  </tr>
+  <tr>
+    <td>{NumpadUp}</td>
+    <td>小键盘上的向上键</td>
+  </tr>
+  <tr>
+    <td>{NumpadDown}</td>
+    <td>小键盘上的向下键</td>
+  </tr>
+  <tr>
+    <td>{NumpadLeft}</td>
+    <td>小键盘上的向左键</td>
+  </tr>
+  <tr>
+    <td>{NumpadRight}</td>
+    <td>小键盘上的向右键</td>
+  </tr>
+  <tr>
+    <td>{NumpadHome}</td>
+    <td>小键盘上的 Home 键</td>
+  </tr>
+  <tr>
+    <td>{NumpadEnd}</td>
+    <td>小键盘上的 End 键</td>
+  </tr>
+  <tr>
+    <td>{NumpadPgUp}</td>
+    <td>小键盘上的向上翻页键</td>
+  </tr>
+  <tr>
+    <td>{NumpadPgDn}</td>
+    <td>小键盘上的向下翻页键</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{Browser_Back}</td>
+    <td>按下浏览器的"后退"按钮</td>
+  </tr>
+  <tr>
+    <td>{Browser_Forward}</td>
+    <td>按下浏览器的"前进"按钮</td>
+  </tr>
+  <tr>
+    <td>{Browser_Refresh}</td>
+    <td>按下浏览器的"刷新"按钮</td>
+  </tr>
+  <tr>
+    <td>{Browser_Stop}</td>
+    <td>按下浏览器的"停止"按钮</td>
+  </tr>
+  <tr>
+    <td>{Browser_Search}</td>
+    <td>按下浏览器的"搜索"按钮</td>
+  </tr>
+  <tr>
+    <td>{Browser_Favorites}</td>
+    <td>按下浏览器的"收藏"按钮</td>
+  </tr>
+  <tr>
+    <td>{Browser_Home}</td>
+    <td>启动浏览器并打开主页</td>
+  </tr>
+  <tr>
+    <td>{Volume_Mute}</td>
+    <td>主音量静音/取消静音.通常相当于 <code><a href="SoundSet.htm">SoundSet</a>, +1, , mute</code>.</td>
+  </tr>
+  <tr>
+    <td>{Volume_Down}</td>
+    <td>减小主音量.通常相当于 <code><a href="SoundSet.htm">SoundSet</a> -5</code>.</td>
+  </tr>
+  <tr>
+    <td>{Volume_Up}</td>
+    <td>增加主音量.通常相当于 <code><a href="SoundSet.htm">SoundSet</a> +5</code>.</td>
+  </tr>
+  <tr>
+    <td>{Media_Next}</td>
+    <td>在媒体播放器中播放下一曲目</td>
+  </tr>
+  <tr>
+    <td>{Media_Prev}</td>
+    <td>在媒体播放器中播放前一曲目</td>
+  </tr>
+  <tr>
+    <td>{Media_Stop}</td>
+    <td>停止媒体播放器</td>
+  </tr>
+  <tr>
+    <td>{Media_Play_Pause}</td>
+    <td>播放/暂停媒体播放器</td>
+  </tr>
+  <tr>
+    <td>{Launch_Mail}</td>
+    <td>启动电子邮件程序</td>
+  </tr>
+  <tr>
+    <td>{Launch_Media}</td>
+    <td>启动媒体播放器</td>
+  </tr>
+  <tr>
+    <td>{Launch_App1}</td>
+    <td>启动用户程序 1</td>
+  </tr>
+  <tr>
+    <td>{Launch_App2}</td>
+    <td>启动用户程序 2</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr>
+    <td>{PrintScreen}</td>
+    <td>Print Screen</td>
+  </tr>
+  <tr>
+    <td>{CtrlBreak}</td>
+    <td>Ctrl+break</td>
+  </tr>
+  <tr>
+    <td>{Pause}</td>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+  <tr id="Click">
+    <td><strong>{Click [选项]}</strong><br>
+    <span class="ver">[v1.0.43+]</span></td>
+    <td>使用与 <a href="Click.htm">Click 命令</a> 中相同的可用选项发送鼠标点击. 例如,<code>{Click}</code> 会在鼠标光标当前位置点击一次鼠标左键,而 <code>{Click 100, 200}</code> 则在坐标 100, 200 处点击 (这里的坐标模式取决于 <a href="CoordMode.htm">CoordMode</a>). 要移动鼠标而不点击,请在坐标后指定 0；例如:<code>{Click 100, 200, 0}</code>. 鼠标点击之间的延迟由 <a href="SetMouseDelay.htm">SetMouseDelay</a> 决定 (而不是 <a href="SetKeyDelay.htm">SetKeyDelay</a>).</td>
+  </tr>
+  <tr>
+    <td>{WheelDown}, {WheelUp}, {WheelLeft}, {WheelRight}, {LButton}, {RButton}, {MButton}, {XButton1}, {XButton2}</td>
+    <td>向指针当前位置发送鼠标按钮事件 (要指定位置和其他选项, 请使用上面的 <a href="Click.htm">{Click}</a>). 在鼠标点击之间的延迟由 <a href="SetMouseDelay.htm">SetMouseDelay</a> 决定. WheelLeft/Right 需要 v1.0.48+, 并且在 Windows Vista 之前的操作系统中没有效果.</td>
+  </tr>
+  <tr id="blind">
+    <td><strong>{Blind}</strong></td>
+    <td><p>当按键序列中首个项目为 {Blind} 时, 如果 Alt/Control/Shift/Win 在发送开始时为按下的状态则不松开. 例如,热键 <code>+s::Send {Blind}abc</code> 将发送 ABC 而不是 abc,因为用户按住了 Shift 键.</p>
+      <p>{Blind} 还会忽略 <a href="SetStoreCapslockMode.htm">SetStoreCapslockMode</a>; 即不会改变 Capslock 的状态. 最后, {Blind} 会忽略发送的键击中的额外控制功能; 这样的键击中可以避免后面的情况: 1) 发送 LWin/RWin 键击时出现开始菜单; 2) 发送 Alt 键击时激活菜单栏.</p>
+      <p>在 <a href="misc/Remap.htm">按键的重映射</a> 内部使用了 Blind 模式. 例如, 重映射 a::b 会发生这样的情况: 1) 输入 "a" 时会映射为 "b"; 2) 输入大写字母 A 时映射为大写字母 B; 并且 3) 按下 Control-A 时映射为按了 Control-B.</p>
+      <p>SendRaw 和 <a href="ControlSend.htm">ControlSendRaw</a> 不支持 {Blind}. 此外, <a href="#SendPlayDetail">SendPlay</a> 也不完全支持这种模式, 尤其是在处理修饰键 (Control, Alt, Shift 和 Win) 时.</p></td>
+  </tr>
+  <tr id="Raw">
+    <td><strong>{Raw}</strong><br>
+    <span class="ver">[v1.0.43+]</span></td>
+    <td>准确按照原样发送键击, 而不把 {Enter} 转换成 ENTER 键击, 把 <code>^c</code> 转换成 Control-C 等等. {Raw} 可以不放在按键序列的开始处, 在按键序列中出现时, 它会影响它后面的剩余部分.</td>
+  </tr>
+</table>
+
+<h2>重复或按住按键</h2>
+<p><strong>重复键击</strong>: 把需要重复的按键名称和重复次数写入到大括号中. 例如:</p>
+<pre>Send {DEL 4}  <em>; 按 4 次 Delete 键.</em>
+Send {S 30}   <em>; 发送 30 次大写字母 S.</em>
+Send +{TAB 4}  <em>; 按 4 次 Shift-Tab.</em></pre>
+<p><strong>按住或释放按键</strong>: 把按键名称和单词 <strong>Down</strong> 或 <strong>Up</strong> 写入到大括号中. 例如:</p>
+<pre>Send {b down}{b up}
+Send {TAB down}{TAB up}
+Send {Up down}  <em>; 按下向上键.</em>
+Sleep 1000  <em>; 按住 1 秒.</em>
+Send {Up up}  <em>; 释放向上键.</em></pre>
+<p>使用上面的方法按住一个按键后, 这个期间它不会像您实际按住这个按键一样自动重复 (这是由于自动重复是一个驱动/硬件的特性). 不过, 可以使用 <a href="Loop.htm">Loop</a> 来模拟自动重复. 下面的例子中发送 20 次 tab 键击:</p>
+<pre>Loop 20
+{
+    Send {Tab down}  <em>; 自动重复由连续的按下事件组成 (没有弹起事件).</em>
+    Sleep 30  <em>; 在两次键击之间的毫秒数 (或使用 <a href="SetKeyDelay.htm">SetKeyDelay</a> 设置).</em>
+}
+Send {Tab up}  <em>; 松开按键.</em></pre>
+<p>还可以使用单词 <em>DownTemp</em>. 除了对修饰键 (Control/Shift/Alt/Win) 有区别外它的效果与 <em>Down</em> 相同. 在那些情况下, <em>DownTemp</em> 告知后续的 send 命令这个键不是永久按下, 并可能在需要时随时松开. 例如,<code>Send {Control DownTemp}</code> 之后接着执行 <code>Send a</code> 会产生普通的"a"键击,而不是 control-A 键击.</p>
+
+<h2 id="Remarks">一般说明</h2>
+<p>Send 命令支持发送的字符没有特殊限制.对于当前键盘布局中不存在的字符,根据 AutoHotkey 版本的不同可以通过发送 Unicode 字符包或 <a href="#asc">Alt+nnnnn</a> 组合来模拟.在 AutoHotkey 的 Unicode 版本中直接支持文本形式的 Unicode 字符,而在所有版本中都可以使用 <a href="#sendu">{U+nnnn} 表示法</a>.</p>
+<p><strong>BlockInput 与 SendInput/SendPlay 的比较</strong>: 尽管可以使用 <a href="BlockInput.htm">BlockInput</a> 命令防止用户输入的任何键击扰乱模拟键击流, 但使用 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 通常更好, 这样键击和鼠标点击会保持连续. 这是由于与 BlockInput 不同, SendInput/Play 不会丢弃发送期间用户输入的内容; 作为替代, 这些键击被缓冲起来在之后发送.</p>
+<p>发送大量键击时, 使用 <a href="../Scripts.htm#continuation">延续片段</a> 可以提高可读性和可维护性.</p>
+<p>由于操作系统不允许程序模拟 CTRL-ALT-DELETE 组合键,所以执行像 <code>Send ^!{Delete}</code> 的命令不会产生效果.</p>
+<p>当活动窗口以管理权限运行而当前脚本不是时, <b>Send 在 Windows Vista 或更高版本中可能没有效果</b>. 这是由于用户接口和特权分离的安全机制.</p>
+
+<h2 id="SendInputDetail">SendInput <span class="ver">[v1.0.43+]</span></h2>
+<p>由于 SendInput 突出的速度和可靠性, 通常为发送键击和鼠标点击的首选方法. 在大多数情况下, SendInput 是近乎瞬时发送的, 即使在发送长字符串也是如此. 由于 SendInput 如此快速, 所以也更可靠, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断正发送的键击. 可靠性进一步提升是通过把用户在 SendInput 发送期间输入的内容推迟的情况而言.</p>
+<p>与其他发送模式不同, 操作系统限制 SendInput 每次只能发送大约 5000 个字符 (此限制可能因操作系统版本和性能设置而有所不同). 超过此限制的字符和事件不会被发送.</p>
+<p><strong>注:</strong> SendInput 会忽略 SetKeyDelay, 因为在这种发送模式中操作系统不支持延迟. 但是,在后面描述的情况中当 SendInput 恢复到 <a href="#SendEvent">SendEvent</a> 时,它会使用 <code><a href="SetKeyDelay.htm">SetKeyDelay -1, 0</a></code>(但如果 SendEvent 的按键延迟为 <code>-1,-1</code> 时,则使用 <code>-1,-1</code>).当 SendInput 恢复为 <a href="#SendPlayDetail">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
+<p id="SendInputUnavail">如果执行 SendInput 脚本外的<em>其他</em>脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>,则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或 <a href="#SendPlayDetail">SendPlay</a>,当 <a href="SendMode.htm"><code>SendMode InputThenPlay</code></a> 有效的时候).这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 在 AutoHotkey v1.0.43 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下将不会自动恢复使得比 SendPlay/Event 更不可靠.</p>
+<p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击,并且 <a href="SetMouseDelay.htm"><code>CoordMode Mouse, Relative</code></a> 有效时(默认),则每次点击都会相对于发送开始时的那个活动窗口.因此, 如果 SendInput 有意地激活另一个窗口 (通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
+<h2 id="SendPlayDetail">SendPlay <span class="ver">[v1.0.43+]</span></h2>
+<p><strong>注意:</strong> SendPlay 在 UAC 启用时完全失效, 即使是使用管理员权限运行脚本. 详情参见 <a href="../FAQ.htm#uac">FAQ</a>.</p>
+<p>比起其他模式 SendPlay 最大的优势是具有在相当多种游戏中 "play back" 键击和鼠标点击能力. 例如, 某种特殊的游戏可能仅接受 <a href="../Hotstrings.htm#SendMode">SendPlay 选项</a> 的 <a href="../Hotstrings.htm#SendMode">热字串</a>. 但是, SendPlay 在启用了用户账户控制的 Windows Vista 或更高版本中则可能没有效果, 即使以管理员运行脚本. 下面的脚本提供了此问题的变通解决方法: <a href="http://www.autohotkey.com/forum/topic75595.html">http://www.autohotkey.com/forum/topic75595.html</a>.</p>
+<p>在三种发送模式中, SendPlay 是最不常用的, 因为它本身并不模拟键击和鼠标点击. 作为替代, 它制造一系列事件 (消息) 直接流向活动窗口 (类似于 <a href="ControlSend.htm">ControlSend</a>, 但在更低的层面). 因此 SendPlay 不会触发热键或热字串.</p>
+<p>和 <a href="#SendInputDetail">SendInput</a> 一样, SendPlay 的键击不会夹杂用户输入的内容. 因此, 如果用户碰巧在 SendPlay 发送期间输入了一些内容, 则它们会被延迟到发送完后.</p>
+<p>尽管 SendPlay 明显比 SendInput 慢, 但它通常比传统的 <a href="#SendEvent">SendEvent</a> 模式更快 (即使在 <a href="SetKeyDelay.htm">KeyDelay</a> 为 -1 时).</p>
+<p>如果安装了 <a href="_InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 Windows 键 (LWin 和 RWin). 这样避免了在发送期间当用户无意按了 Windows 键时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后 (通过缓冲).</p>
+<p>SendPlay 不使用 SetKeyDelay 和 SetMouseDelay 的标准设置. 作为替代, 它默认没有延迟, 这可以像下面例子演示的那样改变:</p>
+<pre><a href="SetKeyDelay.htm">SetKeyDelay</a>, 0, 10, <strong>Play</strong>  <em>; 请注意 0 和 -1 在 SendPlay 模式中是一样的.</em>
+<a href="SetMouseDelay.htm">SetMouseDelay</a>, 10, <strong>Play</strong></pre>
+<p>SendPlay 不能切换 Capslock, Numlock 或 Scroll-lock 按键的状态. 同样地, 如果键击发送到脚本自身的窗口时, 则它才能改变由 <a href="GetKeyState.htm">GetKeyState</a> 获取的按键状态. 即使在此时, 对左/右修饰键的任何改变 (例如 RControl) 只能通过它们的中性副本检测到 (例如 Control). 并且, SendPlay 还有在 <a href="SendMode.htm#Play">SendMode 页面</a> 描述的其他限制.</p>
+<p>与 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendEvent">SendEvent</a> 不同, 用户通过按下 Control-Alt-Del 或 Control-Escape 打断 SendPlay 的发送. 这种情况发生时, 剩余的键击不会被发送, 不过脚本会像 SendPlay 正常结束一样继续执行.</p>
+<p>尽管 SendPlay 能发送 LWin 和 RWin 事件, 但它们被直接发送到活动窗口而不执行它们原本的操作系统功能. 要变通解决此问题, 请使用 <a href="#SendEvent">SendEvent</a>. 例如,<code>SendEvent #r</code> 会显示开始菜单的运行对话框.</p>
+
+<h2>相关</h2>
+<p><a href="SendMode.htm">SendMode</a>, <a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetStoreCapslockMode.htm">SetStoreCapslockMode</a>, <a href="_EscapeChar.htm">转义序列(例如 `%)</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="BlockInput.htm">BlockInput</a>, <a href="Hotstrings.htm">热字串</a>, <a href="WinActivate.htm">WinActivate</a></p>
+<h2>示例</h2>
+<pre class="NoIndent">Send Sincerely,{enter}John Smith  <em>; 输入两行的签名.</em>
+Send !fs <em>; 选择 File-&gt;Save 菜单 (Alt+F 后面跟着 S).</em>
+Send {End}+{Left 4} <em>; 跳到文本的末尾然后发送四次 shift 和左方向键组合的键击.</em>
+SendInput <a href="#Raw">{Raw}</a>A long series of raw characters sent via the fastest method (<a href="#SendInputDetail">SendInput</a>).</pre>
+
+</body>
+</html>

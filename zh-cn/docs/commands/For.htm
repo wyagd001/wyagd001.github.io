@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>For-loop</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>For 循环 <span class="ver">[AHK_L 59+]</span></h1>
+
+<p>对对象中的每对键值对重复执行一系列命令.</p>
+
+<pre class="Syntax">For Key [, Value] in Expression</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>键</dt>
+  <dd><p>在每次重复开始时用来保存键的变量名称.</p></dd>
+
+  <dt>值</dt>
+  <dd><p>保存与当前键关联的值的变量名.</p></dd>
+
+  <dt>Expression</dt>
+  <dd><p>结果为对象的 <a href="../Variables.htm#Expressions">表达式</a> 或包含对象的变量.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>只在循环开始前计算一次 <i>表达式</i>. 如果其结果不是对象, 则立即跳转到循环体后面的语句执行; 否则, 调用对象的 <code>_NewEnum()</code> 来获取 <a href="../objects/Enumerator.htm"><i>枚举数</i></a> 对象. 每次重复开始时, 使用枚举数的 <a href="../objects/Enumerator.htm#Next">Next()</a> 方法获取下一个键值对. 如果 Next() 返回零或空字符串, 则循环终止.</p>
+<p>尽管不完全等同于 for 循环, 不过下面演示了近似于它的循环过程:</p>
+<pre>_enum := (<i>Expression</i>)._NewEnum()
+if IsObject(_enum)
+    while _enum.Next(Key, Value)
+    {
+        ...
+    }
+</pre>
+<p>现有的键值对可以在循环中修改, 但插入或移除键可能导致一些项目被跳过或枚举多次. 一种解决方法是建立待移除的键列表, 在首个循环结束后使用第二个循环来移除这些键. 请注意使用 <code><a href="../objects/Object.htm#Remove">Object.Remove</a>(<i>first</i>, <i>last</i>)</code> 可以直接移除键的范围而不需要循环.</p>
+<p>for 循环后通常跟着 <a href="Block.htm">区块</a>, 这是构成循环 <em>体</em> 的语句的集合. 不过, 在单语句的循环中可以不使用区块 (用于此目的时 "if" 与其相匹配的 "else" 一起被视为单语句). 可以使用 One True Brace (OTB) 风格, 这样允许左大括号与 while 在同一行而不是在其下面. 例如:<code>for x, y in z {</code>.</p>
+<p>和所有的循环一样, 循环中可以使用 <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 <a href="../Variables.htm#Index">A_Index</a>.</p>
+
+<h3>COM 对象</h3>
+<p>因为 <i>Key</i> 和 <i>Value</i> 被直接传递给枚举数的 Next() 方法, 所以它们的值取决于被枚举的对象类型. 对于 COM 对象, <i>Key</i> 包含由 <a href="http://msdn.microsoft.com/en-us/library/ms221369.aspx">IEnumVARIANT::Next()</a> 返回的值, 而 <i>Value</i> 包含了表示其 <a href="http://msdn.microsoft.com/en-us/library/cc237865.aspx">变量类型</a> 的数字. 例如, 用于 <a href="http://msdn.microsoft.com/en-us/library/x4k5wbx4.aspx">Scripting.Dictionary</a> 对象时, 每个 <i>Key</i> 包含字典中的键而 <i>Value</i> 通常为 8 (对于字符串) 和 3 (对于整数). 请参阅 <a href="ComObjType.htm">ComObjType</a> 了解类型代码表.</p>
+<p><span class="ver">[v1.0.96.00+]:</span> 枚举 <a href="ComObjArray.htm">SafeArray</a> 时, <i>Key</i> 包含了当前元素而 <i>Value</i> 包含其变量类型.</p>
+
+<h3>相关</h3>
+<p><a href="../objects/Enumerator.htm">枚举数对象</a>, <a href="../objects/Object.htm#NewEnum">Object.NewEnum()</a>, <a href="While.htm">While 循环</a>, <a href="Loop.htm">Loop</a>, <a href="Until.htm">Until</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">区块</a></p>
+
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 列出对象中的键值对:</em>
+colours := <a href="../Objects.htm#Arrays">Object</a>("red", 0xFF0000, "blue", 0x0000FF, "green", 0x00FF00)
+<em>; 上面的表达式可以直接代替下面的"colours":</em>
+for k, v in colours
+    s .= k "=" v "`n"
+MsgBox % s
+</pre>
+<pre class="NoIndent"><em>; 列出所有的资源管理器和 Internet Explorer 窗口:</em>
+for window in <a href="ComObjCreate.htm">ComObjCreate</a>("<a href="http://msdn.microsoft.com/en-us/library/bb774094.aspx">Shell.Application</a>").Windows
+    windows .= window.<a href="http://msdn.microsoft.com/en-us/library/aa752057.aspx">LocationName</a> " :: " window.<a href="http://msdn.microsoft.com/en-us/library/aa752058.aspx">LocationURL</a> "`n"
+MsgBox % windows</pre>
+<pre class="NoIndent"><em>/*
+Class: CEnumerator
+
+能用来循环数值键的通用枚举器对象.在循环中不能修改数组,否则循环的区间可能出错.可以定义自己的 MaxIndex() 函数来表示数组边界.如果在 1 和最大索引间有缺失的数组成员,仍会循环到它们但值为空.这是说这个枚举器被设计为不支持真正的数组解析.要在对象能使用这种循环,请在它的类定义中插入这个函数:
+
+    _NewEnum()
+    {
+    	return new CEnumerator(this)
+    }
+
+来源:http://www.autohotkey.com/board/topic/2667-suggestions-on-documentation-improvements/?p=531509
+*/</em>
+
+<em>; 对枚举器进行循环</em>
+For k, v in Test
+	MsgBox %k%=%v%
+
+<em>; 用于演示的测试类</em>
+class Test
+{
+	static Data := ["abc", "def", "ghi"]
+
+	_NewEnum()
+	{
+		return new CEnumerator(this.Data)
+	}
+}
+
+class CEnumerator
+{
+	__New(Object)
+	{
+		this.Object := Object
+		this.first := true
+		<em>; 加速的缓存.当 MaxIndex() 函数性能差时用得上.</em>
+		<em>; 副作用是在循环时不能插入键值对,否则区间是错误的.</em>
+		this.ObjMaxIndex := Object.MaxIndex()
+	}
+
+	Next(ByRef key, ByRef value)
+	{
+		if (this.first)
+		{
+			this.Remove("first")
+			key := 1
+		}
+		else
+			key ++
+		if (key &lt;= this.ObjMaxIndex)
+			value := this.Object[key]
+		else
+			key := ""
+		return key != ""
+	}
+}</pre>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>函数</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="static/theme.css" rel="stylesheet" type="text/css" />
+<script src="static/content.js" type="text/javascript"></script>
+</head>
+
+<body>
+<h1>函数</h1>
+
+<h2>目录</h2>
+<ul>
+  <li><a href="#intro">入门和简单示例</a></li>
+  <li><a href="#param">参数</a></li>
+  <li><a href="#optional">可选参数</a></li>
+  <li><a href="#return">返回值给调用者</a></li>
+  <li><a href="#Variadic">可变参数函数</a></li>
+  <li><a href="#Locals">局部变量</a></li>
+  <li><a href="#DynCall">动态调用函数</a></li>
+  <li><a href="#ShortCircuit">优化布尔求值</a></li>
+  <li><a href="#gosub">在函数中使用子程序</a></li>
+  <li><a href="#remarks">Return, Exit 及一般说明</a></li>
+  <li><a href="#include">使用 #Include 在多个脚本间共享函数</a></li>
+  <li><a href="#lib">函数库: 标准库和用户库</a></li>
+  <li><a href="#BuiltIn">内置函数</a></li>
+</ul>
+<h2 id="intro">入门和简单示例</h2>
+<p id="define">函数类似于子程序 (<a href="commands/Gosub.htm">Gosub</a>), 不过它还可以从调用者那里接受参数 (输入). 而且, 函数还可以返回值给调用者. 参考下面的例子, Add 函数接受两个参数并返回它们之和:</p>
+<pre>Add(x, y)
+{
+    return x + y   <em>; "<a href="commands/Return.htm">Return</a>" 可直接返回 <a href="Variables.htm#Expressions">表达式</a> 的结果.</em>
+}</pre>
+<p>上面就是一个函数 <em>定义</em>, 因为它创建了一个名称为 "Add" (不区分大小写) 的函数, 并且确立了调用它时必须准确的提供两个参数 (x 和 y). 要调用此函数, 请把它的结果通过 <strong><a href="commands/SetExpression.htm">:=</a></strong><a href="commands/SetExpression.htm"> 运算符</a> 赋值给变量. 例如:</p>
+<pre>Var := Add(2, 3)  <em>; 数字 5 将被保存到 Var.</em></pre>
+<p>当然, 调用函数时也可以不保存其返回值:</p>
+<pre>Add(2, 3)</pre>
+<p>不过这种情况下, 函数的任何返回值都会被丢弃; 所以除非函数还有除了返回值之外的功能(译者注: 比如函数内修改了全局变量; 通过 ByRef 修改了变量值...等等), 否则这次调用毫无意义.</p>
+<p>由于函数调用属于 <a href="Variables.htm#Expressions">表达式</a> 语法, 所以在其参数列表中的任何变量名称都不应该用百分号包围. 同时, 表示原义字符串的变量则应该用双引号包围. 例如:</p>
+<pre>if <a href="#InStr">InStr</a>(MyVar, "fox")
+    MsgBox The variable MyVar contains the word fox.</pre>
+<p>最后, 通常在命令的参数中也可以调用函数 (除了像 <a href="commands/StringLen.htm">StringLen</a> 中的 OutputVar 和 InputVar 这种参数之外). 另外, 在不支持 <a href="Variables.htm#Expressions">表达式</a> 的参数中调用函数时必须加上 "% " 前缀(百分号加一个空格), 例如:</p>
+<pre>MsgBox <strong>%</strong> "The answer is: " <strong>.</strong> Add(3, 2)</pre>
+<p>在原生支持表达式的参数中也允许加上 "% " 前缀, 不过它会被简单的忽略了.(译者注: 总之在你不确定是否应该加 '% ' 前缀的情况下,加上总是没错的.)</p>
+<h2 id="param">参数</h2>
+<p>定义函数时, 其参数都在其名称后面的括号中列出 (函数名和左括号之间不能有空格). 如果函数不接受任何参数,请把括号留空,例如:<code>GetCurrentTimestamp()</code>.</p>
+<p id="ByRef"><strong>ByRef 参数</strong>: 从函数的角度看, 参数本质上是 <a href="#Locals">局部变量</a>, 除非它们被定义为 <em>ByRef</em>, 例如:</p>
+<pre>Swap(ByRef Left, ByRef Right)
+{
+    temp := Left
+    Left := Right
+    Right := temp
+}</pre>
+<p>在上述例子中, <em>ByRef</em> 的使用让相应的参数变成从调用者传递进来的变量的一个别名. 换句话说, 参数和调用者的变量都引用内存中相同的内容. 这样使得 Swap 函数可以通过移动 <em>Left</em> 的内容到 <em>Right</em> 中来修改调用者的变量, 反之亦然.</p>
+<p>与之相比, 在上述例子中如果没有使用 <em>ByRef</em>, <em>Left</em> 和 <em>Right</em> 将是调用者变量的副本, 因此 Swap 函数不会对外部产生影响.</p>
+<p>由于 <a href="commands/Return.htm">return</a> 只能返回一个值给函数的调用者, 所以可以使用 <em>ByRef</em> 返回更多的结果. 这是通过函数将调用者传递进来的变量 (通常为空值的变量) 赋值实现的.</p>
+<p>传递大字符串给函数时, 使用 <em>ByRef</em> 提高了性能, 并且通过避免生成字符串的副本节约了内存. 同样地, 使用 <em>ByRef</em> 送回长字符串给调用者通常比类似 <code>Return HugeString</code> 的方式执行的更好.</p>
+<p><span class="ver">[AHK_L 60+]:</span> 如果传递给 ByRef 参数的变量是不可修改的, 那么函数会表现的就像没有 "ByRef" 关键字一样. 例如, <code>Swap(A_Index, i)</code> 保存 <i>A_Index</i> 的值到 <i>i</i> 中, 但是当 <i>Swap</i> 函数返回时赋给 <i>Left</i> 的值会被丢弃.(译者注: 因为 A_Index 是只读的内置变量.)</p>
+<p><span class="ver">[v1.1.01+]:</span><a href="#IsByRef">IsByRef()</a> 函数可以用来判断调用者是否为指定的 ByRef 参数提供了变量.</p>
+<p>已知限制:</p>
+<ul>
+  <li>对象的属性在 <em>ByRef</em> 的参数中不会被视为变量. 例如, 如果 <code>foo.bar</code> 传递给 ByRef 参数, 那么它将表现的就像没有 <em>ByRef</em> 关键字一样.</li>
+  <li>不能传递 <a href="misc/Clipboard.htm">Clipboard</a>, <a href="Variables.htm#BuiltIn">内置变量</a> 或 <a href="Variables.htm#env">环境变量</a> 给函数的 <em>ByRef</em> 参数, 无论脚本中有没有 <a href="commands/_NoEnv.htm">#NoEnv</a> 语句.</li>
+  <li id="recurse">尽管函数可以递归调用它自己, 但是如果它传递它自己的一个 <a href="#Locals">局部变量</a> 或非 ByRef 参数给自己的 <em>ByRef</em>, 那么新一层的 <em>ByRef</em> 参数将引用它自己那个名称的局部变量而不是之前层的. 然而, 当函数传递给它自己 <a href="#Global">全局变量</a>, <a href="#static">静态变量</a> 或 <em>ByRef</em> 参数时不会产生这样的问题.</li>
+  <li>如果一个参数在函数调用中被解析为一个变量 (例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>func(Var, Var++)</code> 会意外地传递 1 和 0, 即使函数的首个参数不是 <em>ByRef</em> 类型时. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
+  <li>ByRef 不直接支持函数调用 COM 客户端, 或调用 COM 方法. 作为替代, 脚本必须接受或传递一个 <a href="commands/ComObjActive.htm#ByRef">wrapper object (包装对象)</a> 包含特殊的 <a href="commands/ComObjType.htm">VarType (变量类型)</a> 和变量内存地址.</li>
+</ul>
+<h2 id="optional">可选参数</h2>
+<p>定义函数时, 可以把它的一个或多个参数标记为可选的. 这可以通过在参数后添加一个等号(在 v1.1.09+ 中还可以为 <code>:=</code>)后面跟着指定一个默认值来表示. 下面这个函数中的 Z 就是一个可选参数:</p>
+<pre>Add(X, Y, Z:=0) {
+    return X + Y + Z
+}</pre>
+<p>从 v1.1.09 起,<code>=</code> 和 <code>:=</code> 都支持. 为了与表达式赋值保持一致且与将来的 AutoHotkey 版本兼容,建议使用后者.</p>
+<p>当调用者传递 <strong>三个</strong> 参数给上面的函数时, Z 的默认值被忽略. 但当调用者仅传递 <strong>两个</strong> 参数时, Z 自动接受默认值 0.</p>
+<p id="missing">可选参数不能孤立地放在参数列表的中间. 换句话说, 在首个可选参数右边的所有参数都必须定义为可选的. <span class="ver">[AHK_L 31+]:</span> 调用函数时可以省略参数列表中间的可选参数,如下所示: 从 v1.1.12 开始, 动态调用函数或方法时也支持这种特性.</p>
+<pre>Func(1,, 3)
+Func(X, Y:=2, Z:=0) {  <em>; 注意: 这里的 Z 必须是可选参数.</em>
+    MsgBox %X%, %Y%, %Z%
+}</pre>
+<p id="OptionalByRef">从 v1.0.46.13 开始, <a href="#ByRef">ByRef</a> 参数也支持默认值; 例如: <code>Func(ByRef p1 = "")</code>. 每当调用者省略这样的参数时, 函数会创建一个包含默认值的局部变量; 不过, 这种情况下 "ByRef" 关键字没有任何意义.</p>
+<p>参数的默认值必须是下列形式中的一种: <code>true</code>, <code>false</code>, 原义的整数, 原义的浮点数 或 引号包围的/原义的字符串例如 "fox" 或 "" (但在 1.0.46.13 之前的版本中字符串只支持 "").</p>
+<h2 id="return">返回值给调用者</h2>
+<p>如 <a href="#intro">介绍</a> 中所说, 函数可以 <a href="commands/Return.htm">返回</a> 一个值给调用者.</p>
+<pre>
+Test := returnTest()
+MsgBox % Test
+
+returnTest() {
+  return 123
+}
+</pre>
+<p>如果要从函数中返回额外的结果, 可以使用 <a href="#ByRef">ByRef</a>:</p>
+<pre>
+returnByRef(A,B,C)
+MsgBox % A "," B "," C
+
+returnByRef(ByRef val1, ByRef val2, ByRef val3)
+{
+  val1 := "A"
+  val2 := 100
+  val3 := 1.1
+  return
+}
+</pre>
+<p><span class="ver">[v1.0.97+]:</span> 可以使用 <a href="Objects.htm#Usage_Objects">对象</a> 和 <a href="Objects.htm#Usage_Simple_Arrays">数组</a> 返回多值甚至是命名值:</p>
+<pre>
+Test1 := returnArray1()
+MsgBox % Test1[1] "," Test1[2]
+
+Test2 := returnArray2()
+MsgBox % Test2[1] "," Test2[2]
+
+Test3 := returnObject()
+MsgBox % Test3.id "," Test3.val
+
+returnArray1() {
+  Test := [123,"ABC"]
+  return Test
+}
+
+returnArray2() {
+  x := 456
+  y := "EFG"
+  return [x, y]
+}
+
+returnObject() {
+  Test := {id: 789, val: "HIJ"}
+  return Test
+}
+</pre>
+<h2 id="Variadic">可变参数函数 <span class="ver">[AHK_L 60+]</span></h2>
+<p>定义函数时, 在最后一个参数后面写一个星号来标记此函数为可变参数的, 这样让它可以接收可变数目的参数:</p>
+<pre>Join(sep, <b class="blue">params*</b>) {
+    for index,param in params
+        str .= param . sep
+    return SubStr(str, 1, -StrLen(sep))
+}
+MsgBox % Join("`n", "one", "two", "three")</pre>
+<p>调用可变参数函数时, 通过保存在函数的最后参数中的对象可以访问剩余的参数. 函数的首个超出参数是 <code><i>params</i>[1]</code>, 第二个是 <code><i>params</i>[2]</code> 以此类推. 和所有的标准对象一样, 使用 <code><i>params</i>.MaxIndex()</code> 可以确定最大的索引值 (这里为参数的数目). 但是如果没有参数, MaxIndex 会返回空字符串.</p>
+<p>注意:</p>
+<ul>
+  <li>"可变" 参数只可以出现在显式参数(形参)列表的末尾.</li>
+  <li><a href="misc/RegExCallout.htm">RegEx 调出</a> 函数不是可变参数的,虽然允许使用"可变的"参数但是那只是留空而已.</li>
+  <li><a href="commands/RegisterCallback.htm">回调函数</a> <a href="commands/RegisterCallback.htm#Indirect">通过地址</a> 而不是数组传递剩余参数.</li>
+</ul>
+<h3 id="VariadicCall">可变参数函数调用</h3>
+<p>虽然可变参数函数可以 <i>接受</i> 可变数目的参数,不过在函数调用中使用相同的语法可以把数组作为参数传递给 <i>任何</i> 函数:</p>
+<pre>substrings := ["one", "two", "three"]
+MsgBox % Join("`n", <b class="blue">substrings*</b>)</pre>
+<p>注意:</p>
+<ul>
+  <li>在源数组中参数的编号从 1 开始.</li>
+  <li>数组中的可选参数可以完全省略.</li>
+  <li>调用自定义函数时数组参数可以包含命名项,在其他情况下则不支持命名项.</li>
+  <li>目标函数也可以是可变的, 此时命名项被复制, 即使它们没有一致的形式参数.</li>
+  <li>这样的语法还可以用于调用对象的方法或获取对象的属性; 例如, <code>Object.Property[Params*]</code>. 从 v1.1.12 开始,它还可以用于设置属性.</li>
+</ul>
+<p>已知限制:</p>
+<ul>
+  <li>只有最右边的那个参数才可以这样展开.例如, 支持 <code>Func(x, y*)</code> 但不支持 <code>Func(x*, y)</code>.</li>
+  <li>在星号 (<code>*</code>) 和参数列表中最后的形式参数间不能存在任何的非空白字符.</li>
+</ul>
+<h2 id="Locals">局部变量和全局变量</h2>
+<h3>局部变量</h3>
+<p>局部变量是特定于单个函数的,只在该函数内可见.因此，局部变量可能具有与全局变量相同的名称，并且两个变量都有单独的内容. 不同的函数也可以安全地使用相同的变量名.</p>
+<p>当函数返回值时，所有非<a href="#static">静态</a>的本地变量都自动释放( 变为空).</p>
+<p>默认情况下，函数内访问或创建的变量是本地的, 但下列情况例外:</p>
+<ul>
+  <li><a href="#SuperGlobal">超级全局</a> 变量, 包括 <a href="Objects.htm#Custom_Classes">classes</a>.</li>
+  <li>内置变量例如 <a href="misc/Clipboard.htm">Clipboard</a>, <a href="misc/ErrorLevel.htm">ErrorLevel</a>, 和 <a href="Variables.htm#TimeIdle">A_TimeIdle</a>.</li>
+  <li><a href="#DynVar">动态变量引用</a> 如果该名称没有本地变量，则可以解析为现有的全局变量.</li>
+  <li><a href="#PseudoArrays">创建伪数组的命令</a> 即使只声明第一个元素，也可以将所有元素创建为全局元素.</li>
+</ul>
+<p>默认值也可以被覆盖如下所示.</p>
+
+<h3 id="Global">全局变量</h3>
+<p>要在函数中引用现有的全局变量 (或创建新的), 需要在使用前声明此变量为全局的. 例如:</p>
+<pre>LogToFile(TextToLog)
+{
+    global LogFileName  <em>; 此全局变量之前已经在函数外的某个地方赋值了.</em>
+    FileAppend, %TextToLog%`n, %LogFileName%
+}</pre>
+<p id="AssumeGlobal"><strong>假设全局模式</strong>: 如果函数需要访问或创建大量的全局变量, 通过在函数的首行使用单词 "global" 或声明局部变量可以把函数定义为假设其所有的变量都是全局的 (除了它的参数). 例如:</p>
+<pre>SetDefaults()
+{
+    global  <em>; 如果此函数的首行是类似于 "local MyVar" 这样的, 那么这个单词可以省略.</em>
+    MyGlobal := 33  <em>; 把 33 赋值给全局变量, 必要时首先创建这个变量.</em>
+    local x, y:=0, z  <em>; 在这种模式中局部变量必须进行声明, 否则会假设它们为全局的.</em>
+}</pre>
+<p>函数还可以使用这种假设全局模式来创建全局 <a href="misc/Arrays.htm">数组</a>, 例如赋值给 <code>Array%A_Index%</code> 的循环.</p>
+<p id="SuperGlobal"><strong>超级全局变量</strong> <span class="ver">[v1.1.05+]</span>: 如果全局声明出现在任何函数的外面, 默认情况下它可以对所有函数有效. 这样可以避免在每个函数中重复声明变量的需要. 不过, 如果声明了含有相同名称的函数参数或局部变量, 那么它会优先于全局变量. 由 <a href="Objects.htm#Custom_Classes">class</a> 关键字创建的变量也是超级全局的.</p>
+<h3 id="static">静态变量</h3>
+<p>静态变量总是隐式的局部变量, 但和局部变量的区别是它们的值在多次调用期间是记住的. 例如:</p>
+<pre>LogToFile(TextToLog)
+{
+    <strong>static</strong> LoggedLines = 0
+    LoggedLines += 1  <em>; 保持局部的计数 (它的值在多次调用期间是记住的).</em>
+    global LogFileName
+    FileAppend, %LoggedLines%: %TextToLog%`n, %LogFileName%
+}</pre>
+<p id="InitStatic"><strong>静态初始化</strong>: 在 1.0.46 以前的版本中, 所有的静态变量都是以空值开始; 所以要检查静态变量首次被使用的唯一方法是检查它是否为空值. 在 v1.0.46+,静态变量可以初始化为 <code>""</code> 外的其他值,通过在后面跟着 <code>:=</code> 或 <code>=</code> 及后面这些形式的其中一种:<code>true</code>,<code>false</code>,原义的整数,原义的浮点数或引号包围的/原义的字符串,如 <code>"fox"</code>.例如:<code>static X:=0, Y:="fox"</code>.每个静态变量只初始化一次 (在脚本开始执行前).</p>
+<p><span class="ver">[AHK_L 58+]:</span> 支持 <code>Static var := expression</code>. 根据这些表达式在脚本中出现的顺序对它们进行计算,紧接着才进入脚本的自动执行段.</p>
+<p id="AssumeStatic"><strong>假设静态模式</strong> <span class="ver">[v1.0.48+]:</span> 通过在函数的首行使用单词 "static" 可以把函数定义为假设其所有的变量都是静态的 (除了它的参数). 例如:</p>
+<pre>GetFromStaticArray(WhichItemNumber)
+{
+    <strong>static</strong>
+    static FirstCallToUs := true  <em>; 静态声明初始化仍然只运行一次 (在脚本执行前).</em>
+    if FirstCallToUs  <em>; 在首次调用而不在后续的调用时创建静态数组.</em>
+    {
+        FirstCallToUs := false
+        Loop 10
+            StaticArray%A_Index% := "Value #" . A_Index
+    }
+    return StaticArray%WhichItemNumber%
+}</pre>
+<p>在假设静态模式中, 任何非静态变量都必须声明为局部变量或全局变量.</p>
+<h3>关于局部和全局的更多信息</h3>
+<p>通过逗号分隔多个变量这样可以在同一行声明它们, 例如:</p>
+<pre>global LogFileName, MaxRetries := 5
+static TotalAttempts = 0, PrevResult</pre>
+<p id="DeclareInit"></a>在 v1.0.46+, 通过后面跟着 <code>:=</code> or <code>=</code> 及任意 <a href="Variables.htm#Expressions">表达式</a> 局部或全局变量可以在同一行初始化, 如同声明那样 (在声明时 <code>=</code> 运算符和 <code>:=</code> 作用相同). 与 <a href="#InitStatic">静态初始化</a> 不同, 在每次调用函数时都会对局部变量和全局变量进行初始化, 但只在控制流实际达到它们所在的语句时. 换句话说, 像 <code>local x = 0</code> 这样的一行和写成单独的两行有同样的效果: <code>local x</code> 后面跟着 <code>x = 0</code>.</p>
+<p>因为单词 <em>local</em>, <em>global</em> 和 <em>static</em> 都是在脚本运行时立即处理的, 所以不能使用 <a href="commands/IfExpression.htm">IF 语句</a> 有条件的声明变量. 换句话说, IF 或 ELSE 的 <a href="commands/Block.htm">区块</a> 内的声明无条件对声明和函数的闭括号之间的所有行生效. 同时还需注意当前还不支持声明动态变量, 例如 <code>global Array%i%</code>.</p>
+<p id="PseudoArrays">对于创建 <a href="misc/Arrays.htm">数组</a> 的命令 (例如 <a href="commands/StringSplit.htm">StringSplit</a>), 如果 <a href="#AssumeGlobal">假设全局模式</a> 没有生效或数组的首个元素已经声明为局部变量时创建的数组是局部的 (如果函数的某个参数被传递时也是如此, 即使此参数为 <a href="#ByRef">ByRef</a> 类型, 因为参数类似于局部变量). 相反地, 如果首个元素已经 <a href="#Global">声明为全局的</a>, 那么创建全局的数组. 不过, 后面 <i>混乱的常见根源</i> 也适用于这些情况. <a href="commands/StringSplit.htm">StringSplit</a> 创建的数组首个元素为 ArrayName0. 对于其他创建数组的命令, 例如 <a href="commands/WinGet.htm">WinGet List</a>, 首个元素为 ArrayName (即没有数字).</p>
+<p id="DynVar"><span id="Dynamic"></span>在函数中, 任何动态变量引用, 例如 <code>Array%i%</code>, 总是解析为局部变量, 仅当这样名称的局部变量不存在而全局变量存在时才解析为全局变量. 如果两者都不存在并且需要创建此变量时, 当 <a href="#AssumeGlobal">假设全局模式</a> 没有生效时它被创建为局部变量. 因此, 仅当函数被定义为 <a href="#AssumeGlobal">假设全局</a> 函数时, 函数中才可以手动创建全局 <a href="misc/Arrays.htm">数组</a> (通过使用类似 <code>Array%i% := A_Index</code> 的方法).</p>
+<p id="ArrayConfusion"><strong>混乱的常见根源</strong>: 任何对 <em>non</em>-dynamic (<em>非</em>动态引用) 都会在脚本运行时创建那个变量. 例如, 在函数外使用时, <code>MsgBox %Array1%</code> 会在脚本运行的时候创建 Array1 为全局变量. 相反地, 在函数中使用 <code>MsgBox %Array1%</code> 会在脚本运行的时候创建 Array1 为函数的一个局部变量 (除非 <a href="#AssumeGlobal">假设全局模式</a> 生效), 即使 Array 和 Array0 都声明为全局的.</p>
+<h2 id="DynCall">动态调用函数</h2>
+<p>在 v1.0.47.06+, 通过百分号可以动态调用函数 (包括 <a href="#BuiltIn">内置函数</a>). 例如,<code>%Var%(x, "fox")</code> 将调用名称保存在 <em>Var</em> 中的函数.同样地, <code>Func%A_Index%()</code> 将调用 Func1() 或 Func2() 等, 这取决于 A_Index 的当前值.</p>
+<p>在 v1.1.07.00+,  在 <code>%Var%()</code> 中的 <em>Var</em> 可包含函数名, <a href="objects/Functor.htm">函数对象</a> 或 <a href="Objects.htm#Objects_as_Functions">模仿函数的对象</a>. 如果此函数不存在, 则调用 <a href="Objects.htm#Default_Base_Object">默认基对象</a>的 __Call 元函数.</p>
+<p>如果由于下面的某个原因无法调用函数, 计算包含调用的表达式时可能会过早静默停止, 这样可能会产生问题.</p>
+<ul>
+  <li>调用不存在的函数, 这可以通过使用 <code>If <a href="#IsFunc">IsFunc</a>(VarContainingFuncName)</code> 来避免. 除了 <a href="#BuiltIn">内置函数</a>, 被调用函数的 <a href="#define">定义</a> 必须明确存在于脚本中, 通过类似 <a href="commands/_Include.htm">#Include</a> 或对 <a href="#lib">库函数</a> 的非动态调用的方法.</li>
+  <li>传递过少的参数, 这可以通过检查 <a href="#IsFunc">IsFunc()</a> 的返回值来避免 (这是强制参数的数目加上一的数字). 注意: 在 v1.0.48+, 允许传递过多的参数; 每个额外的参数在被完全计算 (包括任何函数调用) 后丢弃.</li>
+</ul>
+<p>最后, 对函数的动态调用比正常调用稍慢, 因为正常的调用在脚本开始运行前解析 (查询).</p>
+<h2 id="ShortCircuit">优化布尔求值</h2>
+<p>当在 <a href="Variables.htm#Expressions">表达式</a> 中使用 <em>AND, OR</em> 和 <a href="Variables.htm#ternary">三元运算符</a> 时, 会对它们进行优化来提高性能 (不管当前是否存在函数调用). 通过不计算表达式中那些不影响最终结果的部分来进行优化运算. 为了说明这个概念, 请看这个例子:</p>
+<pre>if (ColorName &lt;&gt; "" AND not FindColor(ColorName))
+    MsgBox %ColorName% could not be found.</pre>
+<p>在上面的例子中, 如果 <em>ColorName</em> 变量为空则永远不会调用 FindColor() 函数. 这是由于 <em>AND</em> 的左侧结果将为 <em>false</em>, 因此其右边不可能让最终的结果为 <em>true</em>.</p>
+<p>由于此特性, 所以需要注意到, 如果在 <em>AND</em> 或 <em>OR</em> 的右侧调用函数, 那么函数可能永远不会产生副作用 (例如改变全局变量的内容).</p>
+<p>还需要注意在嵌套的 <em>AND</em> 和 <em>OR</em> 串联表达式的求值优化. 例如, 在后面的表达式中每当 <em>ColorName</em> 为空时只会进行最左边的比较. 这是因为此时最左边的比较已经足以确定最终的结果:</p>
+<pre>if (ColorName = "" <u>OR</u> FindColor(ColorName, Region1) <u>OR</u> FindColor(ColorName, Region2))
+    break   <em>; 搜索内容为空或找到了匹配.</em></pre>
+<p>从上面的例子可以看出, 任何耗时的函数一般应该在 <em>AND</em> 或 <em>OR</em> 的右侧调用从而提高性能. 这种方法还能避免调用接受了一个不合适的值例如空字符串的函数.</p>
+<p>在 v1.0.46+, <a href="Variables.htm#ternary">三元条件运算符 (?:)</a> 也通过不计算丢弃的分支进行求值优化.</p>
+<h2 id="gosub">在函数中使用子程序</h2>
+<p>尽管在一个函数中不能 <a href="#define">定义</a> 其他函数, 但它可以含有子程序. 与其他子程序一样使用 <a href="commands/Gosub.htm">Gosub</a> 运行它们且使用 <a href="commands/Return.htm">Return</a> 返回 (此时 Return 属于 Gosub 而不是函数).</p>
+<p>已知限制: 当前每个子程序 (标签) 的名称在整个脚本中必须是唯一的. 如果存在重复的标签, 在运行前程序会通知您.</p>
+<p id="GosubPublic">如果函数使用 <a href="commands/Gosub.htm">Gosub</a> 跳转到公共子程序 (在函数外部的子程序), 那么所有外面的变量都是全局的而且在子程序返回前无法引用函数自身的 <a href="#Locals">局部变量</a>. 不过, A_ThisFunc 仍将包含正在执行的函数名称.</p>
+<p>尽管不能使用 <a href="commands/Goto.htm">Goto</a> 从函数中跳转到外面, 但可以在函数中使用 <a href="commands/Gosub.htm">Gosub</a> 到外部/公共的子程序, 然后在那里使用 Goto.</p>
+<p>尽管一般不鼓励使用 <a href="commands/Goto.htm">Goto</a>, 但它能用来在同个函数中的一个位置跳转到其他位置. 这样有助于简化包含许多个返回点而所有这些点在返回前需要进行一些清理的复杂函数.</p>
+<p>函数可以包含能被外部调用的子程序,例如<a href="commands/SetTimer.htm">计时器</a>,<a href="commands/Gui.htm#label">GUI g 标签</a>和<a href="commands/Menu.htm">菜单项</a>.通常把它们封装到一个单独的文件中供 <a href="commands/_Include.htm">#Include</a> 使用, 这样避免了它们和脚本的 <a href="Scripts.htm#auto">自动执行段</a> 的冲突. 不过, 还存在下面这些限制:</p>
+<ul>
+  <li>如果它们所在的函数曾经被正常调用, 那么这样的子程序应该只使用 <a href="#static">静态</a> 和 <a href="#Global">全局</a> 变量 (不使用 <a href="#Locals">局部</a> 变量). 这是由于中断函数调用线程的子程序 <a href="misc/Threads.htm">线程</a> (反之亦然) 可以改变被中断线程看到的局部变量的值. 此外, 在任何时候函数返回到其调用者时, 它包含的所有局部变量都被置空来释放占用的内存.</li>
+  <li>这样的子程序应该只使用 <a href="#Global">全局变量</a> (不使用 <a href="#static">静态变量</a>) 作为 <a href="commands/Gui.htm#var">GUI 控件的变量</a>.</li>
+  <li>当一个子程序 <a href="misc/Threads.htm">线程</a> 进入函数后, 在此线程中任何对 <a href="misc/Arrays.htm">动态变量</a> 的引用都被视为是 <a href="#Global">全局</a> 的 (包括创建数组的那些命令).</li>
+</ul>
+<h2 id="remarks">Return, Exit 及一般说明</h2>
+<p>如果函数内的执行流在遇到 <a href="commands/Return.htm">Return</a> 前到达了函数的闭括号, 那么函数结束并返回空值 (空字符串) 给其调用者. 当函数明确省略 <a href="commands/Return.htm">Return</a> 的参数时也返回空值.</p>
+<p>当函数使用 <a href="commands/Exit.htm">Exit</a> 命令终止 <a href="misc/Threads.htm">当前线程</a> 时, 其调用者不会接收到返回值. 例如,这个语句 <code>Var := Add(2, 3)</code> 中,如果 <code>Add()</code> 退出了那么 <code>Var</code> 会保持不变.如果函数出现了运行时错误, 例如 <a href="commands/Run.htm">运行</a> 了一个不存在的文件 (当 <a href="commands/Run.htm#UseErrorLevel">UseErrorLevel</a> 选项不存在时), 也会出现同样的情况.</p>
+<p>如果要返回一个额外的容易记住的值, 那么函数可以修改 <a href="misc/ErrorLevel.htm">ErrorLevel</a> 的值来实现.</p>
+<p>要使用一个或多个空值(空字符串)调用函数,可以使用空的引号对,例如:<code>FindColor(ColorName, "")</code>.</p>
+<p>因为调用函数不会开启新 <a href="misc/Threads.htm">线程</a>, 所以函数对设置例如 <a href="commands/SendMode.htm">SendMode</a> 和 <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a> 做出的任何改变对其调用者同样有效.</p>
+<p>函数的调用者可以传递不存在的变量或 <a href="misc/Arrays.htm">数组</a> 元素给它, 当函数期望和 <a href="#ByRef">ByRef</a> 一致的参数时这很有用. 例如, 调用 <code>GetNextLine(BlankArray%i%)</code> 会自动地创建 <a href="#Locals">局部</a> 或全局的变量 <code>BlankArray%i%</code> (是局部还是全局取决于调用者是否在函数内并且它的 <a href="#AssumeGlobal">假设全局模式</a> 是否有效).</p>
+<p>在函数中使用 <a href="commands/ListVars.htm">ListVars</a> 时, 它会显示函数的 <a href="#Locals">局部变量</a> 及其内容. 这样可以帮助调试脚本.</p>
+<h2>风格和命名约定</h2>
+<p>您也许会发现, 如果给复杂函数中的特定变量加上独特的前缀会让函数更容易阅读和维护. 例如, 使用 "p" 或 "p_" 开头来命名函数中的每个参数可以让它们的性质一目了然, 尤其是当函数中有许多 <a href="#Locals">局部变量</a> 吸引您的注意力的时候. 同样地, 前缀 "r" 或 "r_" 可以用于 <a href="#ByRef">ByRef 参数</a>, 而 "s" 或 "s_" 可以用于 <a href="#static">静态变量</a>.</p>
+<p>在定义函数时可以使用 <a href="commands/Block.htm#otb">One True Brace (OTB) 风格</a>. 例如:</p>
+<pre>Add(x, y) <strong>{</strong>
+    return x + y
+<strong>}</strong></pre>
+<h2 id="include">使用 #Include 在多个脚本间共享函数</h2>
+<p>可以使用 <a href="commands/_Include.htm">#Include</a> 指令 (<em>即使在脚本的顶部</em>) 从外部文件中加载函数.</p>
+<p>说明: 当脚本的执行流遇到函数定义时, 它会跳过函数 (使用一种瞬时的方法) 并在函数闭括号后恢复执行. 因此, 开始执行时执行流不会陷入函数中, 也不会因为在脚本的最顶部存在一个或多个函数而影响到 <a href="Scripts.htm#auto">自动执行段</a>.</p>
+<h2 id="lib">函数库: 标准库和用户库 <span class="ver">[v1.0.47+]</span></h2>
+<p>脚本中可以不需要通过 <a href="commands/_Include.htm">#Include</a> 而调用外部文件中的函数. 要达到此目的, 一个和函数相同名称的文件必须存在于下面库目录的其中一个:</p>
+<pre><a href="Variables.htm#ScriptDir">%A_ScriptDir%</a>\Lib\  <em>; 局部库 - 需要 AHK_L 42+.</em>
+<a href="Variables.htm#MyDocuments">%A_MyDocuments%</a>\AutoHotkey\Lib\  <em>; 用户库.</em>
+path-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
+<p>例如,当脚本调用不存在的函数 <code>MyFunc()</code> 时,程序会在用户库中搜索名为"MyFunc.ahk"的文件.如果没有找到, 会继续在标准库中搜索此文件. 如果仍然没有找到匹配的文件且函数的名称含有下划线(例如 <code>MyPrefix_MyFunc</code>),那么程序会在两个库中搜索名为 <code>MyPrefix.ahk</code> 的文件,如果找到则加载它.这样使得 <code>MyPrefix.ahk</code> 可以同时包含 <code>MyPrefix_MyFunc</code> 函数和其他名称以 <code>MyPrefix_</code> 开始的相关函数.</p>
+<p><span class="ver">[AHK_L 42+]:</span> 支持局部库且局部库优先于用户库和标准库.</p>
+<p>只有如 <code>MyFunc()</code> 这样直接的函数声明才能自动导入库. 如果函数是动态生成或间接引用的, 就像 timer (定时器) 或 GUI event (GUI事件), 那么库必须直接被导入,例如: <code><a href="commands/_Include.htm">#Include</a> &lt;MyFunc&gt;</code></p>
+<p>虽然库文件通常只包含和它的文件名称相同的单个函数, 但它还可以包含仅被此函数调用的私有函数和子程序. 然而, 这样的函数应该使用相当特殊的名称, 因为它们仍属于全局命名空间; 也就是说, 可以在脚本的任意位置调用它们.</p>
+<p>如果在库文件中使用 <a href="commands/_Include.htm">#Include</a>, 那么 #Include 的工作目录为库文件自身所在的目录. 利用这个特性可以重定向到较大的库文件, 其中包含此函数及相关内容.</p>
+<p><a href="Scripts.htm#ahk2exe">脚本编译器 (ahk2exe)</a> 同样支持库函数. 不过, 它要求在编译器目录的上一级目录中存在 AutoHotkey.exe 的副本 (通常是这样). 如果不存在 AutoHotkey.exe, 编译器仍可以运行但无法自动包含库函数.</p>
+<p>包含在库中的函数和其他函数执行的一样好, 因为在脚本开始执行前已经预加载了它们.</p>
+<h2 id="BuiltIn">内置函数</h2>
+<p>在内置函数参数列表末尾的任何可选参数可以完全省略. 例如, <code>WinExist("Untitled - Notepad")</code> 是有效的, 因为它的其他三个参数被认为是空的.</p>
+<p>如果脚本定义了与内置函数同名的函数, 那么内置函数会被覆盖. 例如, 脚本会调用它自己定义的 WinExist() 函数来代替标准的那个. 然而, 这样脚本将无法调用原来的函数.</p>
+<p>在 DLL 文件中的 External functions (外部函数)可以使用 <a href="commands/DllCall.htm">DllCall()</a> 调用.</p>
+<p>下列内置函数都可以通过点击它们的名称查看详细信息.</p>
+<h3>常用函数</h3>
+<table class="info">
+  <tr>
+    <th style="width:150px">函数</th>
+    <th>描述</th>
+  </tr>
+  <tr id="FileExist">
+    <td><a href="commands/FileExist.htm">FileExist</a></td>
+    <td>检查文件或文件夹是否存在且返回它的属性.</td>
+  </tr>
+  <tr id="GetKeyState">
+    <td><a href="commands/GetKeyState.htm">GetKeyState</a></td>
+    <td>获取指定键盘按键是否被按下的状态,当指定按键被按下时返回 true (1) 否则返回 false (0).</td>
+  </tr>
+  <tr id="InStr">
+    <td><a href="commands/InStr.htm">InStr</a></td>
+    <td>从左侧或右侧截取给定字符串的一部分.</td>
+  </tr>
+  <tr id="RegExMatch">
+    <td><a href="commands/RegExMatch.htm">RegExMatch</a></td>
+    <td>判断字符串是否包含某个匹配模式 (正则表达式) .</td>
+  </tr>
+  <tr id="RegExReplace">
+    <td><a href="commands/RegExReplace.htm">RegExReplace</a></td>
+    <td>替换字符串中匹配模式 (正则表达式) 出现的地方.</td>
+  </tr>
+  <tr id="StrLen">
+    <td><a href="commands/StringLen.htm">StrLen</a></td>
+    <td>获取给定字符串的长度.</td>
+  </tr>
+  <tr id="StrReplace">
+    <td><a href="commands/StringReplace.htm">StrReplace</a></td>
+    <td>用新的字符串替换指定字符串出现的地方.</td>
+  </tr>
+  <tr id="StrSplit">
+    <td><a href="commands/StringSplit.htm">StrSplit</a></td>
+    <td>使用指定的分隔符把一个字符串分解成多个子字符串并保存到数组中.</td>
+  </tr>
+  <tr id="SubStr">
+    <td><a href="commands/SubStr.htm">SubStr</a></td>
+    <td>从字符串的指定位置获取一个或多个字符.</td>
+  </tr>
+  <tr id="WinActive">
+    <td><a href="commands/WinActive.htm">WinActive</a></td>
+    <td>如果指定的窗口存在且为活动窗口(顶层),则返回其 唯一ID(HWND).</td>
+  </tr>
+  <tr id="WinExist">
+    <td><a href="commands/WinExist.htm">WinExist</a></td>
+    <td>返回首个匹配窗口的 唯一ID(HWND).</td>
+  </tr>
+</table>
+<h3>杂项函数</h3>
+<table class="info">
+  <tr>
+    <th style="width:150px">函数</th>
+    <th>描述</th>
+  </tr>
+  <tr id="Asc">
+    <td><a href="commands/Asc.htm">Asc(String)</a></td>
+    <td>返回 String 第一个字节的数值 或 UTF-16 编码单元, 如果 String 为空则返回 0. (ANSI 编码)返回值的范围为 0 - 255 或者 (Unicode 编码) 0 - 0xFFFF . 参考 Unicode vs ANSI . 要允许 Unicode supplementary characters (Unicode 补充字节), 请使用 Ord(String) 替代.</td>
+  </tr>
+  <tr id="Chr">
+    <td><a href="commands/Chr.htm">Chr(Number)</a></td>
+    <td>返回与参数 Number 指定的编码相匹配的字符串 (通常只有一个字节). 高于 127 的字符编码取决于正在使用的 string encoding (文本编码) , 返回值还会被 Unicode 或 ANSI 的可执行文件反向影响. 如果支持 Unicode ,那么 Number 为 Unicode 字符编码在 0 到 0x10FFFF (或 0xFFFF 在 [v1.1.21] 之前版本) 之间的某个值; 其他 ANSI 字符编码时则为 0 到 255 之间的某个值. 如果 Number 不是有效范围内的值, 则返回一个空字符串. 通常情况下字符编码包含 9 (tab 缩进符), 10 (linefeed 换行符 ), 13 (carriage return 回车符), 32 (space 空格符), 48-57 (the digits 0-9 数字 0-9), 65-90 (uppercase A-Z 大写字母 A-Z), 和 97-122 (lowercase a-z 小写字母 a-z).</td>
+  </tr>
+  <tr id="DllCall">
+    <td><a href="commands/DllCall.htm">DllCall</a></td>
+    <td>调用 DLL 文件中的函数,例如标准的 Windows API 函数.</td>
+  </tr>
+  <tr id="FileOpen">
+    <td><a href="commands/FileOpen.htm">FileOpen</a></td>
+    <td>提供面向对象的文件 I/O.</td>
+  </tr>
+  <tr id="Func">
+    <td><a href="commands/Func.htm">Func(FunctionName)</a></td>
+    <td>获取指定函数的引用.</td>
+  </tr>
+  <tr id="GetKeyName">
+    <td><a href="commands/GetKey.htm">GetKeyName/GetKeyVK/GetKeySC</a></td>
+    <td>获取按键的名称/文本, 虚拟按键码或扫描码.</td>
+  </tr>
+  <tr id="IsByRef">
+    <td><a href="commands/IsByRef.htm">IsByRef(Var)</a></td>
+    <td>当 Var 为 ByRef 参数且调用者提供了变量时返回 1; 否则当 Var 为其他类型的变量时返回 0.</td>
+  </tr>
+  <tr id="IsFunc">
+    <td><a href="commands/IsFunc.htm">IsFunc(FunctionName)</a></td>
+    <td>如果 FunctionName 不是显式出现在脚本中 (通过例如 #Include 或对 库函数 的非动态调用的方法), 则 IsFunc() 返回 0. 否则它返回函数的强制参数个数加一的数字(例如 1 为函数可以不需要参数,2 为函数需要 1 个参数等等).例如, 函数存在时 if IsFunc("MyFunc") 和 if IsFunc(VarContainingFunctionName) 语句为真, 否则为假. 在 v1.1.00+, FunctionName 为可以代替函数名的函数引用.</td>
+  </tr>
+  <tr id="IsLabel">
+    <td><a href="commands/IsLabel.htm">IsLabel(LabelName)</a></td>
+    <td>如果 LabelName 为脚本中的子程序,热键或热字串(不包括 LabelName 中末尾的冒号),则返回非零数字.例如, 标签存在时 if IsLabel(VarContainingLabelName) 将为真, 否则为假. 在类似 Gosub, Hotkey, Menu 和 Gui 命令中指定动态标签时, 使用此函数可以避免运行时错误.</td>
+  </tr>
+  <tr id="IsObject">
+    <td><a href="commands/IsObject.htm">IsObject</a></td>
+    <td>判断某个值是否为对象.</td>
+  </tr>
+  <tr id="ListView">
+    <td><a href="commands/ListView.htm#BuiltIn">ListView</a></td>
+    <td>用于 增加, 插入, 修改 或 删除 ListView 行/列 的函数, 还可以用于从中获取数据.</td>
+  </tr>
+  <tr id="NumGet">
+    <td><a href="commands/NumGet.htm">NumGet(VarOrAddress [, Offset = 0][, Type = "UPtr"])</a></td>
+    <td>返回在指定地址+偏移的位置存储的二进制数.</td>
+  </tr>
+  <tr id="NumPut">
+    <td><a href="commands/NumPut.htm">NumPut(Number, VarOrAddress [, Offset = 0][, Type = "UPtr"])</a></td>
+    <td>以二进制格式把数字存储到指定地址+偏移的位置.</td>
+  </tr>
+  <tr id="OnMessage">
+    <td><a href="commands/OnMessage.htm">OnMessage(MsgNumber [, "FunctionName"])</a></td>
+    <td>监听消息/事件.</td>
+  </tr>
+  <tr id="Ord">
+    <td><a href="commands/Ord.htm">Ord(String)</a></td>
+    <td>返回 String 中第一个字符的有序字符编码数值. 如果 String 以 Unicode 填充符号开头, Ord(String) 返回 Unicode 字符编码(范围在 0x10000 到 0x10FFFF 之间的某个数). 其他情况下与 Asc(String) 的返回值相同.</td>
+  </tr>
+  <tr id="StrPutGet">
+    <td><a href="commands/StrPutGet.htm">StrGet(Address [, Length] [, Encoding = None ] )</a></td>
+    <td>从内存地址复制字符串, 并可以将其在不同代码页间进行转换.</td>
+  </tr>
+  <tr id="StrPutGet">
+    <td><a href="commands/StrPutGet.htm">StrPut(String, Address [, Length] [, Encoding = None ] )</a></td>
+    <td>复制字符串到内存地址, 并可以对其在不同代码页间进行转换.</td>
+  </tr>
+  <tr id="RegisterCallback">
+    <td><a href="commands/RegisterCallback.htm">RegisterCallback</a></td>
+    <td>创建机器码地址,当它被调用时会重定向到脚本中的函数.</td>
+  </tr>
+  <tr id="TreeView">
+    <td><a href="commands/TreeView.htm#BuiltIn">TreeView</a></td>
+    <td>用于添加, 修改 或 删除 TreeView 单元格 的函数, 还可用于从其中获取数据.</td>
+  </tr>
+  <tr id="Trim">
+    <td><a href="commands/Trim.htm">Trim</a></td>
+    <td>移除字符串的开始和/或末尾的某些字符.</td>
+  </tr>
+  <tr id="VarSetCapacity">
+    <td><a href="commands/VarSetCapacity.htm">VarSetCapacity(UnquotedVarName [, RequestedCapacity, FillByte])</a></td>
+    <td>增加或清空变量占用的内存.</td>
+  </tr>
+</table>
+<h3 id="Math">数学函数</h3>
+<table class="info">
+  <tr>
+    <th style="width:150px">函数</th>
+    <th>描述</th>
+  </tr>
+  <tr id="Abs">
+    <td><a href="commands/Math.htm#Abs">Abs(Number)</a></td>
+    <td>返回 <em>Number</em> 的绝对值.</td>
+  </tr>
+  <tr id="Ceil">
+    <td><a href="commands/Math.htm#Ceil">Ceil(Number)</a></td>
+    <td>返回 <em>Number</em> 的四舍五入值 (不带任何 .00 后缀).</td>
+  </tr>
+  <tr id="Exp">
+    <td><a href="commands/Math.htm#Exp">Exp(N)</a></td>
+    <td>返回 <em>e</em> (近似值为 2.71828182845905) 的 <em>N</em>次幂.</td>
+  </tr>
+  <tr id="Floor">
+    <td><a href="commands/Math.htm#Floor">Floor(Number)</a></td>
+    <td>返回 <em>Number</em> 的向下取整 (不带任何 .00 后缀).例如, Floor(1.2) 的结果为 1 而 Floor(-1.2) 结果为 -2.</td>
+  </tr>
+  <tr id="Log">
+    <td><a href="commands/Math.htm#Log">Log(Number)</a></td>
+    <td>返回 <em>Number</em> 的对数 (底数为 10). 结果格式化为浮点数. 如果 Number 为负数, 则返回空字符串.</td>
+  </tr>
+  <tr id="Ln">
+    <td><a href="commands/Math.htm#Ln">Ln(Number)</a></td>
+    <td>返回 <em>Number</em> 的自然对数 (底数为 e). 结果格式化为 浮点数. 如果 Number 为负数, 则返回空字符串.</td>
+  </tr>
+  <tr id="Mod">
+    <td><a href="commands/Math.htm#Mod">Mod(Dividend, Divisor)</a></td>
+    <td>求模, 返回被除数 <em>Dividend</em> 除以除数 <em>Divisor</em> 后得到的余数.结果的正负总是与被除数一致. 例如,mod(5, 3) 和 mod(5, -3) 的结果都为 2,但 mod(-5, 3) 和 mod(-5, -3) 的结果为 -2.如果其中一个参数为浮点数, 那么结果也是浮点数. 例如, mod(5.0, 3) 的结果为 2.0 而 mod(5, 3.5) 的结果为 1.5. 如果除数为零, 则函数返回空值 (空字符串).</td>
+  </tr>
+  <tr id="Round">
+    <td><a href="commands/Math.htm#Round">Round(Number [, N])</a></td>
+    <td>返回 <em>Number</em> 取整到 <em>N</em> 个小数点之后的位置. 如果 N 省略或为 0, 则 Number 被取整到最近的整数. 如果 N 为正数, 则 Number 被取整到 N 个小数位. 如果 N 为负数,则 Number 被取整到十进制小数点左边 N 位.例如,Round(345, -1) 的结果为 350 而 Round (345, -2) 的结果为 300.与 Transform Round 不同, 每当 N 省略或小于 1 时结果不带 .000 后缀. 在 v1.0.44.01+,N 值大于零时会准确显示 N 个小数位而不遵循 SetFormat 的设置.要避免这种情况, 需要对 Round() 的返回值再进行一次数学运算; 例如: Round(3.333, 1)+0.</td>
+  </tr>
+  <tr id="Sqrt">
+    <td><a href="commands/Math.htm#Sqrt">Sqrt(Number)</a></td>
+    <td>返回 <em>Number</em> 的平方根. 结果格式化为 浮点数. 如果 Number 为负数, 则函数返回空字符串.</td>
+  </tr>
+  <tr>
+    <td><span id="Sin"></span><span id="Cos"></span><span id="Tan"></span><a href="commands/Math.htm#Sin">Sin(Number)</a> / <a href="commands/Math.htm#Cos">Cos(Number)</a> / <a href="commands/Math.htm#Tan">Tan(Number)</a></td>
+    <td>返回 <em>Number</em> 的 sine(正弦)/cosine(余弦)/tangent(正切) 值. Number 为弧度.</td>
+  </tr>
+  <tr>
+    <td><span id="ASin"></span><span id="ACos"></span><span id="ATan"></span><a href="commands/Math.htm#ASin">ASin(Number)</a> / <a href="commands/Math.htm#ACos">ACos(Number)</a> / <a href="commands/Math.htm#ATan">ATan(Number)</a></td>
+    <td>返回 Number 的 arcsine(反正弦)/arccosine(反余弦)/arctangent(反正切) 的弧度值.</td>
+  </tr>
+</table>
+<h3>其他函数</h3>
+<p><a href="https://github.com/polyethene/AutoHotkey-Scripts/blob/master/Functions.ahk">Polyethene 的命令函数</a>: 为每个有 OutputVar 的 AutoHotkey 命令提供了可调用的函数.可以通过 <a href="commands/_Include.htm">#Include</a> 把这个库包含在任何脚本中.</p>
+</body>
+</html>
+

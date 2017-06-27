@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>IfWinActive / IfWinNotActive / WinActive</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>IfWinActive / IfWinNotActive / WinActive</h1>
+
+<p>检查指定的窗口是否存在且当前是否活动(在最前面).若存在,则 <em>WinActive()</em> 返回其唯一 ID(HWND).</p>
+
+<pre class="Syntax">IfWinActive [, WinTitle, WinText,  ExcludeTitle, ExcludeText]
+IfWinNotActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+<a href="WinGet.htm">UniqueID</a> := WinActive("WinTitle", "WinText", "ExcludeTitle", "ExcludeText")</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>WinTitle</dt>
+  <dd><p>窗口标题或识别目标窗口的其他条件.请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
+
+  <dt>WinText</dt>
+  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串 (和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
+
+  <dt>ExcludeTitle</dt>
+  <dd><p>标题中含有此参数值的窗口将被排除. 注:由于向后兼容性,所以如果此参数准确匹配某个命令名,那么 <em>IfWinActive</em> 和 <em>IfWinNotActive</em> 会将其作为命令解释.要变通解决此问题,请使用 <em>WinActive()</em> 函数代替.</p></dd>
+
+  <dt>ExcludeText</dt>
+  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>如果省略所有参数, 那么将使用 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</p>
+<p>如果这些命令的其中一个确定了某个活动窗口为符合的匹配, 那么 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a> 将更新为这个活动窗口. 换句话说, 如果 <em>IfWinActive</em> 匹配结果为 "true" 或 <em>IfWinNotActive</em> 匹配结果为 "false", 那么将更新 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</p>
+<p>WinActive() 函数返回匹配指定条件的活动窗口的 <a href="WinGet.htm">唯一 ID (HWND)</a>. 如果不匹配, 则函数返回 0. 由于所有的非零数字被视为"true",所以每当 <em>WinTitle</em> 为活动时,<code>if WinActive("WinTitle")</code> 语句为真.</p>
+<p>获取活动窗口的唯一 ID 的简便方法是使用 <code>ActiveHwnd := WinExist("A")</code>.</p>
+<p><a href="SetWinDelay.htm">SetWinDelay</a> 不适用于 IfWinExist/IfWinActive.</p>
+<p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时,才能检测到隐藏窗口.</p>
+<h3>相关</h3>
+<p><a href="WinExist.htm">IfWinExist</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="_IfWinActive.htm">#IfWinActive/Exist</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">IfWinActive, Untitled - Notepad
+{
+    WinMaximize  <em>; 最大化前面 IfWinActive 找到的记事本窗口.</em>
+    Send, Some text.{Enter}
+    return
+}
+
+if WinActive("ahk_class Notepad") or WinActive("ahk_class" . ClassName)  <em>; "ahk_class" 后不需要空格.</em>
+    WinClose  <em>; 这里使用 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</em></pre>
+
+</body>
+</html>

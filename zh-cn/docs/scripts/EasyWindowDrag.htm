@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>轻松拖曳窗口(需要 XP/2k/NT)</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>轻松拖曳窗口(需要 XP/2k/NT)</h1>
+
+<p>一般情况下只能通过点击标题栏来拖动窗口. 这个脚本扩展到可以在窗口中任何一点拖动窗口. 要激活这种模式, 请在点击时按住 CapsLock 或鼠标中键, 然后拖动窗口到新的位置.
+</p>
+<p><a href="EasyWindowDrag.ahk">下载此脚本</a> &nbsp;| &nbsp;<a href="index.htm">其他示例脚本</a> &nbsp;| &nbsp;<a href="../AutoHotkey.htm">主页</a></p>
+
+<pre class="NoIndent"><em>; 注意: 在按下鼠标按钮后您可以释放 Capslock 或鼠标中键
+; 而不需要在整个拖动过程中按住它.
+; 此脚本需要 v1.0.25+.</em>
+
+~MButton &amp; LButton::
+CapsLock &amp; LButton::
+CoordMode, Mouse  <em>; 切换到屏幕/绝对坐标.</em>
+MouseGetPos, EWD_MouseStartX, EWD_MouseStartY, EWD_MouseWin
+WinGetPos, EWD_OriginalPosX, EWD_OriginalPosY,,, ahk_id %EWD_MouseWin%
+WinGet, EWD_WinState, MinMax, ahk_id %EWD_MouseWin% 
+if EWD_WinState = 0  <em>; 仅在窗口不处于最大化状态时</em>
+    SetTimer, EWD_WatchMouse, 10 <em>; 在用户拖动时跟踪鼠标.</em>
+return
+
+EWD_WatchMouse:
+GetKeyState, EWD_LButtonState, LButton, P
+if EWD_LButtonState = U  <em>; 按钮已经释放, 所以拖动结束.</em>
+{
+    SetTimer, EWD_WatchMouse, off
+    return
+}
+GetKeyState, EWD_EscapeState, Escape, P
+if EWD_EscapeState = D  <em>; 按下了 Escape, 所以取消拖动.</em>
+{
+    SetTimer, EWD_WatchMouse, off
+    WinMove, ahk_id %EWD_MouseWin%,, %EWD_OriginalPosX%, %EWD_OriginalPosY%
+    return
+}
+<em>; 否则, 改变窗口的位置以匹配
+; 用户拖动鼠标引起的鼠标坐标变化:</em>
+CoordMode, Mouse
+MouseGetPos, EWD_MouseX, EWD_MouseY
+WinGetPos, EWD_WinX, EWD_WinY,,, ahk_id %EWD_MouseWin%
+SetWinDelay, -1   <em>; 让下面的移动更快速/平滑.</em>
+WinMove, ahk_id %EWD_MouseWin%,, EWD_WinX + EWD_MouseX - EWD_MouseStartX, EWD_WinY + EWD_MouseY - EWD_MouseStartY
+EWD_MouseStartX := EWD_MouseX  <em>; 为下一次调用此子程序进行更新.</em>
+EWD_MouseStartY := EWD_MouseY
+return
+</pre>
+</body>
+</html>

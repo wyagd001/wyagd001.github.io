@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>ComObjGet()</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ComObjGet() <span class="ver">[AHK_L 53+]</span></h1>
+<p>返回由 COM 组件提供的对象引用.</p>
+<pre class="Syntax">ComObject := ComObjGet(Name)</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>Name</dt>
+  <dd><p>需要获取的对象的显示名称. 请参阅 <a href="http://msdn.microsoft.com/en-us/library/ms691253.aspx">MkParseDisplayName (MSDN)</a> 了解更多信息.</p></dd>
+
+</dl>
+
+<h3>相关</h3>
+<a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/ms678805.aspx">CoGetObject (MSDN)</a>
+
+<h3>示例</h3>
+<pre class="NoIndent" id="exwmi"><em>; 示例: 使用 Shift+Escape 来显示活动窗口
+;   进程的命令行. 需要 XP 或更高版本.</em>
++Esc::
+    WinGet pid, PID, A
+    <em>; 获取 WMI 服务对象.</em>
+    wmi := <b>ComObjGet</b>("winmgmts:")
+    <em>; 执行查询以获取匹配进程.</em>
+    queryEnum := wmi.ExecQuery(""
+        . "Select * from Win32_Process where ProcessId=" . pid)
+        ._NewEnum()
+    <em>; 获取首个匹配进程.</em>
+    if queryEnum[process]
+        MsgBox 0, Command line, % process.CommandLine
+    else
+        MsgBox Process not found!
+      <em>; 释放所有全局对象 (使用局部变量时不需要这么做).</em>
+    wmi := queryEnum := process := ""
+return
+<em>; Win32_Process: <a href="http://msdn.microsoft.com/en-us/library/aa394372.aspx">http://msdn.microsoft.com/en-us/library/aa394372.aspx</a></em>
+</pre>
+
+</body>
+</html>

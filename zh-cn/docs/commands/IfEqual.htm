@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>If/IfEqual/IfNotEqual/IfLess/IfLessOrEqual/IfGreater/IfGreaterOrEqual</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>If/IfEqual/IfNotEqual/IfLess/IfLessOrEqual/IfGreater/IfGreaterOrEqual</h1>
+
+<p>指定在<a href="../Variables.htm">变量</a>与值比较结果为 TRUE 时执行的命令.包含多个命令时,需要把它们括在<a href="Block.htm">区块</a>(大括号)中.</p>
+
+<pre class="Syntax">IfEqual, var, value (等同于: if var = value)
+IfNotEqual, var, value (等同于: if var &lt;&gt; value) (可以使用 != 代替 &lt;&gt;)
+IfGreater, var, value (等同于: if var &gt; value)
+IfGreaterOrEqual, var, value (等同于: if var &gt;= value)
+IfLess, var, value (等同于: if var &lt; value)
+IfLessOrEqual, var, value (等同于: if var &lt;= value)
+If var <em>; 如果变量的内容为空或 0 时, 它被视为 false. 否则它被视为 true.</em>
+
+请参阅: <a href="IfInString.htm">IfInString</a></pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>var</dt>
+  <dd><p><a href="../Variables.htm">变量</a> 名.</p></dd>
+
+  <dt>value</dt>
+  <dd><p>文字字符串, 数字或变量引用 (例如 %var2%). 如果您希望将 <em>var</em> 与空字符串 (空白) 进行比较, 那么可以省略 Value.</p></dd>
+
+</dl>
+
+<h3>备注</h3>
+<p>如果 <em>var</em> 和 <em>value</em> 都为纯数值, 那么它们将被作为数字而不是字符串进行比较. 其他情况下, 它们将被作为字符串按字母顺序进行比较 (即字母次序将决定 <em>var</em> 是大于, 等于或小于 <em>value</em>).</p>
+<p>当 IF 或 <a href="Else.htm">ELSE</a> 结构中含有多行命令时, 这些命令必须括在大括号中. 例如:</p>
+<pre>if count &lt;= 0
+{
+    WinClose Untitled - Notepad
+    MsgBox There are no items present.
+}</pre>
+<p>不过, 如果只有一行命令从属于 IF 或 ELSE, 那么可以不用大括号.</p>
+<p>如果您使用命令名称风格, 那么另一个命令只能与 IF 语句在同一行. 换句话说, 这些语句都是有效的:</p>
+<pre>IfEqual, x, 1, Sleep, 1
+IfGreater, x, 1, EnvAdd, x, 2</pre>
+<p>但这些是无效的:</p>
+<pre>if x = 1 Sleep 1
+IfGreater, x, 1, x += 2</pre>
+<p><a href="IfExpression.htm#otb">One True Brace (OTB) 风格</a> <strong>不</strong> 能用在 if 语句的这些类型中. 它只能和表达式类型的 if 语句一起使用.</p>
+<p>相关提示,<a href="IfBetween.htm">if var [not] between LowerBound and UpperBound</a> 命令判断变量是否在两个值之间,而 <a href="IfIn.htm">if var [not] in value1,value2</a> 可以用来判断变量内容是否存在于值列表中.</p>
+<h3>相关</h3>
+<p><a href="IfExpression.htm">IF (表达式)</a>, <a href="StringCaseSense.htm">StringCaseSense</a>, <a href="SetExpression.htm">赋值表达式 (:=)</a>, <a href="IfIn.htm">if var in/contains MatchList</a>, <a href="IfBetween.htm">if var between</a>, <a href="IfInString.htm">IfInString</a>, <a href="Block.htm">区块</a>, <a href="Else.htm">Else</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">if counter &gt;= 1
+    Sleep, 10
+
+if counter &gt;=1   <em>; 如果 IF 结构中含有多行命令, 那么这些命令必须括在大括号中:</em>
+{
+    WinClose, Untitled - Notepad
+    Sleep 10
+}
+
+if MyVar = %MyVar2%
+    MsgBox The contents of MyVar and MyVar2 are identical.
+else if MyVar =
+{
+    MsgBox, 4,, MyVar is empty/blank. Continue?
+    IfMsgBox, No
+        Return
+}
+else if MyVar &lt;&gt; ,
+    MsgBox The value in MyVar is not a comma.
+else
+    MsgBox The value in MyVar is a comma.
+
+if Done
+    MsgBox The variable Done is neither empty nor zero.</pre>
+
+</body>
+</html>

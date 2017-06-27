@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>FileSetTime</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>FileSetTime</h1>
+
+<p>改变一个或多个文件或文件夹的时间戳.支持通配符.</p>
+
+<pre class="Syntax">FileSetTime [, YYYYMMDDHH24MISS, FilePattern, WhichTime, OperateOnFolders?, Recurse?]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>YYYYMMDDHH24MISS</dt>
+  <dd><p>如果为空或省略, 则它默认为当前时间. 否则, 指定操作使用的时间 (请参阅备注了解时间的格式). 不支持 1601 以前的年份.</p>
+    <p>此参数可以为 <a href="../Variables.htm#Expressions">表达式</a>. 因此, 如果需要连接多个变量来形成单个时间戳, 则应该使用 <a href="../Variables.htm#concat">点运算符</a> 代替百分号. 例如:<code>FileSetTime, Year <strong>.</strong> Month <strong>.</strong> Day, C:\My File.txt</code>.</p></dd>
+
+  <dt>FilePattern</dt>
+  <dd><p>单个文件或文件夹的名称或者通配符模式, 例如 C:\Temp\*.tmp. 如果未指定绝对路径则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p>
+    <p>如果省略, 则使用最内层 <a href="LoopFile.htm">文件循环</a> 的当前文件.</p></dd>
+
+  <dt>WhichTime</dt>
+  <dd>要设置的时间戳:<br>M = 修改时间 (如果此参数为空或省略, 这是默认的)<br>C = 创建时间<br>A = 上次访问时间</dd>
+
+  <dt>OperateOnFolders?</dt>
+  <dd><p>0 (默认) 不对文件夹进行操作 (仅文件). <br>对匹配通配符模式的所有文件和文件夹进行操作.<br>仅对文件夹进行操作 (不操作文件).</p>
+      <p>注: 如果 FilePattern 是单个文件夹而不是通配符模式, 那么总是忽略此设置.</p>
+      <p>此参数可以为 <a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
+
+  <dt>递归?</dt>
+  <dd><p>0 (默认) 不对子文件夹进行递归.<br>递归子文件夹, 以便对包含在其中的匹配 <em>FilePattern</em> 的所有文件和文件夹进行操作. 将递归所有子文件夹, 而不仅是名称匹配 <em>FilePattern</em> 的那些. 但是, 文件和文件夹的完整路径和名称超过 259 个字符时, 这些文件和文件夹会被跳过, 就像它们不存在一样. 这样的文件很罕见, 因为操作系统一般不允许创建它们.</p>
+      <p>此参数可以为 <a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
+
+</dl>
+
+<h3>ErrorLevel</h3>
+<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为改变属性 <u>失败</u> 的文件数, 否则为 0. 如果指定的时间戳无效或 <em>FilePattern</em> 解析结果为空值, 则 ErrorLevel 被置为 1.</p>
+<p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0 (零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
+
+<h3>备注</h3>
+<p>在 FAT16 &amp; FAT32 卷上的文件上次访问时间可能不如在 NTFS 卷上那么精确.</p>
+<p id="YYYYMMDD">YYYYMMDDHH24MISS 格式中元素表示的含义分别为:</p>
+<table class="info">
+  <tr>
+    <td>YYYY</td>
+    <td>4 位数的年份</td>
+  </tr>
+  <tr>
+    <td>MM</td>
+    <td>2 位数的月份 (01-12)</td>
+  </tr>
+  <tr>
+    <td>DD</td>
+    <td>月的 2 位数的天数 (01-31)</td>
+  </tr>
+  <tr>
+    <td>HH24</td>
+    <td>24 小时格式的 2 位小时数 (00-23). 例如, 09 是 9am 而 21 是 9pm.</td>
+  </tr>
+  <tr>
+    <td>MI</td>
+    <td>2 位数的分钟数 (00-59)</td>
+  </tr>
+  <tr>
+    <td>SS</td>
+    <td>2 位数的秒数 (00-59)</td>
+  </tr>
+</table>
+<p>如果只给出了 YYYYMMDDHH24MISS 中的部分字符串 (例如 200403), 则任何省略的元素将使用下面的默认值:</p>
+<p>MM: 月份 01<br>DD: 日期 01<br>HH24: 小时 00<br>MI: 分钟 00<br>SS: 秒 00</p>
+<p>内置变量 <a href="../Variables.htm#Now">A_Now</a> 包含了上述格式的当前本地时间. 同样地, <a href="../Variables.htm#NowUTC">A_NowUTC</a> 包含了当前的协调世界时.</p>
+<p><strong>注:</strong> 使用 <a href="EnvAdd.htm">EnvAdd</a> 和 <a href="EnvSub.htm">EnvSub</a> 可以对日期时间值进行比较和加减. 此外, 最后不要使用大于或小于来比较时间, 除非它们的字符串长度相同. 这是因为此时它们被视为数字进行比较; 例如, 20040201 数值上总是小于 (但时间顺序上较后) 200401010533. 所以应该使用 <a href="EnvSub.htm">EnvSub</a> 来计算出它们之间的时间差是正数还是负数.</p>
+<h3>相关</h3>
+<p><a href="FileGetTime.htm">FileGetTime</a>, <a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileGetVersion.htm">FileGetVersion</a>, <a href="FormatTime.htm">FormatTime</a>, <a href="LoopFile.htm">文件循环</a>, <a href="EnvAdd.htm">EnvAdd</a>, <a href="EnvSub.htm">EnvSub</a></p>
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 设置所有匹配文件的修改时间为当前时间:</em>
+FileSetTime, , C:\temp\*.txt
+
+<em>; 设置修改日期 (时间将为午夜):</em>
+FileSetTime, 20040122, C:\My Documents\test.doc
+
+<em>; 设置创建日期. 把时间设置为 4:55pm:</em>
+FileSetTime, 200401221655, C:\My Documents\test.doc, C
+
+<em>; 改变匹配一种模式的所有文件的修改时间.
+; 由于最后一个参数的作用, 所以也会改变所有匹配的文件夹.:</em>
+FileSetTime, 20040122165500, C:\Temp\*.*, M, 1</pre>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>FileAppend</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>FileAppend</h1>
+
+<p>在文件末尾处追加文本(如果有必要,首先创建文本).</p>
+
+<pre class="Syntax">FileAppend [, Text, Filename, Encoding]</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>文本</dt>
+  <dd><p>要追加到文件的文本. 此文本可以包含换行符 (`n) 来开始新行. 此外, 一个长行可以使用 <a href="../Scripts.htm#continuation">延续片段</a> 的方法分成较短的几行.</p>
+      <p>如果 <em>Text</em> 为空, 则创建一个文件名为 <em>Filename</em> 的空白文件 (但如果文件已经存在, 则更新其修改时间).</p>
+    <p>如果 <em>Text</em> 为 <a href="../misc/Clipboard.htm#ClipboardAll">%ClipboardAll%</a> 或之前接受了 ClipboardAll 赋值的变量, 则用剪贴板的全部内容无条件覆盖 <em>Filename</em> (即不需要 <a href="FileDelete.htm">FileDelete</a>).</p></dd>
+
+  <dt>Filename</dt>
+  <dd><p>要追加内容的文件名, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p>
+    <p><strong>行结束符 (EOL) 转换</strong>: 在文件名前面加个星号可以阻止EOL转换. 这使得每个换行符 (`n) 作为单个换行符 (LF) 而不是 Windows 标准的 CR+LF 写入. 例如:<code>*C:\My Unix File.txt</code></p>
+    <p>如果文件还没有打开 (由于在 <a href="LoopReadFile.htm">文件读取循环</a> 中), EOL 转换将自动禁用, 且 <em>Text</em> 包含任意的回车和换行符对 (`r`n), 则自动以二进制模式打开文件. 换句话说, 前面段落中描述的星号选项自动生效. 不过, 当 <em>Text</em> 包含 `r`n 如果指定星号可以改善性能, 因为程序不需要扫描 <em>Text</em> 检查其中是否包含 `r`n.</p>
+     <p id="stdout"><strong>标准输出 (stdout)</strong>: 在 <em>Filename</em> 指定星号 (*) 可以把 <em>Text</em> 发送到标准输出 (stdout). 这样文本可以重定向到文件, 指向另一个 EXE 的管道或被 <a href="_ErrorStdOut.htm">高级文本编辑器</a> 捕获. 例如, 在命令提示符中输入后面的例子是有效的:</p>
+      <pre>"%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script.ahk" &gt;"Error Log.txt"</pre>
+    <p>然而, 发送到标准输出的文本将不会出现在运行它的命令提示符中. 解决此问题的方法是把脚本的输出通过管道传递给另一个命令或程序. 例如:</p>
+      <pre>"%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script.ahk" |more</pre>
+      <pre>For /F "tokens=*" %L in ('""%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script .ahk""') do @Echo %L</pre>
+    <p><span class="ver">[v1.1.20+]:</span> 在 <em>Filename</em> 指定两个星号 (**) 可以把 <em>Text</em> 发送到标准错误输出 (stderr).</p>
+    </dd>
+
+  <dt>Encoding</dt>
+  <dd><p><span class="ver">[AHK_L 42+]:</span> 覆盖 <a href="FileEncoding.htm">FileEncoding</a> 的默认设置, 其中 <em>Encoding</em> 遵循相同的格式.</p></dd>
+
+</dl>
+
+<h3>ErrorLevel</h3>
+<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
+<p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
+
+<h3>备注</h3>
+<p>要覆盖现有的文件, 请在使用 FileAppend 前用 <a href="FileDelete.htm">FileDelete</a> 删除它.</p>
+<p>追加文本后目标文件会自动关闭 (除非在 <a href="LoopReadFile.htm">文件读取/写入循环</a> 中以单参数模式使用 FileAppend 时).</p>
+<p><span class="ver">[AHK_L 42+]:</span> 追加模式的 <a href="FileOpen.htm">FileOpen()</a> 比 FileAppend 提供了更多的控制性并且允许文件保持打开状态而不是每次打开关闭文件. 一旦以追加模式打开文件后, 请使用 <code>file.<a href="../objects/File.htm#Write">Write</a>(string)</code> 来追加字符串. 文件对象通过 <a href="../objects/File.htm#RawWrite">RawWrite</a>/<a href="../objects/File.htm#RawRead">RawRead</a> 或 <a href="../objects/File.htm#WriteNum">Write<i>Num</i></a>/<a href="../objects/File.htm#ReadNum">Read<i>Num</i></a> 还支持二进制 I/O, 然而 FileAppend 仅支持文本.</p>
+<h3>相关</h3>
+<p><a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="FileReadLine.htm">FileReadLine</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="FileDelete.htm">FileDelete</a>, <a href="OutputDebug.htm">OutputDebug</a>, <a href="../Scripts.htm#continuation">延续片段</a></p>
+<h3>示例</h3>
+<pre class="NoIndent">FileAppend, Another line.`n, C:\My Documents\Test.txt
+
+<em>; 下面的例子使用 <a href="../Scripts.htm#continuation">延续片段</a> 来提高可读性和可维护性:</em>
+FileAppend,
+(
+A line of text.
+By default, the hard carriage return (Enter) between the previous line and this one will be written to the file.
+    This line is indented with a tab; by default, that tab will also be written to the file.
+Variable references such as %Var% are expanded by default.
+), C:\My File.txt</pre>
+<p>&nbsp;</p>
+<pre class="NoIndent" id="FTP"><em>; 下面的例子演示了如何使用操作系统内置的 FTP 功能
+; 自动进行 FTP 上传. 此脚本已经在 Windows XP 中测试通过.</em>
+
+FTPCommandFile = %A_ScriptDir%\FTPCommands.txt
+FTPLogFile = %A_ScriptDir%\FTPLog.txt
+FileDelete %FTPCommandFile%  <em>; 避免之前运行意外中止带来的问题.</em>
+
+FileAppend,  <em>; 这里需要逗号.</em>
+(
+open host.domain.com
+username
+password
+binary
+cd htdocs
+put %VarContainingNameOfTargetFile%
+delete SomeOtherFile.htm
+rename OldFileName.htm NewFileName.htm
+ls -l
+quit
+), %FTPCommandFile%
+
+RunWait %comspec% /c ftp.exe -s:"%FTPCommandFile%" &gt;"%FTPLogFile%"
+FileDelete %FTPCommandFile%  <em>; 删除以避免安全问题.</em>
+Run %FTPLogFile%  <em>; 显示日志进行复查.</em></pre>
+
+</body>
+</html>

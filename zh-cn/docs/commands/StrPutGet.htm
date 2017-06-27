@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>StrPut / StrGet</title>
+<meta http-equiv="content-type" content="text/html; charset=gb2312">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>StrPut() / StrGet() <span class="ver">[AHK_L 46+]</span></h1>
+
+<p>复制字符串到内存地址或来自内存地址, 并可以对其在指定代码页间进行转换.</p>
+
+<pre class="Syntax">StrPut(String [, Encoding = <i>None</i> ] )
+StrPut(String, Address [, Length] [, Encoding = <i>None</i> ] )
+StrGet(Address [, Length] [, Encoding = <i>None</i> ] )</pre>
+<h3>参数</h3>
+<dl>
+
+  <dt>String</dt>
+  <dd><p>任何字符串. 也可以接受数字.</p></dd>
+
+  <dt>Address</dt>
+  <dd><p>字符串将被写入或读取的地址.</p></dd>
+
+  <dt>Length</dt>
+  <dd><p>需读取/写入的字符的最大数目, 需要时包含空终止符. 请参阅返回值.</p></dd>
+
+  <dt>Encoding</dt>
+  <dd><p>用于 StrGet 的源编码或用于 StrPut 的目标编码; 例如, "UTF-8", "UTF-16" 或 "CP936". 如果 <em>Address</em> 和 <em>Length</em> 都没有指定, 那么数值标识符必须加上 "CP" 前缀. 指定空字符串或 "CP0" 则使用系统默认 ANSI 代码页.</p></dd>
+
+</dl>
+
+<h3>返回值</h3>
+<p>对每个函数, 无效的参数会让它们返回空字符串.</p>
+<p>StrPut 返回写入的字符数, 如果没有指定 <i>Address</i> 则返回以字符数表示的必须的缓冲区大小, 如果遇到错误则返回 0. 如果 <em>Length</em> 小于源字符串的长度, 那么函数失败且返回 0. 如果 <em>Length</em> 准确等于源字符串的长度, 那么字符串不包含空终止符; 否则返回的数目包含空终止符.</p>
+<p>StrGet 返回所请求的进行必要转换后的字符串.</p>
+
+<h3>备注</h3>
+<p>注意 StrPut 的 <i>String</i> 参数或 StrGet 的返回值总是为当前可执行程序的 <a href="../Compat.htm#Format">原生编码</a>, 而 <i>Encoding</i> 则指定写入的或从指定 <i>Address</i> 读取的字符串编码. 如果未指定 <em>Encoding</em>, 则对字符串进行简单长度计算或复制而不进行转换.</p>
+<p>如果需要在代码页之间转换, 那么需要的缓存大小可能不同于源 <em>String</em> 的大小.</p>
+<p>需要兼容于 AutoHotkey Basic 的脚本仍可以使用 StrPut 和 StrGet, 此时它们是由安装在 <a href="../Functions.htm#lib">函数库</a> 中的 <a href="http://www.autohotkey.com/forum/topic59738.html">相应的脚本文件</a> 提供的. 这些脚本可以在 <a href="http://www.autohotkey.com/forum/">AutoHotkey 社区论坛</a> 中找到.</p>
+
+<h3>相关</h3>
+<p><a href="../Compat.htm">脚本兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="VarSetCapacity.htm">VarSetCapacity()</a></p>
+
+<h3>示例</h3>
+<p><em>Length</em> 或 <em>Encoding</em> 都可以在 <em>Address</em> 后直接指定, 不过此时 <em>Encoding</em> 必须用非数值表示:</p>
+<pre class="NoIndent">strA := StrGet(addressA, "cp0")     <em>; OK</em>
+strA := StrGet(addressA, length, 0) <em>; OK</em>
+strA := StrGet(addressA, 0)         <em>; 错误</em></pre>
+
+<p>可以调用一次 StrPut 来计算字符串在特殊编码时需要的缓冲区大小, 然后再进行编码并把字符串写入缓冲区. 如果您常用 StrPut 操作变量, 那么考虑把此函数添加到您 <a href="../Functions.htm#lib">库</a> 中:</p>
+<pre class="NoIndent">StrPutVar(string, ByRef var, encoding)
+{
+    <em>; 确定容量.</em>
+    VarSetCapacity( var, StrPut(string, encoding)
+        <em>; StrPut 返回字符数, 但 VarSetCapacity 需要字节数.</em>
+        * ((encoding="utf-16"||encoding="cp1200") ? 2 : 1) )
+    <em>; 复制或转换字符串.</em>
+    return StrPut(string, &amp;var, encoding)
+}</pre>
+
+</body>
+</html>
