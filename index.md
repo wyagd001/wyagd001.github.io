@@ -2,9 +2,11 @@
 layout: default
 ---
 
-Text can be **bold**, _italic_, or ~~strikethrough~~.
-
 [AutoHotkey 中文帮助](zh-cn/index.html).
+
+[AutoHotkey 自用脚本](Run-Ahk/index.md)
+
+Text can be **bold**, _italic_, or ~~strikethrough~~.
 
 There should be whitespace between paragraphs.
 
