@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>变更和新功能</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
 <script src="static/content.js" type="text/javascript"></script>
@@ -418,7 +418,7 @@
 <ul>
   <li><a href="commands/_ClipboardTimeout.htm">#ClipboardTimeout</a> 被 GetClipboardData() 忽略, 之前它也并未实际发挥作用却导致问题. 本修正解决剪切板为文件时(Windows 8 中的任何文件, 及 zip 或类似东西中的文件),超时及丢失数据的问题.</li>
   <li>为零长度剪切板内容分配1字节再返还给剪切板, 之前设置为零长度似乎有问题.</li>
-  <li>由 Scintilla 设置的 MSDEVColumnSelect / MSDEVLineSelec 将被保持, 但由 VS 设置的任何数据将被丢弃.</li>
+  <li>由 Scintilla 设置的 MSDEVColumnSelect/MSDEVLineSelec 将被保持, 但由 VS 设置的任何数据将被丢弃.</li>
   <li>当直接将 ClipboardAll 写至文件时, 将优先使用 Unicode(ClipboardAll 的其他使用情况自 v1.1.08 起便如此).</li>
   <li>Unicode 版本中当 ClipboardAll 及 FileRead *c 数据长度为奇数时, 将向上取整到最近的偶数. 因此, 由 StrLen 返回的结果可能被加1, 避免可能对最后一个字节的截断.</li>
 </ul>
@@ -617,7 +617,7 @@
 <p>修复 当 <a href="commands/ComObjType.htm">ComObjType()</a> 通过 <a href="commands/ComObjActive.htm#Remarks">替代名</a> 被调用时, 引起不可预知的行为的错误.</p>
 <p>修复 <a href="commands/ExitApp.htm">ExitApp</a> 退出线程, 如果 <a href="commands/OnExit.htm">OnExit</a> 子例程阻止脚本终止, 而不是在含有 ExitApp 的 <a href="commands/Block.htm">区块</a> 之后继续执行.</p>
 <p>通过对象调用函数不再作为退出线程的障碍. 因此, 如果使用 <a href="commands/Exit.htm">Exit</a> 或 <a href="Objects.htm#Custom_Classes_method">class method</a> 中产生运行错误, 整个线程将退出而不是仅仅是该函数.</p>
-<p>使用 <a href="Objects.htm#Custom_Classes_base">base.Method()</a> 调用基类方法或类似在类定义中如果该方法不存在不再会导致 <a href="commands/_Warn.htm">UseUnset</a> 警告. 因此, 有 <a href="Objects.htm#Custom_Classes_var">实例变量</a> 的实例化对象如果基类没有实例变量, 不再会导致内置的 <code>base. __Init</code> 方法的警告.</p>
+<p>使用 <a href="Objects.htm#Custom_Classes_base">base.Method()</a> 调用基类方法或类似在类定义中如果该方法不存在不再会导致 <a href="commands/_Warn.htm">UseUnset</a> 警告. 因此, 有 <a href="Objects.htm#Custom_Classes_var">实例变量</a> 的实例化对象如果基类没有实例变量, 不再会导致内置的 <code>base.__Init</code> 方法的警告.</p>
 
 <h2 id="v1.1.06.02">1.1.06.02 - 2012年2月13日</h2>
 <p>修复 在 Section 省略而 Key不省略的情况下 IniRead 会崩溃的问题.</p>
@@ -859,30 +859,32 @@
 
 <h2 id="v1.0.95.00">1.0.95.00 - 2011年3月12日</h2>
 <p>优化 文件 I/O.</p>
-<p>增加 <a href="commands/_Warn.htm">#Warn</a> to assist with debugging; initial design by ac.</p>
-<p>By default, if <i>name_var</i> contains a function name, <code>name_var.()</code> calls the function. This can be overidden via the <a href="Objects.htm#Default_Base_Object">default base object</a>, as before.</p>
-<p>Run supports verbs with parameters, such as <code>Run *RunAs %A_ScriptFullPath% /Param</code>.</p>
-<p>If an operator which can accept either one operand (<code>&amp;x</code>) or two <i>numeric</i> operands (<code>x & y</code>) follows a quoted literal string, auto-concat occurs and the operator is applied only to the right-hand operand. This is because quoted literal strings are always considered non-numeric and are therefore not valid input for numeric operators. For example, expressions like <code>"x" &amp;y</code> and <code>"x" ++y</code> now work.</p>
+<p>增加 <a href="commands/_Warn.htm">#Warn</a> 去协助调试; 初始设计由汤姆.</p>
+<p>默认, 如果 <i>name_var</i> 包含函数, <code>name_var.()</code> 调用该函数. 这可以像以前一样, 通过 <a href="Objects.htm#Default_Base_Object">默认基对象</a> 覆盖.</p>
+<p>Run 支持动词作为参数, 例如, <code>Run *RunAs %A_ScriptFullPath% /Param</code>.</p>
+<p>如果运算符既能接收一个运算对象 (<code>&amp;x</code>) 也能接收两个 <i>数字的</i> 运算对象 (<code>x & y</code>) 紧跟在带引号的原义字符串后, 自动连接发生以及运算符仅应用到右边的运算对象. 因为, 带引号的原义字符串总是被认为是非数字的. 因此, 数字运算符没有有效的输入. 例如, 像这样的 <code>"x" &amp;y</code> 和<code>"x" ++y</code> 表达式现在能正常工作.</p>
 <p><b>修复:</b></p>
 <ul>
-<li>Wildcard hotkeys were not respecting modifiers such as <code>^!+</code> in specific cases.</li>
-<li>File.Pos returned garbage for non-seeking file types; now it returns -1.</li>
-<li>File.AtEOF was incorrectly true in some cases.</li>
-<li>COM wrapper objects left A_LastError unset in some cases.</li>
-<li>Gui submenu icons did not work on Windows 2000/XP/Server 2003.</li>
-<li>SplashImage clipped the image if height > width.</li>
+<li>在特殊情况下, 通配符热键不遵从修饰键, 例如, <code>^!+</code>.</li>
+<li>File.Pos 对于非搜寻文件类型返回无效信息; 现在返回 -1.</li>
+<li>File.AtEOF 在某些情况下不正确.</li>
+<li>在某些情况下, COM 包装器对象未设置 A_LastError.</li>
+<li>在 Windows 2000/XP/Server 2003 系统中, Gui 子菜单的图标不能正常工作.</li>
+<li>如果 高 > 宽, SplashImage 裁剪图像.</li>
 <li>当第一个参数是无效时, ComObjConnect 不会警告.</li>
-<li>SplashImage now uses GDI+ only when the other methods fail, for compatibility.</li>
-<li>Tilde in <code>~x::</code> now affects <code>x & y::</code> in the same way that <code>~x & z::</code> would, instead of having no effect.</li>
-<li>A_PriorHotkey and A_TimeSincePriorHotkey now have the expected values when used with #If.</li>
-<li>RegExReplace did not advance through the string correctly after a match failure if the string contained non-ASCII characters.</li>
+<li>为了兼容性, SplashImage 只在其他方法失败后才使用 GDI+.</li>
+<li>"~" 在 <code>~x::</code> 现在对 <code>x & y::</code> 有效, 同样的方式在 <code>~x & z::</code>, i而不是没有效果.</li>
+<li>当使用 #If时, A_PriorHotkey 和 A_TimeSincePriorHotkey 现在能得到预期的值.</li>
+<li>如果字符串包含非 ASCII 字符时, RegExReplace 在匹配失败后不能提出正确的字符.</li>
 </ul>
+
 <h2 id="v1.0.92.02">1.0.92.02 - 2011年1月19日</h2>
-<p>修复 a memory leak which occurred when the return value of an object invocation or built-in function was not used, such as <code>file.ReadLine()</code> or <code>SubStr(x,y,z)</code> alone on a line.</p>
-<p>Replaced the fix from v1.0.92.01 with a better fix, which also fixes <code>k::MsgBox(),x:=y</code> and doesn't break <code>if()</code>.</p>
+<p>修复 在对象调用返回的结果或内置函数返回的结果没有使用时,导致的内存泄漏, 例如, <code>file.ReadLine()</code> 或 <code>SubStr(x,y,z)</code> 单独在一行.</p>
+<p>在 v1.0.92.01 中所做的修复替换为更好的修复, 这也修复了 <code>k::MsgBox(),x:=y</code> 以及不打断 <code>if()</code>.</p>
+
 <h2 id="v1.0.92.01">1.0.92.01 - 2011年1月18日</h2>
-<p>变更: FileCreateDir now sets A_LastError.</p>
-<p>修复: <code>GuiControl()</code> or similar was sometimes misinterpreted as a command.</p>
+<p>变更: FileCreateDir 现在设置 A_LastError.</p>
+<p>修复: 在某些情况下, <code>GuiControl()</code> 或类似的语句被错误的当作命令.</p>
 
 <h2 id="v1.0.92.00">1.0.92.00 - 2011年1月13日</h2>
 <p>增加 对象的混合赋值, 例如, <code>x.y += z</code>.</p>
@@ -1006,7 +1008,7 @@
 
 <h2 id="L55">Revision 55 - 2010年8月19日</h2>
 <p>修复: GroupActivate not setting ErrorLevel=1 if no Label was specified.</p>
-<p>修复: Tab controls in x64 build.</p>
+<p>修复: Tab controls 在 x64 构建中.</p>
 <p>修复: String-copy mode of StrPut when length is omitted; broken by L53.</p>
 <p>修复: Data-alignment issues in x64 builds.</p>
 <p>变更: Set A_LastError for more File* commands to assist debugging.</p>
@@ -1076,7 +1078,20 @@
 <p>变更: Built-in methods can now be called with or without the underscore prefix (e.g. <code>obj.MaxIndex()</code> or <code>obj._MaxIndex()</code>).</p>
 
 <h2 id="L52">Revision 52 (again) - 2010年6月10日</h2>
-<p>增加 双重引用对内置变量和环境变量的支持.</p>
+<p>增加 在双重引用中支持内置变量和环境变量.(译者增加示例如下:)
+<pre>
+C=A_ScriptFullPath
+if (%C%="G:\Users\xxx\Desktop\test.ahk")  ; 以前的版本中该句脚本判断结果为否
+  msgbox % %C%
+</pre>
+一个普通变量双重引用的例子
+<pre>
+C=qq
+qq=我
+if (%C%="我")  ; 该句脚本判断结果为真
+msgbox % %C%
+</pre>
+</p>
 <p>改进 在某些代码页中, 对多字节字符的支持(以前的版本中,代码页 932, 936, 949, 950 和 1361 是被支持的).</p>
 <p>修复: StrPut failed for codepages which don't support WC_NO_BEST_FIT_CHARS, such as UTF-7.</p>
 <p>修复: 双重引用作为对象 - <code>literal%var%.literal</code>.</p>
@@ -1084,7 +1099,7 @@
 
 <h2>Revision 52 - 2010年6月12日</h2>
 <p>修复: ObjRemove's Key parameter is now optional, as with <a href="objects/Object.htm#Remove">Object._Remove</a>.</p>
-<p>修复: Files were improperly locked while reading, unlike in older versions.</p>
+<p>修复: 文件在读取时,不能正确的被锁定, 不同于旧版本.</p>
 <p>修复: Uppercase Hex format caused negative integers to become unsigned.</p>
 <p>修复: RegExMatch was corrupting output array items when specific conditions were met. See <a href="http://www.autohotkey.com/forum/topic59120.html">bug report</a>.</p>
 
@@ -1134,17 +1149,17 @@
 <p>增加 workaround for WM_PAINT infinite loop often caused by subclassing.</p>
 <p>Allow <code>obj.()</code> as a means to call the default method of an object; equivalent to <code>obj[""]()</code>.</p>
 <p>Dev: Added solution and project files for MSBuild 4.0 & VS2010. <a href="http://github.com/Lexikos/AutoHotkey_L/commit/ed81ea089c223b46c883036c14454aa4386d3801">[more info]</a></p>
-<p>修复 (Unicode): 'Running' column in ListHotkeys.</p>
+<p>修复 (Unicode): 'Running' 列在 ListHotkeys 中.</p>
 
 <h2 id="L44">Revision 44 - 2010年2月7日</h2>
 <p>修复: Attempting to set "nothing" crashed the script. 例如, <code>x[]:=z</code>.</p>
 <p>修复 (Unicode): 不能找到默认的脚本(Documents\AutoHotkey.ahk).</p>
 <p>修复 (Unicode): 从注册表读取 A_Desktop, A_ProgramFiles 和 其他几个内置变量的值导致字符串不正确的终止.</p>
-<p>修复 (ANSI): Characters in the range 0x80-0xFF couldn't be found by InStr or StringReplace.</p>
-<p>变更 (ANSI): Treat ToCodePage/FromCodePage like other unsupported/invalid subcommands.</p>
+<p>修复 (ANSI): InStr 或 StringReplace 不能找到 0x80-0xFF  区域的字符.</p>
+<p>变更 (ANSI): ToCodePage/FromCodePage 像对其他 未支持/无效 子命令一样处理.</p>
 
 <h2 id="L43">Revision 43 - 2010年1月29日</h2>
-<p>修复: obj.Func() resulting in a random integer when it should be an empty string.</p>
+<p>修复: obj.Func() 当应该是空字符串时, 却产生一个随机整数的错误.</p>
 
 <h2 id="L42">Revision 42 - 2010年1月28日</h2>
 <p>与 AutoHotkeyU 合并.</p>
