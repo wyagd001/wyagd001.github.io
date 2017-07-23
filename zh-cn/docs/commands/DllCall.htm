@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
 <title>DllCall</title>
@@ -11,7 +11,7 @@
 
 <h1>DllCall()</h1>
 
-<p>调用 DLL 文件中的函数,例如标准的 Windows API 函数.</p>
+<p>调用 DLL 文件中的函数, 例如标准的 Windows API 函数.</p>
 
 <pre class="Syntax">Result := DllCall("[DllFile\]Function" [, Type1, Arg1, Type2, Arg2, "Cdecl ReturnType"])</pre>
 <h3>参数</h3>
@@ -22,18 +22,18 @@
 
   <dt>[DllFile\]Function</dt>
   <dd><p>DLL 或 EXE 文件名, 后面跟着一个反斜杠和函数名. 例如:<code>&quot;MyDLL\MyFunction&quot;</code> (省略时文件扩展名默认为 &quot;.dll&quot; ). 如果未指定绝对路径, 则假定 <em> DllFile </em> 在系统的 PATH 指定的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
-      <p id="std">调用 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数时可以省略 <em>DllFile</em>. 例如,使用 <code>&quot;User32\IsWindowVisible&quot;</code> 和 <code>&quot;IsWindowVisible&quot;</code> 得到相同的结果.</p>
+      <p id="std">调用 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数时可以省略 <em>DllFile</em>. 例如, 使用 <code>&quot;User32\IsWindowVisible&quot;</code> 和 <code>&quot;IsWindowVisible&quot;</code> 得到相同的结果.</p>
       <p>如果使用指定的名称无法找到函数, 则会根据当前运行脚本的 AutoHotkey 版本自动附加 A (ANSI) 或 W (Unicode) 后缀. 例如,<code>"MessageBox"</code> 在 ANSI 版本中等同于 <code>"MessageBoxA"</code> 而在 Unicode 版本中等同于 <code>"MessageBoxW"</code>.</p>
       <p>当 <em>重复</em> 调用 DLL 通过 <a href="#load">预先加载此 DLL 文件</a> 可以显著改善执行效率.</p>
     <p>在 1.0.46.08+ 版本中, 此参数也可以是表示需调用函数的内存地址的单独的整数. 如 <a href="#COM">COM</a> 和 <a href="RegisterCallback.htm">RegisterCallback()</a> 提供的地址.</p></dd>
 
   <dt>Type1, Arg1</dt>
-  <dd><p>这样的每对数据表示需传递给函数的单个参数. 参数的个数没有限制. 关于 <em>Type</em>,请参阅下面的<a href="#types">类型表</a>.关于 <em>Arg</em>, 指定传递给函数的值.</p></dd>
+  <dd><p>这样的每对数据表示需传递给函数的单个参数. 参数的个数没有限制. 关于 <em>Type</em>, 请参阅下面的<a href="#types">类型表</a>, 关于 <em>Arg</em>, 指定传递给函数的值.</p></dd>
 
   <dt>Cdecl ReturnType</dt>
   <dd><p id="cdecl">通常省略单词 <em>Cdecl</em> 因为大多数函数使用标准调用约定而不是 "C" 调用约定 (像 wsprintf 这样接受可变数目参数的函数在这点上是个例外). 如果您省略了 Cdecl 但调用时产生 <a href="#An">ErrorLevel A<strong>n</strong></a> (这里 <strong>n</strong> 是您传递的参数的总大小), 此时可能需要加上 <em>Cdecl</em>. 注意大多数面向对象的 C++ 函数使用的 <i>thiscall</i> 约定是不受支持的.</p>
-      <p>如果使用了,那么单词<em>Cdecl</em>应该在返回值类型前列出(如果有).在单词间使用空格或 tab 分隔. 例如:<code>"Cdecl Str"</code>.</p>
-      <p><span class="ver">[AHK_L 53+]:</span>因为在 64 位代码中不存在"C"调用约定,所以在 AutoHotkey 的 64 位版本中可以使用 <i>Cdecl</i> 但没有效果.</p>
+      <p>如果使用了, 那么单词 <em>Cdecl</em> 应该在返回值类型前列出(如果有), 在单词间使用空格或 tab 分隔. 例如:<code>"Cdecl Str"</code>.</p>
+      <p><span class="ver">[AHK_L 53+]:</span>因为在 64 位代码中不存在"C"调用约定, 所以在 AutoHotkey 的 64 位版本中可以使用 <i>Cdecl</i> 但没有效果.</p>
       <p><em>ReturnType</em>: 如果函数返回 32 位的有符号整型 (Int), BOOL 或没有返回值, 则 <em>ReturnType</em> 可以省略. 否则, 需要指定下面 <a href="#types">类型表</a> 中参数类型的其中一个. 还支持 <a href="#asterisk">星号后缀</a>.</p></dd>
 
 </dl>
@@ -42,8 +42,8 @@
 <table class="info">
 <tr id="str">
 <td>Str</td>
-<td><p>例如"Blue"或 MyVar 这样的字符串型.如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如,后面的调用将把 <em>MyVar</em> 的内容转换成大写:<code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
-  <p>然而, 如果函数需要保存超过变量当前容量的字符串, 则在调用前必须确保此变量的容量足够大. 这可以通过调用 <code><a href="VarSetCapacity.htm">VarSetCapacity(MyVar, 123)</a></code> 来实现,其中 123 是为 <em>MyVar</em> 保留的容量.</p>
+<td><p>例如"Blue"或 MyVar 这样的字符串型, 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写:<code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
+  <p>然而, 如果函数需要保存超过变量当前容量的字符串, 则在调用前必须确保此变量的容量足够大. 这可以通过调用 <code><a href="VarSetCapacity.htm">VarSetCapacity(MyVar, 123)</a></code> 来实现, 其中 123 是为 <em>MyVar</em> 保留的容量.</p>
   <p><em>Str</em> 参数不能是计算结果为数字 (例如 i+1) 的 <a href="../Variables.htm#Expressions">表达式</a>. 如果这样, 则不会调用函数并设置 ErrorLevel 的值为 -2.</p>
   <p>支持 <a href="#asterisk">星号变量</a> "Str*" 但极少使用. 它可以用在期望如 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中.</p>
   <p>注意: 传递字符串给函数时, 应该注意函数期望什么 <a href="../Compat.htm#DllCall"><i>类型</i> 的字符串</a>.</p></td>
@@ -91,10 +91,10 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 <tr id="asterisk">
   <td>* 或 P<br>
     (后缀)</td>
-  <td><p>在上述任一类型后附加星号 (星号前可以含有空格) 表示传递参数的地址而不是参数的值 (被调用函数必须接受地址). 由于这时函数可能修改参数的值, 所以每当不受保护的变量作为参数传递时, 变量的内容都会被更新. 例如,后面的调用将通过地址传递 MyVar 的内容给 MyFunction,但也会更新 MyVar 来反映 MyFunction 对它作出的改变:<code>DllCall("MyDll\MyFunction", "Int*", MyVar)</code>.</p>
+  <td><p>在上述任一类型后附加星号 (星号前可以含有空格) 表示传递参数的地址而不是参数的值 (被调用函数必须接受地址). 由于这时函数可能修改参数的值, 所以每当不受保护的变量作为参数传递时, 变量的内容都会被更新. 例如, 后面的调用将通过地址传递 MyVar 的内容给 MyFunction, 但也会更新 MyVar 来反映 MyFunction 对它作出的改变:<code>DllCall("MyDll\MyFunction", "Int*", MyVar)</code>.</p>
     <p>一般说来, 星号可用于函数中以 "LP" 开始的参数类型或返回值类型. 最常见的例子是 LPDWORD, 这是指向 DWORD 的指针. 因为 DWORD 是无符号 32 位整型, 所以用 "UInt*" 或 "UintP" 来表示 LPDWORD. 星号不应该用于字符串类型 (例如 LPTSTR), 指向结构的指针 (如 LPRECT) 或数组; 对于这些, 根据您需要传递的是变量还是其地址应该使用 <a href="#str">"Str"</a> 或 "Ptr".</p>
-    <p>注:"Char*"与<a href="#str">"Str"</a>类型是不同的,因为"Char*"传递 8 位数的地址,而<a href="#str">"Str"</a>传递一系列字符的地址,根据 AutoHotkey 版本的不同它可能是 8 位(ANSI)或 16 位(Unicode)的.同样地,"UInt*"会传递 32 位数的地址,所以不应该使用在函数期望大于 32 位的结构或值的数组的时候.</p>
-    <p>由于AutoHotkey 中的变量没有固定的类型,所以传递给函数的地址指向临时内存而不是变量自身.不需要对这样的变量调用 <a href="VarSetCapacity.htm">VarSetCapacity</a>,因为在函数返回后 DllCall 会正确的更新变量.</p>
+    <p>注:"Char*"与<a href="#str">"Str"</a>类型是不同的, 因为"Char*"传递 8 位数的地址, 而<a href="#str">"Str"</a>传递一系列字符的地址, 根据 AutoHotkey 版本的不同它可能是 8 位(ANSI)或 16 位(Unicode)的, 同样地, "UInt*"会传递 32 位数的地址, 所以不应该使用在函数期望大于 32 位的结构或值的数组的时候.</p>
+    <p>由于AutoHotkey 中的变量没有固定的类型, 所以传递给函数的地址指向临时内存而不是变量自身, 不需要对这样的变量调用 <a href="VarSetCapacity.htm">VarSetCapacity</a>, 因为在函数返回后 DllCall 会正确的更新变量.</p>
     </td>
 </tr>
 <tr id="unsigned">
@@ -104,7 +104,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
     <p>不支持由函数产生的 <em>无符号</em> 64 位整型. 因此, 要让大于或等于 0x8000000000000000 的数字有效, 请省略 U 前缀并且把任何从函数接收到的负值转换成很大的正数. 例如, 如果设计返回值为 UInt64 类型的函数在返回 Int64 类型的值 -1 时, 实际的返回值是 0xFFFFFFFFFFFFFFFF.</p></td>
 </tr>
 </TABLE>
-<p><strong>注意</strong>: 当指定不包含空格或星号的参数类型或返回值类型时, 包含的引号可以省略. 例如,可以使用 <code>Str</code> 代替 <code>"Str"</code> 而 <code>CDecl</code> 代替 <code>"CDecl"</code>.此外, 用字母 P 代替星号时也可以省略引号. 例如:<code>UIntP</code>.</p>
+<p><strong>注意</strong>: 当指定不包含空格或星号的参数类型或返回值类型时, 包含的引号可以省略. 例如, 可以使用 <code>Str</code> 代替 <code>"Str"</code> 而 <code>CDecl</code> 代替 <code>"CDecl"</code>, 此外, 用字母 P 代替星号时也可以省略引号. 例如:<code>UIntP</code>.</p>
 
 <h3 id="error">ErrorLevel</h3>
 <p><span class="ver">[v1.1.04+]</span> 此函数失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
@@ -112,13 +112,13 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 <p><strong>0</strong>: 成功.</p>
 <p><strong>-1</strong> (负 1): <em>[DllFile\]Function</em> 参数是浮点数. 要求参数为字符串或正整数.</p>
 <p><strong>-2</strong>: <a href="#types">返回值类型</a> 或某个指定的 <a href="#types">参数类型</a> 无效. 此错误的原因也可能是传递计算结果为数字的<a href="../Variables.htm#Expressions">表达式</a>给字符串(<a href="#str">str</a>)参数.</p>
-<p><strong>-3</strong>:无法访问或加载指定的 <em>DllFile</em>.如果没有明确指明 <em>DllFile</em> 的路径, 则文件必须在系统 PATH 变量的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 此错误的原因可能是用户缺少访问此文件的权限,或者 AutoHotkey 为 32 位而 DLL 是 64 位,反之亦然.</p>
+<p><strong>-3</strong>:无法访问或加载指定的 <em>DllFile</em>, 如果没有明确指明 <em>DllFile</em> 的路径, 则文件必须在系统 PATH 变量的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 此错误的原因可能是用户缺少访问此文件的权限, 或者 AutoHotkey 为 32 位而 DLL 是 64 位, 反之亦然.</p>
 <p><strong>-4</strong>: 在 DLL 中没有找到指定的函数.</p>
 <p><strong>N</strong> (任意正数): 函数被调用后异常终止了, 致命异常号为 <strong>N</strong> (例如, 0xC0000005 表示 "访问违例"). 此时函数返回空值 (空字符串), 但仍会更新所有的 <a href="#asterisk">星号变量</a>. 致命异常的一个例子是间接引用了无效的指针, 如 NULL. 因为 <a href="#cdecl">Cdecl</a> 函数决不会产生下一段描述中的 <em>"An"</em> 错误, 所以当传递给它的参数太少时可能会产生异常.</p>
 <p id="An"><strong>An</strong> (字母 A 后面跟着整数 <strong>n</strong>): 调用了函数, 但传递给它的参数太多或太少了. "<strong>n</strong>" 是错误参数列表超过正确参数列表的字节数. 如果 <strong>n</strong> 为正数, 表示传递的参数过多 (或参数太大), 或函数调用要求 <a href="#cdecl">CDecl</a> 的返回值类型. 如果 <strong>n</strong> 为负数, 表示传递的参数过少. 应该改正这种情况来让函数可靠运行. 此错误的出现也可能表示出现了异常, 此时函数返回空字符串. 请注意由于 x64 调用约定, 64 位版本不会设置 ErrorLevel 为 <b>An</b>.</p>
 
 <h3 id="except">异常和 A_LastError</h3>
-<p>尽管有内置的异常处理机制, 但 DllCall 仍有可能让脚本崩溃. 当函数不直接生成异常而输出一些不适当的数据 (例如无效的指针或没有结束符的字符串) 时, 这种情况可能会发生. 这可能不是函数的问题,而是脚本传递给它不适合的值,例如无效的指针或内存空间不足的 <a href="#str">"str"</a>.当脚本指定不适当的参数类型或返回值类型 (例如要求由函数生成的整数是 <a href="#asterisk">星号变量</a> 或 <a href="#str">str</a>) 时, 它也可能崩溃.</p>
+<p>尽管有内置的异常处理机制, 但 DllCall 仍有可能让脚本崩溃. 当函数不直接生成异常而输出一些不适当的数据 (例如无效的指针或没有结束符的字符串) 时, 这种情况可能会发生. 这可能不是函数的问题, 而是脚本传递给它不适合的值, 例如无效的指针或内存空间不足的 <a href="#str">"str"</a>, 当脚本指定不适当的参数类型或返回值类型 (例如要求由函数生成的整数是 <a href="#asterisk">星号变量</a> 或 <a href="#str">str</a>) 时, 它也可能崩溃.</p>
 <p id="LastError">内置变量 <strong>A_LastError</strong> 包含了操作系统 GetLastError() 函数最近调用返回的结果, 在调用函数后会立即执行此函数 (对效率的影响未知). A_LastError 是一个介于 0 和 4294967295 之间的数字 (总是为十进制而非十六进制). 像 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 一样, A_LastError 是与每个线程关联的设置; 即由其他 <a href="../misc/Threads.htm">线程</a> 产生的中断不会改变它. 不过, <a href="Run.htm#LastError">Run/RunWait</a> 也会设置 A_LastError 的值.</p>
 
 <h3 id="load">性能</h3>
@@ -145,9 +145,9 @@ Loop 500
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中获取任何想要的成员变量. 把 4 替换为结构中目标成员的偏移. 首个成员变量的偏移总为 0. 第二个成员的偏移为 0 加上首个成员的大小 (一般为 4 字节). 后面成员的偏移等于它前一个成员的偏移加上前一个成员的大小. 大多数成员 (例如 DWORD, Int 和 <a href="#Int">其他的 32 位整型</a>) 大小为 4 个字节. 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
 <p>请参阅 <a href="#ExStruct">结构示例</a> 了解实际用法.</p>
 <h3 id="limits">已知限制</h3>
-<p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>)传递给函数而此函数修改了变量内容的长度,那么后面使用这个变量可能出现错误.要解决此问题,有下面几种方法:1) 把 MyVar 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址传递；1) 在 v1.0.44.03+,在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity(MyVar, -2)</a></code> 来更新变量的内部容量.</p>
+<p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>)传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误, 要解决此问题, 有下面几种方法:1) 把 MyVar 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址传递；1) 在 v1.0.44.03+, 在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity(MyVar, -2)</a></code> 来更新变量的内部容量.</p>
 <p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即这样的数据无法被大多数命令和函数访问或修改. 但是, 这样的数据可以使用 <a href="../Variables.htm#amp">地址运算符</a> 和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a> 以及 DllCall 自己进行操作.</p>
-<p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会出乎意料地返回一个地址不同内容相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式.但当使用 DllCall() 进行相同操作时,在后面的调用操作后 <em>MyVar</em> 将是小写的,因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
+<p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会出乎意料地返回一个地址不同内容相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall() 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar = ABC
 result := DllCall("CharLower", <strong><u>str</u></strong>, DllCall("CharUpper", Str, MyVar, <strong><u>Str</u></strong>), Str)</pre>
 <p>要变通解决此问题, 请把上面两个带下划线的 "Str" 修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整型传递给 CharLower.</p>
@@ -211,7 +211,7 @@ F1 up::<strong>DllCall</strong>("SystemParametersInfo", UInt, 0x71, UInt, 0, Ptr
 <a href="ControlGet.htm#Hwnd">ControlGet, OutputVar, Hwnd,, ClassNN, WinTitle</a></pre>
 
 <pre class="NoIndent"><em>; 例子: 监视活动窗口并显示在它的焦点控件中垂直滚动条
-; 的位置 (并实时更新). 此脚本需要 v1.0.43.06+,因为其中使用了 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>.</em>
+; 的位置 (并实时更新). 此脚本需要 v1.0.43.06+, 因为其中使用了 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>.</em>
 
 #Persistent
 SetTimer, WatchScrollBar, 100
@@ -277,7 +277,7 @@ ExitApp
 
 #c::SystemCursor("Toggle")  <em>; Win+C 热键用来切换鼠标光标的显示和隐藏.</em>
 
-SystemCursor(OnOff=1)   <em>; 初始化 = "I","Init"; 隐藏 = 0,"Off"; 切换 = -1,"T","Toggle"; 显示 = 其他</em>
+SystemCursor(OnOff=1)   <em>; 初始化 = "I", "Init"; 隐藏 = 0, "Off"; 切换 = -1,"T", "Toggle"; 显示 = 其他</em>
 {
     static AndMask, XorMask, $, h_cursor
         ,c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13 <em>; 系统指针</em>
