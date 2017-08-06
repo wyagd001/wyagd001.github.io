@@ -11,7 +11,7 @@
 
 <h1>Sort</h1>
 
-<p>以字母,数字或随机顺序排列变量的内容(可以选择是否移除重复项).</p>
+<p>以字母, 数字或随机顺序排列变量的内容(可以选择是否移除重复项).</p>
 
 <pre class="Syntax">Sort, VarName [, Options]</pre>
 <h3>参数</h3>
@@ -29,17 +29,17 @@
 <p><u>由零个或多个下列字母组成的字符串 (可任意顺序, 字母间可以用空格分隔):</u></p>
 <p><strong>C</strong>: 区分大小写的排序 (如果同时存在 <strong>N</strong> 选项则此选项被忽略). 如果同时省略 <strong>C</strong> 和 <strong>CL</strong>, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
 <p><strong>CL</strong> <span class="ver">[v1.0.43.03+]:</span> 基于当前用户区域设置的不区分大小写的排序. 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 ? 和 ü 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起. 根据需要排序的内容, 它的执行性能比默认的不区分方法差了 1 到 8 倍.</p>
-<p><strong>Dx</strong>:指定 <strong>x</strong> 作为分隔符,它决定了 <em>VarName</em> 中每个项目的开始和结束.如果此选项不存在, 则 <strong>x</strong> 默认为换行符 (`n), 这样当 <em>VarName</em> 中每行以 LF (`n) 或 CR+LF (`r`n) 结尾时都可以正确排序.</p>
+<p><strong>Dx</strong>:指定 <strong>x</strong> 作为分隔符, 它决定了 <em>VarName</em> 中每个项目的开始和结束. 如果此选项不存在, 则 <strong>x</strong> 默认为换行符 (`n), 这样当 <em>VarName</em> 中每行以 LF (`n) 或 CR+LF (`r`n) 结尾时都可以正确排序.</p>
 <p id="callback"><strong>F MyFunction</strong> <span class="ver">[v1.0.47+]:</span> 根据 <em>MyFunction</em> 中的标准进行自定义排序 (然而这样的排序需要更长的时间). 指定字母 "F" 后跟着可选的空格/tab, 然后是可以对列表中的任意两项进行比较的 <a href="Functions.htm">函数</a> 名. 此函数必须接受两个或三个参数. 当函数判断出首个参数大于第二个时, 它应该返回正整数; 当判断出两个参数相等时, 应该返回 0, "" 或不返回; 否则它应该返回负整数. 如果返回值中包含小数部分, 则这部分被忽略 (即 0.8 等同于 0). 如果含有第三个参数, 则它接受原始/未排序列表中第二个项目相对于第一个的偏移 (字符数) (请参阅示例). 最后, 此函数使用和调用它的 Sort 命令相同的全局设置 (例如 <a href="StringCaseSense.htm">StringCaseSense</a>).</p>
 <p>注: <strong>F</strong> 选项会使得除 <strong>D</strong>, <strong>Z</strong> 和 <strong>U</strong> 外的选项被忽略 (尽管如此, 但 <strong>N</strong>, <strong>C</strong> 和 <strong>CL</strong> 仍会影响对于 <a href="#unique">重复项</a> 的检测). 并且, 当指定的函数出现下列情况时不会进行排序: 1) 函数不存在; 2) 接受的参数个数少于两个; 或 3) 第一或第二个参数为 <a href="../Functions.htm#ByRef">ByRef</a> 类型.</p>
-<p><strong>N</strong>: 数值排序: 把每个项目看成数字而不是字符串进行排序 (例如, 如果此选项不存在, 则根据字母顺序字符串 233 被认为小于字符串 40). 十进制和十六进制字符串 (例如 0xF1) 都被认为是数字. 不是以数字开头的字符串在排序中被看成是零. 把数字作为64位浮点值进行处理,这样可以考虑到小数部分的每位数字(如果有).</p>
+<p><strong>N</strong>: 数值排序: 把每个项目看成数字而不是字符串进行排序 (例如, 如果此选项不存在, 则根据字母顺序字符串 233 被认为小于字符串 40). 十进制和十六进制字符串 (例如 0xF1) 都被认为是数字. 不是以数字开头的字符串在排序中被看成是零. 把数字作为64位浮点值进行处理, 这样可以考虑到小数部分的每位数字(如果有).</p>
 <p><strong>Pn</strong>: 根据第 <strong>n</strong> 个位置的字符进行排序 (<strong>n</strong> 不能为十六进制数). 如果此选项不存在, 则 <strong>n</strong> 默认为 1, 这是首个字符的位置. 在字符串间排序比较时从它们的第 <strong>n</strong> 个字符开始. 如果 <strong>n</strong> 大于某个字符串的长度, 则在排序中此字符串被看成是空的. 和选项 <strong>N</strong> (数值排序) 一起使用时, 此时使用字符串的字符位置, 它不一定和数字位的位置相同.</p>
 <p><strong>R</strong>: 逆向排序 (根据其他选项进行字母或数字排序).</p>
 <p><strong>Random</strong>: 随机排序. 此选项会使得除 <strong>D</strong>, <strong>Z</strong> 和 <strong>U</strong> 外的其他选项被忽略 (尽管如此, 但 <strong>N</strong>, <strong>C</strong> 和 <strong>CL</strong> 仍会影响对于重复项的检测). 示例:</p>
 <pre>Sort, MyVar, Random
 Sort, MyVar, Random Z D|</pre>
-<p id="unique"><strong>U</strong>: 移除列表中的重复项使得每个项都是唯一的. <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为移除的项目数 (如果没有则为 0). 如果存在 <strong>C</strong> 选项, 则项目的大小写必须匹配才被看成是等同的. 如果存在 <strong>N</strong>, 那么像 2 这样的项目会被看成是 2.0 的副本. 如果存在 <strong>Pn</strong> 或 <strong>\</strong>(反斜线)的其中一个选项,则整个项目必须相同才看成是重复项,而不仅是用于排序的子字符串.如果存在 <strong>Random</strong> 或 <strong>F Function</strong> 选项, 则仅删除排序结果中彼此相邻的重复项 (说明:这句中"F Function"在原英文帮助中中间的不是空格而是斜杠,我觉得可能是错误). 例如, 对 "A|B|A" 进行随机排序, 结果中可能包含一个或两个 A.</p>
-<p><strong>Z</strong>: 要理解此选项, 请考虑内容为 RED`nGREEN`nBLUE`n 的变量. 如果不存在 <strong>Z</strong>, 则最后的换行符 (`n) 会被认为是最后那个项目的一部分, 因此变量中只有三个项目. 但如果指定了选项 <strong>Z</strong>,则最后的 `n(如果存在)将被认为分隔了列表最后的一个空项目,因此变量中有四个项目(最后一个是空的).</p>
+<p id="unique"><strong>U</strong>: 移除列表中的重复项使得每个项都是唯一的. <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为移除的项目数 (如果没有则为 0). 如果存在 <strong>C</strong> 选项, 则项目的大小写必须匹配才被看成是等同的. 如果存在 <strong>N</strong>, 那么像 2 这样的项目会被看成是 2.0 的副本. 如果存在 <strong>Pn</strong> 或 <strong>\</strong>(反斜线)的其中一个选项, 则整个项目必须相同才看成是重复项, 而不仅是用于排序的子字符串. 如果存在 <strong>Random</strong> 或 <strong>F Function</strong> 选项, 则仅删除排序结果中彼此相邻的重复项 (说明:这句中"F Function"在原英文帮助中中间的不是空格而是斜杠, 我觉得可能是错误). 例如, 对 "A|B|A" 进行随机排序, 结果中可能包含一个或两个 A.</p>
+<p><strong>Z</strong>: 要理解此选项, 请考虑内容为 RED`nGREEN`nBLUE`n 的变量. 如果不存在 <strong>Z</strong>, 则最后的换行符 (`n) 会被认为是最后那个项目的一部分, 因此变量中只有三个项目. 但如果指定了选项 <strong>Z</strong>, 则最后的 `n(如果存在)将被认为分隔了列表最后的一个空项目, 因此变量中有四个项目(最后一个是空的).</p>
 <p><strong>\</strong>: 根据每个项目中最后的反斜线后面的子字符串进行排序. 如果项目中不含有反斜线, 则使用整个项目作为排序的子字符串. 此选项可用于排序单独的文件名称 (即不包含路径), 例如在下面的例子中, 排序后 AAA.txt 行在 BBB.txt 行的上面, 因为在排序中它们的目录被忽略了:</p>
 <pre>C:\BBB\AAA.txt
 C:\AAA\BBB.txt</pre>
@@ -49,7 +49,7 @@ C:\AAA\BBB.txt</pre>
 <p>如果 <em>VarName</em> 为 <em>Clipboard</em> 且剪贴板中包含文件 (例如从打开的资源管理器窗口中复制的文件), 那么这些文件将被它们文件名排序后的列表覆盖. 换句话说, 操作后剪贴板将不再包含文件本身.</p>
 <p>仅当存在 <strong>U</strong> 选项时此命令才会改变 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>.</p>
 <p>可以使用 <a href="_MaxMem.htm">#MaxMem</a> 增加变量所的最大内存空间.</p>
-<p>对占用大内存的变量进行排序后当它的内容不再需要时,您可以清空它来释放占用的内存,例如 <code>MyVar =</code>.</p>
+<p>对占用大内存的变量进行排序后当它的内容不再需要时, 您可以清空它来释放占用的内存, 例如 <code>MyVar =</code>.</p>
 <h3>相关</h3>
 <p><a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="LoopParse.htm">解析循环</a>, <a href="StringSplit.htm">StringSplit</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="../misc/Clipboard.htm">剪贴板</a>, <a href="_MaxMem.htm">#MaxMem</a></p>
 <h3>示例</h3>
