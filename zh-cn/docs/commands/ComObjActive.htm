@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
 <title>ComObjActive()</title>
@@ -18,8 +18,8 @@
 <pre class="Syntax">ParamObj := ComObj(VarType, Value [, Flags])</pre>
 
 <h4 style="margin-top:2em">不建议:</h4>
-<p>不推荐以下使用方法,后续版本中可能被替换或不再支持.</p>
-<p id="missing">创建在调用 COM 对象的方法时可以用来代替可选参数默认值的对象. 自v1.1.12废弃:使用两个连续的逗号替换,如<code>Obj.Method(1,,3)</code></p>
+<p>不推荐以下使用方法, 后续版本中可能被替换或不再支持.</p>
+<p id="missing">创建在调用 COM 对象的方法时可以用来代替可选参数默认值的对象. 自 v1.1.12 废弃:使用两个连续的逗号替换,如 <code>Obj.Method(1,,3)</code></p>
 <pre class="Syntax">ParamObj := ComObjMissing()</pre>
 
 <p id="enwrap">装包或拆包位于可用对象的原始<a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a>指针,并自动调用 AddRef (增加引用).</p>
@@ -39,7 +39,7 @@ DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispP
   <dd><p>可以使用 <a href="../Objects.htm#Usage_Objects">对象语法</a> 的 COM 对象.</p></dd>
 
   <dt>VarType</dt>
-  <dd><p>表示值类型的整数.类型列表见<a href="ComObjType.htm#vt">ComObjType()</a>.</p></dd>
+  <dd><p>表示值类型的整数.类型列表见 <a href="ComObjType.htm#vt">ComObjType()</a>.</p></dd>
 
   <dt>Value</dt>
   <dd><p>要包装的值. 当前仅支持整数值和指针值.</p></dd>
@@ -58,7 +58,7 @@ DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispP
     <td>&nbsp;0&nbsp;</td>
     <td>
       <p>默认行为. <a href="http://msdn.microsoft.com/en-us/library/ms691379.aspx">AddRef (增加引用)</a> 自动调用 IUnknown 和 IDispatch 的指针, 所以调用者应该适当使用 <a href="ObjAddRef.htm">ObjRelease</a> 释放指针的副本.</p>
-      <p>未来版本中可能改变此默认行为,因此建议当包装接口指针时总是设置<em>标志</em>为<code>1</code>,需要时再调用<a href="ObjAddRef.htm">ObjAddRef()</a>.</p>
+      <p>未来版本中可能改变此默认行为,因此建议当包装接口指针时总是设置<em>标志</em>为<code>1</code>,需要时再调用 <a href="ObjAddRef.htm">ObjAddRef()</a>.</p>
     </td>
   </tr>
   <tr>
@@ -68,19 +68,19 @@ DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispP
 </table>
 
 <h3 id="ByRef">ByRef <span class="ver">[v1.1.17+]</span></h3>
-<p>如果包装器对象的<a href="ComObjType.htm"><em>变量类型</em></a>包含VT_BYREF (0x4000) 标签, 可用空的方括号对 <code>[]</code>来读写引用的值.</p>
-<p>当创建一个引用, <em>值</em>须为变量的内存地址,或,足够存储指定类型的值的缓存.例如, 下面的代码可以用来创建一个VBScript函数可以写入的变量:</p>
+<p>如果包装器对象的<a href="ComObjType.htm"><em>变量类型</em></a>包含 VT_BYREF (0x4000) 标签, 可用空的方括号对 <code>[]</code>来读写引用的值.</p>
+<p>当创建一个引用, <em>值</em>须为变量的内存地址, 或足够存储指定类型的值的缓存. 例如, 下面的代码可以用来创建一个 VBScript 函数可以写入的变量:</p>
 <pre>VarSetCapacity(var, 24, 0)
-vref := ComObject(0x400C, &amp;var)  <em>; 0x400C是VT_BYREF与VT_VARIANT组合而得.</em>
+vref := ComObject(0x400C, &amp;var)  <em>; 0x400C是 VT_BYREF 与 VT_VARIANT 组合而得.</em>
 
 vref[] := "in value"
 sc.Run("Example", vref)  <em>; sc应像<a href="#ByRefEx">下面例子</a>一样进行初始化.</em>
 MsgBox % vref[]</pre>
 
 <h3 id="Remarks">一般说明</h3>
-<p>当前版本中,除COM相关函数,任何以"ComObj"函数名开头的函数调用实际调用ComObjActive函数.如,<code>ComObjEnwrap(DispPtr)</code>及<code>ComObjActive(DispPtr)</code>均等效于<code>ComObject(DispPtr)</code>(隐式地,<em>变量类型</em>为9).此行为可能于后续版本改变,故,建议仅使用本页所展示的<code>ComObject()</code>及<code>ComObjActive()</code>.</p>
-<p>当使用此函数包装或检索 IDispatch 或 IUnknown 接口指针时, 默认的行为会增加 COM 对象的引用计数. 因此,当不使用时,须<a href="ObjAddRef.htm">手动释放</a>接口指针.. 当用于封装的对象被释放时,他所包含的引用被自动释放.</p>
-<p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>obj1 == obj2</code> ,<code>array[obj1] := value</code>的比较和赋值运算, 会把两个包装器对象视为独立的, 即使它们包含相同的 COM 对象.</p>
+<p>当前版本中, 除 COM 相关函数, 任何以"ComObj"函数名开头的函数调用实际调用 ComObjActive 函数. 如, <code>ComObjEnwrap(DispPtr)</code> 及 <code>ComObjActive(DispPtr)</code> 均等效于 <code>ComObject(DispPtr)</code>(隐式地,<em>变量类型</em>为9). 此行为可能于后续版本改变, 故,建议仅使用本页所展示的 <code>ComObject()</code> 及 <code>ComObjActive()</code>.</p>
+<p>当使用此函数包装或检索 IDispatch 或 IUnknown 接口指针时, 默认的行为会增加 COM 对象的引用计数. 因此, 当不使用时, 须<a href="ObjAddRef.htm">手动释放</a>接口指针. 当用于封装的对象被释放时, 他所包含的引用被自动释放.</p>
+<p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>obj1 == obj2</code>, <code>array[obj1] := value</code> 的比较和赋值运算, 会把两个包装器对象视为独立的, 即使它们包含相同的 COM 对象.</p>
 
 <h3 id="Related">相关</h3>
 <p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="ObjAddRef.htm">ObjAddRef/ObjRelease</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221467.aspx">GetActiveObject (MSDN)</a></p>
@@ -109,7 +109,7 @@ MsgBox % var[]
 <em>; ComVar: 创建可用于按引用(ByRef)传值的对象.
 ;   ComVar[] 返回值.
 ;   ComVar[] := Val 设置值.
-;   ComVar.ref 返回用于COM函数的按引用传值的对象.</em>
+;   ComVar.ref 返回用于 COM 函数的按引用传值的对象.</em>
 ComVar(Type=0xC)
 {
     static <a href="../Objects.htm#Custom_Objects">base</a> := { __Get: "ComVarGet", __Set: "ComVarSet", __Delete: "ComVarDel" }
@@ -118,7 +118,7 @@ ComVar(Type=0xC)
     arr := <a href="ComObjArray.htm">ComObjArray</a>(Type, 1)
     <em>;锁定数组并检索到 VARIANT 的指针.</em>
     DllCall("oleaut32\SafeArrayAccessData", "ptr", <a href="ComObjValue.htm">ComObjValue</a>(arr), "ptr*", arr_data)
-    <em>;保存数组及可用于按引用传递VARIANT值的对象.</em>
+    <em>;保存数组及可用于按引用传递 VARIANT 值的对象.</em>
     return { ref: ComObject(0x4000|Type, arr_data), _: arr, base: base }
 }
 
