@@ -2,7 +2,7 @@
 layout: default
 ---
 
-[AutoHotkey 中文帮助](zh-cn/index.html).        [AutoHotkey 自用脚本](Run-Ahk/index.md)    [AutoHotkey 测试页面](zh-cn/docs/commands/_AllowSameLineComments.htm)
+[AutoHotkey 中文帮助](zh-cn/index.html).        [AutoHotkey 自用脚本](Run-Ahk/index.md)
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
