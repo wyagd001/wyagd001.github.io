@@ -1,14 +1,14 @@
-translate = {
+锘縯ranslate = {
   hdSearchTxt: "AutoHotkey",
-  hdSearchBtn: "搜索",
+  hdSearchBtn: "鎼滅储",
   hdSearchLnk: "http://www.google.com/cse?cx=010629462602499112316:ywoq_rufgic&q={0}",
-  sbContent: "目录",
-  sbIndex: "索引",
+  sbContent: "鐩綍",
+  sbIndex: "绱㈠紩",
   ftLicense: "License:",
   ftExtra: "",
-  cdSelectBtn: "选择",
-  cdDownloadBtn: "下载",
+  cdSelectBtn: "閫夋嫨",
+  cdDownloadBtn: "涓嬭浇",
   verToolTipAHK_L: "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later",
   verToolTipDefault: "Applies to AutoHotkey {0} and later",
-  tutLocalMessage: "如果你是在本地查看此文档, 你可能已经安装了 AutoHotkey 并且可以跳过 b 部分."
+  tutLocalMessage: "濡傛灉浣犳槸鍦ㄦ湰鍦版煡鐪嬫鏂囨。, 浣犲彲鑳藉凡缁忓畨瑁呬簡 AutoHotkey 骞朵笖鍙互璺宠繃 b 閮ㄥ垎."
 };
