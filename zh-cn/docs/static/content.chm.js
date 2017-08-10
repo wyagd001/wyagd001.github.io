@@ -13,8 +13,8 @@ translate = {
   ftExtra: "",
   cdSelectBtn: "选择",
   cdDownloadBtn: "下载",
-  verToolTipAHK_L: "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later",
-  verToolTipDefault: "Applies to AutoHotkey {0} and later",
+  verToolTipAHK_L: "适用于:\nAutoHotkey_L Revision {0} 及以后版本 \nAutoHotkey v1.0.90.00 及以后版本",
+  verToolTipDefault: "适用于 AutoHotkey {0} 及以后版本",
   tutLocalMessage: "如果你是在本地查看此文档, 你可能已经安装了 AutoHotkey 并且可以跳过 b 部分."
 };
 
@@ -140,7 +140,7 @@ function AddContent()
 
     var en = 'http://ahkscript.org/docs/';
     var de = 'http://ragnar-f.github.io/docs/';
-    var cn = 'http://ahkcn.sourceforge.net/docs/';
+    var cn = 'http://wyagd001.github.io/zh-cn/docs/';
 
     $('#lng-btn-en').on('click', function() { document.location = en + relPath; } );
     $('#lng-btn-de').on('click', function() { document.location = de + relPath; } );
