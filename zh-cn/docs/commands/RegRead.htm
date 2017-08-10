@@ -1,8 +1,8 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
 <title>RegRead</title>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
@@ -11,68 +11,68 @@
 
 <h1>RegRead</h1>
 
-<p>��ע�����ȡֵ.</p>
+<p>从注册表读取值.</p>
 
 <pre class="Syntax">RegRead, OutputVar, RootKey\SubKey [, ValueName]  <em>; v1.1.21+</em>
 RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
-<h3>����</h3>
+<h3>参数</h3>
 <dl>
 
   <dt>OutputVar</dt>
-  <dd><p>�����洢��ȡֵ�ı�����. ����޷���ȡ, ��������ÿ��� <a href="../misc/ErrorLevel.htm">ErrorLevel</a> ������Ϊ 1.</p></dd>
+  <dd><p>用来存储获取值的变量名. 如果无法获取, 则变量被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1.</p></dd>
 
   <dt>RootKey</dt>
-  <dd><p>����Ϊ HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT �� HKEY_CURRENT_CONFIG ������һ�� (�������ǵ���д, ���� HKLM). Ҫ����Զ��ע���, ����ǰ����ϼ��������ð�� (�� v1.1.21+ ����б�� /), ����: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个 (或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号 (或 v1.1.21+ 用正斜线 /), 例如: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
 
   <dt>SubKey</dt>
-  <dd><p>�Ӽ��� (���� Software\SomeApplication).</p></dd>
+  <dd><p>子键名 (例如 Software\SomeApplication).</p></dd>
   
   <dt>RootKey\SubKey <span class="ver">[v1.1.21+]</span></dt>
-  <dd><p>����� <em>RootKey</em> �������һ����б�� (<code>\</code>), <em>RootKey</em> �� <em>SubKey</em> �����ϲ���һ������.</p></dd>
+  <dd><p>如果在 <em>RootKey</em> 后面紧随一个反斜杠 (<code>\</code>), <em>RootKey</em> 和 <em>SubKey</em> 将被合并成一个变量.</p></dd>
 
   <dt>ValueName</dt>
-  <dd><p>Ҫ��ȡ��ֵ��. ���ʡ��, ���ȡ <em>Subkey</em> ��Ĭ��ֵ, ������ע�����ֵ����ʾΪ "(Ĭ��)" ��ֵ. ���û��Ĭ��ֵ (��ע�������ʾ "��ֵδ����"), �� <em>OutputVar</em> ���ÿ��� ErrorLevel ������Ϊ 1.</p></dd>
+  <dd><p>要获取的值名. 如果省略, 则获取 <em>Subkey</em> 的默认值, 这是在注册表中值名显示为 "(默认)" 的值. 如果没有默认值 (即注册表中显示 "数值未设置"), 则 <em>OutputVar</em> 被置空且 ErrorLevel 被设置为 1.</p></dd>
 
 </dl>
 <h3>ErrorLevel</h3>
-<p><span class="ver">[v1.1.04+]</span> ������ʧ��ʱ���׳��쳣. ���˽������Ϣ, ����� <a href="Catch.htm#RuntimeErrors">����ʱ����</a>.</p>
-<p>����������� (���粻���ڵļ���ֵ��) �� <a href="../misc/ErrorLevel.htm">ErrorLevel</a> ������Ϊ 1, ����Ϊ 0.</p>
-<p><a href="../Variables.htm#LastError">A_LastError</a> ������Ϊ����ϵͳ GetLastError() �������صĽ��.</p>
-<h3>��ע</h3>
-<p>Ŀǰֻ֧��������Щֵ����: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD �Լ� REG_BINARY.</p>
-<p>REG_DWORD ֵ���Ǳ�ת��Ϊ��ʮ������.</p>
-<p>��ȡ REG_BINARY ��ʱ, ��ȡ�Ľ��Ϊʮ�������ַ����ַ���. ����, REG_BINARY ���͵�ֵ 01, a9, ff, 77 �Ķ�ȡ���Ϊ�ַ��� 01A9FF77.</p>
-<p>��ȡ REG_MULTI_SZ ��ʱ, ֵ��ÿ�����ֻ��Ի��з����� (`n). ���ֵΪ��, �� <em>OutputVar</em> �ᱻ�ÿ�. ����� <a href="FileSelectFile.htm">FileSelectFile</a> �е�ʾ���˽���δ� <em>OutputVar</em> �������ȡ�����Ĳ���.</p>
-<p>���� 64K �� REG_BINARY ֵֻ���� v1.1.10.01 ����߰汾�в��ܶ�ȡ.</p>
-<p>Ҫ��ȡ�Ͳ������ע�������ֵ, �뿼��ʹ�� <a href="LoopReg.htm">ע���ѭ��</a>.</p>
-<p>������η���Զ�̼����ע���������, ����� <a href="LoopReg.htm">ע���ѭ��</a> �еı�ע.</p>
-<p>Ҫ�� 32 λ�ű��ж�дע��� 64 λ���ֵ���Ŀ������෴�Ĳ���, ��ʹ�� <a href="SetRegView.htm">SetRegView</a>.</p>
+<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p>如果遇到问题 (例如不存在的键或值名) 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1, 否则为 0.</p>
+<p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
+<h3>备注</h3>
+<p>目前只支持下列这些值类型: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD 以及 REG_BINARY.</p>
+<p>REG_DWORD 值总是被转换为正十进制数.</p>
+<p>读取 REG_BINARY 键时, 获取的结果为十六进制字符的字符串. 例如, REG_BINARY 类型的值 01, a9, ff, 77 的读取结果为字符串 01A9FF77.</p>
+<p>读取 REG_MULTI_SZ 键时, 值的每个部分会以换行符结束 (`n). 如果值为空, 则 <em>OutputVar</em> 会被置空. 请参阅 <a href="FileSelectFile.htm">FileSelectFile</a> 中的示例了解如何从 <em>OutputVar</em> 中逐个提取单独的部分.</p>
+<p>大于 64K 的 REG_BINARY 值只有在 v1.1.10.01 或更高版本中才能读取.</p>
+<p>要获取和操作多个注册表键或值, 请考虑使用 <a href="LoopReg.htm">注册表循环</a>.</p>
+<p>关于如何访问远程计算机注册表的详情, 请参阅 <a href="LoopReg.htm">注册表循环</a> 中的备注.</p>
+<p>要在 32 位脚本中读写注册表 64 位部分的条目或进行相反的操作, 请使用 <a href="SetRegView.htm">SetRegView</a>.</p>
 
-<h3>���</h3>
-<p><a href="RegDelete.htm">RegDelete</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">ע���ѭ��</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
-<h3>ʾ��</h3>
-<pre class="NoIndent"><em>; ����: ���� Program Files Ŀ¼��·��.
+<h3>相关</h3>
+<p><a href="RegDelete.htm">RegDelete</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
 
-;����ȷ���� 64 λϵͳ�����з� 64 λ�ű�ʱҲ���������� 64 λ�� Program Files Ŀ¼·��.</em>
-<a href="SetRegView.htm">SetRegView</a> 64  <em>; ��Ҫ v1.1.08+</em>
+;此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>
+<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 v1.1.08+</em>
 
 RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">,</span> SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
 MsgBox, Program files are in: %OutputVar%
 
-<em>; ����д�� (��Ҫ v1.1.21+):</em>
+<em>; 备用写法 (需要 v1.1.21+):</em>
 RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">\</span>SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
 MsgBox, Program files are in: %OutputVar%
 
-<em>; ��һ�ַ��� Program Files Ŀ¼·���ķ���:</em>
+<em>; 另一种返回 Program Files 目录路径的方法:</em>
 EnvGet OutputVar, % <a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles"
 MsgBox, Program files are in: %OutputVar%
 </pre>
 <p>&nbsp;</p>
-<pre class="NoIndent"><em>; ��������ӻ�ȡע���ֵ������ (���� REG_SZ �� REG_DWORD).</em>
+<pre class="NoIndent"><em>; 下面的例子获取注册表值的类型 (例如 REG_SZ 或 REG_DWORD).</em>
 MsgBox % RegKeyType(&quot;HKCU&quot;, &quot;Environment&quot;, &quot;TEMP&quot;)
 return
 
-RegKeyType(RootKey, SubKey, ValueName)  <em>; �˺�������ָ��ֵ������.</em>
+RegKeyType(RootKey, SubKey, ValueName)  <em>; 此函数返回指定值的类型.</em>
 {
     Loop, %RootKey%, %SubKey%
         if (A_LoopRegName = ValueName)
