@@ -19,7 +19,7 @@
   <li><a href="#Intro">入门和简单示例</a></li>
   <li><a href="#Symbols">热键前缀符号表 (修饰符)</a></li>
   <li><a href="#Context">上下文相关的热键</a></li>
-  <li><a href="#combo">自定义组合</a></li>
+  <li><a href="#combo">自定义组合键</a></li>
   <li><a href="#Features">其他特性</a></li>
   <li><a href="#Wheel">鼠标滚轮热键</a></li>
   <li><a href="#Remarks">热键技巧和备注</a></li>
@@ -92,15 +92,15 @@ return</pre>
     <td><p>激发热键时, 不会屏蔽(被操作系统隐藏)热键中按键原有的功能. 在下面的两个例子中, 用户的鼠标按钮点击会被发送到活动窗口:</p>
       <pre>~RButton::MsgBox You clicked the right mouse button.
 ~RButton &amp; C::MsgBox You pressed C while holding down the right mouse button.</pre>
-      <p>与其他前缀符号不同, 可以在某些热键的 <a href="commands/_IfWinActive.htm#variant">变体</a> 中使用波浪号前缀而其他的不使用. 然而, 如果应用于波浪号 <a href="#prefix">前缀</a> 的任何自定义组合键没有被关闭或暂停, 它会影响那个前缀键在 <em>所有</em> 组合中的行为.</p>
+      <p>与其他前缀符号不同, 可以在热键的某些 <a href="commands/_IfWinActive.htm#variant">变体</a> 中使用波浪号前缀而其他的不使用. 然而, 如果应用于波浪号 <a href="#prefix">前缀</a> 的任何自定义组合键没有被关闭或暂停, 它会影响那个前缀键在 <em>所有</em> 组合中的行为.</p>
       <p>用于替代 <a href="#alttab">alt-tab</a> 的特殊按键总是忽略波浪号前缀.</p>
       <p><span class="ver">[v1.1.14+]:</span> 如果把波浪号 (<a href="#prefix">前缀键</a>) 用在自定义修饰键中且此修饰键自身也作为热键, 则在按下此修饰键时会触发热键而不会被延迟到按键释放的时候. 例如, 上文中 <em>~RButton</em> 热键在按下此按键时就会触发. 对于 v1.1.14 之前的版本(或未使用波浪号前缀), 则会在按键释放时触发其自身的热键, 不过仅在未触发 <em>RButton &amp; C</em> 组合键的时候.</p>
-      <p>如果波浪号前缀应用于自定义组合而非不可组合键, 按键的原生功能将持续锁定. 例如, 下面的脚本, 按住 AppsKey 键将会一直显示一个 ToolTip 而不会触发上下文菜单:</p>
+      <p>如果波浪号前缀只应用于自定义组合键, 而不应用于非组合热键, 按键的原生功能将持续被屏蔽. 例如, 下面的脚本, 按住 AppsKey 键将会一直显示一个 ToolTip 而不会触发上下文菜单:</p>
       <pre>AppsKey::ToolTip Press &lt; or &gt; to cycle through windows.
 AppsKey Up::ToolTip
 ~AppsKey &amp; &lt;::Send !+{Esc}
 ~AppsKey &amp; &gt;::Send !{Esc}</pre>
-      <p>只要有一个键盘热键有波浪线修饰，热键总是使用键盘钩子.</p>
+      <p>只要有一个键盘热键有波浪号修饰, 热键总是使用键盘钩子.</p>
     </td>
   </tr>
   <tr id="prefixdollar">
@@ -149,8 +149,8 @@ WheelUp::Send {Volume_Up}     <em>; 在任务栏上滚动滚轮:增加/减小音
 WheelDown::Send {Volume_Down} <em>;</em>
 </pre>
 
-<h2 id="combo">自定义组合</h2>
-<p>通过在两个按键 (不包括操纵杆按钮) 间使用 "&amp;" 可以定义定制的组合键. 在下面的例子中, 您在按住 Numpad0 接着按下第二个按键时会触发此热键:</p>
+<h2 id="combo">自定义组合键</h2>
+<p>通过在两个按键(不包括操纵杆按钮) 间使用 "&amp;" 可以定义定制的组合键. 在下面的例子中, 您在按住 Numpad0 接着按下第二个按键时会触发此热键:</p>
 <pre id="prefix">Numpad0 <strong>&amp;</strong> Numpad1::MsgBox You pressed Numpad1 while holding down Numpad0.
 Numpad0 <strong>&amp;</strong> Numpad2::Run Notepad</pre>
 <p><strong>前缀键导致失去它原有的功能:</strong> 在上面的例子中, Numpad0 成为 <em>前缀键</em>; 但是这也让 Numpad0 在被按下时失去了它原有的功能. 为了避免此问题, 脚本中可以配置 Numpad0 执行新的动作, 例如下列热键的其中一个:</p>

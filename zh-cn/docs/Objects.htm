@@ -31,7 +31,7 @@ ul.list_of_p li { margin: 1em 0; }
   <li><a href="objects/Object.htm"><b>对象</b></a> - 脚本化关联数组.</li>
   <li><a href="objects/File.htm">文件</a> - 为文件输入/输出提供接口.</li>
   <li><a href="objects/Functor.htm">函数对象</a> - <a href="objects/Func.htm">Func</a>, <a href="objects/Functor.htm#BoundFunc">绑定函数</a> 或 <a href="objects/Functor.htm#User-Defined">用户定义函数</a>.</li>
-  <li><a href="commands/ComObjCreate.htm">ComObject</a> - 打包 IDispatch 接口 (COM 或 "自动化" 对象).</li>
+  <li><a href="commands/ComObjCreate.htm">ComObject</a> - 包装 IDispatch 接口 (COM 或 "自动化" 对象).</li>
 </ul>
 
 <h2>目录</h2>
@@ -40,7 +40,7 @@ ul.list_of_p li { margin: 1em 0; }
   <li><a href="#Extended_Usage">扩展用法</a> - <a href="#Function_References">函数引用</a>, <a href="#Usage_Arrays_of_Arrays">数组嵌套</a>, <a href="#Usage_Arrays_of_Functions">函数数组</a></li>
   <li><a href="#Custom_Objects">自定义对象</a> - <a href="#Custom_Prototypes">原型</a>, <a href="#Custom_Classes">类</a>, <a href="#Custom_NewDelete">创建和销毁</a>, <a href="#Meta_Functions">元函数</a></li>
   <li><a href="#Default_Base_Object">默认基对象</a> - <a href="#Automatic_Var_Init">自动初始化变量</a>, <a href="#Pseudo_Properties">伪属性</a>, <a href="#Default__Warn">调试</a></li>
-  <li><a href="#Implementation">实例和引用</a> - <a href="#Reference_Counting">引用计数</a>, <a href="#Implementation_Pointers">指向对象的指针</a></li>
+  <li><a href="#Implementation">实现</a> - <a href="#Reference_Counting">引用计数</a>, <a href="#Implementation_Pointers">对象的指针</a></li>
 </ul>
 
 <span id="Syntax"></span><h2 id="Usage">基本用法</h2>
@@ -53,9 +53,9 @@ Array := Array(Item1, Item2, ..., ItemN)</pre>
 <pre>Value := Array[Index]</pre>
 <p>对项进行赋值:</p>
 <pre>Array[Index] := Value</pre>
-<p>插入一个或多个东东到给定序号位置:</p>
+<p>插入一个或多个项到指定索引:</p>
 <pre>Array.<a href="objects/Object.htm#InsertAt">InsertAt</a>(Index, Value, Value2, ...)</pre>
-<p>追加一个或多个东东:</p>
+<p>追加一个或多个项:</p>
 <pre>Array.<a href="objects/Object.htm#Push">Push</a>(Value, Value2, ...)</pre>
 <p>移除项:</p>
 <pre>RemovedValue := Array.<a href="objects/Object.htm#RemoveAt">RemoveAt</a>(Index)</pre>
@@ -246,8 +246,8 @@ other.test()</pre>
 <p>此时, <i>other</i> 从 <i>thing</i> 继承了 <i>foo</i> 和 <i>test</i>. 这种继承是动态的, 所以如果 <code>thing.foo</code> 被改变了, 这改变也会由 <code>other.foo</code> 表现出来. 如果脚本赋值给 <code>other.foo</code>, 值存储到 <i>other</i> 中并且之后对 <code>thing.foo</code> 任何改变都不会影响 <code>other.foo</code>. 调用 <code>other.test()</code> 时, 它 <i>这里的</i> 参数包含到 <i>other</i> 而不是 <i>thing</i> 的引用.
 </p>
 
-<h3 id="Custom_Classes">自定义类 <span class="ver">[v1.1.00+]</span></h3>
-<p>从根本上讲, "类"是具有相同属性和行为的一类事物. 由 <a href="#Custom_Objects">基类</a> 或 <a href="#Custom_Prototypes">原型</a> 定义了一系列属性和行为的对象, 就可以被称为 <em>类</em> 对象. 为了方便, 用 "Class" 关键字定义基本对象可以像下面这样:</p>
+<h3 id="Custom_Classes">类 <span class="ver">[v1.1.00+]</span></h3>
+<p>从根本上讲, "类"是具有相同属性和行为的一类事物. 由 <a href="#Custom_Objects">基类</a> 或 <a href="#Custom_Prototypes">原型</a> 定义了一系列属性和行为的对象, 就可以被称为 <em>类</em> 对象. 为了方便, 用 "Class" 关键字定义基对象可以像下面这样:</p>
 <pre>class ClassName extends BaseClassName
 {
     InstanceVar := Expression		<em>; 实例变量(实例属性)</em>
@@ -587,7 +587,7 @@ Default__Warn(nonobj, p1="", p2="", p3="", p4="")
     MsgBox A non-object value was improperly invoked.`n`nSpecifically: %nonobj%
 }</pre>
 
-<h2 id="Implementation">实例和引用</h2>
+<h2 id="Implementation">实现</h2>
 <span id="Refs"></span><h3 id="Reference_Counting">引用计数</h3>
 <p>当脚本不再引用对象时, AutoHotkey 使用基本引用计数结构来自动释放对象使用的资源. 脚本作者不应该明确调用此结构, 除非打算直接处理未托管的 <a href="#Implementation_Pointers">对象的指针</a>.</p>
 <p>目前在 AutoHotkey v1.1 中, 一个表达式将同时创建一个临时引用 (并不会在任何地方保存). 比如, <code>Fn(&amp;{})</code> 传递了一个无效的地址给函数, 由于临时引用返回 <code>{}</code> , 导致 <a href="Variables.htm#amp">取址</a> 运算之后被立即释放.</p>
@@ -600,20 +600,20 @@ Default__Warn(nonobj, p1="", p2="", p3="", p4="")
 <p>操作系统会在程序退出时自动回收对象占用的内存, 如果对象的所有引用已经被释放, 那么 <a href="#Custom_NewDelete">__Delete</a> 不会被调用. 所以当引用对象被提前释放而不是通过操作系统自动回收时, 可能造成比较严重的后果, 比如产生临时文件.<br>(译者注: 也就是程序如果因为类似死循环这种情况所造成的意外崩溃, 可能导致某些资源的内存无法被操作系统自动回收. 所以老大在这里强调的意思是让咱们小心使用元函数.)</p>
 
 <span id="AddressCast"></span><h3 id="Implementation_Pointers">对象的指针</h3>
-<p>有时候可能需要通过 DllCall 传递对象到外部代码或想要存储对象的二进制数据结构以供以后取回. 可以通过 <code>address := &amp;object</code> 获取对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道一个 <em>对象</em>. 如果对象的 <em>已知</em> 最后一个引用被释放, 该对象将被删除. 因此, 脚本必须设法通知(引用计数器)对象的引用增加了. 有两种方法实现:</p>
+<p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后取回. 可以通过 <code>address := &amp;object</code> 获取对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道一个. 如果对象的 <em>已知</em> 最后一个引用被释放, 该对象将被删除. 因此, 脚本必须设法通知(引用计数器)对象的引用增加了. 有两种方法实现:</p>
 <pre><em>; 方法 #1: 显式地增加引用计数.</em>
 address := &amp;object
 <a href="commands/ObjAddRef.htm">ObjAddRef</a>(address)
 
 <em>; 方法 #2: 使用 Object(), 增加一个引用并返回地址.</em>
 address := Object(object)</pre>
-<p>这个函数还可以把地址转换成引用:</p>
+<p>这个函数还可以把地址转换回引用:</p>
 <pre>object := Object(address)</pre>
 <p>无论用的上述哪种方法, 脚本都需要在结束对象的引用之后通知对象:</p>
 <pre><em>; 减少一次对象的引用使得其可以被自动回收资源:</em>
 <a href="commands/ObjAddRef.htm">ObjRelease</a>(address)
 </pre>
-<p>一般复制一个对象相当于增加了一个该对象的引用, 所以脚本必须在引用增加之后立即调用 ObjAddRef 以及 ObjRelease, 避免引用丢失.<br>比方说, 每次类似 <code>x := address</code> 这样复制一个地址的方式来复制对象, 就应该调用一次 ObjAddRef .<br>同样的, 当脚本结束 <em>x</em> (或者用其他值覆盖 <em>x</em>), 就应该调用一次 ObjRelease .</p>
+<p>一般复制一个对象相当于增加了一个该对象的引用, 所以脚本必须在引用增加之后立即调用 ObjAddRef 以及 ObjRelease, 避免引用丢失.<br>比方说, 每次类似 <code>x := address</code> 这样复制一个地址的方式来复制对象, 就应该调用一次 ObjAddRef.<br>同样的, 当脚本结束 <em>x</em> (或者用其他值覆盖 <em>x</em>), 就应该调用一次 ObjRelease.</p>
 <p>注意, Object() 函数甚至可以在对象创建之前就可以使用, 比如 <a href="commands/ComObjCreate.htm">COM 对象</a> 和 <a href="objects/File.htm">File 对象</a>.</p>
 
 </body>
