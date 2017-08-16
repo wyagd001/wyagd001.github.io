@@ -22,7 +22,7 @@
 </ul>
 <span id="Variables"></span><h2 id="Intro">变量</h2>
 <p><strong>变量的类型</strong>: AutoHotkey 中没有明确的变量类型. 然而, 只包含数字 (可以含有小数点) 的变量进行数学运算或比较时, 会被自动转换为数值. (为了提高性能, 在内部会对数字进行缓存以避免与字符串之间的转换.)</p>
-<p><strong>变量的作用域和声明</strong>: 除了函数中的 <a href="Functions.htm#Locals">局部变量</a>, 其他所有变量都是全局的; 即可以在脚本的任意位置读取或修改它们的内容. 除了在<a href="Functions.htm#Global">函数页面</a>注明的情况, 变量都是不需要声明的；使用它们的时候它们就产生了(每个变量初始为空).</p>
+<p><strong>变量的作用域和声明</strong>: 除了函数中的 <a href="Functions.htm#Locals">局部变量</a>, 其他所有变量都是全局的; 即可以在脚本的任意位置读取或修改它们的内容. 除了在<a href="Functions.htm#Global">函数页面</a>注明的情况, 变量都是不需要声明的; 使用它们的时候它们就产生了(每个变量初始为空).</p>
 <p id="Variable_names"><strong>变量的名称</strong>: 变量名不区分大小写 (例如, <em>CurrentDate</em> 等同于 <em>currentdate</em>). 变量名可以含有多达 253 个字符, 并且可以由字母, 数字以及后面的标点组成: # _ @ $</p>
 <p>考虑到命名的惯例, 通常在命名变量时最好仅使用字母, 数字和下划线 (例如: <em>CursorPosition</em>, <em>Total_Items</em> 和 <em>entry_is_valid</em>). 这样的风格可以让熟悉其他计算机语言的人更容易理解您的脚本. 而且, 如果您在 AutoHotkey 和其他语言中使用相同的风格, 您会发现能更容易重新读懂自己的脚本.</p>
 <p>尽管变量名可以完全由数字组成, 但通常这样的名称仅用于 <a href="Scripts.htm#cmd">传入的命令行参数</a>. 这样数值名称的变量不能用在 <a href="#Expressions">表达式</a> 中, 因为它们会被看成是数字而不是变量.</p>
@@ -90,7 +90,7 @@ ContinueSearch := true</pre>
     <td style="text-align:center; white-space:nowrap"><strong>%Var%</strong></td>
     <td><p>如果表达式中的变量包围在百分号中 (例如 %Var%), 不管此变量 <u>包含</u> 什么内容都会被假定为另一个变量 (如果不存在这样的变量, 那么 %Var% 会被解析为空字符串) 的名称或部分名称. 这种方法常用来引用 <a href="misc/Arrays.htm#pseudo">伪数组</a> 元素, 例如:</p>
       <pre>Var := MyArray%A_Index% + 100</pre>
-      <p>为了向后兼容, 注明了 "可以使用表达式" 的命令参数把百分号中的孤立名称 (例如 %Var%, 但不是 Array%i%) 当作其两边的百分号不存在一样. 通过把引号包围在括号中可以避免这种情况；例如 <code>Sleep (%Var%)</code>.</p>
+      <p>为了向后兼容, 注明了 "可以使用表达式" 的命令参数把百分号中的孤立名称 (例如 %Var%, 但不是 Array%i%) 当作其两边的百分号不存在一样. 通过把引号包围在括号中可以避免这种情况; 例如 <code>Sleep (%Var%)</code>.</p>
       <p><span class="ver">[AHK_L 52+]:</span> 除了普通变量, %Var% 还可以解析为 <a href="#env">环境变量</a>, 剪贴板或任何的 <a href="#BuiltIn">保留/只读的变量</a>. 在修订号 52 之前, 在这些情况中 %Var% 会被当成空字符串.</p></td>
   </tr>
   <tr>
@@ -124,7 +124,7 @@ var2:=++y   ; var2=2, y=2
       <p><strong>逻辑非 (!)</strong>: 如果运算数为空或 0, 那么逻辑非的结果为 1, 这表示 "真". 否则, 结果为 0 (假). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 在 v1.0.46+, 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非 (~)</strong>: 此运算符对运算数按位取反. 如果运算数为浮点数, 则在计算前把它截取成整数. 如果运算数介于 0 和 4294967295 (0xffffffff) 之间, 那么它会被视为 <u>无符号的</u> 32 位值. 否则, 它被视为 <u>有符号的</u> 64 位值. 例如,<code>~0xf0f</code> 计算结果为 0xfffff0f0(4294963440).</p>
       <p id="amp"><strong>取址(&amp;)</strong>: <code>&amp;MyVar</code> 获取 <em>MyVar</em> 的内容的内存地址, 此地址一般和 <a href="commands/DllCall.htm#struct">DllCall 结构</a>一起使用. 同时 <code>&amp;MyVar</code> 也禁用了此变量中的二进制数的缓存, 如果它经常用于数学或数值比较, 那么这会拖慢其性能. 每当变量的地址改变时会重新启用它的缓存 (例如使用 <a href="commands/VarSetCapacity.htm">VarSetCapacity()</a>).</p>
-      <p><strong>解除引用(*)</strong>: <code>*Expression</code> 假定 <code>Expression</code> 解析为数值的内存地址；它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0；但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="commands/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
+      <p><strong>解除引用(*)</strong>: <code>*Expression</code> 假定 <code>Expression</code> 解析为数值的内存地址; 它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0; 但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="commands/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
   </tr>
   <tr>
     <td style="text-align:center"><strong>*<br>
@@ -140,13 +140,13 @@ var2:=++y   ; var2=2, y=2
   <tr>
     <td style="text-align:center"><strong>+<br>
 	-</strong></td>
-    <td><p><strong>加 (+)</strong> 和 <strong>减 (-)</strong>. 相关提示, <a href="commands/EnvAdd.htm"><strong>+=</strong></a> 和 <a href="commands/EnvSub.htm"><strong>-=</strong></a> 运算符是从变量中增加或减少值的一种简写形式. 例如,<code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 同样地, 使用 <a href="#IncDec">Var++,Var--,++Var 或 --Var</a> 可以让变量增加或减小 1.</p>
+    <td><p><strong>加 (+)</strong> 和 <strong>减 (-)</strong>. 相关提示, <a href="commands/EnvAdd.htm"><strong>+=</strong></a> 和 <a href="commands/EnvSub.htm"><strong>-=</strong></a> 运算符是从变量中增加或减少值的一种简写形式. 例如,<code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 同样地, 使用 <a href="#IncDec">Var++, Var--, ++Var 或 --Var</a> 可以让变量增加或减小 1.</p>
     </td>
   </tr>
   <tr id="bitwise">
     <td style="text-align:center"><strong>&lt;&lt;<br>
 	&gt;&gt;</strong></td>
-    <td><strong>按位左移 (&lt;&lt;)</strong> 和 <strong>右移 (&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点数在计算前会被截取成整数. 左移 (<strong>&lt;&lt;</strong>) 相当于把 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂". 右移(<strong>&gt;&gt;</strong>)相当于把 <em>Value1</em> 除以"2 的 <em>Value2</em> 次幂"并把结果往下取整到最近的整数；例如,<code>-3&gt;&gt;1</code> 结果为 -2.</td>
+    <td><strong>按位左移 (&lt;&lt;)</strong> 和 <strong>右移 (&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点数在计算前会被截取成整数. 左移 (<strong>&lt;&lt;</strong>) 相当于把 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂". 右移(<strong>&gt;&gt;</strong>)相当于把 <em>Value1</em> 除以"2 的 <em>Value2</em> 次幂"并把结果往下取整到最近的整数; 例如,<code>-3&gt;&gt;1</code> 结果为 -2.</td>
   </tr>
   <tr>
     <td style="text-align:center"><strong>&amp;<br>
@@ -158,7 +158,7 @@ var2:=++y   ; var2=2, y=2
   <tr id="concat">
     <td style="text-align:center"><strong>.</strong></td>
     <td><p><strong>连接</strong>. 句点运算符用于把两个项目组合成单个字符串 (在句点的两边至少必须有一个空格). 省略句点也可以达到相同的目的(除非表达式中有不明确的关系, 例如 <code>x <strong>-</strong>y</code>, 或在右边的项目含有前导的 ++ 或 -- 运算符). 省略句点时, 合并的两个项目间应该至少有一个空格.<br>
-	  示例(表达式方法): &lt;c6&gt;Var := "The color is " <strong>.</strong> FoundColor</code><br>
+	  示例(表达式方法): <code>Var := "The color is " <strong>.</strong> FoundColor</code><br>
 	  示例(传统方法): <code>Var = The color is %FoundColor%</code></p>
         <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " <strong>.</strong> Price * (1 - Discount/100)</code>.</p>
         <p>以句点 (或其他任何运算符) 开始的行会自动 <a href="Scripts.htm#continuation">附加到</a> 前一行的末尾.</p></td>
@@ -211,7 +211,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="ternary">
     <td style="text-align:center"><strong>?:</strong></td>
-    <td><strong>三元运算符</strong> <span class="ver">[v1.0.46+]</span>. 此运算符是 <a href="commands/IfExpression.htm">if-else 语句</a> 的简写形式. 它计算左侧的条件来决定两个分支中哪个作为最终结果. 例如, <code>var := x&gt;y ? 2 : 3</code>, 当 x 大于 y 时保存 2 到 <em>Var</em>；否则保存 3. 为了提高性能, 只计算决定性的分支(请参阅<a href="Functions.htm#ShortCircuit">求值优化</a>). </td>
+    <td><strong>三元运算符</strong> <span class="ver">[v1.0.46+]</span>. 此运算符是 <a href="commands/IfExpression.htm">if-else 语句</a> 的简写形式. 它计算左侧的条件来决定两个分支中哪个作为最终结果. 例如, <code>var := x&gt;y ? 2 : 3</code>, 当 x 大于 y 时保存 2 到 <em>Var</em>; 否则保存 3. 为了提高性能, 只计算决定性的分支(请参阅<a href="Functions.htm#ShortCircuit">求值优化</a>). </td>
   </tr>
   <tr id="AssignOp">
     <td style="text-align:center"><strong>:=<br>
@@ -230,8 +230,8 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
     <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中 (但在 1.0.46 之前的版本中, 这些运算符只能在一行中最左边使用, 且仅支持前五个运算符). 最简单的赋值运算符为 <a href="commands/SetExpression.htm">冒号等号 (:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#FloorDivide">向下舍除</a>, 把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 同样地, <code>Var <strong>.=</strong> "abc"</code> 为 <code>Var := Var <strong>.</strong> "abc"</code> 的一种简写形式. </p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>. </p>
     <p>如果使用赋值运算的结果作为其他某些运算符的输出, 那么输入的值是变量自身. 例如, 如果变量 <em>Var</em> 新增值后大于 50, 那么表达式 <code>(Var+=2) &gt; 50</code> 结果为真. 这样还允许赋值被作为 <a href="Functions.htm#ByRef">ByRef</a> 传递或获取它的<a href="#amp">地址</a>, 例如: <code>&amp;(x:="abc")</code>. </p>
-    <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等价于 <code>not (x:=y)</code>. 同样地, <code>++Var := X</code> 等价于 <code>++(Var := X)</code>；而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等价于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>. </p>
-    <p>由向后兼容引起的已知限制(可能会在未来的版本中解决):1) 当 <strong>/=</strong> 为表达式中最左边的运算符并且它不是<a href="#comma">多语句表达式</a>的一部分时, 而且输入都不是浮点数时, 它会执行<a href="#FloorDivide">向下舍除</a>(在其他所有情况中, <strong>/=</strong> 会执行<a href="#divide">真除</a>)；2) 仅当 <strong>+=</strong> 和 <strong>-=</strong> 为一行中最左边的运算符时, 它们才支持<a href="commands/EnvAdd.htm">日期/时间的计算</a>；3) 运算符 <strong>+=</strong>, <strong>-=</strong> 和 *= 仅在空变量在单独一行时才把它们视为零；例如, <code>y:=1, x+=1</code> 和 <code>MsgBox % x-=3</code> 当 x 为空时都得到空的结果. </p></td>
+    <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等价于 <code>not (x:=y)</code>. 同样地, <code>++Var := X</code> 等价于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等价于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>. </p>
+    <p>由向后兼容引起的已知限制(可能会在未来的版本中解决): 1) 当 <strong>/=</strong> 为表达式中最左边的运算符并且它不是<a href="#comma">多语句表达式</a>的一部分时, 而且输入都不是浮点数时, 它会执行<a href="#FloorDivide">向下舍除</a>(在其他所有情况中, <strong>/=</strong> 会执行<a href="#divide">真除</a>); 2) 仅当 <strong>+=</strong> 和 <strong>-=</strong> 为一行中最左边的运算符时, 它们才支持<a href="commands/EnvAdd.htm">日期/时间的计算</a>; 3) 运算符 <strong>+=</strong>, <strong>-=</strong> 和 *= 仅在空变量在单独一行时才把它们视为零; 例如, <code>y:=1, x+=1</code> 和 <code>MsgBox % x-=3</code> 当 x 为空时都得到空的结果. </p></td>
   </tr>
   <tr id="comma">
     <td style="text-align:center"><strong>,</strong></td>
@@ -335,7 +335,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="LineNumber">
     <td>A_LineNumber</td>
-    <td><p>当前脚本中正在执行的行所在的行号 (或其 <a href="commands/_Include.htm">#Include 文件</a> 的行号). 这个行号与 <a href="commands/ListLines.htm">ListLines</a> 显示的一致；它可以用在报告错误的时候, 例如: <code>MsgBox Could not write to log file (line number %A_LineNumber%)</code>. </p>
+    <td><p>当前脚本中正在执行的行所在的行号 (或其 <a href="commands/_Include.htm">#Include 文件</a> 的行号). 这个行号与 <a href="commands/ListLines.htm">ListLines</a> 显示的一致; 它可以用在报告错误的时候, 例如: <code>MsgBox Could not write to log file (line number %A_LineNumber%)</code>. </p>
     <p>由于 <a href="Scripts.htm#ahk2exe">已编译脚本</a> 已经把它所有的 <a href="commands/_Include.htm">#Include 文件</a> 合并成一个大脚本, 所以它的行号可能与它在未编译模式运行时不一样.</p></td>
   </tr>
   <tr id="LineFile">
@@ -447,7 +447,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
 Sleep, 1000
 ElapsedTime := A_TickCount - StartTime
 MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
-<p>如果您需要比 A_TickCount 的10ms 更高的精确度, 请使用 <a href="commands/DllCall.htm#QPC">QueryPerformanceCounter()</a> (高精度计时器).</p>
+<p>如果您需要比 A_TickCount 的 10ms 更高的精确度, 请使用 <a href="commands/DllCall.htm#QPC">QueryPerformanceCounter()</a> (高精度计时器).</p>
 </td>
   </tr>
 </table>
@@ -522,7 +522,7 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
   <tr id="KeyDelay">
     <td>A_KeyDelay<br>
     A_KeyDuration</td>
-    <td>由 <a href="commands/SetKeyDelay.htm">SetKeyDelay</a> 设置的当前延迟 (总是十进制数, 不是十六进制). A_KeyDuration 依赖 <span class="ver">[v1.1.23+]</span> .</td>
+    <td>由 <a href="commands/SetKeyDelay.htm">SetKeyDelay</a> 设置的当前延迟(总是十进制数, 不是十六进制). A_KeyDuration 依赖 <span class="ver">[v1.1.23+]</span> .</td>
   </tr>
   <tr id="KeyDelayPlay">
     <td>A_KeyDelayPlay<br>
@@ -531,11 +531,11 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="WinDelay">
     <td>A_WinDelay</td>
-    <td>由 <a href="commands/SetWinDelay.htm">SetWinDelay</a> 设置的当前延迟 (总是十进制数, 不是十六进制).</td>
+    <td>由 <a href="commands/SetWinDelay.htm">SetWinDelay</a> 设置的当前延迟(总是十进制数, 不是十六进制).</td>
   </tr>
   <tr id="ControlDelay">
     <td>A_ControlDelay</td>
-    <td>由 <a href="commands/SetControlDelay.htm">SetControlDelay</a> 设置的当前延迟 (总是十进制数, 不是十六进制).</td>
+    <td>由 <a href="commands/SetControlDelay.htm">SetControlDelay</a> 设置的当前延迟(总是十进制数, 不是十六进制).</td>
   </tr>
   <tr id="MouseDelay">
     <td>A_MouseDelay<br>
@@ -568,7 +568,7 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="IconFile">
     <td>A_IconFile</td>
-    <td>如果使用 <code><a href="commands/Menu.htm">Menu</a>, tray, icon</code> 指定了自定义的托盘图标时, 变量的值为图标文件的完整路径和名称, 否则为空. <strong>已知限制:</strong>如果脚本原来传递相对路径给系统的 DLL, 那么此变量中的路径可能不正确；例如 <code>Menu, Tray, Icon, user32.dll, 2</code>. </td>
+    <td>如果使用 <code><a href="commands/Menu.htm">Menu</a>, tray, icon</code> 指定了自定义的托盘图标时, 变量的值为图标文件的完整路径和名称, 否则为空. <strong>已知限制:</strong> 如果脚本原来传递相对路径给系统的 DLL, 那么此变量中的路径可能不正确; 例如 <code>Menu, Tray, Icon, user32.dll, 2</code>. </td>
   </tr>
   <tr id="IconNumber">
     <td>A_IconNumber</td>
@@ -579,7 +579,7 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
 <table class="info">
   <tr id="TimeIdle">
     <td>A_TimeIdle</td>
-    <td>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入 (例如 <a href="commands/Send.htm">Send</a> 或 <a href="commands/MouseMove.htm">MouseMove</a> 命令) 会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如: <code>IfGreater, A_TimeIdle, 600000, MsgBox, The last keyboard or mouse activity was at least 10 minutes ago</code>. </td>
+    <td>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入 (例如 <a href="commands/Send.htm">Send</a> 或 <a href="commands/MouseMove.htm">MouseMove</a> 命令)会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如: <code>IfGreater, A_TimeIdle, 600000, MsgBox, The last keyboard or mouse activity was at least 10 minutes ago</code>. </td>
   </tr>
   <tr id="TimeIdlePhysical">
     <td>A_TimeIdlePhysical</td>
@@ -594,11 +594,11 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="DefaultListView">
     <td>A_DefaultListView <span class="ver">[v1.1.23+]</span></td>
-    <td><a href="commands/ListView.htm">ListView控件</a> 的 <a href="commands/Gui.htm#Events">变量名</a> 或 <a href="commands/Gui.htm#HwndOutputVar">句柄</a> , 这取决与使用了何种 <a href="commands/ListView.htm#BuiltIn">ListView 函数</a> . 如果默认GUI中没有ListView控件, 此变量为空.</td>
+    <td><a href="commands/ListView.htm">ListView 控件</a> 的 <a href="commands/Gui.htm#Events">变量名</a> 或 <a href="commands/Gui.htm#HwndOutputVar">句柄</a>, 这取决与使用了何种 <a href="commands/ListView.htm#BuiltIn">ListView 函数</a>. 如果默认 GUI 中没有 ListView 控件, 此变量为空.</td>
   </tr>
   <tr id="DefaultTreeView">
     <td>A_DefaultTreeView <span class="ver">[v1.1.23+]</span></td>
-    <td><a href="commands/TreeView.htm">TreeView控件</a> 的 <a href="commands/Gui.htm#Events">变量名</a> 或 <a href="commands/Gui.htm#HwndOutputVar">句柄</a> , 这取决与使用了何种 <a href="commands/TreeView.htm#BuiltIn">TreeView 函数</a> . 如果默认GUI中没有TreeView控件, 此变量为空.</td>
+    <td><a href="commands/TreeView.htm">TreeView 控件</a> 的 <a href="commands/Gui.htm#Events">变量名</a> 或 <a href="commands/Gui.htm#HwndOutputVar">句柄</a>, 这取决与使用了何种 <a href="commands/TreeView.htm#BuiltIn">TreeView 函数</a> . 如果默认 GUI 中没有 TreeView 控件, 此变量为空.</td>
   </tr>
   <tr id="Gui">
     <td>A_Gui</td>
@@ -700,8 +700,8 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="OSVersion">
     <td>A_OSVersion</td>
-    <td><p>下列字符串中的一个(如果存在):WIN_7 <span class="ver">[需要 AHK_L 42+]</span>, WIN_8 <span class="ver">[需要 v1.1.08+]</span>, WIN_8.1 <span class="ver">[需要 v1.1.15+]</span>, WIN_VISTA, WIN_2003, WIN_XP, WIN_2000.</p>
-    <p>在AutoHotKey的执行文件或编译后的脚本属性里添加兼容性设置会让操作系统报告不同的版本信息, 可以间接得出 A_OSVersion .</p>
+    <td><p>下列字符串中的一个(如果存在): WIN_7 <span class="ver">[需要 AHK_L 42+]</span>, WIN_8 <span class="ver">[需要 v1.1.08+]</span>, WIN_8.1 <span class="ver">[需要 v1.1.15+]</span>, WIN_VISTA, WIN_2003, WIN_XP, WIN_2000.</p>
+    <p>在 AutoHotKey 的执行文件或编译后的脚本属性里添加兼容性设置会让操作系统报告不同的版本信息, 可以间接得出 A_OSVersion .</p>
     <p><span class="ver">[v1.1.20+]:</span> 如果系统版本没有被识别成上述版本, 会返回一个"major.minor.build"形式的字符串. 例如, <code>10.0.14393</code> 为 Windows 10 build 14393, 也称为 1607 版.</p>
       <pre><em>; 这个示例已过时了, 里面的这些操作系统都不再受支持. </em>
 if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空格. </em>
@@ -815,7 +815,7 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空
   </tr>
   <tr id="ScreenDPI">
     <td>A_ScreenDPI <span class="ver">[v1.1.11+]</span></td>
-    <td>在屏幕宽度上每逻辑寸的像素数. 在多显示器的系统中, 这个值对于所有的显示器都是一样的. 在大多数系统中该值为 96；它取决于系统文本大小(DPI)设置. 另请参阅 <a href="commands/Gui.htm#DPIScale">Gui -DPIScale</a>. </td>
+    <td>在屏幕宽度上每逻辑寸的像素数. 在多显示器的系统中, 这个值对于所有的显示器都是一样的. 在大多数系统中该值为 96; 它取决于系统文本大小(DPI)设置. 另请参阅 <a href="commands/Gui.htm#DPIScale">Gui -DPIScale</a>. </td>
   </tr>
   <tr id="IPAddress">
     <td>A_IPAddress1 到 4</td>
@@ -891,7 +891,7 @@ return
 <pre><a href="commands/EnvGet.htm">EnvGet, OutputVar, Path</a>  <em>; 想了解含义, 请参阅 <a href="commands/_NoEnv.htm">#NoEnv</a>.</em></pre>
 <h2 id="cap">变量的容量和占用内存</h2>
 <ul>
-  <li>每个变量最多可以含有64MB的文本(使用 <a href="commands/_MaxMem.htm">#MaxMem</a> 可以突破这个限制). </li>
+  <li>每个变量最多可以含有 64 MB 的文本(使用 <a href="commands/_MaxMem.htm">#MaxMem</a> 可以突破这个限制). </li>
   <li>当赋值给变量比当前更长的内容时, 会自动分配额外的系统内存给这个变量.</li>
   <li>通过赋值为空可以释放大变量占用的内存, 例如 <code>Var := ""</code>. </li>
   <li>脚本可以创建的变量数量没有限制. 程序设计用来支持至少几百万的变量而不会出现明显的性能下降.</li>
