@@ -145,7 +145,7 @@ Loop 500
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中获取任何想要的成员变量. 把 4 替换为结构中目标成员的偏移. 首个成员变量的偏移总为 0. 第二个成员的偏移为 0 加上首个成员的大小 (一般为 4 字节). 后面成员的偏移等于它前一个成员的偏移加上前一个成员的大小. 大多数成员 (例如 DWORD, Int 和 <a href="#Int">其他的 32 位整型</a>) 大小为 4 个字节. 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
 <p>请参阅 <a href="#ExStruct">结构示例</a> 了解实际用法.</p>
 <h3 id="limits">已知限制</h3>
-<p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>)传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误, 要解决此问题, 有下面几种方法:1) 把 MyVar 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址传递；1) 在 v1.0.44.03+, 在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity(MyVar, -2)</a></code> 来更新变量的内部容量.</p>
+<p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>)传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误, 要解决此问题, 有下面几种方法: 1) 把 MyVar 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址传递; 2) 在 v1.0.44.03+, 在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity(MyVar, -2)</a></code> 来更新变量的内部容量.</p>
 <p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即这样的数据无法被大多数命令和函数访问或修改. 但是, 这样的数据可以使用 <a href="../Variables.htm#amp">地址运算符</a> 和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a> 以及 DllCall 自己进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会出乎意料地返回一个地址不同内容相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall() 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar = ABC
@@ -153,7 +153,7 @@ result := DllCall("CharLower", <strong><u>str</u></strong>, DllCall("CharUpper",
 <p>要变通解决此问题, 请把上面两个带下划线的 "Str" 修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整型传递给 CharLower.</p>
 <p>处理字符串时可能遇到某些限制. 更多细节请参阅 <a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
 <h3 id="COM">组件对象模型 (COM)</h3>
-<p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate</a>,<a href="ComObjGet.htm">ComObjGet</a> 或 <a href="ComObjActive.htm">ComObjActive</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
+<p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a> 或 <a href="ComObjActive.htm">ComObjActive</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
 <p>不支持 <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx">IDispatch</a> 的 COM 对象可以通过从对象接口的虚函数表中获取函数的地址用于 DllCall 中. 想了解更多细节, 请参阅较远后面的 <a href="#ExTaskbar">这个例子</a>.</p>
 <p>许多 .NET Framework 也可以使用 COM 和 DllCall 进行访问. 请参阅 <a href="http://www.autohotkey.com/forum/topic26191.html">http://www.autohotkey.com/forum/topic26191.html</a>.
 </p>
