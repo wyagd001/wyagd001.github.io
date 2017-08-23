@@ -115,7 +115,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 <p><strong>-3</strong>: 无法访问或加载指定的 <em>DllFile</em>, 如果没有明确指明 <em>DllFile</em> 的路径, 则文件必须在系统 PATH 变量的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 此错误的原因可能是用户缺少访问此文件的权限, 或者 AutoHotkey 为 32 位而 DLL 是 64 位, 反之亦然.</p>
 <p><strong>-4</strong>: 在 DLL 中没有找到指定的函数.</p>
 <p><strong>N</strong>(任意正数): 函数被调用后异常终止了, 致命异常号为 <strong>N</strong> (例如, 0xC0000005 表示 "访问违例"). 此时函数返回空值(空字符串), 但仍会更新所有的 <a href="#asterisk">星号变量</a>. 致命异常的一个例子是间接引用了无效的指针, 如 NULL. 因为 <a href="#cdecl">Cdecl</a> 函数决不会产生下一段描述中的 <em>"An"</em> 错误, 所以当传递给它的参数太少时可能会产生异常.</p>
-<p id="An"><strong>An</strong>(字母 A 后面跟着整数 <strong>n</strong>): 调用了函数, 但传递给它的参数太多或太少了. "<strong>n</strong>" 是错误参数列表超过正确参数列表的字节数. 如果 <strong>n</strong> 为正数, 表示传递的参数过多(或参数太大), 或函数调用要求 <a href="#cdecl">CDecl</a> 的返回值类型. 如果 <strong>n</strong> 为负数, 表示传递的参数过少. 应该改正这种情况来让函数可靠运行. 此错误的出现也可能表示出现了异常, 此时函数返回空字符串. 请注意由于 x64 调用约定, 64 位版本不会设置 ErrorLevel 为 <b>An</b>.</p>
+<p id="An"><strong>An</strong>(字母 A 后面跟着整数 <strong>n</strong>): 调用了函数, 但传递给它的参数太多或太少了. "<strong>n</strong>" 是错误的参数列表超过正确的参数列表的字节数. 如果 <strong>n</strong> 为正数, 表示传递的参数过多(或参数太大), 或函数调用要求 <a href="#cdecl">CDecl</a> 的返回值类型. 如果 <strong>n</strong> 为负数, 表示传递的参数过少. 应该改正这种情况来让函数可靠运行. 此错误的出现也可能表示出现了异常, 此时函数返回空字符串. 请注意由于 x64 调用约定, 64 位版本不会设置 ErrorLevel 为 <b>An</b>.</p>
 
 <h3 id="except">异常和 A_LastError</h3>
 <p>尽管有内置的异常处理机制, 但 DllCall 仍有可能让脚本崩溃. 当函数不直接生成异常而输出一些不适当的数据(例如无效的指针或没有结束符的字符串) 时, 这种情况可能会发生. 这可能不是函数的问题, 而是脚本传递给它不适合的值, 例如无效的指针或内存空间不足的 <a href="#str">"str"</a>, 当脚本指定不适当的参数类型或返回值类型(例如要求由函数生成的整数是 <a href="#asterisk">星号变量</a> 或 <a href="#str">str</a>) 时, 它也可能崩溃.</p>
