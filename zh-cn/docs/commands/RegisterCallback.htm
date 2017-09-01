@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
 <title>RegisterCallback</title>
@@ -28,7 +28,7 @@
 
   <dt>Options</dt>
   <dd><p>指定零个或多个下列单词. 在选项间使用空格分隔(例如 <code>C Fast</code> ).</p>
-    <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>FunctionName</em> 时都启动新 <a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, 但必须避免调用 <em>Address</em> 的线程发生变化 (例如当回调函数被传入的消息触发时). 这是因为 <em>FunctionName</em> 能改变在它被调用时刚好在运行的线程的全局设置 (例如 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a> 和 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>). 想了解更多细节, 请参阅 <a href="#Threads">备注</a>.</p>
+    <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>FunctionName</em> 时都启动新 <a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, 但必须避免调用 <em>Address</em> 的线程发生变化(例如当回调函数被传入的消息触发时). 这是因为 <em>FunctionName</em> 能改变在它被调用时刚好在运行的线程的全局设置(例如 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a> 和 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>). 想了解更多细节, 请参阅 <a href="#Threads">备注</a>.</p>
     <p><strong>CDecl</strong> 或 <strong>C</strong>: 让 <em>Address</em> 遵循"C"调用约定. 此选项通常省略, 因为在回调函数中标准调用约定更常用.</p></dd>
 
   <dt>ParamCount</dt>
@@ -82,15 +82,15 @@ TheFunc(params*) {
 <p>对于 <em>Cdecl</em> 或 64 位调用约定, <em>ParamCount</em> 仅被已经赋值的参数所影响. 如果省略, 所有可选参数被设为他们的默认值, 且不参与 <em>params</em> 保存地址大小的计算.</p>
 
 <h3>函数应该 <em>返回</em> 什么</h3>
-<p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 "" (甚至从不使用 Return), 则返回 0 给 <em>Address</em> 的调用者. 否则, 函数应该返回一个介于 -2147483648 和 4294967295 之间的整数, 它会被返回给 <em>Address</em> 的调用者.</p>
+<p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至从不使用 Return), 则返回 0 给 <em>Address</em> 的调用者. 否则, 函数应该返回一个介于 -2147483648 和 4294967295 之间的整数, 它会被返回给 <em>Address</em> 的调用者.</p>
 
 <h3 id="Threads">快速与慢速</h3>
 <p>默认/慢速的模式会让函数以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这些默认值可以在 <a href="../Scripts.htm#auto">自动执行段</a> 改变.</p>
-<p>与之相比, <a href="#Fast">快速模式</a> 会继承在调用函数时刚好在运行的 <a href="../misc/Threads.htm">线程</a> 的全局设置. 而且, 函数对全局设置的任何修改 (包括 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 和 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在 <a href="../misc/Threads.htm">当前线程</a> 生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
-<p>要避免被自己 (或其他任何线程) 中断, 回调函数可以在它的首行使用 <a href="Critical.htm">Critical</a>. 然而, 通过小于 0x312 消息达到的间接调用函数时, 这并不是完全有效的 (增加 Critical 的 <a href="Critical.htm#Interval">间隔</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="PostMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
+<p>与之相比, <a href="#Fast">快速模式</a> 会继承在调用函数时刚好在运行的 <a href="../misc/Threads.htm">线程</a> 的全局设置. 而且, 函数对全局设置的任何修改(包括 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 和 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在 <a href="../misc/Threads.htm">当前线程</a> 生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
+<p>要避免被自己(或其他任何线程) 中断, 回调函数可以在它的首行使用 <a href="Critical.htm">Critical</a>. 然而, 通过小于 0x312 消息达到的间接调用函数时, 这并不是完全有效的(增加 Critical 的 <a href="Critical.htm#Interval">间隔</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="PostMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
 
 <h3>内存</h3>
-<p>每次使用 RegisterCallback() 都会分配少量的内存 (32 字节加上系统开销). 由于当脚本退出时操作系统会自动释放这些内存, 所以任何分配少量 <em>固定</em> 数目的回调的脚本不需要明确地释放内存. 与之相比, 调用 RegisterCallback() 不确定/无限制次数的脚本应明确对任何不使用的回调执行下列操作:</p>
+<p>每次使用 RegisterCallback() 都会分配少量的内存(32 字节加上系统开销). 由于当脚本退出时操作系统会自动释放这些内存, 所以任何分配少量 <em>固定</em> 数目的回调的脚本不需要明确地释放内存. 与之相比, 调用 RegisterCallback() 不确定/无限制次数的脚本应明确对任何不使用的回调执行下列操作:</p>
 <pre>DllCall(&quot;GlobalFree&quot;, &quot;Ptr&quot;, Address, &quot;Ptr&quot;)</pre>
 
 <h3>相关</h3>
