@@ -178,11 +178,11 @@ Gui <strong>MyGui:</strong>+Resize -MaximizeBox  <em>; 改变名称为 <i>MyGui<
 <p>DPI 缩放比例仅适用于 Gui 命令, 所以类似 ControlGetPos 或 WinGetPos 命令返回的坐标无法工作. 解决方案如下列:</p>
 <ul>
   <li>尽量使用硬编码坐标系统.  例如, 使用类似 <a href="#xp">xp</a>, <a href="#xs">xs</a>, <a href="#xm">xm</a> 和 <a href="#PosPlusMargin">x+m</a> 选项设置控件的相对位置且用像素来设置 <a href="#R">多行文本</a> 的高度值.</li>
-  <li>根据具体情况灵活的开启 (<code>Gui +DPIScale</code>) 和关闭 (<code>Gui -DPIScale</code>) DIP 缩放比例设置. 更改这个设置并不会影响已经设置过的坐标或大小.</li>
-  <li>手动测量坐标. 例如, <code>x*(A_ScreenDPI/96)</code> 会将 x 从 Gui坐标系(逻辑) 转换为 非Gui坐标系(物理).</li>
+  <li>根据具体情况灵活的开启 (<code>Gui +DPIScale</code>) 和关闭 (<code>Gui -DPIScale</code>) DPI 缩放比例设置. 更改这个设置并不会影响已经设置过的坐标或大小.</li>
+  <li>手动测量坐标. 例如, <code>x*(A_ScreenDPI/96)</code> 会将 x 从 Gui 坐标系(逻辑) 转换为 非 Gui 坐标系(物理).</li>
 </ul>
 <p id="GuiHwndOutputVar"><strong>Hwnd</strong><em>OutputVar</em> <span class="ver">[v1.1.04+]:</span> 此选项保存 GUI 的窗口句柄(HWND) 到 <em>OutputVar</em>. 例如: <code>Gui +HwndMyGuiHwnd</code>. 在函数中使用时, <em>MyGuiHwnd</em> 会被视为 <a href="../Functions.htm#DynVar">函数动态变量</a>. GUI 的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 它还可以直接作为 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a> 或代替 GUI 名称来使用, 例如 <code>Gui %MyGuiHwnd%:Destroy</code>.</p>
-<p id="PlusLabel"><strong>Label</strong> <span class="ver">[v1.0.44.09+]:</span> 为当前窗口的 <a href="#Labels">特殊标签</a> 指定自定义名称. 例如, <code>Gui MyGui:+LabelMyGui_On</code> 将使用标签 MyGui_OnClose 和 MyGui_OnSize(如果它们存在)分别代替 MyGuiGuiClose 和 MyGuiGuiSize. 换句话说, 在所有 <a href="#Labels">特殊标签</a> 的名称中字符串 "MyGuiGui" 被替换为 "MyGui_On". 这可以让多个窗口使用一套相同的标签(此时脚本可以根据 <a href="../Variables.htm#Gui">A_Gui</a> 来确定运行子程序的窗口是哪个).</p>
+<p id="PlusLabel"><strong>Label</strong> <span class="ver">[v1.0.44.09+]:</span> 为当前窗口的 <a href="#Labels">特殊标签</a> 指定自定义名称. 例如, <code>Gui MyGui:+LabelMyGui_On</code> 将使用标签 MyGui_OnClose 和 MyGui_OnSize(如果它们存在) 分别代替 MyGuiGuiClose 和 MyGuiGuiSize. 换句话说, 在所有 <a href="#Labels">特殊标签</a> 的名称中字符串 "MyGuiGui" 被替换为 "MyGui_On". 这可以让多个窗口使用一套相同的标签(此时脚本可以根据 <a href="../Variables.htm#Gui">A_Gui</a> 来确定运行子程序的窗口是哪个).</p>
 <p id="LastFound"><strong>LastFound</strong>: 设置窗口为 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>(对于 <a href="#DefaultWin">Gui 线程</a> 这是多余的, 因为它自动设置了), 这样允许类似 <a href="WinSet.htm">WinSet</a> 这样的命令对此窗口进行操作, 即使它当前为隐藏状态(即不需要使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>). 需要在显示窗口之前改变其属性时, 这是非常有用的. 例如:</p>
 <pre>Gui +LastFound
 WinSet, TransColor, %CustomColor% 150
@@ -207,7 +207,7 @@ Gui, MyGui:+Owner  <em>; 让 <i>MyGui</i> 成为 <a href="Menu.htm#MainWindow">�
 <p>在某个从属窗口显示时要防止用户与其父窗口交互, 请使用 <code>Gui +Disabled</code> 禁用父窗口. 之后(当子窗口取消或销毁时), 通过 <code>Gui -Disabled</code> 来重新启用父窗口. 在取消或销毁子窗口前这样做可以让父窗口自动恢复有效.</p>
 <p id="Parent"><strong>Parent</strong> <span class="ver">[v1.1.03+]</span>: 使用 <code>+Parent</code> 后面紧跟着要拥有此窗口的现有 Gui 或任何窗口或控件的 <a href="WinGet.htm#ID">HWND</a> 的<a href="#Name">名称</a>或编号. 要恢复 Gui 为顶级窗口, 请使用 <code>-Parent.</code>. 在窗口创建后此选项也有效.</p>
 <p id="Resize"><strong><a name="Resize"></a>Resize</strong>: 此选项允许用户重新调整窗口的大小并启用标题栏上的最大化按钮. 要禁用最大化按钮, 请指定 <code>+Resize -MaximizeBox</code>.</p>
-<p><strong>SysMenu</strong>(默认含有此选项): 指定 <code>-SysMenu</code>(负 SysMenu)可以删除点击窗口左上角时弹出的系统菜单和图标. 同时也删除标题栏上的最小化, 最大化和关闭按钮.</p>
+<p><strong>SysMenu</strong>(默认含有此选项): 指定 <code>-SysMenu</code>(负 SysMenu) 可以删除点击窗口左上角时弹出的系统菜单和图标. 同时也删除标题栏上的最小化, 最大化和关闭按钮.</p>
 <p id="Theme"><strong>Theme</strong>: 指定 <code>-Theme</code>, 可以让后续创建的所有控件在 Windows XP 以及更高版本中使用经典主题外观. 之后要创建其他使用当前主题的控件时, 请使用 <code>+Theme</code> 把设置切换回来. 注意: 此选项在比 Windows XP 早的系统上没有效果, 如果 XP 中当前使用经典主题时也没有效果. 最后, 对于单独的控件还可以在其创建的选项中指定 <code>+Theme</code> 或 <code>-Theme</code> 来改变此设置.</p>
 <p><strong>ToolWindow</strong>: 让窗口显示细标题栏, 同时去除任务栏按钮.</p>
 <p><strong>(未命名样式)</strong>: 在十进制或十六进制的 <a href="../misc/Styles.htm">样式编号</a> 前加上加号或减号表示添加或删除此样式.</p>
@@ -221,7 +221,7 @@ Menu, HelpMenu, Add, &amp;About, MenuHandler
 Menu, MyMenuBar, Add, &amp;File, :FileMenu  <em>; 附加上面的两个子菜单.</em>
 Menu, MyMenuBar, Add, &amp;Help, :HelpMenu
 <strong>Gui, Menu, MyMenuBar</strong></pre>
-<p>注意在上面的首行中, <code>&amp;Open</code> 后面跟着 <code>Ctrl+O</code>(它们之间含 tab). 这表示用户可以按下快捷键代替选择菜单项来执行操作. <span class="ver">[v1.1.04+]:</span>如果这样的快捷键中只使用了标准的修饰键名称 Ctrl, Alt 和 Shift, 那么它会被自动注册为这个 GUI 的<em>键盘快捷键</em>. 不含修饰键的单字母快捷键是区分大小写的, 且可以使用不常见的方法触发, 例如 IME 或 Alt+NNNN.</p>
+<p>注意在上面的首行中, <code>&amp;Open</code> 后面跟着 <code>Ctrl+O</code>(它们之间含 tab). 这表示用户可以按下快捷键代替选择菜单项来执行操作. <span class="ver">[v1.1.04+]:</span> 如果这样的快捷键中只使用了标准的修饰键名称 Ctrl, Alt 和 Shift, 那么它会被自动注册为这个 GUI 的<em>键盘快捷键</em>. 不含修饰键的单字母快捷键是区分大小写的, 且可以使用不常见的方法触发, 例如 IME 或 Alt+NNNN.</p>
 <p>如果特殊的按键组合没有自动生效, 请使用 <a href="_IfWinActive.htm">上下文相关热键</a>. 然而, 这样的热键一般不能使用 <a href="Send.htm">Send</a> 触发, 并且比起标准的键盘快捷键它们更可能和其他脚本产生冲突.</p>
 <p>要移除窗口当前的菜单栏, 请使用 <code>Gui Menu</code>(即省略最后一个参数).</p>
 <p>一旦菜单被设置为窗口的菜单栏, 它就不能用于弹出菜单或子菜单. 这是因为菜单栏内部使用了不同的格式(不过, 这只限制菜单栏自身, 而不包括其子菜单). 如果您一定要这样实现, 那么先创建一个菜单用于菜单栏, 再创建另一个相同的菜单用于其他目的.</p>
@@ -291,8 +291,8 @@ gui, show</pre>
 <p><strong>Right</strong>: 在控件的可用宽度内右对齐控件的文本. 对于复选框和单选按钮, 此选项也同时把框放置在控件的右边而不是左边.</p>
 <p><strong>Center</strong>: 在控件的可用宽度内居中对齐控件的文本.</p>
 <p id="Section"><strong>Section</strong>: 定义一个新的控件段并保存当前控件的位置以便在之后创建含有 <em>xs</em> 和 <em>ys</em> 选项的控件时使用, 请参阅<a href="#xs">上文的描述</a>.</p>
-<p id="Tabstop"><strong>Tabstop</strong>: 使用 <code>-Tabstop</code>(即负 Tabstop)可以让用户按 TAB 键导航时跳过输入型控件.</p>
-<p id="Wrap"><strong>Wrap</strong>: 让控件的文本自动换行. 因为几乎所有类型的控件初始状态都启用了自动换行, 所以需要通过<code>-Wrap</code>禁用它.</p>
+<p id="Tabstop"><strong>Tabstop</strong>: 使用 <code>-Tabstop</code>(即负 Tabstop) 可以让用户按 TAB 键导航时跳过输入型控件.</p>
+<p id="Wrap"><strong>Wrap</strong>: 让控件的文本自动换行. 因为几乎所有类型的控件初始状态都启用了自动换行, 所以需要通过 <code>-Wrap</code> 禁用它.</p>
 <p><strong>VScroll</strong>: 当控件支持时为其提供一个垂直滚动条.</p>
 <p><strong>HScroll</strong>: 当控件支持时为其提供一个水平滚动条. 这个段落的剩余部分仅适用于 <a href="GuiControls.htm#ListBox">ListBox</a>. 可水平滚动的宽度默认为 ListBox 宽度的 3 倍. 要使用其他的滚动宽度, 请在单词 HScroll 后紧跟着一个数字表示. 例如, <code>HScroll500</code> 将在 ListBox 中使用 500 像素的滚动栏宽度. 但是, 如果指定的滚动宽度小于 ListBox 的宽度, 则不显示滚动条(不过在这种含有 <em>HScroll</em> 的情况下, 可以在之后使用 <code><a href="GuiControl.htm">GuiControl</a>, +HScroll500, MyScrollBar</code> 来添加水平滚动条, 否则是无法添加的).</p>
 
@@ -315,7 +315,7 @@ gui, show</pre>
   <li><a href="#GuiDropFiles">GuiDropFiles</a></li>
 </ul>
 <p><span class="ver">[v1.1.20+]:</span> 如果事件处理标签不存在, 那么相同名称的函数将替代标签响应. 函数可选择接收 GUI 的 <a href="#GuiHwndOutputVar">HWND</a> 作为第一个参数. 一些事件还有更多的参数.</p>
-<p>对于非第一个窗口 <a href="#MultiWin">(多窗口的情况) </a> , 窗口的名称或序号(如果有) 会被作为前面提到的特殊标签的前缀; 例如, 2GuiEscape 和 2GuiClose 将被作为第二窗口的默认标签, 当 <em>MyGui</em>GuiEscape 和 <em>MyGui</em>GuiClose 会作为 <em>MyGui</em> 的默认标签. 要自定义一个前缀, 请用 <code><a href="#PlusLabel">Gui +Label</a></code>.</p>
+<p>对于非第一个窗口<a href="#MultiWin">(多窗口的情况) </a>, 窗口的名称或序号(如果有) 会被作为前面提到的特殊标签的前缀; 例如, 2GuiEscape 和 2GuiClose 将被作为第二窗口的默认标签, 当 <em>MyGui</em>GuiEscape 和 <em>MyGui</em>GuiClose 会作为 <em>MyGui</em> 的默认标签. 要自定义一个前缀, 请用 <code><a href="#PlusLabel">Gui +Label</a></code>.</p>
 
 <p id="GuiClose"><strong>GuiClose</strong>: 使用下列其中一种方法关闭窗口时自动运行此子程序: 点击标题栏上的关闭按钮, 从标题栏中的系统菜单中选择 "关闭" 或使用 <a href="WinClose.htm">WinClose</a> 关闭. 如果此标签不存在, 则关闭窗口只是简单地隐藏窗口, 与 <a href="#Cancel">Gui Cancel</a> 的效果一样. 在 GuiClose 中一个最常用的动作是 <a href="ExitApp.htm">ExitApp</a>; 例如:</p>
 <pre>GuiClose:
@@ -405,7 +405,7 @@ Gui, <strong>MyGui:</strong>Show</pre>
 <h2 id="DefaultWin">GUI 事件, 线程和子程序</h2>
 <p>一个 GUI <a href="../misc/Threads.htm">线程</a> 是由 GUI 动作启动的. GUI 动作包括从 GUI 窗口的 <a href="#Menu">菜单栏</a> 中选择一个项目或触发其某个 <a href="#label">g-标签</a>(例如按下按钮).</p>
 <p>GUI 线程的 <strong>默认<a href="#MultiWin">窗口名称</a></strong> 是运行此线程的窗口名称. 非 GUI 线程的默认窗口编号为 1.</p>
-<p>当一个 GUI <a href="../misc/Threads.htm">线程</a> 启动时, 此线程的 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a> 初始为此 GUI 窗口自身. 这样可以让窗口和控件操作命令(例如 <a href="WinMove.htm">WinMove</a>, <a href="WinHide.htm">WinHide</a>, <a href="WinSet.htm">WinSet</a>, <a href="WinSetTitle.htm">WinSetTitle</a> 和 <a href="ControlGetFocus.htm">ControlGetFocus</a>)对当前的 GUI 窗口进行操作时省略 WinTitle 和 WinText(即使窗口处于隐藏状态).</p>
+<p>当一个 GUI <a href="../misc/Threads.htm">线程</a> 启动时, 此线程的 <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a> 初始为此 GUI 窗口自身. 这样可以让窗口和控件操作命令(例如 <a href="WinMove.htm">WinMove</a>, <a href="WinHide.htm">WinHide</a>, <a href="WinSet.htm">WinSet</a>, <a href="WinSetTitle.htm">WinSetTitle</a> 和 <a href="ControlGetFocus.htm">ControlGetFocus</a>) 对当前的 GUI 窗口进行操作时省略 WinTitle 和 WinText(即使窗口处于隐藏状态).</p>
 <p>当一个控件的 <a href="#label">g-标签</a> 由于之前的点击还在运行时, 点击此控件不会有效果并且此事件被丢弃. 要避免此问题, 请在子程序的首行使用 <a href="Critical.htm">Critical</a>(不过, 这样也将缓冲/延迟其他 <a href="../misc/Threads.htm">线程</a>, 例如按下的热键).</p>
 <p>内置变量 A_Gui 和 A_GuiControl 包含了运行当前线程的窗口编号和控件 ID. 要了解详情请参阅 <a href="../Variables.htm#Gui">A_Gui</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a>.</p>
 <p>要让多个事件执行相同的子程序, 请在子程序上面连续指定这些标签. 例如:</p>
@@ -428,7 +428,7 @@ ExitApp  <em>; 上面的所有标签都会执行这个语句.</em></pre>
 Gui +LastFound
 <a href="PostMessage.htm">SendMessage</a>, 0x80, 1, hIcon32  <em>; 0x80 是 WM_SETICON; 1 表示 ICON_BIG (而0 表示 ICON_SMALL).</em>
 Gui Show</pre>
-<p>由于操作系统的限制, 在 Windows XP 以及更高版本中, Checkbox, Radio button 和 GroupBox 控件中的文本不是使用默认颜色时将显示为经典主题外观.</p>
+<p>由于操作系统的限制, 在 Windows XP 以及更高版本中, Checkbox, Radio 和 GroupBox 控件中的文本不是使用默认颜色时将显示为经典主题外观.</p>
 <p>相关主题: <a href="#Margin(边距)">窗口边距</a>.</p>
 <h2 id="GenRemarks">一般说明</h2>
 <p>使用 <a href="GuiControl.htm">GuiControl</a> 和 <a href="GuiControlGet.htm">GuiControlGet</a> 可以单独对 GUI 窗口中的控件进行操作.</p>

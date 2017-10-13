@@ -226,14 +226,14 @@ ExitApp</pre>
 <p>尽管除了图标模式和平铺模式显示小图标外, 对于其他的 <a href="#View">视图模式</a> 这是惯例, 但通过传递一个大图标列表到 LV_SetImageList 并且在第二个参数中指定 1(小图标) 可以覆盖此行为. 这也增加了 ListView 中每行的高度以适合大图标.</p>
 <p>如果成功, 则 LV_SetImageList() 返回之前与 ListView 关联的 ImageListID(如果没有则为 0). 任何分离的图像列表一般应使用 <a href="#IL_Destroy">IL_Destroy(ImageListID)</a> 进行销毁.</p>
 <h3 id="IL_Add">IL_Add(ImageListID, Filename [, IconNumber, ResizeNonIcon?])</h3>
-<p>添加图标或图片到指定的 <em>ImageListID</em> 并返回新图标的索引(首个图标索引为 1, 第二个为 2, 依此类推). <em>Filename</em> 为图标(.ICO), 光标(.CUR)或动画光标(.ANI) 文件的名称(动画光标在 ListView 中显示时实际将不会动). 图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR 以及包含图标资源的其他类型. 要使用文件中的图标组而不是首个图标, 请在 <em>IconNumber</em> 指定它的编号. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
+<p>添加图标或图片到指定的 <em>ImageListID</em> 并返回新图标的索引(首个图标索引为 1, 第二个为 2, 依此类推). <em>Filename</em> 为图标(.ICO), 光标(.CUR) 或动画光标(.ANI) 文件的名称(动画光标在 ListView 中显示时实际将不会动). 图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR 以及包含图标资源的其他类型. 要使用文件中的图标组而不是首个图标, 请在 <em>IconNumber</em> 指定它的编号. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
 <p>还可以加载非图标图像, 例如 BMP, GIF 和 JPG. 然而, 此时应该指定最后两个参数以确保正确执行: <em>IconNumber</em> 应该为屏蔽的/透明的颜色编码(对于大多数图片 0xFFFFFF [白色] 可能是最佳的); 而 <em>ResizeNonIcon</em> 应该为非零值来缩放图片为单个图标, 或者为零来把图像分割为多个可以匹配实际宽度的图标.</p>
 <p>在所有的操作系统中都支持 GIF, JPG, BMP, ICO, CUR 和 ANI 图像. 在 Windows XP 或更高版本中, 还支持其他图像格式, 例如 PNG, TIF, Exif, WMF 和 EMF. 比 XP 早的操作系统可以通过复制微软免费的 GDI+ DLL 到 AutoHotkey.exe 文件夹中来提供支持(但如果是 <a href="Scripts.htm#ahk2exe">已编译脚本</a>, 则复制此 DLL 到脚本的文件夹). 要下载这个 DLL, 请在 <a href="http://www.microsoft.com">www.microsoft.com</a> 搜索下列短语: gdi redistributable</p>
 <p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">bitmap(位图) 或 icon(图标) 句柄</a> 可用于替代文件名称. 例如, <code>HBITMAP:%handle%</code>.</p>
 <h3 id="IL_Destroy">IL_Destroy(ImageListID)</h3>
 <p>删除指定的图像列表, 成功时返回 1 而失败返回 0. 通常没必要销毁图像列表, 因为一旦关联到 ListView, 当 ListView 或其父窗口销毁时它们会被自动销毁. 但是, 如果一个 ListView 和其他 ListView 共享图像列表(通过在选项中包含 <code>0x40</code>), 在所有使用此图像列表的 ListView 销毁后脚本应该明确地销毁它. 同样地, 如果脚本使用一个新的图像列表代替 ListView 中原来的, 则应该明确销毁原来的图像列表.</p>
 <h2 id="Remarks">ListView 备注</h2>
-<p><a href="Gui.htm#Submit">Gui Submit</a> 命令对 ListView 控件没有效果. 因此, 脚本可以使用 ListView 的<a href="Gui.htm#var">关联变量</a>(如果有)来保存其他数据而不用担心它会被覆盖.</p>
+<p><a href="Gui.htm#Submit">Gui Submit</a> 命令对 ListView 控件没有效果. 因此, 脚本可以使用 ListView 的<a href="Gui.htm#var">关联变量</a>(如果有) 来保存其他数据而不用担心它会被覆盖.</p>
 <p>在对某个列进行排序后(通过用户点击其标题的方法或脚本调用 <code><a href="#LV_ModifyCol">LV_ModifyCol(1, "Sort")</a></code>), 任何随后添加的行将出现在列表的底部而不会遵循排序顺序. 例外情况是 <a href="#Sort">Sort</a> 和 <a href="#SortDesc">SortDesc</a> 样式, 它们会把新添加的行移动正确的位置.</p>
 <p id="Enter">当 ListView 拥有焦点时如果要检测到用户按下的回车键, 请使用 <a href="GuiControls.htm#DefaultButton">默认按钮</a>(如果需要则可以隐藏它). 例如:</p>
 <pre>Gui, Add, Button, Hidden Default, OK
