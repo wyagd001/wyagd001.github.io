@@ -1,14 +1,31 @@
-﻿translate = {
-  hdSearchTxt: "AutoHotkey",
-  hdSearchBtn: "搜索",
-  hdSearchLnk: "http://www.google.com/cse?cx=010629462602499112316:ywoq_rufgic&q={0}",
-  sbContent: "目录",
-  sbIndex: "索引",
-  ftLicense: "License:",
-  ftExtra: "",
-  cdSelectBtn: "选择",
-  cdDownloadBtn: "下载",
-  verToolTipAHK_L: "适用于:\nAutoHotkey_L Revision {0} 及以后版本 \nAutoHotkey v1.0.90.00 及以后版本",
-  verToolTipDefault: "适用于 AutoHotkey {0} 及以后版本",
-  tutLocalMessage: "如果你是在本地查看此文档, 你可能已经安装了 AutoHotkey 并且可以跳过 b 部分."
+﻿translateData = {
+  // sidebar
+  "Content":"目录",
+  "Index":"引索",
+  "Type in the keyword to find:":"输入要查找关键词",
+  "Search":"搜索",
+  "Type in the word(s) to search for:":"输入要搜索的内容",
+  // header
+  "Hide/Show sidebar":"显示/隐藏 侧边栏",
+  "Home page":"主页",
+  "zh":"中文",
+  "Change language":"更换语言",
+  "v1":true,
+  "Change AHK version":"变更 AHK 版本",
+  "https://lexikos.github.io/v2/docs/":true,
+  "Edit page on GitHub":"在 GitHub 编辑页面",
+  "https://github.com/Lexikos/AutoHotkey_L-Docs/edit/master/docs/":"https://github.com/wyagd001/wyagd001.github.io/edit/master/zh-cn/docs/",
+  "Go back":"后退",
+  "Go forward":"前进",
+  "Change font size":"更改字体大小",
+  "Print current document":"打印当前页面",
+  // ALT+... shortcuts (needs uppercase)
+  "C":true,
+  "N":true,
+  "S":true,
+  // content
+  "Select code":"选择代码",
+  "Download code":"下载代码",
+  "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later":"适用于:\nAutoHotkey_L Revision {0} 及以后版本 \nAutoHotkey v1.0.90.00 及以后版本",
+  "Applies to AutoHotkey {0} and later":"适用于 AutoHotkey {0} 及以后版本"
 };

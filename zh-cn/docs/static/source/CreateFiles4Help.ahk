@@ -2,24 +2,12 @@
 #NoTrayIcon
 SetBatchLines, -1
 
-FileList := { MainJS:       "main.js"
-            , IndexJS:      "data_index.js"
-            , TocJS:        "data_toc.js"
-            , TranslateJS:  "data_translate.js"
-            , JQueryJS:     "jquery.js"
-            , TreeJQueryJS: "tree.jquery.js" }
+; FileRead TocJS, %A_ScriptDir%\data_toc.js
+FileRead IndexJS, %A_ScriptDir%\data_index.js
 
-FileEncoding, UTF-8
-For var, file in FileList
-	FileRead %var%, %A_ScriptDir%\%file%
-
-;~ 仅当需要更新目录和索引时取消下面的注释
-;~ SetWorkingDir %A_ScriptDir%\..
-;~ Overwrite("content.js", JQueryJS "`n" TreeJQueryJS "`n" TocJS "`n" IndexJS "`n" TranslateJS "`n" MainJS)
-;~ Overwrite("content.chm.js", JQueryJS "`n" TranslateJS "`n" MainJS)
-;~ SetWorkingDir %A_ScriptDir%\..\..\..
-;~ Overwrite("Table of Contents.hhc", TOC_CreateHHC(TocJS))
-;~ Overwrite("Index.hhk", INDEX_CreateHHK(IndexJS))
+SetWorkingDir %A_ScriptDir%\..\..\..
+; Overwrite("Table of Contents.hhc", TOC_CreateHHC(TocJS))
+Overwrite("Index.hhk", INDEX_CreateHHK(IndexJS))
 return
 
 Overwrite(File, Text)
@@ -43,7 +31,7 @@ TOC_CreateHHC(data)
     <param name="ImageType" value="Folder">
     </object>
     )
-    output .= TOC_CreateListCallback("", sc.Eval("toc"))
+    output .= TOC_CreateListCallback("", sc.Eval("tocData"))
     output .= "`n</body>`n</html>`n"
     return % output
 }
@@ -85,7 +73,7 @@ INDEX_CreateHHK(data)
     sc := ComObjCreate("ScriptControl")
     sc.Language := "JScript"
     sc.ExecuteStatement(data)
-    data := sc.Eval("index")
+    data := sc.Eval("indexData")
     output =
     ( LTrim
     <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
