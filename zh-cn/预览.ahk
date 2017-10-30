@@ -13,7 +13,7 @@ Gui Add, ActiveX, w1050 h800 vWB, Shell.Explorer  ; The final parameter is the n
 WB.silent := true ;Surpress JS Error boxes
 ComObjConnect(WB, WB_events)  ; Connect WB's events to the WB_events class object.
 Gui Show
-WB.Navigate("file://N:\资料\autohotkey中文帮助\编译工具\index.html")
+WB.Navigate("file://" A_Scriptdir "\index.html")
 return
 
 class WB_events

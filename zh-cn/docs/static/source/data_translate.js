@@ -1,14 +1,14 @@
 ﻿translateData = {
   // sidebar
-  "Content":"目录",
-  "Index":"引索",
+  "Content":"目录(C)",
+  "Index":"索引(N)",
   "Type in the keyword to find:":"输入要查找关键词",
-  "Search":"搜索",
+  "Search":"搜索(S)",
   "Type in the word(s) to search for:":"输入要搜索的内容",
   // header
   "Hide/Show sidebar":"显示/隐藏 侧边栏",
   "Home page":"主页",
-  "zh":"中文",
+  "en":"zh",
   "Change language":"更换语言",
   "v1":true,
   "Change AHK version":"变更 AHK 版本",
