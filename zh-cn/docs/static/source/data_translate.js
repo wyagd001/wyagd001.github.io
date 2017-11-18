@@ -1,30 +1,30 @@
-translateData = {
+ï»¿translateData = {
   // sidebar
-  "Content":"Ä¿Â¼(C)",
-  "Index":"Ë÷Òı(N)",
-  "Type in the keyword to find:":"ÊäÈëÒª²éÕÒ¹Ø¼ü´Ê",
-  "Search":"ËÑË÷(S)",
-  "Type in the word(s) to search for:":"ÊäÈëÒªËÑË÷µÄÄÚÈİ",
+  "Content":"ç›®å½•(C)",
+  "Index":"ç´¢å¼•(N)",
+  "Type in the keyword to find:":"è¾“å…¥è¦æŸ¥æ‰¾å…³é”®è¯",
+  "Search":"æœç´¢(S)",
+  "Type in the word(s) to search for:":"è¾“å…¥è¦æœç´¢çš„å†…å®¹",
   // header
-  "Hide/Show sidebar":"ÏÔÊ¾/Òş²Ø ²à±ßÀ¸",
-  "Home page":"Ö÷Ò³",
+  "Hide/Show sidebar":"æ˜¾ç¤º/éšè— ä¾§è¾¹æ ",
+  "Home page":"ä¸»é¡µ",
   "en":"zh",
-  "Change language":"¸ü»»ÓïÑÔ",
+  "Change language":"æ›´æ¢è¯­è¨€",
   "v1":true,
-  "Change AHK version":"±ä¸ü AHK °æ±¾",
-  "Edit page on GitHub":"ÔÚ GitHub ±à¼­Ò³Ãæ",
+  "Change AHK version":"å˜æ›´ AHK ç‰ˆæœ¬",
+  "Edit page on GitHub":"åœ¨ GitHub ç¼–è¾‘é¡µé¢",
   "https://github.com/Lexikos/AutoHotkey_L-Docs/edit/master/docs/":"https://github.com/wyagd001/wyagd001.github.io/edit/master/zh-cn/docs/",
-  "Go back":"ºóÍË",
-  "Go forward":"Ç°½ø",
-  "Change font size":"¸ü¸Ä×ÖÌå´óĞ¡",
-  "Print current document":"´òÓ¡µ±Ç°Ò³Ãæ",
+  "Go back":"åé€€",
+  "Go forward":"å‰è¿›",
+  "Change font size":"æ›´æ”¹å­—ä½“å¤§å°",
+  "Print current document":"æ‰“å°å½“å‰é¡µé¢",
   // ALT+... shortcuts (needs uppercase)
   "C":true,
   "N":true,
   "S":true,
   // content
-  "Select code":"Ñ¡Ôñ´úÂë",
-  "Download code":"ÏÂÔØ´úÂë",
-  "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later":"ÊÊÓÃÓÚ:\nAutoHotkey_L Revision {0} ¼°ÒÔºó°æ±¾ \nAutoHotkey v1.0.90.00 ¼°ÒÔºó°æ±¾",
-  "Applies to AutoHotkey {0} and later":"ÊÊÓÃÓÚ AutoHotkey {0} ¼°ÒÔºó°æ±¾"
+  "Select code":"é€‰æ‹©ä»£ç ",
+  "Download code":"ä¸‹è½½ä»£ç ",
+  "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later":"é€‚ç”¨äº:\nAutoHotkey_L Revision {0} åŠä»¥åç‰ˆæœ¬ \nAutoHotkey v1.0.90.00 åŠä»¥åç‰ˆæœ¬",
+  "Applies to AutoHotkey {0} and later":"é€‚ç”¨äº AutoHotkey {0} åŠä»¥åç‰ˆæœ¬"
 };
