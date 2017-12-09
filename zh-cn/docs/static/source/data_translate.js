@@ -2,9 +2,9 @@
   // sidebar
   "Content":"目录(C)",
   "Index":"索引(N)",
-  "Type in the keyword to find:":"输入要查找的关键词",
+  "Type in the keyword to find:":"输入要查找的关键词:",
   "Search":"搜索(S)",
-  "Type in the word(s) to search for:":"输入要搜索的内容",
+  "Type in the word(s) to search for:":"输入要搜索的内容:",
   // header
   "Hide/Show sidebar":"显示/隐藏 侧边栏",
   "Home page":"主页",
