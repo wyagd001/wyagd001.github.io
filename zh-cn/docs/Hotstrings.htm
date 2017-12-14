@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
 <title>热字串和自动替换(类似于自动图文集和自动更正)</title>
@@ -61,7 +61,7 @@ return</pre>
 <ul>
   <li>SI 表示 <a href="commands/Send.htm#SendInputDetail">SendInput</a>, 它通常比其他模式拥有较好的速度和可靠性. 另一个好处是和下面的 SendPlay 一样, SendInput 会在热字串 <a href="#auto">自动替换文本</a> 时会延迟您输入的内容. 这样避免了您的键击穿插到替换的内容中. 当 SendInput <a href="commands/Send.htm#SendInputUnavail">不可用时</a>, 热字串会自动使用 SendPlay.</li>
   <li>SP 表示 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>, 它可以让热字串运行在更大范围的游戏中.</li>
-  <li>SE 表示 <a href="commands/Send.htm#SendEvent">SendEvent</a>, 在比 1.0.43 早的版本中这是默认选项.</li>
+  <li>SE 表示 <a href="commands/Send.htm#SendEvent">SendEvent</a>, 在比 <span class="ver">[1.0.43]</span> 早的版本中这是默认选项.</li>
 </ul>
 <p>如果未使用上面的任何一个选项, 则在 v1.0.43 及更高的版本中默认模式为 SendInput. 然而, 与 SI 选项不同的是, 在 SendInput 不可用时会使用 SendEvent 而不是 SendPlay.</p>
 <p><strong><a name="z"></a>Z</strong>: 这个非常少用的选项会在每次热字串触发后重置热字串识别器. 换句话说, 脚本将开始等待全新的热字串, 而不考虑您之前输入的任何内容. 这可以避免意外地触发字符串. 为了进行说明, 请思考下面的字符串:</p>
@@ -94,18 +94,18 @@ See <a href="Scripts.htm#continuation">continuation section</a> for how to chang
 <p>替换文本中当前不支持例如 <code>%MyVar%</code> 这样的变量引用. 要解决此问题, 请不要让这样的热字串<a href="#auto">自动替换</a>. 而是在缩写的下面使用 <a href="commands/Send.htm#SendInput">SendInput</a> 命令, 后跟着仅包含单词 Return 的行.</p>
 <p>要在替换文本后发送额外的空格或 tab, 可以把它们加在替换文本后, 但需要在末尾加上重音符/反引号(`). 例如:</p>
 <pre>:*:btw::By the way `</pre>
-<p id="NoMouse">鼠标左键或右键的任何点击都会重置热字串识别器. 换句话说, 脚本将开始等待全新的热字串, 而不考虑您之前输入的任何内容(如果您不希望这样, 请在脚本的任意位置指定 <code><a href="commands/_Hotstring.htm">#Hotstring NoMouse</a></code> 这行). 在 "鼠标点击时重置" 的行为是默认的, 因为每次点击通常会移动插入点(光标) 或设置键盘焦点到新的控件/区域. 在这种情况下, 通常希望: 1) 即使没有 <a href="#Question">问号选项</a> 也触发热键; 2) 防止您在点击鼠标后输入的一些内容与之前输入的内容意外形成有效的缩写从而触发热字串.</p>
+<p id="NoMouse">鼠标左键或右键的任何点击都会重置热字串识别器. 换句话说, 脚本将开始等待全新的热字串, 而不考虑您之前输入的任何内容(如果您不希望这样, 请在脚本的任意位置指定 <code><a href="commands/_Hotstring.htm">#Hotstring</a> NoMouse</code> 这行). 在 "鼠标点击时重置" 的行为是默认的, 因为每次点击通常会移动插入点(光标) 或设置键盘焦点到新的控件/区域. 在这种情况下, 通常希望: 1) 即使没有 <a href="#Question">问号选项</a> 也触发热键; 2) 防止您在点击鼠标后输入的一些内容与之前输入的内容意外形成有效的缩写从而触发热字串.</p>
 <p>内置变量 <strong>A_EndChar</strong> 包含了触发最近的非自动替换热字串时的终止符. 如果不需要终止符(使用了 <a href="#Asterisk">* 选项</a>), 那么它会被置空. A_EndChar 可以用于使用 Send 命令的热字串或根据您输入的不同终止符改变行为的那些热字串. 要发送终止符自身, 请使用 <code>SendRaw %A_EndChar%</code>(使用 <a href="commands/Send.htm">SendRaw</a> 是因为普通的 Send 命令无法正确发送类似 !{} 这样的字符).</p>
 <p>尽管在热字串定义中的逗号, 百分号和单冒号不需要进行<a href="commands/_EscapeChar.htm">转义</a>, 但反引号和那些在空格或 tab 右边的分号则需要. 请参阅 <a href="commands/_EscapeChar.htm">转义序列</a> 了解完整的列表.</p>
 <p>尽管在 <a href="#auto">自动替换文本</a>(在没有使用 <a href="#raw">原始选项</a> 时) 中支持 <a href="commands/Send.htm">Send 命令</a> 的特殊字符例如 {Enter}, 但热字串自身却不使用这种方式. 而是使用 `n 表示 ENTER 键, `t(或原义的 tab) 表示 TAB(请参阅 <a href="commands/_EscapeChar.htm">转义序列</a> 了解完整的列表). 例如, 当您输入"ab"后跟着 tab 时会触发热字串 <code>:*:ab`t::</code>.</p>
 <p>热字串会原义地处理在它的定义中的空格和 tab. 例如后面的热字串会产生两种不同的效果: <code>::btw::by the way</code> 和 <code>::btw:: by the way</code>.</p>
-<p>每个热字串缩写的长度不能超过 40 个字符. 超出此长度后程序会向您提出警告. 与之相比, 当 <a href="#SendMode">发送模式</a> 为默认的 SendInput 时热字串的替换文本的长度限制约为 5000 个字符. 通过切换到其他 <a href="#SendMode">发送模式</a> 可以把此限制增加到 16,383 字符. 此外, 在热字串的替换文本部分使用 <code><a href="commands/Send.htm#SendPlayDetail">SendPlay %MyVariable%</a></code> 可以发送不限数量的文本.</p>
+<p>每个热字串缩写的长度不能超过 40 个字符. 超出此长度后程序会向您提出警告. 与之相比, 当 <a href="#SendMode">发送模式</a> 为默认的 SendInput 时热字串的替换文本的长度限制约为 5000 个字符. 通过切换到其他 <a href="#SendMode">发送模式</a> 可以把此限制增加到 16,383 字符. 此外, 在热字串的替换文本部分使用 <code><a href="commands/Send.htm#SendPlayDetail">SendPlay </a> %MyVariable%</code> 可以发送不限数量的文本.</p>
 <p>热字串的定义顺序决定了它们的相对优先级. 换句话说, 如果多个热字串匹配您输入的内容, 那么只有脚本中首先列出的那个会生效. 相关主题:<a href="#variant">上下文相关热字串</a>.</p>
 <p>为了识别热字串, 您输入的所有退格都会被计算进来. 然而, 使用方向键, PageUp, PageDown, Home 以及 End 在编辑器中导航会重置热字串识别过程. 换句话说, 它会开始等待全新的热字串.</p>
 <p>即使当前活动窗口忽略您的键击时也可以输入热字串. 换句话说, 即使触发的缩略词不可见时热字串仍会被触发. 此外, 您还可以使用退格键撤销最近输入的键击(尽管您无法看到效果).</p>
 <p id="label">可以 <a href="commands/Gosub.htm">Gosub</a> 或 <a href="commands/Goto.htm">Goto</a> 到热字串标签, 只需在热字串的标签名称前包含第一个双冒号(以及所有选项符号). 例如: <code>Gosub ::xyz</code>. 然而, 跳转到 <a href="#auto">单行(自动替换) 热字串</a> 会除了执行 <a href="commands/Return.htm">return</a> 外什么都不做.</p>
 <p>尽管不会监视热字串且在不可见的 <a href="commands/Input.htm">Input</a> 命令执行时也不会触发它们, 但是可见的 Input 却能触发它们.</p>
-<p id="InputLevel">默认情况下, 由任何 AutoHotkey 脚本生成的键击永远不会触发热字串. 这避免了热字串彼此反复地触发而形成的无限循环的可能性. 在 v1.1.06 及更高版本中, 此行为可以使用 <a href="commands/_InputLevel.htm">#InputLevel</a> 和 <a href="commands/SendLevel.htm">SendLevel</a> 进行控制. 然而, 自动替换型热字串的发送级别总为 0, 因此永远不会触发 <a href="commands/_UseHook.htm">钩子热键</a> 或热字串.</p>
+<p id="InputLevel">默认情况下, 由任何 AutoHotkey 脚本生成的键击永远不会触发热字串. 这避免了热字串彼此反复地触发而形成的无限循环的可能性. 在 <span class="ver">[v1.1.06]</span> 及更高版本中, 此行为可以使用 <a href="commands/_InputLevel.htm">#InputLevel</a> 和 <a href="commands/SendLevel.htm">SendLevel</a> 进行控制. 然而, 自动替换型热字串的发送级别总为 0, 因此永远不会触发 <a href="commands/_UseHook.htm">钩子热键</a> 或热字串.</p>
 <p>在某些时候 <a href="commands/Input.htm">Input</a> 命令比热字串更灵活. 例如, 它可以对活动窗口(例如游戏) 隐藏您的键击. 它还支持非字符型的终止键, 例如 Escape.</p>
 <p>任何包含热字串的脚本会自动使用 <a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
 <p>在下面的情况中热字串与热键具有相同的特性:</p>

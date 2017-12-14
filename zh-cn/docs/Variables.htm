@@ -70,7 +70,7 @@ Sleep % MillisecondsToWait</pre>
 <pre>CaseSensitive := false
 ContinueSearch := true</pre>
 <p><strong>整数和浮点数</strong>: 在表达式中, 含有小数点的数字被视为浮点数; 否则视为整数. 对于大多数运算符(例如加法和乘法), 只要其中的一个输入是浮点数, 那么结果也将是浮点数.</p>
-<p>不论在表达式中还是在表达式外的其他地方, 整数都可以表示成十六进制或十进制. 十六进制数必须以前缀 0x 开头. 例如, <code>Sleep 0xFF</code> 等同于 <code>Sleep 255</code>. 在 v1.0.46.11+, 可以识别用科学计数法表示的浮点数; 但只有在它们含有小数点时才行(例如 <code>1<strong>.</strong>0e4</code> 和 <code>-2<strong>.</strong>1E-4</code>).</p>
+<p>不论在表达式中还是在表达式外的其他地方, 整数都可以表示成十六进制或十进制. 十六进制数必须以前缀 0x 开头. 例如, <code>Sleep 0xFF</code> 等同于 <code>Sleep 255</code>. <span class="ver">[v1.0.46.11+]</span>: 可以识别用科学计数法表示的浮点数; 但只有在它们含有小数点时才行(例如 <code>1<strong>.</strong>0e4</code> 和 <code>-2<strong>.</strong>1E-4</code>).</p>
 <p><strong>强制使用表达式</strong>: 通过在表达式前加上百分号和空格或 tab, 能把表达式用在不直接支持表达式的参数中(除了像 <a href="commands/StringLen.htm">StringLen</a> 的 OutputVar 和 InputVar 的那些参数). 这种技巧常用来访问 <a href="misc/Arrays.htm">数组</a>. 例如:</p>
 <pre><a href="commands/FileAppend.htm">FileAppend</a>, <strong>%</strong> MyArray%i%, My File.txt
 <a href="commands/FileAppend.htm">FileAppend</a>, <strong>%</strong> MyPseudoArray%i%, My File.txt
@@ -113,7 +113,17 @@ var2:=++y   ; var2=2, y=2
   </tr>
   <tr id="pow">
     <td style="text-align:center"><strong>**</strong></td>
-    <td><strong>幂</strong>. 底数和指数都可以为小数. 如果指数为负数, 即使底数和指数都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以 <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样且得到结果 -4. 因此, 要让负号的优先级高于幂运算, 需要把它们包围在括号中, 例如 <code>(-2)**2</code>. 注意: 不支持底数为负数且指数为分数的情况, 例如 <code>(-2)**0.5</code>; 它会产生空字符串. 但 <code>(-2)**2</code> 和 <code>(-2)**2.0</code> 都是支持的.</td>
+    <td>
+      <p><strong>幂</strong>. 底数和指数都可以为小数. 如果指数为负数, 即使底数和指数都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以 <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样且得到结果 -4. 因此, 要让负号的优先级高于幂运算, 需要把它们包围在括号中, 例如 <code>(-2)**2</code>.</p>      <p class="note"><strong>注意</strong>: 不支持底数为负数且指数为小数的情况, 例如 <code>(-2)**0.5</code>; 它会产生空字符串. 但 <code>(-2)**2</code> 和 <code>(-2)**2.0</code> 都是支持的. 该运算符用下面的例子来说明,<pre>
+msgbox % 2**-2     ; 结果为 0.250000
+msgbox % 2**(-2)   ; 结果为 0.250000
+msgbox % -2**2     ; 结果为 -4
+msgbox % -(2**2)   ; 结果为 -4
+msgbox % (-2)**2   ; 结果为 4
+msgbox % (-2)**2.0 ; 结果为 4.000000
+msgbox % (-2)**0.5 ; 结果为空
+</pre></p>
+    </td>
   </tr>
   <tr id="unary">
     <td style="text-align:center"><strong>-<br>
@@ -121,7 +131,7 @@ var2:=++y   ; var2=2, y=2
 	~<br>
 	&amp; *</strong></td>
     <td><p><strong>一元负号(-)</strong>: 尽管它和减运算符使用相同的符号, 但一元负号仅应用于单项或子表达式, 如此例中的两次演示: <code><strong>-</strong>(3 / <strong>-</strong>x)</code>. 相关提示, 表达式中的任何一元正号(+) 都会被忽略.</p>
-      <p><strong>逻辑非(!)</strong>: 如果运算数为空或 0, 那么逻辑非的结果为 1, 这表示 "真". 否则, 结果为 0(假). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 在 v1.0.46+, 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
+      <p><strong>逻辑非(!)</strong>: 如果运算数为空或 0, 那么逻辑非的结果为 1, 这表示 "真". 否则, 结果为 0(假). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. <span class="ver">[v1.0.46+]</span>: 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~)</strong>: 此运算符对运算数按位取反. 如果运算数为浮点数, 则在计算前把它截取成整数. 如果运算数介于 0 和 4294967295(0xffffffff) 之间, 那么它会被视为 <u>无符号的</u> 32 位值. 否则, 它被视为 <u>有符号的</u> 64 位值. 例如, <code>~0xf0f</code> 计算结果为 0xfffff0f0(4294963440).</p>
       <p id="amp"><strong>取址(&amp;)</strong>: <code>&amp;MyVar</code> 获取 <em>MyVar</em> 的内容的内存地址, 此地址一般和 <a href="commands/DllCall.htm#struct">DllCall 结构</a>一起使用. 同时 <code>&amp;MyVar</code> 也禁用了此变量中的二进制数的缓存, 如果它经常用于数学或数值比较, 那么这会拖慢其性能. 每当变量的地址改变时会重新启用它的缓存(例如使用 <a href="commands/VarSetCapacity.htm">VarSetCapacity()</a>).</p>
       <p><strong>解除引用(*)</strong>: <code>*Expression</code> 假定 <code>Expression</code> 解析为数值的内存地址; 它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0; 但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="commands/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
@@ -166,7 +176,7 @@ var2:=++y   ; var2=2, y=2
   </tr>
   <tr id="regex">
     <td style="text-align:center"><strong>~=</strong></td>
-    <td><span class="ver">[AHK_L 31+]:</span> 这是 <a href="commands/RegExMatch.htm">RegExMatch</a> 的简写形式. 例如, <code>"abc123" ~= "\d"</code> 会设置 ErrorLevel 为 0 并返回数字 4(首个数字的位置). 在 v1.1.03 之前, 此运算符和 <em>等号 </em>(=) 或 (:=) 运算符优先级相同, 但并未在文档中说明.<br>译者注, ~= 的优先级低于 not(!), 也就是说会先取反再匹配. 下面是一个很深的坑, 请测试下面这个<span class="red">错误的例子</span>:<br>
+    <td><span class="ver">[AHK_L 31+]:</span> 这是 <a href="commands/RegExMatch.htm">RegExMatch</a> 的简写形式. 例如, <code>"abc123" ~= "\d"</code> 会设置 ErrorLevel 为 0 并返回数字 4(首个数字的位置). 在 <span class="ver">[v1.1.03]</span> 之前, 此运算符和 <em>等号 </em>(=) 或 (:=) 运算符优先级相同, 但并未在文档中说明.<br>译者注, ~= 的优先级低于 not(!), 也就是说会先取反再匹配. 下面是一个很深的坑, 请测试下面这个<span class="red">错误的例子</span>:<br>
     <pre>
 str := "d"
 if (! str ~= "abc"){     	;~ 必须用括号包围才能获得预期的效果 if ! (str ~= "abc")
@@ -194,7 +204,10 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
     <td style="text-align:center"><strong>=<br>
 	==<br>
 	&lt;&gt; !=</strong></td>
-    <td><strong>等号(=)</strong>, <strong>区分大小写等于(==)</strong> 和 <strong>不等于(&lt;&gt; 或 !=)</strong>. 运算符 <strong>!=</strong> 和 <strong>&lt;&gt;</strong> 功能完全相同. 当两个输入都是数字时, 运算符 <strong>==</strong> 和 <strong>=</strong> 是一样的, 当某个输入不是数字时, <strong>==</strong> 总是区分大小写, 而 <strong>=</strong> 总是不区分大小写(不区分大小写的方法由 <a href="commands/StringCaseSense.htm">StringCaseSense</a> 决定). 与之相比, <strong>&lt;&gt;</strong> 和 <strong>!=</strong> 都遵循 <a href="commands/StringCaseSense.htm">StringCaseSense</a>. 注意: 加了引号的字符串例如 "55" 在这种情况下总是被当成非数值的.</td>
+    <td>
+    <p><strong>等号(=)</strong>, <strong>区分大小写等于(==)</strong> 和 <strong>不等于(&lt;&gt; 或 !=)</strong>. 运算符 <strong>!=</strong> 和 <strong>&lt;&gt;</strong> 功能完全相同. 当两个输入都是数字时, 运算符 <strong>==</strong> 和 <strong>=</strong> 是一样的, 当某个输入不是数字时, <strong>==</strong> 总是区分大小写, 而 <strong>=</strong> 总是不区分大小写(不区分大小写的方法由 <a href="commands/StringCaseSense.htm">StringCaseSense</a> 决定). 与之相比, <strong>&lt;&gt;</strong> 和 <strong>!=</strong> 都遵循 <a href="commands/StringCaseSense.htm">StringCaseSense</a>.</p> 
+      <p class="note"><strong>注意</strong>: 加了引号的字符串例如 "55" 在这种情况下总是被当成非数值的.</p>
+    </td>
   </tr>
   <tr>
     <td style="text-align:center"><strong>NOT</strong></td>
@@ -236,8 +249,9 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="comma">
     <td style="text-align:center"><strong>,</strong></td>
-    <td><p><strong>逗号(多语句)</strong> <span class="ver">[v1.0.46+]</span>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, func()</code>. 这样的语句按从左到右的顺序执行. 注意: 以逗号(或其他任何运算符) 开始的行会自动 <a href="Scripts.htm#continuation">附加到</a> 前一行的末尾. 另请参阅: <a href="#CommaPerf">逗号的性能</a>.</p>
-      <p>在 v1.0.46.01+, 当逗号后紧跟着变量和等号时, 则这个等号会被自动当成赋值 <a href="commands/SetExpression.htm">赋值(:=)</a>. 例如, 后面所有的都是赋值: <code>x:=1, y=2, a=b=c</code>.  新脚本不应该依赖于这种行为, 因为它可能会改变. 该规则只适用于无格式的变量而不是 <a href="#ref">双重引用</a>, 所以下面的内容只有一个赋值: <code>x:=1, %y%=2</code></p></td>
+    <td><p><strong>逗号(多语句)</strong> <span class="ver">[v1.0.46+]</span>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, func()</code>. 这样的语句按从左到右的顺序执行.
+      <p class="note"><strong>注意</strong>: 以逗号(或其他任何运算符) 开始的行会自动 <a href="Scripts.htm#continuation">附加到</a> 前一行的末尾. 另请参阅: <a href="#CommaPerf">逗号的性能</a>.</p>
+      <p><span class="ver">[v1.0.46.01+]</span>: 当逗号后紧跟着变量和等号时, 则这个等号会被自动当成赋值 <a href="commands/SetExpression.htm">赋值(:=)</a>. 例如, 后面所有的都是赋值: <code>x:=1, y=2, a=b=c</code>.  新脚本不应该依赖于这种行为, 因为它可能会改变. 该规则只适用于无格式的变量而不是 <a href="#ref">双重引用</a>, 所以下面的内容只有一个赋值: <code>x:=1, %y%=2</code></p></td>
   </tr>
 </table>
 <p>下面列出的子表达式改变计算的 优先级/顺序:</p>
@@ -280,7 +294,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
 </table>
 <br>
-<p id="CommaPerf"><strong>性能</strong>: 从 v1.0.48+ 开始, 使用逗号运算符常常比分开写单独的表达式速度更快, 尤其是把一个变量的值赋给另一个变量时(例如: <code>x:=y, a:=b</code>). 当越多的表达式联合成单个表达式时, 性能会持续得到提升; 例如, 把五个或十个简单的表达式联合成单个表达式速度可能提升 35%.</p>
+<p id="CommaPerf"><strong>性能</strong>: <span class="ver">[v1.0.48+]</span>: 使用逗号运算符常常比分开写单独的表达式速度更快, 尤其是把一个变量的值赋给另一个变量时(例如: <code>x:=y, a:=b</code>). 当越多的表达式联合成单个表达式时, 性能会持续得到提升; 例如, 把五个或十个简单的表达式联合成单个表达式速度可能提升 35%.</p>
 
 <h2 id="BuiltIn">内置变量</h2>
 <p>下列变量内置于程序中, 可以在任何脚本中引用. 除了 <a href="misc/Clipboard.htm">Clipboard</a>, <a href="misc/ErrorLevel.htm">ErrorLevel</a> 和 <a href="#CommandLine">命令行参数</a>, 其他变量都是只读的; 即它们的内容无法在脚本中直接修改.</p>
@@ -355,7 +369,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="AhkVersion">
     <td>A_AhkVersion</td>
-    <td>在 1.0.22 之前的版本, 此变量为空. 否则, 它包含了运行当前脚本的 AutoHotkey 主程序的版本号, 例如 1.0.22. 在 <a href="Scripts.htm#ahk2exe">已编译脚本</a> 中, 它包含了原来编译时使用的主程序的版本号. 格式化的版本号使得脚本可以使用 &gt; 或 &gt;= 来检查 A_AhkVersion 是否大于某个最小的版本号, 例如: <code>if A_AhkVersion &gt;= 1.0.25.07</code>. </td>
+    <td>在 [1.0.22] 之前的版本, 此变量为空. 否则, 它包含了运行当前脚本的 AutoHotkey 主程序的版本号, 例如 1.0.22. 在 <a href="Scripts.htm#ahk2exe">已编译脚本</a> 中, 它包含了原来编译时使用的主程序的版本号. 格式化的版本号使得脚本可以使用 &gt; 或 &gt;= 来检查 A_AhkVersion 是否大于某个最小的版本号, 例如: <code>if A_AhkVersion &gt;= 1.0.25.07</code>. </td>
   </tr>
   <tr id="AhkPath">
     <td>A_AhkPath</td>
@@ -379,7 +393,10 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
 <table class="info">
   <tr id="YYYY">
     <td>A_YYYY</td>
-    <td>4 位数表示的当前年份(例如 2004). 与 A_Year 含义相同. 注意: 要获取符合您区域设置和语言的格式化时间或日期, 请使用 <code><a href="commands/FormatTime.htm">FormatTime</a>, OutputVar</code>(时间和长日期)或 <code><a href="commands/FormatTime.htm">FormatTime</a>, OutputVar,, LongDate</code>(获取长格式日期). </td>
+    <td>
+    <p>4 位数表示的当前年份(例如 2004). 与 A_Year 含义相同.</p>
+      <p class="note"><strong>注意: 要获取符合您区域设置和语言的格式化时间或日期, 请使用 <code><a href="commands/FormatTime.htm">FormatTime</a>, OutputVar</code>(时间和长日期) 或 <code><a href="commands/FormatTime.htm">FormatTime</a>, OutputVar,, LongDate</code>(获取长格式日期). </p>
+    </td>
   </tr>
   <tr id="MM">
     <td>A_MM</td>
@@ -435,7 +452,10 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="Now">
     <td>A_Now</td>
-    <td><a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式的当前本地时间. 注意: 使用 <a href="commands/EnvAdd.htm">EnvAdd</a> 和 <a href="commands/EnvSub.htm">EnvSub</a> 可以对日期和时间进行计算. 此外, 使用 <a href="commands/FormatTime.htm">FormatTime</a> 可以根据您的区域设置或选项来格式化日期和/或时间.</td>
+    <td>
+    <p><a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式的当前本地时间.</p> 
+      <p class="note"><strong>注意</strong>: 使用 <a href="commands/EnvAdd.htm">EnvAdd</a> 和 <a href="commands/EnvSub.htm">EnvSub</a> 可以对日期和时间进行计算. 此外, 使用 <a href="commands/FormatTime.htm">FormatTime</a> 可以根据您的区域设置或选项来格式化日期和/或时间.</p>
+    </td>
   </tr>
   <tr id="NowUTC">
     <td>A_NowUTC</td>
@@ -498,7 +518,7 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="FileEncoding">
     <td>A_FileEncoding</td>
-    <td><span class="ver">[AHK_L 46+]</span> 包含了多个命令使用的默认编码; 请参阅 <a href="commands/FileEncoding.htm">FileEncoding</a>.</td>
+    <td><span class="ver">[AHK_L 46+]</span>: 包含了多个命令使用的默认编码; 请参阅 <a href="commands/FileEncoding.htm">FileEncoding</a>.</td>
   </tr>
   <tr id="FormatInteger">
     <td>A_FormatInteger</td>
@@ -641,7 +661,7 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
       </ul></td>
   </tr>
 </table>
-<p>注意: 与类似 A_ThisHotkey 这样的变量不同, 每个 <a href="misc/Threads.htm">线程</a> 会为 A_Gui, A_GuiControl, A_GuiX/Y, A_GuiEvent 和 A_EventInfo 保存它自己本身的值. 因此, 如果一个线程被另一个中断, 在这个线程恢复时它仍将看到这些变量的原来/正确的值.</p>
+<p class="note"><strong>注意</strong>: 与类似 A_ThisHotkey 这样的变量不同, 每个 <a href="misc/Threads.htm">线程</a> 会为 A_Gui, A_GuiControl, A_GuiX/Y, A_GuiEvent 和 A_EventInfo 保存它自己本身的值. 因此, 如果一个线程被另一个中断, 在这个线程恢复时它仍将看到这些变量的原来/正确的值.</p>
 <h3 id="h">热键, 热字串和自定义菜单项</h3>
 <table class="info">
   <tr id="ThisMenuItem">
@@ -688,7 +708,10 @@ MsgBox,  %ElapsedTime% milliseconds have elapsed.</pre>
   <tr id="ComSpec">
     <td>ComSpec<br>
 	<span class="ver">[v1.0.43.08+]</span></td>
-    <td>此变量的值与系统环境变量 ComSpec 一样(例如 C:\Windows\system32\cmd.exe). 常与 <a href="commands/Run.htm">Run/RunWait</a> 一起使用. 注意: 此变量不带 A_ 前缀.</td>
+    <td>
+      <p>此变量的值与系统环境变量 ComSpec 一样(例如 C:\Windows\system32\cmd.exe). 常与 <a href="commands/Run.htm">Run/RunWait</a> 一起使用.</p>
+      <p class="note"><strong>注意</strong>: 此变量不带 A_ 前缀.</p>
+    </td>
   </tr>
   <tr id="Temp">
     <td>A_Temp<br>
@@ -747,7 +770,7 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空
         <li>对于 32 位的进程, 这个 <code>ProgramW6432</code> <a href="#env">环境变量</a> 指向 64 位 Program Files 目录. 在 Windows 7 和更高版本上, 对于 64 位的进程也是这样设置的.</li>
         <li>而 <code>ProgramFiles(x86)</code> 环境变量指向 32 位 Program Files 目录.</li>
       </ul>
-	  <p>在 v1.0.43.08+, 前缀 A_ 可以省略, 这样有助于自然过渡到 <a href="commands/_NoEnv.htm">#NoEnv</a>.</p>
+	  <p><span class="ver">[1.0.43.08+]</span>: 前缀 A_ 可以省略, 这样有助于自然过渡到 <a href="commands/_NoEnv.htm">#NoEnv</a>.</p>
 	  </td>
   </tr>
   <tr id="AppData">
@@ -794,7 +817,7 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空
   </tr>
   <tr id="MyDocuments">
     <td>A_MyDocuments</td>
-    <td>当前用户 "我的文档" 文件夹的完整路径和名称. 与大多数类似变量不同, 当此文件夹为驱动器的根目录时, 此变量的值不包含最后的反斜杠. 例如, 它的值我 M: 而不是 M:\</td>
+    <td>当前用户 "我的文档" 文件夹的完整路径和名称. 与大多数类似变量不同, 当此文件夹为驱动器的根目录时, 此变量的值不包含最后的反斜杠. 例如, 它的值是 M: 而不是 M:\</td>
   </tr>
   <tr id="IsAdmin">
     <td>A_IsAdmin</td>
@@ -888,7 +911,7 @@ return
 <h2 id="env">环境变量与 "普通" 变量</h2>
 <p>环境变量由操作系统维护. 在命令提示符中输入 SET 并回车后, 您可以看到环境变量列表.</p>
 <p>脚本中可以使用 <a href="commands/EnvSet.htm">EnvSet</a> 创建新的环境变量或改变现有环境变量的内容. 但是, 这样的添加和改变都是私有的; 它们不会被系统的其他部分看到. 一个例外是当脚本使用 <a href="commands/Run.htm">Run</a> 或 <a href="commands/Run.htm">RunWait</a> 运行程序时(甚至是另一个脚本): 这样的程序会继承其父脚本的环境变量的副本, 包括私有的那些.</p>
-<p>在 v1.0.43.08+, 推荐在所有新脚本中使用以下方式获取环境变量, 例如 <em>Path</em>:</p>
+<p><span class="ver">[v1.0.43.08+]</span>: 推荐在所有新脚本中使用以下方式获取环境变量, 例如 <em>Path</em>:</p>
 <pre><a href="commands/EnvGet.htm">EnvGet, OutputVar, Path</a>  <em>; 想了解含义, 请参阅 <a href="commands/_NoEnv.htm">#NoEnv</a>.</em></pre>
 <h2 id="cap">变量的容量和占用内存</h2>
 <ul>

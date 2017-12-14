@@ -46,7 +46,7 @@ return</pre>
   </tr>
   <tr>
     <td><strong>#</strong></td>
-    <td>Win(Windows 徽标键). 在 v1.0.48.01+, 对于 Windows Vista 及以上版本, 包含 Windows 键的热键(例如 #a) 会等待 Windows 键被释放后才发送任何包含 "L" 键击的文本. 这样避免了这种热键中的 <a href="commands/Send.htm">Send</a> 锁定 PC. 这种行为适用于除 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>(这里不需要) 和 <a href="commands/Send.htm#blind">盲从模式(Blind)</a> 外的所有发送模式.</td>
+    <td>Win(Windows 徽标键). <span class="ver">[v1.0.48.01+]</span>: 对于 Windows Vista 及以上版本, 包含 Windows 键的热键(例如 #a) 会等待 Windows 键被释放后才发送任何包含 "L" 键击的文本. 这样避免了这种热键中的 <a href="commands/Send.htm">Send</a> 锁定 PC. 这种行为适用于除 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>(这里不需要) 和 <a href="commands/Send.htm#blind">盲从模式(Blind)</a> 外的所有发送模式.</td>
   </tr>
   <tr>
     <td><strong>!</strong></td>
@@ -94,7 +94,7 @@ return</pre>
 ~RButton &amp; C::MsgBox You pressed C while holding down the right mouse button.</pre>
       <p>与其他前缀符号不同, 可以在热键的某些 <a href="commands/_IfWinActive.htm#variant">变体</a> 中使用颚化符(波浪号) 前缀而其他的不使用. 然而, 如果应用于颚化符(波浪号) <a href="#prefix">前缀</a> 的任何自定义组合键没有被关闭或暂停, 它会影响那个前缀键在 <em>所有</em> 组合中的行为.</p>
       <p>用于替代 <a href="#alttab">alt-tab</a> 的特殊按键总是忽略颚化符(波浪号) 前缀.</p>
-      <p><span class="ver">[v1.1.14+]:</span> 如果把颚化符(<a href="#prefix">前缀键</a>) 用在自定义修饰键中且此修饰键自身也作为热键, 则在按下此修饰键时会触发热键而不会被延迟到按键释放的时候. 例如, 上文中 <em>~RButton</em> 热键在按下此按键时就会触发. 对于 v1.1.14 之前的版本(或未使用颚化符前缀), 则会在按键释放时触发其自身的热键, 不过仅在未触发 <em>RButton &amp; C</em> 组合键的时候.</p>
+      <p><span class="ver">[v1.1.14+]:</span> 如果把颚化符(<a href="#prefix">前缀键</a>) 用在自定义修饰键中且此修饰键自身也作为热键, 则在按下此修饰键时会触发热键而不会被延迟到按键释放的时候. 例如, 上文中 <em>~RButton</em> 热键在按下此按键时就会触发. 对于 <span class="ver">[v1.1.14]</span> 之前的版本(或未使用颚化符前缀), 则会在按键释放时触发其自身的热键, 不过仅在未触发 <em>RButton &amp; C</em> 组合键的时候.</p>
       <p>如果颚化符前缀只应用于自定义组合键, 而不应用于非组合热键, 按键的原生功能将持续被屏蔽. 例如, 下面的脚本, 按住 AppsKey 键将会一直显示一个 ToolTip 而不会触发上下文菜单:</p>
       <pre>AppsKey::ToolTip Press &lt; or &gt; to cycle through windows.
 AppsKey Up::ToolTip
@@ -125,7 +125,8 @@ AppsKey Up::ToolTip
 LControl::MsgBox You released LControl without having used it to modify any other key.</pre></td>
   </tr>
 </table>
-<p><strong>(请参阅 <a href="KeyList.htm">按键列表</a> 来了解键盘按键和鼠标/操纵杆按钮的完整列表)</strong></p>
+
+<p class="note"><strong>注意</strong>: 请参阅 <a href="KeyList.htm">按键列表</a> 来了解键盘按键和鼠标/操纵杆按钮的完整列表.</p>
 <p><br>
 多个热键可以垂直地叠放来让它们执行相同的动作. 例如:</p>
 <pre>^Numpad0::
@@ -156,7 +157,7 @@ Numpad0 <strong>&amp;</strong> Numpad2::Run Notepad</pre>
 <p><strong>前缀键导致失去它原有的功能:</strong> 在上面的例子中, Numpad0 成为 <em>前缀键</em>; 但是这也让 Numpad0 在被按下时失去了它原有的功能. 为了避免此问题, 脚本中可以配置 Numpad0 执行新的动作, 例如下列热键的其中一个:</p>
 <pre>Numpad0::WinMaximize A   <em>; 最大化活动/前端窗口.</em>
 Numpad0::Send {Numpad0}  <em>; 让 Numpad0 <i>释放</i> 时产生 Numpad0 键击. 请参阅下面的注释.</em></pre>
-<p><strong>释放时触发:</strong> 使用上面的其中一个自定义组合热键可以在 <em>释放</em> Numpad0 时执行指定的动作, 但不包括按住 Numpad0 时您又按下了其他按键的情况. 从 v1.1.14+ 开始, 可以在其中某个热键前使用 <a href="#Tilde">颚化符(波浪号) 前缀</a> 来避免这种行为.</p>
+<p><strong>释放时触发:</strong> 使用上面的其中一个自定义组合热键可以在 <em>释放</em> Numpad0 时执行指定的动作, 但不包括按住 Numpad0 时您又按下了其他按键的情况. 从 <span class="ver">[v1.1.14+]</span> 开始, 可以在其中某个热键前使用 <a href="#Tilde">颚化符(波浪号) 前缀</a> 来避免这种行为.</p>
 <p id="combo_mods"><strong>修饰:</strong> 与普通热键不同的是, 自定义组合在默认情况下表现得就像拥有一个 <a href="#wildcard">通配符(*)</a> 修饰一样. 例如, <code>1 &amp; 2::</code> 无论 Ctrl 或 Alt 是否被按住都会触发, 然而 <code>^1::</code> 仅在 Ctrl+1 组合键时触发, 而 Ctrl+Alt+1 不会触发.</p>
 <p>对于普通的修饰键, 一般的热键会比 "自定义" 组合工作得更好. 例如, <code>&lt;+s::</code> 就是比 <code>LShift &amp; s::</code> 更好的用法.</p>
 <p>不支持组合三个或更多的键. 一般来说组合键支持你键盘上物理存在的所有按键, 都可以用 <a href="commands/_If.htm">#If</a> 和 <a href="commands/GetKeyState.htm">GetKeyState</a> 探测状态, 但是也可能出现不一致的情况. 例如:</p>
@@ -182,10 +183,10 @@ RControl &amp; Enter::ShiftAltTab  <em>; 甚至不需要释放右 control, 直�
 <p>想了解更多细节, 请参阅 <a href="#AltTabDetail">Alt-Tab</a>.</p>
 
 <h2 id="Wheel">鼠标滚轮热键</h2>
-<p>通过键名 WheelDown 和 WheelUp 可以支持转动滚轮来激发热键. 在 v1.0.48+ 中还支持 WheelLeft 和 WheelRight, 但在早于 Windows Vista 的操作系统上没有效果. 这里是一些鼠标滚轮热键的例子:</p>
+<p>通过键名 WheelDown 和 WheelUp 可以支持转动滚轮来激发热键. 在 <span class="ver">[v1.0.48+]</span> 中还支持 WheelLeft 和 WheelRight, 但在早于 Windows Vista 的操作系统上没有效果. 这里是一些鼠标滚轮热键的例子:</p>
 <pre>MButton &amp; WheelDown::MsgBox You turned the mouse wheel down while holding down the middle button.
 ^!WheelUp::MsgBox You rotated the wheel up while holding down Control+Alt.</pre>
-<p>在 v1.0.43.03+, 内置变量 <strong>A_EventInfo</strong> 包含了滚轮转动的格数, 通常为 1. 然而在后面的情况中, A_EventInfo 可能大于或小于 1:</p>
+<p><span class="ver">[v1.0.43.03+]</span>: 内置变量 <strong>A_EventInfo</strong> 包含了滚轮转动的格数, 通常为 1. 然而在后面的情况中, A_EventInfo 可能大于或小于 1:</p>
 <ul>
   <li>如果鼠标硬件报告小于一格的距离, 那么 A_EventInfo 可能为 0;</li>
   <li>如果快速滚动滚轮(取决于鼠标类型), 那么 A_EventInfo 可能大于 1. 像后面这样的热键可以帮助您分析鼠标: <code>~WheelDown::ToolTip %A_EventInfo%</code>.</li>

@@ -137,7 +137,7 @@ MsgBox,, Title
 </ul>
 
 <h3 id="Tilde">~(颚化符) 和自定义组合键</h3>
-<p>从 v1.1.14 起, 当一个按键作为修饰符用于组合键时<a href="Hotkeys.htm#Tilde">颚化符前缀</a>会影响该热键的工作方式.</p>
+<p>从 <span class="ver">[v1.1.14]</span> 起, 当一个按键作为修饰符用于组合键时<a href="Hotkeys.htm#Tilde">颚化符前缀</a>会影响该热键的工作方式.</p>
 
 <h3 id="ComboUpDown">自定义组合键和 Down/Up 热键</h3>
 <p>如果没有使用颚化符前缀, 则对于自定义修饰键会同时定义按键按下和弹起热键, 它们在该按键释放时都会触发. 例如, <code>x &amp; y::</code> 会使得 <code>x::</code> 和 <code>x up::</code> 都会在 x 释放时触发, 而以前 <code>x::</code> 是不会触发.</p>
@@ -205,14 +205,14 @@ VarSetCapacity(native_var,  t_size(capacity_in_chars))  <em>; 请参阅<a href="
   <tr><td class="Syntax" style="text-align:center">Str</td><td style="text-align:center">--</td><td>TCHAR*, LPTSTR, LPCTSTR</td><td>相当于 Unicode 构建中的 <b>WStr</b> 或 ANSI 构建中的 <b>AStr</b>.</td></tr>
 </table>
 <p>如果 "Str" 或在当前版本中的等价类型用于参数中, 那么字符串或变量的地址被传递给函数, 否则创建一个期望格式的字符串临时副本进行传递. 一般地, "AStr"和"WStr"不应该用于函数会写入值的参数中.</p>
-<p><b>注意:</b> "AStr" 和 "WStr" 用于参数和函数的返回值同样是有效的.</p>
+<p class="note"><b>注意:</b> "AStr" 和 "WStr" 用于参数和函数的返回值同样是有效的.</p>
 <p>一般而言, 如果脚本通过 DllCall 调用接受字符串参数的函数, 那么必须采取以下其中一种方式:</p>
 <ol>
   <li>如果函数的 Unicode(W) 和 ANSI(A) 都可用, 那么为当前版本调用匹配的那个. 在下面的例子中, "DeleteFile" 在内部被称为 "DeleteFileA" 或 "DeleteFileW". 由于 "DeleteFile" 自身实际并不存在, DllCall 自动根据当前版本尝试适合的 "A" 或 "W".
   <pre>DllCall("DeleteFile", "Ptr", &amp;filename)
 DllCall("DeleteFile", "Str", filename)</pre>
   <p>在这个例子中, <code>&amp;filename</code> 准确按原样传递字符串地址, 所以函数必须期望接受和 "Str" 类型相同编码格式的字符串. 注意在 AutoHotkey Basic 中 "UInt" 必须使用 "Ptr" 代替, 但得到的代码可能不兼容 64 位.</p>
-  <p><b>注意:</b> 如果无法根据名称准确找到指定的函数, 在 AutoHotkey_L 中不管指定哪个 DLL 都会在函数名称后添加 "A" 或 "W" 后缀查找. 然而, AutoHotkey Basic 则仅为 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数添加 "A" 后缀.</p></li>
+  <p class="note"><b>注意:</b> 如果无法根据名称准确找到指定的函数, 在 AutoHotkey_L 中不管指定哪个 DLL 都会在函数名称后添加 "A" 或 "W" 后缀查找. 然而, AutoHotkey Basic 则仅为 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数添加 "A" 后缀.</p></li>
   <li>如果函数仅接受特殊类型的字符串作为输入, 那么脚本可能必须使用相应的字符串类型:
   <pre>DllCall("DeleteFileA", "AStr", filename)
 DllCall("DeleteFileW", "WStr", filename)</pre></li>
