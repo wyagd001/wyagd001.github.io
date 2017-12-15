@@ -107,7 +107,7 @@
   ["流程控制","",
   [
     ["#Include/#IncludeAgain","commands/_Include.htm"],
-    ["{ ... ] (区块)","commands/Block.htm"],
+    ["{ ... } (区块)","commands/Block.htm"],
     ["Break","commands/Break.htm"],
     ["Catch","commands/Catch.htm"],
     ["Continue","commands/Continue.htm"],

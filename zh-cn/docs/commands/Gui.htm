@@ -51,7 +51,7 @@ Gui, Name: New, Options, Title  <em>; 创建新 GUI, 首先销毁已有的同名
 <ul>
   <li>大多数情况下, 会按需自动创建窗口, 所以通常无需调用 <em>Gui New</em>.</li>
   <li>尽管新窗口会被设为<em>当前</em>线程的<a href="#Default">默认</a>窗口, 但非 GUI 线程的<a href="#DefaultWin">默认窗口仍为编号 1 的 GUI</a>.</li>
-  <li>如果该 GUI 没有名称且非<a href="#Default">默认 GUI</a>, 则操作时必须使用其 HWND. 通过 <code><a href="#GuiHwndOutputVar">+Hwnd<i>GuiHwnd</i></a></code> 选项可以保存新窗口的句柄到 <em>GuiHwnd</em>. <code>Gui, %<i>GuiHwnd</i>%:Default</code> 可将其设为其他 Gui 命令的默认操作对象.</li>
+  <li>如果该 GUI 没有名称且非<a href="#Default">默认 GUI</a>, 则操作时必须使用其 HWND. 通过 <a href="#GuiHwndOutputVar">+Hwnd<i>GuiHwnd</i></a> 选项可以保存新窗口的句柄到 <em>GuiHwnd</em>. <code>Gui, %<i>GuiHwnd</i>%:Default</code> 可将其设为其他 Gui 命令的默认操作对象.</li>
 </ul>
 <p>好的方面是:</p>
 <ul>
@@ -65,7 +65,7 @@ Gui, Name: New, Options, Title  <em>; 创建新 GUI, 首先销毁已有的同名
   <li>特殊的<a href="#Labels">标签</a>(如 <a href="#GuiClose"><em>GuiClose</em></a>) 含有默认的"Gui"前缀, 不过可以在选项中使用 <a href="#PlusLabel">+Label<em>Prefix</em></a> 覆盖.</li>
   <li>不论 GUI 是否开启了新线程, <a href="../Variables.htm#Gui">A_Gui</a> 总是包含句柄而非名称.</li>
 </ul>
-<p><strong>注:</strong> 在 v1.1.08 之前, 在指定名称时此命令不会设置它为默认的 Gui.</p>
+<p class="note"><strong>注意</strong>: 在 <span class="ver">[v1.1.08]</span> 之前, 在指定名称时此命令不会设置它为默认的 Gui.</p>
 
 <h2 id="Add">Gui, Add, ControlType [, Options, Text]</h2>
 <p>添加控件到 GUI 窗口(必要时首先创建 GUI 窗口).</p>
@@ -195,20 +195,23 @@ IfWinExist
 <p><strong>MinimizeBox</strong>(默认含有此选项): 启用标题栏上的最小化按钮.</p>
 <p id="MinSize"><strong>MinSize</strong> 和 <strong>MaxSize</strong> <span class="ver">[v1.0.44.13+]:</span> 限定窗口的最小尺寸和最大尺寸, 例如当用户拖动窗口边框改变其大小的时候. 指定不带后缀的单词 <em>MinSize</em> 和/或 <em>MaxSize</em> 来使用窗口当前尺寸作为限制大小(如果没有窗口当前尺寸, 则使用首次 <a href="#Show">Gui Show</a> 时显示的大小). 还可以在后面加上宽度, 跟着 X 和高度, 例如: <code>Gui +Resize +MinSize640x480</code>. 它们指定了以像素为单位的窗口工作区(不包括边框, 标题栏和 <a href="#Menu">菜单栏</a>) 的大小. 规定每个数字为十进制, 而不是十六进制.</p>
 <p>可以省略高度或宽度以保持不变(例如 <code>+MinSize640x</code> 或 <code>+MinSizex480</code>). 而且, 可以多次指定 Min/MaxSize 以便在一个方向上使用窗口当前的尺寸而另一个则使用指定的大小. 例如, <code>+MinSize +MinSize640x</code> 表示最小高度限制为窗口当前的大小而最小宽度限制为 640.</p>
-<p>如果从没有使用 <em>MinSize</em> 和 <em>MaxSize</em>, 则使用操作系统的默认值(同样地, 可以使用 <code>Gui -MinSize -MaxSize</code> 恢复为此默认值). 注意: 必须含有 <a href="#Resize">+Resize</a> 才能允许用户调节窗口的大小.</p>
+<p>如果从没有使用 <em>MinSize</em> 和 <em>MaxSize</em>, 则使用操作系统的默认值(同样地, 可以使用 <code>Gui -MinSize -MaxSize</code> 恢复为此默认值).</p>
+<p class="note"><strong>注意</strong>: 必须含有 <a href="#Resize">+Resize</a> 才能允许用户调节窗口的大小.</p>
 <p id="OwnDialogs"><strong>OwnDialogs</strong>: 在每个<a href="../misc/Threads.htm">线程</a>( 例如 ButtonOK 子线程) 中指定 <code>Gui +OwnDialogs</code>, 这样所有后续的 <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a> 以及 <a href="FileSelectFolder.htm">FileSelectFolder</a> 对话框才会成为当前窗口的子窗口. 这时这些对话框成为模式对话框, 这意味着用户必须先关闭这些对话框才能和它们的父窗口进行交互. 与之相比, <a href="ToolTip.htm">ToolTip</a>, <a href="Progress.htm">Progress</a> 和 <a href="Progress.htm">SplashImage</a> 窗口即使成为了其他窗口的子窗口也为非模式的; 它们仅仅是永远显示在其父窗口的上面. 在模式和非模式窗口两种情况中, 当它们的父窗口 <a href="#Destroy">销毁</a> 时它们也会被自动销毁.</p>
 <p>一般情况下打开这个设置后不需要再切换到关闭, 因为它不影响其他 <a href="../misc/Threads.htm">线程</a>. 但是, 如果一个线程需要显示从属和非从属对话框, 则可以使用 <code>Gui -OwnDialogs</code> 关闭此设置.</p>
 <p>如果在前缀中没有使用窗口名称(例如使用 <code>Gui +OwnDialogs</code> 而不是 <code>Gui MyGui:+OwnDialogs</code>), 则当前<a href="#DefaultWin">线程的默认窗口</a>将拥有这些从属对话框.</p>
-<p id="Owner"><strong>Owner</strong>: 使用 <em>+Owner</em> 可以让当前窗口从属于另一个窗口. 从属的窗口默认不显示在任务栏, 并且它总是显示在其父窗口的上面. 当其父窗口销毁时它也被自动销毁. <em>+Owner</em> 必须在父窗口创建 <u>后</u> 使用, 而在 v1.1.05 及更高版本中可以在从属窗口创建前面或后面使用. <em>+owner</em> 有两种使用方法, 如下所示:</p>
+<p id="Owner"><strong>Owner</strong>: 使用 <em>+Owner</em> 可以让当前窗口从属于另一个窗口. 从属的窗口默认不显示在任务栏, 并且它总是显示在其父窗口的上面. 当其父窗口销毁时它也被自动销毁. <em>+Owner</em> 必须在父窗口创建 <u>后</u> 使用, 而在 <span class="ver">[v1.1.05]</span> 及更高版本中可以在从属窗口创建前面或后面使用. <em>+owner</em> 有两种使用方法, 如下所示:</p>
 <pre>Gui, MyGui:+OwnerMyOtherGui  <em>; 让 <i>MyGui</i> 成为 <i>MyOtherGui</i> 的子窗口.</em>
 Gui, MyGui:+Owner  <em>; 让 <i>MyGui</i> 成为 <a href="Menu.htm#MainWindow">脚本主窗口</a> 的子窗口, 这样可以阻止任务栏按钮的显示.</em></pre>
 <p><span class="ver">[v1.1.03+]:</span> <code>+Owner</code> 后面可以紧跟着现有的 Gui 或任何顶级窗口的 <a href="WinGet.htm#ID">HWND</a> 的<a href="#Name">名称</a>或编号.</p>
-<p>兼容性注意: 在 v1.1.03 及更高版本中, <code>+Owner</code> 移除 WS_CHILD 样式并设置 WS_POPUP 样式. 要设置某个 Gui 的父窗口, 脚本必须使用 <code>+Parent</code> 选项或<em>在</em> <code>+Owner</code> 选项后覆盖适当的样式.</p>
+<p class="note"><strong>兼容性注意</strong>: 在 <span class="ver">[v1.1.03]</span> 及更高版本中, <code>+Owner</code> 移除 WS_CHILD 样式并设置 WS_POPUP 样式. 要设置某个 Gui 的父窗口, 脚本必须使用 <code>+Parent</code> 选项或<em>在</em> <code>+Owner</code> 选项后覆盖适当的样式.</p>
 <p>在某个从属窗口显示时要防止用户与其父窗口交互, 请使用 <code>Gui +Disabled</code> 禁用父窗口. 之后(当子窗口取消或销毁时), 通过 <code>Gui -Disabled</code> 来重新启用父窗口. 在取消或销毁子窗口前这样做可以让父窗口自动恢复有效.</p>
 <p id="Parent"><strong>Parent</strong> <span class="ver">[v1.1.03+]</span>: 使用 <code>+Parent</code> 后面紧跟着要拥有此窗口的现有 Gui 或任何窗口或控件的 <a href="WinGet.htm#ID">HWND</a> 的<a href="#Name">名称</a>或编号. 要恢复 Gui 为顶级窗口, 请使用 <code>-Parent.</code>. 在窗口创建后此选项也有效.</p>
 <p id="Resize"><strong><a name="Resize"></a>Resize</strong>: 此选项允许用户重新调整窗口的大小并启用标题栏上的最大化按钮. 要禁用最大化按钮, 请指定 <code>+Resize -MaximizeBox</code>.</p>
 <p><strong>SysMenu</strong>(默认含有此选项): 指定 <code>-SysMenu</code>(负 SysMenu) 可以删除点击窗口左上角时弹出的系统菜单和图标. 同时也删除标题栏上的最小化, 最大化和关闭按钮.</p>
-<p id="Theme"><strong>Theme</strong>: 指定 <code>-Theme</code>, 可以让后续创建的所有控件在 Windows XP 以及更高版本中使用经典主题外观. 之后要创建其他使用当前主题的控件时, 请使用 <code>+Theme</code> 把设置切换回来. 注意: 此选项在比 Windows XP 早的系统上没有效果, 如果 XP 中当前使用经典主题时也没有效果. 最后, 对于单独的控件还可以在其创建的选项中指定 <code>+Theme</code> 或 <code>-Theme</code> 来改变此设置.</p>
+<p id="Theme"><strong>Theme</strong>: 指定 <code>-Theme</code>, 可以让后续创建的所有控件在 Windows XP 以及更高版本中使用经典主题外观. 之后要创建其他使用当前主题的控件时, 请使用 <code>+Theme</code> 把设置切换回来.</p>
+<p class="note"><strong>注意</strong>: 此选项在比 Windows XP 早的系统上没有效果, 如果 XP 中当前使用经典主题时也没有效果.</p>
+<p>最后, 对于单独的控件还可以在其创建的选项中指定 <code>+Theme</code> 或 <code>-Theme</code> 来改变此设置.</p>
 <p><strong>ToolWindow</strong>: 让窗口显示细标题栏, 同时去除任务栏按钮.</p>
 <p><strong>(未命名样式)</strong>: 在十进制或十六进制的 <a href="../misc/Styles.htm">样式编号</a> 前加上加号或减号表示添加或删除此样式.</p>
 <p><strong>(未命名扩展样式)</strong>: 在字母 E 和十进制或十六进制的扩展样式编号前加上加号或减号表示添加或删除此扩展样式. 例如, <code>+E0x40000</code> 表示添加 WS_EX_APPWINDOW 样式, 此样式让窗口显示任务栏按钮. 尽管这里没有列出其他的扩展样式编号(因为它们极少使用), 不过可以通过在 <a href="http://www.microsoft.com">www.microsoft.com</a> 中搜索 WS_EX_APPWINDOW 找到它们.</p>
@@ -275,14 +278,15 @@ gui, show</pre>
 <p><strong>xs</strong> 和 <strong>ys</strong> 后面可以跟着一个加号/减号和一个数字. 并且, 还可以在控件的选项中同时指定单词 <a href="#Section">Section</a> 和 xs/ys; 这样可以让当前控件使用之前的控件段, 但为后续控件定义一个新段.</p>
 
 <h2 id="Events">存储和响应用户的输入</h2>
-<p id="var"><strong>V</strong>: 变量. 为控件分配关联变量. 在字母 V 后指定一个变量名, 此变量将为全局变量(或指向全局变量的 <a href="../Functions.htm#ByRef">ByRef 局部变量</a>, 在 v1.0.46.01+ 还可能为 <a href="../Functions.htm#static">静态变量</a>). 例如, 指定 <code><strong>v</strong>MyEdit</code> 后, 每当执行 <a href="#Submit">Gui Submit</a> 命令时将把控件的内容保存到变量 <em>MyEdit</em>. 如果控件是不可输入型(例如 Text 控件或 GroupBox), 那么为其分配的关联变量作为控件的唯一标识符仍可用于 <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a>. 注意: <a href="#Submit">Gui Submit</a> 不会改变不可输入型控件(例如 Text 和 GroupBox) 关联变量的内容, 也不会改变其他某些控件的内容(例如 <a href="ListView.htm">ListView</a> 和 <a href="TreeView.htm">TreeView</a>).</p>
+<p id="var"><strong>V</strong>: 变量. 为控件分配关联变量. 在字母 V 后指定一个变量名, 此变量将为全局变量(或指向全局变量的 <a href="../Functions.htm#ByRef">ByRef 局部变量</a>, 在 <span class="ver">[in v1.0.46.01+]</span> 还可能为 <a href="../Functions.htm#static">静态变量</a>). 例如, 指定 <code><strong>v</strong>MyEdit</code> 后, 每当执行 <a href="#Submit">Gui Submit</a> 命令时将把控件的内容保存到变量 <em>MyEdit</em>. 如果控件是不可输入型(例如 Text 控件或 GroupBox), 那么为其分配的关联变量作为控件的唯一标识符仍可用于 <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a>.</p>
+<p class="note"><strong>注意</strong>: <a href="#Submit">Gui Submit</a> 不会改变不可输入型控件(例如 Text 和 GroupBox) 关联变量的内容, 也不会改变其他某些控件的内容(例如 <a href="ListView.htm">ListView</a> 和 <a href="TreeView.htm">TreeView</a>).</p>
 <p id="label"><strong>G</strong>: Gosub(g-标签). 当用户点击或改变控件内容时会自动运行的子程序. 在字母 G 后指定需要执行的 <a href="../misc/Labels.htm">标签</a> 名称. 指定 <code>gCancel</code> 暗示执行 <a href="#Cancel">Gui Cancel</a>(但如果在脚本中存在名称为"Cancel"的标签, 则会执行此标签). 在子程序中可以引用下列内置变量: <a href="../Variables.htm#Gui">A_Gui</a>, <a href="../Variables.htm#GuiControl">A_GuiControl</a>, <a href="../Variables.htm#GuiEvent">A_GuiEvent</a> 以及 <a href="../Variables.htm#EventInfo">A_EventInfo</a>.</p>
 <p><span class="ver">[v1.1.20+]:</span> 如果不是一个有效标签名称, 可以用函数名称替代. 或者, 可以用 <a href="GuiControl.htm#Functor">GuiControl</a> 命令为控件连接一个 <a href="../objects/Functor.htm">函数对象</a> . 函数(用 <code>gCtrlEvent</code> 设置的函数名称为 CtrlEvent) 可以接受以下可选参数:</p>
 <pre class="Syntax">CtrlEvent(CtrlHwnd, GuiEvent, EventInfo, ErrorLevel)</pre>
 <p>这些参数的意义取决于控件的类型.</p>
 
 <h2 id="OtherOptions">控件: 常用样式和其他选项</h2>
-<p>注意: 选项前的符号省略时, 默认为加号, 例如 <code>Wrap</code> 等同于 <code>+Wrap</code>. 相反地, <code>-Wrap</code> 将去除自动换行属性.</p>
+<p class="note"><strong>注意</strong>: 选项前的符号省略时, 默认为加号, 例如 <code>Wrap</code> 等同于 <code>+Wrap</code>. 相反地, <code>-Wrap</code> 将去除自动换行属性.</p>
 <p id="AltSubmit"><strong>AltSubmit</strong>: 使用备用的提交方法. 对于 DropDownList, ComboBox 和 ListBox 此选项会让 <a href="#Submit">Gui Submit</a> 命令保存选项项目的位置而不是其文本. 如果没有选择项目, 则对于 ComboBox 会保存其编辑区域的文本; 同样地, 对于 DropDownList 或 ListBox 则把它们的关联 <a href="#var">输出变量</a> 设置为空. 注意: AltSubmit 还会影响 <a href="GuiControlGet.htm">GuiControlGet</a> 获取这些控件内容时的行为.</p>
 <p><strong>C</strong>: 文本颜色(对 <a href="GuiControls.htm#Button">按钮</a> 控件无效). 指定字母 C 后面紧跟着颜色名称(请参阅 <a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>cRed</code>, <code>cFF2211</code>, <code>c0xFF2211</code>, <code>cDefault</code>.</p>
 <p><strong>Disabled</strong>: 让可输入型控件变为灰色禁用状态, 这样可以防止取得焦点或用户改变其内容. 以后可以使用 <a href="GuiControl.htm#Enable">GuiControl Enable</a> 来启用控件. 注意: 要让编辑控件为只读状态, 请指定 <code>ReadOnly</code> 选项代替. 并且, 还可以在单词 Disabled 后紧跟着 0 或 1 来表示控件的初始状态(0 为启用而 1 为禁用). 换句话说, <code>Disabled</code> 和 <code>Disabled%VarContainingOne%</code> 是一样的.</p>
@@ -300,7 +304,7 @@ gui, show</pre>
 <p id="BackgroundTrans"><strong>BackgroundTrans</strong>: 使用透明的背景, 这样可以让任何一个在 Text, Picture 或 GroupBox 后面的控件显示出来. 例如, 在 Picture 控件上显示一个透明背景的 Text 可以让文字看起来就像图片的一部分. 以后可以使用 <code><a href="GuiControl.htm">GuiControl</a> +background</code> 移除此选项. 请参阅 <a href="GuiControls.htm#PicAltSubmit">Picture 控件的 AltSubmit 部分</a>来了解关于透明图像的更多细节. 已知限制: 对包含了 <a href="GuiControls.htm#Tab">ListView</a> 的 <a href="ListView.htm">Tab 控件</a>中的其他控件, BackgroundTrans 可能无法正确应用.</p>
 <p><strong>-Background</strong>(即负 Background): 使用标准的背景颜色代替 <a href="#Color">Gui Color</a> 命令设置的那个颜色. 此选项常用于让 Tab 控件使用其标准颜色代替窗口颜色. 以后可以使用 <code><a href="GuiControl.htm">GuiControl</a> +background</code> 移除此选项.</p>
 <p><strong>Border</strong>: 为控件增加一个细边框. 对于大多数控件不需要使用此选项, 因为它们已经含有特定于类型的边框. 添加一个边框到 <em>现有</em> 控件时, 可能需要给控件的宽度和高度增加 1 个像素.</p>
-<p id="HwndOutputVar"><strong>Hwnd</strong><em>OutputVar</em> <span class="ver">[v1.0.46.01+]:</span> 在 <a href="#Add">Gui Add</a> 中使用时, 此选项保存新建控件的窗口句柄(HWND) 到 <em>OutputVar</em>. 例如: <code>Gui, Add, Edit, vMyEdit HwndMyEditHwnd</code>. 如果在函数中使用, <em>MyEditHwnd</em> 会被视为 <a href="../Functions.htm#DynVar">函数动态变量</a>. 控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 它还可以直接用在 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a>(即使 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样对于隐藏控件也是有效的) 或 <span class="ver">[in v1.1.04+]</span> GuiControl 和 GuiControlGet 的<em>ControlID</em> 参数. 相关提示, 父窗口的 HWND 可以使用 <code><a href="#GuiHwndOutputVar">Gui MyGui:+HwndOutputVar</a></code> 获取.</p>
+<p id="HwndOutputVar"><strong>Hwnd</strong><em>OutputVar</em> <span class="ver">[v1.0.46.01+]:</span> 在 <a href="#Add">Gui Add</a> 中使用时, 此选项保存新建控件的窗口句柄(HWND) 到 <em>OutputVar</em>. 例如: <code>Gui, Add, Edit, vMyEdit HwndMyEditHwnd</code>. 如果在函数中使用, <em>MyEditHwnd</em> 会被视为 <a href="../Functions.htm#DynVar">函数动态变量</a>. 控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 它还可以直接用在 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a>(即使 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样对于隐藏控件也是有效的) 或 <span class="ver">[in v1.1.04+]</span> GuiControl 和 GuiControlGet 的<em>ControlID</em> 参数. 相关提示, 父窗口的 HWND 可以使用 <a href="#GuiHwndOutputVar">Gui MyGui:+HwndOutputVar</a> 获取.</p>
 <p><strong>Theme</strong>: 使用此选项可以让新建的控件忽略窗口当前的主题设置. 它对于现有控件没有效果; 不过, 这种情况可能在将来的版本中改变. 请参阅 <a href="#Theme">Gui +/-Theme</a> 了解详情.</p>
 <p><strong>(未命名样式)</strong>: 在十进制或十六进制的 <a href="../misc/Styles.htm">样式编号</a> 前加上加号或减号表示添加或删除此样式. 如果省略了符号, 则默认为加号.</p>
 <p><strong>(未命名扩展样式)</strong>: 在字母 E 和十进制或十六进制的扩展样式编号前加上加号或减号表示添加或删除此扩展样式. 如果省略了符号, 则默认为加号. 例如, <code>E0x200</code> 表示添加 WS_EX_CLIENTEDGE 样式, 它可以为图片和其他控件增加一个下沉的边框样式. 尽管这里没有列出其他的扩展样式编号(因为它们极少使用), 不过可以通过在 <a href="http://www.microsoft.com">www.microsoft.com</a> 中搜索 WS_EX_CLIENTEDGE 找到它们.</p>
@@ -315,7 +319,7 @@ gui, show</pre>
   <li><a href="#GuiDropFiles">GuiDropFiles</a></li>
 </ul>
 <p><span class="ver">[v1.1.20+]:</span> 如果事件处理标签不存在, 那么相同名称的函数将替代标签响应. 函数可选择接收 GUI 的 <a href="#GuiHwndOutputVar">HWND</a> 作为第一个参数. 一些事件还有更多的参数.</p>
-<p>对于非第一个窗口<a href="#MultiWin">(多窗口的情况) </a>, 窗口的名称或序号(如果有) 会被作为前面提到的特殊标签的前缀; 例如, 2GuiEscape 和 2GuiClose 将被作为第二窗口的默认标签, 当 <em>MyGui</em>GuiEscape 和 <em>MyGui</em>GuiClose 会作为 <em>MyGui</em> 的默认标签. 要自定义一个前缀, 请用 <code><a href="#PlusLabel">Gui +Label</a></code>.</p>
+<p>对于非第一个窗口<a href="#MultiWin">(多窗口的情况) </a>, 窗口的名称或序号(如果有) 会被作为前面提到的特殊标签的前缀; 例如, 2GuiEscape 和 2GuiClose 将被作为第二窗口的默认标签, 当 <em>MyGui</em>GuiEscape 和 <em>MyGui</em>GuiClose 会作为 <em>MyGui</em> 的默认标签. 要自定义一个前缀, 请用 <a href="#PlusLabel">Gui +Label</a>.</p>
 
 <p id="GuiClose"><strong>GuiClose</strong>: 使用下列其中一种方法关闭窗口时自动运行此子程序: 点击标题栏上的关闭按钮, 从标题栏中的系统菜单中选择 "关闭" 或使用 <a href="WinClose.htm">WinClose</a> 关闭. 如果此标签不存在, 则关闭窗口只是简单地隐藏窗口, 与 <a href="#Cancel">Gui Cancel</a> 的效果一样. 在 GuiClose 中一个最常用的动作是 <a href="ExitApp.htm">ExitApp</a>; 例如:</p>
 <pre>GuiClose:
@@ -351,7 +355,7 @@ ExitApp</pre>
   <li>A_GuiX 和 A_GuiY, 包含了菜单显示位置的 X 和 Y  坐标(例如 <code><a href="Menu.htm">Menu</a>, MyContext, Show, %A_GuiX%, %A_GuiY%</code>). 这里的坐标相对于窗口的左上角.</li>
   <li>A_GuiEvent, 当用户右键点击时包含单词 RightClick, 当用户按下 Apps 键或 Shift-F10 时包含单词 Normal.</li>
 </ol>
-<p>注意: 由于 <a href="GuiControls.htm#Edit">Edit</a> 和 <a href="GuiControls.htm#MonthCal">MonthCal</a> 控件有它们自己的右键菜单, 所以右键点击这些控件时不会运行 GuiContextMenu.</p>
+<p class="note"><strong>注意</strong>: 由于 <a href="GuiControls.htm#Edit">Edit</a> 和 <a href="GuiControls.htm#MonthCal">MonthCal</a> 控件有它们自己的右键菜单, 所以右键点击这些控件时不会运行 GuiContextMenu.</p>
 <p><span class="ver">[v1.1.20+]:</span> 如果 GuiContextMenu 为函数, 它的参数应为:</p>
 <pre class="Syntax">GuiContextMenu(GuiHwnd, CtrlHwnd, EventInfo, IsRightClick, X, Y)</pre>
 <p><em>CtrlHwnd</em> 如果控件没有接收到事件则为空. <em>IsRightClick</em> 在 A_GuiEvent 为 RightClick 时返回 True.</p>
@@ -395,7 +399,7 @@ Loop, parse, FileList, `n
 <p><strong>检测和响应其他事件</strong>: 其他 GUI 事件可以使用 <a href="OnMessage.htm">OnMessage()</a> 来检测和响应. 例如, 当用户把鼠标移动到窗口中特殊的控件时脚本可以通过工具提示显示相关帮助. 请参阅演示 <a href="#ExToolTip">GUI 工具提示示例</a>.</p>
 
 <h2 id="MultiWin">创建多个 GUI 窗口</h2>
-<p>要对非 <a href="#DefaultWin">默认</a> 窗口进行操作, 需要在子命令前加上窗口名称或编号(在 v1.1.03+, 还可以使用 <a href="#GuiHwndOutputVar">HWND</a>) 和一个冒号, 例如:</p>
+<p>要对非 <a href="#DefaultWin">默认</a> 窗口进行操作, 需要在子命令前加上窗口名称或编号(在 <span class="ver">[in v1.1.03+]</span>, 还可以使用 <a href="#GuiHwndOutputVar">HWND</a>) 和一个冒号, 例如:</p>
 <pre>Gui, <strong>MyGui:</strong>Add, Text,, Text for about-box.
 Gui, <strong>MyGui:</strong>Show</pre>
 <p>使用 <code><a href="#Default">Gui MyGui:Default</a></code> 后可以去除上面使用的"MyGui:"前缀. 此外, 在由窗口运行的 <a href="#DefaultWin">GUI 线程</a>中对此窗口进行操作时可以不加前缀.</p>
@@ -461,7 +465,7 @@ ExitApp</pre>
 <p>&nbsp;</p>
 <pre class="NoIndent"><em>; 示例: 选项卡控件:</em>
 
-Gui, Add, Tab2,, First Tab|Second Tab|Third Tab  <em>; Tab2 比起 Tab 需要 v1.0.47.05.</em>
+Gui, Add, Tab2,, First Tab|Second Tab|Third Tab  <em>; Tab2 比起 Tab 需要 <span class="ver">[v1.0.47.05+]</span>.</em>
 Gui, Add, Checkbox, vMyCheckbox, Sample checkbox
 Gui, Tab, 2
 Gui, Add, Radio, vMyRadio, Sample radio1

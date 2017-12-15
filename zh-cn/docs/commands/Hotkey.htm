@@ -20,30 +20,30 @@ Hotkey, If, % FunctionObject</pre>
 <h3>参数</h3>
 <dl>
 
-  <dt>KeyName 按键名称</dt>
-  <dd><p>热键触发键的名称, 包括所有 <a href="../Hotkeys.htm#Symbols">修饰符</a>. 例如, 指定 <code>#c</code> 来触发 Win+C 热键.</p>
+  <dt>KeyName(按键名称)</dt>
+  <dd><p>热键的按键的名称, 包括所有 <a href="../Hotkeys.htm#Symbols">修饰符</a>. 例如, 指定 <code>#c</code> 来触发 Win+C 热键.</p>
     <p>如果 <em>KeyName</em> 是现有的热键, 那么将使用此命令的其他参数值更新原来的热键.</p>
     <p><em>KeyName</em> 也可以是现有的热键标签的名称(即双冒号标签), 这样会使用此命令的其他参数值更新原来的热键.</p>
     <p>指定 <em>现有的</em> 热键时, <em>KeyName</em> 是不区分大小写的. 但是, 按键名称必须和现有的热键拼写相同(例如在这种情况下 Esc 与 Escape 是不同的). 此外, <a href="../Hotkeys.htm#Symbols">修饰符</a>(例如 ^!+#) 是无关紧要的. <a href="GetKey.htm">GetKeyName</a> 可用于获取正常的按键名称.</p>
-    <p>首次创建一个热键时(通过 Hotkey 命令或脚本中的 <a href="../Hotkeys.htm">双冒号标签</a>), 其键名以及修饰符的顺序成为此热键的固定名称, 像 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 包含的那样. 即使之后 Hotkey 命令使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
-    <p><span class="ver">[v1.1.15+]:</span> 如果已存在该热键变体, 则根据 <em>KeyName</em> 是否包含<a href="../Hotkeys.htm#Tilde">颚化符(~)前缀</a>更新它的行为.</p>
-    <p><span class="ver">[v1.1.19+]:</span> 使用 <a href="../Hotkeys.htm#prefixdollar">钩子($) 前缀</a> 可添加到现有热键上. 这个前缀影响所有热键的变体且不能被删除. 在 v1.1.19 之前, 当修改一个现有热键时, 这个前缀被直接忽略.</p>
+    <p>首次创建一个热键时(通过 Hotkey 命令或脚本中的 <a href="../Hotkeys.htm">双冒号标签</a>), 其键名以及修饰符的顺序成为此热键的固定名称, 像 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 包含的那样. 这个名称由热键的所有<a href="_IfWinActive.htm#variant">变体</a>共享, 并且即使之后 Hotkey 命令使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
+    <p><span class="ver">[v1.1.15+]</span>: 如果已存在该热键变体, 则根据 <em>KeyName</em> 是否包含<a href="../Hotkeys.htm#Tilde">颚化符(~)前缀</a>更新它的行为. 但在 <span class="ver">[v1.1.19]</span> 之前, 如果 <em>Label</em> 被省略时, 热键不会更新.</p>
+    <p><span class="ver">[v1.1.19+]</span>: 使用 <a href="../Hotkeys.htm#prefixdollar">钩子($) 前缀</a> 可添加到现有热键上. 这个前缀影响所有热键的变体且不能被删除. 在 <span class="ver">[v1.1.19]</span> 之前, 当修改一个现有热键时, 这个前缀被直接忽略.</p>
     </dd>
 
-  <dt>Label 标签</dt>
+  <dt>Label(标签)</dt>
   <dd><p>当按下对应热键时, 该 <a href="../misc/Labels.htm">标签</a> 区块中的所有内容都会被执行(作为一个新的 <a href="../misc/Threads.htm">线程</a>运行). 可以使用普通标签和 <a href="../Hotkeys.htm">热键</a>/<a href="../Hotstrings.htm">热字符串</a> 标签. 不要包含尾随的冒号( : 或 :: ). 如果 <em>标签</em> 是动态的(比如 %VarContainingLabelName%), 可用 <a href="IsLabel.htm">IsLabel(VarContainingLabelName)</a> 事先检查标签是否存在.</p>
-  <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不是一个有效的标签名称, 这个参数可以是一个函数的名称, 或者是一个 <a href="../objects/Functor.htm">函数对象</a> 引用变量. 比如, <code>Hotkey %funcobj%, On</code> 或 <code>Hotkey % funcobj, On</code>. 其他返回对象的表达式目前暂不支持. 当热键被触发, 函数就会被调用且无需任何参数. 热键还可以直接 <a href="../Hotkeys.htm#Function">定义为函数</a> 而无需使用 Hotkey 命令.</p>
+  <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不是一个有效的标签名称, 这个参数可以是一个函数的名称, 或者是一个 <a href="../objects/Functor.htm">函数对象</a> 单个引用变量. 比如, <code>Hotkey %funcobj%, On</code> 或 <code>Hotkey % funcobj, On</code>. 其他返回对象的表达式目前暂不支持. 当热键被触发, 函数就会被调用且无需任何参数. 热键还可以直接 <a href="../Hotkeys.htm#Function">定义为函数</a> 而无需使用 Hotkey 命令.</p>
       <p>如果 <em>KeyName</em> 已经作为热键, 那么参数可以为空, 这种情况下标签不会被改变. 这在需要仅改变热键 <em>Options(选项)</em> 时很有用.</p>
-      <p><strong>如果指定了标签或函数, 但热键之前已经使用此命令禁用了, 那么热键会保持禁用状态. 要启用它, 请在 <em>Options</em> 中包含单词 ON.</strong></p>
+      <p class="note"><strong>注意</strong>: 如果指定了标签或函数, 但热键之前已经使用此命令禁用了, 那么热键会保持禁用状态. 要启用它, 请在 <em>Options</em> 中包含单词 ON.</p>
       <p>此参数还可以是下列特定值的其中一个:</p>
       <p><strong>On</strong>: 启用热键. 如果热键已经处于启用状态, 则不进行操作.</p>
       <p><strong>Off</strong>: 禁用热键. 如果热键已经处于禁用状态, 则不进行操作.</p>
       <p><strong>Toggle</strong>: 设置热键到相反的状态(启用或禁用).</p>
       <p><strong>AltTab</strong>(及其他): 这些是 <a href="../Hotkeys.htm#alttab">这里</a> 描述的特殊的 Alt-Tab 热键动作.</p>
-      <p><strong><u>注意:</u></strong> 在定义标签名称为 On, Off, Toggle 或 AltTab(或是任何被这个命令支持的名称) 时可能会导致矛盾的行为. 强烈建议不使用这些值作为标签的名字.</p>
+      <p class="note"><strong>警告</strong>: 在定义标签名称为 On, Off, Toggle 或 AltTab(或是任何被这个命令支持的名称) 时可能会导致矛盾的行为. 强烈建议不使用这些值作为标签的名字.</p>
       </dd>
 
-  <dt>Options 选项</dt>
+  <dt>Options(选项)</dt>
   <dd><p>由零个或多个下列字母组成的字符串, 字母间可以用空格分隔. 例如: <code>UseErrorLevel B0</code></p>
       <p id="UseErrorLevel"><strong>UseErrorLevel</strong>: 如果命令遇到问题, 使用此选项会跳过警告对话框, 设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为 <a href="#ErrorLevel">下表</a> 中的一个代码, 然后让 <a href="../misc/Threads.htm">当前线程</a> 继续执行.</p>
       <p><strong>On</strong>: 如果热键当前是禁用的则启用它.</p>
@@ -52,7 +52,7 @@ Hotkey, If, % FunctionObject</pre>
       <p><strong>Pn</strong>: 指定字母 P 后面跟着热键的 <a href="../misc/Threads.htm">线程优先级</a>. 如果创建热键时省略 P 选项, 则设置优先级为 0.</p>
       <p><strong>Tn</strong>: 指定字母 T 后面跟着一个表示此热键允许的线程数, 如同 <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 中描述的那样. 例如: <code>T5</code>.</p>
       <p><strong>In</strong>(表示: InputLevel 输入级别) <span class="ver">[v1.1.23+]</span>: 指定字母 I(或 i) 跟随热键的 <a href="_InputLevel.htm">input level(输入级别)</a>. 例如: <code>I1</code>.</p>
-      <p>如果任一选项字母被忽略并且热键已经存在, 这些选项将不会起作用. 但如果热键还没创建(将由这条命令创建), 这些选项将会影响那些最近创建的热键. 例如, 即使 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a> 出现在脚本底部的情况下也会被采用. 而如果脚本中没有出现 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, 则会采用其默认值(这里是 OFF). 这种特性也适用于 <a href="_IfWinActive.htm">#IfWin</a>: 脚本最底部出现的 #IfWin 会适用于最近创建的热键除非 &quot;<a href="#IfWin">Hotkey IfWin</a>&quot; 在脚本开始时就已执行</p>
+      <p>如果任一选项字母被忽略并且热键已经存在, 这些选项将不会起作用. 但如果热键还没创建(将由这条命令创建), 这些选项将会影响那些最近创建的热键. 例如, 即使 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a> 出现在脚本底部的情况下也会被采用. 而如果脚本中没有出现 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, 则会采用其默认值(这里是 OFF). 这种特性也适用于 <a href="_IfWinActive.htm">#IfWin</a>: 脚本最底部出现的 #IfWin 会适用于最近创建的热键除非 &quot;<a href="#IfWin">Hotkey IfWin</a>&quot; 在脚本开始时就已执行.</p>
       </dd>
 
   <dt>IfWinActive<br>
@@ -68,16 +68,16 @@ Hotkey, If, % FunctionObject</pre>
   <dd><p>在这两个参数中, 任何变量引用(例如 %var%) 会在命令执行结束时被固定下来. 换句话说, 此后对这些变量内容的改变不会影响现有的 IfWin 热键.</p>
       <p>与 <a href="_IfWinActive.htm">#IfWinActive/Exist</a> 一样, <em>WinTitle</em> 和 <em>WinText</em> 为 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 使用在<a href="../Scripts.htm#auto">自动执行段</a>中的默认设置. 请参阅 <a href="_IfWinActive.htm">#IfWinActive/Exist</a> 了解详情.</p></dd>
 
-  <dt id="If">If, 表达式</dt>
+  <dt id="If">If, Expression(表达式)</dt>
   <dd>
-    <p><span class="ver">[AHK_L 4+]:</span> 关联后续创建的热键与<a href="_If.htm">#If <i>表达式</i></a>. <em>表达式</em> 必须是在脚本其他任何地方用 #If 指令开头的的表达式. 通过这个命令不能创建新的表达式, 而只能用已经存在的表达式创建新的热键定义. 请参考 <a href="_If.htm#ex4">#If 例子 4</a>.</p>
-    <p><strong>注意:</strong> 这个 Hotkey 只能用你传递给它的文本, 而不是原始代码. 逗号和变量符号(百分号) 是在命令调用 <em>之前</em> 被解析的, 所以如果这些符号是原始表达式中的一部分, 则应该先转换一下. <a href="_EscapeChar.htm">转义序列</a> 是脚本加载的时候就进行转换的, 所以只产生字符; 例如:<br><code>Hotkey, If, x = "`t"</code><br>和<br><code>Hotkey, If, % "x = """ A_Tab """"</code><br>都对应于<br><code>#If x = "`t"</code>.</p>
+    <p><span class="ver">[AHK_L 4+]:</span> 关联后续创建的热键与 <a href="_If.htm">#If <i>表达式</i></a>. <em>表达式</em> 必须是在脚本其他任何地方用 #If 指令开头的的表达式. 通过这个命令不能创建新的表达式, 而只能用已经存在的表达式创建新的热键定义. 请参考 <a href="_If.htm#ex4">#If 例子 4</a>.</p>
+    <p class="note"><strong>注意</strong>: 这个 Hotkey 只能用你传递给它的文本, 而不是原始代码. 逗号和变量符号(百分号) 是在命令调用 <em>之前</em> 被解析的, 所以如果这些符号是原始表达式中的一部分, 则应该先转换一下. <a href="_EscapeChar.htm">转义序列</a> 是脚本加载的时候就进行转换的, 所以只产生字符; 例如: <code>Hotkey, If, x = "`t"</code> 和 <code>Hotkey, If, % "x = """ A_Tab """"</code> 都对应于 <code>#If x = "`t"</code>.</p>
     <p><strong>已知限制: </strong>If <em>表达式</em> 包含 <code>and</code>/<code>or</code> 运算符的时候, 不会被识别为表达式. 为了避免此问题, 请在原来的 #If 表达式和传递给 Hotkey 命令的表达式中使用等价的 <code>&amp;&amp;</code>/<code>||</code> 运算符.</p>
   </dd>
   
   <dt id="IfFn">If, % FunctionObject</dt>
   <dd>
-    <p><span class="ver">[v1.1.25+]:</span> 关联后续创建的热键与 <a href="../objects/Functor.htm">函数对象</a>. 这样的热键将会在如果调用给定的函数对象产生一个非零的数时执行. 这类似于 <code>Hotkey, If, 表达式</code>, 除了每个热键能有多个 <a href="#variant">变体</a>(每个对象). <em>函数对象</em> 必须是包含带有 <em>call</em> 方法的对象的单个变量(不是表达式). 函数 或 <em>call</em> 方法能带有一个参数, 热键 <a href="../Variables.htm#ThisHotkey">名称</a> .</p>
+    <p><span class="ver">[v1.1.25+]:</span> 关联后续创建的热键与给定的 <a href="../objects/Functor.htm">函数对象</a>. 这样的热键将会在如果调用给定的函数对象产生一个非零的数时执行. 这类似于 <code>Hotkey, If, Expression(表达式)</code>, 除了每个热键能有多个 <a href="#variant">变体</a>(每个对象一个). <em>函数对象</em> 必须是包含带有 <em>call</em> 方法的对象的单个变量(不是表达式). 函数 或 <em>call</em> 方法能带有一个参数, 热键 <a href="../Variables.htm#ThisHotkey">名称</a> .</p>
     <p>一旦传递到热键命令, 对象将永远不会被删除(但是进程退出时操作系统会回收内存).</p>
     <p>下面的<a href="#ExampleIfFn">"三键组合" 示例</a> 使用此子命令.</p>
   </dd>
@@ -85,8 +85,8 @@ Hotkey, If, % FunctionObject</pre>
 </dl>
 
 <h3 id="ErrorLevel">ErrorLevel</h3>
-<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
-<p>只有在出现下列情况时 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 才会被改变:<br>1) 首个参数为 IfWin[Not]Active/Exist, 此时如果遇到问题它会被设置为 1 否则为 0;<br>或者:<br>2) 在 <em>Options</em> 参数中使用了单词 UseErrorLevel.</p>
+<p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p>只有在出现下列情况时 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 才会被改变:<br>1) 首个参数为 IfWin[Not]Active/Exist, 此时如果遇到问题它会被设置为 1 否则为 0; 或 2) 在 <em>Options</em> 参数中使用了单词 UseErrorLevel.</p>
 <p><span class="ver">[v1.1.25+]:</span> 如果第一个参数是 "If", 如果第二个参数无效或内存分配失败, 就会引发异常. 在这些情况下 ErrorLevel 不被设置, 但成功时仍设置为 0.</p>
 <table class="info">
   <tr>
