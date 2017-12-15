@@ -6,7 +6,7 @@
   ["优秀脚本展示","scripts/index.htm"],
   ["更新历史","AHKL_ChangeLog.htm"],
   ["基本用法和语法","",
-[
+  [
     ["热键","Hotkeys.htm"],
     ["热字串和自动替换","Hotstrings.htm"],
     ["重映射按键和鼠标按钮","misc/Remap.htm"],
@@ -18,7 +18,7 @@
     ["线程","misc/Threads.htm"],
     ["调试客户端(DBGp)","AHKL_DBGPClients.htm"],
     ["对象","Objects.htm",
-[
+    [
       ["基本用法","Objects.htm#Usage"],
       ["扩展用法","Objects.htm#Extended_Usage"],
       ["自定义对象","Objects.htm#Custom_Objects"],
@@ -27,7 +27,7 @@
     ]]
   ]],
   ["迁移到 AutoHotkey_L 1.1","", 
-[
+  [
     ["AutoHotkey_L 新特性","AHKL_Features.htm"],
     ["脚本兼容性","Compat.htm"]
   ]],
@@ -40,7 +40,7 @@
     ["OnClipboardChange","commands/OnClipboardChange.htm"],
     ["SysGet","commands/SysGet.htm"]
   ]],
-["外部接口调用","",
+  ["外部接口调用","",
   [
     ["DllCall","commands/DllCall.htm"],
     ["NumGet","commands/NumGet.htm"],
@@ -64,7 +64,7 @@
     ]]
   ]],
 
-["文件,目录和磁盘管理","",
+  ["文件,目录和磁盘管理","",
   [
     ["Drive","commands/Drive.htm"],
     ["DriveGet","commands/DriveGet.htm"],
@@ -119,7 +119,7 @@
     ["For-loop","commands/For.htm"],
     ["Gosub","commands/Gosub.htm"],
     ["Goto","commands/Goto.htm"],
-    ["If 命令","commands/IfExpression.htm","",
+    ["If 命令","commands/IfExpression.htm",
     [
       ["If (传统型)","commands/IfEqual.htm"],
       ["If (表达式)","commands/IfExpression.htm"],
@@ -132,7 +132,7 @@
       ["IfWinActive/IfWinNotActive","commands/WinActive.htm"],
       ["IfWinExist/IfWinNotExist","commands/WinExist.htm"]
     ]],
-    ["Loop 命令","commands/Loop.htm","",
+    ["Loop 命令","commands/Loop.htm",
     [
       ["Loop","commands/Loop.htm"],
       ["Loop (文件和文件夹)","commands/LoopFile.htm"],
@@ -204,7 +204,7 @@
   ]],
   ["鼠标和键盘","",
   [
-    ["热键和热字串","Hotkeys.htm","",
+    ["热键和热字串","Hotkeys.htm",
     [
       ["#HotkeyInterval","commands/_HotkeyInterval.htm"],
       ["#HotkeyModifierTimeout","commands/_HotkeyModifierTimeout.htm"],
