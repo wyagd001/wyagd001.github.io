@@ -13,7 +13,7 @@
 
 <p>从注册表读取值.</p>
 
-<pre class="Syntax">RegRead, OutputVar, RootKey\SubKey [, ValueName]  <em>; v1.1.21+</em>
+<pre class="Syntax">RegRead, OutputVar, RootKey\SubKey [, ValueName]  <em>; 需要 <span class="ver">[v1.1.21+]</span></em>
 RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
 <h3>参数</h3>
 <dl>
@@ -22,7 +22,7 @@ RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
   <dd><p>用来存储获取值的变量名. 如果无法获取, 则变量被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1.</p></dd>
 
   <dt>RootKey</dt>
-  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或 v1.1.21+ 用正斜杠 /), 例如: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或  <span class="ver">[in v1.1.21+]</span> 用正斜杠 /), 例如: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
 
   <dt>SubKey</dt>
   <dd><p>子键名(例如 Software\SomeApplication).</p></dd>
@@ -35,7 +35,7 @@ RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
 
 </dl>
 <h3>ErrorLevel</h3>
-<p><span class="ver">[v1.1.04+]</span> 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题(例如不存在的键或值名) 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1, 否则为 0.</p>
 <p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
 <h3>备注</h3>
@@ -43,7 +43,7 @@ RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
 <p>REG_DWORD 值总是被转换为正十进制数.</p>
 <p>读取 REG_BINARY 键时, 获取的结果为十六进制字符的字符串. 例如, REG_BINARY 类型的值 01, a9, ff, 77 的读取结果为字符串 01A9FF77.</p>
 <p>读取 REG_MULTI_SZ 键时, 值的每个部分会以换行符结束(`n). 如果值为空, 则 <em>OutputVar</em> 会被置空. 请参阅 <a href="FileSelectFile.htm">FileSelectFile</a> 中的示例了解如何从 <em>OutputVar</em> 中逐个提取单独的部分.</p>
-<p>大于 64K 的 REG_BINARY 值只有在 v1.1.10.01 或更高版本中才能读取.</p>
+<p><span class="ver">[v1.1.10.01+]</span>: 大于 64K 的 REG_BINARY 值可以被读取.</p>
 <p>要获取和操作多个注册表键或值, 请考虑使用 <a href="LoopReg.htm">注册表循环</a>.</p>
 <p>关于如何访问远程计算机注册表的详情, 请参阅 <a href="LoopReg.htm">注册表循环</a> 中的备注.</p>
 <p>要在 32 位脚本中读写注册表 64 位部分的条目或进行相反的操作, 请使用 <a href="SetRegView.htm">SetRegView</a>.</p>
@@ -54,12 +54,12 @@ RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
 <pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
 
 ;此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>
-<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 v1.1.08+</em>
+<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 <span class="ver">[v1.1.08+]</span></em>
 
 RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">,</span> SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
 MsgBox, Program files are in: %OutputVar%
 
-<em>; 备用写法 (需要 v1.1.21+):</em>
+<em>; 备用写法 需要 <span class="ver">[requires v1.1.21+]</span>:</em>
 RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">\</span>SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
 MsgBox, Program files are in: %OutputVar%
 

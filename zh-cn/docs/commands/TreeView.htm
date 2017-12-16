@@ -71,9 +71,9 @@ return</pre>
 <p><strong>(未命名的数值样式):</strong> 由于上述以外的其他样式很少使用, 所以没有为它们命名. 请参阅 <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a> 了解这些样式.</p>
 <h2 id="BuiltIn">TreeView 中的内置函数</h2>
 <p>所有的 TreeView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <code><a href="Gui.htm#Default">Gui, 2:Default</a></code> 进行改变). 如果默认窗口不存在或不含有 TreeView 控件, 则所有函数返回零来表明此问题.</p>
-<p id="GuiTV">如果窗口中含有多个 TreeView 控件, 则默认情况下函数操作于最近添加的那个. 要改变这种情况, 请指定 <code>Gui, TreeView, TreeViewName</code>, 其中 <em>TreeViewName</em> 为 TreeView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN 或(在 v1.1.04+)它的 HWND. 一旦改变后, 所有现有和将来的 <a href="../misc/Threads.htm">线程</a> 都会使用指定的 TreeView. <span class="ver">[v1.1.23+]:</span> <a href="../Variables.htm#DefaultTreeView">A_DefaultTreeView</a> 包含当前设置.</p>
+<p id="GuiTV">如果窗口中含有多个 TreeView 控件, 则默认情况下函数操作于最近添加的那个. 要改变这种情况, 请指定 <code>Gui, TreeView, TreeViewName</code>, 其中 <em>TreeViewName</em> 为 TreeView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN 或 <span class="ver">[in v1.1.04+]</span>它的 HWND. 一旦改变后, 所有现有和将来的 <a href="../misc/Threads.htm">线程</a> 都会使用指定的 TreeView. <span class="ver">[v1.1.23+]:</span> <a href="../Variables.htm#DefaultTreeView">A_DefaultTreeView</a> 包含当前设置.</p>
 <h3 id="TV_SetImageList">TV_SetImageList(ImageListID [, 0|2]) <span class="ver">[v1.1.02+]</span></h3>
-<p>设置或替换 TreeView 的 <a href="#ImageList">ImageList</a>.ImageListID 为前面调用 <a href="ListView.htm#IL_Create">IL_Create()</a> 返回的数字. 第二个参数一般情况下忽略, 此时它默认为 0. 否则, 对于状态图标指定 2(还没有直接支持状态图标, 不过可以通过 <a href="PostMessage.htm">SendMessage</a> 使用). 如果成功, 则 TV_SetImageList() 返回之前与 TreeView 关联的 ImageListID(如果没有则为 0). 任何分离的图像列表一般应使用 <a href="ListView.htm#IL_Destroy">IL_Destroy(ImageListID)</a> 进行销毁.</p>
+<p>设置或替换 TreeView 的 <a href="#ImageList">ImageList</a>.<em>ImageListID</em> 为前面调用 <a href="ListView.htm#IL_Create">IL_Create()</a> 返回的数字. 第二个参数一般情况下忽略, 此时它默认为 0. 否则, 对于状态图标指定 2(还没有直接支持状态图标, 不过可以通过 <a href="PostMessage.htm">SendMessage</a> 使用). 如果成功, 则 TV_SetImageList() 返回之前与 TreeView 关联的 ImageListID(如果没有则为 0). 任何分离的图像列表一般应使用 <a href="ListView.htm#IL_Destroy">IL_Destroy(ImageListID)</a> 进行销毁.</p>
 <h2 id="bifAddModifyDelete">添加, 修改和删除项目</h2>
 <h3 id="TV_Add">TV_Add(Name, [ParentItemID, Options])</h3>
 <p>添加新的项目到 TreeView 并返回其唯一的项目 ID 号(失败时返回 0).<em>Name</em> 为被显示的文本, 它可以为文本或数值(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果).<em>ParentItemID</em> 为新项目的父项的 ID 号(省略它或指定 0 来添加顶级项目). 当添加大量项目时, 在添加项目前使用 <code>GuiControl, -Redraw, MyTreeView</code> 并且在添加项目后使用 <code>GuiControl, +Redraw, MyTreeView</code> 可以提升性能.</p>
@@ -135,7 +135,7 @@ Loop
 <p><strong>DoubleClick</strong>: 用户双击了一项. 变量 A_EventInfo 包含目标项目 ID.</p>
 <p><strong>D</strong>: 用户尝试开始拖动一个项目(目前还没有内置对拖动项目的支持). 变量 A_EventInfo 包含目标项目 ID.</p>
 <p><strong>d</strong>(小写的 D): 和上面相同, 除了指右键拖动而不是左键.</p>
-<p><strong>e</strong>(小写的 E): 用户完成编辑一个项目(只有当 TreeView 选项中含有 <code><a href="#ReadOnly"><strong>-</strong>ReadOnly</a></code> 时用户才可以编辑项目). 变量 A_EventInfo 包含目标项目 ID.</p>
+<p><strong>e</strong>(小写的 E): 用户完成编辑一个项目(只有当 TreeView 选项中含有 <code>-<a href="#ReadOnly">ReadOnly</a></code> 时用户才可以编辑项目). 变量 A_EventInfo 包含目标项目 ID.</p>
 <p><strong>S</strong>: 选择了一个新项目, 可以是用户或脚本自己选择的. 变量 A_EventInfo 包含新选择项目的 ID.</p>
 <h2>G-标签通知(次要)</h2>
 <p>如果 TreeView 的 <a href="#Options">选项</a> 中含有单词 AltSubmit, 则其 g-标签会运行的更频繁并且 <strong>A_GuiEvent</strong> 还可能包含下列值:</p>
@@ -151,7 +151,7 @@ return</pre>
 <p><strong>E</strong>: 用户开始编辑一个项目(只有当 TreeView 选项中含有 <a href="#ReadOnly">-ReadOnly</a> 时用户才可以编辑项目). 变量 A_EventInfo 包含目标项目 ID.</p>
 <p><strong>F</strong>: TreeView 接收到键盘焦点.</p>
 <p><strong>f</strong>(小写的 F): TreeView 失去了键盘焦点.</p>
-<p id="NotifyK"><strong>K</strong>: 当 TreeView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 如果此键是字母键, 则在大多数键盘布局中可以使用 <code><a href="Chr.htm">Chr(A_EventInfo)</a></code> 把它转换成相应的字符. 不论 <a href="#WantF2">WantF2</a> 选项如何都可以接收到 F2 键击. 然而, 不会接收到 Enter 键击; 要接收它, 请像<a href="#Enter">下面</a>描述的那样使用一个默认按钮.</p>
+<p id="NotifyK"><strong>K</strong>: 当 TreeView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 如果此键是字母键, 则在大多数键盘布局中可以使用 <code><a href="Chr.htm">Chr</a>(A_EventInfo)</code> 把它转换成相应的字符. 不论 <a href="#WantF2">WantF2</a> 选项如何都可以接收到 F2 键击. 然而, 不会接收到 Enter 键击; 要接收它, 请像<a href="#Enter">下面</a>描述的那样使用一个默认按钮.</p>
 <p><strong>+</strong>(加号): 展开了一个项目来显示它的子项目. 变量 A_EventInfo 包含目标项目 ID.</p>
 <p><strong>-</strong>(减号): 折叠一个项目来隐藏它的子项目. 变量 A_EventInfo 包含目标项目 ID.</p>
 <h2 id="Remarks">备注</h2>
