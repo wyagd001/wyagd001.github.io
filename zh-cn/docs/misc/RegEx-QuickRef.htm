@@ -92,10 +92,10 @@
   </tr>
   <tr id="NEWLINE_ANY">
     <td><strong>`a</strong></td>
-    <td>从 v1.0.46.06 开始, `a 可以识别任意类型的新行符, 即 `r, `n, `r`n, `v/VT/vertical tab/chr(0xB), `f/FF/formfeed/chr(0xC) 以及 NEL/next-line/chr(0x85). <br>从 v1.0.47.05 开始, 新行符可以被限制为 CR, LF 和 CRLF 三种, 只需要在模式的开始处(选项后面) 指定大写的(*ANYCRLF) ; <br>例如 <code>im)(*ANYCRLF)^abc$</code>.</td>
+    <td><span class="ver">[v1.0.46.06+]</span>: `a 可以识别任意类型的新行符, 即 `r, `n, `r`n, `v/VT/vertical tab/chr(0xB), `f/FF/formfeed/chr(0xC) 以及 NEL/next-line/chr(0x85). <span class="ver">[v1.0.47.05+]</span>: 新行符可以被限制为 CR, LF 和 CRLF 三种, 只需要在模式的开始处(选项后面) 指定大写的(*ANYCRLF); 例如 <code>im)(*ANYCRLF)^abc$</code>.</td>
   </tr>
 </table>
-<p>注: 在两个选项间可以使用空格或 tab 分隔.</p>
+<p class="note"><strong>注意</strong>: 在两个选项间可以使用空格或 tab 分隔.</p>
 
 <h2 id="Common">常用符号和用法</h2>
 <table class="info">
@@ -176,7 +176,7 @@
   \r<br>
   等等.</strong></td>
 	  <td><p>这些转义序列表示特殊的字符. 最常见的有 <span class="regex">\t</span>(tab), <span class="regex">\r</span>(回车) 和 <span class="regex">\n</span>(换行). 在 AutoHotkey, 在这些情况中还可以使用重音符(`) 代替反斜杠. 还支持 \xhh 格式的转义序列, 其中 <em>hh</em> 是介于 00 和 FF 之间的任意 ANSI 字符的十六进制码.</p>
-      <p>在 v1.0.46.06+, <span class="regex">\R</span> 表示 "单个任意类型的新行符", 即在 <a href="#NEWLINE_ANY">`a 选项</a> 中列出的这些(然而, \R 在 <a href="#class">字符类</a> 中仅仅表示字母 "R"). 在 v1.0.47.05+, <span class="regex">\R</span> 可以被限制为 CR, LF 和 CRLF 三种, 只需要在模式的开始处(选项后面) 指定大写的(*BSR_ANYCRLF) ; 例如 <span class="regex">im)(*BSR_ANYCRLF)abc\Rxyz</span></p></td>
+      <p><span class="ver">[v1.0.46.06+]</span>: <span class="regex">\R</span> 表示 "单个任意类型的新行符", 即在 <a href="#NEWLINE_ANY">`a 选项</a> 中列出的这些(然而, \R 在 <a href="#class">字符类</a> 中仅仅表示字母 "R"). <span class="ver">[v1.0.47.05+]</span>: <span class="regex">\R</span> 可以被限制为 CR, LF 和 CRLF 三种, 只需要在模式的开始处(选项后面) 指定大写的(*BSR_ANYCRLF); 例如 <span class="regex">im)(*BSR_ANYCRLF)abc\Rxyz</span></p></td>
   </tr>
   <tr id="slashP">
     <td style="align:center"><strong>\p{xx}<br>\P{xx}<br>\X</strong></td>
@@ -192,7 +192,7 @@
 <p><strong>贪婪</strong>: 默认情况下, <span class="regex">*</span>, <span class="regex">?</span>, <span class="regex">+</span> 和 <span class="regex">{min,max}</span> 是贪婪的, 因为它们消耗到 <em>最后一个</em> 能满足整个模式的可能的所有字符. <br>要让它们停在 <em>首个</em> 可能的字符, 请在它们后面加上问号. 例如, 模式 <span class="regex">&lt;.+&gt;</span>(其中没有问号) 表示: "搜索一个 &lt;, 接着一个或多个任意字符, 然后是一个 &gt;". <br>要在匹配 <em>整个</em> 字符串 <span class="subj"><span class="red"><strong>&lt;</strong></span>em&gt;text&lt;/em<span class="red"><strong>&gt;</strong></span></span> 时停止, 请在加号后加上问号: <span class="regex">&lt;.+<span class="red">?</span>&gt;</span>. 这样会让匹配在第一个 '&gt;' 处停止, 因此它只匹配第一个标签 <span class="subj"><span class="red"><strong>&lt;</strong></span>em<span class="red"><strong>&gt;</strong></span></span>.</p>
 <p><strong>预测和回顾断言</strong>: 这组 <span class="regex">(?=...)</span>, <span class="regex">(?!...)</span>, <span class="regex">(?&lt;=...)</span> 和 <span class="regex">(?&lt;!...)</span> 被称为<em>断言</em>, 因为它们要求符合某个条件但不消耗任何字符. <br>例如: <span class="regex">abc(?=.*xyz)</span> 中含有预测断言, 它要求在字符串 abc 右边的某个位置存在字符串 xyz(如果不存在, 则匹配失败). <br><span class="regex">(?=...)</span> 被称为 <em>正</em> 预测断言, 因为它要求指定的模式存在. <br><span class="regex">(?!...)</span> 被称为 <em>负</em> 预测断言, 因为它要求指定的模式 <em>不</em> 存在. <br>同样地, <span class="regex">(?&lt;=...)</span> 和 <span class="regex">(?&lt;!...)</span> 分别是正的和负的 <em>回顾</em> 断言, 因为它们检查当前位置的 <em>左边</em> 而不是右边. <br>回顾比预测受到更多的限制, 因为它们不支持可变大小的限定符, 例如 <span class="regex">*</span>, <span class="regex">?</span> 和 <span class="regex">+</span>. <br>转义序列 <span class="regex">\K</span> 类似于回顾断言, 因为它会让前一个匹配的字符在最后的匹配字符串中省略. 例如, <span class="regex">foo\Kbar</span> 可以匹配 "foobar" 但报告匹配的结果为 "bar".</p>
 <p><strong>相关</strong>: <a href="../commands/RegExMatch.htm">RegExMatch()</a>, <a href="../commands/RegExReplace.htm">RegExReplace()</a> 和 <a href="../commands/SetTitleMatchMode.htm">SetTitleMatchMode</a> 支持正则表达式.</p>
-<p><strong>最后说明</strong>: 尽管这个页面涉及了大多数常用的正则表达式功能, 但是还有相当一部分您可能希望了解的其他功能没有提及, 例如条件子模式. 完整的 PCRE 手册请访问 <a href="http://www.pcre.org/pcre.txt">www.pcre.org/pcre.txt</a></p>
+<p class="note"><strong>最后说明</strong>: 尽管这个页面涉及了大多数常用的正则表达式功能, 但是还有相当一部分您可能希望了解的其他功能没有提及, 例如条件子模式. 完整的 PCRE 手册请访问 <a href="http://www.pcre.org/pcre.txt">www.pcre.org/pcre.txt</a></p>
 <p>&nbsp;</p>
 </body>
 </html>
