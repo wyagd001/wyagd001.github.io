@@ -13,140 +13,171 @@
 
 <p>提供文件输入/输出的接口. <a href="../commands/FileOpen.htm">FileOpen</a> 返回文件类型的对象.</p>
 
+<h2 id="Members">Object Members</h2>
+ <h4>Properties:</h4>
+ <ul>
+   <li><a href="#Seek">Pos</a>: Retrieves or sets the position of the file pointer. Equivalent to <code>Pos := File.Tell()</code> or <code>File.Seek(Distance)</code>.</li>
+   <li><a href="#Length">Length</a>: Retrieves or sets the size of the file.</li>
+   <li><a href="#AtEOF">AtEOF</a>: Retrieves a non-zero value if the file pointer has reached the end of the file.</li>
+   <li><a href="#Encoding">Encoding</a>: Retrieves or sets the text encoding used by this file object.</li>
+   <li><a href="#Handle">__Handle</a>: Retrieves a system file handle, intended for use with DllCall.</li>
+ </ul>
+ <h4>Methods:</h4>
+ <ul>
+   <li><a href="#Read">Read</a>: Reads a string of characters from the file and advances the file pointer.</li>
+   <li><a href="#Write">Write</a>: Writes a string of characters to the file and advances the file pointer.</li>
+   <li><a href="#ReadLine">ReadLine</a>: Reads a line of text from the file and advances the file pointer.</li>
+   <li><a href="#WriteLine">WriteLine</a>: Writes a string of characters followed by <code>`n</code> or <code>`r`n</code> depending on the flags used to open the file. Advances the file pointer.</li>
+   <li><a href="#ReadNum">Read<em>NumType</em></a>: Reads a number from the file and advances the file pointer.</li>
+   <li><a href="#WriteNum">Write<em>NumType</em></a>: Writes a number to the file and advances the file pointer.</li>
+   <li><a href="#RawRead">RawRead</a>: Read raw binary data from the file into memory.  If a var is specified, it is expanded automatically when necessary.</li>
+   <li><a href="#RawWrite">RawWrite</a>: Write raw binary data to the file.</li>
+   <li><a href="#Seek">Seek</a>: Moves the file pointer. If the second parameter is omitted, it is equivalent to <code>File.Pos := Distance</code>.</li>
+   <li><a href="#Tell">Tell</a>: Returns the position of the file pointer. Equivalent to <code>Pos := File.Pos</code>.</li>
+   <li><a href="#Close">Close</a>: Closes the file, flushes any data in the cache to disk and releases the share locks.</li>
+ </ul>
+
 <div class="methodShort" id="Read"><h2>Read</h2>
 <p>从文件读取字符串并使文件指针向前移动.</p>
 <pre class="Syntax">String := File.Read([Characters])</pre>
-<table class="info">
-  <tr><td style="width:15%">Characters</td><td>需读取的最大字符数. 如果省略, 则读取文件的剩余部分并作为单个字符串返回. 如果 File 对象创建于非搜寻设备(例如控制台缓冲区或管道) 的句柄, 省略此参数可能引起执行方法失败或仅返回当前可用的数据.</td></tr>
-  <tr><td><b>返回值</b></td><td>字符串.</td></tr>
-</table></div>
+<dl>
+  <dt>Characters</dt>
+  <dd>需读取的最大字符数. 如果省略, 则读取文件的剩余部分并作为单个字符串返回. 如果 File 对象创建于非搜寻设备(例如控制台缓冲区或管道) 的句柄, 省略此参数可能引起执行方法失败或仅返回当前可用的数据.</dd>
+</dl>
+  <p><strong>返回</strong>字符串.</p>
+</div>
 
 <div class="methodShort" id="Write"><h2>Write</h2>
 <p>写入字符串到文件并使文件指针向前移动.</p>
 <pre class="Syntax">File.Write(String)</pre>
-<table class="info">
-  <tr><td style="width:15%">String</td><td>字符串.</td></tr>
-  <tr><td><b>返回值</b></td><td>写入的字节数(不是字符数).</td></tr>
-</table></div>
+<dl>
+    <dt>String</dt>
+  <dd>要写入的字符串.</dd>
+</dl>
+  <p><strong>返回</strong>写入的字节数(不是字符数).</p>
+</div>
 
 <div class="methodShort" id="ReadLine"><h2>ReadLine</h2>
 <p>从文件中读取一行文本并使文件指针向前移动.</p>
-<pre class="Syntax">Line := File.ReadLine()</pre>
-<table class="info">
-  <tr><td style="width:15%"><b>返回值</b></td><td>一行文本. 其中可能包括 <code>`n</code>, <code>`r`n</code> 或 <code>`r</code>, 取决于文件和打开文件时使用的 EOL 标志.</td></tr>
-</table></div>
+<pre class="Syntax">TextLine := File.ReadLine()</pre>
+<p><strong>返回</strong> 一行文本.  其中可能包括  <code>`n</code>, <code>`r`n</code> or <code>`r</code> 取决于文件和打开文件时使用的 EOL 标志.</p>
+<p>Lines up to 65,534 characters long can be read. If the length of a line exceeds this, the remainder of the line is returned by subsequent calls to this method.</p></div>
 
 <div class="methodShort" id="WriteLine"><h2>WriteLine</h2>
 <p>写入字符串后面跟着 <code>`n</code> 或 <code>`r`n</code>, 取决于打开文件时使用的标志. 使文件指针向前移动.</p>
 <pre class="Syntax">File.WriteLine([String])</pre>
-<table class="info">
-  <tr><td style="width:15%">String</td><td>可选的字符串.</td></tr>
-  <tr><td><b>返回值</b></td><td>写入的字节数(不是字符数).</td></tr>
-</table></div>
+<dl>
+  <dt>String</dt>
+  <dd>可选的字符串 to write.</dd>
+</dl>
+<p><strong>返回</strong> 写入的字节数(不是字符数).</p>
+</div>
 
-<div class="methodShort" id="ReadNum"><h2>Read<i>Num</i></h2>
+<div class="methodShort" id="ReadNum"><h2>Read<i>NumType</i></h2>
 <p>从文件中读取指定类型的数据并使文件指针向前移动.</p>
 <pre class="Syntax">Num := File.Read<i>NumType</i>()</pre>
-<table class="info">
-  <tr><td style="width:15%"><i>NumType</i></td><td>指定下列各项的其中一个直接作为函数名称的一部分:<br>UInt, Int, Int64, Short, UShort, Char, UChar, Double 或 Float.</td></tr>
-  <tr><td><b>返回值</b></td><td>成功时返回数字, 否则返回空字符串.</td></tr>
-</table>
+<p><em>NumType</em> is either UInt, Int, Int64, Short, UShort, Char, UChar, Double, or Float. These type names have the same meanings as with <a href="../commands/DllCall.htm#types">DllCall</a>.</p>
+<p><strong>Returns</strong> a number if successful, otherwise an empty string.</p>
 <p>如果使用 Try 语句且没有读取任何字节时将抛出异常. 但是, 如果读取到任何字节则不会抛出异常, 即使 <i>NumType</i> 的设定值大于读取的字节数. 不足位用0填充.</p></div>
 
-<div class="methodShort" id="WriteNum"><h2>Write<i>Num</i></h2>
+<div class="methodShort" id="WriteNum"><h2>Write<i>NumType</i></h2>
 <p>写入指定类型的数据到文件并使文件指针向前移动.</p>
 <pre class="Syntax">File.Write<i>NumType</i>(Num)</pre>
-<table class="info">
-  <tr><td style="width:15%"><i>NumType</i></td><td>指定下列各项的其中一个直接作为函数名称的一部分:<br>UInt, Int, Int64, Short, UShort, Char, UChar, Double 或 Float.</td></tr>
-  <tr><td>Num</td><td>数字.</td></tr>
-  <tr><td><b>返回值</b></td><td>写入的字节数. 例如, 写入成功时 WriteUInt 返回 4.</td></tr>
-</table></div>
+<dl>
+  <dt>Num</dt>
+  <dd>A number to write.</dd>
+</dl>
+<p><em>NumType</em> is either UInt, Int, Int64, Short, UShort, Char, UChar, Double, or Float. These type names have the same meanings as with <a href="../commands/DllCall.htm#types">DllCall</a>.</p>
+<p><strong>Returns</strong> the number of bytes that were written. For instance, WriteUInt returns 4 if successful.</p>
+</div>
 
 <div class="methodShort" id="RawRead"><h2>RawRead</h2>
 <p>从文件读取原始的二进制数据到内存. 如果指定了变量, 则必要时会自动扩展.</p>
 <pre class="Syntax">File.RawRead(VarOrAddress, Bytes)</pre>
-<table class="info">
-  <tr><td style="width:15%">VarOrAddress</td><td>用来保存复制出来的数据的变量或内存地址. 用法类似于 <a href="../commands/NumGet.htm">NumGet</a>.</td></tr>
-  <tr><td>Bytes</td><td>需读取的最大字节数.</td></tr>
-  <tr><td><b>返回值</b></td><td>读取的字节数.</td></tr>
-</table>
+<dl>
+  <dt>VarOrAddress</dt>
+  <dd>A variable or memory address to which the data will be copied.  Usage is similar to <a href="../commands/NumGet.htm">NumGet</a>.</dd>
+  <dt>Bytes</dt>
+  <dd>The maximum number of bytes to read.</dd>
+</dl>
+<p><strong>Returns</strong> the number of bytes that were read.</p>
 <p>如果使用 Try 语句, 且 <em>Bytes</em> 不为零, 但是没有读取到字节, 则抛出异常. 如果有需要, 可使用 <a href="#AtEOF">AtEOF</a> 来避免这种情况.</p></div>
 
 <div class="methodShort" id="RawWrite"><h2>RawWrite</h2>
 <p>写入原始的二进制数据到文件.</p>
 <pre class="Syntax">File.RawWrite(VarOrAddress, Bytes)</pre>
-<table class="info">
-  <tr><td style="width:15%">VarOrAddress</td><td>包含数据的变量或内存中的数据地址. 用法类似于 <a href="../commands/NumPut.htm">NumPut</a>.</td></tr>
-  <tr><td>Bytes</td><td>需写入的字节数.</td></tr>
-  <tr><td><b>返回值</b></td><td>写入的字节数.</td></tr>
-</table></div>
+<dl>
+  <dt>VarOrAddress</dt>
+  <dd>A variable containing the data or the address of the data in memory.  Usage is similar to <a href="../commands/NumPut.htm">NumPut</a>.</dd>
+  <dt>Bytes</dt>
+  <dd>The number of bytes to write.</dd>
+</dl>
+<p><strong>Returns</strong> the number of bytes that were written.</p>
+</div>
 
 <div class="methodShort" id="Seek"><h2>Seek</h2>
 <p>移动文件指针.</p>
 <pre class="Syntax">File.Seek(Distance [, Origin = 0])
 File.Position := Distance
-File.Pos := Distance</pre>
-<table class="info">
-  <tr><td style="width:15%">Distance</td><td>需移动的距离, 单位为字节. 较小的值更接近文件的开始处.</td></tr>
-  <tr><td>Origin</td><td>文件指针开始移动的起点. 必须为下列值的其中一个:<ul>
+File.Pos := Distance
+</pre>
+<dl>
+  <dt>Distance</dt>
+<dd>需移动的距离, 单位为字节. 较小的值更接近文件的开始处.</dd>
+  <dt>Origin</dt>
+  <dd><p>文件指针开始移动的起点. 必须为下列值的其中一个:</p>
+    <ul>
       <li>0(SEEK_SET): 文件的开始处. <i>Distance</i> 必须为零或更大.</li>
       <li>1(SEEK_CUR): 文件指针的当前位置.</li>
       <li>2(SEEK_END): 文件的末尾. <i>Distance</i> 通常应该为负数.</li>
-    </ul>如果省略, 当 Distance 为负数时 <i>Origin</i> 为 SEEK_END, 而其他情况时为 SEEK_SET.</td></tr>
-  <tr><td><b>返回值</b></td><td>成功时为非零值, 否则为零.</td></tr>
-</table></div>
+    </ul>
+    <p>如果省略, 当 Distance 为负数时 <i>Origin</i> 为 SEEK_END, 而其他情况时为 SEEK_SET.</p></dd>
+</dl>
+<p><strong>Returns</strong> a non-zero value if successful, otherwise zero.</p>
+</div>
 
 <div class="methodShort" id="Tell"><h2>Tell</h2>
+<p>Returns the current position of the file pointer, where 0 is the beginning of the file.</p>
 <pre class="Syntax">Pos := File.Tell()
 Pos := File.Position
-Pos := File.Pos</pre>
-<table class="info">
-  <tr><td style="width:15%"><b>返回值</b></td><td>文件指针的当前位置, 文件开始处为 0.</td></tr>
-</table></div>
+Pos := File.Pos
+</pre>
+</div>
 
 <div class="methodShort" id="Length"><h2>Length</h2>
 <p>获取或设置文件的大小.</p>
-<pre class="Syntax">FileSize := File.Length
-File.Length := NewSize</pre>
-<table class="info">
-  <tr><td style="width:15%">NewSize</td><td>文件的新大小, 单位为字节.</td></tr>
-  <tr><td><b>返回值</b></td><td>文件的大小, 单位为字节.</td></tr>
-</table>
+<pre class="Syntax">FileSize := File.Length</pre>
+<pre class="Syntax">File.Length := NewSize</pre>
+<p><em>FileSize</em> and <em>NewSize</em> is the size of the file, in bytes.</p>
 <p>此属性应该仅用于真实的文件. 如果 File 对象创建于管道的句柄, 那么它可能返回管道内部缓冲区中当前可能数据的数目, 但不能保证一定如此.</p></div>
 
 <div class="methodShort" id="AtEOF"><h2>AtEOF</h2>
+  <p>Retrieves a non-zero value if the file pointer has reached the end of the file, otherwise zero.</p>
 <pre class="Syntax">IsAtEOF := File.AtEOF</pre>
-<table class="info">
-  <tr><td style="width:15%"><b>返回值</b></td><td>当文件指针到达文件的末尾时为非零值, 否则为零.</td></tr>
-</table>
 <p>此属性应该仅用于真实的文件. 如果 File 对象创建于非搜寻设备(例如控制台缓冲区或管道) 的句柄, 那么返回的值可能没有意义, 因为这些设备逻辑上没有"文件末尾".</p></div>
 
 <div class="methodShort" id="Close"><h2>Close</h2>
-<p>关闭文件, 把缓冲区的数据写入磁盘并释放共享锁定. 尽管当对象释放时文件会自动关闭, 不过建议尽快关闭文件.</p>
+<p>关闭文件, 把缓冲区的数据写入磁盘并释放共享锁定.</p>
 <pre class="Syntax">File.Close()</pre>
-<p><i>没有参数或返回值.</i></p></div>
+<p>尽管当对象释放时文件会自动关闭, 不过建议尽快关闭文件.</p></div>
 
 <div class="methodShort" id="Encoding"><h2>Encoding</h2>
 <p>获取或设置此文件对象使用的编码.</p>
-<pre class="Syntax">Encoding := File.Encoding
-File.Encoding := Encoding</pre>
-<table class="info">
-  <tr><td style="width:15%">Encoding</td><td>数值的代码页标识(见<a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">MSDN</a>) 或以下字符串之一:<br>
+<pre class="Syntax">RetrievedEncoding := File.Encoding</pre>
+<pre class="Syntax">File.Encoding := NewEncoding</pre>
+  <p><em>RetrievedEncoding</em> and <em>NewEncoding</em> is a numeric code page identifier (see <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">MSDN</a>) or one of the following strings:</p>
   <ul>
 	<li><code>UTF-8</code>: Unicode UTF-8, 相当于 CP65001.</li>
 	<li>带小端字节顺序标识的 Unicode UTF-16 等效于 CP1200.</li>
 	<li><code>CP<i>nnn</i></code>: 带数值标识符 <i>nnn</i> 的代码页.</li>
   </ul>
-  <p><em>Encoding</em>不会返回带 <code>-RAW</code> 后缀的值, 不论文件如何被打开或是否包含字节顺序标识(BOM). 设置 <em>Encoding</em> 不会增加或移除 BOM, 因为 BOM 通常在文件建立时就被写入其中.</p>
-  <p>从 v1.1.15.04+ 开始, 设置 <em>Encoding</em> 为 <code>UTF-8-RAW</code> 或 <code>UTF-16-RAW</code> 合法, 但 <code>-RAW</code> 后缀将被忽略. 而之前的版本中, <code>UTF-8-RAW</code> 及 <code>UTF-16-RAW</code> 如同非法的 8 位编码, 导致所有非 ASCII 字符被丢弃, 不过这只会影响 <code>File.Encoding</code>, 而不会影响 <a href="../commands/FileOpen.htm">FileOpen()</a>.</p>
-  </td></tr>
-</table></div>
+  <p><em>RetrievedEncoding</em>不会返回带 <code>-RAW</code> 后缀的值, 不论文件如何被打开或是否包含字节顺序标识(BOM). 设置 <em>NewEncoding</em> 不会增加或移除 BOM, 因为 BOM 通常在文件建立时就被写入其中.</p>
+  <p><span class="ver">[v1.1.15.04+]</span>: 设置 <em>NewEncoding</em> 为 <code>UTF-8-RAW</code> 或 <code>UTF-16-RAW</code> 合法, 但 <code>-RAW</code> 后缀将被忽略. 而之前的版本中, <code>UTF-8-RAW</code> 及 <code>UTF-16-RAW</code> 如同非法的 8 位编码, 导致所有非 ASCII 字符被丢弃, 不过这只会影响 <code>File.Encoding</code>, 而不会影响 <a href="../commands/FileOpen.htm">FileOpen()</a>.</p>
+</div>
 
 <div class="methodShort" id="Handle"><h2>__Handle</h2>
+  <p>Returns a system file handle, intended for use with DllCall. See <a href="http://msdn.microsoft.com/en-us/library/aa363858.aspx">CreateFile</a>.</p>
 <pre class="Syntax">File.__Handle</pre>
-<table class="info">
-  <tr><td style="width:15%"><b>返回值</b></td><td>与 DllCall 一起使用的系统文件句柄. 请参阅 <a href="http://msdn.microsoft.com/en-us/library/aa363858.aspx">CreateFile</a>.</td></tr>
-</table>
 <p>文件对象使用内部缓冲区读取或写入. 如果数据已经被写入对象的内部缓冲区, 则在返回句柄前会确保把数据写入磁盘. 如果缓冲区中包含从文件读取的数据, 则会把数据丢弃且文件指针的实际位置被重设为由 <code>File.Pos</code> 表示的逻辑位置.</p></div>
 
 </body>

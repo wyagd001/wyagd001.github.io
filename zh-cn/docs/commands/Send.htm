@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Send/SendRaw/SendInput/SendPlay/SendEvent:发送按键和点击</title>
+<title>发送按键和点击</title>
 <meta name="description" content="使用这个免费的宏程序发送键击和鼠标点击到任意窗口. SendInput 通常是最快并且大多数时候都比较可靠的方法.">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,21 +27,69 @@ SendEvent Keys</pre>
 <h3>参数</h3>
 <dl>
 
-  <dt>键</dt>
+  <dt>Keys</dt>
   <dd><p>要发送的按键序列. 和其他命令一样, 在首个参数前的逗号可以省略.</p></dd>
 
 </dl>
 
-<p id="SendRaw"><strong>原始模式</strong>: <em>SendRaw</em> 命令会原样发送所有字符, 而不把 {Enter} 转换成 ENTER 键击, 把 ^c 转换成 Control-C, 等等. 不过, 转义系列, 变量引用和表达式的一般规则仍然适用, 因为它们在命令执行前就已经被处理了. 要在 SendInput, SendPlay 或 SendEvent 中使用原始模式, 请把 <a href="#Raw">{Raw}</a> 写在需发送的按键序列前面; 例如: <code>SendInput {Raw}abc</code>.</p>
-<p><strong>普通模式</strong>: 不处于原始模式时, 下列字符被看成是修饰键(这些修饰键仅影响紧跟着的下一个键):</p>
-<p><span class="red">!</span>: 发送 ALT 键击. 例如, <code>Send This is text!a</code> 将发送按键序列"This is text"并接着按下 ALT+a. <strong>注</strong>: 在某些程序中 !A 和 !a 会产生不同的效果. 这是由于 !A 按了 ALT+SHIFT+A 而 !a 按了 ALT+a. 如果不确定, 请使用小写字母.</p>
-<p><span class="red">+</span>: 发送 SHIFT 键击. 例如, <code>Send +abC</code> 会发送文本"AbC", 而 <code>Send !+a</code> 会按下 ALT+SHIFT+a.</p>
-<p><span class="red">^</span>: 发送 CONTROL 键击. 例如, <code>Send ^!a</code> 会按下 CTRL+ALT+a, 而 <code>Send ^{Home}</code> 则发送 CONTROL+HOME. <strong>注</strong>: 在某些程序中 ^A 和 ^a 会产生不同的效果. 这是由于 ^A 按了 CONTROL+SHIFT+A 而 ^a 按了 CONTROL+a. 如果不确定, 请使用小写字母.</p>
-<p><span class="red">#</span>: 发送 WIN 键击, 因此 <code>Send #e</code> 会在按住 Windows 键时按下字母"e".</p>
+<p id="SendRaw"><strong>Raw mode</strong> - <em>SendRaw</em> or <a href="#Raw">{Raw}</a>: The characters <code>^+!#{}</code> are interpreted literally rather than translating <code>{Enter}</code> to an ENTER keystroke, <code>^c</code> to Control-C, etc. To use raw mode with SendInput, SendPlay, or SendEvent, write <a href="#Raw">{Raw}</a> as the first item in the string; for example: <code>SendInput {Raw}abc</code>.</p>
+<p><em>Raw mode</em> does not affect the interpretation of <a href="_EscapeChar.htm">escape sequences</a>, <a href="../Variables.htm#retrieving">variable references</a> and <a href="../Variables.htm#Expressions">expressions</a>. For example, <code>SendRaw, ``100`%</code> sends the string <code>`100%</code>. When using <a href="ControlSend.htm">ControlSend</a>, it is also necessary to escape literal commas (<code>`,</code>).</p>
+<p id="specialchars"><strong>Normal mode</strong>: When not in raw mode, the following symbols have special meaning: <code>!+^#{}</code></p>
+<p>The modifiers <code>!+^#</code> affect only the very next key. To send the corresponding modifier key on its own, enclose the key name in braces. To just press (hold down) or release the key, follow the key name with the word "down" or "up" as shown below.</p>
+<style>
+#modifierkeys td:not(:last-child) { white-space: nowrap; text-align: center }
+</style>
+<table id="modifierkeys" class="info">
+  <tr>
+    <th>Symbol</th>
+    <th>Key</th>
+    <th>Press</th>
+    <th>Release</th>
+    <th>Examples</th>
+  </tr>
+  <tr>
+    <td>!</td>
+    <td>{Alt}</td>
+    <td>{Alt down}</td>
+    <td>{Alt up}</td>
+    <td><code>Send !a</code> presses ALT+a</td>
+  </tr>
+  <tr>
+    <td>+</td>
+    <td>{Shift}</td>
+    <td>{Shift down}</td>
+    <td>{Shift up}</td>
+    <td><code>Send +abC</code> sends the text "AbC"<br>
+    <code>Send !+a</code> presses ALT+SHIFT+a</td>
+  </tr>
+  <tr>
+    <td>^</td>
+    <td>{Ctrl}</td>
+    <td>{Ctrl down}</td>
+    <td>{Ctrl up}</td>
+    <td><code>Send ^{Home}</code> presses CONTROL+HOME</td>
+  </tr>
+  <tr>
+    <td>#</td>
+    <td>{LWin}<br>{RWin}</td>
+    <td>{LWin down}<br>{RWin down}</td>
+    <td>{LWin up}<br>{RWin up}</td>
+    <td><code>Send #e</code> holds down the Windows key and then presses the letter "e"</td>
+  </tr>
+  <tr>
+    <th>Symbol</th>
+    <th colspan="4">Meaning</th>
+  </tr>
+  <tr>
+    <td>{ }</td>
+    <td colspan="4" style="white-space: normal; text-align: left">Braces are used to enclose <a href="#keynames">key names and other options</a>, and to send special characters literally. For example, <code>{Tab}</code> is the Tab key and <code>{!}</code> is a literal exclamation mark.</td>
+  </tr>
+</table>
+<p class="note"><strong>注意</strong>: As capital letters are produced by sending the SHIFT key, <code>A</code> produces a different effect in some programs than <code>a</code>. For example, <code>!A</code> presses ALT+SHIFT+A and <code>!a</code> presses ALT+a. If in doubt, use lowercase.</p>
 <p><br>
 <strong id="SendInput">SendInput</strong> 和 <strong id="SendPlay">SendPlay</strong> <span class="ver">[v1.0.43+]:</span> SendInput 和 SendPlay 与 Send 使用相同的语法但通常更快更可靠. 此外, 它们缓存了发送期间任何物理的键盘或鼠标活动, 这样避免了在发送时夹杂用户的键击. 可以使用 <a href="SendMode.htm">SendMode</a> 让 Send 和 SendInput 或 SendPlay 执行相同的功能. 关于每种模式的更多细节, 请参阅下面的 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendPlayDetail">SendPlay</a>.</p>
 <p><a name="SendEvent"></a><strong>SendEvent</strong> <span class="ver">[v1.0.43+]:</span> SendEvent 和 1.0.43 之前版本的 <em>Send</em> 命令使用相同的方法发送键击. 键击发送的频率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定. 默认情况下, <em>Send</em> 和 <em>SendEvent</em> 功能相同; 但通过 <a href="SendMode.htm">SendMode</a> 可以让它变成和 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 一样.</p>
-<p><strong>Key Names</strong>: 下表中列出了可以发送的特殊按键(每个按键名称必须用大括号包围):</p>
+<p id="keynames"><strong>Key Names</strong>: 下表中列出了可以发送的特殊按键(每个按键名称必须用大括号包围):</p>
 <table class="info">
   <tr>
     <th>&nbsp;</th>
@@ -446,7 +494,7 @@ SendEvent Keys</pre>
   </tr>
   <tr>
     <td>{WheelDown}, {WheelUp}, {WheelLeft}, {WheelRight}, {LButton}, {RButton}, {MButton}, {XButton1}, {XButton2}</td>
-    <td>向指针当前位置发送鼠标按钮事件(要指定位置和其他选项, 请使用上面的 <a href="Click.htm">{Click}</a>). 在鼠标点击之间的延迟由 <a href="SetMouseDelay.htm">SetMouseDelay</a> 决定. WheelLeft/Right 需要 v1.0.48+, 并且在 Windows Vista 之前的操作系统中没有效果.</td>
+    <td>向指针当前位置发送鼠标按钮事件(要指定位置和其他选项, 请使用上面的 <a href="Click.htm">{Click}</a>). 在鼠标点击之间的延迟由 <a href="SetMouseDelay.htm">SetMouseDelay</a> 决定. WheelLeft/Right 需要 <span class="ver">[v1.0.48+]</span>, 并且在 Windows Vista 之前的操作系统中没有效果.</td>
   </tr>
   <tr id="blind">
     <td><strong>{Blind}</strong></td>
@@ -458,7 +506,7 @@ SendEvent Keys</pre>
   <tr id="Raw">
     <td><strong>{Raw}</strong><br>
     <span class="ver">[v1.0.43+]</span></td>
-    <td>准确按照原样发送键击, 而不把 {Enter} 转换成 ENTER 键击, 把 <code>^c</code> 转换成 Control-C 等等. {Raw} 可以不放在按键序列的开始处, 在按键序列中出现时, 它会影响它后面的剩余部分.</td>
+    <td>Enables <a href="#SendRaw"><em>Raw mode</em></a>, which causes the following characters to be interpreted literally: <code>^+!#{}</code>. <code>{Raw}</code> 可以不放在按键序列的开始处, 在按键序列中出现时, 它会影响它后面的剩余部分.</td>
   </tr>
 </table>
 
@@ -492,11 +540,11 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <h2 id="SendInputDetail">SendInput <span class="ver">[v1.0.43+]</span></h2>
 <p>由于 SendInput 突出的速度和可靠性, 通常为发送键击和鼠标点击的首选方法. 在大多数情况下, SendInput 是近乎瞬时发送的, 即使在发送长字符串也是如此. 由于 SendInput 如此快速, 所以也更可靠, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断正发送的键击. 可靠性进一步提升是通过把用户在 SendInput 发送期间输入的内容推迟的情况而言.</p>
 <p>与其他发送模式不同, 操作系统限制 SendInput 每次只能发送大约 5000 个字符(此限制可能因操作系统版本和性能设置而有所不同). 超过此限制的字符和事件不会被发送.</p>
-<p><strong>注:</strong> SendInput 会忽略 SetKeyDelay, 因为在这种发送模式中操作系统不支持延迟. 但是, 在后面描述的情况中当 SendInput 恢复到 <a href="#SendEvent">SendEvent</a> 时, 它会使用 <code><a href="SetKeyDelay.htm">SetKeyDelay -1, 0</a></code>(但如果 SendEvent 的按键延迟为 <code>-1, -1</code> 时, 则使用 <code>-1, -1</code>). 当 SendInput 恢复为 <a href="#SendPlayDetail">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
-<p id="SendInputUnavail">如果执行 SendInput 脚本外的<em>其他</em>脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或 <a href="#SendPlayDetail">SendPlay</a>, 当 <a href="SendMode.htm"><code>SendMode InputThenPlay</code></a> 有效的时候). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 在 AutoHotkey v1.0.43 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下将不会自动恢复使得比 SendPlay/Event 更不可靠.</p>
-<p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <a href="SetMouseDelay.htm"><code>CoordMode Mouse, Relative</code></a> 有效时(默认), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
+<p class="note"><strong>注意</strong>: SendInput 会忽略 SetKeyDelay, 因为在这种发送模式中操作系统不支持延迟. 但是, 在后面描述的情况中当 SendInput 恢复到 <a href="#SendEvent">SendEvent</a> 时, 它会使用 <code><a href="SetKeyDelay.htm">SetKeyDelay</a> -1, 0</code>(但如果 SendEvent 的按键延迟为 <code>-1, -1</code> 时, 则使用 <code>-1, -1</code>). 当 SendInput 恢复为 <a href="#SendPlayDetail">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
+<p id="SendInputUnavail">如果执行 SendInput 脚本外的<em>其他</em>脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或 <a href="#SendPlayDetail">SendPlay</a>, 当 <code><a href="SendMode.htm">SendMode</a> InputThenPlay</code> 有效的时候). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 在 <span class="ver">[AutoHotkey v1.0.43+]</span> 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下将不会自动恢复使得比 SendPlay/Event 更不可靠.</p>
+<p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <code><a href="SetMouseDelay.htm">CoordMode</a> Mouse, Relative</code> 有效时(默认), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
 <h2 id="SendPlayDetail">SendPlay <span class="ver">[v1.0.43+]</span></h2>
-<p><strong>注意:</strong> SendPlay 在 UAC 启用时完全失效, 即使是使用管理员权限运行脚本. 详情参见 <a href="../FAQ.htm#uac">FAQ</a>.</p>
+<p class="warning"><strong>警告</strong>: SendPlay 在 UAC 启用时完全失效, 即使是使用管理员权限运行脚本. 详情参见 <a href="../FAQ.htm#uac">FAQ</a>.</p>
 <p>比起其他模式 SendPlay 最大的优势是具有在相当多种游戏中 "play back" 键击和鼠标点击能力. 例如, 某种特殊的游戏可能仅接受 <a href="../Hotstrings.htm#SendMode">SendPlay 选项</a> 的 <a href="../Hotstrings.htm#SendMode">热字串</a>. 但是, SendPlay 在启用了用户账户控制的 Windows Vista 或更高版本中则可能没有效果, 即使以管理员运行脚本. 下面的脚本提供了此问题的变通解决方法: <a href="http://www.autohotkey.com/forum/topic75595.html">http://www.autohotkey.com/forum/topic75595.html</a>.</p>
 <p>在三种发送模式中, SendPlay 是最不常用的, 因为它本身并不模拟键击和鼠标点击. 作为替代, 它制造一系列事件(消息) 直接流向活动窗口(类似于 <a href="ControlSend.htm">ControlSend</a>, 但在更低的层面). 因此 SendPlay 不会触发热键或热字串.</p>
 <p>和 <a href="#SendInputDetail">SendInput</a> 一样, SendPlay 的键击不会夹杂用户输入的内容. 因此, 如果用户碰巧在 SendPlay 发送期间输入了一些内容, 则它们会被延迟到发送完后.</p>
