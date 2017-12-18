@@ -39,7 +39,7 @@ var cache = {
 
 // Set global variables:
 cache.load();
-var scriptDir = document.scripts[document.scripts.length-1].src.substr(0, document.scripts[document.scripts.length-1].src.lastIndexOf('/'));;
+var scriptDir = document.scripts[document.scripts.length-1].src.substr(0, document.scripts[document.scripts.length-1].src.lastIndexOf('/'));
 var workingDir = getWorkingDir();
 var relPath = location.href.replace(workingDir, '');
 var isInsideCHM = (location.href.search(/::/) > 0) ? 1 : 0;
@@ -357,8 +357,8 @@ function ctor_search()
   self.dataPath = scriptDir + '/source/data_search.js';
   self.modify = function() { // Modify the elements of the search tab.
     var $search = $('#left div.search');
-    var $searchList = $('div.list', search);
-    var $searchInput = $('input', search);
+    var $searchList = $('div.list', $search);
+    var $searchInput = $('input', $search);
 
     // --- Hook up events ---
 
@@ -659,7 +659,7 @@ function ctor_structure()
     // language links. Keys are based on ISO 639-1 language name standard:
     var link = { 'v1': { 'en': 'https://autohotkey.com/docs/',
                                  'de': 'https://ahkde.github.io/docs/',
-                                 'zh': 'http://wyagd001.github.io/zh-cn/docs/' },
+                                 'zh': 'https://wyagd001.github.io/zh-cn/docs/' },
                        'v2': { 'en': 'https://lexikos.github.io/v2/docs/',
                                 'de': 'https://ahkde.github.io/v2/docs/' } }
 
@@ -896,7 +896,7 @@ function ctor_structure()
       // When using mobile device hide sidebar and goto anchor:
       if (isMobile && location.hash) {
         anchor = document.getElementById(location.hash.substr(1));
-      setTimeout( function() {
+        setTimeout( function() {
           self.displaySidebar(false);
           anchor.scrollIntoView();
          }, 200);
@@ -922,7 +922,7 @@ function ctor_structure()
       else
         return;
       $(anchor).css("backgroundColor", "#ff9632");
-       setTimeout( function() {
+      setTimeout( function() {
         $(anchor).css("backgroundColor", "")
                  .css("transition", "background-color 1s"); // CSS3 only
       }, 200);
