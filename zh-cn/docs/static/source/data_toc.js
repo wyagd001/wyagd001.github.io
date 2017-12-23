@@ -338,7 +338,7 @@
     ["StrPut()/StrGet()","commands/StrPutGet.htm"],
     ["StrReplace()","commands/StringReplace.htm"],
     ["StrSplit()","commands/StringSplit.htm"],
-    ["SubStr()","Functions.htm#SubStr"],
+    ["SubStr()","commands/SubStr.htm"],
     ["Trim()","commands/Trim.htm"]
   ]],
   ["窗口管理","",
