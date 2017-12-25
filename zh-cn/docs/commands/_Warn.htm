@@ -21,24 +21,25 @@
   <dt>WarningType</dt>
   <dd>
       <p>要启用或禁用的警告类型. 如果省略, 默认为 <i>All</i>.</p>
-      <p><strong>UseUnsetLocal</strong> 或 <strong>UseUnsetGlobal</strong>: 在读取之前没有赋值或使用 <a href="VarSetCapacity.htm">VarSetCapacity</a> 初始化的变量时产生警告. 如果这种变量计划为空的, 则可以为它赋值空字符串来屏蔽这样的警告.</p>
+      <p id="UseUnset"><strong>UseUnsetLocal</strong> 或 <strong>UseUnsetGlobal</strong>: 在读取之前没有赋值或使用 <a href="VarSetCapacity.htm">VarSetCapacity</a> 初始化的变量时产生警告. 如果这种变量计划为空的, 则可以为它赋值空字符串来屏蔽这样的警告.</p>
       <p>根据用于局部和全局变量这种警告被分成两种单独的类型, 这是由于全局变量的持久, 脚本范围作用域的性质, 所以对不首先初始化而使用全局变量更常用. 因此, 一些脚本作者会希望在局部启用这种警告类型, 但禁用全局的.</p>
       <pre>#Warn
 <em>;y := ""  ; 这样将屏蔽警告.</em>
 x := y    <em>; y 还不含有值.</em></pre>
-      <p><strong>UseEnv</strong>: 在自动使用环境变量代替空的脚本变量时产生警告. 当环境变量名意外地与脚本中使用的某个变量名相同时会发生这种情况. 这种警告会在访问变量时会产生, 但如果脚本使用了 <a href="_NoEnv.htm">#NoEnv</a>(由于多种原因而推荐使用) 则可以避免.</p>
+      <p id="UseEnv"><strong>UseEnv</strong>: 在自动使用环境变量代替空的脚本变量时产生警告. 当环境变量名意外地与脚本中使用的某个变量名相同时会发生这种情况. 这种警告会在访问变量时会产生, 但如果脚本使用了 <a href="_NoEnv.htm">#NoEnv</a>(由于多种原因而推荐使用) 则可以避免.</p>
       <pre>#Warn
 <em>;#NoEnv             ; 如果"temp"不是计划为环境变量则添加这行.</em>
 <em>;EnvGet temp, TEMP  ; 这里将复制环境变量的值到脚本变量中.</em>
 temp := ""          <em>; 不考虑这行,temp 仍然含有值.</em>
 MsgBox % temp       <em>; 这里访问名称为"TEMP"的环境变量.</em></pre>
-      <p><strong>LocalSameAsGlobal</strong>: 在脚本开始运行前, 为与全局变量名称相同的每个<em>未声明</em>局部变量显示警告. 这是用来避免在函数中由于忘记在访问全局变量前进行声明引起的错误. 如果变量确实为局部变量, 则可以用类似 <code>local x</code> 或 <code>static y</code> 这样的声明来屏蔽这种警告.</p>
+      <p id="LocalSameAsGlobal"><strong>LocalSameAsGlobal</strong>: 在脚本开始运行前, 为与全局变量名称相同的每个<em>未声明</em>局部变量显示警告. 这是用来避免在函数中由于忘记在访问全局变量前进行声明引起的错误. 如果变量确实为局部变量, 则可以用类似 <code>local x</code> 或 <code>static y</code> 这样的声明来屏蔽这种警告. This warning is never shown for variables inside a <a href="../Functions.htm#ForceLocal">force-local</a> function.</p>
       <pre>#Warn
 g := 1
 ShowG() {       <em>; 即使从未调用这个函数也会显示警告.</em>
     <em>;global g   ; &lt;-- 访问全局变量时需要这行.</em>
     MsgBox % g  <em>; 没有声明, 所以"g"是个空的局部变量.</em>
 }</pre>
+      <p id="ClassOverwrite"><strong>ClassOverwrite</strong> <span class="ver">[v1.1.27+]</span>: Before the script starts to run, show a warning for each assignment targetting a class variable. For example, <code>box := new Box</code> will show a warning if <em>Box</em> is a class, since this would overwrite the class (within the super-global variable, <em>Box</em>). Warnings are also shown for output variables of commands, but not ByRef parameters.</p>
       <p><strong>All</strong>: 应用指定的 <em>WarningMode</em> 支持的所有警告类型.</p>
     </dd>
 
@@ -64,7 +65,7 @@ x := EnvVar       <em>; 由于没有使用 #NoEnv, 所以这句是正确的.</em
 x := NotAnEnvVar  <em>; 产生警告.</em>
 </pre>
 <h3>相关</h3>
-<p><a href="../Functions.htm#Locals">局部变量和全局变量</a></p>
+<p><a href="../Functions.htm#Local">局部变量和全局变量</a></p>
 <h3>示例</h3>
 <pre class="NoIndent">
 #Warn All, Off                    <em>; 禁用所有警告.  这是默认设置.</em>

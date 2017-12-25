@@ -21,7 +21,11 @@ ul.list_of_p li { margin: 1em 0; }
   <li>设置值.</li>
   <li>调用方法(即可以对目标对象进行某些操作的函数).</li>
 </ul>
-<p>对象 <i>引用</i> 是指向特殊对象的指针或 "句柄". 和字符串和数字一样, 对象引用可以存储到变量中, 传递给函数或从函数返回以及保存到对象中. 在从一个变量复制引用到另一个后, 例如 <code>x := y</code>, 两个变量都引用相同的对象.</p>
+<p>Related topics:</p>
+<ul>
+  <li><a href="Concepts.htm#objects">Objects</a>: General explanation of objects.</li>
+  <li><a href="Concepts.htm#object-protocol">Object Protocol</a>: Specifics about how a script interacts with an object.</li>
+</ul>
 
 <p><b>IsObject</b> 可以用来确定一个值是否为对象:</p>
 <pre>Result := IsObject(<i>expression</i>)</pre>
@@ -274,7 +278,8 @@ other.test()</pre>
     }
 }
 </pre>
-<p>在加载脚本时, 这里会创建对象并将其存储到全局(或 <span class="ver">[v1.1.05]</span> <a href="Functions.htm#SuperGlobal">超级全局</a>) 变量 <i>ClassName</i>. 在 <span class="ver">[v1.1.05]</span> 之前, 要在函数中引用这个类, 如果函数不处于 <a href="Functions.htm#AssumeGlobal">假设全局模式</a>, 那么需要进行声明, 例如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的完整名称(从 <span class="ver">[v1.1.11]</span> 开始, 对于早期的版本它们所定义的无关紧要). 每个类的完整名称存储在 <code><i>object</i>.__Class</code>.</p>
+<p>在加载脚本时, 这里会创建对象并将其存储到全局(或 <span class="ver">[v1.1.05]</span> <a href="Functions.htm#SuperGlobal">超级全局</a>) 变量 <i>ClassName</i>.  To reference this class inside a <a href="Functions.htm#ForceLocal">force-local</a> function (or an assume-local or assume-static function prior to <span class="ver">[v1.1.05]</span>), 那么需要进行声明, 例如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的完整名称(从 <span class="ver">[v1.1.11]</span> 开始, 对于早期的版本它们所定义的无关紧要). 每个类的完整名称存储在 <code><i>object</i>.__Class</code>.</p>
+<p>Because the class is referenced via a variable, the class name cannot be used to both reference the class and create a separate variable (such as to hold an instance of the class) in the same context. For example, <code>box := new Box</code> would replace the class object in <em>Box</em> with an instance of itself. <span class="ver">[v1.1.27+]:</span> <a href="commands/_Warn.htm#ClassOverwrite">#Warn ClassOverwrite</a> enables a warning to be shown at load time for each attempt to overwrite a class.</p>
 <p>在本文档中, "class" 这个单词表示一个类对象是由 <code>class</code> 构造的.</p>
 <p>类定义可以包含变量声明, 方法定义和内嵌的类定义.</p>
 

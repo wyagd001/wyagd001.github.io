@@ -103,7 +103,7 @@ return</pre>
 <p id="actually">加载脚本时, 每个重映射会被转换为一对 <a href="../Hotkeys.htm">热键</a>. 例如, 包含重映射 <code>a::b</code> 的脚本实际包含下面的两个热键:</p>
 <pre>*<strong>a</strong>::
 SetKeyDelay -1   <em>; 如果目标键是鼠标按钮, 则使用 SetMouseDelay 代替.</em>
-Send <a href="../commands/Send.htm#blind">{Blind}</a>{<strong>b</strong> DownTemp}  <em>; DownTemp 和 Down 相似, 不过使用 DownTemp 时脚本中后面的其他 Send 命令则不会假定 "b" 仍然处于按下的状态.</em>
+Send <a href="../commands/Send.htm#blind">{Blind}</a>{<strong>b</strong> <a href="../commands/Send.htm#DownR">DownR</a>}  <em>; DownR 和 Down 相似, 不过使用 DownTemp 时脚本中后面的其他 Send 命令则不会假定 "b" 仍然处于按下的状态.</em>
 return
 
 *<strong>a up</strong>::
@@ -112,15 +112,16 @@ Send {Blind}{<strong>b</strong> Up}
 return</pre>
 <p>但是, 上面的两个热键在下列环境中会发生变化:</p>
 <ol>
-  <li>当原始键为 LCtrl 而目标键为 Alt 键时, 会把 <code>Send {Blind}{LAlt DownTemp}</code> 这行语句替换为 <code>Send {Blind}<strong>{LCtrl Up}</strong>{LAlt DownTemp}</code>. 如果原始键为 RCtrl 也会如此, 除非使用了 <code>{RCtrl up}</code>.</li>
+  <li>当原始键为 LCtrl 而目标键为 Alt 键时, 会把 <code>Send {Blind}{LAlt DownR}</code> 这行语句替换为 <code>Send {Blind}<strong>{LCtrl Up}</strong>{LAlt DownR}</code>. 如果原始键为 RCtrl 也会如此, 除非使用了 <code>{RCtrl up}</code>.</li>
   <li>当键盘按键被重映射为鼠标按钮时(例如 <code>RCtrl::RButton</code>), 在上面的热键中会使用 SetMouseDelay 代替 SetKeyDelay. 而且, 上面的首个热键会被替换为下面的热键, 这样避免了由于键盘的自动重复功能生成的重复的鼠标点击:
     <pre>*RCtrl::
 SetMouseDelay -1
 if not GetKeyState("RButton")  <em>; 即鼠标右键还没有按下.</em>
-    Send {Blind}{RButton DownTemp}
+    Send {Blind}{RButton DownR}
 return</pre>
   </li>
 </ol>
+<p>Prior to <span class="ver">[v1.1.27]</span>, <a href="../commands/Send.htm#DownTemp">DownTemp</a> was used instead of <a href="../commands/Send.htm#DownR">DownR</a>.</p>
 <p>请注意在上面的热键中省略了 SetKeyDelay 的第二个参数(<a href="../commands/SetKeyDelay.htm#dur">按键时长</a>). 这是因为按键时长不适用于独立的按键按下或按键弹起事件, 例如 <code>{b down}</code> 和 <code>{b up}</code>. 但是, 它适用于 Shift/Ctrl/Alt/Win 按键状态的改变, 这会影响像 <code>a::B</code> 或 <code>a::^b</code> 的重映射. 因此, 脚本中任何在<a href="../Scripts.htm#auto">自动执行段</a>生效的按键时长会应用于所有这类重映射.</p>
 <p>尽管一对按键不能直接重映射为单个按键(例如 <code>a &amp; c::b</code> 是无效的), 不过只需要在前面的示例中添加明确的弹起和按下热键即可实现这种行为:简单地把 <code>*a::</code> 替换为 <code>a &amp; c::</code>, 且把 <code>*a up::</code> 替换为 <code>a &amp; c up::</code>.</p>
 <p>由于重映射会被简单翻译为上面描述的热键, 所以 <a href="../commands/Suspend.htm">Suspend</a> 也会影响它们. 同样地, <a href="../commands/Hotkey.htm">Hotkey</a> 命令可以禁用或修改重映射. 例如, 下面的两个命令会禁用重映射 <code>a::b</code>.</p>

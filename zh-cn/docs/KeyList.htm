@@ -57,6 +57,7 @@
 </table>
 <h2>键盘</h2>
 <p class="note"><strong>注意</strong>: 字母和数字按键的名称和单个字母或数字相同. 例如: b 表示 "b" 键而 5 表示 "5" 键.</p>
+<p>Although any single character can be used as a key name, its meaning (scan code or virtual keycode) depends on the current keyboard layout. Additionally, some special characters may need to be escaped or enclosed in braces, depending on the context. <span class="ver">[v1.1.27+]:</span> The letters a-z or A-Z can be used to refer to the corresponding virtual keycodes (usually vk41-vk5A) even if they are not included in the current keyboard layout.</p>
 <h3>常规</h3>
 <table class="info">
   <tr>
@@ -358,17 +359,19 @@
     <td>Sleep</td>
     <td>休眠键. 注意在一些键盘上的 sleep 键可能不是休眠功能.</td>
   </tr>
-  <tr>
+  <tr id="sc">
     <td>SC<b>nnn</b></td>
     <td>请在 <b>nnn</b> 中指定按键的扫描码. 识别上面没有提到的罕见的按键. 请参阅<a href="#SpecialKeys">特殊按键</a>了解详情.</td>
   </tr>
-  <tr>
-    <td id="vk">VK<b>nn</b></td>
-    <td>请在 <b>nn</b> 中指定十六进制的虚拟按键码. 这种极少用的方法还可以避免某些类型的<a href="Hotkeys.htm">热键</a>需要安装<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>. 例如, 后面的热键不使用键盘钩子, 但副作用是它会在按下 Home 或 NumpadHome 的<em>其中一个</em>时触发:
+  <tr id="vk">
+    <td>VK<b>nn</b></td>
+    <td><p>请在 <b>nn</b> 中指定十六进制的虚拟按键码. 这种极少用的方法还可以避免某些类型的<a href="Hotkeys.htm">热键</a>需要安装<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>. 例如, 后面的热键不使用键盘钩子, 但副作用是它会在按下 Home 或 NumpadHome 的<em>其中一个</em>时触发:</p>
       <pre>^VK24::MsgBox You pressed Home or NumpadHome while holding down Control.
 </pre>
-      <strong>已知限制</strong>: 强制使用<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>的 VK 热键, 例如 <code>*VK24</code> 或 <code>~VK24</code>, 只会触发其中一个热键, 而不会触发两者(例如触发 NumpadHome 但不触发 Home).
-	  关于 VKnn 方法的更多细节, 请参阅<a href="#SpecialKeys">特殊按键</a>.</td>
+      <p><strong>已知限制</strong>: 强制使用<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>的 VK 热键, 例如 <code>*VK24</code> 或 <code>~VK24</code>, 只会触发其中一个热键, 而不会触发两者(例如触发 NumpadHome 但不触发 Home).
+	  关于 VKnn 方法的更多细节, 请参阅<a href="#SpecialKeys">特殊按键</a>.</p>
+      <p class="warning"><strong>Warning:</strong> VKnn and SCnnn cannot be combined. <span class="ver">[v1.1.27+]:</span> Any invalid suffix will raise an error. This includes any SC suffix (for example, <code>vk1Bsc001::</code>), which was ignored (had no effect) in previous versions.</p>
+      </td>
   </tr>
 </table>
 <h2 id="Joystick">Joystick</h2>

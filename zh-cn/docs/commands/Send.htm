@@ -32,9 +32,11 @@ SendEvent Keys</pre>
 
 </dl>
 
-<p id="SendRaw"><strong>原始模式</strong> - <em>SendRaw</em> 或 <a href="#Raw">{Raw}</a>: 这些字符 <code>^+!#{}</code> 解释为原义字符而不是转换, 如 <code>{Enter}</code> 不会转换为 ENTER(回车) 键击, <code>^c</code> 不会转换为 Control-C, 等等. 要在 SendInput, SendPlay 或 SendEvent 中使用原始模式, 请把 <a href="#Raw">{Raw}</a> 写在需发送的按键序列前面; 例如: <code>SendInput {Raw}abc</code>.</p>
+<p id="SendRaw"><strong>原始模式</strong> - <em>SendRaw</em> 或 <a href="#Raw">{Raw}</a>: 这些字符 <code>^+!#{}</code> 解释为原义字符而不是转换, 如 <code>{Enter}</code> 不会转换为 ENTER(回车) 键击, <code>^c</code> 不会转换为 Control-C, 等等. 要在 SendInput, SendPlay, SendEvent 或 ControlSend 中使用原始模式, 请把 <a href="#Raw">{Raw}</a> 写在需发送的按键序列前面; 例如: <code>SendInput {Raw}abc</code>.</p>
 <p><em>原始模式</em> 不影响 <a href="_EscapeChar.htm">转义序列</a>, <a href="../Variables.htm#retrieving">变量引用</a> 和 <a href="../Variables.htm#Expressions">表达式</a>的解释. 例如, <code>SendRaw, ``100`%</code> 为发送字符 <code>`100%</code>. 当使用 <a href="ControlSend.htm">ControlSend</a> 时, 也需要转义原义的逗号 (<code>`,</code>).</p>
-<p id="specialchars"><strong>普通模式</strong>: 当不处于原始模式时, 以下符号具有特殊的含义: <code>!+^#{}</code></p>
+<p id="SendText"><strong>Text mode</strong> - <code>{Text}</code> <span class="ver">[v1.1.27+]</span>: Similar to Raw mode, except that no attempt is made to translate characters (other than <code>`r</code>, <code>`n</code>, <code>`t</code> and <code>`b</code>) to keycodes; instead, the <a href="#fallback">fallback method</a> is used for all of the remaining characters. For SendEvent, SendInput and ControlSend, this improves reliability because the characters are much less dependent on correct modifier state. Text mode can be combined with Blind mode to avoid releasing any modifier keys: <code>Send {Blind}{Text}your text</code>. However, some applications require that the modifier keys be released.</p>
+<p><code>`n</code>, <code>`r</code> and <code>`r`n</code> are all translated to a single Enter keystroke, unlike normal mode and Raw mode, which translate <code>`r`n</code> to two Enter keystrokes. <code>`t</code> is translated to Tab and <code>`b</code> to Backspace, but all other characters are sent without translation.</p>
+<p id="specialchars"><strong>Normal mode</strong>: When not in Raw mode or Text mode, the following symbols have special meaning: <code>!+^#{}</code></p>
 <p>这些修饰键 <code>!+^#</code> 仅影响紧跟着的下一个键. 若要发送修饰符本身对应的键, 将按键名称括在大括号中. 若要按下(按住) 或松开按键, 下面所示的单词 "down" 或 "up" 跟在按键名称的后面.</p>
 <style>
 #modifierkeys td:not(:last-child) { white-space: nowrap; text-align: center }
@@ -82,7 +84,8 @@ SendEvent Keys</pre>
   </tr>
   <tr>
     <td>{ }</td>
-    <td colspan="4" style="white-space: normal; text-align: left">大括号用于包含<a href="#keynames">键名和其他选项</a>, 并发送特殊的原义字符. 例如, <code>{Tab}</code> 是 Tab 键 而 <code>{!}</code> 是原义的感叹号.</td>
+    <td colspan="4" style="white-space: normal; text-align: left"><p>大括号用于包含<a href="#keynames">键名和其他选项</a>, 并发送特殊的原义字符. 例如, <code>{Tab}</code> 是 Tab 键 而 <code>{!}</code> 是原义的感叹号.</p>
+    <p><span class="ver">[v1.1.27+]:</span> Enclosing a plain ASCII letter (a-z or A-Z) in braces forces it to be sent as the corresponding virtual keycode, even if the character does not exist on the current keyboard layout. In other words, <code>Send a</code> produces the letter "a" while <code>Send {a}</code> may or may not produce "a", depending on the keyboard layout. For details, see the <a href="#AZ">remarks below</a>.</p></td>
   </tr>
 </table>
 <p class="note"><strong>注意</strong>: 由于大写字母是通过发送 SHIFT 键产生的, 因此在某些程序中 <code>A</code> 和 <code>a</code> 会产生不同的效果. 例如, <code>!A</code> 按下 ALT+SHIFT+A 而 <code>!a</code> 按下 ALT+a. 如果不确定, 请使用小写字母.</p>
@@ -300,16 +303,17 @@ SendEvent Keys</pre>
     <p>要生成 Unicode 字符, 请指定一个介于 256 和 65535 之间的数字(不带前导零). 但是, 有些应用程序不支持这种方法. 对于替代方法, 请参阅下面的部分.</p></td>
   </tr>
   <tr id="Unicode">
-    <td><span id="sendu"></span>{U+nnnn}</td>
-    <td><p><span class="ver">[AHK_L 24+]:</span> 发送 Unicode 字符, 其中 <em>nnnn</em> 为不包括 0x 前缀的字符的十六进制值. 在 AutoHotkey 的 Unicode 版本中通常不需要这么做, 因为它包含的 Send 和 ControlSend 自动支持 Unicode 文本.</p>
-    <p>如果这个字符没有映射为一个虚拟按键代码, 则使用 <a href="http://msdn.microsoft.com/en-us/library/ms646310.aspx">SendInput()</a> 或 <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> 发送这个字符而当前的发送模式无效.</p></td>
+    <td>{U+nnnn}</td>
+    <td><p id="sendu"><span class="ver">[AHK_L 24+]:</span> 发送 Unicode 字符, 其中 <em>nnnn</em> 为不包括 0x 前缀的字符的十六进制值. 在 AutoHotkey 的 Unicode 版本中通常不需要这么做, 因为它包含的 Send 和 ControlSend 自动支持 Unicode 文本.</p>
+    <p>使用 <a href="http://msdn.microsoft.com/en-us/library/ms646310.aspx">SendInput()</a> 或 <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> 发送这个字符而当前的发送模式无效. Characters sent this way usually do not trigger shortcut keys or hotkeys.</p></td>
   </tr>
   <tr id="vk">
     <td><p>{vkXX}<br>
       {scYYY}<br>
     {vkXXscYYY}</p></td>
     <td><p>发送一个虚拟按键为 XX 且扫描码为 YYY 的键击. 例如: <code>Send {vkFFsc159}</code>. 如果省略了 sc 或 vk 部分, 则会发送最适当的值.</p>
-      <p>XX 和 YYY 是十六进制值, 通常可以在主窗口的 <a href="KeyHistory.htm">View-&gt;Key history</a> 菜单项找到. 另请参阅: <a href="../KeyList.htm#SpecialKeys">特殊按键</a></p></td>
+      <p>XX 和 YYY 是十六进制值, 通常可以在主窗口的 <a href="KeyHistory.htm">View-&gt;Key history</a> 菜单项找到. 另请参阅: <a href="../KeyList.htm#SpecialKeys">特殊按键</a></p>
+      <p class="warning"><strong>Warning:</strong> Combining vk and sc in this manner is valid only with Send. Prior to <span class="ver">[v1.1.27]</span>, hotkeys permitted but ignored any non-hexadecimal characters following XX.</p></td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -508,14 +512,19 @@ SendEvent Keys</pre>
     <span class="ver">[v1.0.43+]</span></td>
     <td>启用 <a href="#SendRaw"><em>原始模式</em></a>, 这将导致以下字符被原义解释: <code>^+!#{}</code>. <code>{Raw}</code> 可以不放在按键序列的开始处, 在按键序列中出现时, 它会影响它后面的剩余部分.</td>
   </tr>
+  <tr id="Text">
+    <td><strong>{Text}</strong><br>
+    <span class="ver">[v1.1.27+]</span></td>
+    <td>Enables <a href="#SendText"><em>Text mode</em></a>, which sends a stream of characters rather than keystrokes. Like Raw mode, Text mode causes the following characters to be interpreted literally: <code>^+!#{}</code>. Although the string <code>{Text}</code> need not occur at the beginning of the string, once specified, it stays in effect for the remainder of the string.</td>
+  </tr>
 </table>
 
 <h2>重复或按住按键</h2>
-<p><strong>重复键击</strong>: 把需要重复的按键名称和重复次数写入到大括号中. 例如:</p>
+<p id="repeat"><strong>重复键击</strong>: 把需要重复的按键名称和重复次数写入到大括号中. 例如:</p>
 <pre>Send {DEL 4}  <em>; 按 4 次 Delete 键.</em>
 Send {S 30}   <em>; 发送 30 次大写字母 S.</em>
 Send +{TAB 4}  <em>; 按 4 次 Shift-Tab.</em></pre>
-<p><strong>按住或释放按键</strong>: 把按键名称和单词 <strong>Down</strong> 或 <strong>Up</strong> 写入到大括号中. 例如:</p>
+<p id="Down"><strong>按住或释放按键</strong>: 把按键名称和单词 <strong>Down</strong> 或 <strong>Up</strong> 写入到大括号中. 例如:</p>
 <pre>Send {b down}{b up}
 Send {TAB down}{TAB up}
 Send {Up down}  <em>; 按下向上键.</em>
@@ -528,10 +537,26 @@ Send {Up up}  <em>; 释放向上键.</em></pre>
     Sleep 30  <em>; 在两次键击之间的毫秒数(或使用 <a href="SetKeyDelay.htm">SetKeyDelay</a> 设置).</em>
 }
 Send {Tab up}  <em>; 松开按键.</em></pre>
-<p>还可以使用单词 <em>DownTemp</em>. 除了对修饰键(Control/Shift/Alt/Win) 有区别外它的效果与 <em>Down</em> 相同. 在那些情况下, <em>DownTemp</em> 告知后续的 send 命令这个键不是永久按下, 并可能在需要时随时松开. 例如, <code>Send {Control DownTemp}</code> 之后接着执行 <code>Send a</code> 会产生普通的"a"键击, 而不是 control-A 键击.</p>
+<p>By default, Send will not automatically release a modifier key (Control/Shift/Alt/Win) if that modifier key was "pressed down" by sending it. For example, <code>Send a</code> may behave similar to <code>Send <a href="#blind">{Blind}</a>{Ctrl up}a{Ctrl down}</code> if the user is physically holding Ctrl, but <code>Send {Ctrl Down}</code> followed by <code>Send a</code> will produce a control-A keystroke. <em>DownTemp</em> and <em>DownR</em> can be used to override this behavior. <em>DownTemp</em> and <em>DownR</em> have the same effect as <em>Down</em> except for the modifer keys (Control/Shift/Alt/Win).</p>
+<p id="DownTemp"><strong>DownTemp</strong> tells subsequent sends that the key is not permanently down, and may be released whenever a keystroke calls for it. For example, <code>Send {Control DownTemp}</code> followed later by <code>Send a</code> would produce a normal &quot;a&quot; keystroke, not a control-A keystroke. Any use of Send may potentially release the modifier permanently, so <em>DownTemp</em> is not ideal for <a href="../misc/Remap.htm">remapping</a> modifier keys.</p>
+<p id="DownR"><span class="ver">[v1.1.27+]:</span> <strong>DownR</strong> (where "R" stands for <a href="../misc/Remap.htm">remapping</a>, which is its main use) tells subsequent sends that if the key is automatically released, it should be pressed down again when send is finished. For example, <code>Send {Control DownR}</code> followed later by <code>Send a</code> would produce a normal "a" keystroke, not a control-A keystroke, but will leave the control key in the pressed state for use with keyboard shortcuts. In other words, <em>DownR</em> has an effect similar to physically pressing the key.</p>
+<p>If a character does not correspond to a virtual key on the current keyboard layout, it cannot be "pressed" or "released". For example, <code>Send {μ up}</code> has no effect on most layouts, and <code>Send {μ down}</code> is equivalent to <code>Send μ</code>.</p>
 
 <h2 id="Remarks">一般说明</h2>
-<p>Send 命令支持发送的字符没有特殊限制. 对于当前键盘布局中不存在的字符, 根据 AutoHotkey 版本的不同可以通过发送 Unicode 字符包或 <a href="#asc">Alt+nnnnn</a> 组合来模拟. 在 AutoHotkey 的 Unicode 版本中直接支持文本形式的 Unicode 字符, 而在所有版本中都可以使用 <a href="#sendu">{U+nnnn} 表示法</a>.</p>
+<p id="characters"><strong>Characters vs. keys</strong>: By default, characters are sent by first translating them to keystrokes. If this translation is not possible (that is, if the current keyboard layout does not contain a key or key combination which produces that character), the character is sent by one of following fallback methods:</p>
+<ul id="fallback">
+  <li>SendEvent and SendInput use <a href="http://msdn.microsoft.com/en-us/library/ms646310">SendInput()</a> with the <a href="https://msdn.microsoft.com/en-us/library/ms646271#keyeventf_unicode">KEYEVENTF_UNICODE flag</a>. <span class="ver">[v1.1.27+]:</span> ANSI builds of AutoHotkey convert the character to Unicode before sending it. Prior to v1.1.27, ANSI builds used the Alt+nnnnn method.</span></li>
+  <li>SendPlay uses the <a href="#asc">Alt+nnnnn</a> method, which produces Unicode only if supported by the target application.</li>
+  <li>ControlSend posts a <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> message.</li>
+</ul>
+<p class="warning"><strong>Note:</strong> Characters sent using either of the above methods usually do not trigger keyboard shortcuts or hotkeys.</p>
+<p id="AZ"><span class="ver">[v1.1.27+]:</span> For characters in the range <strong>a-z</strong> or <strong>A-Z</strong> (plain ASCII letters), each character which does not exist in the current keyboard layout may be sent either as a character or as the corresponding virtual keycode (vk41-vk5A):</p>
+<ul>
+  <li>If a naked letter is sent (that is, without modifiers or braces), or if <a href="#Raw">Raw</a> mode is in effect, it is sent as a character. For example, <code>Send {Raw}Regards</code> sends the expected text, even though pressing the "r" key (vk52) produces some other character (such as к on the Russian layout). <code>{Raw}</code> can be omitted in this case, unless a modifier key was put into effect by a prior Send.</li>
+  <li>If one or more modifier keys have been put into effect by the Send command, or if the letter is wrapped in braces, it is sent as a keycode (modified with Shift if the letter is upper-case). This allows the script to easily activate standard keyboard shortcuts. For example, <code>^c</code> and <code>{Ctrl down}c{Ctrl up}</code> activate the standard Ctrl+C shortcut and <code>{c}</code> is equivalent to <code>{vk43}</code>.</li>
+</ul>
+<p>If the letter exists in the current keyboard layout, it is always sent as whichever keycode the layout associates with that letter (unless <a href="#SendText">Text mode</a> is used, in which case the character is sent by other means). In other words, the section above is only relevant for non-Latin based layouts such as Russian.</p>
+<p id="mask"><strong>Modifier State</strong>: When Send is required to change the state of the Win or Alt modifier keys (such as if the user was holding one of those keys), it may inject additional keystrokes (Ctrl by default) to prevent the Start menu or window menu from appearing. For details, see <a href="_MenuMaskKey.htm">#MenuMaskKey</a>.</p>
 <p><strong>BlockInput 与 SendInput/SendPlay 的比较</strong>: 尽管可以使用 <a href="BlockInput.htm">BlockInput</a> 命令防止用户输入的任何键击扰乱模拟键击流, 但使用 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 通常更好, 这样键击和鼠标点击会保持连续. 这是由于与 BlockInput 不同, SendInput/Play 不会丢弃发送期间用户输入的内容; 作为替代, 这些键击被缓冲起来在之后发送.</p>
 <p>发送大量键击时, 使用 <a href="../Scripts.htm#continuation">延续片段</a> 可以提高可读性和可维护性.</p>
 <p>由于操作系统不允许程序模拟 CTRL-ALT-DELETE 组合键, 所以执行像 <code>Send ^!{Delete}</code> 的命令不会产生效果.</p>
