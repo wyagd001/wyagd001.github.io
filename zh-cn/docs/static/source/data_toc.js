@@ -8,7 +8,7 @@
   ["基本用法和语法","",
   [
     ["程序的使用","Program.htm"],
-    ["概念和惯例","Concepts.htm"],
+    ["概念和约定","Concepts.htm"],
     ["脚本语言","Language.htm"],
     ["热键","Hotkeys.htm"],
     ["热字串和自动替换","Hotstrings.htm"],

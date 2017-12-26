@@ -1,69 +1,69 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Scripting Language</title>
+<title>脚本语言</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
 <script src="static/content.js" type="text/javascript"></script>
 </head>
 <body>
-<h1>Scripting Language</h1>
-<p>An AutoHotkey script is basically a set of instructions for the program to follow, written in a custom language exclusive to AutoHotkey. This language bears some similarities to several other scripting languages, but also has its own unique strengths and pitfalls. This document describes the language and also tries to point out common pitfalls.</p>
-<p class="note">See <a href="Concepts.htm">Concepts and Conventions</a> for more general explanation of various concepts utilised by AutoHotkey.</p>
-<p class="warning">There are two distinct styles of syntax used in AutoHotkey: <a href="#legacy-syntax">legacy syntax</a> and <a href="#expressions">expressions</a>.</p>
+<h1>脚本语言</h1>
+<p>一个 AutoHotkey 脚本从根本上说是使用 AutoHotkey 独有的自定义语言编写的程序要遵循的指令集合. 这种语言与其他几种脚本语言有一些相似之处, 但也有其独特的优势和缺陷. 本文档描述了该语言, 并试图指出常见的缺陷.</p>
+<p class="note">有关 AutoHotkey 所使用的各种概念的更一般的解释, 请参阅 <a href="Concepts.htm">概念和约定</a>.</p>
+<p class="warning">在 AutoHotkey 中使用两种不同的语法样式: <a href="#legacy-syntax">传统语法</a> 和 <a href="#expressions">表达式</a>.</p>
 
-<h2>Table of Contents</h2>
+<h2>目录</h2>
 <ul>
-  <li><a href="#general-conventions">General Conventions</a></li>
-  <li><a href="#comments">Comments</a></li>
-  <li><a href="#expressions">Expressions</a>
+  <li><a href="#general-conventions">常规约定</a></li>
+  <li><a href="#comments">注释</a></li>
+  <li><a href="#expressions">表达式</a>
   <ul>
-    <li><a href="#strings">Strings / Text</a></li>
-    <li><a href="#variables">Variables</a></li>
-    <li><a href="#operators">Operators</a></li>
-    <li><a href="#function-calls">Function Calls</a></li>
-    <li><a href="#operators-for-objects">Operators for Objects</a></li>
-    <li><a href="#expression-statements">Expression Statements</a></li>
+    <li><a href="#strings">字符串 / 文本</a></li>
+    <li><a href="#variables">变量</a></li>
+    <li><a href="#operators">运算符</a></li>
+    <li><a href="#function-calls">函数调用</a></li>
+    <li><a href="#operators-for-objects">对象的运算符</a></li>
+    <li><a href="#expression-statements">表达式语句</a></li>
   </ul></li>
-  <li><a href="#legacy-syntax">Legacy Syntax</a></li>
-  <li><a href="#commands">Commands</a>
+  <li><a href="#legacy-syntax">传统语法</a></li>
+  <li><a href="#commands">命令</a>
   <ul>
-    <li><a href="#outputvar-and-inputvar-parameters">OutputVar and InputVar Parameters</a></li>
-    <li><a href="#text-parameters">Text Parameters</a></li>
-    <li><a href="#numeric-parameters">Numeric Parameters</a></li>
-    <li><a href="#-expression">% Expression</a></li>
-    <li><a href="#documentation-conventions">Documentation Conventions</a></li>
-    <li><a href="#optional-parameters">Optional Parameters</a></li>
+    <li><a href="#outputvar-and-inputvar-parameters">OutputVar 和 InputVar 参数</a></li>
+    <li><a href="#text-parameters">文本参数</a></li>
+    <li><a href="#numeric-parameters">数字参数</a></li>
+    <li><a href="#-expression">% 表达式</a></li>
+    <li><a href="#documentation-conventions">文档约定</a></li>
+    <li><a href="#optional-parameters">可选参数</a></li>
   </ul></li>
-  <li><a href="#expressions-vs-legacy-syntax">Expressions vs Legacy Syntax</a>
+  <li><a href="#expressions-vs-legacy-syntax">表达式与传统语法</a>
   <ul>
-    <li><a href="#different-equals">Different Equals</a></li>
-    <li><a href="#commands-vs-functions">Commands vs Functions</a></li>
+    <li><a href="#different-equals">不同的等号</a></li>
+    <li><a href="#commands-vs-functions">命令与功能</a></li>
   </ul></li>
-  <li><a href="#control-flow">Control Flow Statements</a>
+  <li><a href="#control-flow">控制流语句</a>
   <ul>
-    <li><a href="#control-flow-vs-commands">Control Flow vs Commands</a></li>
-    <li><a href="#if-statement">If Statement</a></li>
-    <li><a href="#loop-statement">Loop Statement</a></li>
-    <li><a href="#not-control-flow">Not Control Flow</a></li>
+    <li><a href="#control-flow-vs-commands">控制流与命令</a></li>
+    <li><a href="#if-statement">If 语句</a></li>
+    <li><a href="#loop-statement">Loop 语句</a></li>
+    <li><a href="#not-control-flow">非控制流</a></li>
   </ul></li>
-  <li><a href="#structure-of-a-script">Structure of a Script</a>
+  <li><a href="#structure-of-a-script">脚本的结构</a>
   <ul>
-    <li><a href="#auto-execute-section">Auto-execute Section</a></li>
-    <li><a href="#subroutines">Subroutines</a></li>
-    <li><a href="#user-defined-functions">User-Defined Functions</a></li>
+    <li><a href="#auto-execute-section">自动执行部分</a></li>
+    <li><a href="#subroutines">子程序</a></li>
+    <li><a href="#user-defined-functions">用户定义的函数</a></li>
     <li><a href="#-include">#Include</a></li>
   </ul></li>
-  <li><a href="#misc">Miscellaneous</a>
+  <li><a href="#misc">杂项</a>
   <ul>
-    <li><a href="#dynamic-variables">Dynamic Variables</a>
+    <li><a href="#dynamic-variables">动态变量</a>
     <ul>
-      <li><a href="#pseudo-arrays">Pseudo-arrays</a></li>
-      <li><a href="#associative-pseudo-arrays">Associative pseudo-arrays</a></li>
-      <li><a href="#commands-which-create-pseudo-arrays">Commands which create pseudo-arrays</a></li>
+      <li><a href="#pseudo-arrays">伪数组</a></li>
+      <li><a href="#associative-pseudo-arrays">关联伪数组</a></li>
+      <li><a href="#commands-which-create-pseudo-arrays">创建伪数组的命令</a></li>
     </ul></li>
-    <li><a href="#labels">Labels</a></li>
+    <li><a href="#labels">标签</a></li>
   </ul></li>
 </ul>
 <!-- TODO:
