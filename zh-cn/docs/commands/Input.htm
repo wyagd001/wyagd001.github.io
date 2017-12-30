@@ -20,7 +20,8 @@
   <dt>OutputVar</dt>
   <dd><p>用来保存用户输入文本的变量名(默认情况下, 模拟输入也被保存下来).</p>
       <p>如果省略此参数和其他参数, 那么会终止在其他 <a href="../misc/Threads.htm">线程</a> 中正在执行的任何 Input 并且将那个 Input 的 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为单词 NewInput. 与之相比, 如果终止了之前的 Input 则把当前线程的 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0, 如果没有需要终止的 Input 则为 1.</p>
-      <p><em>OutputVar</em> 本身并不记录键击. 而是记录通过键击根据活动窗口的键盘布局/语言产生的字符. 因此, 不产生字符的键击(例如 PageUp 和 Escape) 不会被记录下来(尽管可以通过下面的 <em>EndKeys</em> 参数识别它们).</p>
+      <p><em>OutputVar</em> 本身并不记录键击. 而是记录通过键击根据活动窗口的键盘布局/语言产生的字符. 因此, 不产生字符的键击(例如 PageUp 和 Home) 不会被记录下来(尽管可以通过下面的 <em>EndKeys</em> 参数识别它们).</p>
+      <p class="warning"><strong>Note:</strong> The Escape key is translated to the ASCII ESC character, <code>Chr(27)</code>. This can be avoided by including <code>{Esc}</code> in <em>EndKeys</em>, in which case pressing Escape will terminate Input.</p>
       <p>会原义保存空白字符, 例如 TAB(`t). ENTER 被保存为换行符(`n).</p></dd>
 
   <dt>选项</dt>
@@ -46,7 +47,7 @@ ExitApp</pre>
   <dd><p>零个或多个按键组成的列表, 按下其中的任何一个都可以终止输入(<em>EndKey</em> 自身不会被写入 <em>OutputVar</em>). 使用此方式终止输入后, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为单词 EndKey 后跟着冒号和 <em>EndKey</em> 的名称. 例如: <code>EndKey:.</code>, <code>EndKey:Escape</code>.</p>
       <p><em>EndKey</em> 列表使用类似于 <a href="Send.htm">Send</a> 命令的格式. 例如, 指定 <code>{Enter}.{Esc}</code> 会使得 ENTER, 句点(.) 或 ESCAPE 其中任何一个都可以终止输入. 要使用大括号作为终止键, 请指定 <code>{{}</code> 和/或 <code>{}}</code>.</p>
       <p>要使用 Control, Alt 或 Shift 作为终止键, 请指定它们的左和/或右版本, 而不是中性版本. 例如, 指定 <code>{LControl}{RControl}</code> 而不是 <code>{Control}</code>.</p>
-      <p><span class="ver">[v1.0.14+]</span>: 尽管不支持诸如 Control-C(^c) 这样的修饰键, 但支持某些需要按住 shift 键来输入的字符,标点符号, 例如 <code>?!:@&amp;{}</code>. <span class="ver">[v1.1.20+]</span>: 其他字符推荐使用上述的 <strong>E</strong> 选项.</p>
+      <p><span class="ver">[v1.0.14+]</span>: 尽管不支持诸如 Alt-C(!c) 这样的修饰键, 但支持某些需要按住 shift 键来输入的字符,标点符号, 例如 <code>?!:@&amp;{}</code>. <span class="ver">[v1.1.20+]</span>: 其他字符推荐使用上述的 <strong>E</strong> 选项. When the <strong>E</strong> and <strong>M</strong> options are both used, Control-A through Control-Z are supported by including the corresponding ASCII control characters in <em>EndKeys</em>.</p>
       <p>还可以指定明确的虚拟按键代码, 例如 <code>{vkFF}</code>. 只有在一个按键没有指定名称且按下时不产生可见的字符这样少见的情况下, 这种方法才有用. 它的虚拟按键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p>
     </dd>
 
