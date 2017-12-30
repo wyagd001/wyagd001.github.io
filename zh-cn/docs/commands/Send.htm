@@ -34,9 +34,9 @@ SendEvent Keys</pre>
 
 <p id="SendRaw"><strong>原始模式</strong> - <em>SendRaw</em> 或 <a href="#Raw">{Raw}</a>: 这些字符 <code>^+!#{}</code> 解释为原义字符而不是转换, 如 <code>{Enter}</code> 不会转换为 ENTER(回车) 键击, <code>^c</code> 不会转换为 Control-C, 等等. 要在 SendInput, SendPlay, SendEvent 或 ControlSend 中使用原始模式, 请把 <a href="#Raw">{Raw}</a> 写在需发送的按键序列前面; 例如: <code>SendInput {Raw}abc</code>.</p>
 <p><em>原始模式</em> 不影响 <a href="_EscapeChar.htm">转义序列</a>, <a href="../Variables.htm#retrieving">变量引用</a> 和 <a href="../Variables.htm#Expressions">表达式</a>的解释. 例如, <code>SendRaw, ``100`%</code> 为发送字符 <code>`100%</code>. 当使用 <a href="ControlSend.htm">ControlSend</a> 时, 也需要转义原义的逗号 (<code>`,</code>).</p>
-<p id="SendText"><strong>Text mode</strong> - <code>{Text}</code> <span class="ver">[v1.1.27+]</span>: Similar to Raw mode, except that no attempt is made to translate characters (other than <code>`r</code>, <code>`n</code>, <code>`t</code> and <code>`b</code>) to keycodes; instead, the <a href="#fallback">fallback method</a> is used for all of the remaining characters. For SendEvent, SendInput and ControlSend, this improves reliability because the characters are much less dependent on correct modifier state. Text mode can be combined with Blind mode to avoid releasing any modifier keys: <code>Send {Blind}{Text}your text</code>. However, some applications require that the modifier keys be released.</p>
-<p><code>`n</code>, <code>`r</code> and <code>`r`n</code> are all translated to a single Enter keystroke, unlike normal mode and Raw mode, which translate <code>`r`n</code> to two Enter keystrokes. <code>`t</code> is translated to Tab and <code>`b</code> to Backspace, but all other characters are sent without translation.</p>
-<p id="specialchars"><strong>Normal mode</strong>: When not in Raw mode or Text mode, the following symbols have special meaning: <code>!+^#{}</code></p>
+<p id="SendText"><strong>文本模式</strong> - <code>{Text}</code> <span class="ver">[v1.1.27+]</span>: 与原始模式类似, 除了不尝试将字符(除了 <code>`r</code>, <code>`n</code>, <code>`t</code> 和 <code>`b</code>) 转换为键击外; 作为代替, <a href="#fallback">后备方法</a> 用于所有剩余的字符. 对于 SendEvent, SendInput 和 ControlSend, 这提高了可靠性, 因为字符对正确的修饰符状态的依赖性要小得多. 文本模式可以与 Blind 模式结合使用, 以避免释放任何修饰键: <code>Send {Blind}{Text}your text</code>. 但是, 一些应用程序要求修饰键被释放.</p>
+<p><code>`n</code>, <code>`r</code> 和 <code>`r`n</code> 都被转换为单独一次 Enter 键击, 不像普通模式和原始模式, 转换 <code>`r`n</code> 为两次 Enter 键击. <code>`t</code> 转换为 Tab 而 <code>`b</code> 转换为 Backspace, 但所有其他字符都是不经转换直接发送的.</p>
+<p id="specialchars"><strong>普通模式</strong>: 不处于原始模式或文本模式时, 以下符号具有特殊含义: <code>!+^#{}</code></p>
 <p>这些修饰键 <code>!+^#</code> 仅影响紧跟着的下一个键. 若要发送修饰符本身对应的键, 将按键名称括在大括号中. 若要按下(按住) 或松开按键, 下面所示的单词 "down" 或 "up" 跟在按键名称的后面.</p>
 <style>
 #modifierkeys td:not(:last-child) { white-space: nowrap; text-align: center }
@@ -85,7 +85,7 @@ SendEvent Keys</pre>
   <tr>
     <td>{ }</td>
     <td colspan="4" style="white-space: normal; text-align: left"><p>大括号用于包含<a href="#keynames">键名和其他选项</a>, 并发送特殊的原义字符. 例如, <code>{Tab}</code> 是 Tab 键 而 <code>{!}</code> 是原义的感叹号.</p>
-    <p><span class="ver">[v1.1.27+]:</span> Enclosing a plain ASCII letter (a-z or A-Z) in braces forces it to be sent as the corresponding virtual keycode, even if the character does not exist on the current keyboard layout. In other words, <code>Send a</code> produces the letter "a" while <code>Send {a}</code> may or may not produce "a", depending on the keyboard layout. For details, see the <a href="#AZ">remarks below</a>.</p></td>
+    <p><span class="ver">[v1.1.27+]:</span> 将一个纯 ASCII 字母(a-z 或 A-Z) 括在大括号中强制它作为相应的虚拟键码发送, 即使该字符在当前键盘布局上不存在. 换句话说, <code>Send a</code> 产生字母 "a", 而 <code>Send {a}</code> , 根据键盘布局, 可能会也可能不会产生 "a". 有关详细信息, 请参阅 <a href="#AZ">下面的注释</a>.</p></td>
   </tr>
 </table>
 <p class="note"><strong>注意</strong>: 由于大写字母是通过发送 SHIFT 键产生的, 因此在某些程序中 <code>A</code> 和 <code>a</code> 会产生不同的效果. 例如, <code>!A</code> 按下 ALT+SHIFT+A 而 <code>!a</code> 按下 ALT+a. 如果不确定, 请使用小写字母.</p>
@@ -313,7 +313,7 @@ SendEvent Keys</pre>
     {vkXXscYYY}</p></td>
     <td><p>发送一个虚拟按键为 XX 且扫描码为 YYY 的键击. 例如: <code>Send {vkFFsc159}</code>. 如果省略了 sc 或 vk 部分, 则会发送最适当的值.</p>
       <p>XX 和 YYY 是十六进制值, 通常可以在主窗口的 <a href="KeyHistory.htm">View-&gt;Key history</a> 菜单项找到. 另请参阅: <a href="../KeyList.htm#SpecialKeys">特殊按键</a></p>
-      <p class="warning"><strong>Warning:</strong> Combining vk and sc in this manner is valid only with Send. Prior to <span class="ver">[v1.1.27]</span>, hotkeys permitted but ignored any non-hexadecimal characters following XX.</p></td>
+      <p class="warning"><strong>警告:</strong> 以这种方式组合 vk 和 sc, 仅在 Send 命令中有效. 在 <span class="ver">[v1.1.27]</span> 之前, hotkeys permitted but ignored any non-hexadecimal characters following XX.</p></td>
   </tr>
   <tr>
     <th>&nbsp;</th>
