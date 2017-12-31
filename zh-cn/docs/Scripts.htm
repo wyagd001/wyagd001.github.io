@@ -198,27 +198,27 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <p>注意: 在早期版本 <a href="AHKL_ChangeLog.htm#L51">revision 51</a>, 程序会在工作目录寻找 AutoHotkey.ini 或者我的文档下的 AutoHotkey.ahk.</p>
 <p><span class="ver">[v1.1.17+]:</span> 星号(*)加在文件名上会打开标准输入通道(stdin)的脚本. 例如 <a href="commands/Run.htm#ExecScript">ExecScript()</a>.</p>
 <p id="cmd_args"><strong>脚本参数:</strong> 你想要传递给脚本的参数用空格分隔. 单个参数如果包含空格需要在两端加上<strong>&quot;</strong>. 如果参数本身包含<strong>&quot;</strong>则需要转义(\&quot;). 如果参数末尾是 \ 则可能会被转义(例如&quot;C:\My Documents<span class="red">\&quot;</span>) 会被视为引号(就是说脚本会接收到 C:\My Documents<span class="red">&quot;</span>). 要移除引号, 使用<code><a href="commands/StringReplace.htm">StringReplace</a>, 1, 1, <span class="red">&quot;</span>,, All</code>.</p>
-<p id="cmd_args"><span class="ver">[v1.1.27+]:</span> Incoming parameters, if present, are stored as an array in the built-in variable <strong>A_Args</strong>, and can be accessed using <a href="Objects.htm#Usage_Simple_Arrays">array syntax</a>. <code>A_Args[1]</code> contains the first parameter. The following example exits the script when too few parameters are passed to it:</p>
+<p id="cmd_args"><span class="ver">[v1.1.27+]:</span> 传入参数, 如果存在, 作为数组存储在内置变量 <strong>A_Args</strong> 中, 可以使用 <a href="Objects.htm#Usage_Simple_Arrays">数组语法</a> 来访问. <code>A_Args[1]</code> 包含第一个参数. 下面的示例在传递给它的参数太少时退出脚本:</p>
 <pre>if A_Args.Length() &lt; 3
 {
-    MsgBox % "This script requires at least 3 parameters but it only received " A_Args.Length() "."
+    MsgBox % "脚本需要至少 3 个参数, 但实际只接收到" A_Args.Length() "个."
     ExitApp
 }</pre>
-<p>If the number of parameters passed into a script varies (perhaps due to the user dragging and dropping a set of files onto a script), the following example can be used to extract them one by one:</p>
-<pre>for n, param in A_Args  <em>; For each parameter:</em>
+<p>如果传递给脚本的参数数目不确定(可能是由于用户将一组文件拖放到脚本中), 则可以使用以下示例逐个提取它们:</p>
+<pre>for n, param in A_Args  <em>; 对每个参数进行循环:</em>
 {
     MsgBox Parameter number %n% is %param%.
 }
 </pre>
-<p>If the parameters are file names, the following example can be used to convert them to their case-corrected long names (as stored in the file system), including complete/absolute path:</p>
-<pre>for n, GivenPath in A_Args  <em>; For each parameter (or file dropped onto a script):</em>
+<p>如果参数是文件名, 则可以使用以下示例将它们转换为大小写校正的长名称(与文件系统中存储的一致), 包括完整/绝对路径:</p>
+<pre>for n, GivenPath in A_Args  <em>; 对每个参数(或拖放到脚本上的文件) 进行循环:</em>
 {
     Loop Files, %GivenPath%, FD  <em>; Include files and directories.</em>
         LongPath := A_LoopFileFullPath
     MsgBox The case-corrected long path name of file`n%GivenPath%`nis:`n%LongPath%
 }</pre>
 <p><strong>已知限制:</strong> 如果 NTFS 文件系统中关闭了 8.3(短) 文件名, 那么拖拽文件到 .ahk 脚本上可能无法正常工作. 一种解决方法是 <a href="#ahk2exe">编译</a> 脚本, 然后拖拉文件到生成的 EXE 文件上..</p>
-<p id="cmd_args_old"><strong>Legacy:</strong> The command line parameters are also stored in the <a href="Variables.htm">variables</a> %1%, %2%, and so on, as in versions prior to <span class="ver">[v1.1.27]</span>. In addition, %0% contains the number of parameters passed (0 if none). However, these variables cannot be referenced directly in an expression because they would be seen as numbers rather than variables. The following example exits the script when too few parameters are passed to it:</p>
+<p id="cmd_args_old"><strong>传统方法:</strong> 命令行参数也存储在 <a href="Variables.htm">变量</a> %1%, %2% 等中, 如 <span class="ver">[v1.1.27]</span> 之前的版本. 另外, %0% 包含传递参数的数量(如果没有则为 0). 但是, 这些变量不能在表达式中直接引用, 因为它们会被视为数字而不是变量. 下面的示例在传递给它的参数太少时退出脚本:</p>
 <pre>if 0 &lt; 3  <em>; The left side of a <a href="commands/IfEqual.htm">non-expression if-statement</a> is always the name of a variable.</em>
 {
     MsgBox 脚本需要至少 3 个参数, 但实际只接收到 %0% 个.
@@ -233,7 +233,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
         break
 }</pre>
 <p>如果这些参数是文件名, 那么可以使用下列的例子把它们转换到大小写正确的长名称(与文件系统中存储的一致), 其中包含完整/绝对的路径.</p>
-<pre>Loop %0%  <em>; 对每个参数 (或放到脚本上的文件) 进行循环:</em>
+<pre>Loop %0%  <em>; 对每个参数 (或拖放到脚本上的文件) 进行循环:</em>
 {
     GivenPath := %A_Index%  <em>; 取得名称为 A_Index 变量中的内容.</em>
     Loop %GivenPath%, 1

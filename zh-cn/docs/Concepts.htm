@@ -83,9 +83,9 @@ Exception handling
 <p>有关数字值的范围和精度的详细信息, 请参阅 <a href="#pure-numbers">纯数字</a>.</p>
 
 <h3 id="boolean">布尔值</h3>
-<p><em>布尔值</em> 可以是 <em>真</em> 或 <em>假</em>. 布尔值用于表示具有两种可能状态的任何东西, 例如表达式的 <em>真值</em>. 例如, 当 x 小于或等于 y 的值时, 表达式 <code>(x &lt;= y)</code> 是 <em>真</em>. 布尔值也可以表示 <em>是</em> 或 <em>否</em>, <em>开</em> 或 <em>关</em>, <em>下</em> 或 <em>上</em> (如 <a href="commands/GetKeyState.htm">GetKeyState</a>) 等等.</p>
+<p><em>布尔值</em> 可以是 <em>真</em> 或 <em>假</em>. 布尔值用于表示具有两种可能状态的任何东西, 例如表达式的 <em>真假</em>. 例如, 当 x 小于或等于 y 的值时, 表达式 <code>(x &lt;= y)</code> 是 <em>真</em>. 布尔值也可以表示 <em>是</em> 或 <em>否</em>, <em>开</em> 或 <em>关</em>, <em>下</em> 或 <em>上</em> (如 <a href="commands/GetKeyState.htm">GetKeyState</a>) 等等.</p>
 <p>AutoHotkey 没有特定的布尔类型, 因此它使用整数值 <code>0</code> 表示假, 而 <code>1</code> 表示真. 当要求判断一个值的真假时, 空白或零值被认为是假, 而所有其他值被认为是真. (对象总是被视为真.)</p>
-<p>单词 <code>true</code> 和 <code>false</code> 是是值分别为 1 和 0 的<a href="#built-in-variables">内置变量</a>. 使用它们可以增加脚本的可读性.</p>
+<p>单词 <code>true</code> 和 <code>false</code> 是值分别为 1 和 0 的<a href="#built-in-variables">内置变量</a>. 使用它们可以增加脚本的可读性.</p>
 
 <h3 id="nothing">空值</h3>
 <p>AutoHotkey 中没有像其他语言那样有一个独特的表示 <em>nothing</em>, <em>null</em>, <em>nil</em> 或 <em>undefined(未定义)</em> 的值. 相反, 一个空字符串(长度为零的字符串) 通常具有这个含义.</p>
@@ -190,55 +190,55 @@ myObj.name[arg2, ..., argN] := value
   <dt id="parameters">参数<dd>
   <p>通常一个命令或函数接受 <em>参数</em>, 告诉它如何操作或操作什么. 每个参数都是一个 <a href="#values">值</a>, 如字符串或数字. 例如, <a href="commands/WinMove.htm">WinMove</a> 移动一个窗口, 所以它的参数告诉它要移动哪个窗口以及移动到哪里. Parameter(参数) 也可以被称为 <em>arguments(参数)</em>. 常用的缩写包括 <em>param</em> 和 <em>arg</em>.</p>
   <dt id="pass-parameters">传递参数<dd>
-  <p>Parameters are <em>passed</em> to a function or command, meaning that a value is specified for each parameter of the function or command when it is called. For example, one can <em>pass</em> the name of a key to <a href="commands/GetKeyState.htm">GetKeyState</a> to determine whether that key is being held down.</p>
+  <p>参数被 <em>传递</em> 给一个函数或命令, 这意味着函数或命令被调用时每个参数都会指定一个值. 例如, 可以 <em>传递</em> 键的名称给 <a href="commands/GetKeyState.htm">GetKeyState</a> 以确定该键是否被按下.</p>
   <dt id="return-a-value">返回值<dd>
-  <p>Functions <em>return</em> a value, so the result of the function is often called a <em>return value</em>. For example, <a href="commands/StringLen.htm">StrLen</a> returns the number of characters in a string. Commands do not return a result directly; instead, they store the result in a <a href="#variables">variable</a>. Functions may also do this, such as when there is more than one result.</p>
+  <p>函数 <em>返回</em> 一个值, 所以函数的结果通常称为返回值 <em>返回值</em>. 例如, <a href="commands/StringLen.htm">StrLen</a> 返回字符串中的字符数. 命令不直接返回结果; 作为代替, 他们将结果存储在一个 <a href="#variables">变量</a> 中. 函数也可以这样做, 比如当有多个结果时.</p>
 </dl>
-<p>Functions and commands usually expect parameters to be written in a specific order, so the meaning of each parameter value depends on its position in the comma-delimited list of parameters. Some parameters can be omitted, in which case the parameter can be left blank, but the comma following it can only be omitted if all remaining parameters are also omitted. For example, the syntax for <a href="commands/ControlSend.htm">ControlSend</a> is:</p>
+<p>函数和命令通常期望参数以特定的顺序写入, 因此每个参数值的含义取决于它在逗号分隔的参数列表中的位置. 有些参数可以省略, 在这种情况下参数可以留空, 但是如果所有其余的参数都省略, 则只能省略后面的逗号. 例如, <a href="commands/ControlSend.htm">ControlSend</a> 的语法是:</p>
 <pre>ControlSend [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
 </pre>
-<p>Square brackets signify that the enclosed parameters are optional (the brackets themselves should not appear in the actual code). However, ControlSend isn't useful unless <em>Keys</em> are specified, and usually one must also specify the target window. For example:</p>
-<pre>ControlSend, Edit1, ^{Home}, A  <em>; Correct. Control is specified.</em>
-ControlSend, ^{Home}, A         <em>; Incorrect: Parameters are mismatched.</em>
-ControlSend,, ^{Home}, A        <em>; Correct. Control is omitted.</em>
+<p>方括号表示所包含的参数是可选的(方括号本身不应出现在实际的代码中). 但是, 除非指定了 <em>Keys</em>, 否则 ControlSend 是无用的, 通常还必须指定目标窗口. 例如:</p>
+<pre>ControlSend, Edit1, ^{Home}, A  <em>; 正确. 控件被指定.</em>
+ControlSend, ^{Home}, A         <em>; 不正确: 参数不匹配.</em>
+ControlSend,, ^{Home}, A        <em>; 正确. 控件被忽略.</em>
 </pre>
 
 <h3 id="methods">方法</h3>
-<p><em>Methods</em> are functions which operate on a particular <a href="#objects">object</a>. While there can only be one function named <code>Send</code> (for example), there can be as many methods named <code>Send</code> as there are objects, as each object (or class of objects) can respond in a different way. For this reason, the target object (which may be a variable or sub-expression) is specified to left of the method name instead of inside the parameter list. For details, see <a href="#object-protocol">Object Protocol</a>.</p>
+<p><em>方法</em> 是对特定 <a href="#objects">对象</a> 进行操作的函数. 虽然只能有一个名为 <code>Send</code> 的函数(例如), 但可以有许多名为 <code>Send</code> 的方法, 因为每个对象(或对象的类) 可以以不同的方式响应. 因此, 目标对象(可能是变量或子表达式) 被指定为方法名的左侧, 而不是参数列表中的左边. 有关详细信息, 请参阅 <a href="#object-protocol">对象协议</a>.</p>
 
 <h2 id="control-flow">控制流</h2>
-<p><em>Control flow</em> is the order in which individual statements are executed. Normally statements are executed sequentially from top to bottom, but a control flow statement can override this, such as by specifying that statements should be executed repeatedly, or only if a certain condition is met.</p>
+<p><em>控制流</em> 是执行单个语句的顺序. 通常,  语句从上到下依次执行, 但控制流语句可以重写这一点, 例如, 指定应重复执行语句, 或者仅在满足某一条件时才这样做.</p>
 <dl>
-  <dt id="statement">Statement <dd>
-  <p>A <em>statement</em> is simply the smallest standalone element of the language that expresses some action to be carried out. In AutoHotkey, statements include commands, assignments, function calls and other expressions. However, directives, labels (including hotkeys and hotstrings), and declarations without assignments are not statements; they are processed when the program first starts up, before the script <em>executes</em>.</p>
-  <dt id="execute">Execute <dd>
-  <p>Carry out, perform, evaluate, put into effect, etc. <em>Execute</em> basically has the same meaning as in non-programming speak.</p>
-  <dt id="body">Body <dd>
-  <p>The <em>body</em> of a control flow statement is the statement or group of statements to which it applies. For example, the body of an <a href="Language.htm#if-statement">if statement</a> is executed only if a specific condition is met.</p>
+  <dt id="statement">语句<dd>
+  <p><em>语句</em> 只是语言中最小的独立元素, 表示一些要执行的操作. 在 AutoHotkey 中, 语句包括命令, 任务, 函数调用和其他表达式. 但是, 指令, 标签(包括热键和热字符串), 以及没有赋值的声明都不是语句; 当程序首次启动时, 在脚本<em>执行</em>之前, 它们将被处理.</p>
+  <dt id="execute">执行<dd>
+  <p>实施, 执行, 求值, 使生效, 等等. <em>执行</em> 基本上与非编程语言有相同的含义.</p>
+  <dt id="body">主体(正文)<dd>
+  <p>控制流语句的 <em>主体</em> 是它所应用的语句或语句组. 例如,  <a href="Language.htm#if-statement">if 语句</a> 的主体仅在满足特定条件时执行.</p>
 </dl>
-<p>For example, consider this simple set of instructions:</p>
+<p>例如, 请考虑以下简单的指令集:</p>
 <ol>
-  <li>Open Notepad</li>
-  <li>Wait for Notepad to appear on the screen</li>
-  <li>Type &quot;Hello, world!&quot;</li>
+  <li>打开记事本</li>
+  <li>等待记事本出现在屏幕上</li>
+  <li>输入 &quot;Hello, world!&quot;</li>
 </ol>
-<p>We take one step at a time, and when that step is finished, we move on to the next step. In the same way, control in a program or script usually flows from one statement to the next statement. But what if we want to type into an existing Notepad window? Consider this revised set of instructions:</p>
+<p>我们一步一个脚印, 当一步完成时, 我们继续下一步. 同样, 程序或脚本中的控制通常从一个语句流向下一个语句. 但是如果我们想在一个现有的记事本窗口中输入呢? 考虑一下这套经过修改的指令:</p>
 <ol>
-  <li>If Notepad is not running:
+  <li>如果(If) 记事本没有运行:
 <ol>
-  <li>Open Notepad</li>
-  <li>Wait for Notepad to appear on the screen</li>
-</ol>
-</li>
-  <li>Otherwise:
-<ol>
-  <li>Activate Notepad</li>
+  <li>打开记事本</li>
+  <li>等待记事本出现在屏幕上</li>
 </ol>
 </li>
-  <li>Type &quot;Hello, world!&quot;</li>
+  <li>否则:
+<ol>
+  <li>激活记事本</li>
 </ol>
-<p>So we either open Notepad or activate Notepad depending on whether it is already running. #1 is a <em>conditional statement</em>, also known as an <em>if statement</em>; that is, we execute its <em>body</em> (#1.1 - #1.2) only if a condition is met. #2 is an <em>else statement</em>; we execute its body (#2.1) only if the condition of a previous <em>if statement</em> (#1) is not met. Depending on the condition, control <em>flows</em> one of two ways: #1 (if true) &rarr; #1.1 &rarr; #1.2 &rarr; #3; or #1 (if false) &rarr; #2 (else) &rarr; #2.1 &rarr; #3.</p>
-<p>The instructions above can be translated into the code below:</p>
+</li>
+  <li>输入 &quot;Hello, world!&quot;</li>
+</ol>
+<p>所以我们要么打开记事本, 要么激活记事本, 取决于它是否已经在运行. #1 是 <em>条件语句</em>, 也被称为 <em>if 语句</em>; 也就是说, 只有满足条件时, 我们才执行它的 <em>主体(正文)</em>(#1.1 - #1.2). #2 是 <em>else 语句</em>; 我们只有在前一个 <em>if 语句</em>(#1) 的条件不满足时才执行它的主体(#2.1). 根据条件, 控制 <em>流</em> 有两种方式: #1(如果为真) &rarr; #1.1 &rarr; #1.2 &rarr; #3; 或 #1(如果为假) &rarr; #2 (else) &rarr; #2.1 &rarr; #3.</p>
+<p>上面的说明可以转换成下面的代码:</p>
 <pre>if (not WinExist(&quot;ahk_class Notepad&quot;))
 {
     Run Notepad
@@ -248,31 +248,31 @@ else
     WinActivate ahk_class Notepad
 Send Hello`, world!
 </pre>
-<p>In our written instructions, we used indentation and numbering to group the statements. Scripts work a little differently. Although indentation makes code easier to read, in AutoHotkey it does not affect the grouping of statements. Instead, statements are grouped by enclosing them in braces, as shown above. This is called a <a href="commands/Block.htm"><em>block</em></a>.</p>
-<p class="note">For details about syntax - that is, how to write or recognise control flow statements in AutoHotkey - see <a href="Language.htm#control-flow">Control Flow</a>.</p>
+<p>在我们的写的指令中, 我们使用了缩进和编号来对语句进行了分组. 脚本工作有点不同. 尽管缩进使得代码更容易阅读, 但在 AutoHotkey 中, 它并不影响语句的分组. 作为替代, 如上所示, 语句通过将它们括在花括号中进行分组. 这被称为一个 <a href="commands/Block.htm"><em>块</em></a>.</p>
+<p class="note">有关语法的详细信息 - 即如何在 AutoHotkey 中编写或识别控制流程语句 - 请参阅 <a href="Language.htm#control-flow">控制流</a>.</p>
 
 <h2 id="details">细节</h2>
 
 <h3 id="string-encoding">字符编码</h3>
-<p>Each character in the string is represented by a number, called its <em>ordinal number</em>, or <em>character code</em>. For example, the value &quot;Abc&quot; would be represented as follows:</p>
+<p>字符串中的每个字符都用一个数字表示, 称为 <em>序号</em>, 或 <em>字符编码</em>. 例如, 值 &quot;Abc&quot; 将被表示如下:</p>
 <table class="info" style="width: 8em; text-align: center">
   <tr><td>A<td>b<td>c
   <tr><td>65<td>98<td>99
 </table>
-<p>The <em>encoding</em> of a string is the way in which numbers are mapped to symbols. There are many different encodings, but as all of those supported by AutoHotkey include ASCII as a subset, character codes 0 to 127 always have the same meaning. For example, 'A' always has the character code 65.</p>
-<p>Although AutoHotkey provides ways to work with text in various encodings, the built-in commands and functions--and to some degree the language itself--all assume string values to be in one particular encoding. This is referred to as the <em>native</em> encoding. The native encoding depends on the version of AutoHotkey:</p>
+<p>字符串的 <em>编码</em> 是将数字映射到符号的方式. 有许多不同的编码, 但是由于所有由 AutoHotkey 支持的编码都包含 ASCII 作为子集, 所以字符编码 0 到 127 总是具有相同的含义. '例如, 'A' 总是具有字符编码 65.</p>
+<p>虽然 AutoHotkey 提供了以各种编码方式处理文本的方法, 但是内置的命令和函数--在某种程度上包括语言本身--都假定字符串值是在一个特定的编码中. 这被称为 <em>原生</em> 编码. 原生编码取决于 AutoHotkey 的版本:</p>
 <ul>
   <li>
-<p>Unicode versions of AutoHotkey use UTF-16. The smallest element in a UTF-16 string is two bytes (16 bits). Unicode characters in the range 0 to 65535 (U+FFFF) are represented by a single 16-bit code unit of the same value, while characters in the range 65536 (U+10000) to 1114111 (U+10FFFF) are represented by a <em>surrogate pair</em>; that is, exactly two 16-bit code units between 0xD800 and 0xDFFF. (For further explanation of surrogate pairs and methods of encoding or decoding them, search the Internet.)</p>
+<p>AutoHotkey 的 Unicode 版本使用 UTF-16. UTF-16 字符串中最小的元素是两个字节(16 位). 在 0 到 65535(U+FFFF) 范围内的 Unicode 字符是由一个单一的相同值的 16 位编码单元表示, 而在 65536(U+10000) 到 1114111(U+10FFFF) 范围内的字符由<em>代理对</em> 表示的; 也就是说, 需要在 0xD800 和 0xDFFF 范围内的两个 16 位编码单元来表示一个字符. (关于代理对的进一步解释以及对它们进行编码或解码的方法, 请在网上搜索.)</p>
 </li>
   <li>
-<p>ANSI versions of AutoHotkey use the system default ANSI code page, which depends on the system locale or &quot;language for non-Unicode programs&quot; system setting. The smallest element of an ANSI string is one byte. However, some code pages contain characters which are represented by sequences of multiple bytes (these are always non-ASCII characters).</p>
+<p>AutoHotkey 的 ANSI 版本使用系统默认的 ANSI 代码页, 这取决于系统区域设置或 &quot;非 Unicode 程序的语言&quot; 系统设置. ANSI 字符串的最小元素是一个字节(8 位). 但是, 某些代码页包含由多个字节序列表示的字符(这些字符总是非 ASCII 字符).</p>
 </li>
 </ul>
-<p>Generally, other parts of this documentation use the term &quot;character&quot; to mean a string's smallest unit; bytes for ANSI strings and 16-bit code units for Unicode strings. For practical reasons, the length of a string and positions within a string are measured by counting these fixed-size units, even though they may not be complete Unicode characters.</p>
-<p><a href="commands/FileRead.htm">FileRead</a>, <a href="commands/FileAppend.htm">FileAppend</a>, <a href="commands/FileOpen.htm">FileOpen</a> and the <a href="objects/File.htm">File object</a> provide ways of reading and writing text in files with a specific encoding.</p>
-<p>The functions <a href="commands/StrPutGet.htm">StrGet and StrPut</a> can be used to convert strings between the native encoding and some other specified encoding. However, these are usually only useful in combination with data structures and the <a href="commands/DllCall.htm">DllCall</a> function. Strings which are passed directly to or from <a href="commands/DllCall.htm">DllCall</a> can be converted to ANSI or UTF-16 by using the <code>AStr</code> or <code>WStr</code> parameter types.</p>
-<p>Techniques for dealing with the differences between ANSI and Unicode versions of AutoHotkey can be found under <a href="Compat.htm#Format">Unicode vs ANSI</a>.</p>
+<p>一般来说, 本文档的其他部分使用的术语 &quot;字符&quot; 表示的是字符串的最小单位; ANSI 字符串的字节和 Unicode 字符串的 16 位编码单元. 出于实际的原因, 字符串的长度和字符串中的位置是通过计数这些固定大小的单位来测量的, 尽管它们可能不是完整的 Unicode 字符.</p>
+<p><a href="commands/FileRead.htm">FileRead</a>, <a href="commands/FileAppend.htm">FileAppend</a>, <a href="commands/FileOpen.htm">FileOpen</a> 和 <a href="objects/File.htm">File 对象</a> 提供了在具有特定编码的文件中读写文本的方法.</p>
+<p><a href="commands/StrPutGet.htm">StrGet 和 StrPut</a> 函数可用于在原生编码和某些其他指定编码之间转换字符串. 但是, 这些通常只与数据结构和 <a href="commands/DllCall.htm">DllCall</a> 函数结合使用. 直接传入或传出 <a href="commands/DllCall.htm">DllCall</a> 的字符串可以通过使用 <code>AStr</code> 或 <code>WStr</code> 参数类型转换为 ANSI 或 UTF-16.</p>
+<p>处理 AutoHotkey ANSI 和 Unicode 版本之间差异的技术可以在 <a href="Compat.htm#Format">Unicode 和 ANSI</a> 下找到.</p>
 
 <h3 id="pure-numbers">纯数字</h3>
 <p><em>纯</em>数字 或 <em>二进制</em>数字 是以计算机的 CPU 可以直接使用的格式(例如执行数学运算) 存储在内存中的数字. 在大多数情况下, AutoHotkey 会自动根据需要在数字字符串和纯数字之间进行转换, 很少区分这两种类型. AutoHotkey 主要为纯数字使用两种数据类型:</p>
@@ -286,49 +286,49 @@ Send Hello`, world!
 <p>整数必须在 -9223372036854775808 (-0x8000000000000000, 或 -2<sup>63</sup>) 到 9223372036854775807 (0x7FFFFFFFFFFFFFFF, 或 2<sup>63</sup>-1). 尽管字符串中可以包含更大的值, 但是将字符串转换为数字(例如在数学运算中使用该字符串)  的尝试可能会产生不一致的结果.</p>
 </li>
   <li>
-<p>Floating-point numbers generally support 15 digits of precision. However, converting a floating-point number to a string causes the number to be rounded according to the current <a href="commands/SetFormat.htm#Float">float format</a>, which defaults to 6 decimal places. If the &quot;slow&quot; mode of <a href="commands/SetFormat.htm">SetFormat</a> is present anywhere in the script, numbers are <em>always</em> converted to strings when assigned to a <a href="#variables">variable</a>.</p>
+<p>浮点数字通常支持 15 位精度. 但是, 将浮点数字转换为字符串会使数字根据当前的 <a href="commands/SetFormat.htm#Float">浮点格式</a> 进行四舍五入的操作, 默认为小数点后 6 位. 如果 <a href="commands/SetFormat.htm">SetFormat</a> 的 &quot;慢速&quot; 模式存在于脚本的任意位置, 数字赋值给 <a href="#variables">变量</a> 时, <em>总是</em> 转为字符串.</p>
 </li>
 </ul>
-<p><strong>Note:</strong> There are some decimal fractions which the binary floating-point format cannot precisely represent, so a number is rounded to the closest representable number. This may lead to unexpected results. For example:</p>
-<pre>SetFormat FloatFast, 0.17  <em>; Show &quot;over-full&quot; precision</em>
+<p><strong>注意:</strong> 二进制浮点格式不能精确地表示一些小数, 所以一个数字四舍五入到最接近的可表示数字. 例如:</p>
+<pre>SetFormat FloatFast, 0.17  <em>; 显示 &quot;超载&quot; 精度</em>
 MsgBox % 0.1 + 0           <em>; 0.10000000000000001</em>
 MsgBox % 0.1 + 0.2         <em>; 0.30000000000000004</em>
 MsgBox % 0.3 + 0           <em>; 0.29999999999999999</em>
-MsgBox % 0.1 + 0.2 = 0.3   <em>; 0 (not equal)</em>
+MsgBox % 0.1 + 0.2 = 0.3   <em>; 0 (不相等, 结果为假)</em>
 </pre>
-<p>One strategy for dealing with this is to avoid direct comparison, instead comparing the difference. For example:</p>
+<p>解决这个问题的一个策略是避免直接比较, 而是比较相差. 例如:</p>
 <pre>MsgBox % Abs((0.1 + 0.2) - (0.3)) &lt; 0.0000000000000001
 </pre>
-<p>Another strategy is to always convert to string (thereby applying rounding) before comparison. There are generally two ways to do this while specifying the precision, and both are shown below:</p>
+<p>另一个策略是在比较之前总是转换为字符串(从而应用四舍五入). 在指定精确度时, 通常有两种方法可以做到这一点, 这两者都显示如下:</p>
 <pre>MsgBox % Round(0.1 + 0.2, 15) = Format(&quot;{:.15f}&quot;, 0.3)
 </pre>
 
 <h3 id="names">名称</h3>
-<p>AutoHotkey uses the same set of rules for naming various things, including variables, functions, <a href="commands/GroupAdd.htm">window groups</a>, <a href="commands/Gui.htm">GUIs</a>, classes and methods:</p>
+<p>AutoHotkey 使用相同的一组规则来命名各种东西, 包括 变量, 函数, <a href="commands/GroupAdd.htm">窗口组</a>, <a href="commands/Gui.htm">GUIs</a>, 类和方法:</p>
 <ul>
-  <li><strong>Case sensitivity:</strong> None for ASCII characters. For example, <code>CurrentDate</code> is the same as <code>currentdate</code>. However, uppercase non-ASCII characters such as '?' are <em>not</em> considered equal to their lowercase counterparts, regardless of the current user's locale. This helps the script to behave consistently across multiple locales.</li>
-  <li><strong>Maximum length:</strong> 253 characters.</li>
-  <li><strong>Allowed characters:</strong> Letters, numbers, non-ASCII characters, and the following symbols: _ # @ $</li>
+  <li><strong>大小写敏感性:</strong> ASCII 字符不区分大小写. 例如, <code>CurrentDate</code> 等同于 <code>currentdate</code>. 但是, 大写的 非 ASCII 字符例如 '?' 是 <em>不</em> 被认为等于他们的小写字母, 不管当前用户的区域设置如何. 这有助于脚本在多个语言环境中保持一致.</li>
+  <li><strong>最大长度:</strong> 253 个字符.</li>
+  <li><strong>允许的字符:</strong> 字母, 数字, 非 ASCII 字符和以下符号: _ # @ $</li>
 </ul>
-<p>Due to style conventions, it is generally better to name your variables using only letters, numbers, and the underscore character (for example: <em>CursorPosition</em>, <em>Total_Items</em>, and <em>entry_is_valid</em>). This style allows people familiar with other computer languages to understand your scripts more easily.</p>
-<p>Although a <a href="#variables">variable</a> name may consist entirely of digits, this is generally used only for <a href="Scripts.htm#cmd_args_old">incoming command line parameters</a>. Such numeric names cannot be used in expressions because they would be seen as numbers rather than variables. It is best to avoid starting a name with a digit, as such names are confusing and will be considered invalid in AutoHotkey v2.</p>
-<p>As the following characters may be reserved for other purposes in AutoHotkey v2, it is recommended to avoid using them: # @ $</p>
-<p>Property names in classes have the same rules and restrictions as variable names, except that the three characters listed above (# @ $) are not allowed. Although they can be used in a method definition, calling such a method requires using square brackets. For example, <code>myObject.@home()</code> is not valid, but <code>myObject[&quot;@home&quot;]()</code> is acceptable.</p>
+<p>考虑到命名的惯例, 通常在命名变量时最好仅使用字母, 数字, 和下划线(例如: <em>CursorPosition</em>, <em>Total_Items</em>, 和 <em>entry_is_valid</em>). 这样的风格可以让熟悉其他计算机语言的人更容易理解您的脚本.</p>
+<p>尽管 <a href="#variables">变量</a> 名可以完全由数字组成, 但通常这样的名称仅用于 <a href="Scripts.htm#cmd_args_old">传入的命令行参数</a>. 这样数值名称的变量不能用在表达式中, 因为它们会被看成是数字而不是变量. 最好避免以数字开头, 因为这样的名称是容易混淆的并且在 AutoHotkey v2 中会被认为是无效的.</p>
+<p>由于以下字符可能保留用于 AutoHotkey v2 中的其他用途, 因此建议避免使用它们: # @ $</p>
+<p>类中的属性名称与变量名具有相同的规则和限制, 但不允许上面列出的三个字符(# @ $). 尽管可以在方法定义中使用它们, 但调用这种方法需要使用方括号. 例如, <code>myObject.@home()</code> 是无效的, 但 <code>myObject[&quot;@home&quot;]()</code> 是可以接受的.</p>
 
 <h3 id="variable-references">变量引用与值</h3>
-<p>Variables have certain attributes that blur the line between a variable and its value, but it is important to make the distinction. In particular, consider <a href="#objects">objects</a> and ByRef parameters.</p>
-<p>Although we may say the variable <code>myArray</code> <em>contains</em> an array (which is a type of object), what the variable contains isn't the array itself but rather a <em>reference or pointer</em> to the array. Any number of variables can contain a reference to the same object. It may be helpful to think of a variable as just a name in that case. For instance, giving a person a nickname doesn't cause a clone of that person to come into existence.</p>
-<p>By default, variables are passed to user-defined functions <em>by value</em>. In other words, the value contained by the variable is copied into the variable which corresponds to the function's parameter. <strong>ByRef</strong> parameters allow you to pass a variable <em>by reference</em>, or in other words, to make one parameter of the function an <em>alias</em> for your variable, allowing the function to assign a new value to your variable.</p>
-<p>Because a variable only ever contains a <em>reference</em> to an object and not the object itself, when you pass such a variable to a non-ByRef parameter, what the function receives is a reference to the same object. This allows the function to modify the object, but it does not allow the function to modify the <em>variable</em> which the function's caller used, because the function only has a reference to the object, not the variable.</p>
+<p>变量的某些属性模糊了变量与其值之间的界限, 但区分它们是很重要的. 特别是, 在考虑 <a href="#objects">对象</a> 和 ByRef 参数的时候.</p>
+<p>虽然我们可以说变量 <code>myArray</code> <em>包含</em> 一个数组(这是一个对象类型), 但变量包含的不是数组本身,  而是对数组的 <em>引用或指针</em>. 任意数量的变量都可以包含对同一对象的引用. 在这种情况下, 将变量看作只是一个名称可能会有所帮助. 例如, 给一个人一个昵称并不会导致克隆人的存在.</p>
+<p>默认情况下, 变量 <em>按值</em> 传递给用户定义的函数. 换句话说, 变量所包含的值被复制到与该函数的参数对应的变量中. <strong>ByRef</strong> 参数允许您 <em>通过引用</em> 传递一个变量, 或换句话说, 使函数的一个参数成为变量的 <em>别名</em>, 从而允许函数为变量赋一个新值.</p>
+<p>因为变量只包含对对象的 <em>引用</em>, 而不是对象本身, 所以当您将这样的变量传递给非 ByRef 参数时, 函数接收到的是对同一对象的引用. 这允许函数修改对象, 但它不允许函数修改函数调用者使用的 <em>变量</em>, 因为该函数只具有对对象的引用, 而不是变量.</p>
 
 <h3 id="references-to-objects">对象的引用</h3>
-<p>Scripts interact with an object only indirectly, through a <em>reference</em> to the object. When you create an object, the object is created at some location you don't control, and you're given a reference. Passing this reference to a function or storing it in a variable or another object creates a new reference to the <em>same</em> object. You release a reference by simply using an assignment to replace it with any other value. An object is deleted only after all references have been released; you cannot delete an object explicitly, and should not try.</p>
-<pre>ref1 := Object()  <em>; Create an object and store first reference</em>
-ref2 := ref1      <em>; Create a new reference to the same object</em>
-ref1 := &quot;&quot;        <em>; Release the first reference</em>
-ref2 := &quot;&quot;        <em>; Release the second reference; object is deleted</em>
+<p>脚本仅通过对对象的 <em>引用</em> 间接与对象进行交互. 创建对象时, 对象是在您不能控制的地方创建的, 并给您一个引用. 将此引用传递给函数或将其存储在变量或其他对象中会创建对 <em>同一</em> 对象的新引用. 通过简单地使用赋值将其替换为任何其他数值, 可以释放引用. 只有在所有引用都已释放后, 才会删除对象; 不能显式删除对象, 也不应该去尝试这样做.</p>
+<pre>ref1 := Object()  <em>; 创建一个对象并储存第一个引用</em>
+ref2 := ref1      <em>; 创建一个对同一对象的新引用</em>
+ref1 := &quot;&quot;        <em>; 释放第一个引用</em>
+ref2 := &quot;&quot;        <em>; 释放第二个引用; 对象被删除</em>
 </pre>
-<p>If that's difficult to understand, try thinking of an object as a rental unit. When you rent a unit, you're given a key which you can use to access the unit. You can get more keys and use them to access the same unit, but when you're finished with the unit, you must hand all keys back to the rental agent. Usually a unit wouldn't be <em>deleted</em>, but maybe the agent will have any junk you left behind removed; just as any values you stored in an object are freed when the object is deleted.</p>
+<p>如果难以理解的话, 可以尝试将一个对象看作出租单位. 当你租一个单位时, 你会得到一个你可以用来访问单位的钥匙. 您可以获得更多钥匙并使用它们访问同一个设备, 但是当您使用完该设备时, 您必须将所有钥匙交还给租赁代理. 通常这个单位不会被 <em>删除</em>, 但也许租赁代理将有你留下的任何垃圾删除掉; 就像存储在对象中的任何值在对象被删除时被释放一样.</p>
 
 </body>
 </html>

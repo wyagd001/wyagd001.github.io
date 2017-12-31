@@ -28,38 +28,38 @@
 <p>变更 在按下钩子热键时, <a href="commands/_MenuMaskKey.htm">菜单(Alt/Win) 掩饰键</a> 的规则:</p>
 <ul>
   <li>显式发送 Alt/Win 可能被屏蔽. 这修复了键盘映射, 如 <code>AppsKey::RWin</code>, 但 为了激活开始菜单的热键可能需要新的变通办法.</li>
-  <li>If Alt/Win is logically but not physically down, only hotkeys which require Alt/Win (such as <code>#a::</code>, not <code>*a::</code>) cause masking. This is to allow a remapping or wildcard hotkey to send the key-up without it    being masked.</li>
-  <li>Unsuppressed hotkeys such as <code>~#a::</code> no longer cause masking, because the unsuppressed keydown/keyup is sufficient to prevent a menu. However, mouse hotkeys like <code>~*MButton::</code> no longer suppress the Start Menu if combined with the Win key.  It can be suppressed manually with <code>Send {Blind}{vk07}</code> or similar.</li>
-  <li>The keyboard hook now tracks events in relation to Alt/Win, so that the mask key does not need to be sent if Alt/Win was already masked by some other event (physical or sent).</li>
+  <li>如果 Alt/Win 逻辑是按下但没有物理按下, 只有热键需要 Alt/Win (如 <code>#a::</code>, 而不是 <code>*a::</code>) 时, 才引发掩饰键. 这是允许重新映射或通配符热键发送 key-up 不被掩饰.</li>
+  <li>不抑制热键原生功能的热键如 <code>~#a::</code> 不再引发掩饰键, 因为原生的 keydown/keyup 足以阻止菜单. 但是, 鼠标热键像 <code>~*MButton::</code> 结合 Win 键, 不再阻止开始菜单. 它可以通过发送 <code>Send {Blind}{vk07}</code> 或类似的方式手动阻止.</li>
+  <li>现在, 键盘钩子跟踪与 Alt/Win 相关的事件, 因此如果 Alt/Win 已被某些其他事件(物理或发送) 掩饰, 则不需要发送掩饰键.</li>
 </ul>
 <p class="warning">热键 <code>~LWin::</code> 和 <code>~RWin::</code> 不再屏蔽开始菜单(译者注: 旧版的屏蔽效果也不是很好). 有关详细信息和解决方法, 请参阅 <a href="commands/_MenuMaskKey.htm">#MenuMaskKey</a>.</p>
 <p>增加 vk 或 sc 键名增加适当的验证, 所以名称, 如 "sc01notvalid" 不再被识别为按键.</p>
-<p class="warning">Scripts containing hotkeys of the form <code>VKnnSCnnn::</code> will need to be corrected by removing <code>SCnnn</code>, which was previously ignored.</p>
+<p class="warning">脚本中含有形如 <code>VKnnSCnnn::</code> 热键的将需要通过删除 <code>SCnnn</code> 来加以修正, 在之前的版本中是被忽略的.</p>
 <p>帮助文件: 使用由 Ragnar-F 开发的新 HTML5 边栏替换标准 HTML 帮助查看器边栏.</p>
 
 <h4>新特性:</h4>
 <ul>
 <li>增加 <a href="commands/Math.htm#Min">Min</a>/<a href="commands/Math.htm#Max">Max</a> 内置函数. [PR #84 from Ragnar-F]</li>
 <li>增加 <a href="Variables.htm#Args">A_Args</a> 作为编号变量的替代.</li>
-<li>增加 <a href="Functions.htm#ForceLocal">force-local mode</a> for functions.</li>
+<li>增加 函数的 <a href="Functions.htm#ForceLocal">强制局部变量模式</a>.</li>
 <li>增加 <a href="commands/_Warn.htm#ClassOverwrite">#Warn ClassOverwrite</a>.</li>
-<li>增加 <a href="commands/Send.htm#SendText">{Text} mode</a> for Send and <a href="Hotstrings.htm#T">T option</a> for hotstrings. These are like the Raw mode, but more reliable.</li>
+<li>增加 Send 命令的 <a href="commands/Send.htm#SendText">{Text} 模式</a> 和 热字符串的 <a href="Hotstrings.htm#T">T 选项</a>. 这些都类似于原始模式, 但更可靠.</li>
 <li>增加 <a href="commands/Send.htm#DownR">{<em>key</em> <strong>DownR</strong>}</a> and changed remapping to use it, to fix issues with <code>AppsKey::RWin</code> and similar.</li>
 </ul>
 
 <h4>Bug 修复:</h4>
 <ul>
 <li>修复 当索引无效时, 图标加载不默认为 id 0.</li>
-<li>修复 VK&harr;SC mapping of PrintScreen. SC&rarr;VK was already correct on Vista and later.</li>
-<li>修复 Hotkey control returning scXXX instead of names in some cases.</li>
+<li>修复 VK&harr;SC 映射 PrintScreen. SC&rarr;VK 已经能在 Vista 和更高版本上正确使用了.</li>
+<li>修复 在某些情况下, 热键控制返回 scXXX 而不是名称的问题.</li>
 <li>修复 ListVars crashing if a ByRef parameter refers to a variable containing an object. [PR #86 from HotKeyIt]</li>
-<li>修复 some (very unlikely) memory leaks.</li>
+<li>修复 一些(概率极小的) 内存泄漏.</li>
 <li>修复 menu handles not being freed if only the standard items are used.</li>
 <li>修复 bold font not being applied to default menu item if it has a submenu and a Win32 menu handle.</li>
 <li>修复 Send to use the correct modifier state with Unicode chars.</li>
 <li>修复 <code>ControlSend {u n}</code>, where u is Unicode, to send n times, not just 1.</li>
 <li>修复 inconsistent behavior of AltGr between OS versions. Specifically, <code>RAlt::</code> once again causes the system to "release" LCtrl on Windows 10, as it did prior to v1.1.26.01 (but unlike those old versions, it prevents the RAlt-up from reaching the active window). This change should not affect layouts without AltGr.</li>
-<li>修复 <code>Menu Tray, Icon</code> and SB_SetIcon to allow bitmaps.</li>
+<li>修复 <code>Menu Tray, Icon</code> 和 SB_SetIcon 以允许位图.</li>
 <li>修复 menu items to not disappear when a cursor is set as a menu item's icon.</li>
 <li>改进 启动 Window Spy 和 帮助文件:
 <ul>
