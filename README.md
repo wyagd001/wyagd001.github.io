@@ -4,7 +4,7 @@
 感谢您的支持
 
 方式一：手机支付宝扫码<br/>
-![Image text](https://wyagd001.github.io/img/zfb.jpg)
+![Image text](https://raw.githubusercontent.com/wyagd001/wyagd001.github.io/master/img/zfb.jpg)
 
 方式二:<br/>
 快来领取支付宝跨年红包！1月1日起还有机会额外获得专享红包哦！手机复制此消息，打开最新版支付宝就能领取！A3Hh3V38cr
