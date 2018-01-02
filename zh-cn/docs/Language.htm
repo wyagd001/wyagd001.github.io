@@ -163,27 +163,27 @@ MsgBox, 这行被注释掉了.
 <p><code>MyFunc(Params*)</code> 是一个 <a href="Functions.htm#VariadicCall">可变函数调用</a>. 星号必须紧跟在函数参数列表末尾的右括号之前. <em>参数</em> 必须是返回数组对象的变量或子表达式. 尽管在任何地方使用 <code>Params*</code> 都是无效的, 但它可以用在数组文字(<code>[A, B, C, ArrayToAppend*]</code>) 或索引器(<code>Alpha[Params*]</code>) 中.</p>
 
 <h3 id="expression-statements">表达式语句</h3>
-<p>并不是所有的表达式都可以单独在一行上使用. 例如, 只包含 <code>21*2</code> 或 <code>&quot;Some text&quot;</code> 的行就没有任何意义. 表达式 <em>语句</em> is an expression used on its own, typically for its side-effects. Most expressions with side-effects can be used this way, so it is generally not necessary to memorise the details of this section.</p>
+<p>并不是所有的表达式都可以单独在一行上使用. 例如, 只包含 <code>21*2</code> 或 <code>&quot;Some text&quot;</code> 的行就没有任何意义. 表达式 <em>语句</em> 是一个单独使用的表达式, 通常利用它的附加作用. 大多数带有附加作用的表达式都可以这样使用, 所以一般不需要记住本节的细节.</p>
 <p>以下类型的表达式可以用作语句:</p>
-<p>赋值, 如 <code>x := y</code>, compound assignments such as <code>x += y</code>, and increment/decrement operators such as <code>++x</code> and <code>x--</code>. However, in AutoHotkey v1, <code>++</code>, <code>--</code>, <code>+=</code>, <code>-=</code>, <code>*=</code> and <code>/=</code> have slightly different behavior when used alone on a line, as they are actually equivalent to EnvAdd, EnvSub, EnvMult or EnvDiv. For details, see &quot;Known limitations&quot; under <a href="Variables.htm#AssignOp">Assign</a> in the table of operators.</p>
-<p>函数调用, 如 <code>MyFunc(Params)</code>. 但是, a standalone function call cannot be followed by an open brace <code>{</code> (at the end of the line or on the next line), because it would be confused with a function declaration.</p>
+<p>赋值, 如 <code>x := y</code>, 复合赋值, 如 <code>x += y</code> 和增量/减量运算符, 如 <code>++x</code> 和 <code>x--</code>. 但是, 在 AutoHotkey v1 中, <code>++</code>, <code>--</code>, <code>+=</code>, <code>-=</code>, <code>*=</code> 和 <code>/=</code> 在单独使用时会有稍微不同的行为, 因为它们实际上等同于 EnvAdd, EnvSub, EnvMult 或 EnvDiv. 有关详细信息, 请参阅运算符列表中的 <a href="Variables.htm#AssignOp">赋值</a> 下的 &quot;已知限制&quot;.</p>
+<p>函数调用, 如 <code>MyFunc(Params)</code>. 但是, 一个独立的函数调用不能跟随一个大括号 <code>{</code>(在行尾或下一行), 因为它会与函数声明混淆.</p>
 <p>方法调用, 如 <code>MyObj.MyMethod()</code>.</p>
-<p>Member access using square brackets, such as <code>MyObj[Index]</code>, which can have side-effects like a function call.</p>
-<p>Expressions starting with the <code>new</code> operator, as in <code>new ClassName</code>, because sometimes a class can be instantiated just for its side-effects.</p>
-<p>Ternary expressions such as <code>x ? CallIfTrue() : CallIfFalse()</code>. However, in AutoHotkey v1, command names take precedence. 例如, <code>MsgBox ? 1 : 0</code> shows a message box.</p>
-<p>Expressions starting with <code>(</code>. However, there usually must be a matching <code>)</code> on the same line, otherwise the line would be interpreted as the start of a <a href="Scripts.htm#continuation">continuation section</a>.</p>
-<p>Expressions that start with any of those described above (but not those described below) are also allowed, for simplicity. 例如, <code>MyFunc()+1</code> is currently allowed, although the <code>+1</code> has no effect and its result is discarded. Such expressions might become invalid in the future due to enhanced error-checking.</p>
-<p>Member access using a dot (once or in a series), such as <code>ExcelApp.Quit</code> or <code>x.y.z</code>. However, unless parentheses are used (as in a method call), this cannot be the prefix of a larger expression. 例如, <code>ExcelApp.Quit, xxx</code> is prohibited due to the apparent similarity to command syntax.</p>
+<p>使用方括号的成员访问, 如 <code>MyObj[Index]</code>, 它可能有类似于函数调用的附加作用.</p>
+<p>表达式以 <code>new</code> 运算符开始, 如在 <code>new ClassName</code> 中, 因为有时一个类可以被实例化, 只是为了它的附加作用.</p>
+<p>三元表达式如 <code>x ? CallIfTrue() : CallIfFalse()</code>. 但是, 在 AutoHotkey v1 中, 命令名称优先. 例如, <code>MsgBox ? 1 : 0</code> 显示一个消息框.</p>
+<p>表达式以 <code>(</code> 开始. 但是, 通常必须在同一行有一个匹配 <code>)</code>, 否则该行将被解释为 <a href="Scripts.htm#continuation">延续片段</a> 的开始.</p>
+<p>为了简单起见, 我们还可以从上面描述的任一表达式(但不是下面描述的) 开始. 例如, <code>MyFunc()+1</code> 目前是允许的, 尽管 <code>+1</code> 没有效果, 其结果会被丢弃. 由于错误检查的增强, 这些表达式在将来可能会失效.</p>
+<p>成员访问使用点(一次或一系列), 如 <code>ExcelApp.Quit</code> 或 <code>x.y.z</code>. 但是, 除非使用圆括号(在方法调用中), 否则这不能是更大表达式的前缀. 例如, <code>ExcelApp.Quit, xxx</code> 是被禁止的, 由于与命令语法明显相似.</p>
 
 <h2 id="legacy-syntax">传统语法</h2>
-<p><em><strong>Legacy</strong></em> or <em><strong>command</strong></em> syntax generally only allows a single action per line, but uses fewer characters to perform simple tasks such as <a href="commands/Send.htm">sending keystrokes</a> or <a href="commands/Run.htm">running a program</a>. The syntax consists of command and variable names, <em>unquoted text</em> and a few symbols such as <code>,</code>, <code>=</code> and <code>%</code>.</p>
-<p id="unquoted-text"><em>Unquoted text</em> is simply text, not enclosed in quote marks, just straight up. Since the text has no explicit start and end marks, it ends at the end of the line or the end of the parameter. Leading and trailing spaces and tabs are ignored. Within unquoted text, the following characters have special meaning:</p>
+<p><em><strong>传统语法</strong></em> or <em><strong>命令</strong></em> 语法通常只允许每行执行一个操作, 但是使用更少的字符来执行简单的任务, 例如 <a href="commands/Send.htm">发送按键</a> 或 <a href="commands/Run.htm">运行一个程序</a>. 该语法由命令和变量名称, <em>不加引号的文本</em> 和一些符号, 如 <code>,</code>, <code>=</code> 和 <code>%</code> 组成.</p>
+<p id="unquoted-text"><em>不加引号的文本</em> 只是文本, not enclosed in quote marks, just straight up. 由于文本没有明确的开始和结束标记, 所以在行尾或参数结束时结束. 前导和尾随空格和制表符被忽略. 在不加引号的文本中, 以下字符具有特殊含义:</p>
 <ul>
   <li>
-<p><code>%</code>: Enclose a variable name in percent signs to include the contents of that variable. 例如, <code>The year is %A_Year%.</code></p>
-<p class="warning"><strong>Note:</strong> Variable names are not <em>always</em> enclosed in percent signs; they are required only within unquoted text. Percent signs should not be used anywhere else, except to create a <a href="#dynamic-variables">dynamic variable reference</a> or <a href="Functions.htm#DynCall">dynamic function call</a>.
+<p><code>%</code>: 用百分号括起一个变量名以包含该变量的内容. 例如, <code>The year is %A_Year%.</code></p>
+<p class="warning"><strong>注意:</strong> 变量名并非 <em>总是</em> 用百分号括起来; 百分号只在变量名和不加引号的文字一起时才需要. 除了创建 <a href="#dynamic-variables">动态变量引用</a> 或 <a href="Functions.htm#DynCall">动态函数调用</a> 之外, 不应在其他任何地方使用百分号.
 </p>
-<p class="warning"><strong>Note:</strong> Only a plain variable name can be used. <a href="Objects.htm#Usage_Simple_Arrays">Array elements</a>, <a href="Objects.htm#Usage_Objects">properties</a> and other <a href="#expressions">expressions</a> are not supported.
+<p class="warning"><strong>注意:</strong> 只能使用普通变量名. 不支持 <a href="Objects.htm#Usage_Simple_Arrays">数组元素</a>, <a href="Objects.htm#Usage_Objects">属性</a> 和其他 <a href="#expressions">表达式</a>.
 </p>
 </li>
   <li>
@@ -235,14 +235,14 @@ MsgBox, 这行被注释掉了.
 <p>In most cases the <a href="#-expression">percent prefix</a> can be used to pass an expression.</p>
 
 <h3 id="outputvar-and-inputvar-parameters">OutputVar 和 InputVar 参数</h3>
-<p><em>OutputVar</em> 和 <em>InputVar</em> parameters require a variable name or <a href="#dynamic-variables">dynamic variable reference</a>. 例如:</p>
+<p><em>OutputVar</em> 和 <em>InputVar</em> 参数需要一个变量名或 <a href="#dynamic-variables">动态变量引用</a>. 例如:</p>
 <pre><em>; Replace all spaces with pluses:</em>
 StringReplace, NewStr, OldStr, %A_Space%, +, All
 </pre>
 <p>该命令从 <em>OldStr</em>(InputVar) 中读取值并将结果存储在 <em>NewStr</em>(OutputVar) 中.</p>
 <p class="warning"><strong>注意:</strong> 只有一个普通变量可以用作 <em>OutputVar</em>. <a href="Objects.htm#Usage_Simple_Arrays">数组元素</a>, <a href="Objects.htm#Usage_Objects">属性</a> 和其他的 <a href="#expressions">表达式</a> 不受支持.
 </p>
-<p><em>InputVar</em> parameters can accept an expression only when the <a href="#-expression">percent prefix</a> is used. However, the prefix is not supported in the <em>Var</em> parameters of <a href="#legacy-if">legacy If commands</a>, so <a href="commands/IfExpression.htm">If (expression)</a> should be used instead.</p>
+<p>只有当 <a href="#-expression">百分号前缀</a> 使用时, <em>InputVar</em> 参数才能接受一个表达式. However, the prefix is not supported in the <em>Var</em> parameters of <a href="#legacy-if">legacy If commands</a>, so <a href="commands/IfExpression.htm">If (expression)</a> should be used instead.</p>
 
 <h3 id="text-parameters">文本参数</h3>
 <p>文本参数接受<a href="#unquoted-text">不加引号的文本</a>. 例如:</p>
@@ -257,10 +257,10 @@ StringReplace, NewStr, OldStr, %A_Space%, +, All
 <p>文本参数也接受 <a href="#-expression">强制表达式</a>.</p>
 
 <h3 id="numeric-parameters">数字参数</h3>
-<p>Numeric parameters accept a literal number or an <a href="#expressions">expression</a>, and can be identified by phrasing like &quot;This parameter can be an expression.&quot;</p>
-<p>For historical reasons, simple variable references alone or combined with digits are not interpreted as expressions. 例如:</p>
-<pre>Sleep %n%000  <em>; Sleep for n seconds.</em>
-Sleep %m%     <em>; Sleep for m milliseconds.</em>
+<p>数字参数接受原义数字或 <a href="#expressions">表达式</a>, 并可以通过类似 &quot;此参数可以是表达式.&quot; 的措辞进行标识.</p>
+<p>由于历史原因, 只是单独的变量引用或与数字结合不被解释为表达式. 例如:</p>
+<pre>Sleep %n%000  <em>; 等待 n 秒.</em>
+Sleep %m%     <em>; 等待 m 毫秒.</em>
 </pre>
 <p>To perform a <a href="#dynamic-variables">double-deref</a> in such cases, enclose the expression in parentheses: <code>Sleep (%m%)</code></p>
 <p>Note that mixed-type parameters such as <a href="commands/SetTimer.htm">SetTimer's</a> second parameter, which sometimes accepts a number and sometimes accepts a string such as <code>On</code> or <code>Off</code>, are actually Text parameters, and as such, they do not accept expressions unless the <a href="#-expression">percent prefix</a> is used.</p>
@@ -284,11 +284,11 @@ Sleep % MillisecondsToWait
 <p>在每个命令文档的顶部, 通常有一个显示语法的块, 如下所示:</p>
 <pre>Run, Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
 </pre>
-<p>The square brackets denote optional parameters; the brackets themselves must be omitted from the actual code.</p>
-<p>Sometimes the value or values a parameter accepts are written directly in the syntax block. 例如, the third parameter of Run shown above accepts one or more of the words shown, as text. The pipe symbol denotes alternatives; the symbol itself should be omitted from the actual code. The exact syntax of the parameter is described in the <em>Parameters</em> table, and varies between commands.</p>
+<p>方括号表示可选参数; 方括号本身必须在实际代码中省略.</p>
+<p>有时, 参数所接受的值或多个值直接写入语法块中. 例如, 上面显示的 Run 的第三个参数接受一个或多个显示的单词，作为文本. 管道符号表示替代选择; 该符号本身应该在实际代码中省略. 参数的确切语法在 <em>参数</em> 表中进行了描述, 并在命令之间有所不同.</p>
 
 <h3 id="optional-parameters">可选参数</h3>
-<p>Optional parameters can simply be left blank. The comma preceding an optional parameter can also be omitted if all subsequent parameters are omitted. 例如, the <a href="commands/Run.htm">Run</a> command can accept between one and four parameters. All of the following are valid:</p>
+<p>可选参数可以简单地留空. 如果省略所有后续参数, 则可选参数前面的逗号也可以省略. 例如, <a href="commands/Run.htm">Run</a> 命令能接受一到四个参数. 以下全部有效:</p>
 <pre>Run, notepad.exe, C:\
 Run, notepad.exe,, Min
 Run notepad.exe, , , notepadPID
@@ -331,11 +331,11 @@ if Var1 between %Low% and %High%
 </pre>
 
 <h3 id="different-equals">不同的等号</h3>
-<p>One common mistake is to write <code>=</code> where <code>:=</code> is needed. 例如:</p>
+<p>一个常见的错误是在需要 <code>:=</code> 的地方写 <code>=</code>. 例如:</p>
 <pre>Total = A + B   <em>; Assigns the literal text &quot;A + B&quot;</em>
 </pre>
-<p>This can be difficult to avoid (at least until such time as the legacy assignment syntax is removed), but it may help to always use <code>:=</code> where an assignment is intended.</p>
-<p>The equal sign (when not used with another symbol, such as <code>&lt;=</code>) has the following meanings:</p>
+<p>这可能很难避免((至少在删除传统赋值语法之前), but it may help to always use <code>:=</code> where an assignment is intended.</p>
+<p>等号(when not used with another symbol, such as <code>&lt;=</code>) 具有以下含义:</p>
 <ul>
   <li><a href="commands/SetEnv.htm">Legacy assignment</a>: <code>Var = Value</code></li>
   <li><a href="commands/IfEqual.htm">Legacy If equal</a>: <code>if Var = Value</code></li>
@@ -348,13 +348,13 @@ if Var1 between %Low% and %High%
 <p>For the last three cases, <code>:=</code> should have been used instead of <code>=</code>.</p>
 
 <h3 id="commands-vs-functions">命令与函数</h3>
-<p>In AutoHotkey v1, it is currently not possible to call a command from an expression, or to call a function using the <em>command syntax</em>. However, several commands have a function replacement.</p>
+<p>在 AutoHotkey v1 中, 目前无法在表达式中调用命令, 或者使用 <em>命令语法</em> 调用函数. 但是, 几个命令有一个函数替换.</p>
 <table class="info">
-  <tr><th>Command</th><th>Replacement</th></tr>
-  <tr><td><a href="commands/FileAppend.htm">FileAppend</a></td><td><a href="commands/FileOpen.htm">FileOpen</a> and <a href="objects/File.htm#Write">File.Write</a></td></tr>
+  <tr><th>命令</th><th>替换</th></tr>
+  <tr><td><a href="commands/FileAppend.htm">FileAppend</a></td><td><a href="commands/FileOpen.htm">FileOpen</a> 和 <a href="objects/File.htm#Write">File.Write</a></td></tr>
   <tr><td><a href="commands/FileGetAttrib.htm">FileGetAttrib</a></td><td><a href="commands/FileExist.htm">FileExist</a></td></tr>
-  <tr><td><a href="commands/FileRead.htm">FileRead</a></td><td><a href="commands/FileOpen.htm">FileOpen</a> and <a href="objects/File.htm#Read">File.Read</a></td></tr>
-  <tr><td><a href="commands/GetKeyState.htm">GetKeyState</a></td><td><a href="commands/GetKeyState.htm">GetKeyState</a> (the function returns 0 or 1, not &quot;U&quot; or &quot;D&quot;)</td></tr>
+  <tr><td><a href="commands/FileRead.htm">FileRead</a></td><td><a href="commands/FileOpen.htm">FileOpen</a> 和 <a href="objects/File.htm#Read">File.Read</a></td></tr>
+  <tr><td><a href="commands/GetKeyState.htm">GetKeyState</a></td><td><a href="commands/GetKeyState.htm">GetKeyState</a> (函数返回 0 或 1, 不是 &quot;U&quot; 或 &quot;D&quot;)</td></tr>
   <tr><td><a href="commands/IfExist.htm">IfExist</a></td><td><a href="commands/FileExist.htm">FileExist</a></td></tr>
   <tr><td><a href="commands/IfInString.htm">IfInString</a></td><td><a href="commands/InStr.htm">InStr</a></td></tr>
   <tr><td><a href="commands/WinActive.htm">IfWinActive</a></td><td><a href="commands/WinActive.htm">WinActive</a></td></tr>
@@ -365,7 +365,7 @@ if Var1 between %Low% and %High%
   <tr><td><a href="commands/StringSplit.htm">StringSplit</a></td><td><a href="commands/StringSplit.htm">StrSplit</a></td></tr>
   <tr>
     <td><a href="commands/StringLower.htm">StringLower<br>StringUpper</a></td>
-    <td><code><a href="commands/Format.htm">Format</a>(&quot;{:L}&quot;, input)</code>, <code>Format(&quot;{:U}&quot;, input)</code> or <code>Format(&quot;{:T}&quot;, input)</code></td>
+    <td><code><a href="commands/Format.htm">Format</a>(&quot;{:L}&quot;, input)</code>, <code>Format(&quot;{:U}&quot;, input)</code> 或 <code>Format(&quot;{:T}&quot;, input)</code></td>
   </tr>
   <tr>
     <td><a href="commands/StringLeft.htm">StringLeft</a><br><a href="commands/StringMid.htm">StringMid</a><br><a href="commands/StringLeft.htm">StringRight</a><br><a href="commands/StringTrimLeft.htm">StringTrimLeft<br>StringTrimRight</a></td>
@@ -515,19 +515,19 @@ return
 <p class="note">See <a href="Functions.htm">Functions</a> for much more detail.</p>
 
 <h3 id="-include">#Include</h3>
-<p>The <a href="commands/_Include.htm">#Include</a> directive causes the script to behave as though the specified file's contents are present at this exact position. This is often used to organise code into separate files, or to make use of script libraries written by other users.</p>
-<p class="warning"><strong>Note:</strong> The following paragraphs detail some common points of confusion.
+<p><a href="commands/_Include.htm">#Include</a> 指令使脚本的行为就像指定文件的内容出现在这个确切位置一样. T这通常用于将代码组织到单独的文件中, 或者使用其他用户编写的脚本库.</p>
+<p class="warning"><strong>注意:</strong> 以下段落详细说明了一些常见的混淆点.
 </p>
-<p>When using #Include, it is important to consider what effect the file's contents would have if placed at that position, since #Include will have the same effect. For instance:</p>
+<p>使用 #Include 时, 重要的是要考虑文件的内容如果放置在该位置将会产生什么效果, 因为 #Include 将具有相同的效果. 例如:</p>
 <ul>
   <li>
-<p>#Include generally should not be used in the middle of a subroutine or function.</p>
+<p>#Include 一般不应该在子程序或函数的中间使用.</p>
 </li>
   <li>
-<p>The use of #Include in the script's <a href="#auto-execute-section">auto-execute section</a> requires special consideration, because the auto-execute section is essentially just a subroutine. Execution of a subroutine halts if it reaches a <code>return</code>, regardless of which file that <code>return</code> is in. Similarly, if the file contains a hotkey/hotstring, it may be considered the script's <em>first</em> hotkey/hotstring, which would act like <code>return</code>.</p>
+<p>在脚本的 <a href="#auto-execute-section">自动执行部分</a> 使用 #Include 需要特别的考虑, 因为自动执行部分基本上只是一个子例程. 如果子程序的执行会在到达一个 <code>return</code> 时终止, 而不管 <code>return</code> 是在哪个文件中. 同样, 果文件包含一个 热键/热字符串, 它可能被认为是脚本的 <em>第一个</em> 热键/热字符串, 它将扮演 <code>return</code> 的角色.</p>
 </li>
   <li>
-<p>The script only has one <a href="#auto-execute-section">auto-execute section</a>, not one per file.</p>
+<p>脚本只有一个 <a href="#auto-execute-section">自动执行部分</a>, 而不是每个文件一个.</p>
 </li>
 </ul>
 <p>#Include can be safely used within the <a href="#auto-execute-section">auto-execute section</a> to include files which contain only function definitions, since function definitions (but not function calls) are skipped over during execution. If a file contains other code, one can avoid breaking the auto-execute section by skipping over the file's contents with <a href="commands/Goto.htm">Goto</a>.</p>
@@ -565,7 +565,7 @@ Loop 3
 <p>由于单个元素只是普通变量, 所以可以赋值或获取一个值, 但不能 <em>删除</em> 或 <em>插入</em> 元素. 因为伪数组本身并不存在, 所以不能将它传递给函数或从函数返回, 或者作为一个整体进行复制. 由于这些原因, 通常建议在可能的情况下使用 <a href="Objects.htm#Usage_Simple_Arrays">普通数组</a>.</p>
 
 <h4 id="associative-pseudo-arrays">关联伪数组</h4>
-<p>The &quot;index&quot; used to form the final variable name does not have to be numeric; it could instead be a letter or keyword, making the pseudo-array similar to an <a href="Objects.htm#Usage_Associative_Arrays">associative array</a> or an <a href="Objects.htm">object</a>. The following example creates a pseudo-array with elements &quot;Left&quot;, &quot;Top&quot;, &quot;Right&quot; and &quot;Bottom&quot;:</p>
+<p>用于形成最终变量名称的 &quot;index(索引)&quot; 不一定是数字; 它可以是一个字母或关键字, 使伪数组类似于 <a href="Objects.htm#Usage_Associative_Arrays">关联数组</a> 或 <a href="Objects.htm">对象</a>. 下面的例子创建一个元素为 &quot;Left&quot;, &quot;Top&quot;, &quot;Right&quot; 和 &quot;Bottom&quot; 的伪数组:</p>
 <pre>SysGet, WA, MonitorWorkArea
 MsgBox, Left: %WALeft% -- Top: %WATop% -- Right: %WARight% -- Bottom: %WABottom%.
 </pre>
@@ -574,14 +574,14 @@ MsgBox, Left: %WALeft% -- Top: %WATop% -- Right: %WARight% -- Bottom: %WABottom%
 <p>有几个命令可以创建关联的伪数组:</p>
 <ul>
   <li><a href="commands/GuiControlGet.htm">GuiControlGet Pos</a>.</li>
-  <li><a href="commands/RegExMatch.htm">RegExMatch</a>, except when given the <code>O)</code> option, which causes it to output a single object containing all match information.</li>
+  <li><a href="commands/RegExMatch.htm">RegExMatch</a>, 除非指定了 <code>O)</code> 选项, 这会导致它输出包含所有匹配信息的单个对象.</li>
   <li><a href="commands/SysGet.htm">SysGet Monitor/MonitorWorkArea</a>, 如上所示.</li>
   <li><a href="commands/StringSplit.htm">StringSplit</a>. 新的脚本应该使用 <a href="commands/StringSplit.htm">StrSplit()</a> 作为代替, 因为它创建的是 <a href="Objects.htm#Usage_Simple_Arrays">普通数组</a>.</li>
   <li><a href="commands/WinGet.htm">WinGet List</a>.</li>
 </ul>
-<p class="warning"><strong>警告:</strong> These commands do not follow the same rules as <em>dynamic variable references</em>. If used within a function, the resulting pseudo-array is either entirely global or entirely local, depending only on the first element (or base name) of the array.  Some of the variables in the pseudo-array may be inaccessible if they are not individually declared. 有关详细信息, 请参阅 <a href="Functions.htm#PseudoArrays">Functions: More about locals and globals</a>.
+<p class="warning"><strong>警告:</strong> 这些命令不遵循与 <em>动态变量引用</em> 相同的规则. 如果在一个函数中使用, 则所得到的伪数组或者全部是全局的或者全部是局部的, 这仅取决于数组的第一个元素(或基于名称). 如果没有单独声明, 伪数组中的一些变量可能是不可访问的. 有关详细信息, 请参阅 <a href="Functions.htm#PseudoArrays">函数: 关于局部变量和全局变量的更多信息</a>.
 </p>
-<p>AutoHotkey also creates one global pseudo-array to contain any <a href="Scripts.htm#cmd_args">command line parameters</a> that were passed to the script.</p>
+<p>AutoHotkey 还创建了一个全局伪数组, 以包含传递给脚本的所有 <a href="Scripts.htm#cmd_args">命令行参数</a>.</p>
 
 <h3 id="labels">标签</h3>
 <p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 目标或形成 <a href="#subroutines">子程序</a>. 有三种标签: 普通标签, <a href="Hotkeys.htm">热键</a> 标签和 <a href="Hotstrings.htm">热字符串</a> 标签.</p>
