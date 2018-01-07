@@ -50,7 +50,7 @@
   </ul></li>
   <li><a href="#structure-of-a-script">脚本的结构</a>
   <ul>
-    <li><a href="#auto-execute-section">自动执行部分</a></li>
+    <li><a href="#auto-execute-section">自动执行段</a></li>
     <li><a href="#subroutines">子程序</a></li>
     <li><a href="#user-defined-functions">用户定义的函数</a></li>
     <li><a href="#-include">#Include</a></li>
@@ -141,7 +141,7 @@ MsgBox, 这行被注释掉了.
   <li>AutoHotkey 只有一个 <em>三元</em> 运算符, 它采用如下的形式 <a href="Variables.htm#ternary"><code>condition(条件) ? valueIfTrue(条件为真时的值) : valueIfFalse(条件为假时的值)</code></a>.</li>
 </ul>
 <p>一些一元和二元运算符共享相同的符号, 在这种情况下,  运算符的含义取决于它是写在两个值之前, 之后还是之间. 例如, <code>x-y</code> 执行减法, 而 <code>-x</code> 反转 <code>x</code> 的符号(从负值产生正值, 反之亦然).</p>
-<p>除非在 <a href="Variables.htm#Expression_Operators_in_descending_precedence_order">运算符表</a> 中另有规定, 否则相同优先级的运算符(例如乘(<code>*</code>) 和除(<code>/</code>)) 将按从左到右的顺序进行计算. 相反, 诸如加(<code>+</code>) 之类的较低优先级的运算符在诸如乘(<code>*</code>) 之类的较高运算符之后被计算. 例如, <code>3 + 2 * 2</code> 作为 <code>3 + (2 * 2)</code> 计算. 括号可以用来覆盖优先级, 如以下示例所示: <code>(3 + 2) * 2</code></p>
+<p>除非在 <a href="Variables.htm#operators">运算符表</a> 中另有规定, 否则相同优先级的运算符(例如乘(<code>*</code>) 和除(<code>/</code>)) 将按从左到右的顺序进行计算. 相反, 诸如加(<code>+</code>) 之类的较低优先级的运算符在诸如乘(<code>*</code>) 之类的较高运算符之后被计算. 例如, <code>3 + 2 * 2</code> 作为 <code>3 + (2 * 2)</code> 计算. 括号可以用来覆盖优先级, 如以下示例所示: <code>(3 + 2) * 2</code></p>
 
 <h3 id="function-calls">函数调用</h3>
 <p class="note">有关函数和相关术语的一般解释, 请参阅 <a href="Concepts.htm#functions">函数/命令</a>.</p>
@@ -177,7 +177,7 @@ MsgBox, 这行被注释掉了.
 
 <h2 id="legacy-syntax">传统语法</h2>
 <p><em><strong>传统语法</strong></em> or <em><strong>命令</strong></em> 语法通常只允许每行执行一个操作, 但是使用更少的字符来执行简单的任务, 例如 <a href="commands/Send.htm">发送按键</a> 或 <a href="commands/Run.htm">运行一个程序</a>. 该语法由命令和变量名称, <em>不加引号的文本</em> 和一些符号, 如 <code>,</code>, <code>=</code> 和 <code>%</code> 组成.</p>
-<p id="unquoted-text"><em>不加引号的文本</em> 只是文本, not enclosed in quote marks, just straight up. 由于文本没有明确的开始和结束标记, 所以在行尾或参数结束时结束. 前导和尾随空格和制表符被忽略. 在不加引号的文本中, 以下字符具有特殊含义:</p>
+<p id="unquoted-text"><em>不加引号的文本</em> 只是文本, 不用括在双引号中, 直接使用. 由于文本没有明确的开始和结束标记, 所以在行尾或参数结束时结束. 前导和尾随空格和制表符被忽略. 在不加引号的文本中, 以下字符具有特殊含义:</p>
 <ul>
   <li>
 <p><code>%</code>: 用百分号括起一个变量名以包含该变量的内容. 例如, <code>The year is %A_Year%.</code></p>
@@ -187,52 +187,52 @@ MsgBox, 这行被注释掉了.
 </p>
 </li>
   <li>
-<p><code>,</code>: Comma is used to delimit (separate) the parameters of a command, with <a href="#escape-comma">some exceptions</a>. It has no special meaning when used in an assignment or comparison, so is interpreted literally in such cases.</p>
+<p><code>,</code>: 逗号用于分隔命令的参数, 但有 <a href="#escape-comma">一些例外</a>. 在赋值或比较中使用时, 它没有特殊的含义, 因此在这种情况下被原义解释.</p>
 </li>
   <li>
-<p><code>`</code>: An <a href="commands/_EscapeChar.htm">escape character</a> is usually used to indicate that the character immediately following it should be interpreted differently than it normally would. 例如, <code>`%</code> produces a literal percent sign and <code>`,</code> produces a literal comma. Some other common escape sequences produce special characters, such as <code>`t</code> (tab), <code>`n</code> (linefeed), and <code>`r</code> (carriage return).</p>
+<p><code>`</code>: <a href="commands/_EscapeChar.htm">转义符</a> 通常用于指示紧跟其后的字符应与通常的解释不同. 例如, <code>`%</code> 生成一个原义百分号 而 <code>`,</code> 生成一个原义逗号. 其他一些常见的转义序列产生特殊字符, 如 <code>`t</code>(制表符 tab), <code>`n</code>(换行), 和 <code>`r</code>(回车).</p>
 </li>
 </ul>
-<p><a href="#commands">Commands</a> accept a mixture of <a href="#text-parameters">unquoted text</a>, <a href="#outputvar-and-inputvar-parameters">variable names</a> and <a href="#numeric-parameters">numeric expressions</a>.</p>
+<p><a href="#commands">命令</a> 接收 <a href="#text-parameters">不加引号的文本</a>, <a href="#outputvar-and-inputvar-parameters">变量名</a> 和 <a href="#numeric-parameters">数字表达式</a> 的混合使用.</p>
 <pre>Send, The time is %A_Hour% o'clock.
 </pre>
-<p><a href="commands/SetEnv.htm">Legacy assignment</a> assigns <a href="#unquoted-text">unquoted text</a> to a variable.</p>
+<p><a href="commands/SetEnv.htm">传统赋值</a> 将 <a href="#unquoted-text">不加引号的文本</a> 赋值到变量.</p>
 <pre>Clipboard = This text is copied to the clipboard.
 </pre>
-<p><a href="#if-statement">If statements</a> perform an action only if the specified condition is met.</p>
+<p><a href="#if-statement">If 语句</a> 仅在满足指定的条件时才执行操作.</p>
 <pre>If Var = Text value
 </pre>
-<p>There are also several other <a href="#control-flow">control flow statements</a> (such as loops) which use legacy syntax similar to commands.</p>
+<p>还有其他一些 <a href="#control-flow">控制流语句</a>(如 loop), 它们使用与命令相似的传统语法.</p>
 
 <h2 id="commands">命令</h2>
-<p>A <em>command</em> is an instruction to carry out a specific predefined action. &quot;Command&quot; may also refer to a specific predefined action, such as <a href="commands/MsgBox.htm">MsgBox</a>. The set of available <a href="commands/index.htm">commands</a> is predefined and cannot be changed by the script.</p>
-<p>A command is <em>called</em> simply by writing its name at the beginning of a line, optionally followed by parameters. 例如:</p>
+<p><em>命令</em> 是执行特定预定义操作的指令. &quot;命令&quot; 也可以指一个特定的预定义的操作, 如 <a href="commands/MsgBox.htm">MsgBox</a>. 可用 <a href="commands/index.htm">命令</a> 集是预定义的, 不能被脚本改变.</p>
+<p>一个命令简单地通过在一行的开始处写入它的名称来 <em>调用</em>, 后面可以跟着参数. 例如:</p>
 <pre>MsgBox, The time is %A_Hour% o'clock.
 </pre>
-<p>The comma separating the command name from its parameters is optional, except in the following cases:</p>
+<p>将命令名与参数分开的逗号是可选的, 但以下情况除外:</p>
 <ul>
   <li>
-<p>When it's necessary to prevent the line from being interpreted as a <a href="commands/SetEnv.htm">legacy assignment</a> or <a href="Variables.htm#AssignOp">assignment expression</a>.</p>
+<p>当需要防止该行被解释为 <a href="commands/SetEnv.htm">传统赋值</a> 或 <a href="Variables.htm#AssignOp">赋值表达式</a> 时.</p>
 <pre>MsgBox, := This would be an assignment without the comma.
 </pre>
 </li>
   <li>
-<p>When the first parameter is blank.</p>
+<p>当第一个参数是空的.</p>
 <pre>MsgBox,, Second, Third
 </pre>
 </li>
   <li>
-<p>When the command is alone at the top of a <a href="Scripts.htm#continuation">continuation section</a>.</p>
+<p>单独的命令在 <a href="Scripts.htm#continuation">延续片段</a> 的顶部.</p>
 </li>
 </ul>
-<p>Each parameter of a command may accept different syntax, depending on the command. There are four types of parameters:</p>
+<p>命令的每个参数都可以接受不同的语法, 具体取决于命令. 有四种类型的参数:</p>
 <ul>
-  <li>OutputVar</li>
-  <li>InputVar</li>
-  <li>Text</li>
-  <li>Number</li>
+  <li>OutputVar(输出变量)</li>
+  <li>InputVar(输入变量)</li>
+  <li>Text(文本)</li>
+  <li>Number(数字)</li>
 </ul>
-<p>In most cases the <a href="#-expression">percent prefix</a> can be used to pass an expression.</p>
+<p>在大多数情况下, <a href="#-expression">百分号前缀</a> 可以用来传递一个表达式.</p>
 
 <h3 id="outputvar-and-inputvar-parameters">OutputVar 和 InputVar 参数</h3>
 <p><em>OutputVar</em> 和 <em>InputVar</em> 参数需要一个变量名或 <a href="#dynamic-variables">动态变量引用</a>. 例如:</p>
@@ -242,7 +242,7 @@ StringReplace, NewStr, OldStr, %A_Space%, +, All
 <p>该命令从 <em>OldStr</em>(InputVar) 中读取值并将结果存储在 <em>NewStr</em>(OutputVar) 中.</p>
 <p class="warning"><strong>注意:</strong> 只有一个普通变量可以用作 <em>OutputVar</em>. <a href="Objects.htm#Usage_Simple_Arrays">数组元素</a>, <a href="Objects.htm#Usage_Objects">属性</a> 和其他的 <a href="#expressions">表达式</a> 不受支持.
 </p>
-<p>只有当 <a href="#-expression">百分号前缀</a> 使用时, <em>InputVar</em> 参数才能接受一个表达式. However, the prefix is not supported in the <em>Var</em> parameters of <a href="#legacy-if">legacy If commands</a>, so <a href="commands/IfExpression.htm">If (expression)</a> should be used instead.</p>
+<p>只有当 <a href="#-expression">百分号前缀</a> 使用时, <em>InputVar</em> 参数才能接受一个表达式. 但是, 百分号前缀在 <a href="#legacy-if">传统 If 命令</a> 的 <em>Var</em> 参数中不受支持, 所以应该使用 <a href="commands/IfExpression.htm">If (表达式)</a> .</p>
 
 <h3 id="text-parameters">文本参数</h3>
 <p>文本参数接受<a href="#unquoted-text">不加引号的文本</a>. 例如:</p>
@@ -262,27 +262,27 @@ StringReplace, NewStr, OldStr, %A_Space%, +, All
 <pre>Sleep %n%000  <em>; 等待 n 秒.</em>
 Sleep %m%     <em>; 等待 m 毫秒.</em>
 </pre>
-<p>To perform a <a href="#dynamic-variables">double-deref</a> in such cases, enclose the expression in parentheses: <code>Sleep (%m%)</code></p>
-<p>Note that mixed-type parameters such as <a href="commands/SetTimer.htm">SetTimer's</a> second parameter, which sometimes accepts a number and sometimes accepts a string such as <code>On</code> or <code>Off</code>, are actually Text parameters, and as such, they do not accept expressions unless the <a href="#-expression">percent prefix</a> is used.</p>
-<p>Although the <a href="#-expression">percent prefix</a> is usually unnecessary with numeric parameters, it is allowed.</p>
+<p>要在这种情况下执行 <a href="#dynamic-variables">双重解引</a>, 请将表达式括在括号内: <code>Sleep (%m%)</code></p>
+<p>请注意, 混合类型参数, 如 <a href="commands/SetTimer.htm">SetTimer</a> 的第二个参数, 有时接受一个数字有时接受如 <code>On</code> 或 <code>Off</code> 的字符串, 实际上是文本参数, 除非使用 <a href="#-expression">百分号前缀</a>, 否则它们不接受表达式.</p>
+<p>虽然 <a href="#-expression">百分号前缀</a> 对于数字参数通常是不必要的, 但它是允许的.</p>
 
 <h3 id="-expression">% 表达式</h3>
-<p>Although purely numeric parameters accept an expression by default, all other parameters of commands do not. Specify a percent sign followed by a space or tab to force a parameter to accept an <a href="#expressions">expression</a>. 例如, all of the following are effectively identical because <a href="commands/Sleep.htm">Sleep</a>'s first parameter is expression-capable:</p>
+<p>尽管纯粹的数字参数在默认情况下接受一个表达式, 但所有其他的命令参数都不会. 指定一个百分号后跟一个空格或制表符来强制一个参数接受一个 <a href="#expressions">表达式</a>. 例如, 以下所有内容都是完全相同的, 因为 <a href="commands/Sleep.htm">Sleep</a> 的第一个参数是接受表达式的:</p>
 <pre>Sleep MillisecondsToWait
 Sleep %MillisecondsToWait%
 Sleep % MillisecondsToWait
 </pre>
-<p class="warning"><strong>Note:</strong> Using the percent-space prefix in a <a href="#numeric-parameters">numeric parameter</a> does not necessarily force it to be an expression.</p>
-<p>All parameters support the percent-space prefix except for:</p>
+<p class="warning"><strong>注意:</strong> 在 <a href="#numeric-parameters">数字参数</a> 中使用百分号空格前缀不一定会强制它成为表达式.</p>
+<p>除以下各项外, 所有参数都支持百分号空格前缀:</p>
 <ul>
-  <li>The <em>Var</em> parameter of any <a href="#legacy-if">legacy If</a> command. Users can avoid confusion by always using <a href="commands/IfExpression.htm">if (expression)</a>.</li>
-  <li><em>OutputVar</em> parameters, which accept a variable reference using the same syntax as expressions.</li>
+  <li>任何 <a href="#legacy-if">传统的 If</a> 命令的 <em>Var</em> 参数. 用户可以通过总是使用 <a href="commands/IfExpression.htm">if (表达式)</a> 来避免混淆.</li>
+  <li><em>OutputVar</em> 参数, 它使用与表达式相同的语法接受变量引用.</li>
 </ul>
-<p>Some users may find it easier to always force an expression, keeping to one consistent syntax (expression syntax) as much as possible.</p>
+<p>一些用户可能会发现, 总是强制执行一个表达式更容易使用, 并尽可能保持一致的语法(表达式语法).</p>
 
 <h3 id="documentation-conventions">文档约定</h3>
 <p>在每个命令文档的顶部, 通常有一个显示语法的块, 如下所示:</p>
-<pre>Run, Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
+<pre class="Syntax">Run, Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
 </pre>
 <p>方括号表示可选参数; 方括号本身必须在实际代码中省略.</p>
 <p>有时, 参数所接受的值或多个值直接写入语法块中. 例如, 上面显示的 Run 的第三个参数接受一个或多个显示的单词，作为文本. 管道符号表示替代选择; 该符号本身应该在实际代码中省略. 参数的确切语法在 <em>参数</em> 表中进行了描述, 并在命令之间有所不同.</p>
@@ -314,18 +314,18 @@ MsgBox    Hello %A_UserName%.   <em>; Shows your username.</em>
 <p>作为代替, 通过将它们按顺序写入, 使用空格或制表符, 或被空格包围的点分隔, 将值 <a href="Variables.htm#concat"><em>连接</em></a> 起来.</p>
 <pre>MsgBox % &quot;Hello &quot; . A_UserName . &quot;.&quot;  <em>; Shows your username.</em>
 </pre>
-<p>One alternative is to use the <a href="commands/Format.htm">Format</a> function, which can also format the parameter value in various ways.</p>
+<p>一种替代方法是使用 <a href="commands/Format.htm">Format</a> 函数, 它也可以以各种方式格式化参数值.</p>
 <pre>MsgBox % Format(&quot;Hello {1}.&quot;, A_UserName)  <em>; {} also works in place of {1}.</em>
 </pre>
-<p>A value is assigned to a variable with <code>:=</code> instead of <code>=</code>:</p>
+<p>一个值被赋值给一个变量, 使用 <code>:=</code> 代替 <code>=</code>:</p>
 <pre>MyVar := &quot;This is text.&quot;
 MyVar = This is text.
 </pre>
-<p>Comparisons are performed using the same symbols as <a href="#legacy-if">legacy If</a>: <code>=</code>, <code>&lt;&gt;</code> or <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code> and <code>&lt;=</code>.</p>
+<p>使用与 <a href="#legacy-if">传统的 If</a> 命令相同的符号执行比较: <code>=</code>, <code>&lt;&gt;</code> 或 <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code> 和 <code>&lt;=</code>.</p>
 <pre>if (Var1 = Var2)
 if Var1 = %Var2%
 </pre>
-<p>In an expression, both values can be simple values or complex sub-expressions. A comparison can also be combined with other conditions using <a href="Variables.htm#Operators">operators</a> such as <code>and</code> and <code>or</code> (which are equivalent to <code>&amp;&amp;</code> and <code>||</code>).</p>
+<p>在表达式中, 这两个值可以是简单的值或复杂的子表达式. 比较也可以使用, 如 <code>and</code> 和 <code>or</code> (这等同于 <code>&amp;&amp;</code> 和 <code>||</code>) 等 <a href="Variables.htm#Operators">运算符</a> 与其他条件结合在一起.</p>
 <pre>if (Var1 &gt;= Low and Var1 &lt;= High)
 if Var1 between %Low% and %High%  
 </pre>
@@ -334,18 +334,18 @@ if Var1 between %Low% and %High%
 <p>一个常见的错误是在需要 <code>:=</code> 的地方写 <code>=</code>. 例如:</p>
 <pre>Total = A + B   <em>; Assigns the literal text &quot;A + B&quot;</em>
 </pre>
-<p>这可能很难避免((至少在删除传统赋值语法之前), but it may help to always use <code>:=</code> where an assignment is intended.</p>
-<p>等号(when not used with another symbol, such as <code>&lt;=</code>) 具有以下含义:</p>
+<p>这可能很难避免((至少在删除传统赋值语法之前), 但是赋值时总是使用 <code>:=</code> 会有所帮助.</p>
+<p>等号(当不用另一个符号, 如 <code>&lt;=</code>) 具有以下含义:</p>
 <ul>
-  <li><a href="commands/SetEnv.htm">Legacy assignment</a>: <code>Var = Value</code></li>
-  <li><a href="commands/IfEqual.htm">Legacy If equal</a>: <code>if Var = Value</code></li>
-  <li><a href="Variables.htm#equal">Case-insensitive equal</a>: <code>if (Expr1 = Expr2)</code> (also valid in other expressions, not just <code>if</code>)</li>
-  <li><a href="Variables.htm#comma">Assign after comma</a>: <code>x:=1, y=2, a=b=c</code> (all are assignments due to a special rule)</li>
-  <li><a href="Functions.htm#DeclareInit">Declare and initialize</a>: <code>local x = Expr</code> (always accepts an expression)</li>
-  <li><a href="Functions.htm#optional">Set parameter default value</a>: <code>MyFunc(Param=&quot;Default value&quot;) {</code>...</li>
+  <li><a href="commands/SetEnv.htm">传统赋值</a>: <code>Var = Value</code></li>
+  <li><a href="commands/IfEqual.htm">传统的 If 相等</a>: <code>if Var = Value</code></li>
+  <li><a href="Variables.htm#equal">不区分大小写的相等</a>: <code>if (Expr1 = Expr2)</code> (在其他表达式中也有效, 不只是 <code>if</code>)</li>
+  <li><a href="Variables.htm#comma">在逗号后的赋值</a>: <code>x:=1, y=2, a=b=c</code> (所有的都是赋值, 由于一个特殊的规则)</li>
+  <li><a href="Functions.htm#DeclareInit">声明和初始化</a>: <code>local x = Expr</code> (总是接受一个表达式)</li>
+  <li><a href="Functions.htm#optional">设置参数的默认值</a>: <code>MyFunc(Param=&quot;Default value&quot;) {</code>...</li>
 </ul>
-<p>The first two cases can be avoided by always using the <code>:=</code> <a href="Variables.htm#AssignOp">assignment operator</a> and <a href="commands/IfExpression.htm">if (expression)</a>.</p>
-<p>For the last three cases, <code>:=</code> should have been used instead of <code>=</code>.</p>
+<p>前两种情况可以通过始终使用 <code>:=</code> <a href="Variables.htm#AssignOp">赋值运算符</a> 和 <a href="commands/IfExpression.htm">if (表达式)</a> 来避免.</p>
+<p>对于最后三种情况, <code>:=</code> 应该用来代替 <code>=</code>.</p>
 
 <h3 id="commands-vs-functions">命令与函数</h3>
 <p>在 AutoHotkey v1 中, 目前无法在表达式中调用命令, 或者使用 <em>命令语法</em> 调用函数. 但是, 几个命令有一个函数替换.</p>
@@ -374,24 +374,24 @@ if Var1 between %Low% and %High%
 </table>
 
 <h2 id="control-flow">控制流语句</h2>
-<p class="note">For a general explanation of control flow, see <a href="Concepts.htm#control-flow">Control Flow</a>.</p>
-<p><a href="Concepts.htm#statement">Statements</a> are grouped together into a <a href="commands/Block.htm"><em>block</em></a> by enclosing them in braces <code>{}</code>, as in C, JavaScript and similar languages, but usually the braces must appear at the start of a line. Control flow statements can be applied to an entire block or just a single statement.</p>
-<p>The <a href="Concepts.htm#body">body</a> of a control flow statement is always a single <em>group</em> of statements. A block counts as a single group of statements, as does a control flow statement and its body. The following related statements are also grouped with each other, along with their bodies: <code>If</code> with <code>Else</code>; <code>Loop</code>/<code>For</code> with <code>Until</code>; <code>Try</code> with <code>Catch</code> and/or <code>Finally</code>. In other words, when a group of these statements is used as a whole, it does not always need to be enclosed in braces (however, some coding styles always include the braces, for clarity).</p>
-<p>Control flow statements which have a body and therefore must always be followed by a related statement or group of statements: <code>If</code>, <code>Else</code>, <code>Loop</code>, <code>While</code>, <code>For</code>, <code>Try</code>, <code>Catch</code> and <code>Finally</code>.</p>
-<p id="control-flow-list">The following control flow statements exist:</p>
+<p class="note">有关控制流的一般说明, 请参阅 <a href="Concepts.htm#control-flow">控制流</a>.</p>
+<p><a href="Concepts.htm#statement">语句</a> 通过将他们括在大括号 <code>{}</code> 中(如 C, JavaScript 和类似语言) 组合成 <a href="commands/Block.htm"><em>块</em></a>, 但通常, 大括号必须出现在行的开头. 控制流语句可以应用于整个块或者只是一个语句.</p>
+<p>控制流程语句的 <a href="Concepts.htm#cf-body">主体</a> 总是 <em>一组</em> 语句. 块被视为一组语句, 就像控制流语句及其主体一样. 以下相关语句与其主体一起彼此分组: <code>If</code> 和 <code>Else</code>; <code>Loop</code>/<code>For</code> 和 <code>Until</code>; <code>Try</code> 和 <code>Catch</code> 和/或 <code>Finally</code>. 换句话说, 当这些语句组作为一个整体使用时, 并不总是需要用大括号括起来(但是, 为了清楚起见, 一些编码样式总是包含大括号).</p>
+<p>控制流语句, 它具有一个主体, 因此必须总是跟着一个相关的语句或一组语句: <code>If</code>, <code>Else</code>, <code>Loop</code>, <code>While</code>, <code>For</code>, <code>Try</code>, <code>Catch</code> 和 <code>Finally</code>.</p>
+<p id="control-flow-list">下面的控制流语句如下:</p>
 <ul>
-  <li>A <a href="commands/Block.htm">block</a> (denoted by a pair of braces) groups zero or more statements to act as a single statement.</li>
-  <li>An <a href="#if-statement">If statement</a> causes its body to be executed or not depending on a condition. It can be followed by an <a href="commands/Else.htm">Else</a> statement, which executes only if the condition was not met.</li>
-  <li><a href="commands/Goto.htm">Goto</a> jumps to the specified label and continues execution.</li>
-  <li><a href="commands/Gosub.htm">Gosub</a> calls a <a href="#subroutines">subroutine</a>.</li>
-  <li><a href="commands/Return.htm">Return</a> returns from a <a href="#subroutines">subroutine</a> or function.</li>
-  <li>A <a href="#loop-statement">Loop statement</a> (<a href="commands/Loop.htm">Loop</a>, <a href="commands/While.htm">While</a> or <a href="commands/For.htm">For</a>) executes its body repeatedly.
+  <li>一个 <a href="commands/Block.htm">块</a>(用一对大括号表示) 将零个或多个语句组合为一个语句.</li>
+  <li>一个 <a href="#if-statement">If 语句</a> 导致其主体被执行或不依赖条件. 其后可以跟一个 <a href="commands/Else.htm">Else</a> 语句, 只有当条件不满足时才执行.</li>
+  <li><a href="commands/Goto.htm">Goto</a> 跳转到指定的标签并继续执行.</li>
+  <li><a href="commands/Gosub.htm">Gosub</a> 调用一个 <a href="#subroutines">子程序</a>.</li>
+  <li><a href="commands/Return.htm">Return</a> 从一个 <a href="#subroutines">子程序</a> 或函数返回.</li>
+  <li>一个 <a href="#loop-statement">Loop(循环) 语句</a> (<a href="commands/Loop.htm">Loop</a>, <a href="commands/While.htm">While</a> 或 <a href="commands/For.htm">For</a>) 重复执行其主体.
   <ul>
-    <li><a href="commands/Break.htm">Break</a> exits (terminates) a loop.</li>
-    <li><a href="commands/Continue.htm">Continue</a> skips the rest of the current loop iteration and begins a new one.</li>
-    <li><a href="commands/Until.htm">Until</a> causes a loop to terminate when an expression evaluates to true. The expression is evaluated after each iteration.</li>
+    <li><a href="commands/Break.htm">Break</a> 退出(终止) 一个循环.</li>
+    <li><a href="commands/Continue.htm">Continue</a> 跳过当前循环迭代的其余部分, 并开始一个新的循环.</li>
+    <li><a href="commands/Until.htm">Until</a> 直到表达式计算结果为 true 时, 循环终止. 表达式在每次迭代之后被计算.</li>
   </ul></li>
-  <li>Exception handling:
+  <li>异常处理:
   <ul>
     <li><a href="commands/Try.htm">Try</a> guards its body against runtime errors and exceptions thrown by the throw command.</li>
     <li><a href="commands/Catch.htm">Catch</a> executes its body after an exception is thrown within a try statement (and only if an exception is thrown).</li>
@@ -472,26 +472,26 @@ Loop Parse, t, `n
 <p>Loop variables can also be used outside the body of a loop, such as in a function or subroutine which is called from within a loop.</p>
 
 <h3 id="not-control-flow">非控制流</h3>
-<p>像指令, 标签(包括热键和热字符串) 和没有赋值的声明 declarations without assignments are processed when the script is loaded from file, they are not subject to control flow. In other words, they take effect unconditionally, before the script ever executes any control flow statements. Similarly, the #If directives such as <a href="commands/_If.htm">#IfWinActive</a> cannot affect control flow; they merely set the criteria for any hotkey labels and hotstrings specified in the code. A hotkey's criteria is evaluated each time it is pressed, not when the #If directive is encountered in the code.</p>
+<p>像指令, 标签(包括热键和热字符串) 和没有赋值的声明 在脚本从文件加载的时候被处理, 它们不受控制流的制约. 换句话说, 在脚本执行任何控制流程语句之前, 它们将无条件生效. 同样, #If 指令如 <a href="commands/_If.htm">#IfWinActive</a> 不能影响控制流; 他们只是设置代码中指定的任何热键标签和热字符串的标准. 每次按下时都会计算热键的条件, 而不是在代码中遇到 #If 指令时.</p>
 
 <h2 id="structure-of-a-script">脚本的结构</h2>
 
-<h3 id="auto-execute-section">自动执行部分</h3>
-<p>After the script has been loaded, it begins executing at the top line, continuing until a <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, the script's first <a href="Hotkeys.htm">hotkey/hotstring label</a>, or the physical end of the script is encountered (whichever comes first). This top portion of the script is referred to as the <em>auto-execute section</em>, but it is really just a <a href="#subroutines">subroutine</a> which is called after program startup.</p>
-<p class="warning"><strong>Note:</strong> While the script's <em>first</em> hotkey/hotstring label has the same effect as <a href="commands/Return.htm">return</a>, other hotkeys and labels do not.</p>
-<p>The auto-execute section is often used to configure settings which apply to every newly launched <a href="misc/Threads.htm">thread</a>. For details, see <a href="Scripts.htm#auto">The Top of the Script</a>.</p>
+<h3 id="auto-execute-section">自动执行段</h3>
+<p>脚本加载完成后, 从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, 脚本的第一个 <a href="Hotkeys.htm">热键/热字符串 标签</a>, 或脚本的物理结束(无论哪一种). 这个脚本的顶部被称为 <em>自动执行段(部分)</em>, 但它实际上只是程序启动后调用的一个 <a href="#subroutines">子程序</a>.</p>
+<p class="warning"><strong>注意:</strong> 虽然脚本的 <em>第一个</em> 热键/热字符串标签有与 <a href="commands/Return.htm">return</a> 相同的效果, 但是其他热键和标签不会.</p>
+<p>自动执行段通常用于配置适用于每个新启动的 <a href="misc/Threads.htm">线程</a> 的设置. 有关详细信息, 请参阅 <a href="Scripts.htm#auto">脚本的顶部</a>.</p>
 
 <h3 id="subroutines">子程序</h3>
-<p>A <em>subroutine</em> (or sub) is a reusable block of code which can be <em>called</em> to perform some task.</p>
-<p>Scripts use subroutines to define what should happen when a particular hotkey is pressed or some other event occurs. Scripts can also call subroutines directly, by using <a href="commands/Gosub.htm">Gosub</a>.</p>
-<p>Any <a href="#labels">label</a> can be used as the starting point of a subroutine. A subroutine has no explicitly marked ending point, but instead ends if and when control is returned to the subroutine's caller by <a href="commands/Return.htm">Return</a> or when the thread is exited.  例如:</p>
+<p><em>子程序</em> 是一个可重复使用的代码块, 可以 <em>调用</em> 它来执行一些任务.</p>
+<p>脚本使用子程序来定义当按下特定热键或发生其他事件时应该发生什么. 脚本也可以通过使用 <a href="commands/Gosub.htm">Gosub</a> 直接调用子程序.</p>
+<p>任何 <a href="#labels">标签</a> 都可以作为子程序的起点. 一个子程序没有明确的标记结束点, 而是通过 <a href="commands/Return.htm">Return</a> 或当线程退出时, 控制权返回到子程序的调用者时作为结束. 例如:</p>
 <pre>gosub Label1
 
 Label1:
 MsgBox %A_ThisLabel%
 return
 </pre>
-<p>Note that as labels have no effect when reached during normal execution, in this example a MsgBox would be shown twice: once while the subroutine is running and again after it returns. One important consequence is that you cannot define one subroutine inside another subroutine, because the &quot;body&quot; of the inner subroutine would execute automatically and then <em>return</em>, effectively terminating the outer subroutine.</p>
+<p>请注意 that as labels have no effect when reached during normal execution, in this example a MsgBox would be shown twice: once while the subroutine is running and again after it returns. One important consequence is that you cannot define one subroutine inside another subroutine, because the &quot;body&quot; of the inner subroutine would execute automatically and then <em>return</em>, effectively terminating the outer subroutine.</p>
 <p>Subroutines should typically be defined separately to any other block of code, but can also be <a href="Functions.htm#gosub">defined inside a function</a>, allowing the subroutine access to that function's static variables (and local variables, but only while the function is running).</p>
 <p class="warning"><strong>Note:</strong> Subroutines defined inside a function have certain limitations regarding the use of local variables and <a href="#dynamic-variables">dynamic variable references</a>, including <a href="commands/Gui.htm#Events">Gui control variables</a>. For details, see <a href="Functions.htm#gosub">Using Subroutines Within a Function</a>.
 </p>
@@ -502,8 +502,8 @@ return
 <p>Functions are defined using syntax resembling a function call followed by a block of code enclosed in braces:</p>
 <pre>MyFunction(FirstParameter, Second, ByRef Third, Fourth:=&quot;&quot;)
 {
-	...
-	return &quot;a value&quot;
+    ...
+    return &quot;a value&quot;
 }
 </pre>
 <p>As with function calls, there must be no space between the function name and open-parenthesis.</p>
@@ -515,7 +515,7 @@ return
 <p class="note">See <a href="Functions.htm">Functions</a> for much more detail.</p>
 
 <h3 id="-include">#Include</h3>
-<p><a href="commands/_Include.htm">#Include</a> 指令使脚本的行为就像指定文件的内容出现在这个确切位置一样. T这通常用于将代码组织到单独的文件中, 或者使用其他用户编写的脚本库.</p>
+<p><a href="commands/_Include.htm">#Include</a> 指令使脚本的行为就像指定文件的内容出现在这个确切位置一样. 这通常用于将代码组织到单独的文件中, 或者使用其他用户编写的脚本库.</p>
 <p class="warning"><strong>注意:</strong> 以下段落详细说明了一些常见的混淆点.
 </p>
 <p>使用 #Include 时, 重要的是要考虑文件的内容如果放置在该位置将会产生什么效果, 因为 #Include 将具有相同的效果. 例如:</p>
@@ -524,35 +524,35 @@ return
 <p>#Include 一般不应该在子程序或函数的中间使用.</p>
 </li>
   <li>
-<p>在脚本的 <a href="#auto-execute-section">自动执行部分</a> 使用 #Include 需要特别的考虑, 因为自动执行部分基本上只是一个子例程. 如果子程序的执行会在到达一个 <code>return</code> 时终止, 而不管 <code>return</code> 是在哪个文件中. 同样, 果文件包含一个 热键/热字符串, 它可能被认为是脚本的 <em>第一个</em> 热键/热字符串, 它将扮演 <code>return</code> 的角色.</p>
+<p>在脚本的 <a href="#auto-execute-section">自动执行段</a> 使用 #Include 需要特别的考虑, 因为自动执行段基本上只是一个子例程. 如果子程序的执行会在到达一个 <code>return</code> 时终止, 而不管 <code>return</code> 是在哪个文件中. 同样, 果文件包含一个 热键/热字符串, 它可能被认为是脚本的 <em>第一个</em> 热键/热字符串, 它将扮演 <code>return</code> 的角色.</p>
 </li>
   <li>
-<p>脚本只有一个 <a href="#auto-execute-section">自动执行部分</a>, 而不是每个文件一个.</p>
+<p>脚本只有一个 <a href="#auto-execute-section">自动执行段</a>, 而不是每个文件一个.</p>
 </li>
 </ul>
-<p>#Include can be safely used within the <a href="#auto-execute-section">auto-execute section</a> to include files which contain only function definitions, since function definitions (but not function calls) are skipped over during execution. If a file contains other code, one can avoid breaking the auto-execute section by skipping over the file's contents with <a href="commands/Goto.htm">Goto</a>.</p>
-<p>Unlike in C/C++, #Include does nothing if the file has already been included by a previous directive. To include the contents of the same file multiple times, use <a href="commands/_Include.htm">#IncludeAgain</a>.</p>
-<p>Script files containing functions can be <em>automatically</em> included without having to use #Include, if they are saved in a standard location and named appropriately. The effect is similar to using #Include at the end of the main script file. For details, see <a href="Functions.htm#lib">Libraries of Functions</a>.</p>
+<p>#Include 可以在 <a href="#auto-execute-section">自动执行段</a> 安全地使用, 以包含仅包含函数定义的文件, 因为函数定义(但不是函数调用) 在执行期间被跳过. 如果一个文件包含其他代码, 可以通过 <a href="commands/Goto.htm">Goto</a> 跳过文件的内容来避免破坏自动执行段.</p>
+<p>与 C/C++ 不同, 如果以前的指令已包含该文件, #Include 不做任何事情. 要多次包含同一文件的内容, 请使用 <a href="commands/_Include.htm">#IncludeAgain</a>.</p>
+<p>如果包含函数的脚本文件被保存在一个标准的位置并进行适当的命名, 则它们可以 <em>自动包含</em>, 而不必使用 #Include. 其效果与在主脚本文件末尾使用 #Include 相似. 有关详细信息, 请参阅 <a href="Functions.htm#lib">函数库</a>.</p>
 
 <h2 id="misc">杂项</h2>
 
 <h3 id="dynamic-variables">动态变量</h3>
-<p>A <em>dynamic variable reference</em> takes a text value and interprets it as the name of a variable.</p>
-<p>The most common form of dynamic variable reference is called a <em>double reference</em> or <em>double-deref</em>. Before performing a double reference, the name of the target variable is stored in a second variable. This second variable can then be used to assign a value to the target variable indirectly, using a double reference. 例如:</p>
-<pre>target := 42
-second := &quot;target&quot;
-MsgBox   %second%  <em>; Normal (single) variable reference in text =&gt; target</em>
-MsgBox %  second   <em>; Normal (single) variable reference in an expression =&gt; target</em>
-MsgBox % %second%  <em>; Double-deref in an expression =&gt; 42</em>
+<p><em>动态变量引用</em> 采用文本值, 并将其解释为变量的名称.</p>
+<p>动态变量引用的最常见形式称为 <em>双重引用</em> 或 <em>双重解引</em>. 在执行双重引用之前, 目标变量的名称存储在第二个变量中. 然后可以通过使用双重引用将第二个变量间接地将值赋给目标变量. 例如:</p>
+<pre>target := 42       <em>; target(目标) := 42</em>
+second := &quot;target&quot; <em>; second(第二个变量) := &quot;target(目标)&quot;</em>
+MsgBox   %second%  <em>; 文本中的普通(单一) 变量引用 =&gt; target(目标)</em>
+MsgBox %  second   <em>; 表达式中的普通(单一) 变量引用 =&gt; target(目标)</em>
+MsgBox % %second%  <em>; 表达式中的双重引用 =&gt; 42</em>
 </pre>
-<p>At first, it would appear that percent signs have a different meaning depending on whether they are used in text or in an expression. However, it may make more sense to think of <code>%second%</code> as being replaced with the contents of the variable <code>second</code> in <em>both</em> cases:</p>
+<p>首先, 看起来百分号有不同的含义, 取决于它们是在文本中还是在表达式中使用. 然而, 在这 <em>两种</em> 情况下, 将 <code>%second%</code> 换为变量 <code>second</code> 的内容可能更有意义:</p>
 <ul>
-  <li><code>MsgBox %second%</code> &rarr; <code>MsgBox target</code>: Shows &quot;target&quot;.</li>
-  <li><code>MsgBox % %second%</code> &rarr; <code>MsgBox % target</code>: Shows the contents of <code>target</code>, i.e. &quot;42&quot;.</li>
+  <li><code>MsgBox %second%</code> &rarr; <code>MsgBox target</code>: 显示 &quot;target&quot;.</li>
+  <li><code>MsgBox % %second%</code> &rarr; <code>MsgBox % target</code>: 显示 <code>target</code> 的内容, 如 &quot;42&quot;.</li>
 </ul>
-<p>Currently, <code>second</code> must always contain a variable name in the second case; arbitrary expressions are not supported.</p>
-<p>A dynamic variable reference can also take one or more pieces of literal text and the content of one or more variables, and join them together to form a single variable name. This is done simply by writing the pieces of the name and percent-enclosed variables in sequence, without any spaces. 例如, <code>MyArray%A_Index%</code> or <code>MyGrid%X%_%Y%</code>. This is used to access <em>pseudo-arrays</em>, described below.</p>
-<p>For a description of how dynamic variable references inside functions are resolved, see <a href="Functions.htm#Dynamic">Functions: More about locals and globals</a>.</p>
+<p>目前, 第二种情况下, <code>second</code> 必须总是包含一个变量名; 任意表达式不被支持.</p>
+<p>动态变量引用也可以采用一个或多个文本文本和一个或多个变量的内容, 并将它们组合在一起组成一个单一变量名. 在没有空格的情况下, 这只需简单地按顺序写入名称和百分号括起来的变量. 例如, <code>MyArray%A_Index%</code> 或 <code>MyGrid%X%_%Y%</code>. 这用于访问 <em>伪数组</em>, 如下所示.</p>
+<p>有关如何解析函数内的动态变量引用的说明, 请参阅 <a href="Functions.htm#Dynamic">函数: 关于局部和全局变量的更多信息</a>.</p>
 
 <h4 id="pseudo-arrays">伪数组</h4>
 <p><em>伪数组</em> 实际上只是一堆分开的变量, 但是有一个命名模式, 可以像数组元素一样使用它. 例如:</p>
@@ -560,7 +560,7 @@ MsgBox % %second%  <em>; Double-deref in an expression =&gt; 42</em>
 MyArray2 = B
 MyArray3 = C
 Loop 3
-	MsgBox % MyArray%A_Index%  <em>; Shows A, then B, then C.</em>
+    MsgBox % MyArray%A_Index%  <em>; Shows A, then B, then C.</em>
 </pre>
 <p>由于单个元素只是普通变量, 所以可以赋值或获取一个值, 但不能 <em>删除</em> 或 <em>插入</em> 元素. 因为伪数组本身并不存在, 所以不能将它传递给函数或从函数返回, 或者作为一个整体进行复制. 由于这些原因, 通常建议在可能的情况下使用 <a href="Objects.htm#Usage_Simple_Arrays">普通数组</a>.</p>
 
