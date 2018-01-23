@@ -13,7 +13,7 @@
 
 <p>判断字符串是否包含某个匹配模式(正则表达式).</p>
 
-<pre class="Syntax">FoundPos := RegExMatch(Haystack, NeedleRegEx [, UnquotedOutputVar = "", StartingPosition = 1])</pre>
+<pre class="Syntax">FoundPos := RegExMatch(Haystack, NeedleRegEx [, OutputVar = "", StartingPosition = 1])</pre>
 <h3>参数</h3>
 <dl>
 
@@ -23,12 +23,12 @@
   <dt>NeedleRegEx</dt>
   <dd><p>要搜索的模式, 它是兼容 Perl 的正则表达式(PCRE). 模式的<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>(如果有) 必须放在模式字符串的开始且后面跟着闭括号. 例如, 模式 "<span class="red">i)</span>abc.*123" 将匹配不区分大小写的 "abc", 接着零个或多个任意字符, 并以 "123" 结尾的字符串. 如果不含选项, 则可以省略 ")"; 例如, ")abc" 等同于 "abc".</p></dd>
 
-  <dt>UnquotedOutputVar</dt>
-  <dd><p><strong>模式 1(默认):</strong> <em>OutputVar</em> 是用来保存 <em>Haystack</em> 中匹配整个模式的那部分的变量名. 如果没有找到模式(即如果函数返回 0), 则此变量和下面的所有数组元素都被置空.</p>
+  <dt>OutputVar</dt>
+  <dd><p><strong>模式 1(默认):</strong> 指定一个变量, 用来保存与整个模式匹配的 <em>Haystack</em> 的部分. 如果没有找到模式(即如果函数返回 0), 则此变量和下面的所有数组元素都被置空.</p>
       <p id="Array">如果在 <em>NeedleRegEx</em> 中包含<a href="../misc/RegEx-QuickRef.htm#subpat">捕获子模式</a>, 那么它们的匹配将被存储在基名称为 <em>OutputVar</em> 的<a href="../misc/Arrays.htm#pseudo">伪数组</a>里. 例如, 如果输出变量名是 <em>Match</em>, 则匹配首个子模式的子字符串存储在 <em>Match1</em>, 第二个存储在 <em>Match2</em>, 依此类推. 这种情况的例外是 <a href="#NamedSubPat">命名子模式</a>: 它们以名称而不是数字保存. 例如, 匹配命名子模式"(?P&lt;Year&gt;\d{4})"的子字符串存储在 <em>MatchYear</em>. 如果特定的子模式不匹配任何文本(或如果函数返回零), 则相应的变量被置空.</p>
       <p>在<a href="Functions.htm">函数</a>中, 要创建全局而不是局部的伪数组, 则必须在使用前<a href="../Functions.htm#Global">声明</a>伪数组的基名称(例如 Match) 为全局变量. 对于 <a href="../Functions.htm#AssumeGlobal">假设全局</a> 函数, 反之亦成. 但是, 通常需要对每个变量都进行声明, 因为可能会造成 <a href="../Functions.htm#ArrayConfusion">混乱的根源</a>.</p>
       <p id="PosMode"><strong>模式 2(位置和长度):</strong> 如果在正则表达式选项中含有 P(例如 "<span class="red">P)</span>abc.*123"), 则整个模式的匹配字符串的 <em>长度</em> 会被存储到 <em>OutputVar</em>(如果没有匹配则为 0). 如果包含<a href="../misc/RegEx-QuickRef.htm#subpat">捕获子模式</a>, 则它们匹配的位置和长度会被存储到两个<a href="../misc/Arrays.htm#pseudo">伪数组</a>:<em>OutputVarPos</em> 和 <em>OutputVarLen</em>. 例如, 如果变量的基名称为 <em>Match</em>, 首个子模式的匹配<em>位置</em>(基于 1) 会存储在 <em>MatchPos1</em>, 而它的长度存储在 <em>MatchLen1</em>(如果子模式没有匹配或函数返回 0 则它们两者中保存的都为零). 这种情况的例外是<a href="#NamedSubPat">命名子模式</a>:它们以名称而不是数字保存(例如 <em>MatchPosYear</em> 和 <em>MatchLenYear</em>).</p>
-      <p id="ObjectMode"><strong>模式 3(匹配对象)</strong> <span class="ver">[v1.1.05+]</span><strong>:</strong> 如果在正则表达式选项中含有大写的 O(例如 "<span class="red">O)</span>abc.*123"), 则 <a href="#MatchObject">匹配对象</a> 会被存储到 <em>UnquotedOutputVar</em>. 此对象还可以用来获取整个匹配和每个<a href="../misc/RegEx-QuickRef.htm#subpat">捕获子模式</a>(如果存在) 的位置, 长度和值.</p>
+      <p id="ObjectMode"><strong>模式 3(匹配对象)</strong> <span class="ver">[v1.1.05+]</span><strong>:</strong> 如果在正则表达式选项中含有大写的 O(例如 "<span class="red">O)</span>abc.*123"), 则 <a href="#MatchObject">匹配对象</a> 会被存储到 <em>OutputVar</em>. 此对象还可以用来获取整个匹配和每个<a href="../misc/RegEx-QuickRef.htm#subpat">捕获子模式</a>(如果存在) 的位置, 长度和值.</p>
     </dd>
 
   <dt>StartingPosition</dt>

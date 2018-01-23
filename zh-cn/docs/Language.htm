@@ -84,7 +84,7 @@ Methods?
   <li>两个运算符之间可能需要空格, 以消除歧义.</li>
   <li>单行 <a href="#comments">注释</a> 如果不在行首, 则需要前导空格.</li>
 </ul>
-<p><strong>换行符是有意义的:</strong> 换行符通常作为语句分隔符, 终止以前的命令或表达式.(<em>语句</em> 只是表示要执行的某个操作的语言中最小的独立元素.) 这个例外是 <a href="Scripts.htm#continuation">行延续</a>, 它通过预处理工作; 也就是说, 它是在其他语言元素之前处理的, 而且是独立于其他语言元素的.</p>
+<p><strong>换行符是有意义的:</strong> 换行符通常作为语句分隔符, 终止前一个命令或表达式.(<em>语句</em> 只是表示要执行的某个操作的语言中最小的独立元素.) 这个例外是行延续(请参见下文).</p>
 <p><strong>行延续:</strong> 长行可以分成一些小行, 以提高可读性和可维护性. 这是通过预处理实现的, 所以不属于这种语言的一部分. 有两种方法:</p>
 <ul>
   <li><a href="Scripts.htm#continuation-line">行延续</a>, 其中以 <a href="Variables.htm#operators">表达式运算符</a>(++ 和 -- 除外) 开始的行与前一行合并. 行被合并, 而不管该行是否实际包含表达式.</li>
@@ -406,7 +406,7 @@ if Var1 between %Low% and %High%
   <li><a href="#if-statement">If 语句</a> 有几种类型, 每种都有不同的语法.</li>
   <li><a href="commands/For.htm">For</a> 几种类型的 <a href="#if-statement">If 语句</a> 使用关键字或运算符而不是逗号来分隔它们的一些参数.</li>
   <li><a href="commands/Block.htm">块</a> 的左大括号可以写在 <a href="commands/IfExpression.htm">If (expression)</a>, <a href="commands/Else.htm">Else</a>, <a href="commands/Loop.htm">Loop Count</a>, <a href="commands/While.htm">While</a>, <a href="commands/For.htm">For</a>, <a href="commands/Try.htm">Try</a>, <a href="commands/Catch.htm">Catch</a> 或 <a href="commands/Finally.htm">Finally</a> 语句的同一行的末尾(基本上任何不使用 <a href="#legacy-syntax">传统语法</a> 的控制流语句). 这被称为 One True Brace(OTB) 风格. 它不受其他 Loop 子命令或 <a href="#legacy-if">传统 If 语句</a> 的支持, 因为大括号将被解释为原义文本 <code>{</code> 字符.</li>
-  <li><a href="commands/Else.htm">Else</a>, <a href="commands/Try.htm">Try</a> 和 <a href="commands/Finally.htm">Finally</a> 允许任何有效的语句在其右侧, 以代替参数.</li>
+  <li><a href="commands/Else.htm">Else</a>, <a href="commands/Try.htm">Try</a> 和 <a href="commands/Finally.htm">Finally</a> 允许任何有效的语句在其右侧, 因为它们需要一个 <a href="Concepts.htm#cf-body">主体</a> 但没有参数.</li>
   <li><a href="commands/IfExpression.htm">If (表达式)</a> 和 <a href="commands/While.htm">While</a> 允许在名称后立即使用左括号. 例如, <code>if(表达式)</code>.</li>
   <li><a href="commands/For.htm">For</a>, <a href="commands/While.htm">While</a>, <a href="commands/Until.htm">Until</a> 和 <a href="commands/Throw.htm">Throw</a> 总是接受表达式. 他们将 <code>%var%</code>, <code>%var%000</code> 和类似的视为表达式, 而其他命令的 <a href="#numeric-parameters">数字参数</a> 则不会. 向后兼容性的要求不适用于这些控制流语句, 因为它们相对较新.</li>
 </ul>
@@ -472,13 +472,13 @@ Loop Parse, t, `n
 <p>循环变量也可以在循环体外部使用, 例如在循环中调用的函数或子程序中.</p>
 
 <h3 id="not-control-flow">非控制流</h3>
-<p>像指令, 标签(包括热键和热字符串) 和没有赋值的声明 在脚本从文件加载的时候被处理, 它们不受控制流的制约. 换句话说, 在脚本执行任何控制流程语句之前, 它们将无条件生效. 同样, #If 指令如 <a href="commands/_If.htm">#IfWinActive</a> 不能影响控制流; 他们只是设置代码中指定的任何热键标签和热字符串的标准. 每次按下时都会计算热键的条件, 而不是在代码中遇到 #If 指令时.</p>
+<p>像指令, 标签(包括热键和热字串) 和没有赋值的声明 在脚本从文件加载的时候被处理, 它们不受控制流的制约. 换句话说, 在脚本执行任何控制流程语句之前, 它们将无条件生效. 同样, #If 指令如 <a href="commands/_If.htm">#IfWinActive</a> 不能影响控制流; 他们只是设置代码中指定的任何热键标签和热字串的标准. 每次按下时都会计算热键的条件, 而不是在代码中遇到 #If 指令时.</p>
 
 <h2 id="structure-of-a-script">脚本的结构</h2>
 
 <h3 id="auto-execute-section">自动执行段</h3>
-<p>脚本加载完成后, 从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, 脚本的第一个 <a href="Hotkeys.htm">热键/热字符串 标签</a>, 或脚本的物理结束(无论哪一种). 这个脚本的顶部被称为 <em>自动执行段(部分)</em>, 但它实际上只是程序启动后调用的一个 <a href="#subroutines">子程序</a>.</p>
-<p class="warning"><strong>注意:</strong> 虽然脚本的 <em>第一个</em> 热键/热字符串标签有与 <a href="commands/Return.htm">return</a> 相同的效果, 但是其他热键和标签不会.</p>
+<p>脚本加载完成后, 从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, 脚本的第一个 <a href="Hotkeys.htm">热键/热字串 标签</a>, 或脚本的物理结束(无论哪一种). 这个脚本的顶部被称为 <em>自动执行段(部分)</em>, 但它实际上只是程序启动后调用的一个 <a href="#subroutines">子程序</a>.</p>
+<p class="warning"><strong>注意:</strong> 虽然脚本的 <em>第一个</em> 热键/热字串标签有与 <a href="commands/Return.htm">return</a> 相同的效果, 但是其他热键和标签不会.</p>
 <p>自动执行段通常用于配置适用于每个新启动的 <a href="misc/Threads.htm">线程</a> 的设置. 有关详细信息, 请参阅 <a href="Scripts.htm#auto">脚本的顶部</a>.</p>
 
 <h3 id="subroutines">子程序</h3>
@@ -525,7 +525,7 @@ return
 <p>#Include 一般不应该在子程序或函数的中间使用.</p>
 </li>
   <li>
-<p>在脚本的 <a href="#auto-execute-section">自动执行段</a> 使用 #Include 需要特别的考虑, 因为自动执行段基本上只是一个子例程. 如果子程序的执行会在到达一个 <code>return</code> 时终止, 而不管 <code>return</code> 是在哪个文件中. 同样, 果文件包含一个 热键/热字符串, 它可能被认为是脚本的 <em>第一个</em> 热键/热字符串, 它将扮演 <code>return</code> 的角色.</p>
+<p>在脚本的 <a href="#auto-execute-section">自动执行段</a> 使用 #Include 需要特别的考虑, 因为自动执行段基本上只是一个子例程. 如果子程序的执行会在到达一个 <code>return</code> 时终止, 而不管 <code>return</code> 是在哪个文件中. 同样, 果文件包含一个 热键/热字串, 它可能被认为是脚本的 <em>第一个</em> 热键/热字串, 它将扮演 <code>return</code> 的角色.</p>
 </li>
   <li>
 <p>脚本只有一个 <a href="#auto-execute-section">自动执行段</a>, 而不是每个文件一个.</p>
@@ -585,21 +585,21 @@ MsgBox, Left: %WALeft% -- Top: %WATop% -- Right: %WARight% -- Bottom: %WABottom%
 <p>AutoHotkey 还创建了一个全局伪数组, 以包含传递给脚本的所有 <a href="Scripts.htm#cmd_args">命令行参数</a>.</p>
 
 <h3 id="labels">标签</h3>
-<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 目标或形成 <a href="#subroutines">子程序</a>. 有三种标签: 普通标签, <a href="Hotkeys.htm">热键</a> 标签和 <a href="Hotstrings.htm">热字符串</a> 标签.</p>
+<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 目标或形成 <a href="#subroutines">子程序</a>. 有三种标签: 普通标签, <a href="Hotkeys.htm">热键</a> 标签和 <a href="Hotstrings.htm">热字串</a> 标签.</p>
 <p>普通标签由一个名称后跟一个冒号组成.</p>
 <pre>this_is_a_label:
 </pre>
 <p>热键标签由一个热键后跟双冒号组成.</p>
 <pre>^a::
 </pre>
-<p>热字符串标签由一个冒号, 零个或多个 <a href="Hotstrings.htm#Options">选项</a>, 另一个冒号, 缩写字符和双冒号组成.</p>
+<p>热字串标签由一个冒号, 零个或多个 <a href="Hotstrings.htm#Options">选项</a>, 另一个冒号, 缩写字符和双冒号组成.</p>
 <pre>:*:btw::
 </pre>
 <p>通常, 除了空格和注释之外, 其他代码不能与标签一起写在同一行上. 然而:</p>
 <ul>
   <li>一个热键标签可以直接跟随一个命令或其他语句来创建 <em>一行</em> 热键. 换句话说, 如果一个命令, 赋值或表达式 与热键标签位于同一行上, 它的行为就好像跟着 <code>return</code> 一样.</li>
   <li>热键和写在双冒号右边的 <a href="KeyList.htm">键名</a> 实际上是 <a href="misc/Remap.htm"><em>重映射</em></a>, 这是 <a href="misc/Remap.htm#actually">热键对</a> 的快速写法. 例如, <code>a::b</code> 创建热键和标签 <code>*a</code> 和 <code>*a Up</code>, 并不创建名为 <code>a</code> 的标签.</li>
-  <li>热字符串和写在最后的双冒号的右边的文本是一个 <em>自动替换</em> 热字符串. 自动替换热字符串不作为标签.</li>
+  <li>热字串和写在最后的双冒号的右边的文本是一个 <em>自动替换</em> 热字串. 自动替换热字串不作为标签.</li>
 </ul>
 <p>有关详细信息, 请参阅 <a href="misc/Labels.htm">标签</a>.</p>
 
