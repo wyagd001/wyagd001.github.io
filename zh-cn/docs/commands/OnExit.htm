@@ -10,41 +10,106 @@
 <body>
 
 <h1>OnExit</h1>
+<p>指定一个在脚本退出时自动运行的 <a href="Gosub.htm">子程序</a>(通常表示标签) 或 <a href="../Functions.htm">回调函数</a>.</p>
 
-<p>指定一个在脚本退出时自动运行的 <a href="Gosub.htm">子程序</a>(通常表示标签) 或 <a href="../Functions.htm">函数</a>.</p>
+<h2 id="command">OnExit</h2>
+<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此命令. 使用 <a href="#function">OnExit</a> 函数代替.</p>
+<pre class="Syntax">OnExit [, Label]</pre>
 
-<pre class="Syntax">OnExit [, Label]
-OnExit(Func [, AddRemove])  <em>; 需要 <span class="ver">[v1.1.20+]</span></em></pre>
 <h3>参数</h3>
 <dl>
 
   <dt>Label</dt>
   <dd><p>如果省略, 则脚本会返回到正常的退出行为. 否则, 请指定 <a href="../misc/Labels.htm">label(标签)</a> 的名称, 当脚本由于任意原因退出时将执行标签中的内容(作为新 <a href="../misc/Threads.htm">线程</a>).</p></dd>
-  
+
+</dl>
+
+<h3>相关</h3>
+<p><strong>重要:</strong> 由于指定的子程序被调用而不是退出脚本, 因此如果需要退出脚本, 子程序必须使用 <a href="ExitApp.htm">ExitApp</a> 命令.</p>
+<p>内置变量 <strong>A_ExitReason</strong> 为空, 除非 OnExit 子程序正在运行或者在之前的退出中至少调用过一次. 如果不是空的, 则它为 <a href="#ExitReason">下面表格</a> 中单词的其中一个.</p>
+
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 脚本启动之后, 在托盘图标上点击鼠标右键和选择 Exit 来测试 OnExit 回调函数.</em>
+<a href="_Persistent.htm">#Persistent</a>  <em>; 防止脚本自动退出.</em>
+OnExit, ExitSub  
+return
+
+ExitSub:
+if A_ExitReason not in Logoff,Shutdown  <em>; 在这行语句中, 注意不要在逗号周围含有空格.</em>
+{
+    MsgBox, 4, , Are you sure you want to exit?
+    IfMsgBox, No
+        return
+}
+ExitApp  <em>; 脚本含有 OnExit 子程序时不会立即终止, 除非子程序使用 ExitApp.</em></pre>
+
+<h2 id="function">OnExit() <span class="ver">[v1.1.20+]</span></h2>
+<pre class="Syntax">OnExit(Func [, AddRemove])</pre>
+
+<h3>参数</h3>
+<dl>
+
   <dt>Func</dt>
-  <dd><p>脚本退出时调用的一个函数名称或 <a href="../objects/Functor.htm">函数对象</a> . 该函数还可以有选择的定义参数, 请参考下面的例子. 如果 OnExit 调用的函数返回一个非零整数, 脚本将不会继续退出. 否则, 脚本将在该函数运行完成之后退出.</p>
+  <dd><p>脚本退出时调用的一个函数名称或 <a href="../objects/Functor.htm">函数对象</a> . 该函数还可以有选择的定义参数, 请参考下面的例子. 如果 OnExit 调用的函数返回一个非零整数, 脚本将不会继续退出. 否则, 脚本将在所有注册函数运行完成之后退出.</p>
   <pre class="Syntax">ExitFunc(<a href="#ExitReason">ExitReason</a>, <a href="ExitApp.htm">ExitCode</a>)</pre></dd>
   
   <dt>AddRemove</dt>
   <dd><p>下列的某个值:<br>
-  <strong>1</strong>: (默认) 在所有之前注册的函数之后调用该函数.<br>
+  <strong>1</strong>(默认): 在所有之前注册的函数之后调用该函数.<br>
   <strong>-1</strong>: 在所有之前注册的函数之前调用该函数.<br>
   <strong>0 </strong>: 不调用该函数.</p>
-  <p>总是优先调用注册的 label(标签)(子程序). </p></dd>
+  <p>总是优先调用已注册的 label(标签)(子程序).</p>
+  </dd>
 
 </dl>
 
-<h3>Remarks</h3>
-<p><strong>注意:</strong> 这是调用子程序而不是退出脚本, 如果希望最终能退出脚本, 该子程序必须使用 <a href="ExitApp.htm">ExitApp</a> 命令. <span class="ver">[v1.1.20+]:</span> 推荐新脚本使用函数替代原来的标签(子程序) 形式 -- 这样可以降低脚本无法退出的风险, 还能确保传递给 Exit 或 ExitApp 的退出码是可控的(保存).</p>
-<p><span class="ver">[v1.1.20+]:</span> OnExit 函数可以注册任意多个. 如果同时还注册了 label(子程序) 也会被注册, 注册的这些函数会在子程序执行 <a href="ExitApp.htm">ExitApp</a> 命令之后被调用. 通常 OnExit 不需要调用 ExitApp 命令; 如果调用了, 脚本将会立即退出.</p>
-<p>OnExit 子程序在(收到) 任何 means(译者注: 理解为有意的退出信息) 时被调用(除非被类似 &quot;结束任务&quot; 的方式强行终止). 无论脚本之前的实例是否使用了 <a href="_SingleInstance.htm">#SingleInstance</a> 和 <a href="Reload.htm">Reload</a> 命令都可调用它来终止脚本.</p>
-<p>脚本可以检测甚至终止操作系统关闭或注销, 用这段代码即可 <code><a href="OnMessage.htm#shutdown">OnMessage(0x11, &quot;WM_QUERYENDSESSION&quot;)</a></code>.</p>
-<p>OnExit <a href="../misc/Threads.htm">线程</a> 并不受到 <a href="_MaxThreads.htm">#MaxThreads</a> 的限制(它总是在需要的时候启动). 此外, 当它运行时, 它不会被任何 <a href="../misc/Threads.htm">线程</a> 中断, 包括 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>, 和 <a href="SetTimer.htm">定时器子程序</a> . 不过, 它会在这些情况下被终止(且脚本也同时被终止了) : 用户从系统栏 或 主菜单栏中选择 exit 退出, 或脚本被 <a href="Reload.htm">Reload</a> 或 <a href="_SingleInstance.htm">#SingleInstance</a> 请求作为返回值. 由于这些原因, OnExit 子程序应该被设计为尽快结束, 除非用户知道自己在做什么.</p>
-<p>如果 OnExit <a href="../misc/Threads.htm">线程</a> 遇到失败条件, 比如运行时错误时, 脚本将会终止. 这可以防止有缺陷的 OnExit 子程序脚本无法终止.</p>
+<h3>相关</h3>
+<p>新脚本使用函数替代原来的子程序 --  这样可以降低脚本无法退出的风险, 并确保传递给 Exit 或 ExitApp 的退出码被保存.</p>
+<p>OnExit 函数可以注册任意多个. 如果同时还注册了 label(子程序), 注册的这些函数会在子程序执行 <a href="ExitApp.htm">ExitApp</a> 命令之后被调用. 通常 OnExit 函数不需要调用 ExitApp 命令; 如果调用了, 脚本将会立即退出.</p>
+
+<h3 id="Examples">示例</h3>
+<pre class="NoIndent"><em>; 脚本启动之后, 在托盘图标上点击鼠标右键和选择 <em>Exit</em> 来测试 OnExit 回调函数.</em>
+<a href="_Persistent.htm">#Persistent</a>  <em>; 防止脚本自动退出.</em>
+
+<em>; 注册一个在退出时调用的函数:</em>
+OnExit("ExitFunc")
+
+<em>; 注册一个在退出时调用的对象:</em>
+OnExit(<a href="ObjBindMethod.htm">ObjBindMethod</a>(MyObject, "Exiting"))
+
+ExitFunc(ExitReason, ExitCode)
+{
+    if ExitReason not in Logoff,Shutdown
+    {
+        MsgBox, 4, , Are you sure you want to exit?
+        IfMsgBox, No
+            return 1  <em>; OnExit 函数必须返回非零值来防止退出.</em>
+    }
+    <em>; 不要用 ExitApp -- 那会阻止其他 OnExit 函数被调用.</em>
+}
+
+class MyObject
+{
+    Exiting()
+    {
+        MsgBox, MyObject is cleaning up prior to exiting...
+        <em>/*
+        this.SayGoodbye()
+        this.CloseNetworkConnections()
+        */</em>
+    }
+}</pre>
+
+<h2>相关</h2>
+<p>当脚本以任何方式退出时, OnExit 子程序或回调函数将被调用(除非被类似 &quot;结束任务&quot; 的方式强行终止). 无论脚本之前的实例是否使用了 <a href="_SingleInstance.htm">#SingleInstance</a> 和 <a href="Reload.htm">Reload</a> 命令都可调用它来终止脚本.</p>
+<p>脚本可以检测甚至终止操作系统关闭或注销, 用这段代码即可 <code><a href="OnMessage.htm#shutdown">OnMessage</a>(0x11, &quot;WM_QUERYENDSESSION&quot;)</code>.</p>
+<p>OnExit <a href="../misc/Threads.htm">线程</a> 并不受到 <a href="_MaxThreads.htm">#MaxThreads</a> 的限制(它总是在需要的时候启动). 此外, 当它运行时, 它不会被任何 <a href="../misc/Threads.htm">线程</a> 中断, 包括 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>, 和 <a href="SetTimer.htm">定时器子程序</a>. 不过, 它会在这些情况下被终止(且脚本也同时被终止了): 用户从托盘菜单 或 主菜单栏中选择 exit(退出), 或由于 <a href="Reload.htm">Reload</a> 或 <a href="_SingleInstance.htm">#SingleInstance</a> 脚本被要求终止. 由于这些原因, OnExit 子程序或 回调函数 应该被设计为尽快结束, 除非用户知道自己在做什么.</p>
+<p>如果 OnExit <a href="../misc/Threads.htm">线程</a> 遇到失败条件, 比如运行时错误时, 脚本将会终止. 这可以防止有缺陷的 OnExit 子程序回调函数使脚本无法终止.</p>
 <p>如果 OnExit 子程序由 <a href="Exit.htm">Exit</a> 或 <a href="ExitApp.htm">ExitApp</a> 启动并设置了退出码, 在 <span class="ver">[v1.1.19]</span> 和之前的版本中被将忽略且不可获取. 而从 <span class="ver">[v1.1.20+]</span> 开始, 最初的退出码将使用, 除非使用 <a href="ExitApp.htm">ExitApp</a> 指定了新的退出码.</p>
-<p>任何当 OnExit 子程序被 exit 尝试调用时, 它都会使用脚本默认配置, 如 <a href="SendMode.htm">SendMode</a>. 这些默认配置可在 <a href="../Scripts.htm#auto">auto-execute section(自动运行区域)</a> 改变.</p>
-<p>内置变量 <strong>A_ExitReason</strong> 为空, 除非 OnExit 子程序正在运行或者在之前的退出中至少调用过一次. 如果不是空的, 则它为下列单词的其中一个:</p>
-<table class="info" id="ExitReason">
+<p>每当进行一个退出尝试时, 每个 OnExit 子程序或回调函数 都将以 <a href="SendMode.htm">SendMode</a> 等设置的默认值启动. 这些默认值可以在 <a href="../Scripts.htm#auto">auto-execute section(自动执行段)</a> 中更改.</p>
+
+<h2 id="ExitReason">Exit Reasons</h2>
+<table class="info">
   <tr id="logoff">
     <td>logoff</td>
     <td>用户正在注销.</td>
@@ -79,54 +144,8 @@ OnExit(Func [, AddRemove])  <em>; 需要 <span class="ver">[v1.1.20+]</span></em
   </tr>
 </table>
 
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="ExitApp.htm">ExitApp</a>, <a href="Shutdown.htm">Shutdown</a>, <a href="_Persistent.htm">#Persistent</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="Gosub.htm">Gosub</a>, <a href="Return.htm">Return</a>, <a href="Menu.htm">Menu</a></p>
-
-<h3 id="Examples">示例</h3>
-<p>下面的例子使用 <a href="_Persistent.htm">#Persistent</a> 来防止脚本自动退出. 脚本启动之后, 在系统栏图标上点击鼠标右键选择 <em>Exit</em> 来测试 OnExit 子程序或函数. 然后点击 "Yes" 来终止脚本 或 "No" 使脚本继续运行.</p>
-<pre class="NoIndent">#Persistent
-OnExit, ExitSub
-return
-
-ExitSub:
-if A_ExitReason not in Logoff,Shutdown  <em>; 在这行语句中, 注意不要在逗号周围含有空格.</em>
-{
-    MsgBox, 4, , Are you sure you want to exit?
-    IfMsgBox, No
-        return
-}
-ExitApp  <em>; 脚本含有 OnExit 子程序时不会立即终止, 除非子程序使用 ExitApp.</em></pre>
-&nbsp;
-<pre class="NoIndent">#Persistent
-
-<em>; 注册一个在退出时调用的函数:</em>
-OnExit("ExitFunc")
-
-<em>; 注册一个在退出时调用的对象:</em>
-OnExit(<a href="ObjBindMethod.htm">ObjBindMethod</a>(MyObject, "Exiting"))
-
-ExitFunc(ExitReason, ExitCode)
-{
-    if ExitReason not in Logoff,Shutdown
-    {
-        MsgBox, 4, , Are you sure you want to exit?
-        IfMsgBox, No
-            return 1  <em>; OnExit 函数必须返回非零值来防止退出.</em>
-    }
-    <em>; 不要用 ExitApp -- 那会阻止其他 OnExit 函数被调用.</em>
-}
-
-class MyObject
-{
-    Exiting()
-    {
-        MsgBox, MyObject is cleaning up prior to exiting...
-        <em>/*
-        this.SayGoodbye()
-        this.CloseNetworkConnections()
-        */</em>
-    }
-}</pre>
 
 </body>
 </html>

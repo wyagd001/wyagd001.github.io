@@ -11,42 +11,60 @@
 <body>
 
 <h1>RegDelete</h1>
-
 <p>从注册表中删除子键或值.</p>
+<h2 id="new">新语法 <span class="ver">[v1.1.21+]</span></h2>
 
-<pre class="Syntax">RegDelete, RootKey\SubKey [, ValueName]  <em>; 需要 <span class="ver">[v1.1.21+]</span></em>
-RegDelete, RootKey, SubKey [, ValueName]</pre>
+<pre class="Syntax">RegDelete, KeyName [, ValueName]</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>KeyName</dt>
+  <dd><p>注册表键的全名.</p>
+      <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, 或 HKEY_CURRENT_CONFIG(或这些的缩写，如 HKLM) 开始. 要访问 <a href="LoopReg.htm#remote">远程注册表</a>, 请在前面加上计算机名和冒号(或 <span class="ver">[in v1.1.21+]</span>, 用正斜杠 /), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+
+  <dt>ValueName</dt>
+  <dd><p>要删除的值名. <strong>如果省略, 将删除整个 <em>KeyName</em></strong>. 要删除 <em>KeyName</em> 的默认值(即注册表中值名显示为"(默认)"的值) -- 请在此参数中使用 <code>AHK_DEFAULT</code>.</p></dd>
+
+</dl>
+
+<h3>示例</h3>
+<pre class="NoIndent">RegDelete, HKEY_LOCAL_MACHINE\Software\SomeApplication, TestValue</pre>
+
+<h2 id="old">传统语法</h2>
+<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此语法. 而是使用 <a href="#new">新语法</a>.</p>
+<pre class="Syntax">RegDelete, RootKey, SubKey [, ValueName]</pre>
+
 <h3>参数</h3>
 <dl>
 
   <dt>RootKey</dt>
-  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或 <span class="ver">[in v1.1.21+]</span>, 用正斜杠 /), 例如: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或 <span class="ver">[in v1.1.21+]</span>, 用正斜杠 /), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
 
   <dt>SubKey</dt>
   <dd><p>子键名 (例如 Software\SomeApplication).</p></dd>
-  
-  <dt>RootKey\SubKey <span class="ver">[v1.1.21+]</span></dt>
-  <dd><p>如果在 <em>RootKey</em> 后面紧随一个反斜杠(<code>\</code>), <em>RootKey</em> 和<em>SubKey</em> 会被合并成一个变量.</p></dd>
 
   <dt>ValueName</dt>
   <dd><p>要删除的值名. <strong>如果省略, 将删除整个 <em>SubKey</em></strong>. 要删除 <em>Subkey</em> 的默认值(即注册表中值名显示为"(默认)"的值), 请在此参数中使用 <code>AHK_DEFAULT</code>.</p></dd>
 
 </dl>
-<h3>ErrorLevel</h3>
+
+<h3>Examples</h3>
+<pre class="NoIndent">RegDelete, HKEY_LOCAL_MACHINE, Software\SomeApplication, TestValue</pre>
+
+<h2>ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
 <p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
-<h3>备注</h3>
+
+<h2>备注</h2>
 <p class="note"><strong>警告</strong>: 对注册表进行删除操作可能引发潜在的问题, 操作前请三思!</p>
 <p>要获取和操作多个注册表键或值, 请考虑使用 <a href="LoopReg.htm">注册表循环</a>.</p>
 <p>关于如何访问远程计算机注册表的详情, 请参阅 <a href="LoopReg.htm">注册表循环</a> 中的备注.</p>
 <p>要在 32 位脚本中删除注册表 64 位部分的条目或进行相反的操作, 请使用 <a href="SetRegView.htm">SetRegView</a>.</p>
 
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="RegRead.htm">RegRead</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniDelete.htm">IniDelete</a></p>
-<h3>示例</h3>
-<pre class="NoIndent">RegDelete, HKEY_LOCAL_MACHINE, Software\SomeApplication, TestValue
-RegDelete, HKEY_LOCAL_MACHINE\Software\SomeApplication, TestValue  <em>; 需要 <span class="ver">[v1.1.21+]</span></em></pre>
 
 </body>
 </html>

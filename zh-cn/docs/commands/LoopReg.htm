@@ -9,44 +9,56 @@
 </head>
 <body>
 
-<h1>Loop (registry)</h1>
-
+<h1>Loop (注册表)</h1>
 <p>获取指定的注册表子键的内容,每次一个项目.</p>
 
-<pre class="Syntax">Loop, Reg, RootKey[\Key, Mode]  <em>; 需要 <span class="ver">[v1.1.21+]</span>(推荐)</em></pre>
-<pre class="Syntax">Loop, RootKey [, Key, IncludeSubkeys?, Recurse?]</pre>
+<h2 id="new">新语法 <span class="ver">[v1.1.21+]</span></h2>
+<pre class="Syntax">Loop, Reg, KeyName [, Mode] </pre>
+
 <h3>参数</h3>
 <dl>
 
-  <dt>Reg <span class="ver">[v1.1.21+]</span></dt>
-  <dd><p>原义单词 <code>Reg</code>(不区分大小写), 不可用变量或表达式. 出现此关键词时, <em>键名</em> 必须和 <em>根键</em> 用斜杠(/) 而不是逗号分隔开来, 这两者都可以包含在一个变量当中. 例如, <code>Loop, Reg, HKLM\Software</code> 或 <code>Loop, Reg, %FullPathOfKey%</code>.</p></dd>
+  <dt>Reg</dt>
+  <dd><p>原义单词 <code>Reg</code>(不区分大小写), 不可用变量或表达式.</p></dd>
+
+  <dt>KeyName</dt>
+  <dd><p>注册表键的全名, 如 <code>HKLM\Software</code> 或 <code>%FullPathOfKey%</code>.</p>
+      <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, 或 HKEY_CURRENT_CONFIG(或这些的缩写，如 HKLM) 开始. 要访问 <a href="#remote">远程注册表</a>, 请在前面加上计算机名和冒号, 就像在本例中一样: \\workstation01:HKEY_LOCAL_MACHINE</p></dd>
+
+  <dt>Mode</dt>
+  <dd><p>零个或多个下列字母:</p>
+      <p><code>K</code>: 包含键名.<br>
+      <code>V</code>: 包含键值. K 和 V 都被省略时, 默认包含键值.<br>
+      <code>R</code>: 递归子键. 若省略 R, <em>KeyName</em> 下的子键中的键名和键值都不会被包含.</p></dd>
+
+</dl>
+
+<h2 id="old">传统语法</h2>
+<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此语法. 而是使用 <a href="#new">新语法</a>.</p>
+<pre class="Syntax">Loop, RootKey [, Key, IncludeSubkeys?, Recurse?]</pre>
+
+<h3>参数</h3>
+<dl>
 
   <dt>RootKey</dt>
   <dd><p>必须为 HKEY_LOCAL_MACHINE(或 HKLM), HKEY_USERS(或 HKU), HKEY_CURRENT_USER(或 HKCU), HKEY_CLASSES_ROOT(或 HKCR) 或 HKEY_CURRENT_CONFIG(或 HKCC) 的其中一个.</p>
-      <p>要访问远程注册表, 请在前面加上计算机名和冒号, 例如: \\workstation01:HKEY_LOCAL_MACHINE</p></dd>
+      <p>要访问 <a href="#remote">远程注册表</a>, 请在前面加上计算机名和冒号, 例如: \\workstation01:HKEY_LOCAL_MACHINE</p></dd>
 
   <dt>Key</dt>
   <dd><p>键名(例如 Software\SomeApplication). 如果为空或省略, 将获取 <em>根键</em> 的内容.</p></dd>
   
-  <dt>Mode <span class="ver">[v1.1.21+]</span></dt>
-  <dd><p>零个或多个下列字母:</p>
-    <p><code>K</code>: 包含键名.<br>
-    <code>V</code>: 包含键值. K 和 V 都被省略时, 默认包含键值.<br>
-    <code>R</code>: 递归子键. 若省略 R , <em>Key</em> 下的子键中的键名和键值都不会被包含(译者注: 添加 R 参数, 表示包括 Key 下面的所有项目(指定的 K 或 V 或 KV, 子键下的所有项目也包括进来)).</p>
-  </dd>
-
   <dt>IncludeSubkeys?</dt>
   <dd><p>0(默认值) 不获取 <em>Key</em> 中包含的子键(仅获取值).<br>
-  1 获取所有的值和子键.<br>
-  2 仅获取子键 (不获取值).</p></dd>
+      1 获取所有的值和子键.<br>
+      2 仅获取子键 (不获取值).</p></dd>
 
   <dt>Recurse?(递归?)</dt>
   <dd>0(默认值) 不对子键进行递归.<br>
-  1 对子键进行递归, 以便获取包含在其中的所有值和子键.</dd>
+      1 对子键进行递归, 以便获取包含在其中的所有值和子键.</dd>
 
 </dl>
 
-<h3>备注</h3>
+<h2>备注</h2>
 <p>当您想对注册表值或子键集合中的项逐个进行操作时, 注册表循环很有用. 值和子键以逆序获取(自下而上), 这样在循环中使用 <a href="RegDelete.htm">RegDelete</a> 不会扰乱循环自身.</p>
 <p id="vars">下列变量存在于任何注册表循环中.如果一个内层注册表循环包含在一个外层注册表循环中,那么最内层循环的注册表项将具有优先权:</p>
 <table class="info">
@@ -86,7 +98,7 @@
     <td>删除当前项. 如果当前项为键, 它以及它所包含的所有子键和值都将被删除.</td>
   </tr>
 </table>
-<p>访问远程注册表时(通过上面描述的 <em>RootKey</em> 参数), 需要注意以下事项:</p>
+<p id="remote">访问远程注册表时(通过上面描述的 <em>RootKey</em> or <em>KeyName</em> 参数), 需要注意以下事项:</p>
 <ul>
   <li>目标机器上必须正在运行远程注册表服务.</li>
   <li>如果您和目标计算机不在相同的域或者本地或远程用户名缺乏足够的权限(然而,请参阅下文了解可能的解决方法) 时,访问远程注册表可能失败.</li>
@@ -96,18 +108,18 @@
   <li>对于 Windows XP 家庭版, MSDN 中声明 "此功能总是无效". 家庭版没有注册表服务器和客户端, 尽管客户端可以从操作系统的某个 cab 压缩包提取.</li>
 </ul>
 <p>请参阅 <a href="Loop.htm">Loop</a> 了解关于<a href="Block.htm">区块</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 A_Index 变量(其存在于各种类型的循环中) 的相关信息.</p>
-<h3>相关</h3>
+
+<h2>相关</h2>
 <p><a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">区块</a>, <a href="RegRead.htm">RegRead</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="RegDelete.htm">RegDelete</a>, <a href="SetRegView.htm">SetRegView</a></p>
 
-<h3>示例</h3>
+<h2>示例</h2>
 <pre class="NoIndent"><em>; 示例: 删除用户输入的 Internet Explorer URL 历史:</em>
 Loop, HKEY_CURRENT_USER, Software\Microsoft\Internet Explorer\TypedURLs
     RegDelete</pre>
-<p>&nbsp;</p>
 <pre class="NoIndent"><em>; 示例: 有效的测试脚本:</em>
 Loop, Reg, HKEY_CURRENT_USER\Software\Microsoft\Windows, KVR
 {
-    if a_LoopRegType = key
+    if A_LoopRegType = key
         value =
     else
     {
@@ -115,10 +127,9 @@ Loop, Reg, HKEY_CURRENT_USER\Software\Microsoft\Windows, KVR
         if ErrorLevel
             value = *error*
     }
-    MsgBox, 4, , %a_LoopRegName% = %value% (%a_LoopRegType%)`n`nContinue?
+    MsgBox, 4, , %A_LoopRegName% = %value% (%A_LoopRegType%)`n`nContinue?
     IfMsgBox, NO, break
 }</pre>
-<p>&nbsp;</p>
 <pre class="NoIndent"><em>; 示例: 用于在整个注册表中
 ; 递归搜索特殊值的可运行示例.</em>
 SetBatchLines -1  <em>; 让搜索以最快速度进行.</em>

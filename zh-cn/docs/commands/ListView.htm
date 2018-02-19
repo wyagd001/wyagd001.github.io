@@ -350,8 +350,8 @@ Loop %Folder%\*.*
     if not IconNumber  <em>; 此扩展名还没有相应的图标, 所以进行加载.</em>
     {
         <em>; 获取与此文件扩展名关联的高质量小图标:</em>
-        if not DllCall("Shell32\SHGetFileInfo" . (A_IsUnicode ? "W":"A"), "str", FileName
-            , "uint", 0, "ptr", &amp;sfi, "uint", sfi_size, "uint", 0x101)  <em>; 0x101 为 SHGFI_ICON+SHGFI_SMALLICON</em>
+        if not DllCall("Shell32\SHGetFileInfo" . (A_IsUnicode ? "W":"A"), "Str", FileName
+            , "UInt", 0, "Ptr", &amp;sfi, "UInt", sfi_size, "UInt", 0x101)  <em>; 0x101 为 SHGFI_ICON+SHGFI_SMALLICON</em>
             IconNumber = 9999999  <em>; 把它设置到范围外来显示空图标.</em>
         else <em>; 成功加载图标.</em>
         {
@@ -359,10 +359,10 @@ Loop %Folder%\*.*
             hIcon := NumGet(sfi, 0)
             <em>; 直接添加 HICON 到小图标和大图标列表.</em>
             <em>; 下面加上 1 来把返回的索引从基于零转换到基于一:</em>
-            IconNumber := DllCall("ImageList_ReplaceIcon", "ptr", ImageListID1, "int", -1, "ptr", hIcon) + 1
-            DllCall("ImageList_ReplaceIcon", "ptr", ImageListID2, "int", -1, "ptr", hIcon)
+            IconNumber := DllCall("ImageList_ReplaceIcon", "Ptr", ImageListID1, "Int", -1, "Ptr", hIcon) + 1
+            DllCall("ImageList_ReplaceIcon", "Ptr", ImageListID2, "Int", -1, "Ptr", hIcon)
             <em>; 现在已经把它复制到图像列表, 所以应销毁原来的:</em>
-            DllCall("DestroyIcon", "ptr", hIcon)
+            DllCall("DestroyIcon", "Ptr", hIcon)
             <em>; 缓存图标来节省内存并提升加载性能:</em>
             IconArray%ExtID% := IconNumber
         }

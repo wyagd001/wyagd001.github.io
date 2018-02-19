@@ -350,7 +350,7 @@ class GMem
 {
     __New(aFlags, aSize)
     {
-        this.ptr := DllCall("GlobalAlloc", "uint", aFlags, "ptr", aSize, "ptr")
+        this.ptr := DllCall("GlobalAlloc", "UInt", aFlags, "Ptr", aSize, "Ptr")
         if !this.ptr
             return ""
         MsgBox % "New GMem of " aSize " bytes at address " this.ptr "."
@@ -360,10 +360,11 @@ class GMem
     __Delete()
     {
         MsgBox % "Delete GMem at address " this.ptr "."
-        DllCall("GlobalFree", "ptr", this.ptr)
+        DllCall("GlobalFree", "Ptr", this.ptr)
     }
 }</pre>
 <p>__Delete 不可被任何含有 "__Class" 键的对象调用. <a href="#Custom_Classes">Class objects(类对象)</a> 默认包含这个键.</p>
+<p><span class="ver">[v1.1.28+]:</span> If an exception or runtime error is thrown while __Delete is executing and is not handled within __Delete, it acts as though __Delete was called from a new <a href="misc/Threads.htm">thread</a>. That is, an error dialog is displayed and __Delete returns, but the thread does not exit (unless it was already exiting). Prior to v1.1.28, unhandled exceptions caused inconsistent behavior.</p>
 
 <h3 id="Meta_Functions">元函数(Meta-Functions)</h3>
 <pre class="Syntax">

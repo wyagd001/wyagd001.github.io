@@ -28,6 +28,7 @@ Thread, Interrupt [, Duration, LineCount]</pre>
 <br>
 <p><strong>Thread, Interrupt [, Duration, LineCount]</strong>: 应该谨慎使用此命令, 因为大多数脚本在默认的设置附近时执行得更一致.</p>
 <p>默认情况下, 每个新运行的线程在开始的 15 毫秒的 <em>持续时间</em> 或在开始的 1000 个脚本 <em>行数</em>(无论首先遇到哪个) 执行时都是不可中断的. 这使得线程有机会结束, 而不是立即被另一个等待运行的线程中断(例如缓冲的 <a href="../Hotkeys.htm">热键</a> 或一系列即将运行的 <a href="SetTimer.htm">计时子程序</a>).</p>
+<p class="note"><strong>Note:</strong> Any <em>Duration</em> less than 17 might result in a shorter actual duration or immediate interruption, since the system tick count has a minimum resolution of 10 to 16 milliseconds.</p>
 <p>如果持续时间或行数其中一个为 0, 则每个新启动的线程会被立即中断. 如果其中一个为 -1, 那么此参数会使得线程不会被中断. 这两个参数的最大值为 2147483647.</p>
 <p>中断设置是全局的, 这意味着所有后续线程都会遵循它, 即使此设置在 <a href="../Scripts.htm#auto">自动执行段</a> 外的某个地方被改变了. 然而, <a href="../misc/Threads.htm">被中断过的线程</a> 则不受影响, 因为它们不可中断的时期已经期满 (说明: Thread, Interrupt 仅设置新线程创建时不可中断的那个时期, 而被中断过的线程已经过了这个时期即随时都可能被中断, 所以不受此设置影响). 同样地, 只有在改变 <em>LineCount</em> 时 <a href="../misc/Threads.htm">当前线程</a> 是不可中断的, 它才会受影响, 因为此时新的 <em>LineCount</em> 对当前线程有效.</p>
 <p>当 <a href="../misc/Threads.htm">当前线程</a> 不可中断时如果按下了 <a href="../Hotkeys.htm">热键</a> 或选择了 <a href="Menu.htm">自定义菜单项</a>, 那么这些事件会被缓冲起来. 换句话说, 到当前线程结束或变得可中断时(无论先遇到哪个) 它才会运行. 例外情况是当当前线程在结束前变得可中断并且它的 <a href="#Priority">优先级</a> 高于被缓冲的事件, 此时被缓冲的事件不再缓冲而丢弃了.</p>
@@ -35,6 +36,8 @@ Thread, Interrupt [, Duration, LineCount]</pre>
 <p>两个参数的其中每个都可以留空来保持此设置不变.</p>
 <h3>备注</h3>
 <p>由于更大的伸缩性和缓冲事件的能力, 命令 <a href="Critical.htm">Critical</a> 通常比 <code>Thread Interrupt</code> 和 <code>Thread Priority</code> 更有效.</p>
+<p>If <a href="Critical.htm">Critical</a> is specified as the first line of the thread's subroutine or function, the thread starts out uninterruptible and the Interrupt setting has no effect. However, this does not apply to bound functions or user-defined <a href="../objects/Functor.htm">function objects</a>.</p>
+
 <h3>相关</h3>
 <p><a href="Critical.htm">Critical</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="Menu.htm">Menu</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="Process.htm">Process</a></p>
 <h3>示例</h3>

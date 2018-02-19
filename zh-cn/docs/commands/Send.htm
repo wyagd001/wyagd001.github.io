@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<h1>Send / SendRaw / SendInput / SendPlay / SendEvent: 发送按键和点击</h1>
+<h1>Send[Raw|Input|Play|Event]: 发送按键和点击</h1>
 
 <p>发送模拟键击和鼠标点击到<a href="WinActivate.htm">活动</a>窗口.</p>
 
@@ -34,7 +34,7 @@ SendEvent Keys</pre>
 
 <p id="SendRaw"><strong>原始模式</strong> - <em>SendRaw</em> 或 <a href="#Raw">{Raw}</a>: 这些字符 <code>^+!#{}</code> 解释为原义字符而不是转换, 如 <code>{Enter}</code> 不会转换为 ENTER(回车) 键击, <code>^c</code> 不会转换为 Control-C, 等等. 要在 SendInput, SendPlay, SendEvent 或 ControlSend 中使用原始模式, 请把 <a href="#Raw">{Raw}</a> 写在需发送的按键序列前面; 例如: <code>SendInput {Raw}abc</code>.</p>
 <p><em>原始模式</em> 不影响 <a href="_EscapeChar.htm">转义序列</a>, <a href="../Variables.htm#retrieving">变量引用</a> 和 <a href="../Variables.htm#Expressions">表达式</a>的解释. 例如, <code>SendRaw, ``100`%</code> 为发送字符 <code>`100%</code>. 当使用 <a href="ControlSend.htm">ControlSend</a> 时, 也需要转义原义的逗号 (<code>`,</code>).</p>
-<p id="SendText"><strong>文本模式</strong> - <code>{Text}</code> <span class="ver">[v1.1.27+]</span>: 与原始模式类似, 除了不尝试将字符(除了 <code>`r</code>, <code>`n</code>, <code>`t</code> 和 <code>`b</code>) 转换为键击外; 作为代替, <a href="#fallback">后备方法</a> 用于所有剩余的字符. 对于 SendEvent, SendInput 和 ControlSend, 这提高了可靠性, 因为字符对正确的修饰符状态的依赖性要小得多. 文本模式可以与 Blind 模式结合使用, 以避免释放任何修饰键: <code>Send {Blind}{Text}your text</code>. 但是, 一些应用程序要求修饰键被释放.</p>
+<p id="SendText"><strong>文本模式</strong> - <code>{Text}</code> <span class="ver">[v1.1.27+]</span>: 与原始模式类似, 除了不尝试将字符(除了 <code>`r</code>, <code>`n</code>, <code>`t</code> 和 <code>`b</code>) 转换为键击外; 作为代替, <a href="#fallback">后备方法</a> 用于所有剩余的字符. 对于 SendEvent, SendInput 和 ControlSend, 这提高了可靠性, 因为字符对正确的修饰符状态的依赖性要小得多. 文本模式可以与 Blind(盲从) 模式结合使用, 以避免释放任何修饰键: <code>Send {Blind}{Text}your text</code>. 但是, 一些应用程序要求修饰键被释放.</p>
 <p><code>`n</code>, <code>`r</code> 和 <code>`r`n</code> 都被转换为单独一次 Enter 键击, 不像普通模式和原始模式, 转换 <code>`r`n</code> 为两次 Enter 键击. <code>`t</code> 转换为 Tab 而 <code>`b</code> 转换为 Backspace, 但所有其他字符都是不经转换直接发送的.</p>
 <p id="specialchars"><strong>普通模式</strong>: 不处于原始模式或文本模式时, 以下符号具有特殊含义: <code>!+^#{}</code></p>
 <p>这些修饰键 <code>!+^#</code> 仅影响紧跟着的下一个键. 若要发送修饰符本身对应的键, 将按键名称括在大括号中. 若要按下(按住) 或松开按键, 下面所示的单词 "down" 或 "up" 跟在按键名称的后面.</p>
@@ -43,7 +43,7 @@ SendEvent Keys</pre>
 </style>
 <table id="modifierkeys" class="info">
   <tr>
-    <th>符号</th>
+    <th nowrap="nowrap">符号</th>
     <th>按键</th>
     <th>按下</th>
     <th>松开</th>
@@ -89,8 +89,19 @@ SendEvent Keys</pre>
   </tr>
 </table>
 <p class="note"><strong>注意</strong>: 由于大写字母是通过发送 SHIFT 键产生的, 因此在某些程序中 <code>A</code> 和 <code>a</code> 会产生不同的效果. 例如, <code>!A</code> 按下 ALT+SHIFT+A 而 <code>!a</code> 按下 ALT+a. 如果不确定, 请使用小写字母.</p>
+<p id="blind"><strong>Blind mode</strong> - <code>{Blind}</code>: Blind mode gives the script more control by disabling a number of things that are normally done automatically to make things work as expected. <code>{Blind}</code> must be the first item in the string to enable Blind mode. It has the following effects:</p>
+<ul>
+  <li>盲从模式 如果在发送开始时 Alt/Control/Shift/Win 为按下的状态, 则不松开这些按键. 例如, 热键 <code>+s::Send {Blind}abc</code> 将发送 ABC 而不是 abc, 因为用户按住了 Shift 键.</li>
+  <li>Modifier keys are restored differently to allow a Send to turn off a hotkey's modifiers even if the user is still physically holding them down. For example, <code>^space::Send {Ctrl up}</code> automatically pushes Ctrl back down if the user is still physically holding Ctrl, whereas <code>^space::Send {Blind}{Ctrl up}</code> allows Ctrl to be logically up even though it is physically down.</li>
+  <li><a href="SetStoreCapslockMode.htm">SetStoreCapsLockMode</a> 会被忽略; 也就是说, CapsLock 的状态不会改变.</li>
+  <li><a href="_MenuMaskKey.htm">Menu masking</a> is disabled. That is, Send omits the extra keystrokes that would otherwise be sent in order to prevent: 1) Start Menu appearance during LWin/RWin keystrokes; 2) menu bar activation during Alt keystrokes. However, Blind mode does not prevent masking performed by the keyboard hook following activation of a hook hotkey.</li>
+  <li>Send does not wait for the Windows key to be released even if the text contains an "L" keystroke. This would normally be done to prevent Send from triggering the system "lock workstation" hotkey (Win+L). See <a href="../Hotkeys.htm#win-l">Hotkeys</a> for details.</li>
+</ul>
+<p>Blind mode is used internally when <a href="../misc/Remap.htm">remapping a key</a>. For example, the remapping <code>a::b</code> would produce: 1) "b" when you type "a"; 2) uppercase "B" when you type uppercase "A"; and 3) Control-B when you type Control-A.</p>
+<p><code>{Blind}</code> is not supported by SendRaw or <a href="ControlSend.htm">ControlSendRaw</a>; use <code>{Blind}{Raw}</code> instead.</p>
+<p>Blind mode is not completely supported by <a href="#SendPlayDetail">SendPlay</a>, especially when dealing with the modifier keys (Control, Alt, Shift, and Win).</p>
 <p><br>
-<strong id="SendInput">SendInput</strong> 和 <strong id="SendPlay">SendPlay</strong> <span class="ver">[v1.0.43+]</span>: SendInput 和 SendPlay 与 Send 使用相同的语法但通常更快更可靠. 此外, 它们缓存了发送期间任何物理的键盘或鼠标活动, 这样避免了在发送时夹杂用户的键击. 可以使用 <a href="SendMode.htm">SendMode</a> 让 Send 和 SendInput 或 SendPlay 执行相同的功能. 关于每种模式的更多细节, 请参阅下面的 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendPlayDetail">SendPlay</a>.</p>
+<strong id="SendInput">SendInput</strong> 和 <strong id="SendPlay">SendPlay</strong> <span class="ver">[v1.0.43+]</span>: SendInput 和 SendPlay 与 Send 使用相同的语法, 但通常更快更可靠. 此外, 它们缓存了发送期间任何物理的键盘或鼠标活动, 这样避免了在发送时夹杂用户的键击. 可以使用 <a href="SendMode.htm">SendMode</a> 让 Send 和 SendInput 或 SendPlay 执行相同的功能. 关于每种模式的更多细节, 请参阅下面的 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendPlayDetail">SendPlay</a>.</p>
 <p><a name="SendEvent"></a><strong>SendEvent</strong> <span class="ver">[v1.0.43+]</span>: SendEvent 和 1.0.43 之前版本的 <em>Send</em> 命令使用相同的方法发送键击. 键击发送的频率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定. 默认情况下, <em>Send</em> 和 <em>SendEvent</em> 功能相同; 但通过 <a href="SendMode.htm">SendMode</a> 可以让它变成和 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 一样.</p>
 <p id="keynames"><strong>Key Names</strong>: 下表中列出了可以发送的特殊按键(每个按键名称必须用大括号包围):</p>
 <table class="info">
@@ -195,7 +206,7 @@ SendEvent Keys</pre>
     <td>CapsLock(在 2k/XP 中使用 <a href="SetNumScrollCapsLockState.htm">SetCapsLockState</a> 更可靠).
 
 
- 发送 {CapsLock} 之前可能要求 <a href="SetStoreCapslockMode.htm">SetStoreCapslockMode Off</a>.</td>
+ 发送 {CapsLock} 之前可能要求 <a href="SetStoreCapslockMode.htm">SetStoreCapsLockMode Off</a>.</td>
   </tr>
   <tr>
     <td>{ScrollLock}</td>
@@ -222,8 +233,8 @@ SendEvent Keys</pre>
     <td>右 CONTROL 键</td>
   </tr>
   <tr>
-    <td>{Control Down} 或 {Ctrl Down}</td>
-    <td>按住 CONTROL 键直到发送 {Ctrl Up}. 要按住左边或右边的键, 请使用 {RCtrl Down} 和 {RCtrl Up}.</td>
+    <td>{Control down} 或 {Ctrl down}</td>
+    <td>按住 CONTROL 键直到发送 {Ctrl up}. 要按住左边或右边的键, 请使用 {RCtrl down} 和 {RCtrl up}.</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -243,7 +254,7 @@ SendEvent Keys</pre>
   </tr>
   <tr>
     <td>{Alt Down}</td>
-    <td>按住 ALT 键直到发送 {Alt Up}. 要按住左边或右边的键, 请使用 {RAlt Down} 和 {RAlt Up}.</td>
+    <td>按住 ALT 键直到发送 {Alt up}. 要按住左边或右边的键, 请使用 {RAlt down} 和 {RAlt up}.</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -262,8 +273,8 @@ SendEvent Keys</pre>
     <td>右 SHIFT 键</td>
   </tr>
   <tr>
-    <td>{Shift Down}</td>
-    <td>按住 SHIFT 键直到发送 {Shift Up}. 要按住左边或右边的键, 请使用 {RShift Down} 和 {RShift Up}.</td>
+    <td>{Shift down}</td>
+    <td>按住 SHIFT 键直到发送 {Shift up}. 要按住左边或右边的键, 请使用 {RShift down} 和 {RShift up}.</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -278,12 +289,12 @@ SendEvent Keys</pre>
     <td>右 Windows 键</td>
   </tr>
   <tr>
-    <td>{LWin Down}</td>
-    <td>按住左 Windows 键直到发送 {LWin Up}</td>
+    <td>{LWin down}</td>
+    <td>按住左 Windows 键直到发送 {LWin up}</td>
   </tr>
   <tr>
-    <td>{RWin Down}</td>
-    <td>按住右 Windows 键直到发送 {RWin Up}</td>
+    <td>{RWin down}</td>
+    <td>按住右 Windows 键直到发送 {RWin up}</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -321,11 +332,11 @@ SendEvent Keys</pre>
   </tr>
   <tr>
     <td>{Numpad0} - {Numpad9}</td>
-    <td>小键盘上的数字键(与 Numlock 打开时输入的一样). 例如: {Numpad5} 为数字 5.</td>
+    <td>小键盘上的数字键(与 NumLock 打开时输入的一样). 例如: {Numpad5} 为数字 5.</td>
   </tr>
   <tr>
     <td>{NumpadDot}</td>
-    <td>小键盘上的点(与 Numlock 打开时输入的一样).</td>
+    <td>小键盘上的点(与 NumLock 打开时输入的一样).</td>
   </tr>
   <tr>
     <td>{NumpadEnter}</td>
@@ -353,7 +364,7 @@ SendEvent Keys</pre>
   </tr>
   <tr>
     <td>{NumpadDel}</td>
-    <td>小键盘上的 Delete 键(此键和后面的小键盘按键是在 Numlock 关闭时输入的)</td>
+    <td>小键盘上的 Delete 键(此键和后面的小键盘按键是在 NumLock 关闭时输入的)</td>
   </tr>
   <tr>
     <td>{NumpadIns}</td>
@@ -500,12 +511,9 @@ SendEvent Keys</pre>
     <td>{WheelDown}, {WheelUp}, {WheelLeft}, {WheelRight}, {LButton}, {RButton}, {MButton}, {XButton1}, {XButton2}</td>
     <td>向指针当前位置发送鼠标按钮事件(要指定位置和其他选项, 请使用上面的 <a href="Click.htm">{Click}</a>). 在鼠标点击之间的延迟由 <a href="SetMouseDelay.htm">SetMouseDelay</a> 决定. WheelLeft/Right 需要 <span class="ver">[v1.0.48+]</span>, 并且在 Windows Vista 之前的操作系统中没有效果.</td>
   </tr>
-  <tr id="blind">
+  <tr>
     <td><strong>{Blind}</strong></td>
-    <td><p>当按键序列中首个项目为 {Blind} 时, 如果 Alt/Control/Shift/Win 在发送开始时为按下的状态则不松开. 例如, 热键 <code>+s::Send {Blind}abc</code> 将发送 ABC 而不是 abc, 因为用户按住了 Shift 键.</p>
-      <p>{Blind} 还会忽略 <a href="SetStoreCapslockMode.htm">SetStoreCapslockMode</a>; 即不会改变 Capslock 的状态. 最后, {Blind} 会忽略发送的键击中的额外控制功能; 这样的键击中可以避免后面的情况: 1) 发送 LWin/RWin 键击时出现开始菜单; 2) 发送 Alt 键击时激活菜单栏.</p>
-      <p>在 <a href="misc/Remap.htm">按键的重映射</a> 内部使用了 Blind(盲从) 模式. 例如, 重映射 a::b 会发生这样的情况: 1) 输入 "a" 时会映射为 "b"; 2) 输入大写字母 A 时映射为大写字母 B; 并且 3) 按下 Control-A 时映射为按了 Control-B.</p>
-      <p>SendRaw 和 <a href="ControlSend.htm">ControlSendRaw</a> 不支持 {Blind}. 此外, <a href="#SendPlayDetail">SendPlay</a> 也不完全支持这种模式, 尤其是在处理修饰键(Control, Alt, Shift 和 Win) 时.</p></td>
+    <td>Enables <a href="#blind">Blind mode</a>, which gives the script more control by disabling a number of things that are normally done automatically to make things generally work as expected. The string <code>{Blind}</code> must occur at the beginning of the string.</td>
   </tr>
   <tr id="Raw">
     <td><strong>{Raw}</strong><br>
@@ -578,12 +586,12 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <p>SendPlay 不使用 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 的标准设置. 作为替代, 它默认没有延迟, 这可以像下面例子演示的那样改变:</p>
 <pre><a href="SetKeyDelay.htm">SetKeyDelay</a>, 0, 10, <strong>Play</strong>  <em>; 请注意 0 和 -1 在 SendPlay 模式中是一样的.</em>
 <a href="SetMouseDelay.htm">SetMouseDelay</a>, 10, <strong>Play</strong></pre>
-<p>SendPlay 不能切换 Capslock, Numlock 或 Scroll-lock 按键的状态. 同样地, 如果键击发送到脚本自身的窗口时, 则它才能改变由 <a href="GetKeyState.htm">GetKeyState</a> 获取的按键状态. 即使在此时, 对左/右修饰键的任何改变(例如 RControl) 只能通过它们的中性副本检测到(例如 Control). 并且, SendPlay 还有在 <a href="SendMode.htm#Play">SendMode 页面</a> 描述的其他限制.</p>
+<p>SendPlay 不能切换 CapsLock, NumLock 或 ScrollLock 按键的状态. 同样地, 如果键击发送到脚本自身的窗口时, 则它才能改变由 <a href="GetKeyState.htm">GetKeyState</a> 获取的按键状态. 即使在此时, 对左/右修饰键的任何改变(例如 RControl) 只能通过它们的中性副本检测到(例如 Control). 并且, SendPlay 还有在 <a href="SendMode.htm#Play">SendMode 页面</a> 描述的其他限制.</p>
 <p>与 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendEvent">SendEvent</a> 不同, 用户通过按下 Control-Alt-Del 或 Control-Escape 打断 SendPlay 的发送. 这种情况发生时, 剩余的键击不会被发送, 不过脚本会像 SendPlay 正常结束一样继续执行.</p>
 <p>尽管 SendPlay 能发送 LWin 和 RWin 事件, 但它们被直接发送到活动窗口而不执行它们原本的操作系统功能. 要变通解决此问题, 请使用 <a href="#SendEvent">SendEvent</a>. 例如, <code>SendEvent #r</code> 会显示开始菜单的运行对话框.</p>
 
 <h2>相关</h2>
-<p><a href="SendMode.htm">SendMode</a>, <a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetStoreCapslockMode.htm">SetStoreCapslockMode</a>, <a href="_EscapeChar.htm">转义序列(例如 `%)</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="BlockInput.htm">BlockInput</a>, <a href="Hotstrings.htm">热字串</a>, <a href="WinActivate.htm">WinActivate</a></p>
+<p><a href="SendMode.htm">SendMode</a>, <a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetStoreCapslockMode.htm">SetStoreCapsLockMode</a>, <a href="_EscapeChar.htm">转义序列(例如 `%)</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="BlockInput.htm">BlockInput</a>, <a href="Hotstrings.htm">热字串</a>, <a href="WinActivate.htm">WinActivate</a></p>
 <h2>示例</h2>
 <pre class="NoIndent">Send Sincerely,{enter}John Smith  <em>; 输入两行的签名.</em>
 Send !fs <em>; 选择 File-&gt;Save 菜单 (Alt+F 后面跟着 S).</em>

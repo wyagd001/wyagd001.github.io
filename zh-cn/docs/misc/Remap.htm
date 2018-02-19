@@ -21,8 +21,9 @@
 <p>上面的例子没有改变 "b" 键自身的功能. "b" 键会继续发送 "b" 的键击, 除非把它重映射成其他功能, 就像下面例子中演示的那样:</p>
 <pre>a::b
 b::a</pre>
-<p>上述例子中使用小写字母, 在大多数情况下建议这么做, 因为它也会映射相应的大写字母(即在 Capslock 打开或 Shift 键被按住时会发送大写形式). 与之相比, 在右边使用大写字母会强制发送大写形式. 例如, 下面的代码行在您输入 "a" 或 "A" 时都会产生大写字母 B(只要 Capslock 是关闭的):</p>
+<p>上述例子中使用小写字母, 在大多数情况下建议这么做, 因为它也会映射相应的大写字母(即在 CapsLock 打开或 Shift 键被按住时会发送大写形式). 与之相比, 在右边使用大写字母会强制发送大写形式. 例如, 下面的代码行在您输入 "a" 或 "A" 时都会产生大写字母 B(只要 CapsLock 是关闭的):</p>
 <pre>a::B</pre>
+<p id="blind-pitfall">However, a remapping opposite to the one above would not work as one might expect, as a remapping never "releases" the modifier keys which are used to trigger it. For example, <code>A::b</code> is typically equivalent to <code>A::B</code> and <code>^a::b</code> is equivalent to <code>^a::^b</code>. This is because each remapping <a href="#actually">internally uses {Blind}</a> to allow the key or key combination to be combined with other modifiers.</p>
 <p>&nbsp;</p>
 <p id="RemapMouse"><strong>鼠标重映射</strong>: 要映射鼠标, 请使用和映射键盘相同的方法. 例如:</p>
 <table class="info">
@@ -43,8 +44,8 @@ b::a</pre>
 <p><strong>其他有用的映射:</strong></p>
 <table class="info">
   <tr>
-    <td>Capslock::Ctrl</td>
-    <td>把 Capslock 映射成 Control 键. 要保留打开及关闭 Capslock 的功能, 需先包含重映射 <code>+Capslock::Capslock</code>. 这样, 当按住 Shift 并点击 Capslock 时, 可切换 Cpaslock 的开关状态. 因为两个重映射均允许附加修饰键被按下, 额外指定的 <code>+Capslock::Capslock</code> 重映射须优先放置.</td>
+    <td>CapsLock::Ctrl</td>
+    <td>把 CapsLock 映射成 Control 键. 要保留打开及关闭 CapsLock 的功能, 需先包含重映射 <code>+CapsLock::CapsLock</code>. 这样, 当按住 Shift 并点击 Capslock 时, 可切换 CpasLock 的开关状态. 因为两个重映射均允许附加修饰键被按下, 额外指定的 <code>+CapsLock::CapsLock</code> 重映射须优先放置.</td>
   </tr>
   <tr>
     <td>XButton2::^LButton</td>
@@ -81,7 +82,7 @@ a::b  <em>; 让 'a' 键到 'b' 键的映射仅在记事本中有效.</em>
 <p>重映射按键和鼠标按钮在下面的关系中是 "完整的":</p>
 <ul>
   <li>按住修饰符(例如 Control 或 Shift) 后按下原始键, 会让那个修饰符对目标键生效. 例如, <code>b::a</code> 会在您按下 Control-B 时产生 Control-A 的效果.</li>
-  <li>Capslock 通常会像普通键那样影响重映射的按键.</li>
+  <li>CapsLock 通常会像普通键那样影响重映射的按键.</li>
   <li>按住目标键或按钮的时间和您持续按住原始键的时间一样长. 但是, 一些游戏不支持重映射; 此时, 键盘和鼠标的重映射没有效果.</li>
   <li>按住被重映射的按键时, 它们的目标键会自动重复(除非是把按键重映射为鼠标按钮).</li>
 </ul>
@@ -108,11 +109,11 @@ return
 
 *<strong>a up</strong>::
 SetKeyDelay -1  <em>; 请参阅下面的注意事项来了解在这段代码中两处 SetKeyDelay 都没有指定按键时长的原因.</em>
-Send {Blind}{<strong>b</strong> Up}
+Send {Blind}{<strong>b</strong> up}
 return</pre>
 <p>但是, 上面的两个热键在下列环境中会发生变化:</p>
 <ol>
-  <li>当原始键为 LCtrl 而目标键为 Alt 键时, 会把 <code>Send {Blind}{LAlt DownR}</code> 这行语句替换为 <code>Send {Blind}<strong>{LCtrl Up}</strong>{LAlt DownR}</code>. 如果原始键为 RCtrl 也会如此, 除非使用了 <code>{RCtrl up}</code>.</li>
+  <li>当原始键为 LCtrl 而目标键为 Alt 键时, 会把 <code>Send {Blind}{LAlt DownR}</code> 这行语句替换为 <code>Send {Blind}<strong>{LCtrl up}</strong>{LAlt DownR}</code>. 如果原始键为 RCtrl 也会如此, 除非使用了 <code>{RCtrl up}</code>.</li>
   <li>当键盘按键被重映射为鼠标按钮时(例如 <code>RCtrl::RButton</code>), 在上面的热键中会使用 SetMouseDelay 代替 SetKeyDelay. 而且, 上面的首个热键会被替换为下面的热键, 这样避免了由于键盘的自动重复功能生成的重复的鼠标点击:
     <pre>*RCtrl::
 SetMouseDelay -1
@@ -124,10 +125,9 @@ return</pre>
 </ol>
 <p>在 <span class="ver">[v1.1.27]</span> 之前, 使用 <a href="../commands/Send.htm#DownTemp">DownTemp</a> 而不是 <a href="../commands/Send.htm#DownR">DownR</a>.</p>
 <p>请注意在上面的热键中省略了 SetKeyDelay 的第二个参数(<a href="../commands/SetKeyDelay.htm#dur">按键时长</a>). 这是因为按键时长不适用于独立的按键按下或按键弹起事件, 例如 <code>{b down}</code> 和 <code>{b up}</code>. 但是, 它适用于 Shift/Ctrl/Alt/Win 按键状态的改变, 这会影响像 <code>a::B</code> 或 <code>a::^b</code> 的重映射. 因此, 脚本中任何在<a href="../Scripts.htm#auto">自动执行段</a>生效的按键时长会应用于所有这类重映射.</p>
-<p>尽管一对按键不能直接重映射为单个按键(例如 <code>a &amp; c::b</code> 是无效的), 不过只需要在前面的示例中添加明确的弹起和按下热键即可实现这种行为:简单地把 <code>*a::</code> 替换为 <code>a &amp; c::</code>, 且把 <code>*a up::</code> 替换为 <code>a &amp; c up::</code>.</p>
 <p>由于重映射会被简单翻译为上面描述的热键, 所以 <a href="../commands/Suspend.htm">Suspend</a> 也会影响它们. 同样地, <a href="../commands/Hotkey.htm">Hotkey</a> 命令可以禁用或修改重映射. 例如, 下面的两个命令会禁用重映射 <code>a::b</code>.</p>
-<pre>Hotkey, *a, off
-Hotkey, *a up, off</pre>
+<pre>Hotkey, *a, Off
+Hotkey, *a up, Off</pre>
 <p id="AltTab">Alt-tab 的问题: 如果您把一个按键或鼠标按钮映射为 Alt 键, 那么这个键很可能无法正确实现 alt-tab 的功能. 一个可能的变通解决方法是添加热键 <code>*Tab::Send {Blind}{Tab}</code>, 但是需要注意这样很可能妨碍使用真正的 Alt  实现 alt-tab 的功能. 因此, 这种方法只应当用于在您希望单独使用重映射的按键和/或 <a href="../Hotkeys.htm#alttab">alt-tab 热键</a> 实现 alt-tab 功能的时候.</p>
 <p>除了 <a href="../KeyList.htm">按键列表</a> 页面中的按键和鼠标按钮, 原始键还可以是在 <a href="../KeyList.htm#SpecialKeys">特殊按键</a> 页面描述的虚拟键(VKnn) 或扫描码(SCnnn). 对于目标键同样如此, 不过它还可以在虚拟键后指定扫描码. 例如, 在大多数键盘布局中 <code>sc01e::vk42sc030</code> 相当于 <code>a::b</code>.</p>
 <p>要禁用按键而不进行重映射, 请把它设置为只含有 <a href="../commands/Return.htm">return</a> 的热键. 例如,<code>F1::return</code> 会禁用 F1 键.</p>

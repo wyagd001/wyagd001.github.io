@@ -10,11 +10,44 @@
 <body>
 
 <h1>RegRead</h1>
-
 <p>从注册表读取值.</p>
 
-<pre class="Syntax">RegRead, OutputVar, RootKey\SubKey [, ValueName]  <em>; 需要 <span class="ver">[v1.1.21+]</span></em>
-RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
+<h2 id="new">新语法 <span class="ver">[v1.1.21+]</span></h2>
+<pre class="Syntax">RegRead, OutputVar, KeyName [, ValueName]</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>OutputVar</dt>
+  <dd><p>用来存储获取值的变量名. 如果值无法获取, 则变量被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设为 1.</p></dd>
+
+  <dt>KeyName</dt>
+  <dd><p>注册表键的全名.</p>
+      <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, or HKEY_CURRENT_CONFIG(或这些的缩写，如 HKLM) 开始. 要访问 <a href="LoopReg.htm#remote">远程注册表</a>, 请在前面加上计算机名和冒号(或 <span class="ver">[in v1.1.21+]</span>, 用正斜杠 /), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+
+  <dt>ValueName</dt>
+  <dd><p>用来存储获取值的变量名. 如果省略, 则获取 <em>KeyName</em> 的默认值, 这是在注册表中值名显示为 "(默认)" 的值. 如果没有默认值(即注册表中显示 "数值未设置"), 则将 <em>OutputVar</em> 置空且 ErrorLevel 设置为 1.</p></dd>
+
+</dl>
+
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
+
+; 此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>
+<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 <span class="ver">[v1.1.08+]</span></em>
+
+RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">\</span>SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
+MsgBox, Program files are in: %OutputVar%
+
+<em>; 另一种返回 Program Files 目录路径的方法:</em>
+EnvGet OutputVar, % <a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles"
+MsgBox, Program files are in: %OutputVar%
+</pre>
+
+<h2 id="old">传统语法</h2>
+<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此语法. 而是使用 <a href="#new">新语法</a>.</p>
+<pre class="Syntax">RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
+
 <h3>参数</h3>
 <dl>
 
@@ -22,23 +55,36 @@ RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
   <dd><p>用来存储获取值的变量名. 如果无法获取, 则变量被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1.</p></dd>
 
   <dt>RootKey</dt>
-  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或  <span class="ver">[in v1.1.21+]</span> 用正斜杠 /), 例如: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或  <span class="ver">[in v1.1.21+]</span> 用正斜杠 /), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
 
   <dt>SubKey</dt>
   <dd><p>子键名(例如 Software\SomeApplication).</p></dd>
   
-  <dt>RootKey\SubKey <span class="ver">[v1.1.21+]</span></dt>
-  <dd><p>如果在 <em>RootKey</em> 后面紧随一个反斜杠(<code>\</code>), <em>RootKey</em> 和 <em>SubKey</em> 将被合并成一个变量.</p></dd>
-
   <dt>ValueName</dt>
-  <dd><p>要获取的值名. 如果省略, 则获取 <em>Subkey</em> 的默认值, 这是在注册表中值名显示为 "(默认)" 的值. 如果没有默认值(即注册表中显示 "数值未设置"), 则 <em>OutputVar</em> 被置空且 ErrorLevel 被设置为 1.</p></dd>
+  <dd><p>要获取的值名. 如果省略, 则获取 <em>Subkey</em> 的默认值, 这是在注册表中值名显示为 "(默认)" 的值. 如果没有默认值(即注册表中显示 "数值未设置"), 则 <em>OutputVar</em> 置空且 ErrorLevel 设置为 1.</p></dd>
 
 </dl>
-<h3>ErrorLevel</h3>
+
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
+
+; 此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.
+</em>
+<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 <span class="ver">[v1.1.08+]</span></em>
+
+RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">,</span> SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
+MsgBox, Program files are in: %OutputVar%
+
+<em>; 另一种返回 Program Files 目录路径的方法:</em>
+EnvGet OutputVar, % <a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles"
+MsgBox, Program files are in: %OutputVar%</pre>
+
+<h2>ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题(例如不存在的键或值名) 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1, 否则为 0.</p>
 <p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
-<h3>备注</h3>
+
+<h2>备注</h2>
 <p>目前只支持下列这些值类型: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD 以及 REG_BINARY.</p>
 <p>REG_DWORD 值总是被转换为正十进制数.</p>
 <p>读取 REG_BINARY 键时, 获取的结果为十六进制字符的字符串. 例如, REG_BINARY 类型的值 01, a9, ff, 77 的读取结果为字符串 01A9FF77.</p>
@@ -48,9 +94,14 @@ RegRead, OutputVar, RootKey, SubKey [, ValueName]</pre>
 <p>关于如何访问远程计算机注册表的详情, 请参阅 <a href="LoopReg.htm">注册表循环</a> 中的备注.</p>
 <p>要在 32 位脚本中读写注册表 64 位部分的条目或进行相反的操作, 请使用 <a href="SetRegView.htm">SetRegView</a>.</p>
 
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="RegDelete.htm">RegDelete</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
-<h3>示例</h3>
+
+<h2>示例</h2>
+<pre class="NoIndent"><em>; The following example retrieves the TYPE of a registry value (e.g. REG_SZ or REG_DWORD).</em>
+MsgBox % RegKeyType(&quot;HKCU&quot;, &quot;Environment&quot;, &quot;TEMP&quot;)
+return
+
 <pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
 
 ;此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>

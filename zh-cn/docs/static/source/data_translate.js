@@ -25,6 +25,7 @@
   // content
   "Select code":"选择代码",
   "Download code":"下载代码",
+  "Back to top":"返回顶部",
   "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later":"适用于:\nAutoHotkey_L Revision {0} 及以后版本 \nAutoHotkey v1.0.90.00 及以后版本",
   "Applies to AutoHotkey {0} and later":"适用于 AutoHotkey {0} 及以后版本"
 };

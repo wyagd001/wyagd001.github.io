@@ -40,14 +40,14 @@ KeyIsDown := GetKeyState(&quot;KeyName&quot; [, &quot;Mode&quot;])</pre>
       <p>如果省略, 则默认的模式是获取按键的逻辑状态. 这是操作系统和活动窗口所认为的按键所处的状态, 但可能和它的物理状态不一致.</p>
 	  <p>或者, 可以指定这些字母的其中一个:</p>
       <p><strong>P</strong>: 获取物理状态(即用户是否实际按住了按键). 如果没有安装键盘和/或鼠标钩子, 则按键或鼠标按钮的物理状态通常和逻辑状态一致(有时逻辑状态可能比物理状态滞后); 如果安装了钩子, 则它会准确反映出用户是否按下了按键或鼠标按钮(只要在脚本执行时它正被按住). 您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 命令或菜单项确定脚本中是否使用了钩子. 通过添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 和/或 <a href="_InstallMouseHook.htm">#InstallMouseHook</a> 指令到脚本中您可以强制安装钩子.</p>
-      <p><strong>T</strong>: 获取切换状态(仅对可以切换的按键才有效, 例如 Capslock, Numlock, Scrolllock 和 Insert). 获取的值为 D 表明按键是打开的, 而 U 表明它是关闭的(不过 GetKeyState() 函数当打开时返回 true (1) 而关闭时返回 false (0)).</p>
+      <p><strong>T</strong>: 获取切换状态(仅对可以切换的按键才有效, 例如 CapsLock, NumLock, ScrollLock 和 Insert). 获取的值为 D 表明按键是打开的, 而 U 表明它是关闭的(不过 GetKeyState() 函数当打开时返回 true (1) 而关闭时返回 false (0)).</p>
     </dd>
 
 </dl>
 
 <h3>备注</h3>
 <p>为了等待按键或鼠标/操纵杆按钮进入新的状态, 通常用 <a href="KeyWait.htm">KeyWait</a> 代替 GetKeyState 的循环会更简单.</p>
-<p>带有不常见键盘驱动的系统更新按键的状态可能比较慢, 尤其是像 Capslock 这样按键的切换状态. 在按键状态改变后立即对其状态进行检查的脚本可以预先使用 <a href="Sleep.htm">Sleep</a>, 以便系统有时间更新按键的状态.</p>
+<p>带有不常见键盘驱动的系统更新按键的状态可能比较慢, 尤其是像 CapsLock 这样按键的切换状态. 在按键状态改变后立即对其状态进行检查的脚本可以预先使用 <a href="Sleep.htm">Sleep</a>, 以便系统有时间更新按键的状态.</p>
 <p>关于对操纵杆使用 GetKeyState 的例子, 请参阅 <a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a> 和 <a href="../scripts/JoystickMouse.htm">操纵杆到鼠标的映射脚本</a>.</p>
 <h3>相关</h3>
 <p><a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">按键列表</a>, <a href="../misc/RemapJoystick.htm">操纵杆重映射</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a></p>
@@ -63,7 +63,7 @@ else
     MsgBox Neither Shift key is down.
 
 GetKeyState, state, CapsLock, T <em>;  当 CapsLock 打开时为 D, 否则为 U.</em>
-state := GetKeyState("Capslock", "T")  <em>; 当 CapsLock 打开时为真, 否则为假.</em>
+state := GetKeyState("CapsLock", "T")  <em>; 当 CapsLock 打开时为真, 否则为假.</em>
 
 <em>; 重映射的例子 (这里只是为了演示因为使用
 ; <a href="../misc/Remap.htm">内置的重映射功能</a> 会更简单):
@@ -85,10 +85,10 @@ return
 
 <em>; 示例: 让操纵杆按钮根据操纵杆轴位置产生不同的反应.</em>
 joy2:: 
-GetKeyState, joyx, JoyX 
-if joyx &gt; 75 
+GetKeyState, Joyx, JoyX 
+if Joyx &gt; 75 
     MsgBox Action #1 (button pressed while joystick was pushed to the right).
-else if joyx &lt; 25 
+else if Joyx &lt; 25 
     MsgBox Action #2 (button pressed while joystick was pushed to the left).
 else
     MsgBox Action #3 (button pressed while joystick was centered horizontally).

@@ -48,7 +48,7 @@ return</pre>
     <td><strong>#</strong></td>
     <td>
     <p>Win(Windows 徽标键).</p>
-    <p><span class="ver">[v1.0.48.01+]</span>: 对于 Windows Vista 及以上版本, 包含 Windows 键的热键(例如 #a) 会等待 Windows 键被释放后才发送任何包含 "L" 键击的文本. 这样避免了这种热键中的 <a href="commands/Send.htm">Send</a> 锁定 PC. 这种行为适用于除 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>(这里不需要) 和 <a href="commands/Send.htm#blind">盲从模式(Blind)</a> 外的所有发送模式.</p>
+    <p id="win-l"><span class="ver">[v1.0.48.01+]</span>: 对于 Windows Vista 及以上版本, 包含 Windows 键的热键(例如 #a) 会等待 Windows 键被释放后才发送任何包含 "L" 键击的文本. 这样避免了这种热键中的 <a href="commands/Send.htm">Send</a> 锁定 PC. 这种行为适用于除 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>(这里不需要) 和 <a href="commands/Send.htm#blind">盲从模式(Blind)</a> 外的所有发送模式.</p>
       <p class="note"><strong>注意:</strong> 按下包含 Win 键的热键可能会导致额外的模拟击键(默认为 Ctrl 键). 请参阅 <a href="commands/_MenuMaskKey.htm">#MenuMaskKey</a>.</p>
     </td>
   </tr>
@@ -121,8 +121,8 @@ AppsKey Up::ToolTip
   <tr id="keyup">
     <td>UP</td>
     <td><p> 单词 UP 可以跟在热键名后面使得在释放按键时触发热键, 而不是按下时. 下面的例子把 LWin <a href="misc/Remap.htm">重映射</a> 为 LControl:</p>
-      <pre>*LWin::Send {LControl Down}
-*LWin <strong>Up</strong>::Send {LControl Up}
+      <pre>*LWin::Send {LControl down}
+*LWin <strong>Up</strong>::Send {LControl up}
 </pre>
       <p>&quot;Up&quot; 也可以用于普通热键中, 例如: <code>^!r Up::MsgBox You pressed and released Ctrl+Alt+R</code>. 它还可以用在 <a href="#combo">组合键</a>(例如 <code>F1 &amp; e Up::</code>)</p>      
       <p>限制: 1) "Up" 不能和 <a href="KeyList.htm">游戏杆按钮</a> 一起使用; 2) 在没有普通/按下热键副本的 "Up" 热键会完全接管那个按键以防被卡住. 避免这种情况的一种方法是添加<a href="#Tilde">颚化符(波浪号) 前缀</a>(例如 <code><strong>~</strong>LControl up::</code>)</p>
@@ -182,7 +182,7 @@ AppsKey &amp; /::MsgBox Hotkey activated.
 <p><strong>键盘钩子:</strong> 自定义的组合键总是使用键盘钩子, 如使用前缀键作为后缀的任何热键. 例如, <code>a &amp; b::</code> 导致 <code>^a::</code> 使用键盘钩子.</p>
 
 <h2 id="Features">其他功能</h2>
-<p><strong>Numlock, Capslock 和 Scrolllock:</strong> 这些键可以被强制设置为 &quot;AlwaysOn&quot; 或 &quot;AlwaysOff&quot;. 例如: <code><a href="commands/SetNumScrollCapsLockState.htm">SetNumlockState</a> AlwaysOn</code>.</p>
+<p><strong>NumLock, CapsLock 和 ScrollLock:</strong> 这些键可以被强制设置为 &quot;AlwaysOn&quot; 或 &quot;AlwaysOff&quot;. 例如: <code><a href="commands/SetNumScrollCapsLockState.htm">SetNumLockState</a> AlwaysOn</code>.</p>
 <p><strong>覆盖资源管理器热键:</strong> 在脚本中可以为 Windows 内置的热键例如 Win-E(#e) 和 Win-R(#r) 指定一个动作来个别的替换. 请参阅 <a href="misc/Override.htm">覆盖页面</a> 了解详情.</p>
 <p id="alttab"><strong>替换 Alt-Tab:</strong> 热键可以提供 Alt-Tab 切换窗口的可选方法. 例如, 下面的两个热键可以让您用右手进行 alt-tab:</p>
 <pre>RControl &amp; RShift::AltTab  <em>; 按住右 control 后接着反复下右 shift 来向前移动.</em>
@@ -213,10 +213,10 @@ return</pre>
 <p>最后, 由于鼠标滚轮热键只产生按下事件(从没有弹起事件), 所以它们无法用作 <a href="#keyup">弹起的按键热键</a>.</p>
 
 <h2 id="Remarks">热键技巧和备注</h2>
-<p>根据 Numlock的状态, 每个小键盘上的按键可以运行两个不同的热键子程序. 可选的, 可以让小键盘上的按键不论 Numlock 的状态如何都运行相同的子程序. 例如:</p>
+<p>根据 NumLock的状态, 每个小键盘上的按键可以运行两个不同的热键子程序. 可选的, 可以让小键盘上的按键不论 NumLock 的状态如何都运行相同的子程序. 例如:</p>
 <pre>NumpadEnd::
 Numpad1::
-MsgBox, This hotkey is launched regardless of whether Numlock is on.
+MsgBox, This hotkey is launched regardless of whether NumLock is on.
 return</pre>
 <p>如果 <a href="#Tilde">波浪号(~)</a> 和 <a href="#prefix">前缀键</a> 一起使用, 即使只是一次, 那么其中的前缀键总是会被发送到活动窗口. 例如, 在下面的两个热键中, 活动窗口都会接收到右键点击, 尽管只是其中一个热键使用了波浪号:</p>
 <pre>~RButton &amp; LButton::MsgBox You pressed the left mouse button while holding down the right.
@@ -285,7 +285,8 @@ return</pre>
             else
                 Run explorer.exe "%path1%"
     }</pre>
-<p>在热键标签或标签和函数之间仅允许空白, 注释或者指令. 通过这种定义方式, 没有热键的标签被创建; 然而, 即使关联了函数, <a href="Scripts.htm#auto">自动执行段</a> 也会以第一个热键结束.</p>
+<p id="function-details"><span class="ver">[v1.1.28+]:</span> Hotstrings can also be defined this way. Multiple hotkeys or hotstrings can be stacked together to call the same function.</p>
+<p>在热键/热字串 标签或标签和函数之间仅允许空白, 注释或者指令. Hotkey/hotstring labels defined this way are not visible to <a href="commands/IsLabel.htm">IsLabel</a>, <a href="commands/Gosub.htm">Gosub</a> or other commands; 然而, 即使关联了函数, <a href="Scripts.htm#auto">自动执行段</a> 也会以第一个 热键/热字串 结束.</p>
 <p>使用函数的的主要好处是可以使用局部变量, 当两个或多个热键为了不同的目的使用相同的变量名时, 避免了冲突. 它也鼓励自我记录热键, 就像上面的代码在函数内描述热键.</p>
 <p><a href="commands/Hotkey.htm">Hotkey</a> 也可以关联函数或函数对象.</p>
 

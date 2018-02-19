@@ -24,23 +24,19 @@
   <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
 
   <dt>Menu</dt>
-  <dd><p>顶级菜单的名称, 例如 File, Edit, View. 此参数也可以使用期望的菜单项的位置, 例如 1&amp; 表示首个菜单, 2&amp; 表示第二个等.</p></dd>
+  <dd><p>顶级菜单的名称, 例如 File, Edit, View. 此参数也可以使用期望的菜单项的位置, 例如 <code>1&amp;</code> 表示首个菜单, <code>2&amp;</code> 表示第二个等.</p>
+  <p><span class="ver">[v1.1.28+]:</span> Specify <code>0&amp;</code> to use the window's <a href="#sys">system menu</a>.</p></dd>
 
   <dt>SubMenu1</dt>
-  <dd><p>要选择的菜单项名称或位置(请参阅上面).</p></dd>
+  <dd><p>要选择的菜单项名称或位置(请参阅上面).</p>
+  <p>This can be omitted if the top-level item does not contain a menu (rare).</p></dd>
 
   <dt>SubMenu2</dt>
   <dd><p>如果 <em>SubMenu1</em> 包含子菜单, 那么这是子菜单项的名称或位置.</p></dd>
 
   <dt>SubMenu3</dt>
-  <dd><p>同上.</p></dd>
-
   <dt>SubMenu4</dt>
-  <dd><p>同上.</p></dd>
-
   <dt>SubMenu5</dt>
-  <dd><p>同上.</p></dd>
-
   <dt>SubMenu6</dt>
   <dd><p>同上.</p></dd>
 
@@ -55,12 +51,25 @@
 <h3>ErrorLevel</h3>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅 <a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
+
 <h3>备注</h3>
 <p>使用此命令时, 目标窗口可以处于不活动状态. 然而, 某些窗口可能需要处于 <a href="WinRestore.htm">非最小化</a> 状态.</p>
 <p>此命令对于使用非标准菜单栏的应用程序 <strong>无效</strong>. 例如 Microsoft Outlook 和 Outlook Express, 它们使用伪装的工具栏作为菜单栏. 在这种情况下, 考虑使用 <a href="ControlSend.htm">ControlSend</a> 或 <a href="PostMessage.htm">PostMessage</a>, 它们应该能和一些这样的非标准菜单栏交互.</p>
 <p>参数中的菜单名称是不区分大小写的(即 File-&gt;Save 等同于 file-&gt;save), 而且可以不需要使用和符号(&amp;) 来表示菜单项中加了下划线的字母(即 &amp;File 等同于 File).</p>
 <p>参数中的菜单名称还可以使用位置代替. 提供这种方法是为了支持不包含文本的菜单(可能是由于它们包含文本的图片而不是真实的文本). 位置 1&amp; 表示首个菜单项(例如 File 菜单), 位置 2&amp; 表示第二个菜单项(例如 Edit 菜单) 等. 为了确定菜单项的位置, 菜单分隔线也作为菜单项计算.</p>
 <p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时, 才能检测到隐藏窗口.</p>
+
+<h3 id="sys">System Menu <span class="ver">[v1.1.28+]</span></h3>
+<p><em>Menu</em> can be <code>0&amp;</code> to select an item within the window's system menu, which typically appears when the user presses Alt+Space or clicks on the icon in the window's title bar. For example:</p>
+<pre><em>; Paste a command into cmd.exe without activating the window.</em>
+Clipboard := "echo Hello, world!`r"
+WinMenuSelectItem ahk_exe cmd.exe,, 0&amp;, Edit, Paste</pre>
+<p class="warning"><strong>Caution:</strong> Use this only on windows which have custom items in their system menu.</p>
+<p>If the window does not already have a custom system menu, a copy of the standard system menu will be created and assigned to the target window as a side effect. This copy is destroyed by the system when the script exits, leaving other scripts unable to access it. Therefore, avoid using 0&amp; for the standard items which appear on all windows. Instead, post the <a href="https://msdn.microsoft.com/library/ms646360">WM_SYSCOMMAND</a> message directly. For example:</p>
+<pre><em>; Like "<a href="#WinMinmize.htm">WinMinimize</a> A", but also play the system sound for minimizing.</em>
+WM_SYSCOMMAND := 0x112
+SC_MINIMIZE := 0xF020
+PostMessage WM_SYSCOMMAND, SC_MINIMIZE, 0,, A</pre>
 
 <h3>相关</h3>
 <p><a href="ControlSend.htm">ControlSend</a>, <a href="PostMessage.htm">PostMessage</a></p>
