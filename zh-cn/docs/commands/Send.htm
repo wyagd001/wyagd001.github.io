@@ -89,20 +89,20 @@ SendEvent Keys</pre>
   </tr>
 </table>
 <p class="note"><strong>注意</strong>: 由于大写字母是通过发送 SHIFT 键产生的, 因此在某些程序中 <code>A</code> 和 <code>a</code> 会产生不同的效果. 例如, <code>!A</code> 按下 ALT+SHIFT+A 而 <code>!a</code> 按下 ALT+a. 如果不确定, 请使用小写字母.</p>
-<p id="blind"><strong>Blind mode</strong> - <code>{Blind}</code>: Blind mode gives the script more control by disabling a number of things that are normally done automatically to make things work as expected. <code>{Blind}</code> must be the first item in the string to enable Blind mode. It has the following effects:</p>
+<p id="blind"><strong>盲从模式</strong> - <code>{Blind}</code>: 盲从模式通过禁用一些通常自动完成的任务, 从而使脚本更容易控制, 使事情按预期工作. <code>{Blind}</code> 必须是字符串中的第一个项目, 以启用盲从模式. 它有以下效果:</p>
 <ul>
-  <li>盲从模式 如果在发送开始时 Alt/Control/Shift/Win 为按下的状态, 则不松开这些按键. 例如, 热键 <code>+s::Send {Blind}abc</code> 将发送 ABC 而不是 abc, 因为用户按住了 Shift 键.</li>
-  <li>Modifier keys are restored differently to allow a Send to turn off a hotkey's modifiers even if the user is still physically holding them down. For example, <code>^space::Send {Ctrl up}</code> automatically pushes Ctrl back down if the user is still physically holding Ctrl, whereas <code>^space::Send {Blind}{Ctrl up}</code> allows Ctrl to be logically up even though it is physically down.</li>
+  <li>盲从模式: 如果在发送开始时 Alt/Control/Shift/Win 为按下的状态, 则不松开这些按键. 例如, 热键 <code>+s::Send {Blind}abc</code> 将发送 ABC 而不是 abc, 因为用户按住了 Shift 键.</li>
+  <li>修饰键有不同的恢复方式, 允许 Send 能关闭热键的修饰键, 即使用户在物理上仍然是按下的. 例如, <code>^space::Send {Ctrl up}</code> 如果用户仍然物理按住 Ctrl, 则自动推送 Ctrl 按下, 而 <code>^space::Send {Blind}{Ctrl up}</code> 允许 Ctrl 逻辑松开, 即使它物理上是按下的.</li>
   <li><a href="SetStoreCapslockMode.htm">SetStoreCapsLockMode</a> 会被忽略; 也就是说, CapsLock 的状态不会改变.</li>
-  <li><a href="_MenuMaskKey.htm">Menu masking</a> is disabled. That is, Send omits the extra keystrokes that would otherwise be sent in order to prevent: 1) Start Menu appearance during LWin/RWin keystrokes; 2) menu bar activation during Alt keystrokes. However, Blind mode does not prevent masking performed by the keyboard hook following activation of a hook hotkey.</li>
-  <li>Send does not wait for the Windows key to be released even if the text contains an "L" keystroke. This would normally be done to prevent Send from triggering the system "lock workstation" hotkey (Win+L). See <a href="../Hotkeys.htm#win-l">Hotkeys</a> for details.</li>
+  <li><a href="_MenuMaskKey.htm">菜单掩饰</a> 是禁用的. 也就是说, Send 忽略额外的击键, 这些键原本会被发送, 以防止: 1) 在按下 LWin/RWin 键时, 出现开始菜单; 2) 在按下 Alt 键时, 菜单栏的激活. 然而, 盲从模式不会阻止在钩子热键激活后由键盘钩子进行的掩饰.</li>
+  <li>即使文本包含一个“L”按键, Send 也不会等待 Windows 按键被释放. 一般情况下会等待 Win 键释放, 以防止 Send 触发系统 "锁定工作站" 的热键(Win+L). 有关详细信息, 请参阅 <a href="../Hotkeys.htm#win-l">热键</a>.</li>
 </ul>
-<p>Blind mode is used internally when <a href="../misc/Remap.htm">remapping a key</a>. For example, the remapping <code>a::b</code> would produce: 1) "b" when you type "a"; 2) uppercase "B" when you type uppercase "A"; and 3) Control-B when you type Control-A.</p>
-<p><code>{Blind}</code> is not supported by SendRaw or <a href="ControlSend.htm">ControlSendRaw</a>; use <code>{Blind}{Raw}</code> instead.</p>
-<p>Blind mode is not completely supported by <a href="#SendPlayDetail">SendPlay</a>, especially when dealing with the modifier keys (Control, Alt, Shift, and Win).</p>
+<p>在 <a href="../misc/Remap.htm">按键的重映射</a> 时, 盲从模式可以在内部使用. 例如, 重映射 <code>a::b</code> 会发生这样的情况: 1)  输入 "a" 时会映射为 "b"; 2) 输入大写字母 "A" 时映射为大写字母 "B"; 并且 3) 按下 Control-A 时映射为按下 Control-B.</p>
+<p>SendRaw 或 <a href="ControlSend.htm">ControlSendRaw</a> 不支持 <code>{Blind}</code> ; 请使用 <code>{Blind}{Raw}</code> 代替.</p>
+<p><a href="#SendPlayDetail">SendPlay</a> 不完全支持盲从模式, 尤其是在处理修饰键(Control, Alt, Shift 和 Win) 时.</p>
 <p><br>
 <strong id="SendInput">SendInput</strong> 和 <strong id="SendPlay">SendPlay</strong> <span class="ver">[v1.0.43+]</span>: SendInput 和 SendPlay 与 Send 使用相同的语法, 但通常更快更可靠. 此外, 它们缓存了发送期间任何物理的键盘或鼠标活动, 这样避免了在发送时夹杂用户的键击. 可以使用 <a href="SendMode.htm">SendMode</a> 让 Send 和 SendInput 或 SendPlay 执行相同的功能. 关于每种模式的更多细节, 请参阅下面的 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendPlayDetail">SendPlay</a>.</p>
-<p><a name="SendEvent"></a><strong>SendEvent</strong> <span class="ver">[v1.0.43+]</span>: SendEvent 和 1.0.43 之前版本的 <em>Send</em> 命令使用相同的方法发送键击. 键击发送的频率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定. 默认情况下, <em>Send</em> 和 <em>SendEvent</em> 功能相同; 但通过 <a href="SendMode.htm">SendMode</a> 可以让它变成和 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 一样.</p>
+<p><a name="SendEvent"></a><strong>SendEvent</strong> <span class="ver">[v1.0.43+]</span>: SendEvent 和 1.0.43 之前版本的 <em>Send</em> 命令使用相同的方法发送键击. 键击发送的频率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定. 默认情况下, <em>Send</em> 和 <em>SendEvent</em> 是相同的; 但通过 <a href="SendMode.htm">SendMode</a> 可以让它变成和 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 一样.</p>
 <p id="keynames"><strong>Key Names</strong>: 下表中列出了可以发送的特殊按键(每个按键名称必须用大括号包围):</p>
 <table class="info">
   <tr>
@@ -513,7 +513,7 @@ SendEvent Keys</pre>
   </tr>
   <tr>
     <td><strong>{Blind}</strong></td>
-    <td>Enables <a href="#blind">Blind mode</a>, which gives the script more control by disabling a number of things that are normally done automatically to make things generally work as expected. The string <code>{Blind}</code> must occur at the beginning of the string.</td>
+    <td>启用 <a href="#blind">盲从模式</a>, 通过禁用一些通常自动完成的任务, 从而使脚本更容易控制, 使事情按预期工作. 字符串 <code>{Blind}</code> 必须出现在字符串的开头.</td>
   </tr>
   <tr id="Raw">
     <td><strong>{Raw}</strong><br>
