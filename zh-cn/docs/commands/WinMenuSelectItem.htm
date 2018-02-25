@@ -13,7 +13,7 @@
 
 <p>调用指定窗口菜单栏中的菜单项.</p>
 
-<pre class="Syntax">WinMenuSelectItem, WinTitle, WinText, Menu [, SubMenu1, SubMenu2, SubMenu3, SubMenu4, SubMenu5, SubMenu6, ExcludeTitle, ExcludeText]</pre>
+<pre class="Syntax"><span class="func">WinMenuSelectItem</span>, WinTitle, WinText, Menu <span class="optional">, SubMenu1, SubMenu2, SubMenu3, SubMenu4, SubMenu5, SubMenu6, ExcludeTitle, ExcludeText</span></pre>
 <h3>参数</h3>
 <dl>
 
@@ -25,11 +25,11 @@
 
   <dt>Menu</dt>
   <dd><p>顶级菜单的名称, 例如 File, Edit, View. 此参数也可以使用期望的菜单项的位置, 例如 <code>1&amp;</code> 表示首个菜单, <code>2&amp;</code> 表示第二个等.</p>
-  <p><span class="ver">[v1.1.28+]:</span> Specify <code>0&amp;</code> to use the window's <a href="#sys">system menu</a>.</p></dd>
+  <p><span class="ver">[v1.1.28+]:</span> 指定 <code>0&amp;</code> 使用窗口的 <a href="#sys">系统菜单</a>.</p></dd>
 
   <dt>SubMenu1</dt>
   <dd><p>要选择的菜单项名称或位置(请参阅上面).</p>
-  <p>This can be omitted if the top-level item does not contain a menu (rare).</p></dd>
+  <p>如果顶级项目不包含菜单(罕见的), 则可以省略此项.</p></dd>
 
   <dt>SubMenu2</dt>
   <dd><p>如果 <em>SubMenu1</em> 包含子菜单, 那么这是子菜单项的名称或位置.</p></dd>
@@ -60,12 +60,12 @@
 <p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时, 才能检测到隐藏窗口.</p>
 
 <h3 id="sys">System Menu <span class="ver">[v1.1.28+]</span></h3>
-<p><em>Menu</em> can be <code>0&amp;</code> to select an item within the window's system menu, which typically appears when the user presses Alt+Space or clicks on the icon in the window's title bar. For example:</p>
+<p><em>Menu</em> 可以是 <code>0&amp;</code> 并能在窗口的系统菜单中选择一个项目, 通常在用户按下 Alt+Space 或点击窗口标题栏中的图标时, 菜单就会出现. 例如:</p>
 <pre><em>; Paste a command into cmd.exe without activating the window.</em>
 Clipboard := "echo Hello, world!`r"
 WinMenuSelectItem ahk_exe cmd.exe,, 0&amp;, Edit, Paste</pre>
-<p class="warning"><strong>Caution:</strong> Use this only on windows which have custom items in their system menu.</p>
-<p>If the window does not already have a custom system menu, a copy of the standard system menu will be created and assigned to the target window as a side effect. This copy is destroyed by the system when the script exits, leaving other scripts unable to access it. Therefore, avoid using 0&amp; for the standard items which appear on all windows. Instead, post the <a href="https://msdn.microsoft.com/library/ms646360">WM_SYSCOMMAND</a> message directly. For example:</p>
+<p class="warning"><strong>警告:</strong> 仅在窗口的系统菜单中具有自定义项目时使用此项.</p>
+<p>如果窗口还没有自定义系统菜单, 则将具有创建一个标准系统菜单的副本并关联到目标窗口的副作用. 该副本在脚本退出时被系统销毁, 导致其他脚本无法访问该副本. 因此, 避免在所有出现有标准项目的窗口上使用 0&amp;. 作为代替, 直接 post(发布) <a href="https://msdn.microsoft.com/library/ms646360">WM_SYSCOMMAND</a> 消息. 例如:</p>
 <pre><em>; Like "<a href="#WinMinmize.htm">WinMinimize</a> A", but also play the system sound for minimizing.</em>
 WM_SYSCOMMAND := 0x112
 SC_MINIMIZE := 0xF020

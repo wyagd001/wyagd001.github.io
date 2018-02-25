@@ -11,12 +11,15 @@
 <script>
 /*
 Usage: search.htm?q=query&m=mode
+
   mode = 1 -> index tab
   mode = 2 -> search tab
+
 &m=mode is optional and defaults to mode #1 (index).
 */
 var pQuery = getUrlParameter("q");
 var pMode = (Number(getUrlParameter("m")) || 1);
+
 switch(pMode) {
   case 1:
   cache.index.input = pQuery;
@@ -58,12 +61,15 @@ switch(pMode) {
 }
 // https://stackoverflow.com/a/21903119
 function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
+    var sPageURL, sParameterName, i;
+    if (window.location.search)
+      sPageURL = decodeURIComponent(window.location.search.substring(1));
+    else
+      sPageURL = decodeURIComponent(window.location.hash.substring(2));
+    var sURLVariables = sPageURL.split('&');
     for (i = 0; i < sURLVariables.length; i++) {
         sParameterName = sURLVariables[i].split('=');
+
         if (sParameterName[0] === sParam) {
             return sParameterName[1] === undefined ? true : sParameterName[1];
         }
