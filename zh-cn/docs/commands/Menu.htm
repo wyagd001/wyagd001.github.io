@@ -60,7 +60,7 @@ Menu, tray, add, This Menu Item Is A Submenu, :MySubmenu</pre>
 <p>为了不影响菜单项的标签或子菜单, 在改变一个已存在的菜单项的选项时直接忽略 <em>Label-or-Submenu</em> 参数即可.</p>
 <p id="Insert"><strong>Insert [, ItemToInsertBefore, NewItemName, Label-or-Submenu, Options]</strong> <span class="ver">[v1.1.23+]</span>: 在指定的菜单项前插入一个新的菜单项. 其用法同上面的 <em>Add</em> , 多出来的 <em>ItemToInsertBefore</em> 参数代表一个已存在的菜单项名称或介于1和 <a href="MenuGetHandle.htm#Examples">当前菜单项数目</a>+1 之间的位置序号(位置&amp;). 也可以用忽略 <em>ItemToInsertBefore</em>(连写两个逗号) 的方式追加菜单项. 与 <em>Add</em> 不同, <em>Insert</em> 在 <em>NewItemName</em> 和已有菜单项同名的情况下仍可以创建新的菜单项.
 <p id="Delete"><strong>Delete [, MenuItemName]</strong>: 从菜单中删除 <em>MenuItemName</em> . 标准菜单项例如 Exit(请参阅下面) 不能被单独删除. 如果删除了 <em>默认</em> 菜单项, 则效果与使用 <em>NoDefault</em> 选项类似. 如果省略了 <em>MenuItemName</em>, 则会删除整个 <em>MenuName</em> 以及在其他菜单中名称为 <em>MenuName</em> 的任何子菜单项. 删除一个菜单也会导致当前 <a href="#Win32_Menus">Win32 菜单</a> 的父菜单和子菜单被销毁, 之后在需要时才能被重新创建.</p>
-<p id="DeleteAll"><strong>DeleteAll</strong>: 从菜单中删除所有自定义菜单项, 当不包含 <em>标准</em> 菜单项(请参阅下面) 时则让菜单留空. 与使用 <em>Delete</em> 命令(请参阅上面) 完全删除菜单不同, 此时仍然存在一个空菜单, 因此其他任何包含此菜单项作为子菜单的菜单仍保留这些子菜单. 但当前 <a href="#Win32_Menus">Win32 菜单</a> 的父菜单和子菜单会被销毁, 之后在需要时才能被重新创建.</p>
+<p id="DeleteAll"><strong>DeleteAll</strong>: 从菜单中删除所有自定义菜单项, 当不包含 <em>标准</em> 菜单项(请参阅下面) 时则让菜单留空. 与使用 <em>Delete</em> 命令(请参阅上面) 完全删除菜单不同, 此时仍然存在一个空菜单, 因此其他任何包含此菜单项作为子菜单的菜单仍保留这些子菜单.</p>
 <p><strong>Rename, MenuItemName [, NewName]</strong>: 改变 <em>MenuItemName</em> 为 <em>NewName</em>(如果 <em>NewName</em> 为空, 则 <em>MenuItemName</em> 会变为分隔线). 菜单项的当前目标标签或子菜单不会改变. <span class="ver">[v1.1.23+]:</span> 可通过指定分隔线的 <em>位置&amp;</em> 和一个非空的 <em>NewName</em> 的方式将分隔线转换成正常的菜单项, 随后使用 <em>Add</em> 命令为其指定一个标签或子菜单.</p>
 <p><strong>Check, MenuItemName</strong>: 在 <em>MenuItemName</em> 前添加复选标记(如果还没有).</p>
 <p><strong>Uncheck, MenuItemName</strong>: 从 <em>MenuItemName</em> 中移除复选标记(如果有).</p>
@@ -104,8 +104,7 @@ Menu, tray, add, This Menu Item Is A Submenu, :MySubmenu</pre>
 <ul>
   <li>删除菜单.</li>
   <li>用标签或不同的菜单替换某个菜单项的子菜单.</li>
-  <li>Menu, <em>MenuName</em>, <strong>DeleteAll</strong>.</li>
-  <li>Menu, <em>MenuName</em>, <strong>NoStandard</strong>(如果标准菜单项存在的话).</li>
+  <li>Prior to <span class="ver">[v1.1.27.03]</span>, calling <strong>NoStandard</strong> (if the standard items were present) or <strong>DeleteAll</strong>.</li>
 </ul>
 <p>任何通过 Win32 API 调用直接对菜单进行的修改仅适用与菜单的当前 "实例" , 在菜单被销毁后丢失.</p>
 <p>在首次添加到菜单中时每个菜单项都会被分配到一个 ID. 脚本不能依靠某个菜单项来接收其特定 ID, 但可以像 <a href="MenuGetHandle.htm#Examples">MenuGetHandle 示例</a> 中那样使用 GetMenuItemID 获取该 ID. 此 ID 不可以用在 Menu 命令中, 却可以用于多种 <a href="https://msdn.microsoft.com/en-us/library/ms646977">Win32 函数</a>.</p>

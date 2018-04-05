@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>GetKeyState</title>
+<title>GetKeyState / GetKeyState()</title>
 <meta name="description" content="在这个免费的宏程序中使用 GetKeyState 可以方便地检查键盘按键或鼠标/操纵杆按钮当前是否按下或放开.">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,27 +10,44 @@
 </head>
 <body>
 
-<h1>GetKeyState</h1>
-
+<h1>GetKeyState / GetKeyState()</h1>
 <p>检查键盘按键或鼠标/操纵杆按钮是否按下或放开. 也可以获取操纵杆的状态.</p>
+
+<h2 id="command">GetKeyState</h2>
+<p class="warning"><strong>Deprecated:</strong> This command is not recommended for use in new scripts. Use the <a href="#function">GetKeyState</a> function instead.</p>
 
 <pre class="Syntax">
 <span class="func">GetKeyState</span>, OutputVar, KeyName <span class="optional">, Mode</span>
-KeyIsDown := <span class="func">GetKeyState</span>("KeyName" <span class="optional">, "Mode"</span>)
 </pre>
 <h3>参数</h3>
 <dl>
 
   <dt>OutputVar</dt>
-  <dd><p>用来保存获取的按键状态的变量名, 它的值在按下时是 D 而弹起时是 U(不过 GetKeyState() 函数在按下时返回 true(1) 而弹起时返回 false(0)). 如果按键的状态无法识别, 则此变量为空.</p>
-      <p>下面是关于操纵杆的几点说明:</p>
-    <p>1) 对于像 JoyX 这样的操纵杆轴, <em>OutputVar</em> 将被设置为介于 0 和 100 之间的浮点数, 作为该轴活动范围的百分率, 表示操纵杆的位置. 可以使用 <a href="SetFormat.htm">SetFormat</a> 改变此数字的格式. 此 <a href="../scripts/JoystickTest.htm">测试脚本</a> 可以用来分析您的操纵杆.</p>
-    <p>2) 当 <em>KeyName</em> 为 JoyPOV 时, 获取的值将介于 0 和 35900 之间. 许多操纵杆使用与下列近似的 POV 值:<br>
-    -1: 没有角度<br>
-    0: 向前 POV<br>
-9000(即 90 度): 向右 POV<br>
-27000(即 270 度): 向左 POV<br>
-18000(即 180 度): 向后 POV</p></dd>
+  <dd><p>The name of the variable in which to store the retrieved key state, which is either D for down or U for up. The variable will be empty (blank) if the state of the key could not be determined. For the joystick's special keys such as axes and POV switch, <a href="#joystick">other values are retrieved</a>.</p>
+      </dd>
+
+  <dt>KeyName</dt>
+  <dd><p>This can be just about any single character from the keyboard or one of the key names from the <a href="../KeyList.htm">key list</a>, such as a mouse/joystick button. Examples: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
+      <p>Alternatively, an explicit virtual key code such as vkFF may be specified. This is useful in the rare case where a key has no name. The virtual key code of such a key can be determined by following the steps at the bottom of the <a href="../KeyList.htm#SpecialKeys">key list page</a>.</p> 
+      <p><b>Known limitation:</b> This command cannot differentiate between two keys which share the same virtual key code, such as Left and NumpadLeft.</p></dd>
+
+  <dt>Mode</dt>
+  <dd><p>This parameter is ignored when retrieving joystick status.</p>
+      <p>If omitted, the mode will default to that which retrieves the logical state of the key. This is the state that the OS and the active window believe the key to be in, but is not necessarily the same as the physical state.</p>
+	  <p>Alternatively, one of these letters may be specified:</p>
+      <p><strong>P</strong>: Retrieve the physical state (i.e. whether the user is physically holding it down). The physical state of a key or mouse button will usually be the same as the logical state unless the keyboard and/or mouse hooks are installed, in which case it will accurately reflect whether or not the user is physically holding down the key or button (as long as it was pressed down while the script was running). You can determine if your script is using the  hooks via the <a href="KeyHistory.htm">KeyHistory</a> command or menu item. You can force the hooks to be installed by adding the <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> and/or <a href="_InstallMouseHook.htm">#InstallMouseHook</a> directives to the script.</p>
+      <p><strong>T</strong>: Retrieve the toggle state (only valid for  keys that can be toggled such as CapsLock, NumLock, ScrollLock, and Insert). A retrieved value of D means the key is &quot;on&quot;, while U means it's &quot;off&quot;.</p>
+    </dd>
+
+</dl>
+
+<h2 id="function">GetKeyState()</h2>
+
+<pre class="Syntax">
+KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional">, Mode</span>)
+</pre>
+<h3>Parameters</h3>
+<dl>
 
   <dt>KeyName</dt>
   <dd><p>此参数可以是键盘中任何的单个字符或 <a href="../KeyList.htm">按键列表</a> 中的其中一个键名, 例如鼠标/操纵杆按钮. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
@@ -47,15 +64,33 @@ KeyIsDown := <span class="func">GetKeyState</span>("KeyName" <span class="option
 
 </dl>
 
-<h3>备注</h3>
+<h3>返回值</h3>
+<p>This function returns 1 if the key is down (or toggled on) or 0 if it is up (or toggled off). For the joystick's special keys such as axes and POV switch, <a href="#joystick">other values are retrieved</a>.</p>
+<p>If <em>KeyName</em> is invalid or the state of the key could not be determined, an empty string is returned.</p>
+
+<h2 id="joystick">Joystick's special keys</h2>
+<p>When <em>KeyName</em> is a joystick axis such as JoyX, the retrieved value will be a floating point number between 0 and 100 to indicate the joystick's position as a percentage of that axis's range of motion. The format of the number can be changed via <a href="SetFormat.htm">SetFormat</a>. This <a href="../scripts/JoystickTest.htm">test script</a> can be used to analyze your joystick(s).</p>
+<p>当 <em>KeyName</em> 为 JoyPOV 时, 获取的值将介于 0 和 35900 之间. 许多操纵杆使用与下列近似的 POV 值:</p>
+<ul>
+  <li>-1: 没有角度</li>
+  <li>0: 向前 POV</li>
+  <li>9000(即 90 度): 向右 POV</li>
+  <li>27000(即 270 度): 向左 POV</li>
+  <li>18000(即 180 度): 向后 POV</li>
+</ul>
+
+<h2>备注</h2>
 <p>为了等待按键或鼠标/操纵杆按钮进入新的状态, 通常用 <a href="KeyWait.htm">KeyWait</a> 代替 GetKeyState 的循环会更简单.</p>
 <p>带有不常见键盘驱动的系统更新按键的状态可能比较慢, 尤其是像 CapsLock 这样按键的切换状态. 在按键状态改变后立即对其状态进行检查的脚本可以预先使用 <a href="Sleep.htm">Sleep</a>, 以便系统有时间更新按键的状态.</p>
 <p>关于对操纵杆使用 GetKeyState 的例子, 请参阅 <a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a> 和 <a href="../scripts/JoystickMouse.htm">操纵杆到鼠标的映射脚本</a>.</p>
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">按键列表</a>, <a href="../misc/RemapJoystick.htm">操纵杆重映射</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a></p>
-<h3>示例</h3>
-<pre class="NoIndent"><em>; 基本示例:</em>
-GetKeyState, state, RButton  <em>; 鼠标右键.</em>
+
+<h2>示例</h2>
+
+<h4 id="ex1">Example #1: Command vs. function</h4>
+<p>Although the first code block uses the command and the second one uses the function, these two blocks are functionally identical:</p>
+<pre>GetKeyState, state, RButton  <em>; Right mouse button.</em>
 GetKeyState, state, Joy2  <em>; 第一个操纵杆的第二个按钮.</em>
 
 GetKeyState, state, Shift
@@ -65,29 +100,36 @@ else
     MsgBox Neither Shift key is down.
 
 GetKeyState, state, CapsLock, T <em>;  当 CapsLock 打开时为 D, 否则为 U.</em>
-state := GetKeyState("CapsLock", "T")  <em>; 当 CapsLock 打开时为真, 否则为假.</em>
+</pre>
+<pre>state := GetKeyState("RButton")  <em>; Right mouse button.</em>
+state := GetKeyState("Joy2")  <em>; The second button of the first joystick.</em>
 
-<em>; 重映射的例子 (这里只是为了演示因为使用
-; <a href="../misc/Remap.htm">内置的重映射功能</a> 会更简单):
-; 在下面的热键中, 当 NumpadAdd 按下时鼠标按钮会保持按住的状态,
-; 这个热键把 NumpadAdd 映射为鼠标按钮. 此方法
-; 还可以用来在用户按住按键或按钮时重复一个动作:</em>
-*NumpadAdd::
+if GetKeyState("Shift")
+    MsgBox At least one Shift key is down.
+else
+    MsgBox Neither Shift key is down.
+
+state := GetKeyState("CapsLock", "T") <em>; True if CapsLock is ON, false otherwise.</em>
+</pre>
+
+<h4 id="ex2">Example #2: Remapping</h4>
+<p>(This example is only for illustration because it would be easier to use the <a href="../misc/Remap.htm">built-in remapping feature</a>.) In the following hotkey, the mouse button is kept held down while NumpadAdd is down, which effectively transforms NumpadAdd into a mouse button. This method can also be used to repeat an action while the user is holding down a key or button:</p>
+<pre>*NumpadAdd::
 MouseClick, left,,, 1, 0, D  <em>; 按住鼠标左键.</em>
 Loop
 {
     Sleep, 10
-    GetKeyState, state, NumpadAdd, P
-    if state = U  <em>; 按键已经被释放, 所以退出循环.</em>
+    if !GetKeyState("NumpadAdd", "P")  <em>; 按键已经被释放, 所以退出循环.</em>
         break
     <em>; ... 此处放置您想要重复的任何动作.</em>
 }
 MouseClick, left,,, 1, 0, U  <em>; 释放鼠标按钮.</em>
-return
+return</pre>
 
-<em>; 示例: 让操纵杆按钮根据操纵杆轴位置产生不同的反应.</em>
-joy2:: 
-GetKeyState, Joyx, JoyX 
+<h4 id="ex3">Example #3</h4>
+<p>Make joystick button behavior depend on joystick axis position:</p>
+<pre>joy2::
+JoyX := GetKeyState("JoyX")
 if Joyx &gt; 75 
     MsgBox Action #1 (button pressed while joystick was pushed to the right).
 else if Joyx &lt; 25 
@@ -95,8 +137,10 @@ else if Joyx &lt; 25
 else
     MsgBox Action #3 (button pressed while joystick was centered horizontally).
 return
+</pre>
 
-<em>; 请参阅 <a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a> 和 <a href="../scripts/JoystickMouse.htm">操纵杆到鼠标的映射脚本</a> 查看其他示例.</em></pre>
+<h4 id="ex-other">Other examples</h4>
+<p>请参阅 <a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a> 和 <a href="../scripts/JoystickMouse.htm">操纵杆到鼠标的映射脚本</a> 查看其他示例.</p>
 
 </body>
 </html>

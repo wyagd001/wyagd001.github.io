@@ -64,7 +64,7 @@
   <li>对象的属性在 <em>ByRef</em> 的参数中不会被视为变量. 例如, 如果 <code>foo.bar</code> 传递给 ByRef 参数, 那么它将表现的就像没有 <em>ByRef</em> 关键字一样.</li>
   <li>不能传递 <a href="misc/Clipboard.htm">Clipboard</a>, <a href="Variables.htm#BuiltIn">内置变量</a> 或 <a href="Concepts.htm#environment-variables">环境变量</a> 给函数的 <em>ByRef</em> 参数, 无论脚本中有没有 <a href="commands/_NoEnv.htm">#NoEnv</a> 语句.</li>
   <li id="recurse">尽管函数可以递归调用它自己, 但是如果它传递它自己的一个 <a href="#Local">局部变量</a> 或非 ByRef 参数给自己的 <em>ByRef</em>, 那么新一层的 <em>ByRef</em> 参数将引用它自己那个名称的局部变量而不是之前层的. 然而, 当函数传递给它自己 <a href="#Global">全局变量</a>, <a href="#static">静态变量</a> 或 <em>ByRef</em> 参数时不会产生这样的问题.</li>
-  <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>func(Var, Var++)</code> 会意外地传递 1 和 0, 即使函数的首个参数不是 <em>ByRef</em> 类型时. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
+  <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>MyFunc(Var, Var++)</code> 会意外地传递 1 和 0, 即使函数的首个参数不是 <em>ByRef</em> 类型时. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
   <li>ByRef 不直接支持函数调用 COM 客户端, 或调用 COM 方法. 作为替代, 脚本必须接受或传递一个 <a href="commands/ComObjActive.htm#ByRef">wrapper object(包装对象)</a> 包含特殊的 <a href="commands/ComObjType.htm">VarType(变量类型)</a> 和变量内存地址.</li>
 </ul>
 <h2 id="optional">可选参数</h2>
@@ -76,11 +76,11 @@
 }</pre>
 <p>当调用者传递 <strong>三个</strong> 参数给上面的函数时, Z 的默认值被忽略. 但当调用者仅传递 <strong>两个</strong> 参数时, Z 自动接受默认值 0.</p>
 <p id="missing">可选参数不能孤立地放在参数列表的中间. 换句话说, 在首个可选参数右边的所有参数都必须定义为可选的. <span class="ver">[AHK_L 31+]:</span> 调用函数时可以省略参数列表中间的可选参数, 如下所示: 从 <span class="ver">[v1.1.12]</span> 开始, 动态调用函数或方法时也支持这种特性.</p>
-<pre>Func(1,, 3)
-Func(X, Y:=2, Z:=0) {  <em>; 注意: 这里的 Z 必须是可选参数.</em>
+<pre>MyFunc(1,, 3)
+MyFunc(X, Y:=2, Z:=0) {  <em>; 注意: 这里的 Z 必须是可选参数.</em>
     MsgBox %X%, %Y%, %Z%
 }</pre>
-<p id="OptionalByRef">从 <span class="ver">[v1.0.46.13]</span> 开始, <a href="#ByRef">ByRef</a> 参数也支持默认值; 例如: <code>Func(ByRef p1 = "")</code>. 每当调用者省略这样的参数时, 函数会创建一个包含默认值的局部变量; 不过, 这种情况下 "ByRef" 关键字没有任何意义.</p>
+<p id="OptionalByRef">从 <span class="ver">[v1.0.46.13]</span> 开始, <a href="#ByRef">ByRef</a> 参数也支持默认值; 例如: <code>MyFunc(ByRef p1 = "")</code>. 每当调用者省略这样的参数时, 函数会创建一个包含默认值的局部变量; 不过, 这种情况下 "ByRef" 关键字没有任何意义.</p>
 
 <h2 id="return">返回值给调用者</h2>
 <p>如 <a href="#intro">介绍</a> 中所说, 函数可以 <a href="commands/Return.htm">返回</a> 一个值给调用者.</p>
@@ -161,7 +161,7 @@ MsgBox % Join("`n", <b class="blue">substrings*</b>)</pre>
 </ul>
 <p>已知限制:</p>
 <ul>
-  <li>只有最右边的那个参数才可以这样展开. 例如, 支持 <code>Func(x, y*)</code> 但不支持 <code>Func(x*, y)</code>.</li>
+  <li>只有最右边的那个参数才可以这样展开. 例如, 支持 <code>MyFunc(x, y*)</code> 但不支持 <code>MyFunc(x*, y)</code>.</li>
   <li>在星号(<code>*</code>) 和参数列表中最后的形式参数间不能存在任何的非空白字符.</li>
 </ul>
 <h2 id="Locals">局部变量和全局变量</h2>

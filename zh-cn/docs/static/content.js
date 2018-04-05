@@ -19,15 +19,16 @@ var scriptDir = scriptElement.src.substr(0, scriptElement.src.lastIndexOf('/'));
 var cache = {
   scriptDir: scriptDir,
   fontSize: 1.0,
+  forceNoFrame: false,
+  forceNoScript: false,
   clickTab: 0,
   LastUsedSource: "",
   displaySidebar: true,
   sidebarWidth: '18em',
   RightIsFocused: true,
-  translate: {},
-  toc: {data: {}, clickItem: 0, scrollPos: 0},
-  index: {data: {}, input: "", clickItem: 0, scrollPos: 0},
-  search: {index: {}, files: {}, titles: {}, data: {}, input: "", clickItem: 0, scrollPos: 0},
+  toc: {clickItem: 0, scrollPos: 0},
+  index: {input: "", clickItem: 0, scrollPos: 0},
+  search: {data: {}, input: "", clickItem: 0, scrollPos: 0},
   load: function() {
     try {
       var data = JSON.parse(window.name);
@@ -52,7 +53,7 @@ var workingDir = getWorkingDir();
 var relPath = location.href.replace(workingDir, '');
 var isInsideCHM = (location.href.search(/::/) > 0) ? 1 : 0;
 var supportsHistory = (history.replaceState) && !isInsideCHM;
-var isFrameCapable = isInsideCHM || supportsHistory;
+var isFrameCapable = !cache.forceNoFrame && (isInsideCHM || supportsHistory);
 var isInsideFrame = (window.self !== window.top);
 var isSearchBot = navigator.userAgent.match(/googlebot|bingbot|slurp/i);
 var isTouch = !!("ontouchstart" in window) || !!(navigator.msMaxTouchPoints);
@@ -80,7 +81,7 @@ var isPhone = (document.documentElement.clientWidth <= 600);
     return;
 
   // Exit the script on sites which doesn't need the sidebar:
-  if (/(search|frame)\.htm/.test(location.href))
+  if (/(search|frame)\.htm/.test(location.href) || cache.forceNoScript)
     return;
 
   // Special treatments for pages inside a frame:
@@ -122,34 +123,39 @@ var isPhone = (document.documentElement.clientWidth <= 600);
   structure.build();
 
   // Get the data if needed and modify the site:
-  if (!isCacheLoaded) {
+  if (!cache.translate)
     loadScript(structure.dataPath, function() {
       cache.translate = translateData;
       structure.modify();
       $(document).ready(addFeatures);
     });
+  else {
+    structure.modify();
+    $(document).ready(addFeatures);
+  }
+  if (!cache.toc.data)
     loadScript(toc.dataPath, function() {
       cache.toc.data = tocData;
       toc.modify();
     });
+  else
+    toc.modify();
+  if (!cache.index.data)
     loadScript(index.dataPath, function() {
       cache.index.data = indexData;
       index.modify();
     });
+  else
+    index.modify();
+  if (!cache.search.index || !cache.search.files || !cache.search.titles)
     loadScript(search.dataPath, function() {
       cache.search.index = SearchIndex;
       cache.search.files = SearchFiles;
       cache.search.titles = SearchTitles;
       search.modify();
     });
-  }
-  else {
-    structure.modify();
-    toc.modify();
-    index.modify();
+  else
     search.modify();
-    $(document).ready(addFeatures);
-  }
 })();
 
 // --- Constructor: Table of content ---
@@ -592,7 +598,7 @@ function ctor_structure()
   self.metaViewport = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">';
   self.template = '<div id="body">' +
   '<div id="head"><div class="h-tabs"><ul><li data-translate data-content="Content"></li><li data-translate data-content="Index"></li><li data-translate data-content="Search"></li></ul></div><div class="h-tools"><div class="main"><ul><li class="sidebar" title="Hide/Show sidebar" data-translate>&#926;</li></ul></div><div class="online"><ul><li class="home" title="Home page" data-translate><a href="' + location.protocol + '//' + location.host + '/zh-cn/docs/AutoHotkey.htm' + '">&#916;</a></li></ul><ul><li class="language" title="Change language" data-translate data-content="en"></li></ul><ul class="languages"><li class="arrow">&#9658;</li><li><a title="&#x82F1;&#x6587; (English)" data-content="en"></a></li><li><a title="&#x5FB7;&#x6587; (German)" data-content="de"></a></li><li><a title="&#x4E2D;&#x6587; (Chinese)" data-content="zh"></a></li></ul><ul><li class="version" title="Change AHK version" data-translate data-content="v1"></li></ul><ul class="versions"><li class="arrow">&#9658;</li><li><a title="AHK v1.1" data-content="v1"></a></li><li><a title="AHK v2.0" data-content="v2"></a></li></ul><ul><li class="edit" title="Edit page on GitHub" data-translate><a data-content="E"></a></li></ul></div><div class="chm"><ul><li class="back" title="Go back" data-translate>&#9668;</li><li class="forward" title="Go forward" data-translate>&#9658;</li><li class="zoom" title="Change font size" data-translate data-content="Z"></li><li class="print" title="Print current document" data-translate data-content="P"></li></ul></div></div></div>' +
-  '<div id="main"><div id="left"><div class="toc"></div><div class="index"><div class="label" data-translate data-content="Type in the keyword to find:"></div><div class="input"><input type="text" /></div><div class="list"></div></div><div class="search"><div class="label" data-translate data-content="Type in the word(s) to search for:"></div><div class="input"><input type="text" /></div><div class="list"></div></div></div><div class="dragbar"></div><div id="right" tabIndex="-1"><div class="area">';
+  '<div id="main"><div id="left"><div class="toc"></div><div class="index"><div class="label" data-translate data-content="Type in the keyword to find:"></div><div class="input"><input type="text" /></div><div class="list"></div></div><div class="search"><div class="label" data-translate data-content="Type in the word(s) to search for:"></div><div class="input"><input type="text" /></div><div class="list"></div></div><div class="load"><div class="lds-dual-ring"></div></div></div><div class="dragbar"></div><div id="right" tabIndex="-1"><div class="area">';
   self.template = isIE || isEdge ? self.template.replace(/ data-content="(.*?)">/g, '>$1') : self.template;
   self.build = function() { document.write(self.template); }; // Write HTML before DOM is loaded to prevent flickering.
   self.modify = function() { // Modify elements added via build.
@@ -711,9 +717,9 @@ function ctor_structure()
     // 'Print' button:
     $('li.print', $chm).on('click', function() { window.print(); });
 
-    // --- If help is CHM, hide online tools, otherwise hide CHM tools ---
+    // --- If help is CHM, show CHM tools, else show online tools ---
 
-    (isInsideCHM) ? $online.hide() : $chm.hide();
+    (isInsideCHM) ? $chm.show() : $online.show();
 
     // --- Apply click events for sidebar tabs ---
 
@@ -1221,7 +1227,7 @@ function addFeatures()
 
   // Syntax highlighting:
   if (!isIE8) {
-    if (cache.index.data[0]) {
+    if (cache.index.data) {
         addSyntaxColors(pres);
     } else {
       loadScript(index.dataPath, function() { cache.index.data = indexData; addSyntaxColors(pres); });
@@ -1243,93 +1249,98 @@ function addFeatures()
     }
     // Traverse pre elements:
     for(var i = 0; i < pres.length; i++) {
-      var pre = pres[i];
+      var pre = pres[i], ems = [], els = [];
       // Skip pre.no-syntax-highlight elements:
       if (pre.className.indexOf('no-syntax-highlight') != -1)
         continue;
-      // multi-line string (needs to be pre-processed):
-      pre.innerHTML = pre.innerHTML.replace(/(^(\s*)\([\s\S]*?^(\s*)\))/gm, function(m, m1) { return wrap(m1,'multi-str',0); });
-      // Separate existing tags with attributes to avoid threading them as strings and wrap the rest ("plain texts") with tags:
-      var innerHTML = pre.innerHTML;
-      var offset = 0;
+      // Temporary remove comments to avoid interfering with syntax detection:
+      $('em', pre).each(function() {
+        ems.push(this);
+        $(this).replaceWith('<em>');
+      });
+      // Mark continuation sections:
+      pre.innerHTML = pre.innerHTML.replace(/(^\s*\([\s\S]*?^\s*\))/gm, function(m,m1) { return wrap(m1,'str',0)});
+      // function definitions:
+      pre.innerHTML = pre.innerHTML.replace(/^(\s*?)(\S*?)(?=\(.*?\)[<\/em>\s]*{)/mg, function(m,m1,m2) { return m1+wrap(m2,'lab',0); });
+      // Temporary remove elements with attributes and children to avoid interfering with syntax detection:
       $(pre).children().each(function() {
         if (this.attributes.length || this.children.length) {
-          var outerHTML = this.outerHTML;
-          var n = innerHTML.indexOf(outerHTML, offset);
-          var replacement = '</span>'+outerHTML+'<span class="pln">';
-          offset = n + replacement.length;
-          if (n !== -1)
-            innerHTML = innerHTML.substr(0, n) + replacement + innerHTML.substr(n + outerHTML.length);
+          els.push(this);
+          $(this).replaceWith('<el>');
         }
       });
-      pre.innerHTML = '<span class="pln">'+innerHTML+'</span>';
-      // Traverse plain text elements defined by above:
-      var spans = pre.querySelectorAll("span.pln");
-      for(var j = 0; j < spans.length; j++) {
-        var innerHTML = spans[j].innerHTML;
-        // strings (double and single quotes):
-        innerHTML = innerHTML.replace(/(("|').*?\2)\B/g, function(m, m1) { return wrap(m1, 'str', false); });
-        // methods:
-        innerHTML = innerHTML.replace(/(\.)([^~`!@#$%^&*(){}\[\];:"'<,.>?\/\\|+=-\s]+?)(?=\()/g, function(m, m1, m2) { return m1+wrap(m2, 'met', false); });
-        // legacy if:
-        innerHTML = innerHTML.replace(/(^\s*|[,:}]\s*)(else |)(if) (\S+) (not between|between|not in|in|not contains|contains|is not|is) (?:(\S+) (and) (\S+)|(.+))/gim, function(m, m1, m2, m3, m4, m5, m6, m7, m8, m9) {
-          var if_var_ = m1+m2+wrap(m3, 'cfs', 'commands/IfEqual.htm')+' '+m4+' ';
-          switch(m5) {
-            case "not between":
-            case "between":
-            return if_var_+wrap(m5,'cfs','commands/IfBetween.htm')+' '+wrap(m6,'str',0)+' '+wrap(m7,'cfs',0)+' '+wrap(m8,'str',0);
-      
-            case "not in":
-            case "in":
-            case "not contains":
-            case "contains":
-            return if_var_+wrap(m5,'cfs','commands/IfIn.htm')+' '+wrap(m9,'str',0);
-      
-            case "is not":
-            case "is":
-            return if_var_+wrap(m5,'cfs','commands/IfIs.htm')+' '+wrap(m9,'str',0);
-          };
-        });
-        // if expression:
-        innerHTML = innerHTML.replace(/(^\s*|[,:}]\s*)(else |)(if)\b/gim, function(m, m1, m2, m3) { return m1+m2+wrap(m3,'cfs','commands/IfExpression.htm'); });
-        // loops:
-        innerHTML = innerHTML.replace(/\b(loop)(\s|,\s|,)(files|parse|read|reg)\b/gim, function(m, m1, m2, m3) {
-          m3 = m3.substr(0,1).toUpperCase()+m3.substr(1).toLowerCase(); // Convert to title case.
-          var link = 'commands/Loop'+(m3.toLowerCase()=='files'?m3.substr(0,4):m3)+'.htm';
-          return wrap(m1,'cfs',link)+m2+wrap(m3,'cfs',link);
-        });
-        // class:
-        innerHTML = innerHTML.replace(/(^\s*|[,:}]\s*)(class) (\S+)(?: (extends)(?= \S+)|)/gim, function(m, m1, m2, m3, m4) {
-          var link = 'Objects.htm#Custom_Classes';
-          if (m4)
-            return m1+wrap(m2,'cfs',link)+' '+m3+' '+wrap(m4,'cfs',link);
-          else
-            return m1+wrap(m2,'cfs',link)+' '+m3;
-        });
-        // for:
-        innerHTML = innerHTML.replace(/\b(for) (\S+|\S+, \S+) (in)/gim, function(m, m1, m2, m3) {
-          var link = 'commands/For.htm';
-          return wrap(m1,'cfs',link)+' '+m2+' '+wrap(m3,'cfs',link);
-        });
-        // control flows / declarations:
-        innerHTML = innerHTML.replace(new RegExp('(^\\s*|[,:}]\\s*)('+syntax[3].join('|')+'|'+syntax[5].join('|')+')\\b','gim'), function(m, m1, m2) { return m1+wrap(m2,'cfs',true); });
-        // ByRef:
-        innerHTML = innerHTML.replace(/(.+?)\b(byref)\b(?=(.+?)\))/gim, function(m, m1, m2) { return m1+wrap(m2,'cfs','Functions.htm#ByRef'); });
-        // commands:
-        innerHTML = innerHTML.replace(new RegExp('(^\\s*|[:]\\s*)('+syntax[6].join('|')+')\\b(?=[\\s,]|$)',"gim"), function(m, m1, m2) { return m1+wrap(m2,'cmd',true); });
-        // built-in functions:
-        innerHTML = innerHTML.replace(new RegExp('\\b('+syntax[2].join('|')+')(?=\\()','gi'), function(m, m1) { return wrap(m1, 'bif', true); });
-        // built-in vars:
-        innerHTML = innerHTML.replace(new RegExp('\\b('+syntax[1].join('|')+')\\b','gi'), function(m, m1) { return wrap(m1, 'biv', true); });
-        // directives:
-        innerHTML = innerHTML.replace(new RegExp('('+syntax[0].join('|')+')\\b','gi'), function(m, m1) { return wrap(m1, 'dir', true); });
-        // hotkeys/hotstrings:
-        innerHTML = innerHTML.replace(/^(\s*)((?:\S+?|\S+? \S+?|\S+? (&amp;|&) \S+?)::)/mg, function(m, m1, m2) { return m1+wrap(m2, 'lab', false); });
-        // labels:
-        innerHTML = innerHTML.replace(/^(\s*)([^\s]+?:)(?=\s|$)/mg, function(m, m1, m2) { return m1+wrap(m2, 'lab', false); });
-
-        spans[j].innerHTML = innerHTML;
-      }
+      var innerHTML = pre.innerHTML;
+      // strings:
+      innerHTML = innerHTML.replace(/((")[\s\S]*?\2)\B/gm, function(m, m1) { return wrap(m1, 'str', false); });
+      // methods:
+      innerHTML = innerHTML.replace(/(\.)([^~`!@#$%^&*(){}\[\];:"'<,.>?\/\\|+=\-\s]+?)(?=\()/g, function(m, m1, m2) { return m1+wrap(m2, 'met', false); });
+      // legacy if:
+      innerHTML = innerHTML.replace(/(^\s*|[,:}]\s*)(else |)(if) (\S+) (not between|between|not in|in|not contains|contains|is not|is) (?:(\S+) (and) (\S+)|(.+))/gim, function(m, m1, m2, m3, m4, m5, m6, m7, m8, m9) {
+        var if_var_ = m1+m2+wrap(m3, 'cfs', 'commands/IfEqual.htm')+' '+m4+' ';
+        switch(m5) {
+          case "not between":
+          case "between":
+          return if_var_+wrap(m5,'cfs','commands/IfBetween.htm')+' '+wrap(m6,'str',0)+' '+wrap(m7,'cfs',0)+' '+wrap(m8,'str',0);
+    
+          case "not in":
+          case "in":
+          case "not contains":
+          case "contains":
+          return if_var_+wrap(m5,'cfs','commands/IfIn.htm')+' '+wrap(m9,'str',0);
+    
+          case "is not":
+          case "is":
+          return if_var_+wrap(m5,'cfs','commands/IfIs.htm')+' '+wrap(m9,'str',0);
+        };
+      });
+      // if expression:
+      innerHTML = innerHTML.replace(/(^\s*|[,:}]\s*)(else |)(if)\b/gim, function(m, m1, m2, m3) { return m1+m2+wrap(m3,'cfs','commands/IfExpression.htm'); });
+      // loops:
+      innerHTML = innerHTML.replace(/\b(loop)(\s|,\s|,)(files|parse|read|reg)\b/gim, function(m, m1, m2, m3) {
+        var dict = {files: 'File', parse: 'Parse', read: 'ReadFile', reg: 'Reg'};
+        var link = 'commands/Loop'+dict[m3.toLowerCase()]+'.htm';
+        return wrap(m1+m2+m3,'cfs',link);
+      });
+      // class:
+      innerHTML = innerHTML.replace(/(^\s*|[,:}]\s*)(class) (\S+)(?: (extends)(?= \S+)|)/gim, function(m, m1, m2, m3, m4) {
+        var link = 'Objects.htm#Custom_Classes';
+        if (m4)
+          return m1+wrap(m2,'cfs',link)+' '+m3+' '+wrap(m4,'cfs',link);
+        else
+          return m1+wrap(m2,'cfs',link)+' '+m3;
+      });
+      // for:
+      innerHTML = innerHTML.replace(/\b(for) (\S+|\S+, \S+) (in)/gim, function(m, m1, m2, m3) {
+        var link = 'commands/For.htm';
+        return wrap(m1,'cfs',link)+' '+m2+' '+wrap(m3,'cfs',link);
+      });
+      // control flows / declarations:
+      innerHTML = innerHTML.replace(new RegExp('(^\\s*|[,:}]\\s*)('+syntax[3].join('|')+'|'+syntax[5].join('|')+')\\b','gim'), function(m, m1, m2) { return m1+wrap(m2,'cfs',true); });
+      // ByRef:
+      innerHTML = innerHTML.replace(/(.+?)\b(byref)\b(?=(.+?)\))/gim, function(m, m1, m2) { return m1+wrap(m2,'cfs','Functions.htm#ByRef'); });
+      // commands:
+      innerHTML = innerHTML.replace(new RegExp('(^\\s*|[:]\\s*)('+syntax[6].join('|')+')\\b(?=[\\s,]|$)',"gim"), function(m, m1, m2) { return m1+wrap(m2,'cmd',true); });
+      // built-in functions:
+      innerHTML = innerHTML.replace(new RegExp('\\b('+syntax[2].join('|')+')(?=\\()','gi'), function(m, m1) { return wrap(m1, 'bif', true); });
+      // built-in vars:
+      innerHTML = innerHTML.replace(new RegExp('\\b('+syntax[1].join('|')+')\\b','gi'), function(m, m1) { return wrap(m1, 'biv', true); });
+      // directives:
+      innerHTML = innerHTML.replace(new RegExp('('+syntax[0].join('|')+')\\b','gi'), function(m, m1) { return wrap(m1, 'dir', true); });
+      // hotstrings:
+      innerHTML = innerHTML.replace(/^(\s*)(:.*?:)(.*?)(::)(.*)/mg, function(m,m1,m2,m3,m4,m5) { return m1+wrap(m2,'lab',0)+wrap(m3,'str',0)+wrap(m4,'lab',0)+wrap(m5,'str',0); });
+      // hotkeys:
+      innerHTML = innerHTML.replace(/^(\s*)((?:\S+?|\S+? \S+?|\S+? (&amp;|&) \S+?)::)/mg, function(m,m1,m2) { return m1+wrap(m2,'lab',0); });
+      // labels:
+      innerHTML = innerHTML.replace(/^(\s*)([^\s]+?:)(?=\s|$)/mg, function(m, m1, m2) { return m1+wrap(m2, 'lab', false); });
+      pre.innerHTML = innerHTML;
+      // Restore elements with attributes and children:
+      $('el', pre).each(function(index) {
+        this.outerHTML = els[index].outerHTML;
+      });
+      // Restore comments:
+      $('em', pre).each(function(index) {
+        this.outerHTML = ems[index].outerHTML;
+      });
     }
     function wrap(match, type, isLink) {
       var span = document.createElement('span');
