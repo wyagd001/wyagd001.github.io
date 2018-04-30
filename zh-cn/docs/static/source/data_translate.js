@@ -7,6 +7,7 @@
   "Type in the word(s) to search for:":"输入要搜索的内容:",
   // header
   "Hide/Show sidebar":"显示/隐藏 侧边栏",
+  "Open Settings":"打开设置",
   "Home page":"主页",
   "en":"zh",
   "Change language":"更换语言",

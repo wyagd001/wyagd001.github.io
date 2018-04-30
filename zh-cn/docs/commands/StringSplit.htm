@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>StringSplit / StrSplit()</title>
+<title>StrSplit() / StringSplit</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -9,8 +9,50 @@
 </head>
 <body>
 
-<h1>StringSplit / StrSplit()</h1>
+<h1>StrSplit() / StringSplit</h1>
 <p>使用指定的分隔符把一个字符串分解成多个子字符串并保存到数组中.</p>
+
+<h2 id="function">StrSplit() <span class="ver">[v1.1.13+]</span></h2>
+<pre class="Syntax">
+Array := <span class="func">StrSplit</span>(String <span class="optional">, Delimiters, OmitChars</span>)
+Array := <span class="func">StrSplit</span>(String <span class="optional">, Delimiters, OmitChars, MaxParts := -1</span>)  <em>; <span class="ver">[v1.1.28+]</span></em>
+</pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>String</dt>
+  <dd><p>要分割的字符串. </p></dd>
+
+  <dt>Delimiters(分隔符)</dt>
+  <dd><p>如果此参数为空或省略, 那么将把输入字符串中的每个字符解析为单独的子字符串. </p>
+      <p>其他情况下, <em>Delimiters</em> 中可以是单个字符串或字符串数组, 其中的每个都被用来确定子字符串之间的边界. 由于分隔符不被视为子字符串的一部分, 所以它们不会被包含在返回的数组中. 此外, 如果输入字符串中一对分隔符之间没有其他字符, 那么相应的数组元素会被置空. </p>      
+      <p>例如: <code>","</code>将根据逗号每次出现的位置分割字符串. 同样地, 使用 <code>[A_Tab, A_Space]</code> 作为分隔符将在输入字符串中每次遇到空格或 tab 时创建一个新的数组元素. </p></dd>
+
+  <dt>OmitChars</dt>
+  <dd><p>可选的字符列表(区分大小写), 用来从每个数组元素的开始和结尾部分移除这些字符. 例如, 如果 <em>OmitChars</em> 是 <code>" `t"</code>, 那么每个元素中开始和结尾部分(但中间的不会) 的空格和 tab 会被移除.</p>
+      <p>如果 <em>Delimiters</em> 为空, 那么 <em>OmitChars</em> 表示需要从数组中排除的那些字符.</p></dd>
+
+  <dt>MaxParts <span class="ver">[v1.1.28+]</span></dt>
+  <dd><p>返回的子字符串的最大数目. 如果非零, 则字符串最多被分割 <em>MaxParts</em>-1 次, 并且在最后一个子字符串中返回字符串的其余部分(不包括任何领先的或尾随的 <em>OmitChars</em>). 如果省略或 -1, 则没有限制.</p></dd>
+
+</dl>
+
+<h3>返回值</h3>
+<p>函数返回字符串 <a href="../Objects.htm#Usage_Simple_Arrays">数组</a> (对象).</p>
+
+<h3>示例</h3>
+<pre class="NoIndent">TestString := "This is a test."
+word_array := StrSplit(TestString, A_Space, ".")  <em>; 忽略句点. </em>
+MsgBox % "The 4th word is " word_array[4]
+
+Colors := "red,green,blue"
+ColorArray := StrSplit(Colors, ",")
+Loop % ColorArray.MaxIndex()
+{
+    this_color := ColorArray[a_index]
+    MsgBox, Color number %a_index% is %this_color%.
+}</pre>
 
 <h2 id="command">StringSplit</h2>
 <p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此命令. 使用 <a href="#function">StrSplit</a> 函数作为代替.</p>
@@ -56,48 +98,6 @@ Loop, %ColorArray0%
 {
     this_color := ColorArray%A_Index%
     MsgBox, Color number %A_Index% is %this_color%.
-}</pre>
-
-<h2 id="function">StrSplit() <span class="ver">[v1.1.13+]</span></h2>
-<pre class="Syntax">
-Array := <span class="func">StrSplit</span>(String <span class="optional">, Delimiters, OmitChars</span>)
-Array := <span class="func">StrSplit</span>(String <span class="optional">, Delimiters, OmitChars, MaxParts := -1</span>)  <em>; <span class="ver">[v1.1.28+]</span></em>
-</pre>
-
-<h3>参数</h3>
-<dl>
-
-  <dt>String</dt>
-  <dd><p>要分割的字符串. </p></dd>
-
-  <dt>Delimiters(分隔符)</dt>
-  <dd><p>如果此参数为空或省略, 那么将把输入字符串中的每个字符解析为单独的子字符串. </p>
-      <p>其他情况下, <em>Delimiters</em> 中可以是单个字符串或字符串数组, 其中的每个都被用来确定子字符串之间的边界. 由于分隔符不被视为子字符串的一部分, 所以它们不会被包含在返回的数组中. 此外, 如果输入字符串中一对分隔符之间没有其他字符, 那么相应的数组元素会被置空. </p>      
-      <p>例如: <code>","</code>将根据逗号每次出现的位置分割字符串. 同样地, 使用 <code>[A_Tab, A_Space]</code> 作为分隔符将在输入字符串中每次遇到空格或 tab 时创建一个新的数组元素. </p></dd>
-
-  <dt>OmitChars</dt>
-  <dd><p>可选的字符列表(区分大小写), 用来从每个数组元素的开始和结尾部分移除这些字符. 例如, 如果 <em>OmitChars</em> 是 <code>" `t"</code>, 那么每个元素中开始和结尾部分(但中间的不会) 的空格和 tab 会被移除.</p>
-      <p>如果 <em>Delimiters</em> 为空, 那么 <em>OmitChars</em> 表示需要从数组中排除的那些字符.</p></dd>
-
-  <dt>MaxParts <span class="ver">[v1.1.28+]</span></dt>
-  <dd><p>返回的子字符串的最大数目. 如果非零, 则字符串最多被分割 <em>MaxParts</em>-1 次, 并且在最后一个子字符串中返回字符串的其余部分(不包括任何领先的或尾随的 <em>OmitChars</em>). 如果省略或 -1, 则没有限制.</p></dd>
-
-</dl>
-
-<h3>返回值</h3>
-<p>函数返回字符串 <a href="../Objects.htm#Usage_Simple_Arrays">数组</a> (对象).</p>
-
-<h3>示例</h3>
-<pre class="NoIndent">TestString := "This is a test."
-word_array := StrSplit(TestString, A_Space, ".")  <em>; 忽略句点. </em>
-MsgBox % "The 4th word is " word_array[4]
-
-Colors := "red,green,blue"
-ColorArray := StrSplit(Colors, ",")
-Loop % ColorArray.MaxIndex()
-{
-    this_color := ColorArray[a_index]
-    MsgBox, Color number %a_index% is %this_color%.
 }</pre>
 
 <h2>备注</h2>

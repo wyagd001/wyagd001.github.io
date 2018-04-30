@@ -105,43 +105,43 @@ MsgBox The previous value was: %prev_chars%</pre>
 
 <h3>示例</h3>
 <h4 id="ex1">示例 #1: 热字串助手</h4>
-<p>如果您是一个热字串重度用户, 下面的脚本可能会很有用. 它基于 <a href="../Hotstrings.htm#Helper">Andreas Borutta 创建的脚本</a>. 通过按下 Win+H (or another hotkey of your choice), 可以将当前选定的文本转换为热字串. 例如, if you have &quot;by the way&quot; selected in a word processor, pressing Win+H will prompt you for its abbreviation (e.g. btw) and then add the new hotstring to the script. 热字串将被激活而无需重新加载脚本.</p>
-<pre>#h::  <em>; Win+H hotkey
-; Get the text currently selected. The clipboard is used instead of
-; "ControlGet Selected" because it works in a greater variety of editors
-; (namely word processors).  Save the current clipboard contents to be
-; restored later. Although this handles only plain text, it seems better
-; than nothing:</em>
+<p>如果您是一个热字串重度用户, 下面的脚本可能会很有用. 它基于 <a href="../Hotstrings.htm#Helper">Andreas Borutta 创建的脚本</a>. 通过按下 Win+H(或您选择的其他热键), 可以将当前选定的文本转换为热字串. 例如, 如果您在文字处理软件中选择了 &quot;by the way&quot; , 按下 Win+H 会提示您输入其缩写(例如 btw), 然后把新热字串添加到脚本中. 之后会重新载入脚本来激活热字串. 热字串将被激活而无需重新加载脚本.</p>
+<pre>#h::  <em>; Win+H 热键
+; 获取当前选择的文本. 使用剪贴板代替
+; "ControlGet Selected" 是因为它可以工作于更大范围的编辑器
+; (即文字处理软件).  保存剪贴板当前的内容
+; 以便在后面恢复. 尽管这里只能处理纯文本,
+; 但总比没有好:</em>
 ClipboardOld := Clipboard
-Clipboard := "" <em>; Must start off blank for detection to work.</em>
+Clipboard := "" <em>; 必须清空, 才能检测是否有效.</em>
 Send ^c
 ClipWait 1
-if ErrorLevel  <em>; ClipWait timed out.</em>
+if ErrorLevel  <em>; ClipWait 超时.</em>
     return
-<em>; Replace CRLF and/or LF with `n for use in a "send-raw" hotstring:
-; The same is done for any other characters that might otherwise
-; be a problem in raw mode:</em>
-ClipContent := StrReplace(Clipboard, "``", "````")  <em>; Do this replacement first to avoid interfering with the others below.</em>
-ClipContent := StrReplace(ClipContent, "`r`n", "``r")  <em>; Using `r works better than `n in MS Word, etc.</em>
+<em>; 替换 CRLF 和/或 LF 为 `n 以便用于 "发送原始模式的" 热字串:
+; 对其他任何在原始模式下可能出现问题
+; 的字符进行相同的处理:</em>
+ClipContent := StrReplace(Clipboard, "``", "````")  <em>; 首先进行此替换以避免和后面的操作冲突.</em>
+ClipContent := StrReplace(ClipContent, "`r`n", "``r")  <em>; 在 MS Word 等软件中中使用 `r 会比 `n 工作的更好.</em>
 ClipContent := StrReplace(ClipContent, "`n", "``r")
 ClipContent := StrReplace(ClipContent, "`t", "``t")
 ClipContent := StrReplace(ClipContent, "`;", "```;")
-Clipboard := ClipboardOld  <em>; Restore previous contents of clipboard.</em>
+Clipboard := ClipboardOld  <em>; 恢复剪贴板之前的内容.</em>
 ShowInputBox(":T:`::" ClipContent)
 return
 
 ShowInputBox(DefaultValue)
 {
-    <em>; This will move the InputBox's caret to a more friendly position:</em>
+    <em>; 这里会移动 InputBox 的光标到更人性化的位置:</em>
     SetTimer, MoveCaret, 10
-    <em>; Show the InputBox, providing the default hotstring:</em>
+    <em>; 显示 InputBox, 提供默认的热字串:</em>
     InputBox, UserInput, New Hotstring,
     (
     Type your abreviation at the indicated insertion point. You can also edit the replacement text if you wish.
 
     Example entry: :R:btw`::by the way
     ),,,,,,,, %DefaultValue%
-    if ErrorLevel  <em>; The user pressed Cancel.</em>
+    if ErrorLevel  <em>; 用户选择了取消.</em>
         return
 
     if RegExMatch(UserInput, "O)(?P&lt;Label&gt;:.*?:(?P&lt;Abbreviation&gt;.*?))::(?P&lt;Replacement&gt;.*)", Hotstring)
@@ -152,8 +152,8 @@ ShowInputBox(DefaultValue)
             MsgText := "You didn't provide a replacement"
         else
         {
-            Hotstring(Hotstring.Label, Hotstring.Replacement)  <em>; Enable the hotstring now.</em>
-            FileAppend, `n%UserInput%, %A_ScriptFullPath%  <em>; Save the hotstring for later use.</em>
+            Hotstring(Hotstring.Label, Hotstring.Replacement)  <em>; 现在激活热字串.</em>
+            FileAppend, `n%UserInput%, %A_ScriptFullPath%  <em>; 保存热字串以备以后使用.</em>
         }
     }
     else
@@ -169,7 +169,7 @@ ShowInputBox(DefaultValue)
     
     MoveCaret:
     WinWait, New Hotstring
-    <em>; Otherwise, move the InputBox's insertion point to where the user will type the abbreviation.</em>
+    <em>; 否则移动 InputBox 中的光标到用户输入缩写的位置.</em>
     Send {Home}{Right 3}
     SetTimer,, Off
     return

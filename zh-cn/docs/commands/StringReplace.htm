@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>StringReplace / StrReplace()</title>
+<title>StrReplace() / StringReplace</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -9,56 +9,8 @@
 </head>
 <body>
 
-<h1>StringReplace / StrReplace()</h1>
+<h1>StrReplace() / StringReplace</h1>
 <p>用新字符串替换指定的子字符串.</p>
-
-<h2 id="command">StringReplace</h2>
-<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此命令. 使用 <a href="#function">StrReplace</a> 函数作为代替.</p>
-<pre class="Syntax"><span class="func">StringReplace</span>, OutputVar, InputVar, SearchText <span class="optional">, ReplaceText, ReplaceAll?</span></pre>
-
-<h3>参数</h3>
-<dl>
-
-  <dt>OutputVar</dt>
-  <dd><p>用来存储替换后的新字符串的变量名.</p></dd>
-
-  <dt>InputVar</dt>
-  <dd><p>需要被读取内容的变量名. 不要把名称括在百分号中, 除非您希望使用变量的<em>内容</em>作为被解析的变量名.</p></dd>
-
-  <dt>SearchText</dt>
-  <dd><p>要搜索的字符串. 如果没有启用 <a href="StringCaseSense.htm">StringCaseSense</a>, 那么匹配过程不区分大小写.</p></dd>
-
-  <dt>ReplaceText</dt>
-  <dd><p>用来替换 <em>SearchText</em> 的文本. 如果省略或为空, 那么 <em>SearchText</em> 会被替换为空. 换句话说, 它会被从 <em>OutputVar</em> 删除.</p></dd>
-
-  <dt>ReplaceAll?</dt>
-  <dd><p>如果省略, 那么只替换 <em>SearchText</em> 的首个匹配. 如果此参数为 1, A 或 All, 那么替换所有匹配.</p>
-      <p>指定单词 <strong>UseErrorLevel</strong> 可以把替换的次数保存到 ErrorLevel(没有则为 0). UseErrorLevel 包含了 "All" 的作用.</p></dd>
-
-</dl>
-
-<h3>ErrorLevel</h3>
-<p>当最后一个参数为 <em>UseErrorLevel</em> 时, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 中会保存替换的次数(没有则为 0). 否则, 如果在 <em>InputVar</em> 中没有找到 <em>SearchText</em> 则 ErrorLevel 被置为 1, 找到则置为 0.</p>
-
-<h3>备注</h3>
-<p>在这个及其他所有命令中,<em>OutputVar</em> 和 <em>InputVar</em> 中可以使用相同的变量.</p>
-<p>内置变量 <a href="../Variables.htm">%A_Space%</a> 和 <a href="../Variables.htm">%A_Tab%</a> 分别包含了单个空格和单个 tab 字符. 当您需要搜索单独的空格或 tab 或在 <em>SearchText</em> 的开始或末尾含有空格或 tab 时, 这很有用.</p>
-<p><span class="ver">[v1.0.45+]</span>: 为了改善性能和内存的利用率, AllSlow 选项已经作废. 尽管仍可以指定它, 但不会有效果.</p>
-
-<h3>示例</h3>
-<pre class="NoIndent"><em>; 移除剪贴板中所有的 CR+LF:</em>
-StringReplace, Clipboard, Clipboard, `r`n, , All
-
-<em>; 用加号替换所有空格:</em>
-StringReplace, NewStr, OldStr, %A_Space%, +, All
-
-<em>; 移除变量中所有空行:</em>
-Loop
-{
-    StringReplace, MyString, MyString, `r`n`r`n, `r`n, UseErrorLevel
-    if ErrorLevel = 0  <em>; 不需要再进行替换.</em>
-        break
-}</pre>
 
 <h2 id="function">StrReplace() <span class="ver">[v1.1.21+]</span></h2>
 <pre class="Syntax">ReplacedStr := <span class="func">StrReplace</span>(Haystack, SearchText <span class="optional">, ReplaceText, OutputVarCount, Limit := -1</span>)</pre>
@@ -74,7 +26,7 @@ Loop
 
   <dt>ReplaceText</dt>
   <dd><p>用来替换 <em>SearchText</em> 的文本. 如果省略或为空, 那么 <em>SearchText</em> 会被替换为空. 换句话说, 它会被从 <em>OutputVar</em> 删除.</p></dd>
-  
+
   <dt>OutputVarCount</dt>
   <dd><p>指定用来存储替换次数的变量(没有则为 0).</p></dd>
   
@@ -98,6 +50,54 @@ Loop
 {
     MyString := StrReplace(MyString, "`r`n`r`n", "`r`n", Count)
     if Count = 0  <em>; 不再需要更多的替代.</em>
+        break
+}</pre>
+
+<h2 id="command">StringReplace</h2>
+<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此命令. 使用 <a href="#function">StrReplace</a> 函数作为代替.</p>
+<pre class="Syntax"><span class="func">StringReplace</span>, OutputVar, InputVar, SearchText <span class="optional">, ReplaceText, ReplaceAll?</span></pre>
+
+<h3>参数</h3>
+<dl>
+
+  <dt>OutputVar</dt>
+  <dd><p>用来存储替换后的新字符串的变量名.</p></dd>
+
+  <dt>InputVar</dt>
+  <dd><p>需要被读取内容的变量名. 不要把名称括在百分号中, 除非您希望使用变量的<em>内容</em>作为被解析的变量名.</p></dd>
+
+  <dt>SearchText</dt>
+  <dd><p>要搜索的字符串. 如果没有启用 <a href="StringCaseSense.htm">StringCaseSense</a>, 那么匹配过程不区分大小写.</p></dd>
+
+  <dt>ReplaceText</dt>
+  <dd><p>用来替换 <em>SearchText</em> 的文本. 如果省略或为空, 那么 <em>SearchText</em> 会被替换为空. 换句话说, 它会被从 <em>OutputVar</em> 删除.</p></dd>
+
+  <dt>ReplaceAll?</dt>
+  <dd><p>如果省略, 那么只替换 <em>SearchText</em> 的首个匹配. 如果此参数为 1, A 或 All, 那么替换所有匹配.</p>
+      <p>指定单词 <strong>UseErrorLevel</strong>  可以把替换的次数保存到 ErrorLevel(没有则为 0). UseErrorLevel 包含了 &quot;All&quot; 的作用.</p></dd>
+
+</dl>
+
+<h3>ErrorLevel</h3>
+<p>当最后一个参数为 <em>UseErrorLevel</em> 时, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 中会保存替换的次数(没有则为 0). 否则, 如果在 <em>InputVar</em> 中没有找到 <em>SearchText</em> 则 ErrorLevel 被置为 1, 找到则置为 0.</p>
+
+<h3>备注</h3>
+<p>在这个及其他所有命令中,<em>OutputVar</em> 和 <em>InputVar</em> 中可以使用相同的变量.</p>
+<p>内置变量 <a href="../Variables.htm">%A_Space%</a> 和 <a href="../Variables.htm">%A_Tab%</a> 分别包含了单个空格和单个 tab 字符. 当您需要搜索单独的空格或 tab 或在 <em>SearchText</em> 的开始或末尾含有空格或 tab 时, 这很有用.</p>
+<p><span class="ver">[v1.0.45+]</span>: 为了改善性能和内存的利用率, AllSlow 选项已经作废. 尽管仍可以指定它, 但不会有效果.</p>
+
+<h3>示例</h3>
+<pre class="NoIndent"><em>; 移除剪贴板中所有的 CR+LF:</em>
+StringReplace, Clipboard, Clipboard, `r`n, , All
+
+<em>; 用加号替换所有空格:</em>
+StringReplace, NewStr, OldStr, %A_Space%, +, All
+
+<em>; 移除变量中所有空行:</em>
+Loop
+{
+    StringReplace, MyString, MyString, `r`n`r`n, `r`n, UseErrorLevel
+    if ErrorLevel = 0  <em>; 不需要再进行替换.</em>
         break
 }</pre>
 
