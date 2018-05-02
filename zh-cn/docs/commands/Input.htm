@@ -20,34 +20,34 @@
   <dt>OutputVar</dt>
   <dd><p>用来保存用户输入文本的变量名(默认情况下, 模拟输入也被保存下来).</p>
       <p>如果省略此参数和其他参数, 那么会终止在其他 <a href="../misc/Threads.htm">线程</a> 中正在执行的任何 Input 并且将那个 Input 的 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为单词 NewInput. 与之相比, 如果终止了之前的 Input 则把当前线程的 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0, 如果没有需要终止的 Input 则为 1.</p>
-      <p><em>OutputVar</em> 本身并不记录键击. 而是记录通过键击根据活动窗口的键盘布局/语言产生的字符. 因此, 不产生字符的键击(例如 PageUp 和 Home) 不会被记录下来(尽管可以通过下面的 <em>EndKeys</em> 参数识别它们).</p>
-      <p class="warning"><strong>注意:</strong> Escape 键被转换为 ASCII ESC 字符, <code>Chr(27)</code>. 这可以通过在 <em>EndKeys</em> 中包含 <code>{Esc}</code> 来避免, 在这种情况下, 按下 Escape 将终止输入.</p>
-      <p>会原义保存空白字符, 例如 TAB(`t). ENTER 被保存为换行符(`n).</p></dd>
+      <p><em>OutputVar</em> 本身并不记录键击. 而是记录通过键击根据活动窗口的键盘布局/语言产生的字符. 因此, 不产生字符的键击(例如 <kbd>PageUp</kbd> 和 <kbd>Home</kbd>) 不会被记录下来(尽管可以通过下面的 <em>EndKeys</em> 参数识别它们).</p>
+      <p class="warning"><strong>注意:</strong> <kbd>Escape</kbd> 键被转换为 ASCII ESC 字符, <code>Chr(27)</code>. 这可以通过在 <em>EndKeys</em> 中包含 <code>{Esc}</code> 来避免, 在这种情况下, 按下 <kbd>Escape</kbd> 将终止输入.</p>
+      <p>会原义保存空白字符, 例如 <kbd>Tab</kbd>(`t). <kbd>Enter</kbd> 被保存为换行符(`n).</p></dd>
 
   <dt>选项</dt>
   <dd><p><u>由零个或多个下列字母组成的字符串(可任意顺序, 字母间可以用空格分隔):</u></p>
-      <p><strong>B</strong>: 忽略退格键. 一般情况下, 按下退格键会删除最后一个输入的字符. 注: 如果输入的文本是可见的(例如在编辑器中), 在其中使用方向键或其他方式移动了光标后, 退格键仍然会删除最后一个字符而不是光标(插入点) 后面的字符.</p>
+      <p><strong>B</strong>: 忽略 <kbd>Backspace</kbd>(退格)键. 一般情况下, 按下 <kbd>Backspace</kbd> 键会删除最后一个输入的字符. 注: 如果输入的文本是可见的(例如在编辑器中), 在其中使用方向键或其他方式移动了光标后, <kbd>Backspace</kbd> 键仍然会删除最后一个字符而不是光标(插入点) 后面的字符.</p>
       <p><strong>C</strong>: 区分大小写. 一般情况下, <em>MatchList</em> 是不区分大小写的(在 1.0.43.03 之前的版本中, 只有字母 A-Z 被认为具有大小写形式, 而像 ü/ü 这样的字母则没有).</p>
       <p><strong>I</strong>: 忽略由 AutoHotkey 脚本产生的所有字符, 例如 <a href="Send.htm#SendEvent">SendEvent</a> 命令. 然而, 不论此设置如何, <a href="Send.htm#SendInput">SendInput</a> 和 <a href="Send.htm#SendPlay">SendPlay</a> 模式生成的输入总是被忽略.</p>      
       <p><strong>L</strong>: 长度限制(例如 <code>L5</code>). 允许输入文本的最大长度. 当文本到达这个长度, 则输入会被终止且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为单词 Max, 不过如果此时文本匹配 <em>MatchList</em> 中的某个词组, 则把 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为单词 Match. 如果未指定, 则长度限制为 16383, 这也是绝对的最大长度.</p>
-      <p><strong>M</strong>: 如果含修饰符的键击(例如 Control-A 到 Control-Z) 对应于真实的 ASCII 字符, 则会识别并对它们进行转译. 参考这个例子, 其中识别了 Control-C: </p>
+      <p><strong>M</strong>: 如果含修饰符的键击(例如 <kbd>Control</kbd>+<kbd>A</kbd> 到 <kbd>Control</kbd>+<kbd>Z</kbd>) 对应于真实的 ASCII 字符, 则会识别并对它们进行转译. 参考这个例子, 其中识别了 <kbd>Control</kbd>+<kbd>C</kbd>: </p>
       <pre>Transform, CtrlC, Chr, 3 <em>; 把 Ctrl-C 对应的字符保存到 CtrlC 变量.</em>
 Input, OutputVar, L1 M
 if OutputVar = %CtrlC%
     MsgBox, You pressed Control-C.
 ExitApp</pre>
-      <p class="note"><strong>注意</strong>: 从 Ctrl-A 到 Ctrl-Z 对应的字符为从 <a href="Chr.htm">Chr(1)</a> 到 <a href="Chr.htm">Chr(26)</a>. 此外, <strong>M</strong> 选项可能会导致某些键盘快捷键(例如 Ctrl-LeftArrow)在 Input 执行时表现不正常.</p>
+      <p class="note"><strong>注意</strong>: 从 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd> 对应的字符为从 <a href="Chr.htm">Chr(1)</a> 到 <a href="Chr.htm">Chr(26)</a>. 此外, <strong>M</strong> 选项可能会导致某些键盘快捷键(例如 <kbd>Ctrl</kbd>+<kbd>&larr;</kbd>)在 Input 执行时表现不正常.</p>
       <p><strong>T</strong>: 超时(例如 <code>T3</code>). 在终止输入前等待的秒数, 超时后设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为单词 Timeout.Input 超时后, <em>OutputVar</em> 会被设置为用户在超时前输入的文本. 这个值可以为浮点数, 例如 <code>2.5</code>.</p>      
       <p id="vis"><strong>V</strong>: 可见. 一般情况下, 用户的输入是阻塞的(隐藏在操作系统后). 使用此选项来发送用户的键击到活动窗口.</p>
       <p id="asterisk"><strong>*</strong>: 通配符(查找所有地方). 一般情况下, 用户输入的文本必须准确匹配 <em>MatchList</em> 中的某个词组, 匹配才会成功. 使用此选项搜索输入文本的整个长度, 这样会更容易找到匹配.</p>
-      <p id="E"><strong>E</strong> <span class="ver">[v1.1.20+]</span>: 使结束键响应单个字符而替代使用 keycode(按键码). 这样使得当用户键盘布局和脚本的不同的时候得到一致的返回值. 同时它还能避免实际发生的组合键和定义的不同的歧义; 举个例子, 如果 <code>@</code> 作为 结束键, 在 US 键盘布局上 Shift+2 会触发它, 但是 Ctrl+Shift+2 不会(如果使用了 E 选项的话). 如果 <strong>C</strong> 选项也同时开启, 那么结束字符是大小写敏感的.</p>
+      <p id="E"><strong>E</strong> <span class="ver">[v1.1.20+]</span>: 使结束键响应单个字符而替代使用 keycode(按键码). 这样使得当用户键盘布局和脚本的不同的时候得到一致的返回值. 同时它还能避免实际发生的组合键和定义的不同的歧义; 举个例子, 如果 <code>@</code> 作为 结束键, 在 US 键盘布局上 <kbd>Shift</kbd>+<kbd>2</kbd> 会触发它, 但是 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd> 不会(如果使用了 E 选项的话). 如果 <strong>C</strong> 选项也同时开启, 那么结束字符是大小写敏感的.</p>
       </dd>
 
   <dt>EndKeys</dt>
   <dd><p>零个或多个按键组成的列表, 按下其中的任何一个都可以终止输入(<em>EndKey</em> 自身不会被写入 <em>OutputVar</em>). 使用此方式终止输入后, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为单词 EndKey 后跟着冒号和 <em>EndKey</em> 的名称. 例如: <code>EndKey:.</code>, <code>EndKey:Escape</code>.</p>
-      <p><em>EndKey</em> 列表使用类似于 <a href="Send.htm">Send</a> 命令的格式. 例如, 指定 <code>{Enter}.{Esc}</code> 会使得 ENTER, 句点(.) 或 ESCAPE 其中任何一个都可以终止输入. 要使用大括号作为终止键, 请指定 <code>{{}</code> 和/或 <code>{}}</code>.</p>
-      <p>要使用 Control, Alt 或 Shift 作为终止键, 请指定它们的左和/或右版本, 而不是中性版本. 例如, 指定 <code>{LControl}{RControl}</code> 而不是 <code>{Control}</code>.</p>
-      <p><span class="ver">[v1.0.14+]</span>: 尽管不支持诸如 Alt-C(!c) 这样的修饰键, 但支持某些需要按住 shift 键来输入的字符,标点符号, 例如 <code>?!:@&amp;{}</code>. <span class="ver">[v1.1.20+]</span>: 其他字符推荐使用上述的 <strong>E</strong> 选项. 当同时使用 <strong>E</strong> 和 <strong>M</strong> 选项时, 通过在 <em>EndKeys</em> 中包括相应的 ASCII 控制字符来支持 Control-A 到 Control-Z.</p>
+      <p><em>EndKey</em> 列表使用类似于 <a href="Send.htm">Send</a> 命令的格式. 例如, 指定 <code>{Enter}.{Esc}</code> 会使得 <kbd>Enter</kbd>, <kbd>.</kbd> 或 <kbd>Escape</kbd> 其中任何一个都可以终止输入. 要使用大括号作为终止键, 请指定 <code>{{}</code> 和/或 <code>{}}</code>.</p>
+      <p>要使用 <kbd>Control</kbd>, <kbd>Alt</kbd> 或 <kbd>Shift</kbd> 作为终止键, 请指定它们的左和/或右版本, 而不是中性版本. 例如, 指定 <code>{LControl}{RControl}</code> 而不是 <code>{Control}</code>.</p>
+      <p><span class="ver">[v1.0.14+]</span>: 尽管不支持诸如 <kbd>Alt</kbd>+<kbd>C</kbd>(!c) 这样的修饰键, 但支持某些需要按住 <kbd>shift</kbd> 键来输入的字符,标点符号, 例如 <code>?!:@&amp;{}</code>. <span class="ver">[v1.1.20+]</span>: 其他字符推荐使用上述的 <strong>E</strong> 选项. 当同时使用 <strong>E</strong> 和 <strong>M</strong> 选项时, 通过在 <em>EndKeys</em> 中包括相应的 ASCII 控制字符来支持 <kbd>Control</kbd>+<kbd>A</kbd> 到 <kbd>Control</kbd>+<kbd>Z</kbd>.</p>
       <p>还可以指定明确的虚拟按键代码, 例如 <code>{vkFF}</code>. 只有在一个按键没有指定名称且按下时不产生可见的字符这样少见的情况下, 这种方法才有用. 它的虚拟按键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p>
     </dd>
 

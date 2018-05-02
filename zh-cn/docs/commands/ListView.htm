@@ -72,11 +72,11 @@ ExitApp</pre>
 <p><strong>Multi:</strong> 指定 <code>-Multi</code>(负 Multi) 来禁止用户一次选择多行.</p>
 <p><strong>NoSortHdr:</strong> 禁止点击标题. 此时会显示平坦的外观而不是正常的类似按钮的外观. 与其他大多数 ListView 样式不同, 此样式在 ListView 创建后无法改变.</p>
 <p id="NoSort"><strong>NoSort:</strong> 关闭当用户点击标题时发生的自动排序. 然而, 标题的外观看起来仍像按钮(除非指定了 NoSortHdr). 此外, g-标签仍会接收到 <a href="#ColClick">ColClick 通知</a>, 可以用自定义排序或其他动作对它进行响应.</p>
-<p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每行首列的文本. 要编辑某行, 请在选择后按下 <a href="#WantF2">F2 键</a>. 或者, 您可以对一行点击一次来选择它, 至少等待半秒钟, 然后再次点击同一行进行编辑.</p>
+<p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每行首列的文本. 要编辑某行, 请在选择后按下 <kbd>F2</kbd> 键(请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对一行点击一次来选择它, 至少等待半秒钟, 然后再次点击同一行进行编辑.</p>
 <p><strong>R</strong>: 行高(创建时). 指定字母 R 后面紧跟着要在控件中留出空间的行数. 例如, <code>R10</code> 会设置控件为 10 行的高度. 如果使用报告视图外的其他<a href="#View">视图模式</a>创建 ListView, 则控件会调整大小以适应含图标的行而不是文本行. 注: 添加<a href="#IL">图标</a>到 ListView 的行中会增加每行的高度, 这会让此选项不准确.</p>
 <p id="Sort"><strong>Sort:</strong> 让控件根据首列的内容保持按字母顺序排列.</p>
 <p id="SortDesc"><strong>SortDesc:</strong> 和上面一样, 不过这里是降序排列.</p>
-<p id="WantF2"><strong>WantF2</strong> <span class="ver">[v1.0.44+]:</span> 指定 <code>-WantF2</code>(负 WantF2) 来阻止来自<a href="#ReadOnly">编辑</a>当前焦点行的 F2 按键. 仅当 <code>-<a href="#ReadOnly">ReadOnly</a></code> 也有效时此设置才不会被忽略. 不论此设置如何, g-标签仍会接收到 F2 <a href="#NotifyK">通告</a>.</p>
+<p id="WantF2"><strong>WantF2</strong> <span class="ver">[v1.0.44+]:</span> 指定 <code>-WantF2</code>(负 WantF2) 来阻止来自<a href="#ReadOnly">编辑</a>当前焦点行的 <kbd>F2</kbd> 按键. 仅当 <code>-<a href="#ReadOnly">ReadOnly</a></code> 也有效时此设置才不会被忽略. 不论此设置如何, g-标签仍会接收到 <kbd>F2</kbd> <a href="#NotifyK">通告</a>.</p>
 <p><strong>(未命名的数值样式):</strong> 由于上述以外的其他样式很少使用, 所以没有为它们命名. 请参阅 <a href="../misc/Styles.htm#ListView">ListView 样式表</a> 了解这些样式.</p>
 <h2 id="View">视图模式</h2>
 <p>ListView 有五种视图模式, 其中最常见的是报告视图(这是默认的). 要使用其他某种视图, 请在选项列表中指定它的名称. 还可以在控件创建后改变视图模式; 例如: <code>GuiControl, +IconSmall, MyListView</code>.</p>
@@ -199,7 +199,7 @@ return</pre>
 <p><strong>F</strong>: ListView 接收到键盘焦点.</p>
 <p><strong>f</strong>(小写的 F): ListView 失去了键盘焦点.</p>
 <p id="ItemChanged"><strong>I</strong>: 项目发生了变化. 通过变成选择的/未选择的, 选中的/未选中的等让一行改变了. 如果用户选择了一个新行, 则至少会接收到两个这样的通知: 一个是在取消之前的行时, 而另一个是在选择新行时. <span class="ver">[v1.0.44+]</span>: 变量 A_EventInfo 包含目标行号. <span class="ver">[v1.0.46.10+]</span>: ErrorLevel 包含零个或多个下列字母来表示项目发生的变化: S(选择) 或 s(取消选择), 和/或 F(成为焦点) 或 f(失去焦点), 和/或 C(选中) 或 c(取消选中). 例如, SF 表示此行被选择且成为了焦点. 要检查是否存在一个特定的字母, 请使用<a href="LoopParse.htm">解析循环</a>或带区分大小写选项的 <a href="InStr.htm">InStr()</a>; 例如: <code>InStr(ErrorLevel, "S", true)</code>. 注: 考虑到和未来版本的兼容性, 脚本不应假定 "SsFfCc" 包含了所有可能的字母或字母组合. 此外, 指定 <a href="Critical.htm">Critical</a> 作为 <a href="Gui.htm#label">g-标签</a> 子程序的首行来确保接收到所有的 "I" 通知(否则, 如果脚本无法跟上, 则它们其中一些可能会丢失).</p>
-<p id="NotifyK"><strong>K</strong>: 当 ListView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 然后可以通过 <a href="GetKey.htm">GetKeyName</a> 转换为按键名称或字符. 例如, <code>key := GetKeyName(<a href="Format.htm">Format</a>("vk{:x}", A_EventInfo))</code>. 在大多数键盘布局中, A-Z 键都可以通过 <code><a href="Chr.htm">Chr</a>(A_EventInfo)</code> 转换为相应的字符. F2 的按键动作总是被接收且不会被 <a href="#WantF2">WantF2</a> 影响. 但是, 回车键不会被接收; 除非按照下面的方法设置为默认按钮.</p>
+<p id="NotifyK"><strong>K</strong>: 当 ListView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 然后可以通过 <a href="GetKey.htm">GetKeyName</a> 转换为按键名称或字符. 例如, <code>key := GetKeyName(<a href="Format.htm">Format</a>("vk{:x}", A_EventInfo))</code>. 在大多数键盘布局中, A-Z 键都可以通过 <code><a href="Chr.htm">Chr</a>(A_EventInfo)</code> 转换为相应的字符. <kbd>F2</kbd> 的按键动作总是被接收且不会被 <a href="#WantF2">WantF2</a> 影响. 但是, <kbd>Enter</kbd> 键不会被接收; 除非按照下面的方法设置为默认按钮.</p>
 <p><strong>M</strong>: 选取框. 用户开始在一组行或图标周围拖动一个矩形选区.</p>
 <p><strong>S</strong>: 用户开始滚动 ListView.</p>
 <p><strong>s</strong>(小写的 S): 用户完成滚动 ListView.</p>
@@ -235,7 +235,7 @@ ExitApp</pre>
 <h2 id="Remarks">ListView 备注</h2>
 <p><a href="Gui.htm#Submit">Gui Submit</a> 命令对 ListView 控件没有效果. 因此, 脚本可以使用 ListView 的<a href="Gui.htm#var">关联变量</a>(如果有) 来保存其他数据而不用担心它会被覆盖.</p>
 <p>在对某个列进行排序后(通过用户点击其标题的方法或脚本调用 <code><a href="#LV_ModifyCol">LV_ModifyCol</a>(1, "Sort")</code>), 任何随后添加的行将出现在列表的底部而不会遵循排序顺序. 例外情况是 <a href="#Sort">Sort</a> 和 <a href="#SortDesc">SortDesc</a> 样式, 它们会把新添加的行移动正确的位置.</p>
-<p id="Enter">当 ListView 拥有焦点时如果要检测到用户按下的回车键, 请使用 <a href="GuiControls.htm#DefaultButton">默认按钮</a>(如果需要则可以隐藏它). 例如:</p>
+<p id="Enter">当 ListView 拥有焦点时如果要检测到用户按下的 <kbd>Enter</kbd> 键, 请使用 <a href="GuiControls.htm#DefaultButton">默认按钮</a>(如果需要则可以隐藏它). 例如:</p>
 <pre>Gui, Add, Button, Hidden Default, OK
 ...
 ButtonOK:
