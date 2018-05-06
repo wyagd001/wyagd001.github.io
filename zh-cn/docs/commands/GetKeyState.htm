@@ -21,7 +21,7 @@ KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional
 <h3>参数</h3>
 <dl>
 
-  <dt>KeyName</dt>
+  <dt>KeyName(按键名称)</dt>
   <dd><p>此参数可以是键盘中任何的单个字符或 <a href="../KeyList.htm">按键列表</a> 中的其中一个键名, 如一个鼠标/操纵杆按键. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
       <p>或者, 可以指定明确的虚拟键代码, 例如 vkFF. 只有在一个按键没有指定名称这样少见的情况下, 这种方法才有用. 按键的虚拟键代码可以通过 <a href="../KeyList.htm#SpecialKeys">按键列表页面</a> 底部的步骤来确定.</p>
       <p><b>已知限制:</b> 此函数无法区别共享相同虚拟按键代码的两个按键, 例如 Left 和 NumpadLeft.</p></dd>
@@ -37,8 +37,8 @@ KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional
 </dl>
 
 <h3>返回值</h3>
-<p>This function returns 1 if the key is down (or toggled on) or 0 if it is up (or toggled off). For the joystick's special keys such as axes and POV switch, <a href="#joystick">other values are retrieved</a>.</p>
-<p>If <em>KeyName</em> is invalid or the state of the key could not be determined, an empty string is returned.</p>
+<p>如果键是按下的(或打开了), 函数返回 1, 如果是松开的, 则返回 0. 对于操纵杆的特殊键, 如轴和 POV 开关, <a href="#joystick">返回其他值</a>.</p>
+<p>如果 <em>KeyName</em> 无效或者无法确定键的状态, 则返回空字符串.</p>
 
 <h2 id="command">GetKeyState</h2>
 <p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此命令. 而是使用 <a href="#function">GetKeyState</a> 函数作为代替.</p>
@@ -50,7 +50,7 @@ KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional
 <dl>
 
   <dt>OutputVar</dt>
-  <dd><p>The name of the variable in which to store the retrieved key state, which is either D for down or U for up. The variable will be empty (blank) if the state of the key could not be determined. For the joystick's special keys such as axes and POV switch, <a href="#joystick">other values are retrieved</a>.</p>
+  <dd><p>用于存储检索到的键状态的变量的名称, 它是 D 表示按下或 U 表示松开. 如果无法确定键的状态,则该变量为空. 对于操纵杆的特殊键, 如轴和 POV 开关, 将 <a href="#joystick">返回其他值</a>.</p>
       </dd>
 
   <dt>KeyName</dt>
@@ -68,8 +68,8 @@ KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional
 
 </dl>
 
-<h2 id="joystick">Joystick's special keys</h2>
-<p>When <em>KeyName</em> is a joystick axis such as JoyX, the retrieved value will be a floating point number between 0 and 100 to indicate the joystick's position as a percentage of that axis's range of motion. The format of the number can be changed via <a href="SetFormat.htm">SetFormat</a>. This <a href="../scripts/JoystickTest.htm">test script</a> can be used to analyze your joystick(s).</p>
+<h2 id="joystick">操纵杆的特殊按键</h2>
+<p>当 <em>KeyName</em> 是 joystick 的轴, 如 JoyX 时, 返回值将是一个 0 到 100 之间的浮点数, 用于指示操纵杆的位置为该轴运动范围的百分比. 可以通过 <a href="SetFormat.htm">SetFormat</a> 更改数字的格式. 这个 <a href="../scripts/JoystickTest.htm">测试脚本</a> 可以用来分析你的操纵杆.</p>
 <p>当 <em>KeyName</em> 为 JoyPOV 时, 获取的值将介于 0 和 35900 之间. 许多操纵杆使用与下列近似的 POV 值:</p>
 <ul>
   <li>-1: 没有角度</li>
@@ -89,9 +89,9 @@ KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional
 <h2>示例</h2>
 
 <h4 id="ex1">示例 #1: 命令 vs. 函数</h4>
-<p>Although the first code block uses the command and the second one uses the function, these two blocks are functionally identical:</p>
-<pre>GetKeyState, state, RButton  <em>; Right mouse button.</em>
-GetKeyState, state, Joy2  <em>; 第一个操纵杆的第二个按钮.</em>
+<p>虽然第一个代码块使用命令, 第二个代码块使用函数, 但这两个代码块在功能上是相同的:</p>
+<pre>GetKeyState, state, RButton  <em>; 鼠标右键.</em>
+GetKeyState, state, Joy2  <em>; 操纵杆的第二个按钮.</em>
 
 GetKeyState, state, Shift
 if state = D
@@ -101,8 +101,8 @@ else
 
 GetKeyState, state, CapsLock, T <em>;  当 CapsLock 打开时为 D, 否则为 U.</em>
 </pre>
-<pre>state := GetKeyState("RButton")  <em>; Right mouse button.</em>
-state := GetKeyState("Joy2")  <em>; The second button of the first joystick.</em>
+<pre>state := GetKeyState("RButton")  <em>; 鼠标右键.</em>
+state := GetKeyState("Joy2")  <em>; 你操纵杆的第二个按钮.</em>
 
 if GetKeyState("Shift")
     MsgBox At least one Shift key is down.
@@ -113,7 +113,7 @@ state := GetKeyState("CapsLock", "T") <em>; True if CapsLock is ON, false otherw
 </pre>
 
 <h4 id="ex2">示例 #2: 重映射</h4>
-<p>(This example is only for illustration because it would be easier to use the <a href="../misc/Remap.htm">built-in remapping feature</a>.) In the following hotkey, the mouse button is kept held down while NumpadAdd is down, which effectively transforms NumpadAdd into a mouse button. This method can also be used to repeat an action while the user is holding down a key or button:</p>
+<p>(此示例仅用于说明, 因为它更容易使用<a href="../misc/Remap.htm">内置的重新映射功能</a>.) 在下面的热键中, 按下 NumpadAdd 时, 鼠标按钮被按住, 这有效地将 NumpadAdd 变成了一个鼠标按键. 该方法还可以用于重复操作, 而用户正在按住一个键或按键:</p>
 <pre>*NumpadAdd::
 MouseClick, left,,, 1, 0, D  <em>; 按住鼠标左键.</em>
 Loop
@@ -127,7 +127,7 @@ MouseClick, left,,, 1, 0, U  <em>; 释放鼠标按钮.</em>
 return</pre>
 
 <h4 id="ex3">示例 #3</h4>
-<p>Make joystick button behavior depend on joystick axis position:</p>
+<p>使操纵杆按钮的行为取决于操纵杆轴的位置:</p>
 <pre>joy2::
 JoyX := GetKeyState("JoyX")
 if Joyx &gt; 75 
