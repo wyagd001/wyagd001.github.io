@@ -1,7 +1,7 @@
 ; requires AHK v2 32-bit
 #Warn
 SetWorkingDir A_ScriptDir "\..\.."
-;FileEncoding "UTF-8"
+FileEncoding "UTF-8"
 
 common_words1 := "
 (Join| C
