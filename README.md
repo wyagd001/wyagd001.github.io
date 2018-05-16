@@ -3,11 +3,6 @@
 
 感谢您的支持
 
-方式一：手机支付宝扫码<br/>
-![Image text](https://raw.githubusercontent.com/wyagd001/wyagd001.github.io/master/img/zfb.png)
+<!--![Image text](https://raw.githubusercontent.com/wyagd001/wyagd001.github.io/master/img/zfb.png) -->
 
-方式二:<br/>
-快来领取支付宝跨年红包！1月1日起还有机会额外获得专享红包哦！手机复制此消息，打开最新版支付宝就能领取！A3Hh3V38cr
-
-重点是复制下面这一串文字：<br/>
-A3Hh3V38cr
+![Image text](https://autohotkey.com/assets/images/ahk-logo-no-text241x78-180.png)
