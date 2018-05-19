@@ -7,7 +7,6 @@
   "Type in the word(s) to search for:":"输入要搜索的内容:",
   // header
   "Hide/Show sidebar":"显示/隐藏 侧边栏",
-  "Open Settings":"打开设置",
   "Home page":"主页",
   "en":"zh",
   "Change language":"更换语言",
@@ -19,6 +18,8 @@
   "Go forward":"前进",
   "Change font size":"更改字体大小",
   "Print current document":"打印当前页面",
+  "Open settings":"打开设置",
+  "Change to dark/light theme":"暗黑/明亮主题切换",
   // ALT+... shortcuts (needs uppercase)
   "C":true,
   "N":true,
