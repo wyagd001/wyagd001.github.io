@@ -11,28 +11,39 @@
 
 <h1>简单对象 - 关联数组</h1>
 
-<p>AutoHotkey 的基本对象数据类型是关联数组, 特点是允许<a href="../Objects.htm#Custom_Objects">自定义</a>它的行为. 默认由 <code>{}</code>, <code>[]</code>, <code>Object()</code> 和 <code>Array()</code> 创建的对象支持下列方法:</p>
+<p>AutoHotkey 的基本对象数据类型是关联数组, 特点是允许<a href="../Objects.htm#Custom_Objects">自定义</a>它的行为. 默认由 <code>{}</code>, <code>[]</code>, <code>Object()</code> 和 <code>Array()</code> 创建的对象支持下列的:</p>
+<h4>方法:</h4>
 <ul>
   <li><a href="#InsertAt">InsertAt</a> / <a href="#RemoveAt">RemoveAt</a></li>
   <li><a href="#Push">Push</a> / <a href="#Pop">Pop</a></li>
   <li><a href="#Delete">Delete</a></li>
-	<li><a href="#MinMaxIndex">MinIndex / MaxIndex</a> / <a href="#Length">Length</a></li>
+	<li><a href="#MinMaxIndex">MinIndex / MaxIndex</a> / <a href="#Length">Length</a> / <a href="#Count">Count</a></li>
 	<li><a href="#SetCapacity">SetCapacity</a> / <a href="#GetCapacity">GetCapacity</a></li>
 	<li><a href="#GetAddress">GetAddress</a></li>
 	<li><a href="#NewEnum">_NewEnum</a></li>
 	<li><a href="#HasKey">HasKey</a></li>
 	<li><a href="#Clone">Clone</a></li>
-  <li><a href="#RawSet">ObjRawSet</a>(函数)</li>
+</ul>
+<h4>属性:</h4>
+<ul>
+	<li><a href="#Base">Base</a></li>
+</ul>
+<h4>函数:</h4>
+<ul>
+	<li><a href="#RawGet">ObjRawGet</a></li>
+	<li><a href="#RawSet">ObjRawSet</a></li>
+	<li><a href="#GetBase">ObjGetBase</a></li>
+	<li><a href="#SetBase">ObjSetBase</a></li>
 </ul>
 <p><strong>弃用的</strong>(不推荐使用):</p>
 <ul>
 	<li><a href="#Insert">Insert</a></li>
 	<li><a href="#Remove">Remove</a></li>
 </ul>
-<p>每个方法都有对应的 obj前缀函数(译者注: 这里描述的是以 "obj" 为前缀的内置函数, 下文统称为"obj前缀函数"), 可用于传递由对象实现的任何 <a href="../Objects.htm#Custom_Objects">自定义行为</a> -- 推荐这些 obj前缀函数 专门用于此目的.  要调用某个这种函数, 在方法名前加上"Obj"前缀并把目标对象作为首个参数传递过去. 例如:</p>
+<p>每个方法都有对应的函数(译者注: 这里描述的是以 "Obj" 为前缀的内置函数, 下文统称为"Obj前缀函数"), 可用于传递由对象实现的任何 <a href="../Objects.htm#Custom_Objects">自定义行为</a> -- 推荐这些 Obj前缀函数 仅用于此目的. 要调用某个这种函数, 在方法名前加上"Obj"前缀并把目标对象作为首个参数传递过去. 例如:</p>
 <pre>array := [1, 2, 3]
 MsgBox % ObjMaxIndex(array) " = " array.MaxIndex()</pre>
-<p>如果 "obj" 前缀函数 的参数对象或值的类型不正确, 它将返回空字符串.</p>
+<p>如果对象的方法-函数的参数对象或值的类型不正确, 它将返回空字符串. 而独立函数如 ObjRawSet 则会抛出异常</p>
 &nbsp;
 
 <div class="methodShort" id="InsertAt"><h2>InsertAt <span class="ver">[v1.1.21+]</span></h2>
@@ -161,25 +172,40 @@ MsgBox % {-10: 0, 10: 0}.Length()  <em>; 10</em>
 MsgBox % {-10: 0, -1: 0}.Length()  <em>;  0</em>
 </pre></div>
 
+<div class="methodShort" id="Count"><h2>Count <span class="ver">[v1.1.29+]</span></h2>
+<pre class="Syntax">Count := Object.<span class="func">Count</span>()</pre>
+<p>返回对象中存在的键-值对的数量.</p>
+<pre>
+MsgBox % {A: 1, Z: 26}.Count()    <em>;  2</em>
+MsgBox % ["A", "B", "C"].Count()  <em>;  3</em>
+MsgBox % ["A",    , "C"].Count()  <em>;  2</em>
+</pre>
+</div>
+
 <div class="methodShort" id="SetCapacity"><h2>SetCapacity <span class="ver">[AHK_L 31+]</span></h2>
-<p>调整对象或其一个区域占用的内存空间.</p>
+<p>调整对象或其一个字段占用的内存空间.</p>
 <pre class="Syntax">
 Object.<span class="func">SetCapacity</span>(MaxItems)
 Object.<span class="func">SetCapacity</span>(Key, ByteSize)
 </pre>
-<table class="info">
-  <tr><td style="width:15%">MaxItems</td><td>对象在必须自动扩展前它可以包含的键值对的最大数目. 如果少于键值对的当前数目, 则使用该数目并释放未使用的内存.</td></tr>
-  <tr><td>Key</td><td>任何有效键.</td></tr>
-  <tr><td>ByteSize</td><td>为目标区域字符串缓存设置的新大小, 不包括空终止符, 单位为字节. 如果区域不存在, 则创建它. 如果 <i>ByteSize</i> 为零, 则清空缓存但不移除空区域. 如果 <i>ByteSize</i> 小于当前大小, 则移除额外的数据; 否则保留所有现有的数据.</td></tr>
-  <tr><td><b>返回值</b></td><td>成功时返回新设置的内存空间, 否则为空字符串.</td></tr>
-</table></div>
-
+<dl>
+	<dt>MaxItems</dt>
+	<dd><p>	对象在必须自动扩展前可以包含的键值对的最大数目. 如果少于键值对的当前数目, 则使用该数目并释放未使用的内存.</p></dd>
+	<dt>Key</dt>
+	<dd><p>任何有效键.</p></dd>
+	<dt>ByteSize</dt>
+	<dd><p>为目标字段字符串缓存设置新的大小, 不包括空终止符, 单位为字节. 如果字段不存在, 则创建它. 如果 <i>ByteSize</i> 为零, 则清空缓存但不移除空字段. 如果 <i>ByteSize</i> 小于当前大小, 则移除额外的数据; 否则保留所有现有的数据.</p></dd>
+	<dt><strong>返回值</strong></dt>
+	<dd><p>成功时返回新设置的内存空间, 否则为空字符串.</p></dd>
+</dl>
+</div>
+ 	 
 <div class="methodShort" id="GetCapacity"><h2>GetCapacity <span class="ver">[AHK_L 31+]</span></h2>
 <pre class="Syntax">
 MaxItems := Object.<span class="func">GetCapacity</span>()
 ByteSize := Object.<span class="func">GetCapacity</span>(Key)
 </pre>
-<p>返回对象或其一个区域当前占用的内存空间.</p>
+<p>返回对象或其一个字段当前占用的内存空间.</p>
 <p>如果字段不存在或不包含字符串, 则返回空字符串.</p></div>
 
 <div class="methodShort" id="GetAddress"><h2>GetAddress <span class="ver">[AHK_L 31+]</span></h2>
@@ -198,11 +224,45 @@ ByteSize := Object.<span class="func">GetCapacity</span>(Key)
 <pre class="Syntax">Clone := Object.<span class="func">Clone</span>()</pre>
 <p>返回对象的一个浅拷贝(引用的内存地址资源相同).</p></div>
 
+<div class="methodShort" id="Base"><h2>Base</h2>
+<p>Retrieves or sets the object's <a href="../Objects.htm#Custom_Objects">base object</a>.</p>
+<pre class="Syntax">BaseObject := Object.Base</pre>
+<pre class="Syntax">Object.Base := BaseObject</pre>
+<p><em>BaseObject</em> must be an object or an empty string.</p>
+<p>Properties and methods defined by a base object are accessible only while that base object is in use. Therefore, changing <em>Object</em>'s base also changes the set of available properties and methods.</p>
+<p>See also: <a href="#GetBase">ObjGetBase</a>, <a href="#SetBase">ObjSetBase</a></p>
+</div>
+
+<div class="methodShort" id="RawGet"><h2>ObjRawGet <span class="ver">[v1.1.29+]</span></h2>
+<p>Retrieves the value associated with a given key within <em>Object</em>.</p>
+<pre class="Syntax">Value := <span class="func">ObjRawGet</span>(Object, Key)</pre>
+<p>If <em>Object</em> does not contain <em>Key</em>, the return value is an empty string. No <a href="../Objects.htm#Meta_Functions">meta-functions</a> or <a href="../Objects.htm#Custom_Classes_property">property functions</a> are called. The content of <em>Object</em>'s base objects are not considered, and since <a href="#Base">base</a> itself is a property and not a key-value pair <a href="../Objects.htm#base-key">by default</a>, it is typically not returned.</p>
+<p>An exception is thrown if <em>Object</em> is of an incorrect type.</p>
+</div>
+
 <div class="methodShort" id="RawSet"><h2>ObjRawSet</h2>
 <p>存储或覆盖对象中的一组键值对.</p>
 <pre class="Syntax"><span class="func">ObjRawSet</span>(Object, Key, Value)</pre>
-<p>这个函数提供一种绕过 __Set <a href="../Objects.htm#Meta_Functions">元函数</a> 的途径. 如果不是必须的, 最好还是使用普通的(赋值) 方法. 例如: <code>Object[Key] := Value</code></p>
-<p>由于目的是绕过元函数, 所以它只是一个函数, 而不是(对象的) 方法. 因为调用(对象的) 内建方法, 通常也会调用 __Call 元函数.</p></div>
+<p>这个函数提供一种绕过 __Set <a href="../Objects.htm#Meta_Functions">元函数</a> 和 <a href="../Objects.htm#Custom_Classes_property">properties</a> 的途径. 如果不是必须的, 最好还是使用普通的(赋值) 方法. 例如: <code>Object[Key] := Value</code></p>
+<p>由于目的是绕过元函数, 所以它只是一个函数, 而不是(对象的) 方法. 因为调用(对象的) 内建方法, 通常也会调用 __Call 元函数.</p>
+<p>An exception is thrown if <em>Object</em> is of an incorrect type.</p>
+</div>
+
+<div class="methodShort" id="GetBase"><h2>ObjGetBase <span class="ver">[v1.1.29+]</span></h2>
+<p>Returns the object's <a href="../Objects.htm#Custom_Objects">base object</a>.</p>
+<pre class="Syntax">BaseObject := <span class="func">ObjGetBase</span>(Object)</pre>
+<p>No <a href="../Objects.htm#Meta_Functions">meta-functions</a> are called. The object's base is returned even if the key "base" has been stored in the object (such as with <a href="#RawSet">ObjRawSet</a> or <a href="#SetCapacity">SetCapacity</a>). An empty string is returned if the object has no base.</p>
+<p>An exception is thrown if <em>Object</em> is of an incorrect type.</p>
+<p>See also: <a href="#Base">Base property</a></p>
+</div>
+
+<div class="methodShort" id="SetBase"><h2>ObjSetBase <span class="ver">[v1.1.29+]</span></h2>
+<p>Sets the object's <a href="../Objects.htm#Custom_Objects">base object</a>.</p>
+<pre class="Syntax"><span class="func">ObjSetBase</span>(Object, BaseObject)</pre>
+<p>No <a href="../Objects.htm#Meta_Functions">meta-functions</a> are called. The object's base is set even if the key "base" has been stored in the object (such as with <a href="#RawSet">ObjRawSet</a> or <a href="#SetCapacity">SetCapacity</a>). An empty string is returned if the object has no base.</p>
+<p>An exception is thrown if <em>Object</em> is of an incorrect type or if <em>BaseObject</em> is not an object or empty string.</p>
+<p>See also: <a href="#Base">Base property</a></p>
+</div>
 
 <div class="methodShort" id="Insert"><h2>Insert <span class="ver">[AHK_L 31+]</span></h2>
 <div class="warning"><strong>弃用的:</strong> Insert 不推荐在新脚本中继续使用. 可以用 <a href="#InsertAt">InsertAt</a>, <a href="#Push">Push</a>, <a href="#RawSet">ObjRawSet</a> 或简单赋值操作替代它.</div>

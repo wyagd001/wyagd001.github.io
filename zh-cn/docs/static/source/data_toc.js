@@ -143,6 +143,7 @@
       ["Loop (读取文件内容)","commands/LoopReadFile.htm"],
       ["Loop (注册表)","commands/LoopReg.htm"]
     ]],
+    ["OnError","commands/OnError.htm"],
     ["OnExit","commands/OnExit.htm"],
     ["Pause","commands/Pause.htm"],
     ["Reload","commands/Reload.htm"],
