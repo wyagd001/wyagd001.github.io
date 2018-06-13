@@ -17,11 +17,11 @@
 <span class="func">Critical</span> <span class="optional">, Off</span>
 <span class="func">Critical</span> 50 <em>; 请参阅<a href="#Interval">备注底部</a>.</em>
 </pre>
-<p>如果首个参数省略(或为单词 On), 则设置 <a href="../misc/Threads.htm">当前线程</a> 为关键的, 这意味着它不会被其他线程中断. 如果首个参数为 Off(或在 <span class="ver">[v1.0.48+]</span> 为数字 0), 则当前线程会不论 <a href="Thread.htm">Thread Interrupt</a> 如何设置都会变成可中断状态.</p>
+<p>如果首个参数省略(或为单词 On), 则设置<a href="../misc/Threads.htm">当前线程</a>为关键的, 这意味着它不会被其他线程中断. 如果首个参数为 Off(或在 <span class="ver">[v1.0.48+]</span> 为数字 0), 则当前线程会不论 <a href="Thread.htm">Thread Interrupt</a> 如何设置都会变成可中断状态.</p>
 
 <h3 id="Behave">关键线程的行为</h3>
-<p>与 <a href="../misc/Threads.htm">高优先级</a> 线程不同, 在关键线程中产生的事件不会被丢弃. 例如, 在当前线程为关键线程时用户按下了 <a href="../Hotkeys.htm">热键</a>, 那么此热键会被缓冲到当前线程结束或成为非关键线程时才作为新的线程启动.</p>
-<p>关键线程也会被紧急事件中断. 紧急事件包括: 1) <a href="OnExit.htm">OnExit</a> 子程序; 2) 监听消息号小于 0x312 的任何 <a href="OnMessage.htm">OnMessage()</a> 函数(或被这些消息触发的 <a href="RegisterCallback.htm">回调</a>); 和 3) 由紧急线程自身间接触发的任何 <a href="RegisterCallback.htm">回调</a>(例如通过 <a href="PostMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>). 要避免被这些事件中断, 可以临时禁用这些函数.</p>
+<p>与<a href="../misc/Threads.htm">高优先级</a>线程不同, 在关键线程中产生的事件不会被丢弃. 例如, 在当前线程为关键线程时用户按下了<a href="../Hotkeys.htm">热键</a>, 那么此热键会被缓冲到当前线程结束或成为非关键线程时才作为新的线程启动.</p>
+<p>关键线程也会被紧急事件中断. 紧急事件包括: 1) <a href="OnExit.htm">OnExit</a> 子程序; 2) 监听消息号小于 0x312 的任何 <a href="OnMessage.htm">OnMessage()</a> 函数(或被这些消息触发的<a href="RegisterCallback.htm">回调</a>); 和 3) 由紧急线程自身间接触发的任何<a href="RegisterCallback.htm">回调</a>(例如通过 <a href="PostMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>). 要避免被这些事件中断, 可以临时禁用这些函数.</p>
 <p>关键线程在显示 <a href="MsgBox.htm">MsgBox</a> 或其他对话框时, 会变成可中断的. 但是, 与 <a href="Thread.htm">Thread Interrupt</a> 不同, 在用户解除对话框后这个线程会再恢复为关键的.</p>
 
 <h3 id="Off">Critical Off</h3>
@@ -30,12 +30,12 @@
 
 <h3 id="Settings">线程设定</h3>
 <p>如何保存和还原当前线程的关键设定请看 <a href="../Variables.htm#IsCritical">A_IsCritical</a>. Critical 是一个对于特定线程的设定, 当一个关键线程结束时, 随后/接续的线程(如果有的话)会自动变成非关键线程. 因此没有必要在一个线程结束时马上使用 <code>Critical Off</code>.</p>
-<p>如果在自动执行段没有使用 Critical(脚本开头部分), 所有的线程将会以非关键线程开始(但 <a href="Thread.htm">线程中断</a> 的设定仍然有效). 与之对比的是, 如果自动执行段打开了 Critical 但随后并没有关闭过它, 每个新启动的 <a href="../misc/Threads.htm">线程</a>(像 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项目</a>, 或 <a href="SetTimer.htm">定时</a> 子程序) 都会以关键线程开始.</p>
-<p><a href="Thread.htm">Thread NoTimers</a> 命令类似于 Critical, 但前者仅保护线程不被 <a href="SetTimer.htm">定时器</a> 中断.</p>
+<p>如果在自动执行段没有使用 Critical(脚本开头部分), 所有的线程将会以非关键线程开始(但<a href="Thread.htm">线程中断</a>的设定仍然有效). 与之对比的是, 如果自动执行段打开了 Critical 但随后并没有关闭过它, 每个新启动的 <a href="../misc/Threads.htm">线程</a>(像<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项目</a>或<a href="SetTimer.htm">定时</a>子程序) 都会以关键线程开始.</p>
+<p><a href="Thread.htm">Thread NoTimers</a> 命令类似于 Critical, 但前者仅保护线程不被<a href="SetTimer.htm">定时器</a>中断.</p>
 <p><span class="ver">[v1.0.47+]</span>: 打开 Critical 的同时也会让 <code><a href="SetBatchLines.htm">SetBatchLines</a> -1</code> 对<a href="../misc/Threads.htm">当前线程</a>生效.</p>
 
 <h3 id="Interval">消息检查间隔</h3>
-<p>在 <span class="ver">[v1.0.47+]</span>: 指定一个正数作为首个参数(如 <code>Critical 30</code>) 将会打开 Critical 但同时也会改变检查内部消息队列的时间间隔(以 ms 毫秒计). 如果未指定该参数, 在 Critical 打开的状态下每 16ms 检查一次消息队列, 在 Critical 关闭状态下每 5ms 检查一次. 延长时间间隔会推迟消息/事件的到达, 给出更多的时间让 <a href="../misc/Threads.htm">当前线程</a> 结束. 这会减少某些 <a href="OnMessage.htm">OnMessage()</a> 和 <a href="Gui.htm#DefaultWin">GUI 事件</a> 因为 &quot;线程已运行&quot; 而丢失的可能性. 然而, 像 <a href="Sleep.htm">Sleep</a> 和 <a href="WinWait.htm">WinWait</a> 这样的等待型命令则无视此设定而照常检查消息(一个变通的解决办法是 <code>DllCall(&quot;Sleep&quot;, UInt, 500)</code>).</p>
+<p>在 <span class="ver">[v1.0.47+]</span>: 指定一个正数作为首个参数(如 <code>Critical 30</code>) 将会打开 Critical 但同时也会改变检查内部消息队列的时间间隔(以 ms 毫秒计). 如果未指定该参数, 在 Critical 打开的状态下每 16ms 检查一次消息队列, 在 Critical 关闭状态下每 5ms 检查一次. 延长时间间隔会推迟消息/事件的到达, 给出更多的时间让<a href="../misc/Threads.htm">当前线程</a>结束. 这会减少某些 <a href="OnMessage.htm">OnMessage()</a> 和 <a href="Gui.htm#DefaultWin">GUI 事件</a>因为 &quot;线程已运行&quot; 而丢失的可能性. 然而, 像 <a href="Sleep.htm">Sleep</a> 和 <a href="WinWait.htm">WinWait</a> 这样的等待型命令则无视此设定而照常检查消息(一个变通的解决办法是 <code>DllCall(&quot;Sleep&quot;, UInt, 500)</code>).</p>
     <p class="note"><strong>注意</strong>: 将消息检查间隔设置的太大会减少对多种事件的响应能力, 例如 <a href="Gui.htm">GUI</a> 窗口的重绘.</p>
 
 <h3>相关</h3>

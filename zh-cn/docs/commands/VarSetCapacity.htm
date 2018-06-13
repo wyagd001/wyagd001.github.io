@@ -27,7 +27,7 @@
       <p>因此, 要明确地缩小变量, 首先请使用 <code>VarSetCapacity(Var, 0)</code> 释放它占用的内存, 然后使用 <code>VarSetCapacity(Var, NewCapacity)</code> 或者简单地让它自动按需从零扩展.</p>
       <p>考虑到性能的原因, 要释放一个原来容量小于 64 字节(在 Unicode 版本中为 128 字节) 的变量可能会没有效果, 因为它的内存是永久类型的. 此时, 会返回当前容量而不是 0.</p>
       <p>考虑到性能的原因, 容量小于 4096 字节的变量的内存不能通过赋值空字符串的方法来释放(例如 <code>Var := &quot;&quot;</code>). 然而, <code>VarSetCapacity(Var, 0)</code> 可释放它.</p>
-      <p id="neg1"><span class="ver">[v1.0.44.03+]</span>: 可通过将 <em>RequestedCapacity</em> 设为 -1, 以将变量的内部存储的字符串长度更新为其当前内容的长度. 这个特性在变量被间接修改时特别有用, 例如将变量的 <a href="../Variables.htm#amp">地址</a> 递给 <a href="DllCall.htm">DllCall()</a>. 在这种模式中, VarSetCapacity() 可返回以字节为单位的实际内容的长度而不是变量的容量. 译者注: 某些 Dll 中的函数返回的变量, 其长度为 0, 直接调用时该变量表现为空值, 需要使用 <code>VarSetCapacity(UnquotedVarName, -1)</code> 将变量长度更新为其当前内容的实际长度.</p></dd>
+      <p id="neg1"><span class="ver">[v1.0.44.03+]</span>: 可通过将 <em>RequestedCapacity</em> 设为 -1, 以将变量的内部存储的字符串长度更新为其当前内容的长度. 这个特性在变量被间接修改时特别有用, 例如将变量的<a href="../Variables.htm#amp">地址</a>递给 <a href="DllCall.htm">DllCall()</a>. 在这种模式中, VarSetCapacity() 可返回以字节为单位的实际内容的长度而不是变量的容量. 译者注: 某些 Dll 中的函数返回的变量, 其长度为 0, 直接调用时该变量表现为空值, 需要使用 <code>VarSetCapacity(UnquotedVarName, -1)</code> 将变量长度更新为其当前内容的实际长度.</p></dd>
 
   <dt>FillByte</dt>
   <dd><p>此参数通常省略, 此时不会对目标变量的内存进行初始化(作为替代, 只是像上面描述的那样简单地把变量置空). 否则, 请指定介于 0 和 255 之间的整数. 目标变量内存区域的每个字节(它的当前容量, 可能大于 <em>RequestedCapacity</em>) 会被设为这个数字. 零显然是最常用的值, 这可用于要在变量中保存原始的二进制数据时, 例如 <a href="DllCall.htm#struct">DllCall 结构</a>.</p></dd>
