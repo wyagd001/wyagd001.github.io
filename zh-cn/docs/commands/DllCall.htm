@@ -122,7 +122,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 <p id="LastError">内置变量 <strong>A_LastError</strong> 包含了操作系统 GetLastError() 函数最近调用返回的结果, 在调用函数后会立即执行此函数(对效率的影响未知). A_LastError 是一个介于 0 和 4294967295 之间的数字(总是为十进制而非十六进制). 像 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 一样, A_LastError 是与每个线程关联的设置; 即由其他<a href="../misc/Threads.htm">线程</a>产生的中断不会改变它. 不过, <a href="Run.htm#LastError">Run/RunWait</a> 也会设置 A_LastError 的值.</p>
 
 <h3 id="load">性能</h3>
-<p>当需要重复调用一个 DLL 时, 预先明确装载它可以显著提高执行效率(<em>对于 <a href="#std">标准的 DLL</a> 文件如 User32 可以不需要, 因为它是常驻的</em>). 这样的实现避免了 DllCall 内部每次调用 LoadLibrary 和 FreeLibrary 的需要. 例如:</p>
+<p>当需要重复调用一个 DLL 时, 预先明确装载它可以显著提高执行效率(<em>对于<a href="#std">标准的 DLL</a> 文件如 User32 可以不需要, 因为它是常驻的</em>). 这样的实现避免了 DllCall 内部每次调用 LoadLibrary 和 FreeLibrary 的需要. 例如:</p>
 <pre>hModule := DllCall("<strong>LoadLibrary</strong>", "Str", "MyFunctions.dll", "Ptr")  <em>; 避免了在循环中每次都需要使用 DllCall() 装载库.</em>
 Loop, C:\My Documents\*.*, , 1
     result := DllCall("MyFunctions\BackupFile", "Str", A_LoopFileFullPath)
@@ -142,7 +142,7 @@ Loop 500
 <p>1) 调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyStruct, 123, 0)</code> 来确保目标变量足够大以便保存结构数据. 把 123 替换为至少和结构一样大小的数字. 最后一个参数零是可选的; 它会初始化所有成员变量为二进制零, 这样通常可以避免在下一步中频繁调用 NumPut().</p>
 <p>2) 如果目标函数需要初始化结构, 则调用 <code><a href="NumPut.htm">NumPut</a>(123, MyStruct, 4, "UInt")</code> 来初始化任意成员为非零数据. 把 <code>123</code> 替换为需要向目标成员存入的整数(或指定 <code>&amp;Var</code> 来存入变量的<a href="../Variables.htm#amp">地址</a>). 把 <code>4</code> 替换为目标成员的偏移(关于 "偏移" 的说明请参阅步骤 #4). 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
 <p>3) 调用目标函数, 把 <em>MyStruct</em> 的<a href="../Variables.htm#amp">地址</a>作为 UInt(或 Ptr 在 <span class="ver">[AHK_L 42+]</span> 时) 的参数传递过去. 例如, <code>DllCall("MyDll\MyFunc", Ptr, <strong>&amp;</strong>MyStruct)</code>. 函数将检查和/或改变其中的某些成员变量.</p>
-<p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中获取任何想要的成员变量. 把 <code>4</code> 替换为结构中目标成员的偏移. 首个成员变量的偏移总为 0. 第二个成员的偏移为 0 加上首个成员的大小(一般为 4 字节). 后面成员的偏移等于它前一个成员的偏移加上前一个成员的大小. 大多数成员(例如 DWORD, Int 和 <a href="#Int">其他的 32 位整型</a>) 大小为 4 个字节. 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
+<p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中获取任何想要的成员变量. 把 <code>4</code> 替换为结构中目标成员的偏移. 首个成员变量的偏移总为 0. 第二个成员的偏移为 0 加上首个成员的大小(一般为 4 字节). 后面成员的偏移等于它前一个成员的偏移加上前一个成员的大小. 大多数成员(例如 DWORD, Int 和<a href="#Int">其他的 32 位整型</a>) 大小为 4 个字节. 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
 <p>请参阅<a href="#ExStruct">结构示例</a>了解实际用法.</p>
 <h3 id="limits">已知限制</h3>
 <p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>) 传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误, 要解决此问题, 有下面几种方法: 1) 把 <em>MyVar</em> 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址 传递; 2) <span class="ver">[v1.0.44.03+]</span>: 在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>

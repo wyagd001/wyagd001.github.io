@@ -183,7 +183,7 @@ Gui <strong>MyGui:</strong>+Resize -MaximizeBox  <em>; 改变名称为 <i>MyGui<
 </ul>
 <p id="GuiHwndOutputVar"><strong>Hwnd</strong><em>OutputVar</em> <span class="ver">[v1.1.04+]:</span> 此选项保存 GUI 的窗口句柄(HWND) 到 <em>OutputVar</em>. 例如: <code>Gui +HwndMyGuiHwnd</code>. 在函数中使用时, <em>MyGuiHwnd</em> 会被视为<a href="../Functions.htm#DynVar">函数动态变量</a>. GUI 的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 它还可以直接作为 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a> 或代替 GUI 名称来使用, 例如 <code>Gui %MyGuiHwnd%:Destroy</code>.</p>
 <p id="PlusLabel"><strong>Label</strong> <span class="ver">[v1.0.44.09+]:</span> 为当前窗口的<a href="#Labels">特殊标签</a>指定自定义名称. 例如, <code>Gui MyGui:+LabelMyGui_On</code> 将使用标签 MyGui_OnClose 和 MyGui_OnSize(如果它们存在) 分别代替 MyGuiGuiClose 和 MyGuiGuiSize. 换句话说, 在所有<a href="#Labels">特殊标签</a>的名称中字符串 "MyGuiGui" 被替换为 "MyGui_On". 这可以让多个窗口使用一套相同的标签(此时脚本可以根据 <a href="../Variables.htm#Gui">A_Gui</a> 来确定运行子程序的窗口是哪个).</p>
-<p id="LastFound"><strong>LastFound</strong>: 设置窗口为<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>(对于 <a href="#DefaultWin">Gui 线程</a> 这是多余的, 因为它自动设置了), 这样允许类似 <a href="WinSet.htm">WinSet</a> 这样的命令对此窗口进行操作, 即使它当前为隐藏状态(即不需要使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>). 需要在显示窗口之前改变其属性时, 这是非常有用的. 例如:</p>
+<p id="LastFound"><strong>LastFound</strong>: 设置窗口为<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>(对于 <a href="#DefaultWin">Gui 线程</a>这是多余的, 因为它自动设置了), 这样允许类似 <a href="WinSet.htm">WinSet</a> 这样的命令对此窗口进行操作, 即使它当前为隐藏状态(即不需要使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>). 需要在显示窗口之前改变其属性时, 这是非常有用的. 例如:</p>
 <pre>Gui +LastFound
 WinSet, TransColor, %CustomColor% 150
 Gui Show</pre>
@@ -198,7 +198,7 @@ IfWinExist
 <p>如果从没有使用 <em>MinSize</em> 和 <em>MaxSize</em>, 则使用操作系统的默认值(同样地, 可以使用 <code>Gui -MinSize -MaxSize</code> 恢复为此默认值).</p>
 <p class="note"><strong>注意</strong>: 必须含有 <a href="#Resize">+Resize</a> 才能允许用户调节窗口的大小.</p>
 <p id="OwnDialogs"><strong>OwnDialogs</strong>: 在每个<a href="../misc/Threads.htm">线程</a>( 例如 ButtonOK 子线程) 中指定 <code>Gui +OwnDialogs</code>, 这样所有后续的 <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a> 以及 <a href="FileSelectFolder.htm">FileSelectFolder</a> 对话框才会成为当前窗口的子窗口. 这时这些对话框成为模式对话框, 这意味着用户必须先关闭这些对话框才能和它们的父窗口进行交互. 与之相比, <a href="ToolTip.htm">ToolTip</a>, <a href="Progress.htm">Progress</a> 和 <a href="Progress.htm">SplashImage</a> 窗口即使成为了其他窗口的子窗口也为非模式的; 它们仅仅是永远显示在其父窗口的上面. 在模式和非模式窗口两种情况中, 当它们的父窗口<a href="#Destroy">销毁</a>时它们也会被自动销毁.</p>
-<p>一般情况下打开这个设置后不需要再切换到关闭, 因为它不影响其他 <a href="../misc/Threads.htm">线程</a>. 但是, 如果一个线程需要显示从属和非从属对话框, 则可以使用 <code>Gui -OwnDialogs</code> 关闭此设置.</p>
+<p>一般情况下打开这个设置后不需要再切换到关闭, 因为它不影响其他<a href="../misc/Threads.htm">线程</a>. 但是, 如果一个线程需要显示从属和非从属对话框, 则可以使用 <code>Gui -OwnDialogs</code> 关闭此设置.</p>
 <p>如果在前缀中没有使用窗口名称(例如使用 <code>Gui +OwnDialogs</code> 而不是 <code>Gui MyGui:+OwnDialogs</code>), 则当前<a href="#DefaultWin">线程的默认窗口</a>将拥有这些从属对话框.</p>
 <p id="Owner"><strong>Owner</strong>: 使用 <em>+Owner</em> 可以让当前窗口从属于另一个窗口. 从属的窗口默认不显示在任务栏, 并且它总是显示在其父窗口的上面. 当其父窗口销毁时它也被自动销毁. <em>+Owner</em> 必须在父窗口创建 <u>后</u> 使用, 而在 <span class="ver">[v1.1.05]</span> 及更高版本中可以在从属窗口创建前面或后面使用. <em>+owner</em> 有两种使用方法, 如下所示:</p>
 <pre>Gui, MyGui:+OwnerMyOtherGui  <em>; 让 <i>MyGui</i> 成为 <i>MyOtherGui</i> 的子窗口.</em>
@@ -267,7 +267,7 @@ Menu, MyMenuBar, Add, &amp;Help, :HelpMenu
 <p id="PosPlus">对于 <strong>X</strong> 和 <strong>Y</strong>, 还可以在后面加上加号来确定控件相对于前一个添加控件的右边或底部边缘(分别地) 的位置. 例如, 指定 <code>Y+10</code> 将把控件放置在前一个控件底部下面 10 个像素的位置, 而不使用标准的填充间距. 同样地, 指定 <code>X+10</code> 将把控件放置在前一个控件右边缘的右边 10 个像素的位置. 由于负数如 <code>X-10</code> 表示绝对的位置, 因此要使用负的位置偏移, 需要在前面加上一个加号. 例如: <code>X+-10</code>.</p>
 <p id="PosPlusMargin"><span class="ver">[v1.1.16+]:</span> 对 <strong>X+</strong> 及 <strong>Y+</strong>, 可将字母 <strong>M</strong> 替换为窗口的<a href="#Margin">边距</a>值. 如, <strong>x+m</strong> 使用前一控件的右边位置加上标准填充间隔. <strong>xp y+m</strong> 将控件放置于前一个之下, 但当指定 X 坐标时, 相当于默认情况下隐式的 <strong>yp</strong>.</p>
 <p id="xp"><strong>xp+n</strong>, <strong>yp+n</strong>, <strong>xp-n</strong>, <strong>yp-n</strong>(其中 <strong>n</strong> 可以为任意数字) 可以用来指定控件相对于前一个控件左上角的位置, 此选项常用于 <a href="GuiControls.htm#GroupBox">GroupBox</a> 中的封装控件.</p>
-<p id="xm"><strong>xm</strong> 和 <strong>ym</strong> 分别可以把控件放置在窗口最左边和最上边的 <a href="#Margin(边距)">边缘</a>(它们后面还可以跟着加号/减号和数字). 指定 <strong>ym</strong> 而省略 x 坐标, 将把控件放置在窗口的最上面但在之前所有控件的右边, 可以理解为开始了一个新 "列". 反之亦然.</p>
+<p id="xm"><strong>xm</strong> 和 <strong>ym</strong> 分别可以把控件放置在窗口最左边和最上边的<a href="#Margin">边缘(边距)</a> (它们后面还可以跟着加号/减号和数字). 指定 <strong>ym</strong> 而省略 x 坐标, 将把控件放置在窗口的最上面但在之前所有控件的右边, 可以理解为开始了一个新 "列". 反之亦然.</p>
 <p id="xs"><strong>xs</strong> 和 <strong>ys</strong>: 它们类似于 <strong>xm</strong> 和 <strong>ym</strong>, 区别在于它们是相对于前一个使用 <a href="#Section">Section</a> 选项添加的控件坐标(在窗口中创建首个控件时总是开始一个新列, 即使没有指定此选项). 指定 <strong>ys</strong> 而省略 x 坐标, 将把控件放置在之前保存的 y 坐标(即最近一次使用 Section 选项添加的控件的 y 坐标) 但在最近一次使用 <a href="#Section">Section</a> 后添加的所有控件右边; 这可以理解为在同一个控件段中开始一个新列. 例如:</p>
 <pre>gui, add, edit, w600  <em>; 在窗口的顶部添加一个非常宽的编辑控件.</em>
 gui, add, text, <strong>section</strong>, First Name:  <em>; 保存此控件位置并定义一个新控件段.</em>
@@ -340,7 +340,7 @@ ExitApp</pre>
   1: 窗口被最小化了.<br>
   2: 窗口被最大化了.</p>
 <p>脚本中可以使用 GuiSize 调整控件的大小和位置来响应用户对窗口大小的改变. 通过 <a href="https://autohotkey.com/boards/viewtopic.php?f=6&t=1079">AutoXYWH() by tmplinshi and toralf</a> 可以让这种处理更容易些.</p>
-<p>当窗口改变大小时(脚本发出的事件), GuiSize 不一定会立即响应. 类似其他窗口事件, 如果当前线程为 <a href="Thread.htm#Interrupt">不可中断的</a>, GuiSize 直到线程变为可中断之前都不会响应. 如果脚本正在改变窗口大小, 下面的例子将确保 GuiSize 立即响应:</p>
+<p>当窗口改变大小时(脚本发出的事件), GuiSize 不一定会立即响应. 类似其他窗口事件, 如果当前线程为<a href="Thread.htm#Interrupt">不可中断的</a>, GuiSize 直到线程变为可中断之前都不会响应. 如果脚本正在改变窗口大小, 下面的例子将确保 GuiSize 立即响应:</p>
 <pre><a href="Critical.htm#Off">Critical Off</a>  <em>; 无论是否设置过 Critical On.</em>
 <a href="Sleep.htm">Sleep -1</a></pre>
 <p><span class="ver">[v1.1.22.05+]:</span> Gui Show 会自动延迟一秒 <code>Sleep -1</code>, 所以通常无需再次使用 Sleep .</p>
@@ -411,7 +411,7 @@ Gui, <strong>MyGui:</strong>Show</pre>
 <p>一个 GUI <a href="../misc/Threads.htm">线程</a>是由 GUI 动作启动的. GUI 动作包括从 GUI 窗口的<a href="#Menu">菜单栏</a>中选择一个项目或触发其某个 <a href="#label">g-标签</a>(例如按下按钮).</p>
 <p>GUI 线程的<strong>默认<a href="#MultiWin">窗口名称</a></strong>是运行此线程的窗口名称. 非 GUI 线程的默认窗口编号为 1.</p>
 <p>当一个 GUI <a href="../misc/Threads.htm">线程</a>启动时, 此线程的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始为此 GUI 窗口自身. 这样可以让窗口和控件操作命令(例如 <a href="WinMove.htm">WinMove</a>, <a href="WinHide.htm">WinHide</a>, <a href="WinSet.htm">WinSet</a>, <a href="WinSetTitle.htm">WinSetTitle</a> 和 <a href="ControlGetFocus.htm">ControlGetFocus</a>) 对当前的 GUI 窗口进行操作时省略 WinTitle 和 WinText(即使窗口处于隐藏状态).</p>
-<p>当一个控件的 <a href="#label">g-标签</a>由于之前的点击还在运行时, 点击此控件不会有效果并且此事件被丢弃. 要避免此问题, 请在子程序的首行使用 <a href="Critical.htm">Critical</a>(不过, 这样也将缓冲/延迟其他 <a href="../misc/Threads.htm">线程</a>, 例如按下的热键).</p>
+<p>当一个控件的 <a href="#label">g-标签</a>由于之前的点击还在运行时, 点击此控件不会有效果并且此事件被丢弃. 要避免此问题, 请在子程序的首行使用 <a href="Critical.htm">Critical</a>(不过, 这样也将缓冲/延迟其他<a href="../misc/Threads.htm">线程</a>, 例如按下的热键).</p>
 <p>内置变量 A_Gui 和 A_GuiControl 包含了运行当前线程的窗口编号和控件 ID. 要了解详情请参阅 <a href="../Variables.htm#Gui">A_Gui</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a>.</p>
 <p>要让多个事件执行相同的子程序, 请在子程序上面连续指定这些标签. 例如:</p>
 <pre>GuiEscape:
