@@ -73,7 +73,7 @@
   <dt id="If">If, Expression(表达式)</dt>
   <dd>
     <p><span class="ver">[AHK_L 4+]:</span> 关联后续创建的热键与<a href="_If.htm">#If <i>表达式</i></a>. <em>表达式</em> 必须是在脚本其他任何地方用 #If 指令开头的的表达式. 通过这个命令不能创建新的表达式, 而只能用已经存在的表达式创建新的热键定义. 请参考 <a href="_If.htm#ex4">#If 例子 4</a>.</p>
-    <p class="note"><strong>注意</strong>: 这个 Hotkey 只能用你传递给它的文本, 而不是原始代码. 逗号和变量符号(百分号) 是在命令调用 <em>之前</em> 被解析的, 所以如果这些符号是原始表达式中的一部分, 则应该先转换一下. <a href="_EscapeChar.htm">转义序列</a> 是脚本加载的时候就进行转换的, 所以只产生字符; 例如: <code>Hotkey, If, x = "`t"</code> 和 <code>Hotkey, If, % "x = """ A_Tab """"</code> 都对应于 <code>#If x = "`t"</code>.</p>
+    <p class="note"><strong>注意</strong>: 这个 Hotkey 只能用你传递给它的文本, 而不是原始代码. 逗号和变量符号(百分号) 是在命令调用 <em>之前</em> 被解析的, 所以如果这些符号是原始表达式中的一部分, 则应该先转换一下. <a href="_EscapeChar.htm">转义序列</a>是脚本加载的时候就进行转换的, 所以只产生字符; 例如: <code>Hotkey, If, x = "`t"</code> 和 <code>Hotkey, If, % "x = """ A_Tab """"</code> 都对应于 <code>#If x = "`t"</code>.</p>
     <p><strong>已知限制: </strong>If <em>表达式</em> 包含 <code>and</code>/<code>or</code> 运算符的时候, 不会被识别为表达式. 为了避免此问题, 请在原来的 #If 表达式和传递给 Hotkey 命令的表达式中使用等价的 <code>&amp;&amp;</code>/<code>||</code> 运算符.</p>
   </dd>
   
@@ -135,12 +135,12 @@ if ErrorLevel in 5,6
     MsgBox 热键定义不存在 或者 它不是当前 IfWin 的条件的变体.</pre>
 
 <h3>备注</h3>
-<p><a href="#IfWin">当前的 IfWin 设置</a> 决定了 Hotkey 命令将操作热键的哪个<a href="#variant">变体</a>.</p>
+<p><a href="#IfWin">当前的 IfWin 设置</a>决定了 Hotkey 命令将操作热键的哪个<a href="#variant">变体</a>.</p>
 <p>如果需要根据活动窗口的类型自动禁用选择的热键或热字串, 使用 <code>Hotkey, ^!c, Off</code> 通常不如 <a href="_IfWinActive.htm">#IfWinActive/Exist</a>(或它们<a href="#IfWin">下面</a>的动态副本"Hotkey IfWinActive/Exist")来的方便.</p>
 <p>通过<a href="../Hotkeys.htm">双冒号</a>创建热键比使用 Hotkey 命令执行地更好, 因为在脚本启动时会批量启用它们(而非一个一个地启用). 因此, 最好使用此命令创建那些在脚本开始运行后才知道键名的热键. 一种这样的情况是通过 <a href="IniRead.htm">INI 文件</a>为热键配置了多个不同的动作.</p>
 <p>给定的标签可以是多个热键的目标. 如果某个热键调用了标签, 您可以通过检查内置变量 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 来确定是哪个热键.</p>
 <p>如果脚本是<a href="Suspend.htm">挂起的</a>, 那么新增加/启用的热键也将是挂起的, 直到挂起状态被关闭(除非它们像 <a href="Suspend.htm">Suspend</a> 命令中描述的那样被免除了).</p>
-<p>由此命令做出的改变使得<a href="_InstallKeybdHook.htm">键盘</a>和/或<a href="_InstallMouseHook.htm">鼠标</a> 钩子被安装或移除是正常的.</p>
+<p>由此命令做出的改变使得<a href="_InstallKeybdHook.htm">键盘</a>和/或<a href="_InstallMouseHook.htm">鼠标</a>钩子被安装或移除是正常的.</p>
 <p>尽管 Hotkey 命令不能直接启用或禁用脚本中不是它创建的热键, 但在大多数情况下它可以通过创建或启用相同的热键来<a href="../misc/Override.htm">覆盖</a>它们. 这样是否有效取决于下列因素: 1) 在其他脚本中需要被覆盖的热键是否为<a href="ListHotkeys.htm">钩子热键</a>(非钩子热键总是可以成功覆盖); 2) 最近启动的热键通常优先于其他脚本中的相同热键(因此, 如果要覆盖其他脚本中的脚本是最近启动的, 覆盖总是会成功); 3) 此热键的启用或创建是否会重新激活<a href="_InstallKeybdHook.htm">键盘</a>或<a href="_InstallMouseHook.htm">鼠标</a>钩子(如果是, 那么覆盖总是会成功).</p>
 <p>每当脚本含有至少一个热键时, 它会变成持续运行的, 这意味着应该使用 <a href="ExitApp.htm">ExitApp</a> 而不是 Exit 来终止它. 同时热键脚本自动为 <a href="_SingleInstance.htm">#SingleInstance</a> 的单实例属性, 不过可以指定 <code>#SingleInstance Off</code> 来关闭.</p>
 

@@ -86,7 +86,7 @@ By default, the hard carriage return (Enter) between the previous line and this 
 
 See <a href="Scripts.htm#continuation">continuation section</a> for how to change these default behaviors.
 )</pre>
-<p>使用延续片段后也会使热字串默认为 <a href="#raw">原始模式</a>. 覆盖此特性的唯一方法是在每个含延续片段的热字串中指定 <a href="#raw">r0 选项</a>(例如 <code>:r0:text1::</code>).</p>
+<p>使用延续片段后也会使热字串默认为<a href="#raw">原始模式</a>. 覆盖此特性的唯一方法是在每个含延续片段的热字串中指定 <a href="#raw">r0 选项</a>(例如 <code>:r0:text1::</code>).</p>
 <h2 id="variant">上下文相关的热字串</h2>
 <p>使用 <a href="commands/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以让选择的热字串产生上下文相关性. 这样的热字串会根据窗口是否活动或存在的不同情况发送不同的替换, 执行不同的动作或什么都不做. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
@@ -105,30 +105,30 @@ See <a href="Scripts.htm#continuation">continuation section</a> for how to chang
 <p id="NoMouse">默认情况下, 鼠标左键或右键的任何点击都会重置热字串识别器. 换句话说, 脚本将开始等待全新的热字串, 而不考虑您之前输入的任何内容(如果您不希望这样, 请在脚本的任意位置指定 <code><a href="commands/_Hotstring.htm">#Hotstring</a> NoMouse</code> 这行). 在 "鼠标点击时重置" 的行为是默认的, 因为每次点击通常会移动插入点(光标) 或设置键盘焦点到新的控件/区域. 在这种情况下, 通常希望: 1) 即使没有 <a href="#Question">问号选项</a> 也触发热键; 2) 防止您在点击鼠标后输入的一些内容与之前输入的内容意外形成有效的缩写从而触发热字串.</p>
 <p id="focus-reset">每次输入字符时, 热字串识别器会检查当前活动窗口, 并且如果活动窗口不同于之前, 则会重置. 如果活动窗口发生变化, 但在键入任何字符之前返回, 则不会检测到更改(但可能会由于其他原因重置热字串识别器). 热字串识别器也可以通过调用 <code><a href="commands/Hotstring.htm#Reset">Hotstring("Reset")</a></code> 来重置.</p>
 <p>内置变量 <strong>A_EndChar</strong> 包含了触发最近的非自动替换热字串时的终止符. 如果不需要终止符(使用了 <a href="#Asterisk">* 选项</a>), 那么它会被置空. A_EndChar 可以用于使用 Send 命令的热字串或根据您输入的不同终止符改变行为的那些热字串. 要发送终止符自身, 请使用 <code>SendRaw %A_EndChar%</code>(使用 <a href="commands/Send.htm">SendRaw</a> 是因为普通的 Send 命令无法正确发送类似 !{} 这样的字符).</p>
-<p>尽管在热字串定义中的逗号, 百分号和单冒号不需要进行<a href="commands/_EscapeChar.htm">转义</a>, 但反引号和那些在空格或 tab 右边的分号则需要. 请参阅 <a href="commands/_EscapeChar.htm">转义序列</a> 了解完整的列表.</p>
-<p>尽管在 <a href="#auto">自动替换文本</a>(在没有使用 <a href="#raw">原始选项</a> 时) 中支持 <a href="commands/Send.htm">Send 命令</a> 的特殊字符例如 {Enter}, 但热字串自身却不使用这种方式. 而是使用 `n 表示 <kbd>Enter</kbd> 键, `t(或原义的 tab) 表示 <kbd>Tab</kbd>(请参阅 <a href="commands/_EscapeChar.htm">转义序列</a> 了解完整的列表). 例如, 当您输入"ab"后跟着 tab 时会触发热字串 <code>:*:ab`t::</code>.</p>
+<p>尽管在热字串定义中的逗号, 百分号和单冒号不需要进行<a href="commands/_EscapeChar.htm">转义</a>, 但反引号和那些在空格或 tab 右边的分号则需要. 请参阅<a href="commands/_EscapeChar.htm">转义序列</a>了解完整的列表.</p>
+<p>尽管在<a href="#auto">自动替换文本</a>(在没有使用<a href="#raw">原始选项</a>时) 中支持 <a href="commands/Send.htm">Send 命令</a> 的特殊字符例如 {Enter}, 但热字串自身却不使用这种方式. 而是使用 `n 表示 <kbd>Enter</kbd> 键, `t(或原义的 tab) 表示 <kbd>Tab</kbd>(请参阅<a href="commands/_EscapeChar.htm">转义序列</a>了解完整的列表). 例如, 当您输入"ab"后跟着 tab 时会触发热字串 <code>:*:ab`t::</code>.</p>
 <p>热字串会原义地处理在它的定义中的空格和 tab. 例如后面的热字串会产生两种不同的效果: <code>::btw::by the way</code> 和 <code>::btw:: by the way</code>.</p>
-<p>每个热字串缩写的长度不能超过 40 个字符. 超出此长度后程序会向您提出警告. 与之相比, 当 <a href="#SendMode">发送模式</a> 为默认的 SendInput 时热字串的替换文本的长度限制约为 5000 个字符. 通过切换到其他 <a href="#SendMode">发送模式</a> 可以把此限制增加到 16,383 字符. 此外, 在热字串的替换文本部分使用 <code><a href="commands/Send.htm#SendPlayDetail">SendPlay </a> %MyVariable%</code> 可以发送不限数量的文本.</p>
-<p>热字串的定义顺序决定了它们的相对优先级. 换句话说, 如果多个热字串匹配您输入的内容, 那么只有脚本中首先列出的那个会生效. 相关主题:<a href="#variant">上下文相关热字串</a>.</p>
+<p>每个热字串缩写的长度不能超过 40 个字符. 超出此长度后程序会向您提出警告. 与之相比, 当<a href="#SendMode">发送模式</a>为默认的 SendInput 时热字串的替换文本的长度限制约为 5000 个字符. 通过切换到其他<a href="#SendMode">发送模式</a>可以把此限制增加到 16,383 字符. 此外, 在热字串的替换文本部分使用 <code><a href="commands/Send.htm#SendPlayDetail">SendPlay </a> %MyVariable%</code> 可以发送不限数量的文本.</p>
+<p>热字串的定义顺序决定了它们的相对优先级. 换句话说, 如果多个热字串匹配您输入的内容, 那么只有脚本中首先列出的那个会生效. 相关主题: <a href="#variant">上下文相关热字串</a>.</p>
 <p>为了识别热字串, 您输入的所有退格都会被计算进来. 然而, 使用<kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PageUp</kbd>, <kbd>PageDown</kbd>, <kbd>Home</kbd>, 和 <kbd>End</kbd> 在编辑器中导航会重置热字串识别过程. 换句话说, 它会开始等待全新的热字串.</p>
 <p>即使当前活动窗口忽略您的键击时也可以输入热字串. 换句话说, 即使触发的缩略词不可见时热字串仍会被触发. 此外, 您还可以使用 <kbd>Backspace</kbd>键撤销最近输入的键击(尽管您无法看到效果).</p>
-<p id="label">可以 <a href="commands/Gosub.htm">Gosub</a> 或 <a href="commands/Goto.htm">Goto</a> 到热字串标签, 只需在热字串的标签名称前包含第一个双冒号(以及所有选项符号). 例如: <code>Gosub ::xyz</code>. 然而, 跳转到 <a href="#auto">单行(自动替换) 热字串</a> 会除了执行 <a href="commands/Return.htm">return</a> 外什么都不做.</p>
+<p id="label">可以 <a href="commands/Gosub.htm">Gosub</a> 或 <a href="commands/Goto.htm">Goto</a> 到热字串标签, 只需在热字串的标签名称前包含第一个双冒号(以及所有选项符号). 例如: <code>Gosub ::xyz</code>. 然而, 跳转到<a href="#auto">单行(自动替换) 热字串</a>会除了执行 <a href="commands/Return.htm">return</a> 外什么都不做.</p>
 <p>尽管不会监视热字串且在不可见的 <a href="commands/Input.htm">Input</a> 命令执行时也不会触发它们, 但是可见的 Input 却能触发它们.</p>
-<p id="InputLevel">默认情况下, 由任何 AutoHotkey 脚本生成的键击永远不会触发热字串. 这避免了热字串彼此反复地触发而形成的无限循环的可能性. 在 <span class="ver">[v1.1.06]</span> 及更高版本中, 此行为可以使用 <a href="commands/_InputLevel.htm">#InputLevel</a> 和 <a href="commands/SendLevel.htm">SendLevel</a> 进行控制. 然而, 自动替换型热字串的发送级别总为 0, 因此永远不会触发 <a href="commands/_UseHook.htm">钩子热键</a> 或热字串.</p>
-<p><span class="ver">[v1.1.28+]:</span> 热字串可以通过 <a href="commands/Hotstring.htm">热字串</a> 函数动态创建, 它还可以单独修改, 禁用, 或启用脚本的现有的热字串.</p>
+<p id="InputLevel">默认情况下, 由任何 AutoHotkey 脚本生成的键击永远不会触发热字串. 这避免了热字串彼此反复地触发而形成的无限循环的可能性. 在 <span class="ver">[v1.1.06]</span> 及更高版本中, 此行为可以使用 <a href="commands/_InputLevel.htm">#InputLevel</a> 和 <a href="commands/SendLevel.htm">SendLevel</a> 进行控制. 然而, 自动替换型热字串的发送级别总为 0, 因此永远不会触发<a href="commands/_UseHook.htm">钩子热键</a>或热字串.</p>
+<p><span class="ver">[v1.1.28+]:</span> 热字串可以通过<a href="commands/Hotstring.htm">热字串</a>函数动态创建, 它还可以单独修改, 禁用, 或启用脚本的现有的热字串.</p>
 <p>在某些时候 <a href="commands/Input.htm">Input</a> 命令比热字串更灵活. 例如, 它可以对活动窗口(例如游戏) 隐藏您的键击. 它还支持非字符型的终止键, 例如 <kbd>Escape</kbd>.</p>
-<p>任何包含热字串的脚本会自动使用 <a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
+<p>任何包含热字串的脚本会自动使用<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
 <p>在下面的情况中热字串与热键具有相同的特性:</p>
 <ul>
   <li>它们都受 <a href="commands/Suspend.htm">Suspend</a> 命令影响.</li>
   <li>它们都遵循 <a href="commands/_MaxThreads.htm">#MaxThreads</a> 和 <a href="commands/_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 的设置(但不遵循 <a href="commands/_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>).</li>
-  <li>包含热字串的脚本会自动变成 <a href="commands/_Persistent.htm">持续运行的</a>.</li>
-  <li>非自动替换热字串在运行时会创建新的 <a href="misc/Threads.htm">线程</a>. 此外, 它们会更新内置热键变量, 例如 <a href="Variables.htm#ThisHotkey">A_ThisHotkey</a>.</li>
+  <li>包含热字串的脚本会自动变成<a href="commands/_Persistent.htm">持续运行的</a>.</li>
+  <li>非自动替换热字串在运行时会创建新的<a href="misc/Threads.htm">线程</a>. 此外, 它们会更新内置热键变量, 例如 <a href="Variables.htm#ThisHotkey">A_ThisHotkey</a>.</li>
 </ul>
 <p>已知限制: 在某些系统上的 Java 应用程序中, 热字串可能会干扰用户输入变音符字母(附加符号, 例如 á, à, è, ü 通过 dead 键). 为了解决此问题, 可以临时打开 <a href="commands/Suspend.htm">Suspend</a>(这样禁用了所有热字串).</p>
 
 <h2 id="Function">函数热字串 <span class="ver">[v1.1.28+]</span></h2>
-<p>紧跟在热字串标签后面的函数, 通过简单的定义, 一个或多个热字串可以关联到此 <a href="Functions.htm">函数</a>, 如下例所示:</p>
+<p>紧跟在热字串标签后面的函数, 通过简单的定义, 一个或多个热字串可以关联到此<a href="Functions.htm">函数</a>, 如下例所示:</p>
 <pre><em>; This example also demonstrates one way to implement case conformity in a script.</em>
 :C:BTW::  <em>; Typed in all-caps.</em>
 :C:Btw::  <em>; Typed with only the first letter upper-case.</em>
@@ -143,12 +143,12 @@ See <a href="Scripts.htm#continuation">continuation section</a> for how to chang
             Send by the way
     }
 </pre>
-<p>有关其他细节, 请参阅 <a href="Hotkeys.htm#function-details">函数热键</a>.</p>
-<p>还可以使用 <a href="commands/Hotstring.htm">热字串</a> 函数将热字串关联到函数或函数对象.</p>
+<p>有关其他细节, 请参阅<a href="Hotkeys.htm#function-details">函数热键</a>.</p>
+<p>还可以使用<a href="commands/Hotstring.htm">热字串</a>函数将热字串关联到函数或函数对象.</p>
 
 <h2 id="Helper">热字串助手</h2>
 <p>Andreas Borutta 推荐了下面的脚本, 如果您是深度的热字串用户, 那么它会很有用. 使用 <kbd>Win</kbd>+<kbd>H</kbd>(或您选择的其他热键), 可以把当前选择的文本转变成热字串. 例如, 如果您在文字处理软件中选择了 "by the way", 按下 <kbd>Win</kbd>+<kbd>H</kbd> 会提示您输入其缩写(例如 btw), 然后把新热字串添加到脚本中. 之后会重新载入脚本来激活热字串.</p>
-<p class="note"><strong>注意:</strong> 可以使用 <a href="commands/Hotstring.htm">热字串</a> 函数创建新的热字串而不需要重新加载. 查看函数页面示例部分中的 <a href="commands/Hotstring.htm#ex1">示例 1</a>, 看看如何实现它.</p>
+<p class="note"><strong>注意:</strong> 可以使用<a href="commands/Hotstring.htm">热字串</a> 函数创建新的热字串而不需要重新加载. 查看函数页面示例部分中的<a href="commands/Hotstring.htm#ex1">示例 1</a>, 看看如何实现它.</p>
 <pre class="NoIndent">#h::  <em>; Win+H 热键
 ; 获取当前选择的文本. 使用剪贴板代替
 ; "ControlGet Selected", 是因为它可以工作于更大范围的编辑器
