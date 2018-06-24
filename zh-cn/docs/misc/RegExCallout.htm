@@ -15,13 +15,22 @@
 
 <p>调出当前只有 <a href="../commands/RegExMatch.htm">RegExMatch</a> 和 <a href="../commands/RegExReplace.htm">RegExReplace</a> 支持.</p>
 
-<h3>语法</h3>
+<h2 id="toc">目录</h2>
+<ul>
+    <li><a href="#syntax">语法</a></li>
+    <li><a href="#callout-functions">调出函数</a></li>
+    <li><a href="#EventInfo">EventInfo</a></li>
+    <li><a href="#auto">自动调出</a></li>
+    <li><a href="#remarks">备注</a></li>
+</ul>
+
+<h2 id="syntax">语法</h2>
 
 <p>在 AutoHotkey 中调出的语法为 <span class="Syntax">(?C<em>Number</em>:<em>Function</em>)</span>, 其中 <em>Number</em> 和 <em>Function</em> 都是可选的. 只有在指定了 <em>Function</em> 才允许使用冒号, 而如果省略 <em>Number</em> 则冒号也可以省略. 如果指定的 <em>Function</em> 不是自定义的函数名称, 则会出现编译错误且不会开始模式匹配.</p>
 
 <p>如果省略 <em>Function</em>, 则必须在 <b>pcre_callout</b> 变量中指定函数名称. 如果同时存在此名称的全局变量和局部变量, 则局部变量优先. 如果 <em>pcre_callout</em> 没有包含自定义函数的名称, 那么省略了 <em>Function</em> 的调出会被忽略.</p>
 
-<h3>调出函数</h3>
+<h2 id="callout-functions">调出函数</h2>
 
 <pre class="Syntax">
 Function(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
@@ -56,7 +65,7 @@ Callout(m) {
 }</pre>
 <p>在上面的例子中, 对于匹配调出之前的那部分模式的每个子字符串都会调用一次 <em>Func</em>. 使用 <span class="Syntax">\b</span> 排除匹配到不完整的单词, 例如 <em>The quic</em>, <em>The qui</em>, <em>The qu</em>, 等等.</p>
 
-<h3 id="EventInfo">EventInfo</h3>
+<h2 id="EventInfo">EventInfo</h2>
 
 <p>通过 <b>A_EventInfo</b> 可以使用 pcre_callout_block 结构的附加信息.</p>
 <pre>version           := NumGet(A_EventInfo,  0, "Int")
@@ -77,7 +86,7 @@ if version &gt;= 2
 </pre>
 <p>想了解更多信息, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>, <a href="../commands/NumGet.htm">NumGet</a> 和 <a href="../Variables.htm#PtrSize">A_PtrSize</a>.</p>
 
-<h3 id="auto">自动调出</h3>
+<h2 id="auto">自动调出</h2>
 
 <p>在模式的选项中包含 <span class="Syntax">C</span> 来启用自动调出模式. 在这种情况下的调出相当于在模式里的每项前插入了 <span class="Syntax">(?C255)</span>. 例如, 下面的模板可以用来调试正则表达式:</p>
 <pre><em>; 设置默认的调出函数.</em>
@@ -110,7 +119,7 @@ DebugRegEx(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
     Pause
 }</pre>
 
-<h3>备注</h3>
+<h2 id="remarks">备注</h2>
 
 <p>调出在当前的半线程中执行, 但在调出函数返回后将恢复 A_EventInfo 原来的值. 在 RegExMatch 或 RegExReplace 返回时才会设置 ErrorLevel 的值.</p>
 <p>在一些可以确定不会发生匹配的情况下, 则会对 PCRE 进行优化来提早中止 (即此时会不进行匹配而直接返回 "没有匹配" 的结果). 对于在这些情况中的所有调出, 可能需要在模式的开始处指定 <code>(*NO_START_OPT)</code> 来禁用这种优化. 此选项需要 <span class="ver">[v1.1.05]</span> 或更高版本.</p>
