@@ -199,7 +199,7 @@ MsgBox % Join("`n", <b class="blue">substrings*</b>)</pre>
     local x, y:=0, z  <em>; 在这种模式中局部变量必须进行声明, 否则会假设它们为全局的.</em>
 }</pre>
 <p>函数还可以使用这种假设全局模式来创建全局<a href="misc/Arrays.htm">数组</a>, 例如赋值给 <code>Array%A_Index%</code> 的循环.</p>
-<p id="SuperGlobal"><strong>超级全局变量</strong> <span class="ver">[v1.1.05+]</span>: 如果全局声明出现在任何函数的外面, 默认情况下它可以对所有函数有效 (excluding <a href="#ForceLocal">force-local</a> functions). 这样可以避免在每个函数中重复声明变量的需要. 不过, 如果声明了含有相同名称的函数参数或局部变量, 那么它会优先于全局变量. 由 <a href="Objects.htm#Custom_Classes">class</a> 关键字创建的变量也是超级全局的.</p>
+<p id="SuperGlobal"><strong>超级全局变量</strong> <span class="ver">[v1.1.05+]</span>: 如果全局声明出现在任何函数的外面, 默认情况下它可以对所有函数有效 (<a href="#ForceLocal">强制局部模式</a>的函数除外). 这样可以避免在每个函数中重复声明变量的需要. 不过, 如果声明了含有相同名称的函数参数或局部变量, 那么它会优先于全局变量. 由 <a href="Objects.htm#Custom_Classes">class</a> 关键字创建的变量也是超级全局的.</p>
 <h3 id="static">静态变量</h3>
 <p>静态变量总是隐式的局部变量, 但和局部变量的区别是它们的值在多次调用期间是记住的. 例如:</p>
 <pre>LogToFile(TextToLog)
@@ -224,7 +224,7 @@ MsgBox % Join("`n", <b class="blue">substrings*</b>)</pre>
     }
     return StaticArray%WhichItemNumber%
 }</pre>
-<p>在假设静态模式中, 任何非静态变量都必须声明为局部变量或全局变量 (例外情况与<a href="#AssumeLocal">假设局部模式</a>相同, 除非<a href="#ForceLocal">强制局部模式</a>也有效).</p>
+<p>在假设静态模式中, 任何非静态变量都必须声明为局部变量或全局变量(例外情况与<a href="#AssumeLocal">假设局部模式</a>相同, 除非<a href="#ForceLocal">强制局部模式</a>也有效).</p>
 <p><span class="ver">[v1.1.27+]:</span> 可以通过指定 <code>local</code> 然后 <code>static</code> 的方式将<a href="#ForceLocal">强制局部模式</a>和假设静态模式组合在一起使用, 如下面演示的那样. 允许函数使用强制局部模式的规则, 但默认情况下创建静态变量.</p>
 <pre>global MyVar := "This is global"
 DemonstrateForceStatic()
@@ -277,7 +277,7 @@ static TotalAttempts = 0, PrevResult</pre>
 <ul>
   <li>如果它们所在的函数曾经被正常调用, 那么这样的子程序应该只使用<a href="#static">静态</a>和<a href="#Global">全局</a>变量(不使用<a href="#Local">局部</a>变量). 这是由于中断函数调用线程的子程序<a href="misc/Threads.htm">线程</a>(反之亦然) 可以改变被中断线程看到的局部变量的值. 此外, 在任何时候函数返回到其调用者时, 它包含的所有局部变量都被置空来释放占用的内存.</li>
   <li>这样的子程序应该只使用<a href="#Global">全局变量</a>(不使用<a href="#static">静态变量</a>) 作为 <a href="commands/Gui.htm#var">GUI 控件的变量</a>.</li>
-  <li>当一个子程序<a href="misc/Threads.htm">线程</a> 进入函数后, 在此线程中任何对<a href="misc/Arrays.htm">动态变量</a>的引用都被视为是<a href="#Global">全局</a>的(包括创建数组的那些命令).</li>
+  <li>当一个子程序<a href="misc/Threads.htm">线程</a>进入函数后, 在此线程中任何对<a href="misc/Arrays.htm">动态变量</a>的引用都被视为是<a href="#Global">全局</a>的(包括创建数组的那些命令).</li>
 </ul>
 <h2 id="remarks">Return, Exit 及一般说明</h2>
 <p>如果函数内的执行流在遇到 <a href="commands/Return.htm">Return</a> 前到达了函数的闭括号, 那么函数结束并返回空值(空字符串) 给其调用者. 当函数明确省略 <a href="commands/Return.htm">Return</a> 的参数时也返回空值.</p>
