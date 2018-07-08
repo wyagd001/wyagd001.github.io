@@ -12,103 +12,207 @@
 <h1>ControlGet</h1>
 
 <p>获取控件的各种类型的信息.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
-<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Cmd <span class="optional">, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<h3>参数</h3>
+<h2>参数</h2>
 <dl>
-
   <dt>OutputVar</dt>
-  <dd><p>用来保存 <em>Cmd</em> 结果的变量名.</p></dd>
+  <dd>用来保存 <em>SubCommand</em> 结果的变量名.</dd>
 
-  <dt>Cmd, Value</dt>
-  <dd>请参阅后面的列表.
-    </dd>
+  <dt>SubCommand, Value</dt>
+  <dd>他们互相依赖, 其用法描述<a href="#SubCommands">如下</a>.</dd>
 
   <dt>Control</dt>
-  <dd><p>可以是 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 如果此参数为空, 则使用目标窗口的顶层控件.</p>
-    <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code>ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall</a>.</p></dd>
+  <dd>
+    <p>可以是 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 如果此参数为空, 则使用目标窗口的顶层控件.</p>
+    <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code>ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
+</dd>
 
   <dt>WinTitle</dt>
-  <dd><p>窗口标题或识别目标窗口的其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
+  <dd>窗口标题或识别目标窗口的其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</dd>
 
   <dt>WinText</dt>
-  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
+  <dd>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</dd>
 
   <dt>ExcludeTitle</dt>
-  <dd><p>标题中含有此参数值的窗口将被排除.</p></dd>
+  <dd>标题中含有此参数值的窗口将被排除.</dd>
 
   <dt>ExcludeText</dt>
-  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
-
+  <dd>文本中含有此参数值的窗口将被排除.</dd>
 </dl>
 
-<h3>Cmd, Value</h3>
-<p><em>Cmd</em> 和 <em>Value</em> 参数互相依赖, 它们的用法描述如下.</p>
-<p id="List"><strong>List</strong>: 从列表视图, 列表框, 组合框或下拉列表中获取条目列表.</p>
-<p><u>ListView</u>: 从列表视图中获取条目列表的方法是:</p>
-<pre>ControlGet, OutputVar, List, <strong>Options</strong>, SysListView321, WinTitle, WinText</pre>
+<h2 id="SubCommands">子命令</h2>
+<p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
+<ul>
+  <li><a href="#List">List</a>: 从列表视图, 列表框, 组合框或下拉列表中获取条目列表.</li>
+  <li><a href="#Checked">Checked</a>: 如果选中复选框或单选按钮, 则检索(返回) 1, 如果不选中, 则检索 0.</li>
+  <li><a href="#Enabled">Enabled</a>: 启用控件时检索 1, 禁用控件时检索 0.</li>
+  <li><a href="#Visible">Visible</a>: 如果控件可见检索 1, 如果隐藏检索 0.</li>
+  <li><a href="#Tab">Tab</a>: 检索 SysTabControl32 控件的标签页数目.</li>
+  <li><a href="#FindString">FindString</a>: 检索列表框或组合框中与字符串完全匹配的条目编号.</li>
+  <li><a href="#Choice">Choice</a>: 检索列表框或组合框中当前选择的条目的名称.</li>
+  <li><a href="#LineCount">LineCount</a>: 获取编辑控件中的行数.</li>
+  <li><a href="#CurrentLine">CurrentLine</a>: 检索插入符号所在的编辑控件中的行号.</li>
+  <li><a href="#CurrentCol">CurrentCol</a>: 检索插入符号所在的编辑控件中的列号.</li>
+  <li><a href="#Line">Line</a>: 检索编辑控件中指定行号的文本.</li>
+  <li><a href="#Selected">Selected</a>: 在编辑控件中检索所选文本.</li>
+  <li><a href="#Style">Style</a>: 检索表示控件样式的 8 位十六进制数字.</li>
+  <li><a href="#ExStyle">ExStyle</a>: 检索表示控件扩展样式的 8 位十六进制数字.</li>
+  <li><a href="#Hwnd">Hwnd</a> <span class="ver">[v1.1.04+]</span>: 检索控件的窗口句柄(HWND).</li>
+</ul>
+
+<h3 id="List">List</h3>
+<p>从列表视图, 列表框, 组合框或下拉列表中检索项目列表. 对于 ListView, 可以指定附加的选项.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, List <span class="optional">, Options, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+
+<h4>ListView</h4>
 <p>如果 <em>Options</em> 为空或省略, 则获取控件中所有文本. 除最后一行外的其他行都以换行符(`n) 结尾. 在每行中, 除最后一个字段外的其他字段(列) 都以 tab 字符(`t) 结尾.</p>
 <p>在 <em>Options</em> 指定零个或多个下列单词, 单词间使用空格或 tab 分隔:</p>
-<p><em>Selected</em>: 仅获取选择(高亮) 行而不是所有行. 如果没有, 则 <em>OutputVar</em> 被置空.<br>
-<em>Focused</em>: 仅获取焦点行. 如果没有, 则 <em>OutputVar</em> 被置空.<br>
-<em id="ColN">Col4</em>: 仅获取第四列(字段) 而不是所有列(把 4 替换为您选择的数字).<br>
-<em>Count</em>: 获取控件中总行数(单个数字表示).<br>
-<em>Count Selected</em>: 获取选择(高亮) 的行数.<br>
-<em>Count Focused</em>: 获取焦点行的行号(位置)(如果没有焦点行则为 0).<br>
-<em>Count Col</em>: 获取控件的列数(如果列的总是无法确定则为 -1).</p>
+<table class="info">
+  <tr>
+    <td>Selected</td>
+    <td>仅获取选择(高亮) 行而不是所有行. 如果没有, <em>OutputVar</em> 被置空.</td>
+  </tr>
+  <tr>
+    <td>Focused</td>
+    <td>仅获取焦点行. 如果没有, <em>OutputVar</em> 被置空.</td>
+  </tr>
+  <tr id="ColN">
+    <td>Col4</td>
+    <td>仅获取第四列(字段) 而不是所有列(把 4 替换为您选择的数字).</td>
+  </tr>
+  <tr>
+    <td>Count</td>
+    <td>获取控件中总行数(单个数字表示).</td>
+  </tr>
+  <tr>
+    <td>Count&nbsp;Selected</td>
+    <td>获取选择(高亮) 的行数.</td>
+  </tr>
+  <tr>
+    <td>Count&nbsp;Focused</td>
+    <td>获取焦点行的行号(位置)(如果没有焦点行则为 0).</td>
+  </tr>
+  <tr>
+    <td>Count&nbsp;Col</td>
+    <td>获取控件的列数(如果列的总是无法确定则为 -1).</td>
+  </tr>
+
+</table>
 <p class="note"><strong>注意</strong>: 某些应用程序秘密地保存它们列表视图中的文本, 这样阻止了这些文本被获取. 在这种情况下, ErrorLevel 通常被置为 0(表示成功) 但获取的所有字段都是空的. 还有注意的是列表视图的文本是不受 <a href="_MaxMem.htm">#MaxMem</a> 限制的.</p>
-<p>如果获取成功, 则 ErrorLevel 被置为 0. 如果失败, 则它被置为 1 且 <em>OutputVar</em> 被置空. 引起失败的原因有: 1) 目标窗口或控件不存在; 2) 目标控件不是 SysListView32 类型; 3) 无法打开拥有列表视图的进程, 可能由于缺少用户权限或被锁定了; 4) <a href="#ColN">Col<em>N</em> 选项</a> 指定的列不存在.</p>
+<p>如果获取成功, 则 ErrorLevel 被置为 0. 如果失败, 则它被置为 1 且 <em>OutputVar</em> 被置空. 引起失败的原因有: 1) 目标窗口或控件不存在; 2) 目标控件不是 SysListView32 类型; 3) 无法打开拥有列表视图的进程, 可能由于缺少用户权限或被锁定了; 4) <a href="#ColN">Col<em>N</em> 选项</a>指定的列不存在.</p>
 <p>要从列表视图中逐个提取每行和每个字段, 请使用<a href="LoopParse.htm">解析循环</a>, 例如:</p>
-<pre>ControlGet, List, List, Selected, SysListView321, WinTitle
-Loop, Parse, List, `n  <em>; 行之间由换行符(`n) 分隔.</em>
+<pre>ControlGet, SelectedItems, List, Selected, SysListView321, <i>WinTitle</i>
+Loop, Parse, SelectedItems, `n  <em>; 行之间由换行符(`n) 分隔.</em>
 {
     RowNumber := A_Index
     Loop, Parse, A_LoopField, %A_Tab%  <em>; 每行中的字段(列) 之间由 tab(A_Tab) 分隔.</em>
         MsgBox Row #%RowNumber% Col #%A_Index% is %A_LoopField%.
 }</pre>
 <p>相关提示, 列表视图中的列可以使用 <a href="PostMessage.htm">SendMessage</a> 来调整大小, 如下所示:</p>
-<pre>SendMessage, 4126, 0, 80, SysListView321, WinTitle  <em>; 4126 为消息 LVM_SETCOLUMNWIDTH.
-; 在上面的语句中, 0 表示首列(1 表示第二列, 2 表示第三列, 等等.)  此外, 80 是新宽度.
-; 把 80 替换为 -1 来自动调整列的大小. 替换为 -2 来实现相同的功能, 并且调整标题文本的宽度.</em></pre>
-<p><u>ListBox,ComboBox,DropDownList</u>: 获取控件中所有的文本(即不支持上面的列表视图选项, 例如 <em>Count</em> 和 <em>Selected</em>).</p>
+<pre>SendMessage, 4126, 0, 80, SysListView321, <i>WinTitle</i> <em>; 4126 为消息 LVM_SETCOLUMNWIDTH.</em></pre>
+<p>在上面的语句中, 0 表示首列(1 表示第二列, 2 表示第三列, 等等.) 此外, 80 是新宽度. 把 80 替换为 -1 来自动调整列的大小. 替换为 -2 来实现相同的功能, 并且调整标题文本的宽度.</p>
+<h4>ListBox, ComboBox, DropDownList</h4>
+<p>获取控件中所有的文本(即不支持上面的列表视图选项, 例如 <em>Count</em> 和 <em>Selected</em>).</p>
 <p>除最后一个项目以外的每个项目都以换行符(`n) 结束. 要逐个访问每个项目, 请使用<a href="LoopParse.htm">解析循环</a>, 例如:</p>
-<pre>ControlGet, List, List,, ComboBox1, WinTitle
-Loop, Parse, List, `n
+<pre>ControlGet, Items, List,, ComboBox1, <i>WinTitle</i>
+Loop, Parse, Items, `n
     MsgBox Item number %A_Index% is %A_LoopField%.</pre>
-<p><strong>Checked</strong>: 如果复选框或单选框被选中, 则设置 <em>OutputVar</em> 为 1; 否则为 0.</p>
-<p><strong>Enabled</strong>: 如果 <em>Control</em> 处于启用状态, 则设置 <em>OutputVar</em> 为 1; 禁用则为 0.</p>
-<p><strong>Visible</strong>: 如果 <em>Control</em> 是可见的, 则设置 <em>OutputVar</em> 为 1; 否则为 0.</p>
-<p><strong>Tab</strong>: 设置 <em>OutputVar</em> 为 SysTabControl32 控件的选项卡编号. 首个选项卡为 1, 第二个为 2, 等等. 要获取选项卡控件中含有的选项卡(页) 数目, 请参照此例:</p>
-<pre><a href="PostMessage.htm">SendMessage</a>, 0x1304,,, SysTabControl321, WinTitle  <em>; 0x1304 为 TCM_GETITEMCOUNT.</em>
+
+<h3 id="Checked">Checked</h3>
+<p>如果选中复选框或单选按钮则检索 1, 如果不选中则检索 0.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Checked <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+
+<h3 id="Enabled">Enabled</h3>
+<p>如果 <em>控件</em> 是启用的则检索 1, 禁用控件时检索 0.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Enabled <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+
+<h3 id="Visible">Visible</h3>
+<p>如果 <em>控件</em> 是可见的则检索 1, 隐藏控件时检索 0.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Visible <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+
+<h3 id="Tab">Tab</h3>
+<p>检索 SysTabControl32 控件的标签页数目.</p>
+pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Tab <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>首个选项卡为 1, 第二个为 2, 等等. 要获取选项卡控件中含有的选项卡(页) 数目, 请参照此例:</p>
+<pre><a href="PostMessage.htm">SendMessage</a>, 0x1304,,, SysTabControl321, <i>WinTitle</i>   <em>; 0x1304 为 TCM_GETITEMCOUNT.</em>
 TabCount = %ErrorLevel%</pre>
-<p><strong>FindString, String</strong>: 设置 <em>OutputVar</em> 为列表框或组合框中准确匹配 <em>String</em> 的条目编号. 控件中首个条目为 1, 第二个为 2, 依此类推. 如果没有找到匹配, 则 <em>OutputVar</em> 被置空且 ErrorLevel 被设置为 1.</p>
-<p><strong>Choice</strong>: 设置<em>OutputVar</em>列表框或组合框中当前选择的条目名称. 要获取所选条目的位置, 请参照此例(只需使用下面开始两行中的其中一行):</p>
-<pre><a href="PostMessage.htm">SendMessage</a>, 0x188, 0, 0, ListBox1, WinTitle  <em>; 0x188 为 LB_GETCURSEL (对于列表框).</em>
+
+<h3 id="FindString">FindString</h3>
+<p>检索列表框或组合框中与 <em>String</em> 完全匹配的条目编号.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, FindString, String <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>控件中首个条目为 1, 第二个为 2, 依此类推. 如果没有找到匹配, 则 <em>OutputVar</em> 被置空且 ErrorLevel 被设置为 1.</p>
+
+<hh3 id="Choice">Choice</h3>
+<p>检索列表框或组合框中当前选择的条目的名称.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Choice <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>要获取所选条目的位置, 请参照此例(只需使用下面开始两行中的其中一行):</p>
+<pre><a href="PostMessage.htm">SendMessage</a>, 0x188, 0, 0, ListBox1, <i>WinTitle</i>  <em>; 0x188 为 LB_GETCURSEL (对于列表框).</em>
 <a href="PostMessage.htm">SendMessage</a>, 0x147, 0, 0, ComboBox1, WinTitle  <em>; 0x147 为 CB_GETCURSEL (对于下拉列表或组合框).</em>
 ChoicePos := ErrorLevel&lt;&lt;32&gt;&gt;32   <em>; 如果没有选中的条目, UInt 转换为 Int 时须 -1.</em>
 ChoicePos += 1  <em>; 从基于 0 转换到基于 1, 这样首个条目被称为 1, 而不是 0.</em></pre>
-<p><strong>LineCount</strong>: 设置 <em>OutputVar</em> 为编辑控件中的行数. 所有的编辑控件至少含有一行, 即使控件是空的.</p>
-<p><strong>CurrentLine</strong>: 设置 <em>OutputVar</em> 为编辑控件光标处(插入点) 所在的行号. 首行为 1. 如果控件中选择了文本, 则 <em>OutputVar</em> 被设置为选区开始处所在的行号.</p>
-<p><strong>CurrentCol</strong>: 设置 <em>OutputVar</em> 为编辑控件光标处(文本插入点) 所在的列号. 首列为 1. 如果控件中选择了文本, 则 <em>OutputVar</em> 被设置为选区开始处所在的列号.</p>
-<p><strong>Line, N</strong>: 设置 <em>OutputVar</em> 为编辑控件中行 <em>N</em> 的文本. 行 1 为首行. 根据控件的性质, <em>OutputVar</em> 可能以回车符(`r) 或换车和换行符(`r`n) 结束. 如果指定的行号没有内容或不存在, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1 且 <em>OutputVar</em> 被置空.</p>
-<p><strong>Selected</strong>: 设置 <em>OutputVar</em> 为编辑控件中选择的文本. 如果没有选择的文本, 则 <em>OutputVar</em> 会被置空且 ErrorLevel 被设置为 0(即没有错误). 某些类型的控件, 例如 RichEdit20A, 在某些情况下可能无法获取到正确的文本(例如 Metapad).</p>
-<p><strong>Style</strong>: 获取表示控件样式的 8 位十六进制数. 请参阅<a href="../misc/Styles.htm">样式表</a>了解一些样式.</p>
-<p><strong>ExStyle</strong>: 获取表示控件扩展样式的 8 位十六进制数.</p>
-<p id="Hwnd"><strong>Hwnd</strong> <span class="ver">[v1.0.43.06+]:</span> 获取指定控件的窗口句柄(HWND). 例如: <code>ControlGet, OutputVar, Hwnd,, Edit1, WinTitle</code>. 控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 相关提示, 还可以使用 <a href="MouseGetPos.htm">MouseGetPos</a> 获取控件的 HWND. 最后, 控件的 HWND 可以直接用在 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a> 中(即使 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样对于隐藏控件也是有效的).</p>
-<h3>ErrorLevel</h3>
+
+<h3 id="LineCount">LineCount</h3>
+<p>获取编辑控件中的行数.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, LineCount <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>所有的编辑控件至少含有一行, 即使控件是空的.</p>
+
+<h3 id="CurrentLine">CurrentLine</h3>
+<p>检索插入符号(插入点) 所在的编辑控件中的行号.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, CurrentLine <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>首行为 1. 如果控件中选择了文本, 则 <em>OutputVar</em> 被设置为选区开始处所在的行号.</p>
+
+<h3 id="CurrentCol">CurrentCol</h3>
+<p>检索插入符号(文本插入点) 所在的编辑控件中的列号.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, CurrentCol <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>首列为 1. 如果控件中选择了文本, 则 <em>OutputVar</em> 被设置为选区开始处所在的列号.</p>
+
+<h3 id="Line">Line</h3>
+<p>检索编辑控件中行 <em>N</em> 的文本.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Line, N <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>行 1 为首行. 根据控件的性质, <em>OutputVar</em> 可能以回车符(`r) 或换车和换行符(`r`n) 结束. 如果指定的行号没有内容或不存在, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1 且 <em>OutputVar</em> 被置空.</p>
+
+<h3 id="Selected">Selected</h3>
+<p>检索在编辑控件中所选文本.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Selected <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>如果没有选择的文本, 则 <em>OutputVar</em> 会被置空且 ErrorLevel 被设置为 0(即没有错误). 某些类型的控件, 例如 RichEdit20A, 在某些情况下可能无法获取到正确的文本(例如 Metapad).</p>
+
+<h3 id="Style">Style</h3>
+<p>检索表示控件样式的 8 位十六进制数字.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Style <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>对于一些样式的列表, 请参阅<a href="../misc/Styles.htm">样式表</a>.</p>
+
+<h3 id="ExStyle">ExStyle</h3>
+<p>检索表示控件扩展样式的 8 位十六进制数字.</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, ExStyle <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>对于一些样式的列表, 请参阅<a href="../misc/Styles.htm">样式表</a>.</p>
+
+<h3 id="Hwnd">Hwnd <span class="ver">[v1.0.43.06+]</span></h3>
+<p>检索控件的窗口句柄(HWND).</p>
+<pre class="Syntax"><span class="func">ControlGet</span>, OutputVar, Hwnd <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>例如: <code>ControlGet, OutputVar, Hwnd,, Edit1, <i>WinTitle</i></code>. 控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 相关提示, 还可以通过 <a href="MouseGetPos.htm">MouseGetPos</a> 来获取控件的 HWND. 最后, 控件的 HWND 可以直接用在 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a> 中(即使 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样对于隐藏控件也是有效的).</p>
+
+<h2>ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>成功时, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 0. 如果遇到问题, 例如窗口或控件不存在, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1 且 <em>OutputVar</em> 被置空.</p>
-<h3>备注</h3>
+
+<h2>备注</h2>
 <p>和其他改变控件的命令不同, ControlGet 后没有自动的延时; 即, <a href="SetControlDelay.htm">SetControlDelay</a> 不会影响它.</p>
 <p>要获取鼠标当前悬停的控件的 ClassNN 或 HWND, 请使用 <a href="MouseGetPos.htm">MouseGetPos</a>. 要获取窗口中所有控件列表, 请使用 <a href="WinGet.htm#ControlList">WinGet ControlList</a>.</p>
 <p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时, 才能检测到隐藏窗口.</p>
 
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="Control.htm">Control</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlGetPos.htm">ControlGetPos</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlFocus.htm">ControlFocus</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="WinGet.htm">WinGet</a></p>
-<h3>示例</h3>
-<pre class="NoIndent">ControlGet, OutputVar, Line, 1, Edit1, Some Window Title
 
-ControlGet, WhichTab, Tab, , SysTabControl321, Some Window Title
+<h2>示例</h2>
+
+<h4 id="ex1">示例 #1</h4>
+<p>检索第一个编辑控件的第一行:</p>
+<pre class="NoIndent">ControlGet, OutputVar, Line, 1, Edit1, Some Window Title</pre>
+
+<h4 id="ex2">示例 #2</h4>
+<p>检索第一个选项卡控件的当前活动选项卡:</p>
+<pre class="NoIndent">ControlGet, WhichTab, Tab, , SysTabControl321, Some Window Title
 if ErrorLevel
     MsgBox There was a problem.
 else

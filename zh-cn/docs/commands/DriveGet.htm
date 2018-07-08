@@ -12,79 +12,116 @@
 <h1>DriveGet</h1>
 
 <p>获取计算机驱动器的各种类型的信息.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value</span></pre>
+<p><em>OutputVar</em> 参数是用于存储结果的变量的名称. The <em>SubCommand</em> 和 <em>Value</em> 参数相互依赖, 其用法如下所示.</p>
 
-<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Cmd <span class="optional">, Value</span></pre>
-<h3>参数</h3>
-<dl>
+<h2 id="SubCommands">子命令</h2>
+<p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
+<ul>
+    <li><a href="#List">List</a>: 检索(获取) 一串字母, 其中每个字母表示系统中的一个驱动器.</li>
+    <li><a href="#Capacity">Capacity</a>: 检索指定路径的总容量, 以 MB 为单位.</li>
+    <li><a href="#FileSystem">FileSystem</a>: 检索指定驱动器的文件系统的类型.</li>
+    <li><a href="#Label">Label</a>: 检索指定驱动器的卷标.</li>
+    <li><a href="#Serial">Serial</a>:检索指定驱动器的卷序列号.</li>
+    <li><a href="#Type">Type</a>: 检索指定路径的驱动器类型.</li>
+    <li><a href="#Status">Status</a>: 检索指定路径的状态.</li>
+    <li><a href="#StatusCD">StatusCD</a>: 检索 CD 或 DVD 驱动器的媒体状态.</li>
+</ul>
 
-  <dt>OutputVar</dt>
-  <dd><p>用来保存 <em>Cmd</em> 结果的变量名.</p></dd>
+<h3 id="List">List</h3>
+<p>检索一串字母, 其中每个字母表示系统中的一个驱动器. 例如: ACDEZ.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, List <span class="optional">, Type</span></pre>
+<p>如果省略 <em>Type</em>, 则获取所有类型的驱动器. 否则, 指定 <em>Type</em> 为下列单词的其中一个来获取该特定类型的驱动器: CDROM, REMOVABLE, FIXED, NETWORK, RAMDISK, UNKNOWN.</p>
 
-  <dt>Cmd, Value</dt>
-  <dd>请参阅后面的列表.
-    </dd>
+<h3 id="Capacity">Capacity</h3>
+<p>检索指定 <em>Path</em>(例如 <code>C:\</code>) 的总容量, 单位为 MB.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Capacity, Path</pre>
+<p>使用 <a href="DriveSpaceFree.htm">DriveSpaceFree</a> 来获取可用空间. Cap 可用来代替 Capacity.</p>
 
-</dl>
+<h3 id="FileSystem">FileSystem</h3>
+<p>检索 <em>Drive</em> 的文件系统的类型.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, FileSystem, Drive</pre>
+<p><em>Drive</em> 由驱动器字母, 跟着一个冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. <em>OutputVar</em> 将被设为下列单词的其中一个: FAT, FAT32, NTFS, CDFS(通常表示 CD), UDF(通常表示 DVD). 如果驱动器中不包含格式化的媒体, <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1. FS 可用来代替 FileSystem.</p>
 
-<h3>Cmd, Value</h3>
-<p><em>Cmd</em> 和 <em>Value</em> 参数互相依赖, 它们的用法描述如下. 如果遇到问题, 则 <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
-<p><strong>List [, Type]</strong>: 设置 <em>OutputVar</em> 为一串字母, 其中每个字母表示系统中的一个驱动器. 例如: ACDEZ. 如果省略 <em>Type</em>, 则获取所有类型的驱动器. 否则, 指定 <em>Type</em> 为下列单词的其中一个来获取该特定类型的驱动器: CDROM, REMOVABLE, FIXED, NETWORK, RAMDISK, UNKNOWN.</p>
-<p><strong>Capacity(或 Cap), Path</strong>: 获取 <em>Path</em>(例如 C:\) 的总容量, 单位为 MB. 使用 <a href="DriveSpaceFree.htm">DriveSpaceFree</a> 来获取可用空间.</p>
-<p><strong>Filesystem(或 FS), Drive</strong>: 获取 <em>Drive</em> 的文件系统类型, 其中 <em>Drive</em> 由驱动器字母, 跟着一个冒号和可选的反斜杠组成, 或为 UNC 名称(例如 \\server1\share1).<em>OutputVar</em> 将被设为下列单词的其中一个: FAT, FAT32, NTFS, CDFS(一般指 CD), UDF(一般指 DVD). 如果驱动器中不包含格式化的媒体, 则 <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
-<p><strong>Label, Drive</strong>: 获取 <em>Drive</em> 的卷标, 其中 <em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称(例如 \\server1\share1). 要改变卷标, 请参照此例: <code><a href="Drive.htm">Drive</a>, Label, C:, MyLabel</code>.</p>
-<p><strong>Serial, Drive</strong>: 获取以十进制数表示的 <em>Drive</em> 的卷序列号, 其中 <em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称(例如 \\server1\share1). 请参阅 <a href="SetFormat.htm">SetFormat</a> 了解如何把它转换成十六进制.</p>
-<p><strong>Type, Path</strong>: 获取 <em>Path</em> 的驱动器类型, 它为下列单词的其中一个: Unknown, Removable, Fixed, Network, CDROM, RAMDisk.</p>
-<p><strong>Status, Path</strong>: 获取 <em>Path</em> 的状态, 它为下列单词的其中一个: Unknown(可能表示未格式化/RAW), Ready, NotReady(通常表示不含媒体的可移动驱动器), Invalid(<em>Path</em> 不存在或为当前无法访问的网络驱动器, 等等).</p>
-<p><strong>StatusCD [, Drive]</strong>: 获取 CD 或 DVD 驱动器的媒体状态, 其中 <em>Drive</em> 由驱动器字母跟着冒号组成(如果省略 <em>Drive</em>, 则使用默认的 CD/DVD 驱动器). 如果无法确定它的状态, 则 <em>OutputVar</em> 被置空. 否则, 它被设置为下列字符串的其中一个:</p>
+<h3 id="Label">Label</h3>
+<p>检索 <em>Drive</em> 的卷标.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Label, Drive</pre>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. 要改变卷标, 请参照此例: <code><a href="Drive.htm">Drive</a>, Label, C:, MyLabel</code>.</p>
+
+<h3 id="Serial">Serial</h3>
+<p>检索以十进制数表示的 <em>Drive</em> 的卷序列号.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Serial, Drive</pre>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. 请参阅 <a href="SetFormat.htm">SetFormat</a> 了解如何把它转换成十六进制.</p>
+
+<h3 id="Type">Type</h3>
+<p>检索 <em>Path</em> 的驱动器类型.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Type, Path</pre>
+<p><em>OutputVar</em> 为下列单词的其中一个: Unknown, Removable, Fixed, Network, CDROM, RAMDisk.</p>
+
+<h3 id="Status">Status</h3>
+<p>检索 <em>Path</em> 的状态.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Status, Path</pre>
+<p><em>OutputVar</em> 为下列单词的其中一个: Unknown(能表示未格式化/RAW), Ready, NotReady(常表示不含媒体的可移动驱动器), Invalid(<em>Path</em> 不存在或为当前无法访问的网络驱动器, 等等.)</p>
+
+<h3 id="StatusCD">StatusCD</h3>
+<p>检索 CD 或 DVD 驱动器的媒体状态.</p>
+<pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, StatusCD <span class="optional">, Drive</span></pre>
+<p><em>Drive</em> 由驱动器字母跟着冒号组成. 如果省略  <em>Drive</em>, 则使用默认的 CD/DVD 驱动器. 如果无法确定它的状态, <em>OutputVar</em> 被置空. 否则, 它被设置为下列字符串的其中一个:</p>
 <table class="info">
-  <tr>
-    <td style="width:15%">not ready</td>
-    <td>驱动器未准备好被访问, 可能因为正忙于写入操作. 已知限制: 当驱动器里是 DVD 而不是 CD 时, 也会出现 "未准备好" 的情况.</td>
-  </tr>
-  <tr>
-    <td>open</td>
-    <td>驱动器里没有光盘, 或者托盘已弹出.</td>
-  </tr>
-  <tr>
-    <td>playing</td>
-    <td>驱动器正在播放光盘.</td>
-  </tr>
-  <tr>
-    <td>paused</td>
-    <td>之前播放的音频或视频现在已暂停.</td>
-  </tr>
-  <tr>
-    <td>seeking</td>
-    <td>驱动器正在寻道.</td>
-  </tr>
-  <tr>
-    <td>stopped</td>
-    <td>驱动器里有 CD 但当前没有进行访问.</td>
-  </tr>
+    <tr>
+        <td style="width:15%">not ready</td>
+        <td>驱动器未准备好被访问, 可能因为正忙于写入操作. 已知限制: 当驱动器里是 DVD 而不是 CD 时, 也会出现 "未准备好" 的情况.</td>
+    </tr>
+    <tr>
+        <td>open</td>
+        <td>驱动器里没有光盘, 或者托盘已弹出.</td>
+    </tr>
+    <tr>
+        <td>playing</td>
+        <td>驱动器正在播放光盘.</td>
+    </tr>
+    <tr>
+        <td>paused</td>
+        <td>之前播放的音频或视频现在已暂停.</td>
+    </tr>
+    <tr>
+        <td>seeking</td>
+        <td>驱动器正在寻道.</td>
+    </tr>
+    <tr>
+        <td>stopped</td>
+        <td>驱动器里有 CD 但当前没有进行访问.</td>
+    </tr>
 </table>
-<p>此命令对网络驱动器或非 CD/DVD 驱动器不起作用; 如果因为这种或其他原因失败了, 则 <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
-<p>如果托盘刚才被关闭, 则此命令可能需要一些时间才能完成.</p>
+<p>此子命令对网络驱动器或非 CD/DVD 驱动器不起作用; 如果因为这种或其他原因失败了, 则 <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
+<p>如果托盘刚才被关闭, 则此子命令可能需要一些时间才能完成.</p>
 <p>要弹出或收回托盘, 请参阅 <a href="Drive.htm">Drive</a> 命令.</p>
-<h3>ErrorLevel</h3>
+
+<h2>ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
-<h3>备注</h3>
-<p>此命令的一些子命令参数 <em>Path</em> 中可以接受网络共享名, 例如 \\MyServer\MyShare\</p>
-<h3>相关</h3>
+
+<h2>备注</h2>
+<p>此命令的一些子命令参数 <em>Path</em> 中可以接受网络共享名, 例如 <code>\\MyServer\MyShare\</code>.</p>
+
+<h2>相关</h2>
 <p><a href="Drive.htm">Drive</a>, <a href="DriveSpaceFree.htm">DriveSpaceFree</a></p>
-<h3>示例</h3>
-<pre class="NoIndent"><em>; 这是个可运行示例脚本.</em>
-FileSelectFolder, folder, , 3, Pick a drive to analyze:
-if folder =
+
+<h2>示例</h2>
+
+<h4 id="ex1">示例 #1</h4>
+<p>允许用户选择一个驱动器来分析它:</p>
+<pre class="NoIndent">FileSelectFolder, folder, , 3, Pick a drive to analyze:
+if not folder
     return
-DriveGet, list, list
-DriveGet, cap, capacity, %folder%
+DriveGet, list, List
+DriveGet, cap, Capacity, %folder%
 DriveSpaceFree, free, %folder%
-DriveGet, fs, fs, %folder%
-DriveGet, label, label, %folder%
-DriveGet, serial, serial, %folder%
-DriveGet, type, type, %folder%
-DriveGet, status, status, %folder%
+DriveGet, fs, FileSystem, %folder%
+DriveGet, label, Label, %folder%
+DriveGet, serial, Serial, %folder%
+DriveGet, type, Type, %folder%
+DriveGet, status, Status, %folder%
 MsgBox All Drives: %list%`nSelected Drive: %folder%`nDrive Type: %type%`nStatus: %status%`nCapacity: %cap% M`nFree Space: %free% M`nFilesystem: %fs%`nVolume Label: %label%`nSerial Number: %serial%</pre>
 
 </body>

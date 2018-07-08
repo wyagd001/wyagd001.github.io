@@ -12,18 +12,42 @@
 <h1>Drive</h1>
 
 <p>弹出/收进 CD 或 DVD 驱动器托盘, 或设置驱动器的卷标.</p>
+<pre class="Syntax"><span class="func">Drive</span>, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value1, Value2</span></pre>
+<p><em>SubCommand</em>, <em>Value1</em> 和 <em>Value2</em> 参数相互依赖, 它们的用法如下所述.</p>
 
-<pre class="Syntax"><span class="func">Drive</span>, Sub-command <span class="optional">, Drive, Value</span></pre>
-<p><em>Sub-command</em>, <em>Drive</em> 和 <em>Value</em> 参数互相依赖, 它们的用法描述如下.</p>
-<p><strong>Label, Drive [, NewLabel]</strong>: 改变 <em>Drive</em> 的卷标为 <em>NewLabel</em>(如果省略 <em>NewLabel</em>, 则设置驱动器卷标为空). <em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成(也许对 UNC 和映射的驱动器也有效). 例如: <code>Drive, Label, C:, Seagate200</code>.</p>
+<h2 id="SubCommands">子命令</h2>
+<p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
+<ul>
+    <li><a href="#Label">Label</a>: 重命名驱动器的卷标.</li>
+    <li><a href="#Lock">Lock</a>: 禁用驱动器的弹出功能工作.</li>
+    <li><a href="#Unlock">Unlock</a>: 恢复驱动器的弹出特性.</li>
+    <li><a href="#Eject">Eject</a>: 弹出或收回光盘或DVD驱动器的托盘.</li>
+</ul>
+
+<h3 id="Label">Label</h3>
+<p>改变 <em>Drive</em> 的卷标为 <em>NewLabel</em>.</p>
+<pre class="Syntax"><span class="func">Drive</span>, Label, Drive <span class="optional">, NewLabel</span></pre>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成(也许对 UNC 和映射的驱动器也有效). 如果省略 <em>NewLabel</em>, 则设置驱动器卷标为空.</p>
 <p>要获取当前卷标, 请参照此例: <code><a href="DriveGet.htm">DriveGet</a>, OutputVar, Label, C:</code>.</p>
-<p><strong>Lock, Drive</strong>: 禁用驱动器的弹出功能. 例如: <code>Drive, Lock, D:</code>. 大多数驱动器不能 "在锁定之后打开". 然而, 在驱动器打开时进行锁定可能会导致驱动器在关闭后立即进入锁定状态. 对于不支持锁定的驱动器(例如大多数只读驱动器), 此命令没有效果. 如果使用脚本锁定驱动器后这个脚本退出了, 那么那个驱动器会保持锁定状态, 直到另一个脚本或程序对它进行解锁, 或系统重新启动. 如果指定的驱动器不存在或不支持锁定功能, 则 ErrorLevel 被置为 1. 否则被置为 0.</p>
-<p><strong>Unlock, Drive</strong>: 反转上面的功能. 如果对同一驱动器锁定了多次, 则需使用 <em>Unlock</em> 多次才能解锁(至少适用于一些驱动器). 例如, 如果执行了 <code>Drive, Lock, D:</code> 三次, 那么需要执行 <code>Drive, Unlock, D:</code> 三次才能解锁. 由于这种情况以及并没有方法判断某个驱动器当前是否锁定的事实, 所以通常需要使用<a href="../Variables.htm">变量</a>来记录它的锁定状态.</p>
-<p><strong>Eject [, Drive, 1]</strong>: 弹出或收回 CD 或 DVD 驱动器的托盘(要弹出其他类型的媒体或设备, 请参阅在此页面底部的 DllCall 示例).</p>
-<p>如果省略 <em>Drive</em>, 则默认使用 CD/DVD. 要弹出托盘, 请省略最后一个参数. 要收回/关闭托盘, 请在最后一个参数中指定 1; 例如: <code>Drive, Eject, D:, 1</code>.</p>
-<p><em>Drive Eject </em>会等待弹出或收回完成, 然后才继续执行脚本. 如果托盘已经处于指定的状态(打开或关闭), 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 0(例 "没有错误").</p>
-<p><em>Drive Eject </em> 可能对网络驱动器或非 CD/DVD 驱动器无效. 如果因为这种或其他原因失败了, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
-<p>通过检测命令消耗的时间, 可以判断托盘之前的状态. 例如, 下面的热键切换托盘到相反的状态(打开或关闭):</p>
+
+<h3 id="Lock">Lock</h3>
+<p>禁用驱动器的弹出功能.</p>
+<pre class="Syntax"><span class="func">Drive</span>, Lock, Drive</pre>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成(也许对 UNC 和映射的驱动器也有效). 例如: <code>Drive, Lock, D:</code>. 大多数驱动器不能 &quot;在锁定之后打开&quot;. 然而, 在驱动器打开时进行锁定可能会导致驱动器在关闭后立即进入锁定状态. 此子命令对不支持锁定的驱动器(如大多数只读驱动器) 没有影响. 如果使用脚本锁定驱动器后这个脚本退出了, 那么那个驱动器会保持锁定状态, 直到另一个脚本或程序对它进行解锁, 或系统重新启动. 如果指定的驱动器不存在或不支持锁定功能, 则 ErrorLevel 被置为 1. 否则被置为 0.</p>
+
+<h3 id="Unlock">Unlock</h3>
+<p>恢复驱动器的弹出特性.</p>
+<pre class="Syntax"><span class="func">Drive</span>, Unlock, Drive</pre>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成(也许对 UNC 和映射的驱动器也有效). 如果驱动器被多次锁定(至少适用于某些驱动器), 则需要多次执行 Unlock 子命令. 例如, 如果执行了 <code>Drive, Lock, D:</code> 三次, 那么需要执行 <code>Drive, Unlock, D:</code> 三次才能解锁. 由于这种情况以及并没有方法判断某个驱动器当前是否锁定的事实, 所以通常需要使用<a href="../Variables.htm">变量</a>来记录它的锁定状态.</p>
+
+<h3 id="Eject">Eject</h3>
+<p>弹出或收回 CD 或 DVD 驱动器的托盘.</p>
+<pre class="Syntax"><span class="func">Drive</span>, Eject <span class="optional">, Drive, 1</span></pre>
+<p>要弹出其他类型的媒体或设备, 请参阅在页面底部的 <a href="#ex2">示例 #2</a>.</p>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成(也许对 UNC 和映射的驱动器也有效). 如果省略 <em>Drive</em>, 将使用默认的 CD/DVD 驱动器. 要弹出托盘, 请省略最后一个参数. 要收回/关闭托盘, 请在最后一个参数中指定 1; 例如: <code>Drive, Eject, D:, 1</code>.</p>
+<p>在允许脚本继续之前, 这个子命令会等待弹出或收回完成. 如果托盘已经处于指定的状态(打开或关闭), <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0 (例如 &quot;没有错误&quot;).</p>
+<p>这个子命令可能不会在网络驱动器或非 CD/DVD 驱动器上工作. 如果因为这种或其他原因失败了, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1.</p>
+<p>通过检测命令完成的时间, 也许可以判断托盘之前的状态. 例如, 下面的热键切换托盘到相反的状态(打开或关闭):</p>
 <pre>#c::
 Drive, Eject
 <em>; 如果命令快速完成, 则托盘已经处于弹出状态.
@@ -32,11 +56,21 @@ if A_TimeSinceThisHotkey &lt; 1000  <em>; 需要时调整这个时间值.</em>
     Drive, Eject,, 1
 return</pre>
 <p>要判断 CD 或 DVD 驱动器的媒体状态(正在播放, 停止, 打开, 等等), 请参阅 <a href="DriveGet.htm">DriveGet</a>.</p>
-<h3>ErrorLevel</h3>
+
+<h2>ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
-<h3>备注</h3>
-<p>下面的例子是另一种弹出方法, 它对除了 CD/DVD 外的其他类型的媒体/设备也有效:</p>
+
+<h2>相关</h2>
+<p><a href="DriveGet.htm">DriveGet</a>, <a href="DriveSpaceFree.htm">DriveSpaceFree</a></p>
+
+<h2>示例</h2>
+<h4 id="ex1">示例 #1: 多个基础命令</h4>
+<pre class="NoIndent">Drive, Label, D:, BackupDrive
+Drive, Eject,, 1 <em>; 收回(关闭) 默认的 CD 或 DVD 驱动器的托盘.</em></pre>
+
+<h4 id="ex2">示例 #2</h4>
+<p>下面的例子是另一种弹出方法, 也适用于 CD/DVD 以外的媒体/设备类型:</p>
 <pre><em>; 使用期望的驱动器字母更新下面的第一行(您可以忽略后面的其他所有行).</em>
 DriveLetter = I:  <em>; 设置为您想弹出的驱动器字母.</em>
 
@@ -47,7 +81,7 @@ hVolume := DllCall("CreateFile"
     , UInt, 0
     , UInt, 0x3  <em>; OPEN_EXISTING</em>
     , UInt, 0, UInt, 0)
-if hVolume &lt;&gt; -1
+if (hVolume &lt;&gt; -1)
 {
     DllCall("DeviceIoControl"
         , UInt, hVolume
@@ -57,11 +91,6 @@ if hVolume &lt;&gt; -1
         , UInt, 0)
     DllCall("CloseHandle", UInt, hVolume)
 }</pre>
-<h3>相关</h3>
-<p><a href="DriveGet.htm">DriveGet</a>, <a href="DriveSpaceFree.htm">DriveSpaceFree</a></p>
-<h3>示例</h3>
-<pre class="NoIndent">Drive, Label, D:, BackupDrive
-Drive, Eject,, 1 <em>; 收回(关闭) 默认的 CD 或 DVD 驱动器的托盘.</em></pre>
 
 </body>
 </html>

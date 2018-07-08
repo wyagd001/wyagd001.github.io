@@ -12,16 +12,15 @@
 <h1>GuiControlGet</h1>
 
 <p>获取 GUI 窗口中控件的各种类型的信息.</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar <span class="optional">, <a href="#SubCommands">SubCommand</a>, ControlID, Value</span></pre>
 
-<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar <span class="optional">, Sub-command, ControlID, Param4</span></pre>
-<h3>参数</h3>
+<h2>参数</h2>
 <dl>
-
   <dt>OutputVar</dt>
-  <dd><p>用来存储结果的变量名. 如果此命令无法完成(请参阅下面的 ErrorLevel), 则此变量被置空.</p></dd>
+  <dd>用来存储子命令结果的变量名.</dd>
 
-  <dt>Sub-command</dt>
-  <dd><p>请看<a href="#subcommands">下面的子命令列表</a>.</p></dd>
+  <dt>SubCommand, Value</dt>
+  <dd>它们相互依赖, 其用法描述<a href="#SubCommands">如下</a>.</dd>
 
   <dt>ControlID</dt>
   <dd><p>如果为空或省略, 则使用指定的输出变量名. 例如, <code>GuiControlGet, MyEdit</code> 等同于 <code>GuiControlGet, MyEdit,, MyEdit</code>.</p>
@@ -31,40 +30,77 @@
     <p><span class="ver">[v1.1.04+]</span>: <em>ControlID</em> 可以为某个控件的 <a href="Gui.htm#HwndOutputVar">HWND</a> .</p>
     <p>如果控件不是默认 GUI 上的, 那么 <strong>必须设置 GUI 的名称 </strong> -- 在<span class="ver">[v1.1.20+]</span> 版本中, <em>ControlID</em> 参数为 HWND, 因为每个 HWND 都是唯一值. 详情参见<a href="#Remarks">备注</a> .</p>
   </dd>
-
-  <dt>Param4</dt>
-  <dd><p>除了下面的子命令列表中注明的, 否则省略此参数.</p></dd>
-
 </dl>
 
-<h3>ErrorLevel</h3>
-<p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
-<p>如果指定的窗口/控件不存在或由于其他问题使得命令无法工作, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1. 否则被置为 0.</p>
-<h3 id="subcommands">子命令</h3>
-<p><strong>(空)</strong>: 留空 <em>Sub-command</em> 来获取控件的内容. 除了下面的控件类型, 其他都是无须解释的:</p>
+<h2 id="SubCommands">子命令</h2>
+<p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
+<ul>
+  <li><a href="#Blank">(Blank)</a>: 检索(获取) 控件的内容.</li>
+  <li><a href="#Pos">Pos</a>: 检索控件的位置和大小.</li>
+  <li><a href="#Focus">Focus</a>: 检索当前含键盘焦点的控件的标识符(ClassNN).</li>
+  <li><a href="#FocusV">FocusV</a> <span class="ver">[v1.0.43.06+]</span>: 检索焦点控件的关联变量的名称.</li>
+  <li><a href="#Enabled">Enabled</a>: 如果控件是启用的检索 1, 或者如果是禁用的检索 0.</li>
+  <li><a href="#Visible">Visible</a>: 如果控件是可见的检索 1, 或者如果是隐藏的检索 0.</li>
+  <li><a href="#Hwnd">Hwnd</a> <span class="ver">[v1.0.46.16+]</span>: 检索控件的窗口句柄(HWND).</li>
+  <li><a href="#Name">Name</a> <span class="ver">[v1.1.03+]</span>: 检索控件的关联变量名.</li>
+</ul>
+
+<h3 id="Blank">(Blank)</h3>
+<p>检索控件的内容.</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar <span class="optional">,, ControlID, Value</span></pre>
+<p>留空 <em>SubCommand</em>, 来获取控件的内容. 除了下面的控件类型, 其他的都是无须解释的:</p>
 <p><a href="GuiControls.htm#Picture">Picture</a>: 获取控件创建时最初指定的图片文件名. 即使指定了新的图片文件名, 此名称也不会改变.</p>
 <p><a href="GuiControls.htm#Edit">Edit</a>: 获取控件的内容, 但文本中断行的位置表示为单独的换行符(`n) 而不是非 GUI 命令(例如 <a href="ControlGetText.htm">ControlGetText</a> 和 <a href="ControlSetText.htm">ControlSetText</a>) 使用的传统 CR+LF(`r`n).</p>
 <p><a href="GuiControls.htm#Hotkey">Hotkey</a>: 如果控件中不含控件, 则获取到空值. 否则它获取到修饰符和键名. 例如: <code>^!C</code>, <code>^Home</code>, <code>+^NumpadHome</code>.</p>
-<p><a href="GuiControls.htm#Checkbox">Checkbox</a>/<a href="GuiControls.htm#Radio">Radio</a>: 控件被选中时获取的值为 1, 未选中时为 0, 而灰色状态时为 -1. 要获取控件的文本/标题, 请指定单词 Text 到 <em>Param4</em>. 注: 与 <a href="Gui.htm#Submit">Gui Submit</a> 不同, 单选按钮的状态总是单独获取的, 不论它们是否在单选按钮组中.</p>
+<p><a href="GuiControls.htm#Checkbox">Checkbox</a>/<a href="GuiControls.htm#Radio">Radio</a>: 控件被选中时获取的值为 1, 未选中时为 0, 而灰色状态时为 -1. 要获取控件的文本/标题, 请指定单词 Text 到 <em>Value</em>. 注: 与 <a href="Gui.htm#Submit">Gui Submit</a> 不同, 单选按钮的状态总是单独获取的, 不论它们是否在单选按钮组中.</p>
 <p><a href="GuiControls.htm#UpDown">UpDown</a>/<a href="GuiControls.htm#Slider">Slider</a>/<a href="GuiControls.htm#Progress">Progress</a>: 获取控件的当前位置.</p>
 <p><a href="GuiControls.htm#Tab">Tab</a>/<a href="GuiControls.htm#DropDownList">DropDownList</a>/<a href="GuiControls.htm#ComboBox">ComboBox</a>/<a href="GuiControls.htm#ListBox">ListBox</a>: 获取当前选择的项目/选项卡的文本(如果控件含有 <a href="Gui.htm#AltSubmit">AltSubmit</a> 则为其位置). 对于组合框, 如果没有选择的项目, 则获取控件编辑区域的文本. 对于<a href="GuiControls.htm#ListBoxMulti">多选列表框</a>, 输出结果中使用窗口的<a href="Gui.htm#Delimiter">当前分隔符</a>.</p>
-<p><a href="ListView.htm">ListView</a> 和 <a href="TreeView.htm">TreeView</a>: 当 <em>Sub-command</em> 为空时不支持它们. 作为替代, 请使用内置的 <a href="ListView.htm#BuiltIn">ListView 函数</a>和 <a href="TreeView.htm#BuiltIn">TreeView 函数</a>.</p>
+<p><a href="ListView.htm">ListView</a> 和 <a href="TreeView.htm">TreeView</a>: 当 <em>SubCommand</em> 为空时不支持它们. 作为替代, 请使用内置的 <a href="ListView.htm#BuiltIn">ListView 函数</a>和 <a href="TreeView.htm#BuiltIn">TreeView 函数</a>.</p>
 <p><a href="GuiControls.htm#StatusBar">StatusBar</a>: 仅获取首个部分的文本.</p>
 <p><a href="GuiControls.htm#ActiveX">ActiveX</a>: 获取控件的 ActiveX 组件的新包装器对象.</p>
-<p class="note"><strong>注意</strong>: 要无条件获取任意控件(CheckBox, Radio, DropDownList 或 ComboBox) 的文本/标题而不是其内容, 请在 <em>Param4</em> 中指定单词 Text.</p>
-<p>&nbsp;</p>
-<p><strong>GuiControlGet, OutputVar, Pos</strong>: 获取控件的位置和大小. 这里的位置相对于 GUI 窗口的工作区, 这是窗口中不包括标题栏, 菜单栏和边框的区域. 获取的结果保存在四个名称以 <em>OutputVar</em> 开始的变量中. 例如:</p>
+<p class="note"><strong>注意</strong>: 要无条件检索 CheckBox, Radio, DropDownList 或 ComboBox 控件的文本/标题, 而不是其内容, 请将 <em>Value</em> 指定为单词 Text.</p>
+
+<h3 id="Pos">Pos</h3>
+<p>检索控件的位置和大小.</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar, Pos <span class="optional">, ControlID</span></pre>
+<p>这里的位置相对于 GUI 窗口的工作区, 不包括窗口的标题栏, 菜单栏和边框的区域. 信息保存在四个名称以 <em>OutputVar</em> 开始的变量中. 例如:</p>
 <pre>GuiControlGet, MyEdit, Pos
 MsgBox The X coordinate is %MyEditX%. The Y coordinate is %MyEditY%. The width is %MyEditW%. The height is %MyEditH%.</pre>
 <p>在<a href="Functions.htm">函数</a>中, 要创建一组全局变量而不是局部变量, 请在此命令前 <a href="../Functions.htm#Global">声明</a> <em>OutputVar</em> 为全局变量(对于<a href="../Functions.htm#AssumeGlobal">假设全局</a>函数, 反之亦成). 但是, 通常需要对每个变量都进行声明, 因为可能会造成<a href="../Functions.htm#ArrayConfusion">混乱的根源</a>.</p>
-<p>&nbsp;</p>
-<p><strong>GuiControlGet, OutputVar, Focus</strong>: 获取当前含键盘焦点的控件的标识符(ClassNN). 由于指定的 GUI 窗口必须是<a href="WinActivate.htm">活动的</a>, 这样其中的某个控件才会含有焦点, 所以如果窗口不是活动的则 <em>OutputVar</em> 被置空. 用法示例: <code>GuiControlGet, focused_control, focus</code>.</p>
-<p><strong>GuiControlGet, OutputVar, FocusV</strong> <span class="ver">[v1.0.43.06+]</span>: 与上面的 <em>Focus</em> 相同, 不过它获取的是焦点控件的<a href="Gui.htm#Events">关联变量</a>的名称. 如果那个控件没有关联变量, 则获取控件的文本/标题中前 63 个字符(这常用来避免给每个按钮分配变量名).</p>
-<p><strong>GuiControlGet, OutputVar, Enabled</strong>: 如果控件是启用的则获取的值为 1, 禁用的则为 0.</p>
-<p><strong>GuiControlGet, OutputVar, Visible</strong>: 如果控件是可见的则获取的值为 1, 隐藏的则为 0.</p>
-<p id="Hwnd"><strong>GuiControlGet, OutputVar, Hwnd</strong> <span class="ver">[v1.0.46.16+]</span>: 获取控件的窗口句柄(HWND). 控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 注: <a href="Gui.htm#HwndOutputVar">HwndOutputVar</a> 通常是获取 HWND 的一种较简便的方法.</p>
-<p id="Name"><strong>GuiControlGet, OutputVar, Name</strong> <span class="ver">[v1.1.03+]</span>: 获取控件的<a href="Gui.htm#Events">关联变量名</a>, 如果没有则 <em>OutputVar</em> 被置空.</p>
-<h3 id="Remarks">备注</h3>
+
+<h3 id="Focus">Focus</h3>
+<p>检索当前含键盘焦点的控件的标识符(ClassNN).</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar, Focus <span class="optional">, ControlID</span></pre>
+<p>由于指定的 GUI 窗口必须是<a href="WinActivate.htm">活动的</a>, 这样其中的某个控件才会含有焦点, 所以如果窗口不是活动的 <em>OutputVar</em> 将会置空. 用法示例: <code>GuiControlGet, focused_control, Focus</code>.</p>
+
+<h3 id="FocusV">FocusV <span class="ver">[v1.0.43.06+]</span></h3>
+<p>检索焦点控件的<a href="Gui.htm#Events">关联变量</a>的名称.</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar, FocusV <span class="optional">, ControlID</span></pre>
+<p>为了解详情, 请参阅上面的 <a href="#Focus">Focus</a> 子命令. 如果那个控件没有关联变量, 则获取控件的文本/标题中前 63 个字符(这常用来避免给每个按钮分配变量名).</p>
+
+<h3 id="Enabled">Enabled</h3>
+<p>如果控件是启用的检索 1, 或者如果是禁用的检索 0.</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar, Enabled <span class="optional">, ControlID</span></pre>
+
+<h3 id="Visible">Visible</h3>
+<p>如果控件是可见的检索 1, 或者如果是隐藏的检索 0.</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar, Visible <span class="optional">, ControlID</span></pre>
+
+<h3 id="Hwnd">Hwnd <span class="ver">[v1.0.46.16+]</span></h3>
+<p>检索控件的窗口句柄(HWND).</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar, Hwnd <span class="optional">, ControlID</span></pre>
+<p>控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 注: <a href="Gui.htm#HwndOutputVar">HwndOutputVar</a> 通常是获取 HWND 的一种较简便的方法.</p>
+
+<h3 id="Name">Name <span class="ver">[v1.1.03+]</span></h3>
+<p>检索控件的<a href="Gui.htm#Events">关联变量</a>.</p>
+<pre class="Syntax"><span class="func">GuiControlGet</span>, OutputVar, Name <span class="optional">, ControlID</span></pre>
+<p>如果控件没有关联变量, <em>OutputVar</em> 将会置空.</p>
+
+<h2>ErrorLevel</h2>
+<p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
+<p>如果指定的窗口/控件不存在或由于其他问题使得命令无法工作, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设为 1. 否则, 设为 0.</p>
+
+<h2 id="Remarks">备注</h2>
 <p>要对非默认窗口进行操作(请参阅下面), 需要在子命令前加上窗口名称或编号和一个冒号, 例如:</p>
 <pre>GuiControlGet, MyEdit, MyGui:
 GuiControlGet, MyEdit, MyGui:Pos
@@ -73,9 +109,11 @@ GuiControlGet, OutputVar, MyGui:Focus</pre>
 <p>GUI <a href="../misc/Threads.htm">线程</a> 是由 GUI 动作启动的. GUI 动作包含从 GUI 窗口的菜单栏选择一个项目或触发其某个 <a href="Gui.htm#label">g-标签</a>(例如按下按钮).</p>
 <p>GUI 线程的<a href="Gui.htm#DefaultWin">默认窗口名称</a>是运行此线程的窗口名称. 非 GUI 线程的默认窗口编号为 1.</p>
 
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="Gui.htm">Gui</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="ControlGet.htm">ControlGet</a></p>
-<h3>示例</h3>
+
+<h2>示例</h2>
+<h4 id="ex1">示例 #1: 杂项</h4>
 <pre class="NoIndent">GuiControlGet, MyEdit
 GuiControlGet, CtrlContents,, MyEdit  <em>; 和上面相同, 不过这里使用非默认的输出变量.</em>
 GuiControlGet, MyCheckbox1 <em>; 如果选中的则获取的值为 1, 未选中的则为 0.</em>

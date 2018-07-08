@@ -12,11 +12,29 @@
 <h1>GUI</h1>
 
 <p>创建和管理窗口和控件. 这种窗口可以用作数据输入窗体或自定义用户界面.</p>
+<pre class="Syntax"><span class="func">Gui</span>, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value1, Value2, Value3</span></pre>
+<p><em>SubCommand</em>, <em>Value1</em>, <em>Value2</em> 和 <em>Value3</em> 相互依赖, 它们的用法如下所述.</p>
 
-<pre class="Syntax"><span class="func">Gui</span>, sub-command <span class="optional">, Param2, Param3, Param4</span></pre>
 <h2>目录</h2>
 <ul>
-  <li><a href="#New">New</a>: 创建新窗口.</li>
+    <li><a href="#SubCommands">子命令</a></li>
+    <li><a href="#Position">通过 SmartGUI Creator 来确定位置和布局</a></li>
+    <li><a href="#PosSize">控件的位置和大小</a></li>
+    <li><a href="#Events">保存和响应用户的输入</a></li>
+    <li><a href="#OtherOptions">控件: 样式和选项</a></li>
+    <li><a href="#Labels">窗口事件</a>: <a href="#GuiClose">GuiClose</a> | <a href="#GuiEscape">GuiEscape</a> | <a href="#GuiSize">GuiSize</a> | <a href="#GuiContextMenu">GuiContextMenu</a> | <a href="#GuiDropFiles">GuiDropFiles</a></li>
+    <li><a href="#MultiWin">创建多个 GUI 窗口</a></li>
+   <li><a href="#DefaultWin">GUI 事件, 线程和子程序</a></li>
+    <li><a href="#Navigate">键盘导航</a></li>
+    <li><a href="#Appear">窗口外观</a></li>
+    <li><a href="#GenRemarks">一般说明</a></li>
+    <li><a href="#Examples">示例</a></li>
+</ul>
+
+<h2 id="SubCommands">子命令</h2>
+<p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
+<ul>
+  <li><a href="#New">New</a> <span class="ver">[v1.1.04+]</span>: 创建新窗口.</li>
   <li><a href="#Add">Add</a>: 创建控件, 例如文本, 按钮或复选框.</li>
   <li><a href="#Show">Show</a>: 显示窗口. 同时可以最小化, 最大化和移动窗口.</li>
   <li><a href="#Submit">Submit</a>: 保存用户的输入并可以隐藏窗口.</li>
@@ -25,69 +43,63 @@
   <li><a href="#Font">Font</a>: 为后续创建的控件文本设置文字的字体, 大小, 样式和文本颜色.</li>
   <li><a href="#Color">Color</a>: 设置窗口和/或控件的背景颜色.</li>
   <li><a href="#Margin">Margin</a>: 设置在没有为控件指定明确的位置时使用的边距/间隔.</li>
-  <li><a href="#Options">窗口的选项和风格</a>: 设置窗口的外观和行为的各种选项.</li>
+  <li><a href="#Options">窗口的选项和样式</a>: 设置窗口的外观和行为的各种选项.</li>
   <li><a href="#Menu">Menu</a>: 添加或移除菜单栏.</li>
-  <li><a href="#Minimize">Minimize / Maximize / Restore</a>: 对窗口执行指示的操作.</li>
+  <li><a href="#Minimize">Minimize / Maximize / Restore</a>: 对窗口执行指定的操作.</li>
   <li><a href="#Flash">Flash</a>: 闪烁窗口及其任务栏按钮.</li>
   <li><a href="#Default">Default</a>: 改变当前线程的默认 GUI 窗口编号.</li>
-  <li><a href="#Position">控件的定位和大小设置</a></li>
-  <li><a href="#Events">保存和响应用户的输入</a>: 变量和 g-标签</li>
-  <li><a href="#OtherOptions">控件的选项和样式</a></li>
-  <li><a href="#Labels">窗口事件</a>: <a href="#GuiClose">GuiClose</a> | <a href="#GuiEscape">GuiEscape</a> | <a href="#GuiSize">GuiSize</a> | <a href="#GuiContextMenu">GuiContextMenu</a> | <a href="#GuiDropFiles">GuiDropFiles</a></li>
-  <li><a href="#MultiWin">创建多个 GUI 窗口</a></li>
-  <li><a href="#DefaultWin">GUI 事件, 线程和子程序</a></li>
-  <li>其他: <a href="#Navigate">键盘导航</a> | <a href="#Appear">窗口外观</a> | <a href="#GenRemarks">一般说明</a></li>
-  <li><a href="#Examples">示例</a>: 包含了演示 GUI 窗口和控件的有效脚本</li>
 </ul>
 
-<h2 id="New">Gui, New [, Options, Title] <span class="ver">[v1.1.04+]</span></h2>
+<h3 id="New">New <span class="ver">[v1.1.04+]</span></h3>
 <p>创建新窗口并将其设为当前线程的<a href="#Default">默认窗口</a>.</p>
-<pre>Gui, New, Options, Title  <em>; 创建新的未命名且未编号的 GUI.</em>
-Gui, Name: New, Options, Title  <em>; 创建新 GUI, 首先销毁已有的同名 GUI.</em>
-</pre>
-<p><strong><em>Options</em></strong> 可以包含主要 GUI 命令支持的任意<a href="#Options">选项</a>.</p>
-<p>如果省略 <strong><em>Title</em></strong>, 则使用脚本文件名.</p>
-<p>使用该命令应注意下列说明:</p>
+<pre class="Syntax"><span class="func">Gui</span>, New <span class="optional">, Options, Title</span>
+<span class="func">Gui</span>, GuiName:New <span class="optional">, Options, Title</span></pre>
+<p>如果指定了 <em>GuiName</em>, 那么将创建一个新的 GUI, 销毁任何具有该名称的现有 GUI. 否则, 将创建一个新的未命名和无编号的 GUI.</p>
+<p><em>Options</em> 可以包含主 GUI 命令支持的任意<a href="#Options">选项</a>.</p>
+<p>如果省略 <em>Title</em>, 则使用脚本文件名.</p>
+<p>这个子命令附带以下注意事项:</p>
 <ul>
-  <li>大多数情况下, 会按需自动创建窗口, 所以通常无需调用 <em>Gui New</em>.</li>
-  <li>尽管新窗口会被设为<em>当前</em>线程的<a href="#Default">默认</a>窗口, 但非 GUI 线程的<a href="#DefaultWin">默认窗口仍为编号 1 的 GUI</a>.</li>
-  <li>如果该 GUI 没有名称且非<a href="#Default">默认 GUI</a>, 则操作时必须使用其 HWND. 通过 <a href="#GuiHwndOutputVar">+Hwnd<i>GuiHwnd</i></a> 选项可以保存新窗口的句柄到 <em>GuiHwnd</em>. <code>Gui, %<i>GuiHwnd</i>%:Default</code> 可将其设为其他 Gui 命令的默认操作对象.</li>
+    <li>大多数情况下, 会按需自动创建窗口, 所以通常无需调用 <code>Gui New</code>.</li>
+    <li>尽管新窗口会被设为<em>当前</em>线程的<a href="#Default">默认</a>窗口, 但非 GUI 线程的<a href="#DefaultWin">默认窗口仍为编号 1 的 GUI</a>.</li>
+    <li>如果该 GUI 没有名称且非<a href="#Default">默认 GUI</a>, 则操作时必须使用其 HWND. 通过 <a href="#GuiHwndOutputVar">+Hwnd<i>GuiHwnd</i></a> 选项可以保存新窗口的句柄到 <em>GuiHwnd</em>. <code>Gui, %<i>GuiHwnd</i>%:Default</code> 可将其设为其他 Gui 命令的默认操作对象.</li>
 </ul>
 <p>好的方面是:</p>
 <ul>
-  <li>调用 <em>Gui New</em> 可确保脚本创建新的 GUI 而不修改已有的 GUI. 这也使的脚本目的明确, 其他用户(或自己以后) 更容易看懂.</li>
-  <li><em>Gui New</em> 使得无需获取每个 GUI 的句柄和编号. 如果脚本需要创建多个 GUI 或打算包含于其他脚本时, 这样特别有用.</li>
-  <li>有时, 创建 GUI 而不<a href="#Show">显示</a>时设置窗口的标题会更直观.</li>
+    <li>调用 <code>Gui New</code> 可确保脚本创建新的 GUI 而不修改已有的 GUI. 这也使的脚本目的明确, 其他用户(或自己以后) 更容易看懂.</li>
+    <li><code>Gui New</code> 使得无需获取每个 GUI 的句柄和编号. 如果脚本需要创建多个 GUI 或打算包含于其他脚本时, 这样特别有用.</li>
+    <li>有时, 创建 GUI 而不<a href="#Show">显示</a>时设置窗口的标题会更直观.</li>
 </ul>
-
 <p>如果不指定名称, 则应用下列规则:</p>
 <ul>
-  <li>特殊的<a href="#Labels">标签</a>(如 <a href="#GuiClose"><em>GuiClose</em></a>) 含有默认的"Gui"前缀, 不过可以在选项中使用 <a href="#PlusLabel">+Label<em>Prefix</em></a> 覆盖.</li>
-  <li>不论 GUI 是否开启了新线程, <a href="../Variables.htm#Gui">A_Gui</a> 总是包含句柄而非名称.</li>
+    <li>特殊的<a href="#Labels">标签</a>(如 <a href="#GuiClose">GuiClose</a>) 含有默认的"Gui"前缀, 不过可以在选项中使用 <a href="#PlusLabel">+Label<em>Prefix</em></a> 覆盖.</li>
+    <li>不论 GUI 是否开启了新线程, <a href="../Variables.htm#Gui">A_Gui</a> 总是包含句柄而非名称.</li>
 </ul>
-<p class="note"><strong>注意</strong>: 在 <span class="ver">[v1.1.08]</span> 之前, 在指定名称时此命令不会设置它为默认的 Gui.</p>
+<p class="note"><strong>注意</strong>: 在 <span class="ver">[v1.1.08]</span> 之前, 在指定名称时此子命令不会设置它为默认的 Gui.</p>
 
-<h2 id="Add">Gui, Add, ControlType [, Options, Text]</h2>
+<h3 id="Add">Add</h3>
 <p>添加控件到 GUI 窗口(必要时首先创建 GUI 窗口).</p>
-
+<pre class="Syntax"><span class="func">Gui</span>, Add, ControlType <span class="optional">, Options, Text</span></pre>
 <p><em>ControlType</em> 为下列的其中一个:</p>
 <ul>
-  <li><a href="GuiControls.htm#Text">Text(文本)</a>, <a href="GuiControls.htm#Edit">Edit(编辑框)</a>, <a href="GuiControls.htm#UpDown">UpDown(加减按钮)</a>, <a href="GuiControls.htm#Picture">Picture(图片)</a></li>
-  <li><a href="GuiControls.htm#Button">Button(按钮)</a>, <a href="GuiControls.htm#Checkbox">Checkbox(勾选框)</a>, <a href="GuiControls.htm#Radio">Radio(单选按钮)</a></li>
-  <li><a href="GuiControls.htm#DropDownList">DropDownList(下拉列表)</a>, <a href="GuiControls.htm#ComboBox">ComboBox(组合框)</a></li>
-  <li><a href="GuiControls.htm#ListBox">ListBox(列表框)</a>, <a href="ListView.htm">ListView(列表视图)</a>, <a href="TreeView.htm">TreeView(树形列表)</a></li>
-  <li><a href="GuiControls.htm#Link">Link(链接)</a>, <a href="GuiControls.htm#Hotkey">Hotkey(热键)</a>, <a href="GuiControls.htm#DateTime">DateTime(时间日期选择器)</a>, <a href="GuiControls.htm#MonthCal">MonthCal(月历)</a></li>
-  <li><a href="GuiControls.htm#Slider">Slider(滑块)</a>, <a href="GuiControls.htm#Progress">Progress(进度条)</a></li>
-  <li><a href="GuiControls.htm#GroupBox">GroupBox(按钮组)</a>, <a href="GuiControls.htm#Tab">Tab(选项卡)</a>, <a href="GuiControls.htm#StatusBar">StatusBar(状态栏)</a></li>
-  <li><a href="GuiControls.htm#ActiveX">ActiveX</a>(例如 Internet Explorer 控件)</li>
-  <li><a href="GuiControls.htm#Custom">自定义控件</a></li>
+    <li><a href="GuiControls.htm#Text">Text(文本)</a>, <a href="GuiControls.htm#Edit">Edit(编辑框)</a>, <a href="GuiControls.htm#UpDown">UpDown(加减按钮)</a>, <a href="GuiControls.htm#Picture">Picture(图片)</a></li>
+    <li><a href="GuiControls.htm#Button">Button(按钮)</a>, <a href="GuiControls.htm#Checkbox">Checkbox(勾选框)</a>, <a href="GuiControls.htm#Radio">Radio(单选按钮)</a></li>
+    <li><a href="GuiControls.htm#DropDownList">DropDownList(下拉列表)</a>, <a href="GuiControls.htm#ComboBox">ComboBox(组合框)</a></li>
+    <li><a href="GuiControls.htm#ListBox">ListBox(列表框)</a>, <a href="ListView.htm">ListView(列表视图)</a>, <a href="TreeView.htm">TreeView(树形列表)</a></li>
+    <li><a href="GuiControls.htm#Link">Link(链接)</a>, <a href="GuiControls.htm#Hotkey">Hotkey(热键)</a>, <a href="GuiControls.htm#DateTime">DateTime(时间日期选择器)</a>, <a href="GuiControls.htm#MonthCal">MonthCal(月历)</a></li>
+    <li><a href="GuiControls.htm#Slider">Slider(滑块)</a>, <a href="GuiControls.htm#Progress">Progress(进度条)</a></li>
+    <li><a href="GuiControls.htm#GroupBox">GroupBox(按钮组)</a>, <a href="GuiControls.htm#Tab">Tab(选项卡)</a>, <a href="GuiControls.htm#StatusBar">StatusBar(状态栏)</a></li>
+    <li><a href="GuiControls.htm#ActiveX">ActiveX</a>(例如 Internet Explorer 控件)</li>
+    <li><a href="GuiControls.htm#Custom">自定义控件</a></li>
 </ul>
 <p>例如:</p>
 <pre>Gui, Add, Text,, Please enter your name:
 Gui, Add, Edit, vName
 Gui, Show</pre>
-<h2 id="Show">Gui, Show [, Options, Title]</h2>
-<p>如果没有在 <em>Options</em> 中明确指定, 那么此命令会让窗口以可见, 非最小化(必要时), <a href="WinActivate.htm">激活</a>并设置它的标题的状态显示. 如果省略了 <em>Title</em>, 则保留原来的标题(如果没有, 则使用脚本的文件名).</p>
+
+<h3 id="Show">Show</h3>
+<p>如果没有在 <em>Options</em> 中明确指定, 那么此命令会让窗口以可见, 非最小化(必要时), <a href="WinActivate.htm">激活</a>并设置它的标题的状态显示.</p> 
+<pre class="Syntax"><span class="func">Gui</span>, Show <span class="optional">, Options, Title</span></pre>
+<p>如果省略了 <em>Title</em>, 则保留原来的标题(如果没有, 则使用脚本的文件名).</p>
 <p>省略后面的 X, Y, W 和 H 选项则让窗口保持原来的大小和位置. 如果之前没有设置过位置, 则在后面提到的 X 和/或 Y 选项没有指明的坐标上窗口将自动居中. 如果之前没有设置过大小, 则窗口会根据它所包含控件的大小和位置自动调整大小.</p>
 <p>在 <em>Options</em> 中可以包含零个或多个下列字符串(规定其中的数字使用十进制, 而不是十六进制):</p>
 <p><strong>Wn</strong>: 指定 <strong>n</strong> 为窗口工作区的宽度(单位为像素), 窗口工作区指除了窗口边框, 标题栏和<a href="#Menu">菜单栏</a>的区域.</p>
@@ -97,10 +109,7 @@ Gui, Show</pre>
 <p><strong>Center</strong>: 让窗口在屏幕的水平和垂直方向上居中.</p>
 <p><strong>xCenter</strong>: 让窗口在屏幕的水平方向上居中. 例如: <code>Gui, Show, xCenter y0</code>.</p>
 <p><strong>yCenter</strong>: 让窗口在屏幕的垂直方向上居中.</p>
-<p id="AutoSize"><strong>AutoSize</strong>: 根据窗口当前包含的可见控件调整窗口的大小. 这常在添加新控件, 调整现有控件的大小或隐藏/显示现有控件后用来调整窗口的大小. 例如:<br>
-  <code>Gui, Show, AutoSize Center</code></p>
-<p><br>
-  <em><strong>还可以包含下列参数的其中一个:</strong></em></p>
+<p id="AutoSize"><strong>AutoSize</strong>: 根据窗口当前包含的可见控件调整窗口的大小. 这常在添加新控件, 调整现有控件的大小或隐藏/显示现有控件后用来调整窗口的大小. 例如: <code>Gui, Show, AutoSize Center</code></p>
 <p><strong>Minimize</strong>: 最小化当前窗口并激活其下方的窗口.</p>
 <p><strong>Maximize</strong>: 最大化并激活窗口.</p>
 <p><strong>Restore</strong>: 当窗口处于最小化或最大化状态时, 还原窗口. 当窗口隐藏且不活动时, 则显示并激活窗口.</p>
@@ -108,49 +117,78 @@ Gui, Show</pre>
 <p><strong>NA</strong>: 显示窗口但不进行激活. 如果窗口处于最小化状态, 那么它仍保持这种状态, 但可能提升它的 z 顺序(这是在 alt-tab 选择器中看到的顺序). 如果窗口之前是隐藏的, 则此参数可能会让它显示在当前仍处于活动状态的窗口上面.</p>
 <p><strong>Hide</strong>: 隐藏窗口并激活其下方的窗口. 除了允许隐藏窗口被移动, 重设大小或在不显示的情况下设置新的标题外, 此参数与 <a href="#Cancel">Gui Cancel</a> 的功能相同. 例如: <code>Gui, Show, Hide x55 y66 w300 h200, New Title</code>.</p>
 
-<h2 id="Submit">Gui, Submit [, NoHide]</h2>
-<p>保存每个控件的内容到其<a href="#var">关联变量</a>中(如果有) 并且在没有使用 NoHide 选项时隐藏窗口. 对于那些产生多个字段输出的控件, 例如<a href="GuiControls.htm#ListBoxMulti">多选列表框</a>, 输出结果中使用窗口的<a href="#Delimiter">当前分隔符</a>来分隔多个字段的内容. 如果由于之前使用 <a href="#Destroy">Gui Destroy</a> 销毁了窗口或其他原因使得窗口不存在, 那么此命令没有效果.</p>
+<h3 id="Submit">Submit</h3>
+<p>保存每个控件的内容到其<a href="#var">关联变量</a>中(如果有) 并且在没有使用 NoHide 选项时隐藏窗口.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Submit <span class="optional">, NoHide</span></pre>
+<p>对于那些产生多个字段输出的控件, 例如<a href="GuiControls.htm#ListBoxMulti">多选列表框</a>, 输出结果中使用窗口的<a href="#Delimiter">当前分隔符</a>来分隔多个字段的内容. 如果由于之前使用 <a href="#Destroy">Gui Destroy</a> 销毁了窗口或其他原因使得窗口不存在, 那么此子命令没有效果.</p>
 
-<h2 id="Cancel">Gui, Cancel</h2>
-<p>隐藏当前窗口, 并不保存控件的内容到其<a href="#var">关联变量</a>中. 如果由于之前使用 <a href="#Destroy">Gui Destroy</a> 销毁了窗口或其他原因使得窗口不存在, 那么此命令没有效果.</p>
+<div id="Cancel"><h3 id="Hide">Cancel / Hide</h3></div>
+<p>隐藏当前窗口, 并不保存控件的内容到其<a href="#var">关联变量</a>中.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Cancel
+<span class="func">Gui</span>, Hide</pre>
+<p>如果由于之前使用 <a href="#Destroy">Gui Destroy</a> 销毁了窗口或其他原因使得窗口不存在, 那么此子命令没有效果.</p>
 
-<h2 id="Destroy">Gui, Destroy</h2>
-<p>移除当前窗口(如果它存在) 及其所有控件, 并释放其占用的内存和系统资源. 如果脚本之后重新创建窗口, 那么窗口的所有属性(例如颜色和字体) 初始都为默认值(如同窗口从没有出现过一样). 如果没有使用 <code>Gui Destroy</code>, 则当脚本退出时会自动销毁所有的 GUI 窗口.</p>
+<h3 id="Destroy">Destroy</h3>
+<p>移除当前窗口(如果它存在) 及其所有控件, 并释放其占用的内存和系统资源.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Destroy</pre>
+<p>如果脚本之后重新创建窗口, 那么窗口的所有属性(例如颜色和字体) 初始都为默认值(如同窗口从没有出现过一样). 如果没有使用 <code>Gui Destroy</code>, 则当脚本退出时会自动销毁所有的 GUI 窗口.</p>
 
-<h2 id="Font">Gui, Font [, Options, FontName]</h2>
-<p>为在此处之后创建的控件设置字体字型, 大小, 样式和/或颜色. 例如:</p>
+<h3 id="Font">Font</h3>
+<p>为在此处之后创建的控件设置字体字型, 大小, 样式和/或颜色.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Font <span class="optional">, Options, FontName</span></pre>
+<p>例如:</p>
 <pre>gui, font, s10, Verdana  <em>; 设置 10 点大小的 Verdana 字体.</em></pre>
 <p>省略最后两个参数可以让字体恢复为系统默认的 GUI 字型, 大小和颜色.</p>
-<p><em>FontName</em> 可以是任意字体的名称, 例如<a href="../misc/FontsStandard.htm">字体表</a>的其中一个. 如果省略了 <em>FontName</em> 或此字体在系统中不存在, 则使用之前的字体字型(如果没有, 则使用系统默认的 GUI 字型). 即使某些系统缺少首选字体, 这种特性也可以让窗口在多个系统上具有类似的字体. 例如, 按顺序执行下列命令, 则 Verdana 字体优先于 Arial, 而 Arial 字体优先于 MS sans serif:</p>
-<pre>gui, font,, MS sans serif
-gui, font,, Arial
-gui, font,, Verdana  <em>; 首选字体.</em></pre>
+<p><em>FontName</em> 可以是任意字体的名称, 例如<a href="../misc/FontsStandard.htm">字体表</a>的其中一个. 如果省略了 <em>FontName</em> 或此字体在系统中不存在, 则使用之前的字体字型(如果没有, 则使用系统默认的 GUI 字型). 即使某些系统缺少首选字体, 这种特性也可以让窗口在多个系统上具有类似的字体. 例如, 按顺序执行下列命令, 则 Verdana 字体优先于 Arial, 而 Arial 字体优先于 MS Sans Serif:</p>
+<pre>Gui, Font,, MS Sans Serif
+Gui, Font,, Arial
+Gui, Font,, Verdana  <em>; 首选字体.</em></pre>
 <p>如果 <em>Options</em> 参数为空, 则使用之前的字体属性. 或者可以在其中指定下列的一个或多个选项字母:</p>
 <p><strong>C</strong>: 颜色名称(请参阅<a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值, 或指定单词 Default 来恢复到系统默认颜色(大多数系统的默认颜色为黑色). 例如: <code>cRed</code>, <code>cFFFFAA</code>, <code>cDefault</code>. 注意: <a href="GuiControls.htm#Button">按钮</a>不遵循自定义颜色. 此外, 可以通过包含 C 选项创建带有字体颜色的特殊控件不会受到当前选项的影响. 例如: <code>Gui, Add, Text, cRed, My Text</code>.</p>
 <p><strong>S</strong>: 字体大小(单位为磅). 例如: <code>s12</code>(规定为十进制, 而不是十六进制)</p>
 <p><strong>W</strong>: 字体粗细, 这是介于 1 和 1000  之间的数字(400 为标准大小而 700 为粗体). 例如: <code>w600</code>(规定为十进制, 而不是十六进制)</p>
 <p>还支持使用下列单词: <strong>bold</strong>, <em>italic</em>, <s>strike</s>, <u>underline</u> 和 norm. 指定 <em>Norm</em> 则让字体恢复标准粗细并去除斜体, 删除线和下划线效果(但保持现有的颜色和大小). 可以使用 norm 去除所有属性然后有选择的设置其他属性. 例如, 指定 <code>norm italic</code> 将设置字体为标准然后增加斜体属性.</p>
 <p>要指定多个选项, 请在选项间使用空格分隔. 例如: <code>cBlue s12 bold</code>.</p>
-<p>如果一个脚本中创建了<a href="#MultiWin">多个 GUI 窗口</a>, 那么其中的每个窗口都会记住它自己的 "当前字体" 属性, 
-可以用于后面创建的控件.</p>
+<p>如果一个脚本中创建了<a href="#MultiWin">多个 GUI 窗口</a>, 那么其中的每个窗口都会记住它自己的 "当前字体" 属性, 可以用于后面创建的控件.</p>
 <p>相关提示, 操作系统提供了标准的对话框让用户选取字体, 颜色或图标. 使用 <a href="DllCall.htm">DllCall()</a> 可以显示这些对话框, 演示的例子请参阅 <a href="http://www.autohotkey.com/forum/topic17230.html">www.autohotkey.com/forum/topic17230.html</a>.</p>
 <p id="fontq"><strong>Q</strong>: <span class="ver">[AHK_L 19+]:</span> 文本呈现质量. 例如: <code>q3</code>. 应该在 Q 后跟着下表中的一个数字:</p>
 <table class="info">
-  <tr><td>0 = DEFAULT_QUALITY</td><td>保持字体的外观.</td></tr>
-  <tr><td>1 = DRAFT_QUALITY</td><td>字体外观不如使用 PROOF_QUALITY 值时那么重要.</td></tr>
-  <tr><td>2 = PROOF_QUALITY</td><td>字体的字符质量比准确符合逻辑字体属性更重要.</td></tr>
-  <tr><td>3 = NONANTIALIASED_QUALITY</td><td>不对字体修边, 即不进行平滑处理.</td></tr>
-  <tr><td>4 = ANTIALIASED_QUALITY</td><td>如果字体支持且字体不会太小或太大时, 则对字体进行修边或平滑.</td></tr>
-  <tr><td>5 = CLEARTYPE_QUALITY</td><td>Windows XP 以及更高版本: 如果设置此选项, 则(尽可能) 使用 ClearType 抗锯齿方法描绘文本.</td></tr>
+  <tr>
+        <td>0&nbsp;=&nbsp;DEFAULT_QUALIT</td>
+        <td>保持字体的外观.</td>
+  </tr>
+  <tr>
+        <td>1&nbsp;=&nbsp;DRAFT_QUALITY</td>
+        <td>字体外观不如使用 PROOF_QUALITY 值时那么重要.</td>
+  </tr>
+  <tr>
+        <td>2&nbsp;=&nbsp;PROOF_QUALITY</td>
+        <td>字体的字符质量比准确符合逻辑字体属性更重要.</td>
+  </tr>
+  <tr>
+        <td>3&nbsp;=&nbsp;NONANTIALIASED_QUALITY</td>
+        <td>不对字体修边, 即不进行平滑处理.</td>
+  </tr>
+  <tr>
+        <td>4&nbsp;=&nbsp;ANTIALIASED_QUALITY</td>
+        <td>如果字体支持且字体不会太小或太大时, 则对字体进行修边或平滑.</td>
+  </tr>
+  <tr>
+        <td>5&nbsp;=&nbsp;CLEARTYPE_QUALITY</td>
+        <td>Windows XP 以及更高版本: 如果设置此选项, 则(尽可能) 使用 ClearType 抗锯齿方法描绘文本.</td>
+</tr>
 </table>
 <p>关于这些值含义的更多细节, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd183499.aspx">MSDN: CreateFont</a>.</p>
 <p>由于默认设置通常是最好的品质, 所以这个功能往往用于在特殊情况时禁用抗锯齿效果, 这样可以让文本更清晰.</p>
-<h2 id="Color">Gui, Color [, WindowColor, ControlColor]</h2>
-<p>设置窗口和/或其控件的背景颜色. 设置 <em>WindowColor</em> 为 GUI 窗口自己的背景颜色. <em>ControlColor</em> 应用于窗口中所有现在和将来的控件(不过某些类型的控件不支持自定义颜色). 尽管 <a href="ListView.htm">ListViews</a> 和 <a href="TreeView.htm">TreeViews</a> 的初始背景颜色由当前的 <em>ControlColor</em> 决定, 但之后 <em>ControlColor</em> 颜色的改变不会影响它们. 这时, 应该使用 <code>GuiControl +BackgroundFF9977, MyListView</code> 来明确改变它们的背景颜色.</p>
+
+<h3 id="Color">Color</h3>
+<p>设置窗口和/或其控件的背景颜色.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Color <span class="optional">, WindowColor, ControlColor</span></pre>
+<p>设置 <em>WindowColor</em> 为 GUI 窗口自己的背景颜色. <em>ControlColor</em> 应用于窗口中所有现在和将来的控件(不过某些类型的控件不支持自定义颜色). 虽然 <a href="ListView.htm">ListViews</a> 和 <a href="TreeView.htm">TreeViews</a> 初始颜色遵循 <em>ControlColor</em>, 但之后改变 <em>ControlColor</em> 不会对它们造成影响. 在这种情况下, 使用 <code>GuiControl +BackgroundFF9977, MyListView</code> 来明确更改它们的颜色.</p>
 <p>让两个参数中的某个留空可以保持当前的颜色设置. 否则, 指定 16 种 <a href="Progress.htm#colors">HTML 基础颜色</a>之一或 6 位的 RGB 颜色值(0x 前缀可以省略), 或指定单词 Default 来恢复到默认颜色. 例如: <code>Silver</code>, <code>FFFFAA</code>, <code>0xFFFFAA</code>, <code>Default</code>.</p>
 <p>默认情况下, 窗口的背景颜色为系统按钮的颜色, 而控件的背景颜色为系统默认窗口的颜色(通常为白色).</p>
 <p><a href="#Menu">菜单栏</a>及其子菜单的颜色可以这样改变, 例如: <code><a href="Menu.htm">Menu</a>, MyMenuBar, Color, White</code>.</p>
-<p>要让窗口的背景透明, 请使用 <a href="WinSet.htm#TransColor">WinSet TransColor</a>. 然而, 如果在进行这样的操作前没有使用 <a href="#Color">Gui, Color</a> 为窗口设置自定义的颜色, 那么按钮也将变成透明的. 要避免此问题, 应首先为窗口设置自定义的颜色, 然后让此颜色透明. 例如:</p>
+<p>要让窗口的背景透明, 请使用 <a href="WinSet.htm#TransColor">WinSet TransColor</a>. 然而, 如果在进行这样的操作前没有使用 <a href="#Color">Gui Color</a> 为窗口设置自定义的颜色, 那么按钮也将变成透明的. 要避免此问题, 应首先为窗口设置自定义的颜色, 然后让此颜色透明. 例如:</p>
 <pre>Gui, Color, EEAA99
 Gui +LastFound  <em>; 让 GUI 窗口成为<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>以用于下一行的命令.</em>
 WinSet, TransColor, EEAA99</pre>
@@ -158,13 +196,17 @@ WinSet, TransColor, EEAA99</pre>
 <pre>Gui -Caption  <em>; 如果它不是<a href="#DefaultWin">默认窗口</a>, 则使用 <i>Gui, GuiName:-Caption</i>.</em></pre>
 <p>为了阐明上面的情况, 请参阅此页面底部的屏幕显示(OSD) 的例子.</p>
 
-<h2 id="Margin">Gui, Margin [, X, Y]</h2>
-<p>此命令用来为窗口上没有明确指定 <a href="#XY">X 或 Y 坐标</a>的控件设置在自动排列时距离窗口边界的距离, <strong>X</strong> 为控件距离窗口左/右边界的距离, <strong>Y</strong> 为控件距离窗口上/下边界的距离, 它们的单位为像素. 同时使用此边距设置自动排列的控件彼此间在水平和垂直方向上的距离. 最后, 在首次使用 <a href="#Show">Gui Show</a> 计算窗口的大小时也需要考虑此边距(在没有明确指定窗口大小的时候).</p>
+<h3 id="Margin">Margin</h3>
+<p>在自动排列没有明确指定 <a href="#XY">X 或 Y 坐标</a>的控件时, 设置时距离窗口的左/右和上/下侧留下的空间的像素值.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Margin <span class="optional">, X, Y</span></pre>
+<p>此外, 还可以使用边距来确定自动定位控件之间的垂直距离和水平距离. 最后, 第一次使用 <a href="#Show">Gui Show</a> 来计算窗口的大小时, 要考虑到此边距(在没有明确指定窗口大小时).</p>
 <p><code>Gui, Margin</code> 仅影响<a href="#Default">默认窗口</a>, 而 <code>Gui, Name:Margin</code> 仅影响<a href="#MultiWin">命名窗口</a>. 如果没有使用此命令, 当添加首个控件到窗口时, 窗口会根据当前选择的<a href="#Font">字体</a>的大小按比例计算出默认的边距(上下边距为字体高度的 0.75 倍, 而左右边距为字体高度的 1.25 倍).</p>
 <p>尽管在添加控件的过程中可以改变边距, 但这仅印象后面添加的控件, 而不影响现在的. 最后, X 或 Y 的其中任意一个可以留空来保持相应的边距不变.</p>
 
-<h2 id="Options">Gui, +/-Option1 +/-Option2 ...</h2>
-<p>在 GUI 命令后可以指定一个或多个选项. 考虑到性能的原因, 最好在创建窗口前(即在使用任何其他子命令例如 <a href="#Add">Gui Add</a> 之前) 使用一行语句指定所有的选项.</p>
+<h3 id="Options">窗口的选项和样式</h3>
+<p>在GUI命令之后, 可以立即指定一个或多个选项.</p>
+<pre class="Syntax"><span class="func">Gui</span>, +/-Option1 +/-Option2 ...</pre>
+<p>处于性能原因, 最好在一行中设置所有选项, 并在创建窗口之前(即在使用任何其他子命令例如 <a href="#Add">Gui Add</a> 之前) 使用一行语句指定所有的选项.</p>
 <p>此命令的效果是累加的; 即它只改变那些明确指定的选项, 而其他所有选项则保持不变.</p>
 <p>在选项前指定加号表示增加此选项, 而减号表示移除它. 例如:</p>
 <pre>Gui +Resize -MaximizeBox  <em>; 改变<a href="#DefaultWin">默认</a> GUI 窗口的设置.</em>
@@ -174,12 +216,12 @@ Gui <strong>MyGui:</strong>+Resize -MaximizeBox  <em>; 改变名称为 <i>MyGui<
 <p><strong>Caption</strong>(默认具有此选项): 为窗口增加标题栏和粗边框. 如果要移除将要使用 <a href="WinSet.htm#TransColor">WinSet TransColor</a> 设置透明的窗口的标题栏, 那么在需要在设置 TransColor 后才进行移除.</p>
 <p id="Delimiter"><strong>Delimiter</strong>: 指定管道(|) 外的其他字符作为窗口的字段分隔符, 每当使用 <a href="#Add">Gui Add</a> 添加, 使用 <a href="GuiControl.htm">GuiControl</a> 修改, 使用 <a href="#Submit">Gui Submit</a> 或 <a href="GuiControlGet.htm">GuiControlGet</a> 获取控件的内容时. 在单词 Delimiter 后紧跟着单个字符. 例如, <code>Gui +Delimiter`n</code> 将使用换行符, 这可能特别适合于<a href="../Scripts.htm#continuation">延续片段</a>. 同样, 使用 <code>Gui +Delimiter|</code> 将恢复为默认的分隔符. 要使用空格或 tab, 指定 <code>Gui +DelimiterSpace</code> 或 <code>Gui +DelimiterTab</code>. 一旦改变数据分隔符, 它会影响作用于这个特殊窗口的所有现在和后续的<a href="../misc/Threads.htm">线程</a>.</p>
 <p><strong>Disabled</strong>: 禁用窗口, 阻止用户和窗口中的控件交互. 此选项常用于含有子窗口的窗口(请参阅 <a href="#Owner">Owner</a>).</p>
-<p id="DPIScale"><strong>DPIScale</strong> <span class="ver">[v1.1.11+]</span>: 使用 <code>Gui -DPIScale</code> 禁用 DPI 缩放, 它默认是启用的. 如果在使用非标准 DPI 设置的系统上启用 DPI 缩放, 则 Gui 命令会自动调整坐标和尺寸来让控件具有大致相同的外观尺寸(不过解析率更高). 例如, 对于 144(150%) 的 DPI, <code>Gui Show, w100</code> 会让 Gui 宽度为 150 像素, 但 <a href="../Variables.htm#GuiWidth">A_GuiWidth</a> 将保持 100. <a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 包含了系统当前 DPI.</p>
-<p>DPI 缩放比例仅适用于 Gui 命令, 所以类似 ControlGetPos 或 WinGetPos 命令返回的坐标无法工作. 解决方案如下列:</p>
+<p id="DPIScale"><strong>DPIScale</strong> <span class="ver">[v1.1.11+]</span>: 使用 <code>Gui -DPIScale</code> 禁用 DPI 缩放, 它默认是启用的. 如果在使用非标准 DPI 设置的系统上启用 DPI 缩放, 则 Gui 子命令会自动调整坐标和尺寸来让控件具有大致相同的外观尺寸(不过解析率更高). 例如, 对于 144(150%) 的 DPI, <code>Gui Show, w100</code> 会让 Gui 宽度为 150 像素, 但 <a href="../Variables.htm#GuiWidth">A_GuiWidth</a> 将保持 100. <a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 包含了系统当前 DPI.</p>
+<p>DPI 缩放比例仅适用于 Gui 子命令, 所以类似 ControlGetPos 或 WinGetPos 命令返回的坐标无法工作. 解决方案如下列:</p>
 <ul>
-  <li>尽量使用硬编码坐标系统.  例如, 使用类似 <a href="#xp">xp</a>, <a href="#xs">xs</a>, <a href="#xm">xm</a> 和 <a href="#PosPlusMargin">x+m</a> 选项设置控件的相对位置且用像素来设置<a href="#R">多行文本</a>的高度值.</li>
-  <li>根据具体情况灵活的开启 (<code>Gui +DPIScale</code>) 和关闭 (<code>Gui -DPIScale</code>) DPI 缩放比例设置. 更改这个设置并不会影响已经设置过的坐标或大小.</li>
-  <li>手动测量坐标. 例如, <code>x*(A_ScreenDPI/96)</code> 会将 x 从 Gui 坐标系(逻辑) 转换为 非 Gui 坐标系(物理).</li>
+    <li>尽量使用硬编码坐标系统. 例如, 使用类似 <a href="#xp">xp</a>, <a href="#xs">xs</a>, <a href="#xm">xm</a> 和 <a href="#PosPlusMargin">x+m</a> 选项设置控件的相对位置且用像素来设置<a href="#R">多行文本</a>的高度值.</li>
+    <li>根据具体情况灵活的开启 (<code>Gui +DPIScale</code>) 和关闭 (<code>Gui -DPIScale</code>) DPI 缩放比例设置. 更改这个设置并不会影响已经设置过的坐标或大小.</li>
+    <li>手动测量坐标. 例如, <code>x*(A_ScreenDPI/96)</code> 会将 x 从 Gui 坐标系(逻辑) 转换为 非 Gui 坐标系(物理).</li>
 </ul>
 <p id="GuiHwndOutputVar"><strong>Hwnd</strong><em>OutputVar</em> <span class="ver">[v1.1.04+]:</span> 此选项保存 GUI 的窗口句柄(HWND) 到 <em>OutputVar</em>. 例如: <code>Gui +HwndMyGuiHwnd</code>. 在函数中使用时, <em>MyGuiHwnd</em> 会被视为<a href="../Functions.htm#DynVar">函数动态变量</a>. GUI 的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall</a>. 它还可以直接作为 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a> 或代替 GUI 名称来使用, 例如 <code>Gui %MyGuiHwnd%:Destroy</code>.</p>
 <p id="PlusLabel"><strong>Label</strong> <span class="ver">[v1.0.44.09+]:</span> 为当前窗口的<a href="#Labels">特殊标签</a>指定自定义名称. 例如, <code>Gui MyGui:+LabelMyGui_On</code> 将使用标签 MyGui_OnClose 和 MyGui_OnSize(如果它们存在) 分别代替 MyGuiGuiClose 和 MyGuiGuiSize. 换句话说, 在所有<a href="#Labels">特殊标签</a>的名称中字符串 "MyGuiGui" 被替换为 "MyGui_On". 这可以让多个窗口使用一套相同的标签(此时脚本可以根据 <a href="../Variables.htm#Gui">A_Gui</a> 来确定运行子程序的窗口是哪个).</p>
@@ -216,8 +258,10 @@ Gui, MyGui:+Owner  <em>; 让 <i>MyGui</i> 成为<a href="Menu.htm#MainWindow">�
 <p><strong>(未命名样式)</strong>: 在十进制或十六进制的<a href="../misc/Styles.htm">样式编号</a>前加上加号或减号表示添加或删除此样式.</p>
 <p><strong>(未命名扩展样式)</strong>: 在字母 E 和十进制或十六进制的扩展样式编号前加上加号或减号表示添加或删除此扩展样式. 例如, <code>+E0x40000</code> 表示添加 WS_EX_APPWINDOW 样式, 此样式让窗口显示任务栏按钮. 尽管这里没有列出其他的扩展样式编号(因为它们极少使用), 不过可以通过在 <a href="http://www.microsoft.com">www.microsoft.com</a> 中搜索 WS_EX_APPWINDOW 找到它们.</p>
 
-<h2 id="Menu">Gui, Menu [, MenuName]</h2>
-<p>添加菜单栏到窗口. 使用 <a href="Menu.htm">Menu</a> 命令可以创建普通的菜单. 例如:</p>
+<h3 id="Menu">Menu</h3>
+<p>添加菜单栏到窗口.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Menu <span class="optional">, MenuName</span></pre>
+<p>使用 <a href="Menu.htm">Menu</a> 命令可以创建普通的菜单. 例如:</p>
 <pre>Menu, FileMenu, Add, &amp;Open<a href="_EscapeChar.htm">`t</a>Ctrl+O, MenuFileOpen  <em>; 关于 Ctrl+O 请参阅后面的备注.</em>
 Menu, FileMenu, Add, E&amp;xit, MenuHandler
 Menu, HelpMenu, Add, &amp;About, MenuHandler
@@ -230,21 +274,29 @@ Menu, MyMenuBar, Add, &amp;Help, :HelpMenu
 <p>一旦菜单被设置为窗口的菜单栏, 它就不能用于弹出菜单或子菜单. 这是因为菜单栏内部使用了不同的格式(不过, 这只限制菜单栏自身, 而不包括其子菜单). 如果您一定要这样实现, 那么先创建一个菜单用于菜单栏, 再创建另一个相同的菜单用于其他目的.</p>
 <p>对当前正用于菜单栏(在某些情况下包括其子菜单) 使用某些破坏性的 <a href="Menu.htm">menu 子命令</a>(例如 Delete 和 DeleteAll) 时, 这些命令会无效并显示错误对话框(可以使用 <a href="Menu.htm">UseErrorLevel</a> 来避免). 可以使用下列步骤改变窗口菜单栏中的菜单: 1) 使用 <code>Gui Menu</code>(省略 <em>MenuName</em>) 从窗口中分离菜单; 2) 改变菜单; 3) 使用 <code>Gui, Menu, MyMenuBar</code> 重新附加菜单到窗口.</p>
 
-<span id="Maximize"></span><span id="Restore"></span><span id="Hide"></span><h2 id="Minimize">Gui, Hide / Minimize / Maximize / Restore</h2>
-<p><code>Gui Hide</code> 相当于 <a href="#Cancel">Gui Cancel</a>. 其他三个命令则显示窗口, (必要时) 然后分别对窗口进行最小化/最大化/还原操作. 如果由于之前使用 <a href="#Destroy">Gui Destroy</a> 销毁了窗口或其他原因使得窗口不存在, 那么这些命令没有效果.</p>
+<div id="Restore"><div id="Maximize"><h3 id="Minimize">Minimize / Maximize / Restore</h3></div></div>
+<p>打开窗口(如果需要), 然后对其执行指定的操作.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Minimize
+<span class="func">Gui</span>, Maximize
+<span class="func">Gui</span>, Restore</pre>
+<p>如果该窗口不存在 -- 可能由于通过 <a href="#Destroy">Gui Destroy</a> 销毁了 -- 则该子命令无效.</p>
 
-<h2 id="Flash">Gui, Flash [, Off]</h2>
-<p>闪烁窗口的任务栏按钮. 这是通过反转窗口的标题栏和/或任务栏按钮(如果有) 的颜色实现的. 可以加上选项 OFF 让标题栏和任务栏按钮恢复到它们最初的颜色(但实际效果可能受操作系统版本影响). 在下面的例子中, 窗口将闪烁三次, 因为每对闪烁都会在对它们反转后恢复原来的外观:</p>
+<h3 id="Flash">Flash</h3>
+<p>闪烁窗口的任务栏按钮.</p>
+<pre class="Syntax"><span class="func">Gui</span>, Flash <span class="optional">, Off</span></pre>
+<p>这是通过反转窗口的标题栏和/或任务栏按钮(如果有) 的颜色实现的. 可以加上选项 OFF 让标题栏和任务栏按钮恢复到它们最初的颜色(但实际效果可能受操作系统版本影响). 在下面的例子中, 窗口将闪烁三次, 因为每对闪烁都会在对它们反转后恢复原来的外观:</p>
 <pre>Loop 6
 {
     Gui Flash
     Sleep 500  <em>; 这个时间值十分敏感, 改变它可能引起异常.</em>
 }</pre>
 
-<h2 id="Default">Gui, GuiName:Default</h2>
-<p>改变<a href="../misc/Threads.htm">当前线程</a>的默认 <a href="#MultiWin">GUI 窗口名称</a>, 这是在没有指定窗口名称时用于 <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a> 和 Gui 命令自身的默认窗口. 在后面的例子中, 默认窗口名称被改变为"MyGui": <code>Gui MyGui:Default</code>. 请参阅<a href="#DefaultWin">线程的默认窗口</a>了解关于默认窗口的更多细节.</p>
+<h3 id="Default">Default</h3>
+<p>改变<a href="../misc/Threads.htm">当前线程</a>的默认 <a href="#MultiWin">GUI 窗口名称</a>.</p>
+<pre class="Syntax"><span class="func">Gui</span>, GuiName:Default</pre>
+<p>这是在没有指定窗口名称时用于 <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a> 和 Gui 命令自身的默认窗口. 在接下来的例子中, 默认窗口名称被改变为 &quot;MyGui&quot;: <code>Gui MyGui:Default</code>. 请参阅<a href="#DefaultWin">线程的默认窗口</a>了解关于默认窗口的更多细节.</p>
 <p><span class="ver">[v1.1.03+]:</span> <em>GuiName</em> 可以是一个脚本的 GUI 窗口的 <a href="#GuiHwndOutputVar">HWND</a>. 如果窗口有一个名称, 它就会成为默认名称并且即使在窗口本身被销毁之后仍然是这样. 如果窗口没有名称, 当窗口被销毁时, 默认名称将恢复为 1.</p>
-<p><span class="ver">[v1.1.23+]:</span> 内置变量 <a href="../Variables.htm#DefaultGui">A_DefaultGui</a> 包含 默认GUI 的名称或数字.</p>
+<p><span class="ver">[v1.1.23+]:</span> 内置变量 <a href="../Variables.htm#DefaultGui"><strong>A_DefaultGui</strong></a> 包含默认 GUI 的名称或数字.</p>
 
 <h2 id="Position">使用 SmartGUI Creator 创建窗口布局</h2>
 <p>虽然下一段落中描述了简单的布局选项, 但您会发现使用 Rajat 的 SmartGUI Creator 来创建会更简单, 因为它是完全可视化的; 即 "所见即所得". SmartGUI Creator 是免费的, 可以从 <a href="http://www.autohotkey.com/docs/SmartGUI/">www.autohotkey.com/docs/SmartGUI/</a> 下载</p>
@@ -341,9 +393,9 @@ ExitApp</pre>
   2: 窗口被最大化了.</p>
 <p>脚本中可以使用 GuiSize 调整控件的大小和位置来响应用户对窗口大小的改变. 通过 <a href="https://autohotkey.com/boards/viewtopic.php?f=6&t=1079">AutoXYWH() by tmplinshi and toralf</a> 可以让这种处理更容易些.</p>
 <p>当窗口改变大小时(脚本发出的事件), GuiSize 不一定会立即响应. 类似其他窗口事件, 如果当前线程为<a href="Thread.htm#Interrupt">不可中断的</a>, GuiSize 直到线程变为可中断之前都不会响应. 如果脚本正在改变窗口大小, 下面的例子将确保 GuiSize 立即响应:</p>
-<pre><a href="Critical.htm#Off">Critical Off</a>  <em>; 无论是否设置过 Critical On.</em>
-<a href="Sleep.htm">Sleep -1</a></pre>
-<p><span class="ver">[v1.1.22.05+]:</span> Gui Show 会自动延迟一秒 <code>Sleep -1</code>, 所以通常无需再次使用 Sleep .</p>
+<pre><a href="Critical.htm#Off">Critical</a> Off  <em>; 无论是否设置过 Critical On.</em>
+<a href="Sleep.htm">Sleep</a> -1</pre>
+<p><span class="ver">[v1.1.22.05+]:</span> <a href="#Show">Gui Show</a> 会自动延迟一秒 <code>Sleep -1</code>, 所以通常无需再次使用 Sleep .</p>
 <p><span class="ver">[v1.1.20+]:</span> 如果 GuiSize 为函数, 它的参数应为:</p>
 <pre class="Syntax"><span class="func">GuiSize</span>(GuiHwnd, EventInfo, Width, Height)</pre>
 
@@ -371,23 +423,23 @@ ExitApp</pre>
 <p>要逐个提取每个文件, 请使用<a href="LoopParse.htm">解析循环</a>, 如下所示:
 </p>
 <pre><em>; 示例 #1:</em>
-Loop, parse, A_GuiEvent, `n
+Loop, Parse, A_GuiEvent, `n
 {
     MsgBox, 4,, File number %A_Index% is:`n%A_LoopField%.`n`nContinue?
-    IfMsgBox, No, Break
+    IfMsgBox, No, break
 }
 
 <em>; 示例 #2: 只要提取首个文件, 请参照此例:</em>
-Loop, parse, A_GuiEvent, `n
+Loop, Parse, A_GuiEvent, `n
 {
     FirstFile = %A_LoopField%
-    Break
+    break
 }
 
 <em>; 示例 #3: 要按照文件名的字母顺序处理文件, 请参照此例:</em>
-FileList = %A_GuiEvent%
+FileList := A_GuiEvent
 Sort, FileList
-Loop, parse, FileList, `n
+Loop, Parse, FileList, `n
     MsgBox File number %A_Index% is:`n%A_LoopField%.</pre>
 <p>要临时禁用窗口的拖放功能, 请使用 <code>Gui -E0x10</code> 移除 WS_EX_ACCEPTFILES 样式. 后面要重新启用, 请使用 <code>Gui +E0x10</code>.</p>
 <p><span class="ver">[v1.1.20+]:</span> 如果 GuiDropFiles 为函数, 它的参数应为下面例子中那样. <em>CtrlHwnd</em> 当文件在 GUI 上释放时为空. <em>FileArray</em> 为一个包含文件名称的 <a href="../Objects.htm#Usage_Simple_Arrays">数组(对象) </a>, 其中 <code>FileArray[1]</code> 为第一个文件而 <code>FileArray.MaxIndex()</code> 返回文件的数量. 使用 <a href="For.htm">for-循环</a> 可迭代枚举其中的文件:</p>
@@ -419,10 +471,12 @@ GuiClose:
 ButtonCancel:
 ExitApp  <em>; 上面的所有标签都会执行这个语句.</em></pre>
 <p>所有的 GUI <a href="../misc/Threads.htm">线程</a>都会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a>. 这些默认值可以在<a href="../Scripts.htm#auto">自动执行段</a>改变.</p>
+
 <h2 id="Navigate">键盘导航</h2>
 <p>使用  <kbd>Tab</kbd> 键可以在 GUI 窗口中导航, 它会移动键盘焦点到下一个可输入型控件中(跳过移除了 <a href="#Tabstop">Tabstop</a> 样式的控件). 导航的顺序由控件添加的顺序决定. 当首次显示一个窗口时, 键盘焦点将在首个具有 Tabstop 样式(默认情况下大多数类型的控件都具有) 的可输入型控件上.</p>
 <p id="ShortcutKey">可以在某些控件的名称中包含和符号(&amp;) 来创建此控件的键盘快捷键, 在控件名称中的快捷键字母会加上下划线显示(取决于系统设置). 用户可以通过按下 <kbd>Alt</kbd> 键和相应的字符来触发这样的快捷键. 对于按钮, 复选框和单选按钮, 按下相应的快捷键等于点击了按钮. 对于 GroupBox 和 Text 控件, 按下相应的快捷键则移动键盘焦点到此控件后(不是指位置, 是创建顺序) 首个具有 <a href="#Tabstop">tabstop</a> 样式的可输入型控件中. 然而, 如果多个控件含有相同的快捷键, 则按下此快捷键会让键盘焦点在这些控件中交替.</p>
 <p>要在上面提及类型的控件中显示一个原义的和符号, 请指定两个连续的和符号, 例如: <code>Save &amp;&amp; Exit</code>.</p>
+
 <h2 id="Appear">窗口外观</h2>
 <p>GUI 窗口使用托盘图标作为其窗口图标是在窗口创建时生效. 因此, 如果要使用不同的图标, 需要在创建窗口前改变托盘图标. 例如: <code><a href="Menu.htm">Menu</a>, Tray, Icon, MyIcon.ico</code>. 还可以让窗口拥有一个不同的大图标而不用这个小图标(大图标显示在 alt-tab 任务切换器中). 这个功能可以通过 LoadPicture 和 SendMessage 来实现; 例如:</p>
 <pre>iconsize := 32  <em>; alt-tab 任务切换器中图标的理想尺寸在不同版本的系统中有所不同.</em>
@@ -441,22 +495,26 @@ Gui +LastFound
 </pre>
 <p>由于操作系统的限制, 在 Windows XP 以及更高版本中, Checkbox, Radio 和 GroupBox 控件中的文本不是使用默认颜色时将显示为经典主题外观.</p>
 <p>相关主题: <a href="#Margin(边距)">窗口边距</a>.</p>
+
 <h2 id="GenRemarks">一般说明</h2>
 <p>使用 <a href="GuiControl.htm">GuiControl</a> 和 <a href="GuiControlGet.htm">GuiControlGet</a> 可以单独对 GUI 窗口中的控件进行操作.</p>
 <p>每个 GUI 窗口最多可以包含 11,000 个控件. 然而, 当控件数量超过 5000 时需要谨慎, 因为此时某些类型的控件可能让系统不稳定.</p>
 <p>使用 GUI 命令的任何脚本会自动成为<a href="_Persistent.htm">持续运行的</a>(即使 GUI 命令实际从未执行过). 同时也会单实例运行, 除非使用 <a href="_SingleInstance.htm">#SingleInstance</a> 覆盖了默认设置.</p>
+
 <h2>相关</h2>
 <p><a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="Menu.htm">Menu</a>, <a href="GuiControls.htm">控件类型</a>, <a href="ListView.htm">ListView</a>, <a href="TreeView.htm">TreeView</a>, <a href="Control.htm">Control</a>, <a href="ControlGet.htm">ControlGet</a>, <a href="Progress.htm">SplashImage</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a>, <a href="FileSelectFolder.htm">FileSelectFolder</a></p>
-<h2 id="Examples">示例</h2>
-<pre class="NoIndent"><em>; 示例: 实现类似 SplashTextOn 的效果:</em>
 
-Gui, +AlwaysOnTop +Disabled -SysMenu +Owner  <em>; +Owner 避免显示任务栏按钮.</em>
+<h2 id="Examples">示例</h2>
+
+<h4 id="ex1">示例 #1</h4>
+<p>实现类似 <a href="SplashTextOn.htm">SplashTextOn</a> 的效果:</p>
+<pre class="NoIndent">Gui, +AlwaysOnTop +Disabled -SysMenu +Owner  <em>; +Owner 避免显示任务栏按钮.</em>
 Gui, Add, Text,, Some text to display.
 Gui, Show, NoActivate, Title of Window  <em>; NoActivate 让当前活动窗口继续保持活动状态.</em></pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例: 要求输入姓名的简单输入框:</em>
 
-Gui, Add, Text,, First name:
+<h4 id="ex2">示例 #2</h4>
+<p>要求输入姓名的简单输入框:</p>
+<pre class="NoIndent">Gui, Add, Text,, First name:
 Gui, Add, Text,, Last name:
 Gui, Add, Edit, vFirstName ym  <em>; ym 选项开始一个新的控件列.</em>
 Gui, Add, Edit, vLastName
@@ -469,10 +527,10 @@ ButtonOK:
 Gui, Submit  <em>; 保存用户的输入到每个控件的关联变量中.</em>
 MsgBox You entered "%FirstName% %LastName%".
 ExitApp</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例: 选项卡控件:</em>
 
-Gui, Add, Tab2,, First Tab|Second Tab|Third Tab  <em>; Tab2 比起 Tab 需要 <span class="ver">[v1.0.47.05+]</span>.</em>
+<h4 id="ex3">示例 #3</h4>
+<p>创建带有多个选项卡的选项卡控件, 每个选项卡包含不同的控件与之交互:</p>
+<pre class="NoIndent">Gui, Add, Tab2,, First Tab|Second Tab|Third Tab  <em>; Tab2 比起 Tab 需要 <span class="ver">[v1.0.47.05+]</span>.</em>
 Gui, Add, Checkbox, vMyCheckbox, Sample checkbox
 Gui, Tab, 2
 Gui, Add, Radio, vMyRadio, Sample radio1
@@ -490,10 +548,10 @@ GuiEscape:
 Gui, Submit  <em>; 保存每个控件的内容到其关联变量中.</em>
 MsgBox You entered:`n%MyCheckbox%`n%MyRadio%`n%MyEdit%
 ExitApp</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例: 显示一个目录中的文件的列表框:</em>
 
-Gui, Add, Text,, Pick a file to launch from the list below.`nTo cancel, press ESCAPE or close this window.
+<h4 id="ex4">示例 #4</h4>
+<p>显示一个目录中的文件的列表框:</p>
+<pre class="NoIndent">Gui, Add, Text,, Pick a file to launch from the list below.`nTo cancel, press ESCAPE or close this window.
 Gui, Add, ListBox, vMyListBox gMyListBox w640 r10
 Gui, Add, Button, Default, OK
 Loop, C:\*.*  <em>; 根据您的需要改变此文件和通配符模式.</em>
@@ -522,10 +580,10 @@ return
 GuiClose:
 GuiEscape:
 ExitApp</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent" id="ExToolTip"><em>; 示例: 当鼠标移动到特定的控件上时显示相关帮助(使用工具提示):</em>
 
-Gui, Add, Edit, v<strong>MyEdit</strong>
+<h4 id="ex5">示例 #5</h4>
+<p>当鼠标移动到特定的控件上时显示相关帮助(使用工具提示):</p>
+<pre class="NoIndent" id="ExToolTip">Gui, Add, Edit, v<strong>MyEdit</strong>
 <strong>MyEdit</strong>_TT := &quot;This is a tooltip for the control whose variable is MyEdit.&quot;
 Gui, Add, DropDownList, v<strong>MyDDL</strong>, Red|Green|Blue
 <strong>MyDDL</strong>_TT := &quot;Choose a color from the drop-down list.&quot;
@@ -558,13 +616,12 @@ WM_MOUSEMOVE()
     return
 }
 
-
 GuiClose:
 ExitApp</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent" id="OSD"><em>; 示例: 使用透明窗口进行屏幕显示 (OSD):</em>
 
-CustomColor = EEAA99  <em>; 可以为任意 RGB 颜色 (在下面会被设置为透明).</em>
+<h4 id="ex6">示例 #6</h4>
+<p>使用透明窗口进行屏幕显示(OSD):</p>
+<pre class="NoIndent" id="OSD">CustomColor := "EEAA99"  <em>; 可以为任意 RGB 颜色(在下面会被设置为透明)).</em>
 Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  <em>; +ToolWindow 避免显示任务栏按钮和 alt-tab 菜单项.</em>
 Gui, Color, %CustomColor%
 Gui, Font, s32  <em>; 设置大字体 (32 磅).</em>
@@ -580,10 +637,10 @@ UpdateOSD:
 MouseGetPos, MouseX, MouseY
 GuiControl,, MyText, X%MouseX%, Y%MouseY%
 return</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例: 在背景图像上移动的进度条.</em>
 
-Gui, Color, White
+<h4 id="ex7">示例 #7</h4>
+<p>在背景图像上移动的进度条:</p>
+<pre class="NoIndent">Gui, Color, White
 Gui, Add, Picture, x0 y0 h350 w450, %A_WinDir%\system32\ntimage.gif
 Gui, Add, Button, Default xp+20 yp+250, Start the Bar Moving
 Gui, Add, Progress, vMyProgress w416
@@ -605,10 +662,10 @@ return
 
 GuiClose:
 ExitApp</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例: 简单的图像查看器:</em>
 
-Gui, +Resize
+<h4 id="ex8">示例 #8</h4>
+<p>简单的图像查看器:</p>
+<pre class="NoIndent">Gui, +Resize
 Gui, Add, Button, default, &amp;Load New Image
 Gui, Add, Radio, ym+5 x+10 vRadio checked, Load &amp;actual size
 Gui, Add, Radio, ym+5 x+10, Load to &amp;fit screen
@@ -618,18 +675,18 @@ return
 
 ButtonLoadNewImage:
 FileSelectFile, file,,, Select an image:, Images (*.gif; *.jpg; *.bmp; *.png; *.tif; *.ico; *.cur; *.ani; *.exe; *.dll)
-if file =
+if not file
     return
 Gui, Submit, NoHide <em>; 保存单选按钮的值.</em>
-if Radio = 1  <em>; 按实际大小显示图像.</em>
+if (Radio = 1)  <em>; 按实际大小显示图像.</em>
 {
-    Width = 0
-    Height = 0
+    Width := 0
+    Height := 0
 }
 else <em>; 选择了第二个单选按钮: 按照屏幕的大小显示图像.</em>
 {
     Width := A_ScreenWidth - 28  <em>; 减去的 28 是用来显示边框和内边缘的空间.</em>
-    Height = -1  <em>; "保持高宽比" 应该是最好的.</em>
+    Height := -1  <em>; "保持高宽比" 应该是最好的.</em>
 }
 GuiControl,, Pic, *w%width% *h%height% %file%  <em>; 载入图像.</em>
 Gui, Show, xCenter y0 AutoSize, %file%  <em>; 调整窗口以适合图片尺寸.</em>
@@ -637,10 +694,10 @@ return
 
 GuiClose:
 ExitApp</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例: 含菜单栏的简单文本编辑器.</em>
 
-<em>; 为菜单栏创建子菜单:</em>
+<h4 id="ex9">示例 #9</h4>
+<p>带有菜单栏的简单文本编辑器:</p>
+<pre class="NoIndent"><em>; 为菜单栏创建子菜单:</em>
 Menu, FileMenu, Add, &amp;New, FileNew
 Menu, FileMenu, Add, &amp;Open, FileOpen
 Menu, FileMenu, Add, &amp;Save, FileSave
@@ -660,7 +717,7 @@ Gui, Menu, MyMenuBar
 Gui, +Resize  <em>; 让用户可以调整窗口的大小.</em>
 Gui, Add, Edit, vMainEdit WantTab W600 R20
 Gui, Show,, Untitled
-CurrentFileName =  <em>; 表示当前没有文件.</em>
+CurrentFileName :=""  <em>; 表示当前没有文件.</em>
 return
 
 FileNew:
@@ -670,7 +727,7 @@ return
 FileOpen:
 Gui +OwnDialogs  <em>; 强制用户响应 FileSelectFile 对话框后才能返回到主窗口.</em>
 FileSelectFile, SelectedFileName, 3,, Open File, Text Documents (*.txt)
-if SelectedFileName =  <em>; 没有选择文件.</em>
+if not SelectedFileName   <em>; 没有选择文件.</em>
     return
 Gosub FileRead
 return
@@ -683,12 +740,12 @@ if ErrorLevel
     return
 }
 GuiControl,, MainEdit, %MainEdit%  <em>; 在控件中显示文本.</em>
-CurrentFileName = %SelectedFileName%
+CurrentFileName := SelectedFileName
 Gui, Show,, %CurrentFileName%   <em>; 在标题栏显示文件名.</em>
 return
 
 FileSave:
-if CurrentFileName =   <em>; 还没有选择文件, 所以执行另存为操作.</em>
+if not CurrentFileName   <em>; 还没有选择文件, 所以执行另存为操作.</em>
     Goto FileSaveAs
 Gosub SaveCurrentFile
 return
@@ -696,14 +753,14 @@ return
 FileSaveAs:
 Gui +OwnDialogs  <em>; 强制用户响应 FileSelectFile 对话框后才能返回到主窗口.</em>
 FileSelectFile, SelectedFileName, S16,, Save File, Text Documents (*.txt)
-if SelectedFileName =  <em>; 没有选择文件.</em>
+if not SelectedFileName <em>; 没有选择文件.</em>
     return
-CurrentFileName = %SelectedFileName%
+CurrentFileName := SelectedFileName
 Gosub SaveCurrentFile
 return
 
 SaveCurrentFile:  <em>; 调用者已经确保了 CurrentFileName 不为空.</em>
-IfExist %CurrentFileName%
+if FileExist(CurrentFileName%)
 {
     FileDelete %CurrentFileName%
     if ErrorLevel
@@ -736,14 +793,14 @@ return
 GuiDropFiles:  <em>; 对拖放提供支持.</em>
 Loop, Parse, A_GuiEvent, `n
 {
-    SelectedFileName = %A_LoopField%  <em>; 仅获取首个文件 (如果有多个文件的时候).</em>
+    SelectedFileName := A_LoopField  <em>; 仅获取首个文件 (如果有多个文件的时候).</em>
     break
 }
 Gosub FileRead
 return
 
 GuiSize:
-if ErrorLevel = 1  <em>; 窗口被最小化了. 无需进行操作.</em>
+if (ErrorLevel = 1)  <em>; 窗口被最小化了. 无需进行操作.</em>
     return
 <em>; 否则, 窗口的大小被调整过或被最大化了. 调整编辑控件的大小以匹配窗口.</em>
 NewWidth := A_GuiWidth - 20
