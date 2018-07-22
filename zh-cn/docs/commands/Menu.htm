@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Menu</title>
+<title>Menu | AutoHotkey</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,104 +12,248 @@
 <h1>Menu</h1>
 
 <p>创建, 删除, 修改和显示菜单和菜单项. 改变托盘图标和它的提示. 控制是否可以打开<a href="Scripts.htm#ahk2exe">已编译脚本</a>的主窗口.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value1, Value2, Value3, Value4</span></pre>
+<p><em>MenuName</em> 参数可以是 <code>Tray</code> 或任何自定义菜单的名称. 自定义菜单在第一次使用 <a href="#Add">Add</a> 子命令时自动创建. 例如: <code>Menu, MyMenu, Add, Item1</code>. 创建后, 可以使用 <a href="#Show">Show</a> 子命令显示自定义菜单. 它也可以通过 <a href="#Add">Add</a> 子命令作为子菜单附加到一个或多个其他菜单上.</p>
+<p><em>SubCommand</em>, <em>Value1</em>, <em>Value2</em>, <em>Value3</em> 和 <em>Value4</em> 参数相互依赖, 它们的用法如下所述.</p>
 
-<pre class="Syntax"><span class="func">Menu</span>, MenuName, Cmd <span class="optional">, P3, P4, P5</span></pre>
-<h3>参数</h3>
-<dl>
+<h2 id="toc">目录</h2>
+<ul>
+    <li><a href="#SubCommands">子命令</a></li>
+    <li><a href="#MenuItemName"><em>MenuItemName</em> 参数</a></li>
+    <li><a href="#Win32_Menus">Win32 菜单</a></li>
+    <li><a href="#Remarks">备注</a></li>
+    <li><a href="#Related">相关</a></li>
+    <li><a href="#Examples">示例</a></li>
+</ul>
 
-  <dt>MenuName</dt>
-  <dd><p>它可以为 TRAY 或任何自定义菜单的名称. 首次和 <em>Add</em> 命令一起使用自定义菜单的名称时会自动创建此菜单. 例如: <code>Menu, MyMenu, Add, Item1</code>.</p>
-      <p>创建后, 可以用 <em>Show</em> 命令显示自定义菜单. 通过 <em>Add</em> 命令还可以把它作为子菜单附加到一个或更多的其他菜单上.</p></dd>
+<h2 id="SubCommands">子命令</h2>
+<p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
+<ul>
+    <li><a href="#Add">Add</a>: 添加一个菜单项, 用一个新的子菜单或标签更新一个菜单项, 或把普通菜单转换成子菜单(或相反).</li>
+    <li><a href="#Insert">Insert</a> <span class="ver">[v1.1.23+]</span>: 在指定的菜单项前插入一个新的菜单项.</li>
+    <li><a href="#Delete">Delete</a>: 从菜单中删除指定的菜单项.</li>
+    <li><a href="#DeleteAll">DeleteAll</a>: 从菜单中删除所有自定义菜单项.</li>
+    <li><a href="#Rename">Rename</a>: 重命名指定的菜单项.</li>
+    <li><a href="#Check">Check</a>: 在指定的菜单项前添加复选标记.</li>
+    <li><a href="#Uncheck">Uncheck</a>: 从指定的菜单项中删除复选标记.</li>
+    <li><a href="#ToggleCheck">ToggleCheck</a>: 向指定的菜单项添加一个复选标记; 如果已经有了, 则删除它.</li>
+    <li><a href="#Enable">Enable</a>: 启用指定的菜单项(如果之前已禁用).</li>
+    <li><a href="#Disable">Disable</a>: 禁用指定的菜单项.</li>
+    <li><a href="#ToggleEnable">ToggleEnable</a>: 禁用指定的菜单项; 如果已经禁用, 则启用.</li>
+    <li><a href="#Default">Default</a>: 将菜单的默认项更改为指定的菜单项, 并使其字体加粗.</li>
+    <li><a href="#NoDefault">NoDefault</a>: 反向设置用户定义的默认菜单项.</li>
+    <li><a href="#Standard">Standard</a>: 在菜单底部插入标准菜单项.</li>
+    <li><a href="#NoStandard">NoStandard</a>: 从菜单中删除所有标准菜单项.</li>
+    <li><a href="#Icon">Icon</a>: 更改脚本的托盘图标或 <span class="ver">[AHK_L 17+]</span> 设置指定菜单项的图标.</li>
+    <li><a href="#NoIcon">NoIcon</a>: 删除托盘图标或 <span class="ver">[AHK_L 17+]</span> 从指定的菜单项中删除图标.</li>
+    <li><a href="#Tip">Tip</a>: 更改托盘图标的工具提示.</li>
+    <li><a href="#Show">Show</a>: 显示指定的菜单.</li>
+    <li><a href="#Color">Color</a>: 改变菜单的背景颜色.</li>
+    <li><a href="#Click">Click</a>: 设置点击次数以激活托盘菜单的默认菜单项.</li>
+    <li><a href="#MainWindow">MainWindow</a>: 允许通过托盘图标打开已编译脚本的主窗口.</li>
+    <li><a href="#NoMainWindow">NoMainWindow</a>: 防止编译脚本的主窗口通过托盘图标打开.</li>
+    <li><a href="#UseErrorLevel">UseErrorLevel</a>: 当菜单命令生成错误时, 跳过任何警告对话框和线程终止.</li>
+</ul>
 
-  <dt>Cmd, P3, P4, P5</dt>
-  <dd><p>这 4 个参数彼此依赖. 请参阅下表了解允许的组合.</p></dd>
-  
-  <dt>MenuItemName</dt>
-  <dd>
-    <p>菜单项的名称或位置. 一些适用于此参数的规则同样适用于所有使用此参数的子命令:</p>
-    <p>要为菜单项名称的某个字母加下划线, 在这个字母前加一个 &amp; 号. 当菜单显示出来时, 此项可以通过按键盘上对应的按键来选中. 要显示原义的 &amp; 号像这样指定连续的两个 &amp; 号: <code>Save &amp;&amp; Exit</code> .</p>
-    <p>当引用到一个已存在的菜单或菜单项时, 其名称不区分大小写但 &amp; 号不能少, 例如: <code>&amp;Open</code> .</p>
-    <p><span class="ver">[v1.1.23+]:</span> 要通过在菜单中的位置确定一个菜单项, 写下该菜单项的位置并尾随一个 &amp; 号. 例如, <code>1&amp;</code> 表示第一个菜单项.</p>
-  </dd>
-
-</dl>
-
-<h2>添加或改变菜单项</h2>
-<p><strong>Add [, MenuItemName, Label-or-Submenu, Options]</strong>: 此命令有多种用途, 包括添加菜单项, 使用新的子菜单或标签更新菜单项或把普通菜单转换成子菜单(或相反). 如果 <em>MenuItemName</em> 还不存在, 则把它添加到菜单. 否则, 将使用新指定的 <em>Label-or-Submenu</em> 更新 <em>MenuItemName</em>.</p>
+<h3 id="Add">Add</h3>
+<p>添加一个菜单项, 用一个新的子菜单或标签更新一个菜单项, 或把普通菜单转换成子菜单(或相反).</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Add <span class="optional">, MenuItemName, LabelOrSubmenu, Options</span></pre>
+<p>这是一个多用途子命令. <em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>). 如果 <em>MenuItemName</em> 还不存在, 则把它添加到菜单. 否则, 将使用新指定的 <em>LabelOrSubmenu</em> 更新 <em>MenuItemName</em>.</p>
 <p>要添加菜单分隔线, 请省略所有三个参数.</p>
-<p>当用户选择菜单项时, 标签子程序作为新<a href="../misc/Threads.htm">线程</a>运行(类似于 <a href="Gosub.htm">Gosub</a> 和<a href="../Hotkeys.htm">热键子程序</a>). 如果省略 <em>Label-or-Submenu</em>, 那么将使用 <em>MenuItemName</em> 同时作为标签和菜单项的名称.</p>
-<p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不存在这个名称的标签, 那么 <em>Label-or-Submenu</em> 可以是一个函数对象的名称, 或是引用某个<a href="../objects/Functor.htm">函数对象</a>的变量. 例如 , <code>%funcObj%</code> 或 <code>% funcObj</code>. 目前暂不支持其他表达式返回对象. 另外还可以定义函数可选参数, 例如:</p>
+<p>当用户选择菜单项时, 标签子程序作为新<a href="../misc/Threads.htm">线程</a>运行(类似于 <a href="Gosub.htm">Gosub</a> 和<a href="../Hotkeys.htm">热键子程序</a>). 如果省略 <em>LabelOrSubmenu</em>, 那么将使用 <em>MenuItemName</em> 同时作为标签和菜单项的名称.</p>
+<p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不存在这个名称的标签, 那么 <em>LabelOrSubmenu</em> 可以是一个函数对象的名称, 或是引用某个<a href="../objects/Functor.htm">函数对象</a>的变量. 例如 , <code>%funcObj%</code> 或 <code>% funcObj</code>. 目前暂不支持其他表达式返回对象. 另外还可以定义函数可选参数, 例如:</p>
 <pre class="Syntax"><i>FunctionName</i>(ItemName, ItemPos, MenuName)</pre>
-<p>要让 <em>MenuItemName</em> 变成子菜单(在选择时打开新菜单的菜单项), 请在 <em>Label-or-Submenu</em> 中指定冒号后面跟着现有自定义菜单的 <em>MenuName</em>. 例如:</p>
-<pre>Menu, MySubmenu, add, Item1
-Menu, tray, add, This Menu Item Is A Submenu, :MySubmenu</pre>
-<p>如果不省略, <em>选项</em> 必须是包含一个或多个下列选项并以空格或制表符分隔的列表:</p>
+<p>要让 <em>MenuItemName</em> 变成子菜单(在选择时打开新菜单的菜单项), 请在 <em>LabelOrSubmenu</em> 中指定冒号后面跟着现有自定义菜单的 <em>MenuName</em>. 例如:</p>
+<pre>Menu, MySubmenu, Add, Item1
+Menu, Tray, Add, This menu item is a submenu, :MySubmenu</pre>
+<p>如果不省略, <em>Options</em> 必须是包含一个或多个下列选项并以空格或制表符分隔的列表:</p>
 <table class="info">
-  <tr><td>P<em>n</em></td>
-  <td><em>n</em> 代表菜单项的<a href="../misc/Threads.htm">进程优先级</a>, 如 <code>P1</code>. 如果在添加菜单项时省略此选项, 其优先级将会是默认的 0 . 如果在更新菜单项时省略此选项, 其优先级不变. 用十进制数字(非十六进制) 表示优先级.</td></tr>
-  <tr><td>+Radio</td>
-  <td><span class="ver">[v1.1.23+]:</span> 选中菜单项时显示的是一个空心圆而不是打勾标志.</td></tr>
-  <tr><td>+Right</td>
-  <td><span class="ver">[v1.1.23+]:</span> 让菜单栏中的菜单项右对齐. 此选项仅适用于<a href="Gui.htm#Menu">菜单栏</a>而不是弹出式菜单或子菜单.</td></tr>
-  <tr><td>+Break</td>
-  <td><span class="ver">[v1.1.23+]:</span> 让弹出式菜单中的菜单项以新的一列开始.</td></tr>
-  <tr><td>+BarBreak</td>
-  <td><span class="ver">[v1.1.23+]:</span> 作用同上, 不过该选项会在列之间加分隔线.</td></tr>
+    <tr>
+        <td>P<em>n</em></td>
+        <td><em>n</em> 代表菜单项的<a href="../misc/Threads.htm">线程优先级</a>, 如 <code>P1</code>. 如果在添加菜单项时省略此选项, 其优先级将会是默认的 0 . 如果在更新菜单项时省略此选项, 其优先级不变. 用十进制数字(不是十六进制) 表示优先级.</td>
+    </tr>
+    <tr>
+        <td>+Radio</td>
+  <td><span class="ver">[v1.1.23+]:</span> 选中菜单项时显示的是一个空心圆而不是打勾标志.</td>
+    </tr>
+    <tr>
+        <td>+Right</td>
+        <td><span class="ver">[v1.1.23+]:</span> 让菜单栏中的菜单项右对齐. 此选项仅适用于<a href="Gui.htm#Menu">菜单栏</a>而不是弹出式菜单或子菜单.</td>
+    </tr>
+    <tr>
+        <td>+Break</td>
+        <td><span class="ver">[v1.1.23+]:</span> 让弹出式菜单中的菜单项以新的一列开始.</td>
+    </tr>
+    <tr>
+        <td>+BarBreak</td>
+        <td><span class="ver">[v1.1.23+]:</span> 作用同上, 不过该选项会在列之间加分隔线.</td>
+    </tr>
 </table>
 <p>选项中的加号(+) 是可选的也可以用减号(-) 代替用以移除某个选项, 就像 <code>-Radio</code> . 选项不区分大小写.</p>
-<p>为了不影响菜单项的标签或子菜单, 在改变一个已存在的菜单项的选项时直接忽略 <em>Label-or-Submenu</em> 参数即可.</p>
-<p id="Insert"><strong>Insert [, ItemToInsertBefore, NewItemName, Label-or-Submenu, Options]</strong> <span class="ver">[v1.1.23+]</span>: 在指定的菜单项前插入一个新的菜单项. 其用法同上面的 <em>Add</em> , 多出来的 <em>ItemToInsertBefore</em> 参数代表一个已存在的菜单项名称或介于1和<a href="MenuGetHandle.htm#Examples">当前菜单项数目</a>+1 之间的位置序号(位置&amp;). 也可以用忽略 <em>ItemToInsertBefore</em>(连写两个逗号) 的方式追加菜单项. 与 <em>Add</em> 不同, <em>Insert</em> 在 <em>NewItemName</em> 和已有菜单项同名的情况下仍可以创建新的菜单项.</p>
-<p id="Delete"><strong>Delete [, MenuItemName]</strong>: 从菜单中删除 <em>MenuItemName</em> . 标准菜单项例如 Exit(请参阅下面) 不能被单独删除. 如果删除了 <em>默认</em> 菜单项, 则效果与使用 <em>NoDefault</em> 选项类似. 如果省略了 <em>MenuItemName</em>, 则会删除整个 <em>MenuName</em> 以及在其他菜单中名称为 <em>MenuName</em> 的任何子菜单项. 删除一个菜单也会导致当前 <a href="#Win32_Menus">Win32 菜单</a>的父菜单和子菜单被销毁, 之后在需要时才能被重新创建.</p>
-<p id="DeleteAll"><strong>DeleteAll</strong>: 从菜单中删除所有自定义菜单项, 当不包含 <em>标准</em> 菜单项(请参阅下面) 时则让菜单留空. 与使用 <em>Delete</em> 命令(请参阅上面) 完全删除菜单不同, 此时仍然存在一个空菜单, 因此其他任何包含此菜单项作为子菜单的菜单仍保留这些子菜单.</p>
-<p><strong>Rename, MenuItemName [, NewName]</strong>: 改变 <em>MenuItemName</em> 为 <em>NewName</em>(如果 <em>NewName</em> 为空, 则 <em>MenuItemName</em> 会变为分隔线). 菜单项的当前目标标签或子菜单不会改变. <span class="ver">[v1.1.23+]:</span> 可通过指定分隔线的 <em>位置&amp;</em> 和一个非空的 <em>NewName</em> 的方式将分隔线转换成正常的菜单项, 随后使用 <em>Add</em> 命令为其指定一个标签或子菜单.</p>
-<p><strong>Check, MenuItemName</strong>: 在 <em>MenuItemName</em> 前添加复选标记(如果还没有).</p>
-<p><strong>Uncheck, MenuItemName</strong>: 从 <em>MenuItemName</em> 中移除复选标记(如果有).</p>
-<p><strong>ToggleCheck, MenuItemName</strong>: 如果没有复选标记则进行添加; 否则移除它.</p>
-<p><strong>Enable, MenuItemName</strong>: 允许用户再次选择之前禁用(灰色) 的 <em>MenuItemName</em>.</p>
-<p><strong>Disable, MenuItemName</strong>: 把 <em>MenuItemName</em> 变成灰色以指示用户无法选择它.</p>
-<p><strong>ToggleEnable, MenuItemName</strong>: 禁用之前启用的 <em>MenuItemName</em>; 否则启用它.</p>
-<p><strong>Default [, MenuItemName]</strong>: 改变菜单的默认项为 <em>MenuItemName</em> 并加粗其字体(当前在 TRAY 以外的菜单中设置默认项只是改变外观而没有其他作用). 当用户双击托盘图标时, 会运行其默认菜单项. 如果没有默认项, 则双击没有效果. 如果省略了 <em>MenuItemName</em>, 则效果等同于使用了下面的 <em>NoDefault</em>.</p>
-<p><strong>NoDefault</strong>: 对于托盘菜单: 让菜单恢复其默认菜单项, 对于未编译脚本为 OPEN 而对于<a href="Scripts.htm#ahk2exe">已编译脚本</a>则没有(除非 <em>MainWindow</em> 选项有效). 如果因为之前使用了下面的 NoStandard 命令使得 OPEN 菜单项不存在, 那么将没有默认菜单项, 因此双击托盘图标没有效果. 对于 TRAY 以外的其他菜单: 任何现有的默认项恢复为非加粗字体.</p>
-<p><strong>Standard</strong>: 在菜单底部插入标准菜单项(如果还不存在). 此命令可用于托盘菜单或其他任何菜单.</p>
-<p><strong>NoStandard</strong>: 从托盘菜单移除所有标准(非自定义)的菜单项(如果存在).</p>
-<h2 id="MenuIcon">设置或移除菜单项的图标 <span class="ver">[AHK_L 17+]</span></h2>
-<p><strong>Icon, MenuItemName, FileName [, IconNumber, IconWidth]</strong>: 设置 <em>MenuItemName</em> 的图标. <em>FileName</em> 可以为图标文件或 AutoHotkey 支持的格式的任何图像. 要使用文件中的图标组而不是首个图标, 请在 <em>IconNumber</em> 指定它的编号(如果省略, 则它默认为 1). 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在 <em>IconWidth</em> 中指定期望的图标宽度. 如果 <em>IconNumber</em> 表示的图标组包含多种大小的图标, 则使用最接近的匹配并将图标缩放到指定的大小. 请参阅示例部分的用法示例.</p>
-<p>当前在 Windows Vista 和更高版本中如果需要被设置的图标保留透明度时, 则必须指定 "真实的大小". 例如:</p>
-<pre>Menu, MenuName, Icon, MenuItemName, Filename.png,, 0</pre>
-<p>已知限制: 在 Windows XP 和更早版本中, Gui 菜单栏中的图标无法放置到正确的位置.</p>
-<p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">bitmap(位图) 或 icon(图标) 句柄</a>可替代文件名. 例如, <code>HBITMAP:%handle%</code>.</p>
-<p><strong>NoIcon, MenuItemName</strong>: 移除 <em>MenuItemName</em> 的图标(如果有).</p>
-<h2>改变托盘图标或工具提示 <span class="ver">(<em>MenuName</em> 必须为 TRAY)</span></h2>
-<p id="Icon"><strong>Icon [, FileName, IconNumber, 1]</strong>: 改变脚本的<a href="Program.htm#tray-icon">托盘图标</a>为 <em>FileName</em> 中的某个图标. 支持下列的文件类型: ICO, CUR, ANI, EXE, DLL, CPL, SCR 以及包含图标资源的其他类型. 要使用文件中的图标组而不是首个图标, 请在 <em>IconNumber</em> 指定它的编号(如果省略, 则它默认为 1). 例如, <strong>2</strong> 将加载第二个图标组中的默认图标. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在 <em>FileName</em> 指定星号(*)来恢复脚本到其默认图标.</p>
+<p>为了不影响菜单项的标签或子菜单, 在改变一个已存在的菜单项的选项时直接忽略 <em>LabelOrSubmenu</em> 参数即可.</p>
+
+<h3 id="Insert">Insert <span class="ver">[v1.1.23+]</span></h3>
+<p>在指定的菜单项前插入一个新的菜单项.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Insert <span class="optional">, MenuItemName, ItemToInsertBefore, LabelOrSubmenu, Options</span></pre>
+<p>用法同上面的 <a href="#Add">Add</a> 子命令, 除了 <em>MenuItemName</em> 始终是现有菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>), <em>ItemToInsertBefore</em> 是要在 <em>MenuItemName</em> 之前插入的新菜单项的名称. 菜单项也可以通过忽略 <em>MenuItemName</em>(连写两个逗号) 的方式追加. 与 <a href="#Add">Add</a> 子命令不同, Insert 子命令创建一个新的菜单项, 即使 <em>ItemToInsertBefore</em> 与现有菜单项的名称匹配.</p>
+
+<h3 id="Delete">Delete</h3>
+<p>从菜单中删除指定的菜单项.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Delete <span class="optional">, MenuItemName</span></pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>). 标准菜单项例如 "Exit"(请参阅下面) 不能被单独删除. 如果删除了 <em>default</em> 菜单项, 则效果与使用了 <a href="#NoDefault">NoDefault</a> 子命令类似. 如果省略了  <em>MenuItemName</em>, 则会删除整个 <em>MenuName</em> 菜单以及在其他菜单中名称为 <em>MenuName</em> 的任何子菜单项. 删除菜单还会导致当前 <a href="#Win32_Menus">Win32 菜单</a>的父菜单和子菜单的被销毁, 之后在需要时重新创建.</p>
+
+<h3 id="DeleteAll">DeleteAll</h3>
+<p>从菜单中删除所有自定义菜单项.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, DeleteAll</pre>
+<p>任何现有的标准菜单项(见下文) 仍然不受影响. 与使用 <a href="#Delete">Delete</a> 子命(见上文) 令完全删除菜单不同, 空菜单仍然存在, 因此其他任何包含此菜单项作为子菜单的菜单仍保留这些子菜单.</p>
+
+<h3 id="Rename">Rename</h3>
+<p>重命名指定的菜单项到 <em>NewName</em>.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Rename, MenuItemName <span class="optional">, NewName</span></pre>
+<p>如果 <em>NewName</em> 为空, 指定的菜单项将被转换为分隔线. <em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>). 菜单项的当前目标标签或子菜单不会改变. <span class="ver">[v1.1.23+]:</span> 可通过指定分隔线的位置&amp; 和一个非空的 <em>NewName</em> 的方式将分隔线转换成正常的菜单项, 随后使用 <a href="#Add">Add</a> 子命令为其指定一个标签或子菜单.</p>
+
+<h3 id="Check">Check</h3>
+<p>在指定的菜单项前添加复选标记(如果还没有).</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Check, MenuItemName</pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>).</p>
+
+<h3 id="Uncheck">Uncheck</h3>
+<p>从指定的菜单项中删除复选标记(如果有).</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Uncheck, MenuItemName</pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>).</p>
+
+<h3 id="ToggleCheck">ToggleCheck</h3>
+<p>指定的菜单项如果没有复选标记则添加一个复选标记; 如果已经有了, 则删除它.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, ToggleCheck, MenuItemName</pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>).</p>
+
+<h3 id="Enable">Enable</h3>
+<p>允许用户再次选择指定的菜单项, 如果它先前是被禁用(灰色的).</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Enable, MenuItemName</pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>).</p>
+
+<h3 id="Disable">Disable</h3>
+<p>将指定的菜单项更改为灰色, 以指示用户无法选择它.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Disable, MenuItemName</pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>).</p>
+
+<h3 id="ToggleEnable">ToggleEnable</h3>
+<p>如果指定的菜单项之前是启用的则禁用; 否则, 启用它.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, ToggleEnable, MenuItemName</pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>).</p>
+
+<h3 id="Default">Default</h3>
+<p>将菜单的默认项更改为指定的菜单项, 并将其字体加粗.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Default <span class="optional">, MenuItemName</span></pre>
+<p>目前在 TRAY 以外的菜单中设置默认项只是改变外观而没有其他作用. <em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>). 当用户双击托盘图标时, 会运行其默认菜单项. 如果没有默认项, 则双击没有效果. 如果省略了 <em>MenuItemName</em>, 则效果等同于使用了下面的 <a href="#NoDefault">NoDefault</a> 子命令.</p>
+
+<h3 id="NoDefault">NoDefault</h3>
+<p>反向设置用户定义的默认菜单项.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, NoDefault</pre>
+<p>对于托盘菜单: 让菜单恢复其默认菜单项, 对于未编译脚本为 OPEN, 而对于<a href="../Scripts.htm#ahk2exe">已编译脚本</a>则没有(除非 <a href="#MainWindow">MainWindow</a> 子命令生效). 如果因为之前使用了下面的 <a href="#NoStandard">NoStandard</a> 子命令使得 OPEN 菜单项不存在, 那么将没有默认菜单项, 因此双击托盘图标没有效果. 对于 TRAY 以外的其他菜单: 任何现有的默认项恢复为非加粗字体.</p>
+
+<h3 id="Standard">Standard</h3>
+<p>在菜单底部插入标准菜单项(如果还不存在).</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Standard</pre>
+<p>此子命令可用于托盘菜单或其他任何菜单.</p>
+
+<h3 id="NoStandard">NoStandard</h3>
+<p>从菜单移除所有标准(非自定义) 的菜单项(如果存在).</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, NoStandard</pre>
+<p>此子命令可用于托盘菜单或其他任何菜单.</p>
+
+<h3 id="Icon">Icon</h3>
+<p>作用于<a href="#TrayIcon">托盘图标</a>或 <span class="ver">[in AHK_L 17+]</span> <a href="#MenuIcon">菜单项的图标</a>具体取决于下面语法的用法.</p>
+
+<h4 id="TrayIcon">设置托盘图标</h4>
+<p>改变脚本的<a href="../Program.htm#tray-icon">托盘图标</a>为 <em>FileName</em> 中的某个图标.</p>
+<pre class="Syntax"><span class="func">Menu</span>, Tray, Icon <span class="optional">, FileName, IconNumber, 1</span></pre>
+<p>支持下列的文件类型: ICO, CUR, ANI, EXE, DLL, CPL, SCR 以及包含图标资源的其他类型. 要使用文件中除第一个之外的图标组, 请在 <em>IconNumber</em> 指定它的编号(如果省略, 则它默认为 1). 例如, <strong>2</strong> 将加载第二个图标组中的默认图标. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在 <em>FileName</em> 指定星号(*) 来恢复脚本到其默认图标.</p>
 <p>最后一个参数: 在最后一个参数指定 1 来冻结图标, 而 0 则解冻它(或留空来保持冻结/解冻状态不变). 当图标已经冻结时, <a href="Pause.htm">Pause</a> 和 <a href="Suspend.htm">Suspend</a> 不会改变它. 注: 要冻结或解冻<em>当前的</em>图标, 请使用 1 或 0, 例如: <code>Menu, Tray, Icon,,, 1</code>.</p>
-<p>改变托盘图标同时也改变由 <a href="InputBox.htm">InputBox</a>, <a href="Progress.htm">Progress</a> 和后续创建的 <a href="Gui.htm">GUI</a> 窗口显示的图标. 也会影响<a href="Scripts.htm#ahk2exe">已编译脚本</a>, 即使它在编译时指定了自定义的图标. 注: 如果之前使用如 <a href="_NoTrayIcon.htm">#NoTrayIcon</a> 的方法隐藏了托盘图标, 则改变图标不会让它显示出来; 要让它显示, 请使用 <code>Menu, Tray, Icon</code>(不带参数).</p>
+<p>改变托盘图标同时也改变由 <a href="InputBox.htm">InputBox</a>, <a href="Progress.htm">Progress</a> 和后续创建的 <a href="Gui.htm">GUI</a> 窗口显示的图标. 也会影响<a href="../Scripts.htm#ahk2exe">已编译脚本</a>, 即使它在编译时指定了自定义的图标.</p>
+<p class="note"><strong>注意:</strong> 如果之前使用如 <a href="_NoTrayIcon.htm">#NoTrayIcon</a> 的方法隐藏了托盘图标, 则改变图标不会让它显示出来; 要让它显示, 请使用 <code>Menu, Tray, Icon</code>(不带参数).</p>
 <p id="distort">从 .ICO 外的其他类型文件中加载托盘图标时可能产生轻微的变形. 尤其是对于 16x16 的图标. 要避免此问题, 请把要使用的托盘图标保存到 .ICO 文件.</p>
 <p>操作系统的 DLL 和 CPL 文件包含的一些图标可能会有用. 例如: <code>Menu, Tray, Icon, Shell32.dll, 174</code>.</p>
 <p>内置变量 <strong>A_IconNumber</strong> 和 <strong>A_IconFile</strong> 分别包含了当前图标的编号和名称(带完整路径)(如果为默认图标则两者都为空).</p>
 <p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">icon handle(图标句柄)</a> 可替代文件名. 例如, <code>Menu Tray, Icon, HICON:*%handle%</code>. 星号是必需的, 因为图标必须 "加载" 两次: 一次为小图标, 再次为大图标.</p>
 <p><span class="ver">[v1.1.27+]:</span> <em>文件名</em> 支持非 icon 图片文件 和 <a href="../misc/ImageHandles.htm">bitmap handles(位图句柄)</a>. 例如, <code>Menu Tray, Icon, HBITMAP:*%handle%</code>.</p>
-<p><strong>Icon </strong>(不带参数): 如果还没有托盘图标则进行创建. 如果在脚本中使用了 <a href="_NoTrayIcon.htm">#NoTrayIcon</a>, 则此命令会覆盖它.</p>
-<p><strong>NoIcon</strong>: 如果存在托盘图标则移除它. 如果在脚本的最顶部使用此命令, 则当脚本运行时托盘图标可能出现短暂的时间. 要避免这种情况, 请使用 <a href="_NoTrayIcon.htm">#NoTrayIcon</a>. 如果托盘图标当前是隐藏的, 则内置变量 <strong>A_IconHidden</strong> 的值为 1, 否则为 0.</p>
-<p><strong>Tip [, Text]</strong>: 改变托盘图标的工具提示, 这是在鼠标悬停在托盘图标上时显示的. 要创建多行的工具提示, 请在两行之间使用换行符(`n), 例如 Line1`nLine2. 仅显示<em>Text</em>中的前 127 个字符, 并且如果<em>Text</em>中存在 tab 字符, 则首个此字符后的内容被截除. 如果省略 <em>Text</em>, 则把工具提示恢复为默认文本. 内置变量 <strong>A_IconTip</strong> 包含了当前工具提示的默认文本(如果文本是默认的, 则为空).</p>
-<h2>杂项命令</h2>
-<p id="Show"><strong>Show [, X, Y]</strong>: 显示 <em>MenuName</em>, 允许用户使用方向键, 菜单快捷键(下划线字母) 或鼠标选择菜单项. 可以显示包括托盘菜单在内的任何菜单, 但 <a href="Gui.htm">GUI</a> 菜单栏例外. 如果同时省略 X 和 Y, 则菜单显示在鼠标光标的当前位置. 如果仅省略其中一个, 则用鼠标光标的位置代替省略的这个. X 和 Y 相对于活动窗口. 预先指定 "<a href="CoordMode.htm">CoordMode</a>, Menu" 可以让它们相对于整个屏幕.</p>
-<p><strong>Color, ColorValue [, Single]</strong>: 改变菜单的背景颜色为 <em>ColorValue</em>, 它是 16 种 HTML 基础颜色之一或 6 位的 RGB 颜色值(请参阅<a href="Progress.htm#colors">颜色图标</a>). 将 <em>ColorValue</em> 留空(或指定单词 Default) 来恢复菜单的默认颜色. 如果后一个参数不是单词 Single, 则任何附加到此菜单的子菜单都会改变颜色.</p>
-<p><strong>Click, ClickCount</strong>: 在 <em>ClickCount</em> 中指定 1 来允许单击激活托盘菜单的默认菜单项. 在 <em>ClickCount</em> 中指定 2 来恢复到默认行为(双击). 例如: <code>Menu, Tray, Click, 1</code>.</p>
-<p id="MainWindow"><strong>MainWindow</strong>: 此命令仅影响<a href="Scripts.htm#ahk2exe">已编译脚本</a>. 它允许用户通过托盘图标打开脚本主窗口, 否则这是不行的. 它同时也启用了主窗口的 View 菜单项(例如 "Lines most recently executed"), 这样就允许查看脚本的源代码和其他信息. <em>MenuName</em> 必须为 TRAY.</p>
-<p><strong>NoMainWindow</strong>(默认): 此命令仅影响<a href="Scripts.htm#ahk2exe">已编译脚本</a>. 它恢复脚本的默认行为, 即阻止打开主窗口. 即使此选项有效, 脚本运行中遇到下列命令时仍然会显示主窗口: <a href="ListLines.htm">ListLines</a>, <a href="ListVars.htm">ListVars</a>, <a href="ListHotkeys.htm">ListHotkeys</a> 和 <a href="KeyHistory.htm">KeyHistory</a>. <em>MenuName</em> 必须为 TRAY.</p>
-<p><strong>UseErrorLevel [, Off]</strong>: 如果脚本中从未使用过此选项, 则它默认为 OFF. 每当 Menu 命令遇到错误时, OFF 设置会显示一个对话框并终止<a href="../misc/Threads.htm">当前线程</a>. 指定 <code>Menu, Tray, UseErrorLevel</code> 来阻止显示对话框和终止线程; 作为替代, 如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1 否则为 0. 要让此选项转回 off, 请在后一个参数中指定 OFF. 此设置是全局的, 这意味着它影响所有的菜单, 而不只是 <em>MenuName</em>.</p>
+
+<h4 id="MenuIcon">设置菜单项的图标 <span class="ver">[AHK_L 17+]</span></h4>
+<p>为指定的菜单项设置一个图标.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Icon, MenuItemName, FileName <span class="optional">, IconNumber, IconWidth</span></pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>). <em>FileName</em> 可以为图标文件或 AutoHotkey 支持的格式的任何图像.要使用文件中除第一个之外的图标组, 请在 <em>IconNumber</em> 指定它的编号(如果省略, 则它默认为 1). 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在 <em>IconWidth</em> 中指定期望的图标宽度. 如果 <em>IconNumber</em> 表示的图标组包含多种大小的图标, 则使用最接近的匹配并将图标缩放到指定的大小. 请参阅 <a href="#ex4">示例 #4</a> 的用法示例.</p>
+<p>当前在 Windows Vista 和更高版本中如果需要被设置的图标保留透明度时, 则必须指定 "真实的大小". 例如:</p>
+<pre>Menu, <i>MenuName</i>, Icon, <i>MenuItemName</i>, Filename.png,, 0</pre>
+<p>已知限制: 在 Windows XP 和更早版本中, Gui 菜单栏中的图标无法放置到正确的位置.</p>
+<p><span class="ver">[v1.1.23+]:</span> A <a href="../misc/ImageHandles.htm">位图或图标句柄</a>可替代文件名. 例如, <code>HBITMAP:%handle%</code>.</p>
+
+<h3 id="NoIcon">NoIcon</h3>
+<p>作用于<a href="#RemoveTrayIcon">托盘图标</a>或 <span class="ver">[in AHK_L 17+]</span> <a href="#RemoveMenuIcon">菜单项的图标</a>, 具体取决于下面的语法的用法.</p>
+
+<h4 id="RemoveTrayIcon">移除托盘图标</h4>
+<p>如果存在托盘图标则移除它.</p>
+<pre class="Syntax"><span class="func">Menu</span>, Tray, NoIcon</pre>
+<p>如果在脚本的最顶部使用此子命令, 那么当脚本启动时, 托盘图标可能会短暂地显示出来. 要避免这种情况, 请使用 <a href="_NoTrayIcon.htm">#NoTrayIcon</a>. 如果托盘图标当前是隐藏的, 则内置变量 <strong>A_IconHidden</strong> 的值为 1, 否则为 0.</p>
+
+<h4 id="RemoveMenuIcon">移除菜单项的图标 <span class="ver">[AHK_L 17+]</span></h4>
+<p>从指定的菜单项中删除图标(如果有的话).</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, NoIcon, MenuItemName</pre>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>).</p>
+
+<h3 id="Tip">Tip</h3>
+<p>改变托盘图标的工具提示.</p>
+<pre class="Syntax"><span class="func">Menu</span>, Tray, Tip <span class="optional">, Text</span></pre>
+<p>托盘图标的工具提示是在鼠标悬停在托盘图标上时显示的. 要创建多行的工具提示, 请在每行之间使用换行符(`n), 例如 Line1`nLine2. 仅显示 <em>Text</em> 中的前 127 个字符, 并且如果 <em>Text</em> 中存在 tab 字符, 则首个此字符后的内容被截除. 如果忽略 <em>Text</em>, 工具提示将恢复到默认文本. 内置变量 <strong>A_IconTip</strong> 包含工具提示的当前文本(如果文本处于默认状态，则为空).</p>
+
+<h3 id="Show">Show</h3>
+<p>显示 <em>MenuName</em>.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Show <span class="optional">, X, Y</span></pre>
+<p>允许用户使用方向键, 菜单快捷键(下划线字母) 或鼠标选择菜单项. 可以显示包括托盘菜单在内的任何菜单, 但 <a href="Gui.htm">GUI</a> 菜单栏除外. 如果同时省略 X 和 Y, 则菜单显示在鼠标光标的当前位置. 如果仅省略其中一个, 则用鼠标光标的位置代替省略的这个. X 和 Y 相对于活动窗口. 预先指定 &quot;<a href="CoordMode.htm">CoordMode</a>, Menu&quot; 可以让它们相对于整个屏幕.</p>
+
+<h3 id="Color">Color</h3>
+<p>改变菜单的背景颜色为 <em>ColorValue</em>.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, Color, ColorValue <span class="optional">, Single</span></pre>
+<p><em>ColorValue</em> 是 16 种 HTML 基础颜色之一或 6 位的 RGB 颜色值(请参阅<a href="Progress.htm#colors">颜色图标</a>). 将 <em>ColorValue</em> 留空(或指定单词 Default) 来恢复菜单的默认颜色. 如果单词 Single 没有作为下一个参数出现, 则任何附加到此菜单的子菜单都会改变颜色.</p>
+
+<h3 id="Click">Click</h3>
+<p>设置点击次数以激活托盘菜单的默认菜单项.</p>
+<pre class="Syntax"><span class="func">Menu</span>, Tray, Click, ClickCount</pre>
+<p>在 <em>ClickCount</em> 中指定 1 来允许单击激活托盘菜单的默认菜单项. 在 <em>ClickCount</em> 中指定 2 来恢复到默认行为(双击). 例如: <code>Menu, Tray, Click, 1</code>.</p>
+
+<h3 id="MainWindow">MainWindow</h3>
+<p>允许通过托盘图标打开<a href="../Scripts.htm#ahk2exe">已编译脚本</a>的主窗口, 否则这是不可能的.</p>
+<pre class="Syntax"><span class="func">Menu</span>, Tray, MainWindow</pre>
+<p>此子命令也启用了主窗口的 View 菜单项, 例如 &quot;Lines most recently executed&quot;, 这样就允许查看脚本的源代码和其他信息.</p>
+
+<h3 id="NoMainWindow">NoMainWindow</h3>
+<p>防止通过托盘图标打开<a href="../Scripts.htm#ahk2exe">已编译脚本</a>的主窗口.</p>
+<pre class="Syntax"><span class="func">Menu</span>, Tray, NoMainWindow</pre>
+<p>此子命令恢复脚本的默认行为. 即使此选项有效, 脚本运行中遇到下列命令时仍然会显示主窗口: <a href="ListLines.htm">ListLines</a>, <a href="ListVars.htm">ListVars</a>, <a href="ListHotkeys.htm">ListHotkeys</a> 和 <a href="KeyHistory.htm">KeyHistory</a>.</p>
+
+<h3 id="UseErrorLevel">UseErrorLevel</h3>
+<p>当菜单命令生成错误时, 跳过任何警告对话框和线程终止.</p>
+<pre class="Syntax"><span class="func">Menu</span>, MenuName, UseErrorLevel <span class="optional">, Off</span></pre>
+<p>如果脚本中从未使用过此选项, 则它默认为 OFF. 每当 Menu 命令遇到错误时, OFF 设置会显示一个对话框并终止<a href="../misc/Threads.htm">当前线程</a>. 指定 <code>Menu, Tray, UseErrorLevel</code> 来阻止显示对话框和终止线程; 作为替代, 如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1, 否则为 0. 要让此选项转回 off, 请为下一个参数指定 OFF. 此设置是全局的, 这意味着它影响所有的菜单, 而不只是 <em>MenuName</em>.</p>
+
+<h2 id="MenuItemName"><em>MenuItemName</em> 参数</h2>
+<p>菜单项的名称或位置. 一些通用规则适用于所有使用该参数的子命令:</p>
+<ul>
+    <li>要为菜单项名称的某个字母加下划线, 在这个字母前加一个 &amp; 符号. 当菜单显示出来时, 此项可以通过按键盘上对应的按键来选中. 要显示原义的 &amp; 符号, 像这个例子一样, 指定连续的两个 &amp; 号: <code>Save &amp;&amp; Exit</code></li>
+    <li>当引用到一个已存在的菜单或菜单项时, 其名称不区分大小写但 & 号不能少. 例如: <code>&amp;Open</code></li>
+    <li><span class="ver">[v1.1.23+]:</span> 要通过在菜单中的位置确定一个菜单项, 写下该菜单项的位置并尾随一个 &amp; 号. 例如, <code>1&amp;</code> 表示第一个菜单项.</li>
+</ul>
 
 <h2 id="Win32_Menus">Win32 菜单</h2>
 <p>当菜单项被添加到菜单中或被修改时, 每个菜单项的名称和其他属性会被 Menu 命令记录下来,  但实际上 <a href="https://msdn.microsoft.com/en-us/library/ms646977">Win32 菜单</a>并不会被马上创建. 这种情况发生在菜单或父菜单被附加到一个 GUI 或者首次被显示或者菜单在最近一次显示后被"销毁". 下列任意一种情形都会导致 Win32 菜单被销毁, 其父菜单和子菜单也会随之销毁:</p>
 <ul>
   <li>删除菜单.</li>
   <li>用标签或不同的菜单替换某个菜单项的子菜单.</li>
-  <li><span class="ver">[v1.1.27.03]</span> 之前的版本, 调用 <strong>NoStandard</strong>(如果标准项存在) 或 <strong>DeleteAll</strong>.</li>
+  <li><span class="ver">[v1.1.27.03]</span> 之前的版本, 调用子命令 <a href="#NoStandard">NoStandard</a>(如果标准项存在) 或 <a href="#DeleteAll">DeleteAll</a>.</li>
 </ul>
 <p>任何通过 Win32 API 调用直接对菜单进行的修改仅适用与菜单的当前 "实例" , 在菜单被销毁后丢失.</p>
 <p>在首次添加到菜单中时每个菜单项都会被分配到一个 ID. 脚本不能依靠某个菜单项来接收其特定 ID, 但可以像 <a href="MenuGetHandle.htm#Examples">MenuGetHandle 示例</a>中那样使用 GetMenuItemID 获取该 ID. 此 ID 不可以用在 Menu 命令中, 却可以用于多种 <a href="https://msdn.microsoft.com/en-us/library/ms646977">Win32 函数</a>.</p>
 
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>菜单和菜单项的名称长度最多可达 260 个字符.</p>
 <p>分割线可通过 <code>Menu, <i>MenuName</i>, Add</code> 来增加(也就是忽略其他所有参数). <span class="ver">[v1.1.23+]</span>: 要单独删除分割线, 确定他们在菜单中的位置. 例如, 使用 <code>Menu, <i>MenuName</i>, Delete, 3&amp;</code> 如果分隔符之前有两个项目. 还可以 <code>Menu, <i>MenuName</i>, DeleteAll</code> 然后重新添加自定义菜单项.</p>
 <p>新的菜单项总是添加到菜单的底部. 对于托盘菜单: 要把您的菜单项放到标准菜单项的上面, (在添加完自定义菜单项后) 执行 <code>Menu, tray, NoStandard</code> 后面接着执行 <code>Menu, tray, Standard</code>.</p>
@@ -119,23 +263,26 @@ Menu, tray, add, This Menu Item Is A Submenu, :MySubmenu</pre>
 <p>每当通过菜单项运行子程序时, 它会使用设置(例如 <a href="SendMode.htm">SendMode</a>) 的默认值开始. 这些默认值可以在<a href="../Scripts.htm#auto">自动执行段</a>改变.</p>
 <p>内置变量 <strong><a href="../Variables.htm#ThisMenuItem">A_ThisMenuItem</a></strong> 和 <strong><a href="../Variables.htm#ThisMenuItemPos">A_ThisMenuItemPos</a></strong> 分别包含了最近用户选择的自定义菜单项的名称和位置(如果没有则为空). 同样地, <strong>A_ThisMenu</strong> 是选择的 <strong>A_ThisMenuItem</strong> 的菜单名称. 这些变量可用于在创建的菜单内容不总是相同的时候. 在这种情况下, 通常最好把所有这样的菜单项指向相同的标签, 并在此标签中引用上面的变量来决定执行什么动作.</p>
 <p>要让非热键且非 <a href="Gui.htm">GUI</a> 的脚本持续运行(例如仅包含自定义菜单或菜单项的脚本), 请使用 <a href="_Persistent.htm">#Persistent</a>.</p>
-<h2>相关</h2>
-<p><a href="Gui.htm">GUI</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread</a>, <a href="Critical.htm">Critical</a>, <a href="_NoTrayIcon.htm">#NoTrayIcon</a>, <a href="Gosub.htm">Gosub</a>, <a href="Return.htm">Return</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="_Persistent.htm">#Persistent</a></p>
-<h2>示例</h2>
-<pre class="NoIndent"><em>; 示例 #1: 这是个可运行脚本, 它添加一个新菜单项到托盘图标菜单的底部.</em>
 
-#Persistent  <em>; 让脚本持续运行, 直到用户退出.</em>
-Menu, tray, add  <em>; 创建分隔线.</em>
-Menu, tray, add, Item1, MenuHandler  <em>; 创建新菜单项.</em>
+<h2 id="Related">相关</h2>
+<p><a href="Gui.htm">GUI</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread</a>, <a href="Critical.htm">Critical</a>, <a href="_NoTrayIcon.htm">#NoTrayIcon</a>, <a href="Gosub.htm">Gosub</a>, <a href="Return.htm">Return</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="_Persistent.htm">#Persistent</a></p>
+
+<h2>示例</h2>
+
+<h4 id="ex1">示例 #1</h4>
+<p>这是个可运行脚本, 它添加一个新菜单项到托盘图标菜单的底部:</p>
+<pre class="NoIndent">#Persistent  <em>; 让脚本持续运行, 直到用户退出.</em>
+Menu, Tray, Add  <em>; 创建分隔线.</em>
+Menu, Tray, Add, Item1, MenuHandler  <em>; 创建新菜单项.</em>
 return
 
 MenuHandler:
 MsgBox You selected %A_ThisMenuItem% from menu %A_ThisMenu%.
 return</pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例 #2: 这是个可运行脚本, 它创建了一个在用户按下 Win-Z 热键时显示的弹出菜单.</em>
 
-<em>; 添加一些菜单项来创建弹出菜单.</em>
+<h4 id="ex2">示例 #2</h4>
+<p>这是一个可工作脚本, 创建一个弹出菜单, 当用户按下 <kbd>Win</kbd>+<kbd>Z</kbd> 热键时显示:</p>
+<pre class="NoIndent"><em>; 添加一些菜单项来创建弹出菜单.</em>
 Menu, MyMenu, Add, Item1, MenuHandler
 Menu, MyMenu, Add, Item2, MenuHandler
 Menu, MyMenu, Add  <em>; 添加分隔线.</em>
@@ -144,7 +291,7 @@ Menu, MyMenu, Add  <em>; 添加分隔线.</em>
 Menu, Submenu1, Add, Item1, MenuHandler
 Menu, Submenu1, Add, Item2, MenuHandler
 
-<em>; 创建第一个菜单的子菜单 (右箭头指示符). 当用户选择它时会显示第二个菜单.</em>
+<em>; 创建第一个菜单的子菜单(右箭头指示符). 当用户选择它时会显示第二个菜单.</em>
 Menu, MyMenu, Add, My Submenu, :Submenu1
 
 Menu, MyMenu, Add  <em>; 在子菜单下添加分隔线.</em>
@@ -156,98 +303,102 @@ MsgBox You selected %A_ThisMenuItem% from the menu %A_ThisMenu%.
 return
 
 #z::Menu, MyMenu, Show  <em>; 即按下 Win-Z 热键来显示菜单.</em></pre>
-<p>&nbsp;</p>
-<pre class="NoIndent"><em>; 示例 #3: 这是个可运行脚本, 它演示了一些菜单命令.</em>
 
-#Persistent
+<h4 id="ex3">示例 #3</h4>
+<p>这是个可运行脚本, 它演示了一些菜单子命令:</p>
+<pre class="NoIndent">#Persistent
 #SingleInstance
-menu, tray, add <em>; 分隔符</em>
-menu, tray, add, TestToggle&amp;Check
-menu, tray, add, TestToggleEnable
-menu, tray, add, TestDefault
-menu, tray, add, TestStandard
-menu, tray, add, TestDelete
-menu, tray, add, TestDeleteAll
-menu, tray, add, TestRename
-menu, tray, add, Test
+Menu, Tray, Add <em>; 分隔符</em>
+Menu, Tray, Add, TestToggle&amp;Check
+Menu, Tray, Add, TestToggleEnable
+Menu, Tray, Add, TestDefault
+Menu, Tray, Add, TestStandard
+Menu, Tray, Add, TestDelete
+Menu, Tray, Add, TestDeleteAll
+Menu, Tray, Add, TestRename
+Menu, Tray, Add, Test
 return
 
 <em>;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</em>
 
 TestToggle&amp;Check:
-menu, tray, ToggleCheck, TestToggle&amp;Check
-menu, tray, Enable, TestToggleEnable <em>; 同时启用了下一行的测试, 因为它不能撤销自己的禁用状态.</em>
-menu, tray, add, TestDelete <em>; 类似于上面.</em>
+Menu, Tray, ToggleCheck, TestToggle&amp;Check
+Menu, Tray, Enable, TestToggleEnable <em>; 同时启用了下一行的测试, 因为它不能撤销自己的禁用状态.</em>
+Menu, Tray, Add, TestDelete <em>; 类似于上面.</em>
 return
 
 TestToggleEnable:
-menu, tray, ToggleEnable, TestToggleEnable
+Menu, Tray, ToggleEnable, TestToggleEnable
 return
 
 TestDefault:
-if default = TestDefault
+if (Default = "TestDefault")
 {
-    menu, tray, NoDefault
-    default =
+    Menu, Tray, NoDefault
+    Default := ""
 }
 else
 {
-    menu, tray, Default, TestDefault
-    default = TestDefault
+    Menu, Tray, Default, TestDefault
+    Default := "TestDefault"
 }
 return
 
 TestStandard:
-if standard &lt;&gt; n
+if (Standard &lt;&gt; false)
 {
-    menu, tray, NoStandard
-    standard = n
+    Menu, Tray, NoStandard
+    Standard := false
 }
 else
 {
-    menu, tray, Standard
-    standard = y
+    Menu, Tray, Standard
+    Standard := true
 }
 return
 
 TestDelete:
-menu, tray, delete, TestDelete
+Menu, Tray, Delete, TestDelete
 return
 
 TestDeleteAll:
-menu, tray, DeleteAll
+Menu, Tray, DeleteAll
 return
 
 TestRename:
-if NewName &lt;&gt; renamed
+if (NewName &lt;&gt; "renamed")
 {
-    OldName = TestRename
-    NewName = renamed
+    OldName := "TestRename"
+    NewName := "renamed"
 }
 else
 {
-    OldName = renamed
-    NewName = TestRename
+    OldName := "renamed"
+    NewName := "TestRename"
 }
-menu, tray, rename, %OldName%, %NewName%
+Menu, Tray, Rename, %OldName%, %NewName%
 return
 
 Test:
 MsgBox, You selected &quot;%A_ThisMenuItem%&quot; in menu &quot;%A_ThisMenu%&quot;.
 return</pre>
-<pre class="NoIndent"><em>; 示例 #4: 这是个添加图标到其菜单项的可运行脚本.</em>
-Menu, FileMenu, Add, Script Icon, MenuHandler
+
+<h4 id="ex4">示例 #4</h4>
+<p>这是个添加图标到其菜单项的可运行脚本:</p>
+<pre class="NoIndent">Menu, FileMenu, Add, Script Icon, MenuHandler
 Menu, FileMenu, Add, Suspend Icon, MenuHandler
 Menu, FileMenu, Add, Pause Icon, MenuHandler
-Menu, FileMenu, Icon, Script Icon, %A_AhkPath%, 2 <em>;使用文件中的第二个图标组</em>
-Menu, FileMenu, Icon, Suspend Icon, %A_AhkPath%, -206 <em>;使用资源标识符 206 表示的图标</em>
-Menu, FileMenu, Icon, Pause Icon, %A_AhkPath%, -207 <em>;使用资源表示符 207 表示的图标</em>
+Menu, FileMenu, Icon, Script Icon, %A_AhkPath%, 2 <em>; 使用文件中的第二个图标组</em>
+Menu, FileMenu, Icon, Suspend Icon, %A_AhkPath%, -206 <em>; 使用资源标识符 206 表示的图标</em>
+Menu, FileMenu, Icon, Pause Icon, %A_AhkPath%, -207 <em>; 使用资源表示符 207 表示的图标</em>
 Menu, MyMenuBar, Add, &amp;File, :FileMenu
 Gui, Menu, MyMenuBar
 Gui, Add, Button, gExit, Exit This Example
 Gui, Show
+return
+
 MenuHandler:
-Return
+return
 
 Exit:
 ExitApp

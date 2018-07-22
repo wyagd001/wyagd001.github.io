@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>SysGet</title>
+<title>SysGet | AutoHotkey</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,140 +12,141 @@
 <h1>SysGet</h1>
 
 <p>获取屏幕分辨率, 多显示器信息, 系统对象的尺寸和其他系统属性.</p>
+<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value</span></pre>
+<p>The <em>OutputVar</em> 参数是用来存储结果的变量的名称. <em>SubCommand</em> 和 <em>Value</em> 互相依赖, 其用法描述如下.</p>
 
-<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, Sub-command <span class="optional">, Param3</span></pre>
-<h3>参数</h3>
-<dl>
+<h2 id="SubCommands">子命令</h2>
+<p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
+<ul>
+  <li><a href="#MonitorCount">MonitorCount</a>: 检索(获取) 监视器的总数.</li>
+  <li><a href="#MonitorPrimary">MonitorPrimary</a>: 检索主监视器的数目.</li>
+  <li><a href="#Monitor">Monitor</a>: 检索指定监视器的边界坐标.</li>
+  <li><a href="#MonitorWorkArea">MonitorWorkArea</a>: 检索指定监视器的工作区边界坐标.</li>
+  <li><a href="#MonitorName">MonitorName</a>: 检索指定监视器的名称.</li>
+  <li><a href="#Numeric">(Numeric)</a>: 从下面的表中检索相应的值.</li>
+</ul>
 
-  <dt>OutputVar</dt>
-  <dd><p>用来存储结果的变量名.</p></dd>
-
-  <dt>Sub-command</dt>
-  <dd>请参阅后面的列表.
-    </dd>
-
-  <dt>Param3</dt>
-  <dd><p>除了下面注明的, 否则省略此参数.</p></dd>
-
-</dl>
-
-<h3>子命令</h3>
-<p><strong>MonitorCount</strong>: 获取监视器的总数. 与下表提到的 SM_CMONITORS 不同, <em>MonitorCount</em> 包括所有的监视器, 甚至是没有不是桌面一部分的那些.</p>
-<p><strong>MonitorPrimary</strong>: 获取主监视器的数目, 在单监示器系统上这个数目为 1.</p>
-<p><strong>Monitor [, N]</strong>: 获取编号为 <strong>N</strong> 的监视器的边界坐标(如果 <strong>N</strong> 省略, 则使用主监视器). 获取的结果保存在四个名称以 <em>OutputVar</em> 开始的变量中. 如果 <strong>N</strong> 太大或获取信息时遇到问题, 那么这些变量都被置空. 例如:</p>
+<h3 id="MonitorCount">MonitorCount</h3>
+<p>检索监视器的总数.</p>
+<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, MonitorCount</pre>
+<p>与下表提到的 SM_CMONITORS 不同, 这子命令包括所有的监视器, 甚至没有被用作桌面的部分也包括.</p>
+ 	 
+<h3 id="MonitorPrimary">MonitorPrimary</h3>
+<p>检索主监视器的数目.</p>
+<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, MonitorPrimary</pre>
+<p>在单监示器系统上这个数目总是 1.</p>
+ 	 
+<h3 id="Monitor">Monitor</h3>
+<p>获取编号为 <em>N</em> 的监视器的边界坐标.</p>
+<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, Monitor <span class="optional">, N</span></pre>
+<p>如果 <em>N</em> 省略, 则使用主监视器. 获取的结果保存在四个名称以 <em>OutputVar</em> 开始的变量中. 如果 <em>N</em> 太大或获取信息时遇到问题, 那么这些变量都被置空. 例如:</p>
 <pre>SysGet, Mon2, Monitor, 2
 MsgBox, Left: %Mon2Left% -- Top: %Mon2Top% -- Right: %Mon2Right% -- Bottom %Mon2Bottom%.</pre>
 <p>在<a href="Functions.htm">函数</a>中, 要创建一组全局变量而不是局部变量, 请在此命令前<a href="../Functions.htm#Global">声明</a> Mon2 为全局变量(对于<a href="../Functions.htm#AssumeGlobal">假设全局</a>函数, 反之亦成). 但是, 通常需要对每个变量进行声明, 否则可能造成<a href="../Functions.htm#ArrayConfusion">混乱的根源</a>.</p>
-<p><strong>MonitorWorkArea [, N]</strong>: 与上面相同, 不过这个区域不包括任务栏和其他注册的桌面工具栏占用的空间.</p>
-<p><strong>MonitorName [, N]</strong>: 监视器编号为 <strong>N</strong> 的操作系统名称(如果省略 <strong>N</strong>, 则使用主监视器).</p>
-<p><strong>(数值)</strong>: 指定 <em>Sub-command</em> 下表的其中一个数字来获取相应的值. 后面的例子会保存鼠标按钮的数目到变量"MouseButtonCount": <code>SysGet, MouseButtonCount, 43</code>.</p>
-<h3>常用的</h3>
-<table class="info">
-<tr>
-  <th>数字</th>
-  <th>说明</th>
-</tr>
-<tr>
-<td>80</td>
-<td>SM_CMONITORS: 桌面上监视器数目(不包括 "不显示的伪监视器").</td>
-</tr>
-<tr>
-<td>43</td>
-<td>SM_CMOUSEBUTTONS: 鼠标按钮的数目(没有安装鼠标则为 0).</td>
-</tr>
-<tr>
-<td>16, 17</td>
-<td>SM_CXFULLSCREEN, SM_CYFULLSCREEN: 在主监视器上全屏窗口工作区的宽度和高度, 单位为像素.</td>
-</tr>
-<tr>
-<td>61, 62</td>
-<td>SM_CXMAXIMIZED, SM_CYMAXIMIZED: 主监视器上已最大化的顶层窗口的尺寸, 单位为像素.</td>
-</tr>
-<tr>
-<td>59, 60</td>
-<td>SM_CXMAXTRACK, SM_CYMAXTRACK: 包含标题和可调整大小边框的窗口的默认最大尺寸, 单位为像素. 这个度量指向整个桌面. 用户无法拖动窗口边框超过这些尺寸指定的大小.</td>
 
-</tr>
-<tr>
-<td>28, 29</td>
-<td>SM_CXMIN, SM_CYMIN: 窗口的最小宽度和高度, 单位为像素.</td>
-</tr>
-<tr>
-<td>57, 58</td>
-<td>SM_CXMINIMIZED, SM_CYMINIMIZED: 已最小化的窗口的尺寸, 单位为像素.</td>
-</tr>
-<tr>
-<td>34, 35</td>
-<td>SM_CXMINTRACK, SM_CYMINTRACK: 窗口的最小跟踪宽度和高度, 单位为像素. 用户无法拖动窗口边框小于这些尺寸指定的大小. 窗口可以通过处理 WM_GETMINMAXINFO 消息来覆盖这些值.</td>
+<h3 id="MonitorWorkArea">MonitorWorkArea</h3>
+<p>获取编号为 <em>N</em> 的监视器的工作区域的边界坐标.</p>
+<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, MonitorWorkArea <span class="optional">, N</span></pre>
+<p>与上面的 <a href="#Monitor">Monitor 子命令</a>相同, 除了该区域不包括任务栏和其他注册的桌面工具栏占用的空间.</p>
 
+<h3 id="MonitorName">MonitorName</h3>
+<p>检索操作系统的监视器号 <em>N</em> 的名称.</p>
+<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, MonitorName <span class="optional">, N</span></pre>
+<p>如果 <em>N</em> 省略, 则使用主监视器.</p>
 
-</tr>
-<tr>
-<td>0, 1</td>
-<td>SM_CXSCREEN, SM_CYSCREEN: 主监视器屏幕的宽度和高度, 单位为像素. 这两个值等同于内置变量 <a href="../Variables.htm#Screen">A_ScreenWidth</a> 和 <a href="../Variables.htm#Screen">A_ScreenHeight</a>.</td>
-</tr>
-<tr>
-<td>78, 79</td>
-<td>SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN: 虚拟屏幕的宽度和高度, 单位为像素. 虚拟屏幕是所有监视器的边框. SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN 度量是虚拟屏幕左上角的坐标.</td>
+<h3 id="Numeric">(Numeric)</h3>
+<p>指定 <em>SubCommand</em> 为下表其中的一个数字来获取相应的值.</p>
+<pre class="Syntax"><span class="func">SysGet</span>, OutputVar, N</pre>
+<p>后面的例子会保存鼠标按钮的数目到变量 &quot;MouseButtonCount&quot;: <code>SysGet, MouseButtonCount, 43</code>.</p>
 
-
-</tr>
-<tr>
-<td>19</td>
-<td>SM_MOUSEPRESENT: 如果安装了鼠标则为非零值, 否则为零.</td>
-</tr>
-<tr>
-<td>75</td>
-<td>SM_MOUSEWHEELPRESENT: 如果安装了带滚轮的鼠标则为非零值, 否则为零.</td>
-</tr>
-<tr>
-<td>63</td>
-<td>SM_NETWORK: 网络存在时设置最低的有效位, 否则进行清除. 
-其他的位保留供将来使用.</td>
-</tr>
-<tr>
-<td>8193</td>
-<td>
-        SM_REMOTECONTROL: 此系统度量用于终端服务环境. 
-		如果当前的会话是由远程控制的则它的值不为零; 否则为零.</td>
-</tr>
-<tr>
-<td>4096</td>
-<td>
-        SM_REMOTESESSION: 此系统度量用于终端服务环境. 
-		如果调用线程与终端服务的客户端会话关联, 则返回非零值. 
-		如果调用线程与终端服务的控制台会话关联, 则返回零. 
-		控制台会话不一定是实际的控制台.</td>
-</tr>
-<tr>
-<td>70</td>
-<td>
-        SM_SHOWSOUNDS: 如果用户要求一个原本只提供声音信息的场合中同时提供可视化信息时为非零值, 否则为零.
-		
-    </td>
-</tr>
-<tr>
-<td>8192</td>
-<td>
-    SM_SHUTTINGDOWN: 当前会话正在关闭时为非零值, 否则为零. <B>Windows 2000:</b> 获取的值总是 0.</td>
-</tr>
-<tr>
-<td>23</td>
-<td>SM_SWAPBUTTON: 交换了鼠标左右键的功能时为非零值, 否则为零.</td>
-</tr>
-<tr>
-<td>76, 77</td>
-<td>
-        SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN: 虚拟屏幕左边和上面的坐标. 虚拟屏幕是所有监视器的边框. 与之相比, the SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN 度量(较远的上面) 为虚拟屏幕的宽度和高度.</td>
-		
-		
-</tr>
-</table>
-<br>
-<h3>不常用的</h3>
+<h4>常用的</h4>
 <table class="info">
   <tr>
-    <th>数字</th>
+    <th>数&nbsp;&nbsp;&nbsp;字</th>
+    <th>说明</th>
+  </tr>
+  <tr>
+    <td>80</td>
+    <td>SM_CMONITORS: 桌面上监视器数目(不包括 "不显示的伪监视器").</td>
+  </tr>
+  <tr>
+    <td>43</td>
+    <td>SM_CMOUSEBUTTONS: 鼠标按钮的数目(没有安装鼠标则为 0).</td>
+  </tr>
+  <tr>
+    <td>16, 17</td>
+    <td>SM_CXFULLSCREEN, SM_CYFULLSCREEN: 在主监视器上全屏窗口工作区的宽度和高度, 单位为像素.</td>
+  </tr>
+  <tr>
+    <td>61, 62</td>
+    <td>SM_CXMAXIMIZED, SM_CYMAXIMIZED: 主监视器上已最大化的顶层窗口的尺寸, 单位为像素.</td>
+  </tr>
+  <tr>
+    <td>59, 60</td>
+    <td>SM_CXMAXTRACK, SM_CYMAXTRACK: 包含标题和可调整大小边框的窗口的默认最大尺寸, 单位为像素. 这个度量指向整个桌面. 用户无法拖动窗口边框超过这些尺寸指定的大小.</td>
+  </tr>
+  <tr>
+    <td>28, 29</td>
+    <td>SM_CXMIN, SM_CYMIN: 窗口的最小宽度和高度, 单位为像素.</td>
+  </tr>
+  <tr>
+    <td>57, 58</td>
+    <td>SM_CXMINIMIZED, SM_CYMINIMIZED: 已最小化的窗口的尺寸, 单位为像素.</td>
+  </tr>
+  <tr>
+    <td>34, 35</td>
+    <td>SM_CXMINTRACK, SM_CYMINTRACK: 窗口的最小跟踪宽度和高度, 单位为像素. 用户无法拖动窗口边框小于这些尺寸指定的大小. 窗口可以通过处理 WM_GETMINMAXINFO 消息来覆盖这些值.</td>
+  </tr>
+  <tr>
+    <td>0, 1</td>
+    <td>SM_CXSCREEN, SM_CYSCREEN: 主监视器屏幕的宽度和高度, 单位为像素. 这两个值等同于内置变量 <a href="../Variables.htm#Screen">A_ScreenWidth</a> 和 <a href="../Variables.htm#Screen">A_ScreenHeight</a>.</td>
+  </tr>
+  <tr>
+    <td>78, 79</td>
+    <td>SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN: 虚拟屏幕的宽度和高度, 单位为像素. 虚拟屏幕是所有监视器的边框. SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN 度量是虚拟屏幕左上角的坐标.</td>
+  </tr>
+  <tr>
+    <td>19</td>
+    <td>SM_MOUSEPRESENT: 如果安装了鼠标则为非零值, 否则为零.</td>
+  </tr>
+  <tr>
+    <td>75</td>
+    <td>SM_MOUSEWHEELPRESENT: 如果安装了带滚轮的鼠标则为非零值, 否则为零.</td>
+  </tr>
+  <tr>
+    <td>63</td>
+    <td>SM_NETWORK: 网络存在时设置最低的有效位, 否则进行清除.其他的位保留供将来使用.</td>
+  </tr>
+  <tr>
+    <td>8193</td>
+    <td>SM_REMOTECONTROL: 此系统度量用于终端服务环境. 如果当前的会话是由远程控制的则它的值不为零; 否则为零.</td>
+  </tr>
+  <tr>
+    <td>4096</td>
+    <td>SM_REMOTESESSION: 此系统度量用于终端服务环境. 如果调用线程与终端服务的客户端会话关联, 则返回非零值. 如果调用线程与终端服务的控制台会话关联, 则返回零. 控制台会话不一定是实际的控制台.</td>
+  </tr>
+  <tr>
+    <td>70</td>
+    <td>SM_SHOWSOUNDS: 如果用户要求一个原本只提供声音信息的场合中同时提供可视化信息时为非零值, 否则为零.</td>
+  </tr>
+  <tr>
+    <td>8192</td>
+    <td>SM_SHUTTINGDOWN: 当前会话正在关闭时为非零值, 否则为零. <B>Windows 2000:</b> 获取的值总是 0.</td>
+  </tr>
+  <tr>
+    <td>23</td>
+    <td>SM_SWAPBUTTON: 交换了鼠标左右键的功能时为非零值, 否则为零.</td>
+  </tr>
+  <tr>
+    <td>76, 77</td>
+    <td>SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN: 虚拟屏幕左边和上面的坐标. 虚拟屏幕是所有监视器的边框. 与之相比, the SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN 度量(较远的上面) 为虚拟屏幕的宽度和高度.</td>
+  </tr>
+</table>
+
+<h4>不常用的</h4>
+<table class="info">
+  <tr>
+    <th>数&nbsp;&nbsp;&nbsp;字</th>
     <th>说明</th>
   </tr>
   <tr>
@@ -155,9 +156,9 @@ MsgBox, Left: %Mon2Left% -- Top: %Mon2Top% -- Right: %Mon2Right% -- Bottom %Mon2
   <tr>
     <td>67</td>
     <td>SM_CLEANBOOT: 指定系统启动的方式:<br>
-	0 正常启动<br>
-	1 失败-安全模式启动<br>
-	2 失败-带网络的安全模式启动</td>
+      <br> 0 正常启动<br>
+      <br> 1 失败-安全模式启动<br>
+      <br> 2 失败-带网络的安全模式启动</td>
   </tr>
   <tr>
     <td>5, 6</td>
@@ -297,18 +298,23 @@ MsgBox, Left: %Mon2Left% -- Top: %Mon2Top% -- Right: %Mon2Right% -- Bottom %Mon2
     <td>SM_TABLETPC: 如果当前操作系统为 Windows XP Tablet PC 版本时为非零值, 如果不是则为零.</td>
   </tr>
 </table>
-<h3>备注</h3>
-<p>内置变量 <a href="../Variables.htm#Screen">A_ScreenWidth</a> 和 <a href="../Variables.htm#Screen">A_ScreenHeight</a> 包含了主监视器的尺寸, 单位为像素.</p>
-<h3>相关</h3>
-<p><a href="DllCall.htm">DllCall</a>, <a href="WinGet.htm">WinGet</a></p>
-<h3>示例</h3>
-<pre class="NoIndent"><em>; 示例 #1:</em>
-SysGet, MouseButtonCount, 43
-SysGet, VirtualScreenWidth, 78
-SysGet, VirtualScreenHeight, 79
 
-<em>; 示例 #2: 这是个显示每个监视器信息的可运行脚本:</em>
-SysGet, MonitorCount, MonitorCount
+<h2>备注</h2>
+<p>内置变量 <a href="../Variables.htm#Screen">A_ScreenWidth</a> 和 <a href="../Variables.htm#Screen">A_ScreenHeight</a> 包含了主监视器的尺寸, 单位为像素.</p>
+
+<h2>相关</h2>
+<p><a href="DllCall.htm">DllCall</a>, <a href="WinGet.htm">WinGet</a></p>
+
+<h2>示例</h2>
+
+<h4 id="ex1">示例 #1: 杂项</h4>
+<pre class="NoIndent">SysGet, MouseButtonCount, 43
+SysGet, VirtualScreenWidth, 78
+SysGet, VirtualScreenHeight, 79</pre>
+
+<h4 id="ex2">Example #2</h4>
+<p>显示每个监视器的信息:</p>
+<pre class="NoIndent">SysGet, MonitorCount, MonitorCount
 SysGet, MonitorPrimary, MonitorPrimary
 MsgBox, Monitor Count:`t%MonitorCount%`nPrimary Monitor:`t%MonitorPrimary%
 Loop, %MonitorCount%
