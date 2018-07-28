@@ -17,9 +17,8 @@
 
 <p id="param">创建一个表示要作为参数或返回值传递的类型化值的对象.</p>
 <pre class="Syntax">ParamObj := <span class="func">ComObject</span>(VarType, Value <span class="optional">, Flags</span>)</pre>
-
-<h4 style="margin-top:2em">不建议:</h4>
-<p>不推荐使用以下方法, 后续版本中可能被替换或不再支持.</p>
+<hr>
+<p class="warning"><strong>不建议:</strong> 不推荐使用以下方法, 后续版本中可能被替换或不再支持.</p>
 <p id="missing">在调用 COM 对象的方法时创建一个可用于替代可选参数默认值的对象. <span class="ver">[v1.1.12+]</span>: 这种函数已废弃使用. 作为代替, 使用两个连续的逗号, 如 <code>Obj.Method(1,,3)</code></p>
 <pre class="Syntax">ParamObj := <span class="func">ComObjMissing</span>()</pre>
 
@@ -31,8 +30,9 @@ DispPtr := <span class="func">ComObjUnwrap</span>(ComObject)
 <p>要写更多面向未来的代码，请改用以下代码:</p>
 <pre>ComObject := ComObject(9, DispPtr, 1), ObjAddRef(DispPtr)
 DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispPtr)</pre>
+<hr>
 
-<h3>参数</h3>
+<h2>参数</h2>
 <dl>
 
   <dt>CLSID</dt>
@@ -55,7 +55,7 @@ DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispP
 
 </dl>
 
-<h3 id="Flags">Flags</h3>
+<h2 id="Flags">Flags</h2>
 <table class="info">
   <tr>
     <td>&nbsp;0&nbsp;</td>
@@ -70,7 +70,7 @@ DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispP
   </tr>
 </table>
 
-<h3 id="ByRef">ByRef <span class="ver">[v1.1.17+]</span></h3>
+<h2 id="ByRef">ByRef <span class="ver">[v1.1.17+]</span></h2>
 <p>如果包装器对象的<a href="ComObjType.htm"><em>变量类型</em></a>包含 VT_BYREF(0x4000) 标签, 可用空的方括号对 <code>[]</code> 来读写引用的值.</p>
 <p>当创建一个引用, <em>值</em>须为变量的内存地址, 或足够存储指定类型的值的缓存. 例如, 下面的代码可以用来创建一个 VBScript 函数可以写入的变量:</p>
 <pre>VarSetCapacity(var, 24, 0)
@@ -80,16 +80,16 @@ vref[] := "in value"
 sc.Run("Example", vref)  <em>; sc 应像<a href="#ByRefEx">下面例子</a>一样进行初始化.</em>
 MsgBox % vref[]</pre>
 
-<h3 id="Remarks">一般说明</h3>
+<h2 id="Remarks">一般说明</h2>
 <p>当前版本中, 除 COM 相关函数, 任何以"ComObj"函数名开头的函数调用实际调用 ComObjActive 函数. 如, <code>ComObjEnwrap(DispPtr)</code> 及 <code>ComObjActive(DispPtr)</code> 均等效于 <code>ComObject(DispPtr)</code>(隐式地, <em>变量类型</em>为 9). 此行为可能于后续版本改变, 故, 建议仅使用本页所展示的 <code>ComObject()</code> 及 <code>ComObjActive()</code>.</p>
 <p>如果 ComObjActive 不能检索活动的对象, 则可能会抛出异常, 退出脚本或返回空字符串, 具体取决于当前的 <a href="ComObjError.htm">ComObjError</a> 设置和<a href="ComObjError.htm#factors">其他因素</a>.</p>
 <p>当使用此函数包装或检索 IDispatch 或 IUnknown 接口指针时, 默认的行为会增加 COM 对象的引用计数. 因此, 当不使用时, 须<a href="ObjAddRef.htm">手动释放</a>接口指针. 当用于封装的对象被释放时, 他所包含的引用被自动释放.</p>
 <p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>obj1 == obj2</code>, <code>array[obj1] := value</code> 的比较和赋值运算, 会把两个包装器对象视为独立的, 即使它们包含相同的 COM 对象.</p>
 
-<h3 id="Related">相关</h3>
+<h2 id="Related">相关</h2>
 <p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="ObjAddRef.htm">ObjAddRef/ObjRelease</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221467.aspx">GetActiveObject (MSDN)</a></p>
 
-<h3>示例</h3>
+<h2>示例</h2>
 <p>ComObjUnwrap(COM 对象拆包): 参见<a href="ComObjConnect.htm#Examples">ComObjConnect</a>.</p>
 <pre class="NoIndent" id="ByRefEx">
 <em>; 条件 - ScriptControl 需 32 位版本的 AutoHotkey.</em>

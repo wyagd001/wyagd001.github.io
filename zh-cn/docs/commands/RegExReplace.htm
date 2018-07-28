@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>RegExReplace | AutoHotkey</title>
+<title>RegExReplace() | AutoHotkey</title>
+<meta name="description" content="The RegExReplace function replaces occurrences of a pattern (regular expression) inside a string." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -14,7 +15,7 @@
 <p>替换字符串中匹配模式(正则表达式) 出现的地方.</p>
 
 <pre class="Syntax">NewStr := <span class="func">RegExReplace</span>(Haystack, NeedleRegEx <span class="optional">, Replacement := "", OutputVarCount := "", Limit := -1, StartingPosition := 1</span>)</pre>
-<h3>参数</h3>
+<h2>参数</h2>
 <dl>
 
   <dt>Haystack</dt>
@@ -41,10 +42,10 @@
 
 </dl>
 
-<h3>返回值</h3>
+<h2>返回值</h2>
 <p>函数将返回 <em>Haystack</em> 被替换之后的值. 如果没有发生替换, 将返回 <em>Haystack</em> 的原始值. 如果发生错误(比如 <em>NeedleRegEx</em> 出现语法错误), 同样返回 <em>Haystack</em> 的原始值(除非是 1.0.46.06 之前的版本, 将返回 &quot;&quot; 空字符串) 同时 ErrorLevel 被设为<a href="#ErrorLevel">下面</a>列表中除了 0 之外的值.</p>
 
-<h3 id="ErrorLevel">ErrorLevel</h3>
+<h2 id="ErrorLevel">ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此函数失败时会抛出异常(这个不会和 "没有找到匹配" 冲突, 失败表示匹配过程中遇到问题, 而 "没有找到匹配" 表示匹配过程成功完成只是没有发现匹配). 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为下列值的其中一个:</p>
 <ul>
@@ -52,21 +53,21 @@
   <li>一个如下格式的字符串: <em>Compile error N at offset M: description</em>. 在此字符串中, <em>N</em> 是 PCRE 错误值, <em>M</em> 是正则表达式中出现错误的字符的位置, 而 <em>description</em> 是描述这个错误的文本.</li>
   <li>一个负数, 表示在正则表达式 <em>执行</em> 时遇到的错误. 尽管这样的错误很罕见, 然而像这些情况就容易出现这种错误, 例如 "太多空字符串匹配"(-22), "递归太深"(-21) 以及 "达到匹配限制"(-8). 如果出现这些情况, 请尝试重新设计更严格的匹配模式, 例如无论是否可行都把每个 * 替换为 ?, + 或像 {0,3} 这样的限制.</li>
 </ul>
-<h3>选项</h3>
+<h2>选项</h2>
 <p>请参阅<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>了解修饰符, 例如 "<span class="red">i)</span>abc", 里面的选项关闭了 "abc" 模式中的区分大小写匹配.</p>
-<h3>性能</h3>
+<h2>性能</h2>
 <p>要进行简单的子字符串替换, 请使用 <a href="StringReplace.htm">StringReplace</a>, 因为它比 RegExReplace() 执行地更快.</p>
 <p>如果您知道替换的最大次数是多少, 请在 <em>Limit</em> 参数中指定来提高性能, 因为这样可以早一些停止搜索(这样也可能会降低在替换操作过程中占用的系统内存). 例如, 如果您知道在一个大字符串的开始处仅有一个匹配, 请指定最大次数为 1.</p>
 <p>为了提升性能, 最近使用的 100 个正则表达式会被缓存在内存中(以已编译的形式).</p>
 <p>多次使用一个正则表达式时(例如在循环中), 使用<a href="../misc/RegEx-QuickRef.htm#Study">研究选项(S)</a> 可以提高性能.</p>
-<h3>备注</h3>
+<h2>备注</h2>
 <p>大多数字符(例如 abc123) 可以直接使用在正则表达式中. 然而, <strong>\.*?+[{|()^$</strong> 这些字符则必须在其前面加上反斜杠来进行匹配. 例如, <strong>\.</strong> 表示一个原义的句点而 <strong>\\</strong> 表示一个原义的反斜杠. 使用 \Q...\E 能避免转义. 例如: <code>\QLiteral Text\E</code>.</p>
 <p>在正则表达式中, 特殊字符(如制表符和新行符) 可以使用一个重音符(`) 或反斜杠(\) 进行转义. 例如, `t 等同于 \t.</p>
 <p>要了解正则表达式的基础(或复习正则表达式的语法), 请参阅<a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</p>
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="RegExMatch.htm">RegExMatch()</a>, <a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>, <a href="../misc/RegExCallout.htm">正则表达式调出</a>, <a href="StringReplace.htm">StringReplace</a>, <a href="InStr.htm">InStr()</a></p>
 <p>文本数据的常见来源: <a href="FileRead.htm">FileRead</a>, <a href="URLDownloadToFile.htm">UrlDownloadToFile</a>, <a href="../misc/Clipboard.htm">Clipboard</a>, <a href="GuiControls.htm#Edit">GUI Edit 控件</a></p>
-<h3>示例</h3>
+<h2>示例</h2>
 <pre class="NoIndent">NewStr := RegExReplace("abc123123", "123$", "xyz")  <em>; 返回 "abc123xyz", 因为 $ 使得只能在末尾形成匹配.</em>
 NewStr := RegExReplace(&quot;abc123&quot;, &quot;i)^ABC&quot;)  <em>; 返回 "123", 因为通过不区分大小写选项实现了匹配.</em>
 NewStr := RegExReplace("abcXYZ123", "abc<span class="red">(.*)</span>123", "aaa<span class="red">$1</span>zzz")  <em>; 返回 "aaaXYZzzz", 其中使用了 <span class="red">$1</span> <a href="#BackRef">后向引用</a>.</em>

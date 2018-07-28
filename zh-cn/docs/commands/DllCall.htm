@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>DllCall | AutoHotkey</title>
+<meta name="description" content="The DllCall function calls a function inside a DLL, such as a standard Windows API function." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -14,7 +15,7 @@
 <p>调用 DLL 文件中的函数, 例如标准的 Windows API 函数.</p>
 
 <pre class="Syntax">Result := <span class="func">DllCall</span>("<span class="optional">DllFile\</span>Function" <span class="optional">, Type1, Arg1, Type2, Arg2, "Cdecl ReturnType"</span>)</pre>
-<h3>参数</h3>
+<h2>参数</h2>
 <dl>
 
   <dt>Result</dt>
@@ -38,7 +39,7 @@
 
 </dl>
 
-<h3 id="types">参数和返回值类型</h3>
+<h2 id="types">参数和返回值类型</h2>
 <table class="info">
 <tr id="str">
 <td>Str</td>
@@ -106,7 +107,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 </table>
 <p class="note"><strong>注意</strong>: 当指定不包含空格或星号的参数类型或返回值类型时, 包含的引号可以省略. 例如, 可以使用 <code>Str</code> 代替 <code>"Str"</code> 而 <code>CDecl</code> 代替 <code>"CDecl"</code>, 此外, 用字母 P 代替星号时也可以省略引号. 例如: <code>UIntP</code>.</p>
 
-<h3 id="error">ErrorLevel</h3>
+<h2 id="error">ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此函数失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 会被设置为下列值的其中一个来表示调用成功或失败.</p>
 <p><strong>0</strong>: 成功.</p>
@@ -117,11 +118,11 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 <p><strong>N</strong>(任意正数): 函数被调用后异常终止了, 致命异常号为 <strong>N</strong>(例如, 0xC0000005 表示 "访问违例"). 此时函数返回空值(空字符串), 但仍会更新所有的<a href="#asterisk">星号变量</a>. 致命异常的一个例子是间接引用了无效的指针, 如 NULL. 因为 <a href="#cdecl">Cdecl</a> 函数决不会产生下一段描述中的 <em>"An"</em> 错误, 所以当传递给它的参数太少时可能会产生异常.</p>
 <p id="An"><strong>An</strong>(字母 A 后面跟着整数 <strong>n</strong>): 调用了函数, 但传递给它的参数太多或太少了. "<strong>n</strong>" 是错误的参数列表超过正确的参数列表的字节数. 如果 <strong>n</strong> 为正数, 表示传递的参数过多(或参数太大), 或函数调用要求 <a href="#cdecl">CDecl</a> 的返回值类型. 如果 <strong>n</strong> 为负数, 表示传递的参数过少. 应该改正这种情况来让函数可靠运行. 此错误的出现也可能表示出现了异常, 此时函数返回空字符串. 请注意由于 x64 调用约定, 64 位版本不会设置 ErrorLevel 为 <b>An</b>.</p>
 
-<h3 id="except">异常和 A_LastError</h3>
+<h2 id="except">异常和 A_LastError</h2>
 <p>尽管有内置的异常处理机制, 但 DllCall 仍有可能让脚本崩溃. 当函数不直接生成异常而输出一些不适当的数据(例如无效的指针或没有结束符的字符串) 时, 这种情况可能会发生. 这可能不是函数的问题, 而是脚本传递给它不适合的值, 例如无效的指针或内存空间不足的 <a href="#str">"str"</a>, 当脚本指定不适当的参数类型或返回值类型(例如要求由函数生成的整数是<a href="#asterisk">星号变量</a>或 <a href="#str">str</a>) 时, 它也可能崩溃.</p>
 <p id="LastError">内置变量 <strong>A_LastError</strong> 包含了操作系统 GetLastError() 函数最近调用返回的结果, 在调用函数后会立即执行此函数(对效率的影响未知). A_LastError 是一个介于 0 和 4294967295 之间的数字(总是为十进制而非十六进制). 像 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 一样, A_LastError 是与每个线程关联的设置; 即由其他<a href="../misc/Threads.htm">线程</a>产生的中断不会改变它. 不过, <a href="Run.htm#LastError">Run/RunWait</a> 也会设置 A_LastError 的值.</p>
 
-<h3 id="load">性能</h3>
+<h2 id="load">性能</h2>
 <p>当需要重复调用一个 DLL 时, 预先明确装载它可以显著提高执行效率(<em>对于<a href="#std">标准的 DLL</a> 文件如 User32 可以不需要, 因为它是常驻的</em>). 这样的实现避免了 DllCall 内部每次调用 LoadLibrary 和 FreeLibrary 的需要. 例如:</p>
 <pre>hModule := DllCall("<strong>LoadLibrary</strong>", "Str", "MyFunctions.dll", "Ptr")  <em>; 避免了在循环中每次都需要使用 DllCall() 装载库.</em>
 Loop, C:\My Documents\*.*, , 1
@@ -136,7 +137,7 @@ Loop 500
 <p>同时, 在脚本的任意位置添加 <a href="_NoEnv.htm">#NoEnv</a> 这行可以改善在使用了没有加引号的参数类型(例如 Int 与 "Int") 时 DllCall 的性能.</p>
 <p>最后, 当传递字符串变量给不会改变它长度的函数时, 传递变量的<a href="../Variables.htm#amp">地址</a>(例如 &amp;MyVar) 而不是作为 "<a href="#str">str</a>" 类型可以提升性能(尤其是当字符串很长的时候). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", <strong>Ptr</strong>, <strong>&amp;</strong>MyVar, Ptr)</code>.</p>
 
-<h3 id="struct">结构和数组</h3>
+<h2 id="struct">结构和数组</h2>
 <p>结构是内存中连续的 <em>成员</em>(空间) 的集合. 大多数成员变量类型是整型.</p>
 <p>调用接受结构地址(或内存块数组) 的函数可以把结构中的原始二进制数据保存到普通变量中. 一般步骤如下:</p>
 <p>1) 调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyStruct, 123, 0)</code> 来确保目标变量足够大以便保存结构数据. 把 123 替换为至少和结构一样大小的数字. 最后一个参数零是可选的; 它会初始化所有成员变量为二进制零, 这样通常可以避免在下一步中频繁调用 NumPut().</p>
@@ -144,7 +145,7 @@ Loop 500
 <p>3) 调用目标函数, 把 <em>MyStruct</em> 的<a href="../Variables.htm#amp">地址</a>作为 UInt(或 Ptr 在 <span class="ver">[AHK_L 42+]</span> 时) 的参数传递过去. 例如, <code>DllCall("MyDll\MyFunc", Ptr, <strong>&amp;</strong>MyStruct)</code>. 函数将检查和/或改变其中的某些成员变量.</p>
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中获取任何想要的成员变量. 把 <code>4</code> 替换为结构中目标成员的偏移. 首个成员变量的偏移总为 0. 第二个成员的偏移为 0 加上首个成员的大小(一般为 4 字节). 后面成员的偏移等于它前一个成员的偏移加上前一个成员的大小. 大多数成员(例如 DWORD, Int 和<a href="#Int">其他的 32 位整型</a>) 大小为 4 个字节. 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
 <p>请参阅<a href="#ExStruct">结构示例</a>了解实际用法.</p>
-<h3 id="limits">已知限制</h3>
+<h2 id="limits">已知限制</h2>
 <p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>) 传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误, 要解决此问题, 有下面几种方法: 1) 把 <em>MyVar</em> 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址 传递; 2) <span class="ver">[v1.0.44.03+]</span>: 在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>
 <p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即这样的数据无法被大多数命令和函数访问或修改. 但是, 这样的数据可以使用<a href="../Variables.htm#amp">地址运算符</a>和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a> 以及 DllCall 自己进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会出乎意料地返回一个地址不同内容相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall() 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
@@ -158,9 +159,9 @@ result := DllCall("CharLower", <strong><u>str</u></strong>, DllCall("CharUpper",
 <p>许多 .NET Framework 也可以使用 COM 和 DllCall 进行访问. 请参阅 <a href="http://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>.
 </p>
 
-<h3>相关</h3>
+<h2>相关</h2>
 <p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a>, <a href="Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="http://msdn.microsoft.com/library/">MSDN Library</a></p>
-<h3>示例</h3>
+<h2>示例</h2>
 <pre class="NoIndent"><em>; 例子: 调用 Windows API 函数 "MessageBox" 并报告用户按下了哪个按钮.</em>
 
 WhichButton := DllCall("MessageBox", "Int", "0", "Str", "Press Yes or No", "Str", "Title of box", "Int", 4)
