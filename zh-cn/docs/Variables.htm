@@ -39,7 +39,7 @@ MyVar := ""</pre>
 <pre><a href="commands/MsgBox.htm">MsgBox</a> The value in the variable named Var is %Var%.
 CopyOfVar = %Var%</pre>
 <p>与之相比, 表达式方法省去了变量名两边的百分号, 但<a href="Language.htm#strings">原义的字符串</a>必须包围在双引号中. 所以, 下面的表达式作用等同于上面的例子:</p>
-<pre>MsgBox <strong>%</strong> &quot;The value in the variable named Var is &quot; . Var . &quot;.&quot;  <em>; 使用句点连接(join 拼接) 两个字符串.</em>
+<pre>MsgBox % &quot;The value in the variable named Var is &quot; . Var . &quot;.&quot;  <em>; 使用句点连接(join 拼接) 两个字符串.</em>
 CopyOfVar := Var</pre>
 <p>在上面的 MsgBox 这行, 通过使用<a href="Language.htm#-expression">百分号和空格</a>把参数从传统模式改变为表达式模式. 因为所有的命令默认情况下使用传统模式(除了另外注明的那些), 所以这是必须的.</p>
 <p><strong>变量的比较</strong>: 请阅读下面表达式部分中关于不同类型变量比较的重要提示, 尤其是关于何时使用小括号的内容.</p>
@@ -66,12 +66,12 @@ ContinueSearch := true</pre>
 <p><strong>整数和浮点数</strong>: 在表达式中, 含有小数点的数字被视为浮点数; 否则视为整数. 对于大多数运算符(例如加法和乘法), 只要其中的一个输入是浮点数, 那么结果也将是浮点数.</p>
 <p>不论在表达式中还是在表达式外的其他地方, 整数都可以表示成十六进制或十进制. 十六进制数必须以前缀 0x 开头. 例如, <code>Sleep 0xFF</code> 等同于 <code>Sleep 255</code>. <span class="ver">[v1.0.46.11+]</span>: 可以识别用科学计数法表示的浮点数; 但只有在它们含有小数点时才行(例如 <code>1<strong>.</strong>0e4</code> 和 <code>-2<strong>.</strong>1E-4</code>).</p>
 <p id="percent-space"><strong>强制使用表达式</strong>: 通过在表达式前加上百分号和空格或 tab, 能把表达式用在不直接支持表达式的参数中(除了像 <a href="commands/StringLen.htm">StringLen</a> 的 OutputVar 和 InputVar 的那些参数). 这种技巧常用来访问<a href="misc/Arrays.htm">数组</a>. 例如:</p>
-<pre><a href="commands/FileAppend.htm">FileAppend</a>, <strong>%</strong> MyArray%i%, My File.txt
-<a href="commands/FileAppend.htm">FileAppend</a>, <strong>%</strong> MyPseudoArray%i%, My File.txt
-<a href="commands/MsgBox.htm">MsgBox</a> <strong>%</strong> &quot;The variable MyVar contains &quot; . MyVar . &quot;.&quot;
-<a href="commands/Loop.htm">Loop</a> <strong>%</strong> Iterations + 1
-<a href="commands/WinSet.htm">WinSet</a>, Transparent, <strong>%</strong> X + 100
-<a href="commands/Control.htm">Control</a>, Choose, <strong>%</strong> CurrentSelection - 1</pre>
+<pre><a href="commands/FileAppend.htm">FileAppend</a>, % MyArray%i%, My File.txt
+<a href="commands/FileAppend.htm">FileAppend</a>, % MyPseudoArray%i%, My File.txt
+<a href="commands/MsgBox.htm">MsgBox</a> % &quot;The variable MyVar contains &quot; . MyVar . &quot;.&quot;
+<a href="commands/Loop.htm">Loop</a> % Iterations + 1
+<a href="commands/WinSet.htm">WinSet</a>, Transparent, % X + 100
+<a href="commands/Control.htm">Control</a>, Choose, % CurrentSelection - 1</pre>
 
 <h2 id="Operators">表达式中的运算符</h2>
 <p class="note">有关运算符的一般信息, 请参阅<a href="Language.htm#operators">运算符</a>.</p>
@@ -130,7 +130,7 @@ msgbox % (-2)**0.5 ; 结果为空
       <p id="amp"><strong>取址(&amp;)</strong>: <code>&amp;MyVar</code> 获取 <em>MyVar</em> 的内容的内存地址, 此地址一般和 <a href="commands/DllCall.htm#struct">DllCall 结构</a>一起使用. 同时 <code>&amp;MyVar</code> 也禁用了此变量中的二进制数的缓存, 如果它经常用于数学或数值比较, 那么这会拖慢其性能. 每当变量的地址改变时会重新启用它的缓存(例如使用 <a href="commands/VarSetCapacity.htm">VarSetCapacity()</a>).</p>
       <p><strong>解除引用(*)</strong>: <code>*Expression</code> 假定 <code>Expression</code> 解析为数值的内存地址; 它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0; 但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="commands/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
   </tr>
-  <tr>
+  <tr id="MulDiv">
     <td style="text-align:center"><strong>*<br>
 	/<br>
 	//
@@ -141,7 +141,7 @@ msgbox % (-2)**0.5 ; 结果为空
     <p><a href="commands/EnvMult.htm">*=</a> 和 <a href="commands/EnvDiv.htm">/=</a> 运算符是用变量的值乘以或除以另一个值的一种简写形式. 例如, <code>Var*=2</code> 和 <code>Var:=Var*2</code> 会得到相同的结果(不过前者执行的更好).</p>
     <p>除数为零时结果为空(空字符串).</p></td>
   </tr>
-  <tr>
+  <tr id="AddSub">
     <td style="text-align:center"><strong>+<br>
 	-</strong></td>
     <td><p><strong>加(+)</strong> 和 <strong>减(-)</strong>. 相关提示, <a href="commands/EnvAdd.htm"><strong>+=</strong></a> 和 <a href="commands/EnvSub.htm"><strong>-=</strong></a> 运算符是从变量中增加或减少值的一种简写形式. 例如, <code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 同样地, 使用 <a href="#IncDec">Var++, Var--, ++Var 或 --Var</a> 可以让变量增加或减小 1.</p>
@@ -211,16 +211,16 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
       <p class="note"><strong>注意</strong>: 加了引号的字符串例如 "55" 在这种情况下总是被当成非数值的.</p>
     </td>
   </tr>
-  <tr>
+  <tr id="not">
     <td style="text-align:center"><strong>NOT</strong></td>
     <td><strong>逻辑非</strong>. 除了优先级较低外, 其他的与 <strong>!</strong> 运算符相同. 例如, <code>not (x = 3 or y = 3)</code> 等同于 <code><strong>!</strong>(x = 3 or y = 3)</code>. </td>
   </tr>
-  <tr>
+  <tr id="and">
     <td style="text-align:center"><strong>AND<br>
 	&amp;&amp;</strong></td>
     <td>这两个运算符都是 <strong>逻辑与</strong>. 例如: <code>x &gt; 3 and x &lt; 10</code>. 要提高性能, 则要应用<a href="Functions.htm#ShortCircuit">求值优化</a>. 此外, 以 AND/OR/&amp;&amp;/||(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾.</td>
   </tr>
-  <tr>
+  <tr id="or">
     <td style="text-align:center"><strong>OR<br>
 	||</strong></td>
     <td>这两个运算符都是 <strong>逻辑或</strong>. 例如: <code>x &lt;= 3 or x &gt;= 10</code>. 要提高性能, 则要应用<a href="Functions.htm#ShortCircuit">求值优化</a>.</td>

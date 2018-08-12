@@ -169,7 +169,7 @@ MsgBox You pressed button #%WhichButton%.</pre>
 
 <pre class="NoIndent"><em>; 例子: 改变壁纸为指定的位图 (.bmp) 文件.</em>
 
-DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, <i>A_WinDir <strong>.</strong> "\winnt.bmp"</i>, UInt, 2)</pre>
+DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, A_WinDir <strong>.</strong> "\winnt.bmp", UInt, 2)</pre>
 
 <pre class="NoIndent"><em>; 例子: 调用 API 函数 "IsWindowVisible" 来判断记事本窗口是否可见.</em>
 
@@ -189,10 +189,11 @@ MsgBox % Format("{:010}", 432)
 
 <pre class="NoIndent" id="QPC"><em>; 例子: 演示 QueryPerformanceCounter(), 它提供了比 <a href="../Variables.htm#TickCount">A_TickCount</a> 的 10ms 更高的精确度.</em>
 
+DllCall(&quot;QueryPerformanceFrequency&quot;, &quot;Int64*&quot;, freq)
 DllCall("QueryPerformanceCounter", "Int64*", CounterBefore)
 Sleep 1000
 DllCall("QueryPerformanceCounter", "Int64*", CounterAfter)
-MsgBox % "Elapsed QPC time is " . CounterAfter - CounterBefore</pre>
+MsgBox % &quot;Elapsed QPC time is &quot; . (CounterAfter - CounterBefore) / freq * 1000 &quot; ms&quot;</pre>
 
 <pre class="NoIndent"><em>; 例子: 这是个临时减慢鼠标移动速度的热键, 这样有助于准确定位.
 ; 按住 F1 来降低鼠标速度. 释放后则恢复原来的速度.</em>

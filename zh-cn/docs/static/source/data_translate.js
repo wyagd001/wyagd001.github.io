@@ -2,9 +2,15 @@
   // sidebar
   "Content":"目录(C)",
   "Index":"索引(N)",
-  "Type in the keyword to find:":"输入要查找的关键词:",
+  "Filter":"过滤筛选",
+  "Directives":"指令",
+  "Built-in Variables":"内置变量",
+  "Built-in Functions":"内置函数",
+  "Control Flow Statements":"控制流语句",
+  "Declarations":"声明",
+  "Operators":"运算符",
+  "Commands":"命令",
   "Search":"搜索(S)",
-  "Type in the word(s) to search for:":"输入要搜索的内容:",
   "Highlight the words":"高亮搜索",
   // header
   "Hide/Show sidebar":"显示/隐藏 侧边栏",
