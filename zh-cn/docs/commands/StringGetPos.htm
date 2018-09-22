@@ -15,7 +15,7 @@
 <p>获取指定的子字符串在某个字符串中的位置.</p>
 <p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此命令. 使用 <a href="InStr.htm">InStr</a> 函数作为代替.</p>
 
-<pre class="Syntax"><span class="func">StringGetPos</span>, OutputVar, InputVar, SearchText <span class="optional">, L#|R#, Offset</span></pre>
+<pre class="Syntax"><span class="func">StringGetPos</span>, OutputVar, InputVar, SearchText <span class="optional">, Occurrence, Offset</span></pre>
 <h2>参数</h2>
 <dl>
 
@@ -28,9 +28,13 @@
   <dt>SearchText</dt>
   <dd><p>要搜索的字符串. 如果没有启用 <a href="StringCaseSense.htm">StringCaseSense</a>, 那么匹配过程不区分大小写.</p></dd>
 
-  <dt>L#|R#</dt>
-  <dd><p>当 <em>SearchText</em> 在 <em>InputVar</em> 中出现多次时, 此参数决定找到哪个. 如果省略此参数, 那么会从 <em>InputVar</em> 左边开始查找, 直到找到首个匹配. 如果此参数为 1 或字母 R, 那么将从 <em>InputVar</em> 的右边往左开始查找, 直到找到首个匹配.</p>
-      <p>要查找非首个匹配, 请在字母 L 或 R 后面指定出现位置的编号. 例如, 要找到从右边开始的第四个匹配, 请指定 r4. 注意: 如果编号小于或等于零, 将找不到匹配.</p></dd>
+  <dt>Occurrence</dt>
+  <dd>
+    <p>如果 <em>SearchText</em> 在 <em>InputVar</em> 中出现多次, 此参数影响那个将被找到. 如果省略此参数, 默认为 L1(意味着将从 <em>InputVar</em> 左边开始查找首个匹配). 要更改此行为, 请指定以下选项之一:</p>
+    <p><strong>L<em>n</em>:</strong> 从 <em>InputVar</em> 的左边开始搜索, 并继续向右直到找到第 <em>n</em> 个匹配.</p>
+    <p><strong>R<em>n</em>:</strong> 从 <em>InputVar</em> 的右边开始搜索, 并继续向左直到找到第 <em>n</em> 个匹配. 如果 <em>n</em> 省略(或 <em>Occurrence</em> 参数为 1), 默认为 R1. </p>
+    <p>例如, 要找到从右边开始的第四个匹配, 请指定 R4. 注意: 如果 <em>n</em> 小于或等于零, 将找不到匹配.</p>
+  </dd>
 
   <dt>Offset</dt>
   <dd><p>最左边或最右边 (取决于上面的参数) 需要跳过的字符数. 省略时默认为 0. 例如, 后面的语句会从左边的第十个字符开始查找:<code>StringGetPos, OutputVar, InputVar, abc, , 9</code>. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
@@ -41,7 +45,7 @@
 <p>在 <em>InputVar</em> 中的指定位置没有找到 <em>SearchText</em> 时 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
 <h2>备注</h2>
 <p>与 <a href="StringMid.htm">StringMid</a> 和 <a href="InStr.htm">InStr()</a> 不同, StringGetPos 中首个字符的位置为 0.</p>
-<p>获取的位置总是相对于 <em>InputVar</em> 的首个字符, 不受 <em>L#|R#</em> 和/或 <em>Offset</em> 的值影响. 例如, 如果在 123abc789 中查找 "abc", 那么获取的位置总为 3, 而不论查找的参数如何.</p>
+<p>获取的位置总是相对于 <em>InputVar</em> 的首个字符, 不受 <em>Occurrence</em> 和/或 <em>Offset</em> 的值影响. 例如, 如果在 123abc789 中查找 "abc", 那么获取的位置总为 3, 而不论查找的参数如何.</p>
 <p>如果 <em>SearchText</em> 不存在于 <em>InputVar</em> 中的指定出现位置, 那么 <em>OutputVar</em> 将被置为 -1 且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
 <p>使用 <a href="SplitPath.htm">SplitPath</a> 可以更容易地将文件路径分解为目录, 文件名和扩展名.</p>
 <p>内置变量 <a href="../Variables.htm">%A_Space%</a> 和 <a href="../Variables.htm">%A_Tab%</a> 分别包含了单个空格和单个 tab 字符. 当您需要搜索单独的空格或 tab 或在 <em>SearchText</em> 的开始或末尾含有空格或 tab 时, 这很有用.</p>
