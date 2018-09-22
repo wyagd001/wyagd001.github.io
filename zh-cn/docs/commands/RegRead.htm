@@ -24,7 +24,7 @@
 
   <dt>KeyName</dt>
   <dd><p>注册表键的全名.</p>
-      <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, or HKEY_CURRENT_CONFIG(或这些的缩写, 如 HKLM) 开始. 要访问<a href="LoopReg.htm#remote">远程注册表</a>, 请在前面加上计算机名和冒号(或在 <span class="ver">[v1.1.21+]</span>, 用正斜杠 /), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+      <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG(或这些的缩写, 如 HKLM) 开始. 要访问<a href="LoopReg.htm#remote">远程注册表</a>, 请在前面加上计算机名和冒号(或在 <span class="ver">[v1.1.21+]</span>, 可用斜杠 / 或 \), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code>, 或 <span class="ver">[v1.1.21+]</span> <code>\\workstation01\HKEY_LOCAL_MACHINE</code></p></dd>
 
   <dt>ValueName</dt>
   <dd><p>用来存储获取值的变量名. 如果省略, 则获取 <em>KeyName</em> 的默认值, 这是在注册表中值名显示为 "(默认)" 的值. 如果没有默认值(即注册表中显示 "数值未设置"), 则将 <em>OutputVar</em> 置空且 ErrorLevel 设置为 1.</p></dd>
@@ -56,7 +56,7 @@ MsgBox, Program files are in: %OutputVar%
   <dd><p>用来存储获取值的变量名. 如果无法获取, 则变量被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 1.</p></dd>
 
   <dt>RootKey</dt>
-  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或在 <span class="ver">[v1.1.21+]</span> 用正斜杠 /), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+  <dd><p>必须为 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG 的其中一个(或者它们的缩写, 例如 HKLM). 要访问远程注册表, 请在前面加上计算机名和冒号(或在 <span class="ver">[v1.1.21+]</span> 可用斜杠 / 或 \), 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code>, 或 <span class="ver">[v1.1.21+]</span> <code>\\workstation01\HKEY_LOCAL_MACHINE</code></p></dd>
 
   <dt>SubKey</dt>
   <dd><p>子键名(例如 Software\SomeApplication).</p></dd>
@@ -99,27 +99,6 @@ MsgBox, Program files are in: %OutputVar%</pre>
 <p><a href="RegDelete.htm">RegDelete</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; The following example retrieves the TYPE of a registry value (e.g. REG_SZ or REG_DWORD).</em>
-MsgBox % RegKeyType(&quot;HKCU&quot;, &quot;Environment&quot;, &quot;TEMP&quot;)
-return
-
-<pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
-
-;此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>
-<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 <span class="ver">[v1.1.08+]</span></em>
-
-RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">,</span> SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
-MsgBox, Program files are in: %OutputVar%
-
-<em>; 备用写法 需要 <span class="ver">[requires v1.1.21+]</span>:</em>
-RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">\</span>SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
-MsgBox, Program files are in: %OutputVar%
-
-<em>; 另一种返回 Program Files 目录路径的方法:</em>
-EnvGet OutputVar, % <a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles"
-MsgBox, Program files are in: %OutputVar%
-</pre>
-<p>&nbsp;</p>
 <pre class="NoIndent"><em>; 下面的例子获取注册表值的类型 (例如 REG_SZ 或 REG_DWORD).</em>
 MsgBox % RegKeyType(&quot;HKCU&quot;, &quot;Environment&quot;, &quot;TEMP&quot;)
 return
