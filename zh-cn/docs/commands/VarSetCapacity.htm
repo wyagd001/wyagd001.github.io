@@ -19,14 +19,14 @@
 <dl>
 
   <dt>TargetVar</dt>
-  <dd><p>变量的引用. 例如: <code>VarSetCapacity(MyVar, 1000)</code>.<br>或者是动态变量, 例如 <code>Array%i%</code> .<br>还可以是函数的 <a href="../Functions.htm#ByRef">ByRef 参数</a>.</p></dd>
+  <dd><p>变量的引用. 例如: <code>VarSetCapacity(MyVar, 1000)</code>. 这也可以是动态变量, 例如 <code>Array%i%</code> 或是函数的 <a href="../Functions.htm#ByRef">ByRef 参数</a>.</p></dd>
 
   <dt>RequestedCapacity</dt>
-  <dd><p>如果省略此参数, 则函数将返回变量(UnquotedVarName) 当前的容量且不会改变其的内容. 否则, 变量中的所有内容将会丢弃(变量被置空).</p>
-      <p>指定一个数字则表示调节变量所能接受的容量大小, 以字节为单位. <span class="red">同时清空变量现有内容!</span><br>如果变量用于存储 Unicode 字符串, 本参数应设为 ANSI 字符串的两倍(即 x2).<br><br>译者注: ANSI 字符串一个英文字母占用一字节, 而中文字每个占用两个字节.<br><br>本参数无需考虑内部零终止符.<br>例如, 设为 1 表示修改变量容量为最多可接受一字节字符串的内容加上内部终止符.<br><br>注意: AHK 脚本中给变量赋值是自动扩展变量容量大小的, 即使之前用本函数将变量设为一个较小的容量, 也不会影响之后给变量传递更大的值.</p> 
-      <p>因此可以经常简单地调用此函数来确保变量占用最小的空间, 考虑到性能原因, 只有在 <em>RequestedCapacity</em> 为 0 时它才会缩小变量的容量. 换句话说, 如果变量的容量已经大于 <em>RequestedCapacity</em>, 则不会减小它的容量(但为了保持一致, 变量会被置空).</p>
+  <dd><p>如果省略, 则函数将返回变量当前的容量且不会改变其的内容. 否则, 变量中的所有内容将会丢弃(变量被置空).</p>
+      <p>为 <em>RequestedCapacity</em> 指定调整后变量所能容纳的字节数. 对于 Unicode 字符串, 本参数应设为 ANSI 字符串的两倍(即 x2). 译者注: ANSI 字符串一个英文字母占用一字节, 而中文字每个占用两个字节. <em>RequestedCapacity</em> 无需考虑内部零终止符. 例如, 指定 1 表示修改变量容量为最多可接受一字节字符串的内容加上内部终止符. 注意: AHK 脚本中给变量赋值是自动扩展变量容量大小的, 即使之前用本函数将变量设为一个较小的容量, 也不会影响之后给变量传递更大的值.</p> 
+      <p>因此可以经常简单地调用此函数来确保变量占用最小的空间, 考虑到性能原因, 只有在 <em>RequestedCapacity</em> 为 0 时, 才会缩小变量的容量. 换句话说, 如果变量的容量已经大于 <em>RequestedCapacity</em>, 不会减小它的容量(但为了保持一致, 变量会被置空).</p>
       <p>因此, 要明确地缩小变量, 首先请使用 <code>VarSetCapacity(Var, 0)</code> 释放它占用的内存, 然后使用 <code>VarSetCapacity(Var, NewCapacity)</code> 或者简单地让它自动按需从零扩展.</p>
-      <p>考虑到性能的原因, 要释放一个原来容量小于 64 字节(在 Unicode 版本中为 128 字节) 的变量可能会没有效果, 因为它的内存是永久类型的. 此时, 会返回当前容量而不是 0.</p>
+      <p>考虑到性能的原因, 要释放一个原来容量小于 64 字节(在 Unicode 构建中为 128 字节) 的变量可能会没有效果, 因为它的内存是永久类型的. 此时, 会返回当前容量而不是 0.</p>
       <p>考虑到性能的原因, 容量小于 4096 字节的变量的内存不能通过赋值空字符串的方法来释放(例如 <code>Var := &quot;&quot;</code>). 然而, <code>VarSetCapacity(Var, 0)</code> 可释放它.</p>
       <p id="neg1"><span class="ver">[v1.0.44.03+]</span>: 可通过将 <em>RequestedCapacity</em> 设为 -1, 以将变量的内部存储的字符串长度更新为其当前内容的长度. 这个特性在变量被间接修改时特别有用, 例如将变量的<a href="../Variables.htm#amp">地址</a>递给 <a href="DllCall.htm">DllCall()</a>. 在这种模式中, VarSetCapacity() 可返回以字节为单位的实际内容的长度而不是变量的容量. 译者注: 某些 Dll 中的函数返回的变量, 其长度为 0, 直接调用时该变量表现为空值, 需要使用 <code>VarSetCapacity(UnquotedVarName, -1)</code> 将变量长度更新为其当前内容的实际长度.</p></dd>
 

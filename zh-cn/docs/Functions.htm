@@ -301,7 +301,7 @@ static TotalAttempts = 0, PrevResult</pre>
 <p>脚本中可以不需要通过 <a href="commands/_Include.htm">#Include</a> 而调用外部文件中的函数. 要达到此目的, 一个和函数相同名称的文件必须存在于下面库目录的其中一个:</p>
 <pre><a href="Variables.htm#ScriptDir">%A_ScriptDir%</a>\Lib\  <em>; 局部库 - 需要 <span class="ver">[AHK_L 42+].</em>
 <a href="Variables.htm#MyDocuments">%A_MyDocuments%</a>\AutoHotkey\Lib\  <em>; 用户库.</em>
-path-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
+directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
 <p>例如, 当脚本调用不存在的函数 <code>MyFunc()</code> 时, 程序会在用户库中搜索名为"MyFunc.ahk"的文件. 如果没有找到, 会继续在标准库中搜索此文件. 如果仍然没有找到匹配的文件且函数的名称含有下划线(例如 <code>MyPrefix_MyFunc</code>), 那么程序会在两个库中搜索名为 <code>MyPrefix.ahk</code> 的文件, 如果找到则加载它. 这样使得 <code>MyPrefix.ahk</code> 可以同时包含 <code>MyPrefix_MyFunc</code> 函数和其他名称以 <code>MyPrefix_</code> 开始的相关函数.</p>
 <p><span class="ver">[AHK_L 42+]:</span> 支持局部库且局部库优先于用户库和标准库.</p>
 <p>只有如 <code>MyFunc()</code> 这样直接的函数声明才能自动导入库. 如果函数是动态生成或间接引用的, 就像 timer(定时器) 或 GUI event(GUI 事件), 那么库必须直接被导入, 例如: <code><a href="commands/_Include.htm">#Include</a> &lt;MyFunc&gt;</code></p>
@@ -372,12 +372,12 @@ path-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
     <th>描述</th>
   </tr>
   <tr id="Asc">
-    <td><a href="commands/Asc.htm">Asc(String)</a></td>
-    <td>返回 String 第一个字节的数值 或 UTF-16 编码单元, 如果 String 为空则返回 0. (ANSI 编码)返回值的范围为 0 - 255 或者(Unicode 编码) 0 - 0xFFFF . 参考 Unicode vs ANSI . 要允许 Unicode supplementary characters(Unicode 补充字节), 请使用 Ord(String) 替代.</td>
+    <td><a href="commands/Asc.htm">Asc</a></td>
+    <td>返回指定字符串第一个字节或 UTF-16 编码单元的数值.</td>
   </tr>
   <tr id="Chr">
-    <td><a href="commands/Chr.htm">Chr(Number)</a></td>
-    <td>返回与参数 Number 指定的编码相匹配的字符串(通常只有一个字节). 高于 127 的字符编码取决于正在使用的 string encoding(文本编码) , 返回值还会被 Unicode 或 ANSI 的可执行文件反向影响. 如果支持 Unicode , 那么 Number 为 Unicode 字符编码在 0 到 0x10FFFF(或 0xFFFF 在 [v1.1.21] 之前版本) 之间的某个值; 其他 ANSI 字符编码时则为 0 到 255 之间的某个值. 如果 Number 不是有效范围内的值, 则返回一个空字符串. 通常情况下字符编码包含 9(tab 缩进符), 10(linefeed 换行符), 13(carriage return 回车符), 32(space 空格符), 48-57(the digits 0-9 数字 0-9), 65-90(uppercase A-Z 大写字母 A-Z), 97-122(lowercase a-z 小写字母 a-z).</td>
+    <td><a href="commands/Chr.htm">Chr</a></td>
+    <td>返回指定数字所代表的字符编码中相对应的字符串(通常只有一个字节).</td>
   </tr>
   <tr id="DllCall">
     <td><a href="commands/DllCall.htm">DllCall</a></td>
@@ -393,58 +393,58 @@ path-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
   </tr>
   <tr id="Format">
     <td><a href="commands/Format.htm">Format</a></td>
-    <td>根据格式字符串设置可变数量的输入值的格式.</td>
+    <td>根据格式字符串, 设置可变数量的输入值的格式.</td>
   </tr>
   <tr id="Func">
-    <td><a href="commands/Func.htm">Func(FunctionName)</a></td>
+    <td><a href="commands/Func.htm">Func</a></td>
     <td>获取指定函数的引用.</td>
   </tr>
   <tr id="GetKeyName">
-    <td><a href="commands/GetKey.htm">GetKeyName/GetKeyVK/GetKeySC</a></td>
+    <td><a href="commands/GetKey.htm">GetKeyName/VK/SC</a></td>
     <td>获取按键的名称/文本, 虚拟按键码或扫描码.</td>
   </tr>
   <tr id="IsByRef">
-    <td><a href="commands/IsByRef.htm">IsByRef(Var)</a></td>
-    <td>当 Var 为 ByRef 参数且调用者提供了变量时返回 1; 否则当 Var 为其他类型的变量时返回 0.</td>
+    <td><a href="commands/IsByRef.htm">IsByRef</a></td>
+    <td>如果函数的 ByRef 参数与指定变量一起提供, 则返回一个非零数字.</td>
   </tr>
   <tr id="IsFunc">
-    <td><a href="commands/IsFunc.htm">IsFunc(FunctionName)</a></td>
-    <td>如果 FunctionName 不是显式出现在脚本中(通过例如 #Include 或对 库函数 的非动态调用的方法), 则 IsFunc() 返回 0. 否则它返回函数的强制参数个数加一的数字(例如 1 为函数可以不需要参数, 2 为函数需要 1 个参数等等). 例如, 函数存在时 if IsFunc("MyFunc") 和 if IsFunc(VarContainingFunctionName) 语句为真, 否则为假. <span class="ver">[v1.1.00+]</span>: FunctionName 为可以代替函数名的函数引用.</td>
+    <td><a href="commands/IsFunc.htm">IsFunc</a></td>
+    <td>如果脚本中存在指定的函数, 则返回一个非零数字.</td>
   </tr>
   <tr id="IsLabel">
-    <td><a href="commands/IsLabel.htm">IsLabel(LabelName)</a></td>
-    <td>如果 LabelName 为脚本中的子程序, 热键或热字串(不包括 LabelName 中末尾的冒号), 则返回非零数字. 例如, 标签存在时 if IsLabel(VarContainingLabelName) 将为真, 否则为假. 在类似 Gosub, Hotkey, Menu 和 Gui 命令中指定动态标签时, 使用此函数可以避免运行时错误.</td>
+    <td><a href="commands/IsLabel.htm">IsLabel</a></td>
+    <td>如果脚本中存在指定的标签, 则返回一个非零数字.</td>
   </tr>
   <tr id="IsObject">
     <td><a href="commands/IsObject.htm">IsObject</a></td>
-    <td>判断某个值是否为对象.</td>
+    <td>如果指定的值是对象, 则返回一个非零数字.</td>
   </tr>
   <tr id="ListView">
     <td><a href="commands/ListView.htm#BuiltIn">ListView</a></td>
-    <td>用于 增加, 插入, 修改 或 删除 ListView 行/列 的函数, 还可以用于从中获取数据.</td>
+    <td>用于增加, 插入, 修改或删除 ListView 行/列的函数, 还可以用于从中获取数据.</td>
   </tr>
   <tr id="NumGet">
-    <td><a href="commands/NumGet.htm">NumGet(VarOrAddress [, Offset = 0][, Type = "UPtr"])</a></td>
+    <td><a href="commands/NumGet.htm">NumGet</a></td>
     <td>返回在指定地址+偏移的位置存储的二进制数.</td>
   </tr>
   <tr id="NumPut">
-    <td><a href="commands/NumPut.htm">NumPut(Number, VarOrAddress [, Offset = 0][, Type = "UPtr"])</a></td>
+    <td><a href="commands/NumPut.htm">NumPut</a></td>
     <td>以二进制格式把数字存储到指定地址+偏移的位置.</td>
   </tr>
   <tr id="OnMessage">
-    <td><a href="commands/OnMessage.htm">OnMessage(MsgNumber [, "FunctionName"])</a></td>
+    <td><a href="commands/OnMessage.htm">OnMessage</a></td>
     <td>监听消息/事件.</td>
   </tr>
   <tr id="Ord">
-    <td><a href="commands/Ord.htm">Ord(String)</a></td>
-    <td>返回 String 中第一个字符的有序字符编码数值. 如果 String 以 Unicode 填充符号开头, Ord(String) 返回 Unicode 字符编码(范围在 0x10000 到 0x10FFFF 之间的某个数). 其他情况下与 Asc(String) 的返回值相同.</td>
+    <td><a href="commands/Ord.htm">Ord</a></td>
+    <td>返回指定字符串中第一个字符的序号值(数字字符编码).</td>
   </tr>
   <tr id="StrGet">
-    <td><a href="commands/StrPutGet.htm">StrGet(Address [, Length] [, Encoding = None ] )</a></td>
+    <td><a href="commands/StrPutGet.htm">StrGet</a></td>
     <td>从内存地址复制字符串, 并可以将其在不同代码页间进行转换.</td>
   </tr>
   <tr id="StrPut">
-    <td><a href="commands/StrPutGet.htm">StrPut(String, Address [, Length] [, Encoding = None ] )</a></td>
+    <td><a href="commands/StrPutGet.htm">StrPut</a></td>
     <td>复制字符串到内存地址, 并可以对其在不同代码页间进行转换.</td>
   </tr>
   <tr id="RegisterCallback">
@@ -453,15 +453,15 @@ path-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
   </tr>
   <tr id="TreeView">
     <td><a href="commands/TreeView.htm#BuiltIn">TreeView</a></td>
-    <td>用于添加, 修改 或 删除 TreeView 单元格 的函数, 还可用于从其中获取数据.</td>
+    <td>用于添加, 修改或删除 TreeView 单元格 的函数, 还可用于从其中获取数据.</td>
   </tr>
   <tr id="Trim">
     <td><a href="commands/Trim.htm">Trim</a></td>
-    <td>移除字符串的开始和/或末尾的某些字符.</td>
+    <td>移除字符串的开头和/或末尾处的某些字符.</td>
   </tr>
   <tr id="VarSetCapacity">
-    <td><a href="commands/VarSetCapacity.htm">VarSetCapacity(UnquotedVarName [, RequestedCapacity, FillByte])</a></td>
-    <td>增加或清空变量占用的内存.</td>
+    <td><a href="commands/VarSetCapacity.htm">VarSetCapacity</a></td>
+    <td>增加变量的容量或释放其内存.</td>
   </tr>
 </table>
 <h3 id="Math">数学函数</h3>
@@ -471,51 +471,51 @@ path-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
     <th>描述</th>
   </tr>
   <tr id="Abs">
-    <td><a href="commands/Math.htm#Abs">Abs(Number)</a></td>
+    <td><a href="commands/Math.htm#Abs">Abs</a></td>
     <td>返回 <em>Number</em> 的绝对值.</td>
   </tr>
   <tr id="Ceil">
-    <td><a href="commands/Math.htm#Ceil">Ceil(Number)</a></td>
-    <td>返回 <em>Number</em> 的四舍五入值(不带任何 .00 后缀).</td>
+    <td><a href="commands/Math.htm#Ceil">Ceil</a></td>
+    <td>返回 <em>Number</em> 的向上取整(不带任何 .00 后缀).</td>
   </tr>
   <tr id="Exp">
-    <td><a href="commands/Math.htm#Exp">Exp(N)</a></td>
+    <td><a href="commands/Math.htm#Exp">Exp</a></td>
     <td>返回 <em>e</em>(近似值为 2.71828182845905) 的 <em>N</em>次幂.</td>
   </tr>
   <tr id="Floor">
-    <td><a href="commands/Math.htm#Floor">Floor(Number)</a></td>
-    <td>返回 <em>Number</em> 的向下取整(不带任何 .00 后缀). 例如, Floor(1.2) 的结果为 1 而 Floor(-1.2) 结果为 -2.</td>
+    <td><a href="commands/Math.htm#Floor">Floor</a></td>
+    <td>返回 <em>Number</em> 的向下取整(不带任何 .00 后缀).</td>
   </tr>
   <tr id="Log">
-    <td><a href="commands/Math.htm#Log">Log(Number)</a></td>
-    <td>返回 <em>Number</em> 的对数(底数为 10). 结果格式化为浮点数. 如果 Number 为负数, 则返回空字符串.</td>
+    <td><a href="commands/Math.htm#Log">Log</a></td>
+    <td>返回 <em>Number</em> 的对数(底数为 10).</td>
   </tr>
   <tr id="Ln">
-    <td><a href="commands/Math.htm#Ln">Ln(Number)</a></td>
-    <td>返回 <em>Number</em> 的自然对数(底数为 e). 结果格式化为 浮点数. 如果 Number 为负数, 则返回空字符串.</td>
+    <td><a href="commands/Math.htm#Ln">Ln</a></td>
+    <td>返回 <em>Number</em> 的自然对数(底数为 e). </td>
   </tr>
   <tr>
     <td><span id="Max"></span><span id="Min"></span><a href="commands/Math.htm#Max">Max</a> / <a href="commands/Math.htm#Min">Min</a></td>
     <td>返回 一个或多个数字的最大/最小值.</td>
   </tr>
   <tr id="Mod">
-    <td><a href="commands/Math.htm#Mod">Mod(Dividend, Divisor)</a></td>
-    <td>求模, 返回被除数 <em>Dividend</em> 除以除数 <em>Divisor</em> 后得到的余数. 结果的正负总是与被除数一致. 例如, mod(5, 3) 和 mod(5, -3) 的结果都为 2, 但 mod(-5, 3) 和 mod(-5, -3) 的结果为 -2. 如果其中一个参数为浮点数, 那么结果也是浮点数. 例如, mod(5.0, 3) 的结果为 2.0 而 mod(5, 3.5) 的结果为 1.5. 如果除数为零, 则函数返回空值(空字符串).</td>
+    <td><a href="commands/Math.htm#Mod">Mod</a></td>
+    <td>返回被除数 <em>Dividend</em> 除以除数 <em>Divisor</em> 后得到的余数.</td>
   </tr>
   <tr id="Round">
-    <td><a href="commands/Math.htm#Round">Round(Number [, N])</a></td>
-    <td>返回 <em>Number</em> 取整到 <em>N</em> 个小数点之后的位置. 如果 N 省略或为 0, 则 Number 被取整到最近的整数. 如果 N 为正数, 则 Number 被取整到 N 个小数位. 如果 N 为负数, 则 Number 被取整到十进制小数点左边 N 位. 例如,Round(345, -1) 的结果为 350 而 Round(345, -2) 的结果为 300. 与 Transform Round 不同, 每当 N 省略或小于 1 时结果不带 .000 后缀. 在 v1.0.44.01+, N 值大于零时会准确显示 N 个小数位而不遵循 SetFormat 的设置. 要避免这种情况, 需要对 Round() 的返回值再进行一次数学运算; 例如: Round(3.333, 1)+0.</td>
+    <td><a href="commands/Math.htm#Round">Round</a></td>
+    <td>返回 <em>Number</em> 四舍五入到 <em>N</em> 个小数位的数字.</td>
   </tr>
   <tr id="Sqrt">
-    <td><a href="commands/Math.htm#Sqrt">Sqrt(Number)</a></td>
-    <td>返回 <em>Number</em> 的平方根. 结果格式化为 浮点数. 如果 Number 为负数, 则函数返回空字符串.</td>
+    <td><a href="commands/Math.htm#Sqrt">Sqrt</a></td>
+    <td>返回 <em>Number</em> 的平方根.</td>
   </tr>
   <tr>
-    <td><span id="Sin"></span><span id="Cos"></span><span id="Tan"></span><a href="commands/Math.htm#Sin">Sin(Number)</a> / <a href="commands/Math.htm#Cos">Cos(Number)</a> / <a href="commands/Math.htm#Tan">Tan(Number)</a></td>
-    <td>返回 <em>Number</em> 的 sine(正弦)/cosine(余弦)/tangent(正切) 值. Number 为弧度.</td>
+    <td><span id="Sin"></span><span id="Cos"></span><span id="Tan"></span><a href="commands/Math.htm#Sin">Sin</a> / <a href="commands/Math.htm#Cos">Cos</a> / <a href="commands/Math.htm#Tan">Tan</a></td>
+    <td>返回 <em>Number</em> 的 sine(正弦)/cosine(余弦)/tangent(正切) 值.</td>
   </tr>
   <tr>
-    <td><span id="ASin"></span><span id="ACos"></span><span id="ATan"></span><a href="commands/Math.htm#ASin">ASin(Number)</a> / <a href="commands/Math.htm#ACos">ACos(Number)</a> / <a href="commands/Math.htm#ATan">ATan(Number)</a></td>
+    <td><span id="ASin"></span><span id="ACos"></span><span id="ATan"></span><a href="commands/Math.htm#ASin">ASin</a> / <a href="commands/Math.htm#ACos">ACos</a> / <a href="commands/Math.htm#ATan">ATan</a></td>
     <td>返回 Number 的 arcsine(反正弦)/arccosine(反余弦)/arctangent(反正切) 的弧度值.</td>
   </tr>
 </table>
