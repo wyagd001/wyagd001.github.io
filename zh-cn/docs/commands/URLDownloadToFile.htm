@@ -48,29 +48,29 @@ UrlDownloadToFile, ftp://user:pass@example.com/My Directory, C:\Dir Listing.html
 <h2>示例</h2>
 <pre class="NoIndent">UrlDownloadToFile, https://autohotkey.com/download/1.1/version.txt, C:\AutoHotkey Latest Version.txt
 UrlDownloadToFile, http://someorg.org/archive.zip, C:\SomeOrg's Archive.zip</pre>
-<pre id="WHR" class="NoIndent"><em>; 示例:下载文本到变量:</em>
+<pre id="WHR" class="NoIndent"><em>; 示例: 下载文本到变量:</em>
 whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "https://autohotkey.com/download/1.1/version.txt", true)
 whr.Send()
-<em>; Using 'true' above and the call below allows the script to remain responsive.</em>
+<em>; 使用 'true'(上面) 和调用下面的函数, 允许脚本保持响应.</em>
 whr.WaitForResponse()
 version := whr.ResponseText
 MsgBox % version
 </pre>
-<pre id="XHR" class="NoIndent"><em>; Example: Make an asynchronous HTTP request.</em>
+<pre id="XHR" class="NoIndent"><em>; 示例: 发出异步 HTTP 请求.</em>
 
 req := ComObjCreate("Msxml2.XMLHTTP")
-<em>; Open a request with async enabled.</em>
+<em>; 打开启用异步的请求.</em>
 req.open("GET", "https://autohotkey.com/download/1.1/version.txt", true)
-<em>; Set our callback function <span class="ver">[requires v1.1.17+]</span>.</em>
+<em>; 设置回调函数 <span class="ver">[需要 v1.1.17+]</span>.</em>
 req.onreadystatechange := Func("Ready")
-<em>; Send the request.  Ready() will be called when it's complete.</em>
+<em>; 发送请求. Ready() 将在其完成后被调用.</em>
 req.send()
 <em>/*
-; If you're going to wait, there's no need for onreadystatechange.
-; Setting async=true and waiting like this allows the script to remain
-; responsive while the download is taking place, whereas async=false
-; will make the script unresponsive.
+; 如果你要一直等待到下载完毕, 就不需要 onreadystatechange 了.
+; 设置 async=true 和像这样等待, 可以在下载过程中
+; 允许脚本保留响应, 而 async=false
+; 将使脚本无响应.
 while req.readyState != 4
     sleep 100
 */</em>
@@ -78,9 +78,9 @@ while req.readyState != 4
 
 Ready() {
     global req
-    if (req.readyState != 4)  <em>; Not done yet.</em>
+    if (req.readyState != 4)  <em>; 没有完成.</em>
         return
-    if (req.status == 200) <em>; OK.</em>
+    if (req.status == 200) <em>; 完成.</em>
         MsgBox % "Latest AutoHotkey version: " req.responseText
     else
         MsgBox 16,, % "Status " req.status
