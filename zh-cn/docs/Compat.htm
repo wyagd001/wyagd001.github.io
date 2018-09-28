@@ -168,22 +168,21 @@ MsgBox,, Title
 <p><a href="Variables.htm#IsCompiled">A_IsCompiled</a> 当脚本未编译时被定义为空字符串. 之前它会被保留为未定义, 这意味着当脚本未编译时对它进行赋值(例如 <code>A_IsCompiled := 1</code>) 是有效的. 现在在所有的情况中它都被视为只读的内置变量.</p>
 
 <h3 id="Escaped_Whitespace">转义的空白符</h3>
-<p>不再从每个参数的开始和末尾移除转义的空白字符(例如 <code>`t</code> 和 <code>`</code>). 例如, <code>StringReplace s, s, `t</code> 现在是有效的, 并会移除 <em>s</em> 中的所有 tab 字符.</p>
-
+<p>不再从每个参数的开始和末尾移除转义的空白字符(如 <code>`t</code> 和 <code>`</code>). 例如, <code>StringReplace OutputVar, InputVar, `t</code> 现在是有效的, 并会移除 <em>InputVar</em> 中的所有 tab 字符.</p>
 
 <h2 id="Format">Unicode 和 ANSI 的比较</h2>
-<p>文本值(text value) 通常会被看做字符串( <em>string</em> ), 也就是被视作为序列(sequence) 或 <em>一串</em> 字符. 每个字符的数值和大小(单位是 bytes 字节) 取决于所使用的 AutoHotkey 构建: <i>Unicode</i> 或 <i>ANSI</i>. 这些细节对于进行下列操作的脚本通常很重要:</p>
+<p>文本值(text value) 通常会被看做字符串( <em>string</em> ), 也就是被视作为序列(sequence) 或 <em>一串</em> 字符. 每个字符的数值和大小(单位是字节) 取决于所使用的 AutoHotkey 构建: <i>Unicode</i> 或 <i>ANSI</i>. 这些细节对于进行下列操作的脚本通常很重要:</p>
 <ul>
   <li>通过 <a href="#DllCall">DllCall</a> 传递字符串到外部函数.</li>
   <li>通过 <a href="commands/PostMessage.htm">PostMessage/SendMessage</a> 传递字符串.</li>
   <li>通过 <a href="#NumPutGet">NumPut/NumGet</a> 直接操作字符串.</li>
   <li>使用 <a href="#VarSetCapacity">VarSetCapacity</a> 来确保变量中能存储一定数目的字符.</li>
 </ul>
-<p>为一种特殊格式设计的脚本使用错误的 AutoHotkey 版本运行时常常会遇到问题. 例如, 一些为 AutoHotkey Basic 编写的脚本能正常运行在 AutoHotkey_L 的 ANSI 版本中, 但在 Unicode 版本中会失败. 如果您不确定正在使用的版本, 请运行下面的脚本:</p>
+<p>使用一种特殊格式设计的脚本在使用错误的 AutoHotkey 版本运行时常常会遇到问题. 例如, 一些为 AutoHotkey Basic 编写的脚本能正常运行在 AutoHotkey_L 的 ANSI 版本中, 但在 Unicode 版本中会失败. 如果您不确定正在使用的版本, 请运行下面的脚本:</p>
 <pre>MsgBox % <a href="Variables.htm#IsUnicode">A_IsUnicode</a> ? "Unicode" : "ANSI"</pre>
 <p><strong>ANSI:</strong> 每个字符占用<strong>一个字节</strong>(8 位). 大于 127 的字符代码取决于系统的语言设置.</p>
 <p><strong>Unicode:</strong> 每个字符占用<strong>两个字节</strong>(16 位). 字符代码在 <a href="http://en.wikipedia.org/wiki/UTF-16">UTF-16</a> 格式中定义.</p>
-<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为<i>两个</i> 16 位代码单元, 一起被称为"代理项对". 同样地, 一些 <a href="http://msdn.microsoft.com/en-us/library/dd317752.aspx">ANSI 代码页</a>(通常称为<a href="http://msdn.microsoft.com/en-us/library/dd317794.aspx">双字节字符集</a>) 含有一些双字节字符. 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为"字符").</p>
+<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为<i>两个</i> 16 位代码单元, 一起被称为"代理项对". 同样地, 一些 <a href="http://msdn.microsoft.com/en-us/library/dd317752.aspx">ANSI 代码页</a>(通常称为<a href="http://msdn.microsoft.com/en-us/library/dd317794.aspx">双字节字符集</a>,  例如 cp936 中的汉字) 含有一些双字节字符. 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为"字符").</p>
 
 <h3 id="VarSetCapacity">VarSetCapacity</h3>
 <p>VarSetCapacity 设置一个变量占用的空间, <i>单位为字节</i>. 要根据字符数设置变量的容量, 必须同时考虑字符的大小. 例如:</p>
