@@ -273,7 +273,7 @@
 <p><a href="commands/SetTimer.htm#once">运行一次</a>的计时器如果与脚本创建的对象相关联, 则会在运行后自动删除. 这允许在脚本不再引用它的情况下释放对象, 但这也表示计时器的 <em>Period</em> 和<em>Priority</em> 不再保留.</p>
 <p>SetTimer, Hotkey, GuiControl 和 Menu 现在检查由参考给出的函数的最小参数计数(不像以前的版本). 如果该功能需要太多参数, 会引发错误或设置 ErrorLevel(视情况而定).</p>
 <p><strong>向后兼容的改变:</strong></p>
-<p>如果计时器的<a href="commands/SetTimer.htm#Label"><em>标签</em></a> 参数被<a href="commands/SetTimer.htm#OmitLabel">省略</a>且 <a href="Variables.htm#ThisLabel">A_ThisLabel</a> 为空, 则使用当前的定时器(如果有的话).</p>
+<p>如果计时器的<a href="commands/SetTimer.htm#Label"><em>标签</em></a> 参数被<a href="commands/SetTimer.htm#OmitLabel">省略</a>且 <a href="Variables.htm#ThisLabel">A_ThisLabel</a> 为空, 则使用当前的计时器(如果有的话).</p>
 <p><strong>新特性:</strong></p>
 <p>增加 <a href="commands/GuiControls.htm#Tab">Tab3 控件类型</a>, 解决若干 Tab 控件的问题.</p>
 <p><strong>Bug 修复:</strong></p>
@@ -334,8 +334,8 @@
 <p>修复 SetTimer Delete 的一些问题.</p>
 <ul>
   <li>KeyHistory 的 timer 计数当中错误的包含了已经删除的 timer.</li>
-  <li>由定时器初始化的线程中, 如果已被删除但并未关闭的定时器调用了 KeyHistory 将会引起脚本崩溃.</li>
-  <li>删除最近创建的定时器时会导致早前创建的定时器无法运行除非所有定时器被删除.</li>
+  <li>由计时器初始化的线程中, 如果已被删除但并未关闭的计时器调用了 KeyHistory 将会引起脚本崩溃.</li>
+  <li>删除最近创建的计时器时会导致早前创建的计时器无法运行除非所有计时器被删除.</li>
 </ul>
 
 <h2 id="v1.1.22.08">1.1.22.08 - 2015 年 11 月 11 日</h2>
@@ -384,7 +384,7 @@
 
 <h2 id="v1.1.22.02">1.1.22.02 - 2015 年 5 月 27 日</h2>
 <p>修正 TreeView 对于未知消息不提交 <code>*</code>  事件.</p>
-<p>修正 定时器删除本身时出现的崩溃或坏的表现.</p>
+<p>修正 计时器删除本身时出现的崩溃或坏的表现.</p>
 <p>修正 RWin-up <a href="commands/_MenuMaskKey.htm">被屏蔽</a> 在某些罕见的情况下而 LWin-up 不会.</p>
 
 <h2 id="v1.1.22.01">1.1.22.01 - 2015 年 5 月 24 日</h2>
@@ -443,14 +443,14 @@
   <li>如果 ErrorLevel 包含一个对象并且线程被中断, 线程继续时对象替换为空字符串, 就像 v1.1.19 及早期版本.</li>
   <li>当线程继续时, 如果 ErrorLevel 包含一个字符串的长度超过 127 个字符, 它会被截断, 就像 v1.1.19 及早期版本.</li>
 </ul>
-<p>修正 定时器有时会导致 ErrorLevel 会被格式化成十六进制值.</p>
+<p>修正 计时器有时会导致 ErrorLevel 会被格式化成十六进制值.</p>
 <p>修正 类方法保留类的计数引用.</p>
 
 <h2 id="v1.1.20.00">1.1.20.00 - 2015 年 3 月 8 日</h2>
 <p><strong>新特性:</strong></p>
-<p>增强 Hotkey, Menu, SetTimer, Gui events 和 Gui control events 接受<a href="misc/Labels.htm#Functions">函数替换标签</a>, 如果没有找到标签.</p>
-<p>增强 Hotkey, Menu, SetTimer 和 Gui control events 接受<a href="objects/Functor.htm"> Func 对象</a>. 添加一个删除子命令来让 settimer 释放对象.</p>
-<p>增强 <a href="commands/OnMessage.htm">OnMessage()</a>允许任意数量的函数或函数对象来监控单个消息.</p>
+<p>增强 Hotkey, Menu, SetTimer, Gui 事件和 Gui 控件事件接受<a href="misc/Labels.htm#Functions">函数替换标签</a>, 如果没有找到标签.</p>
+<p>增强 Hotkey, Menu, SetTimer 和 Gui 控件事件接受 <a href="objects/Functor.htm">Func 对象</a>. 添加一个删除子命令来让 settimer 释放对象.</p>
+<p>增强 <a href="commands/OnMessage.htm">OnMessage()</a> 允许任意数量的函数或函数对象来监控单个消息.</p>
 <p>添加 <a href="commands/OnExit.htm">OnExit()</a> 和 <a href="commands/OnClipboardChange.htm">OnClipboardChange()</a> 接受函数名或对象.</p>
 <p>添加 <a href="Hotkeys.htm#Function">热键标签指向函数</a>的功能.</p>
 <p>添加 <a href="commands/Format.htm#ULT">U/L/T 修饰语</a>执行 Format() 的情况转换.</p>
@@ -1449,7 +1449,7 @@ if (%C%="我")  ; 该句脚本判断结果为真
 
 <h2 id="L21">Revision 21 - 2009 年 3 月 16 日</h2>
 <p>优化 While. [感谢 Chris]</p>
-<p>修复(调试器): 版本 19 和 20 从调用堆栈中忽略了定时器的线程.</p>
+<p>修复(调试器): 版本 19 和 20 从调用堆栈中忽略了计时器的线程.</p>
 <p>修复(调试器): 在大多数情况下不转义 XML 的保留字符.</p>
 <p>修复(调试器): 在退出脚本之前, 最终的响应中使用了不正确的命令和 transaction_id.</p>  
 

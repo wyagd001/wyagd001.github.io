@@ -14,9 +14,9 @@
 
 <p>"函数对象"泛指以下内容:</p>
 <ul>
-  <li><a href="Func.htm">函数对象</a>, 即<a href="../Functions.htm">函数</a>的对象形式; 包含内置函数及脚本定义的函数</li>
+  <li>对 <a href="Func.htm">Func 对象</a>的引用, 它表示一个实际的<a href="../Functions.htm">函数</a>; 包含内置函数及脚本定义的函数.</li>
   <li>支持像函数一样被调用的用户定义的对象. 亦称为"函数子".</li>
-  <li>其他支持像函数一样被调用的对象, 如, <a href="#BoundFunc">函数绑定对象</a>, 或, COM 方法返回的 JavaScript 函数对象.</li>
+  <li>其他支持像函数一样被调用的对象, 如<a href="#BoundFunc">绑定函数对象</a>或 COM 方法返回的 JavaScript 函数对象.</li>
 </ul>
 <p>函数对象可被以下对象使用:</p>
 <ul>
@@ -33,11 +33,11 @@
 <!-- TODO: Explain how a user-defined object could be useful -->
 <p>用户定义函数对象应按以下模式:</p>
 <pre>class YourClassName {
-    Call(a, b) {  <em>;声明参数, 或<a href="../Functions.htm#Variadic">数组*</a>.</em>
+    Call(a, b) {  <em>; 根据需要声明参数, 或<a href="../Functions.htm#Variadic">数组*</a>.</em>
         <em>;...</em>
     }
     __Call(method, args*) {
-        if (method = "")  <em>;对 <a href="../Functions.htm#DynCall">%fn%()</a> 或 fn.()</em>
+        if (method = "")  <em>; 对 <a href="../Functions.htm#DynCall">%fn%()</a> 或 fn.()</em>
             return this.Call(args*)
         if (IsObject(method))  <em>; 如果此函数对象作为方法被使用.</em>
             return this.Call(method, args*)
@@ -53,14 +53,14 @@
 </ul>
 <p>上述过程可以直接在 __Call 中完成, 推荐使用 __Call 代替 Call 以便更好的迁移到 <a href="https://autohotkey.com/v2/">AutoHotkey v2</a> 版本, 其会改变 <code>%this%()</code> 的行为及调用 CALL 的方法调用.</p>
 
-<h2 id="BoundFunc">函数绑定对象<span class="ver">[v1.1.20+]</span></h2>
-<p>行为像函数, 但仅将传递给自己的参数绑定至另一个函数.</p>
-<p>有两种建立函数绑定对象的方式:</p>
+<h2 id="BoundFunc">绑定函数对象<span class="ver">[v1.1.20+]</span></h2>
+<p>行为像函数, 但只是将预定义的参数传递给另一个函数.</p>
+<p>有两种建立绑定函数对象的方式:</p>
 <ul>
-  <li>调用 <a href="Func.htm#Bind">Func.Bind()</a> 方法, 其绑定参数值至一个函数</li>
-  <li>调用 <a href="../commands/ObjBindMethod.htm">ObjBindMethod()</a> 函数, 其绑定参数值及方法名至目标对象.</li>
+  <li>调用 <a href="Func.htm#Bind">Func.Bind()</a> 方法, 其绑定参数值至一个函数.</li>
+  <li>调用 <a href="../commands/ObjBindMethod.htm">ObjBindMethod()</a> 函数, 其绑定参数值和方法名至目标对象.</li>
 </ul>
-<p>函数绑定对象可按如下实例调用. 不支持其他方法. 当函数绑定对象被调用时, 它调用被绑定的函数或方法, 传递绑定的参数, 及调用时的参数. 例如:</p>
+<p>调用绑定函数对象, 如下例所示. 不支持其他方法. 当绑定函数对象被调用时, 它调用绑定的函数或方法, 传递绑定的参数和后面跟着的调用者传递的任何参数. 例如:</p>
 <pre>fn := Func("RealFn").Bind(1)
 
 %fn%(2)    <em>; 显示 "1, 2"</em>
