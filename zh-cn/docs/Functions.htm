@@ -39,12 +39,12 @@
 <p>当然, 调用函数时也可以不保存其返回值:</p>
 <pre>Add(2, 3)</pre>
 <p>不过这种情况下, 函数的任何返回值都会被丢弃; 所以除非函数还有除了返回值之外的功能(译者注: 比如函数内修改了全局变量; 通过 ByRef 修改了变量值...等等), 否则这次调用毫无意义.</p>
-<p>由于函数调用属于<a href="Variables.htm#Expressions">表达式</a 语法, 所以在其参数列表中的任何变量名称都不应该用百分号包围. 同时, 表示原义字符串的变量则应该用双引号包围. 例如:</p>
+<p>由于函数调用属于<a href="Variables.htm#Expressions">表达式</a>语法, 所以在其参数列表中的任何变量名称都不应该用百分号包围. 同时, 表示原义字符串的变量则应该用双引号包围. 例如:</p>
 <pre>if <a href="#InStr">InStr</a>(MyVar, "fox")
     MsgBox The variable MyVar contains the word fox.</pre>
 <p>最后, 通常在命令的参数中也可以调用函数(除了像 <a href="commands/StringLen.htm">StringLen</a> 中的 OutputVar 和 InputVar 这种参数之外). 另外, 在不支持<a href="Variables.htm#Expressions">表达式</a>的参数中调用函数时必须加上 "% " 前缀(百分号加一个空格), 例如:</p>
 <pre>MsgBox % &quot;The answer is: &quot; . Add(3, 2)</pre>
-<p>在原生支持表达式的参数中也允许加上 "% " 前缀, 但它只是会被忽略.(译者注: 总之在你不确定是否应该加 "% " 前缀的情况下, 加上总是没错的.)</p>
+<p>在原生支持表达式的参数中也允许加上 "% " 前缀, 但它只是会被忽略. (译者注: 总之在你不确定是否应该加 "% " 前缀的情况下, 加上总是没错的.)</p>
 <h2 id="param">参数</h2>
 <p>定义函数时, 其参数都在其名称后面的括号中列出(函数名和左括号之间不能有空格). 如果函数不接受任何参数, 请把括号留空, 例如: <code>GetCurrentTimestamp()</code>.</p>
 <p id="ByRef"><strong>ByRef 参数</strong>: 从函数的角度看, 参数本质上是<a href="#Local">局部变量</a>, 除非它们被定义为 <em>ByRef</em>, 例如:</p>
@@ -298,17 +298,17 @@ static TotalAttempts = 0, PrevResult</pre>
 <p>可以使用 <a href="commands/_Include.htm">#Include</a> 指令(<em>即使在脚本的顶部</em>) 从外部文件中加载函数.</p>
 <p>说明: 当脚本的执行流遇到函数定义时, 它会跳过函数(使用一种瞬时的方法) 并在函数闭括号后恢复执行. 因此, 开始执行时执行流不会陷入函数中, 也不会因为在脚本的最顶部存在一个或多个函数而影响到<a href="Scripts.htm#auto">自动执行段</a>.</p>
 <h2 id="lib">函数库: 标准库和用户库 <span class="ver">[v1.0.47+]</span></h2>
-<p>脚本中可以不需要通过 <a href="commands/_Include.htm">#Include</a> 而调用外部文件中的函数. 要达到此目的, 一个和函数相同名称的文件必须存在于下面库目录的其中一个:</p>
-<pre><a href="Variables.htm#ScriptDir">%A_ScriptDir%</a>\Lib\  <em>; 局部库 - 需要 <span class="ver">[AHK_L 42+].</em>
+<p>脚本中可以不需要通过 <a href="commands/_Include.htm">#Include</a> 而调用外部文件中的函数. 要达到此目的, 必须在下面某个库文件夹中存在与函数同名的文件:</p>
+<pre><a href="Variables.htm#ScriptDir">%A_ScriptDir%</a>\Lib\  <em>; 本地库, 脚本所在目录中的 Lib 文件夹 - 需要 <span class="ver">[AHK_L 42+].</em>
 <a href="Variables.htm#MyDocuments">%A_MyDocuments%</a>\AutoHotkey\Lib\  <em>; 用户库.</em>
-directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库.</em></pre>
+directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前运行的 AutoHotkey.exe 所在目录中的 Lib 文件夹.</em></pre>
 <p>例如, 当脚本调用不存在的函数 <code>MyFunc()</code> 时, 程序会在用户库中搜索名为"MyFunc.ahk"的文件. 如果没有找到, 会继续在标准库中搜索此文件. 如果仍然没有找到匹配的文件且函数的名称含有下划线(例如 <code>MyPrefix_MyFunc</code>), 那么程序会在两个库中搜索名为 <code>MyPrefix.ahk</code> 的文件, 如果找到则加载它. 这样使得 <code>MyPrefix.ahk</code> 可以同时包含 <code>MyPrefix_MyFunc</code> 函数和其他名称以 <code>MyPrefix_</code> 开始的相关函数.</p>
-<p><span class="ver">[AHK_L 42+]:</span> 支持局部库且局部库优先于用户库和标准库.</p>
-<p>只有如 <code>MyFunc()</code> 这样直接的函数声明才能自动导入库. 如果仅动态或间接调用该函数, 就像计时器或 GUI 事件, 那么库必须直接被导入, 例如: <code><a href="commands/_Include.htm">#Include</a> &lt;MyFunc&gt;</code></p>
-<p>虽然库文件通常只包含和它的文件名称相同的单个函数, 但它还可以包含仅被此函数调用的私有函数和子程序. 然而, 这样的函数应该使用相当特殊的名称, 因为它们仍属于全局命名空间; 也就是说, 可以在脚本的任意位置调用它们.</p>
-<p>如果在库文件中使用 <a href="commands/_Include.htm">#Include</a>, 那么 #Include 的工作目录为库文件自身所在的目录. 利用这个特性可以重定向到较大的库文件, 其中包含此函数及相关内容.</p>
+<p><span class="ver">[AHK_L 42+]:</span> 支持本地库且本地库优先于用户库和标准库.</p>
+<p>只有如 <code>MyFunc()</code> 这样直接的函数声明才能自动导入库. 如果仅动态或间接调用该函数, 就像计时器或 GUI 事件, 那么库必须在脚本中明确的导入, 例如: <code><a href="commands/_Include.htm">#Include</a> &lt;MyFunc&gt;</code></p>
+<p>虽然库文件通常只包含和它的文件名称相同的单个函数, 但它还可以包含仅被此函数调用的私有函数和子程序. 然而, 这样的函数应该使用相当明确清晰的名称, 因为它们仍属于全局命名空间; 也就是说, 可以在脚本的任意位置调用它们.</p>
+<p>如果库文件使用 <a href="commands/_Include.htm">#Include</a>, 那么 #Include 的工作目录为库文件自身所在的目录. 利用这个特性可以重定向到较大的库文件, 其中包含此函数及相关内容.</p>
 <p><a href="Scripts.htm#ahk2exe">脚本编译器(ahk2exe)</a> 同样支持库函数. 不过, 它要求在编译器目录的上一级目录中存在 AutoHotkey.exe 的副本(通常是这样). 如果不存在 AutoHotkey.exe, 编译器仍可以运行但无法自动包含库函数.</p>
-<p>包含在库中的函数和其他函数执行的一样好, 因为在脚本开始执行前已经预加载了它们.</p>
+<p>从库中导入的函数和其他函数执行的一样好, 因为在脚本开始执行前已经预加载了它们.</p>
 <h2 id="BuiltIn">内置函数</h2>
 <p>在内置函数参数列表末尾的任何可选参数可以完全省略. 例如, <code>WinExist("Untitled - Notepad")</code> 是有效的, 因为它的其他三个参数被认为是空的.</p>
 <p>如果脚本定义了与内置函数同名的函数, 那么内置函数会被覆盖. 例如, 脚本会调用它自己定义的 WinExist() 函数来代替标准的那个. 然而, 这样脚本将无法调用原来的函数.</p>

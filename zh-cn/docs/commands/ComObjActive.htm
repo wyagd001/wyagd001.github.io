@@ -12,14 +12,14 @@
 
 <h1>ComObjActive() <span class="ver">[AHK_L 53+]</span></h1>
 
-<p>检索正在运行的 OLE 已注册对象.</p>
+<p>检索已使用 OLE(对象连接与嵌入) 注册的运行对象.</p>
 <pre class="Syntax">ComObject := <span class="func">ComObjActive</span>(CLSID)</pre>
 
 <p id="param">创建一个表示要作为参数或返回值传递的类型化值的对象.</p>
 <pre class="Syntax">ParamObj := <span class="func">ComObject</span>(VarType, Value <span class="optional">, Flags</span>)</pre>
 <hr>
 <p class="warning"><strong>不建议:</strong> 不推荐使用以下方法, 后续版本中可能被替换或不再支持.</p>
-<p id="missing">在调用 COM 对象的方法时创建一个可用于替代可选参数默认值的对象. <span class="ver">[v1.1.12+]</span>: 这种函数已废弃使用. 作为代替, 使用两个连续的逗号, 如 <code>Obj.Method(1,,3)</code></p>
+<p id="missing">在调用 COM(组件对象模型) 对象的方法时创建一个可用于替代可选参数默认值的对象. <span class="ver">[v1.1.12+]</span>: 这种函数已废弃使用. 作为代替, 使用两个连续的逗号, 如 <code>Obj.Method(1,,3)</code></p>
 <pre class="Syntax">ParamObj := <span class="func">ComObjMissing</span>()</pre>
 
 <p id="enwrap">装包或拆包位于可用对象的原始 <a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a> 指针, 并自动调用 AddRef(增加引用).</p>
@@ -81,7 +81,7 @@ sc.Run("Example", vref)  <em>; sc 应像<a href="#ByRefEx">下面例子</a>一�
 MsgBox % vref[]</pre>
 
 <h2 id="Remarks">一般说明</h2>
-<p>当前版本中, 除 COM 相关函数, 任何以"ComObj"函数名开头的函数调用实际调用 ComObjActive 函数. 如, <code>ComObjEnwrap(DispPtr)</code> 及 <code>ComObjActive(DispPtr)</code> 均等效于 <code>ComObject(DispPtr)</code>(隐式地, <em>变量类型</em>为 9). 此行为可能于后续版本改变, 故, 建议仅使用本页所展示的 <code>ComObject()</code> 及 <code>ComObjActive()</code>.</p>
+<p>当前版本中, 任何以"ComObj"开头的函数调用, 如果不匹配目录列表中的其他 COM 函数, 则实际调用 ComObjActive 函数. 如, <code>ComObjEnwrap(DispPtr)</code> 及 <code>ComObjActive(DispPtr)</code> 均等效于 <code>ComObject(DispPtr)</code>(隐式地, <em>变量类型</em>为 9). 此行为可能于后续版本不再可用, 故建议仅使用本页所展示的 <code>ComObject()</code> 及 <code>ComObjActive()</code>.</p>
 <p>如果 ComObjActive 不能检索活动的对象, 则可能会抛出异常, 退出脚本或返回空字符串, 具体取决于当前的 <a href="ComObjError.htm">ComObjError</a> 设置和<a href="ComObjError.htm#factors">其他因素</a>.</p>
 <p>当使用此函数包装或检索 IDispatch 或 IUnknown 接口指针时, 默认的行为会增加 COM 对象的引用计数. 因此, 当不使用时, 须<a href="ObjAddRef.htm">手动释放</a>接口指针. 当用于封装的对象被释放时, 他所包含的引用被自动释放.</p>
 <p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>if (obj1 == obj2)</code>, <code>array[obj1] := value</code> 这样的比较和赋值运算, 会把两个包装器对象视为独立的, 即使它们包含相同的 COM 对象.</p>
