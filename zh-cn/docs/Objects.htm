@@ -288,7 +288,7 @@ other.test()</pre>
 <h4 id="Custom_Classes_var">Instance Variables(实例变量)<span class="ver">[v1.1.01+]</span></h4>
 <p>一个 <em>instance variable 实例变量</em> 是类的每个实例都拥有独立的副本(实例是从类派生的每个对象). 他们如同普通赋值一样被声明, 但 <code>this.</code> 前缀被忽略(仅限于类体内部时):</p>
 <pre>InstanceVar := Expression</pre>
-<p>这些声明在使用 <a href="#Custom_NewDelete">new</a> 关键字建立类的新实例时被计算. 处于此原因方法名 <code>__Init</code> 被保留, 脚本中不可使用. <a href="#Custom_NewDelete">__New()</a>方法在所有此类声明计算完毕后被调用, 包括在基类中定义的那些. <em>表达式</em> 可以通过 <code>this</code> 访问其他实例变量和方法, 但其他所有的变量引用都假定为全局的.</p>
+<p>这些声明在使用 <a href="#Custom_NewDelete">new</a> 关键字建立类的新实例时被计算. 处于此原因方法名 <code>__Init</code> 被保留, 脚本中不可使用. <a href="#Custom_NewDelete">__New()</a> 方法在所有此类声明计算完毕后被调用, 包括在基类中定义的那些. <em>表达式</em> 可以通过 <code>this</code> 访问其他实例变量和方法, 但其他所有的变量引用都假定为全局的.</p>
 <p>要访问实例变量, 总是要指定目标对象; 例如, <code><b>this</b>.InstanceVar</code>.</p>
 <p><span class="ver">[v1.1.08+]:</span>支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 例如, <code>x := {}, x.y := 42</code> 声明了 <code>x</code> 并初始化了 <code>this.x.y</code> .</p>
 
@@ -608,7 +608,7 @@ Default__Warn(nonobj, p1="", p2="", p3="", p4="")
 <p>操作系统会在程序退出时自动回收对象占用的内存, 如果对象的所有引用已经被释放, 那么 <a href="#Custom_NewDelete">__Delete</a> 不会被调用. 所以当引用对象被提前释放而不是通过操作系统自动回收时, 可能造成比较严重的后果, 比如产生临时文件.<br>(译者注: 也就是程序如果因为类似死循环这种情况所造成的意外崩溃, 可能导致某些资源的内存无法被操作系统自动回收. 所以老大在这里强调的意思是让咱们小心使用元函数.)</p>
 
 <span id="AddressCast"></span><h3 id="Implementation_Pointers">对象的指针</h3>
-<p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后取回. 可以通过 <code>address := &amp;object</code> 获取对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道一个. 如果对象的 <em>已知</em> 最后一个引用被释放, 该对象将被删除. 因此, 脚本必须设法通知(引用计数器)对象的引用增加了. 有两种方法实现:</p>
+<p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后检索. 可以通过 <code>address := &amp;object</code> 来检索对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道对象中的一个. 如果对象的最后一个 <em>已知</em> 引用被释放, 该对象将被删除. 因此, 脚本必须设法通知对象它的引用增加了. 有两种方法实现:</p>
 <pre><em>; 方法 #1: 显式地增加引用计数.</em>
 address := &amp;object
 <a href="commands/ObjAddRef.htm">ObjAddRef</a>(address)

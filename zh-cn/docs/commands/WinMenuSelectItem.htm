@@ -60,14 +60,14 @@
 <p>参数中的菜单名称还可以使用位置代替. 提供这种方法是为了支持不包含文本的菜单(可能是由于它们包含文本的图片而不是真实的文本). 位置 1&amp; 表示首个菜单项(例如 File 菜单), 位置 2&amp; 表示第二个菜单项(例如 Edit 菜单) 等. 为了确定菜单项的位置, 菜单分隔线也作为菜单项计算.</p>
 <p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时, 才能检测到隐藏窗口.</p>
 
-<h2 id="sys">System Menu <span class="ver">[v1.1.28+]</span></h2>
-<p><em>Menu</em> 可以是 <code>0&amp;</code> 并能在窗口的系统菜单中选择一个项目, 通常在用户按下 <kbd>Alt</kbd>+<kbd>Space</kbd> 或点击窗口标题栏中的图标时, 菜单就会出现. 例如:</p>
-<pre><em>; Paste a command into cmd.exe without activating the window.</em>
+<h2 id="sys">系统菜单<span class="ver">[v1.1.28+]</span></h2>
+<p><em>Menu</em> 可以是 <code>0&amp;</code>, 以选择窗口系统菜单的项目, 菜单通常在用户按下 <kbd>Alt</kbd>+<kbd>Space</kbd> 或点击窗口标题栏中的图标时出现. 例如:</p>
+<pre><em>; 粘贴命令到 cmd.exe 而不用激活窗口.</em>
 Clipboard := "echo Hello, world!`r"
 WinMenuSelectItem ahk_exe cmd.exe,, 0&amp;, Edit, Paste</pre>
 <p class="warning"><strong>警告:</strong> 仅在窗口的系统菜单中具有自定义项目时使用此项.</p>
-<p>如果窗口还没有自定义系统菜单, 则将具有创建一个标准系统菜单的副本并关联到目标窗口的副作用. 该副本在脚本退出时被系统销毁, 导致其他脚本无法访问该副本. 因此, 避免在所有出现有标准项目的窗口上使用 0&amp;. 作为代替, 直接 post(发布) <a href="https://msdn.microsoft.com/library/ms646360">WM_SYSCOMMAND</a> 消息. 例如:</p>
-<pre><em>; Like "<a href="#WinMinmize.htm">WinMinimize</a> A", but also play the system sound for minimizing.</em>
+<p>如果窗口还没有自定义系统菜单, 则将具有创建一个标准系统菜单的副本并关联到目标窗口的副作用. 该副本在脚本退出时被系统销毁, 导致其他脚本无法访问该副本. 因此, 避免在所有显示标准项目的窗口上使用 0&amp;. 作为代替, 直接 post(发布) <a href="https://msdn.microsoft.com/library/ms646360">WM_SYSCOMMAND</a> 消息. 例如:</p>
+<pre><em>; 与 "<a href="#WinMinmize.htm">WinMinimize</a> A" 类似, 但最小化时播放系统声音(如果设置有).</em>
 WM_SYSCOMMAND := 0x112
 SC_MINIMIZE := 0xF020
 PostMessage WM_SYSCOMMAND, SC_MINIMIZE, 0,, A</pre>
