@@ -57,9 +57,9 @@ CopyOfVar := Var</pre>
 <p><strong>保存表达式的结果</strong>: 要把结果赋值给变量, 请使用 <a href="commands/SetExpression.htm">:= 运算符</a>. 例如:</p>
 <pre>NetPrice := Price * (1 - Discount/100)</pre>
 <p id="Boolean"><strong>布尔值</strong>: 要计算表达式结果为真还是假时(例如 IF 语句), 表达式结果为空或零被视为假, 而其他所有结果都视为真. 例如, 仅当 ItemCount 为空或 0 时 <code>if ItemCount</code> 的结果才为假. 类似地, 表达式 <code>if not ItemCount</code> 将产生相反的结果.</p>
-<p>像 NOT/AND/OR/&gt;/=/&lt; 这些运算符的运算会自动产生真值或假值的结果: 真值时结果为 1 而假值时为 0. 例如, 在下面的表达式中, 如果有一个条件为真则变量 <em>Done</em> 被赋值为 1:</p>
+<p>像 <b>NOT</b>/<b>AND</b>/<b>OR</b>/<b>&gt;</b>/<b>=</b>/<b>&lt;</b> 这些运算符的运算会自动产生真值或假值的结果: 真值时结果为 1 而假值时为 0. 例如, 在下面的表达式中, 如果有一个条件为真则变量 <em>Done</em> 被赋值为 1:</p>
 <pre>Done := A_Index &gt; 5 or FoundIt</pre>
-<p>如上面提示的那样, 简单地置空变量或为其赋值为 0 可以让它假值. 利用这种特性, 可以使用简写语句 <code>if Done</code> 来检查变量 Done 是真还是假.</p>
+<p>如上面提示的那样, 简单地置空变量或为其赋值为 0 可以让它为假值. 利用这种特性, 可以使用简写语句 <code>if Done</code> 来检查变量 Done 是真还是假.</p>
 <p><span id="True"></span><span id="False"></span>单词 <em>true</em> 和 <em>false</em> 是值分别为 1 和 0 的内置变量. 使用它们可以增加脚本的可读性, 例如:</p>
 <pre>CaseSensitive := false
 ContinueSearch := true</pre>
@@ -98,12 +98,14 @@ ContinueSearch := true</pre>
   <tr id="IncDec">
     <td style="text-align:center"><strong>++<br>
 	--</strong></td>
-    <td><strong>前置和后置的自增/自减</strong>. 从变量中增加或减去 1(但在 1.0.46 之前的版本中, 只有把它们放在一行中才能用; 此行中不能使用其他运算符). 运算符可以放在变量名的前面或后面. 如果放在变量名的 <em>前面</em>, 会立即执行运算并把结果用于后面的运算. 例如, <code>Var := ++X</code> 让 X 自增后才把它的值赋给 <em>Var</em>. 相反地, 如果运算符放在变量名的 <em>后面</em>, 在后面的运算使用了变量 <em>之后</em> 才对其进行自增运算. 例如, <code>Var := X++</code> 把 X 的当前值赋给 <em>Var</em> 后才进行自增. 由于向后兼容性, 仅当空变量在单独一行时运算符 ++ 和 -- 才把它们视为零; 例如, <code>y:=1, ++x</code> 和 <code>MsgBox % ++x</code> 当 x 为空时结果都为空. 该运算符用下面的例子来说明,<pre>
+    <td><strong>前置和后置的自增/自减</strong>. 从变量中增加或减去 1(但在 1.0.46 之前的版本中, 这些只能在一行上单独使用; 此行中不存在其他运算符). 运算符可以放在变量名的前面或后面. 如果放在变量名的 <em>前面</em>, 则立即执行自增/减运算并把结果用于下一运算. 例如, <code>Var := ++X</code> 让 X 自增后才把它的值赋给 <em>Var</em>. 相反地, 如果运算符放在变量名的 <em>后面</em>, 则在下一运算使用该变量 <em>之后</em> 才对其进行自增/减运算. 例如, <code>Var := X++</code> 把 X 的当前值赋给 <em>Var</em> 后才进行自增. 由于向后兼容性, 仅当空变量在一行中单独使用时, 运算符 ++ 和 -- 才把它们视为零; 例如, <code>y:=1, ++x</code> 和 <code>MsgBox % ++x</code> 当 x 为空时结果都为空. 该运算符用下面的例子来说明,<pre>
 x=1
 y=1
-var1:=x++   ; var1=1, x=2
-var2:=++y   ; var2=2, y=2
-</pre> 运行结果为, x 为 2, y 为 2, var1 为 1, var2 为 2.</td>
+var1:=++x  ; 结果为 var1=2, x=2
+var2:=y++  ; 结果为 var2=1, y=2
+++z        ; 空变量单独使用
+msgbox % z ; 结果为 z=1
+</pre></td>
   </tr>
   <tr id="pow">
     <td style="text-align:center"><strong>**</strong></td>
@@ -248,7 +250,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>. </p>
     <p>如果使用赋值运算的结果作为其他某些运算符的输出, 那么输入的值是变量自身. 例如, 如果变量 <em>Var</em> 新增值后大于 50, 那么表达式 <code>(Var+=2) &gt; 50</code> 结果为真. 这样还允许赋值被作为 <a href="Functions.htm#ByRef">ByRef</a> 传递或获取它的<a href="#amp">地址</a>, 例如: <code>&amp;(x:="abc")</code>. </p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等价于 <code>not (x:=y)</code>. 同样地, <code>++Var := X</code> 等价于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等价于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>. </p>
-    <p>由向后兼容引起的已知限制(可能会在未来的版本中解决): 1) 当 <strong>/=</strong> 为表达式中最左边的运算符并且它不是<a href="#comma">多语句表达式</a>的一部分时, 而且输入都不是浮点数时, 它会执行<a href="#FloorDivide">向下舍除</a>(在其他所有情况中, <strong>/=</strong> 会执行<a href="#divide">真除</a>); 2) 仅当 <strong>+=</strong> 和 <strong>-=</strong> 为一行中最左边的运算符时, 它们才支持<a href="commands/EnvAdd.htm">日期/时间的计算</a>; 3) 运算符 <strong>+=</strong>, <strong>-=</strong> 和 *= 仅在空变量在单独一行时才把它们视为零; 例如, <code>y:=1, x+=1</code> 和 <code>MsgBox % x-=3</code> 当 x 为空时都得到空的结果. </p></td>
+    <p>由向后兼容引起的已知限制(可能会在未来的版本中解决): 1) 当 <strong>/=</strong> 为表达式中最左边的运算符并且它不是<a href="#comma">多语句表达式</a>的一部分时, 而且输入都不是浮点数时, 它会执行<a href="#FloorDivide">向下舍除</a>(在其他所有情况中, <strong>/=</strong> 会执行<a href="#divide">真除</a>); 2) 仅当 <strong>+=</strong> 和 <strong>-=</strong> 为一行中最左边的运算符时, 它们才支持<a href="commands/EnvAdd.htm">日期/时间的计算</a>; 3) 运算符 <strong>+=</strong>, <strong>-=</strong> 和 *= 仅在空变量在一行单独使用时才把空变量视为零; 例如, <code>y:=1, x+=1</code> 和 <code>MsgBox % x-=3</code> 当 x 为空时都得到空的结果. </p></td>
   </tr>
   <tr id="comma">
     <td style="text-align:center"><strong>,</strong></td>
