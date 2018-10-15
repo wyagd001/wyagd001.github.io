@@ -22,6 +22,7 @@
 <p><strong><a href="#general-troubleshooting">一般故障排查</a></strong></p>
 <ul>
   <li><a href="#install">如果 AutoHotkey 无法安装我该怎么办?</a></li>
+  <li><a href="#rightclick">如何恢复 .ahk 文件的右键菜单选项?</a></li>
   <li><a href="#autoexec">为什么我脚本中的某些行总是无法执行?</a></li>
   <li><a href="#vista">为什么我的脚本在前一个系统运行良好却无法工作于 Windows <em>xxx</em> ?</a></li>
   <li><a href="#uac">我该如何处理用户账户控制(UAC) 导致的问题?</a></li>
@@ -75,9 +76,14 @@
 <p>1) 在参数中的输入或输出变量: <code><a href="commands/StringLen.htm">StringLen</a>, <strong>OutputVar</strong>, <strong>InputVar</strong></code><br>
   2) 在赋值表达式的左侧: <code><strong>Var</strong> = 123abc</code><br>
   3) 在<a href="commands/IfEqual.htm">传统(非表达式) if 语句</a>的左侧: <code>If <strong>Var1</strong> &lt; %Var2%</code><br>
-4) 在<a href="Variables.htm#Expressions">表达式</a> 中的任意位置. 例如:</p>
+4) 在<a href="Variables.htm#Expressions">表达式</a>中的任意位置. 例如:</p>
 <pre>If (<strong>Var1</strong> &lt;&gt; <strong>Var2</strong>)
     <strong>Var1 <a href="commands/SetExpression.htm">:=</a> Var2</strong> + 100</pre>
+<p>有关百分号如何使用的进一步解释, 请参阅<a href="Language.htm#legacy-syntax">传统语法</a>和<a href="Language.htm#dynamic-variables">动态变量</a>. 百分号还可以有其他含义:</p>
+<ul>
+  <li><a href="Language.htm#-expression">百分号-空格前缀</a>会导致命令参数被解释为表达式.</li>
+  <li><a href="commands/_EscapeChar.htm#Remarks">转义的</a>百分号(<code>`%</code>) 和<a href="Language.htm#strings">引号括起来的字符串</a>中的百分号没有特殊含义(它们被解释为原义百分号).</li>
+</ul>
 <h3 id="esc">什么时候应该对百分号和逗号进行<a href="commands/_EscapeChar.htm">转义</a>?</h3>
 <p>原义的百分号必须在它们前面加重音符/反引号进行<a href="commands/_EscapeChar.htm">转义</a>. 例如: <code>MsgBox The current percentage is 25`%.</code> 原义的逗号也必须进行转义(<code>`,</code>), 除非在 <a href="commands/MsgBox.htm">MsgBox</a> 或任何命令的最后一个参数(在这种情况下可以使用重音符但不是必须的) 使用时.</p>
 <p> 在<a href="Variables.htm#Expressions">表达式</a>中逗号或百分号括在引号中时, 可以使用这样重音符但不是必须的. 例如: <code>Var := &quot;15%&quot;</code>.</p>
@@ -91,6 +97,20 @@
 <li>以<a href="Program.htm#install">命令行</a>选项安装. 如果你手动解压安装程序( Exe 文件), 使用 <code>setup.exe /S</code> 或 <code>AutoHotkeyU32.exe Installer.ahk /S</code>.</li>
 </ul>
 <p><strong>其它:</strong> 以上建议基本能解决遇到的大多数问题. 更进一步的援助, 请到论坛发帖求助.</p>
+
+<h3 id="rightclick">如何恢复 .ahk 文件的右键菜单选项?</h3>
+<p>通常情况下, 如果安装了 AutoHotkey, 右键单击 AutoHotkey 脚本文件(.ahk) 应该会提供以下选项:</p>
+<ul>
+  <li>Run Script(运行脚本)</li>
+  <li>Compile Script(编译脚本)(取决于 <em>Install script compiler</em> 安装选项)</li>
+  <li>Edit Script(编辑脚本)</li>
+  <li>Run as administrator(以管理员权限运行)(如果在 AutoHotkey 安装时启用了 UAC)</li>
+  <li>Run with UI Access(以 UI Access 运行)(如果在安装期间启用了<a href="Program.htm#Installer_uiAccess">该选项</a> )</li>
+</ul>
+<p>有时这些选项会被当前用户配置文件中的设置覆盖, 例如是否使用 <em>Open With(打开方式)</em> 更改了打开 .ahk 文件的默认程序. 可以通过删除以下注册表键来解决此问题:</p>
+<pre class="no-highlight">HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.ahk\UserChoice</pre>
+<p>这可以通过应用<a href="misc/remove-userchoice.reg" download="remove-userchoice.reg">此注册表文件</a>来完成.</p>
+<p>还可能需要修复默认注册表值, 方法是重新安装 AutoHotkey 或运行 AutoHotkey Setup(从开始菜单) 并在窗口顶部选择<em>apply(应用)</em>.</p>
 
 <h3 id="autoexec">为什么我脚本中的某些行总是无法执行?</h3>
 <p>任何想在脚本启动时立即执行的行都应该出现在脚本的顶部, 要在首个<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>或 <a href="commands/Return.htm">Return</a> 之前. 更多细节请参阅<a href="Scripts.htm#auto">自动执行段</a>.</p>
@@ -207,15 +227,15 @@ FileDelete, C:\My Temp File.txt</pre>
 <p>要避免使用临时文件(特别是在输出比较大时), 可以考虑使用 <a href="commands/Run.htm">Run</a> 命令示例中展示的 <a href="commands/Run.htm#StdOut">Shell.Exec()</a> 方法.</p>
 <h3 id="close">如何让一个脚本关闭, 暂停或挂起其他的脚本?</h3>
 <p>首先, 这里有个关闭另一个脚本的例子:</p>
-<pre>DetectHiddenWindows On  <em>; Allows a script's hidden main window to be detected.</em>
-SetTitleMatchMode 2  <em>; Avoids the need to specify the full path of the file below.</em>
-WinClose Script's File Name.ahk - AutoHotkey  <em>; Update this to reflect the script's name (case sensitive).</em></pre>
+<pre>DetectHiddenWindows On  <em>; 允许脚本隐藏的主窗口能被检测到.</em>
+SetTitleMatchMode 2  <em>; 避免需要指定以下文件的完整路径.</em>
+WinClose Script's File Name.ahk - AutoHotkey  <em>; 要关闭的脚本的名称(区分大小写).</em></pre>
 <p>其次 <a href="commands/Suspend.htm">suspend(挂起)</a> 或 <a href="commands/Pause.htm">pause(暂停)</a> 另一个脚本, 请把上面脚本的最后一行替换为下列语句中的一行:</p>
-<pre>PostMessage, 0x111, 65305,,, Script's File Name.ahk - AutoHotkey  <em>; Suspend.</em>
-PostMessage, 0x111, 65306,,, Script's File Name.ahk - AutoHotkey  <em>; Pause.</em></pre>
+<pre>PostMessage, 0x111, 65305,,, Script's File Name.ahk - AutoHotkey  <em>; 挂起.</em>
+PostMessage, 0x111, 65306,,, Script's File Name.ahk - AutoHotkey  <em>; 暂停.</em></pre>
 <h3 id="repeat">如何在不退出脚本的情况下停止重复的动作?</h3>
 <p>通过按下热键来暂停或继续整个脚本, 需要给 <a href="commands/Pause.htm">Pause</a> 命令指定热键, 例如:</p>
-<pre>^!p::Pause  <em>; Press Ctrl+Alt+P to pause. Press it again to resume.</em></pre>
+<pre>^!p::Pause  <em>; 按下 Ctrl+Alt+P 暂停脚本. 再次按下以恢复.</em></pre>
 <p>要停止在 <a href="commands/Loop.htm">Loop (循环)</a> 中重复的操作, 请参考下面这个可运行示例, 热键启动和停止自身重复动作. 换句话说, 按下热键将开始循环. 再次按下同样的热键将停止循环.</p>
 <pre>#MaxThreadsPerHotkey 3
 <strong>#z::  <em>; Win+Z 热键(可根据您的喜好改变此热键).</em></strong>
@@ -246,7 +266,7 @@ return</pre>
 <p>对于 Internet Explorer, 可能最可靠的方法是使用 DllCall 和 COM 正如 <a href="http://www.autohotkey.com/forum/topic19256.html">www.autohotkey.com/forum/topic19256.html</a> 所演示的. 此外, 获取地址栏及状态栏相关内容的方法在 <a href="http://www.autohotkey.com/forum/topic19255.html">www.autohotkey.com/forum/topic19255.html</a> 中被提到.</p><p>译者注: 适用于旧版程序及使用 COM_L, 可能不适用于新版的程序(需修改相关代码才能适用于新版 AutoHotkey)</p>
 <p><strong>旧的, 稳定性稍差的方法:</strong> 下面示例中的技术对使用 IE 打开大多数网页时都有效. 类似的方法可能也适用于其他浏览器:</p>
 <pre>Run, www.yahoo.com
-MouseMove, 0, 0  <em>; Prevents the status bar from showing a mouse-hover link instead of &quot;Done&quot;.</em>
+MouseMove, 0, 0  <em>; 防止状态栏显示鼠标悬停链接而不是&quot;完成&quot;.</em>
 WinWait, Yahoo! - 
 WinActivate 
 <a href="commands/StatusBarWait.htm">StatusBarWait</a>, Done, 30
