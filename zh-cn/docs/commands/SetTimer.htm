@@ -21,24 +21,24 @@
   <dt id="Label">Label</dt>
   <dd><p>跳转的目标<a href="../misc/Labels.htm">标签</a>或<a href="../Hotkeys.htm">热键标签</a>的名称, 这样会执行 <em>Label</em> 下的命令, 直到遇到 <a href="Return.htm">Return</a> 或 <a href="Exit.htm">Exit</a>. 和几乎其他所有命令的参数一样, <em>Label</em> 可以为<a href="../Variables.htm">变量</a>引用(例如 %MyLabel%), 此时将使用变量中的名称作为跳转的目标.</p>
   <p id="OmitLabel"><span class="ver">[v1.1.01+]:</span> 如果省略 <em>Label</em>, 则使用 <a href="../Variables.htm#ThisLabel">A_ThisLabel</a>. 例如, <code>SetTimer,, Off</code> 可以用来在定时子程序中关闭计时器, 当 <code>SetTimer,, 1000</code> 还会更新当前计时器的 <em>Period(周期)</em> 或者对当前正在运行的 label 设置一个新的定时值. <span class="ver">[v1.1.24+]:</span> 如果 A_ThisLabel 为空但是当前线程为计时器启动的, 那么就会直接使用这个计时器. 这个特性对于用计时器调用函数或函数对象时非常方便.</p>
-  <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不存在有效的标签名称, 这个参数可以为一个函数的名称, 或者是引用<a href="../objects/Functor.htm">函数对象</a>的单个变量. 例如, <code>SetTimer %funcObj%, 1000</code> 或 <code>SetTimer % funcObj, 1000</code>. 目前暂不支持其他返回对象的表达式. 详参<a href="#ExampleClass">类的例子</a>.</p>
+  <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不存在有效的标签名称, 这个参数可以为一个函数的名称, 或者是引用<a href="../objects/Functor.htm">函数对象</a>的单个变量. 例如, <code>SetTimer %funcObj%, 1000</code> 或 <code>SetTimer % funcObj, 1000</code>. 目前暂不支持其他返回对象的表达式. 详情参见<a href="#ExampleClass">类的例子</a>.</p>
 <p class="note"><strong>注意</strong>: <span class="ver">[v1.1.24+]:</span> 传递空变量或返回空值的表达式被看做一个错误. 这个参数必须为非空的值或完全忽略.</p>
   </dd>
 
   <dt>PeriodOnOffDelete</dt>
-  <dd><p><strong>On(开)</strong>: 以原来的 <em>周期</em> 重新启用之前禁用的计时器. 如果计时器不存在, 则进行创建(使用默认的周期 250). 计时器也会<a href="#reset">重置</a>. 如果计时器存在但之前被设为<a href="#once">单次运行模式</a>, 那么它仍然只运行一次.</p>
-      <p><strong>Off(关)</strong>: 禁用现有的计时器.</p>
+  <dd><p><strong>On(开启)</strong>: 以原来的 <em>周期</em> 重新启用之前禁用的计时器. 如果计时器不存在, 则进行创建(使用默认的周期 250). 计时器也会<a href="#reset">重置</a>. 如果计时器存在但之前被设为<a href="#once">单次运行模式</a>, 那么它仍然只运行一次.</p>
+      <p><strong>Off(关闭)</strong>: 禁用现有的计时器.</p>
       <p><strong>Delete(删除)</strong> <span class="ver">[v1.1.20+]</span>: 禁止并删除已存在的计时器. 如果计时器已经关联了某个<a href="../objects/Functor.htm">函数对象</a>, 该对象将被释放. 关闭计时器并不会释放该(函数) 对象.</p>
-      <p><strong>周期</strong>: 使用该参数的绝对值创建或更新一个计时器, 如同在此计时器执行前必须经过的<a href="#Precision">近似</a>的毫秒数一样. 计时器会被自动启用和<a href="#reset">重置</a>. 计时器可以设置成重复执行或只执行一次:</p>
+      <p><strong>Period(周期)</strong>: 使用该参数的绝对值创建或更新一个计时器, 如同在此计时器执行前必须经过的<a href="#Precision">近似</a>的毫秒数一样. 计时器会被自动启用和<a href="#reset">重置</a>. 计时器可以设置成重复执行或只执行一次:</p>
       <ul>
-        <li>如果 <em>周期</em> 为正数, 计时器会自动重复直到被脚本确切的关闭.</li>
+        <li>如果 <em>周期</em> 为正数, 计时器会自动重复直到被脚本明确的关闭.</li>
         <li id="once"><p><span class="ver">[v1.0.46.16+]:</span> 如果 <em>周期</em> 为负数, 则计时器仅执行一次. 例如指定 -100, 计时器将在 100ms 后执行然后关闭, 就像使用了 <code>SetTimer, Label, Off</code> 命令一样.</p>
-        <p><span class="ver">[v1.1.24+]:</span> 如果 <em>Label</em> 为脚本生成的对象(不是代码中存在的函数或标签), 计时器将在计时器函数返回后自动删除, 除非定时为可开启的. 这使得对象在脚本不再引用它时可以被释放, 但是它也意味着计时器的 <em>Period(周期)</em> 和 <em>Priority(优先级)</em> 都不会保留.</p></li>
+        <p><span class="ver">[v1.1.24+]:</span> 如果 <em>Label</em> 为脚本生成的对象(不是代码中存在的函数或标签), 计时器将在计时器函数返回后自动删除, 除非定时为可开启的. 这使得对象在脚本不再引用它时可以被释放, 但是它也意味着计时器的 <em>周期</em> 和 <em>优先级</em> 都不会保留.</p></li>
       </ul>  
-      <p><em>Period(周期)</em> 必须为整数, 除非用的是变量或表达式, 在这种情况下, 任何小数部分都被忽略. 周期的绝对值不能大于 4294967295ms(49.7 天).</p>
-      <p><strong>默认</strong>: 如果此参数为空并且:<br>
+      <p><em>周期</em> 必须为整数, 除非用的是变量或表达式, 在这种情况下, 任何小数部分都被忽略. 周期的绝对值不能大于 4294967295ms(49.7 天).</p>
+      <p><strong>默认值</strong>: 如果此参数为空并且:<br>
 	  1) 计时器不存在: 则使用 250 的周期进行创建.<br>
-      2) 计时器已经存在: 则启用计时器并<a href="#reset">重设</a>为它原来的 <em>周期</em> , 除非指定了 <em>Priority(优先级)</em>.</p>
+      2) 计时器已经存在: 则以原来的 <em>周期</em> 启用和<a href="#reset">重置</a>计时器, 除非指定了 <em>Priority(优先级)</em>.</p>
 
     </dd>
 
@@ -128,7 +128,7 @@ else if winc_presses &gt; 2
 ; 为下一个系列的按下做准备:</em>
 winc_presses = 0
 return</pre>
-<pre class="NoIndent" id="ExampleClass"><em>; 示例 #4: 使用 <a href="../Objects.htm#Custom_Classes_method">method</a> 作为计时器子程序.</em>
+<pre class="NoIndent" id="ExampleClass"><em>; 示例 #4: 使用 <a href="../Objects.htm#Custom_Classes_method">方法(method)</a> 作为计时器子程序.</em>
 
 counter := new SecondCounter
 counter.Start()
