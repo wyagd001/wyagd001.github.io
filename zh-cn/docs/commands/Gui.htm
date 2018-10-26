@@ -332,9 +332,9 @@ gui, show</pre>
 <p><strong>xs</strong> 和 <strong>ys</strong> 后面可以跟着一个加号/减号和一个数字. 并且, 还可以在控件的选项中同时指定单词 <a href="#Section">Section</a> 和 xs/ys; 这样可以让当前控件使用之前的控件段, 但为后续控件定义一个新段.</p>
 
 <h2 id="Events">存储和响应用户的输入</h2>
-<p id="var"><strong>V</strong>: 变量. 为控件分配关联变量. 在字母 V 后指定一个变量名, 此变量将为全局变量(或指向全局变量的 <a href="../Functions.htm#ByRef">ByRef 局部变量</a>, 在 <span class="ver">[in v1.0.46.01+]</span> 还可能为 <a href="../Functions.htm#static">静态变量</a>). 例如, 指定 <code><strong>v</strong>MyEdit</code> 后, 每当执行 <a href="#Submit">Gui Submit</a> 命令时将把控件的内容保存到变量 <em>MyEdit</em>. 如果控件是不可输入型(例如 Text 控件或 GroupBox), 那么为其分配的关联变量作为控件的唯一标识符仍可用于 <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a>.</p>
+<p id="var"><strong>V</strong>: 变量. 为控件分配关联变量. 在字母 V 后指定一个变量名, 此变量将为全局变量(或指向全局变量的 <a href="../Functions.htm#ByRef">ByRef 局部变量</a>, 在 <span class="ver">[v1.0.46.01+]</span> 还可能为<a href="../Functions.htm#static">静态变量</a>). 例如, 指定 <code><strong>v</strong>MyEdit</code> 后, 每当执行 <a href="#Submit">Gui Submit</a> 命令时将把控件的内容保存到变量 <em>MyEdit</em>. 如果控件是不可输入型(例如 Text 控件或 GroupBox), 那么为其分配的关联变量作为控件的唯一标识符仍可用于 <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a>.</p>
 <p class="note"><strong>注意</strong>: <a href="#Submit">Gui Submit</a> 不会改变不可输入型控件(例如 Text 和 GroupBox) 关联变量的内容, 也不会改变其他某些控件的内容(例如 <a href="ListView.htm">ListView</a> 和 <a href="TreeView.htm">TreeView</a>).</p>
-<p id="label"><strong>G</strong>: Gosub(g-标签). 当用户点击或改变控件内容时会自动运行的子程序. 在字母 G 后指定需要执行的<a href="../misc/Labels.htm">标签</a>名称. 指定 <code>gCancel</code> 暗示执行 <a href="#Cancel">Gui Cancel</a>(但如果在脚本中存在名称为"Cancel"的标签, 则会执行此标签). 在子程序中可以引用下列内置变量: <a href="../Variables.htm#Gui">A_Gui</a>, <a href="../Variables.htm#GuiControl">A_GuiControl</a>, <a href="../Variables.htm#GuiEvent">A_GuiEvent</a> 以及 <a href="../Variables.htm#EventInfo">A_EventInfo</a>.</p>
+<p id="label"><strong>G</strong>: Gosub(g-标签). 当用户点击或改变控件内容时会自动运行的子程序. 在字母 G 后指定需要执行的<a href="../misc/Labels.htm">标签</a>名称. 可以指定 <code>gCancel</code> 来隐式执行 <a href="#Cancel">Gui Cancel</a>(但如果在脚本中存在名称为"Cancel"的标签, 则会执行此标签). 在子程序中可以引用下列内置变量: <a href="../Variables.htm#Gui">A_Gui</a>, <a href="../Variables.htm#GuiControl">A_GuiControl</a>, <a href="../Variables.htm#GuiEvent">A_GuiEvent</a> 以及 <a href="../Variables.htm#EventInfo">A_EventInfo</a>.</p>
 <p><span class="ver">[v1.1.20+]:</span> 如果不是一个有效标签名称, 可以用函数名称替代. 或者, 可以用 <a href="GuiControl.htm#Functor">GuiControl</a> 命令为控件连接一个<a href="../objects/Functor.htm">函数对象</a>. 函数(用 <code>gCtrlEvent</code> 设置的函数名称为 CtrlEvent) 可以接受以下可选参数:</p>
 <pre class="Syntax"><span class="func">CtrlEvent</span>(CtrlHwnd, GuiEvent, EventInfo, ErrLevel:="")</pre>
 <p>这些参数的意义取决于控件的类型.</p>
@@ -402,7 +402,7 @@ ExitApp</pre>
 
 <p id="GuiContextMenu"><strong>GuiContextMenu</strong>: 当用户在窗口上除标题栏和菜单栏外的其他地方点击右键时自动运行此子程序. 当用户按下 <kbd>Menu</kbd> 键或 <kbd>Shift</kbd>+<kbd>F10</kbd> 时也会运行. 和其他多数 GUI 标签不同, GuiContextMenu 可以含有多个并发<a href="../misc/Threads.htm">线程</a>. 在 GuiContextMenu 子程序中可以引用下列内置变量:</p>
 <ol>
-  <li><a href="../Variables.htm#GuiControl">A_GuiControl</a>, 它包含了接收事件的控件的 <a href="../Variables.htm#GuiControl">文本或变量名</a>(如果没有则为空).</li>
+  <li><a href="../Variables.htm#GuiControl">A_GuiControl</a>, 它包含了接收事件的控件的<a href="../Variables.htm#GuiControl">文本或变量名</a>(如果没有则为空).</li>
   <li><a href="../Variables.htm#EventInfo">A_EventInfo</a>: 当右键点击 ListBox, ListView 或 TreeView 时(可以由上面的 A_GuiControl 确定), A_EventInfo 包含了右键点击的控件项目:<br>
     <a href="GuiControls.htm#ListBox">ListBox</a> 或 <a href="ListView.htm">ListView</a>: A_EventInfo 包含了当前焦点行的行号(如果没有则为 0).<br>
     <a href="TreeView.htm">TreeView</a>: 右键点击时, A_EventInfo 包含了右击项目的 ID 编号(如果用户点击到项目外的其他地方则为 0). 对于 <kbd>Menu</kbd> 键和 <kbd>Shift</kbd>+<kbd>F10</kbd>, A_EventInfo 包含了选择的项目的 ID 编号.</li>
@@ -443,7 +443,7 @@ Sort, FileList
 Loop, Parse, FileList, `n
     MsgBox File number %A_Index% is:`n%A_LoopField%.</pre>
 <p>要临时禁用窗口的拖放功能, 请使用 <code>Gui -E0x10</code> 移除 WS_EX_ACCEPTFILES 样式. 后面要重新启用, 请使用 <code>Gui +E0x10</code>.</p>
-<p><span class="ver">[v1.1.20+]:</span> 如果 GuiDropFiles 为函数, 它的参数应为下面例子中那样. <em>CtrlHwnd</em> 当文件在 GUI 上释放时为空. <em>FileArray</em> 为一个包含文件名称的 <a href="../Objects.htm#Usage_Simple_Arrays">数组(对象) </a>, 其中 <code>FileArray[1]</code> 为第一个文件而 <code>FileArray.MaxIndex()</code> 返回文件的数量. 使用 <a href="For.htm">for-循环</a> 可迭代枚举其中的文件:</p>
+<p><span class="ver">[v1.1.20+]:</span> 如果 GuiDropFiles 为函数, 它的参数应为下面例子中那样. <em>CtrlHwnd</em> 当文件在 GUI 上释放时为空. <em>FileArray</em> 为一个包含文件名称的<a href="../Objects.htm#Usage_Simple_Arrays">数组(对象)</a>, 其中 <code>FileArray[1]</code> 为第一个文件, 而 <code>FileArray.MaxIndex()</code> 返回文件的数量. 使用 <a href="For.htm">for-循环</a>可迭代枚举其中的文件:</p>
 <pre>GuiDropFiles(GuiHwnd, FileArray, CtrlHwnd, X, Y) {
     for i, file in FileArray
         MsgBox File %i% is:`n%file%
