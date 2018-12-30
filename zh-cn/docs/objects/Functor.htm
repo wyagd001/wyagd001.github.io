@@ -15,10 +15,10 @@
 <p>"函数对象"泛指以下内容:</p>
 <ul>
   <li>对 <a href="Func.htm">Func 对象</a>的引用, 它表示一个实际的<a href="../Functions.htm">函数</a>; 包含内置函数及脚本定义的函数.</li>
-  <li>支持像函数一样被调用的用户定义的对象. 亦称为"函数子".</li>
-  <li>其他支持像函数一样被调用的对象, 如<a href="#BoundFunc">绑定函数对象</a>或 COM 方法返回的 JavaScript 函数对象.</li>
+  <li>用户定义的对象, 可以像函数一样调用. 亦称为"函数子".</li>
+  <li>任何其他可以像函数一样调用的对象, 如<a href="#BoundFunc">绑定函数对象</a>或 COM 方法返回的 JavaScript 函数对象.</li>
 </ul>
-<p>函数对象可被以下对象使用:</p>
+<p>函数对象可用于以下情况:</p>
 <ul>
   <li><a href="../commands/Gui.htm#label">GUI 控件事件</a>(G-标签)</li>
   <li><a href="../commands/Hotkey.htm#Functor">热键</a></li>
@@ -29,9 +29,9 @@
   <li><a href="../commands/SetTimer.htm#Functor">SetTimer</a></li>
 </ul>
 
-<h2 id="User-Defined">用户定义函数</h2>
+<h2 id="User-Defined">用户定义的函数对象</h2>
 <!-- TODO: Explain how a user-defined object could be useful -->
-<p>用户定义函数对象应按以下模式:</p>
+<p>用户定义函数对象应遵循以下一般模式:</p>
 <pre>class YourClassName {
     Call(a, b) {  <em>; 根据需要声明参数, 或<a href="../Functions.htm#Variadic">数组*</a>.</em>
         <em>;...</em>
@@ -52,6 +52,43 @@
   <li><span class="ver">[v1.1.20+]:</span> 如果对象被某需要回调函数的内置函数所使用, 如 OnMessage 或 SetTimer, 则此对象仅需支持 Call 方法即可.</li>
 </ul>
 <p>上述过程可以直接在 __Call 中完成, 推荐使用 __Call 代替 Call 以便更好的迁移到 <a href="https://autohotkey.com/v2/">AutoHotkey v2</a> 版本, 其会改变 <code>%this%()</code> 的行为及调用 CALL 的方法调用.</p>
+<h3 id="User-Defined-Examples">示例</h3>
+<p>如果要定义多个函数对象类型, 则应将样板代码委托给基类(但如果您要将代码与其他人的组合使用, 请小心冲突). 例如:</p>
+<pre id="class_FunctionObject">class FunctionObject {
+    __Call(method, args*) {
+        if (method = "")
+            return this.Call(args*)
+        if (IsObject(method))
+            return this.Call(method, args*)
+    }
+}</pre>
+<p>下面的例子定义了一个可以调用的函数数组; 调用时, 它依次调用数组的每个元素.</p>
+<pre>class FuncArrayType extends <a href="#class_FunctionObject">FunctionObject</a> {
+    Call(obj, params*) {
+        <em>; 调用函数列表.</em>
+        Loop % this.Length()
+            this[A_Index].Call(params*)
+    }
+}
+
+<em>; 创建一个函数数组.</em>
+funcArray := new FuncArrayType
+<em>; 向数组中添加函数(可以在任何位置完成).</em>
+funcArray.Push(Func("One"))
+funcArray.Push(Func("Two"))
+<em>; 创建一个使用数组作为方法的对象.</em>
+obj := {method: funcArray}
+<em>; 调用方法.</em>
+obj.method("foo", "bar")
+
+One(param1, param2) {
+    ListVars
+    MsgBox
+}
+Two(param1, param2) {
+    ListVars
+    MsgBox
+}</pre>
 
 <h2 id="BoundFunc">绑定函数对象<span class="ver">[v1.1.20+]</span></h2>
 <p>行为像函数, 但只是将预定义的参数传递给另一个函数.</p>
