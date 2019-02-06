@@ -176,7 +176,7 @@ Gui, Add, UpDown, vMyUpDown Range1-10, 5</pre>
 <p>在 <em>选项</em> 中指定单词 <strong>Uppercase</strong> 或 <strong>Lowercase</strong> 来把列表中的所有项目自动转换成大写字母或小写字母. 指定单词 <strong>Sort</strong> 来按字母顺序自动排列列表的内容(这也会影响后面通过 <a href="GuiControl.htm">GuiControl</a> 添加的所有项目). Sort 选项还会启用在弹出下拉列表时的增量搜索; 这使得可以通过输入一个项目名称的前几个字符来选择此项.</p>
 <p>当使用 <a href="Gui.htm#Submit">Gui Submit</a> 命令后, 控件的<a href="Gui.htm#var">关联输出变量</a>(如果有) 会接收到当前选择项目的文本. 但是, 如果控件含有 <a href="Gui.htm#AltSubmit">AltSubmit</a> 属性, 则输出变量将接收到项目的位置编号(首个项目为 1, 第二个为 2, 等等.).</p>
 <p><a href="Gui.htm#label">g-标签</a>例如 <code><strong>g</strong>MySubroutine</code> 可以使用在此控件的选项中. 这使得当用户选择新项目时 <em>MySubroutine</em> 标签会自动运行.</p>
-<p>使用 <a href="Gui.htm#R">R 或 H 选项</a> 来控制弹出列表的高度. 例如, 指定 <code>R5</code> 会设置列表为 5 行高, 而 <code>H400</code> 会设置选区字段和列表的总高度为 400 像素. 如果同时省略 R 和 H 选项, 则列表会自动扩展到用户桌面的可用高度(但是在早于 Windows XP 的操作系统中默认会显示 3 行).</p>
+<p>使用 <a href="Gui.htm#R">R 或 H 选项</a>来控制弹出列表的高度. 例如, 指定 <code>R5</code> 会设置列表为 5 行高, 而 <code>H400</code> 会设置选区字段和列表的总高度为 400 像素. 如果同时省略 R 和 H 选项, 则列表会自动扩展到用户桌面的可用高度(但是在早于 Windows XP 的操作系统中默认会显示 3 行).</p>
 <p id="ComboBoxHeight">要设置选区字段或列表项的高度, 请使用 <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb775911">CB_SETITEMHEIGHT</a> 消息, 示例如下:</p>
 <pre>Gui Add, DDL, vcbx w200 hwndhcbx, One||Two
 <em>; CB_SETITEMHEIGHT = 0x153</em>
@@ -208,7 +208,7 @@ Gui Show, h70, Test</pre>
 
 <h3>ListBox 选项</h3>
 <p><strong>Choose</strong>: 请参阅<a href="#ChooseLB">上面</a>.</p>
-<p id="ListBoxMulti"><strong>Multi</strong>: 允许使用 shift-click 和 control-click 同时选择多个项目(如果不希望使用 shift/control-click, 请指定<a href="../misc/Styles.htm#LBS_MULTI">数字 8</a> 代替单词 Multi). 此时, <a href="Gui.htm#Submit">Gui Submit</a> 会保存管道分隔的项目字符串列表到控件的 <a href="Gui.htm#var">输出变量</a>. 不过, 如果存在 <a href="Gui.htm#AltSubmit">AltSubmit</a> 选项, 则 <a href="Gui.htm#Submit">Gui Submit</a> 保存管道分隔的项目编号列表. 例如, <code>1|2|3</code> 表示选择了前三个项目. 要提取每个项目, 请使用<a href="LoopParse.htm">解析循环</a>, 例如:</p>
+<p id="ListBoxMulti"><strong>Multi</strong>: 允许使用 shift-click 和 control-click 同时选择多个项目(如果不希望使用 shift/control-click, 请指定<a href="../misc/Styles.htm#LBS_MULTI">数字 8</a> 代替单词 Multi). 此时, <a href="Gui.htm#Submit">Gui Submit</a> 会保存管道分隔的项目字符串列表到控件的<a href="Gui.htm#var">输出变量</a>. 不过, 如果存在 <a href="Gui.htm#AltSubmit">AltSubmit</a> 选项, 则 <a href="Gui.htm#Submit">Gui Submit</a> 保存管道分隔的项目编号列表. 例如, <code>1|2|3</code> 表示选择了前三个项目. 要提取每个项目, 请使用<a href="LoopParse.htm">解析循环</a>, 例如:</p>
 <pre>Loop, Parse, MyListBox, |
 {
     MsgBox Selection number %A_Index% is %A_LoopField%.
@@ -413,7 +413,7 @@ Gui, Tab, Name,, Exact  <em>; 与上面相同, 不过这里需要准确匹配(�
 <p id="Tab_Positioning"><strong>位置</strong>: 对于 Tab 和 Tab2, 子控件不需要在他们的选项卡控件的边界内: 当标签页是激活或未激活时他们总是会显示和隐藏. 这种行为特别适合下面描述的 &quot;按钮&quot; 样式.</p>
 <p>对于 Tab3, 在标签页控件创建之 <em>前</em> 添加子控件的行为与 Tab 或 Tab2 是一致的. 所有其他子控件只在选项卡控件的显示区域内可见.</p>
 <p>如果 Tab3 控件移动, 他的子控件也随之移动. Tab 和 Tab2 控件没有这个行为.</p>
-<p>在极少数情况下 <a href="WinMove.htm">WinMove</a>(或等效的 DllCall) 用于移动控件, 坐标必须相对于控件的父窗口, 而不是 Gui(参阅 <a href="#Tab_Parent">上面的信息</a>). 相比之下, <a href="GuiControl.htm#Move">GuiControl 移动</a> 使用 GUI 坐标和 <a href="ControlMove.htm">ControlMove</a> 使用窗口坐标, 这些与控件的父窗口无关.</p>
+<p>在极少数情况下 <a href="WinMove.htm">WinMove</a>(或等效的 DllCall) 用于移动控件, 坐标必须相对于控件的父窗口, 而不是 Gui(参阅<a href="#Tab_Parent">上面的信息</a>). 相比之下, <a href="GuiControl.htm#Move">GuiControl 移动</a> 使用 GUI 坐标和 <a href="ControlMove.htm">ControlMove</a> 使用窗口坐标, 这些与控件的父窗口无关.</p>
 <p id="Tab_Autosize"><strong>自动尺寸</strong>: 如果脚本没有指定, 在下列情况下 Tab3 控件的宽度 和/或 高度将会自动计算(在控件创建后以先到者为准):</p>
 <ul>
   <li>第一次 Tab3 控件不再是当前标签页控件. 这可能是调用了 <a href="#TabCmd">Gui, Tab</a>(有或没有参数) 或创建另一个标签页控件所导致的.</li>
