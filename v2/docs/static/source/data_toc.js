@@ -1,36 +1,36 @@
 tocData = [
-  ["Quick Reference","AutoHotkey.htm"],
-  ["Frequently Asked Questions","FAQ.htm"],
-  ["Tutorial (quick start)","Tutorial.htm"],
-  ["Recent Changes","ChangeLog.htm"],
-  ["Script Showcase","scripts/index.htm"],
-  ["Script Compatibility","Compat.htm"],
-  ["Function Index","commands/index.htm"],
-  ["Usage and Syntax","",
+  ["快速参考","AutoHotkey.htm"],
+  ["常见问题(FAQ)","FAQ.htm"],
+  ["初学者向导(快速入门)","Tutorial.htm"],
+  ["更新历史","ChangeLog.htm"],
+  ["脚本展示","scripts/index.htm"],
+  ["脚本兼容性","Compat.htm"],
+  ["函数列表","commands/index.htm"],
+  ["使用和语法","",
   [
-    ["Using the Program","Program.htm"],
-    ["Concepts and Conventions","Concepts.htm"],
-    ["Scripting Language","Language.htm"],
-    ["Hotkeys","Hotkeys.htm"],
-    ["Hotstrings","Hotstrings.htm"],
-    ["Remapping Keys","misc/Remap.htm"],
-    ["List of Keys","KeyList.htm"],
-    ["Scripts (misc)","Scripts.htm"],
-    ["Variables and Expressions","Variables.htm"],
-    ["Functions","Functions.htm"],
-    ["Labels","misc/Labels.htm"],
-    ["Threads","misc/Threads.htm"],
-    ["Debugging Clients","AHKL_DBGPClients.htm"],
-    ["Objects","Objects.htm",
+    ["程序的使用","Program.htm"],
+    ["概念和惯例","Concepts.htm"],
+    ["脚本语言","Language.htm"],
+    ["热键","Hotkeys.htm"],
+    ["热字串","Hotstrings.htm"],
+    ["重映射按键","misc/Remap.htm"],
+    ["按键列表","KeyList.htm"],
+    ["脚本(杂项)","Scripts.htm"],
+    ["变量和表达式","Variables.htm"],
+    ["函数","Functions.htm"],
+    ["标签","misc/Labels.htm"],
+    ["线程","misc/Threads.htm"],
+    ["调试客户端","AHKL_DBGPClients.htm"],
+    ["对象","Objects.htm",
     [
-      ["Basic Usage","Objects.htm#Usage"],
-      ["Extended Usage","Objects.htm#Extended_Usage"],
-      ["Custom Objects","Objects.htm#Custom_Objects"],
-      ["Default Base Object","Objects.htm#Default_Base_Object"],
-      ["Implementation","Objects.htm#Implementation"]
+      ["基本用法","Objects.htm#Usage"],
+      ["扩展用法","Objects.htm#Extended_Usage"],
+      ["自定义对象","Objects.htm#Custom_Objects"],
+      ["默认基对象","Objects.htm#Default_Base_Object"],
+      ["实现","Objects.htm#Implementation"]
     ]]
   ]],
-  ["Drive", "commands/Drive.htm",
+  ["驱动器", "commands/Drive.htm",
   [
     ["DriveEject", "commands/DriveEject.htm"],
     ["DriveGetCapacity", "commands/DriveGetCapacity.htm"],
@@ -46,7 +46,7 @@ tocData = [
     ["DriveUnlock", "commands/DriveUnlock.htm"],
     ["DriveGetType", "commands/DriveGetType.htm"]
   ]],
-  ["Environment","",
+  ["环境变量","",
   [
     ["ClipboardAll","commands/ClipboardAll.htm"],
     ["ClipWait","commands/ClipWait.htm"],
@@ -56,7 +56,7 @@ tocData = [
     ["SysGet","commands/SysGet.htm"],
     ["SysGetIPAddresses","commands/SysGetIPAddresses.htm"],
   ]],
-  ["External Libraries","",
+  ["外部库","",
   [
     ["CallbackCreate","commands/CallbackCreate.htm"],
     ["DllCall","commands/DllCall.htm"],
@@ -81,7 +81,7 @@ tocData = [
       ["ObjAddRef / ObjRelease","commands/ObjAddRef.htm"]
     ]]
   ]],
-  ["File and Directory","",
+  ["文件和目录","",
   [
     ["DirCopy","commands/DirCopy.htm"],
     ["DirCreate","commands/DirCreate.htm"],
@@ -117,7 +117,7 @@ tocData = [
     ["SetWorkingDir","commands/SetWorkingDir.htm"],
     ["SplitPath","commands/SplitPath.htm"]
   ]],
-  ["Flow of Control","",
+  ["流程控制","",
   [
     ["#Include[Again]","commands/_Include.htm"],
     ["{ ... } (block)","commands/Block.htm"],
@@ -136,10 +136,10 @@ tocData = [
     ["Loop","commands/Loop.htm",
     [
       ["Loop","commands/Loop.htm"],
-      ["Loop Files (and folders)","commands/LoopFiles.htm"],
-      ["Loop Parse (strings)","commands/LoopParse.htm"],
-      ["Loop Read (file contents)","commands/LoopRead.htm"],
-      ["Loop Reg (registry)","commands/LoopReg.htm"]
+      ["Loop Files (和文件夹)","commands/LoopFiles.htm"],
+      ["Loop Parse (字符串)","commands/LoopParse.htm"],
+      ["Loop Read (文件内容)","commands/LoopRead.htm"],
+      ["Loop Reg (注册表)","commands/LoopReg.htm"]
     ]],
     ["OnError","commands/OnError.htm"],
     ["OnExit","commands/OnExit.htm"],
@@ -155,7 +155,7 @@ tocData = [
     ["Until","commands/Until.htm"],
     ["While-loop","commands/While.htm"]
   ]],
-  ["Graphical User Interfaces","",
+  ["图形用户界面","",
   [
     ["DirSelect","commands/DirSelect.htm"],
     ["FileSelect","commands/FileSelect.htm"],
@@ -182,7 +182,7 @@ tocData = [
     ["TraySetIcon","commands/TraySetIcon.htm"],
     ["TrayTip","commands/TrayTip.htm"]
   ]],
-  ["Maths","commands/Math.htm",
+  ["数学","commands/Math.htm",
   [
     ["Abs","commands/Math.htm#Abs"],
     ["Ceil","commands/Math.htm#Ceil"],
@@ -211,9 +211,9 @@ tocData = [
     ["MonitorGetPrimary","commands/MonitorGetPrimary.htm"],
     ["MonitorGetWorkArea","commands/MonitorGetWorkArea.htm"]
   ]],
-  ["Mouse and Keyboard","",
+  ["鼠标和键盘","",
   [
-    ["Hotkeys and Hotstrings","Hotkeys.htm",
+    ["热键和热字串","Hotkeys.htm",
     [
       ["#HotkeyInterval","commands/_HotkeyInterval.htm"],
       ["#HotkeyModifierTimeout","commands/_HotkeyModifierTimeout.htm"],
@@ -266,7 +266,7 @@ tocData = [
     ["SetScrollLockState","commands/SetNumScrollCapsLockState.htm"],
     ["SetStoreCapsLockMode","commands/SetStoreCapslockMode.htm"]
   ]],
-  ["Misc.","",
+  ["杂项","",
   [
     ["Download","commands/Download.htm"],
     ["Edit","commands/Edit.htm"],
@@ -280,19 +280,19 @@ tocData = [
     ["OutputDebug","commands/OutputDebug.htm"],
     ["VarSetCapacity","commands/VarSetCapacity.htm"]
   ]],
-  ["Object Types","",
+  ["对象类型","",
   [
-    ["Object","objects/Object.htm"],
-    ["Enumerator Object","objects/Enumerator.htm"],
-    ["Exception Object","commands/Throw.htm#Exception"],
-    ["File Object","objects/File.htm"],
-    ["Func Object","objects/Func.htm"],
-    ["Function Objects","objects/Functor.htm"],
-    ["Gui Object","objects/Gui.htm"],
-    ["GuiControl Object","objects/GuiControl.htm"],
-    ["RegExMatch Object","commands/RegExMatch.htm#MatchObject"]
+    ["对象","objects/Object.htm"],
+    ["枚举器对象 ","objects/Enumerator.htm"],
+    ["异常对象","commands/Throw.htm#Exception"],
+    ["文件对象","objects/File.htm"],
+    ["Func 对象","objects/Func.htm"],
+    ["函数对象","objects/Functor.htm"],
+    ["Gui 对象","objects/Gui.htm"],
+    ["GuiControl 对象","objects/GuiControl.htm"],
+    ["RegExMatch 对象","commands/RegExMatch.htm#MatchObject"]
   ]],
-  ["Process","commands/Process.htm",
+  ["进程","commands/Process.htm",
   [
     ["ProcessClose","commands/ProcessClose.htm"],
     ["ProcessExist","commands/ProcessExist.htm"],
@@ -303,7 +303,7 @@ tocData = [
     ["RunAs","commands/RunAs.htm"],
     ["Shutdown","commands/Shutdown.htm"]
   ]],
-  ["Registry","",
+  ["注册表","",
   [
     ["Loop Reg","commands/LoopReg.htm"],
     ["RegDelete","commands/RegDelete.htm"],
@@ -312,20 +312,20 @@ tocData = [
     ["RegWrite","commands/RegWrite.htm"],
     ["SetRegView","commands/SetRegView.htm"]
   ]],
-  ["Screen","",
+  ["屏幕","",
   [
     ["ImageSearch","commands/ImageSearch.htm"],
     ["PixelGetColor","commands/PixelGetColor.htm"],
     ["PixelSearch","commands/PixelSearch.htm"]
   ]],
-  ["Sound","",
+  ["声音","",
   [
     ["SoundBeep","commands/SoundBeep.htm"],
     ["SoundGet","commands/SoundGet.htm"],
     ["SoundPlay","commands/SoundPlay.htm"],
     ["SoundSet","commands/SoundSet.htm"]
   ]],
-  ["String","",
+  ["字符串","",
   [
     ["Chr","commands/Chr.htm"],
     ["Format","commands/Format.htm"],
@@ -348,7 +348,7 @@ tocData = [
     ["SubStr","commands/SubStr.htm"],
     ["Trim","commands/Trim.htm"]
   ]],
-  ["Window","commands/Win.htm",
+  ["窗口","commands/Win.htm",
   [
     ["Controls","commands/Control.htm",
     [
@@ -453,7 +453,7 @@ tocData = [
     ["WinWait[Not]Active","commands/WinWaitActive.htm"],
     ["WinWaitClose","commands/WinWaitClose.htm"]
   ]],
-  ["#Directives","",
+  ["#指令","",
   [
     ["#ClipboardTimeout","commands/_ClipboardTimeout.htm"],
     ["#ErrorStdOut","commands/_ErrorStdOut.htm"],
