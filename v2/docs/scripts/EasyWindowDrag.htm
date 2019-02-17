@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>Easy Window Dragging - Script Example | AutoHotkey v2</title>
+<title>轻松拖曳窗口 - 脚本示例 | AutoHotkey v2</title>
 <meta name="description" content="This script allows moving a window by holding down CapsLock or the middle mouse button while clicking on any point inside a window." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,47 +12,44 @@
 
 <h1>Easy Window Dragging (requires XP/2k/NT)</h1>
 
-<p>Normally, a window can only be dragged by clicking on its title bar.
- This script extends that so that any point inside a window can be dragged.
- To activate this mode, hold down <kbd>CapsLock</kbd> or the middle mouse button while
- clicking, then drag the window to a new position.
+<p>一般情况下只能通过点击标题栏来拖动窗口. 这个脚本扩展到可以在窗口中任何一点拖动窗口. 要激活这种模式, 请在点击时按住 <kbd>CapsLock</kbd> 或鼠标中键, 然后拖动窗口到新的位置.
 </p>
-<p><a href="EasyWindowDrag.ahk">Download This Script</a> &nbsp;| &nbsp;<a href="index.htm">Other Sample Scripts</a> &nbsp;| &nbsp;<a href="../AutoHotkey.htm">Home</a></p>
+<p><a href="EasyWindowDrag.ahk">下载此脚本</a> &nbsp;| &nbsp;<a href="index.htm">其他示例脚本</a> &nbsp;| &nbsp;<a href="../AutoHotkey.htm">主页</a></p>
 
-<pre class="NoIndent"><em>; Note: You can optionally release CapsLock or the middle mouse button after
-; pressing down the mouse button rather than holding it down the whole time.</em>
+<pre class="NoIndent"><em>;注意: 在按下鼠标按钮后您可以释放 <kbd>CapsLock</kbd> 或鼠标中键
+; 而不需要在整个拖动过程中按住它.</em>
 
 ~MButton &amp; LButton::
 CapsLock &amp; LButton::
 EWD_MoveWindow()
 {
-    CoordMode "Mouse"  <em>; Switch to screen/absolute coordinates.</em>
+    CoordMode "Mouse"  <em>; 切换到屏幕/绝对坐标.</em>
     MouseGetPos EWD_MouseStartX, EWD_MouseStartY, EWD_MouseWin
     WinGetPos EWD_OriginalPosX, EWD_OriginalPosY,,, "ahk_id " EWD_MouseWin
-    if !WinGetMinMax("ahk_id " EWD_MouseWin)  <em>; Only if the window isn't maximized </em>
-        SetTimer "EWD_WatchMouse", 10 <em>; Track the mouse as the user drags it.</em>
+    if !WinGetMinMax("ahk_id " EWD_MouseWin)  <em>; 仅在窗口不处于最大化状态时 </em>
+        SetTimer "EWD_WatchMouse", 10 <em>; 在用户拖动时跟踪鼠标.</em>
 
     EWD_WatchMouse()
     {
-        if !GetKeyState("LButton", "P")  <em>; Button has been released, so drag is complete.</em>
+        if !GetKeyState("LButton", "P")  <em>; 按钮已经释放, 所以拖动结束.</em>
         {
             SetTimer , "Off"
             return
         }
-        if GetKeyState("Escape", "P")  <em>; Escape has been pressed, so drag is cancelled.</em>
+        if GetKeyState("Escape", "P")  <em>; 按下了 Escape, 所以取消拖动.</em>
         {
             SetTimer , "Off"
             WinMove EWD_OriginalPosX, EWD_OriginalPosY,,, "ahk_id " EWD_MouseWin
             return
         }
-        <em>; Otherwise, reposition the window to match the change in mouse coordinates
-        ; caused by the user having dragged the mouse:</em>
+        <em>; 否则, 改变窗口的位置以匹配
+; 用户拖动鼠标引起的鼠标坐标变化:</em>
         CoordMode "Mouse"
         MouseGetPos EWD_MouseX, EWD_MouseY
         WinGetPos EWD_WinX, EWD_WinY,,, "ahk_id " EWD_MouseWin
-        SetWinDelay -1   <em>; Makes the below move faster/smoother.</em>
+        SetWinDelay -1   <em>; 让下面的移动更快速/平滑.</em>
         WinMove EWD_WinX + EWD_MouseX - EWD_MouseStartX, EWD_WinY + EWD_MouseY - EWD_MouseStartY,,, "ahk_id " EWD_MouseWin
-        EWD_MouseStartX := EWD_MouseX  <em>; Update for the next timer-call to this subroutine.</em>
+        EWD_MouseStartX := EWD_MouseX  <em>; 为下一次调用此子程序进行更新.</em>
         EWD_MouseStartY := EWD_MouseY
     }
 }
