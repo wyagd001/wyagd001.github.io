@@ -1,0 +1,96 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>Random - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The Random function generates a pseudo-random number." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>Random</h1>
+
+<p>Generates a pseudo-random number.</p>
+
+<pre class="Syntax">N := <span class="func">Random</span>(<span class="optional">Min, Max</span>)</pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>Min</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#numbers">Integer</a> or <a href="../Concepts.htm#numbers">Float</a></p>
+    <p>The smallest number that can be generated, which can be negative or floating point. If omitted, the smallest number will be 0. The lowest allowed value is -2147483648 for integers, but floating point numbers  have no restrictions.</p>
+  </dd>
+
+  <dt>Max</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#numbers">Integer</a> or <a href="../Concepts.htm#numbers">Float</a></p>
+    <p>The largest number that can be generated, which can be negative or floating point. If omitted, the largest number will be 2147483647 (which is also the largest allowed integer value -- but floating point numbers have no restrictions).</p>
+  </dd>
+
+</dl>
+
+<h2>返回值</h2>
+<p>Type: <a href="../Concepts.htm#numbers">Integer</a> or <a href="../Concepts.htm#numbers">Float</a></p>
+<p>This function returns a pseudo-randomly generated number, which is a number that simulates a true random number but is really a number based on a complicated formula to make determination/guessing of the next number extremely difficult.</p>
+
+<h2>备注</h2>
+<p>All numbers within the specified range have approximately the same probability of being generated (however, see &quot;known limitations&quot; below).</p>
+<p>If either <em>Min</em> or <em>Max</em> contains a decimal point, the end result will be a floating point number. Otherwise, the result will be an integer.</p>
+<p>Known limitations for floating point: 1) only about 4,294,967,296 distinct numbers can be generated for any particular range, so all other numbers in the range will never be generated; 2) occasionally a result can be slightly greater than the specified <em>Max</em> (this is caused in part by the imprecision inherent in floating point numbers).</p>
+
+<h2 id="Seed">RandomSeed</h2>
+<p>Reseeds the random number generator with <em>NewSeed</em>.</p>
+<pre class="Syntax"><span class="func">RandomSeed</span> NewSeed</pre>
+<p>This affects all subsequently generated random numbers. <em>NewSeed</em> should be an integer between 0 and 4294967295 (0xFFFFFFFF). Reseeding can improve the quality/security of generated random numbers, especially when <em>NewSeed</em> is a genuine random number rather than one of lesser quality such as a pseudo-random number. Generally, reseeding does not need to be done more than once.</p>
+<p>If reseeding is never done by the script, the seed starts off as the low-order 32-bits of the 64-bit value that is the number of 100-nanosecond intervals since January 1, 1601. This value travels from 0 to 4294967295 every ~7.2 minutes.</p>
+
+<h2>示例</h2>
+<pre class="NoIndent">number := Random(1, 10)
+fraction := Random(0.0, 1.0)</pre>
+<h2>Comments based on the original source</h2>
+<p>This function uses the Mersenne Twister random number generator, MT19937, written
+  by Takuji Nishimura and Makoto Matsumoto, Shawn Cokus, Matthe Bellew and Isaku
+  Wada.</p>
+<p>The Mersenne Twister is an algorithm for generating random numbers. It was
+  designed with consideration of the flaws in various other generators. The period,
+  2<sup>19937</sup>-1, and the order of equidistribution, 623 dimensions, are
+  far greater. The generator is also fast; it avoids multiplication and division,
+  and it benefits from caches and pipelines. For more information see the inventors'
+  web page at www.math.keio.ac.jp/~matumoto/emt.html</p>
+<p>Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura, All rights
+  reserved.</p>
+<p>Redistribution and use in source and binary forms, with or without modification,
+  are permitted provided that the following conditions are met:</p>
+<ol>
+  <li>Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.</li>
+  <li>Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.</li>
+  <li>The names of its contributors may not be used to endorse or promote products
+    derived from this software without specific prior written permission.</li>
+</ol>
+<p class="J">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+<p>Do NOT use for CRYPTOGRAPHY without securely hashing several returned values
+  together, otherwise the generator state can be learned after reading 624 consecutive
+  values.</p>
+<p>When you use this, send an email to: matumoto@math.keio.ac.jp with an appropriate
+  reference to your work. It would be nice to CC: rjwagner@writeme.com and Cokus@math.washington.edu
+  when you write.</p>
+<p><i>This above has been already been done for AutoHotkey, but if you use the Random function in a publicly distributed application,
+    consider sending an e-mail to the above people to thank them.</i></p>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>WinExist - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The WinExist function checks if a matching window exists." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>WinExist</h1>
+
+<p>Checks if the specified window exists.</p>
+
+<pre class="Syntax">UniqueID := <span class="func">WinExist</span>(<span class="optional">WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>UniqueID</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p><a href="../misc/WinTitle.htm#ahk_id">Unique ID (HWND)</a> of the first window matching the given criteria.</p>
+  </dd>
+
+  <dt>WinTitle</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>A window title or other criteria identifying the target window. See <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
+  </dd>
+
+  <dt>WinText</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>If present, this parameter must be a substring from a single text element of the target window (as revealed by the included Window Spy utility). Hidden text elements are detected if <a href="DetectHiddenText.htm">DetectHiddenText</a> is ON.</p>
+  </dd>
+
+  <dt>ExcludeTitle</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>Windows whose titles include this value will not be considered.</p>
+  </dd>
+
+  <dt>ExcludeText</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>Windows whose text include this value will not be considered.</p>
+  </dd>
+
+</dl>
+
+<h2>返回值</h2>
+<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>This function returns the <a href="../misc/WinTitle.htm#ahk_id">Unique ID (HWND)</a> of the first matching window (or 0 if none).</p>
+<p>Since all non-zero numbers are seen as &quot;true&quot;, the statement <code>if WinExist(WinTitle)</code> is true whenever <em>WinTitle</em> exists.</p>
+
+<h2>备注</h2>
+<p>If all parameters are omitted, the <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a> will be checked to see if it still exists.</p>
+<p>If a qualified window exists, the <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a> will be updated to be that window.</p>
+<p>To discover the HWND of a control (for use with <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a> or <a href="DllCall.htm">DllCall</a>), use <a href="ControlGetHwnd.htm">ControlGetHwnd</a> or <a href="MouseGetPos.htm">MouseGetPos</a>.</p>
+<p>Window titles and text are case sensitive. Hidden windows are not detected unless <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> has been turned on.</p>
+
+<h2>相关</h2>
+<p><a href="WinActive.htm">WinActive</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a>, <a href="ProcessExist.htm">ProcessExist</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="_If.htm">#If</a></p>
+<h2>示例</h2>
+<pre class="NoIndent"><em>; Example 1</em>
+if WinExist(&quot;Untitled - Notepad&quot;)
+{
+    WinActivate  <em>; Automatically uses the window found above.</em>
+    WinMaximize  <em>; same</em>
+    Send "Some text.{Enter}"
+    return
+}
+
+<em>; Example 2</em>
+if !WinExist(&quot;Calculator&quot;)
+    return
+else
+{
+    WinActivate  <em>; The above &quot;WinExist&quot; also set the &quot;last found&quot; window for us.</em>
+    WinMove 40, 40  <em>; Move it to a new position.</em>
+    return
+}
+
+<em>; Example 3</em>
+if WinExist(&quot;ahk_class Notepad&quot;) or WinExist(&quot;ahk_class&quot; . ClassName)
+    WinActivate  <em>; Uses the <a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a>.</em>
+
+MsgBox &quot;The active window's ID is &quot; . WinExist(&quot;A&quot;)</pre>
+	
+</body>
+</html>

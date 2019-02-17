@@ -1,0 +1,893 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>变量和表达式 - 定义 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="Learn details about variables, expressions, operators, built-in variables and capacity and memory of variables." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="static/theme.css" rel="stylesheet" type="text/css" />
+<script src="static/content.js" type="text/javascript"></script>
+</head>
+
+<body>
+<h1>变量和表达式</h1>
+
+<h2>目录</h2>
+<ul>
+  <li><a href="#Intro">变量</a></li>
+  <li><a href="#Expressions">表达式</a></li>
+  <li><a href="#Operators">表达式中的运算符</a></li>
+  <li><a href="#BuiltIn">内置变量</a></li>
+  <li><a href="#cap">变量的容量和占用内存</a></li>
+</ul>
+<span id="Variables"></span><h2 id="Intro">变量</h2>
+<p>有关一般说明和变量如何工作的详细信息, 请参阅<a href="Concepts.htm#variables">变量</a>.</p>
+<p id="assigning"><strong>给变量赋值</strong>: 要将字符串或数字存储在变量中, 使用<a href="commands/SetExpression.htm">冒号-等号运算符(:=)</a> 后跟着数字, 加引号的字符串或其他类型的<a href="Language.htm#expressions">表达式</a>. 例如:</p>
+<pre>MyNumber := 123
+MyString := &quot;This is a literal string.&quot;
+CopyOfVar := Var</pre>
+<p>未赋值的变量默认赋值为空字符串. 因此, 要删除变量的内容, 只需赋值一个空字符串:</p>
+<pre>MyVar := &quot;&quot;</pre>
+<p>通过将变量用作函数的<em>输出变量</em>, 还可以间接地为变量赋值. 例如:</p>
+<pre><a href="commands/MouseGetPos.htm">MouseGetPos</a> <strong>x</strong>, <strong>y</strong></pre>
+<p id="retrieving"><strong>检索变量的内容</strong>: 若要将变量的内容包含在字符串中, 请使用<a href="#concat">连接</a>或 <a href="commands/Format.htm">Format</a>. 例如:</p>
+<pre><a href="commands/MsgBox.htm">MsgBox</a> "The value of Var is " . Var . "."
+MsgBox "The value in the variable named Var is " Var "."
+MsgBox Format("Var has the value {1}.", Var)
+</pre>
+<p>子表达式可以以同样的方式与字符串组合. 例如:</p>
+<pre>MsgBox(&quot;The sum of X and Y is &quot; . (X + Y))
+</pre>
+<p><strong>变量的比较</strong>: 请阅读下面表达式部分中关于不同类型比较的重要提示.</p>
+<h2 id="Expressions">表达式</h2>
+<p class="note">有关结构化概述和进一步说明, 请参阅<a href="Language.htm#expressions">表达式</a>.</p>
+<p>表达式用于对一系列变量, 原义字符串和/或原义数字执行一个或多个运算.</p>
+<p>表达式中的普通单词被解释为变量名. 因此, 原义的字符串必须用双引号括起来, 以便与变量区分开来. 例如:</p>
+<pre>if (CurrentSetting &gt; 100 or FoundColor != &quot;Blue&quot;)
+    MsgBox "The setting is too high or the wrong color is present."</pre>
+<p>在上面的例子中, &quot;Blue&quot; 出现在引号中, 因为它是一个原义的字符串. 单引号(&apos;) 和双引号(&quot;) 的作用是相同的, 除了用单引号括起来的字符串可以包含原义双引号, 反之亦然. 因此, 要在原义字符串中包含 <em>真实的</em> 引号, 可以<a href="misc/EscapeChar.htm">转义</a>引号或将字符串括在相反类型的引号中. 例如:</p>
+<pre>MsgBox &quot;She said, <span class="red">`&quot;</span>An apple a day.<span class="red">`&quot;</span>&quot;
+MsgBox <span class="red">&apos;</span>She said, &quot;An apple a day.&quot;<span class="red">&apos;</span></pre>
+<p><strong>空字符串</strong>: 若要在表达式中指定空字符串, 请使用一对空的双引号. 例如, 当 <em>MyVar</em> 非空时, 语句 <code>if (MyVar != &quot;&quot;)</code> 的结果为真.</p>
+<p><strong>保存表达式的结果</strong>: 要把结果赋值给变量, 请使用 <a href="commands/SetExpression.htm">:= 运算符</a>. 例如:</p>
+<pre>NetPrice := Price * (1 - Discount/100)</pre>
+<p id="Boolean"><strong>布尔值</strong>: 若要计算表达式结果为真还是假时(如 IF-语句), 结果为空或零被视为假(false), 而其他所有结果都视为真(true). 例如, 仅当 ItemCount 为空或 0 时, 语句 <code>if ItemCount</code> 的结果才为假. 类似的, 表达式 <code>if not ItemCount</code> 将产生相反的结果.</p>
+<p>诸如 <b>NOT</b>/<b>&gt;</b>/<b>=</b>/<b>&lt;</b> 之类的运算符自动生成一个真值或假值: 真值时结果为 1, 而假值时为 0. 然而, <b>AND</b>/<b>OR</b> 运算符总是生成一个输入值. 例如, 在以下表达式, 如果 A_Index 大于 5, 变量 <em>Done</em> 赋值为 1, 其他情况下为 <em>FoundIt</em> 的值:</p>
+<pre>Done := A_Index &gt; 5 or FoundIt</pre>
+<p>如上所述, 可以通过将变量设为空或赋值为 0, 来使变量来保存假值. 利用这种特性, 可以使用简写语句 <code>if Done</code> 来检查变量 Done 是真还是假.</p>
+<p><span id="True"></span><span id="False"></span>在表达式中, 关键字 <em>true</em> 和 <em>false</em> 解析为 1 和 0. 使用它们可以使脚本更易于阅读, 如以下示例所示:</p>
+<pre>CaseSensitive := false
+ContinueSearch := true</pre>
+<p id="numbers"><strong>整数和浮点数</strong>: 在表达式中, 如果数字包含小数点或科学计数符号, 则认为它们是浮点数; 否则, 否则视为整数. 对于大多数运算符 -- 如加法和乘法 -- 只要其中的一个输入是浮点数, 那么结果也将是浮点数.</p>
+<p>在表达式和非表达式中, 整数都可以用十六进制或十进制格式书写. 十六进制数总是以前缀 0x 开头. 例如, <code>Sleep 0xFF</code> 等同于 <code>Sleep 255</code>. 浮点数可以选择用科学记数法书写, 带或不带小数点(例如 <code>1e4</code> 或 <code>-2.1E-4</code>).</p>
+<p>在脚本开始执行之前, 在表达式中, 未加双引号的原义数字(如 <code>128</code>, <code>0x7F</code> 和 <code>1.0</code>), 被转换为纯数字, 因此将数字转换为字符串可能会产生与原始文字值不同的值. 例如:</p>
+<pre>MsgBox(0x7F)  <em>; 显示 128</em>
+MsgBox(1.00)  <em>; 显示 1.0</em></pre>
+
+<h2 id="Operators">表达式中的运算符</h2>
+<p class="note">有关运算符的一般信息, 请参阅<a href="Language.htm#operators">运算符</a>.</p>
+<p>除了下面提到的, 数学运算中涉及的任何空值(空字符串) 或非数字值都<strong>不会</strong>假定为零. 相反, 会抛出异常. 如果未使用 <a href="commands/Try.htm">Try</a>, 默认情况下, 未处理的异常将导致一个错误对话框.</p>
+
+<h3 id="operators">表达式运算符(按优先级降序排列))</h3>
+<table class="info">
+  <tr id="ref">
+    <td style="text-align:center; white-space:nowrap"><strong>%Expr%</strong></td>
+    <td>
+      <p>计算子表达式 <em>Expr</em>, 并将其值用作变量或函数的名称或部分名称. 这允许脚本引用一个名称未在脚本中文字写入的变量或函数, 而该名称是通过计算 <em>Expr</em>(通常是另一个变量) 确定的. 由于会产生歧义, 百分号不能在 <em>Expr</em> 中直接使用, 但是可以嵌套在括号中. 另外, <em>Expr</em> 可以是任何表达式.</p>
+      <p><code>%Expr%()</code> 执行<a href="Functions.htm#DynCall">动态函数调用</a>.</p>
+      <p><code>%Expr%</code> 根据名称动态检索变量. 子表达式 <em>Expr</em> 的<u>结果</u>必须是要检索的变量的名称或部分名称. 如果有任何与 <em>%Expr%</em> 相邻的序列和部分<a href="Concepts.htm#names">变量名</a>(它们之间没有任何空格或其他字符), 则将它们组合成单个名称.</p>
+      <p>如果该变量不存在, 则创建一个空白变量. 如果名称<a href="Concepts.htm#names">无效</a>, 则抛出<a href="commands/Throw.htm#Exception">异常</a>.</p>
+      <p>这通常用于引用<a href="misc/Arrays.htm#pseudo">伪数组</a>中的元素.</p>
+      <p>尽管这在早期被称为 "双重解引", 但是当 <em>Expr</em> 不包含变量(第一重解引), 以及当结果变量(第二重解引) 是赋值的目标时, 该术语是不准确的.</p>
+    </td>
+  </tr>
+  <tr id="objdot">
+    <td style="text-align:center"><strong>x.y</strong></td>
+    <td><strong>成员访问</strong>. 获取或设置一个值或调用对象 <i>x</i> 的方法, 此处 <i>y</i> 是个原义名称. 请参阅<a href="Objects.htm#Usage_Objects">对象语法</a>.</td>
+  </tr>
+  <tr id="new">
+    <td style="text-align:center"><strong>new</strong></td>
+    <td><code>new <i>Class</i></code> 或 <code>new <i>Class</i>(<i>Params</i>)</code> 创建一个派生自<em>类</em>的新对象. 例如, <code>x := new y</code> 通常等价于 <code>x := {base: y}</code>. <em>Class</em> can be almost any expression which produces a class object, but is typically a class name such as <code>GlobalClass</code> or <code>GlobalClass.NestedClass</code>. More complex cases such as <code>new new (getClass())(params1)(params2)</code> are also supported, but there must be no space between the class expression and parameter list. 更多细节, 请参阅<a href="Objects.htm#Custom_Objects">自定义对象</a>.</td>
+  </tr>
+  <tr id="IncDec">
+    <td style="text-align:center"><strong>++<br>
+    --</strong></td>
+    <td>
+      <p><strong>Pre- and post-increment/decrement</strong>. Adds or subtracts 1 from a variable. The operator may appear either before or after the variable's name. If it appears <em>before</em> the name, the operation is performed immediately and its result is used by the next operation. 例如, <code>Var := ++X</code> increments X immediately and then assigns its value to <em>Var</em>. Conversely, if the operator appears <em>after</em> the variable's name, the operation is performed <em>after</em> the variable is used by the next operation. 例如, <code>Var := X++</code> increments X only after assigning the current value of X to <em>Var</em>.</p>
+    </td>
+  </tr>
+  <tr id="pow">
+    <td style="text-align:center"><strong>**</strong></td>
+    <td>
+      <p><strong>Power</strong>. Both the base and the exponent may contain a decimal point. If the exponent is negative, the result  will be formatted as a floating point number even if the base and exponent are both integers. Since ** is of higher precedence than unary minus, <code>-2**2</code> is evaluated like <code>-(2**2)</code> and so yields -4. Thus, to raise a literal negative number to a power, enclose it in parentheses such as <code>(-2)**2</code>.</p>
+      <p class="note"><strong>Note</strong>: A negative base combined with a fractional exponent such as <code>(-2)**0.5</code> is not supported; attempting it will cause an exception to be thrown. But both <code>(-2)**2</code> and <code>(-2)**2.0</code> are supported.</p>
+    </td>
+  </tr>
+  <tr id="unary">
+    <td style="text-align:center"><strong>-<br>
+    !<br>
+    ~<br>
+    &amp;</strong></td>
+    <td>
+      <p><strong>Unary minus (-)</strong>: Inverts the sign of its operand.</p>
+      <p><strong>Unary plus (+)</strong>: <code>+N</code> is equivalent to <code>-(-N)</code>. This has no effect when applied to a pure number, but can be used to convert numeric strings to pure numbers.</p>
+      <p><strong>Logical-not (!)</strong>: If the operand is blank or 0, the result of applying logical-not is 1, which means &quot;true&quot;. Otherwise, the result is 0 (false). 例如: <code>!x or !(y and z)</code>. Note: The word NOT is synonymous with <strong>!</strong> except that <strong>!</strong> has a higher precedence. Consecutive unary operators such as <code><strong>!!</strong>Var</code> are allowed because they are evaluated in right-to-left order.</p>
+      <p><strong>Bitwise-not (~)</strong>: This inverts each bit of its operand. If the operand is a floating point value, it is truncated to an integer prior to the calculation. As 64-bit signed integers are used, a positive input value will always give a negative result and vice versa. 例如, <code>~0xf0f</code> evaluates to -0xf10 (-3856), which is binary equivalent to 0xfffffffffffff0f0. If an unsigned 32-bit value is intended, the result can be truncated with <code><i>result</i> &amp; 0xffffffff</code>.</p>
+      <p id="amp"><strong>Address (&amp;)</strong>: <code>&amp;MyVar</code> retrieves the address of <em>MyVar</em>'s contents in memory, where <em>MyVar</em> is a user-created variable. <em>MyVar</em>'s contents can be a string, a 64-bit integer, a 64-bit floating-point number, or an object. This is typically used with <a href="commands/DllCall.htm#struct">DllCall structures</a>.</p>
+      <p>The address operator can be used with other strings such as <code>&amp;"string"</code>, <code>&amp;(x . y)</code> or <code>&amp;A_LoopField</code>, with limitations:</p>
+      <ul>
+        <li>The addressed memory should never be modified, such as by passing it to a DllCall output parameter.</li>
+        <li>An address taken from a temporary value (including one returned by a built-in variable) should be considered valid only until evaluation of the expression or <a href="Language.htm#function-call-statements">function call statement</a> completes. After this, the memory may be reused for something else.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr id="MulDiv">
+    <td style="text-align:center"><strong>*<br>
+    /<br>
+    //
+    </strong></td>
+    <td><p><strong>Multiply (*)</strong>: The result is an integer if both inputs are integers; otherwise, it is a floating point number.</p>
+      <p><strong>Other uses</strong>: The asterisk (*) symbol is also used in <a href="Functions.htm#VariadicCall">variadic function calls</a>.</p>
+      <p id="divide"><strong>True divide (/)</strong>: True division yields a floating point result even when both inputs are integers. 例如, <code>3/2</code> yields 1.5 rather than 1, and <code>4/2</code> yields 2.0 rather than 2.</p>
+      <p id="FloorDivide"><strong>Floor divide (//)</strong>: The double-slash operator uses high-performance integer division if the two inputs are integers. 例如, <code>5//3</code> is 1 and <code>5//-3</code> is -1. If either of the inputs is in floating point format, floating point division is performed and the result is truncated to the nearest integer to the left. 例如, <code>5//3.0</code> is 1.0 and <code>5.0//-3</code> is -2.0. Although the result of this floating point division is an integer, it is stored in floating point format so that anything else that uses it will see it as such. For modulo, see <a href="commands/Math.htm#Mod">Mod</a>.</p>
+    <p>The <a href="#AssignOp">*=</a> and <a href="#AssignOp">/=</a> operators are a shorthand way to multiply or divide the value in a variable by another value. 例如, <code>Var*=2</code> produces the same result as <code>Var:=Var*2</code> (though the former performs better).</p>
+    <p>Division by zero causes an exception to be thrown.</p></td>
+  </tr>
+  <tr id="AddSub">
+    <td style="text-align:center"><strong>+<br>
+    -</strong></td>
+    <td><p><strong>Add (+)</strong> and <strong>subtract (-)</strong>. On a related note, the <a href="#AssignOp"><strong>+=</strong></a> and <a href="#AssignOp"><strong>-=</strong></a> operators are a shorthand way to increment or decrement a variable. 例如, <code>Var+=2</code> produces the same result as <code>Var:=Var+2</code> (though the former performs better). Similarly, a variable can be increased or decreased by 1 by using <a href="#IncDec">Var++, Var--, ++Var, or --Var</a>.</p>
+      <p><strong>Other uses</strong>: If the + or - symbol is not preceded by a value (or a sub-expression which yields a value), it is interpreted as a <a href="#unary">unary operator</a> instead.</p>
+    </td>
+  </tr>
+  <tr id="bitshift">
+    <td style="text-align:center"><strong>&lt;&lt;<br>
+    &gt;&gt;</strong></td>
+    <td><strong>Bit shift left (&lt;&lt;)</strong> and <strong>right (&gt;&gt;)</strong>. Example usage: <code>Value1 &lt;&lt; Value2</code>. Any floating point input is truncated to an integer prior to the calculation. Shift left (<strong>&lt;&lt;</strong>) is equivalent to multiplying <em>Value1</em> by &quot;2 to the <em>Value2</em>th power&quot;. Shift right (<strong>&gt;&gt;</strong>) is equivalent to dividing <em>Value1</em> by &quot;2 to the <em>Value2</em>th power&quot; and rounding the result to the nearest integer leftward on the number line; 例如, <code>-3&gt;&gt;1</code> is -2.</td>
+  </tr>
+  <tr id="bitwise">
+    <td style="text-align:center"><strong>&amp;<br>
+      ^<br>
+      |
+    </strong></td>
+    <td>
+      <p><strong>Bitwise-and (&amp;)</strong>, <strong>bitwise-exclusive-or (^)</strong>, and <strong>bitwise-or (|)</strong>. Of the three, <strong>&amp;</strong> has the highest precedence and <strong>|</strong> has the lowest. Any floating point input is truncated to an integer prior to the calculation.</p>
+      <p>Related: <a href="#unary">Bitwise-not (~)</a></p>
+      <p><strong>Other uses</strong>: If the &amp; symbol is not preceded by a value (or a sub-expression which yields a value), it is interpreted as the <a href="#unary">address operator</a> instead.</p>
+    </td>
+  </tr>
+  <tr id="concat">
+    <td style="text-align:center"><strong>.</strong></td>
+    <td>
+      <p><strong>Concatenate</strong>. A period (dot) with at least one space or tab on each side is used to combine two items into a single string. You may also omit the period to achieve the same result (except where ambiguous such as <code>x <strong>-</strong>y</code>, or when the item on the right side has a leading ++ or --). When the dot is omitted, there must be at least one space or tab between the items to be merged.</p>
+      <pre>Var := "The color is " <strong>.</strong> FoundColor  <em>; Explicit concat</em>
+Var := "The color is " FoundColor    <em>; Auto-concat</em>
+</pre>
+      <p>Sub-expressions can also be concatenated. 例如: <code>Var := "The net price is " <strong>.</strong>  Price * (1 - Discount/100)</code>.</p>
+      <p>A line that begins with a period (or any other operator) is automatically <a href="Scripts.htm#continuation">appended to</a> the line above it.</p>
+      <p>The entire <a href="commands/StrLen.htm">length</a> of each input is used, even if it includes binary zero. 例如, <code>Chr(0x2010) Chr(0x0000) Chr(0x4030)</code> produces the following string of bytes (due to UTF-16-LE encoding): 0x10, 0x20, 0, 0, 0x30, 0x40. The result has an additional null-terminator (binary zero) which is not included in the length.</p>
+      <p><strong>Other uses</strong>: If there is no space or tab to the right of a period (dot), it is interpreted as either a literal <a href="#numbers">floating-point number</a> or <a href="#objdot">member access</a>. 例如, <code>1.1</code> and <code>(.5)</code> are numbers, <code>A_Args.Length()</code> is a method call and <code>myArray.1</code> is equivalent to <code>myArray[1]</code>.</p>
+    </td>
+  </tr>
+  <tr id="regex">
+    <td style="text-align:center"><strong>~=</strong></td>
+    <td>Shorthand for <a href="commands/RegExMatch.htm">RegExMatch</a>. 例如, the result of <code>"abc123" ~= "\d"</code> is 4 (the position of the first numeric character).</td>
+  </tr>
+  <tr id="compare">
+    <td style="text-align:center"><strong>&gt;&nbsp;&nbsp;&nbsp;&lt;<br>
+    &gt;= &lt;=</strong></td>
+    <td>
+      <p><strong>Greater (&gt;)</strong>, <strong>less (&lt;)</strong>, <strong>greater-or-equal (&gt;=)</strong>, and <strong>less-or-equal (&lt;=)</strong>. If either of the inputs is not numeric (or both are strings), they are compared alphabetically. 例如, 2 &lt; &quot;10&quot; is <em>true</em> whereas &quot;2&quot; &lt; &quot;10&quot; is <em>false</em>. The comparison is case sensitive only if <a href="commands/StringCaseSense.htm">StringCaseSense</a> has been turned on. See also: <a href="commands/Sort.htm">Sort</a></p>
+      <p>When comparing strings, these operators compare only up to the first binary zero.</p>
+    </td>
+  </tr>
+  <tr id="equal">
+    <td style="text-align:center"><strong>=<br>
+      ==<br>
+      !=<br>
+      !==</strong></td>
+    <td>
+      <p><strong>Case-insensitive equal (=) / not-equal (!=)</strong> and <strong>case-sensitive equal (==) / not-equal (!==)</strong>. The <strong>==</strong> operator behaves identically to <strong>=</strong> except when either of the inputs is not numeric (or both are strings), in which case <strong>==</strong> is always case sensitive and <strong>=</strong> is always case insensitive (the method of insensitivity depends on <a href="commands/StringCaseSense.htm">StringCaseSense</a>). The <strong>!=</strong> and <strong>!==</strong> behave identically to their counterparts without <strong>!</strong>, except that the result is inverted.</p>
+      <p>The <strong>==</strong> and <strong>!==</strong> operators can be used to compare strings which contain binary zero. All other comparison operators except <strong>~=</strong> compare only up to the first binary zero.</p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><strong>IS</strong><br><strong>IN</strong><br><strong>CONTAINS</strong></td>
+    <td id="is">
+      <p><code><i>Value</i> <strong>is</strong> <i>Type</i></code>: Yields true (1) if <em>value</em> is of the given <em>type</em> or false (0) otherwise. For details, see <a href="commands/is.htm"><em>Value</em> is <em>Type</em></a>.</p>
+      <p><code id="in"><strong>in</strong></code> and <code id="contains"><strong>contains</strong></code> are reserved for future use.</p>
+    </td>
+  </tr>
+  <tr id="not">
+    <td style="text-align:center"><strong>NOT</strong></td>
+    <td><strong>Logical-NOT</strong>. Except for its lower precedence, this is the same as the <strong>!</strong> operator. 例如, <code>not (x = 3 or y = 3)</code> is the same as <code><strong>!</strong>(x = 3 or y = 3)</code>.</td>
+  </tr>
+    <tr id="and">
+      <td style="text-align:center"><strong>AND<br>
+      &amp;&amp;</strong></td>
+      <td><p>Both of these are <strong>logical-AND</strong>. 例如: <code>x &gt; 3 and x &lt; 10</code>.</p>
+        <p>In an expression where <strong>all</strong> operands resolve to <em>True</em>, the <strong>last</strong> operand that resolved to <em>True</em> is returned. Otherwise, the <strong>first</strong> operand that resolves to <em>False</em> is returned. Effectively, only when all operands are true, will the result be true. Boolean expressions are subject to <a href="Functions.htm#ShortCircuit">short-circuit evaluation</a> (left to right) in order to enhance performance.</p>
+        <pre>A := 1, B := {}, C := 20, D := True, E := "String" <em>; <strong>All</strong> operands are truthy and will be evaluated</em>
+MsgBox(A &amp;&amp; B &amp;&amp; C &amp;&amp; D &amp;&amp; E) <em>; The <strong>last</strong> truthy operand is returned ("String")</em></pre>
+        <pre>A := 1, B := "", C := 0, D := False, E := "String" <em>; B is falsey, C and D are false</em>
+MsgBox(A &amp;&amp; B &amp;&amp; ++C &amp;&amp; D &amp;&amp; E) <em>; The <strong>first</strong> falsey operand is returned (""). C, D and E are not evaluated and C is never incremented</em></pre>
+        <p>A line that begins with <code>AND</code> or <code>&amp;&amp;</code> (or any other operator) is automatically <a href="Scripts.htm#continuation">appended to</a> the line above it.</p></td>
+    </tr>
+    <tr id="or">
+      <td style="text-align:center"><strong>OR<br>
+      ||</strong></td>
+      <td><p>Both of these are <strong>logical-OR</strong>. 例如: <code>x &lt;= 3 or x &gt;= 10</code>.</p>
+        <p>In an expression where <strong>at least</strong> one operand resolves to <em>True</em>, the <strong>first</strong> operand that resolved to <em>True</em> is returned. Otherwise, the <strong>last</strong> operand that resolves to <em>False</em> is returned. Effectively, provided at least one operand is true, the result will be true. Boolean expressions are subject to <a href="Functions.htm#ShortCircuit">short-circuit evaluation</a> (left to right) in order to enhance performance.</p>
+        <pre>A := "", B := False, C := 0, D := "String", E := 20 <em>; <strong>At least</strong> one operand is truthy. All operands up until D (including) will be evaluated</em>
+MsgBox(A || B || C || D || ++E) <em>; The <strong>first</strong> truthy operand is returned ("String"). E is not evaluated and is never incremented</em></pre>
+        <pre>A := "", B := False, C := 0 <em>; <strong>All</strong> operands are falsey and will be evaluated</em>
+MsgBox(A || B || C) <em>; The <strong>last</strong> falsey operand is returned (0)</em></pre>
+        <p>A line that begins with <code>OR</code> or <code>||</code> (or any other operator) is automatically <a href="Scripts.htm#continuation">appended to</a> the line above it.</p></td>
+    </tr>
+  <tr id="ternary">
+    <td style="text-align:center"><strong>?:</strong></td>
+    <td><p><strong>Ternary operator</strong>. This operator is a shorthand replacement for the <a href="commands/IfExpression.htm">if-else statement</a>. It evaluates the condition on its left side to determine which of its two branches should become its final result. 例如, <code>var := x&gt;y ? 2 : 3</code> stores 2 in <em>Var</em> if x is greater than y; otherwise it stores 3. To enhance performance, only the winning branch is evaluated (see <a href="Functions.htm#ShortCircuit">short-circuit evaluation</a>).</p></td>
+  </tr>
+  <tr id="AssignOp">
+    <td style="text-align:center"><strong>:=<br>
+        +=<br>
+        -=<br>
+        *=<br>
+        /=<br>
+        //=<br>
+        .=<br>
+        |=<br>
+        &amp;=<br>
+        ^=<br>
+        &gt;&gt;=<br>
+        &lt;&lt;=</strong>
+    </td>
+    <td><p><strong>Assign</strong>. Performs an operation on the contents of a variable and stores the result back in the same variable. The simplest assignment operator is <a href="commands/SetExpression.htm">colon-equals (:=)</a>, which stores the result of an expression in a variable. For a description of what the other operators do, see their related entries in this table. 例如, <code>Var //= 2</code> performs <a href="#FloorDivide">floor division</a> to divide <em>Var</em> by 2, then stores the result back in <em>Var</em>. Similarly, <code>Var <strong>.=</strong> &quot;abc&quot;</code> is a shorthand way of writing <code>Var := Var <strong>.</strong> &quot;abc&quot;</code>.</p>
+      <p>Unlike most other operators, assignments are evaluated from right to left. Consequently, a line such as <code>Var1 := Var2 := 0</code> first assigns 0 to <em>Var2</em> then assigns <em>Var2</em> to <em>Var1</em>.</p>
+    <p>If an assignment is used as the input for some other operator, its value is the variable itself. 例如,  the expression <code>(Var+=2) &gt; 50</code> is true if the newly-increased value in <em>Var</em> is greater than 50. This also allows an assignment to be passed <a href="Functions.htm#ByRef">ByRef</a>, or its <a href="#amp">address</a> taken; 例如: <code>&amp;(x:=&quot;abc&quot;)</code>.</p>
+    <p>The precedence of the assignment operators is automatically raised when it would avoid a syntax error or provide more intuitive behavior. 例如: <code>not x:=y</code> is evaluated as <code>not (x:=y)</code>. Similarly, <code>++Var := X</code> is evaluated as <code>++(Var := X)</code>; and <code>Z&gt;0 ? X:=2 : Y:=2</code> is evaluated as <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
+    </td>
+  </tr>
+  <tr id="fat-arrow">
+    <td><strong>() =&gt;</strong> <em>expr</em></td>
+    <td>
+      <p><strong>Fat arrow function</strong>. Defines a simple <a href="Functions.htm">function</a> and returns a <a href="objects/Func.htm">Func</a> or <a href="Functions.htm#closures">Closure</a> object. Write the function's <a href="Functions.htm#param">parameter list</a> (optionally preceded by a function name) to the left of the operator. When the function is called (via the returned reference), it evaluates the sub-expression <em>expr</em> and returns the result.</p>
+      <p>The following two examples are equivalent:</p>
+      <pre>sumfn := Sum(a, b) =&gt; a + b</pre>
+      <pre>Sum(a, b) {
+    return a + b
+}
+sumfn := Func("Sum")</pre>
+      <p>In both cases, the function is defined <strong>unconditionally</strong> at the moment the script launches, but the function reference is stored in <em>sumfn</em> only if and when the assignment is evaluated.</p>
+      <p>If the function name is omitted and the parameter list consists of only a single parameter name, the parentheses can be omitted. The example below defines an anonymous function with one parameter <code>a</code> and stores its reference in the variable <code>double</code>:</p>
+      <pre>double := a =&gt; a * 2</pre>
+      <p>Variable references in <em>expr</em> are resolved in the same way as in the equivalent full function definition. For instance, <em>expr</em> may refer to an outer function's local variables (as in any <a href="Functions.htm#nested">nested function</a>), in which case a new <a href="Functions.htm#closures">closure</a> is created and returned each time the fat arrow expression is evaluated. The function is <a href="Functions.htm#AssumeLocal">assume-local</a> if it is nested inside another function, otherwise it is <a href="Functions.htm#AssumeGlobal">assume-global</a>.</p>
+      <p>Specifying a name for the function allows it to be called recursively or by other nested functions without storing a reference to the <a href="Functions.htm#closures">closure</a> within itself (thereby creating a problematic <a href="Objects.htm#Circular_References">circular reference</a>). It can also be helpful for debugging, such with <a href="objects/Func.htm#Name">Func.Name</a> or when displayed on the debugger's call stack.</p>
+    </td>
+
+  </tr>
+  <tr id="comma">
+    <td style="text-align:center"><strong>,</strong></td>
+    <td><p><strong>Comma (multi-statement)</strong>. Commas may be used to write multiple sub-expressions on a single line. This is most commonly used to group together multiple assignments or function calls.  例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, MyFunc()</code>. Such statements are executed in order from left to right.</p>
+      <p class="note"><strong>Note</strong>: A line that begins with a comma (or any other operator) is automatically <a href="Scripts.htm#continuation">appended to</a> the line above it. See also: <a href="#CommaPerf">comma performance</a>.</p>
+      <p>Comma is also used to delimit the parameters of a function call or control flow statement. To include a multi-statement expression in a parameter list, enclose it in an extra set of parentheses. 例如, <code>MyFn((x, y))</code> evaluates both x and y but passes y as the first and only parameter of MyFn.</p>
+    </td>
+  </tr>
+</table>
+<p>The following types of sub-expressions override precedence/order of evaluation:</p>
+<table class="info">
+  <tr>
+    <td style="text-align:center"><strong>(</strong><em>expression</em><strong>)</strong></td>
+    <td><p>Any sub-expression enclosed in parentheses. 例如, <code>(3 + 2) * 2</code> forces <code>3 + 2</code> to be evaluated first.</p></td>
+  </tr>
+  <tr>
+    <td style="text-align:center; white-space:nowrap"><p><strong>Mod<br>
+        Round<br>
+    Abs</strong></p></td>
+    <td><strong>Function call</strong>. The function name must be immediately followed by an open-parentheses, without any spaces or tabs in between. For details, see <a href="Functions.htm">Functions</a>.</td>
+  </tr>
+  <tr>
+    <td style="text-align:center; white-space:nowrap"><p><strong>%</strong><em>func</em><strong>%()</strong></p></td>
+    <td>See <a href="Functions.htm#DynCall">Dynamically Calling a Function</a>.</td>
+  </tr>
+  <tr>
+    <td style="text-align:center">Fn(<strong><em>Params</em>*</strong>)</td>
+    <td><p><a href="Functions.htm#VariadicCall">Variadic function call</a>. <em>Params</em> is an array (object) containing parameter values.</p></td>
+  </tr>
+  <tr id="square-brackets">
+    <td style="text-align:center"><strong>x[y]<br>[a, b, c]</strong></td>
+    <td>
+      <p><strong>Member access</strong>. Get or set a value or call a method of object <i>x</i>, where <i>y</i> is a parameter list (typically an array index or key) or an expression which returns a method name.</p>
+      <p><strong>Array literal</strong>. If the open-bracket is not preceded by a value (or a sub-expression which yields a value), it is interpreted as the beginning of an array literal. 例如, <code>[a, b, c]</code> is equivalent to <code>Array(a, b, c)</code> (a, b and c are variables).</p>
+      <p>See <a href="Objects.htm#Usage_Simple_Arrays">array syntax</a> and <a href="Objects.htm#Usage_Objects">object syntax</a> for more details.</p>
+    </td>
+  </tr>
+  <tr id="curly-braces">
+    <td style="text-align:center"><strong>{a: b, c: d}</strong></td>
+    <td><p><strong>Object literal</strong>. Create an object or associative array. 例如, <code>x := {a: b}</code> is equivalent to <code>x := Object("a", b)</code> or <code>x := Object(), x.a := b</code>. See <a href="Objects.htm#Usage_Associative_Arrays">Associative Arrays</a> for details.</p></td>
+  </tr>
+</table>
+<br>
+<p id="CommaPerf"><strong>Performance</strong>: The comma operator is usually faster than writing separate expressions, especially when assigning one variable to another (e.g. <code>x:=y, a:=b</code>). Performance continues to improve as more and more expressions are combined into a single expression; 例如, it may be 35% faster to combine five or ten simple expressions into a single expression.</p>
+
+<h2 id="BuiltIn">Built-in Variables</h2>
+<p>The variables below are built into the program and can be referenced by any script.</p>
+<p class="note">See <a href="Concepts.htm#built-in-variables">Built-in Variables</a> for general information.</p>
+<h3>Table of Contents</h3>
+<ul>
+  <li>Special Characters: <a href="#Space">A_Space</a>, <a href="#Tab">A_Tab</a></li>
+  <li>Script Properties: <a href="#Args">command line parameters</a>, <a href="#WorkingDir">A_WorkingDir</a>, <a href="#ScriptDir">A_ScriptDir</a>, <a href="#ScriptName">A_ScriptName</a>, <a href="#prop">(...more...)</a></li>
+  <li>Date and Time: <a href="#YYYY">A_YYYY</a>, <a href="#MM">A_MM</a>, <a href="#DD">A_DD</a>, <a href="#Hour">A_Hour</a>, <a href="#Min">A_Min</a>, <a href="#Sec">A_Sec</a>, <a href="#date">(...more...)</a></li>
+  <li>Script Settings: <a href="#IsSuspended">A_IsSuspended</a>, <a href="#ListLines">A_ListLines</a>, <a href="#TitleMatchMode">A_TitleMatchMode</a>, <a href="#settings">(...more...)</a></li>
+  <li>User Idle Time: <a href="#TimeIdle">A_TimeIdle</a>, <a href="#TimeIdlePhysical">A_TimeIdlePhysical</a>, <a href="#TimeIdleKeyboard">A_TimeIdleKeyboard</a>, <a href="#TimeIdleMouse">A_TimeIdleMouse</a></li>
+  <li>Hotkeys, Hotstrings, and Custom Menu Items: <a href="#ThisHotkey">A_ThisHotkey</a>, <a href="#EndChar">A_EndChar</a>, <a href="#h">(...more...)</a></li>
+  <li>Operating System and User Info: <a href="#OSVersion">A_OSVersion</a>, <a href="#Screen">A_ScreenWidth</a>, <a href="#Screen">A_ScreenHeight</a>, <a href="#os">(...more...)</a></li>
+  <li>Misc: <a href="#Cursor">A_Cursor</a>, <a href="#EventInfo">A_EventInfo</a>, <a href="misc/Clipboard.htm">Clipboard</a>, <a href="misc/ErrorLevel.htm">ErrorLevel</a></li>
+  <li>Loop: <a href="#Index">A_Index</a>, <a href="#loop">(...more...)</a></li>
+</ul>
+<h3>Special Characters</h3>
+<table class="info">
+  <tr id="Space">
+    <td>A_Space</td>
+    <td>Contains a single space character.</td>
+  </tr>
+  <tr id="Tab">
+    <td>A_Tab</td>
+    <td>Contains a single tab character.</td>
+  </tr>
+</table>
+<h3 id="prop">Script Properties</h3>
+<table class="info">
+  <tr id="Args">
+    <td>A_Args</td>
+    <td><strong>Read/write:</strong> Contains an <a href="Objects.htm#Usage_Simple_Arrays">array</a> of command line parameters. For details, see <a href="Scripts.htm#cmd">Passing Command Line Parameters to a Script</a>.</td>
+  </tr>
+  <tr id="WorkingDir">
+    <td>A_WorkingDir</td>
+    <td><p><strong>Read/write:</strong> The script's current working directory, which is where files will be accessed by default. The final backslash is not included unless it is the root directory. Two examples: <code>C:\</code> and <code>C:\My Documents</code>.</p>
+    <p>Use <a href="commands/SetWorkingDir.htm">SetWorkingDir</a> or assign a path to A_WorkingDir to change the working directory.</p>
+    <p>The script's working directory defaults to A_ScriptDir, regardless of how the script was launched.</p></td>
+  </tr>
+  <tr id="InitialWorkingDir">
+    <td>A_InitialWorkingDir</td>
+    <td>The script's initial working directory, which is determined by how it was launched. 例如, if it was run via shortcut -- such as on the Start Menu -- its initial working directory is determined by the "Start in" field within the shortcut's properties.</td>
+  </tr>
+  <tr id="ScriptDir">
+    <td>A_ScriptDir</td>
+    <td>
+      <p>The full path of the directory where the current script is located. The final backslash is omitted (even for root directories).</p>
+      <p>If the script text is <a href="Scripts.htm#stdin">read from stdin</a> rather than from file, this variable contains the <a href="#InitialWorkingDir">initial working directory</a>.</p></td>
+  </tr>
+  <tr id="ScriptName">
+    <td>A_ScriptName</td>
+    <td>
+      <p><strong>Read/write:</strong> The default title for MsgBox, InputBox, FileSelect, DirSelect and GuiCreate. If not set by the script, it defaults to the file name of the current script, without its path, e.g. MyScript.ahk.</p>
+      <p>If the script text is <a href="Scripts.htm#stdin">read from stdin</a> rather than from file, the default value is "*".</p>
+    </td>
+  </tr>
+  <tr id="ScriptFullPath">
+    <td>A_ScriptFullPath</td>
+    <td>
+      <p>The full path of the current script, e.g. C:\My Documents\My Script.ahk</p>
+      <p>If the script text is <a href="Scripts.htm#stdin">read from stdin</a> rather than from file, the value is "*".</p>
+    </td>
+  </tr>
+  <tr id="ScriptHwnd">
+    <td>A_ScriptHwnd</td>
+    <td>The unique ID (HWND/handle) of the script's hidden <a href="Program.htm#main-window">main window</a>.</td>
+  </tr>
+  <tr id="LineNumber">
+    <td>A_LineNumber</td>
+    <td><p>The number of the currently executing line within the script (or one of its <a href="commands/_Include.htm">#Include files</a>). This line number will match the one shown by <a href="commands/ListLines.htm">ListLines</a>; it can be useful for error reporting such as this example: <code>MsgBox "Could not write to log file (line number " A_LineNumber ")"</code>.</p>
+    <p>Since a <a href="Scripts.htm#ahk2exe">compiled script</a> has merged all its <a href="commands/_Include.htm">#Include files</a> into one big script, its line numbering may be different than when it is run in non-compiled mode.</p></td>
+  </tr>
+  <tr id="LineFile">
+    <td>A_LineFile</td>
+    <td>The full path and name of the file to which <a href="#LineNumber">A_LineNumber</a> belongs, which will be the same as <a href="#ScriptFullPath">A_ScriptFullPath</a> unless the line belongs to one of a non-compiled script's <a href="commands/_Include.htm">#Include files</a>.</td>
+  </tr>
+  <tr id="ThisFunc">
+    <td>A_ThisFunc</td>
+    <td>The name of the <a href="Functions.htm">user-defined function</a> that is currently executing (blank if none); 例如: MyFunction. See also: <a href="commands/IsFunc.htm">IsFunc</a></td>
+  </tr>
+  <tr id="ThisLabel">
+    <td>A_ThisLabel</td>
+    <td>The name of the <a href="misc/Labels.htm">label</a> (subroutine) that is currently executing (blank if none); 例如: MyLabel. It is updated whenever the script executes <a href="commands/Gosub.htm">Gosub</a>/<a href="commands/Return.htm">Return</a> or <a href="commands/Goto.htm">Goto</a>. It is also updated for automatically-called labels such as <a href="commands/SetTimer.htm">timers</a>, <a href="objects/GuiOnEvent.htm#Threads">GUI threads</a>, <a href="objects/Menu.htm">menu items</a>, <a href="Hotkeys.htm">hotkeys</a> and <a href="Hotstrings.htm">hotstrings</a>. However, A_ThisLabel is not updated when execution &quot;falls into&quot; a label from above; when that happens, A_ThisLabel retains its previous value. See also: <a href="#ThisHotkey">A_ThisHotkey</a> and <a href="commands/IsLabel.htm">IsLabel</a></td>
+  </tr>
+  <tr id="AhkVersion">
+    <td>A_AhkVersion</td>
+    <td>Contains the version of AutoHotkey that is running the script, such as 1.0.22. In the case of a <a href="Scripts.htm#ahk2exe">compiled script</a>, the version that was originally used to compile it is reported. The formatting of the version number allows a script to check whether A_AhkVersion is greater than some minimum version number with &gt; or &gt;= as in this example: <code>if (A_AhkVersion &gt;= "1.0.25.07")</code>.</td>
+  </tr>
+  <tr id="AhkPath">
+    <td>A_AhkPath</td>
+    <td><p>For non-compiled scripts: The full path and name of the EXE file that is actually running the current script. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
+    <p>For <a href="Scripts.htm#ahk2exe">compiled scripts</a>: The same as the above except the AutoHotkey directory is discovered via the registry entry <em>HKLM\SOFTWARE\AutoHotkey\InstallDir</em>. If there is no such entry, A_AhkPath is blank.</p></td>
+  </tr>
+  <tr id="IsUnicode">
+    <td>A_IsUnicode</td>
+    <td><p>Contains 1 if strings are Unicode (16-bit) and an empty string (which is considered <a href="#Boolean">false</a>) if strings are ANSI (8-bit). The format of strings depends on the version of AutoHotkey.exe which is used to run the script, or if it is compiled, which bin file was used to compile it.</p>
+    <p>Currently all AutoHotkey v2 executables are built for Unicode (16-bit), so this is always 1.</p></td>
+  </tr>
+  <tr id="IsCompiled">
+    <td>A_IsCompiled</td>
+    <td>Contains 1 if the script is running as a <a href="Scripts.htm#ahk2exe">compiled EXE</a> and an empty string (which is considered <a href="#Boolean">false</a>) if it is not.</td>
+  </tr>
+</table>
+<h3 id="date">Date and Time</h3>
+<table class="info">
+  <tr id="YYYY">
+    <td>A_YYYY</td>
+    <td>
+      <p>Current 4-digit year (e.g. 2004). Synonymous with A_Year.</p>
+      <p class="note"><strong>Note</strong>: To retrieve a formatted time or date appropriate for your locale and language, use <code><a href="commands/FormatTime.htm">FormatTime</a>()</code> (time and long date) or <code><a href="commands/FormatTime.htm">FormatTime</a>(, "LongDate")</code> (retrieves long-format date).</p>
+    </td>
+  </tr>
+  <tr id="MM">
+    <td>A_MM</td>
+    <td>Current 2-digit month (01-12). Synonymous with A_Mon.</td>
+  </tr>
+  <tr id="DD">
+    <td>A_DD</td>
+    <td>Current 2-digit day of the month (01-31). Synonymous with A_MDay.</td>
+  </tr>
+  <tr id="MMMM">
+    <td>A_MMMM</td>
+    <td>Current month's full name in the current user's language, e.g. July</td>
+  </tr>
+  <tr id="MMM">
+    <td>A_MMM</td>
+    <td>Current month's abbreviation in the current user's language, e.g. Jul</td>
+  </tr>
+  <tr id="DDDD">
+    <td>A_DDDD</td>
+    <td>Current day of the week's full name in the current user's language, e.g. Sunday</td>
+  </tr>
+  <tr id="DDD">
+    <td>A_DDD</td>
+    <td>Current day of the week's abbreviation in the current user's language, e.g. Sun</td>
+  </tr>
+  <tr id="WDay">
+    <td>A_WDay</td>
+    <td>Current 1-digit day of the week (1-7). 1 is Sunday in all locales.</td>
+  </tr>
+  <tr id="YDay">
+    <td>A_YDay</td>
+    <td>Current day of the year (1-366). The value is not zero-padded, e.g. 9 is retrieved, not 009. To retrieve a zero-padded value, use the following: <code><a href="commands/FormatTime.htm">FormatTime</a>(, "YDay0")</code>.</td>
+  </tr>
+  <tr id="YWeek">
+    <td>A_YWeek</td>
+    <td>Current year and week number (e.g. 200453) according to ISO 8601. To separate the year from the week, use <a href="commands/SubStr.htm">SubStr</a>. Precise definition of A_YWeek: If the week containing January 1st has four or more days in the new year, it is considered week 1. Otherwise, it is the last week of the previous year, and the next week is week 1.</td>
+  </tr>
+  <tr id="Hour">
+    <td>A_Hour</td>
+    <td>Current 2-digit hour (00-23) in 24-hour time (例如, 17 is 5pm). To retrieve 12-hour time as well as an AM/PM indicator, follow this example: <code><a href="commands/FormatTime.htm">FormatTime</a>(, "h:mm:ss tt")</code></td>
+  </tr>
+  <tr id="Min">
+    <td>A_Min</td>
+    <td><p>Current 2-digit minute (00-59).</p></td>
+  </tr>
+  <tr id="Sec">
+    <td>A_Sec</td>
+    <td>Current 2-digit second (00-59).</td>
+  </tr>
+  <tr id="MSec">
+    <td>A_MSec</td>
+    <td>Current 3-digit millisecond (000-999). To remove the leading zeros, follow this example: <code>Milliseconds := A_MSec + 0</code>.</td>
+  </tr>
+  <tr id="Now">
+    <td>A_Now</td>
+    <td>
+      <p>The current local time in <a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> format.</p>
+      <p class="note"><strong>Note</strong>: Date and time math can be performed with <a href="commands/DateAdd.htm">DateAdd</a> and <a href="commands/DateDiff.htm">DateDiff</a>. Also, <a href="commands/FormatTime.htm">FormatTime</a> can format the date and/or time according to your locale or preferences.</p>
+    </td>
+  </tr>
+  <tr id="NowUTC">
+    <td>A_NowUTC</td>
+    <td>The current Coordinated Universal Time (UTC) in <a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> format. UTC is essentially the same as Greenwich Mean Time (GMT).</td>
+  </tr>
+  <tr id="TickCount">
+    <td>A_TickCount</td>
+    <td><p>The number of milliseconds since the computer was rebooted. By storing A_TickCount in a variable, elapsed time can later be measured by subtracting that variable from the latest A_TickCount value. 例如:</p>
+        <pre>StartTime := A_TickCount
+Sleep 1000
+ElapsedTime := A_TickCount - StartTime
+MsgBox ElapsedTime " milliseconds have elapsed."</pre>
+<p>If you need more precision than A_TickCount's 10ms, use <a href="commands/DllCall.htm#QPC">QueryPerformanceCounter()</a>.</p>
+</td>
+  </tr>
+</table>
+<h3 id="settings">Script Settings</h3>
+<table class="info">
+  <tr id="IsSuspended">
+    <td>A_IsSuspended</td>
+    <td>Contains 1 if the script is <a href="commands/Suspend.htm">suspended</a> and 0 otherwise.</td>
+  </tr>
+  <tr id="IsPaused">
+    <td>A_IsPaused</td>
+    <td>Contains 1 if the <a href="misc/Threads.htm">thread</a> immediately underneath the current thread is <a href="commands/Pause.htm">paused</a>. Otherwise it contains 0.</td>
+  </tr>
+  <tr id="IsCritical">
+    <td>A_IsCritical</td>
+    <td>Contains 0 if <a href="commands/Critical.htm">Critical</a> is off for the <a href="misc/Threads.htm">current thread</a>. Otherwise it contains an integer greater than zero, namely the <a href="commands/Critical.htm#Interval">message-check frequency</a> being used by Critical. The current state of Critical can be saved and restored via <code>Old_IsCritical := A_IsCritical</code> followed later by <code>A_IsCritical := Old_IsCritical</code>.</td>
+  </tr>
+  <tr id="ListLines">
+    <td>A_ListLines</td>
+    <td><strong>Read/write:</strong> Contains 1 if <a href="commands/ListLines.htm">ListLines</a> is enabled. Otherwise it contains 0.</td>
+  </tr>
+  <tr id="TitleMatchMode">
+    <td>A_TitleMatchMode</td>
+    <td><strong>Read/write:</strong> The current mode set by <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>: 1, 2, 3, or RegEx.</td>
+  </tr>
+  <tr id="TitleMatchModeSpeed">
+    <td>A_TitleMatchModeSpeed</td>
+    <td><strong>Read/write:</strong> The current match speed (fast or slow) set by <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>.</td>
+  </tr>
+  <tr id="DetectHiddenWindows">
+    <td>A_DetectHiddenWindows</td>
+    <td><strong>Read/write:</strong> The current mode set by <a href="commands/DetectHiddenWindows.htm">DetectHiddenWindows</a>; 1 (detect) or 0 (do not detect).</td>
+  </tr>
+  <tr id="DetectHiddenText">
+    <td>A_DetectHiddenText</td>
+    <td><strong>Read/write:</strong> The current mode set by <a href="commands/DetectHiddenText.htm">DetectHiddenText</a>; 1 (detect) or 0 (do not detect).</td>
+  </tr>
+  <tr id="StringCaseSense">
+    <td>A_StringCaseSense</td>
+    <td><strong>Read/write:</strong> The current mode (On, Off, or Locale) set by <a href="commands/StringCaseSense.htm">StringCaseSense</a>.</td>
+  </tr>
+  <tr id="FileEncoding">
+    <td>A_FileEncoding</td>
+    <td><strong>Read/write:</strong> The default encoding for various functions; see <a href="commands/FileEncoding.htm">FileEncoding</a>.</td>
+  </tr>
+  <tr id="SendMode">
+    <td>A_SendMode</td>
+    <td><strong>Read/write:</strong> The current mode (Event, Input, Play or InputThenPlay) set by  <a href="commands/SendMode.htm">SendMode</a>.</td>
+  </tr>
+  <tr id="SendLevel">
+    <td>A_SendLevel</td>
+    <td><strong>Read/write:</strong> The current <a href="commands/SendLevel.htm">SendLevel</a> setting (an integer between 0 and 100, inclusive).</td>
+  </tr>
+  <tr id="StoreCapslockMode">
+    <td>A_StoreCapsLockMode</td>
+    <td><strong>Read/write:</strong> The current mode set by <a href="commands/SetStoreCapslockMode.htm">SetStoreCapsLockMode</a>; 1 (store) or 0 (do not store).</td>
+  </tr>
+  <tr id="KeyDelay">
+    <td>A_KeyDelay<br>
+    A_KeyDuration</td>
+    <td><strong>Read/write:</strong> The current delay or duration set by <a href="commands/SetKeyDelay.htm">SetKeyDelay</a> (always decimal, not hex).</td>
+  </tr>
+  <tr id="KeyDelayPlay">
+    <td>A_KeyDelayPlay<br>
+    A_KeyDurationPlay</td>
+    <td><strong>Read/write:</strong> The current delay or duration set by <a href="commands/SetKeyDelay.htm">SetKeyDelay</a> for the <a href="commands/Send.htm#SendPlayDetail">SendPlay</a> mode (always decimal, not hex).</td>
+  </tr>
+  <tr id="WinDelay">
+    <td>A_WinDelay</td>
+    <td><strong>Read/write:</strong> The current delay set by <a href="commands/SetWinDelay.htm">SetWinDelay</a> (always decimal, not hex).</td>
+  </tr>
+  <tr id="ControlDelay">
+    <td>A_ControlDelay</td>
+    <td><strong>Read/write:</strong> The current delay set by <a href="commands/SetControlDelay.htm">SetControlDelay</a>.</td>
+  </tr>
+  <tr id="MouseDelay">
+    <td>A_MouseDelay<br>
+    A_MouseDelayPlay</td>
+    <td><strong>Read/write:</strong> The current delay set by <a href="commands/SetMouseDelay.htm">SetMouseDelay</a> (always decimal, not hex). A_MouseDelay is for the traditional SendEvent mode, whereas A_MouseDelayPlay is for <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>.</td>
+  </tr>
+  <tr id="DefaultMouseSpeed">
+    <td>A_DefaultMouseSpeed</td>
+    <td><strong>Read/write:</strong> The current speed set by <a href="commands/SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>.</td>
+  </tr>
+  <tr id="CoordMode">
+    <td>A_CoordModeToolTip<br>
+    A_CoordModePixel<br>
+    A_CoordModeMouse<br>
+    A_CoordModeCaret<br>
+    A_CoordModeMenu</td>
+    <td><strong>Read/write:</strong> The current mode (Window, Client or Screen) set by <a href="commands/CoordMode.htm">CoordMode</a>.</td>
+  </tr>
+  <tr id="RegView">
+    <td>A_RegView</td>
+    <td><strong>Read/write:</strong> The current registry view as set by <a href="commands/SetRegView.htm">SetRegView</a>.</td>
+  </tr>
+  <tr id="TrayMenu">
+    <td>A_TrayMenu</td>
+    <td><p>Returns a <a href="objects/Menu.htm">Menu object</a> which can be used to modify or display the tray menu.</p></td>
+  </tr>
+  <tr id="AllowMainWindow">
+    <td>A_AllowMainWindow</td>
+    <td><p><strong>Read/write:</strong> Contains 1 if the script's main window is allowed to be opened via the tray icon, or 0 otherwise.</p>
+    <p>For <a href="Scripts.htm#ahk2exe">compiled scripts</a>, this variable defaults to 0 but can be overridden by assigning it a value. Setting it to 1 also enables the items in the main window's View menu such as "Lines most recently executed", which allows viewing of the script's source code and other info.</p>
+    <p>The following functions are always able to show the main window when they are encountered in the script at runtime: <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/ListVars.htm">ListVars</a>, <a href="commands/ListHotkeys.htm">ListHotkeys</a>, and <a href="commands/KeyHistory.htm">KeyHistory</a>.</p>
+    <p>If the script is not compiled, this variable always contains 1 and any attempts to change it are ignored.</p></td>
+  </tr>
+  <tr id="IconHidden">
+    <td>A_IconHidden</td>
+    <td><strong>Read/write:</strong> Contains 1 if the <a href="Program.htm#tray-icon">tray icon</a> is currently hidden or 0 otherwise. The icon can be hidden via <a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> or by assigning this variable a false value.</td>
+  </tr>
+  <tr id="IconTip">
+    <td>A_IconTip</td>
+    <td><p><strong>Read/write:</strong> Contains the <a href="Program.htm#tray-icon">tray icon</a>'s tooltip text, which is displayed when the mouse hovers over it. If blank, the script's name is used instead.</p>
+    <p>To create a multi-line tooltip, use the linefeed character (`n) in between each line, e.g. <code>"Line1`nLine2"</code>. Only the first 127 characters are displayed, and the text is truncated at the first tab character, if present.</p></td>
+  </tr>
+  <tr id="IconFile">
+    <td>A_IconFile</td>
+    <td>Blank unless a custom <a href="Program.htm#tray-icon">tray icon</a> has been specified via <a href="commands/TraySetIcon.htm">TraySetIcon</a> -- in which case it is the full path and name of the icon's file.</td>
+  </tr>
+  <tr id="IconNumber">
+    <td>A_IconNumber</td>
+    <td>Blank if A_IconFile is blank. Otherwise, it's the number of the icon in A_IconFile (typically 1).</td>
+  </tr>
+</table>
+<h3>User Idle Time</h3>
+<table class="info">
+  <tr id="TimeIdle">
+    <td>A_TimeIdle</td>
+    <td>The number of milliseconds that have elapsed since the system last received keyboard, mouse, or other input. This is useful for determining whether the user is away. Physical input from the user as well as artificial input generated by <strong>any</strong> program or script (such as the <a href="commands/Send.htm">Send</a> or <a href="commands/MouseMove.htm">MouseMove</a> functions) will reset this value back to zero. Since this value tends to increase by increments of 10, do not check whether it is equal to another value. Instead, check whether it is greater or less than another value. 例如:
+<pre>if A_TimeIdle &gt; 600000
+    MsgBox "The last keyboard or mouse activity was at least 10 minutes ago."</pre></td>
+  </tr>
+  <tr id="TimeIdlePhysical">
+    <td>A_TimeIdlePhysical</td>
+    <td>Similar to above but ignores artificial keystrokes and/or mouse clicks whenever the corresponding hook (<a href="commands/_InstallKeybdHook.htm">keyboard</a> or <a href="commands/_InstallMouseHook.htm">mouse</a>) is installed; that is, it responds only to physical events. (This prevents simulated keystrokes and mouse clicks from falsely indicating that a user is present.) If neither hook is installed, this variable is equivalent to A_TimeIdle. If only one hook is installed, only its type of physical input affects A_TimeIdlePhysical (the other/non-installed hook's input, both physical and artificial, has no effect).</td>
+  </tr>
+  <tr id="TimeIdleKeyboard">
+    <td>A_TimeIdleKeyboard</td>
+    <td>If the <a href="commands/_InstallKeybdHook.htm">keyboard hook</a> is installed, this is the number of milliseconds that have elapsed since the system last received physical keyboard input. Otherwise, this variable is equivalent to A_TimeIdle.</td>
+  </tr>
+  <tr id="TimeIdleMouse">
+    <td>A_TimeIdleMouse</td>
+    <td>If the <a href="commands/_InstallMouseHook.htm">mouse hook</a> is installed, this is the number of milliseconds that have elapsed since the system last received physical mouse input. Otherwise, this variable is equivalent to A_TimeIdle.</td>
+  </tr>
+</table>
+<h3 id="h">Hotkeys, Hotstrings, and Custom Menu Items</h3>
+<table class="info">
+  <tr id="ThisHotkey">
+    <td>A_ThisHotkey</td>
+    <td><p>The most recently executed <a href="Hotkeys.htm">hotkey</a> or <a href="Hotstrings.htm">non-auto-replace hotstring</a> (blank if none), e.g. #z. This value will change if the <a href="misc/Threads.htm">current thread</a> is interrupted by another hotkey, so be sure to copy it into another variable immediately if you need the original value for later use in a subroutine.</p>
+      <p>When a hotkey is first created -- either by the <a href="commands/Hotkey.htm">Hotkey function</a> or a <a href="Hotkeys.htm">double-colon label</a> in the script -- its key name and the ordering of its modifier symbols becomes the permanent name of that hotkey, shared by all <a href="commands/_If.htm#variant">variants</a> of the hotkey.</p>
+      <p>See also: <a href="#ThisLabel">A_ThisLabel</a></p></td>
+  </tr>
+  <tr id="PriorHotkey">
+    <td>A_PriorHotkey</td>
+    <td>Same as above except for the previous hotkey. It will be blank if none.</td>
+  </tr>
+  <tr id="PriorKey">
+    <td>A_PriorKey</td>
+    <td>The name of the last key which was pressed prior to the most recent key-press or key-release, or blank if no applicable key-press can be found in the key history. All input generated by AutoHotkey scripts is excluded. For this variable to be of use, the <a href="commands/_InstallKeybdHook.htm">keyboard</a> or <a href="commands/_InstallMouseHook.htm">mouse hook</a> must be installed and <a href="commands/KeyHistory.htm">key history</a> must be enabled.</td>
+  </tr>
+  <tr id="TimeSinceThisHotkey">
+    <td>A_TimeSinceThisHotkey</td>
+    <td>The number of milliseconds that have elapsed since A_ThisHotkey was pressed. It will be -1 whenever A_ThisHotkey is blank.</td>
+  </tr>
+  <tr id="TimeSincePriorHotkey">
+    <td>A_TimeSincePriorHotkey</td>
+    <td>The number of milliseconds that have elapsed since A_PriorHotkey was pressed.  It will be -1 whenever A_PriorHotkey is blank.</td>
+  </tr>
+  <tr id="EndChar">
+    <td>A_EndChar</td>
+    <td>The <a href="Hotstrings.htm#EndChars">ending character</a> that was pressed by the user to trigger the most recent <a href="Hotstrings.htm">non-auto-replace hotstring</a>. If no ending character was required  (due to the * option), this variable will be blank.</td>
+  </tr>
+</table>
+<h3 id="os">Operating System and User Info</h3>
+<table class="info">
+  <tr id="ComSpec">
+    <td>A_ComSpec</td>
+    <td>Contains the same string as the environment's ComSpec variable. Often used with <a href="commands/Run.htm">Run/RunWait</a>. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Windows\system32\cmd.exe</pre>
+    </td>
+  </tr>
+  <tr id="Temp">
+    <td>A_Temp</td>
+    <td><p>The full path and name of the folder designated to hold temporary files. It is retrieved from one of the following locations (in order): 1) the <a href="Concepts.htm#environment-variables">environment variables</a> TMP, TEMP, or USERPROFILE; 2) the Windows directory. 例如:</p>
+    <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\AppData\Local\Temp</pre>
+  </td>
+  </tr>
+  <tr id="OSVersion">
+    <td>A_OSVersion</td>
+    <td>
+    <p>The version number of the operating system, in the format &quot;<em>major</em>.<em>minor</em>.<em>build</em>&quot;. 例如, Windows 7 SP1 is 6.1.7601.</p>
+    <p>Applying compatibility settings in the AutoHotkey executable or compiled script's properties causes the OS to report a different version number, which is reflected by A_OSVersion.</p>
+    </td>
+  </tr>
+  <tr id="Is64bitOS">
+    <td>A_Is64bitOS</td>
+    <td>Contains 1 (true) if the OS is 64-bit or 0 (false) if it is 32-bit.</td>
+  </tr>
+  <tr id="PtrSize">
+    <td>A_PtrSize</td>
+    <td>Contains the size of a pointer, in bytes.  This is either 4 (32-bit) or 8 (64-bit), depending on what type of executable (EXE) is running the script.</td>
+  </tr>
+  <tr id="Language">
+    <td>A_Language</td>
+    <td>The system's default language, which is one of <a href="misc/Languages.htm">these 4-digit codes</a>.</td>
+  </tr>
+  <tr id="ComputerName">
+    <td>A_ComputerName</td>
+    <td>The name of the computer as seen on the network.</td>
+  </tr>
+  <tr id="UserName">
+    <td>A_UserName</td>
+    <td>The logon name of the user who launched this script.</td>
+  </tr>
+  <tr id="WinDir">
+    <td>A_WinDir</td>
+    <td>The Windows directory. 例如: <code>C:\Windows</code></td>
+  </tr>
+  <tr id="ProgramFiles">
+    <td>A_ProgramFiles</td>
+    <td>
+      <p>The Program Files directory (e.g. <code>C:\Program Files</code> or <code>C:\Program Files (x86)</code>). This is usually the same as the <em>ProgramFiles</em> <a href="Concepts.htm#environment-variables">environment variable</a>.</p>
+      <p>On <a href="#Is64bitOS">64-bit systems</a> (and not 32-bit systems), the following applies:</p>
+      <ul>
+        <li>If the executable (EXE) that is running the script is 32-bit, A_ProgramFiles returns the path of the "Program Files (x86)" directory.</li>
+        <li>For 32-bit processes, the <em>ProgramW6432</em> environment variable contains the path of the 64-bit Program Files directory. On Windows 7 and later, it is also set for 64-bit processes.</li>
+        <li>The <em>ProgramFiles(x86)</em> environment variable contains the path of the 32-bit Program Files directory.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr id="AppData">
+    <td>A_AppData</td>
+    <td>
+      <p>The full path and name of the folder containing the current user's application-specific data. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\AppData\Roaming</pre>
+    </td>
+  </tr>
+  <tr id="AppDataCommon">
+    <td>A_AppDataCommon</td>
+    <td>
+      <p>The full path and name of the folder containing the all-users application-specific data. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\ProgramData</pre>
+    </td>
+  </tr>
+  <tr id="Desktop">
+    <td>A_Desktop</td>
+    <td>
+      <p>The full path and name of the folder containing the current user's desktop files. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\Desktop</pre>
+    </td>
+  </tr>
+  <tr id="DesktopCommon">
+    <td>A_DesktopCommon</td>
+    <td>
+      <p>The full path and name of the folder containing the all-users desktop files. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Users\Public\Desktop</pre>
+    </td>
+  </tr>
+  <tr id="StartMenu">
+    <td>A_StartMenu</td>
+    <td>
+      <p>The full path and name of the current user's Start Menu folder. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\AppData\Roaming\Microsoft\Windows\Start Menu</pre>
+    </td>
+  </tr>
+  <tr id="StartMenuCommon">
+    <td>A_StartMenuCommon</td>
+    <td>
+      <p>The full path and name of the all-users Start Menu folder. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\ProgramData\Microsoft\Windows\Start Menu</pre>
+    </td>
+  </tr>
+  <tr id="Programs">
+    <td>A_Programs</td>
+    <td>
+      <p>The full path and name of the Programs folder in the current user's Start Menu. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs</pre>
+    </td>
+  </tr>
+  <tr id="ProgramsCommon">
+    <td>A_ProgramsCommon</td>
+    <td>
+      <p>The full path and name of the Programs folder in the all-users Start Menu. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\ProgramData\Microsoft\Windows\Start Menu\Programs</pre>
+  </td>
+  </tr>
+  <tr id="Startup">
+    <td>A_Startup</td>
+    <td>
+      <p>The full path and name of the Startup folder in the current user's Start Menu. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</pre>
+  </td>
+  </tr>
+  <tr id="StartupCommon">
+    <td>A_StartupCommon</td>
+    <td>
+      <p>The full path and name of the  Startup folder in the all-users Start Menu. 例如:</p>
+      <pre class="NoIndent no-highlight">C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup</pre>
+  </td>
+  </tr>
+  <tr id="MyDocuments">
+    <td>A_MyDocuments</td>
+    <td>
+      <p>The full path and name of the current user's &quot;My Documents&quot; folder. Unlike most of the similar variables, if the folder is the root of a drive, the final backslash is not included (e.g. it would contain <code>M:</code> rather than <code>M:\</code>). 例如:</p>
+      <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\Documents</pre>
+  </td>
+  </tr>
+  <tr id="IsAdmin">
+    <td>A_IsAdmin</td>
+    <td><p>If the current user has admin rights, this variable contains 1. Otherwise, it contains 0.</p>
+    <p id="RequireAdmin">To have the script restart itself as admin (or show a prompt to the user requesting admin), use <a href="commands/Run.htm#RunAs">Run *RunAs</a>. However, note that running the script as admin causes all programs launched by the script to also run as admin. For a possible alternative, see <a href="FAQ.htm#uac">the FAQ</a>.</p>
+    </td>
+  </tr>
+  <tr id="Screen">
+    <td><p>A_ScreenWidth<br>
+    A_ScreenHeight</p></td>
+    <td><p>The width and height of the primary monitor, in pixels (e.g. 1024 and 768).</p>
+      <p>To discover the dimensions of other monitors in a multi-monitor system, use <a href="commands/SysGet.htm">SysGet</a>.</p>
+      <p>To instead discover the width and height of the entire desktop (even if it spans multiple monitors), use the following example:</p>
+<pre>
+VirtualWidth := <a href="commands/SysGet.htm">SysGet</a>(78)
+VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
+</pre>
+    <p>In addition, use <a href="commands/SysGet.htm">SysGet</a> to discover the work area of a monitor, which can be smaller than the monitor's total area because the taskbar and other registered desktop toolbars are excluded.</p></td>
+  </tr>
+  <tr id="ScreenDPI">
+    <td>A_ScreenDPI</td>
+    <td>Number of pixels per logical inch along the screen width. In a system with multiple display monitors, this value is the same for all monitors. On most systems this is 96; it depends on the system's text size (DPI) setting. See also the GUI's <a href="objects/Gui.htm#DPIScale">-DPIScale</a> option.</td>
+  </tr>
+</table>
+<h3>Misc.</h3>
+<table class="info">
+  <tr id="Cursor">
+    <td>A_Cursor</td>
+    <td><p>The type of mouse cursor currently being displayed. It will be one of the following words: AppStarting, Arrow, Cross, Help, IBeam, Icon, No, Size, SizeAll, SizeNESW, SizeNS, SizeNWSE, SizeWE, UpArrow, Wait, Unknown. The acronyms used with the size-type cursors are compass directions, e.g. NESW = NorthEast+SouthWest. The hand-shaped cursors (pointing and grabbing) are classified as Unknown.</p></td>
+  </tr>
+  <tr id="EventInfo">
+    <td>A_EventInfo</td>
+    <td><p>Contains additional information about the following events:</p>
+      <ul>
+        <li><a href="Hotkeys.htm#Wheel">Mouse wheel hotkeys</a> (WheelDown/Up/Left/Right)</li>
+      </ul>
+<p>Note: Unlike variables such as A_ThisHotkey, each <a href="misc/Threads.htm">thread</a> retains its own value for A_EventInfo. Therefore, if a thread is interrupted by another, upon being resumed it will still see its original/correct values in these variables.</p>
+      <p><strong>Read/write:</strong> A_EventInfo can also be set by the script, but can only accept unsigned integers within the range available to pointers (32-bit or 64-bit depending on the version of AutoHotkey).</p></td>
+  </tr>
+  <tr>
+    <td>Clipboard</td>
+    <td><strong>Read/write:</strong> The contents of the OS's clipboard, which can be read or written to. See the <a href="misc/Clipboard.htm">Clipboard</a> section.</td>
+  </tr>
+  <tr>
+    <td>ErrorLevel</td>
+    <td><strong>Read/write:</strong> See <a href="misc/ErrorLevel.htm">ErrorLevel</a>.</td>
+  </tr>
+  <tr id="LastError">
+    <td>A_LastError</td>
+    <td><p><strong>Read/write:</strong> This is usually the result from the OS's GetLastError() function after the script calls certain functions such as <a href="commands/DllCall.htm">DllCall</a> or <a href="commands/Run.htm">Run/RunWait</a>, or the HRESULT of the last COM object invocation. A_LastError is a number between 0 and 4294967295 (always formatted as decimal, not hexadecimal). Zero (0) means success, but any other number means the call failed. Each number corresponds to a specific error condition (to get a list, search <a href="http://www.microsoft.com">www.microsoft.com</a> for &quot;system error codes&quot;). A_LastError is a per-thread setting; that is, interruptions by other <a href="misc/Threads.htm">threads</a> cannot change it.</p>
+    <p>Assigning a value to A_LastError also causes the OS's SetLastError() function to be called.</p></td>
+  </tr>
+  <tr id="TrueFalse">
+    <td>True<br />False</td>
+    <td><p>Contain 1 and 0. They can be used to make a script more readable. See <a href="Concepts.htm#boolean">Boolean Values</a> for details.</p>
+    </td>
+  </tr>
+</table>
+<h3 id="loop">Loop</h3>
+<table class="info">
+  <tr id="Index">
+    <td>A_Index</td>
+    <td><strong>Read/write:</strong> This is the number of the current loop iteration (a 64-bit integer). 例如, the first time the script executes the body of a loop, this variable will contain the number 1. For details see <a href="commands/Loop.htm">Loop</a> or <a href="commands/While.htm">While-loop</a>.</td>
+  </tr>
+  <tr>
+    <td>A_LoopFileName, etc.</td>
+    <td>This and other related variables are valid only inside a <a href="commands/LoopFiles.htm">file-loop</a>.</td>
+  </tr>
+  <tr>
+    <td>A_LoopRegName, etc.</td>
+    <td>This and other related variables are valid only inside a <a href="commands/LoopReg.htm">registry-loop</a>.</td>
+  </tr>
+  <tr>
+    <td>A_LoopReadLine</td>
+    <td>请参阅<a href="commands/LoopRead.htm">文件读取循环</a>.</td>
+  </tr>
+  <tr>
+    <td>A_LoopField</td>
+    <td>请参阅<a href="commands/LoopParse.htm">解析循环</a>.</td>
+  </tr>
+</table>
+
+<h2 id="cap">变量的容量和占用内存</h2>
+<ul>
+  <li>当赋值给变量比当前更长的内容时, 会自动分配额外的系统内存给这个变量.</li>
+  <li>通过赋值为空, 可以释放大变量占用的内存, 例如 <code>var := &quot;&quot;</code>.</li>
+  <li>脚本可以创建的变量数量没有限制. 程序设计用来支持至少几百万的变量而不会出现明显的性能下降.</li>
+  <li>函数和表达式通常可以支持 15 位的浮点数精度. 对于整数, 可以支持 64 位有符号整数, 其范围从 -9223372036854775808(-0x8000000000000000) 到 9223372036854775807(0x7FFFFFFFFFFFFFFF). 此范围外的任何整数不受支持, 并可能产生错误的结果. 同样的, 整数的算数运算结果超出此范围时会产生溢出(例如 0x7FFFFFFFFFFFFFFF + 1 = -0x8000000000000000).</li>
+</ul>
+</body>
+</html>

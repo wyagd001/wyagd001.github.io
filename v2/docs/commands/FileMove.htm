@@ -1,0 +1,84 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>FileMove - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The FileMove function moves or renames one or more files." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>FileMove</h1>
+
+<p>Moves or renames one or more files.</p>
+
+<pre class="Syntax"><span class="func">FileMove</span> SourcePattern, DestPattern <span class="optional">, Overwrite</span></pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>SourcePattern</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>The name of a single file or a wildcard pattern such as C:\Temp\*.tmp. <em>SourcePattern</em> is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
+  </dd>
+
+  <dt>DestPattern</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>The name or pattern of the  destination, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.  To perform a simple move -- retaining the existing file name(s) -- specify only the folder name as shown in these functionally identical examples:</p>
+<pre>FileMove "C:\*.txt", "C:\My Folder"</pre>
+<pre>FileMove "C:\*.txt", "C:\My Folder\*.*"</pre>
+  </dd>
+
+  <dt>Overwrite</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#boolean">Integer (boolean)</a></p>
+    <p>This parameter determines whether to overwrite files if they already exist. If this parameter is 1 (true), the function overwrites existing files. If omitted or 0 (false), the function does not overwrite existing files.</p>
+  </dd>
+
+</dl>
+
+<h2>ErrorLevel</h2>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to the number of files that could not be moved due to an error, or 0 otherwise. However, if the source file is a single file (no wildcards) and it does not exist, ErrorLevel is set to 0. To detect this condition, use <a href="FileExist.htm">FileExist</a> on the source file prior to moving it.</p>
+<p>Unlike <a href="FileCopy.htm">FileCopy</a>, moving a file onto itself is always considered successful, even if the overwrite mode is not in effect.</p>
+<p>If files were found, <a href="../Variables.htm#LastError">A_LastError</a> is set to 0 (zero) or the result of the operating system's GetLastError() function immediately after the last failure. Otherwise A_LastError contains an error code that might indicate why no files were found.</p>
+
+<h2>备注</h2>
+<p>FileMove moves files only. To instead move the contents of a folder (all its files and subfolders), see the examples section below. To move or rename a single folder, use <a href="DirMove.htm">DirMove</a>.</p>
+<p>The operation will continue even if error(s) are encountered.</p>
+<p>Although this function is capable of moving files to a different volume, the operation will take longer than a same-volume move. This is because a same-volume move is similar to a rename, and therefore much faster.</p>
+<h2>相关</h2>
+<p><a href="FileCopy.htm">FileCopy</a>, <a href="DirCopy.htm">DirCopy</a>, <a href="DirMove.htm">DirMove</a>, <a href="FileDelete.htm">FileDelete</a></p>
+<h2>示例</h2>
+<pre class="NoIndent">FileMove "C:\My Documents\List1.txt", "D:\Main Backup\"  <em>; Move the file without renaming it.</em>
+FileMove "C:\File Before.txt", "C:\File After.txt"  <em>; Rename a single file.</em>
+FileMove "C:\Folder1\*.txt", "D:\New Folder\*.bkp"  <em>; Move and rename files to a new extension.</em></pre>
+<pre class="NoIndent"><em>; The following example moves all files and folders inside a folder to a different folder:</em>
+ErrorCount := MoveFilesAndFolders(&quot;C:\My Folder\*.*&quot;, &quot;D:\Folder to receive all files &amp; folders&quot;)
+if ErrorCount != 0
+    MsgBox ErrorCount " files/folders could not be moved."
+
+MoveFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite := false)
+<em>; Moves all files and folders matching SourcePattern into the folder named DestinationFolder and
+; returns the number of files/folders that could not be moved.</em>
+{
+    if DoOverwrite = 1
+        DoOverwrite := 2  <em>; See <a href="DirMove.htm">DirMove</a> for description of mode 2 vs. 1.</em>
+    <em>; First move all the files (but not the folders):</em>
+    FileMove SourcePattern, DestinationFolder, DoOverwrite
+    ErrorCount := ErrorLevel
+    <em>; Now move all the folders:</em>
+    Loop Files, SourcePattern, "D"  <em>; D means &quot;retrieve folders only&quot;.</em>
+    {
+        DirMove A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
+        ErrorCount += ErrorLevel
+        if ErrorLevel  <em>; Report each problem folder by name.</em>
+            MsgBox "Could not move " A_LoopFilePath " into " DestinationFolder
+    }
+    return ErrorCount
+}</pre>
+
+</body>
+</html>

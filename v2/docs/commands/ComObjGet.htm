@@ -1,0 +1,61 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>ComObjGet - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The ComObjGet function returns a reference to an object provided by a COM component." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ComObjGet</h1>
+<p>Returns a reference to an object provided by a COM component.</p>
+<pre class="Syntax">ComObject := <span class="func">ComObjGet</span>(Name)</pre>
+
+<h2>参数</h2>
+<dl>
+
+  <dt>Name</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>The display name of the object to be retrieved. See <a href="http://msdn.microsoft.com/en-us/library/ms691253.aspx">MkParseDisplayName (MSDN)</a> for more information.</p>
+  </dd>
+
+</dl>
+
+<h2>返回值</h2>
+<p>Type: <a href="../Concepts.htm#objects">Object</a></p>
+<p>This function returns a <a href="../Concepts.htm#references-to-objects">reference</a> to a COM object.</p>
+
+<h2>Error Handling</h2>
+<p>On failure, the function may throw an exception, exit the script or return an empty string, depending on the current <a href="ComObjError.htm">ComObjError</a> setting and <a href="ComObjError.htm#factors">other factors</a>.</p>
+
+<h2>相关</h2>
+<a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/ms678805.aspx">CoGetObject (MSDN)</a>
+
+<h2>示例</h2>
+<pre class="NoIndent" id="exwmi"><em>; Example: Press Shift+Escape to show the command line which was used
+;   to launch the active window's process.  Requires XP or later.</em>
++Esc::
+    pid := WinGetPID("A")
+    <em>; Get WMI service object.</em>
+    wmi := <b>ComObjGet</b>("winmgmts:")
+    <em>; Run query to retrieve matching process(es).</em>
+    queryEnum := wmi.ExecQuery(""
+        . "Select * from Win32_Process where ProcessId=" . pid)
+        ._NewEnum()
+    <em>; Get first matching process.</em>
+    if queryEnum[process]
+        MsgBox(process.CommandLine, "Command line", 0)
+    else
+        MsgBox("Process not found!")
+    <em>; Free all global objects (not necessary when using local vars).</em>
+    wmi := queryEnum := process := ""
+return
+<em>; Win32_Process: <a href="http://msdn.microsoft.com/en-us/library/aa394372.aspx">http://msdn.microsoft.com/en-us/library/aa394372.aspx</a></em>
+</pre>
+
+</body>
+</html>

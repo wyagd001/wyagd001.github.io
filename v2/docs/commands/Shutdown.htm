@@ -1,0 +1,79 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>Shutdown - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The Shutdown function shuts down, restarts, or logs off the system." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>Shutdown</h1>
+
+<p>Shuts down, restarts, or logs off the system.</p>
+
+<pre class="Syntax"><span class="func">Shutdown</span> Code</pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>Code</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>A combination of shutdown codes listed below.</p>
+  </dd>
+
+</dl>
+
+<h2>备注</h2>
+<p>The shutdown code is a combination of the following values:</p>
+<table class="info" style="width:80%">
+  <tr>
+    <td style="width:25%">Logoff</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Shutdown</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>Reboot</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>Force</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>Power down</td>
+    <td>8</td>
+  </tr>
+  <tr>
+    <td>Suspend/Hibernate</td>
+    <td>See <a href="#Suspend">DllCall example</a> at the bottom of this page.</td>
+  </tr>
+  <tr>
+    <td>Turn monitor off</td>
+    <td>See <a href="SendMessage.htm#ex1">SendMessage example #1</a>.</td>
+  </tr>
+</table>
+<p>Add the required values together. For example, to shutdown and power 
+  down the code would be <strong>9</strong> (shutdown + power down = 1 + 8 = 9).</p>
+<p>The &quot;Force&quot; value (4) forces all open applications to close. It should only be used in an emergency because it may cause any open applications to lose data.</p>
+<p>The &quot;Power down&quot; value shuts down the system and turns off the power.</p>
+<p>On a related note, a script can detect when the system is shutting down or the user is logging off via <a href="OnExit.htm">OnExit</a>.</p>
+<h2>相关</h2>
+<p><a href="Run.htm">Run</a>, <a href="ExitApp.htm">ExitApp</a>, <a href="OnExit.htm">OnExit</a></p>
+<h2>Example</h2>
+<pre class="NoIndent"><em>; Force a reboot (reboot + force = 2 + 4 = 6):</em>
+Shutdown 6
+
+<em id="Suspend">; Call the Windows API function &quot;SetSuspendState&quot; to have the system suspend or hibernate.
+; Parameter #1: Pass 1 instead of 0 to hibernate rather than suspend.
+; Parameter #2: Pass 1 instead of 0 to suspend immediately rather than asking each application for permission.
+; Parameter #3: Pass 1 instead of 0 to disable all wake events.</em>
+DllCall(&quot;PowrProf\SetSuspendState&quot;, Int, 0, Int, 0, Int, 0)</pre>
+
+</body>
+</html>

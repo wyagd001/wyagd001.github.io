@@ -1,0 +1,72 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>IniRead - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The IniRead function reads a value, section or list of section names from a standard format .ini file." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>IniRead</h1>
+
+<p>从标准 ini 格式文件中读取一个值, 一个段或段名列表.</p>
+
+<pre class="Syntax">Value := <span class="func">IniRead</span>(Filename, Section, Key <span class="optional">, Default</span>)
+Section := <span class="func">IniRead</span>(Filename, Section)
+SectionNames := <span class="func">IniRead</span>(Filename)</pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>Filename</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>.ini 文件名, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+  </dd>
+
+  <dt>Section</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>.ini 文件中的段名, 它是包含在方括号中的标题短语(在此参数中不需要加方括号).</p>
+  </dd>
+
+  <dt>Key</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>.ini 文件中的键名.</p>
+  </dd>
+
+  <dt>Default</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>如果未找到所请求的键时所返回的值. 如果省略, 它默认为空值.</p>
+      <p>如果 <i>Key</i> 省略时, 则不使用此参数.</p>
+      </dd>
+
+</dl>
+
+<h2>返回值</h2>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+<p>This function returns the actual value of the specified key. If the value cannot be retrieved, the default value indicated by the <em>Default</em> parameter is returned.</p>
+<p>如果 <em>Key</em> 参数省略时, 函数返回整个段. 省略注释和空行. 仅检索该段的前 65,533 个字符.</p>
+<p>如果 <em>Key</em> 和 <em>Section</em> 参数省略时, 函数返回以换行符(<code>`n</code>) 分隔的段名列表.</p>
+
+<h2>ErrorLevel</h2>
+<p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0.</p>
+<h2>备注</h2>
+<p>The operating system automatically omits leading and trailing spaces/tabs from the retrieved string. To prevent this, enclose the string in single or double quote marks. The outermost set of single or double quote marks is also omitted, but any spaces inside the quote marks are preserved.</p>
+<p>Values longer than 65,535 characters are likely to yield inconsistent results.</p>
+<p>标准的 ini 文件看起来类似下面这样:</p>
+<pre>[SectionName]
+Key=Value</pre>
+<p><b>Unicode:</b> IniRead and IniWrite rely on the external functions <a href="http://msdn.microsoft.com/en-us/library/ms724353.aspx">GetPrivateProfileString</a> and <a href="http://msdn.microsoft.com/en-us/library/ms725501.aspx">WritePrivateProfileString</a> to read and write values. These functions support Unicode only in UTF-16 files; all other files are assumed to use the system's default ANSI code page.</p>
+<h2>相关</h2>
+<p><a href="IniDelete.htm">IniDelete</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="RegRead.htm">RegRead</a>, <a href="LoopRead.htm">file-reading loop</a>, <a href="FileRead.htm">FileRead</a></p>
+<h2>示例</h2>
+<pre class="NoIndent">Value := IniRead("C:\Temp\myfile.ini", "section2", "key")
+MsgBox "The value is " Value</pre>
+
+</body>
+</html>

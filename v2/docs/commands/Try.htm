@@ -1,0 +1,123 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>Try - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The Try statement guards one or more code lines against runtime errors and exceptions thrown by the Throw statement." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>Try</h1>
+
+<p>Guards one or more statements (functions or expressions) against runtime errors and exceptions thrown by the <a href="Throw.htm">throw</a> statement.</p>
+
+<pre class="Syntax"><span class="func">Try</span> <i>Statement</i></pre>
+<pre class="Syntax" style="line-height: 100%"><span class="func">Try</span>
+{
+    <i>Statements</i>
+}</pre>
+<h2>备注</h2>
+<p>The <em>try</em> statement is usually followed by a <a href="Block.htm">block</a> - one or more statements (functions or expressions) enclosed in braces. If only a single statement is to be executed, it can be placed on the same line as <em>try</em> or on the next line, and the braces can be omitted. To specify code that executes only when <em>try</em> catches an error, use the <a href="Catch.htm">catch</a> statement.</p>
+<p>An exception can be thrown by the <a href="Throw.htm">throw</a> statement or by the program when a runtime error occurs. When an exception is thrown from within a try block or a function called by one, the following occurs:</p>
+<ul>
+  <li>If there is a corresponding <a href="Catch.htm">catch</a> statement, execution continues there.</li>
+  <li>If there is no catch statement but there is a <a href="Finally.htm">finally</a> statement, it is executed, but once it finishes the exception is automatically thrown again.</li>
+  <li>If there is neither a catch statement nor a finally statement, execution continues at the next line outside the try block.</li>
+</ul>
+<p>If an exception is thrown while no try blocks are executing, an error message is shown and the current thread exits.</p>
+<p>The <a href="Block.htm#otb">One True Brace (OTB) style</a> may optionally be used with the <em>try</em> statement. For example:</p>
+<pre>try {
+    ...
+} catch e {
+    ...
+}</pre>
+
+<h2>相关</h2>
+<p><a href="Catch.htm">Catch</a>, <a href="Throw.htm">Throw</a>, <a href="Finally.htm">Finally</a>, <a href="Block.htm">Blocks</a>, <a href="OnError.htm">OnError</a></p>
+
+<h2 id="Examples">Examples</h2>
+<pre class="NoIndent" id="ex_basic"><em>; Example #1: The basic concept of try/catch/throw.</em>
+
+try  <em>; Attempts to execute code.</em>
+{
+    HelloWorld
+    MakeToast
+}
+<a href="Catch.htm">catch</a> e  <em>; Handles the first error/exception raised by the block above.</em>
+{
+    MsgBox "An exception was thrown!`nSpecifically: " e
+    <a href="Exit.htm">Exit</a>
+}
+
+HelloWorld()  <em>; Always succeeds.</em>
+{
+    MsgBox "Hello, world!"
+}
+
+MakeToast()  <em>; Always fails.</em>
+{
+    <em>; Jump immediately to the try block's error handler:</em>
+    <a href="Throw.htm">throw</a> A_ThisFunc &quot; is not implemented, sorry&quot;
+}
+</pre>
+
+<pre class="NoIndent" id="ex_el"><em>; Example #2: Using try/catch instead of ErrorLevel.</em>
+
+try
+{
+    <em>; The following tries to back up certain types of files:</em>
+    FileCopy A_MyDocuments "\*.txt", "D:\Backup\Text documents"
+    FileCopy A_MyDocuments "\*.doc", "D:\Backup\Text documents"
+    FileCopy A_MyDocuments "\*.jpg", "D:\Backup\Photos"
+}
+catch
+{
+    MsgBox("There was a problem while backing the files up!",, 16)
+    ExitApp
+}
+</pre>
+
+<pre class="NoIndent" id="ex_com"><em>; Example #3: Dealing with COM errors.</em>
+
+try
+{
+    obj := <a href="ComObjCreate.htm">ComObjCreate</a>(&quot;<a href="http://msdn.microsoft.com/en-us/library/aa227633(v=vs.60).aspx">ScriptControl</a>&quot;)
+    obj.ExecuteStatement('MsgBox &quot;This is embedded VBScript&quot;')
+    obj.InvalidMethod() <em>; This line produces a runtime error.</em>
+}
+catch e
+{
+    <em>; For more detail about the object that e contains, see <a href="Throw.htm#Exception">Exception</a>.</em>
+    MsgBox(&quot;Exception thrown!`n`nwhat: &quot; e.what &quot;`nfile: &quot; e.file 
+        . &quot;`nline: &quot; e.line &quot;`nmessage: &quot; e.message &quot;`nextra: &quot; e.extra,, 16) 
+}
+</pre>
+
+<pre class="NoIndent" id="ex_nesting"><em>; Example #4: Nesting try-catch statements.</em>
+
+try Example1 <em>; Any single statement can be on the same line with a Try statement.</em>
+catch e
+    MsgBox &quot;Example1() threw &quot; e
+
+Example1()
+{
+    try Example2
+    catch e
+    {
+        if e = 1
+            throw e <em>; Rethrow the exception so that the caller can catch it.</em>
+        else
+            MsgBox &quot;Example2() threw &quot; e
+    }
+}
+
+Example2()
+{
+    throw Random(1, 2)
+}</pre>
+
+</body>
+</html>

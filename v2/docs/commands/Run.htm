@@ -1,0 +1,223 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>Run / RunWait - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The Run and RunWait functions run an external program. RunWait will wait until the program finishes before continuing." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<style type="text/css">
+.style3 {color: #FF0000; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>Run[Wait]</h1>
+
+<p>Runs an external program. Unlike Run, RunWait will wait until
+the program finishes before continuing.</p>
+
+<pre class="Syntax">
+<span class="func">Run</span> Target <span class="optional">, WorkingDir, Options, OutputVarPID</span>
+ExitCode := <span class="func">RunWait</span>(Target <span class="optional">, WorkingDir, Options, OutputVarPID</span>)
+</pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>Target</dt>
+  <dd>
+      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>A document, URL, executable file (.exe, .com, .bat, etc.), shortcut (.lnk), or <a href="#verbs">system verb</a> to launch (see remarks). If <em>Target</em> is a local file and no path was specified with it, <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> will be searched first. If no matching file is found there, the system will search for and launch the file if it is integrated (&quot;known&quot;), e.g. by being contained in one of the PATH folders.</p>
+      <p>To pass parameters, add them immediately after the program or document name. If a parameter contains spaces, it is  safest to enclose it in double quotes (even though it may work without them in some cases).</p>
+  </dd>
+
+  <dt>WorkingDir</dt>
+  <dd>
+      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>The working directory for the launched item. Do not enclose the name in double quotes even if it contains spaces. If omitted, the script's own working directory (<a href="../Variables.htm#WorkingDir">A_WorkingDir</a>) will be used.</p>
+  </dd>
+
+  <dt>Options</dt>
+  <dd>
+      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>If omitted, the function launches <em>Target</em> normally. To change this behavior, specify one or more of the following words:</p>
+      <p><strong>Max</strong>: launch maximized</p>
+      <p><strong>Min</strong>: launch minimized</p>
+      <p><strong>Hide</strong>: launch hidden (cannot be used in combination with either of the above)</p>
+      <p class="note"><strong>Note</strong>: Some applications (e.g. Calc.exe) do not obey the requested startup state and thus Max/Min/Hide will have no effect.</p>
+  </dd>
+
+  <dt>OutputVarPID</dt>
+  <dd>
+      <p>Type: <a href="../Concepts.htm#variables">Variable</a></p>
+      <p>The name of the variable in which to store the newly launched program's unique <a href="../misc/WinTitle.htm#ahk_pid">Process ID (PID)</a>. The variable will be made blank if the PID could not be determined, which usually happens if a system verb, document, or shortcut is launched rather than a direct executable file. RunWait also supports this parameter, though its <em>OutputVarPID</em> must be checked in <a href="../misc/Threads.htm">another thread</a> (otherwise, the PID will be invalid because the process will have terminated by the time the line following RunWait executes).</p>
+      <p>After the Run function retrieves a PID, any windows to be created by the process might not exist yet. To wait for at least one window to be created, use <code><a href="WinWait.htm">WinWait</a> "ahk_pid " OutputVarPID</code>.</p>
+  </dd>
+
+</dl>
+
+<h2>返回值</h2>
+<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>Unlike Run, RunWait will wait until <em>Target</em> is closed or exits, at which time the return value will be the program's exit code (as a signed 32-bit integer). Some programs will appear to return immediately even though they are still running; these programs spawn another process.</p> 
+
+<h2>Error Handling</h2>
+<p>If <em>Target</em> cannot be launched, an exception is thrown (that is, an error window is displayed) and the current thread is exited, unless the error is caught by a <a href="Try.htm">Try</a>/<a href="Catch.htm">Catch</a> statement. For example:</p>
+<pre>try
+    Run "NonExistingFile"
+catch
+    MsgBox "File does not exist."
+</pre>
+<p>The built-in variable <a href="../Variables.htm#LastError">A_LastError</a> is set to the result of the operating system's GetLastError() function.</p>
+<h2>备注</h2>
+<p>When running a program via <a href="../Variables.htm#ComSpec">Comspec</a> (cmd.exe) -- perhaps because you need to redirect the program's input or output -- if the path or name of the executable contains spaces, the entire string should be enclosed in an outer pair of single-quote marks. In the following example, the outer single-quote marks are shown in red and all the inner double-quote marks are shown in black:</p>
+<pre>Run A_ComSpec <span class="style3">'</span> /c &quot;C:\My Utility.exe&quot; &quot;param 1&quot; &quot;second param&quot; &gt;&quot;C:\My File.txt&quot;<span class="style3">'</span></pre>
+<p>Performance may be slightly improved if <em>Target</em> is an exact path, e.g. <code>Run 'C:\Windows\Notepad.exe &quot;C:\My Documents\Test.txt&quot;'</code> rather than <code>Run "C:\My Documents\Test.txt"</code>.</p>
+<p>Special <a href="../misc/CLSID-List.htm">CLSID folders</a> may be opened via Run. For example:</p>
+<pre>Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; Opens the &quot;My Computer&quot; folder.</em>
+Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; Opens the Recycle Bin.</em></pre>
+<p id="verbs">System verbs correspond to actions available in a file's right-click menu in the Explorer. If a file is launched without a verb, the default verb (usually &quot;open&quot;) for that particular file type will be used. If specified, the verb should be followed by the name of the target file. The following verbs are currently supported:</p>
+<table class="info">
+  <tr>
+    <td style="width:8%">*<i>verb</i></td>
+    <td>Any system-defined or custom verb. For example: <code>Run "*Compile " A_ScriptFullPath</code><br>On Windows Vista and later, the <a href="#RunAs">*RunAs</a> verb may be used in place of the <i>Run as administrator</i> right-click menu item.</td>
+  </tr>
+  <tr>
+    <td>properties</td>
+    <td>
+      <p>Displays the Explorer's properties window for the indicated file. For example: <code>Run 'properties "C:\My File.txt"'</code></p>
+      <p class="note"><strong>Note</strong>: The properties window will automatically close when the script terminates. To prevent this, use <a href="WinWait.htm">WinWait</a> to wait for the window to appear, then use <a href="WinWaitClose.htm">WinWaitClose</a> to wait for the user to close it.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>find</td>
+    <td>Opens an instance of the Explorer's Search Companion or Find File window at the indicated folder. For example: <code>Run "find D:\"</code></td>
+  </tr>
+  <tr>
+    <td>explore</td>
+    <td>Opens an instance of Explorer at the indicated folder. For example: <code>Run "explore " A_ProgramFiles</code>.</td>
+  </tr>
+  <tr>
+    <td>edit</td>
+    <td>Opens the indicated file for editing. It might not work if the indicated file's type does not have an &quot;edit&quot; action associated with it. For example: <code>Run 'edit &quot;C:\My File.txt&quot;'</code></td>
+  </tr>
+  <tr>
+    <td>open</td>
+    <td>Opens the indicated file (normally not needed because it is the default action for most file types). For example: <code>Run 'open &quot;My File.txt&quot;'</code>.</td>
+  </tr>
+  <tr>
+    <td>print</td>
+    <td>Prints the indicated file with the associated application, if any. For example: <code>Run 'print &quot;My File.txt&quot;'</code></td>
+  </tr>
+</table>
+<p>While RunWait is in a waiting state, new <a href="../misc/Threads.htm">threads</a> can be launched via <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timer</a>.</p>
+
+<h2 id="RunAs">Run as Administrator</h2>
+<p>For an executable file, the <em>*RunAs</em> verb is equivalent to selecting <em>Run as administrator</em> from the right-click menu of the file. For example, the following code attempts to restart the current script as admin:</p>
+<pre>full_command_line := DllCall("GetCommandLine", "str")
+
+if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
+{
+    try
+    {
+        if A_IsCompiled
+            Run '*RunAs "' A_ScriptFullPath '" /restart'
+        else
+            Run '*RunAs "' A_AhkPath '" /restart "' A_ScriptFullPath '"'
+    }
+    ExitApp
+}
+
+MsgBox "A_IsAdmin: " A_IsAdmin "`nCommand line: " full_command_line</pre>
+<p>If the user cancels the UAC dialog or Run fails for some other reason, the script will simply exit.</p>
+<p>Using <a href="../Scripts.htm#SlashR">/restart</a> ensures that a <a href="_SingleInstance.htm">single instance</a> prompt is not shown if the new instance of the script starts before ExitApp is called.</p>
+<p>If UAC is disabled, <em>*RunAs</em> will launch the process without elevating it. Checking for <code>/restart</code> in the command line ensures that the script does not enter a runaway loop in that case. Note that <code>/restart</code> is a built-in switch, so is not included in the <a href="../Scripts.htm#cmd_args">array of command-line parameters</a>.</p>
+<p>The example can be modified to fit the script's needs:</p>
+<ul>
+  <li>If the script absolutely requires admin rights, check A_IsAdmin a second time in case <em>*RunAs</em> failed to elevate the script (i.e. because UAC is disabled).</li>
+  <li>To keep the script running even if the user cancels the UAC prompt, move ExitApp into the try block.</li>
+  <li>To keep the script running even if it failed to restart (i.e. because the script file has been changed or deleted), remove ExitApp and use RunWait instead of Run. On success, <code>/restart</code> causes the new instance to terminate the old one. On failure, the new instance exits and RunWait returns.</li>
+</ul>
+<p>If UAC is enabled, the AutoHotkey installer registers the <em>RunAs</em> verb for <em>.ahk</em> files, which allows <code>Run "*RunAs script.ahk"</code> to launch a script as admin with the default executable.</p>
+
+<h2>相关</h2>
+<p><a href="RunAs.htm">RunAs</a>, <a href="Process.htm">Process functions</a>, <a href="Exit.htm">Exit</a>, <a href="../misc/CLSID-List.htm">CLSID List</a>, <a href="DllCall.htm">DllCall</a></p>
+
+<h2>示例</h2>
+<pre class="NoIndent">Run "Notepad.exe", "C:\My Documents", "max"
+
+Run "mailto:someone@domain.com?subject=This is the subject line&amp;body=This is the message body's text."
+
+try Run("ReadMe.doc", , "Max")  <em>; Launch maximized and don't display dialog if it fails.</em>
+if A_LastError
+    MsgBox "The document could not be launched."
+
+RunWait A_ComSpec " /c dir c:\ &gt;&gt;c:\DirTest.txt", , "min"
+Run "c:\DirTest.txt"
+Run "properties c:\DirTest.txt"
+
+Run "http://www.google.com" <em>; i.e. any URL can be launched.</em>
+Run "mailto:someone@somedomain.com"  <em>; This should open the default e-mail application.</em>
+
+Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; Opens the &quot;My Computer&quot; folder.</em>
+Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; Opens the Recycle Bin.</em>
+
+<em>; To run multiple commands consecutively, use &quot;&amp;&amp;&quot; between each:</em>
+Run A_ComSpec " /c dir /b &gt; C:\list.txt &amp;&amp; type C:\list.txt &amp;&amp; pause"
+
+<em>; Following line opens Control Panel &gt; Display Properties &gt; Settings:</em>
+Run "rundll32.exe shell32.dll,Control_RunDLL desk.cpl,, 3"
+</pre>
+
+<pre class="NoIndent" id="StdOut">
+<em>; The following can be used to run a command and retrieve its output:</em>
+MsgBox RunWaitOne("dir " A_ScriptDir)
+
+<em>; ...or run multiple commands in one go and retrieve their output:</em>
+MsgBox RunWaitMany("
+(
+echo Put your commands here,
+echo each one will be run,
+echo and you'll get the output.
+)")
+
+RunWaitOne(command) {
+    <em>; WshShell object: <a href="http://msdn.microsoft.com/en-us/library/aew9yb99">http://msdn.microsoft.com/en-us/library/aew9yb99</a></em>
+    shell := ComObjCreate("WScript.Shell")
+    <em>; Execute a single command via cmd.exe</em>
+    exec := shell.Exec(A_ComSpec " /C " command)
+    <em>; Read and return the command's output</em>
+    return exec.StdOut.ReadAll()
+}
+
+RunWaitMany(commands) {
+    shell := ComObjCreate("WScript.Shell")
+    <em>; Open cmd.exe with echoing of commands disabled</em>
+    exec := shell.Exec(A_ComSpec " /Q /K echo off")
+    <em>; Send the commands to execute, separated by newline</em>
+    exec.StdIn.WriteLine(commands "`nexit")  <em>; Always exit at the end!</em>
+    <em>; Read and return the output of all commands</em>
+    return exec.StdOut.ReadAll()
+}
+</pre>
+
+<pre class="NoIndent" id="ExecScript">
+<em>; ExecScript: Executes the given code as a new AutoHotkey process.</em>
+ExecScript(Script, Wait:=true)
+{
+    shell := ComObjCreate("WScript.Shell")
+    exec := shell.Exec("AutoHotkey.exe /ErrorStdOut *")
+    exec.StdIn.Write(script)
+    exec.StdIn.Close()
+    if Wait
+        return exec.StdOut.ReadAll()
+}
+
+<em>; Example:</em>
+expr := InputBox(&quot;Enter an expression to evaluate as a new script.&quot;,,, 'Ord("*")')
+result := ExecScript('FileAppend ' expr ', "*"')
+MsgBox "Result: " result
+</pre>
+
+</body>
+</html>

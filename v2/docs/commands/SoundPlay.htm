@@ -1,0 +1,57 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>SoundPlay - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The SoundPlay function plays a sound, video, or other supported file type." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>SoundPlay</h1>
+
+<p>Plays a sound, video, or other supported file type.</p>
+
+<pre class="Syntax"><span class="func">SoundPlay</span> Filename <span class="optional">, Wait</span></pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>Filename</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>The name of the file to be played, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
+    <p>To produce standard system sounds, specify an asterisk followed by a number as shown below. Note: the <em>Wait</em> parameter has no effect in this mode.<br>
+<strong>*-1</strong>: Simple beep. If the sound card is not available, the sound is generated using the speaker.<br>
+<strong>*16</strong>: Hand (stop/error)<br>
+<strong>*32</strong>: Question<br>
+<strong>*48</strong>: Exclamation<br>
+<strong>*64</strong>: Asterisk (info)</p>
+  </dd>
+
+  <dt>Wait</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a> or <a href="../Concepts.htm#boolean">Integer (boolean)</a></p>
+    <p>If omitted, the script's <a href="../misc/Threads.htm">current thread</a> will move on to the next statement(s) while the file is playing. To avoid this, specify 1 or the word WAIT, which causes the current thread to wait until the file is finished playing before continuing. Even while waiting, new <a href="../misc/Threads.htm">threads</a> can be launched via <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timer</a>.</p>
+    <p>Known limitation: If the WAIT parameter is omitted, the OS might consider the playing file to be &quot;in use&quot; until the script closes or until another file is played (even a nonexistent file).</p>
+  </dd>
+
+</dl>
+
+<h2>ErrorLevel</h2>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to 1 if there was a problem or 0 otherwise.</p>
+<h2>备注</h2>
+<p>All Windows OSes should be able to play .wav files. However, other files (.mp3, .avi, etc.) might not be playable if the right codecs or features aren't installed on the OS.</p>
+<p>If a file is playing and the current script plays a second file, the first file will be stopped so that the second one can play. On some systems, certain file types might stop playing even when an entirely separate script plays a new file.</p>
+<p>To stop a file that is currently playing, use SoundPlay on a nonexistent filename as in this example: <code>SoundPlay "Nonexistent.avi"</code>.</p>
+<p>If the script is exited, any currently-playing file that it started will stop.</p>
+<h2>相关</h2>
+<p><a href="SoundBeep.htm">SoundBeep</a>, <a href="SoundGet.htm">SoundGet</a>, <a href="SoundSet.htm">SoundSet</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="../misc/Threads.htm">Threads</a></p>
+
+<h2>Example</h2>
+<pre class="NoIndent">SoundPlay A_WinDir "\Media\ding.wav"
+SoundPlay "*-1"  <em>; Simple beep. If the sound card is not available, the sound is generated using the speaker.</em></pre>
+
+</body>
+</html>

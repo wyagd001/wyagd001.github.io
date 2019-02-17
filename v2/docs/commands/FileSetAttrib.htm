@@ -1,0 +1,91 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>FileSetAttrib - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The FileSetAttrib function changes the attributes of one or more files or folders. Wildcards are supported." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>FileSetAttrib</h1>
+
+<p>Changes the attributes of one or more files or folders. Wildcards are supported.</p>
+
+<pre class="Syntax"><span class="func">FileSetAttrib</span> Attributes <span class="optional">, FilePattern, Mode</span></pre>
+<h2>参数</h2>
+<dl>
+
+  <dt>Attributes</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>The attributes to change (see Remarks).</p>
+  </dd>
+
+  <dt>FilePattern</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>The name of a single file or folder, or a wildcard pattern such as <code>"C:\Temp\*.tmp"</code>. <em>FilePattern</em> is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
+    <p>If omitted, the current file of the innermost enclosing <a href="LoopFiles.htm">File-Loop</a> will be used instead.</p>
+  </dd>
+
+  <dt>Mode</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>Zero or more of the following letters:</p>
+    <p><code>D</code>: Include directories (folders).<br>
+    <code>F</code>: Include files. If both F and D are omitted, files are included but not folders.<br>
+    <code>R</code>: Subfolders are recursed into so that files and folders contained therein are operated upon if they match <em>FilePattern</em>. All subfolders will be recursed into, not just those whose names match <em>FilePattern</em>. If R is omitted, files and folders in subfolders are not included.</p>
+    <p class="note"><strong>Note</strong>: If <em>FilePattern</em> is a single folder rather than a wildcard pattern, it will always be operated upon regardless of this setting.</p>
+  </dd>
+
+</dl>
+
+<h2>ErrorLevel</h2>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to the number of files that <u>failed</u> to be changed or 0 otherwise.</p>
+<p>If files were found, <a href="../Variables.htm#LastError">A_LastError</a> is set to 0 (zero) or the result of the operating system's GetLastError() function immediately after the last failure. Otherwise A_LastError contains an error code that might indicate why no files were found.</p>
+
+<h2>备注</h2>
+<p><strong>Known limitation:</strong> Files and folders with a complete path name longer than 259 characters are skipped over, and may or may not be counted in ErrorLevel. Such files are rare because normally, the operating system does not allow their creation.</p>
+<p>The <em>Attributes</em> parameter consists of a collection of operators and attribute letters.</p>
+<p><em>Operators</em>:</p>
+<table class="info">
+  <tr>
+    <td>+</td>
+    <td>Turn on the attribute</td>
+  </tr>
+  <tr>
+    <td>-</td>
+    <td>Turn off the attribute</td>
+  </tr>
+  <tr>
+    <td>^</td>
+    <td>Toggle the attribute (set it to the opposite value of what it is now)</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>If no operator precedes the attribute letters, the file's attributes are replaced with the given attributes. To remove all attributes, use "N" on its own.</td>
+  </tr>
+</table>
+<p><br>
+  <em>Attribute letters</em>:<br>
+  R = READONLY<br>
+  A = ARCHIVE<br>
+  S = SYSTEM<br>
+  H = HIDDEN<br>
+  N = NORMAL (this is valid only when used without any other attributes)<br>
+  O = OFFLINE<br>
+T = TEMPORARY</p>
+<p class="note"><strong>Note</strong>: Currently, the compression state of files cannot be changed with this function.</p>
+<h2>相关</h2>
+<p><a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="FileGetTime.htm">FileGetTime</a>, <a href="FileSetTime.htm">FileSetTime</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileGetVersion.htm">FileGetVersion</a>, <a href="LoopFiles.htm">File-loop</a></p>
+<h2>示例</h2>
+<pre class="NoIndent">FileSetAttrib "+RH", "C:\MyFiles\*.*", "DF"  <em>; +RH is identical to +R+H</em>
+FileSetAttrib "^H", "C:\MyFiles"  <em>; Toggle the folder's &quot;hidden&quot; attribute.</em>
+FileSetAttrib "-R+A", "C:\New Text File.txt"
+FileSetAttrib "+A", "C:\*.ini", "R"  <em>; Recurse through all .ini files on the C drive.</em></pre>
+
+</body>
+</html>
