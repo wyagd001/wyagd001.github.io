@@ -10,8 +10,8 @@
 </head>
 <body>
 <h1>脚本语言</h1>
-<p>An AutoHotkey script is basically a set of instructions for the program to follow, written in a custom language exclusive to AutoHotkey. This language bears some similarities to several other scripting languages, but also has its own unique strengths and pitfalls. This document describes the language and also tries to point out common pitfalls.</p>
-<p class="note">See <a href="Concepts.htm">Concepts and Conventions</a> for more general explanation of various concepts utilised by AutoHotkey.</p>
+<p>一个 AutoHotkey 脚本从根本上说是使用 AutoHotkey 独有的自定义语言编写的程序要遵循的指令集合. 这种语言与其他几种脚本语言有一些相似之处, 但也有其独特的优势和缺陷. 本文档描述了该语言, 并试图指出常见的缺陷.</p>
+<p class="note">有关 AutoHotkey 所使用的各种概念的更一般的解释, 请参阅<a href="Concepts.htm">概念和约定</a>.</p>
 
 <h2>目录</h2>
 <ul>
@@ -60,98 +60,97 @@ Class definitions
 Methods?
 -->
 
-<h2 id="general-conventions">General Conventions</h2>
-<p><strong>Names:</strong> Variable and function names are not case sensitive (for example, <code>CurrentDate</code> is the same as <code>currentdate</code>). For details such as maximum length and usable characters, see <a href="Concepts.htm#names">Names</a>.</p>
-<p><strong>No typed variables:</strong> Variables have no explicitly defined type; instead, a value of any type can be stored in any variable (excluding built-in variables). Numbers may be automatically converted to strings (text) and vice versa, depending on the situation.</p>
-<p><strong>Declarations are optional:</strong> Except where noted on the <a href="Functions.htm">functions page</a>, variables do not need to be declared; they come into existence simply by using them (and each variable starts off empty/blank).</p>
-<p><strong>Spaces are mostly ignored:</strong> Indentation (leading space) is important for writing readable code, but is not required by the program and is generally ignored. Spaces and tabs are <em>generally</em> ignored at the end of a line and within an expression (except between quotes). However, spaces are significant in some cases, including:</p>
+<h2 id="general-conventions">常规约定</h2>
+<p><strong>名称:</strong> 变量和函数名称不区分大小写(例如, <code>CurrentDate</code> 等同于 <code>currentdate</code>). 有关详细信息(如最大长度和可用字符), 请参阅<a href="Concepts.htm#names">名称</a>.</p>
+<p><strong>无类型变量:</strong> 变量没有明确定义的类型; 相反, 任何类型的值都可以存储在任何变量中(不包括内置变量). 数字可能会自动转换为字符串(文本), 反之亦然, 这取决于实际情况.</p>
+<p><strong>声明是可选的:</strong> 除了在<a href="Functions.htm">函数页面</a>上注明的地方外, 变量不需要声明; 它们的存在仅仅是通过使用它们(每个变量都是从空/空白开始的).</p>
+<p><strong>空格通常被忽略:</strong> 缩进(前导空格) 对于编写可读代码非常重要, 但是程序不需要, 通常会被忽略. <em>通常</em> 在行尾的, 表达式内的(引号之间的除外), 以及命令参数之前和之后的空格和制表符会被忽略. 然而, 在一些情况下, 空格是重要的, 包括:</p>
 <ul>
-  <li><a href="#function-calls">Function</a> and method calls require there to be no space between the function/method name and <code>(</code>.</li>
-  <li>Spaces are required when performing concatenation.</li>
-  <li>Spaces may be required between two operators, to remove ambiguity.</li>
-  <li>Single-line <a href="#comments">comments</a> require a leading space if they are not at the start of the line.</li>
+  <li><a href="#function-calls">函数</a>和方法调用要求在函数/方法名称和 <code>(</code> 之间没有空格.</li>
+  <li>执行连接时需要空格.</li>
+  <li>两个运算符之间可能需要空格, 以消除歧义.</li>
+  <li>单行<a href="#comments">注释</a>如果不在行首, 则需要前导空格.</li>
 </ul>
-<p><strong>Line breaks are meaningful:</strong> Line breaks generally act as a statement separator, terminating the previous function call or other statement. (A <em>statement</em> is simply the smallest standalone element of the language that expresses some action to be carried out.) The exception to this is line continuation (see below).</p>
-<p><strong>Line continuation:</strong> Long lines can be divided up into a collection of smaller ones to improve readability and maintainability. This is achieved by preprocessing, so is not part of the language as such. There are three methods:</p>
+<p><strong>换行符是有意义的:</strong> 换行符通常作为语句分隔符, 终止前一个函数或其它语句. (<em>语句</em> 只是语言中表示要执行某些操作的最小的独立元素.) 这个例外是行延续(请参见下文).</p>
+<p><strong>行延续:</strong> 长行可以分成一些小行, 以提高可读性和可维护性. 这是通过预处理实现的, 所以不属于这种语言的一部分. 有三种方法:</p>
 <ul>
-  <li><a href="Scripts.htm#continuation-line">Continuation prefix</a>: Lines that begin with an <a href="Variables.htm#operators">expression operator</a> (except ++ and --) are merged with the previous line. Lines are merged regardless of whether the line actually contains an expression.</li>
-  <li><a href="Scripts.htm#continuation-expr">Continuation by enclosure</a>: A sub-expression enclosed in (), [] or {} can automatically span multiple lines in most cases.</li>
-  <li><a href="Scripts.htm#continuation-section">Continuation section</a>: Multiple lines are merged with the line above the section, which starts with <code>(</code> and ends with <code>)</code> (both symbols must appear at the beginning of a line, excluding whitespace).</li>
+  <li><a href="Scripts.htm#continuation-line">延续前缀</a>: 以<a href="Variables.htm#operators">表达式运算符</a>(++ 和 -- 除外) 开头的行与前一行合并. 无论该行是否实际包含表达式, 都会合并行.</li>
+  <li><a href="Scripts.htm#continuation-expr">延续闭环</a>: 在大多数情况下, 括在 (), [] 或 {} 中的子表达式可以自动跨越多行.</li>
+  <li><a href="Scripts.htm#continuation-section">延续片段</a>: 片段中的多行与片段上面那一行合并, 延续片段以 <code>(</code> 开始, 以 <code>)</code> 结束(两个符号必须出现在行的开头, 不计空格).</li>
 </ul>
- 
 
-<h2 id="comments">Comments</h2>
-<p><em>Comments</em> are portions of text within the script which are ignored by the program. They are typically used to add explanation or disable parts of the code.</p>
-<p>Scripts can be commented by using a semicolon at the beginning of a line. For example:</p>
-<pre><em>; This entire line is a comment.</em></pre>
-<p>Comments may also be added at the end of a line, in which case the semicolon must have at least one space or tab to its left. For example:</p>
-<pre>Run "Notepad"  <em>; This is a comment on the same line as a function call.</em></pre>
-<p>In addition, the <code><em>/*</em></code> and <code><em>*/</em></code> symbols can be used to comment out an entire section, <em>but only if the symbols appear at the beginning of a line</em> (or for <code><em>*/</em></code>, the beginning or end) as in this example:</p>
+<h2 id="comments">注释</h2>
+<p><em>注释</em> 是脚本中被程序忽略的那部分文本. 它们通常用于添加解释或禁用部分代码.</p>
+<p>可以通过在行的开头使用分号来注释脚本. 例如:</p>
+<pre><em>; 这一整行都是注释.</em></pre>
+<p>也可以在行的末尾添加注释, 此时分号左侧必须至少有一个空格或 tab. 例如:</p>
+<pre>Run "Notepad"  <em>; 这是与函数调用在同一行上的注释.</em></pre>
+<p>此外, 可以使用 <code><em>/*</em></code> 和 <code><em>*/</em></code> 符号注释掉整块代码, <em>但仅当它们出现在行首时才有效</em>(对于 <code><em>*/</em></code>, 可以在行的开头或结尾处), 如下例所示:</p>
 <pre><em>/*
-MsgBox "This line is commented out (disabled)."
-MsgBox "Common mistake:" */ " this does not end the comment."
-MsgBox "This line is commented out."
+MsgBox "这行被注释(禁用) 掉了."
+MsgBox "常见的错误:" */ " 这不会结束注释."
+MsgBox "这行被注释掉了."
 */</em>
-MsgBox "This line is not commented out."
-<em>/* This is also valid, but no other code can share the line. */</em>
+MsgBox "这行没有被注释."
+<em>/* 这也是有效注释, 但是这一行不能有其它代码. */</em>
 </pre>
-<p>Since comments are ignored when a script is launched, they do not impact performance or memory utilization.</p>
+<p>由于脚本运行时会忽略注释, 所以它们不会影响脚本性能或占用内存.</p>
 
-<h2 id="expressions">Expressions</h2>
-<p><strong><em>Expressions</em></strong> are combinations of one or more <a href="Concepts.htm#values">values</a>, <a href="Concepts.htm#variables">variables</a>, <a href="#operators">operators</a> and <a href="#function-calls">function calls</a>. For example, <code>10</code>, <code>1+1</code> and <code>MyVar</code> are valid expressions. Usually, an expression takes one or more values as input, performs one or more operations, and produces a value as the result. The process of finding out the value of an expression is called <em>evaluation</em>. For example, the expression <code>1+1</code> <em>evaluates</em> to the number 2.</p>
-<p>Simple expressions can be pieced together to form increasingly more complex expressions. For example, if <code>Discount/100</code> converts a discount percentage to a fraction, <code>1 - Discount/100</code> calculates a fraction representing the remaining amount, and <code>Price * (1 - Discount/100)</code> applies it to produce the net price.</p>
-<p><em>Values</em> are <a href="Concepts.htm#numbers">numbers</a>, <a href="Concepts.htm#objects">objects</a> or <a href="Concepts.htm#strings">strings</a>. A <em>literal</em> value is one written physically in the script; one that you can see when you look at the code.</p>
+<h2 id="expressions">表达式</h2>
+<p><strong><em>表达式</em></strong> 是一个或多个<a href="Concepts.htm#values">值</a>, <a href="Concepts.htm#variables">变量</a>, <a href="#operators">运算符</a>和<a href="#function-calls">函数调用</a>的组合. 例如, <code>10</code>, <code>1+1</code> 和 <code>MyVar</code> 都是有效的表达式. 通常, 表达式将一个或多个值作为输入, 执行一个或多个操作, 并生成一个值作为结果. 找出表达式值的过程被称为 <em>计算</em>. 例如, 表达式 <code>1+1</code> <em>计算</em> 出数字 2.</p>
+<p>简单的表达式可以拼凑在一起形成更复杂的表达式. 例如, 如果 <code>Discount/100</code> 将折扣百分比转换为分数, <code>1 - Discount/100</code> 计算剩余金额的分数, 而 <code>Price * (1 - Discount/100)</code> 应用它来产生净价格.</p>
+<p><em>值</em> 是<a href="Concepts.htm#numbers">数字</a>, <a href="Concepts.htm#objects">对象</a>或<a href="Concepts.htm#strings">字符串</a>. <em>原义</em> 值是在脚本中实际写入的值; 当您在查看代码时可以看到该值(文字).</p>
 
-<h3 id="strings">Strings / Text</h3>
-<p class="note">For a more general explanation of strings, see <a href="Concepts.htm#strings">Strings</a>.</p>
-<p>A <em>string</em>, or <em>string of characters</em>, is just a text value. In an expression, literal text must be enclosed in single or double quotation marks to differentiate it from a variable name or some other expression. This is often referred to as a <em>quoted literal string</em>, or just <em>quoted string</em>. For example, <code>"this is a quoted string"</code> and <code>'so is this'</code>.</p>
-<p>To include an <em>actual</em> quote character inside a quoted string, use the <code>`"</code> or <code>`'</code> <a href="misc/EscapeChar.htm#quote">escape sequence</a> or enclose the character in the opposite type of quote mark. For example: <code>'She said, "An apple a day."'</code>.</p>
-<p>Quoted strings can contain other <a href="misc/EscapeChar.htm">escape sequences</a> such as <code>`t</code> (tab), <code>`n</code> (linefeed), and <code>`r</code> (carriage return).</p>
+<h3 id="strings">字符串 / 文本</h3>
+<p class="note">有关字符串的更一般的解释, 请参阅<a href="Concepts.htm#strings">字符串</a>.</p>
+<p>em>字符串</em> 或 <em>字符组成的串</em>, 只是一个文本值. 在表达式中, 原义的文本必须用引号引起来, 以区分变量名称或其他表达式. 这通常被称为 <em>加引号的原义字符串</em>, 或者为 <em>加引号的字符串</em>. 例如, <code>"this is a quoted string"</code> 和 <code>'so is this'</code>.</p>
+<p>要在原义字符串中包含 <em>真实的</em> 引号字符, 请使用<a href="misc/EscapeChar.htm#quote">转义序列</a> <code>`"</code> 或 <code>`'</code>, 或将字符括在相反类型的引号中. 例如: <code>'She said, "An apple a day."'</code>.</p>
+<p>加引号的字符串能包含其它的<a href="misc/EscapeChar.htm">转义序列</a>, 如 <code>`t</code>(制表符), <code>`n</code>(换行) 和 <code>`r</code>(回车).</p>
 
-<h3 id="variables">Variables</h3>
-<p class="note">For a basic explanation and general details about variables, see <a href="Concepts.htm#variables">Variables</a>.</p>
-<p><em>Variables</em> can be used in an expression simply by writing the variable's name. For example, <code>A_ScreenWidth/2</code>. However, variables cannot be used inside a quoted string. Instead, variables and other values can be combined with text through a process called <a href="Variables.htm#concat"><em>concatenation</em></a>. There are two ways to <em>concatenate</em> values in an expression:</p>
+<h3 id="variables">变量</h3>
+<p class="note">有关变量的基本解释和常规细节, 请参阅<a href="Concepts.htm#variables">变量</a>.</p>
+<p><em>变量</em> 可以简单地通过写变量的名称来用于表达式. 例如, <code>A_ScreenWidth/2</code>. 但是, 变量不能在加引号的字符串中使用. 作为替代, 变量和其他值可以通过名为 <a href="Variables.htm#concat"><em>连接</em></a> 的过程与文本组合起来. 有两种方法能用于 <em>连接</em> 表达式中的值:</p>
 <ul>
-  <li>Implicit concatenation: <code>&quot;The value is &quot; MyVar</code></li>
-  <li>Explicit concatenation: <code>&quot;The value is &quot; . MyVar</code></li>
+  <li>隐式连接: <code>&quot;The value is &quot; MyVar</code></li>
+  <li>显式连接: <code>&quot;The value is &quot; . MyVar</code></li>
 </ul>
-<p>Implicit concatenation is also known as <em>auto-concat</em>. In both cases, the spaces preceding the variable and dot are mandatory.</p>
-<p>The <a href="commands/Format.htm">Format</a> function can also be used for this purpose. For example:</p>
+<p>隐式连接也被称为 <em>自动连接</em>. 在这两种情况下, 变量和点之前的空格都是必需的.</p>
+<p><a href="commands/Format.htm">Format</a> 函数也可以用于此目的. 例如:</p>
 <pre>MsgBox Format("You are using AutoHotkey v{1} {2}-bit.", A_AhkVersion, A_PtrSize*8)
 </pre>
-<p>To assign a value to a variable, use the <code>:=</code> <a href="Variables.htm#AssignOp">assignment operator</a>, as in <code>MyVar := &quot;Some text&quot;</code>.</p>
-<p><em>Percent signs</em> within an expression are used to create <a href="#dynamic-variables">dynamic variable references</a> and <a href="Functions.htm#DynCall">dynamic function calls</a>, but these are rarely needed.</p>
+<p>要为变量赋值, 请使用 <code>:=</code> <a href="Variables.htm#AssignOp">赋值运算符</a>, 如 <code>MyVar := &quot;Some text&quot;</code>.</p>
+<p>表达式中的 <em>百分号</em> 用于创建<a href="#dynamic-variables">动态变量引用</a>和<a href="Functions.htm#DynCall">动态函数调用</a>, 但这些很不常见.</p>
 
-<h3 id="operators">Operators</h3>
-<p><em>Operators</em> take the form of a symbol or group of symbols such as <code>+</code> or <code>:=</code>, or one of the words <code>and</code>, <code>or</code>, <code>not</code>, <code>new</code>, <code>is</code>, <code>in</code> or <code>contains</code>. They take one, two or three values as input and return a value as the result. A value or sub-expression used as input for an operator is called an <em>operand</em>.</p>
+<h3 id="operators">运算符</h3>
+<p><em>运算符</em> take the form of a symbol or group of symbols such as <code>+</code> or <code>:=</code>, or one of the words <code>and</code>, <code>or</code>, <code>not</code>, <code>new</code>, <code>is</code>, <code>in</code> or <code>contains</code>. They take one, two or three values as input and return a value as the result. A value or sub-expression used as input for an operator is called an <em>operand</em>.</p>
 <ul>
-  <li><em>Unary</em> operators are written either before or after a single operand, depending on the operator. For example, <code>-x</code> or <code>not keyIsDown</code>.</li>
-  <li><em>Binary</em> operators are written in between their two operands. For example, <code>1+1</code> or <code>2 * 5</code>.</li>
+  <li><em>Unary</em> operators are written either before or after a single operand, depending on the operator. 例如, <code>-x</code> or <code>not keyIsDown</code>.</li>
+  <li><em>Binary</em> operators are written in between their two operands. 例如, <code>1+1</code> or <code>2 * 5</code>.</li>
   <li>AutoHotkey has only one <em>ternary</em> operator, which takes the form <a href="Variables.htm#ternary"><code>condition ? valueIfTrue : valueIfFalse</code></a>.</li>
 </ul>
-<p>Some unary and binary operators share the same symbols, in which case the meaning of the operator depends on whether it is written before, after or in between two values. For example, <code>x-y</code> performs subtraction while <code>-x</code> inverts the sign of <code>x</code> (producing a positive value from a negative value and vice versa).</p>
-<p>Operators of equal precedence such as multiply (<code>*</code>) and divide (<code>/</code>) are evaluated in left-to-right order unless otherwise specified in the <a href="Variables.htm#operators">operator table</a>. By contrast, an operator of lower precedence such as add (<code>+</code>) is evaluated after a higher one such as multiply (<code>*</code>). For example, <code>3 + 2 * 2</code> is evaluated as <code>3 + (2 * 2)</code>. Parentheses may be used to override precedence as in this example: <code>(3 + 2) * 2</code></p>
+<p>Some unary and binary operators share the same symbols, in which case the meaning of the operator depends on whether it is written before, after or in between two values. 例如, <code>x-y</code> performs subtraction while <code>-x</code> inverts the sign of <code>x</code> (producing a positive value from a negative value and vice versa).</p>
+<p>Operators of equal precedence such as multiply (<code>*</code>) and divide (<code>/</code>) are evaluated in left-to-right order unless otherwise specified in the <a href="Variables.htm#operators">operator table</a>. By contrast, an operator of lower precedence such as add (<code>+</code>) is evaluated after a higher one such as multiply (<code>*</code>). 例如, <code>3 + 2 * 2</code> is evaluated as <code>3 + (2 * 2)</code>. Parentheses may be used to override precedence as in this example: <code>(3 + 2) * 2</code></p>
 
 <h3 id="function-calls">Function Calls</h3>
-<p class="note">For a general explanation of functions and related terminology, see <a href="Concepts.htm#functions">Functions</a>.</p>
-<p><em>Functions</em> take a varying number of inputs, perform some action or calculation, and then <a href="Concepts.htm#return-a-value"><em>return</em></a> a result. The inputs of a function are called <a href="Concepts.htm#parameters"><em>parameters</em></a> or <em>arguments</em>. A function is <a href="Concepts.htm#call"><em>called</em></a> simply by writing its name followed by its parameters enclosed in parentheses. For example, <code>GetKeyState(&quot;Shift&quot;)</code> returns (evaluates to) 1 if the <kbd>Shift</kbd> key is being held down or 0 otherwise.</p>
+<p class="note">For a general explanation of functions and related terminology, 请参阅 <a href="Concepts.htm#functions">Functions</a>.</p>
+<p><em>Functions</em> take a varying number of inputs, perform some action or calculation, and then <a href="Concepts.htm#return-a-value"><em>return</em></a> a result. The inputs of a function are called <a href="Concepts.htm#parameters"><em>parameters</em></a> or <em>arguments</em>. A function is <a href="Concepts.htm#call"><em>called</em></a> simply by writing its name followed by its parameters enclosed in parentheses. 例如, <code>GetKeyState(&quot;Shift&quot;)</code> returns (evaluates to) 1 if the <kbd>Shift</kbd> key is being held down or 0 otherwise.</p>
 <p class="warning"><strong>Note:</strong> There must not be any space between the function name and open parenthesis.
 </p>
-<p>For those new to programming, the requirement for parentheses may seem cryptic or verbose at first, but they are what allows a function call to be combined with other operations. For example, the expression <code>GetKeyState(&quot;Shift&quot;, &quot;P&quot;) and GetKeyState(&quot;Ctrl&quot;, &quot;P&quot;)</code> returns 1 only if both keys are being physically held down.</p>
-<p>Function names are always global, and are separate to variable names. For example, <code>Round</code> can be both a variable name and a function name, and <code>Round := 1</code> will not affect <code>Round(n)</code> in any way.</p>
+<p>For those new to programming, the requirement for parentheses may seem cryptic or verbose at first, but they are what allows a function call to be combined with other operations. 例如, the expression <code>GetKeyState(&quot;Shift&quot;, &quot;P&quot;) and GetKeyState(&quot;Ctrl&quot;, &quot;P&quot;)</code> returns 1 only if both keys are being physically held down.</p>
+<p>Function names are always global, and are separate to variable names. 例如, <code>Round</code> can be both a variable name and a function name, and <code>Round := 1</code> will not affect <code>Round(n)</code> in any way.</p>
 
 <h4 id="function-call-statements">Function Call Statements</h4>
-<p>If the return value of the function is not needed and the function name is written at the start of the line (or in other contexts which allow a <a href="Concepts.htm#statement">statement</a>, such as following <code>else</code> or a <a href="Hotkeys.htm">hotkey label</a>), the parentheses can be omitted. In this case, the remainder of the line is taken as the function's parameter list. For example:</p>
+<p>If the return value of the function is not needed and the function name is written at the start of the line (or in other contexts which allow a <a href="Concepts.htm#statement">statement</a>, such as following <code>else</code> or a <a href="Hotkeys.htm">hotkey label</a>), the parentheses can be omitted. In this case, the remainder of the line is taken as the function's parameter list. 例如:</p>
 <pre>result := MsgBox("This one requires parentheses.",, "OKCancel")
 MsgBox "This one doesn't. The result was " result "."</pre>
 <p>Known limitations:</p>
 <ul>
   <li>If the script overrides a built-in function by defining a function with the same name, the built-in function may (or may not) still be called if the parentheses are omitted, depending on the function.</li>
-  <li>Output variables of built-in functions are currently not allowed to be an expression when parentheses are omitted. For example, <code>MouseGetPos whichvar ? x1 : x2</code> is not valid, but <code>MouseGetPos(whichvar ? x1 : x2)</code> is.</li>
+  <li>Output variables of built-in functions are currently not allowed to be an expression when parentheses are omitted. 例如, <code>MouseGetPos whichvar ? x1 : x2</code> is not valid, but <code>MouseGetPos(whichvar ? x1 : x2)</code> is.</li>
 </ul>
 
 <h4 id="optional-parameters">Optional Parameters</h4>
-<p>Optional parameters can simply be left blank, but the delimiting comma is still required unless all subsequent parameters are also omitted. For example, the <a href="commands/Run.htm">Run</a> function can accept between one and four parameters. All of the following are valid:</p>
+<p>Optional parameters can simply be left blank, but the delimiting comma is still required unless all subsequent parameters are also omitted. 例如, the <a href="commands/Run.htm">Run</a> function can accept between one and four parameters. All of the following are valid:</p>
 <pre>
 Run "notepad.exe", "C:\"
 Run "notepad.exe",, "Min"
@@ -166,11 +165,11 @@ Run("notepad.exe", , , notepadPID)
 <p><code>Alpha[Index]</code> has a similar function to <code>Alpha.Beta</code>, but each part is interpreted in a more standard way. That is, both <em>Alpha</em> and <em>Index</em> are variables in this case, and could be replaced with virtually any sub-expression. This syntax is usually used to retrieve an element of an <a href="Objects.htm#Usage_Simple_Arrays">array</a> or <a href="Objects.htm#Usage_Associative_Arrays">associative array</a>.</p>
 <p><code>new ClassName()</code> is used to instantiate a class, or create an object derived from another object. Although this looks like a function call, <em>ClassName</em> is actually an ordinary variable. Similarly, <code>new Alpha.Beta()</code> would create an object derived from the object returned by <code>Alpha.Beta</code>; <em>Beta</em> is neither a function nor a method. If the optional parentheses are present, they may contain parameters for the object's <a href="Objects.htm#Custom_NewDelete">__New</a> method.</p>
 <p id="array-literal"><code>[A, B, C]</code> creates an <a href="Objects.htm#Usage_Simple_Arrays">array</a> with the initial contents A, B and C (all variables in this case), where A is element 1.</p>
-<p id="object-literal"><code>{Key1: Value1, Key2: Value2}</code> creates an <a href="Objects.htm#Usage_Associative_Arrays">associative array</a> from a list of key-value pairs. A value can later be retrieved by its associated key. Writing a plain word (consisting of alphanumeric characters, underscore and non-ASCII characters) to the left of <code>:</code> is equivalent to enclosing that word in quotation marks. For example, <code>{A: B}</code> is equivalent to <code>{&quot;A&quot;: B}</code>. However, <code>{(A): B}</code> uses the contents of the variable <code>A</code> as the key.</p>
+<p id="object-literal"><code>{Key1: Value1, Key2: Value2}</code> creates an <a href="Objects.htm#Usage_Associative_Arrays">associative array</a> from a list of key-value pairs. A value can later be retrieved by its associated key. Writing a plain word (consisting of alphanumeric characters, underscore and non-ASCII characters) to the left of <code>:</code> is equivalent to enclosing that word in quotation marks. 例如, <code>{A: B}</code> is equivalent to <code>{&quot;A&quot;: B}</code>. However, <code>{(A): B}</code> uses the contents of the variable <code>A</code> as the key.</p>
 <p><code>MyFunc(Params*)</code> is a <a href="Functions.htm#VariadicCall">variadic function call</a>. The asterisk must immediately precede the closing parenthesis at the end of the function's parameter list. <em>Params</em> must be a variable or sub-expression which returns an array object. Although it isn't valid to use <code>Params*</code> just anywhere, it can be used in an array literal (<code>[A, B, C, ArrayToAppend*]</code>) or indexer (<code>Alpha[Params*]</code>).</p>
 
 <h3 id="expression-statements">Expression Statements</h3>
-<p>Not all expressions can be used alone on a line. For example, a line consisting of just <code>21*2</code> or <code>&quot;Some text&quot;</code> wouldn't make any sense. An expression <em>statement</em> is an expression used on its own, typically for its side-effects. Most expressions with side-effects can be used this way, so it is generally not necessary to memorise the details of this section.</p>
+<p>Not all expressions can be used alone on a line. 例如, a line consisting of just <code>21*2</code> or <code>&quot;Some text&quot;</code> wouldn't make any sense. An expression <em>statement</em> is an expression used on its own, typically for its side-effects. Most expressions with side-effects can be used this way, so it is generally not necessary to memorise the details of this section.</p>
 <p>The following types of expressions can be used as statements:</p>
 <p>Assignments, as in <code>x := y</code>, compound assignments such as <code>x += y</code>, and increment/decrement operators such as <code>++x</code> and <code>x--</code>.</p>
 <p class="warning"><strong>Known limitation:</strong> For <code>x++</code> and <code>x--</code>, there currently cannot be a space between the variable name and operator.</p>
@@ -182,11 +181,11 @@ Run("notepad.exe", , , notepadPID)
 <p class="warning"><strong>Known limitation:</strong> There currently cannot be a space between the variable name and question mark.</p>
 <p>Expressions starting with <code>(</code>. However, there usually must be a matching <code>)</code> on the same line, otherwise the line would be interpreted as the start of a <a href="Scripts.htm#continuation">continuation section</a>.</p>
 <p>Expressions starting with a double-deref, such as <code>%varname% := 1</code>. This is primarily due to implementation complexity.</p>
-<p>Expressions that start with any of those described above (but not those described below) are also allowed, for simplicity. For example, <code>MyFunc()+1</code> is currently allowed, although the <code>+1</code> has no effect and its result is discarded. Such expressions might become invalid in the future due to enhanced error-checking.</p>
-<p>Method calls which lack parentheses take the remainder of the line as their parameter list. For example, <code>ExcelApp.Quit</code> or <code>x.y.z "my parameter"</code>. This is technically not an expression, but rather a method call statement.</p>
+<p>Expressions that start with any of those described above (but not those described below) are also allowed, for simplicity. 例如, <code>MyFunc()+1</code> is currently allowed, although the <code>+1</code> has no effect and its result is discarded. Such expressions might become invalid in the future due to enhanced error-checking.</p>
+<p>Method calls which lack parentheses take the remainder of the line as their parameter list. 例如, <code>ExcelApp.Quit</code> or <code>x.y.z "my parameter"</code>. This is technically not an expression, but rather a method call statement.</p>
 
 <h2 id="control-flow">Control Flow Statements</h2>
-<p class="note">For a general explanation of control flow, see <a href="Concepts.htm#control-flow">Control Flow</a>.</p>
+<p class="note">For a general explanation of control flow, 请参阅 <a href="Concepts.htm#control-flow">Control Flow</a>.</p>
 <p><a href="Concepts.htm#statement">Statements</a> are grouped together into a <a href="commands/Block.htm"><em>block</em></a> by enclosing them in braces <code>{}</code>, as in C, JavaScript and similar languages, but usually the braces must appear at the start of a line. Control flow statements can be applied to an entire block or just a single statement.</p>
 <p>The <a href="Concepts.htm#cf-body">body</a> of a control flow statement is always a single <em>group</em> of statements. A block counts as a single group of statements, as does a control flow statement and its body. The following related statements are also grouped with each other, along with their bodies: <code>If</code> with <code>Else</code>; <code>Loop</code>/<code>For</code> with <code>Until</code>; <code>Try</code> with <code>Catch</code> and/or <code>Finally</code>. In other words, when a group of these statements is used as a whole, it does not always need to be enclosed in braces (however, some coding styles always include the braces, for clarity).</p>
 <p>Control flow statements which have a body and therefore must always be followed by a related statement or group of statements: <code>If</code>, <code>Else</code>, <code>Loop</code>, <code>While</code>, <code>For</code>, <code>Try</code>, <code>Catch</code> and <code>Finally</code>.</p>
@@ -217,7 +216,7 @@ Run("notepad.exe", , , notepadPID)
 <ul>
   <li>The opening brace of a <a href="commands/Block.htm">block</a> can be written at the end of the same line as an <a href="commands/IfExpression.htm">If</a>, <a href="commands/Else.htm">Else</a>, <a href="#loop-statement">Loop</a>, <a href="commands/While.htm">While</a>, <a href="commands/For.htm">For</a>, <a href="commands/Try.htm">Try</a>, <a href="commands/Catch.htm">Catch</a> or <a href="commands/Finally.htm">Finally</a> statement (basically any control flow statement which has a <a href="Concepts.htm#cf-body">body</a>). This is referred to as the One True Brace (OTB) style.</li>
   <li><a href="commands/Else.htm">Else</a>, <a href="commands/Try.htm">Try</a> and <a href="commands/Finally.htm">Finally</a> allow any valid statement to their right, as they require a <a href="Concepts.htm#cf-body">body</a> but have no parameters.</li>
-  <li><a href="commands/IfExpression.htm">If</a>, <a href="commands/While.htm">While</a>, <a href="commands/Return.htm">Return</a>, <a href="commands/Until.htm">Until</a>, <a href="commands/Loop.htm">Loop <em>Count</em></a>, <a href="commands/Goto.htm">Goto</a> and <a href="commands/Gosub.htm">Gosub</a> allow an open parenthesis to be used immediately after the name, to enclose the entire parameter list. Although these look like function calls, they are not, and cannot be used mid-expression. For example, <code>if(expression)</code>.</li>
+  <li><a href="commands/IfExpression.htm">If</a>, <a href="commands/While.htm">While</a>, <a href="commands/Return.htm">Return</a>, <a href="commands/Until.htm">Until</a>, <a href="commands/Loop.htm">Loop <em>Count</em></a>, <a href="commands/Goto.htm">Goto</a> and <a href="commands/Gosub.htm">Gosub</a> allow an open parenthesis to be used immediately after the name, to enclose the entire parameter list. Although these look like function calls, they are not, and cannot be used mid-expression. 例如, <code>if(expression)</code>.</li>
   <li>Control flow statements cannot be overridden by defining a function with the same name.</li>
 </ul>
 
@@ -237,7 +236,7 @@ Run("notepad.exe", , , notepadPID)
 <p><a href="commands/Until.htm">Until</a> causes a loop to terminate when an expression evaluates to true. The expression is evaluated after each iteration.</p>
 <p>A <a href="#labels">label</a> can be used to &quot;name&quot; a loop for <a href="commands/Continue.htm">Continue</a> and <a href="commands/Break.htm">Break</a>. This allows the script to easily continue or break out of any number of nested loops without using <a href="commands/Goto.htm">Goto</a>.</p>
 <p>The built-in variable <strong>A_Index</strong> contains the number of the current loop iteration. It contains 1 the first time the loop's body is executed. For the second time, it contains 2; and so on. If an inner loop is enclosed by an outer loop, the inner loop takes precedence. A_Index works inside all types of loops, but contains 0 outside of a loop.</p>
-<p>For some loop types, other built-in variables return information about the current loop item (registry key/value, file, substring or line of text). These variables have names beginning with <strong>A_Loop</strong>, such as A_LoopFileName and A_LoopReadLine. Their values always correspond to the most recently started (but not yet stopped) loop of the appropriate type. For example, A_LoopField returns the current substring in the innermost parsing loop, even if it is used inside a file or registry loop.</p>
+<p>For some loop types, other built-in variables return information about the current loop item (registry key/value, file, substring or line of text). These variables have names beginning with <strong>A_Loop</strong>, such as A_LoopFileName and A_LoopReadLine. Their values always correspond to the most recently started (but not yet stopped) loop of the appropriate type. 例如, A_LoopField returns the current substring in the innermost parsing loop, even if it is used inside a file or registry loop.</p>
 <pre>t := &quot;column 1`tcolumn 2`nvalue 1`tvalue 2&quot;
 Loop Parse t, "`n"
 {
@@ -259,12 +258,12 @@ Loop Parse t, "`n"
 <h3 id="auto-execute-section">Auto-execute Section</h3>
 <p>After the script has been loaded, it begins executing at the top line, continuing until a <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, the script's first <a href="Hotkeys.htm">hotkey/hotstring label</a>, or the physical end of the script is encountered (whichever comes first). This top portion of the script is referred to as the <em>auto-execute section</em>, but it is really just a <a href="#subroutines">subroutine</a> which is called after program startup.</p>
 <p class="warning"><strong>Note:</strong> While the script's <em>first</em> hotkey/hotstring label has the same effect as <a href="commands/Return.htm">return</a>, other hotkeys and labels do not.</p>
-<p>The auto-execute section is often used to configure settings which apply to every newly launched <a href="misc/Threads.htm">thread</a>. For details, see <a href="Scripts.htm#auto">The Top of the Script</a>.</p>
+<p>The auto-execute section is often used to configure settings which apply to every newly launched <a href="misc/Threads.htm">thread</a>. For details, 请参阅 <a href="Scripts.htm#auto">The Top of the Script</a>.</p>
 
 <h3 id="subroutines">Subroutines</h3>
 <p>A <em>subroutine</em> (or sub) is a reusable block of code which can be <em>called</em> to perform some task.</p>
 <p>Scripts use subroutines to define what should happen when a particular hotkey is pressed or some other event occurs. Scripts can also call subroutines directly, by using <a href="commands/Gosub.htm">Gosub</a>.</p>
-<p>Any <a href="#labels">label</a> can be used as the starting point of a subroutine. A subroutine has no explicitly marked ending point, but instead ends if and when control is returned to the subroutine's caller by <a href="commands/Return.htm">Return</a> or when the thread is exited.  For example:</p>
+<p>Any <a href="#labels">label</a> can be used as the starting point of a subroutine. A subroutine has no explicitly marked ending point, but instead ends if and when control is returned to the subroutine's caller by <a href="commands/Return.htm">Return</a> or when the thread is exited.  例如:</p>
 <pre>gosub Label1
 
 Label1:
@@ -273,7 +272,7 @@ return
 </pre>
 <p>Note that as labels have no effect when reached during normal execution, in this example a MsgBox would be shown twice: once while the subroutine is running and again after it returns. One important consequence is that you cannot define one subroutine inside another subroutine, because the &quot;body&quot; of the inner subroutine would execute automatically and then <em>return</em>, effectively terminating the outer subroutine.</p>
 <p>Subroutines should typically be defined separately to any other block of code, but can also be <a href="Functions.htm#gosub">defined inside a function</a>, allowing the subroutine access to that function's static variables (and local variables, but only while the function is running).</p>
-<p class="warning"><strong>Note:</strong> Subroutines defined inside a function have certain limitations regarding the use of local variables and <a href="#dynamic-variables">dynamic variable references</a>. For details, see <a href="Functions.htm#gosub">Using Subroutines Within a Function</a>.
+<p class="warning"><strong>Note:</strong> Subroutines defined inside a function have certain limitations regarding the use of local variables and <a href="#dynamic-variables">dynamic variable references</a>. For details, 请参阅 <a href="Functions.htm#gosub">Using Subroutines Within a Function</a>.
 </p>
 
 <h3 id="user-defined-functions">User-Defined Functions</h3>
@@ -312,23 +311,23 @@ return
 </ul>
 <p>#Include can be safely used within the <a href="#auto-execute-section">auto-execute section</a> to include files which contain only function definitions, since function definitions (but not function calls) are skipped over during execution. If a file contains other code, one can avoid breaking the auto-execute section by skipping over the file's contents with <a href="commands/Goto.htm">Goto</a>.</p>
 <p>Unlike in C/C++, #Include does nothing if the file has already been included by a previous directive. To include the contents of the same file multiple times, use <a href="commands/_Include.htm">#IncludeAgain</a>.</p>
-<p>Script files containing functions can be <em>automatically</em> included without having to use #Include, if they are saved in a standard location and named appropriately. The effect is similar to using #Include at the end of the main script file. For details, see <a href="Functions.htm#lib">Libraries of Functions</a>.</p>
+<p>Script files containing functions can be <em>automatically</em> included without having to use #Include, if they are saved in a standard location and named appropriately. The effect is similar to using #Include at the end of the main script file. For details, 请参阅 <a href="Functions.htm#lib">Libraries of Functions</a>.</p>
 
 <h2 id="misc">Miscellaneous</h2>
 
 <h3 id="dynamic-variables">Dynamic Variables</h3>
 <p>A <em>dynamic variable reference</em> takes a text value and interprets it as the name of a variable.</p>
-<p>The most common form of dynamic variable reference is called a <em>double reference</em> or <em>double-deref</em>. Before performing a double reference, the name of the target variable is stored in a second variable. This second variable can then be used to assign a value to the target variable indirectly, using a double reference. For example:</p>
+<p>The most common form of dynamic variable reference is called a <em>double reference</em> or <em>double-deref</em>. Before performing a double reference, the name of the target variable is stored in a second variable. This second variable can then be used to assign a value to the target variable indirectly, using a double reference. 例如:</p>
 <pre>target := 42
 second := &quot;target&quot;
 MsgBox  second   <em>; Normal (single) variable reference =&gt; target</em>
 MsgBox %second%  <em>; Double-deref =&gt; 42</em>
 </pre>
 <p>Currently, <code>second</code> must always contain a variable name in the second case; arbitrary expressions are not supported.</p>
-<p>A dynamic variable reference can also take one or more pieces of literal text and the content of one or more variables, and join them together to form a single variable name. This is done simply by writing the pieces of the name and percent-enclosed variables in sequence, without any spaces. For example, <code>MyArray%A_Index%</code> or <code>MyGrid%X%_%Y%</code>. This is used to access <em>pseudo-arrays</em>, described below.</p>
+<p>A dynamic variable reference can also take one or more pieces of literal text and the content of one or more variables, and join them together to form a single variable name. This is done simply by writing the pieces of the name and percent-enclosed variables in sequence, without any spaces. 例如, <code>MyArray%A_Index%</code> or <code>MyGrid%X%_%Y%</code>. This is used to access <em>pseudo-arrays</em>, described below.</p>
 
 <h4 id="pseudo-arrays">Pseudo-arrays</h4>
-<p>A <em>pseudo-array</em> is actually just a bunch of discrete variables, but with a naming pattern which allows them to be used like elements of an array. For example:</p>
+<p>A <em>pseudo-array</em> is actually just a bunch of discrete variables, but with a naming pattern which allows them to be used like elements of an array. 例如:</p>
 <pre>
 MyArray1 := "A"
 MyArray2 := "B"
@@ -355,10 +354,10 @@ Loop 3
 <p>Generally, aside from whitespace and comments, no other code can be written on the same line as a label. However:</p>
 <ul>
   <li>A hotkey label can be directly followed by a function call or other statement to create a <em>one-line</em> hotkey. In other words, if a function call, assignment or expression is present on the same line as a hotkey label, it acts as though followed by <code>return</code>.</li>
-  <li>A hotkey with a <a href="KeyList.htm">key name</a> written to the right of the double-colon is actually a <a href="misc/Remap.htm"><em>remapping</em></a>, which is shorthand for <a href="misc/Remap.htm#actually">a pair of hotkeys</a>. For example, <code>a::b</code> creates hotkeys and labels for <code>*a</code> and <code>*a Up</code>, and does not create a label named <code>a</code>.</li>
+  <li>A hotkey with a <a href="KeyList.htm">key name</a> written to the right of the double-colon is actually a <a href="misc/Remap.htm"><em>remapping</em></a>, which is shorthand for <a href="misc/Remap.htm#actually">a pair of hotkeys</a>. 例如, <code>a::b</code> creates hotkeys and labels for <code>*a</code> and <code>*a Up</code>, and does not create a label named <code>a</code>.</li>
   <li>A hotstring with text written to the right of the final double-colon is an <em>auto-replace</em> hotstring. Auto-replace hotstrings do not act as labels.</li>
 </ul>
-<p>For more details, see <a href="misc/Labels.htm">Labels</a>.</p>
+<p>有关详细信息, 请参阅 <a href="misc/Labels.htm">Labels</a>.</p>
 
 </body>
 </html>
