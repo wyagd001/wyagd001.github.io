@@ -235,7 +235,7 @@ DemonstrateForceStatic()
 <p>如下面的例子所示, 通过逗号分隔, 可以在同一行声明多个变量:</p>
 <pre>global LogFileName, MaxRetries := 5
 static TotalAttempts := 0, PrevResult</pre>
-<p id="DeclareInit">局部或全局变量可以在声明的同一行初始化, 方法是在变量后跟着 <code>:=</code> 以及任意<a href="Variables.htm#Expressions">表达式</a>. 与<a href="#InitStatic">静态变量初始化</a>不同, 局部和全局变量的初始化在每次调用函数时都执行, 但只有当控制流 if/when 实际到达它们时才执行. 换句话说, 像 <code>local x := 0</code> 和写成单独的两行有同样的效果: <code>local x</code> 后面跟着 <code>x := 0</code>.</p>
+<p id="DeclareInit">局部或全局变量可以在声明的同一行初始化, 方法是在变量后跟着 <code>:=</code> 以及任意<a href="Variables.htm#Expressions">表达式</a>. 与<a href="#InitStatic">静态变量初始化</a>不同, 局部和全局变量的初始化在每次调用函数时都执行, 但只有当控制流实际到达它们时才执行. 换句话说, 像 <code>local x := 0</code> 和写成单独的两行有同样的效果: <code>local x</code> 后面跟着 <code>x := 0</code>.</p>
 <p>因为单词 <em>local</em>, <em>global</em> 和 <em>static</em> 都是在脚本运行时立即处理的, 所以不能使用 <a href="commands/IfExpression.htm">IF 语句</a>有条件地声明变量. 换句话说, IF 或 ELSE 的<a href="commands/Block.htm">区块</a>内的声明无条件对声明和函数的闭括号之间的所有行生效. 同时还需注意当前还不支持声明动态变量, 如 <code>global Array%i%</code>.</p>
 
 <h2 id="DynCall">动态调用函数</h2>
@@ -372,7 +372,7 @@ timertest()
 
 <h2 id="remarks">Return, Exit 及一般说明</h2>
 <p>如果函数内的执行流在遇到 <a href="commands/Return.htm">Return</a> 前到达了函数的闭括号, 那么函数结束并返回空值(空字符串) 给其调用者. 当函数明确省略 <a href="commands/Return.htm">Return</a> 的参数时, 也返回空值.</p>
-<p>当函数使用 <a href="commands/Exit.htm">Exit</a> 命令终止<a href="misc/Threads.htm">当前线程</a>时, 其调用者不会接收到返回值. 例如, 这个语句 <code>Var := Add(2, 3)</code> 中, 如果 <code>Add()</code> 退出了那么 <code>Var</code> 会保持不变. 如果函数出现了运行时错误(when this error is not caught by a <a href="commands/Try.htm">Try</a>/<a href="commands/Catch.htm">Catch</a> statement), 例如<a href="commands/Run.htm">运行</a>了一个不存在的文件, 也会出现同样的情况.</p>
+<p>当函数使用 <a href="commands/Exit.htm">Exit</a> 命令终止<a href="misc/Threads.htm">当前线程</a>时, 其调用者不会接收到返回值. 例如, 这个语句 <code>Var := Add(2, 3)</code> 中, 如果 <code>Add()</code> 退出了那么 <code>Var</code> 会保持不变. 如果函数出现了运行时错误(当这个错误没有被 <a href="commands/Try.htm">Try</a>/<a href="commands/Catch.htm">Catch</a> 语句捕获时), 例如<a href="commands/Run.htm">运行</a>了一个不存在的文件, 也会出现同样的情况.</p>
 <p>若要返回一个额外的容易记住的值, 那么函数可以修改 <a href="misc/ErrorLevel.htm">ErrorLevel</a> 的值来实现.</p>
 <p>要使用一个或多个空值(空字符串) 调用函数, 可以使用空的引号对, 例如: <code>FindColor(ColorName, &quot;&quot;)</code>.</p>
 <p>因为调用函数不会开启新<a href="misc/Threads.htm">线程</a>, 所以函数对设置(如 <a href="commands/SendMode.htm">SendMode</a> 和 <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>) 做出的任何改变对其调用者同样有效.</p>
