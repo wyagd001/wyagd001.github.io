@@ -12,7 +12,7 @@
 
 <h1>FileAppend</h1>
 
-<p>Writes text or binary data to the end of a file (first creating the file, if necessary).</p>
+<p>在文件末尾处追加(写入) 文本或二进制数据(如果有必要, 首先创建文件).</p>
 
 <pre class="Syntax"><span class="func">FileAppend</span> Text <span class="optional">, Filename, Options</span></pre>
 <h2>参数</h2>
@@ -20,61 +20,61 @@
 
   <dt>Text</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-    <p>The text to append to the file. This text may include linefeed characters (`n) to start new lines. In addition, a single long line can be broken up into several shorter ones by means of a <a href="../Scripts.htm#continuation">continuation section</a>.</p>
-    <p><em>Text</em> can contain binary data if the <code>RAW</code> option is used, but in that case FileAppend will always append an even number of bytes (<a href="StrLen.htm">StrLen</a> times two). This can be used to <a href="ClipboardAll.htm#ex2">save clipboard data to file</a>. <a href="../objects/File.htm#RawWrite">File.RawWrite</a> can be used to write an odd or even number of bytes.</p>
-    <p>If <em>Text</em> is blank, <em>Filename</em> will be created as an empty file (but if the file already exists, its modification time will be updated).</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要追加到文件的文本. 此文本可以包含换行符(`n) 来开始新行. 此外, 一个长行可以使用<a href="../Scripts.htm#continuation">延续片段</a>的方法分成较短的几行.</p>
+    <p>如果使用 <code>RAW</code> 选项, <em>Text</em> 可以包含二进制数据, 但在这种情况下, FileAppend 将始终追加偶数字节(<a href="StrLen.htm">StrLen</a> 乘以 2). 这可用于将<a href="ClipboardAll.htm#ex2">剪贴板数据保存到文件中</a>. <a href="../objects/File.htm#RawWrite">File.RawWrite</a> 可用于写入奇数字节或偶数字节.</p>
+    <p>如果  <em>Text</em> 为空, 则创建一个文件名为 <em>Filename</em> 的空白文件(但如果文件已经存在, 则更新其修改时间).</p>
   </dd>
 
   <dt>Filename</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-    <p>The name of the file to be appended, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
-    <p id="stdout"><strong>Standard Output (stdout)</strong>: Specifying an asterisk (*) for <em>Filename</em> causes <em>Text</em> to be sent to standard output (stdout). Such text can be redirected to a file, piped to another EXE, or captured by <a href="_ErrorStdOut.htm">fancy text editors</a>. For example, the following would be valid if typed at a command prompt:</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要追加内容的文件名, 如果未指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+    <p id="stdout"><strong>标准输出(stdout)</strong>: 在 <em>Filename</em> 指定星号(*) 可以把 <em>Text</em> 发送到标准输出(stdout). 这样文本可以重定向到文件, 指向另一个 EXE 的管道或被<a href="_ErrorStdOut.htm">高级文本编辑器</a>捕获. 例如, 在命令提示符中输入后面的例子是有效的:</p>
       <pre class="no-highlight">&quot;%ProgramFiles%\AutoHotkey\AutoHotkey.exe&quot; &quot;My Script.ahk&quot; &gt;&quot;Error Log.txt&quot;</pre>
-    <p>However, text sent to stdout will not appear at the command prompt it was launched from. This can be worked around by piping a script's output to another command or program. For example:</p>
+    <p>然而, 发送到标准输出的文本将不会出现在运行它的命令提示符中. 解决此问题的方法是把脚本的输出通过管道传递给另一个命令或程序. 例如:</p>
       <pre class="no-highlight">&quot;%ProgramFiles%\AutoHotkey\AutoHotkey.exe&quot; &quot;My Script.ahk&quot; |more</pre>
       <pre class="no-highlight">For /F &quot;tokens=*&quot; %L in ('&quot;&quot;%ProgramFiles%\AutoHotkey\AutoHotkey.exe&quot; &quot;My Script .ahk&quot;&quot;') do @Echo %L</pre>
-    <p>Specifying two asterisks (**) for <em>Filename</em> causes <em>Text</em> to be sent to the stderr stream.</p>
+    <p> 在 <em>Filename</em> 指定两个星号(**) 可以把 <em>Text</em> 发送到标准错误输出(stderr).</p>
     </dd>
 
   <dt>Options</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-    <p>Zero or more of the following strings. Separate each option from the next with a single space or tab. For example: <code>"`n UTF-8"</code></p>
-    <p><strong>Encoding</strong>: Specify any of the encoding names accepted by <a href="FileEncoding.htm">FileEncoding</a> (excluding the empty string) to use that encoding if the file lacks a UTF-8 or UTF-16 byte order mark. If omitted, it defaults to <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>.</p>
-    <p><strong>RAW</strong>: Specify the word RAW (case-insensitive) to write the exact bytes contained by <em>Text</em> to the file as-is, without any conversion. This option overrides any previously specified encoding and vice versa.</p>
-    <p><strong>`n</strong> (a linefeed character): Inserts a carriage return (`r) before each linefeed (`n) if one is not already present. In other words, it translates from `n to `r`n. This translation typically does not affect performance. If this option is not used, line endings within <em>Text</em> are not changed.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>零个或多个以下字符串. 使用单个空格或制表符将每个选项与下一个选项分开. 例如: <code>"`n UTF-8"</code></p>
+    <p><strong>Encoding</strong>: 如果文件缺少 UTF-8 或 UTF-16 字节顺序标记, 则指定 <a href="FileEncoding.htm">FileEncoding</a>接受的任何编码名称(不包括空字符串) 以使用该编码. 如果省略, 默认为 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>.</p>
+    <p><strong>RAW</strong>: 指定单词 RAW(不区分大小写) 按原样将 <em>Text</em> 包含的确切字节写入文件, 不进行任何转换. 此选项覆盖以前指定的任何编码, 反之亦然.</p>
+    <p><strong>`n</strong>(换行符): 如果回车符不存在, 则在每个换行符(`n) 之前插入回车符(`r). 换句话说, 将转换 `n 为 `r`n. 这种转换通常不会影响性能. 如果不使用此选项, 则不会更改 <em>Text</em> 中的行尾.</p>
   </dd>
 
 </dl>
 
 <h2>ErrorLevel</h2>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to 1 if there was a problem or 0 otherwise.</p>
-<p><a href="../Variables.htm#LastError">A_LastError</a> is set to the result of the operating system's GetLastError() function.</p>
+<p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0.</p>
+<p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
 
 <h2>备注</h2>
-<p>To overwrite an existing file, delete it with <a href="FileDelete.htm">FileDelete</a> prior to using FileAppend.</p>
-<p>The target file is automatically closed after the text is appended (except when FileAppend is used in its single-parameter mode inside a <a href="LoopRead.htm">file-reading/writing loop</a>).</p>
-<p><a href="FileOpen.htm">FileOpen</a> in append mode provides more control than FileAppend and allows the file to be kept open rather than opening and closing it each time. Once a file is opened in append mode, use <code>file.<a href="../objects/File.htm#Write">Write</a>(string)</code> to append the string. File objects also support binary I/O via <a href="../objects/File.htm#RawWrite">RawWrite</a>/<a href="../objects/File.htm#RawRead">RawRead</a> or <a href="../objects/File.htm#WriteNum">Write<i>Num</i></a>/<a href="../objects/File.htm#ReadNum">Read<i>Num</i></a>.</p>
+<p>要覆盖现有的文件, 请在使用 FileAppend 前用<a href="FileDelete.htm">FileDelete</a> 删除它.</p>
+<p>追加文本后目标文件会自动关闭(除非在<a href="LoopRead.htm">文件读取/写入循环</a>中以单参数模式使用 FileAppend).</p>
+<p>追加模式的 <a href="FileOpen.htm">FileOpen</a> 比 FileAppend 提供了更多的控制性并且允许文件保持打开状态而不是每次都要打开和关闭文件. 一旦以追加模式打开文件后, 请使用 <code>file.<a href="../objects/File.htm#Write">Write</a>(string)</code> 来追加字符串. 文件对象通过 <a href="../objects/File.htm#RawWrite">RawWrite</a>/<a href="../objects/File.htm#RawRead">RawRead</a> 或 <a href="../objects/File.htm#WriteNum">Write<i>Num</i></a>/<a href="../objects/File.htm#ReadNum">Read<i>Num</i></a> 也支持二进制 I/O.</p>
 <h2>相关</h2>
-<p><a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">File Object</a>, <a href="FileRead.htm">FileRead</a>, <a href="LoopRead.htm">file-reading loop</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="FileDelete.htm">FileDelete</a>, <a href="OutputDebug.htm">OutputDebug</a>, <a href="../Scripts.htm#continuation">continuation sections</a></p>
-<h2>Example</h2>
+<p><a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a>, <a href="LoopRead.htm">文件读取循环</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="FileDelete.htm">FileDelete</a>, <a href="OutputDebug.htm">OutputDebug</a>, <a href="../Scripts.htm#continuation">延续片段</a></p>
+<h2>示例</h2>
 <pre class="NoIndent">FileAppend "Another line.`n", "C:\My Documents\Test.txt"
 
-<em>; The following example uses a <a href="../Scripts.htm#continuation">continuation section</a> to enhance readability and maintainability:</em>
+<em>; 下面的例子使用<a href="../Scripts.htm#continuation">延续片段</a>来提高可读性和可维护性:</em>
 FileAppend "
 (
 A line of text.
 By default, the hard carriage return (Enter) between the previous line and this one will be written to the file.
 	This line is indented with a tab; by default, that tab will also be written to the file.
 )", A_Desktop "\My File.txt"</pre>
-<pre class="NoIndent" id="FTP"><em>; The following example demonstrates how to automate FTP uploading using the operating 
-; system's built-in FTP command. This script has been tested on Windows XP.</em>
+<pre class="NoIndent" id="FTP"><em>; 下面的例子演示了如何使用操作系统内置的 FTP 功能
+; 自动进行 FTP 上传. 此脚本已经在 Windows XP 中测试通过.</em>
 
 FTPCommandFile := A_ScriptDir "\FTPCommands.txt"
 FTPLogFile := A_ScriptDir "\FTPLog.txt"
-FileDelete FTPCommandFile  <em>; In case previous run was terminated prematurely.</em>
+FileDelete FTPCommandFile  <em>; 避免之前运行意外中止带来的问题.</em>
 
 FileAppend
 (
@@ -91,8 +91,8 @@ quit"
 ), FTPCommandFile
 
 RunWait Format('{1} /c ftp.exe -s:"{2}" &gt;"{3}"', A_ComSpec, FTPCommandFile, FTPLogFile)
-FileDelete FTPCommandFile  <em>; Delete for security reasons.</em>
-Run FTPLogFile  <em>; Display the log for review.</em></pre>
+FileDelete FTPCommandFile  <em>; 为确保安全进行删除.</em>
+Run FTPLogFile  <em>; 显示日志进行复查.</em></pre>
 
 </body>
 </html>
