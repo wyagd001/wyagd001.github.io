@@ -192,78 +192,78 @@ Send "{<i>KEY</i> up}"</pre>
 <h3 id="Download">我可以在哪里找到官方发行版或更旧的版本?</h3>
 <p>访问 <a href="https://autohotkey.com/download/">AutoHotkey 下载页面</a>.</p>
 <h3 id="USB">可以在 USB 驱动器中运行 AHK 吗?</h3>
-<p>请参阅 <a href="Program.htm#portability">AutoHotkey.exe 的可移植性</a>. Note that if you use auto-included function libraries, AutoHotkey.exe and the Lib folder must be up one level from Ahk2Exe.exe (e.g. \AutoHotkey.exe vs \Compiler\Ahk2Exe.exe). Also note that Ahk2Exe saves settings to the following registry key: <code>HKCU\Software\AutoHotkey\Ahk2Exe</code>.</p>
+<p>请参阅 <a href="Program.htm#portability">AutoHotkey.exe 的可移植性</a>. 需要注意, 如果你使用自动包含的函数库, AutoHotkey.exe 和 Lib 文件夹必须位于 Ahk2Exe.exe 的上一级目录中(例如 \AutoHotkey.exe vs \Compiler\Ahk2Exe.exe). 还需注意 Ahk2Exe 保存设置到注册表的下列键中: <code>HKCU\Software\AutoHotkey\Ahk2Exe</code>.</p>
 <h3 id="output">如何检索命令行操作的输出?</h3>
-<p>Testing shows that due to file caching, a temporary file can be very fast for relatively small outputs. In fact, if the file is deleted immediately after use, it often does not actually get written to disk. 例如:</p>
+<p>测试表明, 由于文件缓存的原因, 对于较少量的输出, 使用临时文件获取会比较快. 事实上, 如果文件在使用后立即被删除, 通常它并没有被真正地写到磁盘上. 例如:</p>
 <pre><a href="commands/Run.htm">RunWait</a> A_ComSpec ' /c dir &gt; C:\My Temp File.txt'
 VarToContainContents := FileRead("C:\My Temp File.txt")
 FileDelete "C:\My Temp File.txt"</pre>
-<p>To avoid using a temporary file (especially if the output is large), consider using the <a href="commands/Run.htm#StdOut">Shell.Exec()</a> method as shown in the examples for the <a href="commands/Run.htm">Run</a> function.</p>
+<p>要避免使用临时文件(特别是在输出比较大时), 可以考虑使用 <a href="commands/Run.htm">Run</a> 函数示例中展示的 <a href="commands/Run.htm#StdOut">Shell.Exec()</a> 方法.</p>
 <h3 id="close">如何让一个脚本关闭, 暂停或挂起其他的脚本?</h3>
-<p>First, here is an example that closes another script:</p>
-<pre>DetectHiddenWindows True  <em>; Allows a script's hidden main window to be detected.</em>
-SetTitleMatchMode 2  <em>; Avoids the need to specify the full path of the file below.</em>
-WinClose "Script's File Name.ahk - AutoHotkey"  <em>; Update this to reflect the script's name (case sensitive).</em></pre>
-<p>To <a href="commands/Suspend.htm">suspend</a> or <a href="commands/Pause.htm">pause</a> another script, replace the last line above with one of these:</p>
+<p>首先, 这里有个关闭另一个脚本的例子:</p>
+<pre>DetectHiddenWindows True  <em>; 许脚本隐藏的主窗口能被检测到.</em>
+SetTitleMatchMode 2  <em>; 避免需要指定以下文件的完整路径.</em>
+WinClose "Script's File Name.ahk - AutoHotkey"  <em>; 更新它为脚本的实际名称(区分大小写).</em></pre>
+<p>其次 <a href="commands/Suspend.htm">suspend</a> 或 <a href="commands/Pause.htm">pause</a> 另一个脚本, 请把上面脚本的最后一行替换为下列语句中的一行:</p>
 <pre>PostMessage 0x111, 65305,,, "Script's File Name.ahk - AutoHotkey"  <em>; Suspend.</em>
 PostMessage 0x111, 65306,,, "Script's File Name.ahk - AutoHotkey"  <em>; Pause.</em></pre>
 <h3 id="repeat">如何在不退出脚本的情况下停止重复的动作?</h3>
-<p>To pause or resume the entire script at the press of a key, assign a hotkey to the <a href="commands/Pause.htm">Pause</a> function as in this example:</p>
-<pre>^!p::Pause  <em>; Press Ctrl+Alt+P to pause. Press it again to resume.</em></pre>
-<p>To stop an action that is repeating inside a <a href="commands/Loop.htm">Loop</a>, consider the following working example, which is a hotkey that both starts and stops its own repeating action. In other words, pressing the hotkey once will start the Loop. Pressing the same hotkey again will stop it.</p>
+<p>通过按下热键来暂停或继续整个脚本, 需要给 <a href="commands/Pause.htm">Pause</a> 指定热键, 如此例所示:</p>
+<pre>^!p::Pause  <em>; 按下 Ctrl+Alt+P 暂停脚本. 再次按下恢复.</em></pre>
+<p>要停止在 <a href="commands/Loop.htm">Loop</a>中重复的操作, 请参考下面这个可运行示例, 热键启动和停止自身重复动作. 换句话说, 按下热键将开始循环. 再次按下同样的热键将停止循环.</p>
 <pre>#MaxThreadsPerHotkey 3
-<strong>#z::  <em>; Win+Z hotkey (change this hotkey to suit your preferences).</em></strong>
+<strong>#z::  <em>; Win+Z 热键(可根据您的喜好改变此热键).</em></strong>
 #MaxThreadsPerHotkey 1
-if KeepWinZRunning  <em>; This means an underlying <a href="misc/Threads.htm">thread</a> is already running the loop below.</em>
+if KeepWinZRunning  <em>; 这说明一个潜在的<a href="misc/Threads.htm">线程</a>正在下面的循环中运行.</em>
 {
-    KeepWinZRunning := false  <em>; Signal that thread's loop to stop.</em>
-    return  <em>; End this thread so that the one underneath will resume and see the change made by the line above.</em>
+    KeepWinZRunning := false  <em>; 向那个线程的循环发出停止的信号.</em>
+    return  <em>; 结束此线程, 这样才可以让下面的线程恢复并得知上一行所做的更改.</em>
 }
 <em>; Otherwise:</em>
 KeepWinZRunning := true
 Loop
 {
-    <strong><em>; The next four lines are the action you want to repeat (update them to suit your preferences):</em></strong>
+    <strong><em>;  以下四行是您要重复的动作(可根据您的需要修改它们):</em></strong>
     ToolTip "Press Win-Z again to stop this from flashing."
     Sleep 1000
     ToolTip
     Sleep 1000
-    <strong><em>; But leave the rest below unchanged.</em></strong>
-    if not KeepWinZRunning  <em>; The user signaled the loop to stop by pressing Win-Z again.</em>
-        break  <em>; Break out of this loop.</em>
+    <strong><em>; 但请不要修改下面剩下的内容.</em></strong>
+    if not KeepWinZRunning  <em>; 用户再次按下 Win-Z 来向循环发出停止的信号.</em>
+        break  <em>; 跳出此循环.</em>
 }
-KeepWinZRunning := false  <em>; Reset in preparation for the next press of this hotkey.</em>
+KeepWinZRunning := false  <em>; 复位, 为下一次使用热键做准备.</em>
 return</pre>
 <h3 id="help">如何在任意编辑器中获取上下文相关的 AutoHotkey 函数帮助?</h3>
-<p>Rajat created <a href="scripts/ContextSensitiveHelp.htm">this script</a>.</p>
+<p>为此 Rajat 创建了<a href="scripts/ContextSensitiveHelp.htm">这个脚本</a>.</p>
 <h3 id="load">如何检测一个网页何时加载完毕?</h3>
-<p>With Internet Explorer, perhaps the most reliable method is to use DllCall and COM as demonstrated at <a href="http://www.autohotkey.com/forum/topic19256.html">www.autohotkey.com/forum/topic19256.html</a>. On a related note, the contents of the address bar and status bar can be retrieved as demonstrated at <a href="http://www.autohotkey.com/forum/topic19255.html">www.autohotkey.com/forum/topic19255.html</a>.</p>
-<p><strong>Older, less reliable method:</strong> The technique in the following example will work with MS Internet Explorer for most pages. A similar technique might work in other browsers:</p>
+<p>对于 Internet Explorer, 可能最可靠的方法是使用 DllCall 和 COM 正如 <a href="http://www.autohotkey.com/forum/topic19256.html">www.autohotkey.com/forum/topic19256.html</a>所演示的. 此外, 获取地址栏及状态栏相关内容的方法在 <a href="http://www.autohotkey.com/forum/topic19255.html">www.autohotkey.com/forum/topic19255.html</a> 中被提到.</p>
+<p><strong>旧的, 稳定性稍差的方法:</strong>下面示例中的技术对使用 MS Internet Explorer 打开大多数网页时都有效. 类似的方法可能也适用于其他浏览器:</p>
 <pre>Run "www.yahoo.com"
-MouseMove 0, 0  <em>; Prevents the status bar from showing a mouse-hover link instead of &quot;Done&quot;.</em>
+MouseMove 0, 0  <em>; 阻止状态栏显示鼠标悬停链接, 而不是&quot;完成&quot;.</em>
 WinWait "Yahoo! - "
 WinActivate
-<a href="commands/StatusBarWait.htm">StatusBarWait</a> "Done", 30
+<a href="commands/StatusBarWait.htm">StatusBarWait</a> "完成", 30
 if ErrorLevel
     MsgBox "The wait timed out or the window was closed."
 else 
     MsgBox "The page is done loading."</pre>
 <h3 id="time">如何比较或操作日期与时间?</h3>
-<p>The <a href="commands/DateAdd.htm">DateAdd</a> function can add or subtract a quantity of days, hours, minutes, or seconds to a time-string that is in the <a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> format. The following example subtracts 7 days from the specified time:</p>
+<p><a href="commands/DateAdd.htm">DateAdd</a> 函数能对 <a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式表示的时间字符串加上或减去一些天数, 小时, 分钟或秒. 后面的例子从指定的时间中减去 7 天:</p>
 <pre>Result := DateAdd(VarContainingTimestamp, -7, "days")</pre>
-<p>To determine the amount of time between two dates or times, 请参阅 <a href="commands/DateDiff.htm">DateDiff</a>, which gives an example. Also, the built-in variable <a href="Variables.htm#Now">A_Now</a> contains the current local time. Finally, there are several built-in <a href="Variables.htm#date">date/time variables</a>, as well as the <a href="commands/FormatTime.htm">FormatTime</a> function to create a custom date/time string.</p>
+<p>要计算两个日期或时间之间的时间量, 请参阅 <a href="commands/DateDiff.htm">DateDiff</a>, 其中给出了一个示例. 此外, 内置变量 <a href="Variables.htm#Now">A_Now</a> 包含了当前本地时间. 最后, 这里有一些内置的 <a href="Variables.htm#date">日期/时间变量</a>, 也可以使用 <a href="commands/FormatTime.htm">FormatTime</a> 函数来创建自定义格式的日期/时间字符串.</p>
 <h3 id="SendDate">如何发送当前的日期和/或时间?</h3>
-<p>Use <a href="commands/FormatTime.htm">FormatTime</a> or <a href="Variables.htm#date">built-in variables for date and time</a>.</p>
+<p>请使用 <a href="commands/FormatTime.htm">FormatTime</a> 或<a href="Variables.htm#date">日期和时间的内置变量.</a>.</p>
 <h3 id="ControlSend">如何发送文本到不活跃或隐藏的窗口?</h3>
-<p>Use <a href="commands/ControlSend.htm">ControlSend</a>.</p>
+<p>请使用 <a href="commands/ControlSend.htm">ControlSend</a>.</p>
 <h3 id="winamp">如何控制 Winamp, 即使在它未激活时?</h3>
-<p>See <a href="misc/Winamp.htm">Automating Winamp</a>.</p>
+<p>请参阅<a href="misc/Winamp.htm">自动化 Winamp</a>.</p>
 <h3 id="msgbox">如何改变 <a href="commands/MsgBox.htm">MsgBox</a> 的按钮名称?</h3>
-<p>Here is an <a href="scripts/MsgBoxButtonNames.htm">example</a>.</p>
+<p>这里有个<a href="scripts/MsgBoxButtonNames.htm">例子</a>.</p>
 <h3 id="DefaultEditor">如何改变默认编辑器, 即通过上下文菜单或托盘图标打开的那个?</h3>
-<p>In the example section of <a href="commands/Edit.htm">Edit</a> you will find a script that allows you to change the default editor.</p>
+<p>在 <a href="commands/Edit.htm">Edit</a> 的示例部分可以找到能让您改变默认编辑器的脚本.</p>
 <h3 id="GuiSubmit">如何保存我的 GUI 控件的内容?</h3>
-<p>Use <a href="objects/Gui.htm#Submit">Gui.Submit</a>. 例如:</p>
+<p>请使用 <a href="objects/Gui.htm#Submit">Gui.Submit</a>. 例如:</p>
 <pre>Gui := GuiCreate()
 Gui.Add("Text",, "Enter some Text and press Submit:")
 Gui.Add("Edit", "vMyEdit")
@@ -276,43 +276,43 @@ Submit(Btn)
     MsgBox "Content of the edit control: " Saved.MyEdit
 }</pre>
 <h3 id="GDIPlus">我能使用 AHK 画点什么吗?</h3>
-<p>See <a href="http://www.autohotkey.com/forum/topic32238.html">GDI+ standard library</a> by tic. It's also possible with some rudimentary methods using Gui, but in a limited way.</p>
+<p>请参阅 tic 写的 <a href="http://www.autohotkey.com/forum/topic32238.html">GDI+ 标准库</a>. 它可以通过一些基本方法以有限的方式使用 Gui.</p>
 <h3 id="WinWaitAction">如何在窗口出现, 关闭或变成[不]活跃时开始一个动作?</h3>
-<p>Use <a href="commands/WinWait.htm">WinWait</a>, <a href="commands/WinWaitClose.htm">WinWaitClose</a> or <a href="commands/WinWaitActive.htm">WinWait[Not]Active</a>.</p>
-<p>There are also user-created solutions such as <a href="https://autohotkey.com/boards/viewtopic.php?f=6&t=6463">OnWin.ahk</a> and <a href="https://autohotkey.com/board/topic/80644-how-to-hook-on-to-shell-to-receive-its-messages/">[How to] Hook on to Shell to receive its messages</a>.</p>
-<h2 id="hotkeys-hotstrings-and-remapping">Hotkeys, Hotstrings, and Remapping</h2>
+<p>使用 <a href="commands/WinWait.htm">WinWait</a>, <a href="commands/WinWaitClose.htm">WinWaitClose</a> 或 <a href="commands/WinWaitActive.htm">WinWait[Not]Active</a>.</p>
+<p>这里列出了用户自己的解决办法, 例如 <a href="https://autohotkey.com/boards/viewtopic.php?f=6&t=6463">OnWin.ahk</a> 和 <a href="https://autohotkey.com/board/topic/80644-how-to-hook-on-to-shell-to-receive-its-messages/">[How to] Hook on to Shell to receive its messages</a>.</p>
+<h2 id="hotkeys-hotstrings-and-remapping">热键, 热字串和重映射</h2>
 <h3 id="Startup">如何让我的热键和热字串在 PC 启动时自动生效?</h3>
-<p>There are several ways to make a script (or any program) launch automatically every time you start your PC. The easiest is to place a shortcut to the script in the Startup folder:</p>
+<p>有几种方法可以让脚本(或任何程序) 在每次启动 PC 时自动启动. 最简单的方法是在开始菜单的启动文件夹中放置一个脚本的快捷方式:</p>
 <ol>
-  <li>Find the script file, select it, and press <kbd>Control</kbd>+<kbd>C</kbd>.</li>
-  <li>Press <kbd>Win</kbd>+<kbd>R</kbd> to open the Run dialog, then enter <code>shell:startup</code> and click OK or <kbd>Enter</kbd>. This will open the Startup folder for the current user. To instead open the folder for all users, enter <code>shell:common startup</code> (however, in that case you must be an administrator to proceed).</li>
-  <li>Right click inside the window, and click "Paste Shortcut". The shortcut to the script should now be in the Startup folder.</li>
+  <li>找到脚本文件后选中它, 接着按下 <kbd>Control</kbd>+<kbd>C</kbd>.</li>
+  <li>按下 <kbd>Win</kbd>+<kbd>R</kbd> 打开运行对话框, 然后输入 <code>shell:startup</code> 点击确定或按下 <kbd>Enter</kbd>. 这将打开当前用户的启动文件夹. 要打开所有用户的启动文件夹, 输入 <code>shell:common startup</code>(不过, 在这种情况下, 您必须以管理员权限进行).</li>
+  <li>在文件夹窗口里右击, 点击"粘贴快捷方式". 脚本的快捷方式现在应该在启动文件夹中了.</li>
 </ol>
 <h3 id="HotMouse">我在把鼠标按键作为热键使用时遇到问题. 能提供一些建议吗?</h3>
-<p>The left and right mouse buttons should be assignable normally (例如, <code>#LButton::</code> is the <kbd>Win</kbd>+LeftButton hotkey). Similarly, the middle button and the turning of the <a href="KeyList.htm">mouse wheel</a> should be assignable normally except on mice whose drivers directly control those buttons.</p>
-<p> The fourth button (XButton1) and the fifth button (XButton2) might be assignable if your mouse driver allows their clicks to be <a href="commands/KeyHistory.htm">seen</a> by the system. If they cannot be seen -- or if your mouse has more than five buttons that you want to use -- you can try configuring the software that came with the mouse (sometimes accessible in the Control Panel or Start Menu) to send a keystroke whenever you press one of these buttons. Such a keystroke can then be defined as a hotkey in a script. 例如, if you configure the fourth button to send <kbd>Control</kbd>+<kbd>F1</kbd>, you can then indirectly configure that button as a hotkey by using <code>^F1::</code> in a script.</p>
-<p>If you have a five-button mouse whose fourth and fifth buttons cannot be <a href="commands/KeyHistory.htm">seen</a>, you can try changing your mouse driver to the default driver included with the OS. This assumes there is such a driver for your particular mouse and that you can live without the features provided by your mouse's custom software.</p>
+<p>鼠标左键和右键应该可以正常设置为热键(例如, <code>#LButton::</code> 为 <kbd>Win</kbd>+LeftButton 热键). 同样地, 鼠标中键和<a href="KeyList.htm">鼠标滚轮</a>的转动应该可以正常地设置为热键, 除非鼠标驱动直接控制这些按键.</p>
+<p>如果您的鼠标驱动让系统可以<a href="commands/KeyHistory.htm">看见</a>这些按键的点击时, 第四个按键(XButton1) 和第五个按键(XButton2) 也可以设置为热键. 如果它们不可见 -- 或您的鼠标除了您使用的五个按键外还有更多的按键 -- 您可以尝试配置鼠标附带的软件(有时需要通过控制面板或开始菜单访问) 来实现当您按下其中的按键时发送键击. 然后可以在脚本中把这样的键击设置为热键. 例如, 如果您配置第四个按键来发送 <kbd>Control</kbd>+<kbd>F1</kbd>, 然后在脚本中通过使用 <code>^F1::</code> 您可以把这个按键间接的设置为热键.</p>
+<p>如果您有五键鼠标, 其中的第四和第五个按键不<a href="commands/KeyHistory.htm">可见</a>, 您可以尝试把鼠标驱动改变为 OS 自带的默认驱动. 这里假设您特殊的鼠标使用自己的驱动并且您不使用鼠标自带软件提供的功能.</p>
 <h3 id="HotSymb">如何将 tab 和空格键定义为热键?</h3>
-<p>Use the names of the keys (Tab and Space) rather than their characters. 例如, <code>#Space</code> is <kbd>Win</kbd>+<kbd>Space</kbd> and <code>^!Tab</code> is <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>Tab</kbd>.</p>
+<p>使用它们的按键名称(Tab 和 Space) 而不用它们的字符. 例如, <code>#Space</code> 为 <kbd>Win</kbd>+<kbd>Space</kbd>, 而 <code>^!Tab</code> 为 <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>Tab</kbd>.</p>
 <h3 id="Remap">如何将按键或鼠标按钮重映射成其他键?</h3>
-<p>This is described on the <a href="misc/Remap.htm">remapping</a> page.</p>
+<p>这在<a href="misc/Remap.htm">重映射</a>页面进行了描述.</p>
 <h3 id="DoublePress">如何检测按键或按钮的双击?</h3>
-<p>Use <a href="Variables.htm#h">built-in variables for hotkeys</a> as follows:</p>
+<p>像下面那样使用<a href="Variables.htm#h">热键的内置变量</a>:</p>
 <pre>~Ctrl::
     if (A_ThisHotkey = A_PriorHotkey &amp;&amp; A_TimeSincePriorHotkey &lt; 200)
         MsgBox "double-press"
 return</pre>
 <h3 id="HotContext">如何让<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">热字串</a>只在特定的程序中有效? 换句话说, 在特定的窗口不活动时我想让特定的按键执行它原来的功能.</h3>
-<p>The preferred method is <a href="commands/_If.htm">#If</a>. 例如:</p>
+<p>首选的方法是使用 <a href="commands/_If.htm">#If</a>. 例如:</p>
 <pre>#if WinActive("ahk_class Notepad")
 ^a::MsgBox "You pressed Control-A while Notepad is active."
 </pre>
 <h3 id="HotPrefix">如何让前缀按键执行它原来的功能, 而不是什么都不做?</h3>
-<p>Consider the following example, which makes Numpad0 into a prefix key:</p>
+<p>请参考下面的例子, 其中把 Numpad0 作为前缀键:</p>
 <pre>Numpad0 &amp; Numpad1::MsgBox "You pressed Numpad1 while holding down Numpad0."</pre>
-<p>Now, to make Numpad0 send a real Numpad0 keystroke whenever it wasn't used to launch a hotkey such as the above, add the following hotkey:</p>
+<p>现在, 要让 Numpad0 在没有像上面那样用来触发热键时发送真正的 Numpad0 键击, 需要添加下面的热键:</p>
 <pre> $Numpad0::Send "{Numpad0}"</pre>
-<p>The $ prefix is needed to prevent a warning dialog about an infinite loop (since the hotkey &quot;sends itself&quot;). In addition, the above action occurs at the time the key is <strong>released.</strong></p>
+<p>使用前缀 $ 是为避免产生关于无效循环的警告对话框(因为此热键 &quot;发送了它自己&quot;). 此外, 上述动作在<strong>释放</strong>此按键的时候发生.</p>
 <h3 id="HotOverride">如何改变或禁用 Windows 内置的快捷键, 例如 Win+U(辅助工具管理器) 和 Win+R(运行)?</h3>
 <p>这里有一些<a href="misc/Override.htm">示例</a>.</p>
 <h3 id="HotRegex">如何在热字串中使用通配符或正则表达式?</h3>
