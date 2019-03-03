@@ -140,17 +140,17 @@ MsgBox "这行没有被注释."
 <p>函数名称始终是全局的, 并且与变量名称是分开的. 例如, <code>Round</code> 可以同时是一个变量名和一个函数名, 然而 <code>Round := 1</code> 不会以任何方式影响 <code>Round(n)</code>.</p>
 
 <h4 id="function-call-statements">函数调用语句</h4>
-<p>If the return value of the function is not needed and the function name is written at the start of the line (or in other contexts which allow a <a href="Concepts.htm#statement">statement</a>, such as following <code>else</code> or a <a href="Hotkeys.htm">hotkey label</a>), the parentheses can be omitted. In this case, the remainder of the line is taken as the function's parameter list. 例如:</p>
+<p>如果不需要函数的返回值, 并且函数名写在行首(或者在其他允许<a href="Concepts.htm#statement">语句</a>的上下文中, 如下面的 <code>else</code> 或 <a href="Hotkeys.htm">hotkey 标签</a>), 则可以省略括号. 在这种情况下, 行的其余部分作为函数的参数列表. 例如:</p>
 <pre>result := MsgBox("This one requires parentheses.",, "OKCancel")
 MsgBox "This one doesn't. The result was " result "."</pre>
-<p>Known limitations:</p>
+<p>已知限制:</p>
 <ul>
-  <li>If the script overrides a built-in function by defining a function with the same name, the built-in function may (or may not) still be called if the parentheses are omitted, depending on the function.</li>
-  <li>Output variables of built-in functions are currently not allowed to be an expression when parentheses are omitted. 例如, <code>MouseGetPos whichvar ? x1 : x2</code> is not valid, but <code>MouseGetPos(whichvar ? x1 : x2)</code> is.</li>
+  <li>如果脚本通过定义具有相同名称的函数来覆盖内置函数,如果省略括号, 根据函数的不同, 内置函数可能(或不能) 仍然被调用.</li>
+  <li>当圆括号被省略时, 内置函数的 Output 变量目前不允许为表达式. 例如, <code>MouseGetPos whichvar ? x1 : x2</code> 是无效, 但 <code>MouseGetPos(whichvar ? x1 : x2)</code> 是有效的.</li>
 </ul>
 
 <h4 id="optional-parameters">可选参数</h4>
-<p>Optional parameters can simply be left blank, but the delimiting comma is still required unless all subsequent parameters are also omitted. 例如, the <a href="commands/Run.htm">Run</a> function can accept between one and four parameters. All of the following are valid:</p>
+<p>可选参数可以简单地留空, 但是分隔逗号仍然是必需的, 除非所有后续参数也被省略. 例如, <a href="commands/Run.htm">Run</a> 函数可接受一至四个参数. 下列各项均有效:</p>
 <pre>
 Run "notepad.exe", "C:\"
 Run "notepad.exe",, "Min"
@@ -158,35 +158,35 @@ Run("notepad.exe", , , notepadPID)
 </pre>
 
 <h3 id="operators-for-objects">对象的运算符</h3>
-<p>There are other symbols used in expressions which don't quite fit into any of the categories defined above, or that affect the meaning of other parts of the expression, as described below. These all relate to <em>objects</em> in some way. Providing a full explanation of what each construct does would require introducing more concepts which are outside the scope of this section.</p>
-<p><code>Alpha.Beta</code> is often called <em>member access</em>. <em>Alpha</em> is an ordinary variable, and could be replaced with a function call or some other sub-expression which returns an object. When evaluated, the object is sent a request &quot;give me the value of property <em>Beta</em>&quot;, &quot;store this value in property <em>Beta</em>&quot; or &quot;call the method named <em>Beta</em>&quot;. In other words, <em>Beta</em> is a name which has meaning to the object; it is not a local or global variable.</p>
-<p><code>Alpha.Beta()</code> is a <em>method call</em>, as described above.</p>
-<p><code>Alpha.Beta[Param]</code> is a specialised form of member access which includes additional parameters in the request. While <em>Beta</em> is a simple name, <em>Param</em> is an ordinary variable or sub-expression, or a list of sub-expressions separated by commas (the same as in a function's parameter list).</p>
-<p><code>Alpha[Index]</code> has a similar function to <code>Alpha.Beta</code>, but each part is interpreted in a more standard way. That is, both <em>Alpha</em> and <em>Index</em> are variables in this case, and could be replaced with virtually any sub-expression. This syntax is usually used to retrieve an element of an <a href="Objects.htm#Usage_Simple_Arrays">array</a> or <a href="Objects.htm#Usage_Associative_Arrays">associative array</a>.</p>
-<p><code>new ClassName()</code> is used to instantiate a class, or create an object derived from another object. Although this looks like a function call, <em>ClassName</em> is actually an ordinary variable. Similarly, <code>new Alpha.Beta()</code> would create an object derived from the object returned by <code>Alpha.Beta</code>; <em>Beta</em> is neither a function nor a method. If the optional parentheses are present, they may contain parameters for the object's <a href="Objects.htm#Custom_NewDelete">__New</a> method.</p>
-<p id="array-literal"><code>[A, B, C]</code> creates an <a href="Objects.htm#Usage_Simple_Arrays">array</a> with the initial contents A, B and C (all variables in this case), where A is element 1.</p>
-<p id="object-literal"><code>{Key1: Value1, Key2: Value2}</code> creates an <a href="Objects.htm#Usage_Associative_Arrays">associative array</a> from a list of key-value pairs. A value can later be retrieved by its associated key. Writing a plain word (consisting of alphanumeric characters, underscore and non-ASCII characters) to the left of <code>:</code> is equivalent to enclosing that word in quotation marks. 例如, <code>{A: B}</code> is equivalent to <code>{&quot;A&quot;: B}</code>. However, <code>{(A): B}</code> uses the contents of the variable <code>A</code> as the key.</p>
-<p><code>MyFunc(Params*)</code> is a <a href="Functions.htm#VariadicCall">variadic function call</a>. The asterisk must immediately precede the closing parenthesis at the end of the function's parameter list. <em>Params</em> must be a variable or sub-expression which returns an array object. Although it isn't valid to use <code>Params*</code> just anywhere, it can be used in an array literal (<code>[A, B, C, ArrayToAppend*]</code>) or indexer (<code>Alpha[Params*]</code>).</p>
+<p>这里表达式中使用的其他符号不完全符合上面定义的任何类别, 或影响表达式其他部分的含义, 如下所述. 这些都以某种方式与 <em>对象</em> 有关. 对于每个构造所做的事情提供一个完整的解释, 需要引入更多的概念, 而这不属于本节的范围.</p>
+<p><code>Alpha.Beta</code> 通常称为 <em>成员访问</em>. <em>Alpha</em> 是一个普通变量, 可以用函数调用或其他一些返回对象的子表达式替换. 当计算时, 对象发送一个请求 &quot;给我属性 <em>Beta</em> 的值&quot;, &quot;在属性 <em>Beta</em> 中存储这个值&quot; 或 &quot;调用名为 <em>Beta</em> 的方法&quot;. 换句话说, <em>Beta</em> 是一个对对象有意义的名字; 它不是一个局部或全局变量.</p>
+<p><code>Alpha.Beta()</code> 是一个 <em>方法调用</em>, 如上所述.</p>
+<p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同).</p>
+<p><code>Alpha[Index]</code> 具有与 <code>Alpha.Beta</code> 类似的功能, 但每个部分都以更加标准的方式进行解释. 也就是说, 在这种情况下, <em>Alpha</em> 和 <em>Index</em> 都是变量, 实际上可以用任何子表达式替换. 此语法通常用于检索<a href="Objects.htm#Usage_Simple_Arrays">数组</a>或<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>中的元素.</p>
+<p><code>new ClassName()</code> 用于实例化一个类, 或者创建一个从另一个对象派生的对象. 虽然这看起来像一个函数调用, 但 <em>ClassName</em> 实际上是一个普通的变量. 同样, <code>new Alpha.Beta()</code> 将创建一个由 <code>Alpha.Beta</code> 返回的对象派生的对象; <em>Beta</em> 既不是函数也不是方法. 如果可选的括号存在, 则可能包含对象的 <a href="Objects.htm#Custom_NewDelete">__New</a> 方法的参数.</p>
+<p id="array-literal"><code>[A, B, C]</code> 创建一个初始内容为 A, B 和 C(本例中的所有变量) 的<a href="Objects.htm#Usage_Simple_Arrays">数组</a>, 其中 A 是元素 1.</p>
+<p id="object-literal"><code>{Key1: Value1, Key2: Value2}</code> 由键值对列表创建<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>. 一个值以后可以通过它关联的键来检索. 在 <code>:</code> 的左侧写入一个简单的单词(由字母数字字符, 下划线和非 ASCII 字符组成) 等同于将该单词括在引号中. 例如, <code>{A: B}</code> 等同于 <code>{&quot;A&quot;: B}</code>. 但是, <code>{(A): B}</code> 使用变量 <code>A</code> 的内容作为键.</p>
+<p><code>MyFunc(Params*)</code> 是一个<a href="Functions.htm#VariadicCall">可变函数调用</a>. 星号必须紧接在函数参数列表末尾的右括号之前. <em>Params</em> 必须是返回数组对象的变量或子表达式.  虽然在任何地方使用 <code>Params*</code> 都是无效的, 但它可以用在数组标识符 (<code>[A, B, C, ArrayToAppend*]</code>) 或索引器 (<code>Alpha[Params*]</code>) 中.</p>
 
-<h3 id="expression-statements">Expression Statements</h3>
-<p>Not all expressions can be used alone on a line. 例如, a line consisting of just <code>21*2</code> or <code>&quot;Some text&quot;</code> wouldn't make any sense. An expression <em>statement</em> is an expression used on its own, typically for its side-effects. Most expressions with side-effects can be used this way, so it is generally not necessary to memorise the details of this section.</p>
-<p>The following types of expressions can be used as statements:</p>
-<p>Assignments, as in <code>x := y</code>, compound assignments such as <code>x += y</code>, and increment/decrement operators such as <code>++x</code> and <code>x--</code>.</p>
-<p class="warning"><strong>Known limitation:</strong> For <code>x++</code> and <code>x--</code>, there currently cannot be a space between the variable name and operator.</p>
-<p>Function calls such as <code>MyFunc(Params)</code>. However, a standalone function call cannot be followed by an open brace <code>{</code> (at the end of the line or on the next line), because it would be confused with a function declaration.</p>
-<p>Method calls such as <code>MyObj.MyMethod()</code>.</p>
-<p>Member access using square brackets, such as <code>MyObj[Index]</code>, which can have side-effects like a function call.</p>
-<p>Expressions starting with the <code>new</code> operator, as in <code>new ClassName</code>, because sometimes a class can be instantiated just for its side-effects.</p>
-<p>Ternary expressions such as <code>x? CallIfTrue() : CallIfFalse()</code>.</p>
-<p class="warning"><strong>Known limitation:</strong> There currently cannot be a space between the variable name and question mark.</p>
-<p>Expressions starting with <code>(</code>. However, there usually must be a matching <code>)</code> on the same line, otherwise the line would be interpreted as the start of a <a href="Scripts.htm#continuation">continuation section</a>.</p>
-<p>Expressions starting with a double-deref, such as <code>%varname% := 1</code>. This is primarily due to implementation complexity.</p>
-<p>Expressions that start with any of those described above (but not those described below) are also allowed, for simplicity. 例如, <code>MyFunc()+1</code> is currently allowed, although the <code>+1</code> has no effect and its result is discarded. Such expressions might become invalid in the future due to enhanced error-checking.</p>
-<p>Method calls which lack parentheses take the remainder of the line as their parameter list. 例如, <code>ExcelApp.Quit</code> or <code>x.y.z "my parameter"</code>. This is technically not an expression, but rather a method call statement.</p>
+<h3 id="expression-statements">表达式语句</h3>
+<p>并不是所有的表达式都可以单独在一行上使用. 例如, 只包含 <code>21*2</code> 或 <code>&quot;Some text&quot;</code> 的行就没有任何意义. 表达式 <em>语句</em> 是一个单独使用的表达式, 通常利用它的附加作用. 大多数带有附加作用的表达式都可以这样使用, 所以一般不需要记住本节的细节.</p>
+<p>以下类型的表达式可以用作语句:</p>
+<p>赋值(如 <code>x := y</code>), 复合赋值(如 <code>x += y</code>) 和增量/减量运算符(如 <code>++x</code> 和 <code>x--</code>).</p>
+<p class="warning"><strong>已知限制:</strong> 对于 <code>x++</code> 和 <code>x--</code>, 目前变量名和运算符之间不能有空格.</p>
+<p>函数调用(如 <code>MyFunc(Params)</code>). 但是, 一个独立的函数调用不能跟随一个左大括号 <code>{</code>(在行尾或下一行), 因为它会与函数声明混淆.</p>
+<p>方法调用(如 <code>MyObj.MyMethod()</code>).</p>
+<p>使用方括号的成员访问(如 <code>MyObj[Index]</code>), 它可能有类似于函数调用的附加作用.</p>
+<p>以 <code>new</code> 运算符开始的表达式(如 <code>new ClassName</code>), 因为有时一个类可以被实例化, 只是为了它的附加作用.</p>
+<p>三元表达式(如 <code>x? CallIfTrue() : CallIfFalse()</code>).</p>
+<p class="warning"><strong>已知限制:</strong> 当前变量名和问号之间不能有空格.</p>
+<p>以 <code>(</code> 开始的表达式. 但是, 通常必须在同一行有一个匹配的 <code>)</code>, 否则该行将被解释为<a href="Scripts.htm#continuation">延续片段</a>的开始.</p>
+<p>以双百分号开始的表达式(如 <code>%varname% := 1</code>). 这主要是由于实现的复杂性.</p>
+<p>为简单起见, 也允许以上面描述的任一表达式(但不包括下面描述的) 开始的表达式. 例如, <code>MyFunc()+1</code> 目前是允许的, 尽管 <code>+1</code> 没有效果, 其结果会被丢弃. 由于错误检查的增强, 这些表达式在将来可能会失效.</p>
+<p>缺少圆括号的方法调用将行其余部分作为参数列表. 例如, <code>ExcelApp.Quit</code> 或 <code>x.y.z "my parameter"</code>. 这不是一个表达式, 而是一个方法调用语句.</p>
 
 <h2 id="control-flow">控制流语句</h2>
-<p class="note">For a general explanation of control flow, 请参阅 <a href="Concepts.htm#control-flow">Control Flow</a>.</p>
-<p><a href="Concepts.htm#statement">Statements</a> are grouped together into a <a href="commands/Block.htm"><em>block</em></a> by enclosing them in braces <code>{}</code>, as in C, JavaScript and similar languages, but usually the braces must appear at the start of a line. Control flow statements can be applied to an entire block or just a single statement.</p>
+<p class="note">有关控制流的一般说明, 请参阅<a href="Concepts.htm#control-flow">控制流</a>.</p>
+<p><a href="Concepts.htm#statement">语句</a> 通过将他们括在大括号(<code>{}</code>) 中(如 C, JavaScript 和类似语言) 组合成 <a href="commands/Block.htm"><em>块</em></a>, 但通常大括号必须出现在行的开头. 控制流语句可以应用于整个块或者只是单一语句.</p>
 <p>The <a href="Concepts.htm#cf-body">body</a> of a control flow statement is always a single <em>group</em> of statements. A block counts as a single group of statements, as does a control flow statement and its body. The following related statements are also grouped with each other, along with their bodies: <code>If</code> with <code>Else</code>; <code>Loop</code>/<code>For</code> with <code>Until</code>; <code>Try</code> with <code>Catch</code> and/or <code>Finally</code>. In other words, when a group of these statements is used as a whole, it does not always need to be enclosed in braces (however, some coding styles always include the braces, for clarity).</p>
 <p>Control flow statements which have a body and therefore must always be followed by a related statement or group of statements: <code>If</code>, <code>Else</code>, <code>Loop</code>, <code>While</code>, <code>For</code>, <code>Try</code>, <code>Catch</code> and <code>Finally</code>.</p>
 <p id="control-flow-list">The following control flow statements exist:</p>
@@ -256,14 +256,14 @@ Loop Parse t, "`n"
 <h2 id="structure-of-a-script">脚本的结构</h2>
 
 <h3 id="auto-execute-section">自动执行段</h3>
-<p>After the script has been loaded, it begins executing at the top line, continuing until a <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, the script's first <a href="Hotkeys.htm">hotkey/hotstring label</a>, or the physical end of the script is encountered (whichever comes first). This top portion of the script is referred to as the <em>auto-execute section</em>, but it is really just a <a href="#subroutines">subroutine</a> which is called after program startup.</p>
-<p class="warning"><strong>Note:</strong> While the script's <em>first</em> hotkey/hotstring label has the same effect as <a href="commands/Return.htm">return</a>, other hotkeys and labels do not.</p>
-<p>The auto-execute section is often used to configure settings which apply to every newly launched <a href="misc/Threads.htm">thread</a>. For details, 请参阅 <a href="Scripts.htm#auto">The Top of the Script</a>.</p>
+<p>脚本加载完成后, 从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, 脚本的第一个<a href="Hotkeys.htm">热键/热字串标签</a>, 或脚本的物理结束(无论哪一种). 这个脚本的顶部被称为 <em>自动执行段(部分)</em>, 但它实际上只是程序启动后调用的一个<a href="#subroutines">子程序</a>.</p>
+<p class="warning"><strong>注意:</strong> 虽然脚本的 <em>第一个</em> 热键/热字串标签有与 <a href="commands/Return.htm">return</a> 相同的效果, 但是其他热键和标签不会.</p>
+<p>自动执行段通常用于配置适用于每个新启动的<a href="misc/Threads.htm">线程</a>的设置. 有关详情, 请参阅<a href="Scripts.htm#auto">脚本顶部</a>.</p>
 
 <h3 id="subroutines">子程序</h3>
-<p>A <em>subroutine</em> (or sub) is a reusable block of code which can be <em>called</em> to perform some task.</p>
-<p>Scripts use subroutines to define what should happen when a particular hotkey is pressed or some other event occurs. Scripts can also call subroutines directly, by using <a href="commands/Gosub.htm">Gosub</a>.</p>
-<p>Any <a href="#labels">label</a> can be used as the starting point of a subroutine. A subroutine has no explicitly marked ending point, but instead ends if and when control is returned to the subroutine's caller by <a href="commands/Return.htm">Return</a> or when the thread is exited.  例如:</p>
+<p><em>子程序</em> 是一个可重复使用的代码块, 可以 <em>调用</em> 它来执行一些任务.</p>
+<p>脚本使用子程序来定义当按下特定热键或发生其他事件时应该发生什么. 脚本也可以通过使用 <a href="commands/Gosub.htm">Gosub</a> 直接调用子程序.</p>
+<p>任何<a href="#labels">标签</a>都可以作为子程序的起点. 子程序没有明确的标记结束点, but instead ends if and when control is returned to the subroutine's caller by <a href="commands/Return.htm">Return</a> or when the thread is exited.  例如:</p>
 <pre>gosub Label1
 
 Label1:
@@ -357,7 +357,7 @@ Loop 3
   <li>A hotkey with a <a href="KeyList.htm">key name</a> written to the right of the double-colon is actually a <a href="misc/Remap.htm"><em>remapping</em></a>, which is shorthand for <a href="misc/Remap.htm#actually">a pair of hotkeys</a>. 例如, <code>a::b</code> creates hotkeys and labels for <code>*a</code> and <code>*a Up</code>, and does not create a label named <code>a</code>.</li>
   <li>A hotstring with text written to the right of the final double-colon is an <em>auto-replace</em> hotstring. Auto-replace hotstrings do not act as labels.</li>
 </ul>
-<p>有关详细信息, 请参阅 <a href="misc/Labels.htm">Labels</a>.</p>
+<p>有关详细信息, 请参阅<a href="misc/Labels.htm">标签</a>.</p>
 
 </body>
 </html>
