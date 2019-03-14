@@ -12,7 +12,7 @@
 
 <h1>RegRead</h1>
 
-<p>Reads a value from the registry.</p>
+<p>从注册表读取值.</p>
 
 <pre class="Syntax">Value := <span class="func">RegRead</span>(<span class="optional">KeyName, ValueName</span>)
 </pre>
@@ -21,57 +21,56 @@
 
   <dt>KeyName</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-    <p>The full name of the registry key.</p>
-    <p>This must start with HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT, or HKEY_CURRENT_CONFIG (or the abbreviations for each of these, such as HKLM). To access a <a href="LoopReg.htm#remote">remote registry</a>, prepend the computer name and a slash, as in this example: \\workstation01\HKEY_LOCAL_MACHINE</p>
-    <p><em>KeyName</em> can be omitted only if a <a href="LoopReg.htm">registry loop</a> is running, in which case it defaults to the key of the current loop item. If the item is a subkey, the full name of that subkey is used by default. If the item is a value, <em>ValueName</em> defaults to the name of that value, but can be overridden.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>注册表键的全名.</p>
+    <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG(或这些的缩写, 如 HKLM) 开始. 要访问<a href="LoopReg.htm#remote">远程注册表</a>, 请在前面加上计算机名和斜杠, 就像在本例中一样: \\workstation01\HKEY_LOCAL_MACHINE</p>
+    <p>只有在<a href="LoopReg.htm">注册表循环</a>时, 才能省略 <em>KeyName</em>, 在这种情况下, 默认为当前循环项目的键. 如果项目是子键, 则默认使用该子键的全名. 如果项目是值, 则 <em>ValueName</em> 默认为该值的名称, 但是可以重写.</p>
   </dd>
 
   <dt>ValueName</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-    <p>The name of the value to retrieve. If blank or omitted, the key's default value will be retrieved (except as noted above). The default value is displayed as "(Default)" by RegEdit. If there is no default value (that is, if RegEdit displays "value not set"), an empty string is returned and ErrorLevel is set to 1.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要检索的值的名称. 如果为空或省略, 将删除键的默认值(除了上面提到的). 默认值在  RegEdit 中显示为 "(默认)". 如果没有默认值(即注册表中显示 "数值未设置"), 则返回空字符串且 ErrorLevel 设置为 1.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#strings">String</a> or <a href="../Concepts.htm#numbers">Integer</a></p>
-<p>This function returns a value of the specified registry key. If the value cannot be retrieved, an empty string is returned and <a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to 1.</p>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
+<p>函数返回指定注册表键的值. 如果不能检索值, 则返回空字符串且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1.</p>
 
 <h2>ErrorLevel</h2>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to 1 if there was a problem (such as a nonexistent key or value) or 0 otherwise.</p>
-<p><a href="../Variables.htm#LastError">A_LastError</a> is set to the result of the operating system's GetLastError() function.</p>
+<p>如果遇到问题(如不存在的键或值), <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0.</p>
+<p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
 <h2>备注</h2>
-<p>Currently only the following value types are supported: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD, and REG_BINARY.</p>
-<p>REG_DWORD values are always expressed as positive decimal numbers. If the number was intended to be negative, convert it to a signed 32-bit integer by using <code>OutputVar := OutputVar &lt;&lt; 32 &gt;&gt; 32</code> or similar.</p>
-<p>When reading a REG_BINARY key the result is a string of hex characters. For example, the REG_BINARY value of 01,a9,ff,77 will be read as the string 01A9FF77.</p>
-<p>When reading a REG_MULTI_SZ key, each of the components ends in a linefeed character (`n). If there are no components, an empty string is returned. See <a href="FileSelect.htm">FileSelect</a> for an example of how to extract the individual components from the return value.</p>
-<p>To retrieve and operate upon multiple registry keys or values, consider using a <a href="LoopReg.htm">registry-loop</a>.</p>
-<p>For details about how to access the registry of a remote computer, see the remarks in <a href="LoopReg.htm#remote">registry-loop</a>.</p>
-<p>To read and write entries from the 64-bit sections of the registry in a 32-bit script or vice versa, use <a href="SetRegView.htm">SetRegView</a>.</p>
+<p>目前只支持以下值类型: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD, and REG_BINARY.</p>
+<p>REG_DWORD 值总是被转换为正十进制数. 如果数字是负数, 则使用 <code>OutputVar := OutputVar &lt;&lt; 32 &gt;&gt; 32</code> 或类似的方法将其转换为有符号的 32 位整数.</p>
+<p>读取 REG_BINARY 键时, 结果是一串十六进制字符. 例如, REG_BINARY 值 01,a9,ff,77 的读取结果为字符串 01A9FF77.</p>
+<p>读取 REG_MULTI_SZ 值的每个部分会以换行符结束(`n). 如果值为空, 则返回空字符串. 请参阅 <a href="FileSelect.htm">FileSelect</a> 中的示例了解如何从返回值中逐个提取单独的部分.</p>
+<p>要检索和操作多个注册表键或值, 请考虑使用<a href="LoopReg.htm">注册表循环</a>.</p>
+<p>有关如何访问远程计算机注册表的详情, 请参阅<a href="LoopReg.htm#remote">注册表循环</a>中的备注.</p>
+<p>从 32 位脚本中读取或写入注册表的 64 位部分中的条目, 反之亦然, 请使用 <a href="SetRegView.htm">SetRegView</a>.</p>
 
 <h2>相关</h2>
-<p><a href="RegDelete.htm">RegDelete</a>, <a href="RegDeleteKey.htm">RegDeleteKey</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">Registry-loop</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
-<h2>Example</h2>
-<pre class="NoIndent"><em>; Example: Retrieve the path of the Program Files directory.
+<p><a href="RegDelete.htm">RegDelete</a>, <a href="RegDeleteKey.htm">RegDeleteKey</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
+<h2>示例</h2>
+<pre class="NoIndent"><em>; 示例: 检索 Program Files(程序文件) 目录的路径.
 
-; The line below ensures that the path of the 64-bit Program Files
-; directory is returned if the OS is 64-bit and the script is not.</em>
+; 此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>
 <a href="SetRegView.htm">SetRegView</a> 64
 
 ProgramFilesDir := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion", "ProgramFilesDir")
 MsgBox "Program files are in: " ProgramFilesDir
 
-<em>; Another way to retrieve the path of the Program Files directory:</em>
+<em>; 另一种返回 Program Files 目录路径的方法:</em>
 ProgramFilesDir := EnvGet(<a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles")
 MsgBox "Program files are in: " ProgramFilesDir
 </pre>
-<pre class="NoIndent"><em>; The following example retrieves the TYPE of a registry value (e.g. REG_SZ or REG_DWORD).</em>
+<pre class="NoIndent"><em>; 下面的例子检索注册表值的类型(例如 REG_SZ 或 REG_DWORD).</em>
 MsgBox RegKeyType(&quot;HKCU&quot;, &quot;Environment&quot;, &quot;TEMP&quot;)
 return
 
-RegKeyType(RootKey, SubKey, ValueName)  <em>; This function returns the type of the specified value.</em>
+RegKeyType(RootKey, SubKey, ValueName)  <em>; 此函数返回指定值的类型.</em>
 {
     Loop Reg, RootKey "\" SubKey
         if (A_LoopRegName = ValueName)
