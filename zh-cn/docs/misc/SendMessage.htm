@@ -23,7 +23,7 @@
 <pre>WinMenuSelectItem, New Message,, &amp;Insert, &amp;Picture...</pre>
 <p>但 <a href="../commands/PostMessage.htm">PostMessage</a> 能实现这个操作:</p>
 <pre>PostMessage, 0x111, 40239, 0, , New Message</pre>
-<p>太神奇了!但那个是什么? 0x111 是 <a href="SendMessageList.htm">wm_command 消息</a> 的十六进制代码, 而 40239 是这个特殊窗口理解为选择 'Insert Picture' 菜单项的代码. 现在让我告诉您如何找到类似 40239 这样的值:</p>
+<p>太神奇了!但那个是什么? 0x111 是 <a href="SendMessageList.htm">wm_command 消息</a>的十六进制代码, 而 40239 是这个特殊窗口理解为选择 'Insert Picture' 菜单项的代码. 现在让我告诉您如何找到类似 40239 这样的值:</p>
 <ol>
   <li>启动 Winspector Spy, 打开 "New Message" 窗口.</li>
   <li>拖动 Winspector Spy 窗口中的十字线到 "New Message" 窗口的标题栏(没有被 Winspector Spy 覆盖的部分).</li>
@@ -41,30 +41,49 @@
 <pre>PostMessage, 0x111, 639,,, Untitled - Paint</pre>
 <p><a href="../commands/PostMessage.htm">PostMessage</a> 的另一个好处是窗口可以在后台; 与之相比, 发送鼠标点击要求目标窗口必须是活动的.</p>
 <p>这里有其他的例子. 请注意: 我使用的是 WinXP Pro(SP1) ... 如果您使用不同的操作系统, 那么您的参数可能要改变(仅适用于像写字板和记事本这类 windows 自带的应用程序; 其他的程序应该不用改变):</p>
-<pre><em>;设置写字板字体为青色</em>
+<pre><em>; 设置写字板字体为青色</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32788, 0, , Document - WordPad</pre>
-<pre><em>;打开记事本的关于对话框</em>
+<pre><em>; 打开记事本的关于对话框</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65, 0, , Untitled - Notepad</pre>
-<pre><em>;切换记事本的自动换行属性</em>
+<pre><em>; 切换记事本的自动换行属性</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32, 0, , Untitled - Notepad</pre>
-<pre><em>;在 Windows Media Player 中播放/暂停</em>
+<pre><em>; 在 Windows Media Player 中播放/暂停</em>
 <a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32808, 0, , Windows Media Player</pre>
-<pre><em>;挂起正在运行的 AHK 脚本的热键</em>
+<pre><em>; 挂起正在运行的 AHK 脚本的热键</em>
 DetectHiddenWindows, On
 SetTitleMatchMode, 2
-<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65305,,, MyScript.ahk - AutoHotkey <em>; 和挂起操作不同, 必须使用 65306 来暂停.</em></pre>
+<em>; 使用 65306 来 Pause, 而 65303 来 Reload, 从而代替下面的 Suspend. (请参阅 <a href="../FAQ.htm#close">FAQ</a>)</em>
+<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65305,,, MyScript.ahk - AutoHotkey
+</pre>
+<pre><em>; 按下 CapsLock 和 Numpad2 重新加载所有 AutoHotkey 脚本</em>
+CapsLock & Numpad2::
+ReloadAllAhkScripts() {
+    DetectHiddenWindows, On
+    SetTitleMatchMode, 2
+    WinGet, allAhkExe, List, ahk_class AutoHotkey
+    Loop, % allAhkExe {
+        hwnd := allAhkExe%A_Index%
+        if (hwnd = A_ScriptHwnd)  ; 重新加载时忽略当前窗口
+        {
+            continue
+        }
+        PostMessage, 0x111, 65303,,, % "ahk_id" . hwnd
+    }
+    Reload
+}
+</pre>
 <p>上面讲的是 PostMessage. <a href="../commands/PostMessage.htm">SendMessage</a> 的工作方式相同, 不过还会等待返回值, 这个值可用于一些情况中, 例如获取 Winamp 中当前正在播放的曲目(请参阅<a href="Winamp.htm">自动化 Winamp</a> 的例子).</p>
 <p>这里是一些注意事项:</p>
 <ul>
   <li>上文也提到了操作系统是 XP 且需要注意消息值随着不同的操作系统而改变. 如果您发现一个消息在您的系统上有效(对于一个软件的某个版本), 那么在其他系统上它对于这个软件的相同版本仍然是有效的. 此外, 大多数应用程序甚至会在它们的不同版本中使用相同的消息值(例如 Windows Media Player 和 Winamp).</li>
   <li>如果您已经在 Winspector Spy 中设置了过滤器来只显示 wm_command 消息, 却仍然得到大量的消息时, 请右键点击那些不需要的消息并选择隐藏(消息名)... 这些消息一般是不是由于您和目标软件交互所产生的消息.</li>
   <li>在 Winspector Spy 中向右的箭头显示消息值, 而模糊的左箭头显示返回值. 返回值 0(零) 默认情况下可以安全地认为 '没有错误'(与 SendMessage 一起使用, 返回值会存储在 <a href="ErrorLevel.htm">%ErrorLevel%</a>).</li>
-  <li>要传递消息到匹配部分标题的窗口, 请添加此行到脚本:<br><code>SetTitleMatchMode, 2</code></li>
-  <li>要传递消息到隐藏窗口, 请添加此行到脚本:<br><code>DetectHiddenWindows, On</code></li>
+  <li>要传递消息到匹配部分标题的窗口, 请添加此行到脚本: <br><code>SetTitleMatchMode, 2</code></li>
+  <li>要传递消息到隐藏窗口, 请添加此行到脚本: <br><code>DetectHiddenWindows, On</code></li>
 </ul>
 <p>注: 此技术对某些应用程序无效. 我对 VB 和 Delphi 编写的应用程序只能侥幸. 此技术最适用于 C, C++ 编写的应用程序. 对于 VB 应用程序相同命令的 'LParam' 参数在传递时总是变化的. 对于 Delphi 应用程序... 一些程序的 GUI 甚至不使用 wm_command. 它或许使用鼠标位置和点击吧.</p>
 <p>去探索吧.... 并且记得在 AutoHotkey 论坛分享您的经验. 欢迎反馈!</p>
 <p>这个指南并不是为新手们准备的(没有冒犯的意思), 因为这些命令被认为是高级功能. 所以如果读完本文, 您还是摸不着头脑, 请忘了它吧.</p>
-<p>-Rajat</p>
+<p>Rajat</p>
 </body>
 </html>

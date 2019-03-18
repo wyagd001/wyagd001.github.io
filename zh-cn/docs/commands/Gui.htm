@@ -1,9 +1,9 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
 <title>GUI | AutoHotkey</title>
 <meta name="description" content="The Gui command creates and manages windows and controls. Such windows can be used as data entry forms or custom user interfaces." />
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
 <script src="../static/content.js" type="text/javascript"></script>
@@ -255,7 +255,7 @@ Gui, MyGui:+Owner  <em>; 让 <i>MyGui</i> 成为<a href="Menu.htm#MainWindow">�
 <p id="Theme"><strong>Theme</strong>: 指定 <code>-Theme</code>, 可以让后续创建的所有控件在 Windows XP 以及更高版本中使用经典主题外观. 之后要创建其他使用当前主题的控件时, 请使用 <code>+Theme</code> 把设置切换回来.</p>
 <p class="note"><strong>注意</strong>: 此选项在比 Windows XP 早的系统上没有效果, 如果 XP 中当前使用经典主题时也没有效果.</p>
 <p>最后, 对于单独的控件还可以在其创建的选项中指定 <code>+Theme</code> 或 <code>-Theme</code> 来改变此设置.</p>
-<p><strong>ToolWindow</strong>: 让窗口显示细标题栏, 同时去除任务栏按钮.</p>
+<p><strong>ToolWindow</strong>: 让窗口显示细标题栏, 同时去除任务栏按钮. 无论是否存在 <a href="../misc/Styles.htm#WS_MAXIMIZEBOX">WS_MAXIMIZEBOX</a> 和 <a href="../misc/Styles.htm#WS_MINIMIZEBOX">WS_MINIMIZEBOX</a> 样式, 这总是隐藏了最大化和最小化按钮.</p>
 <p><strong>(未命名样式)</strong>: 在十进制或十六进制的<a href="../misc/Styles.htm">样式编号</a>前加上加号或减号表示添加或删除此样式.</p>
 <p><strong>(未命名扩展样式)</strong>: 在字母 E 和十进制或十六进制的扩展样式编号前加上加号或减号表示添加或删除此扩展样式. 例如, <code>+E0x40000</code> 表示添加 WS_EX_APPWINDOW 样式, 此样式让窗口显示任务栏按钮. 尽管这里没有列出其他的扩展样式编号(因为它们极少使用), 不过可以通过在 <a href="http://www.microsoft.com">www.microsoft.com</a> 中搜索 WS_EX_APPWINDOW 找到它们.</p>
 
@@ -375,7 +375,8 @@ gui, show</pre>
 <p><span class="ver">[v1.1.20+]:</span> 如果事件处理标签不存在, 那么相同名称的函数将替代标签响应. 函数可选择接收 GUI 的 <a href="#GuiHwndOutputVar">HWND</a> 作为第一个参数. 一些事件还有更多的参数.</p>
 <p>对于非第一个窗口<a href="#MultiWin">(多窗口的情况) </a>, 窗口的名称或序号(如果有) 会被作为前面提到的特殊标签的前缀; 例如, 2GuiEscape 和 2GuiClose 将被作为第二窗口的默认标签, 当 <em>MyGui</em>GuiEscape 和 <em>MyGui</em>GuiClose 会作为 <em>MyGui</em> 的默认标签. 要自定义一个前缀, 请用 <a href="#PlusLabel">Gui +Label</a>.</p>
 
-<p id="GuiClose"><strong>GuiClose</strong>: 使用下列其中一种方法关闭窗口时自动运行此子程序: 点击标题栏上的关闭按钮, 从标题栏中的系统菜单中选择 "关闭" 或使用 <a href="WinClose.htm">WinClose</a> 关闭. 如果此标签不存在, 则关闭窗口只是简单地隐藏窗口, 与 <a href="#Cancel">Gui Cancel</a> 的效果一样. 在 GuiClose 中一个最常用的动作是 <a href="ExitApp.htm">ExitApp</a>; 例如:</p>
+<h3 id="GuiClose">GuiClose</h3>
+<p>使用下列其中一种方法关闭窗口时自动运行此子程序: 点击标题栏上的关闭按钮, 从标题栏中的系统菜单中选择 "关闭" 或使用 <a href="WinClose.htm">WinClose</a> 关闭. 如果此标签不存在, 则关闭窗口只是简单地隐藏窗口, 与 <a href="#Cancel">Gui Cancel</a> 的效果一样. 在 GuiClose 中一个最常用的动作是 <a href="ExitApp.htm">ExitApp</a>; 例如:</p>
 <pre>GuiClose:
 ExitApp</pre>
 <p><span class="ver">[v1.1.20+]:</span> 如果 GuiClose 是一个函数, GUI 默认将隐藏. 函数可以通过返回一个非零整数来防止这种情况, 如下面的例子:</p>
@@ -385,10 +386,12 @@ ExitApp</pre>
         return true  <em>; true = 1</em>
 }</pre>
 
-<p id="GuiEscape"><strong>GuiEscape</strong>: 用户在 GUI 窗口活动时按下 <kbd>Escape</kbd> 后自动运行此子程序. 如果此标签不存在, 则按下 <kbd>Escape</kbd> 没有效果.
+<h3 id="GuiEscape">GuiEscape</h3>
+<p>用户在 GUI 窗口活动时按下 <kbd>Escape</kbd> 后自动运行此子程序. 如果此标签不存在, 则按下 <kbd>Escape</kbd> 没有效果.
 已知限制: 如果窗口中首个控件是禁用的(可能与控件类型有关), 则按下  <kbd>Escape</kbd> 时 GuiEscape 子程序不会运行. 产生这样的效果可能是受其他一些事件的影响.</p>
 
-<p id="GuiSize"><strong>GuiSize</strong>: 对窗口调整大小, 最小化, 最大化或还原时自动运行此子程序. 内置变量 <a href="../Variables.htm#GuiWidth">A_GuiWidth</a> 和 <a href="../Variables.htm#GuiWidth">A_GuiHeight</a> 分别包含了窗口工作区调整后的宽度和高度, 窗口工作区不包括标题栏, 菜单栏和边框. 此外, <a href="../Variables.htm#EventInfo">A_EventInfo</a> 和 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 将同时包含下列数字的其中一个:</p>
+<h3 id="GuiSize">GuiSize</h3>
+<p>对窗口调整大小, 最小化, 最大化或还原时自动运行此子程序. 内置变量 <a href="../Variables.htm#GuiWidth">A_GuiWidth</a> 和 <a href="../Variables.htm#GuiWidth">A_GuiHeight</a> 分别包含了窗口工作区调整后的宽度和高度, 窗口工作区不包括标题栏, 菜单栏和边框. 此外, <a href="../Variables.htm#EventInfo">A_EventInfo</a> 和 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 将同时包含下列数字的其中一个:</p>
 <p>0: 窗口被还原, 或正常的通过拖拉窗口边缘调节大小时.<br>
   1: 窗口被最小化了.<br>
   2: 窗口被最大化了.</p>
@@ -400,7 +403,8 @@ ExitApp</pre>
 <p><span class="ver">[v1.1.20+]:</span> 如果 GuiSize 为函数, 它的参数应为:</p>
 <pre class="Syntax"><span class="func">GuiSize</span>(GuiHwnd, EventInfo, Width, Height)</pre>
 
-<p id="GuiContextMenu"><strong>GuiContextMenu</strong>: 当用户在窗口上除标题栏和菜单栏外的其他地方点击右键时自动运行此子程序. 当用户按下 <kbd>Menu</kbd> 键或 <kbd>Shift</kbd>+<kbd>F10</kbd> 时也会运行. 和其他多数 GUI 标签不同, GuiContextMenu 可以含有多个并发<a href="../misc/Threads.htm">线程</a>. 在 GuiContextMenu 子程序中可以引用下列内置变量:</p>
+<h3 id="GuiContextMenu">GuiContextMenu</h3>
+<p>当用户在窗口上除标题栏和菜单栏外的其他地方点击右键时自动运行此子程序. 当用户按下 <kbd>Menu</kbd> 键或 <kbd>Shift</kbd>+<kbd>F10</kbd> 时也会运行. 和其他多数 GUI 标签不同, GuiContextMenu 可以含有多个并发<a href="../misc/Threads.htm">线程</a>. 在 GuiContextMenu 子程序中可以引用下列内置变量:</p>
 <ol>
   <li><a href="../Variables.htm#GuiControl">A_GuiControl</a>, 它包含了接收事件的控件的<a href="../Variables.htm#GuiControl">文本或变量名</a>(如果没有则为空).</li>
   <li><a href="../Variables.htm#EventInfo">A_EventInfo</a>: 当右键点击 ListBox, ListView 或 TreeView 时(可以由上面的 A_GuiControl 确定), A_EventInfo 包含了右键点击的控件项目:<br>
@@ -414,7 +418,8 @@ ExitApp</pre>
 <pre class="Syntax"><span class="func">GuiContextMenu</span>(GuiHwnd, CtrlHwnd, EventInfo, IsRightClick, X, Y)</pre>
 <p><em>CtrlHwnd</em> 如果控件没有接收到事件则为空. <em>IsRightClick</em> 在 A_GuiEvent 为 RightClick 时返回 True.</p>
 
-<p id="GuiDropFiles"><strong>GuiDropFiles</strong>: 拖放文件/文件夹到窗口上时运行此子程序(如果此子程序已经在运行中, 则忽略拖放事件). 在 GuiDropFiles 中可以引用下列内置变量:</p>
+<h3 id="GuiDropFiles">GuiDropFiles</h3>
+<p>拖放文件/文件夹到窗口上时运行此子程序(如果此子程序已经在运行中, 则忽略拖放事件). 在 GuiDropFiles 中可以引用下列内置变量:</p>
 <ol>
   <li><a href="../Variables.htm#GuiControl">A_GuiControl</a>, 它包含了接收到释放文件的控件的<a href="../Variables.htm#GuiControl">文本或变量名</a>(如果没有则为空).</li>
   <li><a href="../Variables.htm#EventInfo">A_EventInfo</a> 和 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, 包含了释放文件的数目.</li>
@@ -450,7 +455,8 @@ Loop, Parse, FileList, `n
 }
 </pre>
 
-<p><strong>检测和响应其他事件</strong>: 其他 GUI 事件可以使用 <a href="OnMessage.htm">OnMessage()</a> 来检测和响应. 例如, 当用户把鼠标移动到窗口中特殊的控件时脚本可以通过工具提示显示相关帮助. 请参阅演示 <a href="#ExToolTip">GUI 工具提示示例</a>.</p>
+<h3 id="OtherEvents">其他事件</h3>
+<p>其他 GUI 事件可以使用 <a href="OnMessage.htm">OnMessage()</a> 来检测和响应. 例如, 当用户把鼠标移动到窗口中特殊的控件时脚本可以通过工具提示显示相关帮助. 请参阅演示 <a href="#ExToolTip">GUI 工具提示示例</a>.</p>
 
 <h2 id="MultiWin">创建多个 GUI 窗口</h2>
 <p>要对非<a href="#DefaultWin">默认</a>窗口进行操作, 需要在子命令前加上窗口名称或编号(在 <span class="ver">[in v1.1.03+]</span>, 还可以使用 <a href="#GuiHwndOutputVar">HWND</a>) 和一个冒号, 例如:</p>

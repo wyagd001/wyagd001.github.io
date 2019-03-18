@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>FileOpen() | AutoHotkey</title>
-<meta name="description" content="The FileOpen function opens a file." />
+<meta name="description" content="The FileOpen function opens a file to read specific content from it and/or to write new content into it." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
 
 <h1>FileOpen <span class="ver">[AHK_L 42+]</span></h1>
 
-<p>打开文件.</p>
+<p>打开文件, 从其中读取特定内容和/或将新内容写入其中.</p>
 <pre class="Syntax">file := <span class="func">FileOpen</span>(Filename, Flags <span class="optional">, Encoding</span>)</pre>
 
 <h2>参数</h2>
@@ -36,30 +36,109 @@ FileOpen("**", "w")  <em>; 标准错误(stderr)</em></pre>
   <dd><p>如果文件没有 UTF-8 或 UTF-16 <a href="http://en.wikipedia.org/wiki/Byte_order_mark">字节顺序标记</a>, 或者使用了 <code>h</code>(handle) 标志, 读写文件时使用的代码页(带字节顺序标记的文件 AutoHotkey 自动识别, 指定的 <i>Encoding</i> 无效). 如果省略本参数, 则使用 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a> 的当前值.</p></dd>
 
 </dl>
+
 <h2>Flags</h2>
+
 <h3>访问模式(互斥的)</h3>
 <table class="info">
-  <tr><th style="width:4em">Flag</th><th style="width:4em">数字</th><th style="text-align:left">描述</th></tr>
-  <tr><td class="fopt">r</td><td class="fnum">0</td><td><i>读取:</i> 当文件不存在时失败.</td></tr>
-  <tr><td class="fopt">w</td><td class="fnum">1</td><td><i>写入:</i> 创建新文件, <b style="color:red">若文件已存在则覆盖它们</b>.</td></tr>
-  <tr><td class="fopt">a</td><td class="fnum">2</td><td><i>追加:</i> 如果文件不存在则创建新文件, 否则移动文件指针到文件末尾.</td></tr>
-  <tr><td class="fopt">rw</td><td class="fnum">3</td><td><i>读取/写入:</i> 当文件不存在时创建新文件.</td></tr>
-  <tr><td class="fopt">h</td><td>&nbsp;</td><td>表示 <i>Filename</i> 是包装在对象中的文件句柄. 忽略共享模式标志. 当文件对象销毁时, 文件句柄 <b>不会</b> 自动关闭并且调用 <a href="../objects/File.htm#Close">Close</a> 没有效果. 注意当 <i>Filename</i> 是非搜寻设备(例如管道或通信设备) 的句柄时不应该使用 <a href="../objects/File.htm#Seek">Seek</a>, <a href="../objects/File.htm#Tell">Tell</a> 和 <a href="../objects/File.htm#Length">Length</a>.</td></tr>
+  <tr>
+    <th style="width:4em">Flag</th>
+    <th style="width:4em">十进制</th>
+    <th style="width:4em">十六进制</th>
+    <th style="text-align:left">描述</th>
+  </tr>
+  <tr>
+    <td class="fopt">r</td>
+    <td class="fnum">0</td>
+    <td class="fnum">0x0</td>
+    <td><i>读取:</i> 当文件不存在时失败.</td>
+  </tr>
+  <tr>
+    <td class="fopt">w</td>
+    <td class="fnum">1</td>
+    <td class="fnum">0x1</td>
+    <td><i>写入:</i> 创建新文件, <b style="color:red">若文件已存在则覆盖它们</b>.</td>
+  </tr>
+  <tr>
+    <td class="fopt">a</td>
+    <td class="fnum">2</td>
+    <td class="fnum">0x2</td>
+    <td><i>追加:</i> 如果文件不存在则创建新文件, 否则移动文件指针到文件末尾.</td>
+  </tr>
+  <tr>
+    <td class="fopt">rw</td>
+    <td class="fnum">3</td>
+    <td class="fnum">0x3</td>
+    <td><i>读取/写入:</i> 当文件不存在时创建新文件.</td>
+  </tr>
+  <tr>
+    <td class="fopt">h</td>
+    <td>&nbsp;</td>
+    <td class="fnum">&nbsp;</td>
+    <td>表示 <i>Filename</i> 是包装在对象中的文件句柄. 忽略共享模式标志. 当文件对象销毁时, 文件句柄 <b>不会</b> 自动关闭并且调用 <a href="../objects/File.htm#Close">Close</a> 没有效果. 注意当 <i>Filename</i> 是非搜寻设备(例如管道或通信设备) 的句柄时不应该使用 <a href="../objects/File.htm#Seek">Seek</a>, <a href="../objects/File.htm#Tell">Tell</a> 和 <a href="../objects/File.htm#Length">Length</a>.</td>
+  </tr>
 </table>
+
 <h3>共享模式标志</h3>
 <table class="info">
-  <tr><th>Flag</th><th>数字</th><th style="text-align:left">描述</th></tr>
-  <tr><td class="fopt" style="white-space:nowrap">-rwd</td><td>&nbsp;</td><td>为读取, 写入和/或删除访问进行文件锁定. 可以使用 <code>r</code>, <code>w</code> 和 <code>d</code> 的任意组合. 指定 <code>-</code> 相当于指定 <code>-rwd</code>. 如果完全省略, 默认为共享所有访问.</td></tr>
-  <tr><td>&nbsp;</td><td class="fnum">0</td><td>如果 <i>Flags</i> 是数值的, 缺少共享模式标志会让文件被锁定.</td></tr>
-  <tr><td>&nbsp;</td><td class="fnum">0x100</td><td>共享 <i>读取</i> 访问.</td></tr>
-  <tr><td>&nbsp;</td><td class="fnum">0x200</td><td>共享 <i>写入</i> 访问.</td></tr>
-  <tr><td>&nbsp;</td><td class="fnum">0x400</td><td>共享 <i>删除</i> 访问.</td></tr>
+  <tr>
+    <th>Flag</th>
+    <th style="width:4em">十进制</th>
+    <th style="width:4em">十六进制</th>
+    <th style="text-align:left">描述</th>
+  </tr>
+  <tr>
+    <td class="fopt" style="white-space:nowrap">-rwd</td>
+    <td>&nbsp;</td>
+    <td class="fnum">&nbsp;</td>
+    <td>为读取, 写入和/或删除访问进行文件锁定. 可以使用 <code>r</code>, <code>w</code> 和 <code>d</code> 的任意组合. 指定 <code>-</code> 相当于指定 <code>-rwd</code>. 如果完全省略, 默认为共享所有访问.</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td class="fnum">0</td>
+    <td class="fnum">0x0</td>
+    <td>如果 <i>Flags</i> 是数值的, 缺少共享模式标志会让文件被锁定.</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td class="fnum">256</td>
+    <td class="fnum">0x100</td>
+    <td>共享 <i>读取</i> 访问.</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td class="fnum">512</td>
+    <td class="fnum">0x200</td>
+    <td>共享 <i>写入</i> 访问.</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td class="fnum">1024</td>
+    <td class="fnum">0x400</td>
+    <td>共享 <i>删除</i> 访问.</td>
+  </tr>
 </table>
+
 <h3>行结束符(EOL) 选项</h3>
 <table class="info">
-  <tr><th>Flag</th><th>数字</th><th style="text-align:left">描述</th></tr>
-  <tr><td class="fopt"><code>`n</code></td><td class="fnum">4</td><td>读取时把 <code>`r`n</code> 替换为 <code>`n</code> 而写入时把 <code>`n</code> 替换为 <code>`r`n</code>.</td></tr>
-  <tr><td class="fopt"><code>`r</code></td><td class="fnum">8</td><td>读取时把单独的 <code>`r</code> 替换为 <code>`n</code>.</td></tr>
+  <tr>
+    <th>Flag</th>
+    <th style="width:4em">十进制</th>
+    <th style="width:4em">十六进制</th>
+    <th style="text-align:left">描述</th>
+  </tr>
+  <tr>
+    <td class="fopt"><code>`n</code></td>
+    <td class="fnum">4</td>
+    <td class="fnum">0x4</td>
+    <td>读取时把 <code>`r`n</code> 替换为 <code>`n</code> 而写入时把 <code>`n</code> 替换为 <code>`r`n</code>.</td>
+  </tr>
+  <tr>
+    <td class="fopt"><code>`r</code></td>
+    <td class="fnum">8</td>
+    <td class="fnum">0x8</td>
+    <td>读取时把单独的 <code>`r</code> 替换为 <code>`n</code>.</td>
+  </tr>
 </table>
 
 <h2>返回值</h2>
@@ -75,10 +154,10 @@ FileOpen("**", "w")  <em>; 标准错误(stderr)</em></pre>
 <p><a href="FileEncoding.htm">FileEncoding</a>, <a href="../objects/File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent" id="writeread"><em>; 示例: 这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存.
-; 它提供了与<a href="DllCall.htm#file">此 DllCall 示例</a>同样的功能.</em>
 
-FileSelectFile, FileName, S16,, Create a new file:
+<h3 id="ex1">示例 #1</h3>
+<p>这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存(它提供了与这个 <a href="DllCall.htm#file">DllCall 示例</a>相同的功能):</p>
+<pre class="NoIndent" id="writeread">FileSelectFile, FileName, S16,, Create a new file:
 if (FileName = "")
 	return
 file := FileOpen(FileName, "w")
@@ -103,13 +182,15 @@ TestString := file.Read(CharsToRead)
 file.Close()
 MsgBox The following string was read from the file: %TestString%</pre>
 
-<pre class="NoIndent"><em>; 以只读模式打开脚本并读取它的首行:</em>
-file := FileOpen(A_ScriptFullPath, "r")
-MsgBox % file.ReadLine()
+<h3 id="ex2">示例 #2</h3>
+<p>以只读模式打开脚本并读取它的首行:</p>
+<pre class="NoIndent">file := FileOpen(A_ScriptFullPath, "r")
+MsgBox % file.ReadLine()</pre>
 
-<em>; 打开控制台窗口以进行此次演示:</em>
+<h3 id="ex3">示例 #3</h3>
+<p>演示标准 input/output 流的用法:</p>
+<pre class="NoIndent"><em>; 打开控制台窗口以进行此次演示.</em>
 DllCall("AllocConsole")
-<em>; 在换行符转换模式中打开应用程序的 stdin/stdout 句柄.</em>
 stdin  := FileOpen("*", "r `n")  <em>; 需要 <span class="ver">[v1.1.17+]</span></em>
 stdout := FileOpen("*", "w `n")
 <em>; 对于较旧的版本:
