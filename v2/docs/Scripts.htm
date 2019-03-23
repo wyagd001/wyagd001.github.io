@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>Scripts - 定义 &amp; 使用 | AutoHotkey v2</title>
+<title>脚本 - 定义 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="Learn details about scripts in general, splitting long lines, compiling a script, passing command line parameters, codepage and debugging." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<h1>Scripts</h1>
+<h1>脚本</h1>
 <p>相关话题:</p>
 <ul>
   <li><a href="Program.htm">程序的使用</a>: 在一般情况下, 如何使用 AutoHotkey.</li>
@@ -48,25 +48,25 @@
 <p>长行可以分成一些小行, 以提高可读性和可维护性. 这样不会降低脚本的执行速度, 因为在脚本启动时这些短行会在内存中合并起来.</p>
 <p>有三种方法, 通常可以组合使用:</p>
 <ul>
-  <li><a href="#continuation-line">延续前缀</a>: 以表达式运算符开始一行, 将其连接到前一行.</li>
-  <li><a href="#continuation-expr">延续闭环</a>: 在大多数情况下, 括在 (), [] 或 {} 中的子表达式可以自动跨越多行.</li>
+  <li><a href="#continuation-line">延续前缀</a>(延续行): 以表达式运算符开始一行, 将其连接到前一行.</li>
+  <li><a href="#continuation-expr">延续闭环</a>(延续表达式): 在大多数情况下, 括在 (), [] 或 {} 中的子表达式可以自动跨越多行.</li>
   <li><a href="#continuation-section">延续片段</a>: 标记一组要合并在一起的行, 并添加其他选项, 例如在行之间插入什么文本(或代码).</li>
 </ul>
-<p id="continuation-line"><strong>Continuation prefix</strong>: A line that starts with a comma or any other <a href="Variables.htm#Operators">expression operator</a> (except ++ and --) is automatically merged with the line directly above it. In the following example, the second line is appended to the first because it begins with a comma:</p>
-<pre>FileAppend "This is the text to append.`n"   <em>; A comment is allowed here.</em>
-    <strong>,</strong> A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; Comment.</em></pre>
-<p>Similarly, the following lines would get merged into a single line because the last two start with &quot;and&quot; or &quot;or&quot;:</p>
-<pre>if (Color = &quot;Red&quot; or Color = &quot;Green&quot;  or Color = &quot;Blue&quot;   <em>; Comment.</em>
-    <strong>or</strong> Color = &quot;Black&quot; or Color = &quot;Gray&quot; or Color = &quot;White&quot;)   <em>; Comment.</em>
-    <strong>and</strong> ProductIsAvailableInColor(Product, Color)   <em>; Comment.</em></pre>
-<p>The <a href="Variables.htm#ternary">ternary operator</a> is also a good candidate:</p>
+<p id="continuation-line"><strong>延续前缀</strong>: 以逗号或任何其他<a href="Variables.htm#Operators">表达式运算符</a>(除了 ++ 和 --) 开头的行会自动与其正上方的行合并. 在以下示例中, 第二行被附加到第一行, 因为它以逗号开头:</p>
+<pre>FileAppend "This is the text to append.`n"   <em>; 这里可以使用注释.</em>
+    <strong>,</strong> A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; 注释.</em></pre>
+<p>同样地, 下列几行也会合并成单行, 因为最后两行以 &quot;and&quot; 或 &quot;or&quot; 开始:</p>
+<pre>if (Color = &quot;Red&quot; or Color = &quot;Green&quot;  or Color = &quot;Blue&quot;   <em>; 注释.</em>
+    <strong>or</strong> Color = &quot;Black&quot; or Color = &quot;Gray&quot; or Color = &quot;White&quot;)   <em>; 注释.</em>
+    <strong>and</strong> ProductIsAvailableInColor(Product, Color)   <em>; 注释.</em></pre>
+<p><a href="Variables.htm#ternary">三元运算符</a>也是个不错的选择::</p>
 <pre>ProductIsAvailable := (Color = &quot;Red&quot;)
-    <strong>?</strong> false  <em>; We don't have any red products, so don't bother calling the function.</em>
+    <strong>?</strong> false  <em>; 我们没有任何红色产品, 所以不用那么麻烦去调用函数.</em>
     <strong>:</strong> ProductIsAvailableInColor(Product, Color)</pre>
-<p>Although the indentation used in the examples above is optional, it might improve clarity by indicating which lines belong to ones above them. Also, it is not necessary to include extra spaces for lines starting with the words &quot;AND&quot; and &quot;OR&quot;; the program does this automatically. Finally, blank lines or <a href="Language.htm#comments">comments</a> may be added between or at the end of any of the lines in the above examples.</p>
-<p id="continuation-expr"><strong>Continuation by enclosure</strong>: If a line contains an expression or function/property definition with an unclosed <code>(</code>/<code>[</code>/<code>{</code>, it is joined with subsequent lines until the number of opening and closing symbols balances out. In other words, a sub-expression enclosed in parentheses, brackets or braces can automatically span multiple lines in most cases. 例如:</p>
+<p>虽然上面示例中使用的缩进是可选的, 但它可以显示出哪些行属于上一行从而提高代码清晰度. 此外, 以 &quot;AND&quot; 和 &quot;OR&quot; 开头的行没有必要包含额外的空格; 程序会自动处理这些. 最后, 可以在上述示例中的任何行的末尾或行与行之间添加空行或<a href="Language.htm#comments">注释</a>.</p>
+<p id="continuation-expr"><strong>延续闭环</strong>: 如果一行中包含一个带有未闭合 <code>(</code>/<code>[</code>/<code>{</code>  的表达式或函数/属性定义, 那么它将与后续的行连接, 直到左, 右括号的数量平衡为止. 换句话说, 在大多数情况下, 用小括号(圆括号), 中括号(方括号), 大括号 (花括号) 括起来的子表达式可以自动跨越多行. 例如:</p>
 <pre>
-myarray := [  <em>; The opening bracket must be on this line.</em>
+myarray := [  <em>; 左中括号必须在这行中.</em>
   "item 1",
   "item 2",
 ]
@@ -76,210 +76,210 @@ MsgBox(
     "ok iconi"
     )
 </pre>
-<p>Continuation expressions may contain both types of <a href="Language.htm#comments">comments</a>.</p>
-<p>Continuation expressions may contain normal <a href="#continuation-section">continuation sections</a>. Therefore, as with any line containing an expression, if a line begins with a non-escaped open parenthesis (<code>(</code>), it is considered to be the start of a continuation section unless there is a closing parenthesis (<code>)</code>) on the same line.</p>
-<p>Quoted strings cannot span multiple lines using this method alone. However, 请参阅 above.</p>
-<p>Brace (<code>{</code>) at the end of a line does not cause continuation if the program determines that it should be interpreted as the beginning of a block (<a href="commands/Block.htm#otb">OTB style</a>) rather than the start of an <a href="Language.htm#object-literal">object literal</a>. Specifically (in descending order of precedence):</p>
+<p>延续表达式可以包含两种类型的<a href="Language.htm#comments">注释</a>.</p>
+<p>延续表达式可以包含普通的<a href="#continuation-section">延续片段</a>. 因此, 与任何包含表达式的行一样, 如果一行以非转义的左括号(<code>(</code>) 开头, 除非在同一行上有一个右括号(<code>)</code>), 否则它将被视为延续片段的开头.</p>
+<p>引号括起来的字符串不能单独使用此方法跨越多行. 然而, 请参阅上面的内容.</p>
+<p>如果程序判定行末尾的大括号(<code>{</code>) 应该被解释为块(<a href="commands/Block.htm#otb">OTB 样式</a>) 的开头而不是<a href="Language.htm#object-literal">对象标识符</a>的开头, 则行末尾的大括号不会导致延续. 具体来说(按优先级降序排列):</p>
 <ul>
-  <li>A brace is never interpreted as the beginning of a block if it is preceded by an unclosed <code>(</code>/<code>[</code>/<code>{</code>, since that would produce an invalid expression. 例如, the brace in <code>If ({</code> is the start of an object literal.</li>
-  <li>An object literal cannot legally follow <code>)</code> or <code>]</code>, so if the brace follows either of those symbols (excluding whitespace), it is interpreted as the beginning of a block (such as for a function or property definition).</li>
-  <li>For <a href="Language.htm#control-flow">control flow statements</a> which require a body (and therefore support OTB), the brace can be the start of an object literal only if it is preceded by an operator, such as <code>:= {</code> or <code>for x <strong>in</strong> {</code>. In particular, the brace in <code>Loop {</code> is always block-begin, and <code>If {</code> and <code>While {</code> are always errors.</li>
+  <li>如果一个大括号前面有一个未闭合的 <code>(</code>/<code>[</code>/<code>{</code>, 那么它永远不会被解释为一个块的开始, 因为这会产生一个无效的表达式. 例如, 大括号在 <code>If ({</code> 中是对象标识符的开始.</li>
+  <li>对象标识符不能合法地跟随 <code>)</code> 或 <code>]</code>, 因此, 如果大括号跟随这些符号中的任何一个(不包括空格), 它将被解释为块的开始(例如用于函数或属性定义).</li>
+  <li>对于需要正文(主体)(因此支持 OTB) 的<a href="Language.htm#control-flow">控制流语句</a>, 仅当大括号前面有运算符时, 大括号才能成为对象标识符的开始, 如 <code>:= {</code> 或 <code>for x <strong>in</strong> {</code>. 特别是, 大括号在 <code>Loop {</code> 中始终是块的开始, 而 <code>If {</code> 和 <code>While {</code> 始终是错误.</li>
 </ul>
-<p>A brace can be safely used for line continuation with any function call, expression or control flow statement which does not require a body. 例如:</p>
+<p>大括号可以安全地在任何不需要正文的函数调用, 表达式或控制流语句的行延续中使用. 例如:</p>
 <pre>myfn() {
     return {
         key: "value"
     }
 }</pre>
-<p id="continuation-section"><strong>Continuation section</strong>: This method should be used to merge a large number of lines or when the lines are not suitable for the other methods. Although this method is especially useful for <a href="Hotstrings.htm">auto-replace hotstrings</a>, it can also be used with any <a href="Variables.htm#Expressions">expression</a>. 例如:</p>
+<p id="continuation-section"><strong>延续片段</strong>: 此方法应该用于合并大量行或当这些行不适合其他方法时. 虽然这个方法对于<a href="Hotstrings.htm">自动替换热字符串</a>特别有用, 但是它也可以用于任何<a href="Variables.htm#Expressions">表达式</a>. 例如:</p>
 <pre><em>; 示例 #1:</em>
 Var := "
 (
-Line 1 of the text.
-Line 2 of the text. By default, a linefeed (`n) is present between lines.
-Additionally, "quote marks" are <a href="#continuation_quotes">automatically escaped</a> when appropriate.
+第 1 行的文字.
+第 2 行的文字. 默认情况下, 行与行之间存在换行符(`n).
+此外, "引号" 会在适当时<a href="#continuation_quotes">自动转义</a>.
 )"
 
 <em>; 示例 #2:</em>
 FileAppend "
 (
-A line of text.
-By default, the hard carriage return (Enter) between the previous line and this one will be written to the file.
-	This line is indented with a tab; by default, that tab will also be written to the file.
+一行文字.
+默认情况下, 上一行与此行之间的硬回车(Enter) 将写入文件.
+	这一行用制表符缩进; 默认情况下, 该制表符也将写入该文件.
 )", A_Desktop "\My File.txt"</pre>
-<p>In the examples above, a series of lines is bounded at the top and bottom by a pair of parentheses. This is known as a <em>continuation section</em>. Notice that any code after the closing parenthesis is also joined with the other lines (without any delimiter), but the opening and closing parentheses are not included.</p>
+<p>在上面的示例中, 一系列的行在顶部和底部用一对括号括起来. 这被称为 <em>延续片段</em>. 注意, 右括号之后的任何代码也与其他行连接(没有任何分隔符), 但不包括左括号和右括号.</p>
 <p>If the line above the continuation section ends with a <a href="Concepts.htm#names">name</a> character and the section does not start inside a quoted string, a single space is automatically inserted to separate the name from the contents of the continuation section.</p>
 <p id="continuation_quotes">Quote marks are automatically escaped (i.e. they are interpreted as literal characters) if the continuation section starts inside a quoted string, as in the examples above. Otherwise, quote marks act as they do normally; that is, continuation sections can contain expressions with quoted strings.</p>
-<p id="continuation_defaults">By default, leading spaces or tabs are omitted based on the indentation of the first line inside the continuation section. If the first line mixes spaces and tabs, only the first type of character is treated as indentation. If any line is indented less than the first line or with the wrong characters, all leading whitespace on that line is left as is. </p>
-<p>The default behavior of a continuation section can be overridden by including one or more of the following options to the right of the section's opening parenthesis. If more than one option is present, separate each one from the previous with a space. 例如: <code>( LTrim Join|</code>.</p>
-<p id="Join"><strong>Join</strong>: Specifies how lines should be connected together. If this option is omitted, each line except the last will be followed by a linefeed character (`n). If the word <em>Join</em> is specified by itself, lines are connected directly to each other without any characters in between. Otherwise, the word <em>Join</em> should be followed immediately by as many as 15 characters. 例如, <code>Join`s</code> would insert a space after each line except the last (&quot;`s&quot; indicates a literal space -- it is a special escape sequence recognized only by <em>Join</em>). Another example is <code>Join`r`n</code>, which inserts CR+LF between lines. Similarly, <code>Join|</code> inserts  a pipe between lines. To have the final line in the section also ended by a join-string, include a blank line immediately above the section's closing parenthesis.</p>
-<p>Known limitation: If the Join string ends with a colon, it must not be the last option on the line. 例如, <code>(Join:</code> is treated as the label "(Join" and <code>(LTrim Join:</code> is unsupported, but <code>(Join: C</code> is okay.</p>
-<p id="LTrim"><strong>LTrim</strong>: Omits all spaces and tabs at the beginning of each line. This is usually unnecessary because of the <a href="#continuation_defaults">default &quot;smart&quot; behaviour</a>.</p>
+<p id="continuation_defaults">默认情况下, 根据延续片段中第一行的缩进, 省略前导空格或制表符. 如果第一行混合有空格和制表符, 则只将第一种类型的字符视为缩进. 如果任何行缩进小于第一行或使用不同的字符, 则该行上的所有前导空格都保持原样.</p>
+<p>延续片段的默认行为可以通过在该片段的左括号的右侧包含以下一个或多个选项来覆盖改写. 如果存在多个选项, 请使用空格将每个选项与前一个选项分开. 例如: <code>( LTrim Join|</code>.</p>
+<p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 否则, 单词 <em>Join</em> 后面可以紧跟最多 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格(&quot;`s&quot; 表示原义的空格 -- 它是一个仅由 <em>Join</em> 识别的特殊转义序列). 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 请在它的右括号上方添加一个空行.</p>
+<p>已知限制: 如果 Join 字符串以冒号结尾, 则它不能是该行的最后一个选项. 例如, <code>(Join:</code> 被视为标签 "(Join", <code>(LTrim Join:</code> 不受支持, 而 <code>(Join: C</code> 这种写法没有问题.</p>
+<p id="LTrim"><strong>LTrim</strong>: 删除每行开头的所有的空格和制表符. This is usually unnecessary because of the <a href="#continuation_defaults">default &quot;smart&quot; behaviour</a>.</p>
 <p id="LTrim0"><strong>LTrim0</strong> (LTrim followed by a zero): Turns off the omission of spaces and tabs from the beginning of each line.</p>
 <p id="RTrim0"><strong>RTrim0</strong> (RTrim followed by a zero): Turns off the omission of spaces and tabs from the end of each line.</p>
 <p id="CommentOption"><strong>Comments</strong> (or <strong>Comment</strong> or <strong>Com</strong> or <strong>C</strong>): Allows <a href="Language.htm#comments">semicolon comments</a> inside the continuation section (but not <code>/*..*/</code>). Such comments (along with any spaces and tabs to their left) are entirely omitted from the joined result rather than being treated as literal text. Each comment can appear to the right of a line or on a new line by itself.</p>
 <p id="accent"><strong>`</strong> (accent): Treats each backtick character literally rather than as an <a href="misc/EscapeChar.htm">escape character</a>. This also prevents the translation of any explicitly specified escape sequences such as <code>`r</code> and <code>`t</code>.</p>
 <p id="non-continuation"><strong>)</strong>: If a closing parenthesis appears in the continuation section's options (except as a parameter of the <a href="#Join">Join</a> option), the line is reinterpreted as an expression instead of the beginning of a continuation section. This allows expressions like <code>(x.y)[z]()</code> to work without the need to escape the opening parenthesis.</p>
-<p><a href="misc/EscapeChar.htm">Escape sequences</a> such as `n (linefeed) and `t (tab) are supported inside the continuation section except when the <a href="#accent">accent (`) option</a> has been specified.</p>
+<p>除非指定了<a href="#accent">重音(`) 选项</a>, 否则在延续片段内部支持诸如 `n (换行符) 和 `t(制表符) 之类的<a href="misc/EscapeChar.htm">转义序列</a>.</p>
 <p>When the <a href="#CommentOption">comment option</a> is absent, semicolon and /*..*/ comments are not supported within the interior of a continuation section because they are seen as literal text. However, comments can be included on the bottom and top lines of the section. 例如:</p>
-<pre>FileAppend "   <em>; Comment.
-; Comment.</em>
-( LTrim Join    <em>; Comment.</em>
-    &nbsp;; This is <strong>not</strong> a comment; it is literal. Include the word <i>Comments</i> in the line above to make it a comment.
-)", "C:\File.txt"   <em>; Comment.</em></pre>
-<p>As a consequence of the above, semicolons never need to be <a href="misc/EscapeChar.htm">escaped</a> within a continuation section.</p>
-<p>A continuation section cannot produce a line whose total length is greater than 16,383 characters (if it tries, the program will alert you the moment the script is launched). One way to work around this is to do a series of concatenations into a variable.  例如:</p>
+<pre>FileAppend "   <em>; 注释.
+; 注释.</em>
+( LTrim Join    <em>; 注释.</em>
+    &nbsp;; 本行 <strong>不是</strong> 注释; 它是原义的文字. 上面行包含 <i>注释</i> 的部分都是注释.
+)", "C:\File.txt"   <em>; 注释.</em></pre>
+<p>由上面可知, 延续片段中的分号不需要进行<a href="misc/EscapeChar.htm">转义</a>.</p>
+<p>使用延续片段无法生成总长度超过 16,383 字符的行(如果尝试这么做, 那么程序在启动时会弹出警告). 解决这个问题的一种方法是将一系列延续片段连接到一个变量中. 例如:</p>
 <pre>Var := "
 (
 ...
 )"
-Var .= "`n  <em>; Add more text to the variable via another continuation section.</em>
+Var .= "`n  <em>; 通过另一个延续片段添加更多文本到此变量中.</em>
 (
 ...
 )"
 FileAppend Var, "C:\My File.txt"</pre>
-<p>Since a closing parenthesis indicates the end of a continuation section, to have a line start with literal closing parenthesis, precede it with an accent/backtick: <code>`)</code>. However, this cannot be combined with the <a href="#accent">accent (`) option</a>.</p>
-<p>A continuation section can be immediately followed by a line containing the open-parenthesis of another continuation section. This allows the options mentioned above to be varied during the course of building a single line.</p>
-<p>The piecemeal construction of a continuation section by means of <a href="commands/_Include.htm">#Include</a> is not supported.</p>
+<p>因为右括号表示延续片段的结束, 所以要让某一行以原义的右括号开头, 需要在其前面加上重音符/反引号: <code>`)</code>. 然而, 这不能与<a href="#accent">重音(`) 选项</a>结合使用.</p>
+<p>一个延续片段后面可以紧跟着包含另一个延续片段的左括号的一行. 这样使得上面提到的选项可以在创建单行的过程中进行改变.</p>
+<p>不支持通过 <a href="commands/_Include.htm">#Include</a> 的方法把延续片段各部分连接起来.</p>
 
-<h2 id="ahk2exe">Convert a Script to an EXE (ahk2exe)</h2>
-<p>A script compiler (courtesy of fincs) is included with the program.</p>
-<p>Once a script is compiled, it becomes a standalone executable; that is, AutoHotkey.exe is not required in order to run the script. The compilation process creates an executable file which contains the following: the AutoHotkey interpreter, the script, any files it <a href="commands/_Include.htm">includes</a>, and any files it has incorporated via the <a href="commands/FileInstall.htm">FileInstall</a> function.</p>
-<p>Ahk2Exe can be used in the following ways:</p>
+<h2 id="ahk2exe">把脚本转换成 EXE(ahk2exe)</h2>
+<p>程序中包含了脚本编译器(由 fincs 提供).</p>
+<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本需要<a href="commands/_Include.htm">加载</a>的任何文件以及通过 <a href="commands/FileInstall.htm">FileInstall</a> 函数内嵌的任何文件.</p>
+<p>Ahk2Exe 的使用方法如下:</p>
 <ol>
-  <li><strong>GUI Interface</strong>: Run the &quot;Convert .ahk to .exe&quot; item in the Start Menu.</li>
-  <li><strong>Right-click</strong>: Within an open Explorer window, you can right-click any .ahk file and select &quot;Compile Script&quot; (only available if the script compiler option was chosen when AutoHotkey was installed). This creates an EXE file of the same base filename as the script, which appears after a short time in the same directory. Note: The EXE file is produced using the same custom icon, .bin file and use <a href="#mpress">MPRESS</a> setting that were last used by Method #1 above.</li>
-  <li id="ahk2exeCmd"><strong>Command Line</strong>: The compiler can be run from the command line with the following parameters:
+  <li><strong>GUI 界面</strong>: 在开始菜单中运行 &quot;Convert .ahk to .exe&quot; 项目.</li>
+  <li><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 文件上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器时时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它会在稍后出现在相同目录中. 注: 这样生成的 EXE 文件会使用与前面的方法 #1 最后一次使用时相同的自定义图标, .bin 文件以及 <a href="#mpress">MPRESS</a> 设置.</li>
+  <li id="ahk2exeCmd"><strong>命令行</strong>: 编译器可以从命令行运行，参数如下:
   <pre class="no-highlight">Ahk2Exe.exe /in MyScript.ahk [/out MyScript.exe] [/icon MyIcon.ico] [/bin AutoHotkeySC.bin] [/mpress 0or1]</pre>
   例如:
 <pre class="no-highlight">Ahk2Exe.exe /in "MyScript.ahk" /icon "MyIcon.ico"</pre>
-Usage:
+用法:
 <ul>
-<li>Parameters containing spaces should be enclosed in double quotes.</li>
-<li>If the &quot;out&quot; file is omitted, the EXE will have the same base filename as the script itself.</li>
+<li>包含空格的参数应该用双引号括起来.</li>
+<li>如果省略了 &quot;out&quot; 文件, EXE 将具有与脚本本身相同的基本文件名.</li>
 </ul></li>
 </ol>
-<p>Notes:</p>
+<p>注意:</p>
 <ul>
-  <li>Compiling does not typically improve the performance of a script.</li>
-  <li><a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> and <a href="Variables.htm#AllowMainWindow">A_AllowMainWindow</a> affect the behavior of compiled scripts.</li>
-  <li>Custom version info (as seen in Explorer's file-properties dialog) can be added to your compiled scripts by using a utility such as Resource Hacker (freeware) to edit the file &quot;AutoHotkeySC.bin&quot;. This file is contained in the &quot;Compiler&quot; subfolder where AutoHotkey was installed. <a href="http://www.autohotkey.com/forum/topic22975.html">Compile_AHK II</a> can be used to facilitate this process. The compiled script can be edited instead of AutoHotkeySC.bin.</li>
-  <li>The method above can also be used to change existing icons or add new ones to all compiled scripts.</li>
-  <li>The built-in variable A_IsCompiled contains 1 if the script is running in compiled form. Otherwise, it is blank.</li>
-  <li>When parameters are passed to Ahk2Exe, a message indicating the success or failure of the compiling process is written to stdout. Although the message will not appear at the command prompt, it can be &quot;caught&quot; by means such as redirecting output to a file.</li>
-  <li>Additionally in the case of a failure, Ahk2Exe has exit codes indicating the kind of error that occurred. These error codes can be found at <a href="https://github.com/fincs/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a>.</li>
+  <li>编译通常不会提高脚本的性能.</li>
+  <li><a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> 和 <a href="Variables.htm#AllowMainWindow">A_AllowMainWindow</a> 会影响已编译脚本的行为.</li>
+  <li>使用类似 <a href="http://www.angusj.com/resourcehacker/">Resource Hacker</a>(免费软件) 的工具编辑 &quot;AutoHotkeySC.bin&quot;文件可以给已编译脚本添加自定义版本信息(如资源管理器的文件属性对话框中看到的那些). 此文件包含在 AutoHotkey 安装目录的 &quot;Compiler&quot; 子文件夹中. 可以使用 <a href="http://www.autohotkey.com/forum/topic22975.html">Compile_AHK II</a> 简化这个过程. 可以直接编辑已编译脚本而不是 AutoHotkeySC.bin.</li>
+  <li>上述方法还可用于更改现有图标或向所有已编译脚本添加新图标.</li>
+  <li>如果脚本以编译的形式运行, 则内置变量 A_IsCompiled 的值为 1. 否则为空.</li>
+  <li>传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符 &quot;捕获&quot;.</li>
+  <li>另外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 可以在 <a href="https://github.com/fincs/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 中找到这些错误代码.</li>
 </ul>
-<p>The compiler's source code and newer versions can be found at <a href="https://github.com/fincs/Ahk2Exe">GitHub</a>.</p>
+<p>编译器的源代码和新版本可以在 <a href="https://github.com/fincs/Ahk2Exe">GitHub</a> 上找到.</p>
 
-<h3 id="mpress">Compressing Compiled Scripts</h3>
-<p>Ahk2Exe optionally uses MPRESS (a freeware program by MATCODE Software) to compress compiled scripts. If <strong>mpress.exe</strong> is present in the "Compiler" subfolder where AutoHotkey was installed, it is used automatically unless it is disabled via <code>/mpress 0</code> or the GUI setting. </p>
-<p>Official website (was offline in March 2016): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a></p>
-<p>Mirror (downloads and information): <a href="https://autohotkey.com/mpress/">https://autohotkey.com/mpress/</a></p>
-<p><strong>Note:</strong> While compressing the script executable prevents casual inspection of the script's source code using a plain text editor like Notepad or a PE resource editor, it does not prevent the source code from being extracted by tools dedicated to that purpose.</p>
+<h3 id="mpress">压缩编译的脚本</h3>
+<p>Ahk2Exe 可选用 MPRESS(MATCODE Software 出品的一款免费软件) 来压缩编译的脚本. 如果在 AutoHotKey 安装目录的"Compiler"子目录存在 <strong>mpress.exe</strong>, 编译时将自动使用 MPRESS 来压缩, 除非指定了 <code>/mpress 0</code> 参数或在界面中设置了不启用压缩.</p>
+<p>官网(2016 年 3 月该网站已下线): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a></p>
+<p>镜像(下载信息): <a href="https://autohotkey.com/mpress/">https://autohotkey.com/mpress/</a></p>
+<p><strong>注意:</strong> 压缩编译脚本可以保护脚本不被诸如记事本或 PE 编辑器这类的工具随意查看, 但并不能保护脚本源码不被专用的提取工具提取.</p>
 
-<h2 id="cmd">Passing Command Line Parameters to a Script</h2>
-<p>Scripts support command line parameters. The format is:</p>
+<h2 id="cmd">向脚本传递命令行参数</h2>
+<p>脚本支持命令行参数. 格式为:</p>
 <pre>AutoHotkey.exe [<i>Switches</i>] [<i>Script Filename</i>] [<i>Script Parameters</i>]</pre>
-<p>And for compiled scripts, the format is:</p>
+<p>对于已编译脚本, 格式为:</p>
 <pre>CompiledScript.exe [<i>Switches</i>] [<i>Script Parameters</i>]</pre>
-<p><strong>Switches:</strong> Zero or more of the following:</p>
+<p><strong>Switches</strong>(开关): 下列零个或多个:</p>
 <table class="info">
-  <tr><th>Switch</th><th>Meaning</th><th>Works compiled?</th></tr>
+  <tr><th width="10%">开关</th><th>意义</th><th width="10%">支持编译脚本?</th></tr>
   <tr id="SlashF">
-    <td>/f or /force</td>
-    <td>Launch unconditionally, skipping any warning dialogs. This has the same effect as <a href="commands/_SingleInstance.htm">#SingleInstance Off</a>.</td>
-    <td>Yes</td>
+    <td>/f 或 /force</td>
+    <td>无条件强制启动, 忽略任何警告对话框. 和 <a href="commands/_SingleInstance.htm">#SingleInstance Off</a> 的效果相同.</td>
+    <td>支持</td>
   </tr>
   <tr id="SlashR">
-    <td>/r or /restart</td>
-    <td>Indicate that the script is being restarted (this is also used by the <a href="commands/Reload.htm">Reload</a> function, internally).</td>
-    <td>Yes</td>
+    <td>/r 或 /restart</td>
+    <td>指示脚本正在重新启动(这也能在脚本内部通过 <a href="commands/Reload.htm">Reload</a> 函数实现).</td>
+    <td>支持</td>
   </tr>
   <tr id="ErrorStdOut">
     <td>/ErrorStdOut</td>
-    <td>Send syntax errors that prevent a script from launching to stderr rather than displaying a dialog. See <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a> for details. This can be combined with /iLib to validate the script without running it.</td>
-    <td>Yes</td>
+    <td>把阻止脚本运行的语法错误发送到标准输出而不显示在对话框中. 有关详情, 请参阅 <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a>. 这可以联合 /iLib 来验证脚本而不用运行它.</td>
+    <td>支持</td>
   </tr>
   <tr id="SlashDebug">
     <td>/Debug</td>
-    <td>Connect to a debugging client. 有关详细信息, 请参阅 <a href="#idebug">Interactive Debugging</a>.</td>
-    <td>No</td>
+    <td>连接到调试客户端. 有关详情, 请参阅<a href="#idebug">交互调试</a>.</td>
+    <td>不支持</td>
   </tr>
   <tr id="CPn">
     <td>/CP<i>n</i></td>
-    <td>Overrides the default codepage used to read script files. 有关详细信息, 请参阅 <a href="#cp">Script File Codepage</a>.</td>
-    <td>No</td>
+    <td>覆盖用于读取脚本文件的默认代码页. 有关详情, 请参阅<a href="#cp">脚本文件代码页</a>.</td>
+    <td>不支持</td>
   </tr>
   <tr>
     <td>/iLib <em>"OutFile"</em></td>
     <td>
-      <p>AutoHotkey loads the script but does not run it. For each script file which is auto-included via <a href="Functions.htm#lib">the library mechanism</a>, two lines are written to the file specified by <em>OutFile</em>. These lines are written in the following format, where <em>LibDir</em> is the full path of the Lib folder and <em>LibFile</em> is the filename of the library:</p>
+      <p>AutoHotkey 加载脚本但不运行它. 对于通过<a href="Functions.htm#lib">库机制</a>自动包含的每个脚本文件, 两行代码会写到 <em>OutFile</em> 指定的文件里面. 这些行以以下格式编写, 其中 <em>LibDir</em> 是 Lib 文件夹的完整路径, <em>LibFile</em> 是库的文件名:</p>
 <pre>#Include LibDir\
 #IncludeAgain LibDir\LibFile.ahk</pre>
-      <p>If the output file exists, it is overwritten. <em>OutFile</em> can be <code>*</code> to write the output to stdout.</p>
-      <p>If the script contains syntax errors, the output file may be empty. The process exit code can be used to detect this condition; if there is a syntax error, the exit code is 2. The /ErrorStdOut switch can be used to suppress or capture the error message.</p>
+      <p>如果输出文件存在, 它会被覆盖. <em>OutFile</em> 可以是 <code>*</code> 从而将输出写到标准输出中.</p>
+      <p>如果脚本语法错误, 那么输出文件可能为空. 程序退出代码可以检测这种情况; 如果这里有语法错误, 退出代码就是 2. /ErrorStdOut 开关可用于抑制或捕获错误消息.</p>
     </td>
-    <td>No</td>
+    <td>不支持</td>
   </tr>
 </table>
 
-<p id="defaultfile"><strong>Script Filename:</strong> This can be omitted if there are no <em>Script Parameters</em>. If omitted (such as if you run AutoHotkey directly from the Start menu), the program looks for a script file called <code><i>AutoHotkey</i>.ahk</code> in the following locations, in this order:</p>
+<p id="defaultfile"><strong>Script Filename</strong>(脚本文件名): 如果不含 <em>Script Parameters</em>, 那么此参数可以省略. 省略时(例如, 如果您直接从开始菜单运行 AutoHotkey), 程序按以下顺序在这些位置查找一个名为 <code><i>AutoHotkey</i>.ahk</code> 的脚本文件:</p>
 <ul>
-  <li>The directory which contains the <a href="Variables.htm#AhkPath">AutoHotkey executable</a>.</li>
-  <li>The current user's <a href="Variables.htm#MyDocuments">Documents</a> folder.</li>
+  <li>包含 <a href="Variables.htm#AhkPath">AutoHotkey 可执行文件</a> 的目录.</li>
+  <li>当前用户的 <a href="Variables.htm#MyDocuments">文档(我的文档)</a> 目录.</li>
 </ul>
-<p>The filename <code><i>AutoHotkey</i>.ahk</code> depends on the name of the executable used to run the script. 例如, if you rename AutoHotkey.exe to MyScript.exe, it will attempt to find <code>MyScript.ahk</code>. If you run AutoHotkeyU32.exe without parameters, it will look for AutoHotkeyU32.ahk.</p>
-<p id="stdin">Specify an asterisk (*) for the filename to read the script text from standard input (stdin). This also puts the following into effect:</p>
+<p>文件名 <code><i>AutoHotkey</i>.ahk</code> 取决于运行脚本的可执行文件的名称. 例如, 重命名 AutoHotkey.exe 为 MyScript.exe, 它将尝试查找 <code>MyScript.ahk</code>. 如果您运行不带参数的 AutoHotkeyU32.exe, 它将查找 AutoHotkeyU32.ahk.</p>
+<p id="stdin">为文件名指定星号(*) 以从标准输入(stdin) 读取脚本文本. 这也使以下内容生效:</p>
 <ul>
-  <li>The <a href="Variables.htm#InitialWorkingDir">initial working directory</a> is used as <a href="Variables.htm#ScriptDir">A_ScriptDir</a> and to locate the <a href="Functions.htm#lib">local function library</a>.</li>
-  <li><a href="Variables.htm#ScriptName">A_ScriptName</a> and <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a> both contain "*".</li>
-  <li><a href="commands/_SingleInstance.htm">#SingleInstance</a> is off by default.</li>
+  <li><a href="Variables.htm#InitialWorkingDir">初始工作目录</a>用作 <a href="Variables.htm#ScriptDir">A_ScriptDir</a> 并定位<a href="Functions.htm#lib">本地函数库</a>.</li>
+  <li><a href="Variables.htm#ScriptName">A_ScriptName</a> 和 <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a> 都包含 "*".</li>
+  <li><a href="commands/_SingleInstance.htm">#SingleInstance</a> 默认是关闭的.</li>
 </ul>
-<p>For an example, 请参阅 <a href="commands/Run.htm#ExecScript">ExecScript()</a>.</p>
-<p><strong>Script Parameters:</strong> The string(s) you want to pass into the script, with each separated from the next by a space. Any parameter that contains spaces should be enclosed in quotation marks. A literal quotation mark may be passed in by preceding it with a backslash (\&quot;). Consequently, any trailing slash in a quoted parameter (such as &quot;C:\My Documents<span class="red">\&quot;</span>) is treated as a literal quotation mark (that is, the script would receive the string C:\My Documents<span class="red">&quot;</span>). To remove such quotes, use <code>A_Args[1] := <a href="commands/StrReplace.htm">StrReplace</a>(A_Args[1], '"')</code></p>
-<p id="cmd_args">Incoming parameters, if present, are stored as an array in the built-in variable <strong>A_Args</strong>, and can be accessed using <a href="Objects.htm#Usage_Simple_Arrays">array syntax</a>. <code>A_Args[1]</code> contains the first parameter. The following example exits the script when too few parameters are passed to it:</p>
+<p>有关示例, 请参阅 <a href="commands/Run.htm#ExecScript">ExecScript()</a>.</p>
+<p><strong>Script Parameters</strong>(脚本参数): 要传递给脚本的字符串, 每个参数用空格分隔. 任何包含空格的参数都应该用引号括起来. 原义引号可以通过在它前面加上反斜杠(\&quot;) 来传递. 因此, 任何在加引号参数的末尾的反斜杠(如 &quot;C:\My Documents<span class="red">\&quot;</span>) 都被当作原义的引号(就是说, 脚本将接收到字符串 C:\My Documents<span class="red">&quot;</span>). 要移除引号, 使用 <code>A_Args[1] := <a href="commands/StrReplace.htm">StrReplace</a>(A_Args[1], '"')</code></p>
+<p id="cmd_args">传入参数, 如果存在, 作为数组存储在内置变量 <strong>A_Args</strong> 中, 可以使用<a href="Objects.htm#Usage_Simple_Arrays">数组语法</a>来访问. <code>A_Args[1]</code> 包含第一个参数. 下面的示例在传递给它的参数太少时退出脚本:</p>
 <pre>if A_Args.Length() &lt; 3
 {
     MsgBox "This script requires at least 3 parameters but it only received " A_Args.Length() "."
     ExitApp
 }</pre>
-<p>If the number of parameters passed into a script varies (perhaps due to the user dragging and dropping a set of files onto a script), the following example can be used to extract them one by one:</p>
-<pre>for n, param in A_Args  <em>; For each parameter:</em>
+<p>如果传递给脚本的参数数目不确定(可能是由于用户将一组文件拖放到脚本中), 则可以使用以下示例逐个提取它们:</p>
+<pre>for n, param in A_Args  <em>; 对每个参数进行循环:</em>
 {
     MsgBox "Parameter number " n " is " param "."
 }
 </pre>
-<p>If the parameters are file names, the following example can be used to convert them to their case-corrected long names (as stored in the file system), including complete/absolute path:</p>
-<pre>for n, GivenPath in A_Args  <em>; For each parameter (or file dropped onto a script):</em>
+<p>如果参数是文件名, 则可以使用以下示例将它们转换为大小写校正的长名称(与文件系统中存储的一致), 包括完整/绝对路径:</p>
+<pre>for n, GivenPath in A_Args  <em>; 对每个参数 (或拖放到脚本上的文件) 进行循环:</em>
 {
-    Loop Files, GivenPath, "FD"  <em>; Include files and directories.</em>
+    Loop Files, GivenPath, "FD"  <em>; 包括文件和目录.</em>
         LongPath := A_LoopFileFullPath
     MsgBox "The case-corrected long path name of file`n" GivenPath "`nis:`n" LongPath
 }</pre>
 
 <h2 id="cp">脚本文件代码页</h2>
-<p>The characters a script file may contain are restricted by the codepage used to load the file.</p>
+<p>脚本文件可能包含的字符受加载文件时使用的代码页的限制.</p>
 <ul>
-  <li>If the file begins with a UTF-8 or UTF-16 (LE) byte order mark, the appropriate codepage is used and the <a href="#CPn">/CP<i>n</i></a> switch is ignored.</li>
-  <li>If the <a href="#CPn">/CP<i>n</i></a> switch is passed on the command-line, codepage <i>n</i> is used. For a list of valid numeric codepage identifiers, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">MSDN</a>.</li>
-  <li>In all other cases, the system default ANSI codepage is used.</li>
+  <li>如果文件以 UTF-8 或 UTF-16(LE) 字节顺序标记开头, 则使用相应的代码页并且忽略 <a href="#CPn">/CP<i>n</i></a> 开关.</li>
+  <li>如果在命令行中传递了 <a href="#CPn">/CP<i>n</i></a> 开关, 则使用代码页 <i>n</i>. 有关有效的代码页标识符数字列表, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">MSDN</a>.</li>
+  <li>在其他所有情况中使用系统默认的 ANSI 代码页.</li>
 </ul>
-<p>Note that this applies only to script files loaded by AutoHotkey, not to file I/O within the script itself. <a href="commands/FileEncoding.htm">FileEncoding</a> controls the default encoding of files read or written by the script, while <a href="commands/IniRead.htm">IniRead</a> and <a href="commands/IniWrite.htm">IniWrite</a> always deal in UTF-16 or ANSI.</p>
-<p>As all text is converted (where necessary) to the <a href="Compat.htm#Format">native string format</a>, characters which are invalid or don't exist in the native codepage are replaced with a placeholder: '&#65533;'. This should only occur if there are encoding errors in the script file or the codepages used to save and load the file don't match.</p>
-<p><a href="commands/RegWrite.htm">RegWrite</a> may be used to set the default for scripts launched from Explorer (e.g. by double-clicking a file):</p>
-<pre><em>; Uncomment the appropriate line below or leave them all commented to
-;   reset to the default of the current build.  Modify as necessary:
-; codepage := 0        ; System default ANSI codepage
+<p>注意这仅适用于 AutoHotkey 加载脚本的时候, 而不包括脚本自身的文件 I/O. <a href="commands/FileEncoding.htm">FileEncoding</a> 决定了脚本读取或写入文件时使用的默认编码, 然而 <a href="commands/IniRead.htm">IniRead</a> 和 <a href="commands/IniWrite.htm">IniWrite</a> 总是使用 UTF-16 或 ANSI.</p>
+<p>由于所有的文本都被转换(必要时) 为<a href="Compat.htm#Format">原生的字符串格式</a>, 所以无效的或不存在于原生代码页中的字符会被替换为占位符: '&#65533;'. 这种情况只可能在脚本文件编码错误或用于保存和读取脚本的代码页不匹配时发生.</p>
+<p>可以使用 <a href="commands/RegWrite.htm">RegWrite</a> 为资源管理器中运行的脚本设置默认代码页(例如双击脚本文件时):</p>
+<pre><em>; 取消对下面适当的行的注释或让它们都保留注释
+; 以重新设置为当前版本的默认代码页. 需要时可自行修改:
+; codepage := 0        ; 系统默认的 ANSI 代码页
 ; codepage := 65001    ; UTF-8
 ; codepage := 1200     ; UTF-16
-; codepage := 1252     ; ANSI Latin 1; Western European (Windows)</em>
+; codepage := 1252     ; ANSI Latin 1; 西欧(Windows)</em>
 if (codepage != "")
     codepage := " /CP" . codepage
 cmd := Format('"{1}"{2} "%1" %*', A_AhkPath, codepage)
 key := "AutoHotkeyScript\Shell\Open\Command"
-if A_IsAdmin    <em>; Set for all users.</em>
+if A_IsAdmin    <em>; 为所有用户进行设置.</em>
     RegWrite cmd, "REG_SZ", "HKCR\" key
-else            <em>; Set for current user only.</em>
+else            <em>; 仅为当前用户进行设置.</em>
     RegWrite cmd, "REG_SZ", "HKCU\Software\Classes\" key</pre>
 <p>这里假定已经安装了 AutoHotkey. 如果没有, 则结果可能不理想.</p>
 
