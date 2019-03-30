@@ -108,20 +108,20 @@ FileAppend "
 	这一行用制表符缩进; 默认情况下, 该制表符也将写入该文件.
 )", A_Desktop "\My File.txt"</pre>
 <p>在上面的示例中, 一系列的行在顶部和底部用一对括号括起来. 这被称为 <em>延续片段</em>. 注意, 右括号之后的任何代码也与其他行连接(没有任何分隔符), 但不包括左括号和右括号.</p>
-<p>If the line above the continuation section ends with a <a href="Concepts.htm#names">name</a> character and the section does not start inside a quoted string, a single space is automatically inserted to separate the name from the contents of the continuation section.</p>
-<p id="continuation_quotes">Quote marks are automatically escaped (i.e. they are interpreted as literal characters) if the continuation section starts inside a quoted string, as in the examples above. Otherwise, quote marks act as they do normally; that is, continuation sections can contain expressions with quoted strings.</p>
+<p>如果延续片段上面的行以<a href="Concepts.htm#names">命名</a>字符串结束, 而延续片段没有从引号字符串开始, 则自动插入一个空格, 将名称与延续片段的内容分隔开.</p>
+<p id="continuation_quotes">如果延续片段以引号开始, 引号将自动转义(即它们被解释为原义字符), 如上面的示例所示. 否则, 引号的作用与正常情况相同; 也就是说, 延续片段可以包含带引号字符串的表达式.</p>
 <p id="continuation_defaults">默认情况下, 根据延续片段中第一行的缩进, 省略前导空格或制表符. 如果第一行混合有空格和制表符, 则只将第一种类型的字符视为缩进. 如果任何行缩进小于第一行或使用不同的字符, 则该行上的所有前导空格都保持原样.</p>
 <p>延续片段的默认行为可以通过在该片段的左括号的右侧包含以下一个或多个选项来覆盖改写. 如果存在多个选项, 请使用空格将每个选项与前一个选项分开. 例如: <code>( LTrim Join|</code>.</p>
 <p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 否则, 单词 <em>Join</em> 后面可以紧跟最多 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格(&quot;`s&quot; 表示原义的空格 -- 它是一个仅由 <em>Join</em> 识别的特殊转义序列). 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 请在它的右括号上方添加一个空行.</p>
 <p>已知限制: 如果 Join 字符串以冒号结尾, 则它不能是该行的最后一个选项. 例如, <code>(Join:</code> 被视为标签 "(Join", <code>(LTrim Join:</code> 不受支持, 而 <code>(Join: C</code> 这种写法没有问题.</p>
-<p id="LTrim"><strong>LTrim</strong>: 删除每行开头的所有的空格和制表符. This is usually unnecessary because of the <a href="#continuation_defaults">default &quot;smart&quot; behaviour</a>.</p>
-<p id="LTrim0"><strong>LTrim0</strong> (LTrim followed by a zero): Turns off the omission of spaces and tabs from the beginning of each line.</p>
-<p id="RTrim0"><strong>RTrim0</strong> (RTrim followed by a zero): Turns off the omission of spaces and tabs from the end of each line.</p>
-<p id="CommentOption"><strong>Comments</strong> (or <strong>Comment</strong> or <strong>Com</strong> or <strong>C</strong>): Allows <a href="Language.htm#comments">semicolon comments</a> inside the continuation section (but not <code>/*..*/</code>). Such comments (along with any spaces and tabs to their left) are entirely omitted from the joined result rather than being treated as literal text. Each comment can appear to the right of a line or on a new line by itself.</p>
-<p id="accent"><strong>`</strong> (accent): Treats each backtick character literally rather than as an <a href="misc/EscapeChar.htm">escape character</a>. This also prevents the translation of any explicitly specified escape sequences such as <code>`r</code> and <code>`t</code>.</p>
-<p id="non-continuation"><strong>)</strong>: If a closing parenthesis appears in the continuation section's options (except as a parameter of the <a href="#Join">Join</a> option), the line is reinterpreted as an expression instead of the beginning of a continuation section. This allows expressions like <code>(x.y)[z]()</code> to work without the need to escape the opening parenthesis.</p>
+<p id="LTrim"><strong>LTrim</strong>: 删除每行开头的所有的空格和制表符. 由于<a href="#continuation_defaults">默认的 &quot;智能&quot; 行为</a>, 这通常是不必要的.</p>
+<p id="LTrim0"><strong>LTrim0</strong> (LTrim 后跟一个 0): 关闭每行开头的空格和制表符的删除.</p>
+<p id="RTrim0"><strong>RTrim0</strong> (RTrim 后跟一个 0): 关闭每行末尾的空格和制表符的删除.</p>
+<p id="CommentOption"><strong>Comments</strong> (或 <strong>Comment</strong> 或 <strong>Com</strong> 或 <strong>C</strong>): 在延续片段中允许<a href="Language.htm#comments">分号注释</a>(但不允许 <code>/*..*/</code>). 这些注释(以及它们左边的任何空格和制表符) 将完全从连接结果中省略, 而不是作为文本处理. 每个注释可以出现在一行的右侧, .也可以单独出现在新行上</p>
+<p id="accent"><strong>`</strong>(重音): 按按原义处理反引号, 而不是作为<a href="misc/EscapeChar.htm">转义字符</a>. 这还可以防止任何显式指定的转义序列(<code>`r</code> 和 <code>`t</code>) 的转换.</p>
+<p id="non-continuation"><strong>)</strong>: 如果延续片段的选项中出现右括号(除了作为 <a href="#Join">Join</a> 选项的参数), 则该行将被重新解释为表达式, 而不是延续片段的开头. 这允许像 <code>(x.y)[z]()</code> 这样的表达式工作, 而不需要转义左括号.</p>
 <p>除非指定了<a href="#accent">重音(`) 选项</a>, 否则在延续片段内部支持诸如 `n (换行符) 和 `t(制表符) 之类的<a href="misc/EscapeChar.htm">转义序列</a>.</p>
-<p>When the <a href="#CommentOption">comment option</a> is absent, semicolon and /*..*/ comments are not supported within the interior of a continuation section because they are seen as literal text. However, comments can be included on the bottom and top lines of the section. 例如:</p>
+<p>当 <a href="#CommentOption">comment 选项</a>不存在时, 分号和 /*..*/ 注释在延续片段的内部不受支持, 因为它们被视为原义文本. 但是, 注释可以包含在延续片段的底部和顶部行. 例如:</p>
 <pre>FileAppend "   <em>; 注释.
 ; 注释.</em>
 ( LTrim Join    <em>; 注释.</em>
@@ -163,7 +163,7 @@ FileAppend Var, "C:\My File.txt"</pre>
 <ul>
   <li>编译通常不会提高脚本的性能.</li>
   <li><a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> 和 <a href="Variables.htm#AllowMainWindow">A_AllowMainWindow</a> 会影响已编译脚本的行为.</li>
-  <li>使用类似 <a href="http://www.angusj.com/resourcehacker/">Resource Hacker</a>(免费软件) 的工具编辑 &quot;AutoHotkeySC.bin&quot;文件可以给已编译脚本添加自定义版本信息(如资源管理器的文件属性对话框中看到的那些). 此文件包含在 AutoHotkey 安装目录的 &quot;Compiler&quot; 子文件夹中. 可以使用 <a href="http://www.autohotkey.com/forum/topic22975.html">Compile_AHK II</a> 简化这个过程. 可以直接编辑已编译脚本而不是 AutoHotkeySC.bin.</li>
+  <li>使用类似 <a href="http://www.angusj.com/resourcehacker/">Resource Hacker</a>(免费软件) 的工具编辑 &quot;AutoHotkeySC.bin&quot;文件可以给已编译脚本添加自定义版本信息(如资源管理器的文件属性对话框中看到的那些). 此文件包含在 AutoHotkey 安装目录的 &quot;Compiler&quot; 子文件夹中. 可以使用 <a href="https://github.com/mercury233/compile-ahk">Compile AHK</a> 简化这个过程. 可以直接编辑已编译脚本而不是 AutoHotkeySC.bin.</li>
   <li>上述方法还可用于更改现有图标或向所有已编译脚本添加新图标.</li>
   <li>如果脚本以编译的形式运行, 则内置变量 A_IsCompiled 的值为 1. 否则为空.</li>
   <li>传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符 &quot;捕获&quot;.</li>
@@ -240,7 +240,7 @@ FileAppend Var, "C:\My File.txt"</pre>
 <p id="cmd_args">传入参数, 如果存在, 作为数组存储在内置变量 <strong>A_Args</strong> 中, 可以使用<a href="Objects.htm#Usage_Simple_Arrays">数组语法</a>来访问. <code>A_Args[1]</code> 包含第一个参数. 下面的示例在传递给它的参数太少时退出脚本:</p>
 <pre>if A_Args.Length() &lt; 3
 {
-    MsgBox "This script requires at least 3 parameters but it only received " A_Args.Length() "."
+    MsgBox "脚本至少需要 3 个参数, 但它只接收到 " A_Args.Length() " 个."
     ExitApp
 }</pre>
 <p>如果传递给脚本的参数数目不确定(可能是由于用户将一组文件拖放到脚本中), 则可以使用以下示例逐个提取它们:</p>
@@ -312,7 +312,7 @@ if WinExist(ScriptPath " ahk_class AutoHotkey")
     <em>; 可选参数:
     ;   wParam  = 调试器客户端的 IPv4 地址, 为 32 位整数.
     ;   lParam  = 调试器客户端正在侦听的端口.</em>
-    PostMessage DllCall("RegisterWindowMessage",  Str, "AHK_ATTACH_DEBUGGER")
+    PostMessage DllCall("RegisterWindowMessage", &quot;Str&quot;, "AHK_ATTACH_DEBUGGER")
 </pre>
 <p>当调试器连接后, 通过发送 DBGp 命令 "detach", 可以在不终止脚本的情况下分离调试器.</p>
 

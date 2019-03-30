@@ -99,8 +99,8 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   <tr id="pow">
     <td style="text-align:center"><strong>**</strong></td>
     <td>
-      <p><strong>幂</strong>. 底数和指数都可以为小数. 如果指数为负数, 即使底数和指数都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以, <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样, 且得到结果 -4. 因此, 要计算原义负数的幂, 需要把它们包围在括号中, 如 <code>(-2)**2</code>.</p>
-      <p class="note"><strong>注意</strong>: 不支持底数为负数且指数为小数的情况, 如 <code>(-2)**0.5</code>; 尝试它将导致抛出异常. 但 <code>(-2)**2</code> 和 <code>(-2)**2.0</code> 都是支持的.</p>
+      <p><strong>幂</strong>. 示例用法: <code>base**exponent</code>. 底数(<em>base</em>) 和指数(<em>exponent</em>) 都可以为小数. 如果<em>指数</em> 为负数, 即使<em>底数</em> 和<em>指数</em> 都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以, <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样, 且得到结果 -4. 因此, 要计算原义负数的幂, 需要把它们包围在括号中, 如 <code>(-2)**2</code>.</p>
+      <p class="note"><strong>注意</strong>: 不支持<em>底数</em> 为负数且<em>指数</em> 为小数的情况, 如 <code>(-2)**0.5</code>; 尝试它将导致抛出异常. 但 <code>(-2)**2</code> 和 <code>(-2)**2.0</code> 都是支持的. 如果<em>底数</em> 和<em>指数</em> 都为 0, 结果未定义并抛出异常.</p>
     </td>
   </tr>
   <tr id="unary">
@@ -114,7 +114,8 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
       <p><strong>逻辑非(!)</strong>: 如果运算元为空或 0, 那么逻辑非的结果为 1, 这表示 &quot;true&quot;. 否则, 结果为 0(false). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~)</strong>: 此运算符对运算元按位取反. 如果运算元为浮点值, 则在计算前把它截断成整数. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果.</p>
       <p id="amp"><strong>取址(&amp;)</strong>: <code>&amp;MyVar</code> 在内存中检索 <em>MyVar</em> 内容的地址, 其中 <em>MyVar</em> 是用户创建的变量. <em>MyVar</em> 的内容可以是字符串, 64 位整数, 64 位浮点数或对象. 这通常与 <a href="commands/DllCall.htm#struct">DllCall 结构</a>一起使用.</p>
-      <p>取址运算符可以与其他字符串一起使用, 如 <code>&amp;"string"</code>, <code>&amp;(x . y)</code> 或 <code>&amp;A_LoopField</code>, 但有以下限制:</p>
+      <p><em>MyVar</em> 通常在通过任何<a href=Variables.htm#AssignOp>赋值运算符</a>(包括 ++ 和 --)重新赋值之后, 或者用作内置函数的输出变量之后地址无效. 函数的<a href=Functions.htm#Local>局部</a>变量的内容的地址在函数返回后无效. 对象的地址只在其最后一个<a href=Objects.htm#Reference_Counting>引用</a>被释放之前有效.</p> 
+        <p>取址运算符可以与其他字符串一起使用, 如 <code>&amp;"string"</code>, <code>&amp;(x . y)</code> 或 <code>&amp;A_LoopField</code>, 但有以下限制:</p>
       <ul>
         <li>永远不应该修改寻址内存, 例如将其传递给 DllCall 输出参数.</li>
         <li>从临时值(包括由内置变量返回的值) 获取的地址应仅在表达式或<a href="Language.htm#function-call-statements">函数调用语句</a>的求值完成之前被视为有效. 在此之后, 可以将内存用于其他内容.</li>
@@ -143,7 +144,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   <tr id="bitshift">
     <td style="text-align:center"><strong>&lt;&lt;<br>
     &gt;&gt;</strong></td>
-    <td><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点输入在计算前会被截取成整数. 左移(<strong>&lt;&lt;</strong>) 相当于 <em>Value1</em> 乘以 &quot;2 的 <em>Value2</em> 次幂&quot;. 右移(<strong>&gt;&gt;</strong>) 相当于 <em>Value1</em> 除以 &quot;2 的 <em>Value2</em> 次幂&quot; 并将结果四舍五入到数轴上最左边的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2.</td>
+    <td><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点输入在计算前会被截取成整数. 左移(<strong>&lt;&lt;</strong>) 相当于 <em>Value1</em> 乘以 &quot;2 的 <em>Value2</em> 次幂&quot;. 右移(<strong>&gt;&gt;</strong>) 相当于 <em>Value1</em> 除以 &quot;2 的 <em>Value2</em> 次幂&quot; 并将结果四舍五入到数轴左侧最接近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2. 如果 <em>Value2</em> 小于 0 或大于 63(截断后), 则抛出异常.</td>
   </tr>
   <tr id="bitwise">
     <td style="text-align:center"><strong>&amp;<br>
