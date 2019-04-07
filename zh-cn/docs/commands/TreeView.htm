@@ -65,7 +65,7 @@ Gui, Add, TreeView, <strong>ImageList%ImageListID%</strong>
 Gui Show</pre>
 <p><strong>Lines</strong>: 指定 <code>-Lines</code>(负 Lines) 来避免显示连接父项目和它们的子项目之间的网状线. 但是, 移除这些线也阻止了顶级项目坐标加号/减号按钮的显示.</p>
 <p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每项的文本/名称. 要编辑某项, 请选择它接着按下 <kbd>F2</kbd> 键（请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对某个项目点击一次来选择它, 至少等半秒, 然后再次点击同一项目进行编辑. 编辑后, 可以对一个项目在其同级项目之间按字母顺序进行重新定位, 请参考下面的例子:</p>
-<pre>Gui, Add, TreeView, -ReadOnly <a href="#notify">gMyTree</a>
+<pre>Gui, Add, TreeView, -ReadOnly gMyTree  <em>; 有关 gMyTree, 请参阅 <a href="#notify">TreeView 的 g-标签</a>.</em>
 <em>; ...</em>
 MyTree:
 if (A_GuiEvent == "e")  <em>; 用户结束了对项目的编辑 (使用 == 来进行区分大小写的比较).</em>
@@ -254,17 +254,17 @@ Gui +Resize
 ImageListID := <a href="ListView.htm#IL_Create">IL_Create</a>(5)
 Loop 5 
     <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, &quot;shell32.dll&quot;, A_Index)
-<em>; 创建 TreeView 和 ListView, 让它们像在 Windows 资源管理器中那样靠在一起:</em>
-<a href="#GuiAdd">Gui, Add, TreeView</a>, vMyTreeView r20 w%TreeViewWidth% gMyTreeView <a href="#ImageList">ImageList</a>%ImageListID%
+<em>; 创建 <a href="#GuiAdd">TreeView</a> 和 ListView, 让它们像在 Windows 资源管理器中那样靠在一起:</em>
+Gui, Add, TreeView, vMyTreeView r20 w%TreeViewWidth% gMyTreeView ImageList%ImageListID% <em>; <a href="#ImageList">ImageList</a></em>
 Gui, Add, ListView, vMyListView r20 w%ListViewWidth% x+10, Name|Modified
 
 <em>; 设置 ListView 的列宽(可选的):</em>
 Col2Width := 70  <em>; 缩小到只显示 YYYYMMDD 部分.</em>
-LV_ModifyCol(1, ListViewWidth - Col2Width - 30)  <em>; Allows room for vertical scrollbar.</em>
+LV_ModifyCol(1, ListViewWidth - Col2Width - 30)  <em>; 允许垂直滚动条.</em>
 LV_ModifyCol(2, Col2Width)
 
-<em>; 创建状态栏, 显示文件夹数及其总大小的信息:</em>
-<a href="GuiControls.htm#StatusBar">Gui, Add, StatusBar</a>
+<em>; 创建<a href="GuiControls.htm#StatusBar">状态栏</a>, 显示文件夹数及其总大小的信息:</em>
+Gui, Add, StatusBar
 <a href="GuiControls.htm#SB_SetParts">SB_SetParts</a>(60, 85)  <em>; 在状态栏中创建三个部分(第三部分占用所有剩余宽度).</em>
 
 <em>; 添加文件夹及其子文件夹到树中. 如果加载需要很长时间, 则显示提示信息:</em>
@@ -273,7 +273,7 @@ AddSubFoldersToTree(TreeRoot)
 SplashTextOff
 
 <em>; 显示窗口并返回. 每当用户执行符合条件的动作时, 操作系统会通知脚本:</em>
-Gui, Show,, %TreeRoot%  <em>; Display the source directory (TreeRoot) in the title bar.</em>
+Gui, Show,, %TreeRoot%  <em>; 在标题栏中显示源目录(TreeRoot).</em>
 return
 
 AddSubFoldersToTree(Folder, ParentItemID = 0)
@@ -304,7 +304,7 @@ SelectedFullPath := TreeRoot "\" SelectedItemText
 <em>; 把文件放入 ListView:</em>
 LV_Delete()  <em>; 清除所有行.</em>
 GuiControl, -Redraw, MyListView  <em>; 加载过程中禁用重绘来提升性能.</em>
-FileCount := 0  <em>; Init prior to loop below.</em>
+FileCount := 0  <em>; 在下面循环之前初始化.</em>
 TotalSize := 0
 Loop %SelectedFullPath%\*.*  <em>; 为了简化, 这里省略了文件夹, 所以只在 ListView 中显示文件.</em>
 {

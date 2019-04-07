@@ -58,14 +58,14 @@ Array := Array(Item1, Item2, ..., ItemN)</pre>
 <pre>Value := Array[Index]</pre>
 <p>对项进行赋值:</p>
 <pre>Array[Index] := Value</pre>
-<p>插入一个或多个项到指定索引:</p>
-<pre>Array.<a href="objects/Object.htm#InsertAt">InsertAt</a>(Index, Value, Value2, ...)</pre>
-<p>追加一个或多个项:</p>
-<pre>Array.<a href="objects/Object.htm#Push">Push</a>(Value, Value2, ...)</pre>
-<p>移除项:</p>
-<pre>RemovedValue := Array.<a href="objects/Object.htm#RemoveAt">RemoveAt</a>(Index)</pre>
-<p>移除最后一项:</p>
-<pre>RemovedValue := Array.<a href="objects/Object.htm#Pop">Pop</a>()</pre>
+<p>插入一个或多个项到指定索引  using the <a href="objects/Object.htm#InsertAt">InsertAt</a> method:</p>
+<pre>Array.InsertAt(Index, Value, Value2, ...)</pre>
+<p> using the <a href="objects/Object.htm#Push">Push</a> method 追加一个或多个项:</p>
+<pre>Array.Push(Value, Value2, ...)</pre>
+<p>using the <a href="objects/Object.htm#RemoveAt">RemoveAt</a> method 移除项:</p>
+<pre>RemovedValue := Array.RemoveAt(Index)</pre>
+<p> using the <a href="objects/Object.htm#Pop">Pop</a> method 移除最后一项:</p>
+<pre>RemovedValue := Array.Pop()</pre>
 <p>如果数组不是空的, 那么 <a href="objects/Object.htm#MinMaxIndex">MinIndex</a> 和 <a href="objects/Object.htm#MinMaxIndex">MaxIndex</a>/<a href="objects/Object.htm#Length">Length</a> 分别返回数组中当前使用的最小和最大的索引. 因为最小的索引几乎总是 1, 所以 MaxIndex 通常返回项目的数量. 如果没有整数键, MaxIndex 返回空, 而 Length 返回 0. 循环遍历数组的内容可以通过索引或 For 循环实现. 例如:</p>
 <pre>array := ["one", "two", "three"]
 
@@ -87,8 +87,8 @@ Array := Object("KeyA", ValueA, "KeyB", ValueB, ..., "KeyZ", ValueZ)</pre>
 <pre>Value := Array[Key]</pre>
 <p>对项进行赋值:</p>
 <pre>Array[Key] := Value</pre>
-<p>移除项:</p>
-<pre>RemovedValue := Array.<a href="objects/Object.htm#Delete">Delete</a>(Key)</pre>
+<p>using the <a href="objects/Object.htm#Delete">Delete</a> method 移除项:</p>
+<pre>RemovedValue := Array.Delete(Key)</pre>
 <p>枚举项:</p>
 <pre>array := {ten: 10, twenty: 20, thirty: 30}
 <a href="commands/For.htm">For</a> key, value in array
@@ -290,14 +290,14 @@ other.test()</pre>
 <pre>InstanceVar := Expression</pre>
 <p>这些声明在使用 <a href="#Custom_NewDelete">new</a> 关键字建立类的新实例时被计算. 处于此原因方法名 <code>__Init</code> 被保留, 脚本中不可使用. <a href="#Custom_NewDelete">__New()</a> 方法在所有此类声明计算完毕后被调用, 包括在基类中定义的那些. <em>表达式</em> 可以通过 <code>this</code> 访问其他实例变量和方法, 但其他所有的变量引用都假定为全局的.</p>
 <p>要访问实例变量, 总是要指定目标对象; 例如, <code><b>this</b>.InstanceVar</code>.</p>
-<p><span class="ver">[v1.1.08+]:</span>支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 例如, <code>x := {}, x.y := 42</code> 声明了 <code>x</code> 并初始化了 <code>this.x.y</code>.</p>
+<p><span class="ver">[v1.1.08+]:</span> 支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 例如, <code>x := {}, x.y := 42</code> 声明了 <code>x</code> 并初始化了 <code>this.x.y</code>.</p>
 
 <h4 id="Custom_Classes_staticvar">Static/Class Variables(静态/类变量)<span class="ver">[v1.1.00.01+]</span></h4>
 <p>静态/类变量属于类, 且可被派生对象继承(包括子类). 和实例变量一样声明, 但使用 static 关键字:</p>
 <pre>static ClassVar := Expression</pre>
 <p>静态声明仅在<a href="Scripts.htm#auto">自动执行段</a>按他们在脚本中出现的顺序计算一次. 每个声明保存值到类对象中. <i>表达式</i> 中的任何变量引用都假定为全局的.</p>
 <p>要对类变量赋值, 必须总是指定类的完整名称; 例如, <code><b>ClassName</b>.ClassVar := Value</code>. 如果对象 <em>x</em> 是 <em>ClassName</em> 派生的实例对象, 且 <em>x</em> 本身没有 "ClassVar" 键, 那么 <code>x.ClassVar</code> 可以用来动态获取 <code>ClassName.ClassVar</code> 的值. 不过, <code>x.ClassVar := y</code> 的值保存在 <em>x</em>, 而不是 <em>ClassName</em> 中.</p>
-<p><span class="ver">[v1.1.08+]:</span>支持形如 <code>x.y := z</code> 的声明, 假设 <code>x</code> 已在类中声明. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>.</p>
+<p><span class="ver">[v1.1.08+]:</span> 支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>.</p>
 
 <h4 id="Custom_Classes_class">Nested Classes(嵌套类)</h4>
 <p>嵌套类定义允许类对象存储到另一个类对象中而不作为单独的全局变量. 在上面的例子中, <code>class NestedClass</code> 创建了一个对象并把它保存到 <code>ClassName.NestedClass</code>.<br>子类可继承 <em>嵌套类</em> 或使用自己的嵌套类覆盖它(所以 <code>new this.NestedClass</code> 可用于实例化任何可用的嵌套类).</p>
@@ -474,10 +474,11 @@ class Color
 <h4 id="Objects_as_Functions">对象作为函数</h4>
 <p>对于利用对象实现函数的基本思路, 请参考<a href="objects/Functor.htm#User-Defined">函数对象</a>章节.</p>
 <p>函数对象还可以实现元函数的功能, 效果和前面几节中定义动态属性一样. 尽管推荐用<a href="#Custom_Classes_property">属性语法</a>替代, 下面的例子演示了如何利用元函数的潜能实现新的概念或结构, 甚至改变脚本代码的结构.</p>
-<pre>blue := new Color(0x0000ff)
+<pre><em>; This example requires the <a href="objects/Functor.htm#class_FunctionObject">FunctionObject class</a> in order to work.</em>
+blue := new Color(0x0000ff)
 MsgBox % blue.R "," blue.G "," blue.B
 
-class Properties extends <a href="objects/Functor.htm#class_FunctionObject">FunctionObject</a>
+class Properties extends FunctionObject
 {
     Call(aTarget, aName, aParams*)
     {
