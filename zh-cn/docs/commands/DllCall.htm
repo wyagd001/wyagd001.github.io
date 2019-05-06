@@ -106,7 +106,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
     <p>对于 UInt64 类型的参数, 大的无符号值可以作为字符串传递. 对于没有 * 或 P 后缀的所有较小的整数类型, 或者当将纯 64 位整数传递给函数时, 由于使用二进制补码来表示有符号整数, 有符号与无符号没有区别. 但是, 对于要求无符号的值使用 U 前缀可以提高清晰度.</p></td>
 </tr>
 </table>
-<p class="note"><strong>注意</strong>: 当指定不包含空格或星号的参数类型或返回值类型时, 包含的引号可以省略. 例如, 可以使用 <code>Str</code> 代替 <code>"Str"</code> 而 <code>CDecl</code> 代替 <code>"CDecl"</code>, 此外, 用字母 P 代替星号时也可以省略引号. 例如: <code>UIntP</code>.</p>
+<p class="warning"><strong>不推荐</strong>: 当指定不包含空格或星号的参数类型或返回值类型时, 包含的引号可以省略. 例如, 可以使用 <code>Str</code> 代替 <code>&quot;Str&quot;</code> 而 <code>CDecl</code> 代替 <code>&quot;CDecl&quot;</code>. 不推荐在新脚本中使用.</p>
 
 <h2 id="error">ErrorLevel</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此函数失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
@@ -131,19 +131,19 @@ Loop, C:\My Documents\*.*, , 1
 DllCall("<strong>FreeLibrary</strong>", "Ptr", hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
 <p><span class="ver">[v1.0.46.08+]</span>: 通过预先查找函数的地址甚至可以获得更快的性能. 例如:</p>
 <pre><em>; 在下面的地址中, 如果 DLL 还没有装载, 则请使用 LoadLibrary 代替 GetModuleHandle.</em>
-<strong>MulDivProc</strong> := DllCall("GetProcAddress", Ptr, DllCall("GetModuleHandle", Str, "<strong>kernel32</strong>", "Ptr"), AStr, "<strong>MulDiv</strong>", "Ptr")
+<strong>MulDivProc</strong> := DllCall("GetProcAddress", &quot;Ptr&quot;, DllCall("GetModuleHandle", &quot;Str&quot;, "<strong>kernel32</strong>", &quot;Ptr&quot;), &quot;AStr&quot;, "<strong>MulDiv</strong>", &quot;Ptr&quot;)
 Loop 500
-    DllCall(<strong>MulDivProc</strong>, Int, 3, Int, 4, Int, 3)</pre>
+    DllCall(<strong>MulDivProc</strong>, &quot;Int&quot;, 3, &quot;Int&quot;, 4, &quot;Int&quot;, 3)</pre>
 <p><span class="ver">[AHK_L 31+]:</span> 如果 DllCall 的首个参数是原义的字符串如 <code>"MulDiv"</code> 并且包含了函数的 DLL 在脚本开始前已正常装载了, 那么此字符串会自动被解析为函数地址. 这种内置的最优化比上述演示的例子执行地更高效.</p>
 <p>同时, 在脚本的任意位置添加 <a href="_NoEnv.htm">#NoEnv</a> 这行可以改善在使用了没有加引号的参数类型(例如 Int 与 "Int") 时 DllCall 的性能.</p>
-<p>最后, 当传递字符串变量给不会改变它长度的函数时, 传递变量的<a href="../Variables.htm#amp">地址</a>(例如 &amp;MyVar) 而不是作为 "<a href="#str">str</a>" 类型可以提升性能(尤其是当字符串很长的时候). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", <strong>Ptr</strong>, <strong>&amp;</strong>MyVar, Ptr)</code>.</p>
+<p>最后, 当传递字符串变量给不会改变它长度的函数时, 传递变量的<a href="../Variables.htm#amp">地址</a>(例如 &amp;MyVar) 而不是作为 "<a href="#str">str</a>" 类型可以提升性能(尤其是当字符串很长的时候). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", &quot;<strong>Ptr</strong>&quot;, <strong>&amp;</strong>MyVar, &quot;Ptr&quot;)</code>.</p>
 
 <h2 id="struct">结构和数组</h2>
 <p>结构是内存中连续的 <em>成员</em>(空间) 的集合. 大多数成员变量类型是整型.</p>
 <p>调用接受结构地址(或内存块数组) 的函数可以把结构中的原始二进制数据保存到普通变量中. 一般步骤如下:</p>
 <p>1) 调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyStruct, 123, 0)</code> 来确保目标变量足够大以便保存结构数据. 把 123 替换为至少和结构一样大小的数字. 最后一个参数零是可选的; 它会初始化所有成员变量为二进制零, 这样通常可以避免在下一步中频繁调用 NumPut().</p>
 <p>2) 如果目标函数需要初始化结构, 则调用 <code><a href="NumPut.htm">NumPut</a>(123, MyStruct, 4, "UInt")</code> 来初始化任意成员为非零数据. 把 <code>123</code> 替换为需要向目标成员存入的整数(或指定 <code>&amp;Var</code> 来存入变量的<a href="../Variables.htm#amp">地址</a>). 把 <code>4</code> 替换为目标成员的偏移(关于 "偏移" 的说明请参阅步骤 #4). 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
-<p>3) 调用目标函数, 把 <em>MyStruct</em> 的<a href="../Variables.htm#amp">地址</a>作为 UInt(或 Ptr 在 <span class="ver">[AHK_L 42+]</span> 时) 的参数传递过去. 例如, <code>DllCall("MyDll\MyFunc", Ptr, <strong>&amp;</strong>MyStruct)</code>. 函数将检查和/或改变其中的某些成员变量.</p>
+<p>3) 调用目标函数, 把 <em>MyStruct</em> 的<a href="../Variables.htm#amp">地址</a>作为 UInt(或 Ptr 在 <span class="ver">[AHK_L 42+]</span> 时) 的参数传递过去. 例如, <code>DllCall("MyDll\MyFunc", &quot;Ptr&quot;, <strong>&amp;</strong>MyStruct)</code>. 函数将检查和/或改变其中的某些成员变量.</p>
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中获取任何想要的成员变量. 把 <code>4</code> 替换为结构中目标成员的偏移. 首个成员变量的偏移总为 0. 第二个成员的偏移为 0 加上首个成员的大小(一般为 4 字节). 后面成员的偏移等于它前一个成员的偏移加上前一个成员的大小. 大多数成员(例如 DWORD, Int 和<a href="#Int">其他的 32 位整型</a>) 大小为 4 个字节. 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
 <p>请参阅<a href="#ExStruct">结构示例</a>了解实际用法.</p>
 <h2 id="limits">已知限制</h2>
@@ -151,7 +151,7 @@ Loop 500
 <p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即这样的数据无法被大多数命令和函数访问或修改. 但是, 这样的数据可以使用<a href="../Variables.htm#amp">地址运算符</a>和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a> 以及 DllCall 自己进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会出乎意料地返回一个地址不同内容相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall() 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar = ABC
-result := DllCall("CharLower", <strong><u>str</u></strong>, DllCall("CharUpper", Str, MyVar, <strong><u>Str</u></strong>), Str)</pre>
+result := DllCall("CharLower", &quot;<strong><u>Str</u></strong>&quot;, DllCall("CharUpper", &quot;Str&quot;, MyVar, &quot;<strong><u>Str</u></strong>&quot;), &quot;Str&quot;)</pre>
 <p>要变通解决此问题, 请把上面两个带下划线的 "Str" 修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整型传递给 CharLower.</p>
 <p>处理字符串时可能遇到某些限制. 更多细节请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
 <h3 id="COM">组件对象模型(COM)</h3>
@@ -170,7 +170,7 @@ MsgBox You pressed button #%WhichButton%.</pre>
 
 <pre class="NoIndent"><em>; 例子: 改变壁纸为指定的位图(.bmp) 文件.</em>
 
-DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, A_WinDir <strong>.</strong> "\winnt.bmp", UInt, 2)</pre>
+DllCall("SystemParametersInfo", &quot;UInt&quot;, 0x14, &quot;UInt&quot;, 0, &quot;Str&quot;, A_WinDir <strong>.</strong> "\winnt.bmp", &quot;UInt&quot;, 2)</pre>
 
 <pre class="NoIndent"><em>; 例子: 调用 API 函数 "IsWindowVisible" 来判断记事本窗口是否可见.</em>
 
@@ -203,13 +203,13 @@ F1::
 SPI_GETMOUSESPEED = 0x70
 SPI_SETMOUSESPEED = 0x71
 <em>; 获取鼠标当前的速度以便稍后恢复:</em>
-<strong>DllCall</strong>("SystemParametersInfo", UInt, SPI_GETMOUSESPEED, UInt, 0, UIntP, OrigMouseSpeed, UInt, 0)
+<strong>DllCall</strong>("SystemParametersInfo", &quot;UInt&quot;, SPI_GETMOUSESPEED, &quot;UInt&quot;, 0, &quot;UIntP&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)
 <em>; 现在在倒数第二个参数中设置较低的速度 (范围为 1-20, 10 是默认值):</em>
-<strong>DllCall</strong>("SystemParametersInfo", UInt, SPI_SETMOUSESPEED, UInt, 0, Ptr, <strong>3</strong>, UInt, 0)
+<strong>DllCall</strong>("SystemParametersInfo", &quot;UInt&quot;, SPI_SETMOUSESPEED, &quot;UInt&quot;, 0, &quot;Ptr&quot;, <strong>3</strong>, &quot;UInt&quot;, 0)
 KeyWait F1  <em>; 这里避免了由于键盘的重复特性导致再次执行 DllCall.</em>
 return
 
-F1 up::<strong>DllCall</strong>("SystemParametersInfo", UInt, 0x71, UInt, 0, Ptr, OrigMouseSpeed, UInt, 0)  <em>; 恢复原来的速度.</em></pre>
+F1 up::<strong>DllCall</strong>("SystemParametersInfo", &quot;UInt&quot;, 0x71, &quot;UInt&quot;, 0, &quot;Ptr&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)  <em>; 恢复原来的速度.</em></pre>
 
 <pre class="NoIndent" id="GetChildHWND"><em>; 例子: 当传递窗口的唯一 ID 和其中某个控件的文本或 ClassNN,
 ; 下面的函数会返回此控件的 HWND(唯一 ID)(函数例子省略).
@@ -245,22 +245,22 @@ if FileName =
     return
 GENERIC_WRITE = 0x40000000  <em>; 以写入而不是读取的方式打开文件.</em>
 CREATE_ALWAYS = 2  <em>; 创建新文件(覆盖任何现有的文件).</em>
-hFile := <strong>DllCall</strong>("CreateFile", Str, FileName, UInt, GENERIC_WRITE, UInt, 0, Ptr, 0, UInt, CREATE_ALWAYS, UInt, 0, Ptr, 0, Ptr)
+hFile := <strong>DllCall</strong>("CreateFile", &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_WRITE, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;UInt&quot;, CREATE_ALWAYS, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;Ptr&quot;)
 if not hFile
 {
     MsgBox Can't open &quot;%FileName%&quot; for writing.
     return
 }
 TestString = This is a test string.`r`n  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
-<strong>DllCall</strong>(&quot;WriteFile&quot;, Ptr, hFile, Str, TestString, UInt, StrLen(TestString), UIntP, BytesActuallyWritten, Ptr, 0)
-<strong>DllCall</strong>(&quot;CloseHandle&quot;, Ptr, hFile)  <em>; Close the file.</em>
+<strong>DllCall</strong>(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen(TestString), &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
+<strong>DllCall</strong>(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
 GENERIC_READ = 0x80000000  <em>; 以读取而不是写入的方式来打开文件.</em>
 OPEN_EXISTING = 3  <em>; 此标志表示要打开的文件必须已经存在.</em>
 FILE_SHARE_READ = 0x1 <em>; 这个和下一个标志表示其他进程是否可以打开我们已经打开的文件.</em>
 FILE_SHARE_WRITE = 0x2
-hFile := <strong>DllCall</strong>(&quot;CreateFile&quot;, Str, FileName, UInt, GENERIC_READ, UInt, FILE_SHARE_READ|FILE_SHARE_WRITE, Ptr, 0, UInt, OPEN_EXISTING, UInt, 0, Ptr, 0)
+hFile := <strong>DllCall</strong>(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_READ, &quot;UInt&quot;, FILE_SHARE_READ|FILE_SHARE_WRITE, &quot;Ptr&quot;, 0, &quot;UInt&quot;, OPEN_EXISTING, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0)
 if not hFile
 {
     MsgBox Can't open &quot;%FileName%&quot; for reading.
@@ -268,8 +268,8 @@ if not hFile
 }
 <em>; 清空变量以便进行测试, 但需要确保它含有足够的容量:</em>
 BytesToRead := VarSetCapacity(TestString, StrLen(TestString))
-<strong>DllCall</strong>(&quot;ReadFile&quot;, Ptr, hFile, Str, TestString, UInt, BytesToRead, UIntP, BytesActuallyRead, Ptr, 0)
-<strong>DllCall</strong>("CloseHandle", Ptr, hFile)  <em>; 关闭文件.</em>
+<strong>DllCall</strong>(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, BytesToRead, &quot;UIntP&quot;, BytesActuallyRead, &quot;Ptr&quot;, 0)
+<strong>DllCall</strong>("CloseHandle", &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 MsgBox The following string was read from the file: %TestString%</pre>
 
 <pre class="NoIndent" id="HideCursor"><em>; 例子: 当您按下 Win+C 时隐藏鼠标光标. 再次按下 Win+C 显示.
@@ -324,7 +324,7 @@ SystemCursor(OnOff=1)   <em>; 初始化 = "I", "Init"; 隐藏 = 0, "Off"; 切换
 Run Notepad
 WinWait Untitled - Notepad  <em>; 这里同时设置了 "<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>" 以用于下面的 WinExist().</em>
 VarSetCapacity(Rect, 16)  <em>; RECT 结构由四个 32 位整数组成(即 4*4=16).</em>
-<strong>DllCall</strong>("GetWindowRect", Ptr, WinExist(), Ptr, &amp;Rect)  <em>; WinExist() 返回 HWND.</em>
+<strong>DllCall</strong>("GetWindowRect", &quot;Ptr&quot;, WinExist(), &quot;Ptr&quot;, &amp;Rect)  <em>; WinExist() 返回 HWND.</em>
 MsgBox % "Left " . <a href="NumGet.htm">NumGet</a>(Rect, 0, "Int") . " Top " . NumGet(Rect, 4, "Int")
     . " Right " . NumGet(Rect, 8, "Int") . " Bottom " . NumGet(Rect, 12, "Int")</pre>
 
@@ -370,7 +370,7 @@ SetSystemTime(YYYYMMDDHHMISS)
     StringMid, Int, YYYYMMDDHHMISS, 13, 2 <em>; SS(秒数)</em>
     NumPut(Int, SystemTime, 12, "UShort")
 
-    return <strong>DllCall</strong>("SetSystemTime", Ptr, &amp;SystemTime)
+    return <strong>DllCall</strong>("SetSystemTime", &quot;Ptr&quot;, &amp;SystemTime)
 }</pre>
 
 <pre class="NoIndent"><em>/* <strong>更多结构的例子:</strong>

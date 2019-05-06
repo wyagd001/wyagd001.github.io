@@ -142,11 +142,10 @@ GuiClose:
 ExitApp</pre>
 
 <pre class="NoIndent" id="shutdown"><em>; 示例: 下面的脚本检测系统的关机/注销动作并允许您终止它
-; 据说在 Windows Vista 或更高版本中不会工作).
 ; 相关主题: <a href="OnExit.htm">OnExit</a></em>
 
 <em>; 下面的 DllCall 是可选的:它告诉操作系统要<i>首先</i>关闭此脚本(在其他所有程序之前).</em>
-DllCall(&quot;kernel32.dll\SetProcessShutdownParameters&quot;, UInt, 0x4FF, UInt, 0)
+DllCall(&quot;kernel32.dll\SetProcessShutdownParameters&quot;, &quot;UInt&quot;, 0x4FF, &quot;UInt&quot;, 0)
 OnMessage(0x11, &quot;WM_QUERYENDSESSION&quot;)
 return
 
@@ -158,7 +157,7 @@ WM_QUERYENDSESSION(wParam, lParam)
     else  <em>; 系统正在关机或重启.</em>
         EventType = Shutdown
     MsgBox, 4,, %EventType% in progress.  Allow it?
-    IfMsgBox Yes
+    IfMsgBox Yes     <em>; 在 Windows Vista 或更高版本的系统中始终返回 true.</em>
         return true  <em>; 告诉操作系统允许关机/注销操作继续.</em>
     else
         return false  <em>; 告诉操作系统终止关机/注销操作.</em>

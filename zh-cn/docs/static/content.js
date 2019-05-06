@@ -70,6 +70,7 @@ var cache = {
 // Set global variables:
 var isCacheLoaded = cache.load();
 var workingDir = getWorkingDir();
+var equivPath = $('meta[name|="ahk:equiv"]').prop('content');
 var relPath = location.href.replace(workingDir, '');
 var isInsideCHM = (location.href.search(/::/) > 0) ? 1 : 0;
 var supportsHistory = (history.replaceState) && !isInsideCHM;
@@ -111,7 +112,7 @@ var isPhone = (document.documentElement.clientWidth <= 600);
     {
       $('head').append('<style>body {font-size:' + cache.fontSize + 'em}</style>');
       normalizeParentURL = function() {
-        postMessageToParent('normalizeURL', [$.extend({}, window.location), document.title, supportsHistory ? history.state : null]);
+        postMessageToParent('normalizeURL', [$.extend({}, window.location), document.title, supportsHistory ? history.state : null, equivPath]);
         if (cache.toc_clickItem)
           if (supportsHistory)
             history.replaceState({toc_clickItem: cache.toc_clickItem}, null, null);
@@ -165,7 +166,7 @@ var isPhone = (document.documentElement.clientWidth <= 600);
           }
           document.title = data[2];
           if (structure.modifyOnlineTools)
-            structure.modifyOnlineTools(relPath);
+            structure.modifyOnlineTools(relPath, data[4]);
           if ($('#left > div.toc li > span.selected a').attr('href') == data[1].href)
             break;
           else if (data[3]) {
@@ -864,7 +865,7 @@ function ctor_structure()
     var $langList = $online.find('ul.languages')
     var $verList = $online.find('ul.versions')
 
-    self.modifyOnlineTools = function(relPath) {
+    self.modifyOnlineTools = function(relPath, equivPath) {
       // Bug - IE/Edge doesn't turn off list-style if element is hidden:
       $langList.add($verList).css("list-style", "none");
       // Hide currently selected language and version in the selection lists:
@@ -886,8 +887,7 @@ function ctor_structure()
         var thisLink = link[ver][lang];
         // Fallback to default docs:
         thisLink = (thisLink == null) ? link[ver]['en'] : thisLink;
-        // Don't use relPath here due file differences between the versions:
-        a.attr('href', thisLink);
+        a.attr('href', thisLink + (equivPath || relPath));
       });
       // Hide dropdown list on click with left or middle mouse button:
       $langList.add($verList).off('mouseup').on('mouseup', function(e) {
@@ -904,7 +904,7 @@ function ctor_structure()
         target: "_blank"
       });
     };
-    self.modifyOnlineTools(relPath);
+    self.modifyOnlineTools(relPath, equivPath);
 
     // --- CHM tools (only visible if help is CHM) ---
 

@@ -3,6 +3,7 @@
 <head>
 <title>RegisterCallback | AutoHotkey</title>
 <meta name="description" content="The RegisterCallback function creates a machine-code address that when called, redirects the call to a function in the script." />
+<meta name="ahk:equiv-v2" content="commands/CallbackCreate.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -72,7 +73,7 @@ wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
 <pre>
 callback := RegisterCallback("TheFunc", "F", 3)  <em>; 必须指定参数列表的大小.</em>
 TheFunc("TheFunc was called directly.")          <em>; 直接调用 TheFunc.</em>
-DllCall(callback, float, 10.5, int64, 42)        <em>; 通过回调调用 TheFunc.</em>
+DllCall(callback, &quot;float&quot;, 10.5, &quot;int64&quot;, 42)        <em>; 通过回调调用 TheFunc.</em>
 TheFunc(params*) {
     if IsObject(params)
         MsgBox % params[1]
@@ -107,7 +108,7 @@ if not EnumAddress  <em>; 由于只能从这个线程调用, 所以可以使用�
 DetectHiddenWindows On  <em>; 由于是快速模式, 所以此设置也会在回调中生效.</em>
 
 <em>; 把控制传给 EnumWindows(), 它会重复调用回调:</em>
-DllCall("EnumWindows", Ptr, EnumAddress, Ptr, 0)
+DllCall("EnumWindows", &quot;Ptr&quot;, EnumAddress, &quot;Ptr&quot;, 0)
 MsgBox %Output%  <em>; 显示由回调收集的信息.</em>
     
 EnumWindowsProc(hwnd, lParam)
@@ -124,7 +125,7 @@ EnumWindowsProc(hwnd, lParam)
 ; 背景颜色被改变为自定义颜色.</em>
 
 TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
-TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, UInt, TextBackgroundColor)
+TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, &quot;UInt&quot;, TextBackgroundColor)
 
 Gui, Add, Text, HwndMyTextHwnd, Here is some text that is given`na custom background color.
 Gui +LastFound
@@ -135,8 +136,8 @@ SetWindowLong := A_PtrSize=8 ? "SetWindowLongPtr" : "SetWindowLong"
 
 WindowProcNew := <strong>RegisterCallback</strong>("WindowProc", ""  <em>; 指定 "" 来避免子类化中使用快速模式.</em>
     , <strong>4</strong>, MyTextHwnd)  <em>; 使用了 EventInfo 参数时必须明确指定 ParamCount.</em>
-WindowProcOld := DllCall(SetWindowLong, Ptr, GuiHwnd, Int, -4  <em>; -4 是 GWL_WNDPROC</em>
-    , Ptr, WindowProcNew, Ptr) <em>; 返回值必须设置为 Ptr 或 UPtr 而不是 Int.</em>
+WindowProcOld := DllCall(SetWindowLong,  &quot;Ptr&quot;, GuiHwnd, &quot;Int&quot;, -4  <em>; -4 是 GWL_WNDPROC</em>
+    ,  &quot;Ptr&quot;, WindowProcNew,  &quot;Ptr&quot;) <em>; 返回值必须设置为 Ptr 或 UPtr 而不是 Int.</em>
 
 Gui Show
 return
@@ -147,11 +148,11 @@ WindowProc(hwnd, uMsg, wParam, lParam)
     global TextBackgroundColor, TextBackgroundBrush, WindowProcOld
     if (uMsg = 0x138 &amp;&amp; lParam = A_EventInfo)  <em>; 0x138 为 WM_CTLCOLORSTATIC.</em>
     {
-        DllCall(&quot;SetBkColor&quot;, Ptr, wParam, UInt, TextBackgroundColor)
+        DllCall(&quot;SetBkColor&quot;, &quot;Ptr&quot;, wParam, &quot;UInt&quot;, TextBackgroundColor)
         return TextBackgroundBrush  <em>; 返回 HBRUSH 来通知操作系统我们改变了 HDC.</em>
     }
     <em>; 否则 (如果上面没有返回), 传递所有的未处理事件到原来的 WindowProc.</em>
-    return DllCall(&quot;CallWindowProc&quot;, Ptr, WindowProcOld, Ptr, hwnd, UInt, uMsg, Ptr, wParam, Ptr, lParam)
+    return DllCall(&quot;CallWindowProc&quot;, &quot;Ptr&quot;, WindowProcOld, &quot;Ptr&quot;, hwnd, &quot;UInt&quot;, uMsg, &quot;Ptr&quot;, wParam, &quot;Ptr&quot;, lParam)
 }
 
 GuiClose:
