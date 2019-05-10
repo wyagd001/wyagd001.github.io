@@ -3,6 +3,7 @@
 <head>
 <title>DirSelect - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The DirSelect function displays a standard dialog that allows the user to select a folder." />
+<meta name="ahk:equiv-v1" content="commands/FileSelectFolder.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -20,9 +21,9 @@
 
   <dt>StartingFolder</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>If blank or omitted, the dialog's initial selection will be the user's My Documents folder (or possibly My Computer). A <a href="../misc/CLSID-List.htm">CLSID folder</a> such as <code>"::{20d04fe0-3aea-1069-a2d8-08002b30309d}"</code> (i.e. My Computer) may be specified start navigation at a specific special folder.</p>
-      <p>Otherwise, the most common usage of this parameter is an asterisk followed immediately by the absolute path of the drive or folder to be initially selected. For example, <code>"*C:\"</code> would initially select the C drive. Similarly, <code>"*C:\My Folder"</code> would initially select that particular folder.</p>
+      <p>Otherwise, the most common usage of this parameter is an asterisk followed immediately by the absolute path of the drive or folder to be initially selected. 例如, <code>"*C:\"</code> would initially select the C drive. Similarly, <code>"*C:\My Folder"</code> would initially select that particular folder.</p>
       <p>The asterisk indicates that the user is permitted to navigate upward (closer to the root) from the starting folder. Without the asterisk, the user would be forced to select a folder inside <em>StartingFolder</em> (or <em>StartingFolder</em> itself). One benefit of omitting the asterisk is that <em>StartingFolder</em> is initially shown in a tree-expanded state, which may save the user from having to click the first plus sign.</p>
       <p>If the asterisk is present, upward navigation may optionally be restricted to a folder other than Desktop. This is done by preceding the asterisk with the absolute path of the uppermost folder followed by exactly one space or tab. In the following example, the user would not be allowed to navigate any higher than C:\My Folder (but the initial selection would be C:\My Folder\Projects):<br>
       <code>"C:\My Folder *C:\My Folder\Projects"</code></p>
@@ -30,25 +31,25 @@
 
   <dt>Options</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+      <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
       <p>One of the following numbers:</p>
       <p><strong>0</strong>: The options below are all disabled (except on Windows 2000, where the &quot;make new folder&quot; button might appear anyway).</p>
       <p><strong>1</strong> (default): A button is provided that allows the user to create new folders.</p>
-      <p><strong>Add 2</strong> to the above number to  provide an edit field that allows the user to type the name of a folder. For example, a value of 3 for this parameter provides both an edit field and a &quot;make new folder&quot; button.</p>
+      <p><strong>Add 2</strong> to the above number to  provide an edit field that allows the user to type the name of a folder. 例如, a value of 3 for this parameter provides both an edit field and a &quot;make new folder&quot; button.</p>
       <p id="NewDialog"><strong>Add 4</strong> to the above number to omit the BIF_NEWDIALOGSTYLE property. Adding 4 ensures that DirSelect will work properly even in a Preinstallation Environment like WinPE or BartPE. However, this prevents the appearance of a &quot;make new folder&quot; button, at least on Windows XP.</p>
       <p>If the user types an invalid folder name in the edit field, <em>SelectedFolder</em> will be set to the folder selected in the navigation tree rather than what the user entered, at least on Windows XP.</p>
   </dd>
 
   <dt>Prompt</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>Text displayed in the window to instruct the user what to do. If omitted or blank, it will default to <code>"Select Folder - " <a href="../Variables.htm#ScriptName">A_ScriptName</a></code> (i.e. the name of the current script).</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#strings">String</a></p>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
 <p>This function returns the full path and name of the folder chosen by the user. If the user cancels the dialog (i.e. does not wish to select a folder), an empty string is returned. If the user selects a root directory (such as C:\), the return value will contain a trailing backslash. If this is undesirable, remove it as follows:</p>
 <pre>Folder := RegExReplace(DirSelect(), "\\$")  <em>; Removes the trailing backslash, if present.</em></pre>
 
@@ -65,7 +66,7 @@ Thread "NoTimers", false</pre>
 <h2>相关</h2>
 <p><a href="FileSelect.htm">FileSelect</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="ToolTip.htm">ToolTip</a>, <a href="../objects/Gui.htm">GUI</a>, <a href="../misc/CLSID-List.htm">CLSID List</a>, <a href="DirCopy.htm">DirCopy</a>, <a href="DirMove.htm">DirMove</a>, <a href="SplitPath.htm">SplitPath</a></p>
 <p>Also, the operating system offers standard dialog boxes that prompt the user to pick a font, color, or icon. These dialogs can be displayed via <a href="DllCall.htm">DllCall</a> as demonstrated at <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a>.</p>
-<h2>Example</h2>
+<h2>示例</h2>
 <pre class="NoIndent">SelectedFolder := DirSelect(, 3)
 if SelectedFolder = ""
     MsgBox "You didn't select a folder."

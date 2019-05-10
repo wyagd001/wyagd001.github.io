@@ -3,6 +3,7 @@
 <head>
 <title>Loop Files - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The Loop Files statement retrieves the specified files or folders, one at a time." />
+<meta name="ahk:equiv-v1" content="commands/LoopFile.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -20,7 +21,7 @@
 
   <dt>FilePattern</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>The name of a single file or folder, or a wildcard pattern such as "C:\Temp\*.tmp". <em>FilePattern</em> is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
       <p>Both asterisks and question marks are supported as wildcards. A match occurs when the pattern appears in either the file's long/normal name or its <a href="#LoopFileShortName">8.3 short name</a>.</p>
       <p>If this parameter is a single file or folder (i.e. no wildcards) and <em>Mode</em> includes <code>R</code>, more than one match will be found if the specified file name appears in more than one of the folders being searched.</p>
@@ -28,7 +29,7 @@
 
   <dt>Mode</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>An optional string containing zero or more of the following letters:</p>
       <p><code>D</code>: Include directories (folders).<br>
       <code>F</code>: Include files. If both F and D are omitted, files are included but not folders.<br>
@@ -58,7 +59,7 @@
   </tr>
   <tr id="LoopFileShortPath">
     <td>A_LoopFileShortPath</td>
-    <td><p>The 8.3 short path and name of the file/folder currently retrieved. For example: C:\MYDOCU~1\ADDRES~1.txt. If <em>FilePattern</em> contains a relative path rather than an absolute path, the path here will also be relative.</p>
+    <td><p>The 8.3 short path and name of the file/folder currently retrieved. 例如: C:\MYDOCU~1\ADDRES~1.txt. If <em>FilePattern</em> contains a relative path rather than an absolute path, the path here will also be relative.</p>
       <p>To retrieve the complete 8.3 path and name for a single file or folder, specify its name for <em>FilePattern</em> as in this example:</p>
 <pre>Loop Files, "C:\My Documents\Address List.txt"
     ShortPathName := A_LoopFileShortPath</pre>
@@ -70,7 +71,7 @@
   </tr>
   <tr id="LoopFileDir">
     <td>A_LoopFileDir</td>
-    <td>The path of the directory in which <em>A_LoopFileName</em> resides. If <em>FilePattern</em> contains a relative path rather than an absolute path, the path here will also be relative. A root directory will not contain a trailing backslash. For example: C:</td>
+    <td>The path of the directory in which <em>A_LoopFileName</em> resides. If <em>FilePattern</em> contains a relative path rather than an absolute path, the path here will also be relative. A root directory will not contain a trailing backslash. 例如: C:</td>
   </tr>
   <tr id="LoopFileTimeModified">
     <td>A_LoopFileTimeModified</td>
@@ -108,7 +109,7 @@
 <pre>if A_LoopFileAttrib ~= "[HRS]"  <em>; Skip any file that is either H (Hidden), R (Read-only), or S (System). See <a href="../Variables.htm#regex">~= operator</a>.</em>
     continue  <em>; Skip this file and move on to the next one.</em></pre>
 <p>To retrieve files' relative paths instead of absolute paths during a recursive search, use <a href="SetWorkingDir.htm">SetWorkingDir</a> to change to the base folder prior to the loop, and then omit the path from the Loop (e.g. <code>Loop Files, "*.*", "R"</code>). That will cause <a href="#LoopFilePath">A_LoopFilePath</a> to contain the file's path relative to the base folder.</p>
-<p>A file-loop can disrupt itself if it creates or renames files or folders within its own purview. For example, if it renames files via <a href="FileMove.htm">FileMove</a> or other means, each such file might be found twice: once as its old name and again as its new name. To work around this, rename the files only after creating a list of them. For example:</p>
+<p>A file-loop can disrupt itself if it creates or renames files or folders within its own purview. 例如, if it renames files via <a href="FileMove.htm">FileMove</a> or other means, each such file might be found twice: once as its old name and again as its new name. To work around this, rename the files only after creating a list of them. 例如:</p>
 <pre>FileList := &quot;&quot;
 Loop Files, "*.jpg"
     FileList .= A_LoopFileName &quot;`n&quot;
@@ -122,20 +123,20 @@ Loop Parse, FileList, "`n"
 <p><a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">Blocks</a>, <a href="SplitPath.htm">SplitPath</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileSetTime.htm">FileSetTime</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; Example #1:</em>
+<pre class="NoIndent"><em>; 示例 #1:</em>
 Loop Files, A_ProgramFiles "\*.txt", "R"  <em>; Recurse into subfolders.</em>
 {
     Result := MsgBox("Filename = " A_LoopFilePath "`n`nContinue?",, "y/n")
     if Result = "No"
         break
 }</pre>
-<pre class="NoIndent"><em>; Example #2: Calculate the size of a folder, including the files in all its subfolders:</em>
+<pre class="NoIndent"><em>; 示例 #2: Calculate the size of a folder, including the files in all its subfolders:</em>
 FolderSizeKB := 0
 WhichFolder := DirSelect()  <em>; Ask the user to pick a folder.</em>
 Loop Files, WhichFolder "\*.*", "R"
     FolderSizeKB += A_LoopFileSizeKB
 MsgBox "Size of " WhichFolder " is " FolderSizeKB " KB."</pre>
-<pre class="NoIndent"><em>; Example #3: Retrieve file names sorted by name (see next example to sort by date):</em>
+<pre class="NoIndent"><em>; 示例 #3: Retrieve file names sorted by name (see next example to sort by date):</em>
 FileList := &quot;&quot;  <em>; Initialize to be blank.</em>
 Loop Files, "C:\*.*"
     FileList .= A_LoopFileName &quot;`n&quot;
@@ -148,7 +149,7 @@ Loop Parse, FileList, "`n"
     if Result = "No"
         break
 }</pre>
-<pre class="NoIndent"><em>; Example #4: Retrieve file names sorted by modification date:</em>
+<pre class="NoIndent"><em>; 示例 #4: Retrieve file names sorted by modification date:</em>
 FileList := &quot;&quot;
 Loop Files, A_MyDocuments "\Photos\*.*", "FD"  <em>; Include Files and Directories</em>
     FileList .= A_LoopFileTimeModified &quot;`t&quot; A_LoopFileName &quot;`n&quot;
@@ -162,7 +163,7 @@ Loop Parse, FileList, "`n"
     if Result = "No"
         break
 }</pre>
-<pre class="NoIndent"><em>; Example #5: Copy only the source files that are newer than their counterparts
+<pre class="NoIndent"><em>; 示例 #5: Copy only the source files that are newer than their counterparts
 ; in the destination:</em>
 CopyIfNewer:
 <em>; Caller has set the variables CopySourcePattern and CopyDest for us.</em>
@@ -186,7 +187,7 @@ Loop Files, CopySourcePattern
     }
 }
 Return</pre>
-<pre class="NoIndent"><em>; Example #6: Convert filenames passed in via command-line parameters to long names,
+<pre class="NoIndent"><em>; 示例 #6: Convert filenames passed in via command-line parameters to long names,
 ; complete path, and correct uppercase/lowercase characters as stored in the file system.</em>
 Loop A_Args.Length()  <em>; For each parameter (or file dropped onto a script):</em>
 {

@@ -3,6 +3,7 @@
 <head>
 <title>Loop Read - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The Loop Read statement retrieves the lines in a text file, one at a time." />
+<meta name="ahk:equiv-v1" content="commands/LoopReadFile.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -20,13 +21,13 @@
 
   <dt>InputFile</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>The name of the text file whose contents will be read by the loop, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified. The file's lines may end in carriage return and linefeed (`r`n), just linefeed (`n), or just carriage return (`r).</p>
   </dd>
 
   <dt>OutputFile</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>The name of the file to be kept open for the duration of the loop, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
       <p>Within the loop's body, use the <a href="FileAppend.htm">FileAppend</a> function without the <em>Filename</em> parameter (i.e. omit it) to append to this special file. Appending to a file in this manner performs better than using <a href="FileAppend.htm">FileAppend</a> in its 2-parameter mode because the file does not need to be closed and re-opened for each operation. Remember to include a linefeed (`n) or carriage return and linefeed (`r`n) after the text, if desired.</p>
       <p>The file is not opened if nothing is ever written to it. This happens if the Loop performs zero iterations or if it never calls <a href="FileAppend.htm">FileAppend</a>.</p>
@@ -40,7 +41,7 @@
 <p>A file-reading loop is useful when you want to operate on each line contained in a text file, one at a time. The file is kept open for the entire operation to avoid having to re-scan each time to find the next line.</p>
 <p id="LoopReadLine">The built-in variable <strong>A_LoopReadLine</strong> exists within any file-reading loop. It contains the contents of the current line excluding the carriage return and linefeed (`r`n) that marks the end of the line. If an inner file-reading loop is enclosed by an outer file-reading loop, the innermost loop's file-line will take precedence.</p>
 <p>Lines up to 65,534 characters long can be read. If the length of a line exceeds this, its remaining characters will be read during the next loop iteration.</p>
-<p><a href="StrSplit.htm">StrSplit</a> or a <a href="LoopParse.htm">parsing loop</a> is often used inside a file-reading loop to parse the contents of each line retrieved from <em>InputFile</em>. For example, if <em>InputFile</em>'s lines are each a series of tab-delimited fields, those fields can individually retrieved as in this example:</p>
+<p><a href="StrSplit.htm">StrSplit</a> or a <a href="LoopParse.htm">parsing loop</a> is often used inside a file-reading loop to parse the contents of each line retrieved from <em>InputFile</em>. 例如, if <em>InputFile</em>'s lines are each a series of tab-delimited fields, those fields can individually retrieved as in this example:</p>
 <pre>Loop read, "C:\Database Export.txt"
 {
     Loop parse, A_LoopReadLine, A_Tab
@@ -57,7 +58,7 @@
 <p><a href="FileEncoding.htm">FileEncoding</a>, <a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">File Object</a>, <a href="FileRead.htm">FileRead</a>, <a href="FileAppend.htm">FileAppend</a>, <a href="Sort.htm">Sort</a>, <a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">Blocks</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileSetTime.htm">FileSetTime</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; Example #1: Only those lines of the 1st file that contain the word FAMILY will be written to the 2nd file.
+<pre class="NoIndent"><em>; 示例 #1: Only those lines of the 1st file that contain the word FAMILY will be written to the 2nd file.
 ; Uncomment the first line to overwrite rather than append to any existing file.
 ;FileDelete "C:\Docs\Family Addresses.txt"</em>
 
@@ -66,10 +67,10 @@ Loop read, "C:\Docs\Address List.txt", "C:\Docs\Family Addresses.txt"
     if InStr(A_LoopReadLine, "family")
         FileAppend(A_LoopReadLine "`n")
 }</pre>
-<pre class="NoIndent"><em>; Example #2: Retrieve the last line from a text file.</em>
+<pre class="NoIndent"><em>; 示例 #2: Retrieve the last line from a text file.</em>
 Loop read, "C:\Log File.txt"
     last_line := A_LoopReadLine  <em>; When loop finishes, this will hold the last line.</em></pre>
-<pre class="NoIndent"><em>; Example #3: A working script that attempts to extract all FTP and HTTP
+<pre class="NoIndent"><em>; 示例 #3: A working script that attempts to extract all FTP and HTTP
 ; URLs from a text or HTML file:</em>
 SourceFile := FileSelect(3,, "Pick a text or HTML file to analyze.")
 if SourceFile = ""

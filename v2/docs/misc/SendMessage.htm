@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>PostMessage / SendMessage Tutorial | AutoHotkey v2</title>
+<title>PostMessage / SendMessage 教程 | AutoHotkey v2</title>
 <meta name="description" content="Learn how to send messages to a window or its controls using the PostMessage or SendMessage functions." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,19 +10,19 @@
 </head>
 
 <body>
-<h1>PostMessage / SendMessage Tutorial <span class="headnote">by Rajat</span></h1>
+<h1>PostMessage / SendMessage 教程 <span class="headnote">作者: Rajat</span></h1>
 
-<p>This page explains how to send messages to a window or its controls via <a href="../commands/PostMessage.htm">PostMessage</a> or <a href="../commands/SendMessage.htm">SendMessage</a> and will answer some questions like:</p>
-<p>&quot;How do I press a button on a minimized window?&quot; <br>
-&quot;How do I select a menu item when <a href="../commands/MenuSelect.htm">MenuSelect</a> doesn't work with it?!&quot;<br>
-&quot;This is a skinnable window.... how do I send a function that works every time?&quot;<br>
-&quot;and what about <strong>hidden</strong> windows?!&quot;<br>
+<p>本页解释如何通过 <a href="../commands/PostMessage.htm">PostMessage</a> 或 <a href="../commands/SendMessage.htm">SendMessage</a> 向窗口或窗口控件发送消息, 并将回答如下问题:</p>
+<p>&quot;如何按下已最小化窗口中的按钮?&quot; <br>
+&quot;当 <a href="../commands/MenuSelect.htm">MenuSelect</a> 不起作用时, 我如何选择一个菜单项?!&quot;<br>
+&quot;这是个可更换皮肤的窗口.... 如何确保我每次发送的函数都有效?&quot;<br>
+&quot;如果是 <strong>隐藏</strong> 窗口呢?!&quot;<br>
 <br>
 <br>
-Requirements: Winspector Spy (<a href="http://www.softpedia.com/get/Security/Security-Related/Winspector.shtml">can be found here</a>)</p>
-<p>As a first example, note that <a href="../commands/MenuSelect.htm">MenuSelect</a> fails to work with the menu bar on Outlook Express's &quot;New Message&quot; window. In other words, this code will not work:</p>
+需要: Winspector Spy(<a href="http://www.softpedia.com/get/Security/Security-Related/Winspector.shtml">可在此处下载</a>)</p>
+<p>像第一个例子那样, 请注意 <a href="../commands/MenuSelect.htm">MenuSelect</a> 对 Outlook Express 的 &quot;New Message&quot; 窗口中的菜单栏无效. 换句话说, 这代码不起作用:</p>
 <pre> MenuSelect "New Message",, "&amp;Insert", "&amp;Picture..."</pre>
-<p>But <a href="../commands/PostMessage.htm">PostMessage</a> can get the job done:</p>
+<p>但 <a href="../commands/PostMessage.htm">PostMessage</a> 能实现这个操作:</p>
 <pre>PostMessage 0x111, 40239, 0, , "New Message"</pre>
 <p>Works like a charm! But what the heck is that? 0x111 is the hex code of <a href="SendMessageList.htm">wm_command message</a> and 40239 is the code that this particular window understands as menu-item 'Insert Picture' selection. Now let me tell you how to find a value such as 40239:</p>
 <ol>
@@ -52,7 +52,25 @@ Requirements: Winspector Spy (<a href="http://www.softpedia.com/get/Security/Sec
 <a href="../commands/PostMessage.htm">PostMessage</a> 0x111, 32808, 0, , "Windows Media Player"</pre>
 <pre><em>;suspend the hotkeys of a running AHK script</em>
 DetectHiddenWindows True
-<a href="../commands/PostMessage.htm">PostMessage</a> 0x111, 65305,,, "MyScript.ahk - AutoHotkey" <em>; Use 65306 to Pause vs. Suspend.</em></pre>
+<em>; Use 65306 to Pause and 65303 to Reload instead of Suspend. (see <a href="../FAQ.htm#close">FAQ</a>)</em>
+<a href="../commands/PostMessage.htm">PostMessage</a> 0x111, 65305,,, "MyScript.ahk - AutoHotkey"
+ </pre>
+ <pre><em>; Press CapsLock and Numpad2 to reload all AutoHotkey scripts</em>
+ CapsLock & Numpad2::
+ ReloadAllAhkScripts() {
+     DetectHiddenWindows True
+     allAhkExe := WinGetList("ahk_class AutoHotkey")
+     Loop allAhkExe.Count() {
+         hwnd := allAhkExe[A_Index]
+         if (hwnd = A_ScriptHwnd)  <em>; ignore the current window for reloading</em>
+         {
+             continue
+         }
+         PostMessage 0x111, 65303,,, "ahk_id" . hwnd
+     }
+     Reload
+ }
+ </pre>
 <p>This above was for PostMessage. <a href="../commands/SendMessage.htm">SendMessage</a> works the same way but additionally waits for a return value, which can be used for things such as getting the currently playing track in Winamp (see <a href="Winamp.htm">Automating Winamp</a> for an example).</p>
 <p>Here are some more notes:</p>
 <ul>

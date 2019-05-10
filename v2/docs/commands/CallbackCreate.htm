@@ -3,6 +3,7 @@
 <head>
 <title>CallbackCreate - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The CallbackCreate function creates a machine-code address that when called, redirects the call to a function in the script." />
+<meta name="ahk:equiv-v1" content="commands/RegisterCallback.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -20,7 +21,7 @@
 
   <dt>Function</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a> or <a href="../Concepts.htm#objects">Object</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a> or <a href="../Concepts.htm#objects">Object</a></p>
     <p>A function name or <a href="../objects/Functor.htm">function object</a>. This function is called automatically whenever <em>Address</em> is called. The function also receives the parameters that were passed to <em>Address</em>.</p>
     <p>A <a href="../Functions.htm#closures">closure</a> or <a href="../objects/Functor.htm#BoundFunc">bound function</a> can be used to differentiate between multiple callbacks which all call the same script function.</p>
     <p>The callback retains a reference to the function object, and releases it when the script calls <a href="#CallbackFree">CallbackFree</a>.</p>
@@ -28,23 +29,23 @@
 
   <dt>Options</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>Specify zero or more of the following words or characters. Separate each option from the next with a space (e.g. <code>"C Fast"</code>).</p>
-    <p id="Fast"><strong>Fast</strong> or <strong>F</strong>: Avoids starting a new <a href="../misc/Threads.htm">thread</a> each time <em>FunctionName</em> is called. Although this performs better, it must be avoided whenever the thread from which <em>Address</em> is called varies (e.g. when the callback is triggered by an incoming message). This is because <em>FunctionName</em> will be able to change global settings such as <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a>, and the <a href="../misc/WinTitle.htm#LastFoundWindow">last-found window</a> for whichever thread happens to be running at the time it is called. For more information, see <a href="#Threads">Remarks</a>.</p>
+    <p id="Fast"><strong>Fast</strong> or <strong>F</strong>: Avoids starting a new <a href="../misc/Threads.htm">thread</a> each time <em>FunctionName</em> is called. Although this performs better, it must be avoided whenever the thread from which <em>Address</em> is called varies (e.g. when the callback is triggered by an incoming message). This is because <em>FunctionName</em> will be able to change global settings such as <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a>, and the <a href="../misc/WinTitle.htm#LastFoundWindow">last-found window</a> for whichever thread happens to be running at the time it is called. For more information, 请参阅 <a href="#Threads">Remarks</a>.</p>
     <p><strong>CDecl</strong> or <strong>C</strong>: Makes <em>Address</em> conform to the &quot;C&quot; calling convention. This is typically omitted because the standard calling convention is much more common for callbacks. This option is ignored by 64-bit versions of AutoHotkey, which use the x64 calling convention.</p>
     <p><strong>&amp;</strong>: Causes the address of the parameter list (a single integer) to be passed to <em>Function</em> instead of the individual parameters. Parameter values can be retrieved by using <a href="NumGet.htm">NumGet</a>. When using the standard 32-bit calling convention, <em>ParamCount</em> must specify the size of the parameter list in DWORDs (the number of bytes divided by 4).</p>
   </dd>
 
   <dt>ParamCount</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>The number of parameters that <em>Address</em>'s caller will pass to it. If omitted, it defaults to <code><i>Function</i>.<a href="../objects/Func.htm#MinParams">MinParams</a></code>, which is usually the number of mandatory parameters in the <a href="../Functions.htm#define">definition</a> of <em>Function</em>. In either case, ensure that the caller passes exactly this number of parameters.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>CallbackCreate returns a machine-code address. This address is typically passed to an external function via <a href="DllCall.htm">DllCall</a> or placed in a struct using <a href="NumPut.htm">NumPut</a>, but can also be called directly by DllCall. Passing the address to <a href="#CallbackFree">CallbackFree</a> will delete the callback.</p>
 
 <h2 id="failure">Failure</h2>
@@ -82,10 +83,10 @@ wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
 <pre>MyString := StrGet(MyParameter)</pre>
 <p>If an incoming parameter is the address of a structure, the individual members may be extracted by following the steps at <a href="DllCall.htm#struct">DllCall structures</a>.</p>
 
-<p id="Indirect"><strong>Receiving parameters by address:</strong> If the <code>&amp;</code> option is used, the function receives the <i>address</i> of the first callback parameter. For example:</p>
+<p id="Indirect"><strong>Receiving parameters by address:</strong> If the <code>&amp;</code> option is used, the function receives the <i>address</i> of the first callback parameter. 例如:</p>
 <pre>
 callback := CallbackCreate("TheFunc", "F&amp;", 3)  <em>; Parameter list size must be specified for 32-bit.</em>
-DllCall(callback, float, 10.5, int64, 42)
+DllCall(callback, &quot;float&quot;, 10.5, &quot;int64&quot;, 42)
 TheFunc(params) {
     MsgBox <a href="NumGet.htm">NumGet</a>(params+0, "float") ", " NumGet(params+A_PtrSize, "int64")
 }</pre>
@@ -108,7 +109,7 @@ TheFunc(params) {
 <p><a href="DllCall.htm">DllCall</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort's callback</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">Functions</a>, <a href="../misc/SendMessageList.htm">List of Windows Messages</a>, <a href="../misc/Threads.htm">Threads</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; Example: The following is a working script that displays a summary of all top-level windows.</em>
+<pre class="NoIndent"><em>; 示例: The following is a working script that displays a summary of all top-level windows.</em>
 
 <em>; For performance and memory conservation, call CallbackCreate only once for a given callback:</em>
 if not EnumAddress  <em>; Fast-mode is okay because it will be called only from this thread:</em>
@@ -117,7 +118,7 @@ if not EnumAddress  <em>; Fast-mode is okay because it will be called only from 
 DetectHiddenWindows True  <em>; Due to fast-mode, this setting will go into effect for the callback too.</em>
 
 <em>; Pass control to EnumWindows(), which calls the callback repeatedly:</em>
-DllCall(&quot;EnumWindows&quot;, Ptr, EnumAddress, Ptr, 0)
+DllCall(&quot;EnumWindows&quot;, &quot;Ptr&quot;, EnumAddress, &quot;Ptr&quot;, 0)
 MsgBox Output  <em>; Display the information accumulated by the callback.</em>
     
 EnumWindowsProc(hwnd, lParam)
@@ -129,12 +130,12 @@ EnumWindowsProc(hwnd, lParam)
         Output .= &quot;HWND: &quot; . hwnd . &quot;`tTitle: &quot; . title . &quot;`tClass: &quot; . class . &quot;`n&quot;
     return true  <em>; Tell EnumWindows() to continue until all windows have been enumerated.</em>
 }</pre>
-<pre class="NoIndent"><em>; Example: The following is a working script that demonstrates how to subclass a GUI window by
+<pre class="NoIndent"><em>; 示例: The following is a working script that demonstrates how to subclass a GUI window by
 ; redirecting its WindowProc to a new WindowProc in the script. In this case, the background
 ; color of a text control is changed to a custom color.</em>
 
 TextBackgroundColor := 0xFFBBBB  <em>; A custom color in BGR format.</em>
-TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, UInt, TextBackgroundColor)
+TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, &quot;UInt&quot;, TextBackgroundColor)
 
 Gui := GuiCreate()
 Text := Gui.Add("Text",, "Here is some text that is given`na custom background color.")
@@ -143,8 +144,8 @@ Text := Gui.Add("Text",, "Here is some text that is given`na custom background c
 SetWindowLong := A_PtrSize=8 ? "SetWindowLongPtr" : "SetWindowLong"
 
 WindowProcNew := <strong>CallbackCreate</strong>("WindowProc")  <em>; Avoid fast-mode for subclassing.</em>
-WindowProcOld := DllCall(SetWindowLong, Ptr, Gui.Hwnd, Int, -4  <em>; -4 is GWL_WNDPROC</em>
-    , Ptr, WindowProcNew, Ptr) <em>; Return value must be set to Ptr or UPtr vs. Int.</em>
+WindowProcOld := DllCall(SetWindowLong, &quot;Ptr&quot;, Gui.Hwnd, &quot;Int&quot;, -4  <em>; -4 is GWL_WNDPROC</em>
+    , &quot;Ptr&quot;, WindowProcNew, &quot;Ptr&quot;) <em>; Return value must be set to &quot;Ptr&quot; or &quot;UPtr&quot; vs. &quot;Int&quot;.</em>
 
 Gui.Show
 
@@ -154,11 +155,11 @@ WindowProc(hwnd, uMsg, wParam, lParam)
     global Text, TextBackgroundColor, TextBackgroundBrush, WindowProcOld
     if (uMsg = 0x138 &amp;&amp; lParam = Text.Hwnd)  <em>; 0x138 is WM_CTLCOLORSTATIC.</em>
     {
-        DllCall(&quot;SetBkColor&quot;, Ptr, wParam, UInt, TextBackgroundColor)
+        DllCall(&quot;SetBkColor&quot;, &quot;Ptr&quot;, wParam, &quot;UInt&quot;, TextBackgroundColor)
         return TextBackgroundBrush  <em>; Return the HBRUSH to notify the OS that we altered the HDC.</em>
     }
     <em>; Otherwise (since above didn't return), pass all unhandled events to the original WindowProc.</em>
-    return DllCall(&quot;CallWindowProc&quot;, Ptr, WindowProcOld, Ptr, hwnd, UInt, uMsg, Ptr, wParam, Ptr, lParam)
+    return DllCall(&quot;CallWindowProc&quot;, &quot;Ptr&quot;, WindowProcOld, &quot;Ptr&quot;, hwnd, &quot;UInt&quot;, uMsg, &quot;Ptr&quot;, wParam, &quot;Ptr&quot;, lParam)
 }</pre>
 
 </body>
