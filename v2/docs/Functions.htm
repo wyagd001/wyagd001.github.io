@@ -138,11 +138,9 @@ returnObject() {
 }
 MsgBox Join("`n", "one", "two", "three")</pre>
 <p>调用可变参数函数时, 通过保存在函数的最后参数中的对象可以访问剩余的参数. 函数的首个超出参数是 <code>params[1]</code>, 第二个是 <code>params[2]</code>, 以此类推. 和所有的标准<a href="objects/Object.htm">对象</a>, <code>params.<a href="objects/Object.htm#Length">Length</a>()</code> 能被用于确定参数的数目.</p>
-<p>注意:</p>
-<ul>
-  <li>"可变"参数只可以出现在显式参数(形参) 列表的末尾.</li>
-  <li><a href="misc/RegExCallout.htm">正则调出</a>不是可变参数的; 虽然允许使用这样的"可变"参数, 但是会被置空.</li>
-</ul>
+<p>Attempting to call a non-variadic function with more parameters than it accepts is considered an error. To permit a function to accept any number of parameters <em>without</em> creating an array to store the surplus parameters, write <code>*</code> as the final parameter (without a parameter name).</p>
+<p class="warning"><strong>注意:</strong>"可变"参数只可以出现在显式参数(形参) 列表的末尾.</p>
+
 <h3 id="VariadicCall">可变参数函数的调用</h3>
 <p>虽然可变参数函数可以 <i>接受</i> 可变数目的参数, 不过在函数调用中使用相同的语法可以把数组作为参数传递给 <i>任何</i> 函数:</p>
 <pre>substrings := ["one", "two", "three"]
@@ -239,14 +237,15 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>因为单词 <em>local</em>, <em>global</em> 和 <em>static</em> 都是在脚本运行时立即处理的, 所以不能使用 <a href="commands/IfExpression.htm">IF 语句</a>有条件地声明变量. 换句话说, IF 或 ELSE 的<a href="commands/Block.htm">区块</a>内的声明无条件对声明和函数的闭括号之间的所有行生效. 同时还需注意当前还不支持声明动态变量, 如 <code>global Array%i%</code>.</p>
 
 <h2 id="DynCall">动态调用函数</h2>
-<p>通过百分号可以动态调用函数(包括<a href="#BuiltIn">内置函数</a>). 例如, <code>%Var%(x, &quot;fox&quot;)</code> 将调用名称保存在 <em>Var</em> 中的函数. 同样地, <code>Func%A_Index%()</code> 将调用 Func1() 或 Func2() 等, 这取决于 A_Index 的当前值.</p>
+<p>通过百分号可以动态调用函数(包括<a href="#BuiltIn">内置函数</a>). 例如, <code>%Var%(x, &quot;fox&quot;)</code> 将调用名称 or <a href="Objects.htm#Function_References">reference</a> 保存在 <em>Var</em> 中的函数. 同样地, <code>Func%A_Index%()</code> 将调用 Func1() 或 Func2() 等, 这取决于 A_Index 的当前值.</p>
 <p>在 <code>%Var%()</code> 中的 <em>Var</em> 可包含函数名或<a href="objects/Functor.htm">函数对象</a>. 如果此函数不存在, 则调用<a href="Objects.htm#Default_Base_Object">默认基对象</a>的 __Call 元函数(通常, 如果该方法未定义, 则调用 __Call 元函数).</p>
 <p>如果由于下面的某个原因无法调用函数, 则抛出<a href="commands/Catch.htm#RuntimeErrors">异常</a>:</p>
 <ul>
-  <li>调用不存在的函数, 这可以通过使用 <code>If <a href="commands/IsFunc.htm">IsFunc</a>(VarContainingFuncName)</code> 来避免. 除了<a href="#BuiltIn">内置函数</a>, 被调用函数的<a href="#define">定义</a>必须真实存在于脚本中, 包括通过类似 <a href="commands/_Include.htm">#Include</a> 或对<a href="#lib">库函数</a>的非动态调用的方式.</li>
-  <li>传递过少的参数, 这可以通过检查 <a href="commands/IsFunc.htm">IsFunc</a> 的返回值来避免(这是强制参数的数目加上一的数字). 注意: 允许传递过多的参数; 每个额外的参数在被完全计算(包括任何函数调用) 后丢弃.</li>
+  <li>调用不存在的函数, 这通常可以通过使用 <code>If <a href="commands/IsFunc.htm">IsFunc</a>(VarContainingFuncName)</code> 来避免. 除了<a href="#BuiltIn">内置函数</a>, 被调用函数的<a href="#define">定义</a>必须真实存在于脚本中, 包括通过类似 <a href="commands/_Include.htm">#Include</a> 或对<a href="#lib">库函数</a>的非动态调用的方式.</li>
+  <li>传递过少或太多的参数, 这通常可以通过检查the function's <a href="commands/Func.htm#MinParams">MinParams</a>, <a href="commands/Func.htm#MaxParams">MaxParams</a> and <a href="commands/Func.htm#IsVariadic">IsVariadic</a> properties. However, the exception is thrown because this condition usually means that the function is being called incorrectly. The caller should generally know what each parameter means and how many there are before calling the function.</li>
 </ul>
 <p>最后, 对函数的动态调用比正常调用稍慢, 因为正常的调用在脚本开始运行前就已经解析(查找) 了.</p>
+
 <h2 id="ShortCircuit">优化布尔求值</h2>
 <p>当在<a href="Variables.htm#Expressions">表达式</a>中使用 <em>AND, OR</em> 和<a href="Variables.htm#ternary">三元运算符</a>时, 会对它们进行优化来提高性能(无论当前是否存在函数调用). 通过不计算表达式中那些不影响最终结果的部分来进行优化运算. 为了说明这个概念, 请看这个例子:</p>
 <pre>if (ColorName != &quot;&quot; AND not FindColor(ColorName))

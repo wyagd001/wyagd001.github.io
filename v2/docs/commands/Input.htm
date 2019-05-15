@@ -21,7 +21,7 @@
 
   <dt>Options</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>A string of zero or more of the following letters (in any order, with optional spaces in between):</p>
       <p><strong>B</strong>: <kbd>Backspace</kbd> is ignored. Normally, pressing <kbd>Backspace</kbd> during an Input will remove the most recently pressed character from the end of the string. Note: If the input text is visible (such as in an editor) and the arrow keys or other means are used to navigate within it, <kbd>Backspace</kbd> will still remove the last character rather than the one behind the caret (insertion point).</p>
       <p><strong>C</strong>: Case sensitive. Normally, <em>MatchList</em> is not case sensitive.</p>
@@ -37,31 +37,31 @@ ExitApp</pre>
       <p><strong>T</strong>: Timeout (e.g. <code>T3</code>). The number of seconds to wait before terminating the Input and setting <a href="../misc/ErrorLevel.htm">ErrorLevel</a> to the word Timeout. If the Input function times out, it will return whatever text the user had time to enter. This value can be a floating point number such as <code>2.5</code>.</p>
       <p id="vis"><strong>V</strong>: Visible. Normally, the user's input is blocked (hidden from the system). Use this option to have the user's keystrokes sent to the active window.</p>
       <p id="asterisk"><strong>*</strong>: Wildcard (find anywhere). Normally, what the user types must exactly match one of the <em>MatchList</em> phrases  for a match to occur. Use this option to find a match more often by searching the entire length of the input text.</p>
-      <p id="E"><strong>E</strong>: Handle single-character end keys by character code instead of by keycode. This provides more consistent results if the active window's keyboard layout is different to the script's keyboard layout. It also prevents key combinations which don't actually produce the given end characters from ending input; for example, if <code>@</code> is an end key, on the US layout <kbd>Shift</kbd>+<kbd>2</kbd> will trigger it but <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd> will not (if the E option is used). If the <strong>C</strong> option is also used, the end character is case-sensitive.</p>
+      <p id="E"><strong>E</strong>: Handle single-character end keys by character code instead of by keycode. This provides more consistent results if the active window's keyboard layout is different to the script's keyboard layout. It also prevents key combinations which don't actually produce the given end characters from ending input; 例如, if <code>@</code> is an end key, on the US layout <kbd>Shift</kbd>+<kbd>2</kbd> will trigger it but <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd> will not (if the E option is used). If the <strong>C</strong> option is also used, the end character is case-sensitive.</p>
       </dd>
 
   <dt>EndKeys</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>A list of zero or more keys, any one of which terminates the Input when pressed (the <em>EndKey</em> itself is omitted from the return value). When an Input is terminated this way, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to the word EndKey followed by a colon and the name of the <em>EndKey</em>. Examples: <code>EndKey:.</code>, <code>EndKey:Escape</code>.</p>
-      <p>The <em>EndKey</em> list uses a format similar to the <a href="Send.htm">Send</a> function. For example, specifying <code>{Enter}.{Esc}</code> would cause either <kbd>Enter</kbd>, <kbd>.</kbd>, or <kbd>Escape</kbd> to terminate the Input. To use the braces themselves as end keys, specify <code>{{}</code> and/or <code>{}}</code>.</p>
-      <p>To use <kbd>Control</kbd>, <kbd>Alt</kbd>, or <kbd>Shift</kbd> as end-keys, specify the left and/or right version of the key, not the neutral version. For example, specify <code>{LControl}{RControl}</code> rather than <code>{Control}</code>.</p>
+      <p>The <em>EndKey</em> list uses a format similar to the <a href="Send.htm">Send</a> function. 例如, specifying <code>{Enter}.{Esc}</code> would cause either <kbd>Enter</kbd>, <kbd>.</kbd>, or <kbd>Escape</kbd> to terminate the Input. To use the braces themselves as end keys, specify <code>{{}</code> and/or <code>{}}</code>.</p>
+      <p>To use <kbd>Control</kbd>, <kbd>Alt</kbd>, or <kbd>Shift</kbd> as end-keys, specify the left and/or right version of the key, not the neutral version. 例如, specify <code>{LControl}{RControl}</code> rather than <code>{Control}</code>.</p>
       <p>Although modified keys such as <kbd>Alt</kbd>+<kbd>C</kbd> (!c) are not supported, certain characters that require the <kbd>Shift</kbd> key to be held down -- namely punctuation marks such as <code>?!:@&amp;{}</code> -- are supported. Other characters are supported with the <strong>E</strong> option described above. When the <strong>E</strong> and <strong>M</strong> options are both used, <kbd>Control</kbd>+<kbd>A</kbd> through <kbd>Control</kbd>+<kbd>Z</kbd> are supported by including the corresponding ASCII control characters in <em>EndKeys</em>.</p>
       <p>An explicit virtual key code such as <code>{vkFF}</code> may also be specified. This is useful in the rare case where a key has no name and produces no visible character when pressed. Its virtual key code can be determined by following the steps at the bottom fo the <a href="../KeyList.htm#SpecialKeys">key list page</a>.</p>
     </dd>
 
   <dt>MatchList</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-      <p>A comma-separated list of key phrases, any of which will cause the Input to be terminated (in which case <a href="../misc/ErrorLevel.htm">ErrorLevel</a> will be set to the word Match). The entirety of what the user types must exactly match one of the phrases for a match to occur (unless the <a href="#asterisk">* option</a> is present). In addition, <strong>any spaces or tabs around the delimiting commas are significant</strong>, meaning that they are part of the match string. For example, if <em>MatchList</em> is <code>ABC , XYZ</code>, the user must type a space after ABC or before XYZ to cause a match.</p>
-      <p>Two consecutive commas results in a single literal comma. For example, the following would produce a single literal comma at the end of string: <code>string1,,,string2</code>. Similarly, the following list contains only a single item with a literal comma inside it: <code>single,,item</code>.</p>
-    <p>Because the items in <em>MatchList</em> are not treated as individual parameters, the list can be contained entirely within a variable. In fact, all or part of it must be contained in a variable if its length exceeds 16383 since that is the maximum length of any script line. For example, <em>MatchList</em> might be the <a href="../Variables.htm#Expressions">expression</a> <code>List1 "," List2 "," List3</code> -- where each of the variables  contains a large sub-list of match phrases.</p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+      <p>A comma-separated list of key phrases, any of which will cause the Input to be terminated (in which case <a href="../misc/ErrorLevel.htm">ErrorLevel</a> will be set to the word Match). The entirety of what the user types must exactly match one of the phrases for a match to occur (unless the <a href="#asterisk">* option</a> is present). In addition, <strong>any spaces or tabs around the delimiting commas are significant</strong>, meaning that they are part of the match string. 例如, if <em>MatchList</em> is <code>ABC , XYZ</code>, the user must type a space after ABC or before XYZ to cause a match.</p>
+      <p>Two consecutive commas results in a single literal comma. 例如, the following would produce a single literal comma at the end of string: <code>string1,,,string2</code>. Similarly, the following list contains only a single item with a literal comma inside it: <code>single,,item</code>.</p>
+    <p>Because the items in <em>MatchList</em> are not treated as individual parameters, the list can be contained entirely within a variable. In fact, all or part of it must be contained in a variable if its length exceeds 16383 since that is the maximum length of any script line. 例如, <em>MatchList</em> might be the <a href="../Variables.htm#Expressions">expression</a> <code>List1 "," List2 "," List3</code> -- where each of the variables  contains a large sub-list of match phrases.</p>
     </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#strings">String</a></p>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
 <p>This function returns the text entered by the user (by default, artificial input is also captured).</p>
 <p>The text consists of characters produced by keystrokes according to the active window's keyboard layout/language. Consequently, keystrokes that do not produce characters (such as <kbd>PageUp</kbd> and <kbd>Home</kbd>) are not returned (though they can be recognized via the <em>EndKeys</em> parameter below).</p>
 <p class="warning"><strong>Note:</strong> The <kbd>Escape</kbd> key is translated to the ASCII ESC character, <code>Chr(27)</code>. This can be avoided by including <code>{Esc}</code> in <em>EndKeys</em>, in which case pressing <kbd>Escape</kbd> will terminate Input.</p>
@@ -93,15 +93,16 @@ ExitApp</pre>
     <td>EndKey:<em>Name</em></td>
     <td>
       <p>One of the <em>EndKeys</em> was pressed to terminate the Input. In this case, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> contains the word EndKey followed by a colon and the name of the terminating key without braces, e.g. <code>EndKey:Enter</code>, <code>EndKey:Escape</code>, etc.</p>
-      <p>Note that <em>Name</em> is the "normalized" name of the key regardless of how it was written in <em>EndKeys</em>. For example, <code>{Esc}</code> and <code>{vk1B}</code> both produce <code>EndKey:Escape</code>. <a href="GetKeyName.htm">GetKeyName</a> can be used to retrieve the normalized name.</p>
+      <p>Note that <em>Name</em> is the "normalized" name of the key regardless of how it was written in <em>EndKeys</em>. 例如, <code>{Esc}</code> and <code>{vk1B}</code> both produce <code>EndKey:Escape</code>. <a href="GetKeyName.htm">GetKeyName</a> can be used to retrieve the normalized name.</p>
       <p>If the <a href="#E">E option</a> was used, <em>Name</em> is the actual character which was typed (if applicable). Otherwise, the key name is determined according to the script's active keyboard layout. Single-character key names without the E option are usually lower-case, since the shift state is ignored.</p>
     </td>
   </tr>
 </table>
 
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>If this function is used while an Input is  already in progress in another <a href="../misc/Threads.htm">thread</a>, that Input will be terminated and its <a href="../misc/ErrorLevel.htm">ErrorLevel</a> will be set to the word NewInput. After that (if parameters were given), the new Input will commence.</p>
-<p>While an Input is in progress, new <a href="../misc/Threads.htm">threads</a> such as <a href="../objects/Menu.htm">custom menu items</a> and <a href="SetTimer.htm">timed subroutines</a> can still be created. Similarly, keyboard <a href="../Hotkeys.htm">hotkeys</a> are still in effect if the Input is <a href="#vis">visible</a>. If the Input is not visible, only <a href="_UseHook.htm">hook hotkeys</a> can be triggered.</p>
+<p>While an Input is in progress, new <a href="../misc/Threads.htm">threads</a> such as <a href="../objects/Menu.htm">custom menu items</a> and <a href="SetTimer.htm">timed subroutines</a> can still be created. Similarly, keyboard <a href="../Hotkeys.htm">hotkeys</a> are still in effect. However, hotkeys cannot be triggered by keys which the Input suppresses.</p>
+<p>If the Input is not <a href="#vis">visible</a>, all keys are suppressed except the <a href="../KeyList.htm#modifier">standard modifier keys</a>, CapsLock, NumLock and ScrollLock. Even <em>EndKeys</em> and keystrokes which do not alter <em>OutputVar</em> are suppressed. For example, <kbd>Home</kbd> has no effect while <kbd>LWin</kbd>+<kbd>D</kbd> opens the Start menu (since <kbd>D</kbd> is suppressed but <kbd>LWin</kbd> is not).</p>
 <p>When a script first uses this function, the <a href="_InstallKeybdHook.htm">keyboard hook</a> is installed (if it is not already). The keyboard hook will stay installed until the next use of the <a href="Suspend.htm">Suspend</a> or <a href="Hotkey.htm">Hotkey</a> function, at which time it is removed if not required by any hotkeys or hotstrings.</p>
 <p>If you use multiple languages or keyboard layouts, Input uses the keyboard layout of the active window rather than the script's (regardless of whether the Input is <a href="#vis">visible</a>).</p>
 <p>Although not as flexible, <a href="../Hotstrings.htm">hotstrings</a> are generally easier to use than the Input function.</p>

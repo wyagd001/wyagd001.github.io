@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>StrGet - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The StrGet function copies a string from a memory address, optionally converting it from a given code page." />
+<meta name="description" content="The StrGet function copies a string from a memory address or buffer, optionally converting it from a given code page." />
 <meta name="ahk:equiv-v1" content="commands/StrPutGet.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,29 +13,31 @@
 
 <h1>StrGet</h1>
 
-<p>从内存地址复制字符串, 可选地从给定的代码页进行转换.</p>
+<p>从内存地址 or buffer 复制字符串, 可选地从给定的代码页进行转换.</p>
 
-<pre class="Syntax">String := <span class="func">StrGet</span>(Address <span class="optional">, Length</span> <span class="optional">, Encoding := <i>None</i></span>)</pre>
+<pre class="Syntax">String := <span class="func">StrGet</span>(Target <span class="optional">, Length</span> <span class="optional">, Encoding := <i>None</i></span>)</pre>
 <h2>参数</h2>
 <dl>
 
-  <dt>Address</dt>
+  <dt>Target</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>要复制的字符串的地址.</p>
+    <p>类型:  <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#numbers">整数</a></p>
+    <p>A <a href="../objects/Buffer.htm">Buffer</a>-like object containing the string, or the memory address of the string.</p>
+    <p>Any object which implements <a href="../objects/Buffer.htm#Ptr">Ptr</a> and <a href="../objects/Buffer.htm#Size">Size</a> properties may be used, but this function is optimized for the native <a href="../objects/Buffer.htm">Buffer</a> object. Passing an object with these properties ensures that the function does not read memory from an invalid location; that could cause crashes or other unpredictable behaviour.</p>
+    <p>The string is not required to be null-terminated if a Buffer-like object is provided, or if the <em>Length</em> parameter is specified.</p>
   </dd>
 
   <dt>Length</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>需读取的最大字符数.</p>
-  <p>默认情况下, 只复制到第一个二进制零. 如果 <em>Length</em> 为负数, 则它的绝对值指示要转换的确切字符数, 包括字符串可能包含的任何二进制零 - 换句话说, 结果始终是具有该长度的字符串.</p>
+    <p>默认情况下, 只复制到第一个二进制零. 如果 <em>Length</em> 为负数, 则它的绝对值指示要转换的确切字符数, 包括字符串可能包含的任何二进制零 - 换句话说, 结果始终是具有该长度的字符串.</p>
 </dd>
 
   <dt>Encoding</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>源编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>.  如果 <em>Address</em> 和 <em>Length</em> 都没有指定, 那么数值标识符必须加上 "CP" 前缀. 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码页.</p>
+    <p>源编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>.  如果 <em>Target</em> 和 <em>Length</em> 都没有指定, 那么数值标识符必须加上 "CP" 前缀. 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码页.</p>
   </dd>
 
 </dl>
@@ -48,15 +50,16 @@
 <p>如果检测到无效参数或转换无法执行, 则抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
 
 <h2>备注</h2>
-<p>注意, 返回值总是使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定如何解释从给定 <i>地址</i> 读取的字符串. 如果没有指定 <em>Encoding</em>, 只复制字符串而不进行任何转换.</p>
+<p>注意, 返回值总是使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定如何解释从给定 <i>Target</i> 读取的字符串. 如果没有指定 <em>Encoding</em>, 只复制字符串而不进行任何转换.</p>
+<p class="note">In other words, StrGet is used to retrieve text from a memory address or buffer, or convert it to a format the script can understand.</p>
 <p>如果需要在代码页之间进行转换, 返回值的长度可能与源字符串的长度不同.</p>
-<p><em>Length</em> 或 <em>Encoding</em> 都可以直接在 <em>Address</em> 后面指定, 但在这种情况下 <em>Encoding</em> 必须是非数字的:</p>
+<p><em>Length</em> 或 <em>Encoding</em> 都可以直接在 <em>Target</em> 后面指定, 但在这种情况下 <em>Encoding</em> 必须是非数字的:</p>
 <pre>str := StrGet(address, "cp0")  <em>; 代码页 0, 未指定长度</em>
 str := StrGet(address, n, 0)   <em>; 最大 n 字符, 代码页 0</em>
 str := StrGet(address, 0)      <em>; 最大 0 字符(始终为空)</em></pre>
 
 <h2>相关</h2>
-<p><a href="../Concepts.htm#string-encoding">字符编码</a>, <a href="StrPut.htm">StrPut</a>, <a href="../Compat.htm">脚本兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>
+<p><a href="../Concepts.htm#string-encoding">字符编码</a>, <a href="StrPut.htm">StrPut</a>, <a href="../Compat.htm">脚本兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="DllCall.htm">DllCall</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>
 
 </body>
 </html>

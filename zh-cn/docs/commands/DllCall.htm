@@ -203,13 +203,13 @@ F1::
 SPI_GETMOUSESPEED = 0x70
 SPI_SETMOUSESPEED = 0x71
 <em>; 获取鼠标当前的速度以便稍后恢复:</em>
-<strong>DllCall</strong>("SystemParametersInfo", &quot;UInt&quot;, SPI_GETMOUSESPEED, &quot;UInt&quot;, 0, &quot;UIntP&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)
+DllCall("SystemParametersInfo", &quot;UInt&quot;, SPI_GETMOUSESPEED, &quot;UInt&quot;, 0, &quot;UIntP&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)
 <em>; 现在在倒数第二个参数中设置较低的速度 (范围为 1-20, 10 是默认值):</em>
-<strong>DllCall</strong>("SystemParametersInfo", &quot;UInt&quot;, SPI_SETMOUSESPEED, &quot;UInt&quot;, 0, &quot;Ptr&quot;, <strong>3</strong>, &quot;UInt&quot;, 0)
+DllCall("SystemParametersInfo", &quot;UInt&quot;, SPI_SETMOUSESPEED, &quot;UInt&quot;, 0, &quot;Ptr&quot;, <strong>3</strong>, &quot;UInt&quot;, 0)
 KeyWait F1  <em>; 这里避免了由于键盘的重复特性导致再次执行 DllCall.</em>
 return
 
-F1 up::<strong>DllCall</strong>("SystemParametersInfo", &quot;UInt&quot;, 0x71, &quot;UInt&quot;, 0, &quot;Ptr&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)  <em>; 恢复原来的速度.</em></pre>
+F1 up::DllCall("SystemParametersInfo", &quot;UInt&quot;, 0x71, &quot;UInt&quot;, 0, &quot;Ptr&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)  <em>; 恢复原来的速度.</em></pre>
 
 <pre class="NoIndent" id="GetChildHWND"><em>; 例子: 当传递窗口的唯一 ID 和其中某个控件的文本或 ClassNN,
 ; 下面的函数会返回此控件的 HWND(唯一 ID)(函数例子省略).
@@ -233,7 +233,7 @@ if not FocusedControl  <em>; 没有焦点控件.</em>
     return
 <em>; 在工具提示中显示垂直或水平滚动条的位置:</em>
 ControlGet, ChildHWND, Hwnd,, %FocusedControl%, ahk_id %ActiveWindow%
-ToolTip % <strong>DllCall</strong>("GetScrollPos", "Ptr", ChildHWND, "Int", 1)  <em>;  最后一个参数 1 表示 SB_VERT, 而 0 表示 SB_HORZ.</em>
+ToolTip % DllCall("GetScrollPos", "Ptr", ChildHWND, "Int", 1)  <em>;  最后一个参数 1 表示 SB_VERT, 而 0 表示 SB_HORZ.</em>
 return</pre>
 
 <pre class="NoIndent" id="file"><em>; 示例: 这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存(需要 <span class="ver">[v1.0.34+]</span>).
@@ -245,22 +245,22 @@ if FileName =
     return
 GENERIC_WRITE = 0x40000000  <em>; 以写入而不是读取的方式打开文件.</em>
 CREATE_ALWAYS = 2  <em>; 创建新文件(覆盖任何现有的文件).</em>
-hFile := <strong>DllCall</strong>("CreateFile", &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_WRITE, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;UInt&quot;, CREATE_ALWAYS, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;Ptr&quot;)
+hFile := DllCall("CreateFile", &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_WRITE, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;UInt&quot;, CREATE_ALWAYS, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;Ptr&quot;)
 if not hFile
 {
     MsgBox Can't open &quot;%FileName%&quot; for writing.
     return
 }
 TestString = This is a test string.`r`n  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
-<strong>DllCall</strong>(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen(TestString), &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
-<strong>DllCall</strong>(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
+DllCall(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen(TestString), &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
+DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
 GENERIC_READ = 0x80000000  <em>; 以读取而不是写入的方式来打开文件.</em>
 OPEN_EXISTING = 3  <em>; 此标志表示要打开的文件必须已经存在.</em>
 FILE_SHARE_READ = 0x1 <em>; 这个和下一个标志表示其他进程是否可以打开我们已经打开的文件.</em>
 FILE_SHARE_WRITE = 0x2
-hFile := <strong>DllCall</strong>(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_READ, &quot;UInt&quot;, FILE_SHARE_READ|FILE_SHARE_WRITE, &quot;Ptr&quot;, 0, &quot;UInt&quot;, OPEN_EXISTING, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0)
+hFile := DllCall(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_READ, &quot;UInt&quot;, FILE_SHARE_READ|FILE_SHARE_WRITE, &quot;Ptr&quot;, 0, &quot;UInt&quot;, OPEN_EXISTING, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0)
 if not hFile
 {
     MsgBox Can't open &quot;%FileName%&quot; for reading.
@@ -268,8 +268,8 @@ if not hFile
 }
 <em>; 清空变量以便进行测试, 但需要确保它含有足够的容量:</em>
 BytesToRead := VarSetCapacity(TestString, StrLen(TestString))
-<strong>DllCall</strong>(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, BytesToRead, &quot;UIntP&quot;, BytesActuallyRead, &quot;Ptr&quot;, 0)
-<strong>DllCall</strong>("CloseHandle", &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
+DllCall(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, BytesToRead, &quot;UIntP&quot;, BytesActuallyRead, &quot;Ptr&quot;, 0)
+DllCall("CloseHandle", &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 MsgBox The following string was read from the file: %TestString%</pre>
 
 <pre class="NoIndent" id="HideCursor"><em>; 例子: 当您按下 Win+C 时隐藏鼠标光标. 再次按下 Win+C 显示.
@@ -324,7 +324,7 @@ SystemCursor(OnOff=1)   <em>; 初始化 = "I", "Init"; 隐藏 = 0, "Off"; 切换
 Run Notepad
 WinWait Untitled - Notepad  <em>; 这里同时设置了 "<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>" 以用于下面的 WinExist().</em>
 VarSetCapacity(Rect, 16)  <em>; RECT 结构由四个 32 位整数组成(即 4*4=16).</em>
-<strong>DllCall</strong>("GetWindowRect", &quot;Ptr&quot;, WinExist(), &quot;Ptr&quot;, &amp;Rect)  <em>; WinExist() 返回 HWND.</em>
+DllCall("GetWindowRect", &quot;Ptr&quot;, WinExist(), &quot;Ptr&quot;, &amp;Rect)  <em>; WinExist() 返回 HWND.</em>
 MsgBox % "Left " . <a href="NumGet.htm">NumGet</a>(Rect, 0, "Int") . " Top " . NumGet(Rect, 4, "Int")
     . " Right " . NumGet(Rect, 8, "Int") . " Bottom " . NumGet(Rect, 12, "Int")</pre>
 
@@ -334,11 +334,11 @@ MsgBox % "Left " . <a href="NumGet.htm">NumGet</a>(Rect, 0, "Int") . " Top " . N
 VarSetCapacity(Rect, 16, 0)  <em>; 设置容量为 4 个的 4 字节整型并把它们都初始化为零.</em>
 <a href="NumPut.htm">NumPut</a>(A_ScreenWidth//2, Rect, 8, "Int")  <em>; 结构中的第三个整数是 "rect.right".</em>
 NumPut(A_ScreenHeight//2, Rect, 12, "Int") <em>; 结构中的第四个整数是 "rect.bottom".</em>
-hDC := <strong>DllCall</strong>("GetDC", "Ptr", 0, "Ptr")  <em>; 传递零来获取桌面的设备上下文.</em>
-hBrush := <strong>DllCall</strong>("CreateSolidBrush", "UInt", 0x0000FF, "Ptr")  <em>; 创建红色画刷(0x0000FF 是 BGR 格式).</em>
-<strong>DllCall</strong>("FillRect", "Ptr", hDC, "Ptr", &amp;Rect, "Ptr", hBrush)  <em>;  使用上面的画刷填充指定的矩形.</em>
-<strong>DllCall</strong>("ReleaseDC", "Ptr", 0, "Ptr", hDC)  <em>; 清理.</em>
-<strong>DllCall</strong>("DeleteObject", "Ptr", hBrush)  <em>; 清理.</em></pre>
+hDC := DllCall("GetDC", "Ptr", 0, "Ptr")  <em>; 传递零来获取桌面的设备上下文.</em>
+hBrush := DllCall("CreateSolidBrush", "UInt", 0x0000FF, "Ptr")  <em>; 创建红色画刷(0x0000FF 是 BGR 格式).</em>
+DllCall("FillRect", "Ptr", hDC, "Ptr", &amp;Rect, "Ptr", hBrush)  <em>;  使用上面的画刷填充指定的矩形.</em>
+DllCall("ReleaseDC", "Ptr", 0, "Ptr", hDC)  <em>; 清理.</em>
+DllCall("DeleteObject", "Ptr", hBrush)  <em>; 清理.</em></pre>
 
 <pre class="NoIndent"><em>; 结构的例子: 改变系统的时钟为指定的日期和时间. 请注意
 ; 改变时间为将来的日期可能会导致计划任务提早运行!</em>
@@ -370,7 +370,7 @@ SetSystemTime(YYYYMMDDHHMISS)
     StringMid, Int, YYYYMMDDHHMISS, 13, 2 <em>; SS(秒数)</em>
     NumPut(Int, SystemTime, 12, "UShort")
 
-    return <strong>DllCall</strong>("SetSystemTime", &quot;Ptr&quot;, &amp;SystemTime)
+    return DllCall("SetSystemTime", &quot;Ptr&quot;, &amp;SystemTime)
 }</pre>
 
 <pre class="NoIndent"><em>/* <strong>更多结构的例子:</strong>

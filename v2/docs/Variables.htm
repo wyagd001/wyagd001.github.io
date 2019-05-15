@@ -24,19 +24,19 @@
 <p>有关一般说明和变量如何工作的详细信息, 请参阅<a href="Concepts.htm#variables">变量</a>.</p>
 <p id="assigning"><strong>给变量赋值</strong>: 要将字符串或数字存储在变量中, 使用<a href="commands/SetExpression.htm">冒号-等号运算符(:=)</a> 后跟着数字, 加引号的字符串或其他类型的<a href="Language.htm#expressions">表达式</a>. 例如:</p>
 <pre>MyNumber := 123
-MyString := &quot;This is a literal string.&quot;
+MyString := &quot;这是原义字符串.&quot;
 CopyOfVar := Var</pre>
 <p>未赋值的变量默认赋值为空字符串. 因此, 要删除变量的内容, 只需赋值一个空字符串:</p>
 <pre>MyVar := &quot;&quot;</pre>
 <p>通过将变量用作函数的<em>输出变量</em>, 还可以间接地为变量赋值. 例如:</p>
 <pre><a href="commands/MouseGetPos.htm">MouseGetPos</a> <strong>x</strong>, <strong>y</strong></pre>
 <p id="retrieving"><strong>检索变量的内容</strong>: 若要将变量的内容包含在字符串中, 请使用<a href="#concat">连接</a>或 <a href="commands/Format.htm">Format</a>. 例如:</p>
-<pre><a href="commands/MsgBox.htm">MsgBox</a> "The value of Var is " . Var . "."
-MsgBox "The value in the variable named Var is " Var "."
+<pre><a href="commands/MsgBox.htm">MsgBox</a> "变量的值是 " . Var . "."
+MsgBox "变量 Var 中的值为 " Var "."
 MsgBox Format("Var has the value {1}.", Var)
 </pre>
 <p>子表达式可以以同样的方式与字符串组合. 例如:</p>
-<pre>MsgBox(&quot;The sum of X and Y is &quot; . (X + Y))
+<pre>MsgBox(&quot;X 和 Y 的和是 &quot; . (X + Y))
 </pre>
 <p><strong>变量的比较</strong>: 请阅读下面表达式部分中关于不同类型比较的重要提示.</p>
 <h2 id="Expressions">表达式</h2>
@@ -44,10 +44,10 @@ MsgBox Format("Var has the value {1}.", Var)
 <p>表达式用于对一系列变量, 原义字符串和/或原义数字执行一个或多个运算.</p>
 <p>表达式中的普通单词被解释为变量名. 因此, 原义的字符串必须用双引号括起来, 以便与变量区分开来. 例如:</p>
 <pre>if (CurrentSetting &gt; 100 or FoundColor != &quot;Blue&quot;)
-    MsgBox "The setting is too high or the wrong color is present."</pre>
+    MsgBox "设置太高或出现错误的颜色."</pre>
 <p>在上面的例子中, &quot;Blue&quot; 出现在引号中, 因为它是一个原义的字符串. 单引号(&apos;) 和双引号(&quot;) 的作用是相同的, 除了用单引号括起来的字符串可以包含原义双引号, 反之亦然. 因此, 要在原义字符串中包含 <em>真实的</em> 引号, 可以<a href="misc/EscapeChar.htm">转义</a>引号或将字符串括在相反类型的引号中. 例如:</p>
-<pre>MsgBox &quot;She said, <span class="red">`&quot;</span>An apple a day.<span class="red">`&quot;</span>&quot;
-MsgBox <span class="red">&apos;</span>She said, &quot;An apple a day.&quot;<span class="red">&apos;</span></pre>
+<pre>MsgBox &quot;她说, <span class="red">`&quot;</span>一天一个苹果.<span class="red">`&quot;</span>&quot;
+MsgBox <span class="red">&apos;</span>她说, &quot;一天一个苹果.&quot;<span class="red">&apos;</span></pre>
 <p><strong>空字符串</strong>: 若要在表达式中指定空字符串, 请使用一对空的双引号. 例如, 当 <em>MyVar</em> 非空时, 语句 <code>if (MyVar != &quot;&quot;)</code> 的结果为真.</p>
 <p><strong>保存表达式的结果</strong>: 要把结果赋值给变量, 请使用 <a href="commands/SetExpression.htm">:= 运算符</a>. 例如:</p>
 <pre>NetPrice := Price * (1 - Discount/100)</pre>
@@ -73,9 +73,11 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   <tr id="ref">
     <td style="text-align:center; white-space:nowrap"><strong>%Expr%</strong></td>
     <td>
-      <p>计算子表达式 <em>Expr</em>, 并将其值用作变量或函数的名称或部分名称. 这允许脚本引用一个名称未在脚本中文字写入的变量或函数, 而该名称是通过计算 <em>Expr</em>(通常是另一个变量) 确定的. 由于会产生歧义, 百分号不能在 <em>Expr</em> 中直接使用, 但是可以嵌套在括号中. 另外, <em>Expr</em> 可以是任何表达式.</p>
+      <p>计算子表达式 <em>Expr</em>, 并将其值用作变量, 函数, 属性或方法的名称或部分名称. 这允许脚本引用一个名称未在脚本中文字写入的变量, 函数, 属性或方法, 而该名称是通过计算 <em>Expr</em>(通常是另一个变量) 确定的. 由于会产生歧义, 百分号不能在 <em>Expr</em> 中直接使用, 但是可以嵌套在括号中. 另外, <em>Expr</em> 可以是任何表达式.</p>
+      <p>如果有任何与 <em>%Expr%</em> 相邻的序列和部分<a href="Concepts.htm#names">变量名</a>(它们之间没有任何空格或其他字符), 则将它们组合成单个名称.</p>
       <p><code>%Expr%()</code> 执行<a href="Functions.htm#DynCall">动态函数调用</a>.</p>
-      <p><code>%Expr%</code> 根据名称动态检索变量. 子表达式 <em>Expr</em> 的<u>结果</u>必须是要检索的变量的名称或部分名称. 如果有任何与 <em>%Expr%</em> 相邻的序列和部分<a href="Concepts.htm#names">变量名</a>(它们之间没有任何空格或其他字符), 则将它们组合成单个名称.</p>
+      <p><code>x.%Expr%</code> 访问对象 <em>x</em> 的属性, <code>x.%Expr%()</code> 调用方法.</p>
+      <p>否则, <code>%Expr%</code> 将根据名称动态检索变量. 子表达式 <em>Expr</em> 的<u>结果</u>必须是要检索的变量的名称或部分名称.</p>
       <p>如果该变量不存在, 则创建一个空白变量. 如果名称<a href="Concepts.htm#names">无效</a>, 则抛出<a href="commands/Throw.htm#Exception">异常</a>.</p>
       <p>这通常用于引用<a href="misc/Arrays.htm#pseudo">伪数组</a>中的元素.</p>
       <p>尽管这在早期被称为 "双重解引", 但是当 <em>Expr</em> 不包含变量(第一重解引), 以及当结果变量(第二重解引) 是赋值的目标时, 该术语是不准确的.</p>
@@ -252,7 +254,7 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
   <tr id="fat-arrow">
     <td><strong>() =&gt;</strong> <em>expr</em></td>
     <td>
-      <p><strong>胖箭头函数</strong>. 定义一个简单的<a href="Functions.htm">函数</a> 并返回一个 <a href="objects/Func.htm">Func</a> 或<a href="Functions.htm#closures">闭包</a>对象. 将函数的<a href="Functions.htm#param">参数列表</a>(可以在前面加上函数名) 写在操作符的左边. 当函数被调用时(通过返回的引用), 它计算子表达式 <em>expr</em> 并返回结果.</p>
+      <p><strong>胖箭头函数</strong>. 定义一个简单的<a href="Functions.htm">函数</a>并返回一个 <a href="objects/Func.htm">Func</a> 或<a href="Functions.htm#closures">闭包</a>对象. 将函数的<a href="Functions.htm#param">参数列表</a>(可以在前面加上函数名) 写在操作符的左边. 当函数被调用时(通过返回的引用), 它计算子表达式 <em>expr</em> 并返回结果.</p>
       <p>下面两个例子是等价的:</p>
       <pre>sumfn := Sum(a, b) =&gt; a + b</pre>
       <pre>Sum(a, b) {
@@ -264,6 +266,7 @@ sumfn := Func("Sum")</pre>
       <pre>double := a =&gt; a * 2</pre>
       <p><em>expr</em> 中的变量引用的解析方法与完整函数定义中的方法相同. 例如, <em>expr</em> 可以引用 outer 函数的局部变量(就像在任何<a href="Functions.htm#nested">嵌套函数</a>中一样), 在这种情况下, 每当计算胖箭头表达式时, 都会创建一个新的<a href="Functions.htm#closures">闭包</a>并返回它. 如果是嵌套在另一个函数中的函数, 则其是<a href="Functions.htm#AssumeLocal">假定-局部</a>函数, 否则它是<a href="Functions.htm#AssumeGlobal">假定-全局</a>函数.</p>
       <p>为函数指定名称允许递归地调用它或由其他嵌套函数调用它, 而无需在其内部存储对<a href="Functions.htm#closures">闭包</a>的引用(从而创建有问题的<a href="Objects.htm#Circular_References">循环引用</a>). 它还有助于调试, 比如 <a href="objects/Func.htm#Name">Func.Name</a> 或显示在调试器的调用堆栈上.</p>
+      <p>胖箭头语法也可以用来定义简写的<a href="Objects.htm#Custom_Classes_property_short">属性</a>和<a href="Objects.htm#Custom_Classes_method">方法</a>.</p>
     </td>
 
   </tr>
@@ -406,7 +409,7 @@ sumfn := Func("Sum")</pre>
   <tr id="IsUnicode">
     <td>A_IsUnicode</td>
     <td><p>当字符串为 Unicode(16 位) 时值为 1, 字符串为 ANSI(8 位) 时为空字符串(这会被视为 <a href="#Boolean">false</a>). 字符串的格式取决于用来运行当前脚本的 AutoHotkey.exe 的版本, 如果为已编译脚本, 则取决于用来编译它的主程序.</p>
-    <p>目前所有的 AutoHotkey v2 可执行文件都是  Unicode(16-bit) 构建的, 所以它的值始终是 1.</p></td>
+    <p>目前所有的 AutoHotkey v2 可执行文件都是  Unicode(16 位) 构建的, 所以它的值始终是 1.</p></td>
   </tr>
   <tr id="IsCompiled">
     <td>A_IsCompiled</td>
@@ -487,7 +490,7 @@ sumfn := Func("Sum")</pre>
   </tr>
   <tr id="TickCount">
     <td>A_TickCount</td>
-    <td><p>计算机重启后经过的毫秒数. 通过把 A_TickCount 保存到变量中, 经过一段时间后从最近的 A_TickCount 值中减去那个变量, 可以计算出所经过的时间. 例如:</p>
+    <td><p>计算机自启动以来经过的毫秒数, 最多为 49.7 天. 通过把 A_TickCount 保存到变量中, 经过一段时间后从最近的 A_TickCount 值中减去那个变量, 可以计算出所经过的时间. 例如:</p>
         <pre>StartTime := A_TickCount
 Sleep 1000
 ElapsedTime := A_TickCount - StartTime
@@ -645,6 +648,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
     <td>A_ThisHotkey</td>
     <td><p>最近执行的<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">非自动替换热字串</a>(如果没有则为空), 例如 #z. 如果<a href="misc/Threads.htm">当前线程</a>被其他热键中断, 那么此变量的值会变化, 所以如果之后需要在子程序中使用原来的值, 则必须马上把它复制到另一个变量中.</p>
       <p>首次创建热键时 -- 通过 <a href="commands/Hotkey.htm">Hotkey 函数</a>或<a href="Hotkeys.htm">双冒号标签</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="commands/_If.htm#variant">变体</a>共享.</p>
+      <p>当热字符串是首次创建时, 用于创建它的确切文本将成为热字符串的永久名称.</p>
       <p>另请参阅: <a href="#ThisLabel">A_ThisLabel</a></p></td>
   </tr>
   <tr id="PriorHotkey">

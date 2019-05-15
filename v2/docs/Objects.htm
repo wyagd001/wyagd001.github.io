@@ -16,6 +16,8 @@ ul.list_of_p li { margin: 1em 0; }
 
 <h1>对象</h1>
 
+<p class="warning"><strong>Note:</strong> AutoHotkey v2.0-alpha is undergoing a paradigm shift. This version of the documentation pertains to v2.0-a101.</p>
+
 <p>AutoHotkey 中的 <i>对象</i> 是抽象的数据类型, 它提供了三种基本功能:</p>
 <ul>
   <li>获取值.</li>
@@ -26,17 +28,17 @@ ul.list_of_p li { margin: 1em 0; }
 <ul>
   <li><a href="Concepts.htm#objects">对象</a>: 对象的一般解释.</li>
   <li><a href="Concepts.htm#object-protocol">对象协议</a>: 关于脚本如何与对象交互的细节.</li>
+  <li><a href="objects/Functor.htm">Function objects</a>: Objects which can be <em>called</em>.</li>
 </ul>
 
 <p><b>IsObject</b> 可以用来确定一个值是否为对象:</p>
 <pre>Result := IsObject(<i>expression</i>)</pre>
 
-<p>对象类型包括:</p>
+<p>See <em>Object Types</em> in the documentation side bar for a list of standard object types. These include three main types:</p>
 <ul>
-  <li><a href="objects/Object.htm"><b>对象</b></a> - 脚本化关联数组.</li>
-  <li><a href="objects/File.htm">文件</a> - 为文件输入/输出提供接口.</li>
-  <li><a href="objects/Functor.htm">函数对象</a> - <a href="objects/Func.htm">Func</a>, <a href="objects/Functor.htm#BoundFunc">绑定函数</a>或<a href="objects/Functor.htm#User-Defined">用户定义的</a>.</li>
-  <li><a href="commands/ComObjCreate.htm">ComObject</a> - 包装 IDispatch 接口(COM 或 "自动化" 对象).</li>
+  <li><a href="objects/Object.htm"><b>Object</b></a>, from which all user-defined objects are derived. This currently combines multiple concepts, but a future release will split it into Object, Array (linear array) and Map (associative array).</li>
+  <li><strong>Built-in objects</strong>, such as <a href="objects/File.htm">File</a>. These currently have a strict set of properties and methods and do not permit new properties or methods to be added, nor do they support any means of discovering which properties and methods they implement. However, this will be changed in a future release.</li>
+  <li><strong><a href="commands/ComObjCreate.htm">ComObject</a></strong>; that is, COM objects. These are implemented by external libraries, so often differ in behaviour to AutoHotkey objects. ComObject typically represents a COM or "Automation" object implementing the <a href="https://docs.microsoft.com/windows/desktop/api/oaidl/nn-oaidl-idispatch">IDispatch interface</a>, but is also used to <a href="commands/ComObject.htm">wrap values of specific types</a> to be passed to COM objects and functions.</li>
 </ul>
 
 <h2>目录</h2>
@@ -58,13 +60,13 @@ MyArray := Array(Item1, Item2, ..., ItemN)</pre>
 <pre>Value := MyArray[Index]</pre>
 <p>项目赋值:</p>
 <pre>MyArray[Index] := Value</pre>
-<p>插入一个或多个项目到指定索引:</p>
+<p>使用 <a href="objects/Object.htm#InsertAt">InsertAt</a> 方法在指定索引处插入一个或多个项目:</p>
 <pre>MyArray.<a href="objects/Object.htm#InsertAt">InsertAt</a>(Index, Value, Value2, ...)</pre>
-<p>追加一个或多个项目:</p>
+<p>使用 <a href="objects/Object.htm#Push">Push</a> 方法追加一个或多个项目:</p>
 <pre>MyArray.<a href="objects/Object.htm#Push">Push</a>(Value, Value2, ...)</pre>
-<p>移除项目:</p>
+<p>使用 <a href="objects/Object.htm#RemoveAt">RemoveAt</a> 方法移除项目:</p>
 <pre>RemovedValue := MyArray.<a href="objects/Object.htm#RemoveAt">RemoveAt</a>(Index)</pre>
-<p>移除最后那一个项目:</p>
+<p>使用 <a href="objects/Object.htm#Pop">Pop</a> 移除最后一项:</p>
 <pre>RemovedValue := MyArray.<a href="objects/Object.htm#Pop">Pop</a>()</pre>
 <p>如果数组不是空的, 那么 <a href="objects/Object.htm#MinMaxIndex">MinIndex</a> 和 <a href="objects/Object.htm#MinMaxIndex">MaxIndex</a>/<a href="objects/Object.htm#Length">Length</a> 分别返回数组中当前使用的最小和最大的索引. 因为最小的索引几乎总是 1, 所以 MaxIndex 通常返回项目的数量. 如果没有整数键, MaxIndex 返回空, 而 Length 返回 0. 循环遍历数组的内容可以通过索引或 For 循环实现. 例如:</p>
 <pre>MyArray := ["one", "two", "three"]
@@ -78,7 +80,9 @@ MyArray := Array(Item1, Item2, ..., ItemN)</pre>
     MsgBox "Item " index " is '" value "'"
 </pre>
 
+<p class="warning"><strong>Note:</strong> A future alpha release will change <code>[]</code>, <code>Array()</code> and variadic functions to create a dedicated array type with restricted capabilities. See <a href="https://www.autohotkey.com/boards/viewtopic.php?f=37&t=57591">Objects (forum topic)</a> for details.</p>
 <span id="Arrays"></span><h3 id="Usage_Associative_Arrays">关联数组</h3>
+<p class="warning"><strong>Note:</strong> The following details apply to v2.0-a101 and may not be applicable to future alpha releases. See <a href="https://www.autohotkey.com/boards/viewtopic.php?f=37&t=57591">Objects (forum topic)</a> for details.</p>
 <p>关联数组是包含一组键(每个键是唯一的) 和一组值的对象, 其中每个键和一个值关联. 键可以为字符串, 整数或对象, 而值可以为任何类型. 关联数组可以用如下方法创建:</p>
 <pre>MyArray := {KeyA: ValueA, KeyB: ValueB, ..., KeyZ: ValueZ}
 MyArray := Object("KeyA", ValueA, "KeyB", ValueB, ..., "KeyZ", ValueZ)</pre>
@@ -87,32 +91,33 @@ MyArray := Object("KeyA", ValueA, "KeyB", ValueB, ..., "KeyZ", ValueZ)</pre>
 <pre>Value := MyArray[Key]</pre>
 <p>赋值项目:</p>
 <pre>MyArray[Key] := Value</pre>
-<p>移除项目:</p>
-<pre>RemovedValue := MyArray.<a href="objects/Object.htm#Delete">Delete</a>(Key)</pre>
+<p>使用 <a href="objects/Object.htm#Delete">Delete</a> 方法移除项目:</p>
+<pre>RemovedValue := MyArray.Delete(Key)</pre>
 <p>枚举项目:</p>
 <pre>MyArray := {ten: 10, twenty: 20, thirty: 30}
 <a href="commands/For.htm">For</a> key, value in MyArray
     MsgBox key ' = ' value</pre>
 <p>关联数组可以是稀疏分布的 - 即 <code>{1:"a",1000:"b"}</code> 仅包含两个键值对, 而不是 1000 个.</p>
-<p id="same_thing">目前, 简单数组和关联数组是相同的东西. 然而, 把 <code>[]</code> 视为简单线性数组有助于保持其作用清晰, 并且改善您脚本与 AutoHotkey 未来版本的兼容性, 将来可能会区分简单数组和关联数组.</p>
 
 <h3 id="Usage_Objects">对象</h3>
-<p>对于所有类型的对象, 表示方法 <code>Object.LiteralKey</code> 能用于访问属性, 数组元素或方法, 其中 <em>LiteralKey</em> 是标识符或整数, <em>Object</em> 是任意表达式. 标识符是不带引号的字符串, 可以包含字母数字字符, 下划线和非 ASCII 字符. 例如, <code>match.Pos</code> 等同于 <code>match["Pos"]</code> 而 <code>arr.1</code> 等同于 <code>arr[1]</code>. 圆点后不能有空格.</p>
+<p>An object can have <em>properties</em>, <em>methods</em> and <em>items</em> (such as array elements). Items are accessed using <code>[]</code> as shown in the previous sections. Properties and methods are usually accessed by writing a dot followed by an identifier (just a <a href="Concepts.htm#names">name</a>).</p>
+<p class="warning"><strong>Note:</strong> Currently properties and methods are defined as associative array elements, and as such, the syntax can usually be used interchangeably. However, this will be changed in a future alpha release. It is important to use the syntax appropriate to the situation.</p>
 <p><strong>示例:</strong></p>
-<p>检索属性:</p>
+<p>Retrieve or set a property literally named <em>Property</em>:</p>
 <pre>Value := Object.Property</pre>
-<p>设置属性:</p>
 <pre>Object.Property := Value</pre>
-<p>调用方法:</p>
+<p>Retrieve or set a property where the name is determined by evaluating an expression or variable:</p>
+<pre>Value := Object.%Expression%</pre>
+<pre>Object.%Expression% := Value</pre>
+<p>Call a method literally named <em>Method</em>:</p>
 <pre>ReturnValue := Object.Method(Parameters)</pre>
-<p>调用方法, 使用可计算的方法名:</p>
-<pre>ReturnValue := Object[MethodName](Parameters)</pre>
+<p>Call a method where the name is determined by evaluating an expression or variable:</p>
+<pre>ReturnValue := Object.%Expression%(Parameters)</pre>
+<p class="warning"><strong>Note:</strong> <code>Object[Expression](Parameters)</code> can also be used, but will cease to work in a future release.</p>
 <p>COM 对象和用户定义对象的一些属性可以接受参数:</p>
 <pre>Value := Object.Property[Parameters]
 Object.Property[Parameters] := Value</pre>
 <p><strong>相关:</strong> <a href="objects/Object.htm">对象</a>, <a href="objects/File.htm">File 对象</a>, <a href="objects/Func.htm">Func 对象</a>, <a href="commands/ComObjCreate.htm">COM 对象</a></p>
-<p><b>已知限制:</b></p>
-<ul><li>当前 <code><span class="dull">x</span>.y[z]<span class="dull">()</span></code> 会被视为 <code><span class="dull">x</span>["y", z]<span class="dull">()</span></code>, 这是不受支持的. 作为一种变通方法, <code><span class="red">(</span><span class="dull">x.y</span><span class="red">)</span>[z]()</code> 首先计算 <code>x.y</code>, 然后把结果作为方法调用的目标. 请注意 <code>x.y[z].Call()</code> 没有这个限制, 因为它的求值方式和 <code>(x.y[z]).Call()</code> 一样.</li></ul>
 
 <h3 id="Usage_Freeing_Objects">释放对象</h3>
 <p>脚本不会显式的释放对象. 当到对象的最后一个引用被释放时, 会自动释放这个对象. 当某个保存引用的变量被赋为其他值时, 会自动释放它原来保存的引用. 例如:</p>
@@ -134,19 +139,24 @@ x := "", y := ""             <em>; 如果没有上一行, 则此行无法释放�
 
 <h3 id="Usage_Remarks">备注</h3>
 
-<h4>语法</h4>
-<p>对于所有类型的对象都支持数组语法(方括号) 和对象语法(句点).</p>
-<p>同时, 对象引用自身也可以用在表达式中:</p>
+<h4>Objects as Values</h4>
+<p>对象引用自身也可以用在表达式中:</p>
 <ul>
   <li>当对象引用使用 <code>=</code>, <code>==</code>, <code>!=</code> 或 <code>!==</code> 中的一种比较运算符和其他值比较时, 仅在两个值都为指向相同对象的引用时它们才被视为相等的.</li>
   <li>进行逻辑运算时对象总是被视为 <i>true</i>, 例如在 <code>if obj</code>, <code>!obj</code> 或 <code>obj ? x : y</code> 中.</li>
   <li>使用 <code>&amp;</code> 取址运算符可以获取对象的地址. 它从对象创建时到最后一个引用被<a href="#Refs">释放</a>期间唯一标识此对象.</li>
 </ul>
 <p>如果在不期望对象的地方使用对象, 那么它通常被视为空字符串. 例如, <code>MsgBox(myObject)</code> 消息框显示为空. 由于这种特性可能会变化, 所以不要依赖这种行为. 在某些情况下, 可能会抛出异常, 如 <code>myObject + 1</code> 或 <code>Round(myObject)</code>.</p>
+
+<h4>Syntax</h4>
 <p id="cassign">支持如 <code>x.y += 1</code> and <code>--arr[1]</code> 这样的复合赋值.</p>
-<p>当获取或设置属性时, 参数可以省略. 例如, <code>x[,2]</code>. 脚本可以利用这一点来定义<a href="#Custom_Classes_property">属性</a>和<a href="#Meta_Functions">元函数</a>的参数的默认值. 方法名称也可以完全省略, 如 <code>x[](a)</code> 所示. 脚本可以利用这一点来定义 __Call <a href="#Meta_Functions">元函数</a>的首个参数的默认值, 因为它并不提供其他的返回值. 如果在调用 COM 对象时省略了属性或方法的名称, 它的 "默认成员" 将被调用.</p>
+<p>当获取或设置属性时, 参数可以省略. 例如, <code>x[,2]</code>. 脚本可以利用这一点来定义<a href="#Custom_Classes_property">属性</a>和<a href="#Meta_Functions">元函数</a>的参数的默认值.</p>
+<p>方法名称也可以完全省略, 如 <code>x[](a)</code> 所示. 脚本可以利用这一点来定义 __Call <a href="#Meta_Functions">元函数</a>的首个参数的默认值.</p>
+<p class="warning"><strong>Note:</strong> The use of brackets to replace the method name with an expression will not be supported in future alpha releases. To call a function object <em>x</em>, use <code>x.Call()</code> or <code>%x%()</code>.</p>
+<p>如果在调用 COM 对象时省略了属性或方法的名称, 它的 "默认成员" 将被调用.</p>
 
 <h4>键</h4>
+<p class="warning"><strong>Note:</strong> The following details apply to v2.0-a101 and may not be applicable to future alpha releases. See <a href="https://www.autohotkey.com/boards/viewtopic.php?f=37&t=57591">Objects (forum topic)</a> for details.</p>
 <p>使用 <code>[]</code>, <code>{}</code> 或 <code>new</code> 运算符创建的对象允许使用字符串, 整数和对象作为键, 但需要注意以下事项:</p>
 <p>键的值被保留, 但其 <em>类型标识</em> 不是. 也就是说, 只要值保持不变(包括数字字符串的格式), 整数可以存储为字符串, 反之亦然. 具体是:</p>
 <ul>
@@ -172,6 +182,7 @@ RetVal := MyFuncRef.<a href="objects/Func.htm#Call">Call</a>(<i>Params</i>)
 <p>有关函数引用的其他属性的详细信息, 请参阅 <a href="objects/Func.htm">Func 对象</a>.</p>
 
 <span id="JaggedArrays"></span><h3 id="Usage_Arrays_of_Arrays">数组嵌套</h3>
+<p class="warning"><strong>Note:</strong> The following details apply to v2.0-a101. Future alpha releases may not have built-in support for multi-dimensional arrays. See <a href="https://www.autohotkey.com/boards/viewtopic.php?f=37&t=57591">Objects (forum topic)</a> for details.</p>
 <p>AutoHotkey 通过显式地把数组存储到其他数组中来支持"多维"数组. 例如, 表格可以表示为行数组, 其中每一行本身是一个列数组. 在这种情况下,  <code>x</code> 行 <code>y</code> 列的内容可以用以下两种方法的其中一个进行设置:</p>
 <pre>table[x][y] := content  <em>; A</em>
 table[x, y] := content  <em>; B</em></pre>
@@ -213,6 +224,7 @@ SecondFunc(param) {
 }</pre>
 
 <h2 id="Custom_Objects">自定义对象</h2>
+<p class="warning"><strong>Note:</strong> The following details apply to v2.0-a101 and may not be 100% applicable to future alpha releases. See <a href="https://www.autohotkey.com/boards/viewtopic.php?f=37&t=57591">Objects (forum topic)</a> for details.</p>
 <p>由脚本创建的对象可以不包含预定义结构. 相反, 每个对象可以从其 <code>base</code> 对象(基对象, 也称为"原型"或"类") 中继承属性和方法. 还可以随时添加或移除对象中的属性和方法, 这些改变会影响它的所有派生对象. 更多复杂或专用方案, 可通过定义<a href="#Meta_Functions"><i>元函数</i></a>来覆盖它所派生对象的标准行为.</p>
 <p><em>基</em>对象只是普通对象, 通常有两种创建方法:</p>
 <pre>class baseObject {
@@ -253,8 +265,8 @@ other.test()</pre>
 <p>从根本上讲, "类"是具有相同属性和行为的一类事物. 由<a href="#Custom_Objects">基类</a>或<a href="#Custom_Prototypes">原型</a>定义了一系列属性和行为的对象, 就可以被称为 <em>类</em> 对象. 为了方便, 用 "Class" 关键字定义基对象可以像下面这样:</p>
 <pre>class ClassName extends BaseClassName
 {
-    InstanceVar := Expression
-    static ClassVar := Expression
+    InstanceVar := <i>Expression</i>
+    static ClassVar := <i>Expression</i>
 
     class NestedClass
     {
@@ -268,13 +280,21 @@ other.test()</pre>
 
     Property[]  <em>; 方括号是可选的</em>
     {
-        get {
-            return ...
+        <span class="dec">get</span> {
+            return <i>value of property</i>
         }
-        set {
-            return ... := value
+        <span class="dec">set</span> {
+            <i>Store or otherwise handle</i> <span class="biv">value</span>
         }
     }
+
+     ShortProperty[]
+    {
+        <span class="dec">get</span> => <i>Expression which calculates property value</i>
+        <span class="dec">set</span> => <i>Expression which stores or otherwise handles</i> <span class="biv">value</span>
+    }
+
+     ShorterProperty[] => <i>Expression which calculates property value</i>
 }
 </pre>
 <p>在加载脚本时, 这将构造一个对象并将其存储在<a href="Functions.htm#SuperGlobal">超级全局</a>变量 <i>ClassName</i> 中. 要在<a href="Functions.htm#ForceLocal">强制-局部</a>函数中引用该类, 那么需要进行声明(如 <code>global ClassName</code>). 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的完整名称. 每个类的全名存储在 <code><i>object</i>.__Class</code>.</p>
@@ -321,24 +341,67 @@ Method()
 </ul>
 <p><code>base</code> 仅在后面跟着点 <code>.</code> 或方括号 <code>[]</code> 时才有特殊含义, 所以像 <code>obj := base, obj.Method()</code> 这样的代码将不起作用. 通过把 <i>base</i> 赋为非空值可以禁用它的特殊行为, 但是不建议这样做.</p>
 
+<p><a href="Variables.htm#fat-arrow">Fat arrow syntax</a> can be used to define a single-line method which returns an expression:</p>
+<pre>Method() =&gt; <i>Expression</i></pre>
+
 <h4 id="Custom_Classes_property">属性</h4>
 <p>属性定义允许在脚本获取或设置特定键时执行方法.</p>
-<pre>Property[]
+<pre>Property[]  <em>; Brackets are optional</em>
 {
-    get {
-        return ...
+    <span class="dec">get</span> {
+        return <i>property value</i>
     }
-    set {
-        return ... := value
+    <span class="dec">set</span> {
+        <i>Store or otherwise handle</i> <span class="biv">value</span>
     }
-}</pre>
+}
+</pre>
 <p><em>Property</em> 是用户定义的名称, 用于标识属性. 如, <code>obj.Property</code> 将调用 <em>get</em>, 而 <code>obj.Property := value</code> 将调用 <em>set</em>. 在 <em>get</em> 或 <em>set</em> 内, <code>this</code> 指向被引用的对象. <em>set</em>, <code>value</code> 中包含正要赋予的值.</p>
 <p>可在属性名右后使用方括号包裹以传递参数, 可用于定义及调用中. 除了使用方括号这点不同, 属性的参数和方法的参数定义方法完全一样 - 可选参数, ByRef 和可变参数也都支持.</p>
-<p><em>get</em> 或 <em>set</em> 的返回值, 成为引用属性的子表达式的结果. 如, <code>val := obj.Property := 42</code> 存储 <em>set</em> 的返回值至 <code>val</code>.</p>
+<p>The return value of <em>set</em> is ignored. For example, <code>val := obj.Property := 42</code> always assigns <code>val := 42</code> regardless of what the property does, unless it throws an exception or exits the thread.</p>
 <p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_base">base.Property</a></code> 访问定义于其基类中的属性. 如果 <em>get</em> 或 <em>set</em> 未定, 会交由基类处理. 如果 <em>set</em> 未定义, 且未被元函数或基类处理, 赋予的值被存储于对象中, 相当于禁用了属性.</p>
 <p>试图 <em>调用</em> 属性, 就像在 <code>obj.Property()</code> 中一样, 会产生相同的效果如同属性不存在一样.</p>
 <p>内部 <em>get</em> 与 <em>set</em> 是独立的两方法, 故不可共享变量(除非存储于 <code>this</code>中).</p>
 <p><a href="#Meta_Functions">元函数</a>提供了广泛的控制属性访问, 方法调用的机制, 但更复杂及易错.</p>
+
+<h4 id="Custom_Classes_property_short">Fat Arrow Properties</h4>
+<p><a href="Variables.htm#fat-arrow">Fat arrow syntax</a> can be used to define a <a href="#Custom_Classes_property">property</a> getter or setter which returns an expression:</p>
+<pre>ShortProperty[]
+{
+    <span class="dec">get</span> => <i>Expression which calculates property value</i>
+    <span class="dec">set</span> => <i>Expression which stores or otherwise handles</i> <span class="biv">value</span>
+}</pre>
+<p>When defining only a getter, the braces and <code>get</code> can be omitted:</p>
+<pre>ShorterProperty[] => <i>Expression which calculates property value</i></pre>
+
+<h3 id="__Item">__Item Property</h3>
+<p>The __Item property is invoked when the indexing operator (array syntax) is used with the object. For example:</p>
+<pre>class Env {
+    __Item[name] {
+        get =&gt; EnvGet(name)
+        set =&gt; EnvSet(name, value)
+    }
+}
+
+ Env["PATH"] .= ";" A_ScriptDir  <em>; Only affects this script and child processes.</em>
+MsgBox Env["PATH"]</pre>
+<p>For objects of type <a href="objects/Object.htm">Object</a>, <code>__Item</code> is effectively a default property name (if such a property has been defined). In effect:</p>
+<ul>
+  <li><code><i>object</i>[<i>params</i>]</code> is equivalent to <code><i>object</i>.__Item[<i>params</i>]</code> when there are parameters.</li>
+  <li><code><i>object</i>[]</code> is equivalent to <code><i>object</i>.__Item</code>.</li>
+</ul>
+<p class="note"><strong>Note:</strong> When an explicit property name is combined with empty brackets, as in <code>obj.prop[]</code>, it is handled as two separate operations: first retrieve <code>obj.prop</code>, then invoke the default property of the result. This is part of the language syntax, so is not dependent on the object.</p>
+<p>For example:</p>
+<pre>
+obj := {}
+obj[] := {}              <em>; Equivalent to obj.__Item := {}</em>
+obj["Count"] := "Data"  
+obj["Delete"] := "Data" 
+MsgBox obj.Count()       <em>; 1 (just obj.__Item)</em>
+MsgBox obj.Count = ""    <em>; 1 (true)</em>
+obj.Count := 0          
+MsgBox obj.Count()       <em>; Fail (0 cannot be called)</em>
+</pre>
 
 <h3 id="Custom_NewDelete">创建和销毁</h3>
 <p>每当使用 <code>new</code> 关键字创建派生对象时, 那么调用由其基对象定义的 <code>__New</code> 方法. 此方法可以接受参数, 初始化对象并通过返回值覆盖 <code>new</code> 运算符的结果. 销毁对象时, 则调用 <code>__Delete</code>. 例如:</p>
@@ -384,12 +447,11 @@ class <i>ClassName</i> {
 <p>元函数定义了向目标对象中请求不存在的键时的行为. 例如, 如果 <code>obj.key</code> 尚未赋值, 那么它会调用 <i>__Get</i> 元函数. 同样地, <code>obj.key := value</code> 调用 <i>__Set</i> 而 <code>obj.key()</code> 调用 <i>__Call</i>. 这些元函数(或方法)需要在 <code>obj.base</code>, <code>obj.base.base</code> 或类似的基中定义.</p>
 <p>当脚本获取, 设置或调用目标对象中的键不存在时, 将按如下方式调用基对象:</p>
 <ul class="list_of_p">
-  <li>如果此基对象定义了相应的元函数, 那么调用它. 如果元函数明确 <code>return</code> , 则把返回值作为运算的结果(不受调用元函数方式的影响) 并把控制权归还脚本. 其他情况继续按以下方法进行.
-    <p><i>Set</i>: 如果元函数处理赋值, 则它应返回所赋的值. 这样允许赋值链, 如 <code>a.x := b.y := z</code>. 返回值可能与 <code>z</code> 的原始值不同(即如果对所赋的值施加限制的话).</p></li>
+  <li>如果此基对象定义了相应的元函数, 那么调用它.  If the meta-function explicitly <code>return</code>s, return control to the script (or whoever invoked the object). Otherwise, continue as described below.
+    <p><i>Set</i>: Property assignments always return the value being assigned, so the return value of __Set is ignored (but an explicit <code>return</code> may still be required).</p></li>
   <li>在基类自身的区域中搜索键.</li>
   <li>如果找到指向属性的键, 且已实现 <em>get</em> 或 <em>set</em>(依据当前需求), 引用属性并返回. 如果是方法调用, 则触发 <em>get</em>.</li>
-  <li>如果未找到键, 则递归调用该基对象自己的基对象(从继承列表顶部开始重复应用每个步骤). 如果仍未结束, 则再次搜索该基对象以寻找匹配键, 以防止元函数触发添加.
-    <p>为了顾及向下兼容性, 即便找到了此键仍然会执行 <em>set</em> 操作(除非它的定义中实现了 <em>set</em> 的属性).</p></li>
+  <li>如果未找到键, 则递归调用该基对象自己的基对象(从继承列表顶部开始重复应用每个步骤). 如果仍未结束, 则再次搜索该基对象以寻找匹配键, 以防止元函数触发添加.</p></li>
   <li>如果在 <i>get</i> 或 <i>set</i> 指定了多个参数且找到了键, 则检查其值. 如果那个值为对象, 则调用它处理剩余参数, 不做进一步处理.</li>
   <li>如果找到了键, 停止搜索, 执行以下操作:<br>
     <i>Get</i>: 返回值.<br>
@@ -451,8 +513,7 @@ class Color
             ; 计算并保存新的 RGB 值.</em>
             this.RGB := (aValue &lt;&lt; shift) | (this.RGB &amp; ~(0xff &lt;&lt; shift))
 
-            <em>; 必须使用 'Return' 以表示一个新的键值对不应该被创建.
-            ; 同时还定义了 'x := clr[name] := val' 中的 'x' 所保存的值是什么:</em>
+            <em>; 必须使用 'Return' 以表示一个新的键值对不应该被创建.</em>
             return aValue
         }
         <em>; <span class="red">注意:</span> 这里使用 'return' 终止 this.stored_RGB 和 this.RGB 的逻辑.</em>
@@ -593,7 +654,7 @@ Default__Warn(nonobj, p1:="", p2:="", p3:="", p4:="")
 {
     ListLines
     MsgBox "A non-object value was improperly invoked.`n`nSpecifically: " nonobj
-    return "" <em>; 通过返回值覆盖默认行为.</em>
+    return "" <em>; 通过显式返回覆盖默认行为.</em>
 }</pre>
 
 <h2 id="Implementation">实现</h2>

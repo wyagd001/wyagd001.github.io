@@ -70,8 +70,8 @@ var cache = {
 // Set global variables:
 var isCacheLoaded = cache.load();
 var workingDir = getWorkingDir();
-var equivPath = $('meta[name|="ahk:equiv"]').prop('content');
 var relPath = location.href.replace(workingDir, '');
+var equivPath = $('meta[name|="ahk:equiv"]').prop('content');
 var isInsideCHM = (location.href.search(/::/) > 0) ? 1 : 0;
 var supportsHistory = (history.replaceState) && !isInsideCHM;
 var isFrameCapable = !cache.forceNoFrame && (isInsideCHM || supportsHistory);
@@ -1087,7 +1087,6 @@ function ctor_structure()
       if(isPhone)
         $hTools.show();
     }
-    $leftArea.focus();
   };
   // Show the specified tab:
   self.showTab = function(pos) {

@@ -11,46 +11,49 @@
 <body>
 
 <h1>NumGet</h1>
-<p>Returns the binary number stored at the specified address+offset.</p>
-<pre class="Syntax">Number := <span class="func">NumGet</span>(VarOrAddress <span class="optional">, Offset := 0</span><span class="optional">, Type := "UPtr"</span>)</pre>
+<p>返回存储在指定地址+偏移量处的二进制数.</p>
+<pre class="Syntax">Number := <span class="func">NumGet</span>(Target <span class="optional">, Offset := 0</span><span class="optional">, Type := "UPtr"</span>)</pre>
 
 <h2>参数</h2>
 <dl>
 
-  <dt>VarOrAddress</dt>
+  <dt>Target</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#variables">Variable</a> or <a href="../Concepts.htm#numbers">Integer</a></p>
-		<p>A memory address or variable. If <em>VarOrAddress</em> is a variable such as <code>MyVar</code> and it contains a string (not a pure number), the address of the variable's string buffer is used. This is usually equivalent to passing <code>&amp;MyVar</code>, but omitting the &quot;&amp;&quot; performs better and ensures that the target address + offset is <a href="VarSetCapacity.htm">valid</a>. If the variable contains a pure number, that number is assumed to be an address.</p>
+    <p>类型: <a href="../Concepts.htm#objects">对象</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#variables">变量</a></p>
+		<p>A <a href="../objects/Buffer.htm">Buffer</a>-like object, memory address or variable reference.</p>
+    <p>Any object which implements <a href="../objects/Buffer.htm#Ptr">Ptr</a> and <a href="../objects/Buffer.htm#Size">Size</a> properties may be used, but this function is optimized for the native <a href="../objects/Buffer.htm">Buffer</a> object. Passing an object with these properties ensures that the function does not read memory from an invalid memory location (doing so could cause crashes or other unpredictable behaviour).</p>
+    <p class="warning"><strong>Deprecated:</strong> If <em>Target</em> is a variable such as <code>MyVar</code> and it contains a string (not a pure number), the address and size of the variable's string buffer is used. Passing a variable containing a string may be treated as an error in a future release. <a href="../objects/Buffer.htm">Buffer</a> objects should be used for structs and other binary data.</p>
+    <p>If the variable contains a pure number, that number is assumed to be an address.</p>
 	</dd>
 
   <dt>Offset</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-    <p>An offset - in bytes - which is added to <em>VarOrAddress</em> to determine the target address.</p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>偏移 - 单位为字节 - which is added to <em>Target</em> to determine the target address.</p>
   </dd>
 
   <dt>Type</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>One of the following strings (defaults to UPtr if omitted):<br>
       UInt, Int, Int64, Short, UShort, Char, UChar, Double, Float, Ptr or UPtr</p>
-      <p>Unlike DllCall, these must be enclosed in quotes when used as literal strings.</p>
+    <p><em>Unsigned</em> 64-bit integers are not supported, as AutoHotkey's native integer type is Int64. Therefore, to work with numbers greater than or equal to 0x8000000000000000, omit the U prefix and interpret any negative values as large integers. For example, a value of -1 as an Int64 is really 0xFFFFFFFFFFFFFFFF if it is intended to be a UInt64. On 64-bit builds, UPtr is equivalent to Int64.</p>
+      <p>These type names must be enclosed in quotes when used as literal strings.</p>
       <p>For details see <a href="DllCall.htm#types">DllCall Types</a>.</p>
     </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a> or <a href="../Concepts.htm#numbers">Float</a></p>
-<p>This function returns the binary number at the specified address+offset.</p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
+<p>函数返回指定地址+偏移处的二进制数字.</p>
 
-<h2>General 备注</h2>
-<p>If only two parameters are present, the second parameter can be either <em>Offset</em> or <em>Type</em>. For example, <code>NumGet(var, "int")</code> is valid.</p>
-<p>An exception may be thrown if the target address is invalid. However, some invalid addresses cannot be detected as such and may cause unpredictable behaviour.</p>
+<h2>备注</h2>
+<p>如果只使用了两个参数, the second parameter can be either <em>Offset</em> or <em>Type</em>. 例如, <code>NumGet(var, "int")</code> is valid.</p>
+<p>如果目标地址无效, 则可能抛出异常. 然而, 一些无效的地址无法检测到, 并可能导致不可预知的行为. Passing a <a href="../objects/Buffer.htm">Buffer</a> object instead of an address ensures that the target address can always be validated.</p>
 
 <h2>相关</h2>
 <p><a href="NumPut.htm">NumPut</a>, <a href="DllCall.htm">DllCall</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>
-
 
 </body>
 </html>

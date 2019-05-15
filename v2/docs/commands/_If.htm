@@ -29,21 +29,21 @@
 
 <h2 id="howto">Basic Operation</h2>
 <p>The #If directive sets the expression which will be used by subsequently created hotkeys to determine whether they should activate. This expression is evaluated when the key, mouse button or combination is pressed, or at other times when the program needs to know whether the hotkey is active.</p>
-<p>To make context-sensitive <a href="../Hotkeys.htm">hotkeys</a> and <a href="../Hotstrings.htm">hotstrings</a>, simply precede them with the #If directive. For example:</p>
+<p>To make context-sensitive <a href="../Hotkeys.htm">hotkeys</a> and <a href="../Hotstrings.htm">hotstrings</a>, simply precede them with the #If directive. 例如:</p>
 <pre>#If WinActive("ahk_class Notepad") or WinActive(MyWindowTitle)
 #Space::MsgBox "You pressed Win+Spacebar in Notepad or " MyWindowTitle</pre>
 <p>The #If directive is positional: it affects all hotkeys and hotstrings physically beneath it in the script, until the next #If directive.</p>
 <p class="warning"><strong>Note:</strong> Unlike <a href="IfExpression.htm">if statements</a>, braces have no effect with the #If directive.</p>
-<p>To turn off context sensitivity, specify #If without any expression. For example:</p>
+<p>To turn off context sensitivity, specify #If without any expression. 例如:</p>
 <pre>#If</pre>
 <p>When a mouse or keyboard hotkey is disabled via #If, it performs its native function; that is, it passes through to the active window as though there is no such hotkey. There is one exception: Joystick hotkeys: although #If works, it never prevents other programs from seeing the press of a button.</p>
-<p>#If can also be used to alter the behavior of an ordinary key like <kbd>Enter</kbd> or <kbd>Space</kbd>. This is useful when a particular window ignores that key or performs some action you find undesirable. For example:</p>
+<p>#If can also be used to alter the behavior of an ordinary key like <kbd>Enter</kbd> or <kbd>Space</kbd>. This is useful when a particular window ignores that key or performs some action you find undesirable. 例如:</p>
 <pre>#If WinActive("Reminders ahk_class #32770")  <em>; The "reminders" window in Outlook.</em>
 Enter::Send "!o"  <em>; Have an &quot;Enter&quot; keystroke open the selected reminder rather than snoozing it.</em>
 #If</pre>
 
 <h2 id="variant">Variant (Duplicate) Hotkeys</h2>
-<p>A particular <a href="../Hotkeys.htm">hotkey</a> or <a href="../Hotstrings.htm">hotstring</a> can be defined more than once in the script if each definition has different #If criteria. These are known as <em>hotkey variants</em>. For example:</p>
+<p>A particular <a href="../Hotkeys.htm">hotkey</a> or <a href="../Hotstrings.htm">hotstring</a> can be defined more than once in the script if each definition has different #If criteria. These are known as <em>hotkey variants</em>. 例如:</p>
 <pre>#If <a href="WinActive.htm">WinActive</a>("ahk_class Notepad")
 ^!c::MsgBox "You pressed Control+Alt+C in Notepad."
 #If WinActive("ahk_class WordPadClass")
@@ -51,8 +51,8 @@ Enter::Send "!o"  <em>; Have an &quot;Enter&quot; keystroke open the selected re
 #If
 ^!c::MsgBox "You pressed Control+Alt+C in a window other than Notepad/WordPad."</pre>
 <p>If more than one variant is eligible to fire, only the one closest to the top of the script will fire. The exception to this is the global variant (the one with no #If criteria): It always has the lowest precedence; therefore, it will fire only if no other variant is eligible (this exception does not apply to <a href="../Hotstrings.htm">hotstrings</a>).</p>
-<p>When creating duplicate hotkeys, the order of <a href="../Hotkeys.htm#Symbols">modifier symbols</a> such as ^!+# does not matter. For example, <code>^!c</code> is the same as <code>!^c</code>. However, keys must be spelled consistently. For example, <em>Esc</em> is not the same as <em>Escape</em> for this purpose (though the case does not matter). Also, any hotkey with a <a href="../Hotkeys.htm#wildcard">wildcard prefix (*)</a> is entirely separate from a non-wildcard one; for example, <code>*F1</code> and <code>F1</code> would each have their own set of variants.</p>
-<p>To have the same hotkey subroutine executed by more than one variant, the easiest way is to create a stack of identical hotkeys, each with a different #If directive above it. For example:</p>
+<p>When creating duplicate hotkeys, the order of <a href="../Hotkeys.htm#Symbols">modifier symbols</a> such as ^!+# does not matter. 例如, <code>^!c</code> is the same as <code>!^c</code>. However, keys must be spelled consistently. 例如, <em>Esc</em> is not the same as <em>Escape</em> for this purpose (though the case does not matter). Also, any hotkey with a <a href="../Hotkeys.htm#wildcard">wildcard prefix (*)</a> is entirely separate from a non-wildcard one; 例如, <code>*F1</code> and <code>F1</code> would each have their own set of variants.</p>
+<p>To have the same hotkey subroutine executed by more than one variant, the easiest way is to create a stack of identical hotkeys, each with a different #If directive above it. 例如:</p>
 <pre>#If WinActive("ahk_class Notepad")
 #z::
 #If WinActive("ahk_class WordPadClass")
@@ -60,12 +60,12 @@ Enter::Send "!o"  <em>; Have an &quot;Enter&quot; keystroke open the selected re
 MsgBox "You pressed Win+Z in either Notepad or WordPad."
 return</pre>
 <p>Alternatively, a <a href="GroupAdd.htm">window group</a> can be used via <code>#If WinActive("ahk_group MyGroup")</code>.</p>
-<p>To create hotkey variants dynamically (while the script is running), see <a href="Hotkey.htm#if">Hotkey "If"</a>.</p>
+<p>To create hotkey variants dynamically (while the script is running), 请参阅 <a href="Hotkey.htm#if">Hotkey "If"</a>.</p>
 
 <h2 id="expression-evaluation">Expression Evaluation</h2>
 <p>When the key, mouse or joystick button combination which forms a hotkey is pressed, the #If expression is evaluated to determine if the hotkey should activate.</p>
 <p class="warning"><strong>Note:</strong> Scripts should not assume that the expression is only evaluated when the key is pressed (see below).</p>
-<p>The expression may also be evaluated whenever the program needs to know whether the hotkey is active. For example, the #If expression for a custom combination like <code>a &amp; b::</code> might be evaluated when the prefix key (<code>a</code> in this example) is pressed, to determine whether it should act as a custom modifier key.</p>
+<p>The expression may also be evaluated whenever the program needs to know whether the hotkey is active. 例如, the #If expression for a custom combination like <code>a &amp; b::</code> might be evaluated when the prefix key (<code>a</code> in this example) is pressed, to determine whether it should act as a custom modifier key.</p>
 <p class="warning" id="lag"><strong>Note:</strong> Use of #If in an unresponsive script may cause input lag or break hotkeys (see below).</p>
 <p>There are several more caveats to the #If directive:</p>
 <ul>
@@ -86,7 +86,7 @@ return</pre>
   <li>Whitespace and parentheses are fully handled when the expression is pre-compiled and therefore do not affect this optimization.</li>
 </ul>
 <p>If the expression meets these criteria, it is evaluated directly by the program and does not appear in <a href="ListLines.htm">ListLines</a>.</p>
-<p>Before the <a href="Hotkey.htm">Hotkey</a> function is used to modify an existing hotkey variant, typically <code>Hotkey "If"</code> must be used with the original expression text. However, the first unique expression with a given combination of criteria can also be referenced by that criteria. For example:</p>
+<p>Before the <a href="Hotkey.htm">Hotkey</a> function is used to modify an existing hotkey variant, typically <code>Hotkey "If"</code> must be used with the original expression text. However, the first unique expression with a given combination of criteria can also be referenced by that criteria. 例如:</p>
 <pre>
 Hotkey "IfWinExist", "ahk_class Notepad"
 Hotkey "#n", "Off"  <em>; Turn the hotkey off.</em>
@@ -107,7 +107,7 @@ Hotkey "#n", "On"   <em>; Turn the same hotkey back on.</em>
 <p>When Gosub or Goto is used to jump to a hotkey or hotstring label, it jumps to the variant closest to the top of the script.</p>
 <p>When a hotkey is currently disabled via #If, its key or mouse button will appear with a "#" character in <a href="KeyHistory.htm">KeyHistory's</a> "Type" column. This can help debug a script.</p>
 <p><a href="../Hotkeys.htm#alttab">Alt-tab hotkeys</a> are not affected by #If: they are in effect for all windows.</p>
-<p>The <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a> can be set by #If. For example:</p>
+<p>The <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a> can be set by #If. 例如:</p>
 <pre>#If <a href="WinExist.htm">WinExist</a>("ahk_class Notepad")
 #n::<a href="WinActivate.htm">WinActivate</a>  <em>; Activates the window found by WinExist().</em></pre>
 
@@ -115,9 +115,12 @@ Hotkey "#n", "On"   <em>; Turn the same hotkey back on.</em>
 <p><a href="_IfTimeout.htm">#IfTimeout</a> may be used to override the default timeout value.</p>
 <p><a href="Hotkey.htm">Hotkey function</a>, <a href="../Hotkeys.htm">Hotkeys</a>, <a href="../Hotstrings.htm">Hotstrings</a>, <a href="Suspend.htm">Suspend</a>, <a href="WinActive.htm">WinActive</a>, <a href="WinExist.htm">WinExist</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a></p>
 
-<h2 id="Examples">Examples</h2>
+<h2 id="Examples">示例</h2>
+
+<h3 id="ex1">Example #1</h3>
+<p>Adjust volume by scrolling the mouse wheel over the taskbar:</p>
 <pre class="NoIndent">
-<em>; Example 0: WinActive.</em>
+<em>; 示例 0: WinActive.</em>
 #If WinActive("ahk_class Notepad")
 ^!a::MsgBox "You pressed Ctrl-Alt-A while Notepad is active."
 #c::MsgBox "You pressed Win-C while Notepad is active."
@@ -125,7 +128,6 @@ Hotkey "#n", "On"   <em>; Turn the same hotkey back on.</em>
 #If
 #c::MsgBox "You pressed Win-C in a window other than Notepad."
 
-<em>; Example 1: Adjust volume by scrolling the mouse wheel over the taskbar.</em>
 #If MouseIsOver("ahk_class Shell_TrayWnd")
 WheelUp::Send "{Volume_Up}"
 WheelDown::Send "{Volume_Down}"
@@ -134,8 +136,11 @@ MouseIsOver(WinTitle) {
     MouseGetPos ,, Win
     return WinExist(WinTitle " ahk_id " Win)
 }
+</pre>
 
-<em>; Example 2: Simple word-delete shortcuts for all Edit controls.</em>
+<h3 id="ex2">Example #2</h3>
+<p>Simple word-delete shortcuts for all Edit controls:</p>
+<pre class="NoIndent">
 #If ActiveControlIsOfClass("Edit")
 ^BS::Send "^+{Left}{Del}"
 ^Del::Send "^+{Right}{Del}"
@@ -145,12 +150,17 @@ ActiveControlIsOfClass(Class) {
     FocusedControlClass := WinGetClass("ahk_id " FocusedControl)
     return (FocusedControlClass=Class)
 }
+</pre>
 
-<em>; Example 3: Context-insensitive hotkey.</em>
+<h3 id="ex3">Example #3: Context-insensitive Hotkey</h3>
+<pre class="NoIndent">
 #If
 Esc::ExitApp
+</pre>
 
-<em id="ex4">; Example 4: Dynamic hotkeys. <b>Requires Example 1.</b></em>
+<h3 id="ex4">Example #4: Dynamic Hotkeys</h3>
+<p>This example requires <a href="#ex1">example #1</a>:</p>
+<pre class="NoIndent">
 NumpadAdd::
 Hotkey "If", 'MouseIsOver("ahk_class Shell_TrayWnd")'
 if (doubleup := !doubleup)

@@ -12,7 +12,7 @@ if (A_PtrSize = 8) {
 
 ; Change this path if the loop below doesn't find your hhc.exe,
 ; or leave it as-is if hhc.exe is somewhere in %PATH%.
-hhc := "N:\资料\autohotkey中文帮助\HTML Help Workshop\hhc.exe"
+hhc := "N:\资料\autohotkey 帮助\HTML Help Workshop\hhc.exe"
 
 ; Try to find hhc.exe, since it's not in %PATH% by default.
 for i, env_var in ["ProgramFiles", "ProgramFiles(x86)", "ProgramW6432"]

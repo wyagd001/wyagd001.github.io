@@ -13,22 +13,23 @@
 <h1>VarSetCapacity</h1>
 
 <p>Enlarges a variable's holding capacity or frees its memory. Normally, this is necessary only for unusual circumstances such as <a href="DllCall.htm">DllCall</a>.</p>
-
+<p class="warning"><strong>Deprecated:</strong> This function may be changed or removed in a future version of the program. See <a href="#Remarks">Remarks</a> for details.</p>
 <pre class="Syntax">GrantedCapacity := <span class="func">VarSetCapacity</span>(TargetVar <span class="optional">, RequestedCapacity, FillByte</span>)</pre>
+
 <h2>参数</h2>
 <dl>
 
   <dt>TargetVar</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#variables">Variable</a></p>
-    <p>A reference to a variable. For example: <code>VarSetCapacity(MyVar, 1000)</code>. This can also be a dynamic variable such as <code>Array%i%</code> or a <a href="../Functions.htm#ByRef">function's ByRef parameter</a>.</p>
+    <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
+    <p>A reference to a variable. 例如: <code>VarSetCapacity(MyVar, 1000)</code>. This can also be a dynamic variable such as <code>Array%i%</code> or a <a href="../Functions.htm#ByRef">function's ByRef parameter</a>.</p>
   </dd>
 
   <dt>RequestedCapacity</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>If omitted, the variable's current capacity will be returned and its contents will not be altered. Otherwise, anything currently in the variable is lost (the variable becomes blank).</p>
-    <p>Specify for <em>RequestedCapacity</em> the number of bytes that the variable should be able to hold after the adjustment. For Unicode strings, this should be the length times two. <em>RequestedCapacity</em> does not include the internal zero terminator. For example, specifying 1 would allow the variable to hold up to one byte in addition to its internal terminator. Note: the variable will auto-expand if the script assigns it a larger value later.</p>
+    <p>Specify for <em>RequestedCapacity</em> the number of bytes that the variable should be able to hold after the adjustment. For Unicode strings, this should be the length times two. <em>RequestedCapacity</em> does not include the internal zero terminator. 例如, specifying 1 would allow the variable to hold up to one byte in addition to its internal terminator. Note: the variable will auto-expand if the script assigns it a larger value later.</p>
     <p>Since this function is often called simply to ensure the variable has a certain minimum capacity, for performance reasons, it shrinks the variable only when <em>RequestedCapacity</em> is 0. In other words, if the variable's capacity is already greater than <em>RequestedCapacity</em>, it will not be reduced (but the variable will still made blank for consistency).</p>
     <p>Therefore, to explicitly shrink a variable, first free its memory with <code>VarSetCapacity(Var, 0)</code> and then use <code>VarSetCapacity(Var, NewCapacity)</code> -- or simply let it auto-expand from zero as needed.</p>
     <p>For performance reasons, freeing a variable whose previous capacity was less than 64 characters (128 bytes in Unicode builds) might have no effect because its memory is of a permanent type. In this case, the current capacity will be returned rather than 0.</p>
@@ -38,14 +39,14 @@
 
   <dt>FillByte</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>This parameter is normally omitted, in which case the memory of the target variable is not initialized (instead, the variable is simply made blank as described above). Otherwise, specify a number between 0 and 255. Each byte in the target variable's memory area (its current capacity, which might be greater than <em>RequestedCapacity</em>) is set to that number. Zero is by far the most common value, which is useful in cases where the variable will hold raw binary data such as a <a href="DllCall.htm#struct">DllCall structure</a>.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>This function returns the number of bytes that Var can now hold, which will be greater than or equal to <em>RequestedCapacity</em>.</p>
 
 <h2>Failure</h2>
@@ -56,13 +57,15 @@
   <li><em>RequestedCapacity</em> is less than -1 or (for 32-bit) greater than or equal to 2**31 (2GB).</li>
 </ul>
 
-<h2>备注</h2>
-<p>In addition to its uses described at <a href="DllCall.htm#str">DllCall</a>, this function can also be used to enhance performance when building a string by means of gradual concatenation. This is because multiple automatic resizings can be avoided when you have some idea of what the string's final length will be. In such a case, <em>RequestedCapacity</em> need not be accurate: if the capacity is too small, performance is still improved and the variable will begin auto-expanding when the capacity has been exhausted. If the capacity is too large, some of the memory is wasted, but only temporarily because all the memory can be freed after the operation by means of <code>VarSetCapacity(Var, 0)</code> or <code>Var := &quot;&quot;</code>.</p>
+<h2 id="Remarks">备注</h2>
+<p>The <a href="../objects/Buffer.htm">Buffer</a> object offers superior clarity and flexibility when dealing with binary data, structures, DllCall and similar. For instance, a Buffer object can be assigned to a property or array element or be passed to or returned from a function without copying its contents.</p>
+<p>VarSetCapacity controls the size of a variable's string buffer, which should not be used to create structures or store other binary data. A future update might remove this function or change it to accept the new size in characters rather than bytes.</p>
+<p>This function can be used to enhance performance when building a string by means of gradual concatenation. This is because multiple automatic resizings can be avoided when you have some idea of what the string's final length will be. In such a case, <em>RequestedCapacity</em> need not be accurate: if the capacity is too small, performance is still improved and the variable will begin auto-expanding when the capacity has been exhausted. If the capacity is too large, some of the memory is wasted, but only temporarily because all the memory can be freed after the operation by means of <code>VarSetCapacity(Var, 0)</code> or <code>Var := &quot;&quot;</code>.</p>
 
 <h2>相关</h2>
-<p><a href="DllCall.htm">DllCall</a>, <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a></p>
+<p><a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="DllCall.htm">DllCall</a>, <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a></p>
 
-<h2>Example</h2>
+<h2>示例</h2>
 <pre class="NoIndent"><em>; Optimize by ensuring MyVar has plenty of space to work with.</em>
 VarSetCapacity(MyVar, 10240000)  <em>; ~10 MB</em>
 Loop

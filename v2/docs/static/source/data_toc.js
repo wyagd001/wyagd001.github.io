@@ -58,6 +58,8 @@ tocData = [
   ]],
   ["外部库","",
   [
+    ["Buffer Object","objects/Buffer.htm"],
+    ["BufferAlloc","commands/BufferAlloc.htm"],
     ["CallbackCreate","commands/CallbackCreate.htm"],
     ["DllCall","commands/DllCall.htm"],
     ["NumGet","commands/NumGet.htm"],
@@ -283,6 +285,7 @@ tocData = [
   ["对象类型","",
   [
     ["对象","objects/Object.htm"],
+    ["Buffer Object","objects/Buffer.htm"],
     ["枚举器对象 ","objects/Enumerator.htm"],
     ["异常对象","commands/Throw.htm#Exception"],
     ["文件对象","objects/File.htm"],
@@ -290,6 +293,7 @@ tocData = [
     ["函数对象","objects/Functor.htm"],
     ["Gui 对象","objects/Gui.htm"],
     ["GuiControl 对象","objects/GuiControl.htm"],
+    ["Menu/MenuBar object","objects/Menu.htm"],
     ["RegExMatch 对象","commands/RegExMatch.htm#MatchObject"]
   ]],
   ["进程","commands/Process.htm",

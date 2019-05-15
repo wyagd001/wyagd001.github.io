@@ -137,7 +137,8 @@ MsgBox "这行没有被注释."
 <p class="warning"><strong>注意:</strong> 函数名和左括号之间不能有任何空格.
 </p>
 <p>对于刚接触编程的人来说, 括号的要求起初可能看起来很神秘或冗长, 但它们允许将函数调用与其他操作结合起来. 例如, 只有当两个键被物理按下时, 表达式 <code>GetKeyState(&quot;Shift&quot;, &quot;P&quot;) and GetKeyState(&quot;Ctrl&quot;, &quot;P&quot;)</code> 才会返回 1.</p>
-<p>函数名称始终是全局的, 并且与变量名称是分开的. 例如, <code>Round</code> 可以同时是一个变量名和一个函数名, 然而 <code>Round := 1</code> 不会以任何方式影响 <code>Round(n)</code>.</p>
+<p>函数名与变量名是分开的. 例如, <code>Round</code> 可以同时是变量名和函数名, 而 <code>Round := 1</code> 不会以任何方式影响 <code>Round(n)</code>.</p>
+<p>与普通<a href="Functions.htm#Global">全局变量</a>不同, 默认情况下函数可以在其他函数的内部调用. 但是, <a href="Functions.htm#nested">套嵌函数</a>(即, 在另一个函数中 <em>定义的</em> 任何函数) 只能在包含它们的函数内通过名称来访问.</p>
 
 <h4 id="function-call-statements">函数调用语句</h4>
 <p>如果不需要函数的返回值, 并且函数名写在行首(或者在其他允许<a href="Concepts.htm#statement">语句</a>的上下文中, 如下面的 <code>else</code> 或 <a href="Hotkeys.htm">hotkey 标签</a>), 则可以省略括号. 在这种情况下, 行的其余部分作为函数的参数列表. 例如:</p>
@@ -161,8 +162,9 @@ Run("notepad.exe", , , notepadPID)
 <p>这里表达式中使用的其他符号不完全符合上面定义的任何类别, 或影响表达式其他部分的含义, 如下所述. 这些都以某种方式与 <em>对象</em> 有关. 对于每个构造所做的事情提供一个完整的解释, 需要引入更多的概念, 而这不属于本节的范围.</p>
 <p><code>Alpha.Beta</code> 通常称为 <em>成员访问</em>. <em>Alpha</em> 是一个普通变量, 可以用函数调用或其他一些返回对象的子表达式替换. 当计算时, 对象发送一个请求 &quot;给我属性 <em>Beta</em> 的值&quot;, &quot;在属性 <em>Beta</em> 中存储这个值&quot; 或 &quot;调用名为 <em>Beta</em> 的方法&quot;. 换句话说, <em>Beta</em> 是一个对对象有意义的名字; 它不是一个局部或全局变量.</p>
 <p><code>Alpha.Beta()</code> 是一个 <em>方法调用</em>, 如上所述.</p>
-<p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同).</p>
-<p><code>Alpha[Index]</code> 具有与 <code>Alpha.Beta</code> 类似的功能, 但每个部分都以更加标准的方式进行解释. 也就是说, 在这种情况下, <em>Alpha</em> 和 <em>Index</em> 都是变量, 实际上可以用任何子表达式替换. 此语法通常用于检索<a href="Objects.htm#Usage_Simple_Arrays">数组</a>或<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>中的元素.</p>
+<p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同). <a href="Functions.htm#VariadicCall">Variadic calls</a> are permitted.</p>
+<p><code>Alpha[Index]</code> accesses the <em>default property</em> of <code>Alpha</code>, giving <code>Index</code> as a parameter. Both <em>Alpha</em> and <em>Index</em> are variables in this case, and could be replaced with virtually any sub-expression. 此语法通常用于检索<a href="Objects.htm#Usage_Simple_Arrays">数组</a>或<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>中的元素.</p>
+<p class="warning"><strong>Note:</strong> Currently properties and methods are defined as associative array elements, and as such, the syntax can usually be used interchangebly. However, this will be changed in a future alpha release. It is important to use the syntax appropriate to the situation.</p>
 <p><code>new ClassName()</code> 用于实例化一个类, 或者创建一个从另一个对象派生的对象. 虽然这看起来像一个函数调用, 但 <em>ClassName</em> 实际上是一个普通的变量. 同样, <code>new Alpha.Beta()</code> 将创建一个由 <code>Alpha.Beta</code> 返回的对象派生的对象; <em>Beta</em> 既不是函数也不是方法. 如果可选的括号存在, 则可能包含对象的 <a href="Objects.htm#Custom_NewDelete">__New</a> 方法的参数.</p>
 <p id="array-literal"><code>[A, B, C]</code> 创建一个初始内容为 A, B 和 C(本例中的所有变量) 的<a href="Objects.htm#Usage_Simple_Arrays">数组</a>, 其中 A 是元素 1.</p>
 <p id="object-literal"><code>{Key1: Value1, Key2: Value2}</code> 由键值对列表创建<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>. 一个值以后可以通过它关联的键来检索. 在 <code>:</code> 的左侧写入一个简单的单词(由字母数字字符, 下划线和非 ASCII 字符组成) 等同于将该单词括在引号中. 例如, <code>{A: B}</code> 等同于 <code>{&quot;A&quot;: B}</code>. 但是, <code>{(A): B}</code> 使用变量 <code>A</code> 的内容作为键.</p>
@@ -326,6 +328,11 @@ MsgBox %second%  <em>; 双重解引 =&gt; 42</em>
 </pre>
 <p>目前, 第二种情况下, <code>second</code> 必须总是包含一个变量名; 任意表达式不被支持.</p>
 <p>动态变量引用也可以采用一个或多个文本文本和一个或多个变量的内容, 并将它们组合在一起组成一个单一变量名. 在没有空格的情况下, 这只需简单地按顺序写入名称和百分号括起来的变量. 例如, <code>MyArray%A_Index%</code> 或 <code>MyGrid%X%_%Y%</code>. 这用于访问 <em>伪数组</em>, 如下所示.</p>
+<p>These techniques can also be applied to properties and methods of objects. For example:</p>
+<pre>clr := {}
+for n, component in ["red", "green", "blue"]
+    clr.%component% := Random(0, 255)
+MsgBox clr.red "," clr.green "," clr.blue</pre>
 
 <h4 id="pseudo-arrays">伪数组</h4>
 <p><em>伪数组</em> 实际上只是一堆分开的变量, 但是有一个命名模式, 可以像数组元素一样使用它. 例如:</p>
