@@ -20,7 +20,7 @@
 
   <dt>KeyName</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>This can be just about any single character from the keyboard or one of the key names from the <a href="../KeyList.htm">key list</a>, such as a mouse/joystick button. Examples: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
       <p>Alternatively, an explicit virtual key code such as vkFF may be specified. This is useful in the rare case where a key has no name. The code of such a key can be determined by following the steps at the bottom of the <a href="../KeyList.htm#SpecialKeys">key list page</a>. Note that this code must be in hexadecimal.</p>
       <p><b>Known limitation:</b> This function cannot differentiate between two keys which share the same virtual key code, such as Left and NumpadLeft.</p>
@@ -28,7 +28,7 @@
 
   <dt>Mode</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>This parameter is ignored when retrieving joystick status.</p>
       <p>If omitted, the mode will default to that which retrieves the logical state of the key. This is the state that the OS and the active window believe the key to be in, but is not necessarily the same as the physical state.</p>
 	    <p>Alternatively, one of these letters may be specified:</p>
@@ -39,7 +39,7 @@
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#boolean">Integer (boolean)</a>, <a href="../Concepts.htm#numbers">Float</a> or <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>, <a href="../Concepts.htm#numbers">Float</a> or <a href="../Concepts.htm#numbers">Integer</a></p>
 <p>For keyboard keys and mouse buttons, this function returns 1 (true) if the key is down (or toggled on) or 0 (false) if it is up (or toggled off).</p>
 <p>When <em>KeyName</em> is a joystick axis such as JoyX, this function returns a <a href="../Concepts.htm#numbers">floating-point number</a> between 0 and 100 to indicate the joystick's position as a percentage of that axis's range of motion. This <a href="../scripts/JoystickTest.htm">test script</a> can be used to analyze your joystick(s).</p>
 <p>When <em>KeyName</em> is JoyPOV, this function returns an <a href="../Concepts.htm#numbers">integer</a> between 0 and 35900. The following approximate POV values are used by many joysticks:</p>
@@ -54,13 +54,13 @@
 <h2>备注</h2>
 <p>To wait for a key or mouse/joystick button to achieve a new state, it is usually easier to use <a href="KeyWait.htm">KeyWait</a> instead of a GetKeyState loop.</p>
 <p>Systems with unusual keyboard drivers might be slow to update the state of their keys, especially the toggle-state of keys like <kbd>CapsLock</kbd>. A script that checks the state of such a key immediately after it changed may use <a href="Sleep.htm">Sleep</a> beforehand to give the system time to update the key state.</p>
-<p>For examples of using GetKeyState with a joystick, see the <a href="../misc/RemapJoystick.htm">joystick remapping page</a> and the <a href="../scripts/JoystickMouse.htm">Joystick-To-Mouse script</a>.</p>
+<p>For examples of using GetKeyState with a joystick, 请参阅 the <a href="../misc/RemapJoystick.htm">joystick remapping page</a> and the <a href="../scripts/JoystickMouse.htm">Joystick-To-Mouse script</a>.</p>
 <h2>相关</h2>
 <p><a href="GetKeyVK.htm">GetKeyVK</a>, <a href="GetKeySC.htm">GetKeySC</a>, <a href="GetKeyName.htm">GetKeyName</a>, <a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">Key List</a>, <a href="../misc/RemapJoystick.htm">Joystick remapping</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a></p>
 
 <h2>示例</h2>
 
-<h3 id="ex1">Example #1: Miscellaneous</h3>
+<h3 id="ex1">示例 #1: Miscellaneous</h3>
 <pre class="NoIndent">state := GetKeyState("RButton")  <em>; Right mouse button.</em>
 state := GetKeyState("Joy2")  <em>; The second button of the first joystick.</em>
 
@@ -71,7 +71,7 @@ else
 
 state := GetKeyState(&quot;CapsLock&quot;, &quot;T&quot;)  <em>; True if CapsLock is ON, false otherwise.</em></pre>
 
-<h3 id="ex2">Example #2: Remapping</h3>
+<h3 id="ex2">示例 #2: Remapping</h3>
 <p>(This example is only for illustration because it would be easier to use the <a href="../misc/Remap.htm">built-in remapping feature</a>.) In the following hotkey, the mouse button is kept held down while NumpadAdd is down, which effectively transforms NumpadAdd into a mouse button. This method can also be used to repeat an action while the user is holding down a key or button:</p>
 <pre class="NoIndent">*NumpadAdd::
 MouseClick "left",,, 1, 0, "D"  <em>; Hold down the left mouse button.</em>
@@ -85,13 +85,13 @@ Loop
 MouseClick "left",,, 1, 0, "U"  <em>; Release the mouse button.</em>
 return</pre>
 
-<h3 id="ex3">Example #3</h3>
+<h3 id="ex3">示例 #3</h3>
 <p>Make joystick button behavior depend on joystick axis position:</p>
 <pre class="NoIndent">joy2:: 
-joyx := GetKeyState("JoyX") 
-if joyx &gt; 75 
+JoyX := GetKeyState("JoyX")
+if (JoyX &gt; 75)
     MsgBox "Action #1 (button pressed while joystick was pushed to the right)."
-else if joyx &lt; 25 
+else if (JoyX &lt; 25)
     MsgBox "Action #2 (button pressed while joystick was pushed to the left)."
 else
     MsgBox "Action #3 (button pressed while joystick was centered horizontally)."

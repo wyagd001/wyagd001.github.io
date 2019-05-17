@@ -21,14 +21,14 @@
 }</pre>
 <p>要按字母顺序排列文件名, 请使用 <a href="../commands/Sort.htm">Sort</a> 命令. 要把剪贴板中的文件名写入到文件中, 请使用 <code><a href="../commands/FileAppend.htm">FileAppend</a>, %clipboard%`r`n, C:\My File.txt</code>. 要改变脚本尝试打开剪贴板的持续时间, 例如另一个程序在使用剪贴板的时候, 请使用 <a href="../commands/_ClipboardTimeout.htm">#ClipboardTimeout</a>.</p>
 <strong>基本示例:</strong>
-<pre>clipboard = my text   <em>; 在剪贴板中存入新内容.</em>
-clipboard =   <em>; 清空剪贴板.</em>
-clipboard = %clipboard%   <em>; 把任何复制的文件, HTML 或其他格式的文本转换为纯文本.</em>
-clipboard = %clipboard% Text to append.   <em>; 追加一些文本到剪贴板.</em>
+<pre>clipboard := "my text"   <em>; 在剪贴板中存入新内容.</em>
+clipboard := ""   <em>; 清空剪贴板.</em>
+clipboard := clipboard    <em>; 把任何复制的文件, HTML 或其他格式的文本转换为纯文本.</em>
+clipboard := clipboard " Text to append."   <em>; 追加一些文本到剪贴板.</em>
 StringReplace, clipboard, clipboard, ABC, DEF, All   <em>; 把剪贴板中所有 ABC 替换为 DEF (同时把剪贴板的内容转换为纯文本).</em></pre>
 
 <p><strong>使用 ClipWait 提高脚本的可靠性:</strong></p>
-<pre>clipboard =  <em>; 让剪贴板初始为空, 这样可以使用 ClipWait 检测文本什么时候被复制到剪贴板中.</em>
+<pre>clipboard := ""  <em>; 让剪贴板初始为空, 这样可以使用 ClipWait 检测文本什么时候被复制到剪贴板中.</em>
 Send ^c
 <a href="../commands/ClipWait.htm">ClipWait</a>  <em>; 等待剪贴板中出现文本.</em>
 MsgBox Control-C copied the following contents to the clipboard:`n`n%clipboard%</pre>
@@ -37,7 +37,7 @@ MsgBox Control-C copied the following contents to the clipboard:`n`n%clipboard%<
 <pre>ClipSaved := ClipboardAll   <em>; 把剪贴板的所有内容保存到您选择的变量中.
 ; ... 这里临时使用剪贴板, 例如使用 <a href="../commands/Transform.htm#Unicode">Transform Unicode</a> 粘贴 Unicode 文本 ...</em>
 Clipboard := ClipSaved   <em>; 恢复剪贴板为原来的内容. 注意这里使用 <i>Clipboard</i>(不是 <i>ClipboardAll</i>).</em>
-ClipSaved =   <em>; 在原来的剪贴板含大量内容时释放内存.</em></pre>
+ClipSaved := ""   <em>; 在原来的剪贴板含大量内容时释放内存.</em></pre>
 <p><em>ClipboardAll</em> 中的内容可以保存到文件中(在这种模式中, FileAppend 总是覆盖任何现有的文件):</p>
 <pre><a href="../commands/FileAppend.htm">FileAppend</a>, %ClipboardAll%, C:\Company Logo.clip <em>; 文件扩展名无关紧要.</em></pre>
 <p>要在之后加载这个文件的内容回剪贴板(或变量中), 请参照此例:</p>
@@ -48,9 +48,9 @@ ClipSaved =   <em>; 在原来的剪贴板含大量内容时释放内存.</em></p
 <p>如果 <em>ClipboardAll</em> 不能获取剪贴板中一个或多个数据对象(格式), 则会忽略它们但仍保存剩余的所有对象.</p>
 <p>包含剪贴板数据的变量可以赋值给另一个变量, 例如: <code>ClipSaved2 := ClipSaved</code></p>
 <p><a href="../commands/ClipWait.htm">ClipWait</a> 可以用来检测剪贴板包含数据的时候(可以包含非文本数据).</p>
-<p><a href="../commands/StringLen.htm">StrLen / StringLen</a> 可以用来获取接受 <em>ClipboardAll</em> 赋值的变量的总大小. 然而, 要在 AutoHotkey 的 Unicode 版本中获取字节的大小, 则前面得到的长度必须乘以 2. <a href="../Variables.htm#IsUnicode">A_IsUnicode</a> 可用来支持 ANSI 和 Unicode 版本, 例如: <code>size := StrLen(ClipSaved) * (A_IsUnicode ? 2 : 1)</code>.</p>
-<p>接受 <em>ClipboardAll</em> 赋值的变量可以通过 &lt;&gt; 和 = 互相进行比较(但不能直接和 <em>ClipboardAll</em> 进行比较). 在下面的例子中, 首先检查每个变量的大小. 如果大小不足以判断, 则比较它们的内容来得到结果:</p>
-<pre>if ClipSaved1 &lt;&gt; %ClipSaved2%   <em>; 这里 <u>必须</u> 使用旧式的 IF 语句, 不能使用表达式.</em>
+<p><a href="../commands/StringLen.htm">StrLen() / StringLen</a> 可以用来获取接受 <em>ClipboardAll</em> 赋值的变量的总大小. 然而, 要在 AutoHotkey 的 Unicode 版本中获取字节的大小, 则前面得到的长度必须乘以 2. <a href="../Variables.htm#IsUnicode">A_IsUnicode</a> 可用来支持 ANSI 和 Unicode 版本, 例如: <code>size := StrLen(ClipSaved) * (A_IsUnicode ? 2 : 1)</code>.</p>
+<p>接受 <em>ClipboardAll</em> 赋值的变量可以通过 != 和 = 互相进行比较(但不能直接和 <em>ClipboardAll</em> 进行比较). 在下面的例子中, 首先检查每个变量的大小. 如果大小不足以判断, 则比较它们的内容来得到结果:</p>
+<pre>if (ClipSaved1 != ClipSaved2)   <em>; 这里 <u>必须</u> 使用旧式的 IF 语句, 不能使用表达式.</em>
     MsgBox The two saved clipboards are different.</pre>
 <p>保存 <em>ClipboardAll</em> 到变量时, 这个变量的大小不受 <a href="../commands/_MaxMem.htm">#MaxMem</a> 设置的内存限制.</p>
 <p>保存了剪贴板内容的文件内部由四个字节的格式类型, 接着四个字节的数据块大小以及相应的格式的数据块组成. 如果剪贴板中包含多种格式的内容(大部分时候都是这样), 这三个组成部分会一直重复, 直到包含所有的内容. 文件以四个字节的 0 格式类型结尾.</p>

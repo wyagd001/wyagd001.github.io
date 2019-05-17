@@ -20,22 +20,22 @@
 
   <dt>MsgNumber</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>The number of the message to monitor or query, which should be between 0 and 4294967295 (0xFFFFFFFF). If you do not wish to monitor a <a href="../misc/SendMessageList.htm">system message</a> (that is, one below 0x400), it is best to choose a number greater than 4096 (0x1000) to the extent you have a choice. This reduces the chance of interfering with messages used internally by current and future versions of AutoHotkey.</p>
   </dd>
 
   <dt>Function</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a> or <a href="../Concepts.htm#objects">Object</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a> or <a href="../Concepts.htm#objects">Object</a></p>
     <p>A <a href="../Functions.htm">function</a>'s name or a <a href="../objects/Functor.htm">function object</a>. To pass a literal function name, it must be enclosed in quotes.</p>
   </dd>
 
   <dt id="MaxThreads">MaxThreads</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>This integer is normally omitted, in which case the monitor function is limited to one <a href="../misc/Threads.htm">thread</a> at a time. This is usually best because otherwise, the script would process messages out of chronological order whenever the monitor function interrupts itself. Therefore, as an alternative to <em>MaxThreads</em>, consider using <em>Critical</em> as described <a href="#Critical">below</a>.</p>
     <p>Specify 0 to unregister the previously registered function identified by <em>Function</em>.</p>
-    <p>By default, when multiple functions are registered for a single <em>MsgNumber</em>, they are called in the order that they were registered. To register a function to be called before any previously registered functions, specify a negative value for <em>MaxThreads</em>. For example, <code>OnMessage Msg, Fn, -2</code> registers <code>Fn</code> to be called before any other functions previously registered for <em>Msg</em>, and allows <em>Fn</em> a maximum of 2 threads. However, if the function is already registered, the order will not change unless it is unregistered and then re-registered.</p>
+    <p>By default, when multiple functions are registered for a single <em>MsgNumber</em>, they are called in the order that they were registered. To register a function to be called before any previously registered functions, specify a negative value for <em>MaxThreads</em>. 例如, <code>OnMessage Msg, Fn, -2</code> registers <code>Fn</code> to be called before any other functions previously registered for <em>Msg</em>, and allows <em>Fn</em> a maximum of 2 threads. However, if the function is already registered, the order will not change unless it is unregistered and then re-registered.</p>
   </dd>
 
 </dl>
@@ -43,10 +43,10 @@
 <h2 id="Usage">Usage</h2>
 
 <p>Any number of functions or <a href="../objects/Functor.htm">function objects</a> can monitor a given <em>MsgNumber</em>.</p>
-<p>Either of these two lines registers a function object to be called <strong>after</strong> any previously registered functions:</p>
+<p>Either of these two lines registers a function object to be called <strong>after</strong> any previously registered 函数:</p>
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function     <em>; Option 1 - omit MaxThreads</em>
 <span class="func">OnMessage</span> MsgNumber, Function, 1  <em>; Option 2 - specify MaxThreads 1</em></pre>
-<p>This registers a function object to be called <strong>before</strong> any previously registered functions:</p>
+<p>This registers a function object to be called <strong>before</strong> any previously registered 函数:</p>
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function, -1</pre>
 <p>To unregister a function object, specify 0 for <em>MaxThreads</em>:</p>
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function, 0</pre>
@@ -72,16 +72,16 @@ Parameter #4: The HWND (unique ID) of the window or control to which the message
 <p>WPARAM and LPARAM are unsigned 32-bit integers (from 0 to 2<sup>32</sup>-1) or signed 64-bit integers (from -2<sup>63</sup> to 2<sup>63</sup>-1) depending on whether the exe running the script is 32-bit or 64-bit. For 32-bit scripts, if an incoming parameter is intended to be a signed integer, any negative numbers can be revealed by following this example:</p>
 <pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; Checking <a href="../Variables.htm#PtrSize">A_PtrSize</a> ensures the script is 32-bit.</em>
     wParam := -(~wParam) - 1</pre>
-<p>You can omit one or more parameters from the end of the list if the corresponding information is not needed. For example, a function defined as <code>MyMsgMonitor(wParam, lParam)</code> would receive only the first two parameters, and one defined as <code>MyMsgMonitor()</code> would receive none of them.</p>
+<p>You can omit one or more parameters from the end of the list if the corresponding information is not needed. 例如, a function defined as <code>MyMsgMonitor(wParam, lParam)</code> would receive only the first two parameters, and one defined as <code>MyMsgMonitor()</code> would receive none of them.</p>
 
 <h2>Additional Information Available to the Function</h2>
 <p>In addition to the parameters received above, the function may also consult the built-in variable <a href="../Variables.htm#EventInfo">A_EventInfo</a>, which contains 0 if the message was sent via SendMessage. If sent via PostMessage, it contains the <a href="../Variables.htm#TickCount">tick-count time</a> the message was posted.</p>
-<p>A monitor function's <a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a> starts off as the parent window to which the message was sent (even if it was sent to a control). If the window is hidden but not a GUI window (such as the script's main window), turn on <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> before using it. For example:</p>
+<p>A monitor function's <a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a> starts off as the parent window to which the message was sent (even if it was sent to a control). If the window is hidden but not a GUI window (such as the script's main window), turn on <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> before using it. 例如:</p>
 <pre>DetectHiddenWindows True
 MsgParentWindow := WinExist()  <em>; This stores the unique ID of the window to which the message was sent.</em></pre>
 
 <h2>What the Function Should <em>Return</em></h2>
-<p>If a monitor function uses <a href="Return.htm">Return</a> without any parameters, or it specifies a blank value such as &quot;&quot; (or it never uses Return at all), the incoming message goes on to be processed normally when the function finishes. The same thing happens if the function <a href="Exit.htm">Exits</a> or causes a runtime error such as <a href="Run.htm">running</a> a nonexistent file. By contrast, returning an integer causes it to be sent immediately as a reply; that is, the program does not process the message any further. For example, a function monitoring WM_LBUTTONDOWN (0x201) may return an integer to prevent the target window from being notified that a mouse click has occurred. In many cases (such as a message arriving via <a href="PostMessage.htm">PostMessage</a>), it does not matter which integer is returned; but if in doubt, 0 is usually safest.</p>
+<p>If a monitor function uses <a href="Return.htm">Return</a> without any parameters, or it specifies a blank value such as &quot;&quot; (or it never uses Return at all), the incoming message goes on to be processed normally when the function finishes. The same thing happens if the function <a href="Exit.htm">Exits</a> or causes a runtime error such as <a href="Run.htm">running</a> a nonexistent file. By contrast, returning an integer causes it to be sent immediately as a reply; that is, the program does not process the message any further. 例如, a function monitoring WM_LBUTTONDOWN (0x201) may return an integer to prevent the target window from being notified that a mouse click has occurred. In many cases (such as a message arriving via <a href="PostMessage.htm">PostMessage</a>), it does not matter which integer is returned; but if in doubt, 0 is usually safest.</p>
 <p>The range of valid return values depends on whether the exe running the script is 32-bit or 64-bit. Non-empty return values must be between -2<sup>31</sup> and 2<sup>32</sup>-1 for 32-bit scripts (<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>) and between -2<sup>63</sup> and 2<sup>63</sup>-1 for 64-bit scripts (<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code>).</p>
 <p>If there are multiple functions monitoring a given message number, they are called one by one until one returns a non-empty value.</p>
 
@@ -93,13 +93,13 @@ MsgParentWindow := WinExist()  <em>; This stores the unique ID of the window to 
 <p>If a monitored message that is numerically less than 0x312 arrives while the script is absolutely uninterruptible -- such as while a <a href="../objects/Menu.htm#Show">menu</a> is displayed, a <a href="SetKeyDelay.htm">KeyDelay</a>/<a href="SetMouseDelay.htm">MouseDelay</a> is in progress, or the clipboard is being <a href="_ClipboardTimeout.htm">opened</a> -- the message's function will not be called and the message will be treated as unmonitored.  By contrast, a monitored message of 0x312 or higher will be buffered during  these uninterruptible periods; that is, its function will be called when the script becomes interruptible.</p>
 <p>If a monitored message numerically less than 0x312 arrives while the script is uninterruptible merely due to the settings of <a href="Thread.htm">Thread Interrupt</a> or <a href="Critical.htm">Critical</a>, the current thread will be interrupted so that the function can be called. By contrast, a monitored message of 0x312 or higher will be buffered until the thread finishes or becomes interruptible.</p>
 <p>The <a href="../misc/Threads.htm">priority</a> of OnMessage threads is always 0. Consequently, no messages are monitored or buffered when the current thread's priority is higher than 0.</p>
-<p>Caution should be used when monitoring system messages (those below 0x400). For example, if a monitor function does not finish quickly, the response to the message might take longer than the system expects, which might cause side-effects. Unwanted behavior may also occur if a monitor function returns an integer to suppress further processing of a message, but the system expected different processing or a different response.</p>
-<p>When the script is displaying a system dialog such as <a href="MsgBox.htm">MsgBox</a>, any message posted to a control is not monitored. For example, if the script is displaying a MsgBox and the user clicks a button in a GUI window, the WM_LBUTTONDOWN message is sent directly to the button without calling the monitor function.</p>
+<p>Caution should be used when monitoring system messages (those below 0x400). 例如, if a monitor function does not finish quickly, the response to the message might take longer than the system expects, which might cause side-effects. Unwanted behavior may also occur if a monitor function returns an integer to suppress further processing of a message, but the system expected different processing or a different response.</p>
+<p>When the script is displaying a system dialog such as <a href="MsgBox.htm">MsgBox</a>, any message posted to a control is not monitored. 例如, if the script is displaying a MsgBox and the user clicks a button in a GUI window, the WM_LBUTTONDOWN message is sent directly to the button without calling the monitor function.</p>
 <p>Although an external program may post messages directly to a script's thread via PostThreadMessage() or other API call, this is not recommended because the messages would be lost if the script is displaying a system window such as a <a href="MsgBox.htm">MsgBox</a>. Instead, it is usually best to post or send the messages to the script's main window or one of its GUI windows.</p>
 <h2>相关</h2>
 <p><a href="CallbackCreate.htm">CallbackCreate</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">Functions</a>, <a href="../misc/SendMessageList.htm">List of Windows Messages</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall</a></p>
 <h2>示例</h2>
-<pre class="NoIndent"><em>; Example: The following is a working script that monitors mouse clicks in a GUI window.
+<pre class="NoIndent"><em>; 示例: The following is a working script that monitors mouse clicks in a GUI window.
 ; Related topic: <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu</a> event</em>
 
 Gui := GuiCreate(, "Example Window")
@@ -127,12 +127,12 @@ Gui_Close() {
     ExitApp
 }</pre>
 
-<pre class="NoIndent" id="shutdown"><em>; Example: The following script detects system shutdown/logoff and allows you to abort it (this is
+<pre class="NoIndent" id="shutdown"><em>; 示例: The following script detects system shutdown/logoff and allows you to abort it (this is
 ; reported NOT to work on Windows Vista and later).
 ; Related topic: <a href="OnExit.htm">OnExit</a></em>
 
 <em>; The following DllCall is optional: it tells the OS to shut down this script <i>first</i> (prior to all other applications).</em>
-DllCall &quot;kernel32.dll\SetProcessShutdownParameters&quot;, UInt, 0x4FF, UInt, 0
+DllCall &quot;kernel32.dll\SetProcessShutdownParameters&quot;, &quot;UInt&quot;, 0x4FF, &quot;UInt&quot;, 0
 OnMessage 0x11, &quot;WM_QUERYENDSESSION&quot;
 return
 
@@ -148,8 +148,8 @@ WM_QUERYENDSESSION(wParam, lParam)
     return Result = "Yes"
 }</pre>
 
-<pre class="NoIndent"><em>; Example: Have a script receive a custom message and up to two numbers from some other script or program
-; (to send strings rather than numbers, see the example after this one).</em>
+<pre class="NoIndent"><em>; 示例: Have a script receive a custom message and up to two numbers from some other script or program
+; (to send strings rather than numbers, 请参阅 the example after this one).</em>
 
 OnMessage 0x5555, &quot;MsgMonitor&quot;
 OnMessage 0x5556, &quot;MsgMonitor&quot;
@@ -168,7 +168,7 @@ if WinExist(&quot;Name of Receiving Script.ahk ahk_class AutoHotkey&quot;)
     PostMessage 0x5555, 11, 22  <em>; The message is sent  to the &quot;<a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a>&quot; due to WinExist above.</em>
 DetectHiddenWindows False  <em>; Must not be turned off until after PostMessage.</em></pre>
 
-<pre class="NoIndent" id="SendString"><em>; Example: Send a string of any length from one script to another.  This is a working example.
+<pre class="NoIndent" id="SendString"><em>; 示例: Send a string of any length from one script to another.  This is a working example.
 ; To use it, save and run both of the following scripts then press Win+Space to show an
 ; InputBox that will prompt you to type in a string.</em>
 
@@ -196,7 +196,7 @@ if ErrorLevel  <em>; User pressed the Cancel button.</em>
 result := Send_WM_COPYDATA(StringToSend, TargetScriptTitle)
 if result = ""
     MsgBox "SendMessage failed or timed out. Does the following WinTitle exist?:`n" TargetScriptTitle
-else if result = 0
+else if (result = 0)
     MsgBox "Message sent but the target window responded with 0, which may mean it ignored it."
 return
 
@@ -221,7 +221,7 @@ Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; ByRef saves
     return RetValue  <em>; Return SendMessage's reply back to our caller.</em>
 }</pre>
 
-<pre class="NoIndent"><em>; Example: See the <a href="../scripts/WinLIRC.htm">WinLIRC client script</a> for a demonstration of how to use OnMessage to receive
+<pre class="NoIndent"><em>; 示例: See the <a href="../scripts/WinLIRC.htm">WinLIRC client script</a> for a demonstration of how to use OnMessage to receive
 ; notification when data has arrived on a network connection.</em></pre>
 
 </body>
