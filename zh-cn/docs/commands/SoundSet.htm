@@ -35,7 +35,7 @@
   <dd><p>介于 1 和支持设备总数之间的数字. 如果省略此参数, 则它默认为 1(首个音频设备), 在 Windows Vista 及更高版本中则为系统默认的录制和播放设备. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>. <a href="#Ex">声卡分析脚本</a>有助于确定要使用的编号.</p></dd>
 
 </dl>
-<h2>ErrorLevel</h2>
+<h2>错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>命令执行成功时 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 0. 否则, 它会被设置为下列短语的其中一个:</p>
  <ul>
@@ -78,9 +78,9 @@ SplashTextOn,,, Gathering Soundcard Info...
 <em>; 下面的大部分纯数字也许不存在于任何混音器中, 但查询时需要它们才完整.; 对应于下面项目的数字(按顺序):CUSTOM,BOOLEANMETER,SIGNEDMETER,PEAKMETER,
 ; UNSIGNEDMETER,BOOLEAN,BUTTON,DECIBELS,SIGNED,UNSIGNED,PERCENT,SLIDER,FADER,SINGLESELECT,MUX,
 ; MULTIPLESELECT,MIXER,MICROTIME,MILLITIME</em>
-ControlTypes = VOLUME,ONOFF,MUTE,MONO,LOUDNESS,STEREOENH,BASSBOOST,PAN,QSOUNDPAN,BASS,TREBLE,EQUALIZER,0x00000000, 0x10010000,0x10020000,0x10020001,0x10030000,0x20010000,0x21010000,0x30040000,0x30020000,0x30030000,0x30050000,0x40020000,0x50030000,0x70010000,0x70010001,0x71010000,0x71010001,0x60030000,0x61030000
+ControlTypes := "VOLUME,ONOFF,MUTE,MONO,LOUDNESS,STEREOENH,BASSBOOST,PAN,QSOUNDPAN,BASS,TREBLE,EQUALIZER,0x00000000, 0x10010000,0x10020000,0x10020001,0x10030000,0x20010000,0x21010000,0x30040000,0x30020000,0x30030000,0x30050000,0x40020000,0x50030000,0x70010000,0x70010001,0x71010000,0x71010001,0x60030000,0x61030000"
 
-ComponentTypes = MASTER,HEADPHONES,DIGITAL,LINE,MICROPHONE,SYNTH,CD,TELEPHONE,PCSPEAKER,WAVE,AUX,ANALOG,N/A
+ComponentTypes := "MASTER,HEADPHONES,DIGITAL,LINE,MICROPHONE,SYNTH,CD,TELEPHONE,PCSPEAKER,WAVE,AUX,ANALOG,N/A"
 
 <em>; 创建 ListView, 为主循环做准备:</em>
 Gui, Add, ListView, w400 h400 vMyListView, Component Type|Control Type|Setting|Mixer
@@ -91,7 +91,7 @@ Loop  <em>; 对于系统中存在的每个混音器编号, 查询它的性能.</
 {
     CurrMixer := A_Index
     SoundGet, Setting,,, %CurrMixer%
-    if ErrorLevel = Can't Open Specified Mixer  <em>; 除了这个外的其他任何错误都表明混音器存在.</em>
+    if (ErrorLevel = "Can't Open Specified Mixer")   <em>; 除了这个外的其他任何错误都表明混音器存在.</em>
         break
 
     <em>; 对于此混音器中的每个组件类型, 查询它的实例和控制器类型:</em>
@@ -100,7 +100,7 @@ Loop  <em>; 对于系统中存在的每个混音器编号, 查询它的性能.</
         CurrComponent := A_LoopField
         <em>; 首先检查这个组件类型是否实际存在于混音器中:</em>
         SoundGet, Setting, %CurrComponent%,, %CurrMixer%
-        if ErrorLevel = Mixer Doesn't Support This Component Type
+        if (ErrorLevel = "Mixer Doesn't Support This Component Type")
             continue  <em>; 移动到下一个组件类型进行新的重复.</em>
         Loop  <em>; 对于此组件类型的每个实例, 查询它的控制器类型.</em>
         {
@@ -121,8 +121,8 @@ Loop  <em>; 对于系统中存在的每个混音器编号, 查询它的性能.</
                 if ErrorLevel  <em>; 出现其他错误, 这是意外的情况, 所以把它显示在结果中.</em>
                     Setting := ErrorLevel
                 ComponentString := CurrComponent
-                if CurrInstance &gt; 1
-                    ComponentString = %ComponentString%:%CurrInstance%
+                if (CurrInstance &gt; 1)
+                    ComponentString := ComponentString ":" CurrInstance
                 LV_Add("", ComponentString, CurrControl, Setting, CurrMixer)
             }  <em>; 对于每个控制器类型.</em>
         }  <em>; 对于每个组件实例.</em>

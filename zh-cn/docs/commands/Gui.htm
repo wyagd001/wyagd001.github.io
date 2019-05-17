@@ -233,7 +233,7 @@ WinSet, TransColor, %CustomColor% 150
 Gui Show</pre>
 <p id="LastFoundExist"><strong>LastFoundExist</strong> <span class="ver">[v1.0.43.09+]:</span> 和其他选项不同, LastFoundExist 选项只有在单独使用时才有效. <em>+LastFoundExist</em> 的效果与 <em>+LastFound</em> 相同, 不过如果窗口不存在时不会创建窗口. 此选项的主要用途是判断是否存在某特殊的窗口. 例如:</p>
 <pre>Gui MyGui:+LastFoundExist
-IfWinExist
+if WinExist()
     MsgBox GUI "MyGui" already exists.</pre>
 <p><strong>MaximizeBox</strong>: 启用标题栏上的最大化按钮. 下面的 <em>Resize</em> 也含有此效果.</p>
 <p><strong>MinimizeBox</strong>(默认含有此选项): 启用标题栏上的最小化按钮.</p>
@@ -570,7 +570,7 @@ Gui, Show
 return
 
 MyListBox:
-if A_GuiEvent &lt;&gt; DoubleClick
+if (A_GuiEvent != "DoubleClick")
     return
 <em>; 否则, 用户双击了列表中的项目, 所以把它和点击 OK 按钮进行相同的处理.
 ; 所以直接进入下一个标签.</em>
@@ -581,7 +581,7 @@ IfMsgBox, No
     return
 <em>; 否则, 运行此文件:</em>
 Run, %MyListBox%,, UseErrorLevel
-if ErrorLevel = ERROR
+if (ErrorLevel = "ERROR")
     MsgBox Could not launch the specified file.  Perhaps it is not associated with anything.
 return
 
@@ -604,7 +604,7 @@ WM_MOUSEMOVE()
 {
     static CurrControl, PrevControl, _TT  <em>; _TT 保持为空以便用于下面的 ToolTip 命令.</em>
     CurrControl := A_GuiControl
-    If (CurrControl &lt;&gt; PrevControl and not InStr(CurrControl, &quot; &quot;))
+    If (CurrControl != PrevControl and not InStr(CurrControl, &quot; &quot;))
     {
         ToolTip  <em>; 关闭之前的工具提示.</em>
         SetTimer, DisplayToolTip, 1000

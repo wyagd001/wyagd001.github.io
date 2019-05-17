@@ -62,7 +62,8 @@
 
 Loop, read, C:\Docs\Address List.txt, C:\Docs\Family Addresses.txt
 {
-    IfInString, A_LoopReadLine, family, FileAppend, %A_LoopReadLine%`n
+    if InStr(A_LoopReadLine, "family")
+        FileAppend, %A_LoopReadLine%`n
 }</pre>
 <pre class="NoIndent"><em>; 示例 #2: 获取文本文件的最后一行.</em>
 Loop, read, C:\Log File.txt
@@ -70,23 +71,23 @@ Loop, read, C:\Log File.txt
 <pre class="NoIndent"><em>; 示例 #3: 尝试从文本或 HTML 文件中提取
 ; 所有 FTP 和 HTTP URL 的有效脚本:</em>
 FileSelectFile, SourceFile, 3,, Pick a text or HTML file to analyze.
-if SourceFile =
+if (SourceFile = "")
     return  <em>; 此时将退出.</em>
 
 SplitPath, SourceFile,, SourceFilePath,, SourceFileNoExt
-DestFile = %SourceFilePath%\%SourceFileNoExt% Extracted Links.txt
+DestFile := SourceFilePath "\" SourceFileNoExt " Extracted Links.txt"
 
-IfExist, %DestFile%
+if FileExist(DestFile)
 {
     MsgBox, 4,, Overwrite the existing links file? Press No to append to it.`n`nFILE: %DestFile%
     IfMsgBox, Yes
         FileDelete, %DestFile%
 }
 
-LinkCount = 0
+LinkCount := 0
 Loop, read, %SourceFile%, %DestFile%
 {
-    URLSearchString = %A_LoopReadLine%
+    URLSearchString := A_LoopReadLine
     Gosub, URLSearch
 }
 MsgBox %LinkCount% links were found and written to "%DestFile%".
@@ -95,9 +96,9 @@ return
 
 URLSearch:
 <em>; 由于在一些 URL 中内嵌有其他的 URL, 所以用这种特殊的方法进行处理:</em>
-StringGetPos, URLStart1, URLSearchString, http://
-StringGetPos, URLStart2, URLSearchString, ftp://
-StringGetPos, URLStart3, URLSearchString, www.
+URLStart1 := InStr(URLSearchString, "http://")
+URLStart2 := InStr(URLSearchString, "ftp://")
+URLStart3 := InStr(URLSearchString, "www.")
 
 <em>; 查找最左边的起始位置:</em>
 URLStart = %URLStart1%  <em>; 设置默认的起始处.</em>
@@ -106,28 +107,28 @@ Loop
     <em>; 仅解析 "URLStart%A_Index%" 一次有助于</em>
     <em>; 改善性能 (尤其在含有许多变量的脚本中):</em>
     ArrayElement := URLStart%A_Index%
-    if ArrayElement =  <em>; 到达<a href="../misc/Arrays.htm#pseudo">伪数组</a>的末尾.</em>
+    if (ArrayElement = "")  <em>; 到达<a href="../misc/Arrays.htm#pseudo">伪数组</a>的末尾.</em>
         break
-    if ArrayElement = -1  <em>; 此元素无效.</em>
+    if (ArrayElement = 0)  <em>; 此元素无效.</em>
         continue
-    if URLStart = -1
-        URLStart = %ArrayElement%
+    if (URLStart = 0)
+        URLStart := ArrayElement
     else <em>; URLStart 中含有有效位置, 所以把它与 ArrayElement 进行比较.</em>
     {
-        if ArrayElement &lt;&gt; -1
-            if ArrayElement &lt; %URLStart%
-                URLStart = %ArrayElement%
+        if (ArrayElement != 0)
+            if (ArrayElement &lt; URLStart)
+                URLStart := ArrayElement
     }
 }
 
-if URLStart = -1  <em>; 在 URLSearchString 中不存在网址.</em>
+if (URLStart = 0)  <em>; 在 URLSearchString 中不存在网址.</em>
     return
 
 <em>; 否则, 提取该网址:</em>
-StringTrimLeft, URL, URLSearchString, %URLStart%  <em>; 忽略开始/无效部分.</em>
+URL := SubStr(URLSearchString, URLStart)  <em>; 忽略开始/无效部分.</em>
 Loop, parse, URL, %A_Tab%%A_Space%&lt;&gt;  <em>; 找到首个空格, tab 或尖括号(如果有).</em>
 {
-    URL = %A_LoopField%
+    URL := A_LoopField
     break  <em>; 即仅执行一次循环来获取首个"片段".</em>
 }
 <em>; 如果没有找到结束字符而在上面的循环中没有执行循环体,
@@ -141,9 +142,9 @@ FileAppend, %URLCleansed%`n
 LinkCount += 1
 
 <em>; 看看当前行中是否含有其他网址:</em>
-StringLen, CharactersToOmit, URL
-CharactersToOmit += %URLStart%
-StringTrimLeft, URLSearchString, URLSearchString, %CharactersToOmit%
+CharactersToOmit := StrLen(URL)
+CharactersToOmit += URLStart
+URLSearchString := SubStr(URLSearchString, CharactersToOmit)
 Gosub, URLSearch  ; <em>到自身的递归调用.</em>
 return</pre>
 

@@ -87,7 +87,7 @@
     <td><p>当前获取的文件/文件夹的 8.3 短路径和名称. 例如: C:\MYDOCU~1\ADDRES~1.txt. 如果 <em>FilePattern</em> 包含相对路径而不是绝对路径, 那么这里的路径也是相对路径.</p>
       <p>要获取单个文件或文件夹的完整的 8.3 路径和名称, 像这个例子那样在 <em>FilePattern</em> 中指定其名称:</p>
 <pre>Loop, C:\My Documents\Address List.txt
-    ShortPathName = %A_LoopFileShortPath%</pre>
+    ShortPathName := A_LoopFileShortPath</pre>
         <p class="note"><strong>注意</strong>: 如果文件没有短名称, 那么此变量将为 <strong>空</strong>, 这种情况会发生在注册表中设置了 NtfsDisable8dot3NameCreation 的系统上. 如果 <em>FilePattern</em> 包含相对路径且循环体中使用 <a href="SetWorkingDir.htm">SetWorkingDir</a> 从当前循环的有效的工作目录中切换出来, 那么它也将为空.</p></td>
   </tr>
   <tr id="LoopFileShortName">
@@ -135,9 +135,9 @@
     continue  <em>; 跳过这个文件并前进到下一个.</em></pre>
 <p>要在递归搜索中获取文件的相对路径而不是绝对路径, 在循环之前使用 <a href="SetWorkingDir.htm">SetWorkingDir</a> 来改变工作目录为基文件夹, 且在接着的 Loop 中省略路径(例如 <code>Loop, *.*, 0, 1</code>). 这样将使得 <a href="#LoopFileFullPath">A_LoopFileFullPath</a> 包含相对于基文件夹的文件路径.</p>
 <p>如果文件循环在其范围中创建或重命名文件或文件夹, 那么会扰乱它自己. 例如, 如果它通过 <a href="FileMove.htm">FileMove</a> 或其他方法重命名文件, 每个这样的文件可能被找到两次: 一次是作为其旧名称, 再一次则作为其新名称. 要变通解决此问题, 创建需重命名文件的列表后才重命名这些文件. 例如:</p>
-<pre>FileList =
+<pre>FileList := ""
 Loop, Files, *.jpg
-   FileList = %FileList%%A_LoopFileName%`n
+   FileList .= A_LoopFileName "`n"
 Loop, Parse, FileList, `n
    FileMove, %A_LoopField%, renamed_%A_LoopField%</pre>
 <p>在 NTFS 文件系统中的文件可能总是按字母顺序来获取. 在其他文件系统中的文件则没有特殊的获取顺序. 要使用特殊的获取顺序, 使用 <a href="Sort.htm">Sort</a> 命令, 如同下文示例部分演示的那样.</p>
@@ -157,32 +157,32 @@ Loop Files, %A_ProgramFiles%\*.txt, R  <em>; 递归子文件夹.</em>
 }</pre>
 <pre class="NoIndent"><em>; 示例 #2: 计算文件夹的大小, 包括其所有子文件夹中的文件:</em>
 SetBatchLines, -1  <em>; 让操作以最快速度进行.</em>
-FolderSizeKB = 0
+FolderSizeKB := 0
 FileSelectFolder, WhichFolder  <em>; 让用户选取文件夹.</em>
 Loop, Files, %WhichFolder%\*.*, R
-    FolderSizeKB += %A_LoopFileSizeKB%
+    FolderSizeKB += A_LoopFileSizeKB
 MsgBox Size of %WhichFolder% is %FolderSizeKB% KB.</pre>
 <pre class="NoIndent"><em>; 示例 #3: 获取根据名称排序的文件名(要以日期排序请参阅后一个例子):</em>
-FileList =  <em>; 初始为空.</em>
+FileList := ""  <em>; 初始为空.</em>
 Loop, C:\*.*
-    FileList = %FileList%%A_LoopFileName%`n
+    FileList .= A_LoopFileName "`n"
 Sort, FileList, R  <em>; R 选项使得以逆序排列. 请参阅 <a href="Sort.htm">Sort</a> 了解其他选项.</em>
 Loop, parse, FileList, `n
 {
-    if A_LoopField =  <em>; 忽略列表末尾的空项.</em>
+    if (A_LoopField = "")  <em>; 忽略列表末尾的空项.</em>
         continue
     MsgBox, 4,, File number %A_Index% is %A_LoopField%.  Continue?
     IfMsgBox, No
         break
 }</pre>
 <pre class="NoIndent"><em>; 示例 #4: 获取根据修改日期排序的文件名:</em>
-FileList =
+FileList := ""
 Loop, Files, %A_MyDocuments%\Photos\*.*, FD  <em>; 包含文件和子目录</em>
-    FileList = %FileList%%A_LoopFileTimeModified%`t%A_LoopFileName%`n
+    FileList .= A_LoopFileTimeModified "`t" A_LoopFileName "`n"
 Sort, FileList  <em>; 根据日期排序.</em>
 Loop, Parse, FileList, `n
 {
-    if A_LoopField =  <em>; 忽略列表末尾的最后一个换行符(空项).</em>
+    if (A_LoopField = "")  <em>; 忽略列表末尾的最后一个换行符(空项).</em>
         continue
     StringSplit, FileItem, A_LoopField, %A_Tab%  <em>; 用 tab 作为分隔符将其分为两部分.</em>
     MsgBox, 4,, The next file (modified at %FileItem1%) is:`n%FileItem2%`n`nContinue?
@@ -195,17 +195,17 @@ CopyIfNewer:
 <em>; 调用者已经为我们赋值了变量 CopySourcePattern 和 CopyDest.</em>
 Loop, Files, %CopySourcePattern%
 {
-    copy_it = n
-    IfNotExist, %CopyDest%\%A_LoopFileName%  <em>; 如果目标文件还不存在, 那么总是复制.</em>
-        copy_it = y
+    copy_it := false
+    if not FileExist(CopyDest "\" A_LoopFileName)  <em>; 如果目标文件还不存在, 那么总是复制.</em>
+        copy_it := true
     else
     {
         FileGetTime, time, %CopyDest%\%A_LoopFileName%
         EnvSub, time, %A_LoopFileTimeModified%, seconds  <em>; 从目的时间中减去源文件的时间.</em>
-        if time &lt; 0  <em>; 源文件比目的文件更新.</em>
-            copy_it = y
+        if (time &lt; 0)  <em>; 源文件比目的文件更新.</em>
+            copy_it := true
     }
-    if copy_it = y
+    if copy_it
     {
         FileCopy, %A_LoopFileFullPath%, %CopyDest%\%A_LoopFileName%, 1   <em>; 以覆盖形式复制</em>
         if ErrorLevel
@@ -219,7 +219,7 @@ Loop %0%  <em>; 对于拖放到脚本上(或作为参数传递) 的每个文件.
 {
     GivenPath := %A_Index%  <em>; 获取下一个命令行参数.</em>
     Loop %GivenPath%, 1
-        LongPath = %A_LoopFileLongPath%
+        LongPath := A_LoopFileLongPath
     MsgBox The case-corrected long path name of file`n%GivenPath%`nis:`n%LongPath%
 }</pre>
 

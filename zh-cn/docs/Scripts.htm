@@ -195,7 +195,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
   <li><a href="Variables.htm#AhkPath">AutoHotkey 执行程序目录</a>.</li>
   <li><a href="Variables.htm#MyDocuments">我的文档</a>.</li>
 </ul>
-<p><code><i>AutoHotkey</i>.ahk</code> 的文件名取决于Autohotkey 的文件名. 例如重命名 AutoHotkey.exe 为 MyScript.exe, 它会尝试打开 <code>MyScript.ahk</code>. 如果你运行 AutoHotkeyU32.exe 没有参数则会运行 AutoHotkeyU32.ahk.</p>
+<p><code><i>AutoHotkey</i>.ahk</code> 的文件名取决于 Autohotkey 的文件名. 例如重命名 AutoHotkey.exe 为 MyScript.exe, 它会尝试打开 <code>MyScript.ahk</code>. 如果你运行 AutoHotkeyU32.exe 没有参数则会运行 AutoHotkeyU32.ahk.</p>
 <p>注意: 在早期版本 <a href="AHKL_ChangeLog.htm#L51">revision 51</a>, 程序会在工作目录寻找 AutoHotkey.ini 或者我的文档下的 AutoHotkey.ahk.</p>
 <p><span class="ver">[v1.1.17+]:</span> 星号(*) 加在文件名上会打开标准输入通道(stdin) 的脚本. 例如 <a href="commands/Run.htm#ExecScript">ExecScript()</a>.</p>
 <p id="cmd_args"><strong>Script Parameters:</strong> 你想要传递给脚本的参数用空格分隔. 单个参数如果包含空格需要在两端加上引号(<strong>&quot;</strong>). 如果参数本身包含引号(<strong>&quot;</strong>) 则需要转义(\&quot;). 因此, 加引号参数(例如&quot;C:\My Documents<span class="red">\&quot;</span>) 末尾的斜杠(\) 都被当作原义的引号(就是说, 脚本将接收到字符串 C:\My Documents<span class="red">&quot;</span>). 要移除引号, 使用<code><a href="commands/StringReplace.htm">StringReplace</a>, 1, 1, <span class="red">&quot;</span>,, All</code>.</p>
@@ -238,7 +238,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
 {
     GivenPath := %A_Index%  <em>; 取得名称为 A_Index 变量中的内容.</em>
     Loop %GivenPath%, 1
-        LongPath = %A_LoopFileLongPath%
+        LongPath := A_LoopFileLongPath
     MsgBox The case-corrected long path name of file`n%GivenPath%`nis:`n%LongPath%
 }</pre>
 
@@ -254,10 +254,10 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <p>可以使用 <a href="commands/RegWrite.htm">RegWrite</a> 为资源管理器中运行的脚本设置默认代码页(例如双击脚本文件时):</p>
 <pre><em>; 取消对下面适当的行的注释或让它们都保留注释
 ;   以重新设置为当前版本的默认代码页.  需要时进行修改:
-; codepage = 0        ; 系统默认的 ANSI 代码页
-; codepage = 65001    ; UTF-8
-; codepage = 1200     ; UTF-16
-; codepage = 1252     ; ANSI Latin 1; 西欧 (Windows)</em>
+; codepage := 0        ; 系统默认的 ANSI 代码页
+; codepage := 65001    ; UTF-8
+; codepage := 1200     ; UTF-16
+; codepage := 1252     ; ANSI Latin 1; 西欧 (Windows)</em>
 if (codepage != "")
     codepage := " /CP" . codepage
 cmd="%A_AhkPath%"%codepage% "`%1" `%*
@@ -291,9 +291,9 @@ Pause</pre>
 <pre class="no-highlight">AutoHotkey /Debug "myscript.ahk"
 AutoHotkey /Debug=localhost:9000 "myscript.ahk"</pre>
 <p id="debug_attach"><span class="ver">[AHK_L 59+]:</span> 要向已经在运行的脚本附加调试器, 请向脚本发送消息, 如下所示:</p>
-<pre>ScriptPath = <em>; 设置此变量为脚本的完整路径</em>
+<pre>ScriptPath := "" <em>; 设置此变量为脚本的完整路径</em>
 DetectHiddenWindows On
-IfWinExist %ScriptPath% ahk_class AutoHotkey
+if WinExist(ScriptPath " ahk_class AutoHotkey")
     <em>; 可选参数:
     ;   wParam  = 调试器客户端的 IPv4 地址, 相当于 32 位整数.
     ;   lParam  = 调试器客户端的监听端口.</em>

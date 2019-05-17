@@ -151,11 +151,11 @@ return
 
 WM_QUERYENDSESSION(wParam, lParam)
 {
-    ENDSESSION_LOGOFF = 0x80000000
+    ENDSESSION_LOGOFF := 0x80000000
     if (lParam &amp; ENDSESSION_LOGOFF)  <em>; 用户正在注销.</em>
-        EventType = Logoff
+        EventType := "Logoff"
     else  <em>; 系统正在关机或重启.</em>
-        EventType = Shutdown
+        EventType := "Shutdown"
     MsgBox, 4,, %EventType% in progress.  Allow it?
     IfMsgBox Yes     <em>; 在 Windows Vista 或更高版本的系统中始终返回 true.</em>
         return true  <em>; 告诉操作系统允许关机/注销操作继续.</em>
@@ -202,16 +202,16 @@ Receive_WM_COPYDATA(wParam, lParam)
 }
 
 <em>; 保存下面的脚本为 "<strong>Sender.ahk</strong>", 接着运行它.  然后, 按下 Win+Space 热键.</em>
-TargetScriptTitle = Receiver.ahk ahk_class AutoHotkey
+TargetScriptTitle := "Receiver.ahk ahk_class AutoHotkey"
 
 #space::  <em>; Win+Space 热键. 按下此热键会显示 InputBox 用于输入消息字符串.</em>
 InputBox, StringToSend, Send text via WM_COPYDATA, Enter some text to Send:
 if ErrorLevel  <em>; 用户按下了取消按钮.</em>
     return
 result := Send_WM_COPYDATA(StringToSend, TargetScriptTitle)
-if result = FAIL
+if (result = "FAIL")
     MsgBox SendMessage failed. Does the following WinTitle exist?:`n%TargetScriptTitle%
-else if result = 0
+else if (result = 0)
     MsgBox Message sent but the target window responded with 0, which may mean it ignored it.
 return
 
@@ -228,7 +228,7 @@ Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; 在这种�
     Prev_TitleMatchMode := A_TitleMatchMode
     DetectHiddenWindows On
     SetTitleMatchMode 2
-    TimeOutTime = 4000  <em>; Optional. Milliseconds to wait for response from receiver.ahk. Default is 5000</em>
+    TimeOutTime := 4000  <em>; Optional. Milliseconds to wait for response from receiver.ahk. Default is 5000</em>
     <em>; 必须使用发送 SendMessage 而不是投递 PostMessage.</em>
     SendMessage, 0x4a, 0, &amp;CopyDataStruct,, %TargetScriptTitle%  <em>; 0x4a 为 WM_COPYDAT</em>
     DetectHiddenWindows %Prev_DetectHiddenWindows%  <em>; 恢复调用者原来的设置.</em>

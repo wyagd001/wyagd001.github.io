@@ -33,31 +33,31 @@
   <dt>OperateOnUnderlyingThread</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-    <p>对于 <code>Pause "Off"</code> 会忽略此参数, 因为它总是对底层线程进行操作. 对于其他情况, 除非 Pause 为 On 状态(包含使用 Toggle 打开的情况), 否则参数将被忽略.</p>
+    <p>对于 <code>Pause "Off"</code> 会忽略此参数, 因为它总是对底层线程进行操作. 对于其他情况, 除非 Pause 为 On 状态(包含使用 Toggle 开启的情况), 否则参数将被忽略.</p>
     <p>请指定下面的其中一个数字:</p>
-    <p><strong>0</strong>(或省略): The function pauses the current thread; that is, the one now running the Pause function.</p>
-    <p><strong>1</strong>: The function marks the thread beneath the current thread as paused so that when it resumes, it will finish the function it was running (if any) and then enter a paused state. If there is no thread beneath the current thread, the script itself is paused, which prevents <a href="SetTimer.htm">timers</a> from running (this effect is the same as having used the menu item &quot;Pause Script&quot; while the script has no threads).</p>
-    <p class="note"><strong>Note</strong>: <a href="../Variables.htm#IsPaused">A_IsPaused</a> contains the pause state of the underlying thread.</p>
+    <p><strong>0</strong>(或省略): 函数会暂停当前线程; 即正在运行 Pause 函数的这个线程.</p>
+    <p><strong>1</strong>: 函数将当前线程下面的线程标记为暂停, 以便当它恢复运行时, 它将完成正在运行的函数(如果有的话), 然后进入暂停状态. 如果当前线程下面没有线程, 则暂停脚本自身, 这样阻止<a href="SetTimer.htm">计时器</a>的运行(这样的效果和当脚本没有线程时使用了菜单项 &quot;Pause Script&quot; 一样).</p>
+    <p class="note"><strong>注意</strong>: <a href="../Variables.htm#IsPaused">A_IsPaused</a> 包含了底层线程的暂停状态.</p>
   </dd>
 
 </dl>
 
 <h2>备注</h2>
-<p>By default, the script can also be paused via its <a href="../Program.htm#tray-icon">tray icon</a> or <a href="../Program.htm#main-window">main window</a>.</p>
-<p>Unlike <a href="Suspend.htm">Suspend</a> -- which disables <a href="../Hotkeys.htm">hotkeys</a> and <a href="../Hotstrings.htm">hotstrings</a> -- turning on pause will freeze the <a href="../misc/Threads.htm"> current thread</a>. As a side-effect, any interrupted threads beneath it will lie dormant.</p>
-<p>Whenever any thread is paused, <a href="SetTimer.htm">timers</a> will not run. By contrast, explicitly launched threads such as <a href="../Hotkeys.htm">hotkeys</a> and <a href="../objects/Menu.htm">menu items</a> can still be launched; but when their <a href="../misc/Threads.htm">threads</a> finish, the underlying thread will still be paused. In other words, each thread can be paused independently of the others.</p>
-<p>The color of the tray icon changes from green to red whenever the script's <a href="../misc/Threads.htm">current thread</a> is in a paused state. This color change can be avoided by freezing the icon, which is achieved by specifying 1 for the last parameter of the Menu function. 例如:</p>
+<p>默认情况下, 脚本也可以通过它的<a href="../Program.htm#tray-icon">托盘图标</a>或<a href="../Program.htm#main-window">主窗口</a>来暂停.</p>
+<p>与 <a href="Suspend.htm">Suspend</a> 禁用<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a> 不同, 开启暂停状态会冻结<a href="../misc/Threads.htm">当前线程</a>. 副作用是, 在它下面的任何被中断线程也将处于睡眠状态.</p>
+<p>暂停任意线程后, <a href="SetTimer.htm">计时器</a>不会运行. 与之相比, 显式启动的线程(如 <a href="../Hotkeys.htm">热键</a>和<a href="../objects/Menu.htm">菜单项</a>) 仍然可以运行; 但当它们的<a href="../misc/Threads.htm">线程</a>结束时, 底层线程仍会被暂停. 换句话说, 每个线程都能独立于其他线程被暂停.</p>
+<p>每当脚本的<a href="../misc/Threads.htm">当前线程</a>处于暂停状态时, 托盘图标的颜色会从绿色变成红色. 可以通过冻结图标阻止这个图标颜色的改变, 这是通过指定 Menu 函数的最后一个参数为 1 来实现的. 例如:</p>
   <pre><a href="TraySetIcon.htm">TraySetIcon</a> "C:\My Icon.ico", , 1</pre>
-<p>To disable <a href="SetTimer.htm">timers</a> without pausing the script, use <a href="Thread.htm">Thread "NoTimers"</a>.</p>
-<p>A script is always halted (though not officially paused) while it is displaying any kind of <a href="../objects/Menu.htm">menu</a> (tray menu, menu bar, GUI context menu, etc.)</p>
+<p>要禁用<a href="SetTimer.htm">计时器</a> 而不暂停脚本, 请使用 <a href="Thread.htm">Thread "NoTimers"</a>.</p>
+<p>当脚本显示任意类型的<a href="../objects/Menu.htm">菜单</a>(托盘菜单, 菜单栏, GUI 上下文菜单, 等) 时, 脚本总是处于停顿状态(虽然不是正式地暂停).</p>
 
 <h2>相关</h2>
 <p><a href="Suspend.htm">Suspend</a>, <a href="../objects/Menu.htm">Menu object</a>, <a href="ExitApp.htm">ExitApp</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="SetTimer.htm">SetTimer</a></p>
 <h2>示例</h2>
-<pre class="NoIndent">Pause::Pause  <em>; Assign the toggle-pause function to the &quot;pause&quot; key...</em>
-#p::Pause  <em>; ... or assign it to Win+p or some other hotkey.</em></pre>
+<pre class="NoIndent">Pause::Pause  <em>; 设置 &quot;pause&quot; 键为切换暂停功能的热键...</em>
+#p::Pause  <em>; ... 或者设置 Win+p 或其他热键.</em></pre>
 
-<pre id="PostMessage" class="NoIndent"><em>; Send a Pause function to another script.</em>
+<pre id="PostMessage" class="NoIndent"><em>; 发送 Pause 函数到另一个脚本.</em>
 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> True
 WM_COMMAND := 0x111
 ID_FILE_PAUSE := 65403

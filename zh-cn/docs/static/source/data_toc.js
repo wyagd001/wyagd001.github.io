@@ -189,10 +189,10 @@
   [
     ["Abs","commands/Math.htm#Abs"],
     ["Ceil","commands/Math.htm#Ceil"],
-    ["EnvAdd (and date math)","commands/EnvAdd.htm"],
+    ["EnvAdd (和时间运算)","commands/EnvAdd.htm"],
     ["EnvDiv","commands/EnvDiv.htm"],
     ["EnvMult","commands/EnvMult.htm"],
-    ["EnvSub (and date diff)","commands/EnvSub.htm"],
+    ["EnvSub (和时间比较)","commands/EnvSub.htm"],
     ["Exp","commands/Math.htm#Exp"],
     ["Floor","commands/Math.htm#Floor"],
     ["Log","commands/Math.htm#Log"],

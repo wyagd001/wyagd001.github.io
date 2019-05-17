@@ -35,9 +35,9 @@
 
 </dl>
 
-<h2>ErrorLevel</h2>
+<h2>错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为由于错误而无法移动的文件数, 否则为 0. 但是, 如果源文件为单个文件(没有通配符) 且此文件不存在, 则 ErrorLevel 被置为 0. 要判断这种情况, 请在移动前对源文件使用 <a href="IfExist.htm">IfExist</a> 或 <a href="FileExist.htm">FileExist()</a>.</p>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为由于错误而无法移动的文件数, 否则为 0. 但是, 如果源文件为单个文件(没有通配符) 且此文件不存在, 则 ErrorLevel 被置为 0. 要判断这种情况, 请在移动前对源文件使用 <a href="FileExist.htm">FileExist()</a> 或 <a href="IfExist.htm">IfExist</a>.</p>
 <p>与 <a href="FileCopy.htm">FileCopy</a> 不同, 移动一个文件来覆盖它自己总被认为是成功的, 即使在改写模式没有生效的情况下.</p>
 <p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0(零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
 
@@ -53,7 +53,7 @@ FileMove, C:\File Before.txt, C:\File After.txt  <em>; 重命名单个文件.</e
 FileMove, C:\Folder1\*.txt, D:\New Folder\*.bkp  <em>; 移动并使用新的扩展名重命名文件.</em></pre>
 <pre class="NoIndent"><em>; 下面的例子移动一个文件夹中所有文件和文件夹到另一个文件夹中:</em>
 ErrorCount := MoveFilesAndFolders("C:\My Folder\*.*", "D:\Folder to receive all files &amp; folders")
-if ErrorCount &lt;&gt; 0
+if (ErrorCount != 0)
     MsgBox %ErrorCount% files/folders could not be moved.
 
 MoveFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite = false)
@@ -61,8 +61,8 @@ MoveFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite = false)
 ; 返回无法移动的文件/文件夹的数目. 此函数需要 <span class="ver">[v1.0.38+]</span>
 ; 因为它使用了 FileMoveDir 的模式 2.</em>
 {
-    if DoOverwrite = 1
-        DoOverwrite = 2  <em>; 请参阅 <a href="FileMoveDir.htm">FileMoveDir</a> 了解模式 2 与模式 1 的区别.</em>
+    if (DoOverwrite = 1)
+        DoOverwrite := 2  <em>; 请参阅 <a href="FileMoveDir.htm">FileMoveDir</a> 了解模式 2 与模式 1 的区别.</em>
     <em>; 首先移动所有文件 (不是文件夹):</em>
     FileMove, %SourcePattern%, %DestinationFolder%, %DoOverwrite%
     ErrorCount := ErrorLevel

@@ -167,8 +167,8 @@ return</pre>
 ; 以便在后面恢复. 尽管这里只能处理纯文本,
 ; 但总比没有好:</em>
 AutoTrim Off  <em>; 保留剪贴板中任何前导和尾随空白字符.</em>
-ClipboardOld = %ClipboardAll%
-Clipboard =  <em>; 必须清空, 才能检测是否有效.</em>
+ClipboardOld := ClipboardAll
+Clipboard := ""  <em>; 必须清空, 才能检测是否有效.</em>
 Send ^c
 ClipWait 1
 if ErrorLevel  <em>; ClipWait 超时.</em>
@@ -181,14 +181,14 @@ StringReplace, Hotstring, Hotstring, `r`n, ``r, All  <em>; 在 MS Word 等软件
 StringReplace, Hotstring, Hotstring, `n, ``r, All
 StringReplace, Hotstring, Hotstring, %A_Tab%, ``t, All
 StringReplace, Hotstring, Hotstring, `;, ```;, All
-Clipboard = %ClipboardOld%  <em>; 恢复剪贴板之前的内容.
+Clipboard := ClipboardOld  <em>; 恢复剪贴板之前的内容.
 ; 这里会移动 InputBox 的光标到更人性化的位置:</em>
 SetTimer, MoveCaret, 10
 <em>; 显示 InputBox, 提供默认的热字串:</em>
 InputBox, Hotstring, New Hotstring, Type your abreviation at the indicated insertion point. You can also edit the replacement text if you wish.`n`nExample entry: :R:btw`::by the way,,,,,,,, :R:`::%Hotstring%
 if ErrorLevel  <em>; 用户选择了取消.</em>
     return
-IfInString, Hotstring, :R`:::
+if InStr(Hotstring, ":R`:::")
 {
     MsgBox You didn't provide an abbreviation. The hotstring has not been added.
     return

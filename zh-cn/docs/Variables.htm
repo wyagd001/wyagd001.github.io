@@ -48,11 +48,11 @@ CopyOfVar := Var</pre>
 <p class="note">有关结构化概述和进一步说明, 请参阅<a href="Language.htm#expressions">表达式</a>.</p>
 <p>表达式用来对一系列变量, 原义字符串和/或原义数字执行一个或多个操作.</p>
 <p>表达式中的变量名称不用包围在百分号中(<a href="misc/Arrays.htm#pseudo">伪数组</a>和其他的<a href="#ref">双重引用</a>除外). 所以, 为了与变量区别, 原义的字符串必须用双引号包围. 例如:</p>
-<pre>if (CurrentSetting &gt; 100 or FoundColor &lt;&gt; &quot;Blue&quot;)
+<pre>if (CurrentSetting &gt; 100 or FoundColor != &quot;Blue&quot;)
     MsgBox The setting is too high or the wrong color is present.</pre>
-<p>在上面的例子中, 因为 "Blue" 是原义字符串, 所以包围在双引号中. 要在原义字符串中包含<em>真实的</em>引号字符, 请指定两个连续的引号, 如同此例中的两次演示: <code>"她说, <span class="red">""</span>一天一个苹果.<span class="red">""</span>"</code>.</p>
+<p>在上面的例子中, 因为 &quot;Blue&quot; 是原义字符串, 所以包围在双引号中. 要在原义字符串中包含<em>真实的</em>引号字符, 请指定两个连续的引号, 如同此例中的两次演示: <code>"她说, <span class="red">""</span>一天一个苹果.<span class="red">""</span>"</code>.</p>
 <p class="warning"><strong>注意</strong>: 有几种类型的 <a href="Language.htm#if-statement">If 语句</a>看起来像表达式, 但实际上不是.</p>
-<p><strong>空字符串</strong>: 要在表达式中使用空字符串, 请指定一对空引号. 例如, 当 <em>MyVar</em> 非空时语句 <code>if (MyVar &lt;&gt; "")</code> 的结果为真. 然而, 在<a href="commands/IfEqual.htm">传统 if 语句</a>中, 一对空引号会被视为原义的字符串. 例如, 当 <em>MyVar</em> 仅包含一对真实的引号时语句 <code>if MyVar = ""</code> 结果为真. 因此, 要使用传统的 if 语句判断变量是否为空, 则需要让 = 或 &lt;&gt; 的右侧为空, 例如: <code>if Var =</code>.</p>
+<p><strong>空字符串</strong>: 要在表达式中使用空字符串, 请指定一对空引号. 例如, 当 <em>MyVar</em> 非空时语句 <code>if (MyVar != "")</code> 的结果为真. 然而, 在<a href="commands/IfEqual.htm">传统 if 语句</a>中, 一对空引号会被视为原义的字符串. 例如, 当 <em>MyVar</em> 仅包含一对真实的引号时语句 <code>if MyVar = ""</code> 结果为真. 因此, 要使用传统的 if 语句判断变量是否为空, 则需要让 = 或 != 的右侧为空, 例如: <code>if Var =</code>.</p>
 <p>相关提示, 任何无效的表达式例如 <code>(x +* 3)</code> 会产生空字符串.</p>
 <p><strong>保存表达式的结果</strong>: 要把结果赋值给变量, 请使用 <a href="commands/SetExpression.htm">:= 运算符</a>. 例如:</p>
 <pre>NetPrice := Price * (1 - Discount/100)</pre>
@@ -140,13 +140,13 @@ msgbox % (-2)**0.5 ; 结果为空
     <td><p><strong>乘(*)</strong>: 如果两个输入都为整数, 则结果为整数; 否则结果为浮点数.</p>
       <p id="divide"><strong>真除(/)</strong>: 与 <a href="commands/EnvDiv.htm">EnvDiv</a> 不同, 即使两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
       <p id="FloorDivide"><strong>向下舍除(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点数, 则执行浮点除法并把结果往下取整到最近的整数. 例如, <code>5//3.0</code> 结果为 1.0 而 <code>5.0//-3</code> 结果为 -2.0. 尽管浮点除法的结果为整数, 但它被保存为浮点格式, 以便其他使用者能使用浮点格式. 关于求模运算, 请参阅 <a href="commands/Math.htm#Mod">mod()</a>.</p>
-    <p><a href="commands/EnvMult.htm">*=</a> 和 <a href="commands/EnvDiv.htm">/=</a> 运算符是用变量的值乘以或除以另一个值的一种简写形式. 例如, <code>Var*=2</code> 和 <code>Var:=Var*2</code> 会得到相同的结果(不过前者执行的更好).</p>
+    <p><a href="#AssignOp">*= 和 /= 运算符</a>是用变量的值乘以或除以另一个值的一种简写形式. 例如, <code>Var*=2</code> 和 <code>Var:=Var*2</code> 会得到相同的结果(不过前者执行的更好).</p>
     <p>除数为零时结果为空(空字符串).</p></td>
   </tr>
   <tr id="AddSub">
     <td style="text-align:center"><strong>+<br>
 	-</strong></td>
-    <td><p><strong>加(+)</strong> 和 <strong>减(-)</strong>. 相关提示, <a href="commands/EnvAdd.htm"><strong>+=</strong></a> 和 <a href="commands/EnvSub.htm"><strong>-=</strong></a> 运算符是从变量中增加或减少值的一种简写形式. 例如, <code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 同样地, 使用 <a href="#IncDec">Var++, Var--, ++Var 或 --Var</a> 可以让变量增加或减小 1.</p>
+    <td><p><strong>加(+)</strong> 和 <strong>减(-)</strong>. 相关提示, <a href="#AssignOp"><strong>+=</strong> 和 <strong>-=</strong></a> 运算符</a>是从变量中增加或减少值的一种简写形式. 例如, <code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 同样地, 使用 <a href="#IncDec">Var++, Var--, ++Var 或 --Var</a> 可以让变量增加或减小 1.</p>
     </td>
   </tr>
   <tr id="bitwise">
@@ -444,7 +444,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="YWeek">
     <td>A_YWeek</td>
-    <td>符合 ISO 8601 标准的当前的年份和周数(例如 200453). 要分离年份和周数, 请使用 <code><a href="commands/StringLeft.htm">StringLeft</a>, Year, A_YWeek, 4</code> 和 <code><a href="commands/StringLeft.htm">StringRight</a>, Week, A_YWeek, 2</code>. A_YWeek 的准确定义为: 如果含有 1 月 1 日的星期有四天以上在新年里, 则它被认为是新年的第一个星期. 否则, 它为前一年的最后一个星期, 而下一星期为新年的第一星期.</td>
+    <td>符合 ISO 8601 标准的当前的年份和周数(例如 200453). 要分离年份和周数, 请使用 <code>Year := <a href="commands/SubStr.htm">SubStr</a>(A_YWeek, 1, 4)</code> 和 <code>Week := <a href="commands/SubStr.htm">SubStr</a>(A_YWeek, -1)</code>. A_YWeek 的准确定义为: 如果含有 1 月 1 日的星期有四天以上在新年里, 则它被认为是新年的第一个星期. 否则, 它为前一年的最后一个星期, 而下一星期为新年的第一星期.</td>
   </tr>
   <tr id="Hour">
     <td>A_Hour</td>

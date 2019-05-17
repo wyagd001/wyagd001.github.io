@@ -54,7 +54,7 @@ C:\AAA\BBB.txt</pre>
 <h2>相关</h2>
 <p><a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="LoopParse.htm">解析循环</a>, <a href="StringSplit.htm">StringSplit</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="../misc/Clipboard.htm">剪贴板</a>, <a href="_MaxMem.htm">#MaxMem</a></p>
 <h2>示例</h2>
-<pre class="NoIndent">MyVar = 5,3,7,9,1,13,999,-4
+<pre class="NoIndent">MyVar := "5,3,7,9,1,13,999,-4"
 <strong>Sort</strong> MyVar, N D,  <em>; 数值排序, 使用逗号作为分隔符.</em>
 MsgBox %MyVar%   <em>; 结果是 -4,1,3,5,7,9,13,999</em>
 
@@ -65,13 +65,13 @@ if not ErrorLevel  <em>; 装载成功.</em>
     <strong>Sort</strong>, Contents
     FileDelete, C:\Address List (alphabetical).txt
     FileAppend, %Contents%, C:\Address List (alphabetical).txt
-    Contents =  <em>; 释放内存.</em>
+    Contents := ""  <em>; 释放内存.</em>
 }
 
 <em>; 下面的例子设置 Win+C 热键来从打开的资源管理器窗口中
 ; 复制文件, 对其中的文件名进行排序后放回剪贴板:</em>
 #c::
-Clipboard = <em>; 必须为空以检测是否有效.</em>
+Clipboard := "" <em>; 必须为空以检测是否有效.</em>
 Send ^c
 ClipWait 2
 if ErrorLevel
@@ -81,21 +81,21 @@ MsgBox Ready to be pasted:`n%Clipboard%
 return
 
 <em>; 下面的例子演示了通过回调函数进行自定义排序.</em>
-MyVar = def`nabc`nmno`nFGH`nco-op`ncoop`ncop`ncon`n
+MyVar := "def`nabc`nmno`nFGH`nco-op`ncoop`ncop`ncon`n"
 <strong>Sort</strong>, MyVar, F StringSort
 StringSort(a1, a2)
 {
     return a1 &gt; a2 ? 1 : a1 &lt; a2 ? -1 : 0  <em>; 基于 <a href="StringCaseSense.htm">StringCaseSense</a> 的设置按字母顺序进行排序.</em>
 }
 
-MyVar = 5,3,7,9,1,13,999,-4
+MyVar := "5,3,7,9,1,13,999,-4"
 <strong>Sort</strong>, MyVar, F IntegerSort D,
 IntegerSort(a1, a2)
 {
     return a1 - a2  <em>; 按上升的数值顺序进行排序.  此方法只有在两个数字的差不会超出 64 位有符号整数的范围才有效.</em>
 }
 
-MyVar = 1,2,3,4
+MyVar := "1,2,3,4"
 <strong>Sort</strong>, MyVar, F ReverseDirection D,  <em>; 反转列表, 这样它包含了 4,3,2,1</em>
 ReverseDirection(a1, a2, offset)
 {

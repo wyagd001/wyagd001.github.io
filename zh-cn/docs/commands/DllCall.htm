@@ -108,7 +108,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 </table>
 <p class="warning"><strong>不推荐</strong>: 当指定不包含空格或星号的参数类型或返回值类型时, 包含的引号可以省略. 例如, 可以使用 <code>Str</code> 代替 <code>&quot;Str&quot;</code> 而 <code>CDecl</code> 代替 <code>&quot;CDecl&quot;</code>. 不推荐在新脚本中使用.</p>
 
-<h2 id="error">ErrorLevel</h2>
+<h2 id="error">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此函数失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 会被设置为下列值的其中一个来表示调用成功或失败.</p>
 <p><strong>0</strong>: 成功.</p>
@@ -150,7 +150,7 @@ Loop 500
 <p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>) 传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误, 要解决此问题, 有下面几种方法: 1) 把 <em>MyVar</em> 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址 传递; 2) <span class="ver">[v1.0.44.03+]</span>: 在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>
 <p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即这样的数据无法被大多数命令和函数访问或修改. 但是, 这样的数据可以使用<a href="../Variables.htm#amp">地址运算符</a>和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a> 以及 DllCall 自己进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会出乎意料地返回一个地址不同内容相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall() 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
-<pre>MyVar = ABC
+<pre>MyVar := "ABC"
 result := DllCall("CharLower", &quot;<strong><u>Str</u></strong>&quot;, DllCall("CharUpper", &quot;Str&quot;, MyVar, &quot;<strong><u>Str</u></strong>&quot;), &quot;Str&quot;)</pre>
 <p>要变通解决此问题, 请把上面两个带下划线的 "Str" 修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整型传递给 CharLower.</p>
 <p>处理字符串时可能遇到某些限制. 更多细节请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
@@ -200,8 +200,8 @@ MsgBox % &quot;Elapsed QPC time is &quot; . (CounterAfter - CounterBefore) / fre
 ; 按住 F1 来降低鼠标速度. 释放后则恢复原来的速度.</em>
 
 F1::
-SPI_GETMOUSESPEED = 0x70
-SPI_SETMOUSESPEED = 0x71
+SPI_GETMOUSESPEED := 0x70
+SPI_SETMOUSESPEED := 0x71
 <em>; 获取鼠标当前的速度以便稍后恢复:</em>
 DllCall("SystemParametersInfo", &quot;UInt&quot;, SPI_GETMOUSESPEED, &quot;UInt&quot;, 0, &quot;UIntP&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)
 <em>; 现在在倒数第二个参数中设置较低的速度 (范围为 1-20, 10 是默认值):</em>
@@ -241,25 +241,25 @@ return</pre>
 ; <span class="ver">[AHK_L 42+]</span>: <a href="FileOpen.htm#writeread"></a>使用 <a href="FileOpen.htm">FileOpen</a> 可以实现同样的目的.</em>
 
 FileSelectFile, FileName, S16,, Create a new file:
-if FileName =
+if (FileName := "")
     return
-GENERIC_WRITE = 0x40000000  <em>; 以写入而不是读取的方式打开文件.</em>
-CREATE_ALWAYS = 2  <em>; 创建新文件(覆盖任何现有的文件).</em>
+GENERIC_WRITE := 0x40000000  <em>; 以写入而不是读取的方式打开文件.</em>
+CREATE_ALWAYS := 2  <em>; 创建新文件(覆盖任何现有的文件).</em>
 hFile := DllCall("CreateFile", &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_WRITE, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;UInt&quot;, CREATE_ALWAYS, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;Ptr&quot;)
 if not hFile
 {
     MsgBox Can't open &quot;%FileName%&quot; for writing.
     return
 }
-TestString = This is a test string.`r`n  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
+TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
 DllCall(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen(TestString), &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
 DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
-GENERIC_READ = 0x80000000  <em>; 以读取而不是写入的方式来打开文件.</em>
-OPEN_EXISTING = 3  <em>; 此标志表示要打开的文件必须已经存在.</em>
-FILE_SHARE_READ = 0x1 <em>; 这个和下一个标志表示其他进程是否可以打开我们已经打开的文件.</em>
-FILE_SHARE_WRITE = 0x2
+GENERIC_READ := 0x80000000  <em>; 以读取而不是写入的方式来打开文件.</em>
+OPEN_EXISTING := 3  <em>; 此标志表示要打开的文件必须已经存在.</em>
+FILE_SHARE_READ := 0x1 <em>; 这个和下一个标志表示其他进程是否可以打开我们已经打开的文件.</em>
+FILE_SHARE_WRITE := 0x2
 hFile := DllCall(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_READ, &quot;UInt&quot;, FILE_SHARE_READ|FILE_SHARE_WRITE, &quot;Ptr&quot;, 0, &quot;UInt&quot;, OPEN_EXISTING, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0)
 if not hFile
 {
@@ -292,11 +292,11 @@ SystemCursor(OnOff=1)   <em>; 初始化 = "I", "Init"; 隐藏 = 0, "Off"; 切换
         , h1,h2,h3,h4,h5,h6,h7,h8,h9,h10,h11,h12,h13   <em>; 默认指针的句柄</em>
     if (OnOff = "Init" or OnOff = "I" or $ = "")       <em>; 在请求或首此调用时进行初始化</em>
     {
-        $ = h                                          <em>; 活动的默认指针</em>
+        $ := "h"                                          <em>; 活动的默认指针</em>
         VarSetCapacity( h_cursor,4444, 1 )
         VarSetCapacity( AndMask, 32*4, 0xFF )
         VarSetCapacity( XorMask, 32*4, 0 )
-        system_cursors = 32512,32513,32514,32515,32516,32642,32643,32644,32645,32646,32648,32649,32650
+        system_cursors := "32512,32513,32514,32515,32516,32642,32643,32644,32645,32646,32648,32649,32650"
         StringSplit c, system_cursors, `,
         Loop %c0%
         {
@@ -307,9 +307,9 @@ SystemCursor(OnOff=1)   <em>; 初始化 = "I", "Init"; 隐藏 = 0, "Off"; 切换
         }
     }
     if (OnOff = 0 or OnOff = &quot;Off&quot; or $ = &quot;h&quot; and (OnOff &lt; 0 or OnOff = &quot;Toggle&quot; or OnOff = &quot;T&quot;))
-        $ = b  <em>; 使用空白指针</em>
+        $ := "b"  <em>; 使用空白指针</em>
     else
-        $ = h  <em>; 使用保存的指针</em>
+        $ := "h"  <em>; 使用保存的指针</em>
 
     Loop %c0%
     {
@@ -357,17 +357,17 @@ SetSystemTime(YYYYMMDDHHMISS)
 
     VarSetCapacity(SystemTime, 16, 0)  <em>; 此结构由 8 个 UShort 组成(即 8*2=16).</em>
 
-    StringLeft, Int, YYYYMMDDHHMISS, 4    <em>; YYYY(年份)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 1, 4)    <em>; YYYY(年份)</em>
     <a href="NumPut.htm">NumPut</a>(Int, SystemTime, 0, "UShort")
-    StringMid, Int, YYYYMMDDHHMISS, 5, 2  <em>; MM(年中的月数, 1-12)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 5, 2)  <em>; MM(年中的月数, 1-12)</em>
     NumPut(Int, SystemTime, 2, "UShort")
-    StringMid, Int, YYYYMMDDHHMISS, 7, 2  <em>; DD(月中的天数)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 7, 2)  <em>; DD(月中的天数)</em>
     NumPut(Int, SystemTime, 6, "UShort")
-    StringMid, Int, YYYYMMDDHHMISS, 9, 2  <em>; HH(24 小时制的小时数)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 9, 2)  <em>; HH(24 小时制的小时数)</em>
     NumPut(Int, SystemTime, 8, "UShort")
-    StringMid, Int, YYYYMMDDHHMISS, 11, 2 <em>; MI(分钟数)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 11, 2) <em>; MI(分钟数)</em>
     NumPut(Int, SystemTime, 10, "UShort")
-    StringMid, Int, YYYYMMDDHHMISS, 13, 2 <em>; SS(秒数)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 13, 2) <em>; SS(秒数)</em>
     NumPut(Int, SystemTime, 12, "UShort")
 
     return DllCall("SetSystemTime", &quot;Ptr&quot;, &amp;SystemTime)

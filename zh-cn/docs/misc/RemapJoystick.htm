@@ -117,22 +117,22 @@ return</pre>
 return
 
 WatchAxis:
-<a href="../commands/GetKeyState.htm">GetKeyState</a>, JoyX, JoyX  <em>; 获取 X 轴的位置.</em>
-GetKeyState, JoyY, JoyY  <em>; 获取 Y 轴的位置.</em>
+JoyX := <a href="../commands/GetKeyState.htm">GetKeyState</a>("JoyX")  <em>; 获取 X 轴的位置.</em>
+JoyY := GetKeyState("JoyY")  <em>; 获取 Y 轴的位置.</em>
 KeyToHoldDownPrev = %KeyToHoldDown%  <em>; Prev 现在保存了之前按下的按键(如果有).</em>
 
-if JoyX &gt; 70
-    KeyToHoldDown = Right
-else if JoyX &lt; 30
-    KeyToHoldDown = Left
-else if JoyY &gt; 70
-    KeyToHoldDown = Down
-else if JoyY &lt; 30
-    KeyToHoldDown = Up
+if (JoyX &gt; 70)
+    KeyToHoldDown := "Right"
+else if (JoyX &lt; 30)
+    KeyToHoldDown := "Left"
+else if (JoyY &gt; 70)
+    KeyToHoldDown := "Down"
+else if (JoyY &lt; 30)
+    KeyToHoldDown := "Up"
 else
-    KeyToHoldDown =
+    KeyToHoldDown := ""
 
-if KeyToHoldDown = %KeyToHoldDownPrev%  <em>; 已经按下了正确的按键 (或者不需要按键).</em>
+if (KeyToHoldDown = KeyToHoldDownPrev)  <em>; 已经按下了正确的按键 (或者不需要按键).</em>
     return  <em>; 什么都不做.</em>
 
 <em>; 否则, 释放之前的按键并按下新按键:</em>
@@ -150,24 +150,24 @@ SetTimer, WatchPOV, 5
 return
 
 WatchPOV:
-GetKeyState, POV, JoyPOV  <em>; 获取 POV 控制器的位置.</em>
-KeyToHoldDownPrev = %KeyToHoldDown%  <em>; Prev 现在保存了之前按下的按键(如果有).</em>
+POV := GetKeyState("JoyPOV")  <em>; 获取 POV 控制器的位置.</em>
+KeyToHoldDownPrev := KeyToHoldDown  <em>; Prev 现在保存了之前按下的按键(如果有).</em>
 
 <em>; 有些操纵杆可能有平滑/连续的视角切换而不是使用固定的增幅.; 要全部支持它们, 请使用范围:</em>
-if POV &lt; 0   <em>; 没有角度</em>
-    KeyToHoldDown =
-else if POV &gt; 31500                 <em>; 315 至 360 度: 向前</em>
-    KeyToHoldDown = Up
+if (POV &lt; 0)   <em>; 没有角度</em>
+    KeyToHoldDown := ""
+else if (POV &gt; 31500)                 <em>; 315 至 360 度: 向前</em>
+    KeyToHoldDown := "Up"
 else if POV between 0 and 4500      <em>; 0 至 45 度: 向前</em>
-    KeyToHoldDown = Up
+    KeyToHoldDown := "Up"
 else if POV between 4501 and 13500  <em>; 45 至 135 度: 向右</em>
-    KeyToHoldDown = Right
+    KeyToHoldDown := "Right"
 else if POV between 13501 and 22500 <em>; 135 至 225 度: 向下</em>
-    KeyToHoldDown = Down
+    KeyToHoldDown := "Down"
 else                                <em>; 225 到 315 度: 向左</em>
-    KeyToHoldDown = Left
+    KeyToHoldDown := "Left"
 
-if KeyToHoldDown = %KeyToHoldDownPrev%  <em>; 已经按下了正确的按键 (或不需要按键).</em>
+if (KeyToHoldDown = KeyToHoldDownPrev)   <em>; 已经按下了正确的按键 (或不需要按键).</em>
     return  <em>; 什么都不做.</em>
 
 <em>; 否则, 释放之前的按键并按下新键:</em>

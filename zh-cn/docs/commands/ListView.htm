@@ -222,7 +222,7 @@ Loop % LV_GetCount("Column")
 <p>返回下一个选择的, 选中的或焦点行的行号.</p>
 <pre class="Syntax"><span class="func">LV_GetNext</span>(<span class="optional">StartingRowNumber, RowType</span>)</pre>
 <p>如果没有找到, 则返回零. 如果 <em>StartingRowNumber</em> 省略或小于 1, 则从列表的顶部开始搜索. 否则, 从 <em>StartingRowNumber</em> 行后开始搜索. 如果省略 <em>RowType</em>, 则函数搜索下一个选择的/高亮的行. 否则, 指定 &quot;C&quot; 或 &quot;Checked&quot; 来寻找下一个选中的行; 或指定 &quot;F&quot; 或 &quot;Focused&quot; 来寻找焦点行(在整个列表中不可能有多个焦点行, 且有时甚至没有). 下面的例子, 报告 ListView 中所有选择的行:</p>
-<pre>RowNumber = 0  <em>; 这样使得首次循环从列表的顶部开始搜索.</em>
+<pre>RowNumber := 0  <em>; 这样使得首次循环从列表的顶部开始搜索.</em>
 Loop
 {
     RowNumber := LV_GetNext(RowNumber)  <em>; 在前一次找到的位置后继续搜索.</em>
@@ -264,7 +264,7 @@ IsChecked := (ErrorLevel &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选�
 <p><strong>Normal</strong>: 用户左键单击了一行. 变量 A_EventInfo 包含焦点行号.</p>
 <p><strong>RightClick</strong>: 用户右键单击了一行. 变量 A_EventInfo 包含焦点行号. 在大多数情况下, 最好不要通过显示菜单来响应此通过. 而应使用 <a href="Gui.htm#GuiContextMenu">GuiContextMenu 标签</a>, 因为它还能识别 Appskey. 例如:</p>
 <pre>GuiContextMenu:  <em>; 运行此标签来响应右键点击或按下 Appskey.</em>
-if (A_GuiControl &lt;&gt; "MyListView")  <em>; 这个检查是可选的. 让它只为 ListView 中的点击显示菜单.</em>
+if (A_GuiControl != "MyListView")  <em>; 这个检查是可选的. 让它只为 ListView 中的点击显示菜单.</em>
     return
 <em>; 在提供的坐标处显示菜单, A_GuiX 和 A_GuiY. 应该使用这些
 ; 因为即使用户按下 Appskey 它们也会提供正确的坐标:</em>
@@ -323,7 +323,7 @@ ExitApp</pre>
 ...
 ButtonOK:
 GuiControlGet, FocusedControl, FocusV
-if (FocusedControl &lt;&gt; "MyListView")
+if (FocusedControl != "MyListView")
     return
 MsgBox % &quot;Enter was pressed. The focused row number is &quot; . LV_GetNext(0, &quot;Focused&quot;)
 return</pre>
@@ -391,9 +391,9 @@ if not Folder  <em>; 用户取消了对话框.</em>
 
 <em>; 检查文件夹名称的最后一个字符是否为反斜杠, 对于根目录则会如此,
 ; 例如 C:\. 如果是, 则移除这个反斜杠以避免之后出现两个反斜杠.</em>
-StringRight, LastChar, Folder, 1
+LastChar := SubStr(Folder, 0)
 if (LastChar = "\")
-    StringTrimRight, Folder, Folder, 1  <em>; 移除尾随的反斜杠.</em>
+    Folder := SubStr(Folder, 1, -1)  <em>; 移除尾随的反斜杠.</em>
 
 <em>; 计算 SHFILEINFO 结构需要的缓存大小.</em>
 sfi_size := A_PtrSize + 8 + (A_IsUnicode ? 680 : 340)
@@ -419,7 +419,7 @@ Loop %Folder%\*.*
         ExtID := 0  <em>; 进行初始化来处理比其他更短的扩展名.</em>
         Loop 7     <em>; 限制扩展名为 7 个字符, 这样之后计算的结果才能存放到 64 位值.</em>
         {
-            StringMid, ExtChar, FileExt, A_Index, 1
+            ExtChar := SubStr(FileExt, A_Index, 1)
             if not ExtChar  <em>; 没有更多字符了.</em>
                 break
             <em>; 把每个字符与不同的位位置进行运算来得到唯一 ID:</em>
@@ -483,7 +483,7 @@ if (A_GuiEvent = "DoubleClick")  <em>; 脚本还可以检查许多其他的可�
 return
 
 <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>:  <em>; 运行此标签来响应右键点击或按下 Appskey.</em>
-if (A_GuiControl &lt;&gt; "MyListView")  <em>; 仅在 ListView 中点击时才显示菜单.</em>
+if (A_GuiControl != "MyListView")  <em>; 仅在 ListView 中点击时才显示菜单.</em>
     return
 <em>; 在提供的坐标处显示菜单, A_GuiX 和 A_GuiY. 应该使用这些
 ; 因为即使用户按下 Appskey 它们也会提供正确的坐标:</em>
@@ -498,7 +498,7 @@ if not FocusedRowNumber  <em>; 没有焦点行.</em>
     return
 LV_GetText(FileName, FocusedRowNumber, 1) <em>; 获取首个字段的文本.</em>
 LV_GetText(FileDir, FocusedRowNumber, 2)  <em>; 获取第二个字段的文本.</em>
-IfInString A_ThisMenuItem, Open  <em>; 用户在上下文菜单中选择了 "Open".</em>
+if InStr(A_ThisMenuItem, "Open")  <em>; 用户在上下文菜单中选择了 "Open".</em>
     Run %FileDir%\%FileName%,, UseErrorLevel
 else  <em>; 用户在上下文菜单中选择了 "Properties".</em>
     Run Properties "%FileDir%\%FileName%",, UseErrorLevel

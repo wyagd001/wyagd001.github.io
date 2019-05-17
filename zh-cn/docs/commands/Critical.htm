@@ -11,14 +11,22 @@
 <body>
 
 <h1>Critical</h1>
-
 <p>防止<a href="../misc/Threads.htm">当前线程</a>被其他线程中断, 或开启可中断.</p>
 
 <pre class="Syntax">
-<span class="func">Critical</span> <span class="optional">, Off</span>
-<span class="func">Critical</span> 50 <em>; 请参阅<a href="#Interval">备注底部</a>.</em>
+<span class="func">Critical</span> <span class="optional">, OnOffNumeric</span>
 </pre>
-<p>如果首个参数省略(或为单词 On), 则设置<a href="../misc/Threads.htm">当前线程</a>为关键的, 这意味着它不会被其他线程中断. 如果首个参数为 Off(或在 <span class="ver">[v1.0.48+]</span> 为数字 0), 则当前线程会不论 <a href="Thread.htm">Thread Interrupt</a> 如何设置都会变成可中断状态.</p>
+
+<h2 id="Parameters">参数</h2>
+<dl>
+  <dt>OnOffNumeric</dt>
+  <dd>
+    <p>如果参数为空或省略, 默认为 On. 否则, 请指定以下之一:</p>
+    <p><strong>On</strong>: 设置<a href="../misc/Threads.htm">当前线程</a>为关键的, 这意味着它不会被其他线程中断.</p>
+    <p><strong>Off</strong>: The current thread immediately becomes interruptible, regardless of the settings of <a href="Thread.htm">Thread Interrupt</a>. See <a href="#Off">Critical Off</a> for details.</p>
+    <p><strong>(Numeric)</strong> <span class="ver">[v1.0.47+]</span>: Specify a positive number to turn on Critical but also change the number of milliseconds between checks of the internal message queue. See <a href="#Interval">Message Check Interval</a> for details. <span class="ver">[v1.0.48+]</span>: Specifying 0 turns off Critical.</p>
+  </dd>
+</dl>
 
 <h2 id="Behave">关键线程的行为</h2>
 <p>与<a href="../misc/Threads.htm">高优先级</a>线程不同, 在关键线程中产生的事件不会被丢弃. 例如, 在当前线程为关键线程时用户按下了<a href="../Hotkeys.htm">热键</a>, 那么此热键会被缓冲到当前线程结束或成为非关键线程时才作为新的线程启动.</p>

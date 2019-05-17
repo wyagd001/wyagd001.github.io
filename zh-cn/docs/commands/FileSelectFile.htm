@@ -57,7 +57,7 @@ My File  <em>; 只使用了 <i>Filename</i>(但如果已存在 "My File" 的文�
 
 </dl>
 
-<h2>ErrorLevel</h2>
+<h2>错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果用户没有选择文件却解除了对话框(例如按下了取消按钮), 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1. 如果系统拒绝显示对话框(罕见), 那么它也被设置为 1. 否则被置为 0.</p>
 <h2>备注</h2>
@@ -83,7 +83,7 @@ Thread, NoTimers, false</pre>
 <p>此外, 操作系统提供了标准的对话框让用户选取字体, 颜色或图标. 使用 <a href="DllCall.htm">DllCall()</a> 可以显示这些对话框, 演示的例子请参阅 <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a>.</p>
 <h2>示例</h2>
 <pre class="NoIndent">FileSelectFile, SelectedFile, 3, , Open a file, Text Documents (*.txt; *.doc)
-if SelectedFile =
+if (SelectedFile = "")
     MsgBox, The user didn't select anything.
 else
     MsgBox, The user selected the following:`n%SelectedFile%
@@ -94,14 +94,14 @@ FileSelectFile, OutputVar,, ::{645ff040-5081-101b-9f08-00aa002f954e}  <em>; 回�
 
 <em>; 多选的例子:</em>
 FileSelectFile, files, M3  <em>; M3 = 选择多个现有文件.</em>
-if files =
+if (files = "")
 {
     MsgBox, The user pressed cancel.
     return
 }
 Loop, parse, files, `n
 {
-    if A_Index = 1
+    if (A_Index = 1)
         MsgBox, The selected files are all contained in %A_LoopField%.
     else
     {

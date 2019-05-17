@@ -120,13 +120,13 @@ Loop, HKEY_CURRENT_USER, Software\Microsoft\Internet Explorer\TypedURLs
 <pre class="NoIndent"><em>; 示例: 有效的测试脚本:</em>
 Loop, Reg, HKEY_CURRENT_USER\Software\Microsoft\Windows, KVR
 {
-    if A_LoopRegType = key
-        value =
+    if (A_LoopRegType = "key")
+        value := ""
     else
     {
         RegRead, value
         if ErrorLevel
-            value = *error*
+            value := "*error*"
     }
     MsgBox, 4, , %A_LoopRegName% = %value% (%A_LoopRegType%)`n`nContinue?
     IfMsgBox, NO, break
@@ -134,28 +134,28 @@ Loop, Reg, HKEY_CURRENT_USER\Software\Microsoft\Windows, KVR
 <pre class="NoIndent"><em>; 示例: 用于在整个注册表中
 ; 递归搜索特殊值的可运行示例.</em>
 SetBatchLines -1  <em>; 让搜索以最快速度进行.</em>
-RegSearchTarget = Notepad  <em>; 告知子程序搜索的目标.</em>
+RegSearchTarget := "Notepad"  <em>; 告知子程序搜索的目标.</em>
 Gosub, RegSearch
 return
 
 RegSearch:
-ContinueRegSearch = y
+ContinueRegSearch := true
 Loop, Reg, HKEY_LOCAL_MACHINE, KVR
 {
     Gosub, CheckThisRegItem
-    if ContinueRegSearch = n <em>; 这里告知我们要停止搜索.</em>
+    if not ContinueRegSearch <em>; 这里告知我们要停止搜索.</em>
         return
 }
 Loop, Reg, HKEY_USERS, KVR
 {
     Gosub, CheckThisRegItem
-    if ContinueRegSearch = n <em>; 这里告知我们要停止搜索.</em>
+    if not ContinueRegSearch <em>; 这里告知我们要停止搜索.</em>
         return
 }
 Loop, Reg, HKEY_CURRENT_CONFIG, KVR
 {
     Gosub, CheckThisRegItem
-    if ContinueRegSearch = n <em>; 这里告知我们要停止搜索.</em>
+    if not ContinueRegSearch <em>; 这里告知我们要停止搜索.</em>
         return
 }
 <em>; 请注意: 我认为如果已经搜索了 HKEY_USERS, 那么可以不必搜索
@@ -164,16 +164,16 @@ Loop, Reg, HKEY_CURRENT_CONFIG, KVR
 return
 
 CheckThisRegItem:
-if A_LoopRegType = KEY  <em>; 如果您也想检查键名, 那么移除这两行.</em>
+if (A_LoopRegType = "KEY")  <em>; 如果您也想检查键名, 那么移除这两行.</em>
     return
 RegRead, RegValue
 if ErrorLevel
     return
-IfInString, RegValue, %RegSearchTarget%
+if InStr(RegValue, RegSearchTarget)
 {
     MsgBox, 4, , The following match was found:`n%A_LoopRegKey%\%A_LoopRegSubKey%\%A_LoopRegName%`nValue = %RegValue%`n`nContinue?
     IfMsgBox, No
-        ContinueRegSearch = n  <em>; 告知我们的调用者停止搜索.</em>
+        ContinueRegSearch := false  <em>; 告知我们的调用者停止搜索.</em>
 }
 return</pre>
 
