@@ -12,15 +12,25 @@
 
 <h1>Critical</h1>
 
-<p>Prevents the <a href="../misc/Threads.htm">current thread</a> from being interrupted by other threads, or enables it to be interrupted.</p>
+<p>防止<a href="../misc/Threads.htm">当前线程</a>被其他线程中断, 或使其能够被中断.</p>
 
-<pre class="Syntax"><span class="func">Critical</span> <span class="optional">"Off"</span>
-<span class="func">Critical</span> 50 <em>; See <a href="#Interval">bottom of remarks</a>.</em></pre>
-<p>If the first parameter is omitted (or the word On), the <a href="../misc/Threads.htm">current thread</a> is made critical, meaning that it cannot be interrupted by another thread. If the first parameter is the word Off or the number 0, the current thread immediately becomes interruptible, regardless of the settings of <a href="Thread.htm">Thread Interrupt</a>.</p>
+<pre class="Syntax">
+<span class="func">Critical</span> 50 <em>; 请参阅<a href="#Interval">底部的备注</a>.</em></pre>
 
-<h2 id="Behave">Behavior of Critical Threads</h2>
-<p>Unlike <a href="../misc/Threads.htm">high-priority</a> threads, events that occur during a critical thread are not discarded. For example, if the user presses a <a href="../Hotkeys.htm">hotkey</a> while the current thread is critical, the hotkey is buffered indefinitely until the current thread finishes or becomes noncritical, at which time the hotkey is launched as a new thread.</p>
-<p>A critical thread will be interrupted in emergencies. Emergencies consist of: 1) the <a href="OnExit.htm">OnExit</a> callback function; 2) any <a href="OnMessage.htm">OnMessage</a> function that monitors a message number less than 0x312 (or a <a href="CallbackCreate.htm">callback</a> triggered by such a message); and 3) any <a href="CallbackCreate.htm">callback</a> indirectly triggered by the critical thread itself (e.g. via <a href="SendMessage.htm">SendMessage</a> or <a href="DllCall.htm">DllCall</a>). To avoid these interruptions, temporarily disable such functions.</p>
+<h2 id="Parameters">参数</h2>
+<dl>
+  <dt>OnOffNumeric</dt>
+  <dd>
+    <p>如果参数为空或省略, 默认为 On. 否则, 请指定以下之一:</p>
+    <p><strong>On</strong>: 设置<a href="../misc/Threads.htm">当前线程</a>为关键的, 这意味着它不会被其他线程中断.</p>
+    <p><strong>Off</strong>: 当前线程立即成为可中断的, 无论 <a href="Thread.htm">Thread Interrupt</a> 的设置如何. 有关详情, 请参阅 <a href="#Off">Critical Off</a>.</p>
+    <p><strong>(数字)</strong>: 指定一个正数来打开 Critical, 但同时也会改变检查内部消息队列的时间间隔. 有关详情, 请参阅<a href="#Interval">消息检查间隔</a>. 指定 0 关闭 Critical.</p>
+  </dd>
+</dl>
+
+<h2 id="Behave">关键线程的行为</h2>
+<p>与<a href="../misc/Threads.htm">高优先级</a>线程不同, 在关键线程中产生的事件不会被丢弃. 例如, 在当前线程为关键线程时如果用户按下了<a href="../Hotkeys.htm">热键</a>, 那么热键被无限期地缓冲, 直到当前线程结束或变为非关键线程, 此时热键作为新线程启动.</p>
+<p>关键线程会被紧急事件中断. 紧急事件包括: 1) <a href="OnExit.htm">OnExit</a> 回调函数; 2) 任何 <a href="OnMessage.htm">OnMessage</a> function that monitors a message number less than 0x312 (or a <a href="CallbackCreate.htm">callback</a> triggered by such a message); and 3) any <a href="CallbackCreate.htm">callback</a> indirectly triggered by the critical thread itself (e.g. via <a href="SendMessage.htm">SendMessage</a> or <a href="DllCall.htm">DllCall</a>). To avoid these interruptions, temporarily disable such functions.</p>
 <p>A critical thread becomes interruptible when a <a href="MsgBox.htm">MsgBox</a> or other dialog is displayed. However, unlike <a href="Thread.htm">Thread Interrupt</a>, the thread becomes critical again after the user dismisses the dialog.</p>
 
 <h2 id="Off">Critical Off</h2>
@@ -33,19 +43,19 @@
 <p>The function <a href="Thread.htm">Thread "NoTimers"</a> is similar to Critical except that it only prevents interruptions from <a href="SetTimer.htm">timers</a>.</p>
 
 <h2 id="Interval">Message Check Interval</h2>
-<p>Specifying a positive number as the first parameter (e.g. <code>Critical 30</code>) turns on Critical but also changes the number of milliseconds between checks of the internal message queue. If unspecified, messages are checked every 16 milliseconds while Critical is On, and every 5 ms while Critical is Off. Increasing the interval postpones the arrival of messages/events, which gives the <a href="../misc/Threads.htm">current thread</a> more time to finish. This reduces the possibility that certain <a href="OnMessage.htm">OnMessage()</a> and <a href="../objects/GuiOnEvent.htm">GUI events</a> will be lost due to &quot;thread already running&quot;. However, functions that wait such as <a href="Sleep.htm">Sleep</a> and <a href="WinWait.htm">WinWait</a> will check messages regardless of this setting (a workaround is <code>DllCall(&quot;Sleep&quot;, UInt, 500)</code>).</p>
+<p>Specifying a positive number as the first parameter (e.g. <code>Critical 30</code>) turns on Critical but also changes the number of milliseconds between checks of the internal message queue. If unspecified, messages are checked every 16 milliseconds while Critical is On, and every 5 ms while Critical is Off. Increasing the interval postpones the arrival of messages/events, which gives the <a href="../misc/Threads.htm">current thread</a> more time to finish. This reduces the possibility that certain <a href="OnMessage.htm">OnMessage()</a> and <a href="../objects/GuiOnEvent.htm">GUI events</a> will be lost due to &quot;thread already running&quot;. However, functions that wait such as <a href="Sleep.htm">Sleep</a> and <a href="WinWait.htm">WinWait</a> will check messages regardless of this setting (a workaround is <code>DllCall(&quot;Sleep&quot;, &quot;UInt&quot;, 500)</code>).</p>
   <p class="note"><strong>Note</strong>: Increasing the message-check interval too much may reduce the responsiveness of various events such as <a href="GuiCreate.htm">GUI</a> window repainting.</p>
 
 <h2>相关</h2>
-<p><a href="Thread.htm">Thread (function)</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a>, <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="../objects/Menu.htm">Menu object</a>, <a href="SetTimer.htm">SetTimer</a></p>
+<p><a href="Thread.htm">Thread (函数)</a>, <a href="../misc/Threads.htm">线程</a>, <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a>, <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="../objects/Menu.htm">Menu object</a>, <a href="SetTimer.htm">SetTimer</a></p>
 
-<h2>Example</h2>
-<pre class="NoIndent">#space::  <em>; Win+Space hotkey.</em>
+<h2>示例</h2>
+<pre class="NoIndent">#space::  <em>; Win+Space 热键.</em>
 Critical
 ToolTip "No new threads will launch until after this ToolTip disappears."
 Sleep 3000
-ToolTip  <em>; Turn off the tip.</em>
-return  <em>; Returning from a hotkey subroutine ends the thread. Any underlying thread to be resumed is noncritical by definition.</em></pre>
+ToolTip  <em>; 关闭提示.</em>
+return  <em>; 从热键子程序中返回. 根据定义, 要恢复的任何底层线程都是非关键的.</em></pre>
 
 </body>
 </html>

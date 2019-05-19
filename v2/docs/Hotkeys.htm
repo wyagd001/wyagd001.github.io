@@ -211,62 +211,62 @@ return</pre>
 <p>最后, 由于鼠标滚轮热键只产生按下事件(从没有弹起事件), 所以它们无法用作<a href="#keyup">弹起热键</a>.</p>
 
 <h2 id="Remarks">热键技巧和备注</h2>
-<p>Each numpad key can be made to launch two different hotkey subroutines depending on the state of <kbd>NumLock</kbd>. Alternatively, a numpad key can be made to launch the same subroutine regardless of the <kbd>NumLock</kbd> state. 例如:</p>
+<p>根据 <kbd>NumLock</kbd> 的状态, 每个小键盘上的按键可以运行两个不同的热键子程序. 或者, 小键盘上的按键也可以运行相同的热键子程序, 而不管 <kbd>NumLock</kbd> 的状态如何. 例如:</p>
 <pre>NumpadEnd::
 Numpad1::
 MsgBox "This hotkey is launched regardless of whether NumLock is on."
 return</pre>
-<p>If the <a href="#Tilde">tilde (~) operator</a> is used with a <a href="#prefix">prefix key</a> even once, it changes the behavior of that prefix key for all combinations. 例如, in both of the below hotkeys, the active window will receive all right-clicks even though only one of the definitions contains a tilde:</p>
+<p>如果<a href="#Tilde">波浪号(~)</a> 与<a href="#prefix">前缀键</a>一起使用, 即使只是一次, 它会更改所有组合键的前缀键的行为. 例如, 在下面的两个热键中, 活动窗口都会接收到右键点击, 尽管只是其中一个热键使用了波浪号:</p>
 <pre>~RButton &amp; LButton::MsgBox "You pressed the left mouse button while holding down the right."
 RButton &amp; WheelUp::MsgBox "You turned the mouse wheel up while holding down the right button."</pre>
-<p>The <a href="commands/Suspend.htm">Suspend</a> function can temporarily disable all hotkeys except for ones you make exempt. For greater selectivity, use <a href="commands/_If.htm">#If</a>.</p>
-<p>By means of the <a href="commands/Hotkey.htm">Hotkey</a> function, hotkeys can be created dynamically while the script is running. The Hotkey function can also modify, disable, or enable the script's existing hotkeys individually.</p>
-<p>Joystick hotkeys do not currently support modifier prefixes such as ^ (<kbd>Control</kbd>) and # (<kbd>Win</kbd>). However, you can use <a href="commands/GetKeyState.htm">GetKeyState</a> to mimic this effect as shown in the following example:</p>
+<p><a href="commands/Suspend.htm">Suspend</a> 函数可以临时禁用所有的热键, 但不包括您要排除的那些. 要获得更高的选择性, 请使用 <a href="commands/_If.htm">#If</a>.</p>
+<p>通过使用 <a href="commands/Hotkey.htm">Hotkey</a> 函数, 可以在脚本运行时动态创建热键. Hotkey 函数还可以单独修改, 禁用或启用脚本的现有热键.</p>
+<p>操纵杆热键当前不支持修饰符前缀(如 ^(<kbd>Control</kbd>) 和 #(<kbd>Win</kbd>)). 但是, 您可以使用 <a href="commands/GetKeyState.htm">GetKeyState</a> 来模拟此效果, 如下例所示:</p>
 <pre>Joy2::
-if not GetKeyState(&quot;Control&quot;)  <em>; Neither the left nor right Control key is down.</em>
-    return  <em>; i.e. Do nothing.</em>
+if not GetKeyState(&quot;Control&quot;)  <em>; 左边和右边的 Control 键都没有按下.</em>
+    return  <em>; 即什么都不做.</em>
 MsgBox "You pressed the first joystick's second button while holding down the Control key."
 return</pre>
-<p>There may be times when a hotkey should wait for its own modifier keys to be released before continuing. Consider the following example:</p>
+<p>热键在继续之前可能需要等待自己的修饰键被释放. 请参考下面的例子:</p>
 <pre>^!s::Send "{Delete}"</pre>
-<p>Pressing <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> would cause the system to behave as though you pressed <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd> (due to the system's aggressive detection of <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd>). To work around this, use <a href="commands/KeyWait.htm">KeyWait</a> to wait for the keys to be released; 例如:</p>
+<p>按下 <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> 会让系统以为您按下了 <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd>(由于系统对 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd> 的侵略性检测). 要解决此问题, 请使用 <a href="commands/KeyWait.htm">KeyWait</a> 来等待按键释放; 例如:</p>
 <pre>^!s::
 KeyWait "Control"
 KeyWait "Alt"
 Send "{Delete}"
 return</pre>
-<p>If a hotkey label like <code>#z::</code> produces an error like &quot;Invalid Hotkey&quot;, your system's keyboard layout/language might not have the specified character (&quot;Z&quot; in this case). Try using a different character that you know exists in your keyboard layout.</p>
-<p>A hotkey label can be used as the target of a <a href="commands/Gosub.htm">Gosub</a> or <a href="commands/Goto.htm">Goto</a>. 例如: <code>Gosub "^!s"</code>.</p>
-<p>One common use for hotkeys is to start and stop a repeating action, such as a series of keystrokes or mouse clicks. For an example of this, 请参阅 <a href="FAQ.htm#repeat">this FAQ topic</a>.</p>
-<p>Finally, each script is <a href="misc/Threads.htm">quasi multi-threaded</a>, which allows a new hotkey to be launched even when a previous hotkey subroutine is still running. 例如, new hotkeys can be launched even while a <a href="commands/MsgBox.htm">MsgBox</a> is being displayed by the current hotkey.</p>
+<p>如果热键标签(如 <code>#z::</code>) 产生了类似&quot;Invalid Hotkey(无效热键)&quot;的错误, 那么您的系统键盘布局/语言可能不包含该特殊字符(此时为 &quot;Z&quot;). 尝试使用您键盘布局中您知道存在的其他字符.</p>
+<p>热键标签可以作为 <a href="commands/Gosub.htm">Gosub</a> 或 <a href="commands/Goto.htm">Goto</a> 的目标. 例如: <code>Gosub "^!s"</code>.</p>
+<p>热键的一个常见用途是启动和停止重复的动作, 例如一系列的键击或鼠标点击. 关于这方面的例子, 请参阅<a href="FAQ.htm#repeat">这个 FAQ 主题</a>.</p>
+<p>最后, 每个脚本都是<a href="misc/Threads.htm">准多线程的</a>, 这样可以在之前的热键子程序还在运行时启动新的热键. 例如, 即使在当前热键显示 <a href="commands/MsgBox.htm">MsgBox</a> 时也能启动新的热键.</p>
 
-<h2 id="AltTabDetail">Alt-Tab Hotkeys</h2>
-<p>Each Alt-Tab hotkey must be a combination of two keys, which is typically achieved via the ampersand symbol (&amp;). In the following example, you would hold down the right <kbd>Alt</kbd> key and press <kbd>J</kbd> or <kbd>K</kbd> to navigate the alt-tab menu:</p>
+<h2 id="AltTabDetail">Alt-Tab 热键</h2>
+<p>每个 Alt-Tab 热键必须是两个键的组合, 通常通过 &amp; 符号实现. 在以下示例中, 您将按住右 <kbd>Alt</kbd> 键并按下 <kbd>J</kbd> 或 <kbd>K</kbd> 以导航 alt-tab 菜单:</p>
 <pre>RAlt &amp; j::AltTab
 RAlt &amp; k::ShiftAltTab</pre>
-<p><em>AltTab</em> and <em>ShiftAltTab</em> are two of the special commands that are only recognized when used on the same line as a hotkey. Here is the complete list:</p>
-<p><strong>AltTab</strong>: If the alt-tab menu is visible, move forward in it. Otherwise, display the menu (only if the hotkey is an &quot;&amp;&quot; combination of two keys; otherwise, it does nothing).</p>
-<p><strong>ShiftAltTab</strong>: Same as above except move backward in the menu.</p>
-<p><strong>AltTabAndMenu</strong>: If the alt-tab menu is visible, move forward in it. Otherwise, display the menu.</p>
-<p><strong>AltTabMenu</strong>: Show or hide the alt-tab menu.</p>
-<p><strong>AltTabMenuDismiss</strong>: Close the Alt-tab menu.</p>
-<p>To illustrate the above, the mouse wheel can be made into an entire substitute for Alt-tab. With the following hotkeys in effect, clicking the middle button displays the menu and turning the wheel navigates through it:</p>
+<p><em>AltTab</em> 和 <em>ShiftAltTab</em> 是两个特殊的命令, 只有在与热键在同一行上时才能被识别. 这里是完整的列表:</p>
+<p><strong>AltTab</strong>: 如果 alt-tab 菜单可见, 那么在菜单中前移. 否则, 显示菜单(仅当热键是 "&amp;" 连接的两个按键时; 否则, 它什么都不做).</p>
+<p><strong>ShiftAltTab</strong>: 与上面相同, 只是在菜单中向后移动.</p>
+<p><strong>AltTabAndMenu</strong>: 如果 alt-tab 菜单可见, 则向前移动. 否则, 显示菜单.</p>
+<p><strong>AltTabMenu</strong>: 显示或隐藏 alt-tab 菜单.</p>
+<p><strong>AltTabMenuDismiss</strong>: 关闭 Alt-tab 菜单.</p>
+<p>为了说明上述内容, 可以用鼠标滚轮完全代替 Alt-tab. 使用下面的热键, 点击鼠标中键显示菜单, 转动滚轮在菜单中导航:</p>
 <pre>MButton::AltTabMenu
 WheelDown::AltTab
 WheelUp::ShiftAltTab</pre>
-<p>To cancel a hotkey-invoked Alt-tab menu without activating the selected window, use a hotkey such as the following. It might require adjustment depending on: 1) the means by which the alt-tab menu was originally displayed; and 2) whether the script has the <a href="commands/_InstallKeybdHook.htm">keyboard hook</a> installed.</p>
+<p>要取消热键调用的Alt-tab菜单而不激活所选窗口, 请使用如下所示的热键. 可能需要进行调整, 具体取决于: 1) 最初显示 alt-tab 菜单的方式; 和 2) 脚本是否安装了<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
 <pre>LCtrl &amp; CapsLock::AltTab
-<strong>!</strong>MButton::  <em>; Middle mouse button. The <strong>!</strong> prefix makes it fire while the Alt key is down (which it is if the alt-tab menu is visible).</em>
-if WinExist("ahk_class #32771")  <em>; Indicates that the alt-tab menu is present on the screen.</em>
+<strong>!</strong>MButton::  <em>; 鼠标中键. <strong>!</strong> 前缀让它在按住 Alt 键时激发(当 alt-tab 菜单可见时, alt 键是按住的).</em>
+if WinExist("ahk_class #32771")  <em>; 表示 alt-tab 菜单出现在屏幕上.</em>
     Send "<strong>!</strong>{Escape}{Alt up}"
 return</pre>
-<p>Currently, all special Alt-tab actions must be assigned directly to a hotkey as in the examples above (i.e. they cannot be used as though they were functions). They are <span class="red">not affected by <a href="commands/_If.htm">#If</a></span>.</p>
-<p>Custom alt-tab actions can also be created via hotkeys. In the following example, you would press <kbd>F1</kbd> to display the menu and advance forward in it. Then you would press <kbd>F2</kbd> to activate the selected window (or press <kbd>Escape</kbd> to cancel):</p>
-<pre>*F1::Send "{Alt down}{tab}" <em>; Asterisk is required in this case.</em>
-!F2::Send "{Alt up}"  <em>; Release the Alt key, which activates the selected window.</em>
+<p>当前, 所有特殊的 Alt-tab 动作必须像上面的例子那样直接指定到热键上(即它们无法像函数那样使用). 它们<span class="red">不受 <a href="commands/_If.htm">#If</a> 的影响</span>.</p>
+<p>也可以通过热键创建自定义 alt-tab 的动作. 在下面的示例中, 您可以按下 <kbd>F1</kbd> 显示菜单并在其中向前移动. 然后可以按下 <kbd>F2</kbd> 来激活选择的窗口(或按下 <kbd>Escape</kbd> 来取消):</p>
+<pre>*F1::Send "{Alt down}{tab}" <em>; 在这种情况下需要星号.</em>
+!F2::Send "{Alt up}"  <em>; 释放 Alt 键, 激活选择的窗口.</em>
 ~*Escape::
 if WinExist("ahk_class #32771")
-    Send "{Escape}{Alt up}"  <em>; Cancel the menu without activating the selected window.</em>
+    Send "{Escape}{Alt up}"  <em>; 取消菜单而不激活选择的窗口.</em>
 return</pre>
 
 <h2 id="Function">函数热键</h2>
