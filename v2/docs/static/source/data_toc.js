@@ -58,7 +58,7 @@ tocData = [
   ]],
   ["外部库","",
   [
-    ["Buffer Object","objects/Buffer.htm"],
+    ["缓冲对象","objects/Buffer.htm"],
     ["BufferAlloc","commands/BufferAlloc.htm"],
     ["CallbackCreate","commands/CallbackCreate.htm"],
     ["DllCall","commands/DllCall.htm"],
@@ -285,7 +285,7 @@ tocData = [
   ["对象类型","",
   [
     ["对象","objects/Object.htm"],
-    ["Buffer Object","objects/Buffer.htm"],
+    ["缓冲对象","objects/Buffer.htm"],
     ["枚举器对象 ","objects/Enumerator.htm"],
     ["异常对象","commands/Throw.htm#Exception"],
     ["文件对象","objects/File.htm"],
@@ -293,8 +293,8 @@ tocData = [
     ["函数对象","objects/Functor.htm"],
     ["Gui 对象","objects/Gui.htm"],
     ["GuiControl 对象","objects/GuiControl.htm"],
-    ["Menu/MenuBar object","objects/Menu.htm"],
-    ["RegExMatch 对象","commands/RegExMatch.htm#MatchObject"]
+    ["Menu/MenuBar 对象","objects/Menu.htm"],
+    ["正则匹配对象","commands/RegExMatch.htm#MatchObject"]
   ]],
   ["进程","commands/Process.htm",
   [
@@ -341,6 +341,7 @@ tocData = [
     ["RegExMatch","commands/RegExMatch.htm"],
     ["RegExReplace","commands/RegExReplace.htm"],
     ["Sort","commands/Sort.htm"],
+    ["StrCompare","commands/StrCompare.htm"],
     ["String","commands/String.htm"],
     ["StringCaseSense","commands/StringCaseSense.htm"],
     ["StrLower/StrUpper","commands/StrLower.htm"],

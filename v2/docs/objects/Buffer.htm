@@ -1,7 +1,7 @@
-<!DOCTYPE HTML>
-<html lang="en">
+﻿<!DOCTYPE HTML>
+<html lang="zh">
 <head>
-<title>Buffer Object - Definition &amp; Usage | AutoHotkey v2</title>
+<title>缓冲对象 - 定义 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The Buffer object encapsulates a block of memory for use with advanced techniques such as DllCall, structures, StrPut and raw file I/O." />
 <meta name="ahk:equiv-v1" content="commands/VarSetCapacity.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -11,50 +11,50 @@
 </head>
 <body>
 
- <h1>Buffer Object</h1>
+ <h1>缓冲对象</h1>
 
- <p>Encapsulates a block of memory for use with advanced techniques such as DllCall, structures, StrPut and raw file I/O.</p>
-<p>Buffer objects are typically created by calling <a href="../commands/BufferAlloc.htm">BufferAlloc</a>, but can also be returned by <a href="../commands/FileRead.htm">FileRead</a> with the "RAW" option.</p>
+<p>封装一块内存, 用于高级技术, 如 DllCall, 结构体, StrPut 和原始文件 I/O.</p>
+<p>缓冲对象通常通过调用 <a href="../commands/BufferAlloc.htm">BufferAlloc</a> 创建, 但也可以由 <a href="../commands/FileRead.htm">FileRead</a> 使用 "RAW" 选项返回.</p>
 <pre>Buffer := BufferAlloc(ByteCount)</pre>
-<p><strong>Properties:</strong></p>
+<p><strong>属性:</strong></p>
 <ul>
   <li><a href="#Ptr">Ptr</a></li>
   <li><a href="#Size">Size</a></li>
   <li><a href="#Data">Data</a></li>
 </ul>
 
- <h2 id="like">Buffer-like Objects</h2>
-<p>Some built-in functions accept a Buffer object in place of an address - see the <a href="#Related">Related</a> section for links. These functions also accept any other object which has <a href="#Ptr">Ptr</a> and <a href="#Size">Size</a> properties, but are optimized for the native Buffer object.</p>
-<p>In most cases, passing a Buffer object is safer than passing an address, as the function can read the <a href="#Size">buffer size</a> to ensure that it does not attempt to access any memory location outside of the buffer. One exception is that <a href="../commands/DllCall.htm">DllCall</a> calls functions outside of the program; in those cases, it may be necessary to explicitly pass the <a href="#Size">buffer size</a> to the function.</p>
+ <h2 id="like">类缓冲对象</h2>
+<p>一些内置函数接受缓冲对象来代替地址 - 请参阅<a href="#Related">相关</a>部分以获取链接. 这些函数也接受具有 <a href="#Ptr">Ptr</a> 和 <a href="#Size">Size</a> 属性的任何其他对象, 但是针对原生的缓冲对象进行了优化.</p>
+<p>在大多数情况下, 传递缓冲对象比传递地址更安全, 因为函数可以读取<a href="#Size">缓冲区大小</a>以确保它不会尝试访问缓冲区之外的任何内存位置. 一个例外是 <a href="../commands/DllCall.htm">DllCall</a> 调用程序之外的函数; 在这些情况下, 可能需要将<a href="#Size">缓冲区大小</a>显式传递给函数.</p>
 
- <h2>Properties</h2>
+<h2>属性</h2>
 <div class="methodShort" id="Ptr"><h2>Ptr</h2>
-<p>Retrieves the buffer's current memory address.</p>
+<p>检索缓冲区的当前内存地址.</p>
 <pre class="Syntax">Ptr := Buffer.Ptr</pre>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-<p>Any address returned by this property becomes invalid when the buffer is freed or reallocated. Invalid addresses must not be used. The buffer is not freed until the Buffer object's <a href="../Objects.htm#Reference_Counting">reference count</a> reaches zero, but it is reallocated when its <a href="#Size">Size</a> is changed.</p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+<p>当释放或重新分配缓冲区时, 此属性返回的任何地址都将无效. 不能使用无效地址. 缓冲区在缓冲对象的<a href="../Objects.htm#Reference_Counting">引用计数</a>达到零之前不会被释放, 但是当它的<a href="#Size">大小</a>更改时会重新分配缓冲区.</p>
 </div>
 
- <div class="methodShort" id="Size"><h2>Size</h2>
-<p>Retrieves or sets the buffer's size, in bytes.</p>
+<div class="methodShort" id="Size"><h2>Size</h2>
+<p>检索或设置缓冲区的大小, 以字节为单位.</p>
 <pre class="Syntax">ByteCount := Buffer.Size</pre>
 <pre class="Syntax">Buffer.Size := ByteCount</pre>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-<p>The buffer's address typically changes whenever its size is changed. If the size is decreased, the data within the buffer is truncated, but the remaining bytes are preserved. If the size is increased, all data is preserved and any new bytes are zero-initialized.</p>
-<p>This property always returns the exact value it was given either by <a href="../commands/BufferAlloc.htm">BufferAlloc</a> or by a previous assignment.</p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+<p>缓冲区的地址通常会随着大小的改变而改变. 如果减小大小, 则缓冲区中的数据将被截断, 但保留剩余的字节. 如果增加大小, 则保留所有数据并且任何新字节都是以零初始化的.</p>
+<p>该属性始终返回 <a href="../commands/BufferAlloc.htm">BufferAlloc</a> 或先前赋值给出的确切值.</p>
 </div>
 
  <div class="methodShort" id="Data"><h2>Data</h2>
-<p>Retrieves a copy of the buffer's content, as a string.</p>
+<p>检索缓冲区内容的副本, 以字符串形式.</p>
 <pre class="Syntax">String := Buffer.Data</pre>
-<p>Type: <a href="../Concepts.htm#strings">String</a></p>
-<p>If <a href="#Size">Size</a> is an odd number, the last byte is omitted from the returned string. This is because AutoHotkey v2 uses <a href="../Concepts.htm#string-encoding">UTF-16 strings</a>, where each character is two bytes.</p>
-<p>If the buffer does not contain UTF-16 encoded text, the string will not be readable when displayed by functions such as <a href="../commands/MsgBox.htm">MsgBox</a>.</p>
-<p>The string can contain null characters.</p>
-<p>The string can be passed to <a href="../commands/FileAppend.htm">FileAppend</a> (with the "RAW" option) or <a href="../objects/File.htm#RawWrite">File.RawWrite</a> to write it to file.</p>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+<p>如果<a href="#Size">大小</a>是奇数, 则从返回的字符串中省略最后一个字节. 这是因为 AutoHotkey v2 使用 <a href="../Concepts.htm#string-encoding">UTF-16 字符串</a>, 其中每个字符是两个字节.</p>
+<p>如果缓冲区不包含 UTF-16 编码文本, 则由 <a href="../commands/MsgBox.htm">MsgBox</a> 等函数显示时, 该字符串将不可读.</p>
+<p>该字符串可以包含空字符.</p>
+<p>该字符串可以传递给 <a href="../commands/FileAppend.htm">FileAppend</a> (使用 "RAW" 选项) 或 <a href="../objects/File.htm#RawWrite">File.RawWrite</a> 将其写入文件.</p>
 </div>
 
-<h2 id="Related">Related</h2>
+<h2 id="Related">相关</h2>
 <p><a href="../commands/BufferAlloc.htm">BufferAlloc</a>, <a href="../commands/DllCall.htm">DllCall</a>, <a href="../commands/NumPut.htm">NumPut</a>, <a href="../commands/NumGet.htm">NumGet</a>, <a href="../commands/StrPut.htm">StrPut</a>, <a href="../commands/StrGet.htm">StrGet</a>, <a href="File.htm#RawRead">File.RawRead</a>, <a href="File.htm#RawWrite">File.RawWrite</a></p>
 
 </body>

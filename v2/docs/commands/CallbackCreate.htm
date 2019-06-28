@@ -13,7 +13,7 @@
 
 <h1>CallbackCreate</h1>
 
-<p>Creates a machine-code address that when called, redirects the call to a <a href="../Functions.htm">function</a> in the script.</p>
+<p>创建机器码地址, 当它被调用时会重定向到脚本中的<a href="../Functions.htm">函数</a>.</p>
 
 <pre class="Syntax">Address := <span class="func">CallbackCreate</span>(Function <span class="optional">, Options := "", ParamCount := Function.MinParams</span>)</pre>
 <h2>参数</h2>
@@ -21,17 +21,17 @@
 
   <dt>Function</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a> or <a href="../Concepts.htm#objects">Object</a></p>
-    <p>A function name or <a href="../objects/Functor.htm">function object</a>. This function is called automatically whenever <em>Address</em> is called. The function also receives the parameters that were passed to <em>Address</em>.</p>
-    <p>A <a href="../Functions.htm#closures">closure</a> or <a href="../objects/Functor.htm#BoundFunc">bound function</a> can be used to differentiate between multiple callbacks which all call the same script function.</p>
-    <p>The callback retains a reference to the function object, and releases it when the script calls <a href="#CallbackFree">CallbackFree</a>.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
+    <p>函数名或<a href="../objects/Functor.htm">函数对象</a>. 每当调用 <em>Address</em> 时会自动调用此函数. 此函数同时会接收到传递给 <em>Address</em> 的参数.</p>
+    <p><a href="../Functions.htm#closures">闭包</a>或<a href="../objects/Functor.htm#BoundFunc">绑定函数</a>可以用来区分多个回调函数调用相同的脚本函数.</p>
+    <p>回调函数保留对函数对象的引用, 并在脚本调用 <a href="#CallbackFree">CallbackFree</a> 时释放它.</p>
   </dd>
 
   <dt>Options</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>Specify zero or more of the following words or characters. Separate each option from the next with a space (e.g. <code>"C Fast"</code>).</p>
-    <p id="Fast"><strong>Fast</strong> or <strong>F</strong>: Avoids starting a new <a href="../misc/Threads.htm">thread</a> each time <em>FunctionName</em> is called. Although this performs better, it must be avoided whenever the thread from which <em>Address</em> is called varies (e.g. when the callback is triggered by an incoming message). This is because <em>FunctionName</em> will be able to change global settings such as <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a>, and the <a href="../misc/WinTitle.htm#LastFoundWindow">last-found window</a> for whichever thread happens to be running at the time it is called. For more information, 请参阅 <a href="#Threads">Remarks</a>.</p>
+    <p>指定零个或多个下列单词或字符串. 在选项间使用空格分隔(例如 <code>"C Fast"</code>).</p>
+    <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>Function</em> 时都启动新的<a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, it must be avoided whenever the thread from which <em>Address</em> is called varies (e.g. when the callback is triggered by an incoming message). This is because <em>FunctionName</em> will be able to change global settings such as <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a>, and the <a href="../misc/WinTitle.htm#LastFoundWindow">last-found window</a> for whichever thread happens to be running at the time it is called. For more information, 请参阅 <a href="#Threads">Remarks</a>.</p>
     <p><strong>CDecl</strong> or <strong>C</strong>: Makes <em>Address</em> conform to the &quot;C&quot; calling convention. This is typically omitted because the standard calling convention is much more common for callbacks. This option is ignored by 64-bit versions of AutoHotkey, which use the x64 calling convention.</p>
     <p><strong>&amp;</strong>: Causes the address of the parameter list (a single integer) to be passed to <em>Function</em> instead of the individual parameters. Parameter values can be retrieved by using <a href="NumGet.htm">NumGet</a>. When using the standard 32-bit calling convention, <em>ParamCount</em> must specify the size of the parameter list in DWORDs (the number of bytes divided by 4).</p>
   </dd>

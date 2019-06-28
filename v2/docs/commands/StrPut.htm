@@ -13,7 +13,7 @@
 
 <h1>StrPut</h1>
 
-<p>复制字符串到内存地址 or buffer, 可选地转换它到给定的代码页.</p>
+<p>复制字符串到内存地址或缓冲, 可选地转换它到给定的代码页.</p>
 
 <pre class="Syntax"><span class="func">StrPut</span> String <span class="optional">, Encoding := <i>None</i></span> 
 <span class="func">StrPut</span> String, Target <span class="optional">, Length</span> <span class="optional">, Encoding := <i>None</i></span>
@@ -31,9 +31,9 @@
   <dt>Target</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-    <p>A <a href="../objects/Buffer.htm">Buffer</a>-like object or memory address to which the string will be written.</p>
-    <p>Any object which implements <a href="../objects/Buffer.htm#Ptr">Ptr</a> and <a href="../objects/Buffer.htm#Size">Size</a> properties may be used, but this function is optimized for the native <a href="../objects/Buffer.htm">Buffer</a> object. Passing an object with these properties ensures that the function does not write memory to an invalid location; that could cause crashes or other unpredictable behaviour.</p>
-    <p class="warning"><strong>Note:</strong> If conversion between code pages is necessary, the required buffer size may differ from the size of the source string. For such cases, call StrPut with two parameters to calculate the required size.</p>
+    <p>类<a href="../objects/Buffer.htm">缓冲</a>对象或内存地址, 字符串将写入其中.</p>
+    <p>可以使用任何实现 <a href="../objects/Buffer.htm#Ptr">Ptr</a> 和 <a href="../objects/Buffer.htm#Size">Size</a> 属性的对象, 但此函数针对原生的<a href="../objects/Buffer.htm">缓冲</a>对象进行了优化. 传递具有这些属性的对象可确保函数不会将内存写入无效位置; 这可能会导致崩溃或其他不可预测的行为.</p>
+    <p class="warning"><strong>注意:</strong> 如果需要在代码页之间进行转换, 则所需的缓冲大小可能与源字符串的大小不同. 对于这种情况, 调用带有两个参数的 StrPut 来计算所需的大小.</p>
   </dd>
 
   <dt>Length</dt>
@@ -41,8 +41,8 @@
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>要写入的最大字符数, 需要时包含空终止符.</p>
     <p>如果 <em>Length</em> 为 0 或小于转换后的计划长度(或不需要转换时, 源字符串的长度), 则抛出异常.</p>
-    <p class="warning"><strong>Note:</strong> Specifying the length of <em>String</em> or a substring may be unsafe when <em>Encoding</em> is specified, as conversion may increase the length of the string.</p>
-    <p class="warning"><strong>Note:</strong> <em>Length</em> is measured in characters, whereas buffer sizes are usually measured in bytes, as is StrPut's return value. To specify the buffer size in bytes, use a <a href="../objects/Buffer.htm">Buffer</a>-like object in the <em>Target</em> parameter.</p>
+    <p class="warning"><strong>注意:</strong> 当指定 <em>Encoding</em> 时, 指定 <em>String</em> 或子字符串的长度可能是不安全的, 因为转换可能会增加字符串的长度.</p>
+    <p class="warning"><strong>注意:</strong> <em>Length</em> 是以字符数来计算的, StrPut 的返回值也是如此, 而缓冲大小通常以字节度量. 若要以字节为单位来指定缓冲大小, 请在 <em>Target</em> 参数中使用类<a href="../objects/Buffer.htm">缓冲</a>对象.</p>
   </dd>
 
   <dt>Encoding</dt>
@@ -66,30 +66,30 @@
 <pre>
 StrPut str, address, "cp0"  <em>; 代码页 0, 未指定长度</em>
 StrPut str, address, n, 0   <em>; 最大 n 字符, 代码页 0</em>
-StrPut str, address, 0      <em>; 不支持(maximum 0 chars)</em></pre>
+StrPut str, address, 0      <em>; 不支持(最大长度为 0 字符)</em></pre>
 
 <h2>相关</h2>
-<p><a href="../Concepts.htm#string-encoding">字符编码</a>, <a href="StrGet.htm">StrGet</a>, <a href="../Compat.htm">脚本兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="DllCall.htm">DllCall</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>
+<p><a href="../Concepts.htm#string-encoding">字符编码</a>, <a href="StrGet.htm">StrGet</a>, <a href="../Compat.htm">脚本兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="DllCall.htm">DllCall</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>
 
 <h2 id="ex1">示例</h2>
-<p>StrPut may be called once to calculate the required buffer size for a string in a particular encoding, then again to encode and write the string into the buffer.  The process can be simplified by adding one of these functions to your <a href="../Functions.htm#lib">library</a>:</p>
-<pre class="NoIndent"><em>; Returns a <a href="../objects/Buffer.htm">Buffer</a> object containing the string.</em>
+<p>可以调用一次 StrPut, 来计算特定编码中的字符串所需的缓冲大小, 然后再次对字符串进行编码并将其写入缓冲. 这个过程可以通过在你的<a href="../Functions.htm#lib">库</a>中添加以下函数来简化:</p>
+<pre class="NoIndent"><em>; 返回包含字符串的<a href="../objects/Buffer.htm">缓冲</a>对象.</em>
 StrBuf(string, encoding)
 {
-    <em>; Calculate required size and allocate a buffer.</em>
+    <em>; 计算所需的大小并分配缓冲.</em>
     buf := BufferAlloc(StrPut(string, encoding))
-    <em>; Copy or convert the string.</em>
+    <em>; 复制或转换字符串.</em>
     StrPut(string, buf, encoding)
     return buf
 }
 
-<em>; Stores the encoded string in a variable and returns a byte count.
-; Note: Buffer objects are recommended over variables.</em>
+<em>; 将编码后的字符串存储在变量中, 并返回字节数.
+; 注意: 建议使用缓冲对象而不是变量.</em>
 StrPutVar(string, ByRef var, encoding)
 {
-    <em>; Ensure capacity.</em>
+    <em>; 确定容量.</em>
     VarSetCapacity(var, StrPut(string, encoding))
-    <em>; Copy or convert the string.</em>
+    <em>; 复制或转换字符串.</em>
     return StrPut(string, &amp;var, encoding)
 }</pre>
 </body>

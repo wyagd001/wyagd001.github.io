@@ -55,88 +55,88 @@ return</pre>
   <code>:<strong>c*</strong>:j@::john@somedomain.com</code>.</li>
 </ol>
 <p>下面列表对每个选项进行说明. 当使用上面的方法指定多个选项时, 可以在选项间包含空格.</p>
-<p id="Asterisk"><strong>*</strong> (asterisk): An ending character (e.g. <kbd>Space</kbd>, <kbd>.</kbd>, or <kbd>Enter</kbd>) is not required to trigger the hotstring. 例如:</p>
+<p id="Asterisk"><strong>*</strong> (星号): 不需要终止符(例如 <kbd>Space</kbd>, <kbd>.</kbd> 或 <kbd>Enter</kbd>) 来触发热字串. 例如:</p>
 <pre>:*:j@::jsmith@somedomain.com</pre>
-<p>The example above would send its replacement the moment you type the @ character. When using the <a href="commands/_Hotstring.htm">#Hotstring directive</a>, use <strong>*0</strong> to turn this option back off.</p>
-<p id="Question"><strong>?</strong> (question mark): The hotstring will be triggered even when it is inside another word; that is, when the character typed immediately before it is alphanumeric. 例如, if <code>:?:al::airline</code> is a hotstring, typing &quot;practical &quot; would produce &quot;practicairline &quot;. Use <strong>?0</strong> to turn this option back off.</p>
-<p id="b0"><strong>B0</strong> (B followed by a zero): Automatic backspacing is <u>not</u> done to erase the abbreviation you type. Use a plain <strong>B</strong> to turn backspacing back on after it was previously turned off. A script may also do its own backspacing via {bs 5}, which sends 5 <kbd>Backspace</kbd> keystrokes. Similarly, it may send <kbd>&larr;</kbd> keystrokes via {left 5}. 例如, the following hotstring produces &quot;&lt;em&gt;&lt;/em&gt;&quot; and moves the caret 5 places to the left (so that it's between the tags):</p>
+<p>上面的示例会在您输入 @ 字符时立即进行替换. 当使用 <a href="commands/_Hotstring.htm">#Hotstring 指令</a>时, 可以使用 <strong>*0</strong> 来关闭此选项.</p>
+<p id="Question"><strong>?</strong> (问号): 即使热字串在另一个单词中也会被触发; 也就是说, 在它之前输入的字符是字母数字时. 例如, 如果 <code>:?:al::airline</code> 是热字串, 输入 &quot;practical &quot; 会产生 &quot;practicairline &quot;. 使用 <strong>?0</strong> 来关闭此选项.</p>
+<p id="b0"><strong>B0</strong> (B 后跟着零): <u>不</u> 自动退格来删除您输入的缩写. 关闭此选项后可以使用 <strong>B</strong> 来启用. 脚本还可以通过 {bs 5} 实现自己的退格, 这里发送 5 次 <kbd>Backspace</kbd> 键击. 类似的, 可以通过 {left 5} 发送 <kbd>&larr;</kbd> 键击. 例如, 下面的热字串产生 &quot;&lt;em&gt;&lt;/em&gt;&quot; 并把光标向左移动 5 个位置(这样光标就在标签之间了):</p>
 <pre>:*b0:&lt;em&gt;::&lt;/em&gt;{left 5}</pre>
-<p id="C"><strong>C</strong>: Case sensitive: When you type an abbreviation, it must exactly match the case defined in the script. Use <strong>C0</strong> to turn case sensitivity back off.</p>
-<p id="C1"><strong>C1</strong>: Do not conform to typed case. Use this option to make <a href="#auto">auto-replace hotstrings</a> case insensitive and prevent them from conforming to the case of the characters you actually type. Case-conforming hotstrings (which are the default) produce their replacement text in all caps if you type the abbreviation in all caps. If you type the first letter in caps, the first letter of the replacement will also be capitalized (if it is a letter). If you type the case in any other way, the replacement is sent exactly as defined. When using the <a href="commands/_Hotstring.htm">#Hotstring directive</a>, <strong>C0</strong> can be used to turn this option back off, which makes hotstrings conform again.</p>
-<p id="Kn"><strong>Kn</strong>: Key-delay: This rarely-used option sets the delay between keystrokes produced by auto-backspacing or <a href="#auto">auto-replacement</a>. Specify the new delay for <strong>n</strong>; 例如, specify k10 to have a 10ms delay and k-1 to have no delay. The exact behavior of this option depends on which <a href="#SendMode">sending mode</a> is in effect:</p>
+<p id="C"><strong>C</strong>: 区分大小写: 当您输入缩写时, 它必须准确匹配脚本中定义的大小写形式. 使用 <strong>C0</strong> 可以关闭区分大小写的特性.</p>
+<p id="C1"><strong>C1</strong>: 不遵循输入的大小写形式. 使用此选项可以让<a href="#auto">自动替换热字串</a>不区分大小写且阻止它们遵循您实际输入字符的大小写形式. 遵循大小写形式的热字串(这是默认状态) 会在您输入的缩写都为大写时产生大写形式的的替换文本. 如果您的输入的首字母为大写, 那么替换的首字母也会为标题格式(大写, 如果首个字符是字母). 您按其他任何大小写形式输入时, 替换会准确按照定义进行发送. 如果在 <a href="commands/_Hotstring.htm">#Hotstring 指令</a>中含有此选项, 那么可以使用 <strong>C0</strong> 来关闭它, 这样可以让热字串重新遵循大小写.</p>
+<p id="Kn"><strong>Kn</strong>: 按键延迟: 这个较少使用的选项设置在自动退格或<a href="#auto">自动替换</a>产生的键击之间的延迟. 通过 <strong>n</strong> 指定新的延迟; 例如, 指定 k10 来设置 10ms 的延迟, 而 k-1 则取消延迟. 此选项的实际效果取决于当前生效的<a href="#SendMode">发送模式</a>:</p>
 <ul>
-  <li>SI (SendInput): Key-delay is ignored because a delay is not possible in this mode. The exception to this is when SendInput is <a href="commands/Send.htm#SendInputUnavail">unavailable</a>, in which case hotstrings revert to SendPlay mode below (which does obey key-delay).</li>
-  <li>SP (SendPlay): A delay of length zero is the default, which for SendPlay is the same as -1 (no delay). In this mode, the delay is actually a <a href="commands/SetKeyDelay.htm#dur">PressDuration</a> rather than a delay between keystrokes.</li>
-  <li>SE (SendEvent): A delay of length zero is the default. Zero is recommended for most purposes since it is fast but still cooperates well with other processes (due to internally doing a <a href="commands/Sleep.htm">Sleep 0</a>). Specify k-1 to have no delay at all, which is useful to make auto-replacements faster if your CPU is frequently under heavy load. When set to -1, a script's process-priority becomes an important factor in how fast it can send keystrokes. To raise a script's priority, use <code><a href="commands/ProcessSetPriority.htm">ProcessSetPriority</a> "High"</code>.</li>
+  <li>SI (SendInput): 由于此模式是没有延迟的, 所以按键延迟会被忽略. 例外是当 SendInput <a href="commands/Send.htm#SendInputUnavail">不可用时</a>, 此时热字串会恢复到下面的 SendPlay 模式(它会遵循按键延迟).</li>
+  <li>SP (SendPlay): 默认延迟为零, 这对于 SendPlay 相当于 -1(没有延迟). 此模式中, 这个延迟实际是<a href="commands/SetKeyDelay.htm#dur">按住时长</a>, 而不是键击之间的延迟.</li>
+  <li>SE (SendEvent): 默认延迟为零. 在大多情况下建议使用零的延迟, 因为这样快速且与其他进程配合比较好(由于会内部执行 <a href="commands/Sleep.htm">Sleep 0</a>). 指定 k-1 则不使用延迟, 这样可以在您 CPU 经常高负荷运行时让自动替换更快速地进行. 设置为 -1 时, 脚本的进程优先级会成为键击发送速度的重要因素. 要提升脚本的优先级, 请使用 <code><a href="commands/ProcessSetPriority.htm">ProcessSetPriority</a> "High"</code>.</li>
 </ul>
-<p id="O"><strong>O</strong>: Omit the ending character of <a href="#auto">auto-replace hotstrings</a> when the replacement is produced. This is useful when you want a hotstring to be kept unambiguous by still requiring an ending character, but don't actually want the ending character to be shown on the screen. 例如, if <code>:o:ar::aristocrat</code> is a hotstring, typing &quot;ar&quot; followed by the spacebar will produce &quot;aristocrat&quot; with no trailing space, which allows you to make the word plural or possessive without having to press <kbd>Backspace</kbd>. Use <strong>O0</strong> (the letter O followed by a zero) to turn this option back off.</p>
-<p id="Pn"><strong>Pn</strong>: The <a href="misc/Threads.htm">priority</a> of the hotstring (e.g. P1). This rarely-used option has no effect on <a href="#auto">auto-replace hotstrings</a>.</p>
-<p id="raw"><strong>R</strong>: Send the replacement text <a href="commands/Send.htm#SendRaw">raw</a>; that is, without translating {Enter} to <kbd>Enter</kbd>, ^c to <kbd>Control</kbd>+<kbd>C</kbd>, etc. Use <strong>R0</strong> to turn this option back off, or override it with <strong>T</strong>.</p>
-<p class="note"><strong>Note:</strong> <a href="#T">Text mode</a> may be more reliable. The R and T options are mutually exclusive.</p>
-<p id="SendMode"><strong>SI</strong> or <strong>SP</strong> or <strong>SE</strong>: Sets the method by which <a href="#auto">auto-replace hotstrings</a> send their keystrokes. These options are mutually exclusive: only one can be in effect at a time. The following describes each option:</p>
+<p id="O"><strong>O</strong>: 进行替换时忽略<a href="#auto">自动替换热字串</a>的终止符. 它可以用于当您希望使用终止符让热字串保持清晰, 却不希望终止符显示在屏幕上的时候. 例如, 如果 <code>:o:ar::aristocrat</code> 为热字串, 那么输入 &quot;ar&quot; 后跟着空格键会产生不含尾随空格的 &quot;aristocrat&quot;, 这样可以让您不需要按住 <kbd>Backspace</kbd> 的情况下补上单词的复数或所有格形式. 使用 <strong>O0</strong>(字母 O 后跟着零)) 来关闭此选项.</p>
+<p id="Pn"><strong>Pn</strong>: 字符串的<a href="misc/Threads.htm">优先级</a>(例如 P1). 这个较少使用的选项对<a href="#auto">自动替换热字串</a>没有效果.</p>
+<p id="raw"><strong>R</strong>: 发送替换文本的<a href="commands/Send.htm#SendRaw">原始文本</a>; 即, 不把 {Enter} 转换成 <kbd>Enter</kbd>, ^c 转换成 <kbd>Control</kbd>+<kbd>C</kbd>, 等等. 使用 <strong>R0</strong> 来关闭此选项, 或用 <strong>T</strong> 来覆盖.</p>
+<p class="note"><strong>注意:</strong> <a href="#T">Text 文本模式</a>可能更可靠. R 选项和 T 选项是互相排斥的.</p>
+<p id="SendMode"><strong>SI</strong>, <strong>SP</strong> 或 <strong>SE</strong>: 设置<a href="#auto">自动替换热字串</a>发送键击的方法. 这些选项是互相排斥的: 每次只有一个生效. 下面对每个选项进行说明:</p>
 <ul>
-  <li>SI stands for <a href="commands/Send.htm#SendInputDetail">SendInput</a>, which typically has superior speed and reliability than the other modes. Another benefit is that like SendPlay below, SendInput postpones anything you type during a hotstring's <a href="#auto">auto-replacement text</a>. This prevents your keystrokes from being interspersed with those of the replacement. When SendInput is <a href="commands/Send.htm#SendInputUnavail">unavailable</a>, hotstrings automatically use SendPlay instead.</li>
-  <li>SP stands for <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>, which may allow hotstrings to work in a broader variety of games.</li>
-  <li>SE stands for <a href="commands/Send.htm#SendEvent">SendEvent</a>.</li>
+  <li>SI 代表 <a href="commands/Send.htm#SendInputDetail">SendInput</a>, 它通常比其他模式拥有较好的速度和可靠性. 另一个好处是和下面的 SendPlay 一样, SendInput 会在热字串 <a href="#auto">自动替换文本</a>时延迟您输入的内容. 这样避免了您的键击穿插到替换的内容中. 当 SendInput <a href="commands/Send.htm#SendInputUnavail">不可用时</a>, 热字串会自动使用 SendPlay.</li>
+  <li>SP 代表 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a>, 它可以让热字串在更大范围的游戏中运行.</li>
+  <li>SE 代表 <a href="commands/Send.htm#SendEvent">SendEvent</a>.</li>
 </ul>
-<p>If none of the above options are used, the default mode is SendInput. However, unlike the SI option, SendEvent is used instead of SendPlay when SendInput is unavailable.</p>
-<p id="T"><strong>T</strong>: Send the replacement text using <a href="commands/Send.htm#SendText">Text mode</a>. That is, send each character by character code, without translating {Enter} to <kbd>Enter</kbd>, ^c to <kbd>Control</kbd>+<kbd>C</kbd>, etc. and without translating each character to a keystroke. This option is put into effect automatically for hotstrings that have a <a href="#continuation">continuation section</a>. Use <strong>T0</strong> or <strong>R0</strong> to turn this option back off, or override it with <strong>R</strong>.</p>
-<p id="X"><strong>X</strong>: Execute. Instead of replacement text, the hotstring accepts a command or expression to execute. 例如, <code>:X:~mb::MsgBox</code> would cause a message box to be displayed when the user types "~mb" instead of auto-replacing it with the word "MsgBox". This is most useful when defining a large number of hotstrings which call functions, as it would otherwise require three lines per hotstring.</p>
-<p>When used with the <a href="commands/Hotstring.htm">Hotstring</a> function, the X option causes the <em>Replacement</em> parameter to be interpreted as a label or function name instead of replacement text. However, the X option has this effect only if it is specified each time the function is called.</p>
-<p id="z"><strong>Z</strong>: This rarely-used option resets the hotstring recognizer after each triggering of the hotstring. In other words, the script will begin waiting for an entirely new hotstring, eliminating from consideration anything you previously typed. This can prevent unwanted triggerings of hotstrings. To illustrate, consider the following hotstring:</p>
+<p>如果未使用上面的任何一个选项, 则默认为 SendInput. 然而, 与 SI 选项不同的是, 在 SendInput 不可用时会使用 SendEvent 而不是 SendPlay.</p>
+<p id="T"><strong>T</strong>: 使用<a href="commands/Send.htm#SendText">文本模式</a> 发送替换文本. 也就是说, 按字符代码发送每个字符, 不转换 {Enter} 为 <kbd>Enter</kbd>, ^c 为 <kbd>Control</kbd>+<kbd>C</kbd>, 等等. 不需要将每个字符转换为击键. 对于具有<a href="#continuation">延续片段</a>的热字符串, 此选项将自动生效. 使用 <strong>T0</strong> 或 <strong>R0</strong> 来关闭此选项, 或使用 <strong>R</strong> 来覆盖.</p>
+<p id="X"><strong>X</strong>: 执行. 取代替换文本, 热字串接受一个命令或表达式来执行. 例如, <code>:X:~mb::MsgBox</code> 会在用户输入 "~mb"时显示一个消息框, 而不是用 "MsgBox" 自动替换. 这在定义大量调用函数的热字符串时最有用, 否则每个热字串都需要三行.</p>
+<p>当与<a href="commands/Hotstring.htm">热字串</a>函数一起使用时, X 选项会把 <em>Replacement</em> 参数解释为标签或函数名, 而不是替换文本. 但是, 只有在每次调用函数时指定 X 选项时才会有这种效果.</p>
+<p id="z"><strong>Z</strong>: 这个较少使用的选项会在每次热字串触发后重置热字串识别器. 换句话说, 脚本将开始等待一个全新的热字符串, 从而不考虑您之前键入的任何内容. 这可以防止触发不必要的热字串. 要说明这一点, 请参考以下热字串:</p>
 <pre>:b0*?:11::
 SendInput "xx"
 return</pre>
-<p>Since the above lacks the Z option, typing 111 (three consecutive 1's) would trigger the hotstring twice because the middle 1 is the <em>last</em> character of the first triggering but also the <em>first</em> character of the second triggering. By adding the letter Z in front of b0, you would have to type four 1's instead of three to trigger the hotstring twice. Use <strong>Z0</strong> to turn this option back off.</p>
+<p>由于上面没有使用 Z 选项, 所以输入 111(三个连续的 1) 会触发热字串两次, 因为中间的 1 既是首次触发的 <em>末尾</em> 字符, 又是第二次触发的 <em>起始</em> 字符. 在 b0 前面加上字母 Z 后, 您必须输入四个 1 而不是三个才能触发热键两次. 使用 <strong>Z0</strong> 来关闭此选项.</p>
 <h2 id="continuation">长替换</h2>
-<p>Hotstrings that produce a large amount of replacement text can be made more readable and maintainable by using a <a href="Scripts.htm#continuation">continuation section</a>. 例如:</p>
+<p>通过使用<a href="Scripts.htm#continuation">延续片段</a>的方法可以让产生大量替换文本的热字串更具有可读性和可维护性. 例如:</p>
 <pre>::text1::
 (
 Any text between the top and bottom parentheses is treated literally.
 By default, the hard carriage return (Enter) between the previous line and this one is also preserved.
     By default, the indentation (tab) to the left of this line is preserved.
 )</pre>
-<p>See <a href="Scripts.htm#continuation">continuation section</a> for how to change these default behaviors. The presence of a continuation section also causes the hotstring to default to <a href="#T">Text mode</a>. The only way to override this special default is to specify an opposing option in each hotstring that has a continuation section (e.g. <code>:t0:text1::</code> or <code>:r:text2::</code>).</p>
+<p>有关如何更改这些默认行为的信息, 请参阅<a href="Scripts.htm#continuation">延续片段</a>. 延续片段的存在也会使热字串默认为<a href="#T">文本模式</a>. 覆盖此特性的唯一方法是在每个具有延续片段的热字串中指定相反的选项(例如 <code>:t0:text1::</code> 或 <code>:r:text2::</code>).</p>
 <h2 id="variant">上下文相关的热字串</h2>
-<p>The <a href="commands/_If.htm">#If</a> directive can be used to make selected hotstrings context sensitive. Such hotstrings send a different replacement, perform a different action, or do nothing at all depending on any condition, such as the type of window that is active. 例如:</p>
+<p>使用 <a href="commands/_If.htm">#If</a> 指令可以让选择的热字串产生上下文相关性. 这样的热字符串根据任意条件(比如活动窗口的类型) 来发送不同的替换, 执行不同的操作, 或者什么都不做. 例如:</p>
 <pre>#If WinActive("ahk_class Notepad")
 ::btw::This replacement text will appear only in Notepad.
 #If
 ::btw::This replacement text appears in windows other than Notepad.</pre>
 
 <h2 id="AutoCorrect">自动更正</h2>
-<p>The following script uses hotstrings to correct about 4700 common English misspellings on-the-fly. It also includes a <kbd>Win</kbd>+<kbd>H</kbd> hotkey to make it easy to add more misspellings:</p>
-<p>Download: <a href="http://www.autohotkey.com/download/AutoCorrect.ahk">AutoCorrect.ahk</a> (127 KB)</p>
-<p>Author: <a href="http://www.biancolo.com/blog/autocorrect/">Jim Biancolo</a> and <a href="http://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings">Wikipedia's Lists of Common Misspellings</a></p>
+<p>下面的脚本使用热字串即时更正大约 4700 个常见的英文拼写错误. 它还包含了 <kbd>Win</kbd>+<kbd>H</kbd> 热键来方便地添加更多拼写错误:</p>
+<p>下载: <a href="http://www.autohotkey.com/download/AutoCorrect.ahk">AutoCorrect.ahk</a> (127 KB)</p>
+<p>作者: <a href="http://www.biancolo.com/blog/autocorrect/">Jim Biancolo</a> 和<a href="http://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings">维基百科的常见拼写错误列表</a></p>
 
 <h2 id="remarks">备注</h2>
-<p><a href="Variables.htm#Expressions">Expressions</a> are not currently supported within the replacement text. To work around this, don't make such hotstrings <a href="#auto">auto-replace</a>. Instead, use the <a href="commands/Send.htm#SendInput">SendInput</a> function beneath the abbreviation, followed by a line containing only the word Return.</p>
-<p>To send an extra space or tab after a replacement, include the space or tab at the end of the replacement but make the last character an accent/backtick (`). 例如:</p>
+<p>目前不支持替换文本中使用<a href="Variables.htm#Expressions">表达式</a>. 要解决此问题, 请不要让这样的热字串<a href="#auto">自动替换</a>. 而是在缩写的下面使用 <a href="commands/Send.htm#SendInput">SendInput</a> 函数, 后跟着仅包含单词 Return 的行.</p>
+<p>要在替换文本后发送额外的空格或 tab, 可以把它们加在替换文本后, 但需要在末尾加上重音符/反引号(`). 例如:</p>
 <pre>:*:btw::By the way `</pre>
-<p id="NoMouse">By default, any click of the left or right mouse button will reset the hotstring recognizer. In other words, the script will begin waiting for an entirely new hotstring, eliminating from consideration anything you previously typed (if this is undesirable, specify the line <code><a href="commands/_Hotstring.htm">#Hotstring</a> NoMouse</code> anywhere in the script). This &quot;reset upon mouse click&quot; behavior is the default because each click typically moves the text insertion point (caret) or sets keyboard focus to a new control/field. In such cases, it is usually desirable to: 1) fire a hotstring even if it lacks the <a href="#Question">question mark option</a>; 2) prevent a firing when something you type after clicking the mouse accidentally forms a valid abbreviation with what you typed before.</p>
-<p id="focus-reset">The hotstring recognizer checks the active window each time a character is typed, and resets if a different window is active than before. If the active window changes but reverts before any characters are typed, the change is not detected (but the hotstring recognizer may be reset for some other reason). The hotstring recognizer can also be reset by calling <code><a href="commands/Hotstring.htm#Reset">Hotstring "Reset"</a></code>.</p>
-<p>The built-in variable <strong>A_EndChar</strong> contains the ending character that you typed to trigger the most recent non-auto-replace hotstring. If no ending character was required (due to the <a href="#Asterisk">* option</a>), it will be blank. A_EndChar is useful when making hotstrings that use the Send function or whose behavior should vary depending on which ending character you typed. To send the ending character itself, use <code>SendText A_EndChar</code> (<a href="commands/Send.htm">SendText</a> is used because characters such as !{} would not be sent correctly by the normal Send function).</p>
-<p>Although single-colons within hotstring definitions do not need to be <a href="misc/EscapeChar.htm">escaped</a> unless they precede the double-colon delimiter, backticks and those semicolons having a space or tab to their left must always be escaped. See <a href="misc/EscapeChar.htm">escape sequences</a> for a complete list.</p>
-<p>Although the <a href="commands/Send.htm">Send function</a>'s special characters such as {Enter} are supported in <a href="#auto">auto-replacement text</a> (unless the <a href="#raw">raw option</a> is used), the hotstring abbreviations themselves do not use this. Instead, specify `n for the <kbd>Enter</kbd> key and `t (or a literal tab) for <kbd>Tab</kbd> (see <a href="misc/EscapeChar.htm">escape sequences</a> for a complete list). 例如, the hotstring <code>:*:ab`t::</code> would be triggered when you type &quot;ab&quot; followed by a tab.</p>
-<p>Spaces and tabs are treated literally within hotstring definitions. 例如, the following would produce two different results: <code>::btw::by the way</code> and <code>::btw:: by the way</code>.</p>
-<p>Each hotstring abbreviation can be no more than 40 characters long. The program will warn you if this length is exceeded. By contrast, the length of hotstring's replacement text is limited to about 5000 characters when the <a href="#SendMode">sending mode</a> is at its default of SendInput. That limit can be increased to 16,383 characters by switching to one of the other <a href="#SendMode">sending modes</a>. Furthermore, an unlimited amount of text can be sent by using <code><a href="commands/Send.htm#SendPlayDetail">SendPlay</a> MyVariable</code> in the body of the hotstring.</p>
-<p>The order in which hotstrings are defined determines their precedence with respect to each other. In other words, if more than one hotstring matches something you type, only the one listed first in the script will take effect. Related topic: <a href="#variant">context-sensitive hotstrings</a>.</p>
-<p>Any backspacing you do is taken into account for the purpose of detecting hotstrings. However, the use of <kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PageUp</kbd>, <kbd>PageDown</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd> to navigate within an editor will cause the hotstring recognition process to reset. In other words, it will begin waiting for an entirely new hotstring.</p>
-<p>A hotstring may be typed even when the active window is ignoring your keystrokes. In other words, the hotstring will still fire even though the triggering abbreviation is never visible. In addition, you may still press the <kbd>Backspace</kbd> key to undo the most recently typed keystroke (even though you can't see the effect).</p>
-<p id="label">It is possible to <a href="commands/Gosub.htm">Gosub</a> or <a href="commands/Goto.htm">Goto</a> a hotstring label by including its first pair of colons (including any option symbols) in front of its name. 例如: <code>Gosub ::xyz</code>. However, jumping to a <a href="#auto">single-line (auto-replace) hotstring</a> will do nothing other than execute a <a href="commands/Return.htm">return</a>.</p>
-<p>Although hotstrings are not monitored and will not be triggered during the course of an invisible <a href="commands/Input.htm">Input</a> function, visible Inputs are capable of triggering them.</p>
-<p id="InputLevel">By default, hotstrings are never triggered by keystrokes produced by any AutoHotkey script. This avoids the possibility of an infinite loop where hotstrings trigger each other over and over. This behaviour can be controlled with <a href="commands/_InputLevel.htm">#InputLevel</a> and <a href="commands/SendLevel.htm">SendLevel</a>. However, auto-replace hotstrings always use send level 0 and therefore never trigger <a href="commands/_UseHook.htm">hook hotkeys</a> or hotstrings.</p>
-<p>Hotstrings can be created dynamically by means of the <a href="commands/Hotstring.htm">Hotstring</a> function, which can also modify, disable, or enable the script's existing hotstrings individually.</p>
-<p>The <a href="commands/Input.htm">Input</a> function is more flexible than hotstrings for certain purposes. 例如, it allows your keystrokes to be invisible in the active window (such as a game). It also supports non-character ending keys such as <kbd>Escape</kbd>.</p>
-<p>The <a href="commands/_InstallKeybdHook.htm">keyboard hook</a> is automatically used by any script that contains hotstrings.</p>
-<p>Hotstrings behave identically to hotkeys in the following ways:</p>
+<p id="NoMouse">默认情况下, 鼠标左键或右键的任何点击都会重置热字串识别器. 换句话说, 脚本将开始等待全新的热字串, 而不考虑您之前输入的任何内容(如果您不希望这样, 请在脚本的任意位置指定一行 <code><a href="commands/_Hotstring.htm">#Hotstring</a> NoMouse</code>). "鼠标点击时重置" 的行为是默认的, 因为每次点击通常会移动插入点(光标) 或设置键盘焦点到新的控件/区域. 在这种情况下, 通常希望: 1) 即使没有<a href="#Question">问号选项</a>也触发热键; 2) 防止您在点击鼠标后输入的一些内容与之前输入的内容意外形成有效的缩写从而触发热字串.</p>
+<p id="focus-reset">每次输入字符时, 热字串识别器会检查当前活动窗口, 并且如果活动窗口不同于之前, 则会重置. 如果活动窗口发生变化, 但在键入任何字符之前返回, 则不会检测到更改(但可能会由于其他原因重置热字串识别器). 热字串识别器也可以通过调用 <code><a href="commands/Hotstring.htm#Reset">Hotstring "Reset"</a></code> 来重置.</p>
+<p>内置变量 <strong>A_EndChar</strong> 包含了触发最近的非自动替换热字串时的终止符. 如果不需要终止符(使用了 <a href="#Asterisk">* 选项</a>), 那么它会被置空.  可以用于使用 Send 命令的热字串或根据您输入的不同终止符改变行为的那些热字串. 要发送终止符自身, 请使用 <code>SendText A_EndChar</code>(使用 <a href="commands/Send.htm">SendText</a> 是因为普通的 Send 函数无法正确发送类似 !{} 这样的字符).</p>
+<p>虽然热字符串定义中的单冒号不需要<a href="misc/EscapeChar.htm">转义</a>, 除非它们位于双冒号分隔符之前, 但那些左边有空格或制表符的反引号和分号必须始终被转义. 有关完整列表, 请参阅<a href="misc/EscapeChar.htm">转义序列</a>.</p>
+<p>尽管 <a href="commands/Send.htm">Send 函数</a>的特殊字符(如 {Enter}) 在<a href="#auto">自动替换文本</a>中受到支持(除非使用 <a href="#raw">raw 选项</a>), 但是热字串缩写本身并不使用此功能. 相反, 指定 `n 表示 <kbd>Enter</kbd> 键和 `t(或原义制表符) 表示 <kbd>Tab</kbd>(有关完整列表, 请参阅<a href="misc/EscapeChar.htm">转义序列</a>). 例如, 当您输入 &quot;ab&quot; 后跟着 tab 时, 会触发热字串 <code>:*:ab`t::</code>.</p>
+<p>热字串会原义地处理在它的定义中的空格和 tab. 例如, 后面的热字串会产生两种不同的效果: <code>::btw::by the way</code> 和 <code>::btw:: by the way</code>.</p>
+<p>每个热字串缩写的长度不能超过 40 个字符. 超出此长度后程序会向您发出警告. 相比之下, 当<a href="#SendMode">发送模式</a>默认为 SendInput 时, 热字串的替换文本的长度限制在 5000 个字符左右. 通过切换到其他<a href="#SendMode">发送模式</a>可以把此限制增加到 16,383 个字符. 此外, 在热字串的主体使用 <code><a href="commands/Send.htm#SendPlayDetail">SendPlay</a> MyVariable</code>, 可以发送不限数量的文本.</p>
+<p>热字串的定义顺序决定了它们之间的优先级. 换句话说, 如果多个热字串匹配您输入的内容, 那么只有脚本中首先列出的那个会生效. 相关主题: <a href="#variant">上下文相关的热字串</a>.</p>
+<p>为了识别热字串, 您输入的所有退格都会被考虑在内. 但是, 使用 <kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PageUp</kbd>, <kbd>PageDown</kbd>, <kbd>Home</kbd> 和 <kbd>End</kbd> 在编辑器中导航会重置热字串识别进程. 换句话说, 它将开始等待一个全新的热字串.</p>
+<p>即使当前活动窗口忽略您的键击时也可以输入热字串. 换句话说, 即使触发的缩略词不可见时热字串仍会被触发. 此外, 您还可以使用 <kbd>Backspace</kbd> 键撤销最近输入的键击(尽管您无法看到效果).</p>
+<p id="label">通过在热字串标签名称前包含第一对冒号(以及所有选项符号), 热字串标签可以成为 <a href="commands/Gosub.htm">Gosub</a> 或 <a href="commands/Goto.htm">Goto</a> 的目标. 例如: <code>Gosub ::xyz</code>. 然而, 跳转到<a href="#auto">单行的热字串(自动替换)</a> 时, 除了执行 <a href="commands/Return.htm">return</a> 外什么都不会去做.</p>
+<p>尽管在不可见的 <a href="commands/Input.htm">Input</a> 函数中, 热字串不受监控, 也不会被触发, 但是可见的 Input 却能触发它们.</p>
+<p id="InputLevel">默认情况下, 由任何 AutoHotkey 脚本生成的键击永远不会触发热字串. 这避免了热字串彼此反复地触发而形成的无限循环的可能性. 此行为可以使用 <a href="commands/_InputLevel.htm">#InputLevel</a> 和 <a href="commands/SendLevel.htm">SendLevel</a>. 进行控制. 然而, 自动替换型热字串的发送级别总为 0, 因此永远不会触发<a href="commands/_UseHook.htm">钩子热键</a>或热字串.</p>
+<p>热字串可以通过 <a href="commands/Hotstring.htm">Hotstring</a> 函数动态创建, 它还可以单独修改, 禁用, 或启用脚本的现有的热字串.</p>
+<p>在某些时候 <a href="commands/Input.htm">Input</a> 函数比热字串更灵活. 例如, 它可以对活动窗口(例如游戏) 隐藏您的键击. 它还支持非字符型的终止键, 如 <kbd>Escape</kbd>.</p>
+<p>任何包含热字串的脚本会自动使用<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
+<p>在下列的情况中热字串与热键具有相同的特性:</p>
 <ul>
-  <li>They are affected by the <a href="commands/Suspend.htm">Suspend</a> function.</li>
-  <li>They obey <a href="commands/_MaxThreads.htm">#MaxThreads</a> and <a href="commands/_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> (but not <a href="commands/_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>).</li>
-  <li>Scripts containing hotstrings are automatically <a href="Scripts.htm#persistent">persistent</a>.</li>
-  <li>Non-auto-replace hotstrings will create a new <a href="misc/Threads.htm">thread</a> when launched. In addition, they will update the built-in hotkey variables such as <a href="Variables.htm#ThisHotkey">A_ThisHotkey</a>.</li>
+  <li>它们都受 <a href="commands/Suspend.htm">Suspend</a> 函数影响.</li>
+  <li>它们都遵循 <a href="commands/_MaxThreads.htm">#MaxThreads</a> 和 <a href="commands/_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 的设置(但不遵循 <a href="commands/_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>).</li>
+  <li>包含热字串的脚本会自动变为<a href="Scripts.htm#persistent">持续运行的</a>.</li>
+  <li>非自动替换热字串在运行时会创建新的<a href="misc/Threads.htm">线程</a>. 此外, 它们会更新内置热键变量(如 <a href="Variables.htm#ThisHotkey">A_ThisHotkey</a>).</li>
 </ul>
-<p>Known limitation: On some systems in Java applications, hotstrings might interfere with the user's ability to type diacritical letters (via dead keys).  To work around this, <a href="commands/Suspend.htm">Suspend</a> can be turned on temporarily (which disables all hotstrings).</p>
+<p>已知限制: 在某些系统的 Java 应用程序中, 热字串可能会干扰用户输入变音符字母(通过 dead 键). 为了解决此问题, 可以临时打开 <a href="commands/Suspend.htm">Suspend</a>(这样禁用了所有热字串).</p>
 
 <h2 id="Function">函数热字串</h2>
 <p>一个或多个热字串可以关联到一个<a href="Functions.htm">函数</a>, 只需在热字串标签后立即定义该函数, 如下例所示:</p>
