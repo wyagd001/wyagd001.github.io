@@ -257,10 +257,12 @@ Send Hello`, world!
 <p>字符串中的每个字符都可以用一个名为 <em>序号</em> 或 <em>字符编码</em> 的数字表示. 例如, 值 &quot;Abc&quot; 将被表示如下:</p>
 <table class="info" style="width: 8em; text-align: center">
   <tr><td>A</td><td>b</td><td>c</td></tr>
-  <tr><td>65</td><td>98</td><td>99</td></tr>
+  <tr><td>65</td><td>98</td><td>99</td><td>0</td></tr>
 </table>
-<p>字符串的 <em>编码</em> 是将数字映射到符号的方式. 有许多不同的编码, 但是由于所有由 AutoHotkey 支持的编码都包含 ASCII 作为子集, 所以字符编码 0 到 127 总是具有相同的含义. 例如, 'A' 的字符编码总是 65.</p>
-<p>虽然 AutoHotkey 提供了以各种编码方式处理文本的方法, 但是内置的命令和函数--在某种程度上包括语言本身--都假定字符串值是在一个特定的编码中. 这被称为 <em>原生</em> 编码. 原生编码取决于 AutoHotkey 的版本:</p>
+<p><strong>编码:</strong> 字符串的 <em>编码</em> 定义了符号如何映射到序数, 以及序数到字节. 尽管有许多不同的编码, 但是由于所有由 AutoHotkey 支持的编码都包含 ASCII 作为子集, 所以字符编码 0 到 127 总是具有相同的含义. 例如, 'A' 的字符编码总是 65.</p>
+<p id="null-termination"><strong>空终止符:</strong> 每个字符串都以 "空终止符" 结束, 换句话说, 二进制值为零的字符标志着字符串的结束. 字符串的长度不需要存储, 因为它可以通过空终止符的位置推断出来. 为了提高性能, AutoHotkey 有时也存储长度, 比如字符串存储在变量中时.</p>
+<p class="warning"><strong>注意:</strong> 由于依赖于空终止符, AutoHotkey v1 通常不支持包含空终止符的字符串. 可以使用 <a href="commands/VarSetCapacity.htm">VarSetCapacity</a> 和 <a href="commands/NumPut.htm">NumPut</a> 或 <a href="commands/DllCall.htm">DllCall</a> 创建这样的字符串, 但是可能会产生不一致的结果.</p>
+<p id="native-encoding"><strong>原生编码:</strong> 尽管 AutoHotkey 提供了使用各种编码处理文本的方法, 但是内置的命令和函数--在某种程度上包括语言本身--都假定字符串值是在一个特定的编码中. 这被称为 <em>原生</em> 编码. 原生编码取决于 AutoHotkey 的版本:</p>
 <ul>
   <li>
 <p>AutoHotkey 的 Unicode 版本使用 UTF-16. UTF-16 字符串中最小的元素是两个字节(16 位). 序号在 0 到 65535(U+FFFF) 范围内的 Unicode 字符是由一个与序号相等的单一的 16 位编码单元来表示, 而在 65536(U+10000) 到 1114111(U+10FFFF) 范围内的字符是由 <em>代理项对</em> 表示的; 也就是说, 需要在 0xD800 和 0xDFFF 范围内的两个 16 位编码单元来表示一个字符. (关于代理项对的进一步解释以及对它们进行编码或解码的方法, 请自行在网上搜索.)(译者注: 基本字符 "一" 的序号为 19968 相等的编码为 0x4E00, 扩展字符 "&#150370;" 的编码由代理项对表示为 0xD852 0xDF62)</p>
@@ -269,9 +271,9 @@ Send Hello`, world!
 <p>AutoHotkey 的 ANSI 版本使用系统默认的 ANSI 代码页, 这取决于系统区域设置或 &quot;非 Unicode 程序的语言&quot; 系统设置. ANSI 字符串的最小元素是一个字节(8 位). 但是, 某些代码页包含由多个字节序列表示的字符(这些字符总是非 ASCII 字符).</p>
 </li>
 </ul>
-<p>一般来说, 本文档的其他部分使用的术语 &quot;字符&quot; 表示的是字符串的最小单位; ANSI 字符串的字节和 Unicode 字符串的 16 位编码单元. 出于实际的原因, 字符串的长度和字符串中的位置是通过计数这些固定大小的单位来测量的, 尽管它们可能不是完整的 Unicode 字符.</p>
+<p id="character"><strong>字符:</strong> 一般来说, 本文档的其他部分使用的术语 &quot;字符&quot; 表示的是字符串的最小单位; ANSI 字符串的字节和 Unicode(UTF-16) 字符串的 16 位编码单元. 出于实际的原因, 字符串的长度和字符串中的位置是通过计数这些固定大小的单位来测量的, 尽管它们可能不是完整的 Unicode 字符.</p>
 <p><a href="commands/FileRead.htm">FileRead</a>, <a href="commands/FileAppend.htm">FileAppend</a>, <a href="commands/FileOpen.htm">FileOpen</a> 和 <a href="objects/File.htm">File 对象</a>提供了在具有特定编码的文件中读写文本的方法.</p>
-<p><a href="commands/StrPutGet.htm">StrGet 和 StrPut</a> 函数可用于在原生编码和某些其他指定编码之间转换字符串. 但是, 这些通常只与数据结构和 <a href="commands/DllCall.htm">DllCall</a> 函数结合使用. 直接传入或传出 <a href="commands/DllCall.htm">DllCall</a> 的字符串可以通过使用 <code>AStr</code> 或 <code>WStr</code> 参数类型转换为 ANSI 或 UTF-16.</p>
+<p><a href="commands/StrGet.htm">StrGet</a> 和 <a href="commands/StrPut.htm">StrPut</a> 函数可用于在原生编码和某些其他指定编码之间转换字符串. 但是, 这些通常只与数据结构和 <a href="commands/DllCall.htm">DllCall</a> 函数结合使用. 直接传入或传出 <a href="commands/DllCall.htm">DllCall</a> 的字符串可以通过使用 <code>AStr</code> 或 <code>WStr</code> 参数类型转换为 ANSI 或 UTF-16.</p>
 <p>处理 AutoHotkey ANSI 和 Unicode 版本之间差异的技术可以在 <a href="Compat.htm#Format">Unicode 和 ANSI</a> 下找到.</p>
 
 <h3 id="pure-numbers">纯数字</h3>

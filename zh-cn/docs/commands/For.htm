@@ -51,28 +51,35 @@ if IsObject(_enum)
 <p><a href="../objects/Enumerator.htm">枚举器对象</a>, <a href="../objects/Object.htm#NewEnum">Object._NewEnum()</a>, <a href="While.htm">While 循环</a>, <a href="Loop.htm">Loop</a>, <a href="Until.htm">Until</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">区块</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; 列出对象中的键值对:</em>
-colours := <a href="../Objects.htm#Arrays">Object</a>("red", 0xFF0000, "blue", 0x0000FF, "green", 0x00FF00)
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a>:  列出对象中的键值对:</p>
+<pre>colours := <a href="../Objects.htm#Arrays">Object</a>("red", 0xFF0000, "blue", 0x0000FF, "green", 0x00FF00)
 <em>; 上面的表达式可以直接代替下面的"colours":</em>
 for k, v in colours
     s .= k "=" v "`n"
 MsgBox % s
 </pre>
-<pre class="NoIndent"><em>; 列出所有的资源管理器和 Internet Explorer 窗口:</em>
-for window in <a href="ComObjCreate.htm">ComObjCreate</a>("<a href="http://msdn.microsoft.com/en-us/library/bb774094.aspx">Shell.Application</a>").Windows
+</div>
+
+<div class="ex" id="ExCOM">
+<p><a href="#ExCOM">#2</a>: 列出所有的资源管理器和 Internet Explorer 窗口:</p>
+<pre>for window in <a href="ComObjCreate.htm">ComObjCreate</a>("<a href="http://msdn.microsoft.com/en-us/library/bb774094.aspx">Shell.Application</a>").Windows
     windows .= window.<a href="http://msdn.microsoft.com/en-us/library/aa752057.aspx">LocationName</a> " :: " window.<a href="http://msdn.microsoft.com/en-us/library/aa752058.aspx">LocationURL</a> "`n"
 MsgBox % windows</pre>
-<pre class="NoIndent"><em>/*
-Class: CEnumerator
+</div>
 
-能用来循环数值键的通用枚举器对象.在循环中不能修改数组,否则循环的区间可能出错.可以定义自己的 MaxIndex() 函数来表示数组边界.如果在 1 和最大索引间有缺失的数组成员,仍会循环到它们但值为空.这是说这个枚举器被设计为不支持真正的数组解析.要在对象能使用这种循环,请在它的类定义中插入这个函数:
+<div class="ex" id="ExCEnumerator">
+<p><a href="#ExCEnumerator">#3</a>: Class: CEnumerator</p>
+<p>可用于遍历数值键的通用枚举器对象. 在循环期间不能修改数组, 否则迭代的范围将无效.
+可以定义自己的 MaxIndex() 函数来表示数组边界. 如果在 1 和最大索引间有缺失的数组成员, 仍会循环到它们但值为空. 这意味着这个枚举器不支持实际的稀疏数组. 来源: <a href="https://www.autohotkey.com/board/topic/2667-suggestions-on-documentation-improvements/?p=531509">改善文档的建议</a></p>
+<pre><em>/*
+Class: CEnumerator
+要在对象能使用这种循环, 请在它的类定义中插入这个函数:
 
     _NewEnum()
     {
     	return new CEnumerator(this)
     }
-
-来源:http://www.autohotkey.com/board/topic/2667-suggestions-on-documentation-improvements/?p=531509
 */</em>
 
 <em>; 对枚举器进行循环</em>
@@ -96,8 +103,8 @@ class CEnumerator
 	{
 		this.Object := Object
 		this.first := true
-		<em>; 加速的缓存.当 MaxIndex() 函数性能差时用得上.</em>
-		<em>; 副作用是在循环时不能插入键值对,否则区间是错误的.</em>
+		<em>; 加速的缓存. 当 MaxIndex() 函数性能差时用得上.</em>
+		<em>; 副作用是在循环时不能插入键值对, 否则区间是错误的.</em>
 		this.ObjMaxIndex := Object.MaxIndex()
 	}
 
@@ -117,5 +124,7 @@ class CEnumerator
 		return key != ""
 	}
 }</pre>
+</div>
+
 </body>
 </html>

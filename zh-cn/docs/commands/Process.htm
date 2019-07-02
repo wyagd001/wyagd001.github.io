@@ -50,7 +50,7 @@
 <p>如果成功终止一个匹配的进程, 则设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为此进程原来的进程 ID(PID). 否则(没有找到匹配的进程或在终止匹配进程的过程中出现了问题) 它被设置为 0. 因为进程会被突然终止(可能在一个关键点中断它的工作或导致窗口中未保存数据的丢失), 因此只有当无法使用 <a href="WinClose.htm">WinClose</a> 作用于它的窗口来关闭相应进程时才使用这种方法.</p>
 
 <h3 id="List">List</h3>
-<p>虽然这个子命令还没有得到支持, <a href="#ex4">示例 #4</a> 演示了如何通过 <a href="DllCall.htm">DllCall()</a> 检索进程列表.</p>
+<p>虽然这个子命令还没有得到支持, <a href="#ListEx">示例 #4</a> 演示了如何通过 <a href="DllCall.htm">DllCall()</a> 检索进程列表.</p>
 
 <h3 id="Priority">Priority</h3>
 <p>更改第一个匹配进程的优先级.</p>
@@ -79,22 +79,23 @@
 
 <h2>示例</h2>
 
-<h3 id="ex1">示例 #1</h3>
-<p>启动记事本, 将其优先级设置为 "High" 并显示当前的 PID:</p>
-<pre class="NoIndent">Run notepad.exe,,, NewPID
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a>: 启动记事本, 将其优先级设置为 "High" 并显示当前的 PID:</p>
+<pre>Run notepad.exe,,, NewPID
 Process, Priority, %NewPID%, High
 MsgBox The newly launched Notepad's PID is %NewPID%.</pre>
+</div>
 
-<h3 id="ex2">示例 #2</h3>
-<p>对于记事本的出现, 最多等待 5.5 秒. 如果记事本出现在此秒数内, 则其优先级设置为 "Low", 并且脚本自身的优先级设置为 "High". 之后, 记事本将被关闭, 如果在 5 秒内未关闭, 将显示一个消息框:</p>
-<pre class="NoIndent">Process, Wait, notepad.exe, 5.5
+<div class="ex" id="ExAdvanced">
+<p><a href="#ExAdvanced">#2</a>: 对于记事本的出现, 最多等待 5.5 秒. 如果记事本出现在此秒数内, 则其优先级设置为 "Low", 并且脚本自身的优先级设置为 "High". 之后, 记事本将被关闭, 如果在 5 秒内未关闭, 将显示一个消息框:</p>
+<pre>Process, Wait, notepad.exe, 5.5
 NewPID := ErrorLevel  <em>; 由于 ErrorLevel 会经常发生改变, 所以要立即保存这个值.</em>
 if not NewPID
 {
     MsgBox The specified process did not appear within 5.5 seconds.
     return
 }
-<em>; Otherwise:</em>
+<em>; 否则:</em>
 MsgBox A matching process has appeared (Process ID is %NewPID%).
 Process, Priority, %NewPID%, Low
 Process, Priority,, High  <em>; 把脚本自己设置为高优先级.</em>
@@ -102,10 +103,11 @@ WinClose Untitled - Notepad
 Process, WaitClose, %NewPID%, 5
 if ErrorLevel <em>; PID 仍然存在.</em>
     MsgBox The process did not close within 5 seconds.</pre>
+</div>
 
-<h3 id="ex3">示例 #3</h3>
-<p>一个改变活动窗口进程优先级的热键:</p>
-<pre class="NoIndent">#z:: <em>; Win+Z 热键</em>
+<div class="ex" id="ExHotkey">
+<p><a href="#ExHotkey">#3</a>: 一个改变活动窗口进程优先级的热键:</p>
+<pre>#z:: <em>; Win+Z 热键</em>
 WinGet, active_pid, PID, A
 WinGetTitle, active_title, A
 Gui, 5:Add, Text,, Press ESCAPE to cancel, or double-click a new`npriority level for the following window:`n%active_title%
@@ -132,10 +134,11 @@ if ErrorLevel
 else
     MsgBox Error: Its priority could not be changed to &quot;%MyListBox%&quot;.
 return</pre>
+</div>
 
-<h3 id="ex4">示例 #4</h3>
-<p>使用 <a href="DllCall.htm">DllCall()</a> 获取正在运行的进程列表然后显示在消息框中:</p>
-<pre id="ListEx" class="NoIndent">d := "  |  "  <em>; 字符串分隔符</em>
+<div class="ex" id="ListEx">
+<p<a href="#ListEx">#4</a>: 使用 <a href="DllCall.htm">DllCall()</a> 获取正在运行的进程列表然后显示在消息框中:</p>
+<pre>d := "  |  "  <em>; 字符串分隔符</em>
 s := 4096  <em>; 缓存和数组的大小(4 KB)</em>
 
 Process, Exist  <em>; 设置 ErrorLevel 为这个正在运行脚本的 PID.</em>
@@ -177,15 +180,17 @@ Loop, % r // 4  <em>; 把数组解析为 DWORD(32 位) 的标识符:</em>
 DllCall("FreeLibrary", "Ptr", hModule)  <em>; 卸载库来释放内存.</em>
 <em>;Sort, l, C  ; 取消注释这行来按字母顺序对列表进行排序.</em>
 MsgBox, 0, %c% Processes, %l%</pre>
+</div>
 
-<h3 id="ex5">示例 #5</h3>
-<p>使用 COM 获取正在运行的进程列表:</p>
+<div class="ex" id="ListCom">
+<p><a href="#ListCom">#5</a>: 使用 COM 获取正在运行的进程列表:</p>
 <pre id="ListCom" class="NoIndent">Gui, Add, ListView, x2 y0 w400 h500, Process Name|Command Line
-for process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process")
-    LV_Add("", process.Name, process.CommandLine)
+for proc in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process")
+    LV_Add("", proc.Name, proc.CommandLine)
 Gui, Show,, Process List
 
 <em>; Win32_Process: <a href="http://msdn.microsoft.com/en-us/library/aa394372.aspx">http://msdn.microsoft.com/en-us/library/aa394372.aspx</a></em></pre>
+</div>
 
 </body>
 </html>

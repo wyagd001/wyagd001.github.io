@@ -82,43 +82,57 @@ SendMessage, 0xC, 0, <strong>"New Notepad Title"</strong>  <em>; 0XC 为 WM_SETT
 <h2>相关</h2>
 <p><a href="../misc/SendMessageList.htm">消息列表</a>, <a href="../misc/SendMessage.htm">消息指南</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="../misc/Winamp.htm">自动化 Winamp</a>, <a href="DllCall.htm">DllCall</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="WinMenuSelectItem.htm">WinMenuSelectItem</a></p>
 <h2 id="Examples">示例</h2>
-<pre class="NoIndent">#o::  <em>; Win+O 热键关闭显示器.</em>
+<div class="ex" id="ExMonitorPower">
+<p><a href="#ExMonitorPower">#1</a>: 按下 <kbd>Win</kbd>+<kbd>O</kbd> 关闭显示器.</p>
+<pre>#o::
 Sleep 1000  <em>; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
 ; 关闭显示器:</em>
 SendMessage, 0x112, 0xF170, 2,, Program Manager  <em>; 0x112 是 WM_SYSCOMMAND, 0xF170 是 SC_MONITORPOWER.
 ; 对上面命令的注释: 使用 -1 代替 2 来打开显示器.
 ; 使用 1 代替 2 来激活显示器的节能模式.</em>
-return
+return</pre>
+</div>
 
-<em>; 启动用户选择的屏幕保护程序:</em>
-SendMessage, 0x112, 0xF140, 0,, Program Manager  <em>; 0x112 是 WM_SYSCOMMAND, 而 0xF140 是 SC_SCREENSAVE.</em>
+<div class="ex" id="ExScreenSave">
+<p><a href="#ExScreenSave">#2</a>: 启动用户选择的屏幕保护程序:</p>
+<pre>SendMessage, 0x112, 0xF140, 0,, Program Manager  <em>; 0x112 是 WM_SYSCOMMAND, 而 0xF140 是 SC_SCREENSAVE.</em></pre>
+</div>
 
-<em>; 向上滚动一行 (用于含垂直滚动条的控件):</em>
-ControlGetFocus, control, A
-SendMessage, 0x115, 0, 0, %control%, A
+<div class="ex" id="ExVScrollUp">
+<p><a href="#ExVScrollUp">#3</a>: 向上滚动一行(用于含垂直滚动条的控件):</p>
+<pre>ControlGetFocus, control, A
+SendMessage, 0x115, 0, 0, %control%, A</pre>
+</div>
 
-<em>; 向下滚动一行:</em>
-ControlGetFocus, control, A
-SendMessage, 0x115, 1, 0, %control%, A
+<div class="ex" id="ExVScrollDown">
+<p><a href="#ExVScrollDown">#4</a>: 向下滚动一行:</p>
+<pre>ControlGetFocus, control, A
+SendMessage, 0x115, 1, 0, %control%, A</pre>
+</div>
 
-<em>; 切换活动窗口的键盘布局/语言为英语:</em>
-PostMessage, 0x50, 0, 0x4090409,, A  <em>; 0x50 是 WM_INPUTLANGCHANGEREQUEST.</em>
+<div class="ex" id="ExSwitchKeybLang">
+<p><a href="#ExSwitchKeybLang">#5</a>: 切换活动窗口的键盘布局/语言为英语:</p>
+<pre>PostMessage, 0x50, 0, 0x4090409,, A  <em>; 0x50 是 WM_INPUTLANGCHANGEREQUEST.</em></pre>
+</div>
 
-<em>; 这个例子请求 Winamp 的当前活动的轨道编号:</em>
-SetTitleMatchMode, 2
+<div class="ex" id="ExWinamp">
+<p><a href="#ExWinamp">#6</a>: 这个例子请求 Winamp 的当前活动的轨道编号(有关详情, 请参阅 <a href="../misc/Winamp.htm">Automating Winamp</a>n):</p>
+<pre>SetTitleMatchMode, 2
 SendMessage, 1024, 0, 120,, - Winamp
 if (ErrorLevel != "FAIL")
 {
     ErrorLevel++  <em>; Winamp 的计数从 "0" 开始, 所以加 1 进行调整.</em>
     MsgBox, Track #%ErrorLevel% is active or playing.
-}
-<em>; 请参阅<a href="../misc/Winamp.htm">自动化 Winamp</a>了解详情.</em>
+}</pre>
+</div>
 
-<em>; 找出 AHK 脚本的进程 ID(另一种方法是 "<a href="WinGet.htm">WinGet PID</a>"):</em>
-SetTitleMatchMode, 2
+<div class="ex" id="ExPID">
+<p><a href="#ExPID">#7</a>: 找出 AHK 脚本的进程 ID(另一种方法是 <a href="WinGet.htm">WinGet PID</a>):</p>
+<pre>SetTitleMatchMode, 2
 DetectHiddenWindows, On
 SendMessage, 0x44, 0x405, 0, , SomeOtherScript.ahk - AutoHotkey v
 MsgBox %ErrorLevel% is the process id.</pre>
+</div>
 
 </body>
 </html>
