@@ -1,7 +1,9 @@
 ﻿translateData = {
   // sidebar
-  "Content":"目录(C)",
-  "Index":"索引(N)",
+  "C̲ontent":"目录(C)",
+  "Shortcut: ALT+C":"快捷键: ALT+C",
+  "In̲dex":"索引(N)",
+  "Shortcut: ALT+N":"快捷键: ALT+N",
   "Filter":"过滤筛选",
   "Directives":"指令",
   "Built-in Variables":"内置变量",
@@ -9,8 +11,11 @@
   "Control Flow Statements":"控制流语句",
   "Declarations":"声明",
   "Operators":"运算符",
-  "Search":"搜索(S)",
-  "Highlight the words":"高亮搜索",
+  "S̲earch":"搜索(S)",
+  "Shortcut: ALT+S":"快捷键: ALT+S",
+  "Highlight keywords":"高亮关键词",
+  "Search":"搜索",
+  "Go to previous/next occurrence":"前往关键词上一/下一个出现的位置",
   // header
   "Hide/Show sidebar":"显示/隐藏 侧边栏",
   "Home page":"主页",

@@ -3,7 +3,6 @@
 <head>
 <title>StrPut - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The StrPut function copies a string to a memory address or buffer, optionally converting it to a given code page." />
-<meta name="ahk:equiv-v1" content="commands/StrPutGet.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,7 +12,7 @@
 
 <h1>StrPut</h1>
 
-<p>复制字符串到内存地址或缓冲, 可选地转换它到给定的代码页.</p>
+<p>复制字符串到内存地址或缓冲, 可选地将字符串转换到给定的代码页.</p>
 
 <pre class="Syntax"><span class="func">StrPut</span> String <span class="optional">, Encoding := <i>None</i></span> 
 <span class="func">StrPut</span> String, Target <span class="optional">, Length</span> <span class="optional">, Encoding := <i>None</i></span>
@@ -39,41 +38,47 @@
   <dt>Length</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>要写入的最大字符数, 需要时包含空终止符.</p>
+    <p>要写入的最大<a href="../Concepts.htm#character">字符</a>数, 需要时包含<a href="../Concepts.htm#null-termination">空终止符</a>.</p>
     <p>如果 <em>Length</em> 为 0 或小于转换后的计划长度(或不需要转换时, 源字符串的长度), 则抛出异常.</p>
-    <p class="warning"><strong>注意:</strong> 当指定 <em>Encoding</em> 时, 指定 <em>String</em> 或子字符串的长度可能是不安全的, 因为转换可能会增加字符串的长度.</p>
-    <p class="warning"><strong>注意:</strong> <em>Length</em> 是以字符数来计算的, StrPut 的返回值也是如此, 而缓冲大小通常以字节度量. 若要以字节为单位来指定缓冲大小, 请在 <em>Target</em> 参数中使用类<a href="../objects/Buffer.htm">缓冲</a>对象.</p>
+    <p>除非已知缓冲大小足够大, 否则不能省略 <em>Length</em>, 例如, 如果缓冲是基于先前使用相同的 <em>Source</em> 和 <em>Encoding</em> 调用的 StrPut 而分配的.</p>
+    <p class="warning"><strong>注意:</strong> 当指定 <em>Encoding</em> 时, <em>Length</em> 应该是缓冲的大小(以字符为单位), <strong>而不是</strong> <em>String</em> 或子字符串的长度, 因为转换可能会增加其长度.</p>
+    <p class="warning"><strong>注意:</strong> <em>Length</em> 是以字符数来计算的, 而缓冲大小通常以字节度量, StrPut 的返回值也是如此. 若要以字节为单位来指定缓冲大小, 请在 <em>Target</em> 参数中使用类<a href="../objects/Buffer.htm">缓冲</a>对象.</p>
   </dd>
 
   <dt>Encoding</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>目标编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 如果 <em>Target</em> 和 <em>Length</em> 都没有指定, 那么数值标识符必须加上 "CP" 前缀. 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
+    <p>目标编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在指定 <em>Length</em> 时, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>函数返回写入的字节数. 如果没有指定 <i>Target</i>, 则返回以字节数表示的必须的缓冲区大小. 如果 <em>Length</em> 准确等于源字符串的长度, 那么字符串不包含空终止符; 否则返回的大小包含空终止符.</p>
+<p>函数返回写入的字节数. 如果没有指定 <i>Target</i>, 则返回以字节数表示的必须的缓冲大小. 如果 <em>Length</em> 准确等于源字符串的长度, 那么字符串不包含<a href="../Concepts.htm#null-termination">空终止符</a>; 否则返回的大小包含空终止符.</p>
 
 <h2>错误处理</h2>
 <p>如果检测到无效参数或转换无法执行, 则抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
 
 <h2>备注</h2>
 <p>注意, <i>String</i> 参数总是假定使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定写入给定 <i>Target</i> 的字符串的编码. 如果没有指定 <em>Encoding</em>, 则只测量或复制字符串, 而不进行任何转换.</p>
-<p><em>Length</em> 或 <em>Encoding</em> 都可以直接在 <em>Target</em> 后面指定, 但在这种情况下 <em>Encoding</em> 必须是非数字的:</p>
-<pre>
-StrPut str, address, "cp0"  <em>; 代码页 0, 未指定长度</em>
-StrPut str, address, n, 0   <em>; 最大 n 字符, 代码页 0</em>
-StrPut str, address, 0      <em>; 不支持(最大长度为 0 字符)</em></pre>
 
 <h2>相关</h2>
 <p><a href="../Concepts.htm#string-encoding">字符编码</a>, <a href="StrGet.htm">StrGet</a>, <a href="../Compat.htm">脚本兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="DllCall.htm">DllCall</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>
 
 <h2 id="ex1">示例</h2>
-<p>可以调用一次 StrPut, 来计算特定编码中的字符串所需的缓冲大小, 然后再次对字符串进行编码并将其写入缓冲. 这个过程可以通过在你的<a href="../Functions.htm#lib">库</a>中添加以下函数来简化:</p>
-<pre class="NoIndent"><em>; 返回包含字符串的<a href="../objects/Buffer.htm">缓冲</a>对象.</em>
+<div class="ex" id="ExNumEnc">
+<p><em>Length</em> 或 <em>Encoding</em> 都可以直接在 <em>Target</em> 后面指定, 但在这种情况下 <em>Encoding</em> 必须是非数字的:</p>
+<pre>
+StrPut(str, address, "cp0")  <em>; 代码页 0, 未指定缓冲大小</em>
+StrPut(str, address, n, 0)   <em>; 最大 n 字符, 代码页 0</em>
+StrPut(str, address, 0)      <em>; 不支持(最大长度为 0 的字符)</em>
+</pre>
+</div>
+
+<div class="ex" id="ExEncoding">
+<p><a href="#ExEncoding">#2</a>: 可以调用一次 StrPut, 来计算特定编码中的字符串所需的缓冲大小, 然后再次对字符串进行编码并将其写入缓冲. 这个过程可以通过在你的<a href="../Functions.htm#lib">库</a>中添加以下函数来简化:</p>
+<pre><em>; 返回包含字符串的<a href="../objects/Buffer.htm">缓冲</a>对象.</em>
 StrBuf(string, encoding)
 {
     <em>; 计算所需的大小并分配缓冲.</em>
@@ -92,5 +97,7 @@ StrPutVar(string, ByRef var, encoding)
     <em>; 复制或转换字符串.</em>
     return StrPut(string, &amp;var, encoding)
 }</pre>
+</div>
+
 </body>
 </html>

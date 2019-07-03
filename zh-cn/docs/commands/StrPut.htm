@@ -50,7 +50,7 @@
 </dl>
 
 <h2>返回值</h2>
-<p>函数返回写入的<a href="../Concepts.htm#character">字符</a>数. 如果没有指定 <i>Target</i>, 则返回以字符数表示的必须的缓冲大小. 如果 <em>Length</em> 准确等于转换的字符串的长度, 那么字符串不包含 <a href="../Concepts.htm#null-termination">空终止符</a>; 否则返回的大小包含空终止符.</p>
+<p>函数返回写入的<a href="../Concepts.htm#character">字符</a>数. 如果没有指定 <i>Target</i>, 则返回以字符数表示的必须的缓冲大小. 如果 <em>Length</em> 准确等于转换的字符串的长度, 那么字符串不包含<a href="../Concepts.htm#null-termination">空终止符</a>; 否则返回的大小包含空终止符.</p>
 
 <h2>错误处理</h2>
 <p>如果检测到无效参数或转换无法执行, 则返回空字符串. 如果最终字符数超过 <em>Length</em>, 则返回 0.</p>
@@ -64,22 +64,22 @@
 
 <h2>示例</h2>
 <div class="ex" id="ExNumEnc">
-<p><a href="#ExNumEnc">#1</a>: Either <em>Length</em> or <em>Encoding</em> may be specified directly after <em>Target</em>, but in those cases <em>Encoding</em> must be non-numeric:</p>
+<p><em>Length</em> 或 <em>Encoding</em> 都可以直接在 <em>Target</em> 后面指定, 但在这种情况下 <em>Encoding</em> 必须是非数字的:</p>
 <pre>
-StrPut(str, address, "cp0")  <em>; Code page 0, unspecified buffer size</em>
-StrPut(str, address, n, 0)   <em>; Maximum n chars, code page 0</em>
-StrPut(str, address, 0)      <em>; Unsupported (maximum 0 chars)</em>
+StrPut(str, address, "cp0")  <em>; 代码页 0, 未指定缓冲大小</em>
+StrPut(str, address, n, 0)   <em>; 最大 n 字符, 代码页 0</em>
+StrPut(str, address, 0)      <em>; 不支持(最大长度为 0 的字符)</em>
 </pre>
 </div>
 <div class="ex" id="ExEncoding">
-<p><a href="#ExEncoding">#2</a>: StrPut may be called once to calculate the required buffer size for a string in a particular encoding, then again to encode and write the string into the buffer.  The process can be simplified by adding this function to your <a href="../Functions.htm#lib">library</a>:</p>
+<p><a href="#ExEncoding">#2</a>: 可以调用一次 StrPut, 来计算特定编码中的字符串所需的缓冲大小, 然后再次对字符串进行编码并将其写入缓冲. 这个过程可以通过在你的<a href="../Functions.htm#lib">库</a>中添加以下函数来简化:</p>
 <pre filename="StrPutVar.ahk">StrPutVar(string, ByRef var, encoding)
 {
-    <em>; Ensure capacity.</em>
+    <em>; 确定容量.</em>
     VarSetCapacity( var, StrPut(string, encoding)
-        <em>; StrPut returns char count, but VarSetCapacity needs bytes.</em>
+        <em>; StrPut 返回字符数, 但 VarSetCapacity 需要字节数.</em>
         * ((encoding="utf-16"||encoding="cp1200") ? 2 : 1) )
-    <em>; Copy or convert the string.</em>
+    <em>; 复制或转换字符串.</em>
     return StrPut(string, &amp;var, encoding)
 }</pre>
 </div>

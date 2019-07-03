@@ -20,22 +20,22 @@
 
   <dt>Filename</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>The filename of the picture, which is usually assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified. If the name of a DLL or EXE file is given without a path, it may be loaded from the directory of the current executable (AutoHotkey.exe or a compiled script) or a system directory.</p>
   </dd>
   
   <dt>Options</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>A string of zero or more of the following options, with each separated from the last by a space or tab:</p>
-    <p><strong>W</strong><em>n</em> and <strong>H</strong><em>n</em>: The width and height to load the image at, where <em>n</em> is an integer. If one dimension is omitted or -1, it is calculated automatically based on the other dimension, preserving aspect ratio. If both are omitted, the image's original size is used. If either dimension is 0, the original size is used for that dimension. For example: <code>"w80 h50"</code>, <code>"w48 h-1"</code> or <code>"w48"</code> (preserve aspect ratio), <code>"h0 w100"</code> (use original height but override width).</p>
-    <p><strong>Icon</strong><em>n</em>: Indicates which icon to load from a file with multiple icons (generally an EXE or DLL file). For example, <code>"Icon2"</code> loads the file's second icon. Any supported image format can be converted to an icon by specifying <code>"Icon1"</code>. However, the icon is converted back to a bitmap if the <em>ImageType</em> parameter is omitted.</p>
-    <p><strong>GDI+</strong>: Use GDI+ to load the image, if available. For example, <code>"GDI+ w100"</code>.</p>
+    <p><strong>W</strong><em>n</em> and <strong>H</strong><em>n</em>: The width and height to load the image at, where <em>n</em> is an integer. If one dimension is omitted or -1, it is calculated automatically based on the other dimension, preserving aspect ratio. If both are omitted, the image's original size is used. If either dimension is 0, the original size is used for that dimension. 例如: <code>"w80 h50"</code>, <code>"w48 h-1"</code> or <code>"w48"</code> (preserve aspect ratio), <code>"h0 w100"</code> (use original height but override width).</p>
+    <p><strong>Icon</strong><em>n</em>: Indicates which icon to load from a file with multiple icons (generally an EXE or DLL file). 例如, <code>"Icon2"</code> loads the file's second icon. Any supported image format can be converted to an icon by specifying <code>"Icon1"</code>. However, the icon is converted back to a bitmap if the <em>ImageType</em> parameter is omitted.</p>
+    <p><strong>GDI+</strong>: Use GDI+ to load the image, if available. 例如, <code>"GDI+ w100"</code>.</p>
   </dd>
   
   <dt>ImageType</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#variables">Variable</a></p>
+    <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
     <p>If a variable is specified, it is assigned a number indicating the type of handle being returned: 0 (IMAGE_BITMAP), 1 (IMAGE_ICON) or 2 (IMAGE_CURSOR).</p>
     <p>If this parameter is omitted or not a variable, the return value is always a bitmap handle (icons/cursors are converted if necessary). This is because reliably using or deleting an icon/cursor/bitmap handle requires knowing which type it is.</p>
   </dd>
@@ -43,7 +43,7 @@
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>This function returns a <a href="../misc/ImageHandles.htm">bitmap or icon handle</a> depending on whether a picture or icon is specified.</p>
 
 <h2 id="Remarks">Remarks</h2>
@@ -78,17 +78,14 @@ if !Pics.Length()
 <em>; Add the picture control, preserving the aspect ratio of the first picture.</em>
 Gui := GuiCreate()
 Pic := Gui.Add("Pic", "w600 h-1 vPic +Border", "HBITMAP:*" Pics.1)
-Gui.OnEvent("Escape", "Gui_Escape")
+Gui.OnEvent("Escape", (*) =&gt; ExitApp())
+Gui.OnEvent("Close", (*) =&gt; ExitApp())
 Gui.Show
 Loop 
 {
     <em>; Switch pictures!</em>
     Pic.Value := "HBITMAP:*" Pics[Mod(A_Index, Pics.Length())+1]
     Sleep 3000
-}
-
-Gui_Escape() {
-    ExitApp
 }</pre>
 
 </body>
