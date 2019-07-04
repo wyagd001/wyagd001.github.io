@@ -104,7 +104,7 @@
 <p>获取窗口中每个控件的控件名.</p>
 <pre class="Syntax"><span class="func">WinGet</span>, OutputVar, ControlList <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>如果没有匹配窗口或窗口中没有控件, 那么 <em>OutputVar</em> 被置空. 否则, 每个控件的名称都包含其类名, 紧接着序号(ClassNN), 如同 Window Spy 显示的那样.</p>
-<p>除最后一项外的其他项以换行符结束(`n). 要逐个检查每个控件的名称, 请使用<a href="LoopParse.htm">解析循环</a>, 如同下面的<a href="#ex3">示例 #3</a>.</p>
+<p>除最后一项外的其他项以换行符结束(`n). 要逐个检查每个控件的名称, 请使用<a href="LoopParse.htm">解析循环</a>, 如同下面的<a href="#ExControlList">示例 #3</a>.</p>
 <p>控件是按照 Z 轴顺序排序的, 如果窗口支持选项卡, Z 轴顺序通常与使用 <kbd>Tab</kbd> 键的导航顺序相同.</p>
 
 <h3 id="ControlListHwnd">ControlListHwnd <span class="ver">[v1.0.43.06+]</span></h3>
@@ -157,15 +157,16 @@ if (ExStyle &amp; 0x8)  <em>; 0x8 is WS_EX_TOPMOST.</em>
 
 <h2>示例</h2>
 
-<h3 id="ex1">示例 #1</h3>
-<p>最大化活动窗口并显示其唯一 ID:</p>
-<pre class="NoIndent">WinGet, active_id, ID, A
+<div class="ex" id="ExID">
+<p><a href="#ExID">#1</a>: 最大化活动窗口并显示其唯一 ID:</p>
+<pre>WinGet, active_id, ID, A
 WinMaximize, ahk_id %active_id%
 MsgBox, The active window's ID is &quot;%active_id%&quot;.</pre>
+</div>
 
-<h3 id="ex2">示例 #2</h3>
-<p>访问整个系统上所有窗口并显示它们的信息:</p>
-<pre class="NoIndent">WinGet, id, List,,, Program Manager
+<div class="ex" id="ExList">
+<p><a href="#ExList">#2</a>: 访问整个系统上所有窗口并显示它们的信息:</p>
+<pre>WinGet, id, List,,, Program Manager
 Loop, %id%
 {
     this_id := id%A_Index%
@@ -175,20 +176,22 @@ Loop, %id%
     MsgBox, 4, , Visiting All Windows`n%A_Index% of %id%`nahk_id %this_id%`nahk_class %this_class%`n%this_title%`n`nContinue?
     IfMsgBox, NO, break
 }</pre>
+</div>
 
-<h3 id="ex3">示例 #3</h3>
-<p>从活动窗口的控件列表中提取每个控件的名称:</p>
-<pre class="NoIndent">WinGet, ActiveControlList, ControlList, A
+<div class="ex" id="ExControlList">
+<p><a href="#ExControlList">#3</a>: 从活动窗口的控件列表中提取每个控件的名称:</p>
+<pre>WinGet, ActiveControlList, ControlList, A
 Loop, Parse, ActiveControlList, `n
 {
     MsgBox, 4,, Control #%A_Index% is &quot;%A_LoopField%&quot;. Continue?
     IfMsgBox, No
         break
 }</pre>
+</div>
 
-<h3 id="ex4">示例 #4</h3>
-<p>实时显示活动窗口的控件列表:</p>
-<pre class="NoIndent">#Persistent
+<div class="ex" id="ExRealTime">
+<p><a href="#ExRealTime">#4</a>: 实时显示活动窗口的控件列表:</p>
+<pre>#Persistent
 SetTimer, WatchActiveWindow, 200
 return
 
@@ -196,6 +199,7 @@ WatchActiveWindow:
 WinGet, ControlList, ControlList, A
 ToolTip, %ControlList%
 return</pre>
+</div>
 
 </body>
 </html>

@@ -53,7 +53,7 @@
 <p>尽管计时器给人一种脚本同时执行多个任务的错觉, 实际并非如此. 相反地, 定时子程序只是被当作其他线程来处理: 它们可以中断另一个线程或被另一个线程中断, 例如 <a href="../Hotkeys.htm">热键子程序</a>. 请参阅<a href="../misc/Threads.htm">线程</a>了解详情.</p>
 <p>每当创建或重新启用计时器或用新的<em>周期</em>更新计时器时, 它的子程序都不会立即运行, 必须先经过它的<em>周期</em> 时间. 如果您希望立即开始计时器的首次执行, 请使用 <a href="Gosub.htm">Gosub</a> 来执行计时器的子程序(但是, 这种方式不会像计时器那样启动新线程; 所以诸如 <a href="SendMode.htm">SendMode</a> 的设置不会以它们的默认值开始).</p>
 <p id="reset"><strong>重置</strong>: 如果 SetTimer 用于现有的计时器且第二个参数为数字或单词 ON(或省略), 则计时器内部的 "上次运行的时间" 会被重置为当前时间; 换句话说, 在经过它的整个周期后子程序才会再次运行.</p>
-<p id="Precision"><strong>计时器精度</strong>: 由于操作系统中计时系统的精确度, <em>周期</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于所安装的硬件和驱动的类型). 例如, 在 Windows NT/2000/XP 中介于 1 和 10(含边界) 的<em>周期</em>通常相当于 10 或 15.6. 使用 Loop+Sleep 可以实现更短的延时, 请参阅演示: <a href="Sleep.htm#ShorterSleep">DllCall+<span class="NoIndent">timeBeginPeriod</span>+Sleep</a>.</p>
+<p id="Precision"><strong>计时器精度</strong>: 由于操作系统中计时系统的精确度, <em>周期</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于所安装的硬件和驱动的类型). 例如, 在 Windows NT/2000/XP 中介于 1 和 10(含边界) 的<em>周期</em> 通常相当于 10 或 15.6. 使用 Loop+Sleep 可以实现更短的延时, 请参阅演示: <a href="Sleep.htm#ShorterSleep">DllCall+timeBeginPeriod+Sleep</a>.</p>
 <p id="Reliability"><strong>可靠性</strong>: 在以下条件下, 计时器可能无法按预期时间运行:</p>
 <ol>
   <li>其他程序让 CPU 高负载.</li>
@@ -73,8 +73,9 @@
 <h2>相关</h2>
 <p><a href="Gosub.htm">Gosub</a>, <a href="Return.htm">Return</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread (命令)</a>, <a href="Critical.htm">Critical</a>, <a href="IsLabel.htm">IsLabel()</a>, <a href="Menu.htm">Menu</a>, <a href="_Persistent.htm">#Persistent</a></p>
 <h2>示例</h2>
-<pre class="NoIndent" id="ExampleClose"><em>; 示例 #1: 当不想要的窗口出现时关闭它们:</em>
-#Persistent
+<div class="ex" id="ExampleClose">
+<p><a href="#ExampleClose">#1</a>: 当不想要的窗口出现时关闭它们:</p>
+<pre>#Persistent
 SetTimer, CloseMailWarnings, 250
 return
 
@@ -82,8 +83,11 @@ CloseMailWarnings:
 WinClose, Microsoft Outlook, A timeout occured while communicating
 WinClose, Microsoft Outlook, A connection to the server could not be established
 return</pre>
-<pre class="NoIndent" id="ExampleWait"><em>; 示例 #2: 等待特定的窗口出现, 然后通知用户:</em>
-#Persistent
+</div>
+
+<div class="ex" id="ExampleWait">
+<p><a href="#ExampleWait">#2</a>: 等待特定的窗口出现, 然后通知用户:</p>
+<pre>#Persistent
 SetTimer, Alert1, 500
 return
 
@@ -96,10 +100,11 @@ SplashTextOn, , , The video conversion is finished.
 Sleep, 3000
 SplashTextOff
 return</pre>
-<pre class="NoIndent" id="ExampleCount"><em>; 示例 #3: 检测热键的单次, 两次和三次按下. 这样
-; 允许热键根据您按下次数的多少
-; 执行不同的操作:</em>
-#c::
+</div>
+
+<div class="ex" id="ExampleCount">
+<p><a href="#ExampleCount">#3</a>: 检测热键的单次, 两次和三次按下. 这样允许热键根据您按下次数的多少执行不同的操作:</p>
+<pre>#c::
 if (winc_presses &gt; 0) <em>; SetTimer 已经启动, 所以我们记录键击.</em>
 {
     winc_presses += 1
@@ -128,9 +133,11 @@ else if (winc_presses &gt; 2)
 ; 为下一个系列的按下做准备:</em>
 winc_presses := 0
 return</pre>
-<pre class="NoIndent" id="ExampleClass"><em>; 示例 #4: 使用 <a href="../Objects.htm#Custom_Classes_method">方法(method)</a> 作为计时器子程序.</em>
+</div>
 
-counter := new SecondCounter
+<div class="ex" id="ExampleClass">
+<p><a href="#ExampleClass">#4</a>: 使用 <a href="../Objects.htm#Custom_Classes_method">方法(method)</a> 作为计时器子程序.</p>
+<pre>counter := new SecondCounter
 counter.Start()
 Sleep 5000
 counter.Stop()
@@ -169,6 +176,7 @@ class SecondCounter {
   <li>如果我们将 <em>Tick</em> 更名为 <em>Call</em>, 可直接使用 <code>this</code> 而非 <code>this.timer</code>. 这样也不会产生临时变量.  但 ObjBindMethod 在对象拥有多个可被不同事件源触发的方法时会很有用, 如热键, 菜单项, GUI 控件等.</li>
   <li>如果计时器被自身调用的 函数/方法 修改或删除时, 它可能会简单的<a href="#OmitLabel">忽略 <em>Label</em> 参数</a>. 在某些情况下, 这样就避免了需要保留原始对象传递给计时器, 这样可以省略一个临时变量(就像上面例子中的 <code>timer</code> 那样).</li>
 </ul>
+</div>
 
 </body>
 </html>

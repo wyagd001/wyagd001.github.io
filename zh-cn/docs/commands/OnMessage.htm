@@ -120,10 +120,9 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <h2>相关</h2>
 <p><a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="OnExit.htm">OnExit</a>, <a href="../misc/Clipboard.htm#OnClipboardChange">OnClipboardChange</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall()</a></p>
 <h2>示例</h2>
-<pre class="NoIndent"><em>; 示例: 下面是个可运行脚本, 它监听在 GUI 窗口中的鼠标点击.
-; 相关主题: <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a></em>
-
-Gui, Add, Text,, Click anywhere in this window.
+<div class="ex" id="ExLButtonDown">
+<p><a href="#ExLButtonDown">#1</a>: 下面是个可运行脚本, 它监听在 GUI 窗口中的鼠标点击. 相关主题: <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a></p>
+<pre>Gui, Add, Text,, Click anywhere in this window.
 Gui, Add, Edit, w200 vMyEdit
 Gui, Show
 OnMessage(0x201, &quot;WM_LBUTTONDOWN&quot;)
@@ -134,17 +133,17 @@ WM_LBUTTONDOWN(wParam, lParam)
     X := lParam &amp; 0xFFFF
     Y := lParam &gt;&gt; 16
     if A_GuiControl
-        Control := &quot;`n(in control &quot; . A_GuiControl . &quot;)&quot;
-    ToolTip You left-clicked in Gui window #%A_Gui% at client coordinates %X%x%Y%.%Control%
+        Ctrl := &quot;`n(in control &quot; . A_GuiControl . &quot;)&quot;
+    ToolTip You left-clicked in Gui window #%A_Gui% at client coordinates %X%x%Y%.%Ctrl%
 }
 
 GuiClose:
 ExitApp</pre>
+</div>
 
-<pre class="NoIndent" id="shutdown"><em>; 示例: 下面的脚本检测系统的关机/注销动作并允许您终止它
-; 相关主题: <a href="OnExit.htm">OnExit</a></em>
-
-<em>; 下面的 DllCall 是可选的:它告诉操作系统要<i>首先</i>关闭此脚本(在其他所有程序之前).</em>
+<div class="ex" id="shutdown">
+<p><a href="#shutdown">#2</a>: 下面的脚本检测系统的关机/注销动作并允许您终止它(据报告这在 Windows Vista 或更高版本上无法工作). 相关主题: <a href="OnExit.htm">OnExit</a></p>
+<pre><em>; 下面的 DllCall 是可选的:它告诉操作系统要<i>首先</i>关闭此脚本(在其他所有程序之前).</em>
 DllCall(&quot;kernel32.dll\SetProcessShutdownParameters&quot;, &quot;UInt&quot;, 0x4FF, &quot;UInt&quot;, 0)
 OnMessage(0x11, &quot;WM_QUERYENDSESSION&quot;)
 return
@@ -162,11 +161,11 @@ WM_QUERYENDSESSION(wParam, lParam)
     else
         return false  <em>; 告诉操作系统终止关机/注销操作.</em>
 }</pre>
+</div>
 
-<pre class="NoIndent"><em>; 示例: 此脚本能接收到其他脚本或程序的自定义消息和最多两个数字
-; (要发送字符串而不是数字, 请参阅下一个示例).</em>
-
-OnMessage(0x5555, &quot;MsgMonitor&quot;)
+<div class="ex" id="ExCustom">
+<p><a href="#ExCustom">#3</a>: 让脚本接收其他脚本或程序的自定义消息和最多两个数字(要发送字符串而不是数字, 请参阅下一个示例).</p>
+<pre>OnMessage(0x5555, &quot;MsgMonitor&quot;)
 OnMessage(0x5556, &quot;MsgMonitor&quot;)
 
 MsgMonitor(wParam, lParam, msg)
@@ -182,13 +181,12 @@ DetectHiddenWindows On
 if WinExist("Name of Receiving Script.ahk ahk_class AutoHotkey")
     PostMessage, 0x5555, 11, 22  <em>; 因为上面的有 WinExist(), 所以消息被发送到 "<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>".</em>
 DetectHiddenWindows Off  <em>; 在 PostMessage 时不能是关闭的.</em></pre>
+</div>
 
-<pre class="NoIndent" id="SendString"><em>; 示例: 从一个脚本发送任何长度的字符串到另一个脚本.  这是个可运行的示例.
-; 要使用它, 请保存并运行下面的脚本, 然后按下 Win+Space 来显示
-; InputBox 来让您输入字符串.</em>
-
-<em>; 保存下面的脚本为 "<strong>Receiver.ahk</strong>", 然后运行它:</em>
-#SingleInstance
+<div class="ex" id="SendString">
+<p><a href="#SendString">#4</a>: 从一个脚本发送任何长度的字符串到另一个脚本. 这是个可运行的示例. 要使用它, 请保存并运行下面的两个脚本, 然后按下 <kbd>Win</kbd>+<kbd>Space</kbd> 来显示 InputBox 来让您输入字符串.</p>
+<p>保存下面的脚本为 "<strong>Receiver.ahk</strong>", 然后运行它:</p>
+<pre filename="Receiver.ahk">#SingleInstance
 OnMessage(0x4a, "Receive_WM_COPYDATA")  <em>; 0x4a 为 WM_COPYDATA</em>
 return
 
@@ -199,10 +197,10 @@ Receive_WM_COPYDATA(wParam, lParam)
     <em>; 比起 MsgBox, 应该用 ToolTip 显示, 这样我们可以及时返回:</em>
     ToolTip %A_ScriptName%`nReceived the following string:`n%CopyOfData%
     return true  <em>; 返回 1 (true) 是回复此消息的传统方式.</em>
-}
+}</pre>
 
-<em>; 保存下面的脚本为 "<strong>Sender.ahk</strong>", 接着运行它.  然后, 按下 Win+Space 热键.</em>
-TargetScriptTitle := "Receiver.ahk ahk_class AutoHotkey"
+<p>保存下面的脚本为 <strong>Sender.ahk</strong>, 接着运行它. 然后, 按下 <kbd>Win</kbd>+<kbd>Space</kbd> 热键.</p>
+<pre filename="Sender.ahk">TargetScriptTitle := "Receiver.ahk ahk_class AutoHotkey"
 
 #space::  <em>; Win+Space 热键. 按下此热键会显示 InputBox 用于输入消息字符串.</em>
 InputBox, StringToSend, Send text via WM_COPYDATA, Enter some text to Send:
@@ -235,9 +233,9 @@ Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; 在这种�
     SetTitleMatchMode %Prev_TitleMatchMode%         <em>; 同样.</em>
     return ErrorLevel  <em>; 返回 SendMessage 的回复给我们的调用者.</em>
 }</pre>
+</div>
 
-<pre class="NoIndent"><em>; 示例: 请参阅 <a href="../scripts/WinLIRC.htm">WinLIRC 客户端脚本</a>演示来学习如何使用 OnMessage() 接收
-; 在网络连接的数据到达时的通知.</em></pre>
+<p>有关如何使用 OnMessage() 在数据到达网络连接时接收通知的示例, 请参阅 <a href="../scripts/WinLIRC.htm">WinLIRC 客户端脚本</a>.</p>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>If (传统型) | AutoHotkey</title>
-<meta name="description" content="The IfEqual, IfNotEqual, IfLess, IfLessOrEqual, IfGreater and IfGreaterOrEqual statements run the specified command(s) if the comparison evaluates to true." />
+<meta name="description" content="The IfEqual, IfNotEqual, IfLess, IfLessOrEqual, IfGreater and IfGreaterOrEqual statements specify statements to execute if the comparison evaluates to true." />
 <meta name="ahk:equiv-v2" content="commands/IfExpression.htm" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,54 +12,52 @@
 <body>
 
 <h1>If / IfEqual / IfNotEqual / IfLess / IfLessOrEqual / IfGreater / IfGreaterOrEqual</h1>
-
-<p>指定在<a href="../Variables.htm">变量</a>与值比较结果为 TRUE 时执行的命令. 包含多个命令时, 需要把它们括在<a href="Block.htm">区块</a>(大括号) 中.</p>
-<p class="warning"><strong>不推荐:</strong> 这些命令不推荐在新脚本中使用. 详细信息请参阅<a href="../Language.htm#if-statement">脚本语言: If 语句</a>.</p>
+<p>指定在<a href="../Variables.htm">变量</a>与值的比较结果为 true 时执行的一个或多个<a href="../Concepts.htm#statement">语句</a>.</p>
+<p class="warning"><strong>不推荐:</strong> 传统 If 语句不推荐在新脚本中使用. 有关详情, 请参阅<a href="../Language.htm#if-statement">脚本语言: If 语句</a>, 请使用 <a href="IfExpression.htm">If (表达式)</a> 作为代替.</p>
 
 <pre class="Syntax">
-<span class="func">IfEqual</span>, Var, Value (等同于: if Var = Value)
-<span class="func">IfNotEqual</span>, Var, Value (等同于: if Var != Value) (可以使用 &lt;&gt; 代替 !=)
-<span class="func">IfLess</span>, Var, Value (等同于: if Var &lt; Value)
-<span class="func">IfLessOrEqual</span>, Var, Value (等同于: if Var &lt;= Value)
-<span class="func">IfGreater</span>, Var, Value (等同于: if Var &gt; Value)
-<span class="func">IfGreaterOrEqual</span>, Var, Value (等同于: if Var &gt;= Value)
+<span class="func">IfEqual</span>, Var <span class="optional">, Value</span>          <em>; if Var = Value</em>
+<span class="func">IfNotEqual</span>, Var <span class="optional">, Value</span>       <em>; if Var != Value</em>
+<span class="func">IfLess</span>, Var <span class="optional">, Value</span>           <em>; if Var &lt; Value</em>
+<span class="func">IfLessOrEqual</span>, Var <span class="optional">, Value</span>    <em>; if Var &lt;= Value</em>
+<span class="func">IfGreater</span>, Var <span class="optional">, Value</span>        <em>; if Var &gt; Value</em>
+<span class="func">IfGreaterOrEqual</span>, Var <span class="optional">, Value</span> <em>; if Var &gt;= Value</em>
 </pre>
 
 <h2>参数</h2>
 <dl>
-
   <dt>Var</dt>
-  <dd><p><a href="../Variables.htm">变量</a>(<a href="../Language.htm#outputvar-and-inputvar-parameters">InputVar</a>). 除了<a href="../Language.htm#dynamic-variables">双重引用</a>, 否则必须省略百分号.</p></dd>
-
+  <dd><a href="../Variables.htm">变量</a>名. 除了<a href="../Language.htm#dynamic-variables">双重引用</a>, 否则必须省略百分号. 与其他命令的输入变量不同, 不支持<a href="../Language.htm#-expression">百分号前缀</a>.</</dd>
   <dt>Value</dt>
-  <dd><p><a href="../Language.htm#unquoted-text">不加引号的文本</a>或<a href="../Concepts.htm#numbers">数字</a>. 变量引用必须用百分号括起来(例如 %var2%). 如果您希望将 <em>Var</em> 与空字符串(空白) 进行比较, 那么可以省略 <em>Value</em>.</p></dd>
-
+  <dd><a href="../Language.htm#unquoted-text">不加引号的文本</a>或<a href="../Concepts.htm#numbers">数字</a>. 变量引用必须用百分号括起来(例如 %var2%). 如果您希望将 <em>Var</em> 与空字符串(空白) 进行比较, 那么可以省略 <em>Value</em>.</dd>
 </dl>
 
 <h2>备注</h2>
 <p>如果 <em>Var</em> 和 <em>Value</em> 都为纯数值, 那么它们将被作为数字而不是字符串进行比较. 其他情况下, 它们将被作为字符串按字母顺序进行比较(即字母次序将决定 <em>Var</em> 是大于, 等于或小于 <em>Value</em>).</p>
-<p>当 IF 或 <a href="Else.htm">ELSE</a> 结构中含有多行命令时, 这些命令必须括在大括号中. 例如:</p>
+<p>如果指定要执行多个语句, 这些语句必须用大括号括起来(创建一个<a href="Block.htm">区块</a>). 否则, 大括号是可选的. 例如:</p>
 <pre>if count &lt;= 0
 {
     WinClose Untitled - Notepad
     MsgBox There are no items present.
 }</pre>
-<p>不过, 如果只有一行命令从属于 IF 或 ELSE, 那么可以不用大括号.</p>
-<p>如果您使用命令名称风格, 那么另一个命令只能与 IF 语句在同一行. 换句话说, 这些语句都是有效的:</p>
+<p>注意类命令的 If 语句允许与一个<a href="../Language.htm#commands">命令</a>或类命令的<a href="../Language.htm#control-flow">控制流语句</a>写在同一行, 但是拼写错误的命令名称将被视为原义文本. 换句话说, 这些都是有效的:</p>
 <pre>IfEqual, x, 1, Sleep, 1
 IfGreater, x, 1, EnvAdd, x, 2</pre>
 <p>但这些是无效的:</p>
 <pre>if x = 1 Sleep 1
 IfGreater, x, 1, x += 2</pre>
-<p><a href="IfExpression.htm#otb">One True Brace(OTB) 风格</a> <strong>不</strong> 能用在 if 语句的这些类型中. 它只能和表达式类型的 if 语句一起使用.</p>
-<p>相关提示, <a href="IfBetween.htm">if var [not] between LowerBound and UpperBound</a> 命令判断变量是否在两个值之间, 而 <a href="IfIn.htm">if var [not] in value1,value2</a> 可以用来判断变量内容是否存在于值列表中.</p>
+<p><a href="IfExpression.htm#otb">One True Brace(OTB) 风格</a> <strong>不</strong> 能用于传统的 if 语句中. 它只能与 <a href="IfExpression.htm">If (表达式)</a> 一起使用.</p>
+<p>相关提示, 语句 <a href="IfBetween.htm">if var [not] between LowerBound and UpperBound</a> 判断变量是否在两个值之间, 而 <a href="IfIn.htm">if var [not] in value1,value2</a> 可以用来判断变量内容是否存在于值列表中.</p>
 <h2>相关</h2>
-<p><a href="IfExpression.htm">IF (表达式)</a>, <a href="StringCaseSense.htm">StringCaseSense</a>, <a href="SetExpression.htm">赋值表达式(:=)</a>, <a href="IfIn.htm">if var in/contains MatchList</a>, <a href="IfBetween.htm">if var between</a>, <a href="IfInString.htm">IfInString</a>, <a href="Block.htm">区块</a>, <a href="Else.htm">Else</a></p>
+<p><a href="IfExpression.htm">If (表达式)</a>, <a href="StringCaseSense.htm">StringCaseSense</a>, <a href="SetExpression.htm">赋值表达式(:=)</a>, <a href="IfIn.htm">if var in/contains</a>, <a href="IfBetween.htm">if var between</a>, <a href="IfInString.htm">IfInString</a>, <a href="Block.htm">区块</a>, <a href="Else.htm">Else</a></p>
+
 <h2>示例</h2>
-<pre class="NoIndent">if counter &gt;= 1
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a></p>
+<pre>if counter &gt;= 1
     Sleep, 10
 
-if counter &gt;=1   <em>; 如果 IF 结构中含有多行命令, 那么这些命令必须括在大括号中:</em>
+if counter &gt;=1   <em>; 若要执行多行, 请将这些行用大括号括起来:</em>
 {
     WinClose, Untitled - Notepad
     Sleep 10
@@ -80,6 +78,7 @@ else
 
 if Done
     MsgBox The variable Done is neither empty nor zero.</pre>
+</div>
 
 </body>
 </html>

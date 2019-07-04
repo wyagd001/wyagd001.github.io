@@ -73,7 +73,7 @@
 
   <dt id="If">If, Expression(表达式)</dt>
   <dd>
-    <p><span class="ver">[AHK_L 4+]:</span> 关联后续创建的热键与<a href="_If.htm">#If <i>表达式</i></a>. <em>表达式</em> 必须是在脚本其他任何地方用 #If 指令开头的的表达式. 通过这个命令不能创建新的表达式, 而只能用已经存在的表达式创建新的热键定义. 请参考 <a href="_If.htm#ex4">#If 例子 4</a>.</p>
+    <p><span class="ver">[AHK_L 4+]:</span> 关联后续创建的热键与<a href="_If.htm">#If <i>表达式</i></a>. <em>表达式</em> 必须是在脚本其他任何地方用 #If 指令开头的的表达式. 通过这个命令不能创建新的表达式, 而只能用已经存在的表达式创建新的热键定义. 请参考 <a href="_If.htm#ExDynamic">#If 例子 4</a>.</p>
     <p class="note"><strong>注意</strong>: 这个 Hotkey 只能用你传递给它的文本, 而不是原始代码. 逗号和变量符号(百分号) 是在命令调用 <em>之前</em> 被解析的, 所以如果这些符号是原始表达式中的一部分, 则应该先转换一下. <a href="_EscapeChar.htm">转义序列</a>是脚本加载的时候就进行转换的, 所以只产生字符; 例如: <code>Hotkey, If, x = "`t"</code> 和 <code>Hotkey, If, % "x = """ A_Tab """"</code> 都对应于 <code>#If x = "`t"</code>.</p>
     <p><strong>已知限制: </strong>If <em>表达式</em> 包含 <code>and</code>/<code>or</code> 运算符的时候, 不会被识别为表达式. 为了避免此问题, 请在原来的 #If 表达式和传递给 Hotkey 命令的表达式中使用等价的 <code>&amp;&amp;</code>/<code>||</code> 运算符.</p>
   </dd>
@@ -168,24 +168,30 @@ Hotkey, ^!c, MyLabelForAllOtherWindows</pre>
 <h2>相关</h2>
 <p><a href="../Hotkeys.htm#Symbols">热键修饰符</a>, <a href="_IfWinActive.htm">#IfWinActive/Exist</a>, <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a>, <a href="Suspend.htm">Suspend</a>, <a href="IsLabel.htm">IsLabel()</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread</a>, <a href="Critical.htm">Critical</a>, <a href="Gosub.htm">Gosub</a>, <a href="Return.htm">Return</a>, <a href="Menu.htm">Menu</a>, <a href="SetTimer.htm">SetTimer</a></p>
 <h2>示例</h2>
-<pre class="NoIndent">Hotkey, ^!z, MyLabel
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a></p>
+<pre>Hotkey, ^!z, MyLabel
 return
 
 MyLabel:
 MsgBox You pressed %A_ThisHotkey%.
-return
+return</pre>
+</div>
 
-<em>; 其他的例子:</em>
-Hotkey, RCtrl &amp; RShift, AltTab <em>; 让 RCtrl &amp; RShift 执行 Alt-Tab 的功能.</em>
+<div class="ex" id="ExOther">
+<p><a href="#ExOther">#2</a>: 其他的例子</p>
+<pre>Hotkey, RCtrl &amp; RShift, AltTab <em>; 让 RCtrl &amp; RShift 执行 Alt-Tab 的功能.</em>
 Hotkey, #c, On  <em>; 重新启用 Win-C 热键.</em>
 Hotkey, $+#c, Off  <em>; 禁用 Shift-Win-C 热键.</em>
 Hotkey, ^!a, , T5  <em>; 改变热键为允许 5 个线程.</em>
 
 Hotkey, IfWinActive, ahk_class Notepad
 Hotkey, ^!c, MyLabelForNotepad  <em>; 创建仅在记事本中有效的热键 Ctrl-Alt-C.</em></pre>
+</div>
 
-<pre class="NoIndent" id="ExampleIfFn"><em>; This GUI allows you to register primitive three-key combination hotkeys:</em>
-Gui Add, Text, xm, Prefix key:
+<div class="ex" id="ExampleIfFn">
+<p><a href="#ExampleIfFn">#3</a>: 这个界面允许你注册简单的三键组合热键:</p>
+<pre>Gui Add, Text, xm, Prefix key:
 Gui Add, Edit, yp x100 w100 vPrefix, Space
 Gui Add, Text, xm, Suffix hotkey:
 Gui Add, Edit, yp x100 w100  vSuffix, f &amp; j
@@ -213,6 +219,7 @@ FireHotkey() {
 GuiClose:
 GuiEscape:
 ExitApp</pre>
+</div>
 
 </body>
 </html>

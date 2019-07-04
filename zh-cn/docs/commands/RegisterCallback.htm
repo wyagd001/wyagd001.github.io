@@ -99,9 +99,9 @@ TheFunc(params*) {
 <p><a href="DllCall.htm">DllCall()</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort 的回调</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; 示例: 下面是个可运行脚本, 它显示了所有顶层窗口的摘要.</em>
-
-<em>; 考虑到性能和内存的保持, 只为指定的回调调用一次 RegisterCallback():</em>
+<div class="ex" id="ExWinList">
+<p><a href="#ExWinList">#1</a>: 下面是个可运行脚本, 它显示了所有顶层窗口的摘要.</p>
+<pre><em>; 考虑到性能和内存的保持, 只为指定的回调调用一次 RegisterCallback():</em>
 if not EnumAddress  <em>; 由于只能从这个线程调用, 所以可以使用快速模式:</em>
     EnumAddress := <strong>RegisterCallback</strong>("EnumWindowsProc", "Fast")
 
@@ -120,11 +120,11 @@ EnumWindowsProc(hwnd, lParam)
         Output .= &quot;HWND: &quot; . hwnd . &quot;`tTitle: &quot; . title . &quot;`tClass: &quot; . class . &quot;`n&quot;
     return true  <em>; 告知 EnumWindows() 继续执行, 一直到枚举完所有的窗口.</em>
 }</pre>
-<pre class="NoIndent"><em>; 示例: 下面是个可运行脚本, 它演示了如何在脚本中通过把 GUI 窗口的
-; WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的
-; 背景颜色被改变为自定义颜色.</em>
+</div>
 
-TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
+<div class="ex" id="ExSubclassGUI">
+<p><a href="#ExSubclassGUI">#2</a>: 下面是个可运行脚本, 它演示了如何在脚本中通过把 GUI 窗口的 WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的背景颜色被改变为自定义颜色.</p>
+<pre>TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
 TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, &quot;UInt&quot;, TextBackgroundColor)
 
 Gui, Add, Text, HwndMyTextHwnd, Here is some text that is given`na custom background color.
@@ -157,6 +157,7 @@ WindowProc(hwnd, uMsg, wParam, lParam)
 
 GuiClose:
 ExitApp</pre>
+</div>
 
 </body>
 </html>
