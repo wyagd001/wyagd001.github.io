@@ -109,17 +109,17 @@ TheFunc(params) {
 <p><a href="DllCall.htm">DllCall</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort's callback</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">Functions</a>, <a href="../misc/SendMessageList.htm">List of Windows Messages</a>, <a href="../misc/Threads.htm">Threads</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; 示例: The following is a working script that displays a summary of all top-level windows.</em>
-
-<em>; For performance and memory conservation, call CallbackCreate only once for a given callback:</em>
-if not EnumAddress  <em>; Fast-mode is okay because it will be called only from this thread:</em>
+<div class="ex" id="ExWinList">
+<p><a href="#ExWinList">#1</a>: 下面是个可运行脚本, 它显示了所有顶层窗口的摘要.</p>
+<pre><em>; 考虑到性能和内存的保持, 只为指定的回调调用一次 CallbackCreate:</em>
+if not EnumAddress  <em>; 由于只能从这个线程调用, 所以可以使用快速模式:</em>
     EnumAddress := <strong>CallbackCreate</strong>(&quot;EnumWindowsProc&quot;, &quot;Fast&quot;)
 
-DetectHiddenWindows True  <em>; Due to fast-mode, this setting will go into effect for the callback too.</em>
+DetectHiddenWindows True  <em>; 由于是快速模式, 所以此设置也会在回调中生效.</em>
 
-<em>; Pass control to EnumWindows(), which calls the callback repeatedly:</em>
+<em>; 把控制传给 EnumWindows(), 它会重复调用回调:</em>
 DllCall(&quot;EnumWindows&quot;, &quot;Ptr&quot;, EnumAddress, &quot;Ptr&quot;, 0)
-MsgBox Output  <em>; Display the information accumulated by the callback.</em>
+MsgBox Output  <em>; 显示由回调收集的信息.</em>
     
 EnumWindowsProc(hwnd, lParam)
 {
@@ -128,24 +128,24 @@ EnumWindowsProc(hwnd, lParam)
     class := WinGetClass("ahk_id " hwnd)
     if title
         Output .= &quot;HWND: &quot; . hwnd . &quot;`tTitle: &quot; . title . &quot;`tClass: &quot; . class . &quot;`n&quot;
-    return true  <em>; Tell EnumWindows() to continue until all windows have been enumerated.</em>
+    return true  <em>; 告知 EnumWindows() 继续执行, 一直到枚举完所有的窗口.</em>
 }</pre>
-<pre class="NoIndent"><em>; 示例: The following is a working script that demonstrates how to subclass a GUI window by
-; redirecting its WindowProc to a new WindowProc in the script. In this case, the background
-; color of a text control is changed to a custom color.</em>
+</div>
 
-TextBackgroundColor := 0xFFBBBB  <em>; A custom color in BGR format.</em>
+<div class="ex" id="ExSubclassGUI">
+<p><a href="#ExSubclassGUI">#2</a>: 下面是个可运行脚本, 它演示了如何在脚本中通过把 GUI 窗口的 WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的背景颜色被改变为自定义颜色.</p>
+<pre>TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
 TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, &quot;UInt&quot;, TextBackgroundColor)
 
 Gui := GuiCreate()
 Text := Gui.Add("Text",, "Here is some text that is given`na custom background color.")
 
-<em>; 64-bit scripts must call SetWindowLongPtr instead of SetWindowLong:</em>
+<em>; 64 位脚本必须调用 SetWindowLongPtr 代替 SetWindowLong:</em>
 SetWindowLong := A_PtrSize=8 ? "SetWindowLongPtr" : "SetWindowLong"
 
-WindowProcNew := <strong>CallbackCreate</strong>("WindowProc")  <em>; Avoid fast-mode for subclassing.</em>
-WindowProcOld := DllCall(SetWindowLong, &quot;Ptr&quot;, Gui.Hwnd, &quot;Int&quot;, -4  <em>; -4 is GWL_WNDPROC</em>
-    , &quot;Ptr&quot;, WindowProcNew, &quot;Ptr&quot;) <em>; Return value must be set to &quot;Ptr&quot; or &quot;UPtr&quot; vs. &quot;Int&quot;.</em>
+WindowProcNew := <strong>CallbackCreate</strong>("WindowProc")  <em>; 避免子类化中使用快速模式.</em>
+WindowProcOld := DllCall(SetWindowLong, &quot;Ptr&quot;, Gui.Hwnd, &quot;Int&quot;, -4  <em>; -4 为 GWL_WNDPROC</em>
+    , &quot;Ptr&quot;, WindowProcNew, &quot;Ptr&quot;) <em>; 返回值必须设置为 &quot;Ptr&quot; 或 &quot;UPtr&quot; 而不是 &quot;Int&quot;.</em>
 
 Gui.Show
 
@@ -153,14 +153,15 @@ WindowProc(hwnd, uMsg, wParam, lParam)
 {
     Critical
     global Text, TextBackgroundColor, TextBackgroundBrush, WindowProcOld
-    if (uMsg = 0x138 &amp;&amp; lParam = Text.Hwnd)  <em>; 0x138 is WM_CTLCOLORSTATIC.</em>
+    if (uMsg = 0x138 &amp;&amp; lParam = Text.Hwnd)  <em>; 0x138 为 WM_CTLCOLORSTATIC.</em>
     {
         DllCall(&quot;SetBkColor&quot;, &quot;Ptr&quot;, wParam, &quot;UInt&quot;, TextBackgroundColor)
-        return TextBackgroundBrush  <em>; Return the HBRUSH to notify the OS that we altered the HDC.</em>
+        return TextBackgroundBrush  <em>; 返回 HBRUSH 来通知操作系统我们改变了 HDC.</em>
     }
-    <em>; Otherwise (since above didn't return), pass all unhandled events to the original WindowProc.</em>
+    <em>; 否则(因为上面没有返回), 将所有的未处理事件传递给原来的 WindowProc.</em>
     return DllCall(&quot;CallWindowProc&quot;, &quot;Ptr&quot;, WindowProcOld, &quot;Ptr&quot;, hwnd, &quot;UInt&quot;, uMsg, &quot;Ptr&quot;, wParam, &quot;Ptr&quot;, lParam)
 }</pre>
+</div>
 
 </body>
 </html>
