@@ -180,92 +180,96 @@ result := DllCall(&quot;CharLower&quot;, &quot;<strong><u>Str</u></strong>&quot;
 
 <h2>相关</h2>
 <p><a href="../Compat.htm#DllCall">Script Compatibility</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a>, <a href="../Functions.htm">Functions</a>, <a href="SysGet.htm">SysGet</a>, <a href="http://msdn.microsoft.com/library/">MSDN Library</a></p>
+
 <h2>示例</h2>
-<pre class="NoIndent"><em>; 示例: Calls the Windows API function &quot;MessageBox&quot; and report which button the user presses.</em>
-
-WhichButton := DllCall(&quot;MessageBox&quot;, &quot;Int&quot;, &quot;0&quot;, &quot;Str&quot;, &quot;Press Yes or No&quot;, &quot;Str&quot;, &quot;Title of box&quot;, &quot;Int&quot;, 4)
+<div class="ex" id="ExMessageBox">
+<p><a href="#ExMessageBox">#1</a>: 调用 Windows API 函数 &quot;MessageBox&quot; 并报告用户按下了哪个按钮.</p>
+<pre>WhichButton := DllCall(&quot;MessageBox&quot;, &quot;Int&quot;, &quot;0&quot;, &quot;Str&quot;, &quot;Press Yes or No&quot;, &quot;Str&quot;, &quot;Title of box&quot;, &quot;Int&quot;, 4)
 MsgBox "You pressed button #" WhichButton</pre>
+</div>
 
-<pre class="NoIndent"><em>; 示例: Changes the desktop wallpaper to the specified bitmap (.bmp) file.</em>
+<div class="ex" id="ExWallpaper">
+<p><a href="#ExWallpaper">#2</a>: 将桌面墙纸更改为指定的位图(.bmp) 文件.</p>
+<pre>DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, 0x14, &quot;UInt&quot;, 0, &quot;Str&quot;, A_WinDir <strong>.</strong> &quot;\winnt.bmp&quot;, &quot;UInt&quot;, 2)</pre>
+</div>
 
-DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, 0x14, &quot;UInt&quot;, 0, &quot;Str&quot;, A_WinDir <strong>.</strong> &quot;\winnt.bmp&quot;, &quot;UInt&quot;, 2)</pre>
-
-<pre class="NoIndent"><em>; 示例: Calls the API function &quot;IsWindowVisible&quot; to find out if a Notepad window is visible.</em>
-
-DetectHiddenWindows True
-if not DllCall(&quot;IsWindowVisible&quot;, &quot;Ptr&quot;, WinExist(&quot;Untitled - Notepad&quot;))  <em>; WinExist returns an HWND.</em>
+<div class="ex" id="ExIsWindowVisible">
+<p><a href="#ExIsWindowVisible">#3</a>: 调用 API 函数 &quot;IsWindowVisible&quot; 来判断记事本窗口是否可见.</p>
+<pre>DetectHiddenWindows True
+if not DllCall(&quot;IsWindowVisible&quot;, &quot;Ptr&quot;, WinExist(&quot;Untitled - Notepad&quot;))  <em>; WinExist 返回 HWND.</em>
     MsgBox "The window is not visible."</pre>
+</div>
 
-<pre class="NoIndent"><em>; 示例: Calls the API's wsprintf() to pad the number 432 with leading zeros to make it 10 characters wide (0000000432).</em>
-
-VarSetCapacity(ZeroPaddedNumber, 20)  <em>; Ensure the variable is large enough to accept the new string.</em>
-DllCall(&quot;wsprintf&quot;, &quot;Str&quot;, ZeroPaddedNumber, &quot;Str&quot;, &quot;%010d&quot;, &quot;Int&quot;, 432, &quot;Cdecl&quot;)  <em>; Requires the Cdecl calling convention.</em>
+<div class="ex" id="ExWsprintf">
+<p><a href="#ExWsprintf">#4</a>: 调用 API 的 wsprintf() 函数来给数字 432 加上前导零以填充到 10 个字符的长度(0000000432).</p>
+<pre>VarSetCapacity(ZeroPaddedNumber, 20)  <em>; 确保变量的容量足够大以便容纳新的字符串.</em>
+DllCall(&quot;wsprintf&quot;, &quot;Str&quot;, ZeroPaddedNumber, &quot;Str&quot;, &quot;%010d&quot;, &quot;Int&quot;, 432, &quot;Cdecl&quot;)  <em>; 需要 Cdecl 调用约定.</em>
 MsgBox ZeroPaddedNumber
 
-<em>; Alternatively, use the <a href="Format.htm">Format</a> function in conjunction with the zero flag:</em>
+<em>; 此外, 使用 <a href="Format.htm">Format</a> 函数配合 0 标志可以达到同样的效果:</em>
 MsgBox Format("{:010}", 432)
 </pre>
+</div>
 
-<pre class="NoIndent" id="QPC"><em>; 示例: Demonstrates QueryPerformanceCounter(), which gives more precision than <a href="../Variables.htm#TickCount">A_TickCount's</a> 10ms.</em>
-
-DllCall(&quot;QueryPerformanceFrequency&quot;, &quot;Int64*&quot;, freq)
+<div class="ex" id="QPC">
+<p><a href="#QPC">#5</a>: 演示 QueryPerformanceCounter(), 它提供了比 <a href="../Variables.htm#TickCount">A_TickCount</a> 的 10ms 更高的精确度.</p>
+<pre>DllCall(&quot;QueryPerformanceFrequency&quot;, &quot;Int64*&quot;, freq)
 DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterBefore)
 Sleep 1000
 DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterAfter)
 MsgBox &quot;Elapsed QPC time is &quot; . (CounterAfter - CounterBefore) / freq * 1000 &quot; ms&quot;</pre>
+</div>
 
-<pre class="NoIndent"><em>; 示例: This is a hotkey that temporarily reduces the mouse cursor's speed, which facilitates precise positioning.
-; Hold down the F1 key to slow down the cursor. Release it to return to original speed.</em>
-
-F1::
+<div class="ex" id="ExMouseSpeed">
+<p><a href="#ExMouseSpeed">#6</a>: 这是个临时减慢鼠标移动速度的热键, 这样有助于准确定位. 按住 <kbd>F1</kbd> 来降低鼠标速度. 释放后则恢复原来的速度.</p>
+<pre>F1::
 SPI_GETMOUSESPEED := 0x70
 SPI_SETMOUSESPEED := 0x71
-<em>; Retrieve the current speed so that it can be restored later:</em>
+<em>; 获取鼠标当前的速度以便稍后恢复:</em>
 DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, SPI_GETMOUSESPEED, &quot;UInt&quot;, 0, &quot;UIntP&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)
-<em>; Now set the mouse to the slower speed specified in the next-to-last parameter (the range is 1-20, 10 is default):</em>
+<em>; 现在在倒数第二个参数中设置较低的速度 (范围为 1-20, 10 是默认值):</em>
 DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, SPI_SETMOUSESPEED, &quot;UInt&quot;, 0, &quot;Ptr&quot;, <strong>3</strong>, &quot;UInt&quot;, 0)
-KeyWait "F1"  <em>; This prevents keyboard auto-repeat from doing the DllCall repeatedly.</em>
+KeyWait "F1"  <em>; 这里避免了由于键盘的重复特性导致再次执行 DllCall.</em>
 return
 
-F1 up::DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, 0x71, &quot;UInt&quot;, 0, &quot;Ptr&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)  <em>; Restore the original speed.</em></pre>
+F1 up::DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, 0x71, &quot;UInt&quot;, 0, &quot;Ptr&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)  <em>; 恢复原来的速度.</em></pre>
+</div>
 
-<pre class="NoIndent"><em>; 示例: Monitors the focused control and displays the position of its vertical scroll bar
-; (with real-time updates).</em>
-
-SetTimer "WatchScrollBar", 100
+<div class="ex" id="ExWatchScrollBar">
+<p><a href="#ExWatchScrollBar">#7</a>: 监视活动窗口并显示其焦点控件中的垂直滚动条的位置(实时更新).</p>
+<pre>SetTimer "WatchScrollBar", 100
 
 WatchScrollBar()
 {
     FocusedHwnd := ControlGetFocus("A")
-    if !FocusedHwnd  <em>; No focused control.</em>
+    if !FocusedHwnd  <em>; 没有焦点控件.</em>
         return
-    <em>; Display the vertical or horizontal scroll bar's position in a ToolTip:</em>
-    ToolTip(DllCall("GetScrollPos", "Ptr", FocusedHwnd, "Int", 1))  <em>;  Last parameter is 1 for SB_VERT, 0 for SB_HORZ.</em>
+    <em>; 在工具提示中显示垂直或水平滚动条的位置:</em>
+    ToolTip(DllCall("GetScrollPos", "Ptr", FocusedHwnd, "Int", 1))  <em>;  最后一个参数 1 表示 SB_VERT, 而 0 表示 SB_HORZ.</em>
 }</pre>
+</div>
 
-<pre class="NoIndent" id="file"><em>; 示例: This is a working script that writes some text to a file then reads it back into memory.
-; This method can be used to help performance in cases where multiple files are being read or written simultaneously.
-; Alternatively, <a href="FileOpen.htm">FileOpen</a> can be used to the <a href="FileOpen.htm#writeread">same effect</a>.</em>
-
-FileName := FileSelect("S16",, "Create a new file:")
+<div class="ex" id="file">
+<p><a href="#file">#8</a>: 这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存. 在同时读取或写入多个文件时, 使用这种方法可以改善性能. 此外, 使用 <a href="FileOpen.htm">FileOpen</a> 可以实现<a href="FileOpen.htm#writeread">同样的目的</a>.</p>
+<pre>FileName := FileSelect("S16",, "Create a new file:")
 if FileName = ""
     return
-GENERIC_WRITE := 0x40000000  <em>; Open the file for writing rather than reading.</em>
-CREATE_ALWAYS := 2  <em>; Create new file (overwriting any existing file).</em>
+GENERIC_WRITE := 0x40000000  <em>; 以写入而不是读取的方式打开文件.</em>
+CREATE_ALWAYS := 2  <em>; 创建新文件(覆盖任何现有的文件).</em>
 hFile := DllCall(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_WRITE, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;UInt&quot;, CREATE_ALWAYS, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;Ptr&quot;)
 if !hFile
 {
     MsgBox "Can't open '" FileName "' for writing."
     return
 }
-TestString := "This is a test string.`r`n"  <em>; When writing a file this way, use `r`n rather than `n to start a new line.</em>
+TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
 DllCall(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen(TestString), &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
-DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; Close the file.</em>
+DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 
-<em>; Now that the file was written, read its contents back into memory.</em>
-GENERIC_READ := 0x80000000  <em>; Open the file for reading rather than writing.</em>
-OPEN_EXISTING := 3  <em>; This mode indicates that the file to be opened must already exist.</em>
-FILE_SHARE_READ := 0x1 <em>; This and the next are whether other processes can open the file while we have it open.</em>
+<em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
+GENERIC_READ := 0x80000000  <em>; 以读取而不是写入的方式来打开文件.</em>
+OPEN_EXISTING := 3  <em>; 此标志表示要打开的文件必须已经存在.</em>
+FILE_SHARE_READ := 0x1 <em>; 这个和下一个标志表示其他进程是否可以打开我们已经打开的文件.</em>
 FILE_SHARE_WRITE := 0x2
 hFile := DllCall(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_READ, &quot;UInt&quot;, FILE_SHARE_READ|FILE_SHARE_WRITE, &quot;Ptr&quot;, 0, &quot;UInt&quot;, OPEN_EXISTING, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0)
 if !hFile
@@ -273,35 +277,36 @@ if !hFile
     MsgBox "Can't open '" FileName "' for reading."
     return
 }
-<em>; Make the variable empty for testing purposes, but ensure it retains sufficient capacity:</em>
+<em>; 清空变量以便进行测试, 但需要确保它含有足够的容量:</em>
 BytesToRead := VarSetCapacity(TestString, StrLen(TestString))
 DllCall(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, BytesToRead, &quot;UIntP&quot;, BytesActuallyRead, &quot;Ptr&quot;, 0)
-DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; Close the file.</em>
+DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 MsgBox "The following string was read from the file: " TestString</pre>
+</div>
 
-<pre class="NoIndent" id="HideCursor"><em>; 示例: Hides the mouse cursor when you press Win+C. To later show the cursor, press Win+C again.</em>
+<div class="ex" id="HideCursor">
+<p><a href="#HideCursor">#9</a>: 当您按下 <kbd>Win</kbd>+<kbd>C</kbd> 时, 隐藏鼠标光标. 再次按下, 显示光标. 此脚本来自 <a href="https://www.autohotkey.com/forum/topic6107.html">www.autohotkey.com/forum/topic6107.html</a></p>
+<pre>OnExit () =&gt; SystemCursor("Show")  <em>; 确保到脚本退出时鼠标光标是显示的.</em>
 
-OnExit () =&gt; SystemCursor("Show")  <em>; Ensure the cursor is made visible when the script exits.</em>
-
-#c::SystemCursor("Toggle")  <em>; Win+C hotkey to toggle the cursor on and off.</em>
+#c::SystemCursor("Toggle")  <em>; Win+C 热键用来切换鼠标光标的显示和隐藏.</em>
 
 SystemCursor(cmd)  <em>; cmd = "Show|Hide|Toggle"</em>
 {
     static vision := true, c := {}
     static system_cursors := "32512,32513,32514,32515,32516,32642,32643,32644,32645,32646,32648,32649,32650"
     VarSetCapacity(h_cursor, 4444, 1)
-    if (cmd = "Reload" or !c.Length())  <em>; Reload when requested or at first call.</em>
+    if (cmd = "Reload" or !c.Length())  <em>; 在请求或首次调用时进行重载.</em>
     {
         VarSetCapacity(AndMask, 32*4, 0xFF)
         VarSetCapacity(XorMask, 32*4, 0)
         For i, resID in StrSplit(system_cursors, ",")
         {
             h_cursor := DllCall("LoadCursor", &quot;Ptr&quot;, 0, &quot;Ptr&quot;, resID)
-            <em>; System cursors:</em>
+            <em>; 系统光标:</em>
             c[i] := {r: resID}
-            <em>; Handles of default cursors:</em>
+            <em>; 默认光标的句柄:</em>
             c[i][1] := DllCall("CopyImage", &quot;Ptr&quot;, h_cursor, &quot;UInt&quot;, 2, &quot;Int&quot;, 0, &quot;Int&quot;, 0, &quot;UInt&quot;, 0)
-            <em>; Blank cursors:</em>
+            <em>; 空白光标:</em>
             c[i][0] := DllCall("CreateCursor", &quot;Ptr&quot;, 0, &quot;Int&quot;, 0, &quot;Int&quot;, 0, &quot;Int&quot;, 32, &quot;Int&quot;, 32, &quot;Ptr&quot;, &amp;AndMask, &quot;Ptr&quot;, &amp;XorMask)
         }
     }
@@ -319,76 +324,75 @@ SystemCursor(cmd)  <em>; cmd = "Show|Hide|Toggle"</em>
         DllCall("SetSystemCursor", &quot;Ptr&quot;, h_cursor, &quot;UInt&quot;, cursor.r)
     }
 }</pre>
+</div>
 
-<pre class="NoIndent" id="ExStruct"><em>; Structure Example: Pass the address of a RECT structure to GetWindowRect(), which sets the structure's
-; members to the positions of the left, top, right, and bottom sides of a window (relative to the screen).</em>
-
-Run "Notepad"
-WinWait "Untitled - Notepad"  <em>; This also sets the &quot;<a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a>&quot; for use with WinExist below.</em>
-VarSetCapacity(Rect, 16)  <em>; A RECT is a struct consisting of four 32-bit integers (i.e. 4*4=16).</em>
-DllCall(&quot;GetWindowRect&quot;, &quot;Ptr&quot;, WinExist(), &quot;Ptr&quot;, &amp;Rect)  <em>; WinExist returns an HWND.</em>
+<div class="ex" id="ExStruct">
+<p><a href="#ExStruct">#10</a>: 结构的例子. 把 RECT 结构的地址传递给 GetWindowRect(), 它会把 窗口的左, 上, 右和下边的位置(相对于屏幕) 存入结构的成员中.</p>
+<pre>Run "Notepad"
+WinWait "Untitled - Notepad"  <em>; 这里同时设置了 "<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>" 以用于下面的 WinExist.</em>
+VarSetCapacity(Rect, 16)  <em>; RECT 结构由四个 32 位整数组成(即 4*4=16).</em>
+DllCall(&quot;GetWindowRect&quot;, &quot;Ptr&quot;, WinExist(), &quot;Ptr&quot;, &amp;Rect)  <em>; WinExist 返回 HWND.</em>
 L := NumGet(Rect, 0, "Int"), T := NumGet(Rect, 4, "Int")
 R := NumGet(Rect, 8, "Int"), B := NumGet(Rect, 12, "Int")
 MsgBox Format("Left {1} Top {2} Right {3} Bottom {4}", L, T, R, B)</pre>
 
-<pre class="NoIndent"><em>; Structure Example: Pass to FillRect() the address of a RECT structure that indicates a part of the
-; screen to temporarily paint red.</em>
+<div class="ex" id="ExStructRect">
+<p><a href="#ExStructRect">#11</a>: 结构的例子. 把 RECT 结构的地址传递给 FillRect(), 这个结构表示需要临时描绘为红色的屏幕区域.</p>
+<pre>VarSetCapacity(Rect, 16, 0)  <em>; 设置容量为 4 个的 4 字节整型并把它们都初始化为零.</em>
+<a href="NumPut.htm">NumPut</a>(A_ScreenWidth//2, Rect, 8, "Int")  <em>; 结构中的第三个整数是 &quot;rect.right&quot;.</em>
+NumPut(A_ScreenHeight//2, Rect, 12, "Int") <em>; 结构中的第四个整数是 &quot;rect.bottom&quot;.</em>
+hDC := DllCall(&quot;GetDC&quot;, "Ptr", 0, "Ptr")  <em>; 传递零来获取桌面的设备上下文.</em>
+hBrush := DllCall(&quot;CreateSolidBrush&quot;, "UInt", 0x0000FF, "Ptr")  <em>; 创建红色画刷(0x0000FF 是 BGR 格式).</em>
+DllCall(&quot;FillRect&quot;, "Ptr", hDC, "Ptr", &amp;Rect, "Ptr", hBrush)  <em>; 使用上面的画刷填充指定的矩形.</em>
+DllCall(&quot;ReleaseDC&quot;, "Ptr", 0, "Ptr", hDC)  <em>; 清理.</em>
+DllCall(&quot;DeleteObject&quot;, "Ptr", hBrush)  <em>; 清理.</em></pre>
+</div>
 
-VarSetCapacity(Rect, 16, 0)  <em>; Set capacity to hold four 4-byte integers and initialize them all to zero.</em>
-<a href="NumPut.htm">NumPut</a>(A_ScreenWidth//2, Rect, 8, "Int")  <em>; The third integer in the structure is &quot;rect.right&quot;.</em>
-NumPut(A_ScreenHeight//2, Rect, 12, "Int") <em>; The fourth integer in the structure is &quot;rect.bottom&quot;.</em>
-hDC := DllCall(&quot;GetDC&quot;, "Ptr", 0, "Ptr")  <em>; Pass zero to get the desktop's device context.</em>
-hBrush := DllCall(&quot;CreateSolidBrush&quot;, "UInt", 0x0000FF, "Ptr")  <em>; Create a red brush (0x0000FF is in BGR format).</em>
-DllCall(&quot;FillRect&quot;, "Ptr", hDC, "Ptr", &amp;Rect, "Ptr", hBrush)  <em>; Fill the specified rectangle using the brush above.</em>
-DllCall(&quot;ReleaseDC&quot;, "Ptr", 0, "Ptr", hDC)  <em>; Clean-up.</em>
-DllCall(&quot;DeleteObject&quot;, "Ptr", hBrush)  <em>; Clean-up.</em></pre>
-
-<pre class="NoIndent"><em>; Structure Example: Change the system's clock to the specified date and time. Use caution when
-; changing to a date in the future as it may cause scheduled tasks to run prematurely!</em>
-
-SetSystemTime(&quot;20051008142211&quot;)  <em>; Pass it a <a href="FileSetTime.htm#YYYYMMDD">timestamp</a> (local, not UTC).</em>
+<div class="ex" id="ExSystemTime">
+<p><a href="#ExSystemTime">#12</a>: 结构的例子. 将系统的时钟更改为指定的日期和时间. 请注意改变时间为将来的日期可能会导致计划任务提早运行!</p>
+<pre>SetSystemTime(&quot;20051008142211&quot;)  <em>; 传递<a href="FileSetTime.htm#YYYYMMDD">时间戳</a>(本地的, 非 UTC).</em>
 
 SetSystemTime(YYYYMMDDHHMISS)
-<em>; Sets the system clock to the specified date and time.
-; Caller must ensure that the incoming parameter is a valid date-time stamp
-; (local time, not UTC). Returns non-zero upon success and zero otherwise.</em>
+<em>; 设置系统时钟为指定的日期和时间.
+; 调用者必须确保传入的参数是有效的日期时间戳
+; (本地时间, 非 UTC). 成功时返回非零值, 否则返回零.</em>
 {
-    <em>; Convert the parameter from local time to UTC for use with SetSystemTime().</em>
-    UTC_Delta := DateDiff(A_Now, A_NowUTC, "Seconds")  <em>; Seconds is more accurate due to rounding issue.</em>
-    UTC_Delta := Round(-UTC_Delta/60)  <em>; Round to nearest minute to ensure accuracy.</em>
-    YYYYMMDDHHMISS := DateAdd(YYYYMMDDHHMISS, UTC_Delta, "Minutes")  <em>; Apply offset to convert to UTC.</em>
+    <em>; 把参数从本地时间转换为 UTC 以便用于 SetSystemTime().</em>
+    UTC_Delta := DateDiff(A_Now, A_NowUTC, "Seconds")  <em>; 取整后秒数会更精确.</em>
+    UTC_Delta := Round(-UTC_Delta/60)  <em>; 取整到最近的分钟数以确保精度.</em>
+    YYYYMMDDHHMISS := DateAdd(YYYYMMDDHHMISS, UTC_Delta, "Minutes")  <em>; 对本地时间应用偏移来转换到 UTC.</em>
 
-    VarSetCapacity(SystemTime, 16, 0)  <em>; This struct consists of 8 UShorts (i.e. 8*2=16).</em>
+    VarSetCapacity(SystemTime, 16, 0)  <em>; 此结构由 8 个 UShort 组成(即 8*2=16).</em>
 
-    Int := SubStr(YYYYMMDDHHMISS, 1, 4)  <em>; YYYY (year)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 1, 4)  <em>; YYYY(年)</em>
     <a href="NumPut.htm">NumPut</a>(Int, SystemTime, 0, &quot;UShort&quot;)
-    Int := SubStr(YYYYMMDDHHMISS, 5, 2)  <em>; MM (month of year, 1-12)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 5, 2)  <em>; MM(月, 01-12)</em>
     NumPut(Int, SystemTime, 2, &quot;UShort&quot;)
-    Int := SubStr(YYYYMMDDHHMISS, 7, 2)  <em>; DD (day of month)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 7, 2)  <em>; DD(日)</em>
     NumPut(Int, SystemTime, 6, &quot;UShort&quot;)
-    Int := SubStr(YYYYMMDDHHMISS, 9, 2)  <em>; HH (hour in 24-hour time)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 9, 2)  <em>; HH(小时, 00-24)</em>
     NumPut(Int, SystemTime, 8, &quot;UShort&quot;)
-    Int := SubStr(YYYYMMDDHHMISS, 11, 2) <em>; MI (minute)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 11, 2) <em>; MI(分钟)</em>
     NumPut(Int, SystemTime, 10, &quot;UShort&quot;)
-    Int := SubStr(YYYYMMDDHHMISS, 13, 2) <em>; SS (second)</em>
+    Int := SubStr(YYYYMMDDHHMISS, 13, 2) <em>; SS(秒)</em>
     NumPut(Int, SystemTime, 12, &quot;UShort&quot;)
 
     return DllCall(&quot;SetSystemTime&quot;, &quot;Ptr&quot;, &amp;SystemTime)
 }</pre>
+</div>
 
-<pre class="NoIndent"><em>/* <strong>More Structure Examples:</strong>
+<p>更多结构的例子:</p>
+<ul>
+  <li>请参阅 <a href="../scripts/WinLIRC.htm">WinLIRC 客户端脚本</a>演示来学习如何使用 DllCall() 来创建
+到 TCP/IP 服务器的连接并从那里接收数据.</li>
+  <li>操作系统提供了标准的对话框让用户选取字体和/或颜色或图标.
+  这些对话框使用了结构, 并可以在这里找到演示的例子: <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a>.</li>
+</ul>
+</div>
 
-1) See the <a href="../scripts/WinLIRC.htm">WinLIRC client script</a> for a demonstration of how to use DllCall to make a network connection
-to a TCP/IP server and receive data from it.
-
-2) The operating system offers standard dialog boxes that prompt the user to pick a font and/or color, or an icon.
-These dialogs use structures and are demonstrated at <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a>.
-
-*/</em></pre>
-
-<pre id="ExTaskbar" class="NoIndent"><em>/*
-  Example: Temporarily remove the active window from the taskbar by using COM.
-
+<div class="ex" id="ExTaskbar">
+<p><a href="#ExTaskbar">#13</a>: 使用 COM 从任务栏暂时地移除活动窗口.</p>
+<pre><em>/*
   Methods in <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a>'s VTable:
     IUnknown:
       0 QueryInterface  -- use <a href="ComObjQuery.htm">ComObjQuery</a> instead
@@ -404,7 +408,7 @@ These dialogs use structures and are demonstrated at <a href="https://github.com
 IID_ITaskbarList  := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
 CLSID_TaskbarList := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
-<em>; Create the TaskbarList object and store its address in tbl.</em>
+<em>; 创建 TaskbarList 对象并把它的地址保存到 tbl.</em>
 tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskbarList)
 
 activeHwnd := WinExist("A")
@@ -414,16 +418,17 @@ DllCall(vtable(tbl,5), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http:/
 Sleep 3000
 DllCall(vtable(tbl,4), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
 
-<em>; Non-dispatch objects must always be manually freed.</em>
+<em>; 非 dispatch 对象总是需要手动释放.</em>
 ObjRelease(tbl)
 
 vtable(ptr, n) {
-    <em>; NumGet(ptr+0) returns the address of the object's virtual function
-    ; table (vtable for short). The remainder of the expression retrieves
-    ; the address of the nth function's address from the vtable.</em>
+    <em>; NumGet(ptr+0) 返回对象的虚函数表(简称为 vtable) 的地址
+    ; 表达式的其余部分从
+    ; vtable 中获取第 n 个函数的地址.</em>
     return NumGet(NumGet(ptr+0), n*A_PtrSize)
 }
 </pre>
+</div>
 
 </body>
 </html>

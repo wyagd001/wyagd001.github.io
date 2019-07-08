@@ -19,26 +19,26 @@
 
   <dt>ComObject</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#objects">Object</a> or <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#objects">对象</a> or <a href="../Concepts.htm#numbers">Integer</a></p>
     <p>A COM wrapper object or raw interface pointer.</p>
   </dd>
 
   <dt>IID</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>An interface identifier (GUID) in the form "{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}".</p>
   </dd>
 
   <dt>SID</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>A service identifier in the same form as IID. When omitting this parameter, also omit the comma.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>This function returns the pointer to the requested interface. If the pointer cannot be retrieved, zero is returned.</p>
 
 <h2>备注</h2>
@@ -48,84 +48,85 @@
 <a href="ObjAddRef.htm">ObjRelease</a>, <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjError.htm">ComObjError</a>
 
 <h2>示例</h2>
-
-<pre id="ExClassName" class="NoIndent"><em>; Example: Determine the class name of an object.</em>
-
-obj := ComObjCreate("Scripting.Dictionary")
+<div class="ex" id="ExClassName">
+<p><a href="#ExClassName">#1</a>: 确定对象的类名.</p>
+<pre>obj := ComObjCreate("Scripting.Dictionary")
 
 MsgBox "Interface name: " ComObjType(obj, "name")
 
 IID_IProvideClassInfo := "{B196B283-BAB4-101A-B69C-00AA00341D07}"
 
-<em>; Request a pointer to the object's IProvideClassInfo interface.</em>
+<em>; 请求对象的 IProvideClassInfo 接口的指针.</em>
 if !(pci := ComObjQuery(obj, IID_IProvideClassInfo))
 {
     MsgBox "IProvideClassInfo interface not supported."
     return
 }
 
-<em>; Call GetClassInfo to retrieve a pointer to the ITypeInfo interface.</em>
+<em>; 调用 GetClassInfo 来获取 ITypeInfo 接口的指针.</em>
 DllCall(vtable(pci, 3), "ptr", pci, "ptr*", ti)
 
-<em>; Call GetDocumentation to get the object's full type name.</em>
+<em>; 调用 GetDocumentation 来获取对象的完整类型名称.</em>
 DllCall(vtable(ti, 12), "ptr", ti, "int", -1, "ptr*", name, "ptr", 0, "ptr", 0, "ptr", 0)
 
-<em>; Convert the BSTR pointer to a usable string.</em>
+<em>; 转换 BSTR 指针为可用的字符串.</em>
 name := StrGet(name, "UTF-16")
 
-<em>; Release raw interface pointers.</em>
+<em>; 释放原始接口指针.</em>
 ObjRelease(ti)
 ObjRelease(pci)
 
-<em>; Display the type name!</em>
+<em>; 显示类型名称!</em>
 MsgBox "Class name: " name
 
 vtable(ptr, n) {
-    <em>; NumGet(ptr+0) returns the address of the object's virtual function
-    ; table (vtable for short). The remainder of the expression retrieves
-    ; the address of the nth function's address from the vtable.</em>
+    <em>; NumGet(ptr+0) 返回对象的虚函数表的地址(简称为 vtable).
+    ; 表达式的其余部分从
+    ; vtable 获取第 n 个函数的地址.</em>
     return NumGet(NumGet(ptr+0), n*A_PtrSize)
 }
 </pre>
+</div>
 
-<pre id="ExIE" class="NoIndent"><em>; Example: Automate an existing Internet Explorer window.</em>
-
-sURL := "https://autohotkey.com/boards/"
+<div class="ex" id="ExIE">
+<p><a href="#ExIE">#2</a>: 自动化现有的 Internet Explorer 窗口.</p>
+<pre>sURL := "https://autohotkey.com/boards/"
 if WebBrowser := GetWebBrowser()
     WebBrowser.Navigate(sURL)
 return
 
 GetWebBrowser()
 {
-    <em>; Get a raw pointer to the document object of the top-most IE window.</em>
+    <em>; 获取指向顶部 IE 窗口的文档对象的原始指针.</em>
     static msg := DllCall("RegisterWindowMessage", "Str", "WM_HTML_GETOBJECT")
     lResult := SendMessage(msg, 0, 0, "Internet Explorer_Server1", "ahk_class IEFrame")
     if !lResult
-        return  <em>; IE not found.</em>
+        return  <em>; 未找到 IE.</em>
     DllCall("oleacc\ObjectFromLresult", "Ptr", lResult
         , "Ptr", GUID(IID_IHTMLDocument2,"{332C4425-26CB-11D0-B483-00C04FD90119}")
         , "Ptr", 0, "Ptr*", pdoc)
     
-    <em>; Query for the WebBrowserApp service. In this particular case,
-    ; the SID and IID are the same, but it isn't always this way.</em>
+    <em>; 查询 WebBrowserApp 服务. 在这种特殊情况中,
+    ; SID 和 IID 相同, 但不总是如此.</em>
     static IID_IWebBrowserApp := "{0002DF05-0000-0000-C000-000000000046}"
     static SID_SWebBrowserApp := IID_IWebBrowserApp
     pweb := ComObjQuery(pdoc, SID_SWebBrowserApp, IID_IWebBrowserApp)
     
-    <em>; Release the document object pointer.</em>
+    <em>; 释放文档对象指针.</em>
     ObjRelease(pdoc)
     
-    <em>; Return the WebBrowser object, wrapped for usability:</em>
+    <em>;  返回包装过的可用的 WebBrowser 对象:</em>
     static VT_DISPATCH := 9, F_OWNVALUE := 1
     return ComObject(VT_DISPATCH, pweb, F_OWNVALUE)
 }
 
-GUID(ByRef GUID, sGUID) <em>; Converts a string to a binary GUID and returns its address.</em>
+GUID(ByRef GUID, sGUID) <em>; 转换字符串为二进制的 GUID 并返回其地址.</em>
 {
     VarSetCapacity(GUID, 16, 0)
     return DllCall("ole32\CLSIDFromString", "WStr", sGUID, "Ptr", &amp;GUID) &gt;= 0 ? &amp;GUID : ""
 }
 </pre>
+</div>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Continue - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The Continue statement skips the rest of the current loop iteration and begins a new one. Valid inside any kind of loop." />
+<meta name="description" content="The Continue statement skips the rest of a loop statement's current iteration and begins a new one." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,46 +11,57 @@
 <body>
 
 <h1>Continue</h1>
-
-<p>Skips the rest of the current <a href="Loop.htm">loop</a> iteration and begins a new one. Valid inside any kind of <a href="Loop.htm">loop</a>.</p>
-
+<p>跳过当前<a href="../Language.htm#loop-statement">循环语句</a>的剩余部分并继续下一次循环.</p>
 <pre class="Syntax"><span class="func">Continue</span> <span class="optional">LoopLabel</span></pre>
-<p>If specified, <em>LoopLabel</em> identifies which loop this statement should apply to; either by <a href="../misc/Labels.htm">label name</a> or numeric nesting level. If omitted or 1, this statement applies to the innermost loop in which it is enclosed. If a <a href="../misc/Labels.htm">label</a> is specified, it must point directly at a loop statement.</p>
-<p><em>LoopLabel</em> must be a constant value - variables and expressions are not supported, with the exception of a single literal number or quoted string enclosed in parentheses. 例如: <code>continue("outer")</code></p>
-<p>Continue behaves the same as reaching the loop's closing brace:</p>
+
+<h2>参数</h2>
+<dl>
+  <dt>LoopLabel</dt>
+  <dd>
+  <dd><em>LoopLabel</em> 标识了该语句应该应用于哪个循环; 这是通过<a href="../misc/Labels.htm">标签名</a>或嵌套层级的数值来实现的. 如果省略或为 1, 此语句应用于它所在的最内层循环. 如果指定了<a href="../misc/Labels.htm">标签</a>, 则它必须直接指向<a href="../Language.htm#loop-statement">循环语句</a></p>
+    <p><em>LoopLabel</em> 必须为常量, 不支持变量和表达式, 但括号中的单个原义数字或用圆括号括起来的字符串除外, 例如: <code>continue("outer")</code>.</p>
+  </dd>
+</dl>
+
+<h2>备注</h2>
+<p>Continue 的行为如同直接到达了循环的闭括号:</p>
 <ol>
-  <li>It increases <a href="../Variables.htm#Index">A_Index</a> by 1.</li>
-  <li>It skips the rest of the loop's body.</li>
-  <li>The loop's condition (if it has one) is checked to see if it is satisified. If so, a new iteration begins; otherwise the loop ends.</li>
+  <li>它让 <a href="../Variables.htm#Index">A_Index</a> 加 1.</li>
+  <li>它跳过了循环体的剩余部分.</li>
+  <li>检查循环条件(如果有) 判断是否满足. 如果满足, 开始新的循环; 否则循环结束.</li>
 </ol>
-<p>The use of <a href="Break.htm">Break</a> and Continue are encouraged over <a href="Goto.htm">goto</a> since they usually make scripts more readable and maintainable.</p>
+<p>鼓励使用 <a href="Break.htm">Break</a> 和 Continue 代替 <a href="Goto.htm">Goto</a> 因为它们通常让脚本更容易阅读和维护.</p>
+
 <h2>相关</h2>
 <p><a href="Break.htm">Break</a>, <a href="Loop.htm">Loop</a>, <a href="Until.htm">Until</a>, <a href="While.htm">While-loop</a>, <a href="For.htm">For-loop</a>, <a href="Block.htm">Blocks</a>, <a href="../misc/Labels.htm">Labels</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent"><em>; This example displays 5 MsgBoxes, one for each number between 6 and 10.
-; Note that in the first 5 iterations of the Loop, the &quot;continue&quot; statement
-; causes the loop to start over before it reaches the MsgBox line.</em>
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a>: 此例显示 5 次 MsgBox 消息框, 为从 6 到 10 的每个数字显示一次. 注意 Loop 的前 5 次循, Continue 语句会使得循环在到达 MsgBox 前重新开始.</p>
+<pre>
 Loop 10
 {
     if (A_Index &lt;= 5)
         continue
     MsgBox A_Index
 }</pre>
-<pre class="NoIndent"><em>; Continue the outer loop from within a nested loop.</em>
-outer:
+</div>
+
+<div class="ex" id="ExContinueOuter">
+<p><a href="#ExContinueOuter">#2</a>: 从内嵌循环内部直接继续新的外层(outer) 循环.</p>
+<pre>outer:
 Loop 3
 {
     x := A_Index
     Loop 3
     {
         if (x*A_Index = 4)
-            continue outer  <em>; Equivalent to <b>continue 2</b> or <b>goto continue_outer</b>.</em>
+            continue outer  <em>; 等同于 <b>continue 2</b> 或 <b>goto continue_outer</b>.</em>
         MsgBox x "," A_Index
     }
-    continue_outer: <em>; For goto.</em>
-}
-</pre>
+    continue_outer: <em>; 用于 goto 命令.</em>
+}</pre>
+</div>
 
 </body>
 </html>

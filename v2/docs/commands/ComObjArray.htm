@@ -21,22 +21,22 @@
 
   <dt>VarType</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     The base type of the array (the VARTYPE of each element of the array). The VARTYPE is restricted to a subset of the variant types. Neither the VT_ARRAY nor the VT_BYREF flag can be set. VT_EMPTY and VT_NULL are not valid base types for the array. All other types are legal.
     <p>See <a href="ComObjType.htm">ComObjType</a> for a list of possible values.</p>
   </dd>
 
   <dt>Count<i>N</i></dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>The size of each dimension. Arrays containing up to 8 dimensions are supported.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
-<p>Type: <a href="../Concepts.htm#objects">Object</a></p>
-<p>This function returns a <a href="../Concepts.htm#references-to-objects">reference</a> to a new wrapper object containing the SafeArray, which supports the following methods:</p>
+<p>类型: <a href="../Concepts.htm#objects">对象</a></p>
+<p>This function returns a <a href="../Concepts.htm#references-to-objects">reference</a> to a new wrapper object containing the SafeArray, which supports the following 方法:</p>
 <ul>
     <li><code>.MaxIndex(n)</code>: Returns the upper bound of the <i>n</i>th dimension. If <i>n</i> is omitted, it defaults to 1.</li>
     <li><code>.MinIndex(n)</code>: Returns the lower bound of the <i>n</i>th dimension. If <i>n</i> is omitted, it defaults to 1.</li>
@@ -58,9 +58,9 @@ else
 <p><a href="ComObject.htm">ComObject</a>, <a href="ComObjType.htm">ComObjType</a>, <a href="ComObjValue.htm">ComObjValue</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221145.aspx">Array Manipulation Functions (MSDN)</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent" id="Ex1"><em>; Example #1: Simple usage.</em>
-
-arr := ComObjArray(VT_VARIANT:=12, 3)
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a>: 简单示例.</p>
+<pre id="Ex1">arr := ComObjArray(VT_VARIANT:=12, 3)
 arr[0] := "Auto"
 arr[1] := "Hot"
 arr[2] := "key"
@@ -68,20 +68,21 @@ Loop arr.MaxIndex() + 1
     t .= arr[A_Index-1]
 MsgBox t
 </pre>
+</div>
 
-<pre class="NoIndent" id="Ex2"><em>; Example #2: Multiple dimensions.</em>
+<div class="ex" id="ExMultiDims">
+<p><a href="#ExMultiDims">#2</a>: 多维数组.</p>
+<pre id="Ex2">arr := ComObjArray(VT_VARIANT:=12, 3, 4)
 
-arr := ComObjArray(VT_VARIANT:=12, 3, 4)
-
-<em>; Get the number of dimensions:</em>
+<em>; 获取数组的维数:</em>
 dim := DllCall("oleaut32\SafeArrayGetDim", "ptr", ComObjValue(arr))
 
-<em>; Get the bounds of each dimension:</em>
+<em>; 得到每个维度的边界:</em>
 Loop dim
     dims .= arr.MinIndex(A_Index) " .. " arr.MaxIndex(A_Index) "`n"
 MsgBox dims
 
-<em>; Simple usage:</em>
+<em>; 简单用法:</em>
 Loop 3 {
     x := A_Index-1
     Loop 4 {
@@ -91,6 +92,7 @@ Loop 3 {
 }
 MsgBox arr[2, 3]
 </pre>
+</div>
 
 </body>
 </html>

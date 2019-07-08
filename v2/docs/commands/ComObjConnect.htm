@@ -19,7 +19,7 @@
 
   <dt>ComObject</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#objects">Object</a></p>
+    <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
     <p>An object which raises events.</p>
     <p>If the object does not support the IConnectionPointContainer interface or type information about the object's class cannot be retrieved, an error message is shown. This can be suppressed or handled with <a href="ComObjError.htm">ComObjError</a> or <a href="Try.htm">try</a>/<a href="Catch.htm">catch</a>.</p>
     <p>The IProvideClassInfo interface is used to retrieve type information about the object's class if the object supports it. Otherwise, ComObjConnect attempts to retrieve type information via the object's IDispatch interface, which may be unreliable.</p>
@@ -27,7 +27,7 @@
 
   <dt>Prefix</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>A string to prefix to the event name to determine which function to call when an event occurs.</p>
       <p>If omitted, the object is "disconnected"; that is, the script will no longer receive notification of its events.</p>
       <p>This parameter can be an object defined by the script. When an event is raised, the corresponding method is called. The first parameter, which is usually the hidden <code>this</code> parameter, refers to the script-defined object, not the COM object. To catch all events without defining a method for each one, define a <a href="../Objects.htm#Meta_Functions">__Call meta-function</a>.</p>
@@ -44,7 +44,7 @@
 }</pre>
 <p><i>Prefix</i> is a prefix of your choosing, while <b>EventName</b> is the name of whatever event the function should handle.</p>
 <p><i>Params</i> corresponds to whatever parameters the event has. If the event has no parameters, <i>Params</i> should be omitted entirely. <i>ComObject</i> is optional, and can only be used if the correct number of <i>Params</i> are defined; it contains a reference to the original wrapper object which was passed to ComObjConnect. &quot;ComObject&quot; should be replaced with a name more meaningful in the context of your script.</p>
-<p>Note that event handlers may have return values. To return a COM-specific type of value, use <a href="ComObject.htm">ComObject(type, value)</a>. For example, <code>return ComObject(0,0)</code> returns a variant of type VT_EMPTY, which is equivalent to returning <code>undefined</code> (or not returning) from a JavaScript function.</p>
+<p>Note that event handlers may have return values. To return a COM-specific type of value, use <a href="ComObject.htm">ComObject(type, value)</a>. 例如, <code>return ComObject(0,0)</code> returns a variant of type VT_EMPTY, which is equivalent to returning <code>undefined</code> (or not returning) from a JavaScript function.</p>
 <p>Call <code>ComObjConnect(yourObject, "<i>Prefix</i>")</code> to enable event-handling.</p>
 <p>Call <code>ComObjConnect(yourObject)</code> to disconnect the object (stop handling events).</p>
 <p>If the number of parameters is not known, a <a href="../Functions.htm#Variadic">variadic function</a> can be used.</p>
@@ -55,14 +55,15 @@
 <h2>相关</h2>
 <p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="http://msdn.microsoft.com/en-us/library/ccxe1xe6.aspx">WScript.ConnectObject (MSDN)</a></p>
 
-<h2 id="Examples">Examples</h2>
-<pre class="NoIndent">
-ie := ComObjCreate("<a href="http://msdn.microsoft.com/en-us/library/aa752084.aspx">InternetExplorer.Application</a>")
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExIE">
+<p><a href="#ExIE">#1</a></p>
+<pre>ie := ComObjCreate("<a href="http://msdn.microsoft.com/en-us/library/aa752084.aspx">InternetExplorer.Application</a>")
 
-<em>; Connects events to corresponding script functions with the prefix "IE_".</em>
+<em>; 将事件连接到相应的 "IE_" 为前缀的脚本函数.</em>
 <b>ComObjConnect</b>(ie, "IE_")
 
-ie.Visible := true  <em>; This is known to work incorrectly on IE7.</em>
+ie.Visible := true  <em>; 此语句在 IE7 中无法正常执行.</em>
 ie.Navigate("https://autohotkey.com/")
 #Persistent
 
@@ -79,6 +80,7 @@ ie.Navigate("https://autohotkey.com/")
     ExitApp
 }
 </pre>
+</div>
 
 </body>
 </html>
