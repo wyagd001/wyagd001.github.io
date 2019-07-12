@@ -161,7 +161,7 @@ tocData = [
   [
     ["DirSelect","commands/DirSelect.htm"],
     ["FileSelect","commands/FileSelect.htm"],
-    ["Gui control types","commands/GuiControls.htm"],
+    ["Gui 控件类型","commands/GuiControls.htm"],
     ["Gui object","objects/Gui.htm"],
     ["GuiControl object","objects/GuiControl.htm"],
     ["GuiCreate","commands/GuiCreate.htm"],

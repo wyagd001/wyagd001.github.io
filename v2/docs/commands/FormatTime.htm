@@ -219,7 +219,9 @@ $(function(){
 <p>To convert in the reverse direction -- that is, <em>from</em> a formatted date/time <em>to</em> <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> format -- see <a href="http://www.autohotkey.com/forum/topic20405.html">www.autohotkey.com/forum/topic20405.html</a></p>
 <p>See also: <a href="GuiControls.htm#DateTime">Gui DateTime control</a>, <a href="../Variables.htm#date">built-in date and time variables</a>, <a href="FileGetTime.htm">FileGetTime</a></p>
 <h2>示例</h2>
-<pre class="NoIndent">TimeString := FormatTime()
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a></p>
+<pre>TimeString := FormatTime()
 MsgBox "The current time and date (time first) is " TimeString
 
 TimeString := FormatTime("R")
@@ -241,30 +243,33 @@ MsgBox FormatTime(200504, "'Month Name': MMMM`n'Day Name': dddd")
 
 YearWeek := FormatTime(20050101, "YWeek")
 MsgBox "January 1st of 2005 is in the following ISO year and week number: " YearWeek</pre>
+</div>
 
-<pre class="NoIndent"><em>; Change the date-time stamp of a file:</em>
-FileName := FileSelect(3,, "Pick a file")
-if FileName = "" <em>; The user didn't pick a file.</em>
+<div class="ex" id="ExFileTime">
+<p><a href="#ExFileTime">#2</a>: 改变文件的日期-时间戳:</p>
+<pre>FileName := FileSelect(3,, "Pick a file")
+if FileName = "" <em>; 用户没有选取文件.</em>
     return
 FileTime := FileGetTime(FileName)
-FileTime := FormatTime(FileTime)   <em>; Since the last parameter is omitted, the long date and time are retrieved.</em>
+FileTime := FormatTime(FileTime)   <em>; 由于省略了最后一个参数, 所以获取长日期和时间.</em>
 MsgBox "The selected file was last modified at " FileTime</pre>
+</div>
 
-<pre class="NoIndent"><em>; The following function converts the specified number of seconds into the corresponding
-; number of hours, minutes, and seconds (hh:mm:ss format).</em>
+<div class="ex" id="ExFormatSec">
+<p><a href="#ExFormatSec">#3</a>: 下面的函数把指定的秒数转换成相应的小时数, 分钟数和秒数(hh:mm:ss 格式).</p>
+<pre>MsgBox FormatSeconds(7384)  <em>; 7384 = 2 小时 + 3 分钟 + 4 秒. 它的结果: 2:03:04</em>
 
-MsgBox FormatSeconds(7384)  <em>; 7384 = 2 hours + 3 minutes + 4 seconds. It yields: 2:03:04</em>
-
-FormatSeconds(NumberOfSeconds)  <em>; Convert the specified number of seconds to hh:mm:ss format.</em>
+FormatSeconds(NumberOfSeconds)  <em>; 把指定的秒数转换成 hh:mm:ss 格式.</em>
 {
-    time := 19990101  <em>; *Midnight* of an arbitrary date.</em>
+    time := 19990101  <em>; 任意日期的 *午夜*.</em>
     time := DateAdd(time, NumberOfSeconds, "Seconds")
     return NumberOfSeconds//3600 &quot;:&quot; FormatTime(time, "mm:ss")
     <em>/*
-    ; Unlike the method used above, this would not support more than 24 hours worth of seconds:
+    ; 和上面方法不同的是, 这里不支持超过 24 小时的秒数:
     return FormatTime(time, "h:mm:ss")
     */</em>
 }</pre>
+</div>
 
 </body>
 </html>

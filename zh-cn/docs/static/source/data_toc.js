@@ -164,7 +164,7 @@
     ["FileSelectFile","commands/FileSelectFile.htm"],
     ["FileSelectFolder","commands/FileSelectFolder.htm"],
     ["Gui","commands/Gui.htm"],
-    ["Gui control types","commands/GuiControls.htm"],
+    ["Gui 控件类型","commands/GuiControls.htm"],
     ["GuiControl","commands/GuiControl.htm"],
     ["GuiControlGet","commands/GuiControlGet.htm"],
     ["Gui ListView control","commands/ListView.htm"],

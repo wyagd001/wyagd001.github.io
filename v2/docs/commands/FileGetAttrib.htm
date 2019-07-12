@@ -20,7 +20,7 @@ $(function(){
 
 <h1>FileGetAttrib</h1>
 
-<p>Reports whether a file or folder is read-only, hidden, etc.</p>
+<p>报告文件或文件夹是否为只读, 隐藏等.</p>
 
 <pre class="Syntax">AttributeString := <span class="func">FileGetAttrib</span>(<span class="optional">Filename</span>)</pre>
 <h2>参数</h2>
@@ -29,48 +29,50 @@ $(function(){
   <dt>Filename</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>The name of the target file, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified. If omitted, the current file of the innermost enclosing <a href="LoopFiles.htm">File-Loop</a> will be used instead. Unlike <a href="FileExist.htm">FileExist</a> and <a href="DirExist.htm">DirExist</a>, this must be a true filename, not a pattern.</p>
+    <p>目标文件名, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中. 如果省略, 则使用最内层<a href="LoopFile.htm">文件循环</a>的当前文件. 与 <a href="FileExist.htm">FileExist</a> 和 <a href="DirExist.htm">DirExist</a> 不同, 这必须是一个真正的文件名, 而不是一个模式.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>This function returns the attributes of the file or folder. This string is a subset of <code>RASHNDOCT</code>, where each letter means the following:</p>
+<p>函数返回文件或文件夹的属性. 这个字符串是 <code>RASHNDOCT</code>, 的子集, 其中每个字母的意思如下:</p>
 <ul>
-  <li>R = READONLY</li>
-  <li>A = ARCHIVE</li>
-  <li>S = SYSTEM</li>
-  <li>H = HIDDEN</li>
-  <li>N = NORMAL</li>
-  <li>D = DIRECTORY</li>
-  <li>O = OFFLINE</li>
-  <li>C = COMPRESSED</li>
-  <li>T = TEMPORARY</li>
+    <li>R = READONLY(只读)</li>
+    <li>A = ARCHIVE(存档)</li>
+    <li>S = SYSTEM(系统)</li>
+    <li>H = HIDDEN(隐藏)</li>
+    <li>N = NORMAL(普通)</li>
+    <li>D = DIRECTORY(目录)</li>
+    <li>O = OFFLINE(离线)</li>
+    <li>C = COMPRESSED(压缩)</li>
+    <li>T = TEMPORARY(临时)</li>
 </ul>
-<p>If no file or folder is found, an empty string is returned.</p>
+<p>如果没有找到文件或文件夹, 则返回空字符串.</p>
 
 <h2>Error Handling</h2>
 <p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0.</p>
-<p><a href="../Variables.htm#LastError">A_LastError</a> is set to the result of the operating system's GetLastError() function.</p>
+<p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
 
 <h2>备注</h2>
-<p>On a related note, to retrieve a file's 8.3 short name, follow this example:</p>
+<p>另外, 要检索文件的 8.3 短名称, 请遵循以下示例:</p>
 <pre><a href="LoopFiles.htm">Loop Files</a>, "C:\My Documents\Address List.txt"
-    ShortPathName := A_LoopFileShortPath  <em>; Will yield something similar to C:\MYDOCU~1\ADDRES~1.txt</em></pre>
-<p>A similar method can be used to get the long name of an 8.3 short name.</p>
+    ShortPathName := A_LoopFileShortPath  <em>; 将产生类似于 C:\MYDOCU~1\ADDRES~1.txt 的路径</em></pre>
+<p>可以使用类似的方法获得 8.3 短名称对应的长名称.</p>
 <h2>相关</h2>
 <p><a href="FileExist.htm">FileExist</a>, <a href="DirExist.htm">DirExist</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileGetTime.htm">FileGetTime</a>, <a href="FileSetTime.htm">FileSetTime</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileGetVersion.htm">FileGetVersion</a>, <a href="LoopFiles.htm">File-loop</a></p>
 
 <h2>示例</h2>
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a></p>
+<pre>OutputVar := FileGetAttrib("C:\New Folder")</pre>
+</div>
 
-<h3 id="ex1">示例 #1: Miscellaneous</h3>
-<pre class="NoIndent">OutputVar := FileGetAttrib("C:\New Folder")</pre>
-
-<h3 id="ex2">示例 #2</h3>
-<p>To check if a particular attribute is present in the retrieved string, following this example:</p>
-<pre class="NoIndent">if InStr(FileGetAttrib("C:\My File.txt"), "H")
+<div class="ex" id="ExIf">
+<p><a href="#ExIf">#2</a>: 检查检索的字符串中是否存在特定的属性(隐藏属性).</p>
+<pre>if InStr(FileGetAttrib("C:\My File.txt"), "H")
     MsgBox "The file is hidden."</pre>
+</div>
 
 </body>
 </html>

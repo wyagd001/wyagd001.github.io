@@ -20,7 +20,7 @@ $(function(){
 
 <h1>FileExist</h1>
 
-<p>Checks for the existence of a file or folder and returns its attributes.</p>
+<p>检查文件或目录是否存在并返回它的属性.</p>
 
 <pre class="Syntax">AttributeString := <span class="func">FileExist</span>(FilePattern)</pre>
 <h2>参数</h2>
@@ -29,50 +29,52 @@ $(function(){
   <dt>FilePattern</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>The path, filename, or file pattern to check. <em>FilePattern</em> is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
+    <p>要检查的路径, 文件名或文件模式(文件模式指类似 "*.txt" 这样的 Dos 表示法). 如果未指定完整路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>This function returns the attributes of the first matching file or folder. This string is a subset of <code>RASHNDOCT</code>, where each letter means the following:</p>
+<p>函数返回第一个匹配文件或文件夹的属性. 这个字符串是 <code>RASHNDOCT</code> 的子集, 其中每个字母的意思如下:</p>
 <ul>
-    <li>R = READONLY</li>
-    <li>A = ARCHIVE</li>
-    <li>S = SYSTEM</li>
-    <li>H = HIDDEN</li>
-    <li>N = NORMAL</li>
-    <li>D = DIRECTORY</li>
-    <li>O = OFFLINE</li>
-    <li>C = COMPRESSED</li>
-    <li>T = TEMPORARY</li>
+    <li>R = READONLY(只读)</li>
+    <li>A = ARCHIVE(存档)</li>
+    <li>S = SYSTEM(系统)</li>
+    <li>H = HIDDEN(隐藏)</li>
+    <li>N = NORMAL(普通)</li>
+    <li>D = DIRECTORY(目录)</li>
+    <li>O = OFFLINE(离线)</li>
+    <li>C = COMPRESSED(压缩)</li>
+    <li>T = TEMPORARY(临时)</li>
 </ul>
-<p>If the file has no attributes (rare), "X" is returned. If no file or folder is found, an empty string is returned.</p>
+<p>如果文件没有任何属性(罕见), 则返回 "X". 如果文件不存在则返回空字符串.</p>
 
 <h2>备注</h2>
-<p>Note that searches such as <code>InStr(FileExist("FolderWithFilesAndSubfolders\*"), "D")</code> only tells you whether the <em>first</em> matching file is a folder, not whether a folder exists. In this case, use <a href="DirExist.htm">DirExist</a> instead, such as <code>DirExist("FolderWithFilesAndSubfolders\*")</code>.</p>
-<p>Unlike <a href="FileGetAttrib.htm">FileGetAttrib</a>, FileExist supports wildcard patterns and always returns a non-empty value if a matching file exists.</p>
-<p>Since an empty string is seen as "false", the function's return value can always be used as a quasi-boolean value. 例如, the statement <code>if FileExist("C:\My File.txt")</code> would be true if the file exists and false otherwise.</p>
-<p>Since <em>FilePattern</em> may contain wildcards, FileExist may be unsuitable for validating a file path which is to be used with another function or program. 例如, <code>FileExist("*.txt")</code> may return attributes even though "*.txt" is not a valid filename. In such cases, <a href="FileGetAttrib.htm">FileGetAttrib</a> is preferred.</p>
+<p>注意, 像 <code>InStr(FileExist("FolderWithFilesAndSubfolders\*"), "D")</code> 这样的搜索只告诉您 <em>第一个</em> 匹配的文件是否是一个文件夹, 而不是一个文件夹是否存在. 在这种情况下, 请使用 <a href="DirExist.htm">DirExist</a>, 如 <code>DirExist("FolderWithFilesAndSubfolders\*")</code>.</p>
+<p>与 <a href="FileGetAttrib.htm">FileGetAttrib</a> 不同, FileExist 支持通配符模式, 如果存在匹配的文件, 它总是返回一个非空值.</p>
+<p>由于空字符串被视为 "false", t所以函数的返回值总是可以用作准布尔值. 例如, 如果文件存在, 语句 <code>if FileExist("C:\My File.txt")</code> 为真(true), 否则返回假(false).</p>
+<p>由于 <em>FilePattern</em> 可能包含通配符, 因此 FileExist 可能不适合验证将与其他函数或程序一起使用的文件路径. 例如, <code>FileExist("*.txt")</code> 可能会返回属性即使 "*.txt" 不是有效的文件名. 在这种情况下, <a href="FileGetAttrib.htm">FileGetAttrib</a> is preferred.</p>
 
 <h2>相关</h2>
 <p><a href="DirExist.htm">DirExist</a>, <a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="LoopFiles.htm">File-loops</a></p>
 
 <h2>示例</h2>
-
-<h3 id="ex1">示例 #1: Miscellaneous</h3>
-<pre class="NoIndent">if FileExist("D:\")
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a></p>
+<pre>if FileExist("D:\")
     MsgBox "The drive exists."
 if FileExist("D:\Docs\*.txt")
     MsgBox "At least one .txt file exists."
 if !FileExist("C:\Temp\FlagFile.txt")
     MsgBox "The target file does not exist."</pre>
+</div>
 
-<h3 id="ex2">示例 #2</h3>
-<p>The following example shows how to check the file for a particular attribute:</p>
-<pre class="NoIndent">if InStr(FileExist("C:\My File.txt"), "H")
+<div class="ex" id="ExAttr">
+<p><a href="#ExAttr">#2</a>: 下面的例子展示如何检查文件的特定属性:</p>
+<pre>if InStr(FileExist("C:\My File.txt"), "H")
     MsgBox "The file is hidden."</pre>
+</div>
 
 </body>
 </html>

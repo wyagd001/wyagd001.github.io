@@ -37,59 +37,64 @@ $(function(){
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>以下字符串的零个或多个, 使用单个空格或制表符将每个选项与下一个选项分开. 例如: <code>"`n m5000 UTF-8"</code></p>
     <p><strong>Encoding</strong>: 如果文件缺少 UTF-8 或 UTF-16 字节顺序标记, 则指定 <a href="FileEncoding.htm">FileEncoding</a> 接受的任何编码名称(不包括空字符串) 以使用该编码. 如果省略, 默认为 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>.</p>
-    <p><strong>RAW</strong>: Specify the word RAW (case-insensitive) to read the file's content as <a href="#Binary">raw binary data</a>  and return a <a href="../objects/Buffer.htm">Buffer</a> object instead of a string. This option overrides any previously specified encoding and vice versa.</p>
-    <p><strong>m1024</strong>: If this option is omitted, the entire file is loaded unless there is insufficient memory, in which case an error message is shown and the thread exits (but <a href="Try.htm">Try</a> can be used to avoid this). Otherwise, replace 1024 with a decimal or hexadecimal number of bytes. If the file is larger than this, only its leading part is loaded.</p>
-    <p class="note"><strong>Note</strong>: This might result in the last line ending in a naked carriage return (`r) rather than `r`n.</p>
-    <p><strong>`n</strong> (a linefeed character): Replaces any/all occurrences of carriage return &amp; linefeed (`r`n) with linefeed (`n). However, this translation reduces performance and is usually not necessary. 例如, text containing `r`n is already in the right format to be added to a <a href="StrReplace.htm">Gui Edit control</a>. The following <a href="LoopParse.htm">parsing loop</a> will work correctly regardless of whether each line ends in `r`n or just `n: <code>Loop Parse, MyFileContents, "`n", "`r"</code>.</p>
+    <p><strong>RAW</strong>: 指定单词 RAW(不区分大小写) 以<a href="#Binary">原始二进制数据</a>读取文件内容, 并返回<a href="../objects/Buffer.htm">缓冲</a>对象而不是字符串. 此选项覆盖以前指定的任何编码, 反之亦然.</p>
+    <p><strong>m1024</strong>: 如果省略此选项, 则读取整个文件, 不过如果内存不足, 则显示错误消息并退出线程(使用 <a href="Try.htm">Try</a> 可以避免这种情况). 否则, 请把 1024 替换为十进制或十六进制表示的字节数. 如果文件大于此字节数, 那么只读取其前面部分.</p>
+    <p class="note"><strong>注意</strong>: 此选项可能导致最后一行以单独的回车符(`r) 而不是 `r`n 结束.</p>
+    <p><strong>`n</strong>(换行符): 把所有的回车换行符(`r`n) 替换为换行符(`n). 不过, 这种转换会降低性能而且往往不必要. 例如, 包含 `r`n 的文本已经以正确的格式添加到 <a href="StrReplace.htm">Gui Edit 控件</a>中. 下面的<a href="LoopParse.htm">解析循环</a>将正确工作, 不管每一行的结尾是 `r`n 还是 `n: <code>Loop Parse, MyFileContents, "`n", "`r"</code>.</p>
   </dd>
   
 </dl>
 
 <h2>返回值</h2>
-<p>类型: <a href="../Concepts.htm#strings">字符串</a> or <a href="../objects/Buffer.htm">Buffer</a></p>
-<p>This function returns the contents of the specified file. The return value is a Buffer object if the RAW option is in effect and the file can be opened; otherwise, it is a string. If the file does not exist or cannot be opened for any other reason, an empty string is returned.</p>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../objects/Buffer.htm">缓冲</a></p>
+<p>函数返回指定文件的内容. 如果 RAW 选项有效且文件可以打开, 则返回值为缓冲对象; 否则, 返回字符串. 如果文件不存在或由于其他原因无法打开, 则返回一个空字符串.</p>
 
 <h2>错误处理</h2>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to 0 if the load was successful. It is set to 1 if a problem occurred such as: 1) file does not exist; 2) file is locked or inaccessible; 3) the system lacks sufficient memory to load the file.</p>
-<p><a href="../Variables.htm#LastError">A_LastError</a> is set to the result of the operating system's GetLastError() function.</p>
+<p>读取成功时 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 0. 如果遇到问题, 它被设置为 1, 例如: 1) 文件不存在; 2) 文件被锁定或无法访问; 3) 系统没有足够的内存加载文件.</p>
+<p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
 
-<h2 id="Binary">Reading Binary Data</h2>
-<p>When the <code>RAW</code> option is used, the return value is a <a href="../objects/Buffer.htm">Buffer</a> object containing the raw, unmodified contents of the file. The object's <a href="../objects/Buffer.htm#Size">Size</a> property returns the number of bytes read. <a href="NumGet.htm">NumGet</a> or <a href="StrGet.htm">StrGet</a> can be used to retrieve data from the buffer. For example:</p>
+<h2 id="Binary">读取二进制数据</h2>
+<p>使用 <code>RAW</code> 选项时, 返回值为<a href="../objects/Buffer.htm">缓冲</a>对象, 其中包含文件的原始, 未修改的内容. 对象的 <a href="../objects/Buffer.htm#Size">Size</a> 属性返回读取的字节数. <a href="NumGet.htm">NumGet</a> 或 <a href="StrGet.htm">StrGet</a> 用于从缓冲中检索数据. 例如:</p>
 <pre>buf := FileRead(A_AhkPath, "RAW")
-if StrGet(buf, 2, "cp0") == "MZ"  <em>; Looks like an executable file...</em>
+if StrGet(buf, 2, "cp0") == "MZ"  <em>; 看起来像一个可执行文件...</em>
 {
-    <em>; Read machine type from COFF file header.</em>
+    <em>; 从 COFF 文件头中读取机器类型.</em>
     machine := NumGet(buf, NumGet(buf, 0x3C, "uint") + 4, "ushort")
     machine := machine=0x8664 ? "x64" : machine=0x014C ? "x86" : "unknown"
-    <em>; Display machine type and file size.</em>
+    <em>; 显示机器类型和文件大小.</em>
     MsgBox "This " machine " executable is " buf.Size " bytes."
 }
 buf := ""</pre>
-<p>This option is generally required for reading binary data because by default, any bytes read from file are interpreted as text and may be converted from the source file's encoding (as specified in the options or by <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>) to the script's <a href="../Compat.htm#Format">native encoding</a>, UTF-16. If the data is not UTF-16 text, this conversion generally changes the data in undesired ways.</p>
-<p>For another demonstration of the RAW option, see <a href="ClipboardAll.htm#ex2">Saving and Restoring the Clipboard</a>.</p>
-<p>Finally, <a href="FileOpen.htm">FileOpen</a> and <a href="../objects/File.htm#RawRead">File.RawRead</a> or <a href="../objects/File.htm#ReadNum">File.Read<i>Num</i></a> may be used to read binary data without first reading the entire file into memory.</p>
+<p>读取二进制数据通常需要这个选项, 因为默认情况下, 从文件中读取的任何字节都被解释为文本, 并且可以从源文件的编码(如选项中指定的或通过 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>) 转换为脚本的<a href="../Compat.htm#Format">原生编码</a>, UTF-16. 如果数据不是 UTF-16 文本, 这种转换通常会以不希望的方式更改数据.</p>
+<p>有关 RAW 选项的另一个演示, 请参阅<a href="ClipboardAll.htm#ExFile">保存和恢复剪贴板</a>.</p>
+<p>最后, 使用 <a href="FileOpen.htm">FileOpen</a> 和 <a href="../objects/File.htm#RawRead">File.RawRead</a> 或 <a href="../objects/File.htm#ReadNum">File.Read<i>Num</i></a> 可以在无需首先读取整个文件到内存中的情况下读取二进制数据.</p>
 
 <h2>备注</h2>
-<p>When the goal is to load all or a large part of a file into memory, FileRead performs much better than using a <a href="LoopRead.htm">file-reading loop</a>.</p>
-<p>A file greater than 4 GB in size will cause an exception to be thrown unless the <strong>*m</strong> option is present, in which case the leading part of the file is loaded. An exception will also be thrown if the program is unable to allocate enough memory to contain the requested amount of data.</p>
-<p>If there is concern about using too much memory, check the file size beforehand with <a href="FileGetSize.htm">FileGetSize</a>.</p>
-<p><a href="FileOpen.htm">FileOpen</a> provides more advanced functionality than FileRead, such as reading or writing data at a specific location in the file without reading the entire file into memory. See <a href="../objects/File.htm">File Object</a> for a list of functions.</p>
+<p>当需要读取文件的全部或大部分内容到内存时, 使用 FileRead 比<a href="LoopRead.htm">文件读取循环</a>执行地更好.</p>
+<p>如果文件大小超过4 Gb, 则会引发异常, 除非存在 <strong>*m</strong> 选项, 在这种情况下, 将加载文件前面的部分. 如果程序无法分配足够的内存来包含请求的数据量,  也会抛出异常.</p>
+<p>如果担心使用太多的内存, 可以预先用 <a href="FileGetSize.htm">FileGetSize</a> 来检查文件的大小.</p>
+<p><a href="FileOpen.htm">FileOpen()</a> 比 FileRead 提供了更高级的功能, 例如在文件的指定位置读取或写入数据时无需把整个文件读取到内存中. 请参阅<a href="../objects/File.htm">文件对象</a>了解函数列表.</p>
 
 <h2>相关</h2>
 <p><a href="FileEncoding.htm">FileEncoding</a>, <a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">File Object</a>, <a href="LoopRead.htm">file-reading loop</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileAppend.htm">FileAppend</a>, <a href="IniRead.htm">IniRead</a>, <a href="Sort.htm">Sort</a>, <a href="Download.htm">Download</a></p>
 
 <h2>示例</h2>
-<pre class="NoIndent" id="ex1"><em>; 示例 #1: Read text file into OutputVar.</em>
-MyText := FileRead("C:\My Documents\My File.txt")</pre>
-<pre class="NoIndent" id="ex2"><em>; 示例 #2: Quickly sort the contents of a file.</em>
-Contents := FileRead("C:\Address List.txt")
-if not ErrorLevel  <em>; Successfully loaded.</em>
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a>: 读取文本文件到 <em>OutputVar</em>.</p>
+<pre>MyText := FileRead("C:\My Documents\My File.txt")</pre>
+</div>
+
+<div class="ex" id="ExSort">
+<p><a href="#ExSort">#2</a>: 快速对文件的内容进行排序.</p>
+<pre>Contents := FileRead("C:\Address List.txt")
+if not ErrorLevel  <em>; 加载成功.</em>
 {
     Contents := <a href="Sort.htm">Sort</a>(Contents)
     FileDelete "C:\Address List (alphabetical).txt"
     FileAppend Contents, "C:\Address List (alphabetical).txt"
-    Contents := "" <em>; Free the memory.</em>
+    Contents := "" <em>; 是否内存.</em>
 }</pre>
+</div>
 
 </body>
 </html>
