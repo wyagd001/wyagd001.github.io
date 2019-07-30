@@ -10,6 +10,7 @@
 <script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
 </head>
 <body>
+
 <h1>脚本语言</h1>
 <p>一个 AutoHotkey 脚本从根本上说是使用 AutoHotkey 独有的自定义语言编写的程序要遵循的指令集合. 这种语言与其他几种脚本语言有一些相似之处, 但也有其独特的优势和缺陷. 本文档描述了该语言, 并试图指出常见的缺陷.</p>
 <p class="note">有关 AutoHotkey 所使用的各种概念的更一般的解释, 请参阅<a href="Concepts.htm">概念和约定</a>.</p>
@@ -145,11 +146,7 @@ MsgBox "这行没有被注释."
 <p>如果不需要函数的返回值, 并且函数名写在行首(或者在其他允许<a href="Concepts.htm#statement">语句</a>的上下文中, 如下面的 <code>else</code> 或 <a href="Hotkeys.htm">hotkey 标签</a>), 则可以省略括号. 在这种情况下, 行的其余部分作为函数的参数列表. 例如:</p>
 <pre>result := MsgBox("This one requires parentheses.",, "OKCancel")
 MsgBox "This one doesn't. The result was " result "."</pre>
-<p>已知限制:</p>
-<ul>
-  <li>如果脚本通过定义具有相同名称的函数来覆盖内置函数,如果省略括号, 根据函数的不同, 内置函数可能(或不能) 仍然被调用.</li>
-  <li>当圆括号被省略时, 内置函数的 Output 变量目前不允许为表达式. 例如, <code>MouseGetPos whichvar ? x1 : x2</code> 是无效, 但 <code>MouseGetPos(whichvar ? x1 : x2)</code> 是有效的.</li>
-</ul>
+<p>在同一上下文中调用<a href="Concepts.htm#methods">方法</a>时, 也可以省略圆括号, 但仅当目标对象是变量或直接命名的属性时才可以省略圆括号, 如 <code>myVar.myMethod</code> 或 <code>myVar.myProp.myMethod</code>.</p>
 
 <h4 id="optional-parameters">可选参数</h4>
 <p>可选参数可以简单地留空, 但是分隔逗号仍然是必需的, 除非所有后续参数也被省略. 例如, <a href="commands/Run.htm">Run</a> 函数可接受一至四个参数. 下列各项均有效:</p>
@@ -162,14 +159,16 @@ Run("notepad.exe", , , notepadPID)
 <h3 id="operators-for-objects">对象的运算符</h3>
 <p>这里表达式中使用的其他符号不完全符合上面定义的任何类别, 或影响表达式其他部分的含义, 如下所述. 这些都以某种方式与 <em>对象</em> 有关. 对于每个构造所做的事情提供一个完整的解释, 需要引入更多的概念, 而这不属于本节的范围.</p>
 <p><code>Alpha.Beta</code> 通常称为 <em>成员访问</em>. <em>Alpha</em> 是一个普通变量, 可以用函数调用或其他一些返回对象的子表达式替换. 当计算时, 对象发送一个请求 &quot;给我属性 <em>Beta</em> 的值&quot;, &quot;在属性 <em>Beta</em> 中存储这个值&quot; 或 &quot;调用名为 <em>Beta</em> 的方法&quot;. 换句话说, <em>Beta</em> 是一个对对象有意义的名字; 它不是一个局部或全局变量.</p>
-<p><code>Alpha.Beta()</code> 是一个 <em>方法调用</em>, 如上所述.</p>
-<p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同). <a href="Functions.htm#VariadicCall">Variadic calls</a> are permitted.</p>
-<p><code>Alpha[Index]</code> accesses the <em>default property</em> of <code>Alpha</code>, giving <code>Index</code> as a parameter. Both <em>Alpha</em> and <em>Index</em> are variables in this case, and could be replaced with virtually any sub-expression. 此语法通常用于检索<a href="Objects.htm#Usage_Simple_Arrays">数组</a>或<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>中的元素.</p>
-<p class="warning"><strong>Note:</strong> Currently properties and methods are defined as associative array elements, and as such, the syntax can usually be used interchangebly. However, this will be changed in a future alpha release. It is important to use the syntax appropriate to the situation.</p>
-<p><code>new ClassName()</code> 用于实例化一个类, 或者创建一个从另一个对象派生的对象. 虽然这看起来像一个函数调用, 但 <em>ClassName</em> 实际上是一个普通的变量. 同样, <code>new Alpha.Beta()</code> 将创建一个由 <code>Alpha.Beta</code> 返回的对象派生的对象; <em>Beta</em> 既不是函数也不是方法. 如果可选的括号存在, 则可能包含对象的 <a href="Objects.htm#Custom_NewDelete">__New</a> 方法的参数.</p>
-<p id="array-literal"><code>[A, B, C]</code> 创建一个初始内容为 A, B 和 C(本例中的所有变量) 的<a href="Objects.htm#Usage_Simple_Arrays">数组</a>, 其中 A 是元素 1.</p>
-<p id="object-literal"><code>{Key1: Value1, Key2: Value2}</code> 由键值对列表创建<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>. 一个值以后可以通过它关联的键来检索. 在 <code>:</code> 的左侧写入一个简单的单词(由字母数字字符, 下划线和非 ASCII 字符组成) 等同于将该单词括在引号中. 例如, <code>{A: B}</code> 等同于 <code>{&quot;A&quot;: B}</code>. 但是, <code>{(A): B}</code> 使用变量 <code>A</code> 的内容作为键.</p>
-<p><code>MyFunc(Params*)</code> 是一个<a href="Functions.htm#VariadicCall">可变函数调用</a>. 星号必须紧接在函数参数列表末尾的右括号之前. <em>Params</em> 必须是返回数组对象的变量或子表达式.  虽然在任何地方使用 <code>Params*</code> 都是无效的, 但它可以用在数组标识符 (<code>[A, B, C, ArrayToAppend*]</code>) 或索引器 (<code>Alpha[Params*]</code>) 中.</p>
+<p><code>Alpha.Beta()</code> 是一个 <em>方法调用</em>, 如上所述. 括号可在特定情况下省略; 请参阅<a href="#function-call-statements">函数调用语句</a>.</p>
+<p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同). 允许<a href="Functions.htm#VariadicCall">可变参数调用</a>.</p>
+<p><code>Alpha.%vBeta%</code>, <code>Alpha.%vBeta%[Param]</code> 和 <code>Alpha.%vBeta%()</code> 也是成员访问, 但 <em>vBeta</em> 是一个变量或子表达式. 这允许在脚本运行时确定属性或方法的名称. 以这种方式调用方法时需要括号.</p>
+<p><code>Alpha[Index]</code> 访问 <code>Alpha</code> 的 <em>默认属性</em>, 将 <code>Index</code> 作为参数. 在这种情况下, <em>Alpha</em> 和 <em>Index</em> 都是变量, 几乎可以用任何子表达式替换. 此语法通常用于检索<a href="objects/Array.htm">数组</a>或 <a href="objects/Map.htm">Map</a> 中的元素.</p>
+<p><code>new ClassName()</code> 用于实例化一个类, 虽然这看起来像一个函数调用, 但 <em>ClassName</em> 实际上是一个普通的变量. 同样, <code>new Alpha.Beta()</code> 将创建一个由 <code>Alpha.Beta</code> 返回的对象派生的对象; <em>Beta</em> 既不是函数也不是方法. 如果可选的括号存在, 则可能包含对象的 <a href="Objects.htm#Custom_NewDelete">__New</a> 方法的参数.</p>
+<p class="warning"><strong>Note:</strong> This special syntax might be removed in favour of standard method call syntax, in a future release. For example, <code>ClassName.new()</code> has the same effect.</p>
+<p id="array-literal"><code>[A, B, C]</code> 创建一个初始内容为 A, B 和 C(本例中的所有变量) 的<a href="objects/Array.htm">数组</a>, 其中 A 是元素 1.</p>
+<p id="object-literal"><code>{Prop1: Value1, Prop2: Value2}</code> 创建一个<a href="objects/Object.htm">对象</a>, 其中 <em>Prop1</em> 和 <em>Prop2</em> 为原义的属性名. 可以使用上面描述的 <em>成员访问</em> 语法检索值.</p>
+<p class="warning"><strong>Note:</strong> Only literal <a href="Concepts.htm#names">names</a> should be used on the left-hand side of <code>:</code>. Currently other sub-expressions are allowed, but this is a holdover from when objects were used as associative arrays, and will likely be changed.</p>
+<p><code>MyFunc(Params*)</code> 是一个<a href="Functions.htm#VariadicCall">可变函数调用</a>. 星号必须紧接在函数参数列表末尾的右括号之前. <em>Params</em> 必须是返回<a href="objects/Array.htm">数组</a>或其他可枚举对象的变量或子表达式. 虽然在任何地方使用 <code>Params*</code> 都是无效的, 但它可以用在数组标识符(<code>[A, B, C, ArrayToAppend*]</code>) 或属性参数列表(<code>Alpha.Beta[Params*]</code> 或 <code>Alpha[Params*]</code>) 中.</p>
 
 <h3 id="expression-statements">表达式语句</h3>
 <p>并不是所有的表达式都可以单独在一行上使用. 例如, 只包含 <code>21*2</code> 或 <code>&quot;Some text&quot;</code> 的行就没有任何意义. 表达式 <em>语句</em> 是一个单独使用的表达式, 通常利用它的附加作用. 大多数带有附加作用的表达式都可以这样使用, 所以一般不需要记住本节的细节.</p>
@@ -185,7 +184,7 @@ Run("notepad.exe", , , notepadPID)
 <p>以 <code>(</code> 开始的表达式. 但是, 通常必须在同一行有一个匹配的 <code>)</code>, 否则该行将被解释为<a href="Scripts.htm#continuation">延续片段</a>的开始.</p>
 <p>以双百分号开始的表达式(如 <code>%varname% := 1</code>). 这主要是由于实现的复杂性.</p>
 <p>为简单起见, 也允许以上面描述的任一表达式(但不包括下面描述的) 开始的表达式. 例如, <code>MyFunc()+1</code> 目前是允许的, 尽管 <code>+1</code> 没有效果, 其结果会被丢弃. 由于错误检查的增强, 这些表达式在将来可能会失效.</p>
-<p>缺少圆括号的方法调用将行其余部分作为参数列表. 例如, <code>ExcelApp.Quit</code> 或 <code>x.y.z "my parameter"</code>. 这不是一个表达式, 而是一个方法调用语句.</p>
+<p><a href="#function-call-statements">函数调用语句</a>类似于表达式语句, 但在技术上不是纯表达式. 例如, <code>MsgBox "Hello, world!"</code>, <code>myGui.Show</code> 或 <code>x.y.z "my parameter"</code>.</p>
 
 <h2 id="control-flow">控制流语句</h2>
 <p class="note">有关控制流的一般说明, 请参阅<a href="Concepts.htm#control-flow">控制流</a>.</p>
@@ -329,7 +328,7 @@ MsgBox %second%  <em>; 双重解引 =&gt; 42</em>
 </pre>
 <p>目前, 第二种情况下, <code>second</code> 必须总是包含一个变量名; 任意表达式不被支持.</p>
 <p>动态变量引用也可以采用一个或多个文本文本和一个或多个变量的内容, 并将它们组合在一起组成一个单一变量名. 在没有空格的情况下, 这只需简单地按顺序写入名称和百分号括起来的变量. 例如, <code>MyArray%A_Index%</code> 或 <code>MyGrid%X%_%Y%</code>. 这用于访问 <em>伪数组</em>, 如下所示.</p>
-<p>These techniques can also be applied to properties and methods of objects. For example:</p>
+<p>这些技术也可以应用于对象的属性和方法. 例如:</p>
 <pre>clr := {}
 for n, component in ["red", "green", "blue"]
     clr.%component% := Random(0, 255)

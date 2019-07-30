@@ -285,7 +285,9 @@ tocData = [
   ["对象类型","",
   [
     ["对象","objects/Object.htm"],
+    ["数组对象","objects/Array.htm"],
     ["缓冲对象","objects/Buffer.htm"],
+    ["Class 对象","objects/Class.htm"],
     ["枚举器对象 ","objects/Enumerator.htm"],
     ["异常对象","commands/Throw.htm#Exception"],
     ["文件对象","objects/File.htm"],
@@ -293,6 +295,7 @@ tocData = [
     ["函数对象","objects/Functor.htm"],
     ["Gui 对象","objects/Gui.htm"],
     ["GuiControl 对象","objects/GuiControl.htm"],
+    ["Map 对象","objects/Map.htm"],
     ["Menu/MenuBar 对象","objects/Menu.htm"],
     ["正则匹配对象","commands/RegExMatch.htm#MatchObject"]
   ]],

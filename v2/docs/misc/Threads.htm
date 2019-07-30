@@ -11,23 +11,22 @@
 </head>
 
 <body>
-<h1>Threads</h1>
+<h1>线程</h1>
 
-<p>The <em>current thread</em> is defined as the flow of execution invoked by the most recent event; examples include <a href="../Hotkeys.htm">hotkeys</a>, <a href="../commands/SetTimer.htm">SetTimer subroutines</a>, <a href="../objects/Menu.htm">custom menu items</a>, and <a href="../objects/Gui.htm#Events">GUI events</a>. The <em>current thread</em> can be executing functions within its own subroutine or within other subroutines called by that subroutine.</p>
-<p>Although AutoHotkey doesn't actually use multiple threads, it simulates some of that behavior: If a second thread is started -- such as by pressing another hotkey while the previous is still running -- the <em>current thread</em> will be interrupted (temporarily halted) to allow the new thread to become <em>current</em>. If a third thread is started while the second is still running, both the second and first will be in a dormant state, and so on.</p>
-<p>When the <em>current thread</em> finishes, the one most recently interrupted will be resumed, and so on, until all the threads finally finish. When resumed, a thread's settings for things such as <a href="ErrorLevel.htm">ErrorLevel</a> and <a href="../commands/SendMode.htm">SendMode</a> are automatically restored to what they were just prior to its interruption; in other words, a thread will experience no side-effects from having been interrupted (except for a possible change in the <a href="../commands/WinActivate.htm">active window</a>).</p>
-<p class="note"><strong>Note</strong>: The <a href="../commands/KeyHistory.htm">KeyHistory</a> function/menu-item shows how many threads are in an interrupted state and the <a href="../commands/ListHotkeys.htm">ListHotkeys</a> function/menu-item shows which hotkeys have threads.</p>
-<p>A single script can have multiple simultaneous <a href="../commands/MsgBox.htm">MsgBox</a>, <a href="../commands/InputBox.htm">InputBox</a>, <a href="../commands/FileSelect.htm">FileSelect</a>, and <a href="../commands/DirSelect.htm">DirSelect</a> dialogs. This is achieved by launching a new thread (via <a href="../Hotkeys.htm">hotkey</a>, <a href="../commands/SetTimer.htm">timed subroutine</a>, <a href="../objects/Menu.htm">custom menu item</a>, etc.) while a prior thread already has a dialog displayed.</p>
-<p>By default, a given <a href="../Hotkeys.htm">hotkey</a> or <a href="../Hotstrings.htm">hotstring</a> subroutine cannot be run a second time if it is already running. Use <a href="../commands/_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> to change this behavior.</p>
-<h2>Thread Priority</h2>
-<p>Any thread (<a href="../Hotkeys.htm">hotkey</a>, <a href="../commands/SetTimer.htm">timed subroutine</a>, <a href="../objects/Menu.htm">custom menu item</a>, etc.) with a priority lower than that of the <em>current thread</em> cannot interrupt it. During that time, such timers will not run, and any attempt by the user to create a thread (such as by pressing a <a href="../Hotkeys.htm">hotkey</a> or <a href="../commands/GuiControls.htm#Button">GUI button</a>) will have no effect, nor will it be buffered. Because of this, it is usually best to design high priority threads to finish quickly, or use <a href="../commands/Critical.htm">Critical</a> instead of making them high priority.</p>
-<p>The default priority is 0. All threads use the default priority unless changed by one of the following 方法:<br>
-  1) A timed subroutine is given a specific priority via <a href="../commands/SetTimer.htm">SetTimer</a>.<br>
-  2) A hotkey is given a specific priority via the <a href="../commands/Hotkey.htm">Hotkey</a> function.<br>
-  3) 
-  A <a href="../Hotstrings.htm">hotstring</a> is given a specific priority when it is defined, or via the <a href="../commands/_Hotstring.htm">#Hotstring</a> directive. <br>
-  4) A custom menu item is given a specific priority via the <a href="../objects/Menu.htm#Add">Menu.Add</a> method.<br>
-  5) The <em>current thread</em> sets its own priority via the <a href="../commands/Thread.htm">Thread</a> function.</p>
-<p>The <a href="../commands/OnExit.htm">OnExit</a> callback function (if any) will always run when called for, regardless of the <em>current thread</em>'s priority.</p>
+<p><em>当前线程</em> 的定义为最近事件调用的执行流; 例如包括<a href="../Hotkeys.htm">热键</a>, <a href="../commands/SetTimer.htm">计时器子程序</a>, <a href="../objects/Menu.htm">自定义菜单项</a>和 <a href="../objects/Gui.htm#Events">GUI 事件</a>. <em>当前线程</em> 可以在其自身子程序或该子程序调用的其他子程序中执行函数.</p>
+<p>尽管 AutoHotkey 实际上并不支持多线程, 但它模拟了多线程的某些特性: 如果启动了第二个线程 -- 例如在前一个线程仍在执行时按下另一个热键 -- 那么 <em>当前线程</em> 会被中断(暂时停止) 以允许新线程变为 <em>当前线程</em>. 如果在第二个线程还在运行时又启动了第三个线程, 那么第二个和第一个线程都会进入休眠状态, 依此类推.</p>
+<p>当 <em>当前线程</em> 结束时, 将恢复执行最近中断的线程, 依此类推, 直到所有线程最终结束. 当线程被恢复时, 它的设置例如 <a href="ErrorLevel.htm">ErrorLevel</a> 和 <a href="../commands/SendMode.htm">SendMode</a> 会自动恢复到中断前的状态; 换句话说, 中断不会给线程带来副作用(<a href="../commands/WinActivate.htm">活动窗口</a>可能发生的更改除外).</p>
+<p class="note"><strong>注意</strong>: <a href="../commands/KeyHistory.htm">KeyHistory</a> 函数/菜单项会显示处于中断状态的线程数量, 而 <a href="../commands/ListHotkeys.htm">ListHotkeys</a> 函数/菜单项则显示拥有线程的热键.</p>
+<p>一个脚本可以有多个同时发生的 <a href="../commands/MsgBox.htm">MsgBox</a>, <a href="../commands/InputBox.htm">InputBox</a>, <a href="../commands/FileSelect.htm">FileSelect</a> 和 <a href="../commands/DirSelect.htm">DirSelect</a> 对话框. 这是在前一个线程已经显示对话框时, 通过启动一个新的线程(通过<a href="../Hotkeys.htm">热键</a>, <a href="../commands/SetTimer.htm">计时器子程序</a>, <a href="../objects/Menu.htm">自定义菜单项</a>, 等.) 来实现的.</p>
+<p>默认情况下, 如果给定的<a href="../Hotkeys.htm">热键</a>或<a href="../Hotstrings.htm">热字串</a>子程序已经在运行, 则不能再次启动. 请使用 <a href="../commands/_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 来改变此特性.</p>
+<h2>线程优先级</h2>
+<p>任何优先级低于 <em>当前线程</em>  的线程(<a href="../Hotkeys.htm">热键</a>, <a href="../commands/SetTimer.htm">计时子程序</a>, <a href="../objects/Menu.htm">自定义菜单项</a>, 等.), 不能中断当前线程. 在这种时候, 如计时器不会运行, 任何用户创建线程(如, 通过按下<a href="../Hotkeys.htm">热键</a>或 <a href="../commands/GuiControls.htm#Button">GUI 按钮</a>) 的尝试都不会产生任何效果, 也不会被缓存起来. 由于这个原因, 通常在设计时最好让高优先级的线程快速结束, 或使用 <a href="../commands/Critical.htm">Critical</a> 而不将它们设置成高优先级.</p>
+<p>默认的优先级为 0. 所有线程使用默认的优先级, 不过可以使用下列的其中一种方法来改变:<br>
+  1) 通过 <a href="../commands/SetTimer.htm">SetTimer</a> 给计时子程序指定优先级.<br>
+  2) 通过 <a href="../commands/Hotkey.htm">Hotkey</a> 函数给热键指定优先级.<br>
+  3) 在定义<a href="../Hotstrings.htm">热字串</a> 时指定优先级, 或通过 <a href="../commands/_Hotstring.htm">#Hotstring</a> 指令给热字串指定优先级.<br>
+  4) 通过 <a href="../objects/Menu.htm#Add">Menu.Add</a> 方法给自定义菜单项指定优先级.<br>
+  5) 通过 <a href="../commands/Thread.htm">Thread</a> 函数给 <em>当前线程</em> 设置自己的优先级.</p>
+<p>不论 <em>当前线程</em> 的优先级如何, <a href="../commands/OnExit.htm">OnExit</a> 子程序(如果有) 被调用时总是会运行.</p>
 </body>
 </html>

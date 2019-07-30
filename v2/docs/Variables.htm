@@ -9,8 +9,8 @@
 <script src="static/content.js" type="text/javascript"></script>
 <script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
 </head>
-
 <body>
+
 <h1>变量和表达式</h1>
 
 <h2>目录</h2>
@@ -90,13 +90,14 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   </tr>
   <tr id="new">
     <td style="text-align:center"><strong>new</strong></td>
-    <td><code>new <i>Class</i></code> 或 <code>new <i>Class</i>(<i>Params</i>)</code> 创建一个派生自<em>类</em>的新对象. 例如, <code>x := new y</code> 通常等价于 <code>x := {base: y}</code>. <em>Class</em> 几乎可以是生成类对象的任何表达式, 但通常是类名, 如 <code>GlobalClass</code> 或 <code>GlobalClass.NestedClass</code>. 还支持更复杂的情况, 如 <code>new new (getClass())(params1)(params2)</code>, 但是类表达式和参数列表之间必须没有空格. 更多细节, 请参阅<a href="Objects.htm#Custom_Objects">自定义对象</a>.</td>
+    <td><code>new <i>Class</i></code> 或 <code>new <i>Class</i>(<i>Params</i>)</code> 创建一个派生自 <em>类</em> 的新对象. 它等同于 <a href="objects/Class.htm#New"><em>Class</em>.New()</a>. <em>Class</em> 几乎可以是生成类对象的任何表达式, 但通常是类名, 如 <code>GlobalClass</code> 或 <code>GlobalClass.NestedClass</code>. 还支持更复杂的情况, 如 <code>new new (getClass())(params1)(params2)</code>, 但是类表达式和参数列表之间必须没有空格. 更多细节, 请参阅<a href="Objects.htm#Custom_Objects">自定义对象</a>.</td>
   </tr>
   <tr id="IncDec">
     <td style="text-align:center"><strong>++<br>
     --</strong></td>
     <td>
-      <p><strong>前置和后置的自增/自减</strong>. 从变量中增加或减去 1. 运算符可以放在变量名的前面或后面. 如果放在变量名的 <em>前面</em>, 则立即执行自增/减运算并把结果用于下一运算. 例如, <code>Var := ++X</code> 立即递增 X 然后将其值赋给 <em>Var</em>. 相反, 如果运算符放在变量名的 <em>后面</em>, 自增/减运算在变量在下一运算中使用 <em>之后</em> 进行. 例如, <code>Var := X++</code> 把 X 的当前值赋给 <em>Var</em> 后才进行自增.</p>
+      <p><strong>前置和后置的自增/自减</strong>. 从变量中增加或减去 1. 运算符可以放在变量名的前面或后面. 如果放在变量名的 <em>前面</em>, 则执行自增/减运算并把结果用于下一运算(在这种情况下结果是一个变量引用). 例如, <code>Var := ++X</code> 递增 X 然后将其值赋给 <em>Var</em>. 相反, 如果运算符放在变量名的 <em>后面</em>, 结果是在执行运算之前的 X 值. 例如, <code>Var := X++</code> 递增 X, 但 <em>Var</em> 接收 X 在递增之前的值.</p>
+      <p>这些运算符还可以与对象的属性一起使用, 如 <code>myArray.Length++</code> 或 <code>--myArray[i]</code>. 在这些情况下, 子表达式的结果总是一个数字, 而不是一个变量引用.</p>
     </td>
   </tr>
   <tr id="pow">
@@ -132,8 +133,8 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     </strong></td>
     <td><p><strong>乘(*)</strong>: 如果两个输入都为整数, 则结果为整数; 否则结果为浮点数.</p>
       <p><strong>其他用途</strong>: 星号(*) 运算符也用于<a href="Functions.htm#VariadicCall">可变参数函数调用</a>.</p>
-      <p id="divide"><strong>真除(/)</strong>: 两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
-      <p id="FloorDivide"><strong>向下舍除(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点格式, 则执行浮点除法并把结果向左截断到最近的整数. 例如, <code>5//3.0</code> 结果为 1.0 而 <code>5.0//-3</code> 结果为 -2.0. 虽然浮点除法的结果是一个整数, 但它是以浮点格式存储的, 因此使用它的任何其他东西都将以浮点格式看到它. 有关取模, 请参阅 <a href="commands/Math.htm#Mod">Mod</a>.</p>
+      <p id="divide"><strong>真除(/)</strong>: 即使两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
+      <p id="FloorDivide"><strong>向下舍除(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点格式, 则执行浮点除法并把结果向左截断到最近的整数. 例如, <code>5//3.0</code> 结果为 1.0 而 <code>5.0//-3</code> 结果为 -2.0. 虽然浮点除法的结果是一个整数, 但它是以浮点格式存储的, 因此使用它的任何其他东西都将会将它视为浮点格式. 有关取模, 请参阅 <a href="commands/Math.htm#Mod">Mod</a>.</p>
     <p><a href="#AssignOp">*= 和 /= 运算符</a>是用变量的值乘以或除以另一个值的一种简写形式. 例如, <code>Var*=2</code> 和 <code>Var:=Var*2</code>会得到相同的结果(不过前者执行的更好).</p>
     <p>除数为零, 则导致抛出异常.</p></td>
   </tr>
@@ -250,6 +251,7 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>.</p>
     <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 这样还允许赋值作为 <a href="Functions.htm#ByRef">ByRef</a> 去传递, 或获取它的<a href="#amp">地址</a>; 例如: <code>&amp;(x:=&quot;abc&quot;)</code>.</p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
+    <p>赋值还可以针对对象的属性, 如 <code>myArray.Length += n</code> 或 <code>myArray[i] .= t</code>. 当赋值给一个属性时, 子表达式的结果是赋值的值, 而不是变量引用.</p>
     </td>
   </tr>
   <tr id="fat-arrow">
@@ -321,14 +323,14 @@ sumfn := Func("Sum")</pre>
 <h3>目录</h3>
 <ul>
   <li>特殊字符: <a href="#Space">A_Space</a>, <a href="#Tab">A_Tab</a></li>
-  <li>脚本属性: <a href="#Args">command line parameters</a>, <a href="#WorkingDir">A_WorkingDir</a>, <a href="#ScriptDir">A_ScriptDir</a>, <a href="#ScriptName">A_ScriptName</a>, <a href="#prop">(...more...)</a></li>
-  <li>日期和时间: <a href="#YYYY">A_YYYY</a>, <a href="#MM">A_MM</a>, <a href="#DD">A_DD</a>, <a href="#Hour">A_Hour</a>, <a href="#Min">A_Min</a>, <a href="#Sec">A_Sec</a>, <a href="#date">(...more...)</a></li>
-  <li>脚本设置: <a href="#IsSuspended">A_IsSuspended</a>, <a href="#ListLines">A_ListLines</a>, <a href="#TitleMatchMode">A_TitleMatchMode</a>, <a href="#settings">(...more...)</a></li>
+  <li>脚本属性: <a href="#Args">命令行参数</a>, <a href="#WorkingDir">A_WorkingDir</a>, <a href="#ScriptDir">A_ScriptDir</a>, <a href="#ScriptName">A_ScriptName</a>, <a href="#prop">(...更多...)</a></li>
+  <li>日期和时间: <a href="#YYYY">A_YYYY</a>, <a href="#MM">A_MM</a>, <a href="#DD">A_DD</a>, <a href="#Hour">A_Hour</a>, <a href="#Min">A_Min</a>, <a href="#Sec">A_Sec</a>, <a href="#date">(...更多...)</a></li>
+  <li>脚本设置: <a href="#IsSuspended">A_IsSuspended</a>, <a href="#ListLines">A_ListLines</a>, <a href="#TitleMatchMode">A_TitleMatchMode</a>, <a href="#settings">(...更多...)</a></li>
   <li>用户空闲时间: <a href="#TimeIdle">A_TimeIdle</a>, <a href="#TimeIdlePhysical">A_TimeIdlePhysical</a>, <a href="#TimeIdleKeyboard">A_TimeIdleKeyboard</a>, <a href="#TimeIdleMouse">A_TimeIdleMouse</a></li>
-  <li>热键, 热字串和自定义菜单项: <a href="#ThisHotkey">A_ThisHotkey</a>, <a href="#EndChar">A_EndChar</a>, <a href="#h">(...more...)</a></li>
-  <li>操作系统和用户信息: <a href="#OSVersion">A_OSVersion</a>, <a href="#Screen">A_ScreenWidth</a>, <a href="#Screen">A_ScreenHeight</a>, <a href="#os">(...more...)</a></li>
+  <li>热键, 热字串和自定义菜单项: <a href="#ThisHotkey">A_ThisHotkey</a>, <a href="#EndChar">A_EndChar</a>, <a href="#h">(...更多...)</a></li>
+  <li>操作系统和用户信息: <a href="#OSVersion">A_OSVersion</a>, <a href="#Screen">A_ScreenWidth</a>, <a href="#Screen">A_ScreenHeight</a>, <a href="#os">(...更多...)</a></li>
   <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#EventInfo">A_EventInfo</a>, <a href="misc/Clipboard.htm">Clipboard</a>, <a href="misc/ErrorLevel.htm">ErrorLevel</a></li>
-  <li>Loop: <a href="#Index">A_Index</a>, <a href="#loop">(...more...)</a></li>
+  <li>Loop: <a href="#Index">A_Index</a>, <a href="#loop">(...更多...)</a></li>
 </ul>
 <h3>特殊字符</h3>
 <table class="info">

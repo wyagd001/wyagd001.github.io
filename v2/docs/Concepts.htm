@@ -10,6 +10,7 @@
 <script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
 </head>
 <body>
+
 <h1>概念和约定</h1>
 <p>本文档涵盖了 AutoHotkey 所使用的一些通用概念和约定, 重点放在解释而不是代码上. 不会假定读者之前具备任何脚本或编程的知识, 但应该准备学习的新术语.</p>
 <p>有关语法的更多具体细节, 请参阅<a href="Language.htm">脚本语言</a>.</p>
@@ -97,40 +98,51 @@ Exception handling
 <p>如果一个<a href="#variables">变量</a>或参数被称为 &quot;空&quot; 或 &quot;空白&quot;, 这通常意味着一个空字符串(长度为零的字符串).</p>
 
 <h3 id="objects">对象</h3>
-<p>通常有两种方式看待对象:</p>
+<p><em>对象</em> 是 AutoHotkey 的复合或抽象数据类型. 对象可以由任意数量的 <em>属性</em>(可以检索或设置) 和 <a href="#methods"><em>方法</em></a>(可以调用) 组成. 每个属性或方法的名称和效果取决于特定的对象或对象类型.</p>
 <ul>
-  <li>一个对象包含一组值, 允许这组值本身被视为一个值. 例如, 一个对象可以包含一个 <em>数组</em> 或一系列的项目, 或者一组相关的值, 如屏幕上某个位置的 X 坐标和 Y 坐标. 通过将对象与其他对象组合, 对象可用于构建复杂的结构.</li>
-  <li>一个对象可以表示一个 <em>事物</em>, 一个 <em>服务</em>, 或其他东西, 并且可以为脚本提供与这个事物或服务交互的方法. 例如, <em>银行账户</em> 这个对象可能具有诸如账号, 当前余额和账户所有者等属性, 以及提取或存入金额的方法.</li>
+  <li>对象不是能被包含的; 它们只是<a href="#references-to-objects">引用</a>. 例如, <code>alpha := []</code> 创建一个新<a href="objects/Array.htm">数组</a> 并在 <em>alpha</em> 中存储一个引用. <code>bravo := alpha</code> 复制引用(不是对象) 到 <code>bravo</code>, 因此两者都引用同一个对象. 当一个数组或变量被认为包含一个对象时, 它实际上包含的是对该对象的引用.</li>
+  <li>只有在在引用同一个对象时, 两个对象引用才被视为相等的.</li>
+  <li>当结果需要布尔值时, 对象总是被视为 <i>true</i> , 例如在 <code>if obj</code>, <code>!obj</code> 或 <code>obj ? x : y</code>.</li>
+  <li>每个对象都有一个惟一的地址(内存中的位置), <a href="Variables.htm#amp">地址运算符</a>可以检索该地址, 但通常不直接使用. 此地址唯一标识对象, 但仅在释放对象之前.</li>
+  <li>如果在不需要对象的任何上下文中使用对象, 则通常将其视为空字符串. 例如, <code>MsgBox(myObject)</code> 显示一个空的消息框. 不要依赖这种行为, 因为它可能会改变.</li>
+</ul>
+<p class="note"><strong>注意:</strong> 所有从<a href="objects/Object.htm">对象</a>派生的对象都具有额外的共享行为, 属性和方法.</p>
+<p>对象的一些使用方法包括:</p>
+<ul>
+  <li>包含项目或 <em>元素</em> 的集合. 例如, <a href="objects/Array.htm">数组</a>包含一系列项, 而 <a href="objects/Map.htm">Map</a> 则将键与值相关联. 对象允许将一组值视为一个值, 赋值给单个变量, 传递给函数或从函数返回, 等等.</li>
+  <li>表示真实或概念性的东西. 例如: 如屏幕上某个位置的 X 坐标和 Y 坐标; 通讯录中的联系人, 包括姓名, 电话号码, 电子邮件地址等. 通过将对象与其他对象组合, 对象可用于构建更复杂的信息集.</li>
+  <li>封装一个或一组服务, 允许脚本的其他部分将重点放在任务上, 而不是该任务是如何执行的. 例如, <a href="objects/File.htm">File</a> 对象提供了文件读取或写入数据的方法. 如果将信息写入文件的脚本函数接受 File 对象作为参数, 它不需要知道文件是如何打开的.  可以重复利用相同的函数将信息写入其他目标, 如 TCP/IP 套接字或 WebSocket(通过用户定义的对象).</li>
+  <li>以上的组合. 例如, <a href="objects/Gui.htm">Gui</a> 表示 GUI 窗口; 它向脚本提供了创建和显示图形用户界面的方法; 它包含一组控件, 并通过 Title 和 FocusedCtrl 等属性提供有关窗口的信息.</li>
 </ul>
 <p>适当的使用对象(特别是<a href="Objects.htm#Custom_Classes">类</a>) 能产生 <em>模块化</em> 和 <em>可重复使用</em> 的代码. 模块化代码通常更容易测试, 理解和维护. 例如, 人们可以改进或修改一段代码, 而不需要知道其他段的细节, 也不必对这些段做相应的修改. 可重复使用的代码节省了时间, 避免了一遍又一遍地为相同或相似的任务编写和测试代码.</p>
-<p>当你将一个对象赋值给一个<a href="#variables">变量</a>时, 如 <code>myObj := {}</code>, 你存储的不是对象本身, 而是对象的 <a href="#references-to-objects"><em>引用</em></a>. 复制该变量, 如 <code>yourObj := myObj</code>, 创建一个新的对 <em>同一</em> 对象的引用. 如 <code>myObj.ans := 42</code> 这样的改变会同时影响 <code>myObj.ans</code> 和 <code>yourObj.ans</code>, 因为它们都指向同一个对象. 但是, <code>myObj := Object()</code> 只影响变量 <em>myObj</em>, 不影响变量 <em>yourObj</em>, yourObj 仍然指向原始对象.</p>
 
 <h3 id="object-protocol">对象协议</h3>
 <p class="note">本节以这些概念为基础, 这些概念将在后面的章节中介绍: <a href="#variables">变量</a>, <a href="#functions">函数</a></p>
-<p>对象通过 <em>消息传递</em>. 的原理工作. 您不知道对象的代码或变量实际驻留在哪里, 因此您必须将消息传递给对象, 如 &quot;give me <em>foo</em>&quot; 或 &quot;go do <em>bar</em>&quot;, 并依赖对象来响应消息. AutoHotkey 中的对象支持以下基本消息:</p>
+<p>对象通过 <em>消息传递</em> 的原理工作. 您不知道对象的代码或变量实际驻留在哪里, 因此您必须将消息传递给对象, 如 &quot;give me <em>foo</em>&quot; 或 &quot;go do <em>bar</em>&quot;, 并依赖对象来响应消息. AutoHotkey 中的对象支持以下基本消息:</p>
 <ul>
-  <li><strong>Get</strong> 值.</li>
-  <li><strong>Set</strong> 值, 使用 <code>:=</code>.</li>
-  <li><strong>Call</strong> 方法, 使用 <code>()</code>.</li>
+  <li><strong>Get</strong> 属性.</li>
+  <li><strong>Set</strong> 属性, 使用 <code>:=</code>.</li>
+  <li><strong>Call</strong> <a href="#methods">方法</a>, 使用 <code>()</code>.</li>
 </ul>
-<p>每个消息可以有一个或多个<a href="#parameters">参数</a>(对于 <strong>Set</strong>, 需要一个值). 通常至少有一个参数, 它被解释为属性或方法的名称, 键或数组索引, 具体取决于对象以及使用方法. 消息的参数使用三种不同的模式指定: <code>.Name</code>, <code>[Parameters]</code> 和 <code>(Parameters)</code>, 其中 <em>Name</em> 是文字的<a href="#names">名称或标识符</a>, 而 <em>Parameters</em> 是参数列表(如子表达式), 可以是空/空白(<code>[]</code> 或 <code>()</code>).</p>
-<p>对于 <strong>Get</strong> 和 <strong>Set</strong>, <code>.Name</code> 和 <code>[Parameters]</code> 可以互换使用, 也可以组合使用:</p>
-<pre>myObj[arg1, arg2, ..., argN]
-myObj.name
-myObj.name[arg2, ..., argN]
+<p><em>属性</em> 只是可以设置和/或检索的对象的某个方面. 例如, <a href="objects/Array.htm">数组</a>具有 <a href="objects/Array.htm#Length">Length</a> 属性, 它对应于数组中元素的数量. 如果您定义了一个属性, 它可以具有您想要的任何含义. 通常属性的作用类似于一个<a href="#variables">变量</a>, 但是它的值可以根据需要计算, 而不是实际存储在任何地方.</p>
+<p>每条消息包含以下内容, 通常在属性或<a href="#call">调用</a>方法的地方编写:</p>
+<ul>
+  <li>属性或方法的名称.</li>
+  <li>零个或多个<a href="#parameters">参数</a>, 其可能会影响执行哪个操作, 值如何存储或返回哪个值. 例如, 属性可以采用数组索引或键.</li>
+</ul>
+<p>例如:</p>
+<pre>
+myObj.methodName(arg1)
+value := myObj.propertyName[arg1]
 </pre>
-<p>对于 <strong>Call</strong>, <code>.Name</code> 和 <code>[Parameter]</code> 可以互换使用, 并且必须总是跟着 <code>(Parameters)</code>:</p>
-<pre>myObj.name(arg2, ..., argN)
-myObj[arg1](arg2, ..., argN)
-</pre>
-<p>请注意, 如果 <code>name</code> 已经存在, 它将成为第一个参数. <code>myObj.name</code> 等同于 <code>myObj[&quot;name&quot;]</code>, 而 <code>myObj.123</code> 等同于 <code>myObj[123]</code>. 这适用于所有类型的对象, 因此总是可以在运行时计算属性或方法的名称, 而不是将其硬编码到脚本中.</p>
-<p>虽然 <em>name</em> 或 <em>arg1</em> 被认为是第一个参数, 但是请记住这些只是 <em>消息</em>, 而且对象可以以任何方式自由处理它们. 在如上所示的方法调用中, 通常对象使用 <em>name</em> 或 <em>arg1</em> 来标识哪个方法应该被调用, 然后只有 <em>arg2</em> 和之后的部分被传递给方法. 实际上, <em>arg2</em> 成为方法的第一个表观参数.</p>
-<p>一般来说, <strong>Set</strong> 与赋值有相同的含义, 所以它使用相同的运算符:</p>
-<pre>myObj[arg1, arg2, ..., argN] := value
+<p>对象还可以具有 <em>默认</em> 属性, 当使用方括号而没有属性名时, 将调用该属性. 例如:</p>
+<pre>value := myObj[arg1]</pre>
+<p>通常, <strong>Set</strong> 与赋值有相同的含义, 所以它使用相同的运算符:</p>
+<pre>
 myObj.name := value
-myObj.name[arg2, ..., argN] := value
+myObj.name[arg1, arg2, ..., argN] := value
+myObj[arg1, arg2, ..., argN] := value
 </pre>
-<p>从技术上讲, <code>value</code> 作为 <em>Set</em> 消息的最后一个参数传递; 然而, 这个细节几乎与脚本作者无关. 一般来说, 人们可以简单地将其视为 &quot;被赋值的值&quot;.</p>
 
 <h2 id="variables">变量</h2>
 <p>一个变量允许您使用一个名称作为一个值的占位符. 在脚本运行期间, 这个值可能会重复更改. 例如, 一个热键可以使用一个变量 <code>press_count</code> 来计算它被按下的次数, 并且当 <code>press_count</code> 是 3 的倍数(每第三次按下) 时, 发送一个不同的键. 即使只有一次赋值的变量也是有用的. 例如, <code>WebBrowserTitle</code> 变量可用于在更改首选 Web 浏览器时, 或者由于软件更新而导致 <a href="misc/WinTitle.htm">title</a> 或 <a href="misc/WinTitle.htm#ahk_class">window class</a> 发生更改时, 更容易更新代码.</p>
@@ -188,7 +200,7 @@ myObj.name[arg2, ..., argN] := value
   <dt id="return-a-value">返回值</dt>
   <dd><p>函数 <em>返回</em> 一个值, 所以函数的结果通常称为 <em>返回值</em>. 例如, <a href="commands/StrLen.htm">StrLen</a> 返回字符串中的字符数. 命令不直接返回结果; 作为代替, 他们将结果存储在一个<a href="#variables">变量</a>中. 函数也可以这样做, 比如当有多个结果时.</p></dd>
   <dt id="command">命令</dt>
-  <dd><p>函数调用有时被称为 <em>命令</em>, ，例如它 <em>命令</em> 程序执行特定操作. (由于历史原因, <em>命令</em> 可以指代调用函数的特定样式, 其中括号被省略并且丢弃返回值. However, this is technically a <a href="Language.htm#function-call-statements">function call statement</a>.)</p></dd>
+  <dd><p>函数调用有时被称为 <em>命令</em>, ，例如它 <em>命令</em> 程序执行特定操作. (由于历史原因, <em>命令</em> 可以指代调用函数的特定样式, 其中括号被省略并且丢弃返回值. 但是, 这在技术上是一个<a href="Language.htm#function-call-statements">函数调用语句</a>.)</p></dd>
 </dl>
 <p>函数通常期望参数以特定的顺序写入, 因此每个参数值的含义取决于它在逗号分隔的参数列表中的位置. 有些参数可以省略, 在这种情况下参数可以留空, 但是其后面的逗号只能在所有剩余的参数都省略的情况下才能省略. 例如, <a href="commands/ControlSend.htm">ControlSend</a> 的语法是:</p>
 <pre class="Syntax"><span class="func">ControlSend</span> Keys <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
@@ -201,7 +213,7 @@ ControlSend "^{Home}",, "A"          <em>; Correct. Control is omitted.</em>
 </pre>
 
 <h3 id="methods">方法</h3>
-<p><em>方法</em> 是对特定<a href="#objects">对象</a>进行操作的函数. 虽然只能有一个名为 <code>Send</code> 的函数(例如), 但可以有许多名为 <code>Send</code> 的方法, 因为每个对象(或对象的类) 可以以不同的方式响应. 因此, 目标对象(可能是变量或子表达式) 被指定在方法名的左侧, 而不是参数列表中的左边. 有关详情, 请参阅<a href="#object-protocol">对象协议</a>.</p>
+<p><em>方法</em> 是与特定<a href="#objects">对象</a>或对象类型关联的函数. 要调用方法, 必须指定对象和方法名. 方法名称不能唯一标识函数; 相反, 方法调用时会发生什么取决于对象. 例如, <code>x.Show()</code> 可能会<a href="objects/Menu.htm#Show">显示菜单</a>, <a href="objects/Gui.htm#Show">显示 GUI</a>, 引发错误或执行其他操作, 这取决于 <code>x</code> 是什么. 换句话说, 方法调用只是将消息传递给对象, 指示它执行某些操作. 有关详细信息, 请参阅<a href="#object-protocol">对象协议</a>和<a href="Language.htm#operators-for-objects">对象运算符</a>.</p>
 
 <h2 id="control-flow">控制流</h2>
 <p><em>控制流</em> 是执行单个语句的顺序. 通常,  语句从上到下依次执行, 但控制流语句可以重写这一点, 例如, 指定语句重复执行语句, 或者仅在满足某一条件时才这样做.</p>
@@ -211,7 +223,7 @@ ControlSend "^{Home}",, "A"          <em>; Correct. Control is omitted.</em>
   <dt id="execute">执行</dt>
   <dd><p>实施, 执行, 求值, 使生效, 等等. <em>执行</em> 基本上与非编程语言有相同的含义.</p></dd>
   <dt id="cf-body">主体(正文)</dt>
-  <dd><p>控制流语句的 <em>主体</em> 是它所应用的语句或语句组. 例如, <a href="commands/If.htm">if 语句</a> 的主体仅在满足特定条件时执行.</p></dd>
+  <dd><p>控制流语句的 <em>主体</em> 是它所应用的语句或语句组. 例如, <a href="commands/If.htm">if 语句</a>的主体仅在满足特定条件时执行.</p></dd>
 </dl>
 <p>例如, 请考虑以下简单的指令集:</p>
 <ol>
@@ -309,8 +321,8 @@ MsgBox 0.1 + 0.2 = 0.3   <em>; 0(不相等)</em>
 <p><strong>最大长度:</strong> 253 个字符.</p>
 <p><strong>允许的字符:</strong> 字母, 数字, 下划线(_) 和非 ASCII 字符; 然而, 第一个字符不能是数字.</p>
 <p id="reserved-words"><strong>保留单词:</strong> <code>and</code>, <code>contains</code>, <code>in</code>, <code>is</code>, <code>new</code>, <code>not</code> 和 <code>or</code>. 这些单词保留作<a href="Language.htm#operators">运算符</a>使用.</p>
-<p>声明关键字和控制流语句的名称也是保留的, 主要用于检测错误. 这包括:  <code>Break</code>, <code>Catch</code>, <code>Continue</code>, <code>Else</code>, <code>Finally</code>, <code>For</code>, <code>Global</code>, <code>Gosub</code>, <code>Goto</code>, <code>If</code>, <code>Local</code>, <code>Loop</code>, <code>Return</code>, <code>Static</code>, <code>Throw</code>, <code>Try</code>, <code>Until</code>, <code>While</code>.</p>
-<p>Names of properties, methods and window groups are permitted to be reserved words.</p>
+<p>声明关键字和控制流语句的名称也是保留的, 主要用于检测错误. 这包括: <code>Break</code>, <code>Catch</code>, <code>Continue</code>, <code>Else</code>, <code>Finally</code>, <code>For</code>, <code>Global</code>, <code>Gosub</code>, <code>Goto</code>, <code>If</code>, <code>Local</code>, <code>Loop</code>, <code>Return</code>, <code>Static</code>, <code>Throw</code>, <code>Try</code>, <code>Until</code>, <code>While</code>.</p>
+<p>允许将属性, 方法和窗口组的名称作为保留字.</p>
 
 <h3 id="variable-references">变量引用与值</h3>
 <p>变量的某些属性模糊了变量与其值之间的界限, 但区分它们是很重要的. 特别是, 在考虑<a href="#objects">对象</a>和 ByRef 参数的时候.</p>
@@ -319,7 +331,9 @@ MsgBox 0.1 + 0.2 = 0.3   <em>; 0(不相等)</em>
 <p>因为变量只包含对对象的 <em>引用</em>, 而不是对象本身, 所以当您将这样的变量传递给非 ByRef 参数时, 函数接收到的是对同一对象的引用. 这允许函数修改对象, 但它不允许函数修改函数调用者使用的 <em>变量</em>, 因为该函数只具有对对象的引用, 而不是变量.</p>
 
 <h3 id="references-to-objects">对象的引用</h3>
-<p>脚本仅通过对对象的 <em>引用</em> 间接与对象进行交互. 创建对象时, 对象是在您不能控制的地方创建的, 并给您一个引用. 将此引用传递给函数或将其存储在变量或其他对象中会创建对 <em>同一</em> 对象的新引用. 通过简单地使用赋值将其替换为任何其他数值, 可以释放引用. 只有在所有引用都已释放后, 才会删除对象; 不能显式删除对象, 也不应该去尝试这样做.</p>
+<p>脚本仅能通过(指向) 对象的 <em>引用</em> 间接与对象进行交互. 创建对象时, 对象是在您不能控制的地方创建的, 并给您一个引用. 将此引用传递给函数或将其存储在变量或其他对象中会创建对 <em>同一</em> 对象的新引用.</p>
+<p>例如, 如果 <em>myObj</em> 包含对对象的引用, <code>yourObj := myObj</code>, 将创建一个新的对同一对象的引用. 如 <code>myObj.ans := 42</code> 这样的改变会同时影响 <code>myObj.ans</code> 和 <code>yourObj.ans</code>, 因为它们都指向同一个对象. 但是, <code>myObj := Object()</code> 只影响变量 <em>myObj</em>, 不影响变量 <em>yourObj</em>, yourObj 仍然指向原始对象.</p>
+<p>通过简单地使用赋值将其替换为任何其他数值, 可以释放引用. 只有在所有引用都已释放后, 才会删除对象; 不能显式删除对象, 也不应该去尝试这样做. (但是, 您可以删除对象的属性, 内容或相关资源, 如<a href="objects/Array.htm">数组</a>的元素, 与 <a href="objects/Gui.htm">Gui</a> 关联的窗口, <a href="objects/Menu.htm">Menu</a> 对象的菜单, 等等.)</p>
 <pre>ref1 := Object()  <em>; 创建一个对象并储存第一个引用</em>
 ref2 := ref1      <em>; 创建一个对同一对象的新引用</em>
 ref1 := &quot;&quot;        <em>; 释放第一个引用</em>
