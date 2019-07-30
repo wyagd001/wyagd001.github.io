@@ -14,7 +14,7 @@
 
 <h1>#If <span class="ver">[AHK_L 4+]</span></h1>
 
-<p>创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>. 这样的热键会根据表达式的结果执行不同的操作(或什么都不做).</p>
+<p>创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>. 这些热键会根据表达式的结果执行不同的操作(或什么都不做).</p>
 
 <pre class="Syntax"><span class="func">#If</span> <span class="optional">Expression</span></pre>
 <h2>参数</h2>
@@ -26,27 +26,27 @@
 </dl>
 
 <h2>基本操作</h2>
-<p>可以使用任何有效的表达式定义激活热键的上下文. 例如:</p>
+<p>任何有效的表达式可以用来定义激活热键的上下文. 例如:</p>
 <pre>#If WinActive("ahk_class Notepad") or WinActive(MyWindowTitle)
 #Space::MsgBox You pressed Win+Spacebar in Notepad or %MyWindowTitle%.</pre>
-<p>与 #IfWin 指令一样, #If 是与位置有关的: 它会影响在它后面的所有热键和热字串. #If 和 #IfWin 是互斥的; 即只有最近的 #If 或 #IfWin 会起作用.</p>
-<p>要关闭热键的上下文相关性, 可以在脚本的适当位置指定一个不带任何参数的 #If 或任一 #IfWin 指令. 例如:</p>
+<p>与 #IfWin 指令一样, #If 是与位置有关的: 它会影响脚本中在它后面的所有热键和热字串. #If 和 #IfWin 是互斥的; 即只有最近的 #If 或 #IfWin 会起作用.</p>
+<p>要关闭热键的上下文相关性, 指定一个不带任何参数的 #If 或任一 #IfWin 指令. 例如:</p>
 <pre>#If</pre>
 
-<h2>一般说明</h2>
-<p>当键盘, 鼠标或操作杆按钮组合形成的热键被按下时, 计算 #If 表达式的值以确定热键是否应该激活.</p>
+<h2>备注</h2>
+<p>当键盘, 鼠标或操作杆按钮组合形成的热键被按下时, 计算 #If 表达式的值, 以确定热键是否应该激活.</p>
 <p class="warning"><strong>注意:</strong> 脚本不应该假定只有在按下热键时才计算表达式(见下文).</p>
-<p>每当程序需要知道热键是否处于活动状态时, 也可以计算表达式. 例如, #If 表达式作用于一个普通的组合热键 <code>a &amp; b::</code>, 当按下前缀按键(这个例子中前缀按键是 <code>a</code>) 时, 表达式将会计算一次, 计算结果将决定是否对组合热键起作用.</p>
+<p>每当程序需要知道热键是否处于活动状态时, 也可以计算表达式. 例如, #If 表达式作用于一个自定义组合热键(如 <code>a &amp; b::</code>), 当按下前缀按键(这个例子中的 <code>a</code>) 时, 表达式将会计算一次, 计算结果将决定是否对组合热键起作用.</p>
 <p class="warning"><strong>注意:</strong> 在没有响应的脚本中使用 #If, 可能会导致输入延迟或中断热键(见下文).</p>
 <p>#If 指令还有几个需要注意的问题:</p>
 <ul>
   <li>键盘或鼠标输入通常被缓冲(延迟), 直到表达式计算完成或<a href="_IfTimeout.htm">超时</a>.</li>
-  <li>表达式的计算只能由脚本的主线程(在操作系统级别, 而不是<a href="../misc/Threads.htm">准线程</a>)执行 , 而不是由键盘/鼠标钩子直接执行. 如果脚本忙或者没有响应, 比如在进程中出现了 FileCopy, 那么表达式的计算就会被延迟, 并且可能会超时.</li>
+  <li>表达式的计算只能由脚本的主线程(在操作系统级别, 而不是<a href="../misc/Threads.htm">准线程</a>) 执行 , 而不是由键盘/鼠标钩子直接执行. 如果脚本忙或者没有响应, 比如在进程中出现了 FileCopy, 那么表达式的计算就会被延迟, 并且可能会超时.</li>
   <li>如果达到<a href="_IfTimeout.htm#LowLevelHooksTimeout">系统定义的超时</a>, 系统可能会停止通知脚本键盘或鼠标输入(有关详细信息, 请参阅 #IfTimeout).</li>
-  <li>在计算表达式时, 发送击键或鼠标单击(例如, 从它调用的函数中), 可能会导致并发症, 应该避免.</li>
+  <li>在计算表达式时, 发送击键或鼠标单击(例如, 从它调用的函数中), 可能会导致并发, 应该避免.</li>
 </ul>
-<p><span class="ver">[AHK_L 53+]:</span> <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <a href="../Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 的设置是基于某个 #If 表达式正在计算中的热键.</p>
-<p><span class="ver">[v1.0.95.00+]:</span> <a href="../Variables.htm#PriorHotkey">A_PriorHotkey</a> 和 <a href="../Variables.htm#TimeSincePriorHotkey">A_TimeSincePriorHotkey</a> 临时包含对应 "This" 变量的前一个值.</p>
+<p><span class="ver">[AHK_L 53+]:</span> <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <a href="../Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 是基于当前正在计算的 #If 表达式的热键来设置的.</p>
+<p><span class="ver">[v1.0.95.00+]:</span> <a href="../Variables.htm#PriorHotkey">A_PriorHotkey</a> 和 <a href="../Variables.htm#TimeSincePriorHotkey">A_TimeSincePriorHotkey</a> 临时包含对应的 "This" 变量的前一个值.</p>
 
 <h2>相关</h2>
 <p>大部分 <a href="_IfWinActive.htm">#IfWin</a> 指令的行为属性也适用于 #If.</p>
