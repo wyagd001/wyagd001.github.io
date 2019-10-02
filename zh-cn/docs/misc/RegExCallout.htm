@@ -15,7 +15,7 @@
 
 <p>调出提供了在正则表达式模式匹配过程中临时传递控制到脚本的方法. 关于 PCRE 标准调出功能的详细信息, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>.</p>
 
-<p>调出当前只有 <a href="../commands/RegExMatch.htm">RegExMatch</a> 和 <a href="../commands/RegExReplace.htm">RegExReplace</a> 支持.</p>
+<p>调出当前只有 <a href="../commands/RegExMatch.htm">RegExMatch()</a> 和 <a href="../commands/RegExReplace.htm">RegExReplace()</a> 支持.</p>
 
 <h2 id="toc">目录</h2>
 <ul>
@@ -45,8 +45,8 @@ Function(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
   <li><b>Match</b>: 相当于 RegExMatch 中的 <em>OutputVar</em>, 包含需要时数组变量的创建.</li>
   <li><b>CalloutNumber</b>: 接收调出的 <em>Number</em>.</li>
   <li><b>FoundPos</b>: 接收当前可能匹配的位置.</li>
-  <li><b>Haystack</b>: 接收传递给 RegExMatch 或 RegExReplace 的 <em>Haystack</em>.</li>
-  <li><b>NeedleRegEx</b>: 接收传递给 RegExMatch 或 RegExReplace 的 <em>NeedleRegEx</em>.</li>
+  <li><b>Haystack</b>: 接收传递给 RegExMatch() 或 RegExReplace() 的 <em>Haystack</em>.</li>
+  <li><b>NeedleRegEx</b>: 接收传递给 RegExMatch() 或 RegExReplace() 的 <em>NeedleRegEx</em>.</li>
 </ul>
 <p>这些名称只是暗示性的. 实际中可以使用其他的名称.</p>
 
@@ -55,7 +55,7 @@ Function(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
   <li>如果函数返回 <b>0</b> 或没有返回数值, 则匹配操作如常进行.</li>
   <li>如果函数返回 <b>1</b> 或更大的数字, 则在当前位置匹配失败, 但继续进行剩余部分的匹配测试.</li>
   <li>如果函数返回 <b>-1</b>, 则匹配中止.</li>
-  <li>如果函数返回小于 -1 的值, 则它被视为 PCRE 错误码且匹配中止. RegExMatch 返回空字符串, 而 RegExReplace 返回原始的 <em>Haystack</em>. 在这两个函数中, ErrorLevel 都包含了错误码.</li>
+  <li>如果函数返回小于 -1 的值, 则它被视为 PCRE 错误码且匹配中止. RegExMatch() 返回空字符串, 而 RegExReplace() 返回原始的 <em>Haystack</em>. 在这两个函数中, ErrorLevel 都包含了错误码.</li>
 </ul>
 
 <p>例如:</p>
@@ -86,7 +86,7 @@ next_item_length  := NumGet(A_EventInfo, 32 + pad + A_PtrSize*3, "Int")
 if (version &gt;= 2)
     mark   := StrGet(NumGet(A_EventInfo, 36 + pad + A_PtrSize*3, "Int"), "UTF-8")
 </pre>
-<p>想了解更多信息, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>, <a href="../commands/NumGet.htm">NumGet</a> 和 <a href="../Variables.htm#PtrSize">A_PtrSize</a>.</p>
+<p>想了解更多信息, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>, <a href="../commands/NumGet.htm">NumGet()</a> 和 <a href="../Variables.htm#PtrSize">A_PtrSize</a>.</p>
 
 <h2 id="auto">自动调出</h2>
 
@@ -123,7 +123,7 @@ DebugRegEx(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
 
 <h2 id="remarks">备注</h2>
 
-<p>调出在当前的半线程中执行, 但在调出函数返回后将恢复 A_EventInfo 原来的值. 在 RegExMatch 或 RegExReplace 返回时才会设置 ErrorLevel 的值.</p>
+<p>调出在当前的半线程中执行, 但在调出函数返回后将恢复 A_EventInfo 原来的值. 在 RegExMatch() 或 RegExReplace() 返回时才会设置 ErrorLevel 的值.</p>
 <p>在一些可以确定不会发生匹配的情况下, 则会对 PCRE 进行优化来提早中止 (即此时会不进行匹配而直接返回 "没有匹配" 的结果). 对于在这些情况中的所有调出, 可能需要在模式的开始处指定 <code>(*NO_START_OPT)</code> 来禁用这种优化. 此选项需要 <span class="ver">[v1.1.05]</span> 或更高版本.</p>
 
 </body>

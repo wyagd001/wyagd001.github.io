@@ -17,6 +17,37 @@
 <p>对于较旧的变更, 请参阅<a href="ChangeLogHelp.htm">存档变更</a>.</p>
 
 <!--new revisions go here-->
+<h2 id="v1.1.31.00">1.1.31.00 - 2019 年 9 月 28 日</h2>
+<p>增加 <a href="commands/Switch.htm">Switch</a>.</p>
+<p>增加 <a href="commands/InputHook.htm">InputHook</a>.</p>
+<p>增加 <code>Locale</code> 选项以使 InputBox 使用特定的本地按钮名称. [PR #143 from Ragnar-F]</p>
+<p>优化 对<a href="misc/LongPaths.htm">长路径</a>的支持.</p>
+<p>常规热键优化:</p>
+<ul>
+  <li>优化 对重叠热键的支持, 如 <code>#If</code> 中的 <code>&lt;^a</code> 和 <code>^a</code>. 如果 #If 禁用了热键的所有变体, 则可能触发更常规的热键. 换句话说, 用 #If 禁用热键现在应该更像是关闭它们或从脚本中删除它们.</li>
+  <li>优化 钩子检测到错误的修饰符按键状态.</li>
+  <li>修复 通配符热键选择的忽略由 Send 产生的修饰符改变.</li>
+</ul>
+<p>AltGr 错误修复:</p>
+<ul>
+  <li>修复 <code>Send <i>xy</i></code>(<i>x</i> 需要 AltGr) 后, 热键不触发的问题.</li>
+  <li>修复 <code>Send <i>x</i></code>(<i>x</i> 需要 AltGr) 后, 发送不必要的 LCtrl.</li>
+  <li>修复 系统为 64 位时, Unicode 32 位构建对 AltGr 的检测.</li>
+  <li>修复 当 RCtrl 按下时, 发送 AltGr 组合热键.</li>
+</ul>
+<p>Shift-numpad 错误修复:</p>
+<ul>
+  <li>修复 Send 和 Shift-numpad 之间的交互, 导致 Shift 粘住. 这修复了像 <code>Numpad1::Send +1</code> 这样的热键间歇性问题.</li>
+  <li>优化 由系统小键盘处理生成的伪 Shift 的检测.</li>
+  <li>修复 伪 RShift 被认为是物理上的, 与 LShift 不一致.</li>
+</ul>
+<p>修复 Slider(滑块) <code>+TickInterval</code> 生效, 尽管若干 <code>Range</code> 没有设置.</p>
+<p>修复 滑块 <code>+TickInterval0</code> 设置间隔为 0, 禁止刻度.</p>
+<p>修复 在某些情况下, 菜单和 Gui 事件导致的 CPU-maxing 循环. 具体来说, 当模式消息循环正在运行且脚本不可中断时, 菜单和 Gui 事件会被反复重新发布. 这些现在被丢弃, 因为它们不能被处理或保存在队列中. 这与热键等是一致的.</p>
+<p>修复 DllCall 严重错误时总是退出, 忽略 OnExit 结果.</p>
+<p>修复 <code>ExitApp 2</code> 在全局/静态变量中绕过对象的释放.</p>
+<p>变更 ComObjCreate 对非-GUID 字符串使用 CLSIDFromProgID. 这修复了 <code>ComObjCreate("Microsoft.Windows.ActCtx")</code> 和其他可能不在注册表中但可以工作 VBScript 和 JScript 的代码.</p>
+
 <h2 id="v1.1.30.03">1.1.30.03 - 2019 年 4 月 4 日</h2>
  <p>修复 调试器 context_get 触发 #Warn UseUnset 的问题.</p>
  <p>修复 直接修饰符热键如 Shift:: (由 v1.1.30.02 破坏).</p>
@@ -1183,7 +1214,7 @@
 <p>修复: 在所有的情况下, #If <i>表达式</i> 现在应该在每次按键时, 每个 <i>表达式</i> 最多只计算一次.</p>
 <p>变更: SplashImage 使用常见的图像加载例程; 现在支持 PNG 和类似的格式, 但结果可能不同于之前的图标文件.</p>
 <p>增加: <code><a href="commands/For.htm">For</a> x,y in z</code>.</p>
-<p>增加: <code>Loop ... <a href="commands/Until.htm">Until</a> <i>表达式</i></code>, 可用于任何循环或 For循环.</p>
+<p>增加: <code>Loop ... <a href="commands/Until.htm">Until</a> <i>表达式</i></code>, 可用于任何循环或 For 循环.</p>
 <p>增加: 命名循环; <code><a href="commands/Continue.htm">continue</a> outer_loop</code>, <code><a href="commands/Break.htm">break</a> 2</code>, 等等.</p>
 <p>调试器: 将标准输出和标准错误输出数据包编码为 UTF-8.</p>
 <p>调试器: 当初始化连接失败时, 允许用户终止, <b>重试</b> 或 忽略.</p>

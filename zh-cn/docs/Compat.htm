@@ -13,7 +13,7 @@
 
 <h1>脚本兼容性</h1>
 
-<p>尽管为 AutoHotkey 1.0 编写的许多脚本不需要修改就可以运行在 AutoHotkey 1.1 上, 然而由于两种版本的根本区别可能使得某些功能运行不正常. 因为最主要出现问题的差异只影响高级功能(例如 DllCall), 大多数用户不需要担心.</p>
+<p>尽管为 AutoHotkey 1.0 编写的许多脚本不需要修改就可以运行在 AutoHotkey 1.1 上, 然而由于两种版本的根本区别可能使得某些功能运行不正常. 因为最主要出现问题的差异只影响高级功能(例如 DllCall()), 大多数用户不需要担心.</p>
 <p>AutoHotkey 1.1 也称为"AutoHotkey_L", 而 AutoHotkey 1.0 则表示"AutoHotkey Basic". AutoHotkey_L 的一些旧版本使用 1.0.* 版本号, 所以为了清晰, 这里的帮助中使用名称而不是版本号来区分 AutoHotkey 的两种分支.</p>
 <p class="note"><strong>注:</strong> 一些常见的问题是由对 Unicode 文本的支持引起的, 可以通过使用 AutoHotkey_L 的 ANSI 版本来避免.</p>
 
@@ -81,7 +81,7 @@
 </ul>
 
 <h3 id="FileRead">FileRead</h3>
-<p>在某些情况下 <a href="commands/FileRead.htm#Binary">FileRead</a> 会在代码页之间转换文本, 因此可能输出错误的二进制数据. 要避免此问题, 请添加 <code>*c</code> 选项或使用 <a href="commands/FileOpen.htm">FileOpen</a> 代替.</p>
+<p>在某些情况下 <a href="commands/FileRead.htm#Binary">FileRead</a> 会在代码页之间转换文本, 因此可能输出错误的二进制数据. 要避免此问题, 请添加 <code>*c</code> 选项或使用 <a href="commands/FileOpen.htm">FileOpen()</a> 代替.</p>
 
 <h3 id="Names">变量和函数名</h3>
 <p>字符 <code>[</code>, <code>]</code> 和 <code>?</code> 被预留用于<a href="Variables.htm#Expressions">表达式</a>, 所以在变量名中使用时不再合法. 因此, <code>?</code>(用于<a href="Variables.htm#ternary">三元运算</a>) 的两边不再需要空格. 另请参阅<a href="Objects.htm#Syntax">对象语法</a>.</p>
@@ -98,7 +98,7 @@
 <h3 id="Transform">Transform</h3>
 <p>在 AutoHotkey_L 的 Unicode 版本中一些 <i>Transform</i> 子命令被修改或不可用:</p>
 <ul>
-  <li><a href="commands/Transform.htm#Unicode">Transform, Unicode</a> 不可用. 要赋值 Unicode 文本到剪贴板, 使用正常赋值. 另请参阅: <a href="commands/StrPut.htm">StrPut</a>/<a href="commands/StrGet.htm">StrGet</a>.</li>
+  <li><a href="commands/Transform.htm#Unicode">Transform, Unicode</a> 不可用. 要赋值 Unicode 文本到剪贴板, 使用正常赋值. 另请参阅: <a href="commands/StrPut.htm">StrPut()</a> / <a href="commands/StrGet.htm">StrGet()</a>.</li>
   <li><a href="commands/Transform.htm#HTML">Transform, HTML</a> 支持附加功能.</li>
 </ul>
 
@@ -209,9 +209,9 @@ VarSetCapacity(native_var,  t_size(capacity_in_chars))  <em>; 请参阅<a href="
 </table>
 <p>如果 "Str" 或在当前版本中的等价类型用于参数中, 那么字符串或变量的地址被传递给函数, 否则创建一个期望格式的字符串临时副本进行传递. 一般地, "AStr"和"WStr"不应该用于函数会写入值的参数中.</p>
 <p class="note"><b>注意:</b> "AStr" 和 "WStr" 用于参数和函数的返回值同样是有效的.</p>
-<p>一般而言, 如果脚本通过 DllCall 调用接受字符串参数的函数, 那么必须采取以下其中一种方式:</p>
+<p>一般而言, 如果脚本通过 DllCall() 调用接受字符串参数的函数, 那么必须采取以下其中一种方式:</p>
 <ol>
-  <li>如果函数的 Unicode(W) 和 ANSI(A) 都可用, 那么为当前版本调用匹配的那个. 在下面的例子中, "DeleteFile" 在内部被称为 "DeleteFileA" 或 "DeleteFileW". 由于 "DeleteFile" 自身实际并不存在, DllCall 自动根据当前版本尝试适合的 "A" 或 "W".
+  <li>如果函数的 Unicode(W) 和 ANSI(A) 都可用, 那么为当前版本调用匹配的那个. 在下面的例子中, "DeleteFile" 在内部被称为 "DeleteFileA" 或 "DeleteFileW". 由于 "DeleteFile" 自身实际并不存在, DllCall() 自动根据当前版本尝试适合的 "A" 或 "W".
   <pre>DllCall("DeleteFile", "Ptr", &amp;filename)
 DllCall("DeleteFile", "Str", filename)</pre>
   <p>在这个例子中, <code>&amp;filename</code> 准确按原样传递字符串地址, 所以函数必须期望接受和 "Str" 类型相同编码格式的字符串. 注意在 AutoHotkey Basic 中 "UInt" 必须使用 "Ptr" 代替, 但得到的代码可能不兼容 64 位.</p>
@@ -219,11 +219,11 @@ DllCall("DeleteFile", "Str", filename)</pre>
   <li>如果函数仅接受特殊类型的字符串作为输入, 那么脚本可能必须使用相应的字符串类型:
   <pre>DllCall("DeleteFileA", "AStr", filename)
 DllCall("DeleteFileW", "WStr", filename)</pre></li>
-  <li>如果函数必须修改字符串(非原生格式), 那么脚本必须如<a href="#VarSetCapacity">上面</a>描述的那样分配缓存并且把缓存的地址传递给函数. 如果参数接受输入, 脚本还必须把输入字符串转换为适当的格式; 这可以用 <a href="commands/StrPut.htm">StrPut</a> 实现.</li>
+  <li>如果函数必须修改字符串(非原生格式), 那么脚本必须如<a href="#VarSetCapacity">上面</a>描述的那样分配缓存并且把缓存的地址传递给函数. 如果参数接受输入, 脚本还必须把输入字符串转换为适当的格式; 这可以用 <a href="commands/StrPut.htm">StrPut()</a> 实现.</li>
 </ol>
 
 <h3 id="NumPutGet">NumPut / NumGet</h3>
-<p>当使用 NumPut 或 NumGet 操作字符串时, 对于给定类型的字符串其偏移和类型都必须正确. 可以参考下面的代码:</p>
+<p>当使用 NumPut() 或 NumGet() 操作字符串时, 对于给定类型的字符串其偏移和类型都必须正确. 可以参考下面的代码:</p>
 <pre><em>;  8 位/ANSI   字符串:  size_of_char=1  type_of_char="Char"
 ; 16 位/UTF-16 字符串:  size_of_char=2  type_of_char="UShort"</em>
 <i>n</i>th_char := NumGet(var, (<i>n</i>-1)*<i>size_of_char</i>, <i>type_of_char</i>)
@@ -245,9 +245,9 @@ t_size(char_count=1) {
 <ul>
   <li>含有一个或多个指针的结构字段的偏移计算.</li>
   <li>含有一个或多个指针的结构大小计算.</li>
-  <li>在 <a href="commands/DllCall.htm">DllCall</a>, <a href="commands/NumPut.htm">NumPut</a> 或 <a href="commands/NumGet.htm">NumGet</a> 中使用的类型名称.</li>
+  <li>在 <a href="commands/DllCall.htm">DllCall</a>, <a href="commands/NumPut.htm">NumPut()</a> 或 <a href="commands/NumGet.htm">NumGet()</a> 中使用的类型名称.</li>
 </ul>
-<p>对于大小和偏移计算, 使用 <a href="Variables.htm#PtrSize">A_PtrSize</a>. 对于 DllCall, NumPut 和 NumGet, 使用适当的 <a href="commands/DllCall.htm">Ptr</a> 类型.</p>
+<p>对于大小和偏移计算, 使用 <a href="Variables.htm#PtrSize">A_PtrSize</a>. 对于 DllCall(), NumPut() 和 NumGet(), 使用适当的 <a href="commands/DllCall.htm">Ptr</a> 类型.</p>
 <p>记住一个字段的偏移常常是在它之前所有字段的总大小. 同时注意句柄(包括类似 HWND 和 HBITMAP 的类型) 实际上是指针类型.</p>
 <pre><em>/*
   typedef struct _PROCESS_INFORMATION {

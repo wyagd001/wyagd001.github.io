@@ -96,7 +96,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
   <td><p>在上述任一类型后附加星号(星号前可以含有空格) 表示传递参数的地址而不是参数的值(被调用函数必须接受地址). 由于这时函数可能修改参数的值, 所以每当不受保护的变量作为参数传递时, 变量的内容都会被更新. 例如, 后面的调用将通过地址传递 MyVar 的内容给 MyFunction, 但也会更新 MyVar 来反映 MyFunction 对它作出的改变: <code>DllCall("MyDll\MyFunction", "Int*", MyVar)</code>.</p>
     <p>一般说来, 星号可用于函数中以 "LP" 开始的参数类型或返回值类型. 最常见的例子是 LPDWORD, 这是指向 DWORD 的指针. 因为 DWORD 是无符号 32 位整型, 所以用 "UInt*" 或 "UIntP" 来表示 LPDWORD. 星号不应该用于字符串类型(例如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 根据您需要传递的是变量还是其地址应该使用 <a href="#str">"Str"</a> 或 "Ptr".</p>
     <p class="note"><strong>注意</strong>: "Char*"与<a href="#str">"Str"</a>类型是不同的, 因为"Char*"传递 8 位数的地址, 而<a href="#str">"Str"</a>传递一系列字符的地址, 根据 AutoHotkey 版本的不同它可能是 8 位(ANSI) 或 16 位(Unicode) 的, 同样地, "UInt*"会传递 32 位数的地址, 所以不应该使用在函数期望大于 32 位的结构或值的数组的时候.</p>
-    <p>由于AutoHotkey 中的变量没有固定的类型, 所以传递给函数的地址指向临时内存而不是变量自身, 不需要对这样的变量调用 <a href="VarSetCapacity.htm">VarSetCapacity</a>, 因为在函数返回后 DllCall 会正确的更新变量.</p>
+    <p>由于AutoHotkey 中的变量没有固定的类型, 所以传递给函数的地址指向临时内存而不是变量自身, 不需要对这样的变量调用 <a href="VarSetCapacity.htm">VarSetCapacity()</a>, 因为在函数返回后 DllCall() 会正确的更新变量.</p>
     </td>
 </tr>
 <tr id="unsigned">
@@ -149,20 +149,20 @@ Loop 500
 <p>请参阅<a href="#ExStruct">结构示例</a>了解实际用法.</p>
 <h2 id="limits">已知限制</h2>
 <p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>) 传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误, 要解决此问题, 有下面几种方法: 1) 把 <em>MyVar</em> 作为 <a href="#str">"Str"</a> 参数而不是作为 Ptr/地址 传递; 2) <span class="ver">[v1.0.44.03+]</span>: 在调用 DllCall 后使用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>
-<p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即这样的数据无法被大多数命令和函数访问或修改. 但是, 这样的数据可以使用<a href="../Variables.htm#amp">地址运算符</a>和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a> 以及 DllCall 自己进行操作.</p>
+<p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即这样的数据无法被大多数命令和函数访问或修改. 但是, 这样的数据可以使用<a href="../Variables.htm#amp">地址运算符</a>和 <a href="NumPut.htm">NumPut()</a>/<a href="NumGet.htm">NumGet()</a> 以及 DllCall 自己进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会出乎意料地返回一个地址不同内容相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall() 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar := "ABC"
 result := DllCall("CharLower", &quot;<strong><u>Str</u></strong>&quot;, DllCall("CharUpper", &quot;Str&quot;, MyVar, &quot;<strong><u>Str</u></strong>&quot;), &quot;Str&quot;)</pre>
 <p>要变通解决此问题, 请把上面两个带下划线的 "Str" 修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整型传递给 CharLower.</p>
 <p>处理字符串时可能遇到某些限制. 更多细节请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
 <h3 id="COM">组件对象模型(COM)</h3>
-<p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a> 或 <a href="ComObjActive.htm">ComObjActive</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
+<p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate()</a>, <a href="ComObjGet.htm">ComObjGet()</a> 或 <a href="ComObjActive.htm">ComObjActive()</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
 <p>不支持 <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx">IDispatch</a> 的 COM 对象可以通过从对象接口的虚函数表中获取函数的地址用于 DllCall 中. 想了解更多细节, 请参阅较远后面的<a href="#ExTaskbar">这个例子</a>.</p>
 <p>许多 .NET Framework 也可以使用 COM 和 DllCall 进行访问. 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>.
 </p>
 
 <h2>相关</h2>
-<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a>, <a href="Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="http://msdn.microsoft.com/library/">MSDN Library</a></p>
+<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity()</a>, <a href="Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="http://msdn.microsoft.com/library/">MSDN Library</a></p>
 <h2>示例</h2>
 <div class="ex" id="ExMessageBox">
 <p><a href="#ExMessageBox">#1</a>: 调用 Windows API 函数 &quot;MessageBox&quot; 并报告用户按下了哪个按钮.</p>
@@ -242,7 +242,7 @@ return</pre>
 </div>
 
 <div class="ex" id="file">
-<p><a href="#file">#9</a>: 这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存(需要 <span class="ver">[v1.0.34+]</span>). 在同时读取或写入多个文件时, 使用这种方法可以改善性能. <span class="ver">[AHK_L 42+]</span>: 使用 <a href="FileOpen.htm">FileOpen</a> 可以实现<a href="FileOpen.htm#writeread">同样的目的</a>.</p>
+<p><a href="#file">#9</a>: 这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存(需要 <span class="ver">[v1.0.34+]</span>). 在同时读取或写入多个文件时, 使用这种方法可以改善性能. <span class="ver">[AHK_L 42+]</span>: 使用 <a href="FileOpen.htm">FileOpen()</a> 可以实现<a href="FileOpen.htm#writeread">同样的目的</a>.</p>
 <pre>FileSelectFile, FileName, S16,, Create a new file:
 if (FileName := "")
     return
@@ -389,9 +389,9 @@ SetSystemTime(YYYYMMDDHHMISS)
 <pre><em>/*
   <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a> 的 VTable 中的方法:
     IUnknown:
-      0 QueryInterface  -- 使用 <a href="ComObjQuery.htm">ComObjQuery</a> 代替
-      1 AddRef          -- 使用 <a href="ObjAddRef.htm">ObjAddRef</a> 代替
-      2 Release         -- 使用 <a href="ObjAddRef.htm">ObjRelease</a> 代替
+      0 QueryInterface  -- 使用 <a href="ComObjQuery.htm">ComObjQuery()</a> 代替
+      1 AddRef          -- 使用 <a href="ObjAddRef.htm">ObjAddRef()</a> 代替
+      2 Release         -- 使用 <a href="ObjAddRef.htm">ObjRelease()</a> 代替
     ITaskbarList:
       3 HrInit
       4 AddTab

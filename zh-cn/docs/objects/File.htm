@@ -13,16 +13,16 @@
 
 <h1>文件对象 <span class="ver">[AHK_L 42+]</span></h1>
 
-<p>提供文件输入/输出的接口. <a href="../commands/FileOpen.htm">FileOpen</a> 返回文件类型的对象.</p>
+<p>提供文件输入/输出的接口. <a href="../commands/FileOpen.htm">FileOpen()</a> 返回文件类型的对象.</p>
 
 <h2 id="Members">对象成员</h2>
  <p>属性:</p>
  <ul>
-   <li><a href="#Seek">Pos</a>: 获取或设置文件指针的位置. 等同于 <code>Pos := File.Tell()</code> 或 <code>File.Seek(Distance)</code>.</li>
+   <li><a href="#Seek">Position / Pos</a>: 获取或设置文件指针的位置. 等同于 <code>Pos := File.Tell()</code> 或 <code>File.Seek(Distance)</code>.</li>
    <li><a href="#Length">Length</a>: 获取或设置文件的大小.</li>
    <li><a href="#AtEOF">AtEOF</a>: 获取一个非零值当文件指针到达文件的末尾时.</li>
    <li><a href="#Encoding">Encoding</a>: 获取或设置此文件对象使用的编码.</li>
-   <li><a href="#Handle">__Handle</a>: 获取用于 DllCall 的系统文件句柄.</li>
+   <li><a href="#Handle">__Handle</a>: 获取用于 DllCall() 的系统文件句柄.</li>
  </ul>
  <p>方法:</p>
  <ul>
@@ -32,8 +32,8 @@
    <li><a href="#WriteLine">WriteLine</a>: 根据打开文件时使用的标志(flags), 写入后面跟着 <code>`n</code> 或 <code>`r`n</code> 的字符串. 向前移动文件指针.</li>
    <li><a href="#ReadNum">Read<em>NumType</em></a>: 从文件中读取指定类型的数据并向前移动文件指针.</li>
    <li><a href="#WriteNum">Write<em>NumType</em></a>: 写入指定类型的数据到文件并向前移动文件指针.</li>
-   <li><a href="#RawRead">RawRead</a>: 从文件读取原始的二进制数据到内存. 如果指定了变量, 则必要时会自动扩展..</li>
-   <li><a href="#RawWrite">RawWrite</a>: 写入原始的二进制数据到文件.</li>
+   <li><a href="#RawRead">RawRead</a>: 从文件读取原始的二进制数据到内存并向前移动文件指针.</li>
+   <li><a href="#RawWrite">RawWrite</a>: 写入原始的二进制数据到文件并向前移动文件指针.</li>
    <li><a href="#Seek">Seek</a>: 移动文件指针. 如果第二个参数被省略, 等同于 <code>File.Pos := Distance</code>.</li>
    <li><a href="#Tell">Tell</a>: 返回文件指针的当前位置. 等同于 <code>Pos := File.Pos</code>.</li>
    <li><a href="#Close">Close</a>: 关闭文件, 将缓存中的所有数据写入磁盘并释放共享锁定..</li>
@@ -78,7 +78,7 @@
 <div class="methodShort" id="ReadNum"><h2>Read<i>NumType</i></h2>
 <p>从文件中读取指定类型的数据并使文件指针向前移动.</p>
 <pre class="Syntax">Num := File.Read<i>NumType</i>()</pre>
-<p><em>NumType</em> 可以是 UInt, Int, Int64, Short, UShort, Char, UChar, Double 或 Float. 这些类型名称与 <a href="../commands/DllCall.htm#types">DllCall</a> 具有相同的含义.</p>
+<p><em>NumType</em> 可以是 UInt, Int, Int64, Short, UShort, Char, UChar, Double 或 Float. 这些类型名称与 <a href="../commands/DllCall.htm#types">DllCall()</a> 具有相同的含义.</p>
 <p><strong>返回</strong> 数字, 如果失败则返回空字符串.</p>
 <p>如果使用 Try 语句且没有读取任何字节时将抛出异常. 但是, 如果读取到任何字节则不会抛出异常, 即使 <i>NumType</i> 的设定值大于读取的字节数. 不足位用 0 填充.</p></div>
 
@@ -89,12 +89,12 @@
   <dt>Num</dt>
   <dd>写入的数字.</dd>
 </dl>
-<p><em>NumType</em> 可以是 UInt, Int, Int64, Short, UShort, Char, UChar, Double 或 Float. 这些类型名称与 <a href="../commands/DllCall.htm#types">DllCall</a> 具有相同的含义.</p>
+<p><em>NumType</em> 可以是 UInt, Int, Int64, Short, UShort, Char, UChar, Double 或 Float. 这些类型名称与 <a href="../commands/DllCall.htm#types">DllCall()</a> 具有相同的含义.</p>
 <p><strong>返回</strong> 写入的字节数. 例如, 写入成功时 WriteUInt 返回 4.</p>
 </div>
 
 <div class="methodShort" id="RawRead"><h2>RawRead</h2>
-<p>从文件读取原始的二进制数据到内存. 如果指定了变量, 则必要时会自动扩展.</p>
+<p>从文件读取原始的二进制数据到内存并向前移动文件指针.</p>
 <pre class="Syntax">File.<span class="func">RawRead</span>(VarOrAddress, Bytes)</pre>
 <dl>
   <dt>VarOrAddress</dt>
@@ -106,11 +106,11 @@
 <p>如果使用 Try 语句, 且 <em>Bytes</em> 不为零, 但是没有读取到字节, 则抛出异常. 如果有需要, 可使用 <a href="#AtEOF">AtEOF</a> 来避免这种情况.</p></div>
 
 <div class="methodShort" id="RawWrite"><h2>RawWrite</h2>
-<p>写入原始的二进制数据到文件.</p>
+<p>写入原始的二进制数据到文件并向前移动文件指针.</p>
 <pre class="Syntax">File.<span class="func">RawWrite</span>(VarOrAddress, Bytes)</pre>
 <dl>
   <dt>VarOrAddress</dt>
-  <dd>包含数据的变量或内存中的数据地址. 用法类似于 <a href="../commands/NumPut.htm">NumPut</a>.</dd>
+  <dd>包含数据的变量或内存中的数据地址. 用法类似于 <a href="../commands/NumPut.htm">NumPut()</a>. 如果指定了变量, 则必要时会自动扩展.</dd>
   <dt>Bytes</dt>
   <dd>需写入的字节数.</dd>
 </dl>
@@ -180,7 +180,7 @@ Pos := File.Pos
 </div>
 
 <div class="methodShort" id="Handle"><h2>__Handle</h2>
-  <p>返回用于 DllCall 的系统文件句柄. 请参阅 <a href="http://msdn.microsoft.com/en-us/library/aa363858.aspx">CreateFile</a>.</p>
+  <p>返回用于 DllCall() 的系统文件句柄. 请参阅 <a href="http://msdn.microsoft.com/en-us/library/aa363858.aspx">CreateFile</a>.</p>
 <pre class="Syntax">File.__Handle</pre>
 <p>文件对象使用内部缓冲区读取或写入. 如果数据已经被写入对象的内部缓冲区, 则在返回句柄前会确保把数据写入磁盘. 如果缓冲区中包含从文件读取的数据, 则会把数据丢弃且文件指针的实际位置被重设为由 <code>File.Pos</code> 表示的逻辑位置.</p></div>
 

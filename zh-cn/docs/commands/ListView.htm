@@ -248,7 +248,7 @@ IsChecked := (ErrorLevel &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选�
 <pre class="Syntax"><span class="func">LV_SetImageList</span>(ImageListID <span class="optional">, IconType</span>)</pre>
 <p>此函数一般在 ListView 添加行之前调用. 它设置 <a href="#IL">ImageList</a>, 其中的图标会显示在 ListView 的行中(可选的, 以及列). <em>ImageListID</em> 为前面调用 <a href="#IL_Create">IL_Create()</a> 返回的数字. 如果省略 <em>IconType</em>, 则自动检测图像列表中的图标为大图标还是小图标. 否则, 对于大图标指定 0, 对于小图标指定 1, 而状态图标则为 2(还没有直接支持状态图标, 不过可以通过 <a href="PostMessage.htm">SendMessage</a> 使用).</p>
 <p>一个 ListView 最多可以关联两个图像列表: 小图标和/或大图标. 当脚本允许用户在大图标视图和其他视之间切换的时候, 这是很有用的. 要再关联一个图像列表到 ListView, 请再次调用 LV_SetImageList(), 其中指定第二个列表的 <em>ImageListID</em>. 同时关联有大图标和小图标图像列表的 ListView 应该确保两个列表中包含图标的顺序相同. 这是因为使用一个指定图标的大小版本时, 会引用相同的 ID 编号.</p>
-<p>尽管除了图标模式和平铺模式外, 传统的所有的<a href="#View">视图模式</a>都显示小图标, 但可以通过传递一个大图标列表到 LV_SetImageList 并且在第二个参数中指定 1(小图标) 覆盖此行为. 这也增加了 ListView 中每行的高度以适合大图标.</p>
+<p>尽管除了图标模式和平铺模式外, 传统的所有的<a href="#View">视图模式</a>都显示小图标, 但可以通过传递一个大图标列表到 LV_SetImageList() 并且在第二个参数中指定 1(小图标) 覆盖此行为. 这也增加了 ListView 中每行的高度以适合大图标.</p>
 <p>如果成功, 则 LV_SetImageList() 返回之前与 ListView 关联的 <em>ImageListID</em>(如果没有则为 0). 任何分离的图像列表一般应通过 <a href="#IL_Destroy">IL_Destroy(ImageListID)</a> 进行销毁.</p>
 
 <h2 id="notify">G-标签通知(主要)</h2>
@@ -277,7 +277,7 @@ return</pre>
 <p><strong>F</strong>: ListView 接收到键盘焦点.</p>
 <p><strong>f</strong>(小写的 F): ListView 失去了键盘焦点.</p>
 <p id="ItemChanged"><strong>I</strong>: 项目发生了变化. 通过变成选择的/未选择的, 选中的/未选中的等让一行改变了. 如果用户选择了一个新行, 则至少会接收到两个这样的通知: 一个是在取消之前的行时, 而另一个是在选择新行时. <span class="ver">[v1.0.44+]</span>: 变量 A_EventInfo 包含目标行号. <span class="ver">[v1.0.46.10+]</span>: ErrorLevel 包含零个或多个下列字母来表示项目发生的变化: S(选择) 或 s(取消选择), 和/或 F(成为焦点) 或 f(失去焦点), 和/或 C(选中) 或 c(取消选中). 例如, SF 表示此行被选择且成为了焦点. 要检查是否存在一个特定的字母, 请使用<a href="LoopParse.htm">解析循环</a>或带区分大小写选项的 <a href="InStr.htm">InStr()</a>; 例如: <code>InStr(ErrorLevel, "S", true)</code>. 注: 考虑到和未来版本的兼容性, 脚本不应假定 "SsFfCc" 包含了所有可能的字母或字母组合. 此外, 指定 <a href="Critical.htm">Critical</a> 作为 <a href="Gui.htm#label">g-标签</a> 子程序的首行来确保接收到所有的 "I" 通知(否则, 如果脚本无法跟上, 则它们其中一些可能会丢失).</p>
-<p id="NotifyK"><strong>K</strong>: 当 ListView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 然后可以通过 <a href="GetKey.htm">GetKeyName</a> 转换为按键名称或字符. 例如, <code>key := GetKeyName(<a href="Format.htm">Format</a>("vk{:x}", A_EventInfo))</code>. 在大多数键盘布局中, A-Z 键都可以通过 <code><a href="Chr.htm">Chr</a>(A_EventInfo)</code> 转换为相应的字符. <kbd>F2</kbd> 的按键动作总是被接收且不会被 <a href="#WantF2">WantF2</a> 影响. 但是, <kbd>Enter</kbd> 键不会被接收; 除非按照下面的方法设置为默认按钮.</p>
+<p id="NotifyK"><strong>K</strong>: 当 ListView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 然后可以通过 <a href="GetKey.htm">GetKeyName()</a> 转换为按键名称或字符. 例如, <code>key := GetKeyName(<a href="Format.htm">Format</a>("vk{:x}", A_EventInfo))</code>. 在大多数键盘布局中, A-Z 键都可以通过 <code><a href="Chr.htm">Chr</a>(A_EventInfo)</code> 转换为相应的字符. <kbd>F2</kbd> 的按键动作总是被接收且不会被 <a href="#WantF2">WantF2</a> 影响. 但是, <kbd>Enter</kbd> 键不会被接收; 除非按照下面的方法设置为默认按钮.</p>
 <p><strong>M</strong>: 选取框. 用户开始在一组行或图标周围拖动一个矩形选区.</p>
 <p><strong>S</strong>: 用户开始滚动 ListView.</p>
 <p><strong>s</strong>(小写的 S): 用户完成滚动 ListView.</p>
