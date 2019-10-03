@@ -287,7 +287,7 @@ if (ih.Input = CtrlC)
 <p>如果为真(true), 产生文本的键和键组合可能触发热键或传递到活动窗口. 如果为假(false), 则会被阻止.</p>
 <p>导致文本被附加到输入缓冲的任何击键都被视为生成文本, 即使在其他应用程序中通常不会这样做. 例如, 如果使用 <a href="#option-m"><strong>M</strong> 选项</a>, <kbd>Ctrl</kbd>+<kbd>A</kbd> 生成文本, 而 <kbd>Escape</kbd> 生成控制字符 <code>Chr(27)</code>.</p>
 <p>尽管死键通常不会立即产生效果, 但它们被视为产生文本. 按下死键也可能导致后面的键生成文本(如果只有死键的字符).</p>
-<p><kbd>Backspace</kbd> 仅在 <a href="#BackspaceIsUndo">作为撤销时</a> 才被计为生成文本.</p>
+<p><kbd>Backspace</kbd> 仅在<a href="#BackspaceIsUndo">作为撤销时</a>才被计为生成文本.</p>
 <p><a href="../KeyList.htm#modifier">标准的修饰符键</a>和 CapsLock, NumLock 和 ScrollLock 总是可见的(没有被阻塞).</p>
 </div>
 
@@ -331,7 +331,7 @@ if (ih.Input = CtrlC)
   <li>如果 <a href="#KeyOpt-v">V 选项</a>对 VK 或 SC 有效, 则不会抑制.</li>
   <li>如果 <a href="#KeyOpt-s">S 选项</a>对 VK 或 SC 有效, 则抑制.</li>
   <li>如果按键是<a href="../KeyList.htm#modifier">标准修饰键</a>或 CapsLock, NumLock 或 ScrollLock, 则不会抑制.</li>
-  <li><a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> is consulted, 具体取决于按键是否生成文本. 如果属性为 false, 则抑制按键. 有关将哪些按键计为生成文本的详细信息, 请参阅 <a href="#VisibleText">VisibleText</a>.</li>
+  <li><a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 是否被考虑, 具体取决于按键是否生成文本. 如果该属性为 false, 则抑制按键. 有关将哪些按键计为生成文本的详细信息, 请参阅 <a href="#VisibleText">VisibleText</a>.</li>
 </ul>
 <p>输入正在进行时需要<a href="_InstallKeybdHook.htm">键盘钩子</a>, 但如果在输入终止时, 若不再需要键盘挂钩, 则会自动卸载. 键盘钩子的存在导致脚本暂时变为<a href="_Persistent.htm">持久的</a>, 这意味着可能需要 <a href="ExitApp.htm">ExitApp</a> 来终止它.</p>
 <p>AutoHotkey 不支持输入法编辑器(IME). 键盘钩子拦截键盘事件, 并通过使用 <a href="https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-tounicodeex">ToUnicodeEx</a> 或 ToAsciiEx 将它们转换为文本(<a href="https://docs.microsoft.com/windows/desktop/inputdev/virtual-key-codes#vk_packet">VK_PACKET</a> 事件除外, 它封装了单个字符).</p>
@@ -386,7 +386,7 @@ MsgBox % KeyWaitAny("V")
 KeyWaitAny(Options:="")
 {
     ih := InputHook(Options)
-    ih.KeyOpt("{All}", "ES")  <em>; End and Suppress</em>
+    ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
     ih.Start()
     ErrorLevel := ih.Wait()  <em>; 将 EndReason 存储在 ErrorLevel 中</em>
     return ih.EndKey  <em>; 返回按键名称</em>
@@ -401,7 +401,7 @@ MsgBox % KeyWaitCombo()
 KeyWaitCombo(Option:="")
 {
     ih := InputHook(Options)
-    ih.KeyOpt("{All}", "ES")  <em>; End and Suppress</em>
+    ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
     <em>; Exclude the modifiers</em>
     ih.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-ES")
     ih.Start()
@@ -411,7 +411,7 @@ KeyWaitCombo(Option:="")
 </pre>
 </div>
 <div class="ex" id="ExSac">
-<p><a href="#ExSac">#3</a>: Simple auto-complete: any day of the week.  Pun aside, this is a fully functional example.  Simply run the script and start typing today, press Tab to complete or press <kbd>Escape</kbd> to exit.</p>
+<p><a href="#ExSac">#3</a>: 简单的自动完成: 一周中的任何一天.  Pun aside, this is a fully functional example.  Simply run the script and start typing today, press Tab to complete or press <kbd>Escape</kbd> to exit.</p>
 <pre>global WordList := "Monday`nTuesday`nWednesday`nThursday`nFriday`nSaturday`nSunday"
 
 global Suffix := "", SacHook
