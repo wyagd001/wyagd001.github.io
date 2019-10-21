@@ -138,9 +138,9 @@ returnObject() {
     return SubStr(str, 1, -StrLen(sep))
 }
 MsgBox Join("`n", "one", "two", "three")</pre>
-<p>调用可变参数函数时, 通过保存在函数的最后参数中的对象可以访问剩余的参数. 函数的首个超出参数是 <code>params[1]</code>, 第二个是 <code>params[2]</code>, 以此类推. 和所有的标准<a href="objects/Object.htm">对象</a>, <code>params.<a href="objects/Object.htm#Length">Length</a>()</code> 能被用于确定参数的数目.</p>
+<p>调用可变参数函数时, 通过保存在函数的最后参数中的对象可以访问剩余的参数. 函数的首个超出参数是 <code>params[1]</code>, 第二个是 <code>params[2]</code>, 以此类推. 因其是一个<a href="objects/Array.htm">数组</a>, <code>params.<a href="objects/Array.htm#Length">Length</a></code> 能被用于确定参数的数目.</p>
 <p>尝试使用多于其接受的参数的方式来调用非可变参数函数被认为是错误的. 要允许函数接受任意数量的参数, 而 <em>不</em> 创建数组来存储多余的参数, 请将 <code>*</code> 写入最后一个参数(没有参数名).</p>
-<p class="warning"><strong>注意:</strong>"可变"参数只可以出现在显式参数(形参) 列表的末尾.</p>
+<p class="warning"><strong>注意:</strong> "可变"参数只可以出现在显式参数(形参) 列表的末尾.</p>
 
 <h3 id="VariadicCall">可变参数函数的调用</h3>
 <p>虽然可变参数函数可以 <i>接受</i> 可变数目的参数, 不过在函数调用中使用相同的语法可以把数组作为参数传递给 <i>任何</i> 函数:</p>
@@ -239,7 +239,7 @@ static TotalAttempts := 0, PrevResult</pre>
 
 <h2 id="DynCall">动态调用函数</h2>
 <p>通过百分号可以动态调用函数(包括<a href="#BuiltIn">内置函数</a>). 例如, <code>%Var%(x, &quot;fox&quot;)</code> 将调用名称 or <a href="Objects.htm#Function_References">reference</a> 保存在 <em>Var</em> 中的函数. 同样地, <code>Func%A_Index%()</code> 将调用 Func1() 或 Func2() 等, 这取决于 A_Index 的当前值.</p>
-<p>在 <code>%Var%()</code> 中的 <em>Var</em> 可包含函数名或<a href="objects/Functor.htm">函数对象</a>. 如果此函数不存在, 则调用<a href="Objects.htm#Default_Base_Object">默认基对象</a>的 __Call 元函数(通常, 如果该方法未定义, 则调用 __Call 元函数).</p>
+<p>在 <code>%Var%()</code> 中的 <em>Var</em> 可包含函数名或<a href="objects/Functor.htm">函数对象</a>. 如果 <em>Var</em> >包含不是有效函数名的<a href="Objects.htm#primitive">primitive value</a>, 则将调用该值本身. 通常该值没有 Call 方法, 因此会抛出异常.</p>
 <p>如果由于下面的某个原因无法调用函数, 则抛出<a href="commands/Catch.htm#RuntimeErrors">异常</a>:</p>
 <ul>
   <li>调用不存在的函数, 这通常可以通过使用 <code>If <a href="commands/IsFunc.htm">IsFunc</a>(VarContainingFuncName)</code> 来避免. 除了<a href="#BuiltIn">内置函数</a>, 被调用函数的<a href="#define">定义</a>必须真实存在于脚本中, 包括通过类似 <a href="commands/_Include.htm">#Include</a> 或对<a href="#lib">库函数</a>的非动态调用的方式.</li>
@@ -352,13 +352,13 @@ timertest() {
     x := "tock!"
     tick() {
         MsgBox x               <em>; x 使 tick 变成一个闭包.</em>
-        <em>;SetTimer t, "Delete"  ; 这将导致循环引用.</em>
+        <em>;SetTimer t, 0         ; 这将导致循环引用.</em>
     }
     SetTimer "tick", 1000      <em>; 创建计时器.</em>
-    SetTimer "tick", "Delete"  <em>; 失败.</em>
+    SetTimer "tick", 0         <em>; 删除计时器失败.</em>
     t := Func("tick")
     SetTimer t, 1000           <em>; 创建第二个计时器.</em>
-    SetTimer t, "Delete"       <em>; 删除第二个计时器.</em>
+    SetTimer t, 0              <em>; 删除第二个计时器.</em>
 }
 timertest()
 </pre>

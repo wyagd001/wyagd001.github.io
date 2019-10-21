@@ -88,10 +88,6 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     <td style="text-align:center"><strong>x.y</strong></td>
     <td><strong>成员访问</strong>. 获取或设置一个值或调用对象 <i>x</i> 的方法, 此处 <i>y</i> 是个原义名称. 请参阅<a href="Objects.htm#Usage_Objects">对象语法</a>.</td>
   </tr>
-  <tr id="new">
-    <td style="text-align:center"><strong>new</strong></td>
-    <td><code>new <i>Class</i></code> 或 <code>new <i>Class</i>(<i>Params</i>)</code> 创建一个派生自 <em>类</em> 的新对象. 它等同于 <a href="objects/Class.htm#New"><em>Class</em>.New()</a>. <em>Class</em> 几乎可以是生成类对象的任何表达式, 但通常是类名, 如 <code>GlobalClass</code> 或 <code>GlobalClass.NestedClass</code>. 还支持更复杂的情况, 如 <code>new new (getClass())(params1)(params2)</code>, 但是类表达式和参数列表之间必须没有空格. 更多细节, 请参阅<a href="Objects.htm#Custom_Objects">自定义对象</a>.</td>
-  </tr>
   <tr id="IncDec">
     <td style="text-align:center"><strong>++<br>
     --</strong></td>
@@ -171,7 +167,7 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
       <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " <strong>.</strong>  Price * (1 - Discount/100)</code>.</p>
       <p>以句点(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾.</p>
       <p>每个输入的整个<a href="commands/StrLen.htm">长度</a>会被使用, 即使它包含二进制零. 例如, <code>Chr(0x2010) Chr(0x0000) Chr(0x4030)</code>(<code>fileappend Chr(0x2010) Chr(0x0000) Chr(0x4030), "apple.txt", "UTF-16"</code>) 生成以下字节的字符串(由于 UTF-16-LE 编码): 0x10, 0x20, 00, 00, 0x30, 0x40. 结果有一个额外的空结束符(二进制零), 它不包含在长度中.</p>
-      <p><strong>其他用途</strong>: 如果句点右侧没有空格或制表符, 则将其解释为原义<a href="#numbers">浮点数</a>或<a href="#objdot">成员访问</a>. 例如, <code>1.1</code> 和 <code>(.5)</code> 是数字, <code>A_Args.Length()</code> 方法调用, 而 <code>myArray.1</code> 等同于 <code>myArray[1]</code>.</p>
+      <p><strong>其他用途</strong>: 如果句点右侧没有空格或制表符, 则将其解释为原义<a href="#numbers">浮点数</a>或<a href="#objdot">成员访问</a>. 例如, <code>1.1</code> 和 <code>(.5)</code> 是数字, <code>A_Args.Has(3)</code> 方法调用, 而 <code>A_Args.Length</code> 是一个属性访问.</p>
     </td>
   </tr>
   <tr id="regex">
@@ -895,7 +891,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   <li>当赋值给变量比当前更长的内容时, 会自动分配额外的系统内存给这个变量.</li>
   <li>通过赋值为空, 可以释放大变量占用的内存, 例如 <code>var := &quot;&quot;</code>.</li>
   <li>脚本可以创建的变量数量没有限制. 程序设计用来支持至少几百万的变量而不会出现明显的性能下降.</li>
-  <li>函数和表达式通常可以支持 15 位的浮点数精度. 对于整数, 可以支持 64 位有符号整数, 其范围从 -9223372036854775808(-0x8000000000000000) 到 9223372036854775807(0x7FFFFFFFFFFFFFFF). 此范围外的任何整数不受支持, 并可能产生错误的结果. 同样的, 整数的算数运算结果超出此范围时会产生溢出(例如 0x7FFFFFFFFFFFFFFF + 1 = -0x8000000000000000).</li>
+  <li>接受数字输入的函数和表达式通常支持 15 位的浮点数精度. 对于整数, 可以支持 64 位有符号整数, 其范围从 -9223372036854775808(-0x8000000000000000) 到 9223372036854775807(0x7FFFFFFFFFFFFFFF). 任何超出此范围的整数常量都将回绕. 同样的, 整数的算数运算结果超出此范围时会溢出回绕(例如 0x7FFFFFFFFFFFFFFF + 1 = -0x8000000000000000).</li>
 </ul>
 </body>
 </html>

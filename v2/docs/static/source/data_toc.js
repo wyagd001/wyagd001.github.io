@@ -26,7 +26,7 @@ tocData = [
       ["基本用法","Objects.htm#Usage"],
       ["扩展用法","Objects.htm#Extended_Usage"],
       ["自定义对象","Objects.htm#Custom_Objects"],
-      ["默认基对象","Objects.htm#Default_Base_Object"],
+      ["Primitive Values","Objects.htm#primitive"],
       ["实现","Objects.htm#Implementation"]
     ]]
   ]],
@@ -61,6 +61,7 @@ tocData = [
     ["缓冲对象","objects/Buffer.htm"],
     ["BufferAlloc","commands/BufferAlloc.htm"],
     ["CallbackCreate","commands/CallbackCreate.htm"],
+    ["ComCall","commands/ComCall.htm"],
     ["DllCall","commands/DllCall.htm"],
     ["NumGet","commands/NumGet.htm"],
     ["NumPut","commands/NumPut.htm"],
@@ -71,6 +72,7 @@ tocData = [
     [
       ["ComObjActive","commands/ComObjActive.htm"],
       ["ComObjArray","commands/ComObjArray.htm"],
+      ["ComCall","commands/ComCall.htm"],
       ["ComObjConnect","commands/ComObjConnect.htm"],
       ["ComObjCreate","commands/ComObjCreate.htm"],
       ["ComObjGet","commands/ComObjGet.htm"],
@@ -114,6 +116,7 @@ tocData = [
     ["IniDelete","commands/IniDelete.htm"],
     ["IniRead","commands/IniRead.htm"],
     ["IniWrite","commands/IniWrite.htm"],
+    ["Long Paths","misc/LongPaths.htm"],
     ["Loop Files (and folders)","commands/LoopFiles.htm"],
     ["Loop Read (file contents)","commands/LoopRead.htm"],
     ["SetWorkingDir","commands/SetWorkingDir.htm"],
@@ -151,6 +154,7 @@ tocData = [
     ["SetTimer","commands/SetTimer.htm"],
     ["Sleep","commands/Sleep.htm"],
     ["Suspend","commands/Suspend.htm"],
+    ["Switch","commands/Switch.htm"],
     ["Thread","commands/Thread.htm"],
     ["Throw","commands/Throw.htm"],
     ["Try","commands/Try.htm"],
@@ -253,6 +257,7 @@ tocData = [
     ["KeyHistory","commands/KeyHistory.htm"],
     ["KeyWait","commands/KeyWait.htm"],
     ["Input","commands/Input.htm"],
+    ["InputHook","commands/InputHook.htm"],
     ["MouseClick","commands/MouseClick.htm"],
     ["MouseClickDrag","commands/MouseClickDrag.htm"],
     ["MouseGetPos","commands/MouseGetPos.htm"],
@@ -273,10 +278,15 @@ tocData = [
     ["Download","commands/Download.htm"],
     ["Edit","commands/Edit.htm"],
     ["Func","commands/Func.htm"],
+    ["GetMethod","commands/GetMethod.htm"],
+    ["HasBase","commands/HasBase.htm"],
+    ["HasMethod","commands/HasMethod.htm"],
+    ["HasProp","commands/HasProp.htm"],
     ["IsByRef","commands/IsByRef.htm"],
     ["IsFunc","commands/IsFunc.htm"],
     ["IsLabel","commands/IsLabel.htm"],
     ["IsObject","commands/IsObject.htm"],
+    ["IsSet","commands/IsSet.htm"],
     ["ListLines","commands/ListLines.htm"],
     ["ListVars","commands/ListVars.htm"],
     ["OutputDebug","commands/OutputDebug.htm"],
@@ -297,7 +307,8 @@ tocData = [
     ["GuiControl 对象","objects/GuiControl.htm"],
     ["Map 对象","objects/Map.htm"],
     ["Menu/MenuBar 对象","objects/Menu.htm"],
-    ["正则匹配对象","commands/RegExMatch.htm#MatchObject"]
+    ["正则匹配对象","commands/RegExMatch.htm#MatchObject"],
+    ["Any Prototype","objects/Any.htm"]
   ]],
   ["进程","commands/Process.htm",
   [
@@ -464,6 +475,7 @@ tocData = [
   ["#指令","",
   [
     ["#ClipboardTimeout","commands/_ClipboardTimeout.htm"],
+    ["#DllLoad","commands/_DllLoad.htm"],
     ["#ErrorStdOut","commands/_ErrorStdOut.htm"],
     ["#HotkeyInterval","commands/_HotkeyInterval.htm"],
     ["#HotkeyModifierTimeout","commands/_HotkeyModifierTimeout.htm"],

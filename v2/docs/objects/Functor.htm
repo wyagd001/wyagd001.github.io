@@ -43,23 +43,24 @@
 </pre>
 <h3 id="User-Defined-Examples">Examples</h3>
 <p>The following example defines a function array which can be called; when called, it calls each element of the array in turn.</p>
-<pre>class FuncArrayType {
-    Call(obj, params*) {
+<pre>class FuncArrayType extends Array {
+    Call(params*) {
         <em>; Call a list of functions.</em>
-        Loop this.Length()
-            this[A_Index].Call(params*)
+        Loop this.Length
+            %this[A_Index]%(params*)
     }
 }
 
 <em>; Create an array of functions.</em>
-funcArray := new FuncArrayType
+funcArray := FuncArrayType.new()
 <em>; Add some functions to the array (can be done at any point).</em>
 funcArray.Push(Func("One"))
 funcArray.Push(Func("Two"))
 <em>; Create an object which uses the array as a method.</em>
-obj := {method: funcArray}
+obj := {}
+obj.DefineMethod("method", funcArray)
 <em>; Call the method.</em>
-obj.method("foo", "bar")
+%obj.method%("foo", "bar")
 
 One(param1, param2) {
     ListVars
@@ -77,16 +78,20 @@ Two(param1, param2) {
   <li>By calling the <a href="Func.htm#Bind">Func.Bind</a> method, which binds parameter values to a function.</li>
   <li>By calling the <a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> function, which binds parameter values and a method name to a target object.</li>
 </ul>
-<p>BoundFunc objects can be called as shown in the example below. When the BoundFunc is called, it calls the function or method to which it is bound, passing any bound parameters followed by any which were passed by the caller. 例如:</p>
-<pre>fn := Func("RealFn").Bind(1)
-
+<p>BoundFunc objects can be called as shown in the example below. When the BoundFunc is called, it calls the function or method to which it is bound, passing a combination of bound parameters and the caller's parameters. Unbound parameter positions are assigned positions from the caller's parameter list, left to right. For example:</p>
+<pre>fn := Func("RealFn").Bind(1)  <em>; Bind first parameter only</em>
 %fn%(2)    <em>; Shows "1, 2"</em>
 fn.Call(3) <em>; Shows "1, 3"</em>
 
-RealFn(a, b) {
+fn := Func("RealFn").Bind( , 1)  <em>; Bind second parameter only</em>
+%fn%(2)    <em>; Shows "2, 1"</em>
+fn.Call(3) <em>; Shows "3, 1"</em>
+%fn%(, 4)  <em>; Error: 'a' was omitted</em>
+
+RealFn(a, b, c:="c") {
     MsgBox a ", " b
 }</pre>
-<p><a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> can be used to bind to a method when it isn't possible to retrieve a reference to the method itself.  例如:</p>
+<p><a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> can be used to bind to a method even when it isn't possible to retrieve a reference to the method itself. For example:</p>
 <pre>file := FileOpen(A_ScriptFullPath, "r")
 getLine := ObjBindMethod(file, "ReadLine")
 MsgBox %getLine%()  <em>; Shows the first line of this file.</em></pre>

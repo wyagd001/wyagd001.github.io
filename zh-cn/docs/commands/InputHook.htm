@@ -398,7 +398,7 @@ KeyWaitAny(Options:="")
 <pre>
 MsgBox % KeyWaitCombo()
 
-KeyWaitCombo(Option:="")
+KeyWaitCombo(Options:="")
 {
     ih := InputHook(Options)
     ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
@@ -411,7 +411,7 @@ KeyWaitCombo(Option:="")
 </pre>
 </div>
 <div class="ex" id="ExSac">
-<p><a href="#ExSac">#3</a>: 简单的自动完成: 一周中的任何一天.  Pun aside, this is a fully functional example.  Simply run the script and start typing today, press Tab to complete or press <kbd>Escape</kbd> to exit.</p>
+<p><a href="#ExSac">#3</a>: 简单的自动完成: 一周中的任何一天. 除了字母双关外, 这是一个功能齐全的例子. 只需运行脚本并开始输入, 按 <kbd>Tab</kbd> 完成或按 <kbd>Escape</kbd> 退出.</p>
 <pre>global WordList := "Monday`nTuesday`nWednesday`nThursday`nFriday`nSaturday`nSunday"
 
 global Suffix := "", SacHook
@@ -423,7 +423,7 @@ SacHook.OnEnd := Func("SacEnd")
 SacHook.KeyOpt("{Backspace}", "N")
 SacHook.Start()
 
-SacChar(ih, char)  <em>; Called when a character is added to SacHook.Input.</em>
+SacChar(ih, char)  <em>; 当一个字符被添加到 SacHook.Input 时调用.</em>
 {
     Suffix := ""
     if RegExMatch(ih.Input, "`nm)\w+$", prefix)
@@ -431,15 +431,15 @@ SacChar(ih, char)  <em>; Called when a character is added to SacHook.Input.</em>
     
     ToolTip % Suffix, % A_CaretX + 15, % A_CaretY    
     
-    <em>; Intercept Tab only while we're showing a Tooltip.</em>
+    <em>; 只在显示工具提示时拦截 Tab 键.</em>
     ih.KeyOpt("{Tab}", Suffix = "" ? "-NS" : "+NS")
 }
 
 SacKeyDown(ih, vk, sc)
 {
-    if (vk = 8) <em>; Backspace</em>
+    if (vk = 8) <em>; 退格键</em>
         SacChar(ih, "")
-    else if (vk = 9) <em>; Tab</em>
+    else if (vk = 9) <em>; Tab 键</em>
         Send % "{Text}" Suffix
 }
 

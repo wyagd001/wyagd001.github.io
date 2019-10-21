@@ -34,8 +34,8 @@ Gui.MarginY := 0, Gui.MarginX := 0
 
 ;---- Alter the tray icon menu:
 A_TrayMenu.Delete
-A_TrayMenu.Add k_MenuItemHide, () => k_ShowHide(Gui, k_MenuItemHide, k_MenuItemShow)
-A_TrayMenu.Add "&Exit", () => ExitApp()
+A_TrayMenu.Add k_MenuItemHide, (*) => k_ShowHide(Gui, k_MenuItemHide, k_MenuItemShow)
+A_TrayMenu.Add "&Exit", (*) => ExitApp()
 A_TrayMenu.Default := k_MenuItemHide
 
 ;---- Add a button for each key:
@@ -126,8 +126,8 @@ k_ShowHide(GuiObj, HideText, ShowText)
 
 GetKeyNameText(Key, Extended := false, DoNotCare := false)
 {
-   Params := (GetKeySC(Key) << 16) | (Extended << 24) | (DoNotCare << 25)
-   VarSetCapacity(KeyNameText, 64, 0)
-   DllCall("User32.dll\GetKeyNameText", "Int", Params, "Str", KeyNameText, "Int", 32)
-   return KeyNameText
+    Params := (GetKeySC(Key) << 16) | (Extended << 24) | (DoNotCare << 25)
+    KeyNameText := BufferAlloc(64, 0)
+    DllCall("User32.dll\GetKeyNameText", "Int", Params, "Ptr", KeyNameText, "Int", 32)
+    return StrGet(KeyNameText)
 }

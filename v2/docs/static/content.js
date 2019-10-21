@@ -567,8 +567,8 @@ function ctor_search()
     SearchText = SearchText.toLowerCase().replace(/^ +| +$| +(?= )|\+/, '');
     if (SearchText == '')
       return '';
-    else
-      return SearchText.split(' ');
+    else // split and remove undefined or empty strings
+      return SearchText.split(' ').filter(function(e){return (!!e)});;
   }
   self.highlightWords = function(words) {
     var content = $(isInsideFrame ? 'body' : '#right .area');
@@ -621,7 +621,8 @@ function ctor_search()
     // Get each word from index and clone for modification below:
     var all_results = []
     for (var i = 0; i < qry.length; ++i) {
-      var w = index_partial(qry[i])
+      var t = qry[i].replace(/(\(|\(\))$/,'') // special case for page names ending with ()
+      var w = index_partial(t)
       w = w ? w.slice() : []
       all_results[i] = get_results(w)
     }
@@ -731,7 +732,7 @@ function ctor_search()
     function append_results(ro) {
       var output = '';
       for (var t = 0; t < ro.length && t < RESULT_LIMIT; ++t) {
-        output += '<a href="' + workingDir + ro[t].u + '" tabindex="-1">' + ro[t].n + '</a>';
+        output += '<a href="' + workingDir + ro[t].u + '" tabindex="-1"' + (isIE8 ? '>' + ro[t].n : ' data-content="' + ro[t].n + '">') + '</a>';
       }
       return output;
     }
@@ -800,7 +801,7 @@ function ctor_structure()
   self.dataPath = scriptDir + '/source/data_translate.js';
   self.metaViewport = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">';
   self.template = '<div id="body">' +
-  '<div id="head"><div class="h-area"><div class="h-tabs"><ul><li data-translate title="Shortcut: ALT+C" data-content="C̲ontent"></li><li data-translate title="Shortcut: ALT+N" data-content="In̲dex"></li><li data-translate title="Shortcut: ALT+S" data-content="S̲earch"></li></ul></div><div class="h-tools sidebar"><ul><li class="sidebar" title="Hide/Show sidebar" data-translate>&#926;</li></ul></div><div class="h-tools online"><ul><li class="home" title="Home page" data-translate><a href="' + location.protocol + '//' + location.host + '/v2/docs/AutoHotkey.htm'  + '">&#916;</a></li><li class="language" title="Change language" data-translate data-content="en"><ul class="dropdown languages selected"><li><a title="&#x82F1;&#x6587;(English)" data-content="en"></a></li><li><a title="&#x5FB7;&#x6587; (German)" data-content="de"></a></li><li><a title="&#x4E2D;&#x6587; (Chinese)" data-content="zh"></a></li></ul></li><li class="version" title="Change AHK version" data-translate data-content="v1"><ul class="dropdown versions selected"><li><a title="AHK v1.1" data-content="v1"></a></li><li><a title="AHK v2.0" data-content="v2"></a></li></ul></li><li class="edit" title="Edit page on GitHub" data-translate=2><a data-content="E"></a></li></ul></div><div class="h-tools chm"><ul><li class="back" title="Go back" data-translate=2>&#9668;</li><li class="forward" title="Go forward" data-translate=2>&#9658;</li><li class="zoom" title="Change font size" data-translate=2 data-content="Z"></li><li class="print" title="Print current document" data-translate=2 data-content="P"></li></ul></div><div class="h-tools main visible"><ul><li class="color" title="Change to dark/light theme" data-translate=2 data-content="C"></li><li class="settings" title="Open settings" data-translate=2>&#1029;</li></ul></div></div></div>' +
+  '<div id="head"><div class="h-area"><div class="h-tabs"><ul><li data-translate title="Shortcut: ALT+C" data-content="C̲ontent"></li><li data-translate title="Shortcut: ALT+N" data-content="In̲dex"></li><li data-translate title="Shortcut: ALT+S" data-content="S̲earch"></li></ul></div><div class="h-tools sidebar"><ul><li class="sidebar" title="Hide/Show sidebar" data-translate>&#926;</li></ul></div><div class="h-tools online"><ul><li class="home" title="Home page" data-translate><a href="' + location.protocol + '//' + location.host + '/v2/docs/AutoHotkey.htm'  + '">&#916;</a></li><li class="language" title="Change language" data-translate=2><span data-translate data-content="en"></span><ul class="dropdown languages selected"><li><a title="&#x82F1;&#x6587;(English)" data-content="en"></a></li><li><a title="&#x5FB7;&#x6587; (German)" data-content="de"></a></li><li><a title="&#x4E2D;&#x6587; (Chinese)" data-content="zh"></a></li></ul></li><li class="version" title="Change AHK version" data-translate=2><span data-translate data-content="v1"></span><ul class="dropdown versions selected"><li><a title="AHK v1.1" data-content="v1"></a></li><li><a title="AHK v2.0" data-content="v2"></a></li></ul></li><li class="edit" title="Edit page on GitHub" data-translate=2><a data-content="E"></a></li></ul></div><div class="h-tools chm"><ul><li class="back" title="Go back" data-translate=2>&#9668;</li><li class="forward" title="Go forward" data-translate=2>&#9658;</li><li class="zoom" title="Change font size" data-translate=2 data-content="Z"></li><li class="print" title="Print current document" data-translate=2 data-content="P"></li></ul></div><div class="h-tools main visible"><ul><li class="color" title="Change to dark/light theme" data-translate=2 data-content="C"></li><li class="settings" title="Open settings" data-translate=2>&#1029;</li></ul></div></div></div>' +
   '<div id="main"><div id="left"><div class="toc"></div><div class="index"><div class="input"><input type="search" placeholder="Search" data-translate=2 /></div><div class="select"><select size="1" class="empty"><option value="-1" class="empty" selected data-translate>Filter</option><option value="0" data-translate>Directives</option><option value="1" data-translate>Built-in Variables</option><option value="2" data-translate>Built-in Functions</option><option value="3" data-translate>Control Flow Statements</option><option value="4" data-translate>Operators</option><option value="5" data-translate>Declarations</option></select></div><div class="list"></div></div><div class="search"><div class="input"><input type="search" placeholder="Search" data-translate=2 /></div><div class="checkbox"><input type="checkbox" id="highlightWords"><label for="highlightWords" data-translate>Highlight keywords</label><div class="updown" title="Go to previous/next occurrence" data-translate><div class="up"><div class="triangle-up"></div></div><div class="down"><div class="triangle-down"></div></div></div></div><div class="list"></div></div><div class="load"><div class="lds-dual-ring"></div></div></div><div class="dragbar"></div><div id="right" tabIndex="-1">'+(isFrameCapable?'<iframe frameBorder="0" id="frame" src="">':'<div class="area">');
   self.template = isIE8 ? self.template.replace(/ data-content="(.*?)">/g, '>$1') : self.template;
   self.build = function() { document.write(self.template); }; // Write HTML before DOM is loaded to prevent flickering.
@@ -1345,8 +1346,10 @@ function addFeatures()
   $.queueFunc.add(modifyLinks);
   $.queueFunc.add(modifyVersions);
   $.queueFunc.add(modifyCodes);
-  $.queueFunc.add(addFooter);
+  addFooter();
   $.queueFunc.add(addBackButton);
+  scrollToPos();
+  $.queueFunc.add(highlightWords);
 
   // --- Responsive tables (mobile) ---
 
@@ -1562,6 +1565,7 @@ function addFeatures()
           5 - declaration
       */
       var syntax = [], dict = {}, entry = '', type = '';
+      var assignOp = "(?:&lt;&lt;|<<|&gt;&gt;|>>|\\/\\/|\\^|&amp;|&|\\||\\.|\\/|\\*|-|\\+|:)=";
       for (var i = cache.index_data.length - 1; i >= 0; i--) {
         entry = cache.index_data[i][0];
         type = cache.index_data[i][2];
@@ -1604,12 +1608,41 @@ function addFeatures()
         });
         // Store pre content into a variable to improve performance:
         var innerHTML = pre.innerHTML;
+        // comments:
+        els.order.push('sct'); els.sct = [];
+        innerHTML = innerHTML.replace(/(\s|^)(;.*?)$/gm, function(_, PRE, COMMENT) {
+          out = wrap(COMMENT, 'cmt', false);
+          els.sct.push(out);
+          return PRE + '<sct></sct>';
+        });
+        els.order.push('mct'); els.mct = [];
+        innerHTML = innerHTML.replace(/(^\s*\/\*[\s\S]*?^\s*(\*\/|$(?![\r\n])))/gm, function(COMMENT) {
+          out = wrap(COMMENT, 'cmt', false);
+          els.mct.push(out);
+          return '<mct></mct>';
+        });
         // escape sequences:
         els.order.push('esc'); els.esc = [];
         innerHTML = innerHTML.replace(/`./gm, function(SEQUENCE) {
           out = wrap(SEQUENCE, 'esc', false);
           els.esc.push(out);
           return '<esc></esc>';
+        });
+        // function definitions:
+        els.order.push('fun'); els.fun = [];
+        innerHTML = innerHTML.replace(/^(\s*?)(\S*?)(?=\(.*?\)\s*(<(em|sct)><\/(em|sct)>\s*)*{)/mg, function(ASIS, PRE, DEFINITION) {
+          if (DEFINITION.match(/^(while|if)$/i))
+            return ASIS;
+          out = PRE + wrap(DEFINITION, 'fun', false);
+          els.fun.push(out);
+          return '<fun></fun>';
+        });
+        // numeric values:
+        els.order.push('num'); els.num = [];
+        innerHTML = innerHTML.replace(/\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b/gm, function(_, NUMBER) {
+          out = wrap(NUMBER, 'num', false);
+          els.num.push(out);
+          return '<num></num>';
         });
         // continuation section inside a string "(...)"
         els.order.push('cont1'); els.cont1 = [];
@@ -1625,26 +1658,12 @@ function addFeatures()
           els.cont2.push(out);
           return PRE + '<cont2></cont2>';
         });
-        // function definitions:
-        els.order.push('fun'); els.fun = [];
-        innerHTML = innerHTML.replace(/^(\s*?)(\S*?)(?=\(.*?\)[<\/em>\s]*{)/mg, function(_, PRE, DEFINITION) {
-          out = PRE + wrap(DEFINITION, 'fun', false);
-          els.fun.push(out);
-          return '<fun></fun>';
-        });
         // strings:
         els.order.push('str'); els.str = [];
-        innerHTML = innerHTML.replace(/(("|')[\s\S]*?\2)\B/gm, function(_, STRING) {
+        innerHTML = innerHTML.replace(/(("|')[\s\S]*?\2)/gm, function(_, STRING) {
           out = wrap(STRING, 'str', false);
           els.str.push(out);
           return '<str></str>';
-        });
-        // numeric values:
-        els.order.push('num'); els.num = [];
-        innerHTML = innerHTML.replace(/\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b/gm, function(_, NUMBER) {
-          out = wrap(NUMBER, 'num', false);
-          els.num.push(out);
-          return '<num></num>';
         });
         // methods:
         els.order.push('met'); els.met = [];
@@ -1652,6 +1671,13 @@ function addFeatures()
           out = PRE + wrap(METHOD, 'met', false);
           els.met.push(out);
           return '<met></met>';
+        });
+        // properties:
+        els.order.push('prp'); els.prp = [];
+        innerHTML = innerHTML.replace(/\.([^~`!@#$%^&*(){}\[\];:"'<,.>?\/\\|+=\-\s]+?)\b/g, function(_, PROPERTY) {
+          out = '.' + wrap(PROPERTY, 'prp', false);
+          els.prp.push(out);
+          return '<prp></prp>';
         });
         // declarations:
         els.order.push('dec'); els.dec = [];
@@ -1684,7 +1710,7 @@ function addFeatures()
         });
         // directives:
         els.order.push('dir'); els.dir = [];
-        innerHTML = innerHTML.replace(new RegExp('(' + syntax[0].single.join('|') + ')\\b($|[\\s,])(.*?)(?=<em></em>|$)', 'gim'), function(_, DIR, SEP, PARAMS) {
+        innerHTML = innerHTML.replace(new RegExp('(' + syntax[0].single.join('|') + ')\\b($|[\\s,])(.*?)(?=<(?:em|sct)></(?:em|sct)>|$)', 'gim'), function(_, DIR, SEP, PARAMS) {
           // Get type of every parameter:
           var types = cache.index_data[dict[DIR.toLowerCase()]][3];
         // Skip param processing if first param is an expression:
@@ -1723,14 +1749,14 @@ function addFeatures()
         });
         // built-in functions:
         els.order.push('bif'); els.bif = [];
-        innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[2].single.join('|') + ')\\b(?=$|[\\s(])', 'gi'), function(_, BIF) {
+        innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[2].single.join('|') + ')\\b(?=$|\\(|\\s(?!\\s*' + assignOp + '))', 'gi'), function(_, BIF) {
           out = wrap(BIF, 'bif', true);
           els.bif.push(out);
           return '<bif></bif>';
         });
         // control flow statements:
         els.order.push('cfs'); els.cfs = [];
-        innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[3][0].join('|') + ') (\\S+|\\S+, \\S+) (' + syntax[3][1].join('|') + ') (.+?)(?=<em></em>|$|{)|\\b(' + syntax[3].single.join('|') + ')\\b($|[\\s,(])(.*?)(?=<em></em>|$|{|\\b(' + syntax[3].single.join('|') + ')\\b)', 'gim'), function(ASIS, IF, INPUT, BETWEEN, VAL, CFS, SEP, PARAMS) {
+        innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[3][0].join('|') + ') (\\S+|\\S+, \\S+) (' + syntax[3][1].join('|') + ') (.+?)(?=<(?:em|sct)></(?:em|sct)>|$|{)|\\b(' + syntax[3].single.join('|') + ')\\b($|,|{|(?=\\()|\\s(?!\\s*' + assignOp + '))(.*?)(?=<(?:em|sct)></(?:em|sct)>|$|{|\\b(' + syntax[3].single.join('|') + ')\\b)', 'gim'), function(ASIS, IF, INPUT, BETWEEN, VAL, CFS, SEP, PARAMS) {
           if (IF) {
             if (INPUT) {
               var cfs = cache.index_data[dict[(IF + ' ... ' + BETWEEN).toLowerCase()]];
@@ -1778,7 +1804,7 @@ function addFeatures()
         // hotstrings:
         els.order.push('hotstr'); els.hotstr = [];
         innerHTML = innerHTML.replace(/^(\s*)(:.*?:)(.*?)(::)(.*)/mg, function(_, PRE, HOTSTR1, ABBR, HOTSTR2, REPL) {
-          out = PRE + wrap(HOTSTR1, 'lab', false) + wrap(ABBR, 'str', false) + wrap(HOTSTR2, 'lab', false) + wrap(REPL, 'str', false);
+          out = PRE + wrap(HOTSTR1, 'lab', false) + wrap(ABBR, 'str', false) + wrap(HOTSTR2, 'lab', false) + (HOTSTR1.match(/x/i) ? REPL : wrap(REPL, 'str', false));
           els.hotstr.push(out);
           return '<hotstr></hotstr>';
         });
@@ -1859,13 +1885,17 @@ function addFeatures()
 
   // --- Ensure setting right scroll position when traversing history ---
 
-  if (supportsHistory && history.state)
-    document.getElementById('right').scrollTop = history.state.scrollTop;
+  function scrollToPos() {
+    if (supportsHistory && history.state)
+      document.getElementById('right').scrollTop = history.state.scrollTop;
+  }
 
   // --- Highlight search words with jQuery Highlight plugin ---
 
-  if (cache.search_highlightWords && cache.clickTab == 2)
-    search.highlightWords(cache.search_input);
+  function highlightWords() {
+    if (cache.search_highlightWords && cache.clickTab == 2)
+      search.highlightWords(cache.search_input);
+  }
 }
 
 // --- Get the working directory of the site ---
@@ -1971,9 +2001,16 @@ function overwriteProps(a, b) {
 // but results in longer initial load time for these browsers:
 function registerEvent(el, events, children, func) {
   if (isIE8 || isEdge)
-    el.find(children).on(events, func);
+  {
+    var ElChildren = el.find(children);
+    ElChildren.off(events);
+    ElChildren.on(events, func);
+  }
   else
+  {
+    el.off(events, children);
     el.on(events, children, func);
+  }
 }
 
 function loadJQuery() {

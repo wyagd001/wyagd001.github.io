@@ -124,7 +124,7 @@ MsgBox "这行没有被注释."
 <p>表达式中的 <em>百分号</em> 用于创建<a href="#dynamic-variables">动态变量引用</a>和<a href="Functions.htm#DynCall">动态函数调用</a>, 但这些很不常见.</p>
 
 <h3 id="operators">运算符</h3>
-<p><em>运算符</em> 采用符号或符号组的形式(如 <code>+</code> 或 <code>:=</code>), 或者下列其中一个单词 <code>and</code>, <code>or</code>, <code>not</code>, <code>new</code>, <code>is</code>, <code>in</code> 或 <code>contains</code>. 它们将一个, t两个或三个值作为输入, 并返回一个值作为结果. 用作运算输入的值或子表达式称为 <em>运算元</em>.</p>
+<p><em>运算符</em> 采用符号或符号组的形式(如 <code>+</code> 或 <code>:=</code>), 或者下列其中一个单词 <code>and</code>, <code>or</code>, <code>not</code>, <code>is</code>, <code>in</code> 或 <code>contains</code>. 它们将一个, 两个或三个值作为输入, 并返回一个值作为结果. 用作运算输入的值或子表达式称为 <em>运算元</em>.</p>
 <ul>
   <li><em>一元</em> 运算符可以写在单个运算元的前面或后面, 这取决于运算符. 例如, <code>-x</code> 或 <code>not keyIsDown</code>.</li>
   <li><em>二元</em> 运算符写在两个运算元之间. 例如, <code>1+1</code> 或 <code>2 * 5</code>.</li>
@@ -163,8 +163,6 @@ Run("notepad.exe", , , notepadPID)
 <p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同). 允许<a href="Functions.htm#VariadicCall">可变参数调用</a>.</p>
 <p><code>Alpha.%vBeta%</code>, <code>Alpha.%vBeta%[Param]</code> 和 <code>Alpha.%vBeta%()</code> 也是成员访问, 但 <em>vBeta</em> 是一个变量或子表达式. 这允许在脚本运行时确定属性或方法的名称. 以这种方式调用方法时需要括号.</p>
 <p><code>Alpha[Index]</code> 访问 <code>Alpha</code> 的 <em>默认属性</em>, 将 <code>Index</code> 作为参数. 在这种情况下, <em>Alpha</em> 和 <em>Index</em> 都是变量, 几乎可以用任何子表达式替换. 此语法通常用于检索<a href="objects/Array.htm">数组</a>或 <a href="objects/Map.htm">Map</a> 中的元素.</p>
-<p><code>new ClassName()</code> 用于实例化一个类, 虽然这看起来像一个函数调用, 但 <em>ClassName</em> 实际上是一个普通的变量. 同样, <code>new Alpha.Beta()</code> 将创建一个由 <code>Alpha.Beta</code> 返回的对象派生的对象; <em>Beta</em> 既不是函数也不是方法. 如果可选的括号存在, 则可能包含对象的 <a href="Objects.htm#Custom_NewDelete">__New</a> 方法的参数.</p>
-<p class="warning"><strong>Note:</strong> This special syntax might be removed in favour of standard method call syntax, in a future release. For example, <code>ClassName.new()</code> has the same effect.</p>
 <p id="array-literal"><code>[A, B, C]</code> 创建一个初始内容为 A, B 和 C(本例中的所有变量) 的<a href="objects/Array.htm">数组</a>, 其中 A 是元素 1.</p>
 <p id="object-literal"><code>{Prop1: Value1, Prop2: Value2}</code> 创建一个<a href="objects/Object.htm">对象</a>, 其中 <em>Prop1</em> 和 <em>Prop2</em> 为原义的属性名. 可以使用上面描述的 <em>成员访问</em> 语法检索值.</p>
 <p class="warning"><strong>Note:</strong> Only literal <a href="Concepts.htm#names">names</a> should be used on the left-hand side of <code>:</code>. Currently other sub-expressions are allowed, but this is a holdover from when objects were used as associative arrays, and will likely be changed.</p>
@@ -178,7 +176,6 @@ Run("notepad.exe", , , notepadPID)
 <p>函数调用(如 <code>MyFunc(Params)</code>). 但是, 一个独立的函数调用不能跟随一个左大括号 <code>{</code>(在行尾或下一行), 因为它会与函数声明混淆.</p>
 <p>方法调用(如 <code>MyObj.MyMethod()</code>).</p>
 <p>使用方括号的成员访问(如 <code>MyObj[Index]</code>), 它可能有类似于函数调用的附加作用.</p>
-<p>以 <code>new</code> 运算符开始的表达式(如 <code>new ClassName</code>), 因为有时一个类可以被实例化, 只是为了它的附加作用.</p>
 <p>三元表达式(如 <code>x? CallIfTrue() : CallIfFalse()</code>).</p>
 <p class="warning"><strong>已知限制:</strong>  由于<a href="#function-call-statements">函数调用语句</a>的模糊性, 以变量名和空格开头的条件(还包含其他操作符) 应该用圆括号括起来. 例如, <code>(x + 1) ? y : z</code> 和 <code>x+1 ? y : z </code> 是表达式语句, 但是 <code>x + 1 ? y : z</code> 是函数调用语句.</p>
 <p>以 <code>(</code> 开始的表达式. 但是, 通常必须在同一行有一个匹配的 <code>)</code>, 否则该行将被解释为<a href="Scripts.htm#continuation">延续片段</a>的开始.</p>
@@ -204,6 +201,7 @@ Run("notepad.exe", , , notepadPID)
     <li><a href="commands/Continue.htm">Continue</a> 跳过当前循环迭代的其余部分, 并开始一个新的循环.</li>
     <li><a href="commands/Until.htm">Until</a> 直到表达式计算结果为 true 时, 循环终止. 表达式在每次迭代之后被计算.</li>
   </ul></li>
+  <li><a href="commands/Switch.htm">Switch</a> 执行互斥候选项列表中的一个项目.</li>
   <li>异常处理:
   <ul>
     <li><a href="commands/Try.htm">Try</a> 保护它的主体不受运行错误和 throw 语句抛出的异常的影响.</li>

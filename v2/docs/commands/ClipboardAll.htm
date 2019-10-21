@@ -22,21 +22,20 @@
 <dl>
   <dt>Data</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-    <p>包含二进制数据的字符串, 或为二进制数据地址的纯整数. 数据必须采用特定的格式, 因此通常源自之前对 ClipboardAll 的调用. 请参阅下面的<a href="#ExFile">示例 #2</a>.</p>
+    <p>类型: <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#numbers">整数</a></p>
+    <p>类<a href="../objects/Buffer.htm">缓冲</a>对象, 或为二进制数据地址的纯整数. 数据必须采用特定的格式, 因此通常源自之前对 ClipboardAll 的调用. 请参阅下面的<a href="#ExFile">示例 #2</a>.</p>
   </dd>
   <dt>Size</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>数据要使用的字节数. 当 <em>Data</em> 是字符串时, 这是可选的.</p>
+    <p>数据要使用的字节数. 当 <em>Data</em> 是对象时, 这是可选的.</p>
   </dd>
 </dl>
 
 <h2 id="clipboardall-object">返回值</h2>
 <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
-<p>函数返回 ClipboardAll 对象的<a href="../Concepts.htm#references-to-objects">引用</a> , 它有三个属性(继承自 <a href="../objects/Buffer.htm">Buffer</a>):</p>
+<p>函数返回 ClipboardAll 对象的<a href="../Concepts.htm#references-to-objects">引用</a> , 它有两个属性(继承自 <a href="../objects/Buffer.htm">Buffer</a>):</p>
 <ul>
-  <li><a href="../objects/Buffer.htm#Data">Data</a>: 包含表示剪贴板内容的原始二进制数据的字符串. 这通常传递到 <a href="FileAppend.htm">FileAppend</a> 或 <a href="../objects/File.htm#RawWrite">File.RawWrite</a> 以将其写入文件.</li>
   <li><a href="../objects/Buffer.htm#Ptr">Ptr</a>: 对象包含的数据的地址. 此地址在释放对象之前有效.</li>
   <li><a href="../objects/Buffer.htm#Size">Size</a>: 原始二进制数据的大小, 以字节为单位.</li>
 </ul>
@@ -50,7 +49,7 @@
 <p>已知限制: 当 Microsoft Excel 的单元格被复制到剪贴板时, 使用 <em>ClipboardAll</em> 可能会导致 Excel 弹出 "找不到打印机" 的对话框.</p>
 
 <h2>相关</h2>
-<p><a href="../misc/Clipboard.htm">Clipboard</a>, <a href="ClipWait.htm">ClipWait</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="_ClipboardTimeout.htm">#ClipboardTimeout</a></p>
+<p><a href="../misc/Clipboard.htm">Clipboard</a>, <a href="ClipWait.htm">ClipWait</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="_ClipboardTimeout.htm">#ClipboardTimeout</a>, <a href="../objects/Buffer.htm">Buffer</a></p>
 
 <h2>示例</h2>
 
@@ -64,15 +63,16 @@ ClipSaved := ""  <em>; 在剪贴板含有大量内容时释放内存.</em></pre>
 
 <div class="ex" id="ExFile">
 <p><a href="#ExFile">#2</a>: 使用文件保存和还原剪贴板上的所有内容:</p>
-<pre><em>; 选项 1: 删除任何现有文件, 然后使用 FileAppend 的 "RAW" 模式.</em>
+<pre><em>; 选项 1: 删除任何现有文件, 然后使用 FileAppend.</em>
 <a href="FileDelete.htm">FileDelete</a> "C:\Company Logo.clip"
-<a href="FileAppend.htm">FileAppend</a> ClipboardAll().Data, "Company Logo.clip", "RAW" <em>; 文件扩展名无关紧要.</em>
+<a href="FileAppend.htm">FileAppend</a> ClipboardAll(), "Company Logo.clip" <em>; 文件扩展名无关紧要.</em>
 
 <em>; 选项 2: 使用 FileOpen 的 overwrite 模式和 File.RawWrite.</em>
-<a href="FileOpen.htm">FileOpen</a>("Company Logo.clip", "w").<a href="../objects/File.htm#RawWrite">RawWrite</a>(ClipboardAll().Data)</pre>
+ClipData := ClipboardAll()
+<a href="FileOpen.htm">FileOpen</a>("Company Logo.clip", "w").<a href="../objects/File.htm#RawWrite">RawWrite</a>(ClipData)</pre>
 <p>要稍后将文件加载回剪贴板(或变量), 请遵循以下示例:</p>
-<pre>clip := FileRead("Company Logo.clip", "RAW")
-Clipboard := ClipboardAll(clip.Data)</pre>
+<pre>ClipData := FileRead("Company Logo.clip", "RAW")  <em>; 在这种情况下, FileRead 返回缓冲.</em>
+Clipboard := ClipboardAll(ClipData)  <em>; 将缓冲转换到 ClipboardAll 并赋值.</em></pre>
 </div>
 
 </body>

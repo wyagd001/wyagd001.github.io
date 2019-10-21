@@ -120,9 +120,9 @@ Exception handling
 <p class="note">本节以这些概念为基础, 这些概念将在后面的章节中介绍: <a href="#variables">变量</a>, <a href="#functions">函数</a></p>
 <p>对象通过 <em>消息传递</em> 的原理工作. 您不知道对象的代码或变量实际驻留在哪里, 因此您必须将消息传递给对象, 如 &quot;give me <em>foo</em>&quot; 或 &quot;go do <em>bar</em>&quot;, 并依赖对象来响应消息. AutoHotkey 中的对象支持以下基本消息:</p>
 <ul>
-  <li><strong>Get</strong> 属性.</li>
-  <li><strong>Set</strong> 属性, 使用 <code>:=</code>.</li>
-  <li><strong>Call</strong> <a href="#methods">方法</a>, 使用 <code>()</code>.</li>
+  <li><strong>Get(获取)</strong> 属性.</li>
+  <li><strong>Set(设置)</strong> 属性, 使用 <code>:=</code>.</li>
+  <li><strong>Call(调用)</strong> <a href="#methods">方法</a>, 使用 <code>()</code>.</li>
 </ul>
 <p><em>属性</em> 只是可以设置和/或检索的对象的某个方面. 例如, <a href="objects/Array.htm">数组</a>具有 <a href="objects/Array.htm#Length">Length</a> 属性, 它对应于数组中元素的数量. 如果您定义了一个属性, 它可以具有您想要的任何含义. 通常属性的作用类似于一个<a href="#variables">变量</a>, 但是它的值可以根据需要计算, 而不是实际存储在任何地方.</p>
 <p>每条消息包含以下内容, 通常在属性或<a href="#call">调用</a>方法的地方编写:</p>
@@ -161,7 +161,7 @@ myObj[arg1, arg2, ..., argN] := value
 <h3 id="uninitialised-variables">未初始化变量</h3>
 <p><em>初始化</em> 变量是给它分配一个起始值. 虽然程序会自动初始化所有的变量(一个空字符串是默认值), 但是脚本在使用之前初始化它的变量是一个好习惯. 这样, 任何阅读脚本的人都可以看到脚本将使用哪些变量以及他们预期具有的起始值.</p>
 <p>脚本通常需要初始化任何预期包含数字的变量. 例如, 如果 x 从未被赋值 <code>x := x + 1</code> 将不起作用, 因为 <em>空字符串</em> 被认为是非数字的. 脚本应该分配一个起始值, 如 <code>x := 0</code>. 有些情况下空值 <em>是</em> 被假定为 0, 但是最好不要依赖这个方法.</p>
-<p>脚本作者可以使用 <a href="commands/_Warn.htm">#Warn</a> 指令来帮助查找变量被使用而未被脚本初始化的情况.</p>
+<p>脚本作者可以使用 <a href="commands/_Warn.htm">#Warn</a> 指令来帮助查找变量被使用而未被脚本初始化的情况. <a href="commands/IsSet.htm">IsSet</a> 可用于判定变量是否已经被初始化了.</p>
 
 <h3 id="built-in-variables">内置变量</h3>
 <p>程序中内置了许多有用的变量, 可以通过任何脚本来引用. 除特殊说明外, 这些变量是只读的; 也就是说, 他们的内容不能被脚本直接改变. 按照惯例, 这些变量中的大部分以前缀 <code>A_</code> 开头, 所以最好避免使用这个前缀作为你自己的变量.</p>
@@ -320,7 +320,7 @@ MsgBox 0.1 + 0.2 = 0.3   <em>; 0(不相等)</em>
 <p><strong>大小写敏感性:</strong> ASCII 字符不区分大小写. 例如, <code>CurrentDate</code> 等同于 <code>currentdate</code>. 但是, 大写的非 ASCII 字符(如 'Ä') <em>不</em> 被认为等同于他们的小写字母, 不管当前用户的区域设置如何. 这有助于脚本在多个语言环境中保持一致.</p>
 <p><strong>最大长度:</strong> 253 个字符.</p>
 <p><strong>允许的字符:</strong> 字母, 数字, 下划线(_) 和非 ASCII 字符; 然而, 第一个字符不能是数字.</p>
-<p id="reserved-words"><strong>保留单词:</strong> <code>and</code>, <code>contains</code>, <code>in</code>, <code>is</code>, <code>new</code>, <code>not</code> 和 <code>or</code>. 这些单词保留作<a href="Language.htm#operators">运算符</a>使用.</p>
+<p id="reserved-words"><strong>保留单词:</strong> <code>and</code>, <code>contains</code>, <code>in</code>, <code>is</code>, <code>not</code> 和 <code>or</code>. 这些单词保留作<a href="Language.htm#operators">运算符</a>使用.</p>
 <p>声明关键字和控制流语句的名称也是保留的, 主要用于检测错误. 这包括: <code>Break</code>, <code>Catch</code>, <code>Continue</code>, <code>Else</code>, <code>Finally</code>, <code>For</code>, <code>Global</code>, <code>Gosub</code>, <code>Goto</code>, <code>If</code>, <code>Local</code>, <code>Loop</code>, <code>Return</code>, <code>Static</code>, <code>Throw</code>, <code>Try</code>, <code>Until</code>, <code>While</code>.</p>
 <p>允许将属性, 方法和窗口组的名称作为保留字.</p>
 
@@ -331,8 +331,8 @@ MsgBox 0.1 + 0.2 = 0.3   <em>; 0(不相等)</em>
 <p>因为变量只包含对对象的 <em>引用</em>, 而不是对象本身, 所以当您将这样的变量传递给非 ByRef 参数时, 函数接收到的是对同一对象的引用. 这允许函数修改对象, 但它不允许函数修改函数调用者使用的 <em>变量</em>, 因为该函数只具有对对象的引用, 而不是变量.</p>
 
 <h3 id="references-to-objects">对象的引用</h3>
-<p>脚本仅能通过(指向) 对象的 <em>引用</em> 间接与对象进行交互. 创建对象时, 对象是在您不能控制的地方创建的, 并给您一个引用. 将此引用传递给函数或将其存储在变量或其他对象中会创建对 <em>同一</em> 对象的新引用.</p>
-<p>例如, 如果 <em>myObj</em> 包含对对象的引用, <code>yourObj := myObj</code>, 将创建一个新的对同一对象的引用. 如 <code>myObj.ans := 42</code> 这样的改变会同时影响 <code>myObj.ans</code> 和 <code>yourObj.ans</code>, 因为它们都指向同一个对象. 但是, <code>myObj := Object()</code> 只影响变量 <em>myObj</em>, 不影响变量 <em>yourObj</em>, yourObj 仍然指向原始对象.</p>
+<p>脚本仅能通过对象的 <em>引用</em> 间接与对象进行交互. 创建对象时, 对象是在您不能控制的地方创建的, 并给您一个引用. 将此引用传递给函数或将其存储在变量或其他对象中会创建对 <em>同一</em> 对象的新引用.</p>
+<p>例如, 如果 <em>myObj</em> 包含对对象的引用, <code>yourObj := myObj</code> 将创建一个新的对同一对象的引用. 如 <code>myObj.ans := 42</code> 这样的改变会同时影响 <code>myObj.ans</code> 和 <code>yourObj.ans</code>, 因为它们都指向同一个对象. 但是, <code>myObj := Object()</code> 只影响变量 <em>myObj</em>, 不影响变量 <em>yourObj</em>, yourObj 仍然指向原始对象.</p>
 <p>通过简单地使用赋值将其替换为任何其他数值, 可以释放引用. 只有在所有引用都已释放后, 才会删除对象; 不能显式删除对象, 也不应该去尝试这样做. (但是, 您可以删除对象的属性, 内容或相关资源, 如<a href="objects/Array.htm">数组</a>的元素, 与 <a href="objects/Gui.htm">Gui</a> 关联的窗口, <a href="objects/Menu.htm">Menu</a> 对象的菜单, 等等.)</p>
 <pre>ref1 := Object()  <em>; 创建一个对象并储存第一个引用</em>
 ref2 := ref1      <em>; 创建一个对同一对象的新引用</em>

@@ -21,9 +21,9 @@
 
   <dt>Text</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>要追加到文件的文本. 此文本可以包含换行符(`n) 来开始新行. 此外, 一个长行可以使用<a href="../Scripts.htm#continuation">延续片段</a>的方法分成较短的几行.</p>
-    <p>如果使用 <code>RAW</code> 选项, <em>Text</em> 可以包含二进制数据, 但在这种情况下, FileAppend 将始终追加偶数字节(<a href="StrLen.htm">StrLen</a> 乘以 2). 这可用于将<a href="ClipboardAll.htm#ExFile">剪贴板数据保存到文件中</a>. <a href="../objects/File.htm#RawWrite">File.RawWrite</a> 可用于写入奇数字节或偶数字节.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
+    <p>要追加到文件的文本或文本二进制数据. 文本可以包含换行符(`n) 来开始新行. 此外, 一个长行可以使用<a href="../Scripts.htm#continuation">延续片段</a>的方法分成较短的几行.</p>
+    <p>可以传递类似类<a href="../objects/Buffer.htm">缓冲</a>的对象来附加文本二进制数据. 如果创建了一个文件, 只有在 <em>选项</em> 中指定了 "UTF-8" 或 "UTF-16" 时, 才会写入字节顺序标记(BOM). 不管 <em>选项</em> 是什么, 都会忽略<a href="../Variables.htm#FileEncoding">默认编码</a>, 对象所包含的数据按原样写入. 可以使用任何实现 <a href="../objects/Buffer.htm#Ptr">Ptr</a> 和 <a href="../objects/Buffer.htm#Size">Size</a> 属性的对象.</p>
     <p>如果  <em>Text</em> 为空, 则创建一个文件名为 <em>Filename</em> 的空白文件(但如果文件已经存在, 则更新其修改时间).</p>
   </dd>
 
@@ -43,8 +43,8 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>零个或多个以下字符串. 使用单个空格或制表符将每个选项与下一个选项分开. 例如: <code>"`n UTF-8"</code></p>
-    <p><strong>Encoding</strong>: 如果文件缺少 UTF-8 或 UTF-16 字节顺序标记, 则指定 <a href="FileEncoding.htm">FileEncoding</a> 接受的任何编码名称(不包括空字符串) 以使用该编码. 如果省略, 默认为 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>.</p>
-    <p><strong>RAW</strong>: 指定单词 RAW(不区分大小写) 按原样将 <em>Text</em> 包含的确切字节写入文件, 不进行任何转换. 此选项覆盖以前指定的任何编码, 反之亦然.</p>
+    <p><strong>Encoding</strong>: 如果文件缺少 UTF-8 或 UTF-16 字节顺序标记, 则指定 <a href="FileEncoding.htm">FileEncoding</a> 接受的任何编码名称(不包括空字符串) 以使用该编码. 如果省略, 默认为 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>(除非 <em>Text</em> 是对象, 在这种情况下不写入字节顺序标记).</p>
+    <p><strong>RAW</strong>: 指定单词 RAW(不区分大小写) 按原样将 <em>Text</em> 包含的确切字节写入文件, 不进行任何转换. 此选项覆盖以前指定的任何编码, 反之亦然. 如果 <em>Text</em> 不是对象, 由于使用 UTF-16 字符串, 数据大小总是 2 字节的倍数.</p>
     <p><strong>`n</strong>(换行符): 如果回车符不存在, 则在每个换行符(`n) 之前插入回车符(`r). 换句话说, 将转换 `n 为 `r`n. 这种转换通常不会影响性能. 如果不使用此选项, 则不会更改 <em>Text</em> 中的行尾.</p>
   </dd>
 

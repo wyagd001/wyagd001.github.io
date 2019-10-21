@@ -166,7 +166,7 @@ result := DllCall("CharLower", &quot;<strong><u>Str</u></strong>&quot;, DllCall(
 <h2>示例</h2>
 <div class="ex" id="ExMessageBox">
 <p><a href="#ExMessageBox">#1</a>: 调用 Windows API 函数 &quot;MessageBox&quot; 并报告用户按下了哪个按钮.</p>
-<pre>WhichButton := DllCall("MessageBox", "Int", "0", "Str", "Press Yes or No", "Str", "Title of box", "Int", 4)
+<pre>WhichButton := DllCall("MessageBox", "Int", 0, "Str", "Press Yes or No", "Str", "Title of box", "Int", 4)
 MsgBox You pressed button #%WhichButton%.</pre>
 </div>
 
@@ -255,7 +255,8 @@ if not hFile
     return
 }
 TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
-DllCall(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen(TestString), &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
+StrLen := StrLen(TestString) * (A_IsUnicode ? 2 : 1)
+DllCall(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen, &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
 DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
@@ -270,7 +271,7 @@ if not hFile
     return
 }
 <em>; 清空变量以便进行测试, 但需要确保它含有足够的容量:</em>
-BytesToRead := VarSetCapacity(TestString, StrLen(TestString))
+BytesToRead := VarSetCapacity(TestString, StrLen)
 DllCall(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, BytesToRead, &quot;UIntP&quot;, BytesActuallyRead, &quot;Ptr&quot;, 0)
 DllCall("CloseHandle", &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 MsgBox The following string was read from the file: %TestString%</pre>
