@@ -41,7 +41,7 @@ ul.list_of_p li { margin: 1em 0; }
   <li><a href="#Usage">基本用法</a> - <a href="#Usage_Simple_Arrays">数组</a>, <a href="#Usage_Associative_Arrays">映射(关联数组)</a>, <a href="#Usage_Objects">对象</a>, <a href="#Usage_Freeing_Objects">释放对象</a></li>
   <li><a href="#Extended_Usage">扩展用法</a> - <a href="#Function_References">函数引用</a>, <a href="#Usage_Arrays_of_Arrays">数组嵌套</a></li>
   <li><a href="#Custom_Objects">自定义对象</a> - <a href="#creating-a-base-object">创建基对象</a>, <a href="#Custom_Classes">类</a>, <a href="#Custom_NewDelete">创建和销毁</a>, <a href="#Meta_Functions">元函数</a></li>
-  <li><a href="#primitive">Primitive Values</a></li>
+  <li><a href="#primitive">原始值</a></li>
   <li><a href="#Implementation">实现</a> - <a href="#Reference_Counting">引用计数</a>, <a href="#Implementation_Pointers">对象的指针</a></li>
 </ul>
 
@@ -74,7 +74,7 @@ Loop MyArray.Length
 For index, value in MyArray
     MsgBox "Item " index " is '" value "'"
 
-<em>; Same thing again:</em>
+<em>; 同样的事情再来一次:</em>
 For value in MyArray
     MsgBox "Item " A_Index " is '" value "'"
 </pre>
@@ -219,7 +219,7 @@ thing_test(this) {
 <p>基对象可以用两种不同的方式定义:</p>
 <ul>
   <li>通过<a href="#creating-a-base-object">创建一个普通对象</a>.</li>
-  <li>通过<a href="#Custom_Classes">定义一个类</a>. 每个类都有一个<a href="objects/Class.htm#Prototype">Prototype</a> 属性, 包含一个对象, 该类的所有实例都基于该对象, 而类本身成为任何直接子类的基对象.</li>
+  <li>通过<a href="#Custom_Classes">定义一个类</a>. 每个类都有一个 <a href="objects/Class.htm#Prototype">Prototype</a> 属性, 包含一个对象, 该类的所有实例都基于该对象, 而类本身成为任何直接子类的基对象.</li>
 </ul>
 <p>基对象可以赋值到其他对象的<a href="objects/Object.htm#Base">基</a>属性, 但通常在创建对象时隐式地设置该对象的基.</p>
 
@@ -289,17 +289,17 @@ other.test()</pre>
 <h4 id="Custom_Classes_var">实例变量</h4>
 <p><em>实例变量</em> 是类的每个实例都拥有独立的副本. 他们如同普通赋值一样被声明, 但 <code>this.</code> 前缀被忽略(仅限于类主体内时):</p>
 <pre>InstanceVar := Expression</pre>
-<p>These declarations are evaluated each time a new instance of the class is created with <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a>, after all base-class declarations are evaluated but before <a href="#Custom_NewDelete">__New</a> is called. This is achieved by automatically creating a method named <em>__Init</em> containing a call to <code>base.__Init()</code> and inserting each declaration into it. Therefore, a single class definition must not contain both an __Init method and an instance variable declaration.</p>
-<p><em>Expression</em> can access other instance variables and methods via <code>this</code>, but all other variable references are assumed to be global.</p>
+<p>每次使用 <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a> 创建类的新实例时, 都会计算这些声明, 在所有基类声明被求值之后, 但在调用 <a href="#Custom_NewDelete">__New</a> 之前. 这是通过自动创建一个名为 <em>__Init</em> 的方法来实现的, 该方法包含对 <code>base.__Init()</code> 的调用, 并将每个声明插入其中. 因此, 单个类定义不能同时包含 __Init 方法和实例变量声明.</p>
+<p><em>Expression</em> 可以通过 <code>this</code> 访问其他实例变量和方法, 但是所有其他变量引用都假定是全局的.</p>
 <p>要访问实例变量, 总是要指定目标对象; 例如, <code><b>this</b>.InstanceVar</code>.</p>
 <p>支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 例如, <code>x := {}, x.y := 42</code> 声明了 <code>x</code> 并初始化了 <code>this.x.y</code>.</p>
 
 <h4 id="Custom_Classes_staticvar">Static/Class 变量</h4>
-<p>静态/类变量属于类, but their values can be inherited by subclasses. 和实例变量一样声明, 但使用 static 关键字:</p>
+<p>静态/类变量属于类, 但是它们的值可以被子类继承. 和实例变量一样声明, 但使用 static 关键字:</p>
 <pre>static ClassVar := Expression</pre>
-<p>These declarations are evaluated only once, when the class is initialized. In the current release, classes are initialized in the order that they appear in the script, before evaluation of the <a href="Scripts.htm#auto">auto-execute section</a> and before any static declarations contained by functions. A static method named <em>__Init</em> is automatically defined for this purpose.</p>
-<p>Each declaration stores a value in the class object. Any variable references in <i>Expression</i> are assumed to be global.</p>
-<p>To assign to a class variable, always specify the class object; for example, <code><b>ClassName</b>.ClassVar := Value</code>. If a subclass does not own a property by that name, <code><i>Subclass</i>.ClassVar</code> can also be used to retrieve the value; so if the value is a reference to an object, subclasses will share that object by default. However, <code><i>Subclass</i>.ClassVar := y</code> would store the value in <em>Subclass</em>, not in <em>ClassName</em>.</p>
+<p>这些声明只在初始化类时计算一次. 在当前版本中, 类是按照它们在脚本中出现的顺序初始化的, 在<a href="Scripts.htm#auto">自动执行部分</a>计算之前, 以及函数包含的任何静态声明之前. 为此, 会自动定义一个名为 <em>__Init</em> 的静态方法.</p>
+<p>每个声明在类对象中存储一个值. <i>Expression</i> 中的任何变量引用都被认为是全局的.</p>
+<p>若要给类变量赋值, 始终指定类对象; 例如, <code><b>ClassName</b>.ClassVar := Value</code>. 如果一个子类不拥有该名称的属性, <code><i>Subclass</i>.ClassVar</code> 也可以用来检索值; 因此, 如果该值是对象的引用, 则默认情况下子类将共享该对象. 然而, <code><i>Subclass</i>.ClassVar := y</code> 将值存储在 <em>Subclass</em>, 而不是 <em>ClassName</em> 中.</p>
 <p>支持形如 <code>x.y := z</code> 的声明, 假设 <code>x</code> 已在类中声明. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>.</p>
 
 <h4 id="Custom_Classes_class">嵌套类</h4>
@@ -310,13 +310,13 @@ class NestedClass
     ...
 }
 </pre>
-<p>Nesting a class does not imply any particular relationship to the outer class. The nested class is not instantiated automatically, nor do instances of the nested class have any connection with an instance of the outer class, unless the script explicitly makes that connection.</p>
+<p>嵌套一个类并不意味着与外部类有任何特殊的关系. 嵌套类不会自动实例化, 嵌套类的实例也不会与外部类的实例有任何连接, 除非脚本显式地建立连接.</p>
 
 <h4 id="Custom_Classes_method">方法</h4>
 <p>方法定义看起来和函数定义相同. 每个方法都有一个名为 <code>this</code> 的隐藏参数, 其中包含对调用该方法的对象的引用. 有两种类型的方法:</p>
 <ul>
-  <li>Instance methods are defined as below, and are attached to the class's <a href="objects/Class.htm#Prototype">Prototype</a>, which makes them accessible via any instance of the class. When the method is called, <code>this</code> refers to an instance of the class.</li>
-  <li>Static methods are defined by preceding the method name with the separate keyword <code>static</code>. These are attached to the class object itself, but are also inherited by subclasses, so <code>this</code> refers to either the class itself or a subclass.</li>
+  <li>实例方法定义如下, 并附加到类的<a href="objects/Class.htm#Prototype">原型</a>, 这使得它们可以通过类的任何实例进行访问. 当方法被调用时, <code>this</code> 引用类的一个实例.</li>
+  <li>静态方法是在方法名之前加上独立的关键字 <code>static</code> 来定义的. 它们被附加到类对象本身, 但也被子类继承, 所以 <code>this</code> 要么引用类本身, 要么引用子类.</li>
 </ul>
 <pre>
 Method()
@@ -334,6 +334,7 @@ Method()
 
 <p><a href="Variables.htm#fat-arrow">胖箭头语法</a>可以用来定义一个单行方法, 返回一个表达式:</p>
 <pre>Method() =&gt; <i>Expression</i></pre>
+<p>另请参阅: <a href="objects/Object.htm#DefineMethod">DefineMethod</a></p>
 
 <h4 id="Custom_Classes_property">属性</h4>
 <p>属性定义创建一个<a href="objects/Object.htm#DefineProp">动态属性</a>, 它会调用一个方法, 而不是简单地存储或返回一个值.</p>
@@ -349,12 +350,12 @@ Method()
 </pre>
 <p><em>Property</em> 是用户定义的名称, 用于标识属性. 如, <code>obj.Property</code> 将调用 <em>get</em>, 而 <code>obj.Property := value</code> 将调用 <em>set</em>. 在 <em>get</em> 或 <em>set</em> 内, <code>this</code> 指向被引用的对象. <em>set</em>, <code>value</code> 中包含正要赋予的值.</p>
 <p>参数可以通过将它们括在属性名称右侧的方括号中来定义, 并以相同的方式传递. 除了使用方括号这点不同, 属性参数的定义方法与方法参数相同 - 支持可选参数, ByRef 和可变参数.</p>
-<p>If a property cannot accept parameters (the square brackets are omitted or empty), parameters are automatically forwarded to the <a href="#__Item">__Item</a> property of the object returned by <em>get</em>. For example, <code>this.Property[x]</code> would have the same effect as <code>(this.Property)[x]</code> or <code>y := this.Property, y[x]</code>.</p>
-<p>Static properties can be defined by preceding the property name with the separate keyword <code>static</code>. In that case, <code>this</code> refers to the class itself or a subclass.</p>
+<p>如果属性不能接受参数(方括号被省略或为空), 参数将自动转发给 <em>get</em> 返回的对象的 <a href="#__Item">__Item</a> 属性. 例如, <code>this.Property[x]</code> 与 <code>(this.Property)[x]</code> 或 <code>y := this.Property, y[x]</code> 具有相同的效果.</p>
+<p>静态属性可以在属性名之前加上独立的关键字 <code>static</code> 来定义. 在这种情况下, <code>this</code> 指的是类本身或子类.</p>
 <p><em>set</em> 的返回值会被忽略. 例如, <code>val := obj.Property := 42</code> 总是赋值 <code>val := 42</code> 不管该属性做什么, 除非它抛出异常或退出线程.</p>
 <p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_base">base.Property</a></code> 访问其基类中定义的属性. 如果没有定义 <em>Get</em> 或 <em>Set</em>, 则可以从基对象继承它. 如果没有定义 <em>Get</em>, 则属性可以返回从基继承的值. 如果在该类和所有基对象中没有定义 <em>Set</em>, 则该属性为只读(尝试设置该属性会抛出异常).</p>
 <p>内部 <em>get</em> 与 <em>set</em> 是独立的两方法, 故不可共享变量(除非存储于 <code>this</code> 中).</p>
-<p>See also: <a href="objects/Object.htm#DefineProp">DefineProp</a></p>
+<p>另请参阅: <a href="objects/Object.htm#DefineProp">DefineProp</a></p>
 <p><a href="#Meta_Functions">元函数</a>提供了广泛的控制属性访问, 方法调用的机制, 但更复杂及易错.</p>
 
 <h4 id="Custom_Classes_property_short">胖箭头属性</h4>
@@ -367,8 +368,13 @@ Method()
 <p>当只定义 getter 时, 大括号和 <code>get</code> 可以省略:</p>
 <pre>ShorterProperty[] =&gt; <i>计算属性值的表达式</i></pre>
 
+<h3 id="__Enum">__Enum 方法</h3>
+<pre class="Syntax">__Enum(NumberOfVars)</pre>
+<p>当对象被传递给 <a href="commands/For.htm">for-loop</a> 时, 将调用 __Enum 方法. 此方法应返回一个<a href="objects/Enumerator.htm">枚举器</a>, 该枚举器将返回对象包含的项, 如数组元素. 如果未定义, 则不能将对象直接传递给 for-loop.</p>
+<p><em>NumberOfVars</em> 包含传递给 for-loop 的变量数量. 如果 <em>NumberOfVars</em> 为 2, 则期望枚举器将项的键或索引分配给第一个参数, 将值分配给第二个参数. 每个键或索引都应该作为 <a href="#__Item">__Item</a> 属性的参数而被接受. 这使<a href="AHKL_DBGPClients.htm">基于 DBGp 的调试器</a>能够通过调用枚举器列出它们之后可以获取或设置特定项.</p>
+
 <h3 id="__Item">__Item 属性</h3>
-<p>当索引操作符(数组语法)与对象一起使用时, 将调用 _item 属性. In the following example, the property is declared as static so that the indexing operator can be used on the Env class itself. For another example, see <a href="#Array2D">Array2D</a>.</p>
+<p>当索引操作符(数组语法)与对象一起使用时, 将调用 _item 属性. 在下面的示例中, 属性被声明为静态的, 以便可以在 Env 类本身上使用索引运算符. 有关另一个例子, 请参阅 <a href="#Array2D">Array2D</a>.</p>
 <pre>class Env {
     static __Item[name] {
         get =&gt; EnvGet(name)
@@ -391,14 +397,14 @@ obj["base"] := 10
 MsgBox obj.base = Object.prototype  <em>; True</em>
 MsgBox obj["base"]                  <em>; 10</em>
 </pre>
-<p class="note"><strong>Note:</strong> When an explicit property name is combined with empty brackets, as in <code>obj.prop[]</code>, it is handled as two separate operations: first retrieve <code>obj.prop</code>, then invoke the default property of the result. This is part of the language syntax, so is not dependent on the object.</p>
+<p class="note"><strong>注意:</strong> 当显式属性名与空括号组合时, 如 <code>obj.prop[]</code>, 它是作为两个独立的操作来处理的: 首先检索 <code>obj.prop</code>, 然后调用结果的默认属性. 这是语言语法的一部分, 所以不依赖于对象.</p>
 
 <h3 id="Custom_NewDelete">创建和销毁</h3>
 <p>每当使用 <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a> 的默认实现创建对象时, 都会调用新对象的 <code>__New</code> 方法, 以便允许自定义初始化. 传递给 <code>new</code> 的任何参数都会被转发到 <code>__New</code>, 因此可能会影响对象的初始内容或如何构造它.销毁对象时, 则调用 <code>__Delete</code>. 例如:</p>
 <pre>m1 := GMem.new(0, 10)
 m2 := {base: GMem.Prototype}, m2.__New(0, 30)
 
-<em>; Note: For general memory allocations, use <a href="commands/BufferAlloc.htm">BufferAlloc</a>() instead.</em>
+<em>; 注意: 对于一般的内存分配, 请使用 <a href="commands/BufferAlloc.htm">BufferAlloc</a>().</em>
 class GMem<span id="GMem"></span>
 {
     __New(aFlags, aSize)
@@ -407,7 +413,6 @@ class GMem<span id="GMem"></span>
         if !this.ptr
             throw Exception("Out of memory")
         MsgBox "New GMem of " aSize " bytes at address " this.ptr "."
-        return this  <em>; This line is only required if __new is called directly.</em>
     }
 
     __Delete()
@@ -418,7 +423,7 @@ class GMem<span id="GMem"></span>
 }</pre>
 <p>__Delete 不可被任何具有属性名 "__Class" 的对象所调用. <a href="objects/Class.htm#Prototype">原型对象</a>默认包含该属性.</p>
 <p>如果在 __Delete 执行时抛出了异常或运行时错误, 并且未在 __Delete 中处理, 则它就像从一个新<a href="misc/Threads.htm">线程</a>调用 __Delete. 也就是说, 显示一个错误对话框并 __Delete 返回, 但是线程不会退出(除非它已经退出).</p>
-<p>Each class may also have a <code>static __New</code> method, which is called immediately after its <a href="#Custom_Classes_staticvar">static variables</a> are initialized (this occurs in the order that classes are defined in the script). This method can be inherited from a base class, and can therefore be used to initialize subclasses. Within <code>static __New</code>, <code>this</code> refers to either the class which defined the method, or a subclass.</p>
+<p>每个类也可能有一个 <code>static __New</code> 方法, 在它的 <a href="#Custom_Classes_staticvar">静态变量</a> 初始化之后立即调用它(这是按照脚本中定义类的顺序发生的). 这个方法可以从基类继承, 因此可以用来初始化子类. 在 <code>static __New</code> 中, <code>this</code> 要么引用定义方法的类, 要么引用子类.</p>
 
 <h3 id="Meta_Functions">元函数</h3>
 <pre class="Syntax">
@@ -432,48 +437,48 @@ class <i>ClassName</i> {
   <dt>Name</dt>
   <dd><p>属性或方法的名称.</p></dd>
   <dt>Params</dt>
-  <dd><p>参数<a href="objects/Array.htm">数组</a>. This includes only the parameters between <code>()</code> or <code>[]</code>, so may be empty. The meta-function is expected to handle cases such as <code>x.y[z]</code> where <code>x.y</code> is undefined.</p></dd>
+  <dd><p>参数<a href="objects/Array.htm">数组</a>. 这只包括 <code>()</code> 或 <code>[]</code> 之间的参数, 所以可能是空的. 元函数被期望处理诸如 <code>x.y[z]</code> 这样的情况, 其中 <code>x.y</code> 是未定义的.</p></dd>
   <dt>Value</dt>
-  <dd><p>The value being assigned.</p></dd>
+  <dd><p>被赋值的值.</p></dd>
 </dl>
-<p>Meta-functions define what happens when an undefined property or method is invoked. For example, if <code>obj.unk</code> has not been assigned a value, it invokes the <i>__Get</i> meta-function. Similarly, <code>obj.unk := value</code> invokes <i>__Set</i> and <code>obj.unk()</code> invokes <i>__Call</i>.</p>
-<p>Properties and methods can be defined in the object itself or any of its <a href="#delegation">base objects</a>. In general, for a meta-function to be called for every property, one must avoid defining any properties. Built-in properties such as <a href="objects/Object.htm#Base">Base</a> can be overridden with a <a href="#Custom_Classes_property">property definition</a> or <a href="objects/Object.htm#DefineProp">DefineProp</a>.</p>
-<p>If a meta-function is defined, it must perform whatever default action is required. For example, the following might be expected:</p>
+<p>元函数定义了调用未定义的属性或方法时会发生什么. 例如, 如果 <code>obj.unk</code> 没有被赋值, 那么它会调用 <i>__Get</i> 元函数. 同样地, <code>obj.unk := value</code> 调用 <i>__Set</i>, 而 <code>obj.unk()</code> 调用 <i>__Call</i>.</p>
+<p>属性和方法可以在对象本身或其任何<a href="#delegation">基对象</a>中定义. 通常, 要为每个属性调用一个元函数, 必须避免定义任何属性. 可以使用<a href="#Custom_Classes_property">属性定义</a>或 <a href="objects/Object.htm#DefineProp">DefineProp</a> 来覆盖内置属性(如 <a href="objects/Object.htm#Base">Base</a>).</p>
+<p>如果定义了一个元函数, 它必须执行任何所需的默认操作. 例如, 可能会出现以下情况:</p>
 <ul>
-  <li><i>Call</i>: Throw an "Unknown method" exception.</li>
-  <li>If parameters were given, throw an exception (there's no object to forward the parameters to).</li>
-  <li><i>Get</i>: Return an empty string (functions do this by default when <code>return</code> is omitted).</li>
-  <li><i>Set</i>: Define a new property with the given value, such as by calling <a href="objects/Object.htm#RawSet">ObjRawSet</a>. </li>
+  <li><i>Call</i>: 抛出 "Unknown method(未知方法)" 异常.</li>
+  <li>如果给出了参数, 则抛出异常(没有对象可将参数转发到).</li>
+  <li><i>Get</i>: 返回一个空字符串(当省略 <code>return</code> 时, 函数默认执行此操作).</li>
+  <li><i>Set</i>: 使用给定值定义一个新属性, 例如通过调用 <a href="objects/Object.htm#RawSet">ObjRawSet</a>. </li>
 </ul>
-<p>Any <a href="objects/Functor.htm">callable object</a> can be used as a meta-function by passing it to <a href="objects/Object.htm#DefineMethod">DefineMethod</a>.</p>
-<p>Meta-functions are not called in the following cases:</p>
+<p>任意<a href="objects/Functor.htm">可调用对象</a>可用作元函数, 通过将其传递给 <a href="objects/Object.htm#DefineMethod">DefineMethod</a>.</p>
+<p>在以下情况下, 不调用元函数:</p>
 <ul>
-  <li><code>x[y]</code>: Using square brackets without a property name only invokes the <a href="#__Item">__Item</a> property.</li>
-  <li><code>%x%()</code>: Calling the object itself only invokes the <code>Call</code> method. This includes internal calls made by built-in functions such as <a href="commands/SetTimer.htm">SetTimer</a> and <a href="commands/Hotkey.htm">Hotkey</a>.</li>
-  <li>Internal calls to other meta-functions or double-underscore methods do not trigger <code>__Call</code>.</li>
+  <li><code>x[y]</code>: 使用不带属性名称的方括号仅会调用 <a href="#__Item">__Item</a> 属性.</li>
+  <li><code>%x%()</code>:调用对象本身仅会调用 <code>Call</code> 方法. 这包括内置函数(如 <a href="commands/SetTimer.htm">SetTimer</a> 和 <a href="commands/Hotkey.htm">Hotkey</a>) 进行的内部调用.</li>
+  <li>对其他元函数或双下划线方法的内部调用不会触发 <code>__Call</code>.</li>
 </ul>
 
 <h4 id="Dynamic_Properties">动态属性</h4>
-<p><a href="#Custom_Classes_property">Property syntax</a> and <a href="objects/Object.htm#DefineProp">DefineProp</a> can be used to define properties which compute a value each time they are evaluated, but each property must be defined in advance. By contrast, <em>__Get</em> and <em>__Set</em> can be used to implement properties which are known only at the moment they are invoked.</p>
-<p>For example, a "proxy" object could be created which sends requests for properties over the network (or through some other channel). A remote server would send back a response containing the value of the property, and the proxy would return the value to its caller. Even if the name of each property was known in advance, it would not be logical to define each property individually in the proxy class since every property does the same thing (send a network request). Meta-functions receive the property name as a parameter, so are a good solution to this problem.</p>
+<p><a href="#Custom_Classes_property">属性语法</a>和 <a href="objects/Object.htm#DefineProp">DefineProp</a> 可用于定义属性, 这些属性在每次求值时计算出一个值, 但是必须预先定义每个属性. 相比之下, <em>__Get</em> 和 <em>__Set</em> 可用于实现只有在调用时才知道的属性.</p>
+<p>例如, 可以创建"代理"对象, 该对象通过网络(或者是其他通道) 发送对属性的请求. 远程服务器将返回一个包含属性值的响应, 然后代理将把该值返回给调用者. 虽然每个属性名称都是提前知道的, 但也不必单独定义每个属性, 因为每个属性所做的事都一样(发送一个网络请求). 元函数接受属性名称作为参数, 所以是这种情况的最佳解决方案.</p>
 
-<h2 id="primitive">Primitive Values</h2>
-<p>Primitive values, such as strings and numbers, cannot have their own properties and methods. However, primitive values support the same kind of <a href="#delegation">delegation</a> as objects. That is, any property or method call on a primitive value is delegated to the <em>prototype object</em> corresponding to that value's type, or in other words, the value's <em>base object</em>. The following prototype objects exist:</p>
+<h2 id="primitive">原始值</h2>
+<p>原始值, 如字符串和数字, 不能有自己的属性和方法. 然而, 原始值支持与对象相同类型的<a href="#delegation">委托</a>. 也就是说, 对原始值的任何属性或方法调用都被委托给与该值的类型对应的 <em>原型对象</em>, 换句话说, 就是该值的 <em>基对象</em>. 存在以下原型对象:</p>
 <ul style="line-height: 1.5">
   <li>Any <ul style="padding-left: 1.7em">
-    <li>Primitive <ul style="padding-left: 1.7em">
-      <li>Number <ul style="padding-left: 1.7em">
-        <li>Float</li>
-        <li>Integer</li>
+    <li>原始值 <ul style="padding-left: 1.7em">
+      <li>数字 <ul style="padding-left: 1.7em">
+        <li>浮点数</li>
+        <li>整数</li>
       </ul></li>
-      <li>String</li>
+      <li>字符串</li>
     </ul></li>
   </ul></li>
 </ul>
-<p>However, these objects are currently only accessible through the <code>base</code> property of a primitive value (or a derived prototype object). <a href="objects/Object.htm">Object.Prototype</a> is also based on the Any prototype, so any methods or properties defined on that prototype are inherited by values of all types except ComObject. Similarly, all primitive values inherit from Primitive, and all numbers inherit from Number.</p>
-<p>Although checking the <a href="commands/Type.htm">Type</a> string is generally faster, the type of a value can be tested by checking whether it has a given base. For example, <code>n.HasBase(0.base.base)</code> is true if <em>n</em> is a pure Integer or Float, but not if <em>n</em> is a numeric string, since the String prototype does not derive from the Number prototype. By contrast, <code>n is 'number'</code> is true if <em>n</em> is a number or a numeric string.</p>
-<p>Rather than referring to the prototype objects via numbers and strings, the following code can be used to create the missing classes:</p>
-<pre><em>; Define primitive classes.</em>
+<p>但是, 目前只能通过原始值的 <code>base</code> 属性(或派生原型对象) 访问这些对象. <a href="objects/Object.htm">Object.Prototype</a> 也是基于 Any 原型的, 因此在该原型上定义的任何方法或属性都将被除 ComObject 之外的所有类型的值继承. 类似地, 所有原始值从原始值继承, 所有数字从数字继承.</p>
+<p>虽然检查字符串的<a href="commands/Type.htm">类型</a>通常更快, 但是可以通过检查值是否具有给定的基来测试值的类型. 例如, 如果 <em>n</em> 是一个纯整数或浮点数, 则 <code>n.HasBase(0.base.base)</code> 为真, 但如果 <em>n</em> 是一个数字字符串, 则不为真, 因为字符串原型不是从数字原型派生而来的. 相比之下, 如果 <em>n</em> 是数字或数字字符串<code>n is 'number'</code> 为真.</p>
+<p>不是通过数字和字符串引用原型对象, 下面的代码可以用来创建缺少的类:</p>
+<pre><em>; 定义原始类.</em>
 global Any := Class.new()
      , Primitive := Class.new()
      , String := Class.new()
@@ -481,14 +486,14 @@ global Any := Class.new()
      , Integer := Class.new()
      , Float := Class.new()
 
-<em>; Define hierarchy for primitive classes.</em>
+<em>; 为原始类定义层次结构.</em>
 Primitive.base := Any
   , Number.base := Primitive
     , Integer.base := Number
     , Float.base := Number
   , String.base := Primitive
 
-<em>; Attach the existing prototype objects.</em>
+<em>; 附加现有的原型对象.</em>
 Any.Prototype := (
     Primitive.Prototype := (
       Number.Prototype := (
@@ -499,27 +504,27 @@ Any.Prototype := (
     ).base
   ).base
 </pre>
-<p>The <code>is</code> operator can be used with these classes. For example, <code>n is Number</code> is equivalent to <code>n.HasBase(Number.Prototype)</code> except when the HasBase method has been overridden for <em>n</em>. Note that <code>x is Any</code> would ordinarily be true for any value within AutoHotkey's type hierarchy, but false for COM objects.</p>
+<p><code>is</code> 运算符可以与这些类一起使用. 例如, <code>n is Number</code> 等同于 <code>n.HasBase(Number.Prototype)</code>, 除非 HasBase 方法已经被 <em>n</em> 覆盖. 注意, 对于 AutoHotkey 的类型层次结构中的任何值, <code>x is Any</code> 通常为真, 而对于 COM 对象则为假.</p>
 
-<h3 id="primitive-extension">Adding Properties and Methods</h3>
-<p>Properties and methods can be added for all values of a given type by modifying that type's prototype object. However, since a primitive value is not an Object and cannot have its own properties or methods, the primitive prototype objects do not derive from <code>Object.Prototype</code>. In other words, methods such as <a href="objects/Object.htm#DefineProp">DefineProp</a> and <a href="objects/Object.htm#DefineMethod">DefineMethod</a> are not accessible by default. They can be called indirectly. For example:</p>
+<h3 id="primitive-extension">添加属性和方法</h3>
+<p>通过修改该类型的原型对象, 可以为该类型的所有值添加属性和方法. 但是, 由于原始值不是对象并且不能具有自己的属性或方法, 因此原始原型对象不会从 <code>Object.Prototype</code> 派生. 换句话说, 默认情况下无法访问诸如 <a href="objects/Object.htm#DefineProp">DefineProp</a> 和 <a href="objects/Object.htm#DefineMethod">DefineMethod</a> 之类的方法. 可以间接调用它们. 例如:</p>
 <pre>
 DefProp := {}.GetMethod("DefineProp")
 %DefProp%( "".base, "Length", { get: Func("StrLen") } )
 MsgBox A_AhkPath.length " == " StrLen(A_AhkPath)
 </pre>
-<p>Although primitive values can inherit value properties from their prototype, an exception is thrown if the script attempts to set a value property on a primitive value. For example:</p>
+<p>尽管原始值可以从其原型继承值属性, 但是如果脚本尝试在原始值上设置值属性, 则会引发异常. 例如:</p>
 <pre>"".base.test := 1  <em>; Don't try this at home.</em>
 MsgBox "".test  <em>; 1</em>
-"".test := 2  <em>; Error: Property is read-only.</em></pre>
-<p>Although __Set and property setters can be used, they are not useful since primitive values should be considered immutable.</p>
+"".test := 2  <em>; 错误: 属性是只读的.</em></pre>
+<p>尽管可以使用 __Set 和属性设置器, 但它们没有用, 因为应将原始值视为不可变的.</p>
 
 <h2 id="Implementation">实现</h2>
 <span id="Refs"></span><h3 id="Reference_Counting">引用计数</h3>
 <p>当脚本不再引用对象时, AutoHotkey 使用基本引用计数机制来自动释放对象使用的资源. 脚本作者不应该显式地调用这种机制, 除非打算直接处理未托管的<a href="#Implementation_Pointers">对象的指针</a>.</p>
 <p>表达式中的函数, 方法或运算符返回的临时引用在表达式的计算完成或中止后释放. 在下面的例子中, 新的 GMem 对象只有在 MsgBox 返回后才被释放.</p>
 <pre>MsgBox <a href="commands/DllCall.htm">DllCall</a>("GlobalSize", "ptr", GMem.new(0, 20).ptr, "ptr")  <em>; 20</em></pre>
-<p class="note"><strong>Note:</strong> In this example, <code>.ptr</code> could have been omitted since the <a href="commands/DllCall.htm#ptr">Ptr</a> arg type permits objects with a <code>Ptr</code> property. However, the pattern shown above will work even with other property names.</p>
+<p class="note"><strong>注意:</strong> 在本例中, <code>.ptr</code> 可以省略, 因为 <a href="commands/DllCall.htm#ptr">Ptr</a> 参数类型允许对象具有 <code>Ptr</code> 属性. 但是, 上面显示的模式甚至可以用于其他属性名.</p>
 <p>如果希望在对象的最后一个引用被释放后运行一段代码, 可通过 <a href="#Custom_NewDelete">__Delete</a> 元函数实现.</p>
 <p><b>已知限制:</b></p>
 <ul>

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="en">
 <head>
-<title>Long Paths | AutoHotkey v2</title>
+<title>长路径 | AutoHotkey v2</title>
 <meta name="description" content="Learn how long paths are handled in AutoHotkey and which techniques are available to bypass path length limitations." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,30 +11,30 @@
 </head>
 
 <body>
-<h1>Long Paths</h1>
+<h1>长路径</h1>
 
-<p>In general, programs are affected by two kinds of path length limitations:</p>
+<p>一般来说, 程序受到两种路径长度限制的影响:</p>
 <ol>
-  <li>Functions provided by the operating system generally limit paths to 259 characters, with some exceptions.</li>
-  <li>Code for dealing with paths within the program may rely on the first limitation to simplify the code, effectively placing another 259 character limitation.</li>
+  <li>操作系统提供的函数通常将路径限制为 259 个字符, 也有一些例外.</li>
+  <li>程序内处理路径的代码可能依赖于第一个限制来简化代码, 从而在事实上设置了另一个 259 个字符的限制.</li>
 </ol>
-<p>These limitations are often referred to as "MAX_PATH limitations", after the constant <code>MAX_PATH</code>, which has the value 260. This allows for the drive letter, colon and slash (<code>C:\</code>), a single file or directory name at maximum length (255 characters), and a null terminator.</p>
-<p>AutoHotkey removes the second kind in most cases, which enables the script to work around the first kind. There are two ways to do this:</p>
+<p>这些限制通常被称为 "MAX_PATH 限制", 常量 <code>MAX_PATH</code>, 其值为 260. 这允许驱动器字母, 冒号和斜杠(<code>C:\</code>), 单个文件或目录名的最大长度(255 个字符), 和一个空终止符.</p>
+<p>AutoHotkey 在大多数情况下删除了第二种类型, 这使得脚本可以围绕第一种类型工作. 有两种方法可以做到这一点:</p>
 <ul>
-  <li>Long paths can be enabled for AutoHotkey and all other long-path-aware programs on Windows 10. Refer to the <a href="https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#enable-long-paths-in-windows-10-version-1607-and-later">Microsoft documentation</a> for details. In short, this enables most functions to transparently work with long paths, but requires Windows 10 version 1607 or later.</li>
-  <li>In many cases, prefixing the path with <code>\\?\</code> enables it to exceed the usual limit. However, some system functions do not support it (or long paths in general). See <a href="#limitations">Known Limitations</a> for details.</li>
+  <li>长路径可以在 Windows 10 上为 AutoHotkey 和所有其他长路径感知程序启用. 有关详细信息, 请参阅 <a href="https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#enable-long-paths-in-windows-10-version-1607-and-later">Microsoft 文档</a>. 简而言之, 这使大多数命令和函数能够透明地处理长路径, 但需要 Windows 10 1607 版本或更高版本.</li>
+  <li>在很多情况下, 在路径前面加上前缀 <code>\\?\</code> 使其超过通常的限制. 但是, 有一些系统函数不支持(或者通常不支持长路径). 有关详细信息, 请参阅<a href="#limitations">已知限制</a>.</li>
 </ul>
 
-<h2 id="prefix">Long Path Prefix</h2>
-<p>If supported by the underlying system function, the <code>\\?\</code> prefix -- for example, in <code>\\?\C:\My Folder</code> -- increases the limit to 32,767 characters. However, it does this by skipping <a href="https://blogs.msdn.microsoft.com/jeremykuhne/2016/04/21/path-normalization/">path normalization</a>. Some elements of the path which would normally be removed or altered by normalization instead become part of the file's actual path. Care must be taken as this can allow the creation of paths that "normal" programs cannot access.</p>
-<p>In particular, normalization:</p>
+<h2 id="prefix">长路径前缀</h2>
+<p>如果底层系统函数支持, <code>\\?\</code> 前缀 -- 例如, <code>\\?\C:\My Folder</code> -- 将限制增加到 32,767 个字符. 但是, 它通过跳过<a href="https://blogs.msdn.microsoft.com/jeremykuhne/2016/04/21/path-normalization/">路径规范化</a>来实现这一点. 路径的某些元素通常会被规范化删除或更改, 但它们会成为文件实际路径的一部分. 必须小心, 因为这允许创建"正常"程序无法访问的路径.</p>
+<p>特别是, 规范化:</p>
 <ul>
-  <li>Resolves relative paths such as <code>dir\file.ext</code>, <code>\file.ext</code> and <code>C:file.ext</code> (note the absence of a slash).</li>
-  <li>Resolves relative components such as <code>\..</code> and <code>\.</code>.</li>
-  <li>Canonicalizes component/directory separators, replacing <code>/</code> with <code>\</code> and eliminating redundant separators.</li>
-  <li>Trims certain characters, such as a single period at the end of a component (<code>dir.\file</code>) or trailing spaces and periods (<code>dir\filename . .</code>).</li>
+  <li>解析相对路径, 如 <code>dir\file.ext</code>, <code>\file.ext</code> 和 <code>C:file.ext</code>(注意没有反斜杠).</li>
+  <li>解析相关部分, 如 <code>\..</code> 和 <code>\.</code>.</li>
+  <li>规范化组件/目录分隔符, 用 <code>\</code> 替换 <code>/</code> 并消除多余的分隔符.</li>
+  <li>删除某些字符, 如组件末尾的单个句点(<code>dir.\file</code>) 或尾随的空格和句点(<code>dir\filename . .</code>).</li>
 </ul>
-<p>A path can be normalized explicitly by passing it to <a href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew">GetFullPathName</a> via the function defined below, before applying the prefix. For example:</p>
+<p>在应用前缀之前, 可以通过下面定义的函数将路径传递给 <a href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew">GetFullPathName</a>, 从而显式地规范化路径. 例如:</p>
 <pre>MsgBox "\\?\" NormalizePath("..\file.ext")</pre>
 <pre filename="foo.ahk">NormalizePath(path) {
     cc := DllCall("GetFullPathName", "str", path, "uint", 0, "ptr", 0, "ptr", 0, "uint")
@@ -42,33 +42,33 @@
     DllCall("GetFullPathName", "str", path, "uint", cc, "ptr", buf, "ptr", 0)
     return StrGet(buf)
 }</pre>
-<p>A path with the <code>\\?\</code> prefix can also be normalized by this function. However, in that case the working directory is never used, and the root is <code>\\?\</code> (for example, <code>\\?\C:\..</code> resolves to <code>\\?\</code> whereas <code>C:\..</code> resolves to <code>C:\</code>).</p>
+<p>带有 <code>\\?\</code> 前缀的路径也可以被这个函数规范化. 但是, 在这种情况下, 永远不会使用工作目录, 而根目录是 <code>\\?\</code>(例如, <code>\\?\C:\..</code> 解析为 <code>\\?\</code>, 而 <code>C:\..</code> 解析为 <code>C:\</code>).</p>
 
-<h2 id="limitations">Known Limitations</h2>
-<p>Even when the path itself is not limited to 259 characters, each component (file or directory name) cannot exceed the hard limit imposed by the file system (usually 255 characters).</p>
-<p>These do not support long paths due to limitations of the underlying system function(s):</p>
+<h2 id="limitations">已知限制</h2>
+<p>尽管路径本身不再限制为 259 个字符, 但是每个部分(文件或目录名) 也不能超过文件系统施加的硬限制(通常为255个字符).</p>
+<p>由于底层系统函数的限制, 下面这些不支持长路径:</p>
 <ul>
-  <li><a href="../commands/DllCall.htm">DllCall</a> (for <em>DllFile</em> and <em>Function</em>)</li>
+  <li><a href="../commands/DllCall.htm">DllCall</a>(用于 <em>DllFile</em> 和 <em>Function</em>)</li>
   <li><a href="../commands/DirCopy.htm">DirCopy</a></li>
-  <li><a href="../commands/DirDelete.htm">DirDelete</a>, unless <em>Recurse</em> is false</li>
-  <li><a href="../commands/DirMove.htm">DirMove</a>, unless the R option is used</li>
+  <li><a href="../commands/DirDelete.htm">DirDelete</a>, 除非 <em>Recurse</em> 为 false</li>
+  <li><a href="../commands/DirMove.htm">DirMove</a>, 除非使用 R 选项</li>
   <li><a href="../commands/FileCreateShortcut.htm">FileCreateShortcut</a></li>
   <li><a href="../commands/FileGetShortcut.htm">FileGetShortcut</a></li>
   <li><a href="../commands/FileRecycle.htm">FileRecycle</a></li>
-  <li><a href="../commands/SoundPlay.htm">SoundPlay</a> (for this, the limit is 127 characters)</li>
-  <li><a href="../commands/DriveSetLabel.htm">DriveSetLabel</a> and <a href="../commands/Drive.htm">DriveGet variants</a> (except <a href="../commands/DriveGetType.htm">DriveGetType</a>)</li>
-  <li>Built-in variables which return special folder paths (for which long paths might be impossible anyway): <a href="../Variables.htm#AppData">A_AppData</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#Startup">A_Startup</a> and Common variants, <a href="../Variables.htm#Temp">A_Temp</a> and <a href="../Variables.htm#WinDir">A_WinDir</a></li>
+  <li><a href="../commands/SoundPlay.htm">SoundPlay</a>(限制为 127 个字符)</li>
+  <li><a href="../commands/DriveSetLabel.htm">DriveSetLabel</a> 和 <a href="../commands/Drive.htm">DriveGet 变量</a>(除了 <a href="../commands/DriveGetType.htm">DriveGetType</a>)</li>
+  <li>返回特殊的文件夹路径的内置变量(长路径可能始终无法实现): <a href="../Variables.htm#AppData">A_AppData</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#Startup">A_Startup</a> 和常见变量, <a href="../Variables.htm#Temp">A_Temp</a> 和 <a href="../Variables.htm#WinDir">A_WinDir</a></li>
 </ul>
-<p><a href="../commands/SetWorkingDir.htm">SetWorkingDir</a> and <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> support long paths only when Windows 10 long path awareness is enabled, since the <code>\\?\</code> prefix cannot be used. If the working directory exceeds MAX_PATH, it becomes impossible to launch programs with <a href="../commands/Run.htm">Run</a>. These limitations are imposed by the OS.</p>
-<p>It does not appear to be possible to run an executable with a full path which exceeds MAX_PATH. That being the case, it would not be possible to fully test any changes aimed at supporting longer executable paths. Therefore, MAX_PATH limits have been left in place for the following:</p>
+<p>仅在 Windows 10 启用长路径感知时, <a href="../commands/SetWorkingDir.htm">SetWorkingDir</a> 和 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 才支持长路径, 因为无法使用 <code>\\?\</code> 前缀. 如果工作目录长度超过 MAX_PATH, 则无法使用 <a href="../commands/Run.htm">Run</a> 来启动程序. 这些限制是由操作系统强加的.</p>
+<p>似乎无法运行完整路径超过 MAX_PATH 的可执行文件. 在这种情况下, 就不可能完全测试旨在支持更长的可执行路径的任何更改. 因此, 已为以下各项保留了 MAX_PATH 限制:</p>
 <ul>
   <li><a href="WinTitle.htm#ahk_exe">ahk_exe</a></li>
-  <li>The default script's path, which is based on the current executable's path.</li>
-  <li>Retrieval of the AutoHotkey installation directory, which is used by <a href="../Variables.htm#AhkPath">A_AhkPath</a> in compiled scripts and may be used to launch Window Spy or the help file.</li>
+  <li>默认脚本的路径, 该路径基于当前可执行文件的路径.</li>
+  <li>检索 AutoHotkey 安装目录, 该目录通过 <a href="../Variables.htm#AhkPath">A_AhkPath</a> 在编译脚本中使用, 可用于启动 Window Spy 或帮助文件.</li>
   <li><a href="../commands/WinGetProcessPath.htm">WinGetProcessPath</a>.</li>
-  <li><a href="../commands/WinGetProcessName.htm">WinGetProcessName</a> (this theoretically isn't a problem since it is applied only to the name portion, and NTFS only supports names up to 255 chars).</li>
+  <li><a href="../commands/WinGetProcessName.htm">WinGetProcessName</a>(理论上这不是个问题, 因为它只应用于名称部分, 而且 NTFS 只支持最多 255 个字符的名称).</li>
 </ul>
-<p>Long <a href="../commands/_Include.htm">#Include</a> paths shown in error messages may be truncated arbitrarily.</p>
+<p>错误消息中显示的长 <a href="../commands/_Include.htm">#Include</a> 路径可以任意截断.</p>
 
 </body>
 </html>

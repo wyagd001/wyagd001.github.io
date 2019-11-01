@@ -103,14 +103,14 @@ tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskb
 ; This example will still work if the following line is removed:</em>
 tbl := ComObject(13, tbl)
 
- activeHwnd := WinExist("A")
+activeHwnd := WinExist("A")
 
- ComCall(3, tbl)                     <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774650.aspx">HrInit</a>()</em>
+ComCall(3, tbl)                     <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774650.aspx">HrInit</a>()</em>
 ComCall(5, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774648.aspx">DeleteTab</a>(activeHwnd)</em>
 Sleep 3000
 ComCall(4, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
 
- if IsObject(tbl)  <em>; Was ComObject(13, tbl) used?</em>
+if IsObject(tbl)  <em>; Was ComObject(13, tbl) used?</em>
 {
     <em>; When finished with the object, simply replace any references with
     ; some other value (or if its a local variable, just return):</em>
@@ -131,55 +131,55 @@ else
 <pre>
 tbl := TaskbarList.new()
 
- activeHwnd := WinExist("A")
+activeHwnd := WinExist("A")
 
- tbl.DeleteTab(activeHwnd)
+tbl.DeleteTab(activeHwnd)
 Sleep 3000
 tbl.AddTab(activeHwnd)
 
- tbl := ""
+tbl := ""
 
 
- class TaskbarList {
-    static IID := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
-    static CLSID := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
+class TaskbarList {
+   static IID := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
+   static CLSID := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
-     <em>; Called on startup to initialize the class.</em>
-    static __new() {
-        <em>; Get the base object for all instances of TaskbarList.</em>
-        proto := this.Prototype
+    <em>; Called on startup to initialize the class.</em>
+   static __new() {
+       <em>; Get the base object for all instances of TaskbarList.</em>
+       proto := this.Prototype
 
-         <em>; Bound functions can be used to predefine parameters, making
-        ; the methods more usable without requiring wrapper functions.
-        ; HrInit itself has no parameters, so bind only the index,
-        ; and the caller will implicitly provide 'this'.</em>
-        proto.DefineMethod "HrInit", Func("ComCall").Bind(3)
+        <em>; Bound functions can be used to predefine parameters, making
+       ; the methods more usable without requiring wrapper functions.
+       ; HrInit itself has no parameters, so bind only the index,
+       ; and the caller will implicitly provide 'this'.</em>
+       proto.DefineMethod "HrInit", Func("ComCall").Bind(3)
 
-         <em>; Leave a parameter blank to let the caller provide a value.
-        ; In this case, the blank parameter is 'this' (normally hidden).</em>
-        proto.DefineMethod "AddTab", Func("ComCall").Bind(4,, "ptr")
+        <em>; Leave a parameter blank to let the caller provide a value.
+       ; In this case, the blank parameter is 'this' (normally hidden).</em>
+       proto.DefineMethod "AddTab", Func("ComCall").Bind(4,, "ptr")
 
-         <em>; An object or Map can be used to reduce repetition.</em>
-        for name, args in Map(
-            "DeleteTab", [5,,"ptr"],
-            "ActivateTab", [6,,"ptr"],
-            "SetActiveAlt", [7,,"ptr"]) {
-            proto.DefineMethod name, Func("ComCall").Bind(args*)
-        }
-    }
+        <em>; An object or Map can be used to reduce repetition.</em>
+       for name, args in Map(
+           "DeleteTab", [5,,"ptr"],
+           "ActivateTab", [6,,"ptr"],
+           "SetActiveAlt", [7,,"ptr"]) {
+           proto.DefineMethod name, Func("ComCall").Bind(args*)
+       }
+   }
 
-     <em>; Called by TaskbarList.new() on the new instance.</em>
-    __new() {
-        this.ptr := ComObjCreate(TaskbarList.CLSID, TaskbarList.IID)
-        <em>; If ComObjError(0) was used, this.ptr could be zero.</em>
-        if !this.ptr
-            throw Exception("COM-related error")
-        <em>; Request initialization via ITaskbarList.</em>
-        this.HrInit()
-    }
+    <em>; Called by TaskbarList.new() on the new instance.</em>
+   __new() {
+       this.ptr := ComObjCreate(TaskbarList.CLSID, TaskbarList.IID)
+       <em>; If ComObjError(0) was used, this.ptr could be zero.</em>
+       if !this.ptr
+           throw Exception("COM-related error")
+       <em>; Request initialization via ITaskbarList.</em>
+       this.HrInit()
+   }
 
-     <em>; Release the interface pointer when this object is deleted.</em>
-    __delete() =&gt; this.ptr &amp;&amp; ObjRelease(this.ptr)
+    <em>; Release the interface pointer when this object is deleted.</em>
+   __delete() =&gt; this.ptr &amp;&amp; ObjRelease(this.ptr)
 }
 </pre>
 </div>
