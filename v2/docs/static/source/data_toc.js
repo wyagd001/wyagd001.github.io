@@ -26,7 +26,7 @@ tocData = [
       ["基本用法","Objects.htm#Usage"],
       ["扩展用法","Objects.htm#Extended_Usage"],
       ["自定义对象","Objects.htm#Custom_Objects"],
-      ["Primitive Values","Objects.htm#primitive"],
+      ["原始值","Objects.htm#primitive"],
       ["实现","Objects.htm#Implementation"]
     ]]
   ]],
@@ -295,20 +295,20 @@ tocData = [
   ["对象类型","",
   [
     ["对象","objects/Object.htm"],
+    ["Any 原型","objects/Any.htm"],
     ["数组对象","objects/Array.htm"],
+    ["Map 对象","objects/Map.htm"],
     ["缓冲对象","objects/Buffer.htm"],
-    ["Class 对象","objects/Class.htm"],
+    ["类对象","objects/Class.htm"],
+    ["文件对象","objects/File.htm"],
+    ["函数对象","objects/Functor.htm"],
+    ["Func 对象","objects/Func.htm"],
     ["枚举器对象 ","objects/Enumerator.htm"],
     ["异常对象","commands/Throw.htm#Exception"],
-    ["文件对象","objects/File.htm"],
-    ["Func 对象","objects/Func.htm"],
-    ["函数对象","objects/Functor.htm"],
+    ["正则匹配对象","commands/RegExMatch.htm#MatchObject"],
     ["Gui 对象","objects/Gui.htm"],
     ["GuiControl 对象","objects/GuiControl.htm"],
-    ["Map 对象","objects/Map.htm"],
     ["Menu/MenuBar 对象","objects/Menu.htm"],
-    ["正则匹配对象","commands/RegExMatch.htm#MatchObject"],
-    ["Any Prototype","objects/Any.htm"]
   ]],
   ["进程","commands/Process.htm",
   [
