@@ -14,39 +14,39 @@
 
  <h1>ComCall</h1>
 
- <p>Calls a native COM interface method by index.</p>
+ <p>通过索引调用原生 COM 接口方法.</p>
 
  <pre class="Syntax">Result := <span class="func">ComCall</span>(Index, ComObject <span class="optional">, Type1, Arg1, Type2, Arg2, ReturnType</span>)</pre>
-<h2>Parameters</h2>
+<h2>参数</h2>
 <dl>
 
    <dt>Index</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-      <p>The zero-based index of the method within the virtual function table.</p>
-      <p><em>Index</em> corresponds to the position of the method within the original interface definition. Microsoft documentation usually lists methods in alphabetical order, which is not relevant. In order to determine the correct index, locate the original interface definition. This may be in a header file or type library.</p>
+      <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+      <p>虚拟函数表中方法的索引(从零开始).</p>
+      <p><em>Index</em> 对应于方法在原始接口定义中的位置. Microsoft 文档通常按字母顺序列出方法, 这是不相关的. In order to determine the correct index, locate the original interface definition. This may be in a header file or type library.</p>
       <p>It is important to take into account methods which are inherited from parent interfaces. Since all COM interfaces ultimately derive from <a href="https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown">IUnknown</a>, the first three methods are always QueryInterface (0), AddRef (1) and Release (2). For example, <em>IShellItem2</em> is an extension of <em>IShellItem</em>, which starts at index 3 and contains 5 methods, so <em>IShellItem2</em>'s first method (GetPropertyStore) is at index 8.</p>
-      <p class="note"><strong>Tip:</strong> For COM interfaces defined by Microsoft, try searching the Internet or Windows SDK for "<em>IInterfaceName</em><b>Vtbl</b>" - for example, "IUnknownVtbl". Microsoft's own interface definitions are accompanied by this plain-C definition of the interface's virtual function table, which lists all methods explicitly, in the correct order.</p>
-      <p>Passing an invalid index may cause undefined behaviour, including (but not limited to) program termination.</p>
+      <p class="note"><strong>提示:</strong> For COM interfaces defined by Microsoft, try searching the Internet or Windows SDK for "<em>IInterfaceName</em><b>Vtbl</b>" - for example, "IUnknownVtbl". Microsoft's own interface definitions are accompanied by this plain-C definition of the interface's virtual function table, which lists all methods explicitly, in the correct order.</p>
+      <p>传递无效的索引可能会导致不确定的行为, 包括(但不限于) 程序终止.</p>
   </dd>
 
    <dt>ComObject</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#numbers">Integer</a> or <a href="../Concepts.htm#objects">Object</a></p>
-      <p>The target COM object; that is, a COM interface pointer. The pointer value can be passed directly or encapsulated within an object with the <code>Ptr</code> property, such as a <a href="ComObject.htm">ComObj</a> with variant type VT_UNKNOWN.</p>
-      <p>The interface pointer is used to locate the address of the virtual function which implements the interface method, and is also passed as a parameter. This parameter is generally not explicitly present in languages which natively support interfaces, but is shown in the C style "Vtbl" definition.</p>
+      <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
+      <p>目标 COM 对象; 也就是说, 一个 COM 接口指针. 指针值可以直接传递, 也可以封装在带有 <code>Ptr</code> 属性的对象中, 如带有 VT_UNKNOWN 变量类型的 <a href="ComObject.htm">ComObj</a>.</p>
+      <p>接口指针用于定位实现接口方法的虚拟函数的地址, 也作为参数传递. This parameter is generally not explicitly present in languages which natively support interfaces, but is shown in the C style "Vtbl" definition.</p>
       <p>Passing an invalid pointer may cause undefined behaviour, including (but not limited to) program termination.</p>
   </dd>
 
    <dt>Type1, Arg1</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>Each of these pairs represents a single parameter to be passed to the method. The number of pairs is unlimited. For <em>Type</em>, see the <a href="DllCall.htm#types">DllCall types table</a>. For <em>Arg</em>, specify the value to be passed to the method.</p>
   </dd>
 
    <dt>ReturnType</dt>
   <dd>
-      <p>Type: <a href="../Concepts.htm#strings">String</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>If omitted, the return type defaults to <a href="DllCall.htm#HRESULT">HRESULT</a>, which is most the common return type for COM interface methods. Any result indicating failure causes an exception to be thrown; therefore, the return type must not be omitted unless the actual return type is HRESULT.</p>
       <p>If the method is of a type that does not return a value (the <code>void</code> return type in C), specify "Int" or any other numeric type without any suffix (except HRESULT), and ignore the return value. As the content of the return value register is arbitrary in such cases, an exception may or may not be thrown if <em>ReturnType</em> is omitted.</p>
       <p>Otherwise, specify one of the argument types from the <a href="DllCall.htm#types">DllCall types table</a>. The <a href="DllCall.htm#asterisk">asterisk suffix</a> is also supported.</p>
@@ -55,13 +55,13 @@
 
  </dl>
 
- <h2>Return Value</h2>
-<p>Type: <a href="../Concepts.htm#strings">String</a> or <a href="../Concepts.htm#numbers">Integer</a></p>
+ <h2>返回值</h2>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
 <p>If <em>ReturnType</em> is <a href="DllCall.htm#HRESULT">HRESULT</a> (or omitted) and the method returned an error value (as defined by the <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a>), an exception is thrown.</p>
 <p>Otherwise, ComCall returns the actual value returned by the method. If the method is of a type that does not return a value (with return type defined in C as <code>void</code>), the result is undefined and should be ignored.</p>
 
- <h2 id="Remarks">Remarks</h2>
-<p>The following DllCall topics are also applicable to ComCall:</p>
+ <h2 id="Remarks">备注</h2>
+<p>以下 DllCall 主题也适用于 ComCall:</p>
 <ul>
   <li><a href="DllCall.htm#types">Types of Arguments and Return Values</a></li>
   <li><a href="DllCall.htm#error">Errors</a></li>
@@ -71,10 +71,10 @@
   <li><a href="DllCall.htm#dotnet">.NET Framework</a></li>
 </ul>
 
- <h2>Related</h2>
+ <h2>相关</h2>
 <p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="ComObject.htm">ComObject</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="CallbackCreate.htm">CallbackCreate</a></p>
 
- <h2>Examples</h2>
+ <h2>示例</h2>
 
  <div class="ex" id="ExTaskbar">
 <p><a href="#ExTaskbar">#1</a>: Remove the active window from the taskbar for 3 seconds. Compare this to the <a href="DllCall.htm#ExTaskbar">equivalent DllCall example</a>.</p>
