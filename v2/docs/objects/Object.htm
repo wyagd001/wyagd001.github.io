@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>Object - Methods &amp; Properties | AutoHotkey v2</title>
+<title>Object - 方法 &amp; 属性 | AutoHotkey v2</title>
 <meta name="description" content="Object is the basic class from which other AutoHotkey object classes derive." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,18 +11,18 @@
 </head>
 <body>
 
-<h1>Object</h1>
+<h1>对象</h1>
 
-<p><strong>Object</strong> is the basic class from which other AutoHotkey object classes derive. Each instance of Object consists of the following:</p>
+<p><strong>Object(对象)</strong> 是派生其他 AutoHotkey 类对象的基本类. 每个对象实例包含以下内容:</p>
 <ul>
-  <li>Own properties: a set of properties which belong to this specific Object.</li>
-  <li>Own methods: a set of methods which belong to this specific Object.</li>
-  <li>A base object, from which properties and methods are inherited.</li>
+  <li>自己的属性: 属于这个特定对象的一组属性.</li>
+  <li>自己的方法: 属于这个特定对象的一组方法.</li>
+  <li>基对象, 从其继承属性和方法.</li>
 </ul>
-<p>There are value properties and dynamic properties. Value properties simply contain a value. Dynamic properties do not contain a value, but instead call a <em>getter</em> or <em>setter</em> function when accessed. The <em>getter</em> or <em>setter</em> can be overridden by a derived object (the easiest way is to define them within a class).</p>
-<p>The documentation below uses <code>Obj</code> as a placeholder for any instance of Object.</p>
-<p>All instances of Object are based on <code>Object.Prototype</code>, which is based on the <a href="Any.htm">Any prototype</a>. In addition to the methods and property inherited from Any, Objects have the following predefined methods and properties:</p>
-<p><strong>Methods:</strong></p>
+<p>属性分为值属性和动态属性. 值属性只包含一个值. 动态属性不包含值, 而是在访问时调用 <em>getter</em> 或 <em>setter</em> 函数. 派生对象可以覆盖 <em>getter</em> 或 <em>setter</em>(最简单的方法是在类中定义它们).</p>
+<p>下面的文档使用 <code>Obj</code> 作为对象的任何实例的占位符.</p>
+<p>所有对象的实例都基于 <code>Object.Prototype</code>, 而其又基于 <a href="Any.htm">Any 原型</a>. 除了从 Any 继承的方法和属性外, 对象还具有以下预定义的方法和属性:</p>
+<p><strong>方法:</strong></p>
 <ul>
 	<li><a href="#Clone">Clone</a></li>
   <li><a href="#DefineMethod">DefineMethod</a></li>
@@ -35,65 +35,65 @@
   <li><a href="#OwnMethods">OwnMethods</a></li>
   <li><a href="#OwnProps">OwnProps</a></li>
 </ul>
-<p><strong>Properties:</strong></p>
+<p><strong>属性:</strong></p>
 <ul>
 	<li><a href="#Base">Base</a></li>
 </ul>
-<p><strong>Functions:</strong></p>
+<p><strong>函数:</strong></p>
 <ul>
-	<li><a href="#SetBase">ObjSetBase</a>: Set the object's <a href="../Objects.htm#delegation">base object</a>.</li>
-  <li><a href="#GetCapacity">ObjGetCapacity</a>, <a href="#SetCapacity">ObjSetCapacity</a>: Retrieve or set an Object's capacity to contain properties.</li>
-  <li><a href="#OwnPropCount">ObjOwnPropCount</a>: Retrieve the number of own properties contained by an object.</li>
-	<li>Deprecated: <a href="#RawGet">ObjRawGet</a>, <a href="#RawSet">ObjRawSet</a>: Retrieve or set an object's own value property, bypassing any meta-functions and potentially overwriting property accessor functions.</li>
-  <li>ObjClone, ObjDeleteProp, ObjHasOwnProp, ObjHasProp, ObjOwnMethods, ObjOwnProps: Equivalent to the corresponding predefined method, but cannot be overridden.</li>
+	<li><a href="#SetBase">ObjSetBase</a>: 设置对象的<a href="../Objects.htm#delegation">基对象</a>.</li>
+  <li><a href="#GetCapacity">ObjGetCapacity</a>, <a href="#SetCapacity">ObjSetCapacity</a>: 检索或设置对象所包含属性的容量.</li>
+  <li><a href="#OwnPropCount">ObjOwnPropCount</a>: 检索对象包含的自有属性的数量.</li>
+	<li>不推荐: <a href="#RawGet">ObjRawGet</a>, <a href="#RawSet">ObjRawSet</a>: 检索或设置对象的自有的值属性, 绕过任何元函数, 并可能覆盖属性访问函数.</li>
+  <li>ObjClone, ObjDeleteProp, ObjHasOwnProp, ObjHasProp, ObjOwnMethods, ObjOwnProps: 等同于相应的预定义方法, 但不能被覆盖.</li>
 </ul>
 
-<h2>Methods</h2>
+<h2>方法</h2>
 
 <div class="methodShort" id="Clone"><h2>Clone</h2>
-<p>Returns a shallow copy of the object.</p>
+<p>返回对象的一个浅拷贝.</p>
 <pre class="Syntax">Clone := Obj.<span class="func">Clone</span>()</pre>
-<p>Each property or method owned by the object is copied into the clone. Object <em>references</em> are copied (like with a normal assignment), not the objects themselves; in other words, if a property contains a reference to an object, the clone will contain a reference to the same object.</p>
-<p>Dynamic properties are copied, not invoked.</p>
-<p>The clone has the same base object as the original object.</p>
+<p>对象拥有的每个属性或方法都被复制到副本中. 对象 <em>引用</em> 被复制(就像普通的赋值一样), 而不是对象本身; 换句话说, 如果属性包含对对象的引用, 则副本将包含对同一对象的引用.</p>
+<p>动态属性被复制, 而不是调用.</p>
+<p>副本具有与原始对象相同的基对象.</p>
 </div>
 
 <div class="methodShort" id="DefineMethod"><h2>DefineMethod</h2>
-<p>Defines a new method.</p>
+<p>定义一个新的方法.</p>
 <pre class="Syntax">Obj.<span class="func">DefineMethod</span>(Name, MethodFunc)</pre>
 <dl>
   <dt>Name</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-    <p>The name of the method.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>方法的名称.</p>
   </dd>
   <dt>MethodFunc</dt>
   <dd>
-    <p>Type: <a href="Functor.htm">Function Object</a></p>
-    <p>The implementation of the method. The function must accept at least one parameter, which receives a reference to the target object of the method call. This parameter is defined automatically with the name <code>this</code> when the method is created by a class definition.</p>
+    <p>类型: <a href="Functor.htm">函数对象</a></p>
+    <p>方法的实现. 函数必须接受至少一个参数, 该参数接收对方法调用的目标对象的引用. 当方法由类定义创建时, 将自动使用名称 <code>this</code> 定义此参数.</p>
   </dd>
 </dl>
-<p>The new method is owned by <em>Obj</em>, but may be inherited by any objects which use <em>Obj</em> as a base. If <em>Obj</em> is a class, the new method only applies to the class itself and subclasses (i.e. it is static). To define a method for all instances of a class, let <em>Obj</em> be the class's <code>Prototype</code>.</p>
+<p>新方法归 <em>Obj</em> 所有, 但是任何以 <em>Obj</em> 为基的对象都可以继承. 如果 <em>Obj</em> 是一个类, 则新方法仅适用于类本身和子类(即它是静态的). 要为类的所有实例定义一个方法, 让 <em>Obj</em> 为类的 <code>Prototype</code>.</p>
 </div>
 
 <div class="methodShort" id="DefineProp"><h2>DefineProp</h2>
-<p>Defines a new dynamic property.</p>
+<p>定义一个新的动态属性.</p>
 <pre class="Syntax">Obj.<span class="func">DefineProp</span>(Name, Desc)</pre>
 <dl>
   <dt>Name</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-    <p>The name of the property.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>属性的名称.</p>
   </dd>
   <dt>Desc</dt>
   <dd>
-    <p>Type: Object</p>
-    <p>An object with zero or more of the following own properties:</p>
-    <p><code>Get</code>: The <a href="Functor.htm">function object</a> to call when the property's value is retrieved.</p>
-    <p><code>Set</code>: The <a href="Functor.htm">function object</a> to call when the property is assigned a value. Its second parameter is the value being assigned.</p>
+    <p>类型: 对象</p>
+    <p>具有以下零个或多个自有属性的对象:</p>
+    <p><code>Get</code>: 获取属性值时调用的<a href="Functor.htm">函数对象</a>.</p>
+    <p><code>Set</code>: 属性被赋值时调用的<a href="Functor.htm">函数对象</a>. 第二个参数是要分配的值.</p>
   </dd>
 </dl>
-<p>If <em>Get</em> or <em>Set</em> is not defined, it can be inherited from a base object. If <em>Get</em> is undefined, the property can return a value inherited from a base. If <em>Set</em> is undefined in this and all base objects, the property is read-only (attempting to set the property throws an exception).</p>
+<p>如果 <em>Get</em> 或 <em>Set</em> 未定义, 则可以从基对象继承. 如果 <em>Get</em> 未定义, 则该属性可以返回从基继承的值. 如果 <em>Set</em> is undefined in this and all base objects, the property is read-only (attempting to set the property throws an exception).</p>
 <p>As with methods, the first parameter of <em>Get</em> or <em>Set</em> is <code>this</code> (the target object). For <em>Set</em>, the second parameter is <code>value</code> (the value being assigned). These parameters are defined automatically by method and property definitions within a class, but must be defined explicitly if using normal functions.</p>
 <p>The <code>MaxParams</code> and <code>IsVariadic</code> properties of the function objects are evaluated to determine whether the property may accept parameters. If <code>MaxParams</code> is 1 for <em>get</em> or 2 for <em>set</em> and <code>IsVariadic</code> is false or undefined, the property cannot accept parameters; they are instead forwarded to the <a href="../Objects.htm#__Item">__Item</a> property of the object returned by <em>get</em>.</p>
 </div>
