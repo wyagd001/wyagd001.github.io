@@ -100,246 +100,246 @@ if (ih.Input = CtrlC)
 </ul>
 
 <div class="methodShort" id="KeyOpt"><h2>KeyOpt</h2>
-<p>Sets options for a key or list of keys.</p>
+<p>设置按键或按键列表的选项.</p>
 <pre class="Syntax">InputHook.<span class="func">KeyOpt</span>(Keys, KeyOptions)</pre>
 <dl>
   <dt>Keys</dt>
-  <dd><p>A list of keys. Braces are used to enclose key names, virtual key codes or scan codes, similar to the <a href="Send.htm">Send</a> function. For example, <code>{Enter}.{{}</code> would apply to the <kbd>Enter</kbd>, <kbd>.</kbd> and <kbd>{</kbd> keys. Specifying a key by name, by <code>{vkNN}</code> or by <code>{scNNN}</code> may produce three different results; see below for details.</p>
-  <p id="all-keys">Specify the string <code>{All}</code> (case-insensitive) on its own to apply <em>KeyOptions</em> to all VK and all SC. KeyOpt may then be called a second time to remove options from specific keys.</p></dd>
+  <dd><p>按键列表. 大括号用于括起按键名称, 虚拟键码或扫描码, 类似于 <a href="Send.htm">Send</a> 函数. 例如, <code>{Enter}.{{}</code> 将应用于 <kbd>Enter</kbd>, <kbd>.</kbd> 和 <kbd>{</kbd> 按键. 按名称, 按 <code>{vkNN}</code> 或按 <code>{scNNN}</code> 指定按键可能会产生三种不同的结果; 有关详情, 请参阅下文.</p>
+  <p id="all-keys">单独指定字符串 <code>{All}</code>(不区分大小写) 以便将 <em>KeyOptions</em> 应用于所有 VK 和所有 SC. 然后可以再次调用 KeyOpt 从特定按键中删除选项.</p></dd>
   <dt>KeyOptions</dt>
-  <dd><p>One or more of the following single-character options (spaces and tabs are ignored).</p>
-  <p id="KeyOpt-minus"><strong>-</strong> (minus): Removes any of the options following the <code>-</code>, up to the next <code>+</code>.</p>
-  <p id="KeyOpt-plus"><strong>+</strong> (plus): Cancels any previous <code>-</code>, otherwise has no effect.</p>
-  <p id="KeyOpt-e"><strong>E</strong>: End key. If enabled, pressing the key terminates Input, sets <a href="#EndReason">EndReason</a> to the word EndKey and the <a href="#EndKey">EndKey</a> property to the key's normalized name. Unlike the <em>EndKeys</em> parameter, the state of the Shift key is ignored. For example, <code>@</code> and <code>2</code> are both equivalent to <code>{vk32}</code> on the US keyboard layout.</p>
-  <p id="KeyOpt-i"><strong>I</strong>: Ignore text. Any text normally produced by this key is ignored, and the key is treated as a non-text key (see <a href="#VisibleNonText">VisibleNonText</a>). Has no effect if the key normally does not produce text.</p>
-  <p id="KeyOpt-n"><strong>N</strong>: Notify. Causes the <a href="#OnKeyDown">OnKeyDown</a> callback to be called each time the key is pressed.</p>
-  <p id="KeyOpt-s"><strong>S</strong>: Suppresses (blocks) the key after processing it. This overrides <a href="#VisibleText">VisibleText</a> or <a href="#VisibleNonText">VisibleNonText</a> until <code>-S</code> is used. <code>+S</code> implies <code>-V</code>.</p>
-  <p id="KeyOpt-v"><strong>V</strong>: Visible. Prevents the key from being suppressed (blocked). This overrides <a href="#VisibleText">VisibleText</a> or <a href="#VisibleNonText">VisibleNonText</a> until <code>-V</code> is used. <code>+V</code> implies <code>-S</code>.</p>
+  <dd><p>下列单字符选项中的一个或多个(空格和制表符).</p>
+  <p id="KeyOpt-minus"><strong>-</strong>(减号): 移除 <code>-</code> 后面的任何选项, 直到下一个 <code>+</code>.</p>
+  <p id="KeyOpt-plus"><strong>+</strong>(加号): 取消任何先前的 <code>-</code>, 否则无效.</p>
+  <p id="KeyOpt-e"><strong>E</strong>: 结束键. 如果启用, 则按下键终止 Input, 将 <a href="#EndReason">EndReason</a> 设置为单词 EndKey, 将 <a href="#EndKey">EndKey</a> 属性设置为键的标准名称. 与 <em>EndKeys</em> 参数不同, Shift 键的状态将被忽略. 例如, <code>@</code> 和 <code>2</code> 在美式键盘布局中都相当于 <code>{vk32}</code>.</p>
+  <p id="KeyOpt-i"><strong>I</strong>: 忽略文本. 通常由该键生成的任何文本都将被忽略, 并且该键被视为非文本键(请参阅 <a href="#VisibleNonText">VisibleNonText</a>). 如果键通常不产生文本, 则没有效果.</p>
+  <p id="KeyOpt-n"><strong>N</strong>: 通知. 在每次按下键时调用 <a href="#OnKeyDown">OnKeyDown</a> 回调.</p>
+  <p id="KeyOpt-s"><strong>S</strong>: 处理它后抑制(阻止) 按键. 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code>-S</code>. <code>+S</code> 意味着 <code>-V</code>.</p>
+  <p id="KeyOpt-v"><strong>V</strong>: 可见. 防止键按被抑制(阻止). 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code>-V</code>. <code>+V</code> 意味着 <code>-S</code>.</p>
   </dd>
 </dl>
-<p id="KeyOpt-remarks">Options can be set by both virtual key code and scan code, and are accumulative.</p>
-<p>When a key is specified by name, the options are set either by VK or by SC. Where two physical keys share the same VK but differ by SC (such as <kbd>Up</kbd> and <kbd>NumpadUp</kbd>), they are handled by SC. By contrast, if a VK number is used, it will apply to any physical key which produces that VK (and this may vary over time as it depends on the active keyboard layout).</p>
-<p>Removing an option by VK number does not affect any options that were set by SC, or vice versa. However, when an option is removed by key name and that name is handled by VK, the option is also removed for the corresponding SC (according to the script's keyboard layout). This allows keys to be excluded by name after applying an option to <a href="#all-keys">all keys</a>.</p>
-<p>If <code>+V</code> is set by VK and <code>+S</code> is set by SC (or vice versa), <code>+V</code> takes precedence.</p>
+<p id="KeyOpt-remarks">选项可以通过虚拟键码和扫描码来设置, 并且是累加的.</p>
+<p>当按名称指定一个键时, 选项通过 VK 或 SC 来设置. 如果两个物理键共享相同的 VK, 但 SC 不同(如 <kbd>Up</kbd> 和 <kbd>NumpadUp</kbd>), 则由 SC 处理. 相反, 如果使用 VK 码, 则它将应用于产生该 VK 的任何物理键(这可能会随着时间的推移而变化, 这取决于活动键盘布局).</p>
+<p>通过 VK 码删除选项不会影响 SC 设置的任何选项, 反之亦然. 但是, 当按键名删除一个选项并且该名称由 VK 处理时, 对应的 SC 也会删除该选项(根据脚本的键盘布局). 这允许在对<a href="#all-keys">所有按键</a>应用一个选项后按名称排除按键.</p>
+<p>如果通过 VK 设置 <code>+V</code>, 而通过 SC 设置 <code>+S</code>(反之亦然), 则 <code>+V</code> 优先.</p>
 </div>
 
 <div class="methodShort" id="Start"><h2>Start</h2>
-<p>Starts collecting input.</p>
+<p>启动收集输入.</p>
 <pre class="Syntax">InputHook.<span class="func">Start</span>()</pre>
-<p>Has no effect if the Input is already in progress.</p>
-<p>The newly started Input is placed on the top of the <a href="#stack">InputHook stack</a>, which allows it to override any previously started Input.</p>
-<p>This method installs the <a href="_InstallKeybdHook.htm">keyboard hook</a> (if it was not already).</p>
+<p>如果 Input 已经在进行中, 则没有效果.</p>
+<p>新启动的 Input 放在 <a href="#stack">InputHook 堆栈</a>的顶部, 这允许它覆盖任何先前启动的 Input.</p>
+<p>此方法安装<a href="_InstallKeybdHook.htm">键盘钩子</a>(如果还没有安装).</p>
 </div>
 
 <div class="methodShort" id="Wait"><h2>Wait</h2>
-<p>Waits until the Input is terminated (<a href="#InProgress">InProgress</a> is false).</p>
+<p>等待, 直到 Input 终止(<a href="#InProgress">InProgress</a> 为 false).</p>
 <pre class="Syntax">InputHook.<span class="func">Wait</span>(<span class="optional">MaxTime</span>)</pre>
 <dl>
   <dt>MaxTime</dt>
-  <dd><p>The maximum number of seconds to wait. If Input is still in progress after <em>MaxTime</em> seconds, the method returns and does not terminate Input.</p></dd>
+  <dd><p>等待的最大秒数. 如果 Input 在 <em>MaxTime</em> 秒后仍在进行中, 则该方法返回且不终止 Input.</p></dd>
 </dl>
-<p><strong>Returns</strong> <a href="#EndReason">EndReason</a>.</p>
+<p><strong>返回</strong> <a href="#EndReason">EndReason</a>.</p>
 </div>
 
 <div class="methodShort" id="Stop"><h2>Stop</h2>
-<p>Terminates the Input and sets <a href="#EndReason">EndReason</a> to the word Stopped.</p>
+<p>终止 Input 并将 <a href="#EndReason">EndReason</a> 设置为单词 Stopped.</p>
 <pre class="Syntax">InputHook.<span class="func">Stop</span>()</pre>
-<p>Has no effect if the Input is not in progress.</p>
+<p>如果 Input 不在进行中, 则没有效果.</p>
 </div>
 
 <div class="methodShort" id="EndKey"><h2>EndKey</h2>
-<p>Returns the name of the <a href="#EndKeys">end key</a> which was pressed to terminate the Input.</p>
+<p>返回<a href="#EndKeys">结束键</a>的名称, 按下结束键以终止 Input.</p>
 <pre class="Syntax">KeyName := InputHook.EndKey</pre>
-<p>Note that EndKey returns the "normalized" name of the key regardless of how it was written in <em>EndKeys</em>. For example, <code>{Esc}</code> and <code>{vk1B}</code> both produce <code>Escape</code>. <a href="GetKeyName.htm">GetKeyName</a> can be used to retrieve the normalized name.</p>
-<p>If the <a href="#E">E option</a> was used, EndKey returns the actual character which was typed (if applicable). Otherwise, the key name is determined according to the script's active keyboard layout.</p>
-<p>EndKey returns an empty string if <a href="#EndReason">EndReason</a> is not "EndKey".</p>
+<p>注意, EndKey 返回按键的 "标准" 名称, 而不管它在 <em>EndKeys</em> 中是如何编写的. 例如, <code>{Esc}</code> 和 <code>{vk1B}</code> 都产生 <code>Escape</code>. <a href="GetKey.htm">GetKeyName</a> 可用于检索标准名称.</p>
+<p>如果使用 <a href="#E">E 选项</a>, EndKey 返回输入的实际字符(如果合适). 否则, 键名将根据脚本的活动键盘布局来确定.</p>
+<p>如果 <a href="#EndReason">EndReason</a> 不是 "EndKey", EndKey 返回一个空字符串.</p>
 </div>
 
 <div class="methodShort" id="EndMods"><h2>EndMods</h2>
-<p>Returns a string of the modifiers which were logically down when Input was terminated.</p>
+<p>返回在 Input 终止时逻辑上按下的修饰符的字符串.</p>
 <pre class="Syntax">Mods := InputHook.EndMods</pre>
-<p>If all modifiers were logically down (pressed), the full string is:</p>
+<p>如果所有修饰符在逻辑上都是按下的, 则完整的字符串为:</p>
 <pre>&lt;^&gt;^&lt;!&gt;!&lt;+&gt;+&lt;#&gt;#</pre>
-<p>These modifiers have the same meaning as with <a href="../Hotkeys.htm">hotkeys</a>. Each modifier is always qualified with &lt; (left) or &gt; (right). The corresponding key names are: LCtrl, RCtrl, LAlt, RAlt, LShift, RShift, LWin, RWin.</p>
-<p><a href="InStr.htm">InStr</a> can be used to check whether a given modifier (such as <code>&gt;!</code> or <code>^</code>) is present. The following line can be used to convert <em>Mods</em> to a string of neutral modifiers, such as <code>^!+#</code>:</p>
+<p>这些修饰符与<a href="../Hotkeys.htm">热键</a>的具有相同的含义. 每个修饰符总是用 &lt;(左) 或 &gt;(右) 限定. 对应的键名是: LCtrl, RCtrl, LAlt, RAlt, LShift, RShift, LWin, RWin.</p>
+<p><a href="InStr.htm">InStr</a> 可以用来检查给定的修饰符(如 <code>&gt;!</code> 或 <code>^</code>) 是否存在的. 下面的行可以用来将 <em>Mods</em> 转换成中性修饰符的字符串, 如 <code>^!+#</code>:</p>
 <pre>Mods := RegExReplace(Mods, "[&lt;&gt;](.)(?:&gt;\1)?", "$1")</pre>
-<p>Due to split-second timing, this property may be more reliable than <a href="GetKeyState.htm">GetKeyState</a> even if it is used immediately after Input terminates, or in the <a href="#OnEnd">OnEnd</a> callback.</p>
+<p>由于这是瞬间发生的, 此属性可能比 <a href="GetKeyState.htm">GetKeyState</a> 更可靠, 即使在 Input 终止后立即调用 GetKeyState, 或者在 <a href="#OnEnd">OnEnd</a> 回调中.</p>
 </div>
 
 <div class="methodShort" id="EndReason"><h2>EndReason</h2>
-<p>Returns an <a href="#EndReasons">EndReason string</a> indicating how Input was terminated.</p>
+<p>返回 <a href="#EndReasons">EndReason 字符串</a>, 该字符串表明了 Input 是如何终止的.</p>
 <pre class="Syntax">Reason := InputHook.EndReason</pre>
-<p>Returns an empty string if the Input is still in progress.</p>
+<p>如果 Input 正在进行, 则返回空字符串.</p>
 </div>
 
 <div class="methodShort" id="InProgress"><h2>InProgress</h2>
-<p>Returns true if the Input is in progress and false otherwise.</p>
+<p>如果输入正在进行, 返回 true, 否则返回 false.</p>
 <pre class="Syntax">Boolean := InputHook.InProgress</pre>
 </div>
 
 <div class="methodShort" id="Input"><h2>Input</h2>
-<p>Returns any text collected since the last time Input was started.</p>
+<p>返回自上次 Input 启动以来收集的任何文本.</p>
 <pre class="Syntax">String := InputHook.Input</pre>
-<p>This property can be used while the Input is in progress, or after it has ended.</p>
+<p>此属性可在输入进行中或输入结束后使用.</p>
 </div>
 
 <div class="methodShort" id="Match"><h2>Match</h2>
-<p>Returns the <em><a href="#MatchList">MatchList</a></em> item which caused the Input to terminate.</p>
+<p>返回导致 Input 终止的 <em><a href="#MatchList">MatchList</a></em> 项目.</p>
 <pre class="Syntax">String := InputHook.Match</pre>
-<p><strong>Returns</strong> the matched item with its original case, which may differ from what the user typed if the <strong>C</strong> option was omitted. Returns an empty string if <a href="#EndReason">EndReason</a> is not "Match".</p>
+<p><strong>返回</strong>匹配项及其原始大小写, 如果省略了 <strong>C</strong> 选项, 则返回的大小写可能与用户键入的大小写不同. 如果 <a href="#EndReason">EndReason</a> 不是 "Match", 则返回空字符串.</p>
 </div>
 
 <div class="methodShort" id="OnEnd"><h2>OnEnd</h2>
-<p>Retrieves or sets the <a href="../objects/Functor.htm">function object</a> which is called when Input is terminated.</p>
+<p>检索或设置在 Input 终止时调用的<a href="../objects/Functor.htm">函数对象</a>.</p>
 <pre class="Syntax">MyFunc := InputHook.OnEnd</pre>
 <pre class="Syntax">InputHook.OnEnd := MyFunc</pre>
-<p>类型: <a href="../objects/Functor.htm">函数对象</a> or <a href="../Concepts.htm#nothing">empty string</a>. Default: empty string.</p>
-<p>The function is passed one parameter: a reference to the InputHook object.</p>
-<p>The function is called as a new <a href="../misc/Threads.htm">thread</a>, so starts off fresh with the default values for settings such as <a href="SendMode.htm">SendMode</a> and <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>.</p>
+<p>类型: <a href="../objects/Functor.htm">函数对象</a>或<a href="../Concepts.htm#nothing">空字符串</a>. 默认值: 空字符串.</p>
+<p>该函数传递一个参数: 对 InputHook 对象的引用.</p>
+<p>该函数作为一个新<a href="../misc/Threads.htm">线程</a>被调用, 因此使用 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 等设置的默认值重新开始.</p>
 </div>
 
 <div class="methodShort" id="OnChar"><h2>OnChar</h2>
-<p>Retrieves or sets the <a href="../objects/Functor.htm">function object</a> which is called after a character is added to the input buffer.</p>
+<p>检索或设置将字符添加到输入缓冲后调用的<a href="../objects/Functor.htm">函数对象</a>.</p>
 <pre class="Syntax">MyFunc := InputHook.OnChar</pre>
 <pre class="Syntax">InputHook.OnChar := MyFunc</pre>
-<p>类型: <a href="../objects/Functor.htm">函数对象</a> or <a href="../Concepts.htm#nothing">empty string</a>. Default: empty string.</p>
-<p>The function is passed the following parameters: <code>InputHook, Char</code>. <em>Char</em> is a string containing the character or characters.</p>
-<p>The presence of multiple characters indicates that a dead key was used prior to the last keypress, but the two keys could not be transliterated to a single character. For example, on some keyboard layouts <kbd>`</kbd><kbd>e</kbd> produces <code>è</code> while <kbd>`</kbd><kbd>z</kbd> produces <code>`z</code>.</p>
-<p>The function is never called when an end key is pressed.</p>
+<p>类型: <a href="../objects/Functor.htm">函数对象</a>或<a href="../Concepts.htm#nothing">空字符串</a>. 默认值: 空字符串.</p>
+<p>函数被传递以下参数: <code>InputHook, Char</code>. <em>Char</em> 是包含一个或多个字符的字符串.</p>
+<p>多个字符的存在表明在先前最后的键击中使用了一个死键, 但是这两个键不能转换为单个字符. 例如, 在一些键盘布局中 <kbd>`</kbd><kbd>e</kbd> 产生 <code>è</code>, 而 <kbd>`</kbd><kbd>z</kbd> 产生 <code>`z</code>.</p>
+<p>当按下结束键时, 该函数不会被调用.</p>
 </div>
 
 <div class="methodShort" id="OnKeyDown"><h2>OnKeyDown</h2>
-<p>Retrieves or sets the <a href="../objects/Functor.htm">function object</a> which is called when a notification-enabled key is pressed.</p>
+<p>检索或设置当按下启用通知的按键时调用的<a href="../objects/Functor.htm">函数对象</a>.</p>
 <pre class="Syntax">MyFunc := InputHook.OnKeyDown</pre>
 <pre class="Syntax">InputHook.OnKeyDown := MyFunc</pre>
-<p>类型: <a href="../objects/Functor.htm">函数对象</a> or <a href="../Concepts.htm#nothing">empty string</a>. Default: empty string.</p>
-<p>Key-down notifications must first be enabled by <a href="#KeyOpt">KeyOpt</a> or <a href="#NotifyNonText">NotifyNonText</a>.</p>
-<p>The function is passed the following parameters: <code>InputHook, VK, SC</code>. <em>VK</em> and <em>SC</em> are integers. To retrieve the key name (if any), use <code>GetKeyName(Format("vk{:x}sc{:x}", VK, SC))</code>.</p>
-<p>The function is called as a new <a href="../misc/Threads.htm">thread</a>, so starts off fresh with the default values for settings such as <a href="SendMode.htm">SendMode</a> and <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>.</p>
-<p>The function is never called when an end key is pressed.</p>
+<p>类型: <a href="../objects/Functor.htm">函数对象</a>或<a href="../Concepts.htm#nothing">空字符串</a>. 默认值: 空字符串.</p>
+<p>键-按下通知必须首先由 <a href="#KeyOpt">KeyOpt</a> 或 <a href="#NotifyNonText">NotifyNonText</a> 启用.</p>
+<p>函数被传递如下参数: <code>InputHook, VK, SC</code>. <em>VK</em> 和 <em>SC</em> 都是整数. 要检索按键名称(如果有), 请使用 <code>GetKeyName(Format("vk{:x}sc{:x}", VK, SC))</code>.</p>
+<p>该函数作为一个新<a href="../misc/Threads.htm">线程</a>被调用, 因此使用设置(如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>) 的默认值重新开始.</p>
+<p>当按下结束键时, 该函数不会被调用.</p>
 </div>
 
 <div class="methodShort" id="BackspaceIsUndo"><h2>BackspaceIsUndo</h2>
-<p>Controls whether <kbd>Backspace</kbd> removes the most recently pressed character from the end of the Input buffer.</p>
+<p>控制 <kbd>Backspace</kbd> 是否从 Input 缓冲的末尾删除最近按下的字符.</p>
 <pre class="Syntax">Boolean := InputHook.BackspaceIsUndo</pre>
 <pre class="Syntax">InputHook.BackspaceIsUndo := Boolean</pre>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. Default: true. Option <strong>B</strong> sets the value to false.</p>
-<p>When <kbd>Backspace</kbd> acts as undo, it is treated as a text entry key. Specifically, whether the key is suppressed depends on <a href="#VisibleText">VisibleText</a> rather than <a href="#VisibleNonText">VisibleNonText</a>.</p>
-<p><kbd>Backspace</kbd> is always ignored if pressed in combination with a modifier key such as <kbd>Ctrl</kbd> (the logical modifier state is checked rather than the physical state).</p>
-<p class="warning"><strong>Note:</strong> If the input text is visible (such as in an editor) and the arrow keys or other means are used to navigate within it, <kbd>Backspace</kbd> will still remove the last character rather than the one behind the caret (insertion point).</p>
+<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. 默认值: true. 选项 <strong>B</strong> 设置该值为 false.</p>
+<p>当 <kbd>Backspace</kbd> 用作 undo 时, 它被视为文本输入键. 具体来说, 是否抑制该键取决于 <a href="#VisibleText">VisibleText</a> 而不是 <a href="#VisibleNonText">VisibleNonText</a>.</p>
+<p><kbd>Backspace</kbd> 与修饰符键(如 <kbd>Ctrl</kbd>) 结合使用, 则始终忽略 <kbd>Backspace</kbd>(检查的是修饰符的逻辑状态, 而不是物理状态).</p>
+<p class="warning"><strong>注意:</strong> 如果输入文本是可见的(如在编辑器中) 并且使用箭头键或其他方法在其中导航, <kbd>Backspace</kbd> 仍然会删除最后一个字符, 而不是插入符号(插入点) 后面的字符.</p>
 </div>
 
 <div class="methodShort" id="CaseSensitive"><h2>CaseSensitive</h2>
-<p>Controls whether <em>MatchList</em> is case sensitive.</p>
+<p>控制 <em>MatchList</em> 是否区分大小写.</p>
 <pre class="Syntax">Boolean := InputHook.CaseSensitive</pre>
 <pre class="Syntax">InputHook.CaseSensitive := Boolean</pre>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. Default: false. Option <strong>C</strong> sets the value to true.</p>
+<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. 默认值: false. 选项 <strong>C</strong> 会设置该值为 true.</p>
 </div>
 
 <div class="methodShort" id="FindAnywhere"><h2>FindAnywhere</h2>
-<p>Controls whether each match can be a substring of the input text.</p>
+<p>控制每个匹配项是否可以是输入文本的子字符串.</p>
 <pre class="Syntax">Boolean := InputHook.FindAnywhere</pre>
 <pre class="Syntax">InputHook.FindAnywhere := Boolean</pre>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. Default: false. Option <strong>*</strong> sets the value to true.</p>
-<p>If true, a match can be found anywhere within what the user types (the match can be a substring of the input text). If false, the entirety of what the user types must match one of the <em>MatchList</em> phrases. In both cases, one of the <em>MatchList</em> phrases must be typed in full.</p>
+<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. 默认值: false. 选项 <strong>*</strong> 设置该值为 true.</p>
+<p>如果为真(true), 则可以在用户键入的任何位置找到匹配(匹配可以是输入文本的子字符串). 如果为假(false), 则用户键入的所有内容必须与 <em>MatchList</em> 中的一个短语匹配. 在这两种情况下, 都必须完整输入 <em>MatchList</em> 中的一个短语.</p>
 </div>
 
 <div class="methodShort" id="MinSendLevel"><h2>MinSendLevel</h2>
-<p>Retrieves or sets the minimum <a href="SendLevel.htm">send level</a> of input to collect.</p>
+<p>检索或设置要收集输入的最小<a href="SendLevel.htm">发送级别</a>.</p>
 <pre class="Syntax">Level := InputHook.MinSendLevel</pre>
 <pre class="Syntax">InputHook.MinSendLevel := Level</pre>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a>. Default: 0. Option <strong>I</strong> sets the value to 1 (or a given value).</p>
-<p><em>Level</em> should be an integer between 0 and 101. Events which have a send level <em>lower</em> than this value are ignored. For example, a value of 101 causes all input generated by <a href="Send.htm">SendEvent</a> to be ignored, while a value of 1 only ignores input at the default send level (zero).</p>
-<p>The <a href="Send.htm#SendInput">SendInput</a> and <a href="Send.htm#SendPlay">SendPlay</a> methods are always ignored, regardless of this setting. Input generated by any source other than AutoHotkey is never ignored as a result of this setting.</p>
+<p>Type: <a href="../Concepts.htm#numbers">Integer</a>. 默认值: 0. 选项 <strong>I</strong> 设置该值为 1(或给定值).</p>
+<p><em>Level</em> 应该是 0 到 101 之间的整数. 发送级别 <em>低于</em> 此值的事件将被忽略. 例如, 值 101 会忽略 <a href="Send.htm">SendEvent</a> 生成的所有输入, 而值 1 只会忽略默认发送级别(0) 的输入.</p>
+<p>无论这个设置如何, <a href="Send.htm#SendInput">SendInput</a> 和 <a href="Send.htm#SendPlay">SendPlay</a> 方法总是被忽略. 除了 AutoHotkey 以外的任何其他源生成的输入都不会因为这个设置而被忽略.</p>
 </div>
 
 <div class="methodShort" id="NotifyNonText"><h2>NotifyNonText</h2>
-<p>Controls whether the <a href="#OnKeyDown">OnKeyDown</a> callback is called whenever a non-text key is pressed.</p>
+<p>控制当按下非文本键时是否调用 <a href="#OnKeyDown">OnKeyDown</a> 回调.</p>
 <pre class="Syntax">Boolean := InputHook.NotifyNonText</pre>
 <pre class="Syntax">InputHook.NotifyNonText := Boolean</pre>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. Default: false.</p>
-<p>Setting this to true enables notifications for all keypresses which do not produce text, such as when pressing <kbd>Left</kbd> or <kbd>Alt</kbd>+<kbd>F</kbd>. Setting this property does not affect a key's <a href="#KeyOpt">options</a>, since the production of text depends on the active window's keyboard layout at the time the key is pressed. </p>
-<p>See <a href="#VisibleText">VisibleText</a> for details about which keys are counted as producing text.</p>
+<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. 默认值: false.</p>
+<p>将此设置为 true 可启用所有不产生文本的按键的通知, 如按下 <kbd>Left</kbd> 或 <kbd>Alt</kbd>+<kbd>F</kbd>. 设置此属性不会影响按键的 <a href="#KeyOpt">options</a>, 因为文本的生成取决于按下按键时活动窗口的键盘布局. </p>
+<p>有关计为生成文本的键详细信息, 请参阅 <a href="#VisibleText">VisibleText</a>.</p>
 </div>
 
 <div class="methodShort" id="Timeout"><h2>Timeout</h2>
-<p>Retrieves or sets the timeout value in seconds.</p>
+<p>检索或设置超时值(以秒为单位).</p>
 <pre class="Syntax">Seconds := InputHook.Timeout</pre>
 <pre class="Syntax">InputHook.Timeout := Seconds</pre>
-<p>Type: <a href="../Concepts.htm#numbers">Float</a>. Default: 0.0 (none). Option <strong>T</strong> also sets the timeout value.</p>
-<p>The timeout period ordinarily starts when <a href="#Start">Start</a> is called, but will restart if this property is assigned a value while Input is in progress. If Input is still in progress when the timeout period elapses, it is terminated and <a href="#EndReason">EndReason</a> is set to the word Timeout.</p>
+<p>类型: <a href="../Concepts.htm#numbers">Float</a>. 默认值: 0.0(无). 选项 <strong>T</strong> 也能设置超时值.</p>
+<p>超时周期通常在调用 <a href="#Start">Start</a> 时启动, 但如果在 Input 进行中为该属性赋值, 则会重新启动. 如果在超时时间过去后 Input 仍在进行中, 则终止输入并将 <a href="#EndReason">EndReason</a> 设置为单词 Timeout.</p>
 </div>
 
 <div class="methodShort" id="VisibleNonText"><h2>VisibleNonText</h2>
-<p>Controls whether keys or key combinations which do not produce text are visible (not blocked).</p>
+<p>控制不产生文本的键或键组合是否可见(不阻止).</p>
 <pre class="Syntax">Boolean := InputHook.VisibleNonText</pre>
 <pre class="Syntax">InputHook.VisibleNonText := Boolean</pre>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. Default: true. Option <strong>V</strong> sets the value to true.</p>
-<p>If true, keys and key combinations which do not produce text may trigger hotkeys or be passed on to the active window. If false, they are blocked.</p>
-<p>See <a href="#VisibleText">VisibleText</a> for details about which keys are counted as producing text.</p>
+<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. 默认值: true. 选项 <strong>V</strong> 设置该值为 true.</p>
+<p>如果为真, 不产生文本的键和键组合可能触发热键或被传递到活动窗口. 如果为假, 则会阻止它们.</p>
+<p>有关计为生成文本的键详细信息, 请参阅 <a href="#VisibleText">VisibleText</a>.</p>
 </div>
 
 <div class="methodShort" id="VisibleText"><h2>VisibleText</h2>
-<p>Controls whether keys or key combinations which produce text are visible (not blocked).</p>
+<p>控制产生文本的键或键组合是否可见(不阻止).</p>
 <pre class="Syntax">Boolean := InputHook.VisibleText</pre>
 <pre class="Syntax">InputHook.VisibleText := Boolean</pre>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. Default: false. Option <strong>V</strong> sets the value to true.</p>
-<p>If true, keys and key combinations which produce text may trigger hotkeys or be passed on to the active window. If false, they are blocked.</p>
-<p>Any keystrokes which cause text to be appended to the Input buffer are counted as producing text, even if they do not normally do so in other applications. For instance, <kbd>Ctrl</kbd>+<kbd>A</kbd> produces text if the <a href="#option-m"><strong>M</strong> option</a> is used, and <kbd>Escape</kbd> produces the control character <code>Chr(27)</code>.</p>
-<p>Dead keys are counted as producing text, although they do not typically produce an immediate effect. Pressing a dead key might also cause the following key to produce text (if only the dead key's character).</p>
-<p><kbd>Backspace</kbd> is counted as producing text only when it <a href="#BackspaceIsUndo">acts as undo</a>.</p>
-<p>The <a href="../KeyList.htm#modifier">standard modifier keys</a> and CapsLock, NumLock and ScrollLock are always visible (not blocked).</p>
+<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. 默认值: false. 选项 <strong>V</strong> 设置该值为 true.</p>
+<p>如果为真(true), 产生文本的键和键组合可以触发热键或被传递到活动窗口. 如果为假(false), 则会阻止它们.</p>
+<p>导致文本被附加到输入缓冲的任何击键都被视为生成文本, 即使在其他应用程序中通常不会这样做. 例如, 如果使用 <a href="#option-m"><strong>M</strong> 选项</a>, <kbd>Ctrl</kbd>+<kbd>A</kbd> 生成文本, 而 <kbd>Escape</kbd> 生成控制字符 <code>Chr(27)</code>.</p>
+<p>尽管死键通常不会立即产生效果, 但它们被视为产生文本. 按下死键也可能导致后面的键生成文本(如果只有死键的字符).</p>
+<p><kbd>Backspace</kbd> 仅在<a href="#BackspaceIsUndo">作为撤销时</a>才被计为生成文本.</p>
+<p><a href="../KeyList.htm#modifier">标准的修饰符键</a>和 CapsLock, NumLock 和 ScrollLock 总是可见的(不被阻止).</p>
 </div>
 
 <h2 id="EndReasons">EndReason</h2>
-<p>The EndReason property returns one of the following strings:</p>
+<p>EndReason 属性返回以下字符串之一:</p>
 <table class="info">
   <tr>
     <td>Stopped</td>
-    <td>The Stop method was called or Start has not yet been called for the first time.</td>
+    <td>Stop 方法已被调用或 Start 尚未被调用.</td>
   </tr>
   <tr>
     <td>Max</td>
-    <td>The Input reached the maximum allowed length and it does not match any of the items in <em>MatchList</em>.</td>
+    <td>输入达到允许的最大长度, 且它不匹配 <em>MatchList</em> 中的任何项.</td>
   </tr>
   <tr>
     <td>Timeout</td>
-    <td>The Input timed out.</td>
+    <td>Input 超时.</td>
   </tr>
   <tr>
     <td>Match</td>
-    <td>The Input matches one of the items in <em>MatchList</em>. The <a href="#Match">Match</a> property contains the matched item.</td>
+    <td>Input(输入) 匹配 <em>MatchList</em> 中的一项. <a href="#Match">Match</a> 属性包含匹配的项.</td>
   </tr>
   <tr>
     <td>EndKey</td>
     <td>
-      <p>One of the <em>EndKeys</em> was pressed to terminate the Input. The <a href="#EndKey">EndKey</a> property contains the terminating key name or character without braces.</p>
+      <p><em>EndKeys</em> 中的一个被按下终止了输入. <a href="#EndKey">EndKey</a> 属性包含终止键的名称或字符, 不带大括号.</p>
     </td>
   </tr>
   <tr>
     <td></td>
-    <td>If the Input is in progress, EndReason is blank.</td>
+    <td>如果 Input(输入) 正在进行中, EndReason 为空.</td>
   </tr>
 </table>
 
-<h2 id="Remarks">Remarks</h2>
-<p>The <a href="#Start">Start</a> method must be called before input will be collected.</p>
-<p>InputHook is designed to allow different parts of the script to monitor input, with minimal conflicts. It can operate continuously, such as to watch for <a href="#ExSac">arbitrary words</a> or other patterns. It can also operate temporarily, such as to collect user input or temporarily override specific (or <a href="#ExKeyWaitAny">non-specific</a>) keys without interfering with hotkeys.</p>
-<p>Keyboard <a href="../Hotkeys.htm">hotkeys</a> are still in effect while an Input is in progress, but cannot be triggered by keys which the Input suppresses.</p>
-<p>Keys are either suppressed (blocked) or not depending on the following factors (in order):</p>
+<h2 id="Remarks">备注</h2>
+<p>必须先调用 <a href="#Start">Start</a> 方法, 然后才能收集输入.</p>
+<p>InputHook 设计为允许脚本的不同部分都能监视输入, 并且冲突最小. 它可以连续操作, 例如观察<a href="#ExSac">任意的单词</a>或其他模式. 它还可以临时运行, 例如收集用户输入或临时覆盖特定(或<a href="#ExKeyWaitAny">非-特定</a>) 按键而不干扰热键.</p>
+<p>当 Input 正在进行时, 键盘<a href="../Hotkeys.htm">热键</a>仍然有效, 但 Input 抑制的按键无法被触发.</p>
+<p>按键抑制(阻止) 与否取决于以下因素(按顺序):</p>
 <ul>
-  <li>If the <a href="#KeyOpt-v">V option</a> is in effect for this VK or SC, it is not suppressed.</li>
-  <li>If the <a href="#KeyOpt-s">S option</a> is in effect for this VK or SC, it is suppressed.</li>
-  <li>If the key is a <a href="../KeyList.htm#modifier">standard modifier key</a> or CapsLock, NumLock or ScrollLock, it is not suppressed.</li>
-  <li><a href="#VisibleText">VisibleText</a> or <a href="#VisibleNonText">VisibleNonText</a> is consulted, depending on whether the key produces text. If the property is false, the key is suppressed.   See <a href="#VisibleText">VisibleText</a> for details about which keys are counted as producing text.</li>
+  <li>如果 <a href="#KeyOpt-v">V 选项</a>对 VK 或 SC 有效, 则不会抑制.</li>
+  <li>如果 <a href="#KeyOpt-s">S 选项</a>对 VK 或 SC 有效, 则抑制.</li>
+  <li>如果按键是<a href="../KeyList.htm#modifier">标准修饰键</a>或 CapsLock, NumLock 或 ScrollLock, 则不会抑制.</li>
+  <li><a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 是否被考虑, 具体取决于按键是否生成文本. 如果该属性为 false, 则抑制按键. 有关将哪些按键计为生成文本的详细信息, 请参阅 <a href="#VisibleText">VisibleText</a>.</li>
 </ul>
-<p>The <a href="_InstallKeybdHook.htm">keyboard hook</a> is required while an Input is in progress, but will be uninstalled automatically if it is no longer needed when the Input is terminated. The presence of the keyboard hook causes the script to become temporarily <a href="_Persistent.htm">persistent</a>, meaning that <a href="ExitApp.htm">ExitApp</a> may be needed to terminate it.</p>
-<p>AutoHotkey does not support Input Method Editors (IME). The keyboard hook intercepts keyboard events and translates them to text by using <a href="https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-tounicodeex">ToUnicodeEx</a> or ToAsciiEx (except in the case of <a href="https://docs.microsoft.com/windows/desktop/inputdev/virtual-key-codes#vk_packet">VK_PACKET</a> events, which encapsulate a single character).</p>
-<p>If you use multiple languages or keyboard layouts, Input uses the keyboard layout of the active window rather than the script's (regardless of whether the Input is <a href="#vis">visible</a>).</p>
-<p>Although not as flexible, <a href="../Hotstrings.htm">hotstrings</a> are generally easier to use.</p>
+<p>输入正在进行时需要<a href="_InstallKeybdHook.htm">键盘钩子</a>, 但如果在输入终止时, 若不再需要键盘挂钩, 则会自动卸载. 键盘钩子的存在导致脚本暂时变为<a href="_Persistent.htm">持久的</a>, 这意味着可能需要 <a href="ExitApp.htm">ExitApp</a> 来终止它.</p>
+<p>AutoHotkey 不支持输入法编辑器(IME). 键盘钩子拦截键盘事件, 并通过使用 <a href="https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-tounicodeex">ToUnicodeEx</a> 或 ToAsciiEx 将它们转换为文本(<a href="https://docs.microsoft.com/windows/desktop/inputdev/virtual-key-codes#vk_packet">VK_PACKET</a> 事件除外, 它封装了单个字符).</p>
+<p>如果您使用多种语言或键盘布局, 则 Input 会使用活动窗口的键盘布局而不是脚本的(不论 Input 是否<a href="#vis">可见</a>).</p>
+<p>尽管不够灵活, 但<a href="../Hotstrings.htm">热字串</a>更容易使用.</p>
 
 <h2 id="comparison">InputHook vs. Input</h2>
-<p>InputHook and the <a href="Input.htm">Input</a> function are two different interfaces for the same underlying functionality. The following are mostly equivalent:</p>
+<p>InputHook 和 <a href="Input.htm">Input</a> 函数是用于相同底层功能的两个不同接口. 以下内容大致相同:</p>
 <pre>
 OutputVar := Input(Options, EndKeys, MatchList)
 </pre><pre>
@@ -350,24 +350,25 @@ if (ErrorLevel = "EndKey")
     ErrorLevel .= ":" ih.EndKey
 OutputVar := ih.Input
 </pre>
-<p>The Input function  terminates any previous Input which it started, whereas InputHook allows <a href="#stack">more than one Input</a> at a time.</p>
-<p><em>Options</em> is interpreted the same, but the default settings differ:</p>
+<p>Input 函数终止任何先前由它启动的 Input, 而 InputHook 允许同时<a href="#stack">多个 Input</a>.</p>
+<p><em>Options</em> 解释相同, 但默认设置不同:</p>
 <ul>
-  <li>The Input function limits the length of the input to 16383, while InputHook limits it to 1023. This can be overridden with the <a href="#option-l">L option</a>, and there is no absolute maximum.</li>
-  <li>The Input function blocks both text and non-text keystrokes by default, and blocks neither if the <a href="Input.htm#vis">V option</a> is present. By contrast, InputHook blocks only text keystrokes by default (<a href="#VisibleNonText">VisibleNonText</a> defaults to true), so most hotkeys can be used while an Input is in progress.</li>
+  <li>Input 函数将输入的长度限制为 16383, 而 InputHook 将其限制为 1023. 这可以使用 <a href="#option-l">L 选项</a>来改写, 并且没有绝对最大值.</li>
+  <li>默认情况下, Input 函数会阻止文本和非文本击键, 如果使用 <a href="Input.htm#vis">V 选项</a>, 则不会阻止. 相比之下, InputHook 默认只阻止文本击键(<a href="#VisibleNonText">VisibleNonText</a> 默认为 true), 因此大多数热键可以在输入正在进行时使用.</li>
 </ul>
-<p>The Input function blocks the <a href="../misc/Threads.htm">thread</a> while it is in progress, whereas InputHook allows the thread to continue, or even exit (which allows any thread that it interrupted to resume). Instead of waiting, the script can register an <a href="#OnEnd">OnEnd</a> function to be called when the Input is terminated.</p>
-<p>The Input function returns the user's input only after the Input is terminated, whereas InputHook's <a href="Input.htm">Input</a> property allows it to be retrieved at any time. The script can register an <a href="#OnChar">OnChar</a> function to be called whenever a character is added, instead of continuously checking the Input property.</p>
-<p>InputHook gives much more control over individual keys via the <a href="#KeyOpt">KeyOpt</a> method. This includes adding or removing end keys, suppressing or not suppressing specific keys, or ignoring the text produced by specific keys.</p>
-<p>Unlike the Input function, InputHook can be used to detect keys which do not produce text, <em>without</em> terminating the Input. This is done by registering an <a href="#OnKeyDown">OnKeyDown</a> function and using <a href="#KeyOpt">KeyOpt</a> or <a href="#NotifyNonText">NotifyNonText</a> to specify which keys are of interest.</p>
-<p>If a <em>MatchList</em> item caused the Input to terminate, the <a href="#Match">Match</a> property can be consulted to determine exactly which match (this is more useful when the <a href="#asterisk">* option</a> is present).</p>
-<p>Although the script can consult <a href="GetKeyState.htm">GetKeyState</a> after the Input command returns, sometimes it does not accurately reflect which keys were pressed when the Input was terminated. InputHook's <a href="#EndMods">EndMods</a> property reflects the logical state of the modifier keys at the time Input was terminated.</p>
-<p>There are some differences relating to backward-compatibility:</p>
+<p>Input 函数在进行时会阻塞<a href="../misc/Threads.htm">线程</a>, 而 InputHook 允许线程继续, 甚至退出(这允许中断的任何线程继续运行). 脚本可以注册一个 <a href="#OnEnd">OnEnd</a> 函数, 当输入终止时调用该函数, 而不是等待.</p>
+<p>Input 函数只在输入终止后返回用户的输入, 
+而 InputHook 的 <a href="Input.htm">Input</a> 属性允许在任何时候检索它. 脚本可以注册一个 <a href="#OnChar">OnChar</a> 函数, 以便在字符增加时调用, 而不是不断地检查 Input 属性.</p>
+<p>InputHook 通过 <a href="#KeyOpt">KeyOpt</a> 方法对单个按键提供了更多控制.  这包括添加或删除结束键, 抑制或不抑制特定键, 或忽略特定键生成的文本.</p>
+<p>与 Input 函数不同, InputHook 可用于检测不产生文本的键, 而 <em>不</em> 终止输入. 这是通过注册 <a href="#OnKeyDown">OnKeyDown</a> 函数和使用 <a href="#KeyOpt">KeyOpt</a> 或 <a href="#NotifyNonText">NotifyNonText</a> 来指定相关键来完成的.</p>
+<p>如果 <em>MatchList</em> 中的项目导致 Input 终止, 可以参考 <a href="#Match">Match</a> 属性来确定到底是哪个匹配(当 <a href="#asterisk">* 选项</a>存在时这更有用).</p>
+<p>尽管脚本可以在 Input 函数返回后查询 <a href="GetKeyState.htm">GetKeyState</a>, 但有时它无法准确反映输入终止时按下了哪些键. InputHook 的 <a href="#EndMods">EndMods</a> 属性反映了 Input 终止时修饰键的逻辑状态.</p>
+<p>在向后兼容性方面有一些不同之处:</p>
 <ul>
-  <li>The Input function stores end keys <kbd>A</kbd>-<kbd>Z</kbd> in uppercase even though other letters on some keyboard layouts are lowercase. Passing the value to <a href="Send.htm">Send</a> would produce a shifted keystroke instead of a plain one. By contrast, InputHook's <a href="#EndKeys">EndKeys</a> property always returns the normalized name; i.e. whichever character is produced by pressing the key without holding <kbd>Shift</kbd> or other modifiers.</li>
-  <li><p>If a key name used in <em>EndKeys</em> corresponds to a VK which is shared between two physical keys (such as <kbd>NumpadUp</kbd> and <kbd>Up</kbd>), the Input function handles the primary key by VK and the secondary key by SC, whereas InputHook handles both by SC. <code>{vkNN}</code> notation can be used to handle the key by VK.</p>
-  <p>When the end key is handled by VK, both physical keys can terminate the Input. For example, <code>{NumpadUp}</code> would cause the Input function to be terminated by pressing <kbd>Up</kbd>, but ErrorLevel would contain <code>EndKey:NumpadUp</code> since only the VK is considered.</p>
-  <p>When an end key is handled by SC, the Input function always produces names for the known secondary SC of any given VK, and always produces <code>sc<i>NNN</i></code> for any other key (even if it has a name). By contrast, InputHook produces a name if the key has one.</p></li>
+  <li>Input 函数以大写存储结束键 <kbd>A</kbd>-<kbd>Z</kbd>, 即使某些键盘布局中的一些字母是小写的. 将值传递给 <a href="Send.htm">Send</a> 会产生 Shift 的击键, 而不是普通的击键. 相比之下, InputHook 的 <a href="#EndKeys">EndKeys</a> 属性始终返回规范化的名称; 即按下该键而不按住 <kbd>Shift</kbd> 或其他修饰键时产生的字符.</li>
+  <li><p>如果 <em>EndKeys</em> 中使用的键的名称对应于两个物理键共享 VK(如 <kbd>NumpadUp</kbd> 和 <kbd>Up</kbd>), 则 Input 函数通过 VK 处理主键通过 SC处理次要键, 而 InputHook 都通过 SC 来处理. <code>{vkNN}</code> 表示可以通过 VK 来处理按键.</p>
+  <p>当结束键由 VK 处理时, 两个物理键都可以终止输入. 例如, <code>{NumpadUp}</code> 将导致通过按下 <kbd>Up</kbd> 终止 Input 函数, 但是 ErrorLevel 将包含 <code>EndKey:NumpadUp</code>, 因为只考虑 VK.</p>
+  <p>当结束键由 SC 处理时, Input 函数将始终为任何给定 VK 的已知辅助 SC 生成名称, 并始终为任何其他键生成 <code>sc<i>NNN</i></code>. 与之相比, InputHook 产生按键名(如果有).</p></li>
 </ul>
 
 <h2>相关</h2>
@@ -375,42 +376,42 @@ OutputVar := ih.Input
 
 <h2>示例</h2>
 <div class="ex" id="ExKeyWaitAny">
-<p><a href="#ExKeyWaitAny">#1</a>: Wait for the user to press any single key.</p>
+<p><a href="#ExKeyWaitAny">#1</a>: 等待用户按下任意一个键.</p>
 <pre>
 MsgBox KeyWaitAny()
 
-<em>; Same again, but don't block the key.</em>
+<em>; 再来一遍, 但不阻止按键.</em>
 MsgBox KeyWaitAny("V")
 
 KeyWaitAny(Options:="")
 {
     ih := InputHook(Options)
-    ih.KeyOpt("{All}", "ES")  <em>; End and Suppress</em>
+    ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
     ih.Start()
-    ErrorLevel := ih.Wait()  <em>; Store EndReason in ErrorLevel</em>
-    return ih.EndKey  <em>; Return the key name</em>
+    ErrorLevel := ih.Wait()  <em>; 将 EndReason 存储在 ErrorLevel 中</em>
+    return ih.EndKey  <em>; 返回按键名称</em>
 }
 </pre>
 </div>
 <div class="ex" id="ExKeyWaitCombo">
-<p><a href="#ExKeyWaitCombo">#2</a>: Wait for any key in combination with Ctrl/Alt/Shift/Win.</p>
+<p><a href="#ExKeyWaitCombo">#2</a>: 等待任何与 Ctrl/Alt/Shift/Win 组合的按键.</p>
 <pre>
 MsgBox KeyWaitCombo()
 
 KeyWaitCombo(Options:="")
 {
     ih := InputHook(Options)
-    ih.KeyOpt("{All}", "ES")  <em>; End and Suppress</em>
+    ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
     <em>; Exclude the modifiers</em>
     ih.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-ES")
     ih.Start()
-    ErrorLevel := ih.Wait()  <em>; Store EndReason in ErrorLevel</em>
-    return ih.EndMods . ih.EndKey  <em>; Return a string like &lt;^&lt;+Esc</em>
+    ErrorLevel := ih.Wait()  <em>; 将 EndReason 存储在 ErrorLevel 中</em>
+    return ih.EndMods . ih.EndKey  <em>; 返回字符串, 例如 &lt;^&lt;+Esc</em>
 }
 </pre>
 </div>
 <div class="ex" id="ExSac">
-<p><a href="#ExSac">#3</a>: Simple auto-complete: any day of the week.  Pun aside, this is a fully functional example.  Simply run the script and start typing today, press <kbd>Tab</kbd> to complete or press <kbd>Escape</kbd> to exit.</p>
+<p><a href="#ExSac">#3</a>: 简单的自动完成: 一周中的任何一天. 除了字母双关外, 这是一个功能齐全的例子. 只需运行脚本并开始输入, 按 <kbd>Tab</kbd> 完成或按 <kbd>Escape</kbd> 退出.</p>
 <pre>global WordList := "Monday`nTuesday`nWednesday`nThursday`nFriday`nSaturday`nSunday"
 
 global Suffix := "", SacHook
@@ -421,7 +422,7 @@ SacHook.OnKeyDown := Func("SacKeyDown")
 SacHook.KeyOpt("{Backspace}", "N")
 SacHook.Start()
 
-SacChar(ih, char)  <em>; Called when a character is added to SacHook.Input.</em>
+SacChar(ih, char)  <em>; 当一个字符被添加到 SacHook.Input 时调用.</em>
 {
     Suffix := ""
     if RegExMatch(ih.Input, "`nm)\w+$", prefix)
@@ -431,15 +432,15 @@ SacChar(ih, char)  <em>; Called when a character is added to SacHook.Input.</em>
     CaretGetPos cx, cy
     ToolTip Suffix, cx + 15, cy
     
-    <em>; Intercept Tab only while we're showing a Tooltip.</em>
+    <em>; 只在显示工具提示时拦截 Tab 键.</em>
     ih.KeyOpt("{Tab}", Suffix = "" ? "-NS" : "+NS")
 }
 
 SacKeyDown(ih, vk, sc)
 {
-    if (vk = 8) <em>; Backspace</em>
+    if (vk = 8) <em>; 退格键</em>
         SacChar(ih, "")
-    else if (vk = 9) <em>; Tab</em>
+    else if (vk = 9) <em>; Tab 键</em>
         Send "{Text}" Suffix
 }
 </pre>

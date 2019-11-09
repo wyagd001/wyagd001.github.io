@@ -15,9 +15,9 @@
 
 <p>"函数对象" 通常表示以下任何一项:</p>
 <ul>
-  <li><a href="Func.htm">Func</a> 或 <a href="../Functions.htm#closures">Closure</a> 对象, which represents an actual <a href="../Functions.htm">function</a>; either built-in or defined by the script.</li>
-  <li>A user-defined object which can be called like a function.  This is sometimes also referred to as a "functor".</li>
-  <li>Any other object which can be called like a function, such as a <a href="#BoundFunc">BoundFunc object</a> or a JavaScript function object returned by a COM method.</li>
+  <li><a href="Func.htm">Func</a> 或 <a href="../Functions.htm#closures">Closure</a> 对象, 它表示一个实际的<a href="../Functions.htm">函数</a>; 可以是内置函数也可以是脚本定义的函数.</li>
+  <li>用户定义的对象, 可以像函数一样调用. 亦称为"函数子".</li>
+  <li>任何其他可以像函数一样调用的对象, 如<a href="#BoundFunc">绑定函数对象</a>或 COM 方法返回的 JavaScript 函数对象.</li>
 </ul>
 <p>函数对象可用于以下情况:</p>
 <ul>
@@ -41,7 +41,7 @@
     <em>;...</em>
 }
 </pre>
-<h3 id="User-Defined-Examples">Examples</h3>
+<h3 id="User-Defined-Examples">示例</h3>
 <p>The following example defines a function array which can be called; when called, it calls each element of the array in turn.</p>
 <pre>class FuncArrayType extends Array {
     Call(params*) {
@@ -71,31 +71,31 @@ Two(param1, param2) {
     MsgBox
 }</pre>
 
-<h2 id="BoundFunc">BoundFunc Object</h2>
-<p>Acts like a function, but just passes predefined parameters to another function.</p>
-<p>There are two ways that BoundFunc objects can be created:</p>
+<h2 id="BoundFunc">绑定函数对象</h2>
+<p>行为像函数, 但只是将预定义的参数传递给另一个函数.</p>
+<p>有两种建立绑定函数对象的方式:</p>
 <ul>
-  <li>By calling the <a href="Func.htm#Bind">Func.Bind</a> method, which binds parameter values to a function.</li>
-  <li>By calling the <a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> function, which binds parameter values and a method name to a target object.</li>
+  <li>通过调用 <a href="Func.htm#Bind">Func.Bind</a> 方法, 其绑定参数值至一个函数.</li>
+  <li>通过调用 <a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> 函数, 其绑定参数值和方法名至目标对象.</li>
 </ul>
-<p>BoundFunc objects can be called as shown in the example below. When the BoundFunc is called, it calls the function or method to which it is bound, passing a combination of bound parameters and the caller's parameters. Unbound parameter positions are assigned positions from the caller's parameter list, left to right. For example:</p>
+<p>可以调用绑定函数对象, 如下例所示. 当绑定函数对象被调用时, 它调用绑定的函数或方法, 传递绑定的参数和后面跟着的调用者传递的任何参数. 未绑定的参数位置是从调用者的参数列表中指定的位置(从左到右). 例如:</p>
 <pre>fn := Func("RealFn").Bind(1)  <em>; Bind first parameter only</em>
-%fn%(2)    <em>; Shows "1, 2"</em>
-fn.Call(3) <em>; Shows "1, 3"</em>
+%fn%(2)    <em>; 显示 "1, 2"</em>
+fn.Call(3) <em>; 显示 "1, 3"</em>
 
 fn := Func("RealFn").Bind( , 1)  <em>; Bind second parameter only</em>
-%fn%(2)    <em>; Shows "2, 1"</em>
-fn.Call(3) <em>; Shows "3, 1"</em>
+%fn%(2)    <em>; 显示 "2, 1"</em>
+fn.Call(3) <em>; 显示 "3, 1"</em>
 %fn%(, 4)  <em>; Error: 'a' was omitted</em>
 
 RealFn(a, b, c:="c") {
     MsgBox a ", " b
 }</pre>
-<p><a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> can be used to bind to a method even when it isn't possible to retrieve a reference to the method itself. For example:</p>
+<p><a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> can be used to bind to a method even when it isn't possible to retrieve a reference to the method itself. 例如:</p>
 <pre>file := FileOpen(A_ScriptFullPath, "r")
 getLine := ObjBindMethod(file, "ReadLine")
-MsgBox %getLine%()  <em>; Shows the first line of this file.</em></pre>
-<p>For a more complex example, 请参阅 <a href="../commands/SetTimer.htm#ExampleClass">SetTimer</a>.</p>
+MsgBox %getLine%()  <em>; 显示此文件的第一行.</em></pre>
+<p>更多复杂的例子, 请参阅 <a href="../commands/SetTimer.htm#ExampleClass">SetTimer</a>.</p>
 <p>Other properties and methods are inherited from <a href="Func.htm">Func</a>, but do not reflect the properties of the target function or method (which is not required to be implemented as a function). The BoundFunc acts as an anonymous variadic function with no other formal parameters, similar to the <a href="../Variables.htm#fat-arrow">fat arrow function</a> below:</p>
 <pre>Func_Bind(func, bound_args*) {
     return (args*) => (args.InsertAt(1, bound_args*), %func%(args*))
