@@ -12,9 +12,9 @@
 <body>
 
 <h1>NumPut</h1>
-<p>Stores a number in binary format at the specified address+offset.</p>
+<p>以二进制格式把数字存储到指定地址+偏移的位置.</p>
 <pre class="Syntax"><span class="func">NumPut</span> Type, Number, <span class="optional">Type2, Number2, ...</span> Target <span class="optional">, Offset := 0</span></pre>
-<p class="warning"><strong>Deprecated:</strong> The syntax below is being considered for removal in favour of the above syntax.</p>
+<p class="warning"><strong>不推荐:</strong> 正考虑删除下面的语法以支持上面的语法.</p>
 <pre class="Syntax"><span class="func">NumPut</span> Number, Target <span class="optional">, Offset := 0</span><span class="optional">, Type := "UPtr"</span></pre>
 
 <h2>参数</h2>
@@ -23,45 +23,45 @@
   <dt>Type</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>One of the following strings (defaults to UPtr if omitted):<br>
-    UInt, UInt64, Int, Int64, Short, UShort, Char, UChar, Double, Float, Ptr or UPtr</p>
-      <p>For all integer types, or when passing pure integers, signed vs. unsigned does not affect the result due to the use of two's complement to represent signed integers.</p>
-      <p>These type names must be enclosed in quotes when used as literal strings.</p>
-      <p>For details see <a href="DllCall.htm#types">DllCall Types</a>.</p>
+      <p>下列字符串的其中一个(省略时默认为 UPtr):<br>
+    UInt, UInt64, Int, Int64, Short, UShort, Char, UChar, Double, Float, Ptr 或 UPtr</p>
+      <p>对于所有整数类型, 或者在传递纯整数时, 有符号与无符号并不影响结果, 因为使用了二进制补码来表示有符号整数.</p>
+      <p>作为原义字符串使用时, 这些类型名必须用引号括起来.</p>
+      <p>有关详情, 请参阅 <a href="DllCall.htm#types">DllCall 类型</a>.</p>
     </dd>
 
   <dt>Number</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The number to store.</p>
+    <p>要保存的数字.</p>
   </dd>
 
   <dt>Target</dt>
   <dd>
     <p>类型: <a href="../objects/Buffer.htm">对象</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#variables">变量</a></p>
-		<p>A <a href="../objects/Buffer.htm">Buffer</a>-like object, memory address or variable reference.</p>
-    <p>Any object which implements <a href="../objects/Buffer.htm#Ptr">Ptr</a> and <a href="../objects/Buffer.htm#Size">Size</a> properties may be used, but this function is optimized for the native <a href="../objects/Buffer.htm">Buffer</a> object. Passing an object with these properties ensures that the function does not write to an invalid memory location; doing so could cause crashes or other unpredictable behaviour.</p>
-    <p class="warning"><strong>Deprecated:</strong> If <em>Target</em> is a variable such as <code>MyVar</code> and it contains a string (not a pure number), the address and size of the variable's string buffer is used. Passing a variable containing a string may be treated as an error in a future release. <a href="../objects/Buffer.htm">Buffer</a> objects should be used for structs and other binary data.</p>
-    <p>If the variable contains a pure number, that number is assumed to be an address.</p>
+		<p>类<a href="../objects/Buffer.htm">缓冲</a>对象, 内存地址或变量引用.</p>
+    <p>可以使用任何实现 <a href="../objects/Buffer.htm#Ptr">Ptr</a> 和 <a href="../objects/Buffer.htm#Size">Size</a> 属性的对象, 但此函数针对原生的<a href="../objects/Buffer.htm">缓冲</a>对象进行了优化. 传递具有这些属性的对象可确保函数不会将内存写入无效位置; 这样做可能会导致崩溃或其他不可预测的行为.</p>
+    <p class="warning"><strong>不推荐:</strong> 如果 <em>Target</em> 是一个变量, 例如 <code>MyVar</code>, 并且包含一个字符串(非纯数字), 则使用该字符串变量的缓冲的地址和大小. 在将来的版本中, 传递包含字符串的变量可能会被视为错误. 结构数据和其他二进制数据应使用<a href="../objects/Buffer.htm">缓冲</a>对象.</p>
+    <p>如果变量包含一个纯数字, 则假定该数字为地址.</p>
 	</dd>
 
   <dt>Offset</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>An offset - in bytes - which is added to <em>Target</em> to determine the target address.</p>
+    <p>偏移 - 以字节为单位 - 将其添加到 <em>Target</em> 以确定目标地址.</p>
   </dd>
 
 </dl>
 
 <h2>返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>This function returns the address to the right of the last item written. This is often used when writing a sequence of numbers of different types, such as in a structure for use with <a href="DllCall.htm">DllCall</a>. However, in some cases it may be simpler and more efficient to use the multiple-parameter mode as described below.</p>
+<p>函数 returns the address to the right of the last item written. This is often used when writing a sequence of numbers of different types, 例如在 <a href="DllCall.htm">DllCall</a> 中使用的结构. 但是, 在某些情况下, 使用如下所述的多参数模式可能更简单有效.</p>
 
-<h2>General 备注</h2>
+<h2>一般说明</h2>
 <p>A sequence of numbers can be written by repeating <em>Type</em> and <em>Number</em> any number of times after the first <em>Number</em>. Each number is written at the next byte after the previous number, with no padding. When creating a structure for use with <a href="DllCall.htm">DllCall</a>, be aware that some fields may need explicit padding added due to data alignment requirements.</p>
-<p>If an integer is too large to fit in the specified <em>Type</em>, its most significant bytes are ignored; e.g. <code>NumPut(257, buf, 0, &quot;Char&quot;)</code> would store the number 1.</p>
-<p>An exception may be thrown if the target address is invalid. However, some invalid addresses cannot be detected as such and may cause unpredictable behaviour. Passing a <a href="../objects/Buffer.htm">Buffer</a> object instead of an address ensures that the target address can always be validated.</p>
-<p class="warning"><strong>Deprecated:</strong> If only three parameters are present and <em>Number</em> is the first parameter, the third parameter can be either <em>Offset</em> or <em>Type</em>. For example, <code>NumPut(x, buf, "int")</code> is valid.</p>
+<p>如果整数太大而无法放入指定的 <em>Type</em>, 那么它的高位会被忽略; 例如 <code>NumPut(257, buf, 0, &quot;Char&quot;)</code> 将存储数字 1.</p>
+<p>如果目标地址无效, 则可能抛出异常. 但是, 一些无效地址不能被检测到, 并可能导致不可预知的行为. 传递<a href="../objects/Buffer.htm">缓冲</a>对象而不是地址可以确保目标地址总是可以得到验证.</p>
+<p class="warning"><strong>不推荐:</strong> 如果只使用了三个参数, 并且 <em>Number</em> 第一个参数, 则第三个参数可以是 <em>Offset</em>, 也可以是 <em>Type</em>. 例如, <code>NumPut(x, buf, "int")</code> 是有效的.</p>
 
 <h2>相关</h2>
 <p><a href="NumGet.htm">NumGet</a>, <a href="DllCall.htm">DllCall</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>

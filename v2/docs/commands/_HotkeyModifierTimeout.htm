@@ -13,7 +13,7 @@
 
 <h1>#HotkeyModifierTimeout</h1>
 
-<p>Affects the behavior of <a href="../Hotkeys.htm">hotkey</a> modifiers: <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, <kbd>Win</kbd>, and <kbd>Shift</kbd>.</p>
+<p>影响<a href="../Hotkeys.htm">热键</a>修饰符的行为: <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, <kbd>Win</kbd> 和 <kbd>Shift</kbd>.</p>
 
 <pre class="Syntax"><span class="func">#HotkeyModifierTimeout</span> Milliseconds</pre>
 <h2>参数</h2>
@@ -22,26 +22,26 @@
   <dt>Milliseconds</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The length of the interval in milliseconds. The value can be -1 so that it never times out (modifier keys are always pushed back down after the Send), or 0 so that it always times out (modifier keys are never pushed back down).</p>
+    <p>间隔长度, 以毫秒为单位. 此值设为 -1 时, 它永远不会超时(在 Send 后修饰键总是被推回到按下的状态), 设为 0 时, 总是超时(修饰键总是不会被推回到按下的状态).</p>
   </dd>
 
 </dl>
 <h2>备注</h2>
-<p>This directive  <strong>need not</strong> be used when:</p>
+<p>在下列情况中 <strong>不需要</strong> 使用此指令:</p>
 <ul>
-  <li>Hotkeys send their keystrokes via the <a href="Send.htm#SendInput">SendInput</a> or <a href="Send.htm#SendPlay">SendPlay</a> methods. This is because those methods postpone the user's physical pressing and releasing of keys until after the Send completes.</li>
-  <li>The script has the keyboard hook installed (you can see if your script uses the hook via the &quot;View-&gt;Key history&quot; menu item in the main window, or via the <a href="KeyHistory.htm">KeyHistory</a> function). This is because the hook can keep track of which modifier keys (<kbd>Alt</kbd>/<kbd>Ctrl</kbd>/<kbd>Win</kbd>/<kbd>Shift</kbd>) the user is physically holding down and doesn't need to use the timeout.</li>
+  <li>热键通过 <a href="Send.htm#SendInput">SendInput</a> 或 <a href="Send.htm#SendPlay">SendPlay</a> 方法发送键击. 这是因为这些方法将用户的物理按键操作和释放延迟到 Send 完成之后.</li>
+  <li>脚本安装了键盘钩子(您可以通过主窗口中的 "View-&gt;Key history" 菜单项或 <a href="KeyHistory.htm">KeyHistory</a> 函数判断您的脚本是否使用了钩子). 这是因为钩子可以跟踪用户实际按住的修饰键(<kbd>Alt</kbd>/<kbd>Ctrl</kbd>/<kbd>Win</kbd>/<kbd>Shift</kbd>), 不需要使用超时.</li>
 </ul>
-<p>To illustrate the effect of this directive, consider this example: <code>^!a::Send "abc"</code>.</p>
-<p>When the <a href="Send.htm">Send</a> function executes, the first thing it does is release <kbd>Ctrl</kbd> and <kbd>Alt</kbd> so that the characters get sent properly. After sending all the keys, the function doesn't know whether it can safely push back down <kbd>Ctrl</kbd> and <kbd>Alt</kbd> (to match whether the user is still holding them down). But if less than the specified number of milliseconds have elapsed, it will assume that the user hasn't had a chance to release the keys yet and it will thus push them back down to match their physical state. Otherwise, the modifier keys will not be pushed back down and the user will have to release and press them again to get them to modify the same or another key.</p>
-<p>The timeout should be set to a value less than the amount of time that the user typically holds down a hotkey's modifiers before releasing them. Otherwise, the modifiers may be restored to the down position (get stuck down) even when the user isn't physically holding them down.</p>
-<p>You can reduce or eliminate the need for this directive with one of the following:</p>
+<p>为了说明此指令的效果, 请参考这个例子: <code>^!a::Send "abc"</code>.</p>
+<p>执行 <a href="Send.htm">Send</a> 函数时, 它会首先释放 <kbd>Ctrl</kbd> 和 <kbd>Alt</kbd>, 以便正确发送字符. 在发送所有键击后, 此函数不知道它是否可以安全的推回 <kbd>Ctrl</kbd> 和 <kbd>Alt</kbd> 到按下状态(以匹配用户是否仍然按下它们). 但是, 如果经过的时间少于指定的毫秒数, 则将假定用户尚未有释放键的机会, 因此它将推回它们以使其符合其物理状态. 否则, 修饰键将不会被推回按下状态, 用户必须再次按下它们来修饰同一个或其他的按键.</p>
+<p>超时值应设置为小于用户通常在释放热键的修饰键之前按住它们的时间. 否则, 即使用户没有实际按下修饰键, 修饰键也可能恢复到向下位置(保持按下).</p>
+<p>在下列情况中您可以减少或不使用此指令:</p>
 <ul>
-  <li>Install the keyboard hook by adding the line <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> anywhere in the script.</li>
-  <li>Use the <a href="Send.htm#SendInput">SendInput</a> or <a href="Send.htm#SendPlay">SendPlay</a> methods rather than the traditional <a href="Send.htm#SendEvent">SendEvent</a> method.</li>
-  <li>When using the traditional <a href="Send.htm#SendEvent">SendEvent</a> method, reduce <a href="SetKeyDelay.htm">SetKeyDelay</a> to 0 or -1, which should help because it sends the keystrokes more quickly.</li>
+  <li>通过在脚本的任意位置添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 来安装键盘钩子.</li>
+  <li>使用 <a href="Send.htm#SendInput">SendInput</a> 或 <a href="Send.htm#SendPlay">SendPlay</a> 方法而不使用传统的 <a href="Send.htm#SendEvent">SendEvent</a> 方法.</li>
+  <li>使用传统的 <a href="Send.htm#SendEvent">SendEvent</a> 方法, 将 <a href="SetKeyDelay.htm">SetKeyDelay</a> 减少到 0 或 -1, 这应该会有所帮助, 因为它可以更快地发送击键.</li>
 </ul>
-<p>If this is directive is unspecified in a script, it behaves as though  set to 50.</p>
+<p>如果脚本中未使用此指令, 那么它会表现得就像此设置为 50.</p>
 <h2>相关</h2>
 <p><a href="GetKeyState.htm">GetKeyState</a></p>
 <h2>示例</h2>

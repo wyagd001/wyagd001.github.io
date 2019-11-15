@@ -77,11 +77,11 @@
  <h2>示例</h2>
 
  <div class="ex" id="ExTaskbar">
-<p><a href="#ExTaskbar">#1</a>: 从任务栏中删除活动窗口 3 秒钟. Compare this to the <a href="DllCall.htm#ExTaskbar">equivalent DllCall example</a>.</p>
+<p><a href="#ExTaskbar">#1</a>: 从任务栏中删除活动窗口 3 秒钟. 可以与<a href="DllCall.htm#ExTaskbar">等效的 DllCall 示例</a>进行比较.</p>
 <pre><em>/*
-  Methods in <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a>'s VTable:
+  <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a> 虚拟函数列表中的方法:
     IUnknown:
-      0 QueryInterface  -- use <a href="ComObjQuery.htm">ComObjQuery</a> instead
+      0 QueryInterface  -- 使用 <a href="ComObjQuery.htm">ComObjQuery</a> 代替
       1 AddRef          -- use <a href="ObjAddRef.htm">ObjAddRef</a> instead
       2 Release         -- use <a href="ObjAddRef.htm">ObjRelease</a> instead
     ITaskbarList:
@@ -94,10 +94,10 @@
 IID_ITaskbarList  := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
 CLSID_TaskbarList := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
- <em>; Create the TaskbarList object and store its address in tbl.</em>
+<em>; 创建 TaskbarList 对象并将其地址存储在 tbl 中.</em>
 tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskbarList)
 
- <em>; 由于上面指定了 IID, tbl 是指针(一个整数).
+<em>; 由于上面指定了 IID, tbl 是指针(一个整数).
 ; 指针可以包装起来以便自动释放
 ; 当脚本不再具有对包装对象的引用时.
 ; 如果删除以下行, 示例仍然有效:</em>
@@ -110,23 +110,23 @@ ComCall(5, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com
 Sleep 3000
 ComCall(4, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
 
-if IsObject(tbl)  <em>; Was ComObject(13, tbl) used?</em>
+if IsObject(tbl)  <em>; 是否是 ComObject(13, tbl)?</em>
 {
-    <em>; When finished with the object, simply replace any references with
-    ; some other value (or if its a local variable, just return):</em>
+    <em>; 完成对象后, 只需将所有引用替换为
+    ; 其他一些值(如果是局部变量, 就返回):</em>
     tbl := ""
 }
 else
 {
-    <em>; Since the pointer wasn't wrapped, it must be released manually
-    ; (although any memory used by the object or the corresponding
-    ; library would be reclaimed when the program exits, anyway).</em>
+    <em>; 因为指针没有被包装, 所以必须手动释放它
+    ; (虽然任何对象或相应的库使用的内存
+    ; 当程序退出时, 将被回收).</em>
     ObjRelease(tbl)
 }
 </pre>
 </div>
 
- <div class="ex" id="ExTaskbarClass">
+<div class="ex" id="ExTaskbarClass">
 <p><a href="#ExTaskbarClass">#2</a>: 演示一些包装 COM 接口的技术. 等同于上一个示例.</p>
 <pre>
 tbl := TaskbarList.new()
@@ -144,22 +144,22 @@ class TaskbarList {
    static IID := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
    static CLSID := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
-    <em>; Called on startup to initialize the class.</em>
+   <em>; 在启动时调用, 以初始化类.</em>
    static __new() {
-       <em>; Get the base object for all instances of TaskbarList.</em>
+       <em>; 获取 TaskbarList 的所有实例的基对象.</em>
        proto := this.Prototype
 
-        <em>; Bound functions can be used to predefine parameters, making
-       ; the methods more usable without requiring wrapper functions.
-       ; HrInit itself has no parameters, so bind only the index,
-       ; and the caller will implicitly provide 'this'.</em>
+       <em>; 绑定函数可用于预定义参数, 使
+       ; 这些方法在不需要包装器函数的情况下更容易使用.
+       ; HrInit 本身没有参数, 所以只绑定索引,
+       ; 而调用者将隐式地提供 'this'.</em>
        proto.DefineMethod "HrInit", Func("ComCall").Bind(3)
 
-        <em>; Leave a parameter blank to let the caller provide a value.
-       ; In this case, the blank parameter is 'this' (normally hidden).</em>
+       <em>; 将参数留空, 让调用者提供一个值.
+       ; 在本例中, 空白参数是 'this'(通常是隐藏的).</em>
        proto.DefineMethod "AddTab", Func("ComCall").Bind(4,, "ptr")
 
-        <em>; An object or Map can be used to reduce repetition.</em>
+       <em>; 可以使用对象或映射来减少重复.</em>
        for name, args in Map(
            "DeleteTab", [5,,"ptr"],
            "ActivateTab", [6,,"ptr"],
@@ -168,17 +168,17 @@ class TaskbarList {
        }
    }
 
-    <em>; Called by TaskbarList.new() on the new instance.</em>
+   <em>; 在新实例上由 TaskbarList.new() 调用.</em>
    __new() {
        this.ptr := ComObjCreate(TaskbarList.CLSID, TaskbarList.IID)
-       <em>; If ComObjError(0) was used, this.ptr could be zero.</em>
+       <em>; 如果使用 ComObjError(0), this.ptr 可以为 0.</em>
        if !this.ptr
            throw Exception("COM-related error")
-       <em>; Request initialization via ITaskbarList.</em>
+       <em>; 通过 ITaskbarList 请求初始化.</em>
        this.HrInit()
    }
 
-    <em>; Release the interface pointer when this object is deleted.</em>
+   <em>; 删除此对象时释放接口指针.</em>
    __delete() =&gt; this.ptr &amp;&amp; ObjRelease(this.ptr)
 }
 </pre>
