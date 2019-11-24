@@ -143,8 +143,8 @@ ExitApp</pre>
 </div>
 
 <div class="ex" id="shutdown">
-<p><a href="#shutdown">#2</a>: 下面的脚本检测系统的关机/注销动作并允许您终止它(据报告这在 Windows Vista 或更高版本上无法工作). 相关主题: <a href="OnExit.htm">OnExit</a></p>
-<pre><em>; 下面的 DllCall 是可选的:它告诉操作系统要<i>首先</i>关闭此脚本(在其他所有程序之前).</em>
+<p><a href="#shutdown">#2</a>: 下面的脚本检测系统的关机/注销动作并允许您中止它. 在 Windows Vista 及更高的版本中, 系统会显示一个用户界面, 显示哪个程序正在阻止关机/注销, 并允许用户强制关机/注销. 在较旧的操作系统上, 脚本显示一个确认提示. 相关主题: <a href="OnExit.htm">OnExit</a></p>
+<pre><em>; 下面的 DllCall 是可选的: 它告诉操作系统要首先关闭此脚本(在其他所有程序之前).</em>
 DllCall(&quot;kernel32.dll\SetProcessShutdownParameters&quot;, &quot;UInt&quot;, 0x4FF, &quot;UInt&quot;, 0)
 OnMessage(0x11, &quot;WM_QUERYENDSESSION&quot;)
 return
@@ -156,11 +156,37 @@ WM_QUERYENDSESSION(wParam, lParam)
         EventType := "Logoff"
     else  <em>; 系统正在关机或重启.</em>
         EventType := "Shutdown"
-    MsgBox, 4,, %EventType% in progress.  Allow it?
-    IfMsgBox Yes     <em>; 在 Windows Vista 或更高版本的系统中始终返回 true.</em>
-        return true  <em>; 告诉操作系统允许关机/注销操作继续.</em>
-    else
-        return false  <em>; 告诉操作系统终止关机/注销操作.</em>
+    try
+    {
+        <em>; 设置显示操作系统关闭 UI 的提示.  我们不会显示自己的确认提示,
+        ; 因为我们只有 5 秒钟的时间, 操作系统会显示关机 UI
+        ; 同样, 没有可见窗口的程序在没有提供原因的情况下无法阻止关机.</em>
+        BlockShutdown("Example script attempting to prevent " EventType ".")
+        return false
+    }
+    catch
+    {
+        <em>; ShutdownBlockReasonCreate 不可用,
+        ; 因此这可能是 Windows XP, 2003 或 2000, 我们可以在其中实际防止关机.</em>
+        MsgBox, 4,, %EventType% in progress.  Allow it?
+        IfMsgBox Yes
+            return true  <em>; 通知操作系统允许关机/注销操作继续.</em>
+        else
+            return false  <em>; 通知操作系统中止关机/注销操作.</em>
+    }
+}
+
+BlockShutdown(Reason)
+{
+    <em>; 如果您的脚本具有可见的 GUI, 请使用它代替 A_ScriptHwnd.</em>
+    DllCall("ShutdownBlockReasonCreate", "ptr", A_ScriptHwnd, "wstr", Reason)
+    OnExit("StopBlockingShutdown")
+}
+
+StopBlockingShutdown()
+{
+    OnExit(A_ThisFunc, 0)
+    DllCall("ShutdownBlockReasonDestroy", "ptr", A_ScriptHwnd)
 }</pre>
 </div>
 
@@ -227,7 +253,7 @@ Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; 在这种�
     Prev_TitleMatchMode := A_TitleMatchMode
     DetectHiddenWindows On
     SetTitleMatchMode 2
-    TimeOutTime := 4000  <em>; Optional. Milliseconds to wait for response from receiver.ahk. Default is 5000</em>
+    TimeOutTime := 4000  <em>; 可选的. 等待 receiver.ahk 响应的毫秒数. 默认是 5000</em>
     <em>; 必须使用发送 SendMessage 而不是投递 PostMessage.</em>
     SendMessage, 0x4a, 0, &amp;CopyDataStruct,, %TargetScriptTitle%  <em>; 0x4a 为 WM_COPYDAT</em>
     DetectHiddenWindows %Prev_DetectHiddenWindows%  <em>; 恢复调用者原来的设置.</em>

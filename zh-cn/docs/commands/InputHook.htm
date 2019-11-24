@@ -56,7 +56,6 @@ if (ih.Input = CtrlC)
     <p>两个连续的逗号产生单个原义逗号. 例如, 后面的匹配列表会在 string1 的末尾产生单个原义逗号: <code>string1,,,string2</code>. 类似的, 后面的匹配列表仅包含其中有一个原义逗号的单个项目: <code>single,,item</code>.</p>
     <p>因为 <em>MatchList</em> 中的项目不被视为单独的参数, 所以列表可以完全包含在一个变量中. 事实上, 如果此列表的长度超过 16383, 那么列表的全部或部分必须包含在变量中, 因为这个长度是任何脚本行的最大长度. 例如, <em>MatchList</em> 可能由 <code>%List1%,%List2%,%List3%</code> 组成 -- 其中每个变量都包含匹配词组的子列表.</p>
   </dd>
-
 </dl>
 
 <h2 id="stack">Input 堆栈</h2>
@@ -86,6 +85,7 @@ if (ih.Input = CtrlC)
   <li><a href="#OnEnd">OnEnd</a>: 检索或设置在 Input 终止时调用的<a href="../objects/Functor.htm">函数对象</a>.</li>
   <li><a href="#OnChar">OnChar</a>: 检索或设置<a href="../objects/Functor.htm">函数对象</a>, 该函数对象将在字符添加到输入缓冲后调用.</li>
   <li><a href="#OnKeyDown">OnKeyDown</a>: 检索或设置<a href="../objects/Functor.htm">函数对象</a>, 该函数对象将在按下启用通知的按键时调用.</li>
+  <li><a href="#OnKeyUp">OnKeyUp</a>: 检索或设置<a href="../objects/Functor.htm">函数对象</a>, 该函数对象将在启用通知按键释放时被调用.</li>
 </ul>
 <p>选项属性:</p>
 <ul>
@@ -93,7 +93,7 @@ if (ih.Input = CtrlC)
   <li><a href="#CaseSensitive">CaseSensitive</a>: 控制 <em>MatchList</em> 是否区分大小写.</li>
   <li><a href="#FindAnywhere">FindAnywhere</a>: 控制每个匹配项是否可以是输入文本的子字符串.</li>
   <li><a href="#MinSendLevel">MinSendLevel</a>: 检索或设置要收集的输入的最小<a href="SendLevel.htm">发送级别</a>.</li>
-  <li><a href="#NotifyNonText">NotifyNonText</a>: 控制当按下非文本键时是否调用 <a href="#OnKeyDown">OnKeyDown</a> 回调.</li>
+  <li><a href="#NotifyNonText">NotifyNonText</a>: 控制当按下非文本键时是否调用 <a href="#OnKeyDown">OnKeyDown</a> 和 <a href="#OnKeyUp">OnKeyUp</a> 回调.</li>
   <li><a href="#Timeout">Timeout</a>: 检索或设置超时值(以秒为单位).</li>
   <li><a href="#VisibleNonText">VisibleNonText</a>: 控制不产生文本的键或键组合是否可见(不阻塞).</li>
   <li><a href="#VisibleText">VisibleText</a>: 控制产生文本的键或键组合是否可见(不阻塞).</li>
@@ -112,7 +112,7 @@ if (ih.Input = CtrlC)
   <p id="KeyOpt-plus"><strong>+</strong>(加号): 取消任何先前的 <code>-</code>, 否则无效.</p>
   <p id="KeyOpt-e"><strong>E</strong>: 结束键. 如果启用, 则按下键终止 Input, 将 <a href="#EndReason">EndReason</a> 设置为单词 EndKey, 将 <a href="#EndKey">EndKey</a> 属性设置为键的标准名称. 与 <em>EndKeys</em> 参数不同, Shift 键的状态将被忽略. 例如, <code>@</code> 和 <code>2</code> 在美式键盘布局中都相当于 <code>{vk32}</code>.</p>
   <p id="KeyOpt-i"><strong>I</strong>: 忽略文本. 通常由该键生成的任何文本都将被忽略, 并且该键被视为非文本键(请参阅 <a href="#VisibleNonText">VisibleNonText</a>). 如果键通常不产生文本, 则没有效果.</p>
-  <p id="KeyOpt-n"><strong>N</strong>: 通知. 在每次按下键时调用 <a href="#OnKeyDown">OnKeyDown</a> 回调.</p>
+  <p id="KeyOpt-n"><strong>N</strong>: 通知. 在每次按下键时调用 <a href="#OnKeyDown">OnKeyDown</a> 和 <a href="#OnKeyUp">OnKeyUp</a> 回调.</p>
   <p id="KeyOpt-s"><strong>S</strong>: 处理后抑制(阻塞) 键. 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code>-S</code>. <code>+S</code> 意味着 <code>-V</code>.</p>
   <p id="KeyOpt-v"><strong>V</strong>: 可见. 防止键被抑制(阻塞). 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code>-V</code>. <code>+V</code> 意味着 <code>-S</code>.</p>
   </dd>
@@ -219,6 +219,16 @@ if (ih.Input = CtrlC)
 <p>当按下结束键时, 该函数不会被调用.</p>
 </div>
 
+<div class="methodShort" id="OnKeyUp"><h2>OnKeyUp <span class="ver">[v1.1.32+]</span></h2>
+<p>检索或设置释放启用通知的按键时调用的<a href="../objects/Functor.htm">函数对象</a>.</p>
+<pre class="Syntax">MyFunc := InputHook.OnKeyUp</pre>
+<pre class="Syntax">InputHook.OnKeyUp := MyFunc</pre>
+<p>类型: <a href="../objects/Functor.htm">函数对象</a>或<a href="../Concepts.htm#nothing">空字符串</a>. 默认值: 空字符串.</p>
+<p>按键-释放通知必须首先由 <a href="#KeyOpt">KeyOpt</a> 或 <a href="#NotifyNonText">NotifyNonText</a> 启用. 键被认为是文本还是非文本取决于什么时候键被按下. 如果 InputHook 在没有检测到 key-down 的情况下检测到 key-up, 则认为它是非文本.</p>
+<p>函数被传递如下参数: <code>InputHook, VK, SC</code>. <em>VK</em> 和 <em>SC</em> 都是整数. 要检索按键名称(如果有), 请使用 <code>GetKeyName(Format("vk{:x}sc{:x}", VK, SC))</code>.</p>
+<p>该函数作为一个新<a href="../misc/Threads.htm">线程</a>调用, 因此使用设置(如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>) 的默认值重新开始.</p>
+</div>
+
 <div class="methodShort" id="BackspaceIsUndo"><h2>BackspaceIsUndo</h2>
 <p>控制 <kbd>Backspace</kbd> 是否从输入缓冲的末尾删除最近按下的字符.</p>
 <pre class="Syntax">Boolean := InputHook.BackspaceIsUndo</pre>
@@ -254,11 +264,12 @@ if (ih.Input = CtrlC)
 </div>
 
 <div class="methodShort" id="NotifyNonText"><h2>NotifyNonText</h2>
-<p>控制当按下非文本键时是否调用 <a href="#OnKeyDown">OnKeyDown</a> 回调.</p>
+<p>控制当按下非文本键时是否调用 <a href="#OnKeyDown">OnKeyDown</a> 和 <a href="#OnKeyUp">OnKeyUp</a> 回调.</p>
 <pre class="Syntax">Boolean := InputHook.NotifyNonText</pre>
 <pre class="Syntax">InputHook.NotifyNonText := Boolean</pre>
 <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>. 默认值: false.</p>
-<p>将此设置为 true 可启用所有不产生文本的按键的通知, 如按下 <kbd>Left</kbd> 或 <kbd>Alt</kbd>+<kbd>F</kbd>. 设置此属性不会影响按键的 <a href="#KeyOpt">options</a>, 因为文本的生成取决于按下按键时活动窗口的键盘布局. </p>
+<p>将此设置为 true 可启用所有不产生文本的按键的通知, 如按下 <kbd>Left</kbd> 或 <kbd>Alt</kbd>+<kbd>F</kbd>. 设置此属性不会影响按键的 <a href="#KeyOpt">options</a>, 因为文本的生成取决于按下按键时活动窗口的键盘布局.</p>
+<p>根据先前匹配 VK 码的 key-down 事件被归类为文本还是非文本, 考虑是否将 NotifyNonText 应用于 key-up 事件. 例如, 如果 NotifyNonText 为 true, 那么按下 <kbd>Ctrl</kbd>+<kbd>A</kbd> 将同时对 <kbd>Ctrl</kbd> 和 <kbd>A</kbd> 产生 <a href="#OnKeyDown">OnKeyDown</a> 和 <a href="#OnKeyUp">OnKeyUp</a> 调用, 而按下 <kbd>A</kbd> 本身不会调用 OnKeyDown 或 OnKeyUp, 除非使用 <a href="#KeyOpt">KeyOpt</a> 来启用该键的通知.</p>
 <p>有关计为生成文本的键详细信息, 请参阅 <a href="#VisibleText">VisibleText</a>.</p>
 </div>
 

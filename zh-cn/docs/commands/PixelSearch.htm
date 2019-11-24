@@ -24,10 +24,10 @@
     <p>其中一个或两个参数都可以留空, 此时可以使用 ErrorLevel(请参阅下面) 来判断是否找到了匹配.</p></dd>
 
   <dt>X1, Y1</dt>
-  <dd><p>要搜索的矩形区域的左上角的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. <strong>坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置</strong>.</p></dd>
+  <dd><p>要搜索的矩形区域的起始角的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. <strong>坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置</strong>.</p></dd>
 
   <dt>X2, Y2</dt>
-  <dd><p>要搜索的矩形区域的右下角的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p></dd>
+  <dd><p>要搜索的矩形区域的结束角的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p></dd>
 
   <dt>ColorID</dt>
   <dd><p>要搜索的十进制或十六进制的颜色 ID, 使用蓝绿红(BGR) 格式, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 颜色 ID 可以使用 Window Spy(可从托盘菜单打开) 或 <a href="PixelGetColor.htm">PixelGetColor</a> 来确定. 例如: <code>0x9d6346</code>.</p></dd>
@@ -45,11 +45,17 @@
 <h2>错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令在搜索遇到问题时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果在指定的区域找到指定的颜色, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为 0, 没有找到则为 1, 而如果在命令执行过程中遇到问题使搜索无法进行则为 2.</p>
+
 <h2>备注</h2>
 <p>要搜索的目标区域必须是可见的; 换句话说, 无法搜索隐藏在其他窗口背后的窗口区域. 与之相比, 鼠标光标下方的像素颜色通常可以检测出来. 例外情况是游戏的指针, 在大多数情况下它会隐藏在它下方的任何像素.</p>
-<p>对于慢速模式: 默认情况下从区域左上角的像素开始搜索, 在垂直方向上检查下面所有像素以寻找匹配. 如果没有找到匹配, 则继续往右逐列搜索, 直到找到一个匹配的像素. 通过交换参数列中 <em>X1</em> 和 <em>X2</em> 的位置, 可以使默认的从左往右搜索反向进行. 换句话说, 如果 <em>X1</em> 大于 <em>X2</em>, 搜索会从右往左进行, 从 <em>X1</em> 开始. 同样地, 如果 <em>Y1</em> 大于 <em>Y2</em>, 则从区域底部而不是顶部开始搜索每列像素. 最后, 当需要搜索的目标区域很大而且快速的重复搜索, 这可能会占用大量的 CPU 时间. 为了减轻这种情况, 请保持目标区域的大小为最小值.</p>
+<p>搜索顺序取决于参数的顺序. 换句话说, 如果 <em>X1</em> 大于 <em>X2</em>, 搜索会从右往左进行, 从列 <em>X1</em> 开始. 类似地, 如果 <em>Y1</em> 大于 <em>Y2</em>, 则从下到上进行搜索. 然而, 在 <span class="ver">[v1.1.32]</span> 之前, 快速模式要求 <em>X1</em> 和 <em>Y1</em> 位于左上角.</p>
+<p>快速模式: 搜索从 <em>X1</em> 和 <em>Y1</em> 指定的坐标开始, 并检查从 <em>X1</em> 到 <em>X2</em> 行中的所有像素是否匹配. 如果在该处找不到匹配项, 则搜索将逐行继续到 <em>Y2</em>, 直到找到匹配的像素为止.</p>
+<p>慢速模式: 搜索从 <em>X1</em> 和 <em>Y1</em> 指定的坐标开始, 并检查从 <em>Y1</em> 到 <em>Y2</em> 列中的所有像素是否匹配. 如果在该处找不到匹配项, 则搜索将逐列继续到 <em>X2</em>, 直到找到匹配的像素为止.</p>
+<p>如果要搜索的区域很大, 并且以高频率重复搜索, 则可能会占用大量的 CPU 时间. 为了减轻这种情况, 请将区域的大小保持最小.</p>
+
 <h2>相关</h2>
 <p><a href="PixelGetColor.htm">PixelGetColor</a>, <a href="ImageSearch.htm">ImageSearch</a>, <a href="CoordMode.htm">CoordMode</a>, <a href="MouseGetPos.htm">MouseGetPos</a></p>
+
 <h2>示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
