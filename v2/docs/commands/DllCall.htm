@@ -13,7 +13,7 @@
 
 <h1>DllCall</h1>
 
-<p>调用 DLL 文件中的函数, such as a standard Windows API function.</p>
+<p>调用 DLL 文件中的函数, 例如标准的 Windows API 函数.</p>
 
 <pre class="Syntax">Result := <span class="func">DllCall</span>("<span class="optional">DllFile\</span>Function" <span class="optional">, Type1, Arg1, Type2, Arg2, "Cdecl ReturnType"</span>)</pre>
 <h2 id="Parameters">参数</h2>
@@ -22,43 +22,43 @@
   <dt>[DllFile\]Function</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-      <p>The DLL or EXE file name followed by a backslash and the name of the function. 例如: <code>&quot;MyDLL\MyFunction&quot;</code> (the file extension &quot;.dll&quot; is the default when omitted). If an absolute path isn't specified, <em>DllFile</em> is assumed to be in the system's PATH or <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>.</p>
-      <p id="std"><em>DllFile</em> may be omitted when calling a function that resides in User32.dll, Kernel32.dll, ComCtl32.dll, or Gdi32.dll. 例如, <code>&quot;User32\IsWindowVisible&quot;</code> produces the same result as <code>&quot;IsWindowVisible&quot;</code>.</p>
-      <p>If no function can be found by the given name, a "W" (Unicode) suffix is automatically appended. 例如, <code>"MessageBox"</code> is the same as <code>"MessageBoxW"</code>.</p>
-      <p>Performance can be dramatically improved when making <em>repeated</em> calls to a DLL by <a href="#load">loading it beforehand</a>.</p>
-      <p>This parameter may also consist solely of an integer, which is interpreted as the address of the function to call. Sources of such addresses include <a href="#COM">COM</a> and <a href="CallbackCreate.htm">CallbackCreate</a>.</p>
+      <p>DLL 或 EXE 文件名后面跟着一个反斜杠和函数名. 例如: <code>&quot;MyDLL\MyFunction&quot;</code>(文件扩展名省略时默认为 &quot;.dll&quot;). 如果未指定绝对路径, 则假定 <em>DllFile</em> 在系统的 PATH 指定的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+      <p id="std">当调用位于 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数时, 可以省略 <em>DllFile</em>. 例如, <code>&quot;User32\IsWindowVisible&quot;</code> 和 <code>&quot;IsWindowVisible&quot;</code> 产生相同的结果.</p>
+      <p>如果使用指定的名称无法找到函数, 则自动附加 "W"(Unicode) 前缀. 例如, <code>"MessageBox"</code> 等同于 <code>"MessageBoxW"</code>.</p>
+      <p>当 <em>重复 </em> 调用 DLL 时, 通过<a href="#load">预先加载此 DLL 文件</a>可以显著改善执行效率.</p>
+      <p>此参数也可以仅是一个表示需调用函数的内存地址的整数. 如 <a href="#COM">COM</a> 和 <a href="CallbackCreate.htm">CallbackCreate</a> 提供的地址.</p>
   </dd>
 
   <dt>Type1, Arg1</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>Each of these pairs represents a single parameter to be passed to the function. The number of pairs is unlimited. For <em>Type</em>, 请参阅 the <a href="#types">types table</a> below. For <em>Arg</em>, specify the value to be passed to the function.</p>
+      <p>这样的每对数据表示需传递给函数的单个参数. 参数的个数没有限制. 关于 <em>Type</em>, 请参阅请参阅下面的<a href="#types">类型表</a>. 关于 <em>Arg</em>, 指定传递给函数的值.</p>
   </dd>
 
   <dt>Cdecl ReturnType</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p id="cdecl">The word <em>Cdecl</em> is normally omitted because most functions use the standard calling convention rather than the &quot;C&quot; calling convention (functions such as wsprintf that accept a varying number of arguments are one exception to this). Note that most object-oriented C++ functions use the <i>thiscall</i> convention, which is not supported.</p>
-      <p>If present, the word <em>Cdecl</em> should be listed before the return type (if any). Separate each word from the next with a space or tab. 例如: <code>&quot;Cdecl Str&quot;</code>.</p>
-      <p>Since a separate "C" calling convention does not exist in 64-bit code, <i>Cdecl</i> may be specified but has no effect on 64-bit builds of AutoHotkey.</p>
-      <p><em>ReturnType</em>: If the function returns a 32-bit signed integer (Int), BOOL, or nothing at all, <em>ReturnType</em> may be omitted. Otherwise, specify one of the argument types from the <a href="#types">types table</a> below. The <a href="#asterisk">asterisk suffix</a> is also supported.</p>
+      <p id="cdecl">通常省略单词 <em>Cdecl</em>, 因为大多数函数使用标准调用约定而不是 &quot;C&quot; 调用约定(像 wsprintf 这样接受可变数目参数的函数在这点上是个例外). 注意, 不支持大多数面向对象的 C++ 函数使用的 <i>thiscall</i> 约定.</p>
+      <p>如果此参数存在, 那么单词 <em>Cdecl</em> 应该在返回值类型前列出(如果有). 在单词间使用空格或 tab 分隔. 例如: <code>&quot;Cdecl Str&quot;</code>.</p>
+      <p>因为在 64 位代码中不存在单独的 "C" 调用约定, 所以在 AutoHotkey 的 64 位版本中可以使用 <i>Cdecl</i> 但没有效果.</p>
+      <p><em>ReturnType</em>: 如果函数返回 32 位的有符号整型(Int), BOOL, 或没有返回值, 则 <em>ReturnType</em> 可以省略. 否则, 需要指定下面<a href="#types">类型表</a>中参数类型的其中一个. 还支持<a href="#asterisk">星号后缀</a>.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-<p>DllCall returns the actual value returned by <em>Function</em>. If <em>Function</em> is of a type that does not return a value, the result is an undefined value of the specified return type (integer by default).</p>
+<p>DllCall 返回 <em>Function</em> 返回的实际值. 如果 <em>Function</em> 的类型不返回值, the result is an undefined value of the specified return type (默认为整数).</p>
 
-<h2 id="types">Types of Arguments and Return Values</h2>
+<h2 id="types">参数和返回值的类型</h2>
 <table class="info">
 <tr id="str">
 <td>Str</td>
-<td><p>A string such as &quot;Blue&quot; or MyVar. If the called function modifies the string and the argument is a naked variable, its contents will be updated. 例如, the following call would convert the contents of <em>MyVar</em> to uppercase: <code>DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, <i>MyVar</i>)</code>.</p>
+<td><p>例如 &quot;Blue&quot; 或 MyVar 这样的字符串. 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, <i>MyVar</i>)</code>.</p>
   <p>If the function is designed to store a string longer than the parameter's input value (or if the parameter is for output only), the recommended approach is to use <a href="BufferAlloc.htm">BufferAlloc</a> to allocate a buffer, the <a href="#ptr">Ptr</a> type to pass it, and <a href="StrGet.htm">StrGet</a> to retrieve the string after the function returns. </p>
   <p>Otherwise, ensure that the variable is large enough before calling the function. This can be achieved by calling <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyVar, 123)</code>, where 123 is the number of <strong>bytes</strong> that <em>MyVar</em> must be able to hold. If the variable is not null-terminated upon return, an error message is shown and the program exits as it is likely that memory has been corrupted via buffer overrun. This would typically indicate that the variable's capacity was insufficient.</p>
   <p></p>
-  <p>A <em>Str</em> argument must not be an <a href="../Variables.htm#Expressions">expression</a> that evaluates to a number (such as <code>i+1</code>). If it is, the function is not called and throws an <a href="Catch.htm#RuntimeErrors">exception</a>.</p>
+  <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
   <p id="strp">The rarely-used <a href="#asterisk">Str*</a> arg type passes the address of a temporary variable containing the address of the string. If the function writes a new address into the temporary variable, the new string is copied into the script's variable, if one was passed. This can be used with functions that expect something like &quot;TCHAR **&quot; or &quot;LPTSTR *&quot;. However, if the function allocates memory and expects the caller to free it (such as by calling <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), the <code>Ptr*</code> arg type must be used instead.</p>
   <p class="note"><strong>Note</strong>: When passing a string to a function, be aware what <a href="../Compat.htm#DllCall"><i>type</i> of string</a> the function expects.</p></td>
 </tr>
