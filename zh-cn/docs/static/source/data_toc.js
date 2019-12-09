@@ -51,7 +51,7 @@
     ["RegisterCallback()","commands/RegisterCallback.htm"],
     ["StrGet()","commands/StrGet.htm"],
     ["StrPut()","commands/StrPut.htm"],
-   ["VarSetCapacity()","commands/VarSetCapacity.htm"],
+    ["VarSetCapacity()","commands/VarSetCapacity.htm"],
     ["COM","",
     [
       ["ComObjActive()","commands/ComObjActive.htm"],
@@ -67,7 +67,6 @@
       ["ObjAddRef() / ObjRelease()","commands/ObjAddRef.htm"]
     ]]
   ]],
-
   ["文件,目录和磁盘管理","",
   [
     ["Drive","commands/Drive.htm"],
@@ -176,7 +175,7 @@
     ["InputBox","commands/InputBox.htm"],
     ["LoadPicture()","commands/LoadPicture.htm"],
     ["Menu","commands/Menu.htm"],
-    ["MenuGetHandle","commands/MenuGetHandle.htm"],
+    ["MenuGetHandle()","commands/MenuGetHandle.htm"],
     ["MenuGetName()","commands/MenuGetName.htm"],
     ["MsgBox","commands/MsgBox.htm"],
     ["OnMessage()","commands/OnMessage.htm"],
@@ -208,7 +207,7 @@
     ["SetFormat","commands/SetFormat.htm"],
     ["Sqrt()","commands/Math.htm#Sqrt"],
     ["Sin() / Cos() / Tan()","commands/Math.htm#Sin"],
-    ["ASin()/ ACos() / ATan()","commands/Math.htm#ASin"],
+    ["ASin() / ACos() / ATan()","commands/Math.htm#ASin"],
     ["Transform","commands/Transform.htm"]
   ]],
   ["鼠标和键盘","",
@@ -291,7 +290,7 @@
     ["文件对象","objects/File.htm"],
     ["Func 对象","objects/Func.htm"],
     ["函数对象","objects/Functor.htm"],
-    ["匹配对象","commands/RegExMatch.htm#MatchObject"],
+    ["匹配对象","commands/RegExMatch.htm#MatchObject"]
    ]],
   ["进程管理","",
   [
@@ -333,7 +332,7 @@
     ["If var [not] in/contains MatchList","commands/IfIn.htm"],
     ["InStr()","commands/InStr.htm"],
     ["Loop (parse a string)","commands/LoopParse.htm"],
-    ["Ord","commands/Ord.htm"],
+    ["Ord()","commands/Ord.htm"],
     ["RegEx Quick Reference","misc/RegEx-QuickRef.htm"],
     ["RegExMatch()","commands/RegExMatch.htm"],
     ["RegExReplace()","commands/RegExReplace.htm"],
@@ -451,5 +450,5 @@
     ["#UseHook","commands/_UseHook.htm"],
     ["#Warn","commands/_Warn.htm"],
     ["#WinActivateForce","commands/_WinActivateForce.htm"]
-  ]],
+  ]]
 ];
