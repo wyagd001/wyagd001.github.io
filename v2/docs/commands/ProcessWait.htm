@@ -14,7 +14,7 @@
 
 <h1>ProcessWait</h1>
 
-<p>Waits for the specified process to exist.</p>
+<p>等待指定的进程存在.</p>
 
 <pre class="Syntax">PID := <span class="func">ProcessWait</span>(PIDOrName <span class="optional">, Timeout</span>)</pre>
 
@@ -30,37 +30,37 @@
     <dt>Timeout</dt>
     <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
-        <p>If omitted, this function will wait indefinitely. Otherwise, specify the number of seconds (can contain a decimal point) to wait before timing out.</p>
+        <p>如果忽略, 该函数将无限期地等待. 否则, 指定在超时之前等待的秒数(可以包含小数).</p>
     </dd>
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>If the specified process is discovered, this function returns the <a href="../misc/WinTitle.htm#ahk_pid">Process ID (PID)</a> of the process. If the function times out, zero is returned.</p>
+<p>如果发现了指定的进程, 该函数返回<a href="../misc/WinTitle.htm#ahk_pid">进程 ID (PID)</a> of the process. If the function times out, zero is returned.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>Processes are checked every 100 milliseconds; the moment the condition is satisfied, the function stops waiting. In other words, rather than waiting for the timeout to expire, it immediately returns and continues execution of the script. 此外, 当函数处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
+<p>进程每 100 毫秒检查一次; 当条件满足时, 函数停止等待. 换句话说, 它不会等待超时过期, 而是立即返回并继续执行脚本. 此外, 当函数处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="ProcessWaitClose.htm">ProcessWaitClose</a>, <a href="Run.htm">Run</a>, <a href="WinWait.htm">WinWait</a>, <a href="Process.htm">Process functions</a>, <a href="Win.htm">Win functions</a></p>
+<p><a href="ProcessWaitClose.htm">ProcessWaitClose</a>, <a href="Run.htm">Run</a>, <a href="WinWait.htm">WinWait</a>, <a href="Process.htm">Process 函数</a>, <a href="Win.htm">Win 函数</a></p>
 
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: Waits up to 5.5 seconds for Notepad to appear. If Notepad appears within this number of seconds, its priority is set to "Low" and the script's own priority is set to "High". After that, Notepad will be closed and a message box will be shown if it did not close within 5 seconds:</p>
+<p><a href="#ExBasic">#1</a>: 对于记事本的出现, 最多等待 5.5 秒. 如果记事本出现在此秒数内, 则其优先级设置为 "Low", 并且脚本自身的优先级设置为 "High". 之后, 记事本将被关闭, 如果在 5 秒内未关闭, 将显示一个消息框:</p>
 <pre class="NoIndent">NewPID := ProcessWait("notepad.exe", 5.5)
 if not NewPID
 {
     MsgBox "The specified process did not appear within 5.5 seconds."
     return
 }
-<em>; Otherwise:</em>
+<em>; 否则:</em>
 MsgBox "A matching process has appeared (Process ID is " NewPID ")."
 ProcessSetPriority "Low", NewPID
-ProcessSetPriority "High"  <em>; Have the script set itself to high priority.</em>
+ProcessSetPriority "High"  <em>; 把脚本自己设置为高优先级.</em>
 WinClose "Untitled - Notepad"
 ErrorLevel := ProcessWaitClose(NewPID, 5)
-if ErrorLevel <em>; The PID still exists.</em>
+if ErrorLevel <em>; PID 仍然存在.</em>
     MsgBox "The process did not close within 5 seconds."</pre>
 </div>
 
