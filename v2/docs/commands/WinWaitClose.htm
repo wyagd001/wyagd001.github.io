@@ -13,7 +13,7 @@
 
 <h1>WinWaitClose</h1>
 
-<p>Waits until no matching windows can be found.</p>
+<p>等待直到找不到匹配的窗口.</p>
 
 <pre class="Syntax"><span class="func">WinWaitClose</span> <span class="optional">WinTitle, WinText, Timeout, ExcludeTitle, ExcludeText</span></pre>
 <h2 id="Parameters">参数</h2>
@@ -34,7 +34,7 @@
   <dt>Timeout</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
-    <p>How many seconds to wait before timing out and returning 0. Leave blank to allow the function to wait indefinitely. Specifying 0 is the same as specifying 0.5.</p>
+    <p>超时并返回 0 前等待的秒数. 留空以允许函数无限期等待. 指定 0 等同于指定 0.5.</p>
   </dd>
 
   <dt>ExcludeTitle</dt>
@@ -53,19 +53,19 @@
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-<p>This function returns 0 (false) if the function timed out or 1 (true) otherwise.</p>
+<p>如果该函数超时, 则此函数返回 0(false), 否则返回 1(true).</p>
 
 <h2 id="Remarks">备注</h2>
-<p>Whenever no matching windows exist, the function will not wait for <em>Timeout</em> to expire. Instead, it will immediately return 1 and the script will continue executing. Conversely, the function may continue waiting even after a matching window is closed, until no more matching windows can be found.</p>
-<p>Since <code>"A"</code> matches whichever window is active at any given moment, <code>WinWaitClose "A"</code> typically waits indefinitely. To instead wait for the current active window to close, specify its title or unique ID as in the following example:</p>
+<p>如果没有匹配的窗口存在, 函数将不会等待 <em>Timeout</em> 过期. 相反, 它将立即返回 1 并让脚本继续执行. 相反, 即使关闭了匹配窗口, 函数也可以继续等待, 直到找不到更多的匹配窗口.</p>
+<p>由于 <code>"A"</code> 匹配任何给定时刻处于活动状态的窗口, 因此 <code>WinWaitClose "A"</code> 通常无限期地等待. 要替代等待当前活动窗口关闭, 请指定其标题或唯一 ID, 如下例所示:</p>
 <pre>WinWaitClose "ahk_id " WinExist("A")</pre>
-<p>WinWaitClose updates the <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a> whenever it finds a matching window. One use for this is to identify or operate on the window after the function times out. 例如:</p>
+<p>只要找到匹配的窗口, WinWaitClose 就会更新<a href="../misc/WinTitle.htm#LastFoundWindow">最后找到的窗口</a>. 这样做的一个用途是在函数超时后识别或操作窗口. 例如:</p>
 <pre>
-GuiCreate("", "Test window " Random()).Show("w300 h50")  <em>; Show a test window.</em>
-if !WinWaitClose("Test",, 5)  <em>; Wait 5 seconds for someone to close it.</em>
+GuiCreate("", "Test window " Random()).Show("w300 h50")  <em>; 显示测试窗口.</em>
+if !WinWaitClose("Test",, 5)  <em>; 等待 5 秒钟以让人关闭窗口.</em>
 {
     MsgBox "Window not yet closed: " WinGetTitle()
-    WinClose  <em>; Close the window found by WinWaitClose.</em>
+    WinClose  <em>; 关闭 WinWaitClose 找到的窗口.</em>
 }
 </pre>
 <p>当函数处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
@@ -79,7 +79,7 @@ if !WinWaitClose("Test",, 5)  <em>; Wait 5 seconds for someone to close it.</em>
 <p><a href="#ExBasic">#1</a></p>
 <pre>Run "notepad.exe"
 WinWait "Untitled - Notepad"
-WinWaitClose  <em>; Wait for the exact window found by WinWait to be closed.</em>
+WinWaitClose  <em>; 等待 WinWait 找到的确切窗口被关闭.</em>
 MsgBox "Notepad is now closed."</pre>
 </div>
 

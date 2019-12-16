@@ -55,148 +55,150 @@
 <tr id="str">
 <td>Str</td>
 <td><p>例如 &quot;Blue&quot; 或 MyVar 这样的字符串. 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, <i>MyVar</i>)</code>.</p>
-  <p>If the function is designed to store a string longer than the parameter's input value (or if the parameter is for output only), the recommended approach is to use <a href="BufferAlloc.htm">BufferAlloc</a> to allocate a buffer, the <a href="#ptr">Ptr</a> type to pass it, and <a href="StrGet.htm">StrGet</a> to retrieve the string after the function returns. </p>
-  <p>Otherwise, ensure that the variable is large enough before calling the function. This can be achieved by calling <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyVar, 123)</code>, where 123 is the number of <strong>bytes</strong> that <em>MyVar</em> must be able to hold. If the variable is not null-terminated upon return, an error message is shown and the program exits as it is likely that memory has been corrupted via buffer overrun. This would typically indicate that the variable's capacity was insufficient.</p>
+  <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串. </p>
+  <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 <strong>字节</strong>. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p></p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
-  <p id="strp">The rarely-used <a href="#asterisk">Str*</a> arg type passes the address of a temporary variable containing the address of the string. If the function writes a new address into the temporary variable, the new string is copied into the script's variable, if one was passed. This can be used with functions that expect something like &quot;TCHAR **&quot; or &quot;LPTSTR *&quot;. However, if the function allocates memory and expects the caller to free it (such as by calling <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), the <code>Ptr*</code> arg type must be used instead.</p>
+  <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量(如果已传递). 它可以用在期望 &quot;TCHAR **&quot; 或 &quot;LPTSTR *&quot; 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
   <p class="note"><strong>注意</strong>: 在将字符串传递给函数时, 请注意函数所期望的字符串的<a href="../Compat.htm#DllCall"><i>type</i>.</p></td>
 </tr>
 <tr>
   <td><span id="wstr"></span>WStr</td>
-  <td>Since AutoHotkey uses UTF-16 natively, WStr (wide character string) is equivalent to Str.</td>
+  <td>由于 AutoHotkey 原生使用 UTF-16, 因此 WStr(宽字符串) 等同于 Str.</td>
 </tr>
 <tr>
   <td><span id="astr"></span>AStr</td>
   <td>
-    <p>AStr causes the input value to be automatically converted to ANSI. Since the temporary memory used for this conversion is only large enough for the converted input string, any value written to it by the function is discarded. To receive an ANSI string as an output parameter, follow this example:</p>
-<pre>buf := BufferAlloc(<i>length</i>)  <em>; Allocate temporary buffer.</em>
-DllCall("<i>Function</i>", "ptr", buf)  <em>; Pass buffer to function.</em>
-str := StrGet(buf, "cp0")  <em>; Retrieve ANSI string from buffer.</em>
+    <p>AStr 导致输入值自动转换为 ANSI. 由于用于此转换的临时内存仅足够容纳转换后的输入字符串, 因此函数写入其的任何值都将被丢弃. 要接收 ANSI 字符串作为输出参数, 请遵循以下示例:</p>
+<pre>buf := BufferAlloc(<i>length</i>)  <em>; 分配临时缓冲.</em>
+DllCall("<i>Function</i>", "ptr", buf)  <em>; 传递缓冲给函数.</em>
+str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 </pre>
-    <p>The rarely-used <a href="#asterisk">AStr*</a> arg type is also supported and behaves similarly to the <a href="#strp">Str*</a> type, except that any new string is converted from ANSI to the native format, UTF-16.</p>
-    <p>See <a href="../Compat.htm#DllCall">Script Compatibility</a> for equivalent Win32 types and other details.</p>
+    <p>还支持很少使用的 <a href="#asterisk">AStr*</a> 参数类型, 其行为与 <a href="#strp">Str*</a> 类型类似, 不同之处在于, 所有新字符串都将从 ANSI 转换为原生格式, UTF-16.</p>
+    <p>有关等效的 Win32 类型和其他详细信息, 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
   </td>
 </tr>
 <tr>
   <td>Int64</td>
-  <td>A 64-bit integer, whose range is -9223372036854775808 (-0x8000000000000000) to 9223372036854775807 (0x7FFFFFFFFFFFFFFF).</td>
+  <td>64 位整数, 其范围是 -9223372036854775808(-0x8000000000000000) 到 9223372036854775807(0x7FFFFFFFFFFFFFFF).</td>
 </tr>
 <tr id="Int">
   <td>Int</td>
-  <td><p>A 32-bit integer (the most common integer type), whose range is -2147483648 (-0x80000000) to 2147483647 (0x7FFFFFFF). An Int is sometimes called a &quot;Long&quot;.</p>
-    <p>An Int should also be used for each BOOL argument expected by a function (a BOOL value should be either 1 or 0).</p>
-    <p>An <a href="#unsigned">unsigned</a> Int (UInt) is also used quite frequently, such as for DWORD.</p></td>
+  <td><p>32 位整数(最常用的整数类型), 其范围是 -2147483648(-0x80000000) 到 2147483647(0x7FFFFFFF). Int 有时也被称为 &quot;Long&quot;.</p>
+    <p>在函数期望 BOOL 类型的参数中也应该使用 Int(BOOL 值应该是 1 或 0).</p>
+    <p><a href="#unsigned">无符号</a>的 Int(UInt) 也经常使用, 例如用作 DWORD.</p></td>
 </tr>
 <tr>
   <td>Short</td>
-  <td>A 16-bit integer, whose range is -32768 (-0x8000) to 32767 (0x7FFF). An <a href="#unsigned">unsigned</a> Short (UShort) can be used with functions that expect a WORD.</td>
+  <td>16 位整数, 其范围是 -32768(-0x8000) 到 32767(0x7FFF). <a href="#unsigned">无符号</a> Short(UShort) 能用于
+期望 BYTE 的函数中.</td>
 </tr>
 <tr>
   <td>Char</td>
-  <td>An 8-bit integer, whose range is -128 (-0x80) to 127 (0x7F). An <a href="#unsigned">unsigned</a> character (UChar) can be used with functions that expect a BYTE.</td>
+  <td>8 位整数, 其范围是 -128(-0x80) 到 127(0x7F). <a href="#unsigned">无符号</a> character(UChar) 能用于
+期望 WORD 的函数中.</td>
 </tr>
 <tr>
   <td>Float</td>
-  <td>A 32-bit floating point number, which provides 6 digits of precision.</td>
+  <td>32 位浮点数, 具有 6 位精度.</td>
 </tr>
 <tr>
   <td>Double</td>
-  <td>A 64-bit floating point number, which provides 15 digits of precision.</td>
+  <td>64 位浮点数, 具有 15 位精度.</td>
 </tr>
 <tr id="ptr">
   <td>Ptr</td>
-  <td><p>A <a href="../Variables.htm#PtrSize">pointer-sized</a> integer, equivalent to Int or Int64 depending on whether the exe running the script is 32-bit or 64-bit. <i>Ptr</i> should be used for pointers to arrays or structures (such as RECT* or LPPOINT) and almost all handles (such as HWND, HBRUSH or HBITMAP). If the parameter is a pointer to a single numeric value such as LPDWORD or int*, generally the * or P suffix should be used instead of &quot;Ptr&quot;.</p>
-  <p>If an object is passed to a Ptr parameter, the value of the object's <code>Ptr</code> property is used. If no such property exists, an exception is thrown. Typically the object would be a <a href="../objects/Buffer.htm">Buffer</a> object created by <a href="BufferAlloc.htm">BufferAlloc</a>.</p>
-  <p>If an object is passed to a Ptr* parameter, the value of the object's <code>Ptr</code> property is retrieved before the call and the address of a temporary variable containing this value is passed to the function. After the function returns, the new value is assigned back to the object's <code>Ptr</code> property.</p>
-  <p><i>Ptr</i> can also be used with the * or P suffix; it should be used with functions that output a pointer via LPVOID* or similar.</p>
-  <p><i>UPtr</i> is also valid, but is only unsigned in 32-bit builds as AutoHotkey does not support unsigned 64-bit integers.</p>
-  <p class="note"><strong>Note</strong>: To pass a <strong>NULL</strong> handle or pointer, pass the integer 0.</p></td>
+  <td><p><a href="../Variables.htm#PtrSize">指针大小</a>的整数, 等同于 Int 或 Int64, 具体取决于运行脚本的 exe 是 32 位还是 64 位. <i>Ptr</i> 应该用于指向数组或结构(如 RECT* 或 LPPOINT) 以及几乎所有句柄(如 HWND, HBRUSH 或 HBITMAP) 的指针. 如果参数是指向简单数值的指针( 如 LPDWORD 或 int*), 通常应该使用 * 或 P 后缀代替 &quot;Ptr&quot;.</p>
+  <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在此类属性, 则抛出异常. 通常, 该对象是 <a href="BufferAlloc.htm">BufferAlloc</a> 创建的 <a href="../objects/Buffer.htm">Buffer</a> 对象.</p>
+  <p>如果将对象传递给 Ptr* 参数, 则在调用之前将检索对象的 <code>Ptr</code> 属性值, 并将包含该值的临时变量的地址传递给函数. 函数返回后, 新值将分配回该对象的 <code>Ptr</code> 属性.</p>
+  <p><i>Ptr</i> 也可以和 * 或 P 后缀一起使用; 此时它应该用在通过 LPVOID* 或类似类型输出指针的函数中.</p>
+  <p><i>UPtr</i> 也是有效的, 但仅适用于 32 位版本中的无符号整数, 因为 AutoHotkey 不支持无符号的 64 位整数.</p>
+  <p class="note"><strong>注意</strong>: 要传递 <strong>NULL</strong> 句柄或指针, 请传递整数 0.</p></td>
 </tr>
 <tr id="asterisk">
-  <td>* or P<br>
-    (suffix)</td>
-  <td><p>Append an asterisk (with optional preceding space) to any of the above types to cause the address of the argument to be passed rather than the value itself (the called function must be designed to accept it). Since the value of such an argument might be modified by the function, whenever a naked variable is passed as the argument, that variable's contents will be updated. 例如, the following call would pass the contents of MyVar to MyFunction by address, but would also update MyVar to reflect any changes made to it by MyFunction: <code>DllCall(&quot;MyDll\MyFunction&quot;, &quot;Int*&quot;, MyVar)</code>.</p>
-    <p>In general, an asterisk is used whenever a function has an argument type or return type that starts with &quot;LP&quot;. The most common example is LPDWORD, which is a pointer to a DWORD. Since a DWORD is an unsigned 32-bit integer, use &quot;UInt*&quot; or &quot;UIntP&quot; to represent LPDWORD. An asterisk should not be used for string types such as LPTSTR, pointers to structures such as LPRECT, or arrays; for these, <a href="#str">&quot;Str&quot;</a> or &quot;Ptr&quot; should be used, depending on whether you pass a variable or its address.</p>
-    <p class="note"><strong>Note</strong>: &quot;Char*&quot; is not the same as <a href="#str">&quot;Str&quot;</a> because &quot;Char*&quot; passes the address of an 8-bit number, whereas <a href="#str">&quot;Str&quot;</a> passes the address of a series of characters, which may be either 16-bit (Unicode) or 8-bit (for "AStr"), depending on the version of AutoHotkey. Similarly, &quot;UInt*&quot; passes the address of a 32-bit number, so should not be used if the function expects an array of values or a structure larger than 32 bits.</p>
-    <p>Since variables in AutoHotkey have no fixed type, the address passed to the function points to temporary memory rather than the variable itself. It is not necessary to call <a href="VarSetCapacity.htm">VarSetCapacity</a> on the variable as DllCall will update it correctly after the function returns.</p>
+  <td>* 或 P<br>
+    (后缀)</td>
+  <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, 因此每当将裸变量作为参数传递时, 该变量的内容就会被更新. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall(&quot;MyDll\MyFunction&quot;, &quot;Int*&quot;, MyVar)</code>.</p>
+    <p>通常, 星号可用于参数类型或返回类型以 &quot;LP&quot; 开头的函数. 最常见的示例是 LPDWORD, 它是指向 DWORD 的指针. 由于 DWORD 是 32 位无符号整数, 因此请使用 &quot;UInt*&quot; 或 &quot;UIntP&quot; 表示 LPDWORD. 星号不能用于字符串类型(如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 应使用 <a href="#str">&quot;Str&quot;</a> 或 &quot;Ptr&quot;, 具体取决于您传递变量还是变量地址.</p>
+    <p class="note"><strong>注意</strong>: &quot;Char*&quot; 与 <a href="#str">&quot;Str&quot;</a> 不同, 因为 &quot;Char*&quot; 传递一个 8 位数字的地址, 而 <a href="#str">&quot;Str&quot;</a> 传递一系列字符的地址, 该字符可以是 16 位(Unicode) 或 8 位("AStr"), 具体取决于 AutoHotkey 的版本. 同样, &quot;UInt*&quot; 传递的是 32 位数字的地址, 因此如果函数期望值的数组或大于 32 位的结构, 则不应使用 "UInt*".</p>
+    <p>由于 AutoHotkey 中的变量没有固定类型, 因此传递给函数的地址指向临时内存, 而不是变量本身. 不必在变量上调用 <a href="VarSetCapacity.htm">VarSetCapacity</a>, 因为 DllCall 将在函数返回后正确更新它.</p>
     </td>
 </tr>
 <tr id="unsigned">
-  <td>U (prefix)</td>
-  <td><p>Prepend the letter U to any of the integer types above to interpret it as an unsigned integer (UInt64, UInt, UShort, and UChar). Strictly speaking, this is necessary only for return values and <a href="#asterisk">asterisk variables</a> because it does not matter whether an argument passed by value is unsigned or signed (except for Int64).</p>
-    <p>If a negative integer is specified for an unsigned argument, the integer wraps around into the unsigned domain. 例如, when -1 is sent as a UInt, it would become 0xFFFFFFFF.</p>
-    <p><em>Unsigned</em> 64-bit integers produced by a function are not supported. Therefore, to work with numbers greater or equal to 0x8000000000000000, omit the U prefix and interpret any negative values received from the function as large integers. 例如, a function that yields -1 as an Int64 is really yielding 0xFFFFFFFFFFFFFFFF if it is designed to yield a UInt64.</p>
+  <td>U (前缀)</td>
+  <td><p>在上述任一整数类型加上字母 U 前缀, 以将其解释为无符号整数(UInt64, UInt, UShort 和 UChar). 严格来说, 这仅对返回值和<a href="#asterisk">星号变量</a>才是必需的, 因为按值传递的参数是无符号的还是有符号的(Int64 除外) 都无关紧要.</p>
+    <p>如果为无符号参数指定了负整数, 则该整数将被转换到无符号域中。 例如, 当 -1 作为 UInt 发送时, 它将被转换成 0xFFFFFFFF.</p>
+    <p>不支持函数产生的 <em>无符号</em> 64 位整数. 因此, 要使用大于或等于 0x8000000000000000 的数字, 请省略 U 前缀并将从函数接收的任何负值解释为大整数. 例如, 如果将函数设计为产生 UInt64, 则将函数产生的 -1(Int64 类型), 实际上将产生 0xFFFFFFFFFFFFFFFF.</p>
     </td>
 </tr>
 <tr id="HRESULT">
   <td>HRESULT</td>
   <td>
-    <p>A 32-bit integer. This is generally used with COM functions and is valid only as a return type without any prefix or suffix. Error values (as defined by the <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a>) are never returned; instead, an exception is thrown, with <code>Extra</code> set to the hexadecimal error code. Therefore, the return value is a success code in the range 0 to 2147483647.</p>
-    <p>HRESULT is the default return type for <a href="ComCall.htm">ComCall</a>.</p>
+    <p>32 位整数. 这通常与 COM 函数一起使用, 并且仅作为返回类型有效, 没有任何前缀或后缀. 错误值(由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义) 永远不会返回; 而是抛出一个异常, 并将 <code>Extra</code> 设置为十六进制错误代码. 因此, 成功时, 返回值范围是 0 到 2147483647.</p>
+    <p>HRESULT 是 <a href="ComCall.htm">ComCall</a> 的默认返回类型.</p>
   </td>
 </tr>
 </table>
 
-<h2 id="error">Errors</h2>
-<p>DllCall throws an <a href="Catch.htm#RuntimeErrors">exception</a> under any of the following conditions:</p>
+<h2 id="error">错误</h2>
+<p>DllCall 会在下列任何一种情况下抛出<a href="Catch.htm#RuntimeErrors">异常</a>:</p>
 <ul>
-  <li>The <a href="#HRESULT">HRESULT</a> return type was used and the function returned an error value (as defined by the <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a>). <code>Exception.Extra</code> contains the hexadecimal error code.</li>
-  <li>The <em>[DllFile\]Function</em> parameter is a floating point number. A string or positive integer is required.</li>
-  <li>The <a href="#types">return type</a> or one of the specified <a href="#types">arg types</a> is invalid.</li>
-  <li>An argument was passed a value of an unexpected type. For instance, an <a href="../Variables.htm#Expressions">expression</a> that evaluates to a number was passed to a string (<a href="#str">str</a>) argument, a non-numeric string was passed to a numeric argument, or an object was passed to an argument <em>not</em> of type <a href="#ptr">Ptr</a>.</li>
-  <li>The specified <em>DllFile</em> could not be accessed or loaded. If no explicit path was specified for <em>DllFile</em>, the file must exist in the system's PATH or <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. This error might also occur if the user lacks permission to access the file, or if AutoHotkey is 32-bit and the DLL is 64-bit or vice versa.</li>
-  <li>The specified function could not be found inside the DLL.</li>
-  <li>The function was called but it aborted with a fatal exception. <code>Exception.Extra</code> contains the exception code. 例如, 0xC0000005 means &quot;access violation&quot;. In such cases, the thread is aborted (if <a href="Try.htm">try</a> is not used), but any <a href="#asterisk">asterisk variables</a> are still updated. An example of a fatal exception is dereferencing an invalid pointer such as NULL (0). Since a <a href="#cdecl">Cdecl</a> function never produces the error described in the next paragraph, it may generate an exception when too few arguments are passed to it.</li>
-  <li>The function was called but was passed too many or too few arguments. <code>Exception.Extra</code> contains the number of bytes by which the argument list was incorrect. If it is positive, too many arguments (or arguments that were too large) were passed, or the call requires <a href="#cdecl">CDecl</a>. If it is negative, too few arguments were passed. This situation should be corrected to ensure reliable operation of the function. The presence of this error may also indicate that an exception occurred. Note that due to the x64 calling convention, 64-bit builds never raise this error.</li>
+  <li>使用 <a href="#HRESULT">HRESULT</a> 返回类型, 函数返回一个错误值(由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义). <code>Exception.Extra</code> 包含十六进制错误码.</li>
+  <li><em>[DllFile\]Function</em> 参数是一个浮点数. 需要字符串或正整数.</li>
+  <li><a href="#types">return type</a> 或指定的 <a href="#types">arg types</a> 无效.</li>
+  <li>参数传递了一个意外类型的值. 例如, 将计算结果为数字的<a href="../Variables.htm#Expressions">表达式</a>传递给字符串(<a href="#str">str</a>) 参数, 将非数字字符串传递给数值参数, 或者将对象传递给 <em>非</em> <a href="#ptr">Ptr</a> 类型的参数.</li>
+  <li>无法访问或加载指定的 <em>DllFile</em>. 如果没有明确指明 <em>DllFile</em> 的路径, 则该文件必须存在于系统的 PATH 或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 如果用户没有访问文件的权限, 或者 AutoHotkey 是 32 位而 DLL 是 64 位(反之亦然), 也都可能发生此错误.</li>
+  <li>在 DLL 中找不到指定的函数.</li>
+  <li>该函数已被调用, 但由于致命异常而中止. <code>Exception.Extra</code> 包含异常代码. 例如, 0xC0000005 表示 &quot;访问冲突&quot;. 在这种情况下, 线程将中止(如果没有使用 <a href="Try.htm">try</a> 的话), 但是仍将更新所有<a href="#asterisk">星号变量</a>. 致命异常的一个例子是取消引用无效指针(如 NULL(0)). 由于 <a href="#cdecl">Cdecl</a> 函数永远不会产生下一段中描述的错误, 因此当传递给它的参数太少时, 它可能会生成异常.</li>
+  <li>该函数已被调用, 但传递了太多或太少的参数. <code>Exception.Extra</code> 包含参数列表不正确的字节数. 如果为正, 则传递了太多的参数(或参数太大), 或者调用需要 <a href="#cdecl">CDecl</a>. 如果为负, 则传递的参数太少. 应该纠正这种情况, 以确保函数的可靠运行. 出现此错误也可能表示抛出了异常. 请注意, 由于使用 x64 调用约定, 因此 64 位版本永远不会引发此错误.</li>
 </ul>
 
-<h2 id="except">Native Exceptions and A_LastError</h2>
-<p>In spite of the built-in exception handling, it is still possible to crash a script with DllCall. This can happen when a function does not directly generate an exception but yields something inappropriate, such as a bad pointer or a string that is not terminated. This might not be the function's fault if the script passed it an unsuitable value such as a bad pointer or a <a href="#str">&quot;str&quot;</a> with insufficient capacity. A script can also crash when it specifies an inappropriate argument type or return type, such as claiming that an ordinary integer yielded by a function is an <a href="#asterisk">asterisk variable</a> or <a href="#str">str</a>.</p>
-<p>The built-in variable <a href="../Variables.htm#LastError">A_LastError</a> contains the result of the operating system's GetLastError() function.</p>
+<h2 id="except">原生异常和 A_LastError</h2>
+<p>尽管有内置的异常处理机制, 仍可能因使用 DllCall 使脚本崩溃. 当函数不直接生成异常但产生不适当的数据时, 如无效的指针或未终止的字符串, 可能会发生这种情况. 如果脚本向其传递了不合适的值, 如无效的指针或容量不足的 <a href="#str">&quot;str&quot;</a>, 则可能不是函数的错误. 当脚本指定了不适当的参数类型或返回类型时, 如声明函数产生的普通整数是<a href="#asterisk">星号变量</a>或 <a href="#str">str</a>, 脚本也可能崩溃.</p>
+<p>内置变量 <a href="../Variables.htm#LastError">A_LastError</a> 包含操作系统的 GetLastError() 函数的结果.</p>
 
-<h2 id="load">Performance</h2>
-<p>When making repeated calls to a DLL, performance can be dramatically improved by loading it explicitly (<em>this is not necessary for a <a href="#std">standard DLL</a> such as User32 because it is always resident</em>). This practice avoids the need for DllCall to internally call LoadLibrary and FreeLibrary each time. 例如:</p>
-<pre>hModule := DllCall(&quot;<strong>LoadLibrary</strong>&quot;, &quot;Str&quot;, &quot;MyFunctions.dll&quot;, &quot;Ptr&quot;)  <em>; Avoids the need for DllCall in the loop to load the library.</em>
+<h2 id="load">性能</h2>
+<p>当需要重复调用一个 DLL 时, 预先明确装载它可以显著提高执行效率(<em>对于<a href="#std">标准的 DLL</a> 文件如 User32 这是没有必要的, 因为它是常驻的</em>). 这种做法避免了 DllCall 每次都需要在内部调用 LoadLibrary 和 FreeLibrary. 例如:</p>
+<pre>hModule := DllCall(&quot;<strong>LoadLibrary</strong>&quot;, &quot;Str&quot;, &quot;MyFunctions.dll&quot;, &quot;Ptr&quot;)  <em>; 避免在循环中使用 DllCall 来加载库.</em>
 Loop Files, "C:\My Documents\*.*", "R"
     result := DllCall(&quot;MyFunctions\BackupFile&quot;, &quot;Str&quot;, A_LoopFilePath)
-DllCall(&quot;<strong>FreeLibrary</strong>&quot;, &quot;Ptr&quot;, hModule)  <em>; To conserve memory, the DLL may be unloaded after using it.</em></pre>
-<p>Even faster performance can be achieved by looking up the function's address beforehand. 例如:</p>
-<pre><em>; In the following example, if the DLL isn't yet loaded, use LoadLibrary in place of GetModuleHandle.</em>
+DllCall(&quot;<strong>FreeLibrary</strong>&quot;, &quot;Ptr&quot;, hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
+<p>通过预先查找函数的地址甚至可以获得更快的性能. 例如:</p>
+<pre><em>; 在下面的示例中, 如果 DLL 还没有装载, 使用 LoadLibrary 代替 GetModuleHandle.</em>
 <strong>MulDivProc</strong> := DllCall(&quot;GetProcAddress&quot;, &quot;Ptr&quot;, DllCall(&quot;GetModuleHandle&quot;, &quot;Str&quot;, &quot;<strong>kernel32</strong>&quot;, &quot;Ptr&quot;), &quot;AStr&quot;, &quot;<strong>MulDiv</strong>&quot;, &quot;Ptr&quot;)
 Loop 500
     DllCall(<strong>MulDivProc</strong>, &quot;Int&quot;, 3, &quot;Int&quot;, 4, &quot;Int&quot;, 3)</pre>
-<p>If DllCall's first parameter is a literal string such as <code>"MulDiv"</code> and the DLL containing the function is ordinarily loaded before the script starts, or has been successfully loaded with <a href="_DllLoad.htm">#DllLoad</a>, the string is automatically resolved to a function address. This built-in optimization is more effective than the example shown above.</p>
-<p>Finally, when passing a string-variable to a function that will not change the length of the string, performance is improved by passing the variable <a href="../Variables.htm#amp">by address</a> (e.g. &amp;MyVar) rather than as a &quot;<a href="#str">str</a>&quot; (especially when the string is very long). The following example converts a string to uppercase: <code>DllCall(&quot;CharUpper&quot;, &quot;<strong>Ptr</strong>&quot;, <strong>&amp;</strong>MyVar, &quot;Ptr&quot;)</code>.</p>
+<p>如果 DllCall 的首个参数是原义的字符串如 <code>"MulDiv"</code> 并且包含了函数的 DLL 在脚本开始前已正常装载了, 或者已成功通过 <a href="_DllLoad.htm">#DllLoad</a> 加载, 那么此字符串会自动被解析为函数地址. 这种内置的优化比上面显示的示例更有效.</p>
+<p>最后, 当将字符串变量传递给不会改变字符串长度的函数时, 通过将变量<a href="../Variables.htm#amp">按地址</a>(例如 &amp;MyVar) 而不是 &quot;<a href="#str">str</a>&quot;(特别是当字符串很长时), 可以提高性能. 后面的例子把字符串转换成大写: <code>DllCall(&quot;CharUpper&quot;, &quot;<strong>Ptr</strong>&quot;, <strong>&amp;</strong>MyVar, &quot;Ptr&quot;)</code>.</p>
 
-<h2 id="struct">Structures and Arrays</h2>
-<p>A structure is a collection of <em>members</em> (fields) stored adjacently in memory. Most members tend to be integers.</p>
-<p>Functions that accept the address of a structure (or a memory-block array) can be called by storing the structure's raw binary data in a normal variable. The following steps are generally used:</p>
-<p>1) Call <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyStruct, 123, 0)</code> to ensure that the target variable is large enough to hold the structure's data. Replace 123 with a number that is at least as large as the size of the structure. Specifying zero as the last parameter is optional; it initializes all members to be binary zero, which is typically used to avoid calling NumPut as often in the next step.</p>
-<p>2) If the target function uses the values initially in the structure, call <code><a href="NumPut.htm">NumPut</a>(123, MyStruct, 4, "UInt")</code> to initialize any members that should be non-zero. Replace <code>123</code> with the integer to be put into the target member (or specify <code>&amp;Var</code> to store the <a href="../Variables.htm#amp">address</a> of a variable). Replace <code>4</code> with the offset of the target member (see step #4 for description of &quot;offset&quot;). Replace <code>"UInt"</code> with the appropriate type or omit it if the member is a pointer or handle.</p>
-<p>3) Call the target function, passing the <a href="../Variables.htm#amp">address</a> of <em>MyStruct</em> as a Ptr argument. For example, <code>DllCall(&quot;MyDll\MyFunc&quot;, &quot;Ptr&quot;, <strong>&amp;</strong>MyStruct)</code>. The function will examine and/or change some of the members.</p>
-<p>4) Use <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> to retrieve any desired integers from the structure. Replace <code>4</code> with the offset of the target member in the structure. The first member is always at offset 0. The second member is at offset 0 plus the size of the first member (typically 4). Members beyond the second are at the offset of the previous member plus the size of the previous member. Most members -- such as DWORD, Int, and <a href="#Int">other types of 32-bit integers</a> -- are 4 bytes in size. Replace <code>"UInt"</code> with the appropriate type or omit it if the member is a pointer or handle.</p>
-<p>See <a href="#ExStruct">Structure Examples</a> for actual usages.</p>
+<h2 id="struct">结构和数组</h2>
+<p>结构是内存中连续存储的 <em>成员</em>(空间) 的集合. 大多数成员倾向于是整数.</p>
+<p>可以通过将结构的原始二进制数据存储在普通变量中来调用接受结构(或存储块数组) 地址的函数. 通常使用以下步骤:</p>
+<p>1) 调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyStruct, 123, 0)</code> 以确保目标变量足够大以容纳结构的数据. 将 123 替换为至少与结构大小一样大的数字. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步经常调用 NumPut.</p>
+<p>2) 如果目标函数最初使用结构中的值, 请调用 <code><a href="NumPut.htm">NumPut</a>(123, MyStruct, 4, "UInt")</code> 初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>&amp;Var</code> 来存储变量的<a href="../Variables.htm#amp">地址</a>). 将 <code>4</code> 替换为目标成员的偏移量(有关 &quot;offset&quot; 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
+<p>3) 调用目标函数, 将 <em>MyStruct</em> 的 <a href="../Variables.htm#amp">address</a> 作为 Ptr 参数传递. 例如, <code>DllCall(&quot;MyDll\MyFunc&quot;, &quot;Ptr&quot;, <strong>&amp;</strong>MyStruct)</code>. 该功能将检查和/或更改某些成员.</p>
+<p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code>从结构中检索任何所需的整数. 将 <code>4</code> 替换为结构中目标构件的偏移量. 第一个成员的偏移量始终为 0. 第二个成员的偏移量为 0 加第一个成员的大小(通常为 4). 第二个成员之后的成员是前一个成员的偏移量加上前一个成员的大小. 大多数成员 -- 如 DWORD, Int 和<a href="#Int">其他类型的 32 位整数</a> -- 的大小为 4 个字节. 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
+<p>有关实际用法, 请参阅 <a href="#ExStruct">Structure 示例</a>.</p>
 
 <h2 id="limits">已知限制</h2>
-<p>When a <a href="../Variables.htm#amp">variable's address</a> (e.g. <code>&amp;MyVar</code>) is passed to a function and that function alters the length of the variable's contents, subsequent uses of the variable may behave incorrectly. To fix this, do one of the following: 1) Pass <em>MyVar</em> as a <a href="#str">&quot;Str&quot;</a> argument rather than as a Ptr/address; 2) Call <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity</a>(MyVar, -1)</code> to update the variable's internally-stored length after calling DllCall.</p>
-<p>Any binary zero stored in a variable by a function hides all data to the right of the zero; that is, such data cannot be accessed or changed by most built-in functions. However, such data can be manipulated by the <a href="../Variables.htm#amp">address operator</a> and <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a>, as well as DllCall itself.</p>
-<p>A function that returns the address of one of the strings that was passed into it might return an identical string in a different memory address than expected. For example calling <code>CharLower(CharUpper(MyVar))</code> in a programming language would convert <em>MyVar</em>'s contents to lowercase. But when the same is done with DllCall, <em>MyVar</em> would be uppercase after the following call because CharLower would have operated on a different/temporary string whose contents were identical to <em>MyVar</em>:</p>
+<p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>) 传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误. 要解决此问题, 有下面几种方法: 1) 传递 <em>MyVar</em> 作为 <a href="#str">&quot;Str&quot;</a> 参数而不是 Ptr/地址; 2) 在调用 DllCall 调用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>
+<p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即大多数内置函数无法访问或修改此类数据. 但是, 这样的数据可以使用<a href="../Variables.htm#amp">地址运算符</a>和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a>, 以及 DllCall 本身进行操作.</p>
+<p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会在与预期不同的内存地址中返回相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar := "ABC"
 result := DllCall(&quot;CharLower&quot;, &quot;<strong><u>Str</u></strong>&quot;, DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, MyVar, &quot;<strong><u>Str</u></strong>&quot;), &quot;Str&quot;)</pre>
-<p>To work around this, change the two underlined &quot;Str&quot; values above to Ptr. This interprets CharUpper's return value as a pure address that will get passed as an integer to CharLower.</p>
-<p>Certain limitations may be encountered when dealing with strings. For details, 请参阅 <a href="../Compat.htm#DllCall">Script Compatibility</a>.</p>
+<p>要变通解决此问题, 请把上面两个带下划线的 &quot;Str&quot; 值修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整数传递给 CharLower.</p>
+<p>处理字符串时可能遇到某些限制. 更多详情, 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
 
-<h2 id="COM">Component Object Model (COM)</h2>
-<p>COM objects which are accessible to VBScript and similar languages are typically also accessible to AutoHotkey via <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a> or <a href="ComObjActive.htm">ComObjActive</a> and the built-in <a href="../Objects.htm#Usage_Objects">object syntax</a>.</p>
-COM objects which don't support <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx">IDispatch</a> can be used with DllCall by retrieving the address of a function from the virtual function table of the object's interface. For more details, see <a href="#ExTaskbar">the example</a> further below. However, it is usually better to use <a href="ComCall.htm">ComCall</a>, which streamlines this process.</p>
+<h2 id="COM">组件对象模型(COM)</h2>
+<p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a> 或 <a href="ComObjActive.htm">ComObjActive</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
+不支持 <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx">IDispatch</a> 的 COM 对象可以通过从对象接口的虚拟函数表中获取函数的地址用于 DllCall 中. 有关详情, 请参阅下面的<a href="#ExTaskbar">示例</a>. 但是, 通常最好使用 <a href="ComCall.htm">ComCall</a> 来简化此过程.</p>
 
-<h2 id="dotnet">.NET Framework</h2>
-<p>.NET Framework libraries are executed by a "virtual machine" known as the Common Language Runtime, or CLR. That being the case, .NET DLL files are formatted differently to normal DLL files, and generally do not contain any functions which DllCall is capable of calling.</p>
-<p>However, AutoHotkey can utilize the CLR through <a href="https://docs.microsoft.com/en-us/dotnet/standard/native-interop/com-callable-wrapper">COM callable wrappers</a>. Unless the library is also registered as a general COM component, the CLR itself must first be manually initialized via DllCall. For details, see <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a> (which currently utilizes DllCall and is not compatible with AutoHotkey v2).</p>
+<h2 id="dotnet">.NET 框架</h2>
+<p>.NET Framework 库由被称为公共语言运行时(CLR) 的 "虚拟机" 来执行. 在这种情况下, .NET DLL 文件的格式与常规 DLL 文件的格式不同, 并且通常不包含 DllCall 能够调用的任何函数.</p>
+<p>但是, AutoHotkey 可以通过 <a href="https://docs.microsoft.com/en-us/dotnet/standard/native-interop/com-callable-wrapper">COM 可调用包装器</a>来使用 CLR. 除非该库也已注册为通用 COM 组件, 否则必须先通过 DllCall 手动初始化 CLR 本身. 有关详情, 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>(其当前使用的 DllCall 与 AutoHotkey v2 不兼容).</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="../Compat.htm#DllCall">Script Compatibility</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a>, <a href="../Functions.htm">Functions</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
+<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a>, <a href="../Functions.htm">Functions</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExMessageBox">
