@@ -32,79 +32,79 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>指定零个或多个下列单词或字符串. 在选项间使用空格分隔(例如 <code>"C Fast"</code>).</p>
-    <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>Function</em> 时都启动新的<a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, it must be avoided whenever the thread from which <em>Address</em> is called varies (e.g. when the callback is triggered by an incoming message). This is because <em>FunctionName</em> will be able to change global settings such as <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a>, and the <a href="../misc/WinTitle.htm#LastFoundWindow">last-found window</a> for whichever thread happens to be running at the time it is called. For more information, 请参阅 <a href="#Threads">Remarks</a>.</p>
-    <p><strong>CDecl</strong> or <strong>C</strong>: Makes <em>Address</em> conform to the &quot;C&quot; calling convention. This is typically omitted because the standard calling convention is much more common for callbacks. This option is ignored by 64-bit versions of AutoHotkey, which use the x64 calling convention.</p>
-    <p><strong>&amp;</strong>: Causes the address of the parameter list (a single integer) to be passed to <em>Function</em> instead of the individual parameters. Parameter values can be retrieved by using <a href="NumGet.htm">NumGet</a>. When using the standard 32-bit calling convention, <em>ParamCount</em> must specify the size of the parameter list in DWORDs (the number of bytes divided by 4).</p>
+    <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>Function</em> 时都启动新的<a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, 但必须避免调用 <em>Address</em> 的线程发生变化(例如当回调函数被传入的消息触发). 这是因为 <em>FunctionName</em> 能改变在它被调用时正在运行的线程的全局设置(例如 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Variables.htm#LastError">A_LastError</a> 和<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>). 有关详情, 请参阅<a href="#Threads">备注</a>.</p>
+    <p><strong>CDecl</strong> 或 <strong>C</strong>: 让 <em>Address</em> 遵循 &quot;C&quot; 调用约定. 此选项通常省略, 因为在回调函数中使用标准调用约定更为常用. 64 位版本的 AutoHotkey 会忽略这个选项, 它使用 x64 调用约定.</p>
+    <p><strong>&amp;</strong>: 将参数列表的地址(单个整数) 传递给 <em>Function</em>, 而不是传递给各个参数. 可以使用 <a href="NumGet.htm">NumGet</a> 检索参数值. 当使用标准的 32 位调用约定时, <em>ParamCount</em> 必须以 DWORDs 指定参数列表的大小(字节数除以 4).</p>
   </dd>
 
   <dt>ParamCount</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The number of parameters that <em>Address</em>'s caller will pass to it. If omitted, it defaults to <code><i>Function</i>.<a href="../objects/Func.htm#MinParams">MinParams</a></code>, which is usually the number of mandatory parameters in the <a href="../Functions.htm#define">definition</a> of <em>Function</em>. In either case, ensure that the caller passes exactly this number of parameters.</p>
+    <p><em>Address</em> 的调用者会传递给它的参数数目. 如果省略, 则它默认为 <code><i>Function</i>.<a href="../objects/Func.htm#MinParams">MinParams</a></code>, 这通常是 <em>Function</em> <a href="../Functions.htm#define">定义</a>中强制参数的数目. 在这两种情况中, 必须确保调用者准确传递此数目的参数.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>CallbackCreate returns a machine-code address. This address is typically passed to an external function via <a href="DllCall.htm">DllCall</a> or placed in a struct using <a href="NumPut.htm">NumPut</a>, but can also be called directly by DllCall. Passing the address to <a href="#CallbackFree">CallbackFree</a> will delete the callback.</p>
+<p>CallbackCreate 返回一个机器码地址. 此地址通常通过 <a href="DllCall.htm">DllCall</a> 或使用 <a href="NumPut.htm">NumPut</a> 放置在结构中传递给外部函数, 但也可以由 DllCall 直接调用. 将地址传递给 <a href="#CallbackFree">CallbackFree</a> 将删除回调.</p>
 
-<h2 id="failure">Failure</h2>
-<p>This function fails and throws an exception under any of the following conditions:</p>
+<h2 id="failure">失败</h2>
+<p>在下列任何一种情况下, 此函数失败并抛出异常:</p>
 <ul>
-  <li><em>Function</em> is not an object or a valid function name.</li>
-  <li><em>Function</em> has a <code>MinParams</code> property which exceeds the number of parameters that the callback will supply.</li>
-  <li><em>ParamCount</em> is negative.</li>
-  <li><em>ParamCount</em> is omitted and: 1) <em>Function</em> has no <code>MinParams</code> property; or 2) the <code>&amp;</code> option is used with the standard 32-bit calling convention.</li>
+  <li><em>Function</em> 不是对象或有效的函数名.</li>
+  <li><em>Function</em> 具有 <code>MinParams</code> 属性, 该属性超过回调所提供的参数数量.</li>
+  <li><em>ParamCount</em> 为负数.</li>
+  <li><em>ParamCount</em> 省略, 并且: 1) <em>Function</em> 没有 <code>MinParams</code> 属性; 或 2) <code>&amp;</code> 选项与标准 32 位调用约定一起使用.</li>
 </ul>
 
-<h2>The Callback Function's 参数</h2>
-<p>A <a href="../Functions.htm">function</a> assigned to a callback address may accept up to 31 parameters. <a href="../Functions.htm#optional">Optional parameters</a> are permitted, which is useful when the function is called by more than one caller.</p>
-<p>Interpreting the parameters correctly requires some understanding of how the x86 calling conventions work. Since AutoHotkey does not have typed parameters, the callback's parameter list is assumed to consist of integers, and some reinterpretation may be required.</p>
+<h2 id="The_Callback_Functions_Parameters">回调函数的参数</h2>
+<p>分配给回调地址的<a href="../Functions.htm">函数</a>最多可以接受 31 个参数.  允许使用<a href="../Functions.htm#optional">可选参数</a>, 当多个调用者调用该函数时, 这非常有用.</p>
+<p>正确地解析参数需要了解 x86 调用约定是如何工作的. 由于 AutoHotkey 没有类型化参数, 因此假定回调的参数列表由整数组成, 可能需要进行一些重新解释.</p>
 
-<p><strong>AutoHotkey 32-bit:</strong> All incoming parameters are unsigned 32-bit integers. Smaller types are padded out to 32 bits, while larger types are split into a series of 32-bit parameters.</p>
-<p>If an incoming parameter is intended to be a signed integer, any negative numbers can be revealed by following either of the following examples:</p>
-<pre><em>; Method #1</em>
+<p><strong>AutoHotkey 32-bit:</strong> 所有传入参数都是无符号 32 位整数. 较小的类型被填充为 32 位, 而较大的类型被分割为一系列 32 位的参数.</p>
+<p>如果传入的参数是一个有符号整数, 任何负数都可以通过下面的例子来表示:</p>
+<pre><em>; 方法 #1</em>
 if (wParam &gt; 0x7FFFFFFF)
     wParam := -(~wParam) - 1
 
-<em>; Method #2: Relies on the fact that AutoHotkey natively uses signed 64-bit integers.</em>
+<em>; 方法 #2: 依赖于 AutoHotkey 原生使用带符号的 64 位整数这一事实.</em>
 wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
 
-<p><strong>AutoHotkey 64-bit:</strong> All incoming parameters are signed 64-bit integers. AutoHotkey does not natively support unsigned 64-bit integers. Smaller types are padded out to 64 bits, while larger types are always passed by address.</p>
+<p><strong>AutoHotkey 64-bit:</strong> 所有传入的参数都是有符号的 64 位整数. AutoHotkey 本身不支持无符号 64 位整数. 较小的类型被填充为 64 位，而较大的类型总是通过地址传递.</p>
 
-<p><strong>AutoHotkey 32-bit/64-bit:</strong> If an incoming parameter is intended to be 8-bit or 16-bit (or 32-bit on x64), the upper bits of the value might contain "garbage" which can be filtered out by using bitwise-and, as in the following examples:</p>
+<p><strong>AutoHotkey 32-bit/64-bit:</strong> 如果传入的参数是 8 位或 16 位(或 x64 上的 32 位), 则值的上位可能包含 "garbage" 可以使用 bitwise-and 进行过滤, 如下例所示:</p>
 <pre>Callback(UCharParam, UShortParam, UIntParam) {
     UCharParam &amp;= 0xFF
     UShortParam &amp;= 0xFFFF
     UIntParam &amp;= 0xFFFFFFFF
     <em>;...</em>
 }</pre>
-<p>If an incoming parameter is intended by its caller to be a string, what it actually receives is the address of the string. To retrieve the string itself, use <a href="StrGet.htm">StrGet</a>:</p>
+<p>如果调用者希望传入参数是字符串, 那么它实际接收的是字符串的地址. 要获取这样的字符串, 请使用 <a href="StrGet.htm">StrGet</a>:</p>
 <pre>MyString := StrGet(MyParameter)</pre>
-<p>If an incoming parameter is the address of a structure, the individual members may be extracted by following the steps at <a href="DllCall.htm#struct">DllCall structures</a>.</p>
+<p>如果某个传入参数为结构的地址, 则可以参照 <a href="DllCall.htm#struct">DllCall 结构</a>中描述的步骤提取其中的各个成员.</p>
 
-<p id="Indirect"><strong>Receiving parameters by address:</strong> If the <code>&amp;</code> option is used, the function receives the <i>address</i> of the first callback parameter. 例如:</p>
+<p id="Indirect"><strong>按址接收参数:</strong> 如果使用 <code>&amp;</code> 选项, 函数接收第一个回调参数的 <i>地址</i>. 例如:</p>
 <pre>
-callback := CallbackCreate("TheFunc", "F&amp;", 3)  <em>; Parameter list size must be specified for 32-bit.</em>
+callback := CallbackCreate("TheFunc", "F&amp;", 3)  <em>; 32 位中必须指定参数列表的大小.</em>
 DllCall(callback, &quot;float&quot;, 10.5, &quot;int64&quot;, 42)
 TheFunc(params) {
     MsgBox <a href="NumGet.htm">NumGet</a>(params+0, "float") ", " NumGet(params+A_PtrSize, "int64")
 }</pre>
-<p>Most callbacks in 32-bit programs use the <em>stdcall</em> calling convention, which requires a fixed number of parameters. In those cases, <em>ParamCount</em> must be set to the size of the parameter list, where Int64 and Double count as two 32-bit parameters. With <em>Cdecl</em> or the 64-bit calling convention, <em>ParamCount</em> has no effect.</p>
+<p>32 位程序中的大多数回调都使用 <em>stdcall</em> 调用约定, 该约定需要固定数量的参数. 在这种情况下, 必须将 <em>ParamCount</em> 设置为参数列表的大小, 其中 Int64 和 Double 都计为两个 32 位参数. 使用 <em>Cdecl</em> 或 64 位调用约定时, <em>ParamCount</em> 无效.</p>
 
-<h2>What the Function Should <em>Return</em></h2>
-<p>If the function uses <a href="Return.htm">Return</a> without any parameters, or it specifies a blank value such as &quot;&quot; (or it never uses Return at all), 0 is returned to the caller of the callback. Otherwise, the function should return an integer, which is then returned to the caller. AutoHotkey 32-bit truncates return values to 32-bit, while AutoHotkey 64-bit supports 64-bit return values. Returning structs larger than this (by value) is not supported.</p>
+<h2>函数应该 <em>Return</em> 什么</h2>
+<p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或者指定空白值, 如 &quot;&quot;(或者根本不使用 Return), 则将 0 返回给回调的调用者. 否则, 函数应该返回一个整数, 然后将其返回给调用者. AutoHotkey 32-bit 将返回值截断为 32 位, 而 AutoHotkey 64-bit 则支持 64 位返回值. 不支持返回大于此值的结构(按值).</p>
 
 <h2 id="Threads">Fast vs. Slow</h2>
-<p>The default/slow mode causes the function to start off fresh with the default values for settings such as <a href="SendMode.htm">SendMode</a> and <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. These defaults can be changed in the <a href="../Scripts.htm#auto">auto-execute section</a>.</p>
-<p>By contrast, the <a href="#Fast">fast mode</a> inherits global settings from whichever <a href="../misc/Threads.htm">thread</a> happens to be running at the time the function is called. Furthermore, any changes the function makes to global settings (including <a href="../misc/ErrorLevel.htm">ErrorLevel</a> and the <a href="../misc/WinTitle.htm#LastFoundWindow">last-found window</a>) will go into effect for the <a href="../misc/Threads.htm">current thread</a>. Consequently, the fast mode should be used only when it is known exactly which thread(s) the function will be called from.</p>
-<p>To avoid being interrupted by itself (or any other thread), a callback may use <a href="Critical.htm">Critical</a> as its first line. However, this is not completely effective when the function is called indirectly via the arrival of a message less than 0x312 (increasing Critical's <a href="Critical.htm#Interval">interval</a> may help). Furthermore, <a href="Critical.htm">Critical</a> does not prevent the function from doing something that might indirectly result in a call to itself, such as calling <a href="SendMessage.htm">SendMessage</a> or <a href="DllCall.htm">DllCall</a>.</p>
+<p>默认/慢速模式使该函数以默认值(如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>) 重新启动. 这些默认值可以在<a href="../Scripts.htm#auto">自动执行段</a>中更改.</p>
+<p>与之相比, <a href="#Fast">快速模式</a>会继承在调用函数时正在运行的<a href="../misc/Threads.htm">线程</a>的全局设置. 而且, 函数对全局设置的任何修改(包括 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 和<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在<a href="../misc/Threads.htm">当前线程</a>生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
+<p>要避免被自己(或其他任何线程) 中断, 回调可以在它的首行使用 <a href="Critical.htm">Critical</a>. 但是, 通过小于 0x312 消息达到的间接调用函数时, 这并不是完全有效的(增加 Critical 的 <a href="Critical.htm#Interval">interval</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="SendMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
 
-<h2 id="CallbackFree">Memory</h2>
-<p>Each use of CallbackCreate allocates a small amount of memory (32 bytes plus system overhead). Since the OS frees this memory automatically when the script exits, any script that allocates a small, <em>fixed</em> number of callbacks does not have to explicitly free the memory. By contrast, a script that calls CallbackCreate an indefinite/unlimited number of times should explicitly call the following on any unused callbacks:</p>
+<h2 id="CallbackFree">内存</h2>
+<p>每次使用 CallbackCreate 都会分配少量内存(32 字节加上系统开销). 由于操作系统会在脚本退出时自动释放该内存, 因此分配了少量, <em>固定</em> 数量的回调的任何脚本都不必显式释放内存. 相比之下, 不确定/无限制次数调用 CallbackCreate 的脚本应在任何未使用的回调中显式调用以下代码:</p>
 <pre>CallbackFree(Address)</pre>
-<p>This also releases the callback's reference to the script's function object.</p>
+<p>这也会释放对脚本的函数对象的回调引用.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="DllCall.htm">DllCall</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort's callback</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">Functions</a>, <a href="../misc/SendMessageList.htm">List of Windows Messages</a>, <a href="../misc/Threads.htm">Threads</a></p>
