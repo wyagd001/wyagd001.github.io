@@ -14,7 +14,7 @@
 
 <h1>Download</h1>
 
-<p>Downloads a file from the Internet.</p>
+<p>从互联网下载文件.</p>
 
 <pre class="Syntax"><span class="func">Download</span> URL, Filename </pre>
 <h2 id="Parameters">参数</h2>
@@ -23,13 +23,13 @@
   <dt>URL</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>URL of the file to download. 例如, http://someorg.org might retrieve the welcome page for that organization.</p>
+    <p>要下载的文件的 URL. 例如, http://someorg.org 可能会获取到该组织的欢迎页面.</p>
   </dd>
 
   <dt>Filename</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>Specify the name of the file to be created locally, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified. Any existing file will be <strong>overwritten</strong> by the new file.</p>
+    <p>指定要在本地创建的文件的名称, 如果没有指定绝对路径, 则假定该文件位于 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 任何现有文件都将被新文件 <strong>覆盖</strong>.</p>
   </dd>
 
 </dl>
@@ -37,12 +37,12 @@
 <h2>ErrorLevel</h2>
 <p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0.</p>
 <h2 id="Remarks">备注</h2>
-<p>This function downloads to a file. To download to a variable instead, 请参阅 the example below. For alternative methods, 请参阅 the following forum topic: <a href="https://www.autohotkey.com/forum/topic10466.html">www.autohotkey.com/forum/topic10466.html</a></p>
-<p>The download might appear to succeed even when the remote file doesn't exist. This is because many web servers send an error page instead of the missing file. This error page is what will be saved in place of <em>Filename</em>.</p>
-<p>Firewalls or the presence of multiple network adapters may cause this function to fail. Also, some websites may block such downloads.</p>
-<p><strong>Caching</strong>: By default, the URL is retrieved directly from the remote server (that is, never from Internet Explorer's cache). To permit caching, precede the URL with *0 followed by a space; 例如: <em>*0 http://someorg.org</em>. The zero following the asterisk may be replaced by any valid dwFlags number; for details, search <a href="http://www.microsoft.com">www.microsoft.com</a> for  InternetOpenUrl.</p>
-<p><strong>Proxies</strong>: If a proxy server has been configured in Microsoft Internet Explorer's settings, it will be used.</p>
-<p><strong>FTP and Gopher</strong> URLS are also supported. 例如:</p>
+<p>此函数下载到文件. 要下载到变量, 请参阅下面的示例. 其他方法, 请参阅以下论坛主题: <a href="https://www.autohotkey.com/forum/topic10466.html">www.autohotkey.com/forum/topic10466.html</a></p>
+<p>即使远程文件不存在, 下载也可能会成功. 这是因为许多 Web 服务器发送错误页面来代替丢失的文件. 该错误页面将代替 <em>Filename</em> 保存.</p>
+<p>防火墙或存在多个网络适配器可能导致此函数失败. 此外, 某些网站可能会阻止此类下载.</p>
+<p><strong>缓存</strong>: 默认情况下, 直接从远程服务器检索 URL(即, 不从 Internet Explorer 的缓存检索). 要允许缓存, 请在 URL 之前加 *0 后跟一个空格; 例如: <em>*0 http://someorg.org</em>. 星号后的 0 可以用任何有效的 dwFlags 数字代替; 有关详情, 请在 <a href="http://www.microsoft.com">www.microsoft.com</a> 搜索 InternetOpenUrl.</p>
+<p><strong>代理</strong>: 如果在 Microsoft Internet Explorer 的设置中配置了代理服务器, 则将使用它.</p>
+<p>还支持 <strong>FTP 和 Gopher</strong> URL. 例如:</p>
 <pre>Download "ftp://example.com/home/My File.zip", "C:\My Folder\My File.zip"  <em>; Log in anonymously.</em>
 Download "ftp://user:pass@example.com:21/home/My File.zip", "C:\My Folder\My File.zip"  <em>; Log in as a specific user.</em>
 Download "ftp://user:pass@example.com/My Directory", "C:\Dir Listing.html"  <em>; Gets a directory listing in HTML format.</em></pre>
@@ -62,7 +62,7 @@ Download "http://someorg.org/archive.zip", "C:\SomeOrg's Archive.zip"</pre>
 <pre>whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 whr.Open("GET", "http://autohotkey.com/download/2.0/version.txt")
 whr.Send()
-<em>; Using 'true' above and the call below allows the script to remain responsive.</em>
+<em>; 使用 'true'(上面) 和调用下面的函数, 允许脚本保持响应.</em>
 whr.WaitForResponse()
 version := whr.ResponseText
 MsgBox version
@@ -70,19 +70,18 @@ MsgBox version
 </div>
 
 <div class="ex" id="ExXHR">
-<p><a href="#ExXHR">#3</a>: Make an asynchronous HTTP request.</p>
+<p><a href="#ExXHR">#3</a>: 发出异步 HTTP 请求.</p>
 <pre>req := ComObjCreate("Msxml2.XMLHTTP")
-<em>; Open a request with async enabled.</em>
+<em>; 打开启用异步的请求.</em>
 req.open("GET", "https://www.autohotkey.com/download/2.0/version.txt", true)
-<em>; Set our callback function.</em>
+<em>; 设置回调函数.</em>
 req.onreadystatechange := Func("Ready")
-<em>; Send the request.  Ready() will be called when it's complete.</em>
+<em>; 发送请求. Ready() 将在其完成后被调用.</em>
 req.send()
 <em>/*
-; If you're going to wait, there's no need for onreadystatechange.
-; Setting async=true and waiting like this allows the script to remain
-; responsive while the download is taking place, whereas async=false
-; will make the script unresponsive.
+; 如果你要一直等待到下载完毕, 就不需要 onreadystatechange 了.
+; 设置 async=true 和像这样等待, 可以在下载过程中允许脚本保留响应
+; 而 async=false 将使脚本无响应.
 while req.readyState != 4
     sleep 100
 */</em>
@@ -90,7 +89,7 @@ while req.readyState != 4
 
 Ready() {
     global req
-    if (req.readyState != 4)  <em>; Not done yet.</em>
+    if (req.readyState != 4)  <em>; 没有完成.</em>
         return
     if (req.status == 200) <em>; OK.</em>
         MsgBox "Latest AutoHotkey version: " req.responseText
