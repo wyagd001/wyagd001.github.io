@@ -28,7 +28,7 @@
   <dt>FilePattern</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>单个文件或文件夹的名称, 或通配符模式, 如 <code>"C:\Temp\*.tmp"</code>. 如果未指定绝对路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p>
+    <p>单个文件或文件夹的名称, 或通配符模式, 如 <code>"C:\Temp\*.tmp"</code>. 如果未指定绝对路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
     <p>如果省略, 则使用最内层<a href="LoopFile.htm">文件循环</a>的当前文件.</p>
   </dd>
 
@@ -39,56 +39,56 @@
     <p><code>D</code>: 包含目录(文件夹).<br>
     <code>F</code>: 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录.<br>
     <code>R</code>: 子文件夹被递归到其中, 这样包含在其中的文件和文件夹如果匹配 <em>FilePattern</em>, 则对它们进行操作. 所有子文件夹都将被递归到其中, 而不仅仅是那些名称匹配 <em>FilePattern</em> 的子文件夹. 如果省略 R, 则不包含子目录中的文件和目录.</p>
-    <p class="note"><strong>Note</strong>: If <em>FilePattern</em> is a single folder rather than a wildcard pattern, it will always be operated upon regardless of this setting.</p>
+    <p class="note"><strong>注意</strong>: 如果 <em>FilePattern</em> 是单个文件夹, 而不是通配符模式, 则无论该设置如何, 它都将始终被操作.</p>
   </dd>
 
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to the number of files that <u>failed</u> to be changed or 0 otherwise.</p>
-<p>If files were found, <a href="../Variables.htm#LastError">A_LastError</a> is set to 0 (zero) or the result of the operating system's GetLastError() function immediately after the last failure. Otherwise A_LastError contains an error code that might indicate why no files were found.</p>
+<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为改变属性 <u>失败</u> 的文件数, 否则为 0.</p>
+<p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0, 或上次失败后立即获得操作系统的 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
 
 <h2 id="Remarks">备注</h2>
-<p><strong>Known limitation:</strong> Files and folders with a complete path name longer than 259 characters are skipped over, and may or may not be counted in ErrorLevel. Such files are rare because normally, the operating system does not allow their creation.</p>
-<p>The <em>Attributes</em> parameter consists of a collection of operators and attribute letters.</p>
-<p><em>Operators</em>:</p>
+<p><strong>已知限制:</strong> 具有超过 259 个字符的完整路径名的文件和文件夹将被跳过, 并且有可能在 ErrorLevel 中计算. 这样的文件很少见, 因为通常操作系统不允许创建它们.</p>
+<p><em>Attributes</em> 参数由运算符和属性字母的集合组成.</p>
+<p><em>运算符</em>:</p>
 <table class="info">
   <tr>
     <td>+</td>
-    <td>Turn on the attribute</td>
+    <td>启用属性</td>
   </tr>
   <tr>
     <td>-</td>
-    <td>Turn off the attribute</td>
+    <td>取消属性</td>
   </tr>
   <tr>
     <td>^</td>
-    <td>Toggle the attribute (set it to the opposite value of what it is now)</td>
+    <td>切换属性(设置为与现在相反的值)</td>
   </tr>
   <tr>
     <td></td>
-    <td>If no operator precedes the attribute letters, the file's attributes are replaced with the given attributes. To remove all attributes, use "N" on its own.</td>
+    <td>如果在属性字母之前没有运算符, 则文件的属性将替换为给定的属性. 要删除所有属性, 请单独使用 "N".</td>
   </tr>
 </table>
 <p><br>
-  <em>Attribute letters</em>:<br>
-  R = READONLY<br>
-  A = ARCHIVE<br>
-  S = SYSTEM<br>
-  H = HIDDEN<br>
-  N = NORMAL (this is valid only when used without any other attributes)<br>
-  O = OFFLINE<br>
-T = TEMPORARY</p>
-<p class="note"><strong>Note</strong>: Currently, the compression state of files cannot be changed with this function.</p>
+  <em>属性字母</em>:<br>
+  R = 只读<br>
+  A = 存档<br>
+  S = 系统<br>
+  H = 隐藏<br>
+  N = 普通(仅在单独使用此属性时才有效)<br>
+  O = 离线<br>
+  T = 临时</p>
+<p class="note"><strong>注意</strong>: 当前, 此函数无法改变文件的压缩状态.</p>
 <h2 id="Related">相关</h2>
 <p><a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="FileGetTime.htm">FileGetTime</a>, <a href="FileSetTime.htm">FileSetTime</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileGetVersion.htm">FileGetVersion</a>, <a href="LoopFiles.htm">File-loop</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
-<pre>FileSetAttrib "+RH", "C:\MyFiles\*.*", "DF"  <em>; +RH is identical to +R+H</em>
-FileSetAttrib "^H", "C:\MyFiles"  <em>; Toggle the folder's &quot;hidden&quot; attribute.</em>
+<pre>FileSetAttrib "+RH", "C:\MyFiles\*.*", "DF"  <em>; +RH 等同于 +R+H</em>
+FileSetAttrib "^H", "C:\MyFiles"  <em>; 切换文件夹的 &quot;隐藏&quot; 属性.</em>
 FileSetAttrib "-R+A", "C:\New Text File.txt"
-FileSetAttrib "+A", "C:\*.ini", "R"  <em>; Recurse through all .ini files on the C drive.</em></pre>
+FileSetAttrib "+A", "C:\*.ini", "R"  <em>; 递归 C 驱动器上的所有 .ini 文件.</em></pre>
 </div>
 
 </body>
