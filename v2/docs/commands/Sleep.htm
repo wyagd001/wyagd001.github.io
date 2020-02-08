@@ -13,7 +13,7 @@
 
 <h1>Sleep</h1>
 
-<p>Waits the specified amount of time before continuing.</p>
+<p>在继续前等待指定的时间量.</p>
 
 <pre class="Syntax"><span class="func">Sleep</span> DelayInMilliseconds</pre>
 <h2 id="Parameters">参数</h2>
@@ -22,13 +22,13 @@
   <dt>Delay</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The amount of time to pause (in milliseconds) between 0 and 2147483647 (24 days).</p>
+    <p>要暂停的时间量(单位为毫秒), 介于 0 和 2147483647(24 天) 之间.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>Due to the granularity of the OS's time-keeping system, <em>Delay</em> is typically rounded up to the nearest multiple of 10 or 15.6 milliseconds (depending on the type of hardware and drivers installed). To achieve a shorter delay, 请参阅 <a href="#ExShorterSleep">Examples</a>.</p>
+<p>由于操作系统中计时系统的精确度, <em>Delay</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于所安装的硬件和驱动的类型). 要实现更短的延时, 请参阅<a href="#ExShorterSleep">示例</a>.</p>
 <p>The actual delay time might wind up being longer than what was requested if the CPU is under load. This is because the OS gives each needy process a slice of CPU time (typically 20 milliseconds) before giving another timeslice to the script.</p>
 <p>A delay of 0 yields the remainder of the script's current timeslice to any other processes that need it (as long as they are not significantly lower in <a href="ProcessSetPriority.htm">priority</a> than the script). Thus, a delay of 0 produces an actual delay between 0 and 20ms (or more), depending on the number of needy processes (if there are no needy processes, there will be no delay at all). However, a <em>Delay</em> of 0 should always wind up being shorter than any longer <em>Delay</em> would have been.</p>
 <p>While sleeping, new <a href="../misc/Threads.htm">threads</a> can be launched via <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timer</a>.</p>
@@ -42,21 +42,21 @@
 </div>
 
 <div class="ex" id="ExShorterSleep">
-<p><a href="#ExShorterSleep">#2</a>: The following is a working example that demonstrates how to sleep for less time than the normal 10 or 15.6 milliseconds. NOTE: While a script like this is running, the entire operating system and all applications are affected by timeBeginPeriod below.</p>
+<p><a href="#ExShorterSleep">#2</a>: 下面是个可运行示例, 它演示了如何休眠比普通的 10 或 15.6 毫秒更短的时间. 注意: 像这样的脚本运行时, 整个操作系统和所有的应用程序都会受到下面的 timeBeginPeriod 的影响.</p>
 <pre>
-SleepDuration := 1  <em>; This can sometimes be finely adjusted (e.g. 2 is different than 3) depending on the value below.</em>
-TimePeriod := 3 <em>; Try 7 or 3.  See comment below.
+SleepDuration := 1  <em>; 这里有时可以根据下面的值进行细微调整(例如 2 与 3 的区别).</em>
+TimePeriod := 3 <em>; 尝试 7 或 3. 请参阅下面的注释.
 ; On a PC whose sleep duration normally rounds up to 15.6 ms, try TimePeriod=7 to allow
 ; somewhat shorter sleeps, and try TimePeriod=3 or less to allow the shortest possible sleeps.</em>
 
-DllCall(&quot;Winmm\timeBeginPeriod&quot;, &quot;UInt&quot;, TimePeriod)  <em>; Affects all applications, not just this script's DllCall(&quot;Sleep&quot;...), but does not affect SetTimer.</em>
+DllCall(&quot;Winmm\timeBeginPeriod&quot;, &quot;UInt&quot;, TimePeriod)  <em>; 作用于所有的应用程序, 而不只是脚本的 DllCall(&quot;Sleep&quot;...), 但不影响 SetTimer.</em>
 Iterations := 50
 StartTime := A_TickCount
 
 Loop Iterations
-    DllCall(&quot;Sleep&quot;, &quot;UInt&quot;, SleepDuration)  <em>; Must use DllCall instead of the Sleep function.</em>
+    DllCall(&quot;Sleep&quot;, &quot;UInt&quot;, SleepDuration)  <em>; 必须使用 DllCall 而不是 Sleep 函数.</em>
 
-DllCall(&quot;Winmm\timeEndPeriod&quot;, &quot;UInt&quot;, TimePeriod)  <em>; Should be called to restore system to normal.</em>
+DllCall(&quot;Winmm\timeEndPeriod&quot;, &quot;UInt&quot;, TimePeriod)  <em>; 应该进行调用来让系统恢复正常.</em>
 MsgBox &quot;Sleep duration = &quot; . (A_TickCount - StartTime) / Iterations</pre>
 </div>
 

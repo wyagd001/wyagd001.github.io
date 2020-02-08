@@ -13,20 +13,20 @@
 
 <h1>Thread</h1>
 
-<p>Sets the priority or interruptibility of <a href="../misc/Threads.htm">threads</a>. It can also temporarily disable all <a href="SetTimer.htm">timers</a>.</p>
+<p>设置<a href="../misc/Threads.htm">线程</a>. 的优先级或是否可以被中断. 它也可以临时禁用所有的<a href="SetTimer.htm">计时器</a>.</p>
 <pre class="Syntax"><span class="func">Thread</span> <a href="#SubFunctions">SubFunction</a> <span class="optional">, Value1, Value2</span></pre>
-<p>The <em>SubFunction</em>, <em>Value1</em>, and <em>Value2</em> parameters are dependent upon each other and their usage is described below.</p>
+<p><em>SubFunction</em>, <em>Value1</em> 和 <em>Value2</em> 参数互相依赖, 其用法描述如下.</p>
 
-<h2 id="SubFunctions">Sub-functions</h2>
-<p>For <em>SubFunction</em>, specify one of the following:</p>
+<h2 id="SubFunctions">子函数</h2>
+<p>对于 <em>SubFunction</em>, 指定以下之一:</p>
 <ul>
-    <li><a href="#NoTimers">NoTimers</a>: Prevents interruptions from any timers.</li>
-    <li><a href="#Priority">Priority</a>: Changes the priority level of the current thread.</li>
-    <li><a href="#Interrupt">Interrupt</a>: Changes the duration of interruptibility for newly launched threads.</li>
+    <li><a href="#NoTimers">NoTimers</a>: 防止被任何的计时器中断.</li>
+    <li><a href="#Priority">Priority</a>: 更改当前线程的优先级级别.</li>
+    <li><a href="#Interrupt">Interrupt</a>: 更改新启动的线程的可中断时间.</li>
 </ul>
 
 <h3 id="NoTimers">NoTimers</h3>
-<p>Prevents interruptions from any timers.</p>
+<p>防止被任何计时器中断.</p>
 <pre class="Syntax"><span class="func">Thread</span> "NoTimers" <span class="optional">, TrueOrFalse</span></pre>
 <p>This sub-function prevents interruptions from any <a href="SetTimer.htm">timers</a> until the <a href="../misc/Threads.htm">current thread</a> either ends, executes <code>Thread "NoTimers", false</code>, or is interrupted by another thread that allows timers (in which case timers can interrupt the interrupting thread until it finishes).</p>
 <p>If this sub-function is not used in the auto-execute section (top part of the script), all threads start off as interruptible by timers (though the settings of the <a href="#Interrupt">Interrupt</a> sub-function [below] will still apply). By contrast, if the auto-execute section turns on this sub-function but never turns it off, every newly launched <a href="../misc/Threads.htm">thread</a> (such as a <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timer</a>) starts off immune to interruptions by timers.</p>
@@ -34,7 +34,7 @@
 <p><code>Thread "NoTimers"</code> is equivalent to <code>Thread "NoTimers", true</code>. In addition, since <em>TrueOrFalse</em> is an <a href="../Variables.htm#Expressions">expression</a>, true resolves to 1, and false to 0.</p>
 
 <h3 id="Priority">Priority</h3>
-<p>Changes the priority level of the current thread.</p>
+<p>更改当前线程的优先级级别.</p>
 <pre class="Syntax"><span class="func">Thread</span> "Priority", Level</pre>
 <p>Specify for <em>Level</em> an integer between -2147483648 and 2147483647 (or an <a href="../Variables.htm#Expressions">expression</a>) to indicate the current thread's new priority. This has no effect on other threads. See <a href="../misc/Threads.htm">Threads</a> for details.</p>
 <p>Due to its ability to buffer events, the function <a href="Critical.htm">Critical</a> is generally superior to this sub-function.</p>
@@ -42,7 +42,7 @@
 <pre>ProcessSetPriority "High"</pre>
 
 <h3 id="Interrupt">Interrupt</h3>
-<p>Changes the duration of interruptibility for newly launched threads.</p>
+<p>更改新启动的线程的可中断时间.</p>
 <pre class="Syntax"><span class="func">Thread</span> "Interrupt" <span class="optional">, Duration, LineCount</span></pre>
 <p class="note"><strong>Note:</strong> This sub-function should be used sparingly because most scripts perform more consistently with settings close to the defaults.</p>
 <p>By default, every newly launched thread is uninterruptible for a <em>Duration</em> of 15 milliseconds or a <em>LineCount</em> of 1000 script lines, whichever comes first. This gives the thread a chance to finish rather than  being immediately interrupted by another thread that is waiting to launch (such as a buffered <a href="../Hotkeys.htm">hotkey</a> or a series of <a href="SetTimer.htm">timed subroutines</a> that are all due to be run).</p>
