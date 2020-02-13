@@ -28,41 +28,41 @@
 <h3 id="NoTimers">NoTimers</h3>
 <p>防止被任何计时器中断.</p>
 <pre class="Syntax"><span class="func">Thread</span> "NoTimers" <span class="optional">, TrueOrFalse</span></pre>
-<p>This sub-function prevents interruptions from any <a href="SetTimer.htm">timers</a> until the <a href="../misc/Threads.htm">current thread</a> either ends, executes <code>Thread "NoTimers", false</code>, or is interrupted by another thread that allows timers (in which case timers can interrupt the interrupting thread until it finishes).</p>
-<p>If this sub-function is not used in the auto-execute section (top part of the script), all threads start off as interruptible by timers (though the settings of the <a href="#Interrupt">Interrupt</a> sub-function [below] will still apply). By contrast, if the auto-execute section turns on this sub-function but never turns it off, every newly launched <a href="../misc/Threads.htm">thread</a> (such as a <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timer</a>) starts off immune to interruptions by timers.</p>
-<p>Regardless of the default setting, timers will always operate when the script has no threads (unless <a href="Pause.htm">Pause</a> has been turned on).</p>
-<p><code>Thread "NoTimers"</code> is equivalent to <code>Thread "NoTimers", true</code>. In addition, since <em>TrueOrFalse</em> is an <a href="../Variables.htm#Expressions">expression</a>, true resolves to 1, and false to 0.</p>
+<p>此子函数防止线程被任何<a href="SetTimer.htm">计时器</a>中断, 直至<a href="../misc/Threads.htm">当前线程</a>结束, 或执行 <code>Thread "NoTimers", false</code>, 或被另一个允许计时器的线程中断(这样的情况下, 计时器可以中断正在中断的线程直到计时器完成).</p>
+<p>如果自动执行段(脚本的顶部) 没有使用这个子函数, 则所有线程均以可被计时器中断的方式启动(然而下面的 <a href="#Interrupt">Interrupt</a> 子函数设置仍会生效). 相比之下, 如果在自动执行段中打开了这个子函数, 但却从没有关闭它, 则每个新启动的<a href="../misc/Threads.htm">线程</a>(如 <a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>) 均以不会被计时器中断的方式启动.</p>
+<p>不论默认的设置如何, 当脚本没有其他线程时计时器总能执行(除非使用了 <a href="Pause.htm">Pause</a>).</p>
+<p><code>Thread "NoTimers"</code> 等同于 <code>Thread "NoTimers", true</code>. 此外, 由于 <em>TrueOrFalse</em> 是一个<a href="../Variables.htm#Expressions">表达式</a>, 因此 true 解析为 1, 而 false 解析为 0.</p>
 
 <h3 id="Priority">Priority</h3>
 <p>更改当前线程的优先级级别.</p>
 <pre class="Syntax"><span class="func">Thread</span> "Priority", Level</pre>
-<p>Specify for <em>Level</em> an integer between -2147483648 and 2147483647 (or an <a href="../Variables.htm#Expressions">expression</a>) to indicate the current thread's new priority. This has no effect on other threads. See <a href="../misc/Threads.htm">Threads</a> for details.</p>
-<p>Due to its ability to buffer events, the function <a href="Critical.htm">Critical</a> is generally superior to this sub-function.</p>
-<p>On a related note, the OS's priority level for the entire script can be changed via <a href="ProcessSetPriority.htm">ProcessSetPriority</a>. 例如:</p>
+<p>指定 <em>Level</em> 为介于 -2147483648 和 2147483647 之间的整数(或<a href="../Variables.htm#Expressions">表达式</a>) 来表示当前线程的新优先级. 这不会影响其他线程. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
+<p>由于具有缓冲事件的能力, 函数 <a href="Critical.htm">Critical</a> 通常优于这个子函数.</p>
+<p>相关提示, 整个脚本的操作系统优先级可以通过 <a href="ProcessSetPriority.htm">ProcessSetPriority</a> 来改变. 例如:</p>
 <pre>ProcessSetPriority "High"</pre>
 
 <h3 id="Interrupt">Interrupt</h3>
 <p>更改新启动的线程的可中断时间.</p>
 <pre class="Syntax"><span class="func">Thread</span> "Interrupt" <span class="optional">, Duration, LineCount</span></pre>
-<p class="note"><strong>Note:</strong> This sub-function should be used sparingly because most scripts perform more consistently with settings close to the defaults.</p>
-<p>By default, every newly launched thread is uninterruptible for a <em>Duration</em> of 15 milliseconds or a <em>LineCount</em> of 1000 script lines, whichever comes first. This gives the thread a chance to finish rather than  being immediately interrupted by another thread that is waiting to launch (such as a buffered <a href="../Hotkeys.htm">hotkey</a> or a series of <a href="SetTimer.htm">timed subroutines</a> that are all due to be run).</p>
-<p class="note"><strong>Note:</strong> Any <em>Duration</em> less than 17 might result in a shorter actual duration or immediate interruption, since the system tick count has a minimum resolution of 10 to 16 milliseconds. However, at least one line will execute before the thread becomes interruptible, allowing the script to enable <a href="Critical.htm">Critical</a>, if needed.</p>
-<p>If either parameter is 0, each newly launched thread is immediately interruptible. If either parameter is -1, the thread cannot be interrupted as a result of that parameter. The maximum for both parameters is 2147483647.</p>
-<p>This sub-function is global, meaning that all subsequent threads will obey it, even if the sub-function is used somewhere other than the <a href="../Scripts.htm#auto">auto-execute section</a>. However,<a href="../misc/Threads.htm"> interrupted threads</a> are unaffected because their period of uninterrutibility has already expired. Similarly, the <a href="../misc/Threads.htm">current thread</a> is unaffected except if it is uninterruptible at the time the <em>LineCount</em> parameter is changed, in which case the new <em>LineCount</em> will be in effect for it.</p>
-<p>If a <a href="../Hotkeys.htm">hotkey</a> is pressed or a <a href="../objects/Menu.htm">custom menu item</a> is selected while the <a href="../misc/Threads.htm">current thread</a> is uninterruptible, that event will be buffered. In other words, it will launch when the current thread finishes or becomes interruptible, whichever comes first. The exception to this is when the current thread becomes interruptible before it finishes, and it is of higher <a href="#Priority">priority</a> than the buffered event; in this case the buffered event is unbuffered and discarded.</p>
-<p>Regardless of this sub-function, a thread will become interruptible the moment it displays a <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelect.htm">FileSelect</a>, or <a href="DirSelect.htm">DirSelect</a> dialog.</p>
-<p>Either parameter can be left blank to avoid changing it.</p>
+<p class="note"><strong>注意:</strong> 应该谨慎使用此子函数, 因为大多数脚本在接近默认设置的情况下执行更一致..</p>
+<p>默认情况下, 每个新启动的线程在开始的 <em>Duration</em>(15 毫秒) 或 <em>LineCount</em>(1000 行) 中都是不中断的, 以先到者为准. 这使线程有机会完成操作, 而不是被正在等待启动的另一个线程立即中断(如, 缓冲的<a href="../Hotkeys.htm">热键</a>或计划运行的<a href="SetTimer.htm">计时器子程序</a>).</p>
+<p class="note"><strong>注意:</strong> 任何 <em>Duration</em> 小于 17 可能导致实际持续时间缩短或直接中断, 因为系统刻度计数的最小分辨率为 10 到 16 毫秒. 但是, 在线程中断之前, 将至少执行一行, 从而允许脚本在需要时启用 <a href="Critical.htm">Critical</a>.</p>
+<p>如果任一参数为 0, 每个新启动的线程都可以被立即中断. 如果任一参数为 -1, 那么此参数会使得线程不会被中断. 这两个参数的最大值为 2147483647.</p>
+<p>这个子函数是全局的, 这意味着所有后续线程都会遵循它, 即使子函数在<a href="../Scripts.htm#auto">自动执行段</a>之外的其他地方使用. 然而, <a href="../misc/Threads.htm"> 已经被中断过的线程</a>则不受影响, 因为它们不可中断的时间已经期满. 同样地, <a href="../misc/Threads.htm">当前线程</a>不受影响, 除非在更改 <em>LineCount</em> 参数时当前线程是不中断的, 在这种情况下, 新的 <em>LineCount</em> 将对其生效.</p>
+<p>如果在<a href="../misc/Threads.htm">当前线程</a>处于不可中断状态时, 按下了<a href="../Hotkeys.htm">热键</a>或选择了<a href="../objects/Menu.htm">自定义菜单项</a>, 那么这些事件会被缓冲起来. 换句话说, 到当前线程结束或变得可中断时(无论先遇到哪个) 它们才会运行. 例外情况是当当前线程在结束前变得可中断并且它的<a href="#Priority">优先级</a>高于被缓冲的事件, 此时被缓冲的事件将被取消缓冲并被丢弃.</p>
+<p>不论此子函数如何, 当一个线程在显示 <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelect.htm">FileSelect</a> 或 <a href="DirSelect.htm">DirSelect</a> 对话框时都将变成可中断的.</p>
+<p>任一参数都可以留空来保持此设置不变.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>Due to its greater flexibility and its ability to buffer events, the function <a href="Critical.htm">Critical</a> is generally more useful than <code>Thread "Interrupt"</code> and <code>Thread "Priority"</code>.</p>
+<p>由于更大的灵活性和缓冲事件的能力, 函数 <a href="Critical.htm">Critical</a> 通常比 <code>Thread "Interrupt"</code> 和 <code>Thread "Priority"</code> 更有效.</p>
 <h2 id="Related">相关</h2>
-<p><a href="Critical.htm">Critical</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="../objects/Menu.htm">Menu object</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="Process.htm">Process functions</a></p>
+<p><a href="Critical.htm">Critical</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="../objects/Menu.htm">Menu 对象</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="Process.htm">Process 函数</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
-<pre>Thread "Priority", 1 <em>; Make priority of current thread slightly above average.</em>
-Thread "Interrupt", 0  <em>; Make each newly launched thread immediately interruptible:</em>
-Thread "Interrupt", 50, 2000  <em>; Make each thread interruptible after 50ms or 2000 lines, whichever comes first.</em></pre>
+<pre>Thread "Priority", 1 <em>; 使当前线程的优先级稍高于平均值.</em>
+Thread "Interrupt", 0  <em>; 让每个新启动的线程立即变成可中断的:</em>
+Thread "Interrupt", 50, 2000  <em>; 让每个线程在 50ms 或 2000 行(无论先遇到哪个) 之后变成可中断.</em></pre>
 </div>
 
 </body>
