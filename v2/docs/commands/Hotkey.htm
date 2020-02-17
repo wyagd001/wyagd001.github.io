@@ -34,32 +34,32 @@
     <p>如果 <em>KeyName</em> 已经是现有的热键, 那么将使用此函数的其他参数值更新原来的热键.</p>
     <p><em>KeyName</em> 也可以是现有的热键标签的名称(即双冒号标签), 这样会使用此函数的其他参数值更新原来的热键.</p>
     <p>指定 <em>现有的</em> 热键, <em>KeyName</em> 是不区分大小写的. 但是, 按键名称必须和现有的热键拼写相同(例如在这种情况下 Esc 与 Escape 是不同的). 此外, <a href="../Hotkeys.htm#Symbols">修饰符</a>(如 ^!+#) 的顺序是无关紧要的. <a href="GetKeyName.htm">GetKeyName</a> 可用于获取标准的按键名称.</p>
-    <p>When a hotkey is first created -- either by the Hotkey function or a <a href="../Hotkeys.htm">double-colon label</a> in the script -- its key name and the ordering of its modifier symbols becomes the permanent name of that hotkey as reflected by <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a>. This name is shared by all <a href="_If.htm#variant">variants</a> of the hotkey, and does not change even if the Hotkey function later accesses the hotkey with a different symbol ordering.</p>
-    <p>If the hotkey variant already exists, its behavior is updated according to whether <em>KeyName</em> includes or excludes the <a href="../Hotkeys.htm#Tilde">tilde (~) prefix</a>.</p>
-    <p>The <a href="../Hotkeys.htm#prefixdollar">use hook ($) prefix</a> can be added to existing hotkeys. This prefix affects all variants of the hotkey and cannot be removed.</p>
+    <p>热键首次创建时 -- 无论是通过 Hotkey 函数还是脚本中的<a href="../Hotkeys.htm">双冒号标签</a> -- 其键名以及修饰符的顺序成为此热键的固定名称, 正如 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 所反映的那样. 这个名称由热键的所有<a href="_If.htm#variant">变体</a>共享, 并且即使之后 Hotkey  函数使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
+    <p>如果热键变体已经存在, 则根据 <em>KeyName</em> 是否包含<a href="../Hotkeys.htm#Tilde">颚化符前缀(~)</a> 更新它的行为.</p>
+    <p>使用<a href="../Hotkeys.htm#prefixdollar">钩子前缀($)</a> 可添加到现有热键上. 这个前缀影响所有热键的变体且不能被删除.</p>
   </dd>
 
   <dt>Label</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
-      <p>The subroutine to execute (as a new <a href="../misc/Threads.htm">thread</a>) when the hotkey is pressed. This can be a <a href="../misc/Labels.htm">label</a> name, function name or <a href="../objects/Functor.htm">function object</a>.</p>
-  <p>Literal label and function names must be enclosed in quote marks. Both normal global labels and <a href="../Hotkeys.htm">hotkey</a>/<a href="../Hotstrings.htm">hotstring</a> labels can be used, but not local labels (use a <a href="../Functions.htm#nested">nested function</a> instead). The trailing colon(s) should not be included. If <em>Label</em> is dynamic (e.g. <code>VarContainingLabelName</code>), <a href="IsLabel.htm">IsLabel(VarContainingLabelName)</a> may be called beforehand to verify that the label exists.</p>
-  <p>If <em>Label</em> is a function, it is called without parameters. To specify a function when a label with the same name exists, pass it by reference instead of name. 例如: <code>Hotkey "#c", Func("<i>FunctionName</i>")</code>. Hotkeys can also be <a href="../Hotkeys.htm#Function">defined as functions</a> without the Hotkey function.</p>
-      <p>This parameter can be left blank if <em>KeyName</em> already exists as a hotkey, in which case its label will not be changed. This is useful to change only the hotkey's <em>Options</em>.</p>
-      <p class="note"><strong>Note</strong>: If the label or function is specified but the hotkey is disabled from a previous use of this function, the hotkey will remain disabled. To prevent this, include the word ON in <em>Options</em>.</p>
-      <p>This parameter can also be one of the following special values:</p>
-      <p><strong>On</strong>: The hotkey becomes enabled. No action is taken if the hotkey is already On.</p>
-      <p><strong>Off</strong>: The hotkey becomes disabled. No action is taken if the hotkey is already Off.</p>
-      <p><strong>Toggle</strong>: The hotkey is set to the opposite state (enabled or disabled).</p>
-      <p><strong>AltTab</strong> (and others): These are special Alt-Tab hotkey actions that are described <a href="../Hotkeys.htm#alttab">here</a>.</p>
-      <p class="note"><strong>Note</strong>: If there is a label in the script named On, Off, Toggle or AltTab (or any variation recognized by this function), the label is ignored and cannot be used with this function.</p>
+      <p>当按下热键时, 要执行的子程序(作为一个新的<a href="../misc/Threads.htm">线程</a>). 它可以是<a href="../misc/Labels.htm">标签</a>名称, 函数名称或<a href="../objects/Functor.htm">函数对象</a>.</p>
+  <p>原义标签和函数名必须用引号括起来. 可以使用普通全局和<a href="../Hotkeys.htm">热键</a>/<a href="../Hotstrings.htm">热字串</a>标签, 但不能使用局部标签(而是使用<a href="../Functions.htm#nested">套嵌函数</a>). 后面的冒号不应该包括在内. 如果 <em>Label</em> 是动态的(例如 <code>VarContainingLabelName</code>), 可以事先使用 <a href="IsLabel.htm">IsLabel(VarContainingLabelName)</a> 检查标签是否存在.</p>
+  <p>如果 <em>Label</em> 是一个函数, 则不带参数地调用它. 若要在具有相同名称的标签存在时指定函数, 请通过引用而不是名称传递它. 例如: <code>Hotkey "#c", Func("<i>FunctionName</i>")</code>. 热键还可以直接<a href="../Hotkeys.htm#Function">定义为函数</a>而无需使用 Hotkey 函数.</p>
+      <p>如果 <em>KeyName</em> 已经作为热键, 那么参数可以为空, 这种情况下标签不会被改变. 这在仅需要改变热键 <em>Options</em> 时很有用.</p>
+      <p class="note"><strong>注意</strong>: 如果指定了标签或函数, 但热键之前已经使用此命令禁用了, 那么热键会保持禁用状态. 要启用它, 请在 <em>Options</em> 中包含单词 ON.</p>
+      <p>此参数还可以是下列特定值的其中一个:</p>
+      <p><strong>On</strong>: 启用热键. 如果热键已经处于启用状态, 则不进行操作.</p>
+      <p><strong>Off</strong>: 禁用热键. 如果热键已经处于禁用状态, 则不进行操作.</p>
+      <p><strong>Toggle</strong>: 设置热键到相反的状态(启用或禁用).</p>
+      <p><strong>AltTab</strong>(及其他): <a href="../Hotkeys.htm#alttab">这里</a>描述的特殊的 Alt-Tab 热键动作.</p>
+      <p class="note"><strong>注意</strong>: 如果脚本中有一个名为 On, Off, Toggle 或 AltTab(或由这个函数识别的任何变体) 的标签, 则该标签将被忽略, 并且不能与该函数一起使用.</p>
       </dd>
 
   <dt>Options</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>A string of zero or more of the following letters with optional spaces in between. 例如: <code>UseErrorLevel B0</code>.</p>
-      <p id="UseErrorLevel"><strong>UseErrorLevel</strong>: If the function encounters a problem, this option skips the warning dialog, sets <a href="../misc/ErrorLevel.htm">ErrorLevel</a> to one of the codes from the table <a href="#ErrorLevel">below</a>, then allows the <a href="../misc/Threads.htm">current thread</a> to continue.</p>
+      <p>由零个或多个下列字母组成的字符串, 字母间可以用空格分隔. 例如: <code>UseErrorLevel B0</code>.</p>
+      <p id="UseErrorLevel"><strong>UseErrorLevel</strong>: 如果函数遇到问题, 使用此选项会跳过警告对话框, 设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为<a href="#ErrorLevel">下表</a>中的一个代码, 然后让<a href="../misc/Threads.htm">当前线程</a>继续执行.</p>
       <p><strong>On</strong>: Enables the hotkey if it is currently disabled.</p>
       <p><strong>Off</strong>: Disables the hotkey if it is currently enabled. This is typically used to create a hotkey in an initially-disabled state.</p>
       <p><strong>B</strong> or <strong>B0</strong>: Specify the letter B to buffer the hotkey as described in <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>. Specify B0 (B with the number 0) to disable this type of buffering.</p>

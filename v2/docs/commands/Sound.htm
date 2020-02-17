@@ -28,58 +28,58 @@
 </ul>
 
 <h2 id="devices">终端设备</h2>
-<p>The "devices" referenced by the SoundGet and SoundSet functions are <em>audio endpoint devices</em>. A single device driver or physical device often has multiple endpoints, such as for different types of output or input. For example:</p>
+<p>SoundGet 和 SoundSet 函数引用的 "devices" 是 <em>音频终端设备</em>. 单个设备驱动程序或物理设备通常具有多个终端, 例如用于不同类型的输出或输入. 例如:</p>
 <table class="info">
   <tr><th>名称</th><th>描述</th></tr>
-  <tr><td>扬声器(例如 HD Audio)</td><td>The main analog outputs of this device (uses multiple jacks in the case of surround sound).</td></tr>
-  <tr><td>数字输出(例如 HD Audio)</td><td>An optical or coaxial digital output.</td></tr>
-  <tr><td>麦克风(例如 HD Audio)</td><td>Captures audio through a microphone jack.</td></tr>
-  <tr><td>立体声混音(例如 HD Audio)</td><td>Captures whatever audio is being output to the Speakers endpoint.</td></tr>
+  <tr><td>扬声器(例如 HD Audio)</td><td>此设备的主模拟输出(在环绕声的情况下使用多个插孔).</td></tr>
+  <tr><td>数字输出(例如 HD Audio)</td><td>光纤或同轴数字输出.</td></tr>
+  <tr><td>麦克风(例如 HD Audio)</td><td>通过麦克风插孔捕获音频.</td></tr>
+  <tr><td>立体声混音(例如 HD Audio)</td><td>捕获任何输出到扬声器终端的音频.</td></tr>
 </table>
 <p>设备名称通常由终端名称(如 "Speakers") 和括号中的音频驱动程序名称组成. 脚本可以使用全名, 也可以仅使用名称的开头, 如 "Mic" 或 "Microphone". 音频驱动程序具有固定名称, 但是管理员可以随时通过声音控制面板更改终端名称.</p>
-<p id="mmsys">Devices are listed in the Sound control panel, which can be opened by running <code>mmsys.cpl</code> from the command line, or via the Run dialog (<kbd>Win</kbd>+<kbd>R</kbd>) or the <a href="Run.htm">Run</a> function. By default, the control panel only lists devices that are enabled and plugged in (if applicable), but this can be changed via the right-click menu. AutoHotkey detects devices which are not plugged in, but does not detect disabled devices.</p>
+<p id="mmsys">声音控制面板列出了设备, 从命令行运行 <code>mmsys.cpl</code>, 或通过运行对话框(<kbd>Win</kbd>+<kbd>R</kbd>) 或 <a href="Run.htm">Run</a> 函数可以打开该面板. 默认情况下, 控制面板只列出启用和插入的设备(如果合适), 但这可以通过右键菜单进行更改. AutoHotkey 检测没有插入的设备, 但不检测禁用的设备.</p>
 
 <h2 id="components">组件</h2>
-<p>Components are as shown on the Levels tab of the sound device's properties dialog.</p>
+<p>组件显示在声音设备属性对话框的级别选项卡上.</p>
 <img src="../static/sound_levels.png" alt="Levels" />
-<p>In this example, the master controls are at the top, followed by the first four components: Microphone, FrontMic, Line In, and Side. All have volume and mute controls, except the fourth component, which only has volume.</p>
-<p>A sound device's properties dialog can be opened via the <a href="#mmsys">Sound control panel</a>.</p>
-<p>Audio drivers are capable of exposing other controls, such as bass and treble. However, common audio drivers tend to have only volume and mute controls, or no components at all. Volume and mute controls are supported directly through <a href="SoundGetVolume.htm">SoundGetVolume</a>, <a href="SoundSetVolume.htm">SoundSetVolume</a>, <a href="SoundGetMute.htm">SoundGetMute</a> and <a href="SoundSetMute.htm">SoundSetMute</a>. All other controls are supported only indirectly, through <a href="SoundGetInterface.htm">SoundGetInterface</a> and <a href="ComCall.htm">ComCall</a>.</p>
+<p>在本例中, 主控制位于顶部, 其次是前四个组件: Microphone, FrontMic, Line In 和 Side. 所有的控制都有音量和静音控制, 除了第四个组件, 它只有音量.</p>
+<p>声音设备的属性对话框可以通过<a href="#mmsys">声音控制面板</a>打开.</p>
+<p>音频驱动程序能够显示其他控制, 如低音和高音. 但是, 常见的音频驱动程序往往只具有音量和静音控制, 或者根本没有组件. 音量和静音控制是通过 <a href="SoundGetVolume.htm">SoundGetVolume</a>, <a href="SoundSetVolume.htm">SoundSetVolume</a>, <a href="SoundGetMute.htm">SoundGetMute</a> 和 <a href="SoundSetMute.htm">SoundSetMute</a> 直接支持的. 所有其他控制仅通过 <a href="SoundGetInterface.htm">SoundGetInterface</a> 和 <a href="ComCall.htm">ComCall</a> 间接支持.</p>
 
-<h3>Advanced Details</h3>
-<p>Components are discovered through the <a href="https://docs.microsoft.com/en-us/windows/win32/coreaudio/devicetopology-api">DeviceTopology API</a>, which exposes a graph of <em>Connectors</em> and <em>Subunits</em>. Each component shown above has a Connector, and it is the Connector that defines the component's name. Each control (such as volume or mute) is represented by a Subunit which sits between the Connector and the endpoint. Data "flows" from or to the Connector and is altered as it flows through each Subunit, such as to adjust volume or suppress (mute) all sound.</p>
-<p>The SoundGet and SoundSet functions identify components by walking the <em>device topology</em> graph and counting Connectors with the given name (or all Connectors if no name is given). Once the matching Connector is found, a control interface (such as IAudioVolumeLevel or IAudioMute) is retrieved by querying each Subunit on that specific branch of the graph, starting nearest the Connector.</p>
-<p>Subunits which apply to multiple Connectors are excluded - such as Subunits which correspond to the master volume and mute controls. A Connector is counted if (and only if) it has at least one Subunit of its own, even if the Subunit is not of the requested type.</p>
-<p>In practice, the end result is that the available components are as listed on <a href="#components">the Levels tab</a>, and in the same order. However, this process is based on observation, trial and error, so might not be 100% accurate.</p>
+<h3 id="Advanced_Details">详细信息</h3>
+<p>组件可以通过 <a href="https://docs.microsoft.com/en-us/windows/win32/coreaudio/devicetopology-api">DeviceTopology API</a> 发现, 该 API 公开 <em>Connectors</em> 和 <em>Subunits</em> 的图表. 上面显示的每个组件都有一个连接器, 而连接器定义了组件的名称. 每个控制(例如音量或静音) 由位于连接器和终端之间的子单元表示. 数据从连接器 "流出" 或流入, 并随着流过每个子单元而改变, 例如调节音量或抑制(静音) 所有声音.</p>
+<p>SoundGet 和 SoundSet 函数通过遍历 <em>device topology</em> 图并计算具有给定名称的连接器(或所有未指定名称的连接器) 来标识组件. 一旦找到匹配的连接器, 就可以从最近的连接器开始通过查询图形的该特定分支上的每个子单元来检索控制接口(例如 IAudioVolumeLevel 或 IAudioMute).</p>
+<p>应用于多个连接器的子单元被排除在外 - 例如与主音量和静音控制对应的子单元. 如果连接器至少有一个自己的子单元, 即使该子单元不是所请求的类型, 该连接器也会被计数.</p>
+<p>实际上, 最终结果的可用的组件和<a href="#components">级别选项卡</a>中列出的是一样的, 并且它们的顺序是相同的. 但是, 这个过程是基于观察, 反复尝试的, 所以可能不是 100% 的准确.</p>
 
-<h2>通用参数</h2>
+<h2 id="Common_Parameters">通用参数</h2>
 <dl>
 
   <dt id="component">Component</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-    <p>One of the following:</p>
+    <p>以下之一:</p>
     <ul>
-      <li>The index of a <a href="#components">component</a>, where 1 is the first component.</li>
-      <li>The full display name of a component (case-insensitive).</li>
-      <li>As above, but followed by a colon and integer, where 1 is the first occurrence of a component with that name. For example, <code>"Line In:2"</code> uses the second component named "Line In". This is necessary only when <em>Component</em> would otherwise be ambiguous, such as when multiple components exist with the same name, or the display name is empty, an integer or contains a colon.</li>
-      <li>If omitted or blank, the function targets the master volume/mute controls or an interface that can be returned by <a href="https://docs.microsoft.com/en-us/windows/win32/api/mmdeviceapi/nf-mmdeviceapi-immdevice-activate">IMMDevice::Activate</a>.</li>
+      <li><a href="#components">component</a> 的索引, 其中 1 是第一个组件.</li>
+      <li>组件的完整显示名称(不区分大小写).</li>
+      <li>如上, 但后跟冒号和整数, 其中 1 是第一个使用该名称的组件. 例如, <code>"Line In:2"</code> 是名称为 "Line In" 的第二个组件. 仅当 <em>Component</em> 可能导致歧义时, 例如多个组件具有相同的名称, 或显示名称为空, 为整数或包含冒号时, 才需要这样做.</li>
+      <li>如果省略或为空, 则该函数以主音量/静音控制或由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/mmdeviceapi/nf-mmdeviceapi-immdevice-activate">IMMDevice::Activate</a> 返回的接口为目标.</li>
     </ul>
-    <p>If only an index is specified, the display names are ignored. For example, <code>1</code>, <code>"1"</code> and <code>":1"</code> use the first component regardless of name, whereas <code>""</code> uses the master controls.</p>
-    <p>If the sound device lacks the specified <em>Component</em>, ErrorLevel will indicate the problem.</p>
+    <p>如果只指定索引, 则忽略显示名称. 例如, <code>1</code>, <code>"1"</code> 和 <code>":1"</code> 使用第一个组件, 而不管名称如何, 而 <code>""</code> 使用主控制.</p>
+    <p>如果声音设备缺少指定的 <em>Component</em>, 则 ErrorLevel 将指示问题.</p>
   </dd>
 
   <dt id="device">Device</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-    <p>One of the following:</p>
+    <p>以下之一:</p>
     <ul>
-      <li>A number (integer) between 1 and the total number of supported devices.</li>
-      <li>The display name of a device; either the full name or a leading part (case-insensitive). For example, <code>"Speakers"</code> or <code>"Speakers (Example HD Audio)"</code>.</li>
-      <li>As above, but followed by a colon and integer, where 1 is the first device with a matching name. For example, <code>"Speakers:2"</code> indicates the second device which has a name starting with "Speakers". This is necessary only when <em>Device</em> would otherwise be ambiguous, such as when multiple devices exist with the same name, or the display name contains a colon.</li>
-      <li>If omitted or blank, it defaults to the system's default device for playback (which is not necessarily device 1).</li>
+      <li>介于 1 和支持的设备总数之间的数字(整数).</li>
+      <li>设备的显示名称; 全名或开头部分(不区分大小写). 例如, <code>"Speakers"</code> 或 <code>"Speakers (Example HD Audio)"</code>.</li>
+      <li>如上, 但后跟冒号和整数, 其中 1 是具有匹配名称的第一个设备. 例如, <code>"Speakers:2"</code> 表示名称为 "Speakers" 的第二个设备. 仅当 <em>Device</em> 可能导致歧义时, 例如多个组件具有相同的名称, 或包含冒号时, 才需要这样做.</li>
+      <li>如果省略或为空, 则默认为系统的默认播放设备(不一定是设备 1).</li>
     </ul>
-    <p>The <a href="#ExSoundcard">soundcard analysis script</a> may help determine which name and/or number to use.</p>
+    <p><a href="#ExSoundcard">声卡分析脚本</a>可以帮助确定要使用的名称和/或编号.</p>
   </dd>
 
 </dl>
@@ -94,33 +94,33 @@ scLV := scGui.Add('ListView', "w600 h400"
 
 devMap := Map()
 
-<em>; For each available sound device, first query its name.
-; Permit empty names by also checking ErrorLevel.</em>
+<em>; 对于每个可用的声音设备, 首先查询其名称.
+; 还可以通过检查 ErrorLevel 来允许空白名称.</em>
 while (devName := SoundGetName(, dev := A_Index)) || !ErrorLevel
 {
-    <em>; Qualify names with ":index" where needed.</em>
+    <em>; 如果需要, 使用 ":index" 来限定名称.</em>
     devName := Qualify(devName, devMap, dev)
 
-    <em>; Retrieve master volume and mute setting, if possible.</em>
+    <em>; 如有可能, 获取主音量和静音设置.</em>
     vol := SoundGetVolume( , dev)
     if !ErrorLevel
         vol := Round(vol, 2)
     mute := SoundGetMute( , dev)
-    <em>; Display the master settings only if at least one was retrieved.</em>
+    <em>; 仅在至少检索到一项时显示主设置.</em>
     if vol != "" || mute != ""
         scLV.Add("", "", dev, devName, vol, mute)
 
-    <em>; For each component, first query its name.</em>
+    <em>; 对于每个组件, 首先查询其名称.</em>
     cmpMap := Map()
     while (cmpName := SoundGetName(cmp := A_Index, dev)) || !ErrorLevel
     {
-        <em>; Retrieve this component's volume and mute setting, if possible.</em>
+        <em>; 如有可能, 检索该组件的音量和静音设置.</em>
         vol := SoundGetVolume(cmp, dev)
         if !ErrorLevel
             vol := Round(vol, 2)
         mute := SoundGetMute(cmp, dev)
-        <em>; Display this component even if it does not support volume or mute,
-        ; since it likely supports other controls via SoundGetInterface().</em>
+        <em>; 显示此组件, 即使它不支持音量或静音,
+        ; 因为它可能通过 SoundGetInterface() 支持其他控制.</em>
         scLV.Add("", Qualify(cmpName, cmpMap, A_Index), dev, devName, vol, mute)
     }
 }
@@ -129,7 +129,7 @@ Loop 5
     scLV.ModifyCol(A_Index, 'AutoHdr Logical')
 scGui.Show()
 
-<em>; Qualifies full names with ":index" when needed.</em>
+<em>; 如果需要, 使用 ":index" 来限定名称.</em>
 Qualify(name, names, overallIndex)
 {
     if name = ''
