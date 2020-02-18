@@ -13,7 +13,7 @@
 
 <h1>LoadPicture</h1>
 
-<p>Loads a picture from file and returns a bitmap or icon handle.</p>
+<p>载入图像文件并返回位图或图标句柄.</p>
 <pre class="Syntax">Handle := <span class="func">LoadPicture</span>(Filename <span class="optional">, Options, ByRef ImageType</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
@@ -22,35 +22,35 @@
   <dt>Filename</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>The filename of the picture, which is usually assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified. If the name of a DLL or EXE file is given without a path, it may be loaded from the directory of the current executable (AutoHotkey.exe or a compiled script) or a system directory.</p>
+    <p>图片的文件名, 如果未指定绝对路径, 则通常假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 目录中. 如果指定了 DLL 或 EXE 文件的名称而没有路径, 则可以从当前可执行文件目录(AutoHotkey.exe 或已编译的脚本) 或系统目录加载.</p>
   </dd>
   
   <dt>Options</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>A string of zero or more of the following options, with each separated from the last by a space or tab:</p>
-    <p><strong>W</strong><em>n</em> and <strong>H</strong><em>n</em>: The width and height to load the image at, where <em>n</em> is an integer. If one dimension is omitted or -1, it is calculated automatically based on the other dimension, preserving aspect ratio. If both are omitted, the image's original size is used. If either dimension is 0, the original size is used for that dimension. 例如: <code>"w80 h50"</code>, <code>"w48 h-1"</code> or <code>"w48"</code> (preserve aspect ratio), <code>"h0 w100"</code> (use original height but override width).</p>
-    <p><strong>Icon</strong><em>n</em>: Indicates which icon to load from a file with multiple icons (generally an EXE or DLL file). 例如, <code>"Icon2"</code> loads the file's second icon. Any supported image format can be converted to an icon by specifying <code>"Icon1"</code>. However, the icon is converted back to a bitmap if the <em>ImageType</em> parameter is omitted.</p>
-    <p><strong>GDI+</strong>: Use GDI+ to load the image, if available. 例如, <code>"GDI+ w100"</code>.</p>
+    <p>以下选项中的零个或多个字符串, 每个选项之间以空格或制表符分隔::</p>
+    <p><strong>W</strong><em>n</em> 和 <strong>H</strong><em>n</em>: 待载入图像的宽度和高度,  <em>n</em> 为整数. 如果省略某个尺寸或指定为 -1, 该尺寸将在保持宽高比的情况下根据另一个尺寸进行计算. 如果两个尺寸都被省略, 将使用图像的原始尺寸. 如果任一尺寸被指定为 0, 则该尺寸仍会使用原始尺寸. 例如: <code>"w80 h50"</code>, <code>"w48 h-1"</code> 或 <code>"w48"</code>(保持宽高比), <code>"h0 w100"</code>(使用原始高度但覆盖宽度).</p>
+    <p><strong>Icon</strong><em>n</em>: 指代多图标文件(一般是 EXE 或 DLL 文件) 中待载入图标的序号. 例如, <code>"Icon2"</code> 载入文件的第二个图标. 任何支持的图像格式都可以通过指定 <code>"Icon1"</code> 来转换为图标. 但是, 如果省略 <em>ImageType</em> 参数, 图标将转换回位图.</p>
+    <p><strong>GDI+</strong>: 尝试使用 GDI+ 的方式载入图像. 例如, <code>"GDI+ w100"</code>.</p>
   </dd>
   
   <dt>ImageType</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
-    <p>If a variable is specified, it is assigned a number indicating the type of handle being returned: 0 (IMAGE_BITMAP), 1 (IMAGE_ICON) or 2 (IMAGE_CURSOR).</p>
-    <p>If this parameter is omitted or not a variable, the return value is always a bitmap handle (icons/cursors are converted if necessary). This is because reliably using or deleting an icon/cursor/bitmap handle requires knowing which type it is.</p>
+    <p>如果指定了变量, 它被赋值为表示返回句柄类型的数字: 0(IMAGE_BITMAP), 1(IMAGE_ICON) 或 2(IMAGE_CURSOR).</p>
+    <p>如果忽略该参数或不是一个变量, 则返回值始终是位图句柄(图标/光标类型会按需转换). 这是因为可靠地使用或删除位图/图标/光标句柄需要知道它是哪种类型.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>This function returns a <a href="../misc/ImageHandles.htm">bitmap or icon handle</a> depending on whether a picture or icon is specified.</p>
+<p>函数根据指定的图片或图标返回<a href="../misc/ImageHandles.htm">位图或图标句柄</a>.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>LoadPicture also supports <a href="../misc/ImageHandles.htm">the handle syntax</a>, such as for creating a resized image based on an icon or bitmap which has already been loaded into memory, or converting an icon to a bitmap by omitting <em>ImageType</em>.</p>
-<p>If the image needs to be freed from memory, call whichever function is appropriate for the type of handle.</p>
-<pre>if (not ImageType)  <em>; IMAGE_BITMAP (0) or the ImageType parameter was omitted.</em>
+<p>LoadPicture 也支持<a href="../misc/ImageHandles.htm">句柄语法</a>, 如从一个已载入到内存中的图标或位图创建一个可调整大小的图像, 或将一个图标通过忽略 <em>ImageType</em> 转换成位图.</p>
+<p>如果图像需要从内存中释放, 请调用任何适合于句柄类型的函数.</p>
+<pre>if (not ImageType)  <em>; IMAGE_BITMAP(0) 或 ImageType 参数省略.</em>
     DllCall("DeleteObject", "ptr", Handle)
 else if (ImageType = 1)  <em>; IMAGE_ICON</em>
     DllCall("DestroyIcon", "ptr", Handle)
@@ -62,21 +62,21 @@ else if (ImageType = 2)  <em>; IMAGE_CURSOR</em>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExSlideShow">
-<p><a href="#ExSlideShow">#1</a>: Pre-load and reuse some images.</p>
+<p><a href="#ExSlideShow">#1</a>: 预加载并复用一些图像.</p>
 <pre>Pics := []
-<em>; Find some pictures to display.</em>
+<em>; 寻找几张图像用来展示.</em>
 Loop Files, A_WinDir &quot;\Web\Wallpaper\*.jpg", "R&quot;
 {
-    <em>; Load each picture and add it to the array.</em>
+    <em>; 载入找到的图像并添加到数组中.</em>
     Pics.Push(LoadPicture(A_LoopFileFullPath))
 }
 if !Pics.Length
 {
-    <em>; If this happens, edit the path on the Loop line above.</em>
+    <em>; 如果发生找不到文件的情形, 将正确的路径手动添加到上述的 Loop 循环中.</em>
     MsgBox("No pictures found! Try a different directory.")
     ExitApp
 }
-<em>; Add the picture control, preserving the aspect ratio of the first picture.</em>
+<em>; 创建图标控件, 保持第一张图的宽高比.</em>
 Gui := GuiCreate()
 Pic := Gui.Add("Pic", "w600 h-1 vPic +Border", "HBITMAP:*" Pics[1])
 Gui.OnEvent("Escape", (*) =&gt; ExitApp())
@@ -84,7 +84,7 @@ Gui.OnEvent("Close", (*) =&gt; ExitApp())
 Gui.Show
 Loop 
 {
-    <em>; Switch pictures!</em>
+    <em>; 切换图片!</em>
     Pic.Value := "HBITMAP:*" Pics[Mod(A_Index, Pics.Length)+1]
     Sleep 3000
 }</pre>

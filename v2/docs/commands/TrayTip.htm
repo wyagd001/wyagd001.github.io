@@ -83,40 +83,40 @@
         <td>使用大图标.</td>
       </tr>
     </table>
-    <p>If omitted, it defaults to 0, which is no icon. The icon is also not shown by the balloon window if it lacks a <em>Title</em> (this does not apply to Windows 10 toast notifications).</p>
+    <p>如果省略, 则默认为 0, 即无图标. 如果省略 <em>Title</em>, 气球窗口也不会显示图标(这不适用于 Windows 10 的 toast 通知).</p>
     </dd>
 
 </dl>
 
 <h2 id="To_Hide_the_Window">隐藏窗口</h2>
-<p>To hide a TrayTip balloon window, omit both <em>Text</em> and <em>Title</em>. 例如:</p>
+<p>要隐藏 TrayTip 气球窗口, 同时省略 <em>Text</em> 和 <em>Title</em>. 例如:</p>
 <pre>TrayTip</pre>
-<p>To hide a Windows 10 toast notification, temporarily remove the tray icon. 例如:</p>
+<p>要隐藏 Windows 10 的 toast 通知, 临时移除托盘图标. 例如:</p>
 <pre>TrayTip "#1", "This is TrayTip #1"
-Sleep 3000   <em>; Let it display for 3 seconds.</em>
+Sleep 3000   <em>; 让它显示 3 秒钟.</em>
 HideTrayTip
 TrayTip "#2", "This is the second notification."
 Sleep 3000
 
-<em id="Hide">; Copy this function into your script to use it.</em>
+<em id="Hide">; 将此函数复制到脚本中使用.</em>
 HideTrayTip() {
-    TrayTip  <em>; Attempt to hide it the normal way.</em>
+    TrayTip  <em>; 尝试以普通的方式隐藏它.</em>
     if SubStr(A_OSVersion,1,3) = "10." {
         A_IconHidden := true
-        Sleep 200  <em>; It may be necessary to adjust this sleep.</em>
+        Sleep 200  <em>; 可能有必要调整 sleep 的时间.</em>
         A_IconHidden := false
     }
 }
 </pre>
-<p>This may not always work, according to at least one report.</p>
+<p>根据至少一份报告, 这可能并不总是有效的.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>On Windows 10, a TrayTip window usually looks like this:</p>
+<p>在 Windows 10 中, 托盘提示窗口通常是这样的:</p>
 <img src="../static/dlg_traytip.png" alt="TrayTip" />
-<p id="Windows10"><strong>Windows 10</strong> replaces all balloon windows with toast notifications by default (this can be overridden via group policy). Calling TrayTip multiple times will usually cause multiple notifications to be placed in a "queue" instead of each notification replacing the last.</p>
-<p>TrayTip has no effect if the script lacks a tray icon (via <a href="_NoTrayIcon.htm">#NoTrayIcon</a> or <a href="../Variables.htm#IconHidden">A_IconHidden := true</a>). TrayTip also has no effect if the following REG_DWORD value exists and has been set to 0:</p>
+<p id="Windows10"><strong>Windows 10</strong> 默认以 toast 通知替换气球提示窗口(这能被重置通过主策略). TrayTip 多次调用通常会导致多个通知被放置在一个"队列"而不是每个通知取代最近的那个.</p>
+<p>如果脚本没有托盘图标(使用 <a href="_NoTrayIcon.htm">#NoTrayIcon</a> 或 <a href="../Variables.htm#IconHidden">A_IconHidden := true</a>), 则 TrayTip 没有效果. 同样地, 如果下列的 REG_DWORD 值存在且被设置为 0, 则 TrayTip 没有效果:</p>
 <pre>HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced &gt;&gt; EnableBalloonTips</pre>
-<p>On a related note, there is a tooltip displayed whenever the user hovers the mouse over the script's tray icon. The contents of this tooltip can be changed via: <code><a href="../Variables.htm#IconTip">A_IconTip</a> := "My New Text"</code>.</p>
+<p>相关提示, 每当用户把鼠标悬停在脚本托盘图标上时会显示工具提示. 此工具提示的内容可以使用这样的方法改变: <code><a href="../Variables.htm#IconTip">A_IconTip</a> := "My New Text"</code>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="ToolTip.htm">ToolTip</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="../objects/Menu.htm">Menu object</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelect.htm">FileSelect</a>, <a href="DirSelect.htm">DirSelect</a></p>
@@ -129,22 +129,22 @@ HideTrayTip() {
 
 
 <div class="ex" id="ExDisplayTime">
-<p><a href="#ExDisplayTime">#2</a>: To have more precise control over the display time without having to use Sleep (which stops the current thread):</p>
+<p><a href="#ExDisplayTime">#2</a>: 要更精确的控制显示的时间, 没有使用 Sleep(它停止了当前线程):</p>
 <pre>#Persistent
 TrayTip "This will be displayed for 5 seconds.", "Timed TrayTip"
 SetTimer "HideTrayTip", -5000
 
-HideTrayTip() {  <em>; NOTE: For Windows 10, replace this function with the one defined <a href="#Hide">above</a>.</em>
+HideTrayTip() {  <em>; 注意: 对于 Windows 10, 用<a href="#Hide">上面</a>定义的函数替换这个函数.</em>
     TrayTip
 }
 </pre>
 </div>
 
 <div class="ex" id="ExPermanent">
-<p><a href="#ExPermanent">#3</a>: To have a TrayTip permanently displayed, use a timer to refresh it periodically. NOTE: This probably won't work well on Windows 10 for <a href="#Windows10">reasons described above</a>.</p>
+<p><a href="#ExPermanent">#3</a>: 要让托盘提示永久显示, 请使用计时器进行周期性的刷新. 注意: 由于<a href="#Windows10">上述原因</a>, 这可能无法很好地在 Windows 10 上运行.</p>
 <pre>#Persistent
 SetTimer "RefreshTrayTip", 1000
-RefreshTrayTip  <em>; Call it once to get it started right away.</em>
+RefreshTrayTip  <em>; 调用一次来让它立即开始.</em>
 
 RefreshTrayTip()
 {
