@@ -51,7 +51,7 @@
 
 <h2 id="Returns">返回值</h2>
 <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
-<p>返回包含<a href="ComObjType.htm">变量类型</a>和值或指针的包装器对象.</p>
+<p>返回包含<a href="ComObjType.htm">变体类型</a>和值或指针的包装器对象.</p>
 <p>该对象有两个用途:</p>
 <ol>
   <li>某些 COM 方法可能需要特定类型的值, 这些值在 AutoHotkey 中没有直接等效的值. 此函数允许在将值传递给 COM 方法时指定值的类型. 例如, <code>ComObject(0xB, -1)</code> 创建一个表示 COM 布尔值为 <em>true</em> 的对象.</li>
@@ -59,23 +59,23 @@
 </ol>
 
 <h2 id="Ptr">Ptr</h2>
-<p>If a wrapper object's <a href="ComObjType.htm#vt"><em>VarType</em></a> is VT_UNKNOWN (13) or includes the VT_BYREF (0x4000) flag or VT_ARRAY (0x2000) flag, the <code>Ptr</code> property can be used to retrieve the address of the object, typed variable or SafeArray. This allows the ComObject itself to be passed to any <a href="DllCall.htm">DllCall</a> parameter which has the "Ptr" type, but can also be used explicitly. For example, <code>ComObj.Ptr</code> is equivalent to <code>ComObjValue(ComObj)</code> in these cases.</p>
+<p>如果包装器对象的 <a href="ComObjType.htm#vt"><em>VarType</em></a> 是 VT_UNKNOWN(13) 或包含 VT_BYREF(0x4000) 标志或 VT_ARRAY(0x2000) 标志, 则 <code>Ptr</code> 属性可用于检索对象, 类型化变量或安全数组的地址. 这允许将 ComObject 本身传递给任何具有 "Ptr" 类型的 <a href="DllCall.htm">DllCall</a> 参数, 但也可以显式地使用. 例如, 在这些情况下, <code>ComObj.Ptr</code> 等同于 <code>ComObjValue(ComObj)</code>.</p>
 
 <h2 id="ByRef">ByRef</h2>
-<p>If a wrapper object's <a href="ComObjType.htm#vt"><em>VarType</em></a> includes the VT_BYREF (0x4000) flag, empty brackets <code>[]</code> can be used to read or write the referenced value.</p>
-<p>When creating a reference, <em>Value</em> must be the memory address of a variable or buffer with sufficient capacity to store a value of the given type. 例如, the following can be used to create a variable which a VBScript function can write into:</p>
+<p>如果包装器对象的 <a href="ComObjType.htm#vt"><em>VarType</em></a> 包含 VT_BYREF(0x4000) 标志, 可用空的方括号对 <code>[]</code> 来读写引用的值.</p>
+<p>当创建一个引用, <em>Value</em> 须为变量的内存地址, 或足够存储指定类型的值的缓存. 例如, 下面的代码可以用来创建一个 VBScript 函数可以写入的变量:</p>
 <pre>VarSetCapacity(var, 24, 0)
-vref := ComObject(0x400C, &amp;var)  <em>; 0x400C is a combination of VT_BYREF and VT_VARIANT.</em>
+vref := ComObject(0x400C, &amp;var)  <em>; 0x400C 是 VT_BYREF 与 VT_VARIANT 组合而得.</em>
 
 vref[] := "in value"
-sc.Run("Example", vref)  <em>; sc should be initialized as in the <a href="#ExByRef">example below</a>.</em>
+sc.Run("Example", vref)  <em>; sc 应像<a href="#ExByRef">下面例子</a>一样进行初始化.</em>
 MsgBox vref[]</pre>
 
 <h2 id="Remarks">备注</h2>
-<p>When this function is used to wrap an <a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a> or IUnknown interface pointer, the wrapper object assumes responsibility for automatically releasing the pointer when appropriate. If <em>VarType</em> was omitted, the object is <a href="ComObjQuery.htm">queried</a> for its IDispatch interface; if one is returned, <em>DispPtr</em> is immediately released. Therefore, if the script intends to use the pointer after calling this function, it must call <code><a href="ObjAddRef.htm">ObjAddRef</a>(DispPtr)</code> first.</p>
-<p>The <em>VarType</em> of a wrapper object can be retrieved using <a href="ComObjType.htm">ComObjType</a>.</p>
-<p>The <em>Value</em> of a wrapper object can be retrieved using <a href="ComObjValue.htm">ComObjValue</a>.</p>
-<p><b>Known limitation:</b> Each time a COM object is wrapped, a new wrapper object is created. Comparisons and assignments such as <code>obj1 == obj2</code> and <code>array[obj1] := value</code> treat the two wrapper objects as unique, even though they contain the same COM object.</p>
+<p>当使用此函数包装 <a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a> 或 IUnknown 接口指针时, 包装器对象负责在适当的时候自动释放指针. 如果省略 <em>VarType</em>, 则<a href="ComObjQuery.htm">查询</a>对象的 IDispatch 接口; 如果返回一个, 则立即释放 <em>DispPtr</em>. 因此, 如果脚本打算在调用这个函数后使用指针, 它必须首先调用 <code><a href="ObjAddRef.htm">ObjAddRef</a>(DispPtr)</code>.</p>
+<p>可以使用  <a href="ComObjType.htm">ComObjType</a> 检索包装器对象的 <em>VarType</em>.</p>
+<p>可以使用 <a href="ComObjValue.htm">ComObjValue</a> 检索包装器对象的 <em>Value</em>.</p>
+<p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>obj1 == obj2</code> 和 <code>array[obj1] := value</code> 这样的比较和赋值运算, 将这两个包装器对象视为唯一的, 即使它们包含相同的 COM 对象.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="ObjAddRef.htm">ObjAddRef/ObjRelease</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221467.aspx">GetActiveObject (MSDN)</a></p>
@@ -84,7 +84,7 @@ MsgBox vref[]</pre>
 <div class="ex" id="ExByRef">
 <p><a href="#ExByRef">#1</a></p>
 <pre>
-<em>; Preamble - ScriptControl requires a 32-bit version of AutoHotkey.</em>
+<em>; 条件 - ScriptControl 需 32 位版本的 AutoHotkey.</em>
 code := "
 (
 Sub Example(Var)
@@ -95,23 +95,23 @@ End Sub
 sc := <a href="ComObjCreate.htm">ComObjCreate</a>("ScriptControl"), sc.Language := "VBScript", sc.AddCode(code)
 
 
-<em>; 示例: Pass a VARIANT ByRef to a COM method.</em>
+<em>; 示例: 传递 VARIANT ByRef 至 COM 函数.</em>
 var := ComVar.new()
 var[] := "in value"
 sc.Run("Example", var.ref)
 MsgBox var[]
 
-<em>; ComVar: An object which can be used to pass a value ByRef.
-;   this[] retrieves the value.
-;   this[] := Val sets the value.
-;   this.ref retrieves a ByRef object for passing to a COM method.</em>
+<em>; ComVar: 创建可用于按引用(ByRef) 传值的对象.
+;   this[] 检索值.
+;   this[] := Val 设置值.
+;   this.ref 检索按引用传值的对象, 以传递到 COM 方法.</em>
 class ComVar {
     __new(Type := 0xC) {
-        <em>; Allocate memory for the typed variable.
-        ; The largest supported type is VT_VARIANT on x64 (24 bytes).</em>
-    ; care of all conversions between VARIANT and AutoHotkey internal types.</em>
+        <em>; 为类型化变量分配内存.
+        ; 支持的最大类型是 x64(24 字节) 上的 VT_VARIANT.</em>
+    ; 处理 VARIANT 和 AutoHotkey 内部类型之间的所有转换.</em>
         this.var := BufferAlloc(24, 0)
-        <em>; Create an object which can be used to pass the variable ByRef.</em>
+        <em>; 创建一个可以用来传递变量 ByRef 的对象.</em>
         this.ref := ComObject(0x4000|Type, this.var.ptr + (Type=0xC ? 0 : 8))
     }
     __item {

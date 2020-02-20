@@ -15,7 +15,7 @@
 
 <p>在继续前等待指定的时间量.</p>
 
-<pre class="Syntax"><span class="func">Sleep</span> DelayInMilliseconds</pre>
+<pre class="Syntax"><span class="func">Sleep</span> Delay</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -29,16 +29,16 @@
 
 <h2 id="Remarks">备注</h2>
 <p>由于操作系统中计时系统的精确度, <em>Delay</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于所安装的硬件和驱动的类型). 要实现更短的延时, 请参阅<a href="#ExShorterSleep">示例</a>.</p>
-<p>The actual delay time might wind up being longer than what was requested if the CPU is under load. This is because the OS gives each needy process a slice of CPU time (typically 20 milliseconds) before giving another timeslice to the script.</p>
-<p>A delay of 0 yields the remainder of the script's current timeslice to any other processes that need it (as long as they are not significantly lower in <a href="ProcessSetPriority.htm">priority</a> than the script). Thus, a delay of 0 produces an actual delay between 0 and 20ms (or more), depending on the number of needy processes (if there are no needy processes, there will be no delay at all). However, a <em>Delay</em> of 0 should always wind up being shorter than any longer <em>Delay</em> would have been.</p>
-<p>While sleeping, new <a href="../misc/Threads.htm">threads</a> can be launched via <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timer</a>.</p>
-<p><strong>Sleep -1</strong>: A delay of -1 does not sleep but instead makes the script immediately check its message queue. This can be used to force any pending <a href="../misc/Threads.htm">interruptions</a> to occur at a specific place rather than somewhere more random. See <a href="Critical.htm">Critical</a> for more details.</p>
+<p>如果 CPU 在负载时, 那么实际的延时可能超过请求的时间. 这是因为在给脚本另一个时间片之前, 会给每个有需要的进程一个 CPU 时间片(一般为 20 毫秒).</p>
+<p>延时为 0 会将脚本当前时间片的剩余部分分配给其他需要的进程(只要它们的<a href="ProcessSetPriority.htm">优先级</a>不是显著比脚本低). 因此, 延时为 0 实际会产生在 0 和 20ms(或更多) 之间的延时, 取决于有需要的进程的数目(如果没有这样的进程, 则完全没有延时). 然而, 0 的 <em>Delay</em> 应该比任何更长的 <em>Delay</em> 会更早结束.</p>
+<p>当脚本休眠时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
+<p><strong>Sleep -1</strong>: -1 的 <em>Delay</em> 不会休眠, 相反地它让脚本立即检查消息队列. 这可用来强制任何迫近的<a href="../misc/Threads.htm">中断</a>在指定的位置发生, 而不是在更随机的位置. 有关详情, 请参阅 <a href="Critical.htm">Critical</a>.</p>
 <h2 id="Related">相关</h2>
 <p><a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetMouseDelay.htm">SetMouseDelay</a>, <a href="SetControlDelay.htm">SetControlDelay</a>, <a href="SetWinDelay.htm">SetWinDelay</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
-<pre>Sleep 1000  <em>; 1 second</em></pre>
+<pre>Sleep 1000  <em>; 1 秒</em></pre>
 </div>
 
 <div class="ex" id="ExShorterSleep">
@@ -46,8 +46,8 @@
 <pre>
 SleepDuration := 1  <em>; 这里有时可以根据下面的值进行细微调整(例如 2 与 3 的区别).</em>
 TimePeriod := 3 <em>; 尝试 7 或 3. 请参阅下面的注释.
-; On a PC whose sleep duration normally rounds up to 15.6 ms, try TimePeriod=7 to allow
-; somewhat shorter sleeps, and try TimePeriod=3 or less to allow the shortest possible sleeps.</em>
+; 在 PC 中休眠持续时间一般向上取整到 15.6 ms, 尝试 TimePeriod=7 来允许
+; 稍短一点的休眠, 而尝试 TimePeriod=3 或更小的值来允许最小可能的休眠.</em>
 
 DllCall(&quot;Winmm\timeBeginPeriod&quot;, &quot;UInt&quot;, TimePeriod)  <em>; 作用于所有的应用程序, 而不只是脚本的 DllCall(&quot;Sleep&quot;...), 但不影响 SetTimer.</em>
 Iterations := 50

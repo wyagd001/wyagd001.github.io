@@ -13,7 +13,7 @@
 
 <h1>For-loop</h1>
 
-<p>Repeats a series of functions once for each key-value pair in an object.</p>
+<p>对对象中的每对键值对重复执行一系列函数.</p>
 
 <pre class="Syntax"><span class="func">For</span> Value1 <span class="optional">, Value2</span> in Expression</pre>
 <h2 id="Parameters">参数</h2>
@@ -23,27 +23,27 @@
   <dt>Value2</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
-    <p>The variables in which to store the values returned by the enumerator at the beginning of each iteration. The nature of these values is defined by the enumerator, which is determined by <em>Expression</em>.</p>
-    <p>When the loop breaks or completes, these variables are restored to their former values.</p>
+    <p>用于存储枚举器在每次迭代开始时返回的值的变量. 这些值的性质由枚举器定义, 枚举器由 <em>Expression</em> 决定.</p>
+    <p>当循环中断或完成时, 这些变量将恢复到原来的值.</p>
   </dd>
 
   <dt>Expression</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
-    <p>An <a href="../Variables.htm#Expressions">expression</a> which results in an enumerable object, or a variable which contains an enumerable object.</p>
+    <p>结果为可枚举对象的<a href="../Variables.htm#Expressions">表达式</a>, 或包含可枚举对象的变量.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>The parameter list can optionally be enclosed in parentheses. For example: <code>for (val in myarray)</code></p>
-<p>The process of enumeration is as follows:</p>
+<p>可以选择将参数列表括在括号中. 例如: <code>for (val in myarray)</code></p>
+<p>枚举过程如下:</p>
 <ul>
-  <li>Before the loop begins, <i>Expression</i> is evaluated to determine the target object.</li>
-  <li>The object's <code>__Enum</code> method is called to retrieve an <a href="../objects/Enumerator.htm"><i>enumerator</i></a> object. If no such method exists, the object itself is assumed to be an enumerator object.</li>
-  <li>At the beginning of each iteration, the enumerator is <a href="../objects/Enumerator.htm#Call">called</a> to retrieve the next value or pair of values. If it returns false (zero or an empty string), the loop terminates.</li>
+  <li>在循环开始之前, 计算 <i>Expression</i> 以确定目标对象.</li>
+  <li>调用对象的 <code>__Enum</code> 方法以检索 <a href="../objects/Enumerator.htm"><i>枚举器</i></a> 对象. 如果不存在这样的方法, 则假定对象本身是枚举器对象.</li>
+  <li>在每次迭代开始时, <a href="../objects/Enumerator.htm#Call">调用</a>枚举器以检索下一个值或下一对值. 如果返回 false(0 或空字串), 则循环终止.</li>
 </ul>
-<p>Although not exactly equivalent to a for-loop, the following demonstrates this process:</p>
+<p>尽管不完全等同于 for 循环, 下面演示了这个过程:</p>
 <pre>_enum := <i>Expression</i>
 try _enum := _enum.__Enum(2)
 while %_enum%(Value1, Value2)
@@ -51,23 +51,23 @@ while %_enum%(Value1, Value2)
     ...
 }
 </pre>
-<p>As in the code above, an exception is thrown if <em>Expression</em> or __Enum does not yield a object, or if the enumerator object cannot be called.</p>
-<p>While enumerating properties, methods or array elements, it is generally unsafe to insert or remove items of that type. Doing so may cause some items to be skipped or enumerated multiple times. One workaround is to build a list of items to remove, then use a second loop to remove the items after the first loop completes.</p>
-<p>A for-loop is usually followed by a <a href="Block.htm">block</a>, which is a collection of statements that form the <em>body</em> of the loop. However, a loop with only a single statement does not require a block (an &quot;if&quot; and its &quot;else&quot; count as a single statement for this purpose). The One True Brace (OTB) style may optionally be used, which allows the open-brace to appear on the same line rather than underneath. For example: <code>for x, y in z {</code>.</p>
-<p>As with all loops, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> and <a href="../Variables.htm#Index">A_Index</a> may be used.</p>
+<p>与上面的代码一样, 如果 <em>Expression</em> 或 __Enum 不产生对象, 或无法调用枚举器对象, 则会抛出一个异常.</p>
+<p>在枚举属性, 方法或数组元素时, 插入或删除该类型的项目通常是不安全的. 这样做可能导致某些项目被多次跳过或枚举. 一种解决方法是建立要删除的项目列表, 然后在第一个循环完成后使用第二个循环删除这些项目.</p>
+<p>for 循环后通常跟着<a href="Block.htm">区块</a>, 这是构成循环 <em>主体</em> 的语句的集合. 不过, 在单语句的循环中可以不使用区块(用于此目的时 "if" 与其相匹配的 "else" 一起被视为单语句). 可以选择使用 <a href="Block.htm#otb">One True Brace(OTB) 样式</a>, 这样允许左大括号在同一行而不是在其下面. 例如: <code>for x, y in z {</code>.</p>
+<p>和所有的循环一样, 可以使用 <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 <a href="../Variables.htm#Index">A_Index</a>.</p>
 
-<h2>COM Objects</h2>
-<p>Since <i>Value1</i> and <i>Value2</i> are passed directly to the enumerator, the values they are assigned depends on what type of object is being enumerated. For COM objects, <i>Value1</i> contains the value returned by <a href="http://msdn.microsoft.com/en-us/library/ms221369.aspx">IEnumVARIANT::Next()</a> and <i>Value2</i> contains a number which represents its <a href="http://msdn.microsoft.com/en-us/library/cc237865.aspx">variant type</a>. For example, when used with a <a href="http://msdn.microsoft.com/en-us/library/x4k5wbx4.aspx">Scripting.Dictionary</a> object, each <i>Value1</i> contains a key from the dictionary and <i>Value2</i> is typically 8 for strings and 3 for integers. See <a href="ComObjType.htm">ComObjType</a> for a list of type codes.</p>
-<p>When enumerating a <a href="ComObjArray.htm">SafeArray</a>, <i>Value1</i> contains the current element and <i>Value2</i> contains its variant type.</p>
+<h2>COM 对象</h2>
+<p>因为 <i>Value1</i> 和 <i>Value2</i> 是直接传递给枚举器的, 所以它们的值取决于被枚举的对象类型. 对于 COM 对象, <i>Value1</i> 包含由 <a href="http://msdn.microsoft.com/en-us/library/ms221369.aspx">IEnumVARIANT::Next()</a> 返回的值, 而 <i>Value2</i> 包含了表示其<a href="http://msdn.microsoft.com/en-us/library/cc237865.aspx">变体类型</a>的数字. 例如, 用于 <a href="http://msdn.microsoft.com/en-us/library/x4k5wbx4.aspx">Scripting.Dictionary</a> 对象时, 每个 <i>Value1</i> 包含字典中的键, 而 <i>Value2</i> 通常为 8(对于字符串) 和 3(对于整数). 有关类型代码表, 请参阅 <a href="ComObjType.htm">ComObjType</a>.</p>
+<p>枚举 <a href="ComObjArray.htm">SafeArray</a> 时, <i>Value1</i> 包含了当前元素, 而 <i>Value2</i> 包含其变体类型.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../objects/Enumerator.htm">Enumerator object</a>, <a href="../objects/Object.htm#OwnProps">OwnProps</a>, <a href="../objects/Object.htm#OwnMethods">OwnMethods</a>, <a href="While.htm">While-loop</a>, <a href="Loop.htm">Loop</a>, <a href="Until.htm">Until</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">Blocks</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: List the properties owned by an object:</p>
+<p><a href="#ExBasic">#1</a>: 列出对象的自有属性:</p>
 <pre>colours := {red: 0xFF0000, blue: 0x0000FF, green: 0x00FF00}
-<em>; The above expression could be used directly in place of "colours" below:</em>
+<em>; 上面的表达式可以直接代替下面的 "colours":</em>
 for k, v in colours.OwnProps()
     s .= k "=" v "`n"
 MsgBox s
@@ -82,7 +82,7 @@ MsgBox windows</pre>
 </div>
 
 <div class="ex" id="ExFibF">
-<p><a href="#ExFibF">#3</a>: Define an enumerator as a <a href="../Variables.htm#fat-arrow">fat arrow function</a>. Returns numbers from the Fibonacci sequence, indefinitely or until stopped.</p>
+<p><a href="#ExFibF">#3</a>: 将枚举器定义为<a href="../Variables.htm#fat-arrow">胖箭头函数</a>. 返回斐波那契数列中的数字, 无限次或直到停止.</p>
 <pre>for n in FibF()
     if MsgBox("#" A_Index " = " n "`nContinue?",, "y/n") = "No"
         break
@@ -97,7 +97,7 @@ FibF() {
 </div>
 
 <div class="ex" id="ExFibC">
-<p><a href="#ExFibC">#4</a>: Define an enumerator as a <a href="../Objects.htm#Custom_Classes">class</a>. Equivalent to the <a href="#ExFibF">previous example</a>.</p>
+<p><a href="#ExFibC">#4</a>: 将枚举器定义为<a href="../Objects.htm#Custom_Classes">类</a>. 与<a href="#ExFibF">前面的示例</a>相同.</p>
 <pre>for n in FibC.new()
     if MsgBox("#" A_Index " = " n "`nContinue?",, "y/n") = "No"
         break
