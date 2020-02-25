@@ -34,7 +34,7 @@
 
 </dl>
 
-<h3>相关</h3>
+<h3>备注</h3>
 <p>新脚本使用函数替代原来的子程序 --  这样可以降低脚本无法退出的风险, 并确保传递给 Exit 或 ExitApp 的退出码被保存.</p>
 <p>OnExit 函数可以注册任意多个. 如果同时还注册了 label(子程序), 注册的这些函数会在子程序执行 <a href="ExitApp.htm">ExitApp</a> 命令之后被调用. 通常 OnExit 函数不需要调用 ExitApp 命令; 如果调用了, 脚本将会立即退出.</p>
 
@@ -83,8 +83,8 @@ class MyObject
 
 </dl>
 
-<h3>相关</h3>
-<p><strong>重要:</strong> 由于指定的子程序被调用而不是退出脚本, 因此如果需要退出脚本, 子程序必须使用 <a href="ExitApp.htm">ExitApp</a> 命令.</p>
+<h3>备注</h3>
+<p><strong>重要提示:</strong> 由于指定的子程序被调用而不是退出脚本, 因此如果需要退出脚本, 子程序中必须使用 <a href="ExitApp.htm">ExitApp</a> 命令. (译者注: 每次遇到退出, 就执行子程序, 相当于退出命令被子程序取代了而不会被执行, 不过在子程序运行时(完成之前), 再次选择退出时, 不会再次调用子程序, 而是退出, 详情请参阅下面的备注.)</p>
 <p>内置变量 <strong>A_ExitReason</strong> 为空, 除非 OnExit 子程序正在运行或者在之前的退出中至少调用过一次. 如果不是空的, 则它为<a href="#ExitReason">下面表格</a>中单词的其中一个.</p>
 
 <h3>示例</h3>
@@ -102,7 +102,7 @@ if A_ExitReason not in Logoff,Shutdown  <em>; 在这行语句中, 注意不要�
 }
 ExitApp  <em>; 脚本含有 OnExit 子程序时不会立即终止, 除非子程序使用 ExitApp.</em></pre>
 
-<h2>相关</h2>
+<h2>备注</h2>
 <p>当脚本以任何方式退出时, 将调用 OnExit 回调函数或子程序(除非被类似 &quot;结束任务&quot; 的方式强行终止). 每当 <a href="_SingleInstance.htm">#SingleInstance</a> 和 <a href="Reload.htm">Reload</a> 命令请求前一个实例终止时, 也会调用它.</p>
 <p>脚本可以通过 <code>OnMessage(0x11, &quot;WM_QUERYENDSESSION&quot;)</code>(有关工作脚本, 请参阅 <a href="OnMessage.htm#shutdown">OnMessage 示例 #2</a>) 检测并可选择地中止操作系统关闭或注销.</p>
 <p>OnExit <a href="../misc/Threads.htm">线程</a>并不受到 <a href="_MaxThreads.htm">#MaxThreads</a> 的限制(它总是在需要的时候启动). 此外, 当它运行时, 它不会被任何<a href="../misc/Threads.htm">线程</a>中断, 包括<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>和<a href="SetTimer.htm">计时器子程序</a>. 不过, 它会在这些情况下被中断(终止)(且脚本也同时被终止了): 用户从托盘菜单或主菜单栏中选择 exit(退出), 或由于 <a href="Reload.htm">Reload</a> 或 <a href="_SingleInstance.htm">#SingleInstance</a> 而要求脚本终止. 由于这些原因, OnExit 回调函数或子程序应该被设计为尽快结束, 除非用户知道它在做什么.</p>
