@@ -59,10 +59,10 @@
 <ol>
   <li>其他程序让 CPU 高负载.</li>
   <li>计时器子程序本身在计时器周期到期时仍在运行(定时子程序运行的时间超过它自己的周期), 或者有太多竞争计时器(改变 <a href="SetBatchLines.htm">SetBatchLines</a> 可能有帮助).</li>
-  <li>计时器已经被另一个<a href="../misc/Threads.htm">线程</a>中断, 即另一个定时子程序, <a href="../Hotkeys.htm">热键子程序</a>或<a href="Menu.htm">自定义菜单项</a>(这可以使用 <a href="Critical.htm">Critical</a> 避免). 如果这种情况发生了并且中断的线程花费了很长的时间才结束, 则被中断的计时器在这段时间里会被禁用. 不过, 其他任何计时器会对这个中断首个计时器的<a href="../misc/Threads.htm">线程</a>进行中断来继续运行.</li>
+  <li>计时器已经被另一个<a href="../misc/Threads.htm">线程</a>中断, 即另一个定时子程序, <a href="../Hotkeys.htm">热键子程序</a>或<a href="Menu.htm">自定义菜单项</a>(这可以使用 <a href="Critical.htm">Critical</a> 避免). 如果这种情况发生了并且中断的线程需要很长时间才能结束, 则在此期间将有效地禁用中断的计时器. 不过, 任何其他计时器会对这个中断首个计时器的<a href="../misc/Threads.htm">线程</a>进行中断来继续运行.</li>
   <li>使用 <a href="Critical.htm">Critical</a> 或 <a href="Thread.htm">Thread Interrupt/Priority</a> 后脚本会变成不可中断的. 在这样的时期, 计时器不会运行. 之后, 当脚本恢复可中断时, 任何过时的计时器会尽快运行一次然后恢复到正常的调度.</li>
 </ol>
-<p>尽管计时器在脚本<a href="Suspend.htm">挂起</a>时仍会运行, 但是如果<a href="../misc/Threads.htm">当前线程</a>的 "<a href="Thread.htm">Thread NoTimers</a>" 正在起作用或者任意线程<a href="Pause.htm">被暂停</a>时则不会. 此外, 当用户通过脚本的菜单(例如托盘图标菜单或菜单栏) 进行导航时它们也不会运行.</p>
+<p>尽管计时器在脚本<a href="Suspend.htm">挂起</a>时仍会运行, 但是如果<a href="../misc/Threads.htm">当前线程</a>的 "<a href="Thread.htm">Thread NoTimers</a>" 正在起作用或者任意线程被<a href="Pause.htm">暂停</a>时则不会运行. 此外, 当用户通过脚本的菜单(例如托盘图标菜单或菜单栏) 进行导航时它们也不会运行.</p>
 <p>因为计时器是通过临时中断脚本当前线程来运行的, 所以它们的子程序应该保持简短(以便很快地结束), 无论何时很长的中断都是不好的.</p>
 <p id="otherremarks"><strong>其他备注</strong>: 要在脚本运行期间保持有效的计时器一般应在<a href="../Scripts.htm#auto">自动执行段</a>中进行创建. 与之相比, 临时的计时器经常可以在它自己的子程序中禁用(请参阅此页面底部的示例).</p>
 <p>每当计时子程序运行时, 它会使用设置(例如 <a href="SendMode.htm">SendMode</a>) 的默认值开始. 这些默认值可以在<a href="../Scripts.htm#auto">自动执行段</a>改变.</p>
