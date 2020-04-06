@@ -29,7 +29,7 @@
   "Go forward":"前进",
   "Change the font size":"更改字体大小",
   "Print this document":"打印页面",
-  "Open this document in the default browser (requires internet connection). Middle-click to copy the link address.":true,
+  "Open this document in the default browser (requires internet connection). Middle-click to copy the link address.":"在默认浏览器中打开此文档(需要网络). 中键复制链接地址",
   "Use the dark or light theme":"使用暗黑或明亮主题",
   "Open the help settings":"打开帮助设置",
   // ALT+... shortcuts (needs uppercase)
