@@ -29,31 +29,31 @@
 </dl>
 
 <h2 id="howto">基本操作</h2>
-<p>The #If directive sets the expression which will be used by subsequently created hotkeys to determine whether they should activate. This expression is evaluated when the key, mouse button or combination is pressed, or at other times when the program needs to know whether the hotkey is active.</p>
-<p>To make context-sensitive <a href="../Hotkeys.htm">hotkeys</a> and <a href="../Hotstrings.htm">hotstrings</a>, simply precede them with the #If directive. 例如:</p>
+<p>#If 指令设置表达式, 随后创建的热键将使用该表达式来确定是否应激活它们. 当按下键, 鼠标按钮或组合键, 或者在程序需要知道热键是否处于活动状态时, 将对该表达式求值.</p>
+<p>要生成上下文敏感的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>, 只需在它们前面加上 #If 指令. 例如:</p>
 <pre>#If WinActive("ahk_class Notepad") or WinActive(MyWindowTitle)
 #Space::MsgBox "You pressed Win+Spacebar in Notepad or " MyWindowTitle</pre>
-<p>The #If directive is positional: it affects all hotkeys and hotstrings physically beneath it in the script, until the next #If directive.</p>
-<p class="warning"><strong>Note:</strong> Unlike <a href="If.htm">if statements</a>, braces have no effect with the #If directive.</p>
-<p>To turn off context sensitivity, specify #If without any expression. 例如:</p>
+<p>#If 指令是与位置相关的: 它会影响脚本中在它后面的所有热键和热字串, 直到下一个 #If 指令.</p>
+<p class="warning"><strong>注意:</strong> 与 <a href="If.htm">if 语句</a>不同, 大括号对 #If 指令无效.</p>
+<p>要关闭热键的上下文相关性, 请指定不带任何表达式的 #If 指令. 例如:</p>
 <pre>#If</pre>
-<p>When a mouse or keyboard hotkey is disabled via #If, it performs its native function; that is, it passes through to the active window as though there is no such hotkey. There is one exception: Joystick hotkeys: although #If works, it never prevents other programs from seeing the press of a button.</p>
-<p>#If can also be used to alter the behavior of an ordinary key like <kbd>Enter</kbd> or <kbd>Space</kbd>. This is useful when a particular window ignores that key or performs some action you find undesirable. 例如:</p>
-<pre>#If WinActive("Reminders ahk_class #32770")  <em>; The "reminders" window in Outlook.</em>
-Enter::Send "!o"  <em>; Have an &quot;Enter&quot; keystroke open the selected reminder rather than snoozing it.</em>
+<p>当通过 #If 禁用鼠标或键盘热键时, 它会执行其原来的功能; 也就是说, 它传递到活动窗口, 就好像不存在热键一样. 但有一个例外: 操纵杆热键: 尽管 #If 有效, 它始终不会阻止其他程序看到操纵杆按钮按下.</p>
+<p>#If 也可以用来改变普通按键(例如 <kbd>Enter</kbd> 或 <kbd>Space</kbd>) 的行为. 当某个特定窗口忽略该键或执行某些您认为不需要的操作时, 这是非常有用的. 例如:</p>
+<pre>#If WinActive("Reminders ahk_class #32770")  <em>; Outlook 中的 "reminders" 窗口.</em>
+Enter::Send "!o"  <em>; 按下 &quot;Enter&quot; 打开 reminder, 而不是 snoozing.</em>
 #If</pre>
 
-<h2 id="variant">变体(Duplicate) 热键</h2>
-<p>A particular <a href="../Hotkeys.htm">hotkey</a> or <a href="../Hotstrings.htm">hotstring</a> can be defined more than once in the script if each definition has different #If criteria. These are known as <em>hotkey variants</em>. 例如:</p>
+<h2 id="variant">变体(副本) 热键</h2>
+<p>一个特定的<a href="../Hotkeys.htm">热键</a>或<a href="../Hotstrings.htm">热字串</a>在脚本中可以被创建多次, 如果每个定义有不同的 #If 条件. 这被称为 <em>热键变体</em>. 例如:</p>
 <pre>#If <a href="WinActive.htm">WinActive</a>("ahk_class Notepad")
 ^!c::MsgBox "You pressed Control+Alt+C in Notepad."
 #If WinActive("ahk_class WordPadClass")
 ^!c::MsgBox "You pressed Control+Alt+C in WordPad."
 #If
 ^!c::MsgBox "You pressed Control+Alt+C in a window other than Notepad/WordPad."</pre>
-<p>If more than one variant is eligible to fire, only the one closest to the top of the script will fire. The exception to this is the global variant (the one with no #If criteria): It always has the lowest precedence; therefore, it will fire only if no other variant is eligible (this exception does not apply to <a href="../Hotstrings.htm">hotstrings</a>).</p>
-<p>When creating duplicate hotkeys, the order of <a href="../Hotkeys.htm#Symbols">modifier symbols</a> such as ^!+# does not matter. 例如, <code>^!c</code> is the same as <code>!^c</code>. However, keys must be spelled consistently. 例如, <em>Esc</em> is not the same as <em>Escape</em> for this purpose (though the case does not matter). Also, any hotkey with a <a href="../Hotkeys.htm#wildcard">wildcard prefix (*)</a> is entirely separate from a non-wildcard one; 例如, <code>*F1</code> and <code>F1</code> would each have their own set of variants.</p>
-<p>To have the same hotkey subroutine executed by more than one variant, the easiest way is to create a stack of identical hotkeys, each with a different #If directive above it. 例如:</p>
+<p>如果有多个变体符合触发条件, 那么仅触发最早创建的那个. 这种情况的例外是全局变体(不带 #If 条件的那个): 它的优先级总是最低的, 仅当其他变体都不触发时它才会被触发(此例外不适用<a href="../Hotstrings.htm">热字串</a>).</p>
+<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols"> 修饰符</a> 的顺序(如 ^!+#) 没有关系. 例如, <code>^!c</code> 等同于 <code>!^c</code>.但是, 按键必须拼写一致. 例如, 为了这个目的时, <em>Esc</em> 不同于 <em>Escape</em>(尽管大小写无关). 最后, 任何带有<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不带通配符的热键是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 都可以有他们各自的变体.</p>
+<p>要让多个变体执行相同的热键子例程, 最简单的方法是创建一个相同的热键堆栈, 每个热键上面都有一个不同的 #If 指令. 例如:</p>
 <pre>#If WinActive("ahk_class Notepad")
 #z::
 #If WinActive("ahk_class WordPadClass")
