@@ -13,7 +13,7 @@
 
 <h1>#MenuMaskKey</h1>
 
-<p>Changes which key is used to mask <kbd>Win</kbd> or <kbd>Alt</kbd> keyup events.</p>
+<p>更改用来掩饰(屏蔽) <kbd>Win</kbd> 或 <kbd>Alt</kbd> 键松开事件的按键.</p>
 
 <pre class="Syntax"><span class="func">#MenuMaskKey</span> KeyName</pre>
 <h2 id="Parameters">参数</h2>
@@ -22,23 +22,23 @@
   <dt>KeyName</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>A <a href="../KeyList.htm">key name</a>, <a href="../KeyList.htm#vk">VKnn</a>, <a href="../KeyList.htm#sc">SCnnn</a> or VKnnSCnnn sequence.</p>
+    <p><a href="../KeyList.htm">按键名称</a>, <a href="../KeyList.htm#vk">VKnn</a>, <a href="../KeyList.htm#sc">SCnnn</a> 或 VKnnSCnnn 序列.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>The mask key is sent automatically to prevent the Start menu or the active window's menu bar from activating at unexpected times.</p>
-<p>The default mask key is <kbd>Ctrl</kbd>. This directive can be used to change the mask key to a key with fewer side effects.</p>
-<p>Good candidates are virtual key codes which generally have no effect, such as vk07, which Microsoft documents as "undefined", or vkFF, which is reserved to mean "no mapping" (a key which has no function). Some values, such as zero VK with non-zero SC, may fail to suppress the Start menu. Key codes are not required to match an existing key.</p>
-<p>Specifying <code>vk00sc000</code> will disable all automatic masking.</p>
-<p>This setting is global, meaning that it needs to be specified only once (anywhere in the script) to affect the behavior of the entire script.</p>
-<p><strong>Hotkeys:</strong> If a hotkey is implemented using the keyboard hook or mouse hook, the final keypress may be invisible to the active window and the system. If the system was to detect <em>only</em> a <kbd>Win</kbd> or <kbd>Alt</kbd> keydown and keyup with no intervening keypress, it would usually activate a menu. To prevent this, the keyboard or mouse hook may automatically send the mask key.</p>
-<p>Pressing a hook hotkey causes the next <kbd>Alt</kbd> or <kbd>Win</kbd> keyup to be masked if all of the following conditions are met:</p>
+<p>掩饰键会自动发送, 以防止开始菜单或活动窗口的菜单栏在未预期的时间激活.</p>
+<p>默认的掩饰键为 <kbd>Ctrl</kbd>. 此指令可用于将掩饰键更改为具有较少副作用的键.</p>
+<p>好的候选者是通常不会有效果的虚拟按键代码, 例如 vk07, 微软的文档是 "未定义的", 或 vkFF, 它被保留为 "没有映射"(一个没有功能的键). 某些值, 如 0 VK 和非 0 SC, 可能无法抑制开始菜单. 按键码不需要匹配按键的存在.</p>
+<p>指定 <code>vk00sc000</code> 将禁用所有自动掩饰.</p>
+<p>这个设置是全局的, 这意味着只需要指定一次(在脚本的任何位置) 就可以影响整个脚本的行为.</p>
+<p><strong>Hotkeys:</strong> 如果是使用键盘钩子或鼠标钩子实现的热键, 则最终的按键可能对活动窗口和系统是不可见的. 如果系统 <em>仅</em> 检测到 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 按下和松开, 而期间没有其他键按下, 通常会激活一个菜单. 为防止这种情况发生, 键盘或鼠标钩子可能会自动发送掩饰键.</p>
+<p>如果满足以下所有条件, 则按下钩子热键将导致下一个 <kbd>Alt</kbd> 或 <kbd>Win</kbd> 键的松开被屏蔽(发送掩饰键):</p>
 <ul>
-  <li>The hotkey is suppressed (it lacks the <a href="../Hotkeys.htm#Tilde">tilde modifier</a>).</li>
-  <li><kbd>Alt</kbd> or <kbd>Win</kbd> is logically down when the hotkey is pressed.</li>
-  <li>The modifier is physically down or the hotkey requires the modifier to activate. 例如, <code>$#a::</code> in combination with <code>AppsKey::RWin</code> causes masking when <kbd>Menu</kbd>+<kbd>A</kbd> is pressed, but <kbd>Menu</kbd> on its own is able to open the Start Menu.</li>
+  <li>热键原有功能被屏蔽(没有<a href="../Hotkeys.htm#Tilde">颚化符修饰键</a>).</li>
+  <li>当按下热键时, <kbd>Alt</kbd> 或 <kbd>Win</kbd> 逻辑上是按下的.</li>
+  <li>修饰符键物理上被按下或热键需要修饰符是激活的. 例如, <code>$#a::</code> 与 <code>AppsKey::RWin</code> 一起使用时, 当 <kbd>Menu</kbd>+<kbd>A</kbd> 按下时发送掩饰键, 但是 <kbd>Menu</kbd> 本身能打开开始菜单.</li>
   <li><kbd>Alt</kbd> is not masked if <kbd>Ctrl</kbd> was down when the hotkey was pressed, since <kbd>Ctrl</kbd>+<kbd>Alt</kbd> does not activate the menu bar.</li>
   <li><kbd>Win</kbd> is not masked if the most recent <kbd>Win</kbd> keydown was modified with <kbd>Ctrl</kbd>, <kbd>Shift</kbd> or <kbd>Alt</kbd>, since the Start Menu does not normally activate in those cases. However, key-repeat occurs even for the <kbd>Win</kbd> key if it was the last key physically pressed, so it can be hard to predict <em>when</em> the most recent <kbd>Win</kbd> keydown was.</li>
   <li>Either the keyboard hook is not installed (i.e. for a mouse hotkey), or there have been no other (unsuppressed) keydown or keyup events since the last <kbd>Alt</kbd> or <kbd>Win</kbd> keydown. Note that key-repeat occurs even for modifier keys and even after sending other keys, but only for the last physically pressed key.</li>
