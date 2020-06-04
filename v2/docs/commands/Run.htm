@@ -62,21 +62,21 @@ ExitCode := <span class="func">RunWait</span>(Target <span class="optional">, Wo
 <p>与 Run 不同, RunWait 会等待 <em>Target</em> 关闭或退出, 此时返回值被设置为程序的退出代码(32 位的有符号整数). 一些程序即使仍在运行, 但会出现立即返回; 这是因为这些程序启动了另一个进程.</p> 
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>If <em>Target</em> cannot be launched, an exception is thrown (that is, an error window is displayed) and the current thread is exited, unless the error is caught by a <a href="Try.htm">Try</a>/<a href="Catch.htm">Catch</a> statement. 例如:</p>
+<p>如果无法启动 <em>Target</em>, 则会抛出异常(即, 显示一个错误窗口) 并退出当前线程, 除非错误被 <a href="Try.htm">Try</a>/<a href="Catch.htm">Catch</a> 语句捕获. 例如:</p>
 <pre>try
     Run "NonExistingFile"
 catch
     MsgBox "File does not exist."
 </pre>
-<p>The built-in variable <a href="../Variables.htm#LastError">A_LastError</a> is set to the result of the operating system's GetLastError() function.</p>
+<p>内置变量 <a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统的 GetLastError() 函数的结果.</p>
 <h2 id="Remarks">备注</h2>
-<p>When running a program via <a href="../Variables.htm#ComSpec">Comspec</a> (cmd.exe) -- perhaps because you need to redirect the program's input or output -- if the path or name of the executable contains spaces, the entire string should be enclosed in an outer pair of single-quote marks. In the following example, the outer single-quote marks are shown in red and all the inner double-quote marks are shown in black:</p>
+<p>当通过 <a href="../Variables.htm#ComSpec">Comspec</a>(cmd.exe) 运行程序时 -- 也许是因为你需要重定向程序的输入或输出 -- 如果可执行文件的路径或名称中包含空格, 那么整个字符串应该用一对外置单引号来括起. 在下面的例子中, 外部的单引号用红色显示, 而内部的双引号用黑色显示:</p>
 <pre>Run A_ComSpec <span class="style3">'</span> /c &quot;C:\My Utility.exe&quot; &quot;param 1&quot; &quot;second param&quot; &gt;&quot;C:\My File.txt&quot;<span class="style3">'</span></pre>
-<p>Performance may be slightly improved if <em>Target</em> is an exact path, e.g. <code>Run 'C:\Windows\Notepad.exe &quot;C:\My Documents\Test.txt&quot;'</code> rather than <code>Run "C:\My Documents\Test.txt"</code>.</p>
-<p>Special <a href="../misc/CLSID-List.htm">CLSID folders</a> may be opened via Run. 例如:</p>
+<p>如果 <em>Target</em> 为准确路径时可轻微提升性能, 例如使用 <code>Run 'C:\Windows\Notepad.exe &quot;C:\My Documents\Test.txt&quot;'</code> 代替 <code>Run "C:\My Documents\Test.txt"</code>.</p>
+<p>Run 还可以打开指定的 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>. 例如:</p>
 <pre>Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; Opens the &quot;My Computer&quot; folder.</em>
 Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; Opens the Recycle Bin.</em></pre>
-<p id="verbs">System verbs correspond to actions available in a file's right-click menu in the Explorer. If a file is launched without a verb, the default verb (usually &quot;open&quot;) for that particular file type will be used. If specified, the verb should be followed by the name of the target file. 目前支持下列动词:</p>
+<p id="verbs">系统动词对应于资源管理器中文件的右键菜单中可用的操作. 如果启动文件时没有指定动词, 则使用该文件类型的默认动词(通常为 "打开"). 如果指定了, 则动词后应该跟着目标文件的名称. 目前支持下列动词:</p>
 <table class="info">
   <tr>
     <td style="width:8%">*<i>verb</i>(动词)</td>
@@ -85,35 +85,35 @@ Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; Opens the Recycle Bin.</em
   <tr>
     <td>properties</td>
     <td>
-      <p>Displays the Explorer's properties window for the indicated file. 例如: <code>Run 'properties "C:\My File.txt"'</code></p>
-      <p class="note"><strong>Note</strong>: The properties window will automatically close when the script terminates. To prevent this, use <a href="WinWait.htm">WinWait</a> to wait for the window to appear, then use <a href="WinWaitClose.htm">WinWaitClose</a> to wait for the user to close it.</p>
+      <p>显示指定文件的资源管理器属性窗口. 例如: <code>Run 'properties "C:\My File.txt"'</code></p>
+      <p class="note"><strong>注意</strong>: 当脚本终止时属性窗口会自动关闭. 要避免这种情况, 请使用 <a href="WinWait.htm">WinWait</a> 等待窗口出现, 然后使用 <a href="WinWaitClose.htm">WinWaitClose</a> 等待用户关闭它.</p>
     </td>
   </tr>
   <tr>
     <td>find</td>
-    <td>Opens an instance of the Explorer's Search Companion or Find File window at the indicated folder. 例如: <code>Run "find D:\"</code></td>
+    <td>在指定的文件夹中打开资源管理器的搜索组件或查找文件窗口的实例. 例如: <code>Run "find D:\"</code></td>
   </tr>
   <tr>
     <td>explore</td>
-    <td>Opens an instance of Explorer at the indicated folder. 例如: <code>Run "explore " A_ProgramFiles</code>.</td>
+    <td>打开指定的文件夹的资源管理器实例. 例如: <code>Run "explore " A_ProgramFiles</code>.</td>
   </tr>
   <tr>
     <td>edit</td>
-    <td>Opens the indicated file for editing. It might not work if the indicated file's type does not have an &quot;edit&quot; action associated with it. 例如: <code>Run 'edit &quot;C:\My File.txt&quot;'</code></td>
+    <td>打开指定的文件进行编辑. 如果指定的文件类型没有关联 "edit" 动作时, 它不起作用. 例如: <code>Run 'edit &quot;C:\My File.txt&quot;'</code></td>
   </tr>
   <tr>
     <td>open</td>
-    <td>Opens the indicated file (normally not needed because it is the default action for most file types). 例如: <code>Run 'open &quot;My File.txt&quot;'</code>.</td>
+    <td>打开指定的文件(一般不需要, 因为这对于大多数文件类型这是默认的动作). 例如: <code>Run 'open &quot;My File.txt&quot;'</code>.</td>
   </tr>
   <tr>
     <td>print</td>
-    <td>Prints the indicated file with the associated application, if any. 例如: <code>Run 'print &quot;My File.txt&quot;'</code></td>
+    <td>使用关联的应用程序打印指定的文件, 如果有. 例如: <code>Run 'print &quot;My File.txt&quot;'</code></td>
   </tr>
 </table>
-<p>While RunWait is in a waiting state, new <a href="../misc/Threads.htm">threads</a> can be launched via <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timer</a>.</p>
+<p>当 RunWait 处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
 
 <h2 id="RunAs">以管理员身份运行</h2>
-<p>For an executable file, the <em>*RunAs</em> verb is equivalent to selecting <em>Run as administrator</em> from the right-click menu of the file. 例如, the following code attempts to restart the current script as admin:</p>
+<p>对于可执行文件, <em>*RunAs</em> 动词相当于文件右键菜单的 <em>以管理员身份运行</em>. 例如, 以下代码尝试以管理员权限重启当前脚本:</p>
 <pre>full_command_line := DllCall("GetCommandLine", "str")
 
 if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
@@ -129,16 +129,16 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
 }
 
 MsgBox "A_IsAdmin: " A_IsAdmin "`nCommand line: " full_command_line</pre>
-<p>If the user cancels the UAC dialog or Run fails for some other reason, the script will simply exit.</p>
-<p>Using <a href="../Scripts.htm#SlashR">/restart</a> ensures that a <a href="_SingleInstance.htm">single instance</a> prompt is not shown if the new instance of the script starts before ExitApp is called.</p>
-<p>If UAC is disabled, <em>*RunAs</em> will launch the process without elevating it. Checking for <code>/restart</code> in the command line ensures that the script does not enter a runaway loop in that case. Note that <code>/restart</code> is a built-in switch, so is not included in the <a href="../Scripts.htm#cmd_args">array of command-line parameters</a>.</p>
-<p>The example can be modified to fit the script's needs:</p>
+<p>如果用户取消了 UAC 对话框, 或者由于其他原因启动失败, 脚本就会直接退出.</p>
+<p>如果在调用 ExitApp 之前启动新的脚本实例, 使用 <a href="../Scripts.htm#SlashR">/restart</a> 可以确保不显示<a href="_SingleInstance.htm">单一实例</a>的提示弹窗.</p>
+<p>如果禁用了 UAC, <em>*RunAs</em> 将不会提权启动进程. 在命令行中检查 <code>/restart</code> 可以确保在这种情况下脚本不会进入失控循环. 注意 <code>/restart</code> 是一个内置的开关, 所以其不包括在<a href="../Scripts.htm#cmd_args">命令行参数数组</a>中.</p>
+<p>可以根据脚本的需要修改上面的例子:</p>
 <ul>
-  <li>If the script absolutely requires admin rights, check A_IsAdmin a second time in case <em>*RunAs</em> failed to elevate the script (i.e. because UAC is disabled).</li>
-  <li>To keep the script running even if the user cancels the UAC prompt, move ExitApp into the try block.</li>
-  <li>To keep the script running even if it failed to restart (i.e. because the script file has been changed or deleted), remove ExitApp and use RunWait instead of Run. On success, <code>/restart</code> causes the new instance to terminate the old one. On failure, the new instance exits and RunWait returns.</li>
+  <li>如果脚本的确需要管理员权限, 在 <em>*RunAs</em> 未能提升脚本权限的情况下(例如, 因为 UAC 被禁用), 第二次检查 A_IsAdmin.</li>
+  <li>在用户取消了 UAC 提示的情况下, 为了保持脚本的运行, 可以将 ExitApp 移到 try 块中.</li>
+  <li>在重新启动失败的情况下, 为了保持脚本的运行(比如脚本文件已被重命名或删除), 移除 ExitApp 并且使用 RunWait 代替 Run. 若是成功, <code>/restart</code> 使新实例终止旧实例. 若是失败, 新实例的退出及 RunWait 返回.</li>
 </ul>
-<p>If UAC is enabled, the AutoHotkey installer registers the <em>RunAs</em> verb for <em>.ahk</em> files, which allows <code>Run "*RunAs script.ahk"</code> to launch a script as admin with the default executable.</p>
+<p>如果 UAC 开启, AutoHotkey 安装程序为 <em>.ahk</em> 文件注册  <em>RunAs</em> 动词, 这允许 <code>Run "*RunAs script.ahk"</code> 默认以管理员权限启动脚本.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="RunAs.htm">RunAs</a>, <a href="Process.htm">Process functions</a>, <a href="Exit.htm">Exit</a>, <a href="../misc/CLSID-List.htm">CLSID List</a>, <a href="DllCall.htm">DllCall</a></p>
@@ -150,7 +150,7 @@ MsgBox "A_IsAdmin: " A_IsAdmin "`nCommand line: " full_command_line</pre>
 
 Run "mailto:someone@domain.com?subject=This is the subject line&amp;body=This is the message body's text."
 
-try Run("ReadMe.doc", , "Max")  <em>; Launch maximized and don't display dialog if it fails.</em>
+try Run("ReadMe.doc", , "Max")  <em>; 最大化运行, 且在失败时不显示对话框.</em>
 if A_LastError
     MsgBox "The document could not be launched."
 
@@ -158,25 +158,25 @@ RunWait A_ComSpec " /c dir c:\ &gt;&gt;c:\DirTest.txt", , "min"
 Run "c:\DirTest.txt"
 Run "properties c:\DirTest.txt"
 
-Run "http://www.google.com" <em>; i.e. any URL can be launched.</em>
-Run "mailto:someone@somedomain.com"  <em>; This should open the default e-mail application.</em>
+Run "http://www.google.com" <em>; 即可以运行任意网址.</em>
+Run "mailto:someone@somedomain.com"  <em>; 这样应该会打开默认的电子邮件程序.</em>
 
-Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; Opens the &quot;My Computer&quot; folder.</em>
-Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; Opens the Recycle Bin.</em>
+Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; 打开"我的电脑"文件夹.</em>
+Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; 打开回收站.</em>
 
-<em>; To run multiple commands consecutively, use &quot;&amp;&amp;&quot; between each:</em>
+<em>; 要连续执行多个命令, 请在命令间使用"&&"分隔:</em>
 Run A_ComSpec " /c dir /b &gt; C:\list.txt &amp;&amp; type C:\list.txt &amp;&amp; pause"
 
-<em>; Following line opens Control Panel &gt; Display Properties &gt; Settings:</em>
+<em>; 以下代码打开 控制面板 &gt; 显示属性 &gt; 设置:</em>
 Run "rundll32.exe shell32.dll,Control_RunDLL desk.cpl,, 3"
 </pre>
 </div>
 
 <div class="ex" id="ExStdOut">
-<p><a href="#ExStdOut">#2</a>: The following can be used to run a command and retrieve its output:</p>
+<p><a href="#ExStdOut">#2</a>: 以下可用于运行命令并获取其的输出:</p>
 <pre>MsgBox RunWaitOne("dir " A_ScriptDir)
 
-<em>; ...or run multiple commands in one go and retrieve their output:</em>
+<em>; ...或一次执行多条命令并获取其输出:</em>
 MsgBox RunWaitMany("
 (
 echo Put your commands here,
@@ -187,26 +187,26 @@ echo and you'll get the output.
 RunWaitOne(command) {
     <em>; WshShell object: <a href="http://msdn.microsoft.com/en-us/library/aew9yb99">http://msdn.microsoft.com/en-us/library/aew9yb99</a></em>
     shell := ComObjCreate("WScript.Shell")
-    <em>; Execute a single command via cmd.exe</em>
+    <em>;  通过 cmd.exe 执行单条命令</em>
     exec := shell.Exec(A_ComSpec " /C " command)
-    <em>; Read and return the command's output</em>
+    <em>; 读取并返回命令的输出</em>
     return exec.StdOut.ReadAll()
 }
 
 RunWaitMany(commands) {
     shell := ComObjCreate("WScript.Shell")
-    <em>; Open cmd.exe with echoing of commands disabled</em>
+    <em>; 打开 cmd.exe 禁用命令显示</em>
     exec := shell.Exec(A_ComSpec " /Q /K echo off")
-    <em>; Send the commands to execute, separated by newline</em>
-    exec.StdIn.WriteLine(commands "`nexit")  <em>; Always exit at the end!</em>
-    <em>; Read and return the output of all commands</em>
+    <em>; 发送并执行命令, 使用新行分隔</em>
+    exec.StdIn.WriteLine(commands "`nexit")  <em>; 保证执行完毕后退出!</em>
+    <em>; 读取并返回所有命令的输出</em>
     return exec.StdOut.ReadAll()
 }
 </pre>
 </div>
 
 <div class="ex" id="ExecScript">
-<p><a href="#ExecScript">#3</a>: ExecScript: Executes the given code as a new AutoHotkey process.</p>
+<p><a href="#ExecScript">#3</a>: ExecScript: 在新的 AutoHotkey 进程中执行给定的代码.</p>
 <pre>ExecScript(Script, Wait:=true)
 {
     shell := ComObjCreate("WScript.Shell")
