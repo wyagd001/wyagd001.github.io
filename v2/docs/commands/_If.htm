@@ -60,66 +60,66 @@ Enter::Send "!o"  <em>; 按下 &quot;Enter&quot; 打开 reminder, 而不是 snoo
 #z::
 MsgBox "You pressed Win+Z in either Notepad or WordPad."
 return</pre>
-<p>Alternatively, a <a href="GroupAdd.htm">window group</a> can be used via <code>#If WinActive("ahk_group MyGroup")</code>.</p>
-<p>To create hotkey variants dynamically (while the script is running), 请参阅 <a href="Hotkey.htm#if">Hotkey "If"</a>.</p>
+<p>另外, 也可以通过 <code>#If WinActive("ahk_group MyGroup")</code> 来使用<a href="GroupAdd.htm">窗口组</a>.</p>
+<p>要动态地创建热键变体(当脚本运行时), 请参阅 <a href="Hotkey.htm#if">Hotkey "If"</a>.</p>
 
-<h2 id="expression-evaluation">Expression Evaluation</h2>
-<p>When the key, mouse or joystick button combination which forms a hotkey is pressed, the #If expression is evaluated to determine if the hotkey should activate.</p>
-<p class="warning"><strong>Note:</strong> Scripts should not assume that the expression is only evaluated when the key is pressed (see below).</p>
-<p>The expression may also be evaluated whenever the program needs to know whether the hotkey is active. 例如, the #If expression for a custom combination like <code>a &amp; b::</code> might be evaluated when the prefix key (<code>a</code> in this example) is pressed, to determine whether it should act as a custom modifier key.</p>
-<p class="warning" id="lag"><strong>Note:</strong> Use of #If in an unresponsive script may cause input lag or break hotkeys (see below).</p>
-<p>There are several more caveats to the #If directive:</p>
+<h2 id="expression-evaluation">表达式的计算</h2>
+<p>当热键, 鼠标或操纵杆按钮组合被按下时, #If 表达式被计算以确定热键是否应该被激活.</p>
+<p class="warning"><strong>注意:</strong> 脚本不应假定表达式只在按键被按下时才被计算(见下文).</p>
+<p>只要程序需要知道热键是否被激活, 表达式也可以被计算. 例如, #If 表达式作用于一个自定义组合热键(如 <code>a &amp; b::</code>), 当按下前缀按键(这个例子中的 <code>a</code>) 时, 表达式将会计算一次, 计算结果将决定组合热键是否起作用.</p>
+<p class="warning" id="lag"><strong>注意:</strong> 使用 #If 时, 在脚本无响应时可能会导致输入滞后或破坏热键(见下文).</p>
+<p>对于 #If 指令还有一些注意事项:</p>
 <ul>
-  <li>Keyboard or mouse input is typically buffered (delayed) until expression evaluation completes or <a href="_IfTimeout.htm">times out</a>.</li>
-  <li>Expression evaluation can only be performed by the script's main thread (at the OS level, not a <a href="../misc/Threads.htm">quasi-thread</a>), not directly by the keyboard/mouse hook. If the script is busy or unresponsive, such as if a FileCopy is in progress, expression evaluation is delayed and may time out.</li>
-  <li>If the <a href="_IfTimeout.htm#LowLevelHooksTimeout">system-defined timeout</a> is reached, the system may stop notifying the script of keyboard or mouse input (see #IfTimeout for details).</li>
-  <li>Sending keystrokes or mouse clicks while the expression is being evaluated (such as from a function which it calls) may cause complications and should be avoided.</li>
+  <li>键盘或鼠标输入通常被缓冲(延迟), 直到表达式计算完成或<a href="_IfTimeout.htm">超时</a>.</li>
+  <li>表达式的计算只能由脚本的主线程(在操作系统级别, 而不是<a href="../misc/Threads.htm">准线程</a>), 而不是由键盘/鼠标钩子直接执行. 如果脚本忙或者没有响应, 比如在进程中出现了 FileCopy, 那么表达式的计算就会被延迟, 并且可能会超时.</li>
+  <li>如果达到<a href="_IfTimeout.htm#LowLevelHooksTimeout">系统定义的超时</a>, 系统可能会停止通知脚本键盘或鼠标输入(有关详细信息, 请参阅 #IfTimeout).</li>
+  <li>在计算表达式时, 发送击键或鼠标单击(例如, 从它调用的函数中), 可能会导致并发, 应该避免.</li>
 </ul>
-<p><a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> and <a href="../Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> are set based on the hotkey for which the current #If expression is being evaluated.</p>
-<p><a href="../Variables.htm#PriorHotkey">A_PriorHotkey</a> and <a href="../Variables.htm#TimeSincePriorHotkey">A_TimeSincePriorHotkey</a> temporarily contain the previous values of the corresponding "This" variables.</p>
+<p><a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <a href="../Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 是基于当前正在计算的 #If 表达式的热键来设置的.</p>
+<p><a href="../Variables.htm#PriorHotkey">A_PriorHotkey</a> 和 <a href="../Variables.htm#TimeSincePriorHotkey">A_TimeSincePriorHotkey</a> 暂时包含对应 "This" 变量的前一个值.</p>
 
-<h2 id="optimization">Optimization</h2>
-<p>#If is optimized to avoid expression evaluation for simple calls to <a href="WinActive.htm">WinActive</a> or <a href="WinExist.htm">WinExist</a>, thereby reducing the <a href="#lag">risk of lag</a> or other issues in such cases. Specifically:</p>
+<h2 id="optimization">优化</h2>
+<p>为避免对 <a href="WinActive.htm">WinActive</a> 或 <a href="WinExist.htm">WinExist</a> 的简单调用进行表达式计算, 对 #If 进行了优化, 从而降低了在这种情况下出现<a href="#lag">滞后</a>或其他问题的风险. 具体来说:</p>
 <ul>
-  <li>The expression must contain exactly one call to <a href="WinExist.htm">WinExist</a> or <a href="WinActive.htm">WinActive</a>.</li>
-  <li>Each parameter must be a single quoted string, and no more than two parameters may be used.</li>
-  <li>The result may be inverted with <code>not</code> or <code>!</code>, but no other operators may be used.</li>
-  <li>Whitespace and parentheses are fully handled when the expression is pre-compiled and therefore do not affect this optimization.</li>
+  <li>表达式必须包含一次对 <a href="WinExist.htm">WinExist</a> 或 <a href="WinActive.htm">WinActive</a> 的调用.</li>
+  <li>每个参数必须是一个单引号的字符串, 并且不得使用超过两个参数.</li>
+  <li>结果可以用 <code>not</code> 或 <code>!</code> 进行反转, 但不能使用其他运算符.</li>
+  <li>当表达式被预编译时, 空白和括号会被完全处理, 因此不会影响这种优化.</li>
 </ul>
-<p>If the expression meets these criteria, it is evaluated directly by the program and does not appear in <a href="ListLines.htm">ListLines</a>.</p>
-<p>Before the <a href="Hotkey.htm">Hotkey</a> function is used to modify an existing hotkey variant, typically <code>Hotkey "If"</code> must be used with the original expression text. However, the first unique expression with a given combination of criteria can also be referenced by that criteria. 例如:</p>
+<p>如果表达式符合这些条件, 则直接由程序计算, 不会出现在 <a href="ListLines.htm">ListLines</a> 中.</p>
+<p>在使用<a href="Hotkey.htm">热键</a>函数修改现有的热键变体之前, 通常 <code>Hotkey "If"</code> 必须与原始表达式文本一起使用. 然而, 第一个具有给定组合条件的唯一表达式也可以被该条件引用. 例如:</p>
 <pre>
 Hotkey "IfWinExist", "ahk_class Notepad"
-Hotkey "#n", "Off"  <em>; Turn the hotkey off.</em>
+Hotkey "#n", "Off"  <em>; 关闭热键.</em>
 Hotkey 'If', 'WinExist("ahk_class Notepad")'
-Hotkey "#n", "On"   <em>; Turn the same hotkey back on.</em>
+Hotkey "#n", "On"   <em>; 打开同一个热键.</em>
 
 #if WinExist("ahk_class Notepad")
 #n::WinActivate
 </pre>
-<p>Note that any use of variables will disqualify the expression. If the variable's value never changes after the hotkey is created, there are two strategies for minimizing the risk of lag or other issues inherent to #If:</p>
+<p>注意, 任何变量的使用都会取消表达式的资格. 如果在创建热键后, 变量的值永远不会改变, 有两种策略可以最大限度地降低 #If 的滞后风险或其他固有问题:</p>
 <ul>
-  <li>Use <code><a href="Hotkey.htm#IfWin">Hotkey "IfWin..."</a>, MyTitleVar</code> to set the criteria and <code><a href="Hotkey.htm">Hotkey</a> KeyName, Label</code> to create the hotkey variant.</li>
-  <li>Use a constant expression such as <code>#if WinActive("ahk_group MyGroup")</code> and define the window group with <code><a href="GroupAdd.htm">GroupAdd</a> "MyGroup", MyTitleVar</code> elsewhere in the script.</li>
+  <li>使用 <code><a href="Hotkey.htm#IfWin">Hotkey "IfWin..."</a>, MyTitleVar</code> 来设置条件和 <code><a href="Hotkey.htm">Hotkey</a> KeyName, Label</code> 来创建热键变体.</li>
+  <li>使用常量表达式, 如 <code>#if WinActive("ahk_group MyGroup")</code> 和并在脚本的其他地方使用 <code><a href="GroupAdd.htm">GroupAdd</a> "MyGroup", MyTitleVar</code> 定义窗口组.</li>
 </ul>
 
 <h2 id="general-remarks">备注</h2>
-<p>#If also restores prefix keys to their native function when appropriate (a <a href="../Hotkeys.htm#prefix">prefix key</a> is the <kbd>A</kbd> key in a hotkey such as <code>a &amp; b</code>). This occurs whenever there are no enabled hotkeys for a given prefix.</p>
-<p>When Gosub or Goto is used to jump to a hotkey or hotstring label, it jumps to the variant closest to the top of the script.</p>
-<p>When a hotkey is currently disabled via #If, its key or mouse button will appear with a "#" character in <a href="KeyHistory.htm">KeyHistory's</a> "Type" column. This can help debug a script.</p>
-<p><a href="../Hotkeys.htm#alttab">Alt-tab hotkeys</a> are not affected by #If: they are in effect for all windows.</p>
-<p>The <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a> can be set by #If. 例如:</p>
+<p>适当的时候, #If 也会将前缀键恢复到它们的原生功能(如 <code>a &amp; b</code>, <a href="../Hotkeys.htm#prefix">前缀键</a> 是热键中的 <kbd>A</kbd>). 当给定的前缀键没有启用热键时, 就会发生这种情况.</p>
+<p>当 Gosub 或 Goto 用于跳转到一个热键或热字符串标签时, 它会跳转到最接近脚本顶部的变体.</p>
+<p>当前被 #If 禁用的热键, 它的按键或鼠标按钮在 <a href="KeyHistory.htm">KeyHistory</a> 的 "Type" 列中显示时会带有 "#" 字符. 这可以帮助调试脚本.</p>
+<p><a href="../Hotkeys.htm#alttab">Alt-tab 热键</a>不受 #If 影响: 它们对所有窗口都有效.</p>
+<p><a href="../misc/WinTitle.htm#LastFoundWindow">最后找到的窗口</a> 可以通过 #If 来设置. 例如:</p>
 <pre>#If <a href="WinExist.htm">WinExist</a>("ahk_class Notepad")
-#n::<a href="WinActivate.htm">WinActivate</a>  <em>; Activates the window found by WinExist().</em></pre>
+#n::<a href="WinActivate.htm">WinActivate</a>  <em>; 激活由 WinExist() 找到的窗口.</em></pre>
 
 <h2 id="Related">相关</h2>
-<p><a href="_IfTimeout.htm">#IfTimeout</a> may be used to override the default timeout value.</p>
+<p><a href="_IfTimeout.htm">#IfTimeout</a> 可以用于覆盖默认的超时时间值.</p>
 <p><a href="Hotkey.htm">Hotkey function</a>, <a href="../Hotkeys.htm">Hotkeys</a>, <a href="../Hotstrings.htm">Hotstrings</a>, <a href="Suspend.htm">Suspend</a>, <a href="WinActive.htm">WinActive</a>, <a href="WinExist.htm">WinExist</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a></p>
 
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExVolume">
-<p><a href="#ExVolume">#1</a>: Adjust volume by scrolling the mouse wheel over the taskbar:</p>
+<p><a href="#ExVolume">#1</a>: 在任务栏上滚动鼠标滚轮来调节音量:</p>
 <pre>
 <em>; 示例 0: WinActive.</em>
 #If WinActive("ahk_class Notepad")
@@ -141,7 +141,7 @@ MouseIsOver(WinTitle) {
 </div>
 
 <div class="ex" id="ExWordDelete">
-<p><a href="#ExWordDelete">#2</a>: Simple word-delete shortcuts for all Edit controls:</p>
+<p><a href="#ExWordDelete">#2</a>: 在所有的编辑控件中的轻松删除单词的快捷键:</p>
 <pre>
 #If ActiveControlIsOfClass("Edit")
 ^BS::Send "^+{Left}{Del}"
@@ -156,7 +156,7 @@ ActiveControlIsOfClass(Class) {
 </div>
 
 <div class="ex" id="ExContextInsens">
-<p><a href="#ExContextInsens">#3</a>: Context-insensitive Hotkey.</p>
+<p><a href="#ExContextInsens">#3</a>: 与上下文不相关的热键.</p>
 <pre>
 #If
 Esc::ExitApp
@@ -164,7 +164,7 @@ Esc::ExitApp
 </div>
 
 <div class="ex" id="ExDynamic">
-<p><a href="#ExDynamic">#4</a>: Dynamic Hotkeys. This example requires the MousIsOver function from <a href="#ExVolume">example #1</a>:</p>
+<p><a href="#ExDynamic">#4</a>:动态热键. 这个例子需要<a href="#ExVolume">示例 #1</a> 中的 MousIsOver 函数:</p>
 <pre>
 NumpadAdd::
 Hotkey "If", 'MouseIsOver("ahk_class Shell_TrayWnd")'

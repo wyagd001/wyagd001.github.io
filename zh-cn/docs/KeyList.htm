@@ -42,11 +42,11 @@
 <table class="info">
   <tr>
     <td style="width:13em">LButton</td>
-   <td>鼠标左键</td>
+   <td>Send 中使用的是鼠标左键, 热键中使用的是鼠标主键. 换句话说, 如果用户通过系统设置调换了按钮, <code>LButton::</code> 是通过点击鼠标 <strong>右</strong> 键来物理激活的, 而 <code>Send {LButton}</code> 的执行与物理点击 <strong>左</strong> 键相同. 要始终执行逻辑上的左键单击, 请使用 <code>Click Left</code> 或 <code>Send {Click Left}</code>.</td>
   </tr>
   <tr>
     <td>RButton</td>
-    <td>鼠标右键</td>
+    <td>Send 中使用的是鼠标右键, 热键中使用的是鼠标副键. 换句话说, 如果用户通过系统设置调换了按钮, <code>RButton::</code> 是通过点击鼠标 <strong>左</strong> 键来物理激活的, 而 <code>Send {RButton}</code> 的执行与物理点击 <strong>右</strong> 键相同. 要始终执行逻辑上的右键单击, 请使用 <code>Click Right</code> 或 <code>Send {Click Right}</code>.</td>
   </tr>
   <tr>
     <td>MButton</td>
@@ -88,7 +88,9 @@
 <table class="info">
   <tr>
     <td style="width:13em">CapsLock</td>
-    <td><kbd>CapsLock</kbd>(大小写锁定键)</td>
+    <td><kbd>CapsLock</kbd>(大小写锁定键)
+      <p class="warning"><strong>注意:</strong> Windows IME 可能会干扰 CapsLock 的检测和功能; 有关详情, 请参阅 <a href="#IME">CapsLock 和 IME</a>.</p>
+    </td>
   </tr>
   <tr>
     <td>Space</td>
@@ -453,5 +455,37 @@ return</pre></li>
 	禁用或移除您键盘或鼠标的附带软件, 或者让它使用更标准的驱动, 例如操作系统内置的那个. 这里假设您特殊的键盘或鼠标使用自己的驱动并且您不使用其自带驱动和软件提供的功能.</p>
   </li>
 </ol>
+
+<h2 id="IME">CapsLock 和 IME</h2>
+<p>Windows IME 的某些配置(如 日文输入与英文键盘) 使用 CapsLock 来切换模式. 在这种情况下, CapsLock 被 IME 压制, 并且无法被 AutoHotkey 检测. 不过, <kbd>Alt</kbd>+<kbd>CapsLock</kbd>, <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd> 和 <kbd>Shift</kbd>+<kbd>CapsLock</kbd> 等快捷键可以通过变通的方法禁用. 具体来说, 发送松开按键来修改 IME 的状态, 但通过给键盘钩子发送信号来抑制该事件, 从而防止任何其他影响. 可以使用以下函数来实现这一目的:</p>
+<pre filename="SendSuppressedKeyUp.ahk">
+<em>; 需要 AutoHotkey v1.1.26+, 并且必须安装键盘钩子.</em>
+#InstallKeybdHook
+SendSuppressedKeyUp(key) {
+    DllCall("keybd_event"
+        , "char", GetKeyVK(key)
+        , "char", GetKeySC(key)
+        , "uint", KEYEVENTF_KEYUP := 0x2
+        , "uptr", KEY_BLOCK_THIS := 0xFFC3D450)
+}
+</pre>
+<p>将函数复制到脚本中或保存为 <em>SendSuppressedKeyUp.ahk</em> 放入<a href="Functions.htm#lib">函数库</a>, 可以按照以下方式使用该函数:</p>
+<pre>
+<em>; 禁止 IME 的 Alt+key 快捷键.</em>
+~LAlt::SendSuppressedKeyUp("LAlt")
+
+<em>; 测试热键:</em>
+!CapsLock::MsgBox % A_ThisHotkey
+
+<em>; 重映射 CapsLock 为 LCtrl 以与 IME 兼容的方式.</em>
+*CapsLock::
+    Send {Blind}{LCtrl DownR}
+    SendSuppressedKeyUp("LCtrl")
+    return
+*CapsLock up::
+    Send {Blind}{LCtrl Up}
+    return
+</pre>
+
 </body>
 </html>

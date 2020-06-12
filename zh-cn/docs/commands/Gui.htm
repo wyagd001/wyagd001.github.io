@@ -21,10 +21,11 @@
 <h2>目录</h2>
 <ul>
     <li><a href="#SubCommands">子命令</a></li>
-    <li><a href="#Position">通过 SmartGUI Creator 来确定位置和布局</a></li>
-    <li><a href="#PosSize">控件的位置和大小</a></li>
-    <li><a href="#Events">保存和响应用户的输入</a></li>
-    <li><a href="#OtherOptions">控件: 样式和选项</a></li>
+    <li><a href="#ControlOptions">控件的选项(Gui Add)</a><ul>
+      <li><a href="#PosSize">控件的位置和大小</a></li>
+      <li><a href="#Events">保存和响应用户的输入</a></li>
+      <li><a href="#OtherOptions">控件: 通用样式和其他选项</a></li>
+    </ul></li>
     <li><a href="#Labels">窗口事件</a>: <a href="#GuiClose">GuiClose</a> | <a href="#GuiEscape">GuiEscape</a> | <a href="#GuiSize">GuiSize</a> | <a href="#GuiContextMenu">GuiContextMenu</a> | <a href="#GuiDropFiles">GuiDropFiles</a></li>
     <li><a href="#MultiWin">创建多个 GUI 窗口</a></li>
    <li><a href="#DefaultWin">GUI 事件, 线程和子程序</a></li>
@@ -94,6 +95,12 @@
     <li><a href="GuiControls.htm#ActiveX">ActiveX</a>(例如 Internet Explorer 控件)</li>
     <li><a href="GuiControls.htm#Custom">Custom(自定义控件)</a></li>
 </ul>
+<p><em>Options</em> 是一个由零或多个选项组成的字符串, 如以下章节所述:</p>
+<ul>
+  <li><a href="#PosSize">控件的位置和大小</a></li>
+  <li><a href="#Events">存储和响应用户输入</a></li>
+  <li><a href="#OtherOptions">控件: 通用样式和其他选项</a></li>
+</ul>
 <p>例如:</p>
 <pre>Gui, Add, Text,, Please enter your name:
 Gui, Add, Edit, vName
@@ -148,6 +155,7 @@ Gui, Font,, Arial
 Gui, Font,, Verdana  <em>; 首选字体.</em></pre>
 <p>如果 <em>Options</em> 参数为空, 则使用之前的字体属性. 或者可以在其中指定下列的一个或多个选项字母:</p>
 <p><strong>C</strong>: 颜色名称(请参阅<a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值, 或指定单词 Default 来恢复到系统默认颜色(大多数系统的默认颜色为黑色). 例如: <code>cRed</code>, <code>cFFFFAA</code>, <code>cDefault</code>. 注意: <a href="GuiControls.htm#Button">按钮</a>不遵循自定义颜色. 此外, 可以通过包含 C 选项创建带有字体颜色的特殊控件不会受到当前选项的影响. 例如: <code>Gui, Add, Text, cRed, My Text</code>.</p>
+<p><strong>Choose</strong>: 在 <a href="../commands/GuiControls.htm#ComboBox">ComboBox</a>, <a href="../commands/GuiControls.htm#DateTime">DateTime</a>, <a href="../commands/GuiControls.htm#DDL">DDL</a>, <a href="../commands/GuiControls.htm#ListBox">ListBox</a> 或 <a href="../commands/GuiControls.htm#Tab">Tab</a> 控件中预选一个项目. 指定单词 <code>Choose</code> 后面紧跟着一个项目的编号. 例如: <code>Choose2</code></p>
 <p><strong>S</strong>: 字体大小(单位为磅). 例如: <code>s12</code>(规定为十进制, 而不是十六进制)</p>
 <p><strong>W</strong>: 字体粗细, 这是介于 1 和 1000  之间的数字(400 为标准大小而 700 为粗体). 例如: <code>w600</code>(规定为十进制, 而不是十六进制)</p>
 <p>还支持使用下列单词: <strong>bold</strong>, <em>italic</em>, <s>strike</s>, <u>underline</u> 和 norm. 指定 <em>Norm</em> 则让字体恢复标准粗细并去除斜体, 删除线和下划线效果(但保持现有的颜色和大小). 可以使用 norm 去除所有属性然后有选择的设置其他属性. 例如, 指定 <code>norm italic</code> 将设置字体为标准然后增加斜体属性.</p>
@@ -301,10 +309,9 @@ Gui, Menu, MyMenuBar</pre>
 <p><span class="ver">[v1.1.03+]:</span> <em>GuiName</em> 可以是一个脚本的 GUI 窗口的 <a href="#GuiHwndOutputVar">HWND</a>. 如果窗口有一个名称, 它就会成为默认名称并且即使在窗口本身被销毁之后仍然是这样. 如果窗口没有名称, 当窗口被销毁时, 默认名称将恢复为 1.</p>
 <p><span class="ver">[v1.1.23+]:</span> 内置变量 <a href="../Variables.htm#DefaultGui"><strong>A_DefaultGui</strong></a> 包含默认 GUI 的名称或数字.</p>
 
-<h2 id="Position">使用 SmartGUI Creator 创建窗口布局</h2>
-<p>虽然下一段落中描述了简单的布局选项, 但您会发现使用 Rajat 的 SmartGUI Creator 来创建会更简单, 因为它是完全可视化的; 即 "所见即所得". SmartGUI Creator 是免费的, 可以从 <a href="https://www.autohotkey.com/docs/SmartGUI/">www.autohotkey.com/docs/SmartGUI/</a> 下载</p>
-
-<h2 id="PosSize">控件的位置和大小</h2>
+<h2 id="ControlOptions">控件的选项(Gui Add)</h2>
+<h3 id="PosSize">控件的位置和大小</h3>
+<p class="note"><strong>注意:</strong> 虽然本节中描述的选项能适用于简单的布局, 但你可能会发现使用 Rajat 的 SmartGUI Creator 更容易, 因为它完全是可视化的, 即 &quot;所见即所得&quot;. SmartGUI Creator 是免费的, 可以从 <a href="https://www.autohotkey.com/docs/SmartGUI/">www.autohotkey.com/docs/SmartGUI/</a> 下载.</p>
 <p>如果在 <em>Options</em> 中省略了某些尺寸和/或坐标, 则会根据前一个控件确定它的位置, 根据控件的类型和内容确定它的大小.</p>
 <p>支持下列选项:</p>
 <p id="R"><strong>R</strong>: 指定文本的行数(可以为浮点数, 如 R2.5). 使用 <strong>R</strong> 通常比 <strong>H</strong>(高度) 更合适. 如果同时指定 <strong>R</strong> 和 <strong>H</strong> 选项, 则 <strong>R</strong> 优先考虑. 对于 GroupBox, 此选项设置在框中可以容纳的控件数目. 对于 <a href="GuiControls.htm#DropDownList">DropDownLists</a>, <a href="GuiControls.htm#ComboBox">ComboBoxes</a> 和 <a href="GuiControls.htm#ListBox">ListBoxes</a>, 此选项设置在控件的列表部分一次可以看到的项目数(但在 Windows XP 或更高版本中, 对于 DropDownList 和 ComboBox 控件常常同时省略 <strong>R</strong> 和 <strong>H</strong> 选项, 这样可以让弹出的列表自动设置为用户桌面的可用高度). 对于其他类型的控件, <strong>R</strong> 表示控件内可见的文本行数.</p>
@@ -333,7 +340,7 @@ gui, show</pre>
 <p>反过来(指定 <strong>xs</strong> 但省略 y 坐标) 也是一样的.</p>
 <p><strong>xs</strong> 和 <strong>ys</strong> 后面可以跟着一个加号/减号和一个数字. 并且, 还可以在控件的选项中同时指定单词 <a href="#Section">Section</a> 和 xs/ys; 这样可以让当前控件使用之前的控件段, 但为后续控件定义一个新段.</p>
 
-<h2 id="Events">存储和响应用户的输入</h2>
+<h3 id="Events">存储和响应用户的输入</h3>
 <p id="var"><strong>V</strong>: 变量. 为控件分配关联变量. 在字母 V 后指定一个变量名, 此变量将为全局变量(或指向全局变量的 <a href="../Functions.htm#ByRef">ByRef 局部变量</a>, 在 <span class="ver">[v1.0.46.01+]</span> 还可能为<a href="../Functions.htm#static">静态变量</a>). 例如, 指定 <code><strong>v</strong>MyEdit</code> 后, 每当执行 <a href="#Submit">Gui Submit</a> 命令时将把控件的内容保存到变量 <em>MyEdit</em>. 如果控件是不可输入型(例如 Text 控件或 GroupBox), 那么为其分配的关联变量作为控件的唯一标识符仍可用于 <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a>.</p>
 <p class="note"><strong>注意</strong>: <a href="#Submit">Gui Submit</a> 不会改变不可输入型控件(例如 Text 和 GroupBox) 关联变量的内容, 也不会改变其他某些控件的内容(例如 <a href="ListView.htm">ListView</a> 和 <a href="TreeView.htm">TreeView</a>).</p>
 <p id="label"><strong>G</strong>: Gosub(g-标签). 当用户点击或改变控件内容时会自动运行的子程序. 在字母 G 后指定需要执行的<a href="../misc/Labels.htm">标签</a>名称. 可以指定 <code>gCancel</code> 来隐式执行 <a href="#Cancel">Gui Cancel</a>(但如果在脚本中存在名称为"Cancel"的标签, 则会执行此标签). 在子程序中可以引用下列内置变量: <a href="../Variables.htm#Gui">A_Gui</a>, <a href="../Variables.htm#GuiControl">A_GuiControl</a>, <a href="../Variables.htm#GuiEvent">A_GuiEvent</a> 以及 <a href="../Variables.htm#EventInfo">A_EventInfo</a>.</p>
@@ -341,7 +348,7 @@ gui, show</pre>
 <pre class="Syntax"><span class="func">CtrlEvent</span>(CtrlHwnd, GuiEvent, EventInfo, ErrLevel:="")</pre>
 <p>这些参数的意义取决于控件的类型. 注意, 如果第四个参数声明时没有默认值, 那么只有提供四个参数的事件才会调用该函数.</p>
 
-<h2 id="OtherOptions">控件: 常用样式和其他选项</h2>
+<h3 id="OtherOptions">控件: 常用样式和其他选项</h3>
 <p class="note"><strong>注意</strong>: 选项前的符号省略时, 默认为加号, 例如 <code>Wrap</code> 等同于 <code>+Wrap</code>. 相反地, <code>-Wrap</code> 将去除自动换行属性.</p>
 <p id="AltSubmit"><strong>AltSubmit</strong>: 使用备用的提交方法. 对于 DropDownList, ComboBox 和 ListBox 此选项会让 <a href="#Submit">Gui Submit</a> 命令保存选项项目的位置而不是其文本. 如果没有选择项目, 则对于 ComboBox 会保存其编辑区域的文本; 同样地, 对于 DropDownList 或 ListBox 则把它们的关联<a href="#var">输出变量</a>设置为空. 注意: AltSubmit 还会影响 <a href="GuiControlGet.htm">GuiControlGet</a> 获取这些控件内容时的行为.</p>
 <p><strong>C</strong>: 文本颜色(对<a href="GuiControls.htm#Button">按钮</a>控件无效). 指定字母 C 后面紧跟着颜色名称(请参阅<a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>cRed</code>, <code>cFF2211</code>, <code>c0xFF2211</code>, <code>cDefault</code>.</p>
@@ -356,7 +363,7 @@ gui, show</pre>
 <p><strong>VScroll</strong>: 当控件支持时为其提供一个垂直滚动条.</p>
 <p><strong>HScroll</strong>: 当控件支持时为其提供一个水平滚动条. 这个段落的剩余部分仅适用于 <a href="GuiControls.htm#ListBox">ListBox</a>. 可水平滚动的宽度默认为 ListBox 宽度的 3 倍. 要使用其他的滚动宽度, 请在单词 HScroll 后紧跟着一个数字表示. 例如, <code>HScroll500</code> 将在 ListBox 中使用 500 像素的滚动栏宽度. 但是, 如果指定的滚动宽度小于 ListBox 的宽度, 则不显示滚动条(不过在这种含有 <em>HScroll</em> 的情况下, 可以在之后使用 <code><a href="GuiControl.htm">GuiControl</a>, +HScroll500, MyScrollBar</code> 来添加水平滚动条, 否则是无法添加的).</p>
 
-<h2>控件: 不常用样式和选项</h2>
+<h3>控件: 不常用样式和选项</h3>
 <p id="BackgroundTrans"><strong>BackgroundTrans</strong>: 使用透明的背景, 这样可以让任何一个在 Text, Picture 或 GroupBox 后面的控件显示出来. 例如, 在 Picture 控件上显示一个透明背景的 Text 可以让文字看起来就像图片的一部分. 以后可以使用 <code><a href="GuiControl.htm">GuiControl</a> +background</code> 移除此选项. 请参阅 <a href="GuiControls.htm#PicAltSubmit">Picture 控件的 AltSubmit 部分</a>来了解关于透明图像的更多细节. 已知限制: 对包含了 <a href="GuiControls.htm#Tab">ListView</a> 的 <a href="ListView.htm">Tab 控件</a>中的其他控件, BackgroundTrans 可能无法正确应用.</p>
 <p><strong>-Background</strong>(即负 Background): 使用标准的背景颜色代替 <a href="#Color">Gui Color</a> 命令设置的那个颜色. 此选项常用于让 Tab 控件使用其标准颜色代替窗口颜色. 以后可以使用 <code><a href="GuiControl.htm">GuiControl</a> +background</code> 移除此选项.</p>
 <p><strong>Border</strong>: 为控件增加一个细边框. 对于大多数控件不需要使用此选项, 因为它们已经含有特定于类型的边框. 添加一个边框到 <em>现有</em> 控件时, 可能需要给控件的宽度和高度增加 1 个像素.</p>

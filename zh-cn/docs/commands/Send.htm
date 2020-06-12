@@ -516,8 +516,10 @@
   </tr>
   <tr>
     <td>{WheelDown}, {WheelUp}, {WheelLeft}, {WheelRight}, {LButton}, {RButton}, {MButton}, {XButton1}, {XButton2}</td>
-    <td>向指针当前位置发送鼠标按钮事件(要指定位置和其他选项, 请使用上面的 <a href="Click.htm">{Click}</a>). 在鼠标点击之间的延迟由 <a href="SetMouseDelay.htm">SetMouseDelay</a> 决定. WheelLeft/Right 需要 <span class="ver">[v1.0.48+]</span>, 并且在 Windows Vista 之前的操作系统中没有效果.</td>
-  </tr>
+    <td>
+      <p>向指针当前位置发送鼠标按钮事件(要指定位置和其他选项, 请使用上面的 <a href="Click.htm">{Click}</a>). 在鼠标点击之间的延迟由 <a href="SetMouseDelay.htm">SetMouseDelay</a> 决定. WheelLeft/Right 需要 <span class="ver">[v1.0.48+]</span>, 并且在 Windows Vista 之前的操作系统中没有效果.</p>
+      <p>LButton 和 RButton 在 Send 中对应的是 "物理的" 左键和右键, 而在热键中对应的是 "逻辑" 左键和右键. 换句话说, 如果用户通过系统设置调换了按钮, <code>{LButton}</code> 会执行逻辑右键, 但物理左键会激活 <code>RButton::</code> 热键. <code>{RButton}</code> 和 <code>LButton::</code> 也是如此. 要始终执行逻辑点击, 请使用 <a href="Click.htm">{Click}</a> 来代替.</p>
+    </td>
   <tr>
     <td>{Blind}</td>
     <td>启用<a href="#blind">盲从模式</a>, 通过禁用一些通常自动完成的任务, 从而使脚本更容易控制, 使事情按预期工作. 字符串 <code>{Blind}</code> 必须出现在字符串的开头.</td>
@@ -581,7 +583,7 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <p>由于 SendInput 突出的速度和可靠性, 通常为发送键击和鼠标点击的首选方法. 在大多数情况下, SendInput 是近乎瞬时发送的, 即使在发送长字符串也是如此. 由于 SendInput 如此快速, 所以也更可靠, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断正发送的键击. 可靠性进一步提升是通过把用户在 SendInput 发送期间输入的内容推迟的情况而言.</p>
 <p>与其他发送模式不同, 操作系统限制 SendInput 每次只能发送大约 5000 个字符(此限制可能因操作系统版本和性能设置而有所不同). 超过此限制的字符和事件不会被发送.</p>
 <p class="note"><strong>注意</strong>: SendInput 会忽略 SetKeyDelay, 因为在这种发送模式中操作系统不支持延迟. 但是, 在后面描述的情况中当 SendInput 恢复到 <a href="#SendEvent">SendEvent</a> 时, 它会使用 <code><a href="SetKeyDelay.htm">SetKeyDelay</a> -1, 0</code>(但如果 SendEvent 的按键延迟为 <code>-1, -1</code> 时, 则使用 <code>-1, -1</code>). 当 SendInput 恢复为 <a href="#SendPlayDetail">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
-<p id="SendInputUnavail">如果执行 SendInput 脚本外的<em>其他</em>脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或 <a href="#SendPlayDetail">SendPlay</a>, 当 <code><a href="SendMode.htm">SendMode</a> InputThenPlay</code> 有效的时候). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 在 <span class="ver">[AutoHotkey v1.0.43+]</span> 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下将不会自动恢复使得比 SendPlay/Event 更不可靠.</p>
+<p id="SendInputUnavail">如果执行 SendInput 脚本外的 <em>其他</em> 脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或 <a href="#SendPlayDetail">SendPlay</a>, 当 <code><a href="SendMode.htm">SendMode</a> InputThenPlay</code> 有效的时候). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 在 <span class="ver">[AutoHotkey v1.0.43+]</span> 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下将不会自动恢复使得比 SendPlay/Event 更不可靠.</p>
 <p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <code><a href="SetMouseDelay.htm">CoordMode</a> Mouse, Relative</code> 有效时(默认), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
 
 <h2 id="SendPlayDetail">SendPlay <span class="ver">[v1.0.43+]</span></h2>

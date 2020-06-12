@@ -39,18 +39,18 @@
   <li>热键原有功能被屏蔽(没有<a href="../Hotkeys.htm#Tilde">颚化符修饰键</a>).</li>
   <li>当按下热键时, <kbd>Alt</kbd> 或 <kbd>Win</kbd> 逻辑上是按下的.</li>
   <li>修饰符键物理上被按下或热键需要修饰符是激活的. 例如, <code>$#a::</code> 与 <code>AppsKey::RWin</code> 一起使用时, 当 <kbd>Menu</kbd>+<kbd>A</kbd> 按下时发送掩饰键, 但是 <kbd>Menu</kbd> 本身能打开开始菜单.</li>
-  <li><kbd>Alt</kbd> is not masked if <kbd>Ctrl</kbd> was down when the hotkey was pressed, since <kbd>Ctrl</kbd>+<kbd>Alt</kbd> does not activate the menu bar.</li>
-  <li><kbd>Win</kbd> is not masked if the most recent <kbd>Win</kbd> keydown was modified with <kbd>Ctrl</kbd>, <kbd>Shift</kbd> or <kbd>Alt</kbd>, since the Start Menu does not normally activate in those cases. However, key-repeat occurs even for the <kbd>Win</kbd> key if it was the last key physically pressed, so it can be hard to predict <em>when</em> the most recent <kbd>Win</kbd> keydown was.</li>
-  <li>Either the keyboard hook is not installed (i.e. for a mouse hotkey), or there have been no other (unsuppressed) keydown or keyup events since the last <kbd>Alt</kbd> or <kbd>Win</kbd> keydown. Note that key-repeat occurs even for modifier keys and even after sending other keys, but only for the last physically pressed key.</li>
+  <li>当热键被按下时如果按下了 <kbd>Ctrl</kbd> 键, 则不会掩饰(屏蔽) <kbd>Alt</kbd> 键, 因为 <kbd>Ctrl</kbd>+<kbd>Alt</kbd> 不会激活菜单栏.</li>
+  <li>如果最近的 <kbd>Win</kbd> 按下被 <kbd>Ctrl</kbd>, <kbd>Shift</kbd> 或 <kbd>Alt</kbd> 修饰, 则不会掩饰(屏蔽) <kbd>Win</kbd> 键, 因为在这些情况下, 开始菜单通常不会激活. 然而, 如果 <kbd>Win</kbd> 键是最后一次实际按下的键, 其也会出现重复按键的情况, 所以很难预测最近一次的 <kbd>Win</kbd> 键是 <em>何时</em> 按下的.</li>
+  <li>要么是没有安装键盘钩子(如鼠标热键), 要么自最近一次 <kbd>Alt</kbd> 或 <kbd>Win</kbd> 按下之后没有其他(未被抑制的) 按下或松开事件发生. 请注意, 即使对于修饰键, 甚至在发送其他键之后, 重复按键也会发生, 但只发生在最后一次物理按下的键上.</li>
 </ul>
-<p>Mouse hotkeys may send the mask key immediately if the keyboard hook is not installed.</p>
-<p>Hotkeys with the <a href="../Hotkeys.htm#Tilde">tilde modifier</a> are not intended to block the native function of the key, so they do not cause masking. Hotkeys like <code>~#a::</code> still suppress the menu, since the system detects that <kbd>Win</kbd> has been used in combination with another key. However, mouse hotkeys and the <kbd>Win</kbd> keys themselves (<code>~LWin::</code> and <code>~RWin::</code>) do not suppress the Start Menu.</p>
-<p>The Start Menu (or the active window's menu bar) can be suppressed by sending any keystroke. The following example disables the ability for the left <kbd>Win</kbd> key to activate the Start Menu, while still allowing its use as a modifier:</p>
+<p>如果没有安装键盘钩子, 鼠标热键会立即发送掩饰键.</p>
+<p>带有<a href="../Hotkeys.htm#Tilde">颚化符修饰键</a>的热键并不会阻止按键的原有功能, 因此不会引发掩饰键. 像 <code>~#a::</code> 这样的热键仍然屏蔽开始菜单, 因为系统检测到 <kbd>Win</kbd> 键已经与另一个键组合使用. 但是, 鼠标热键和 <kbd>Win</kbd> 键本身(<code>~LWin::</code> 和 <code>~RWin::</code>) 不会屏蔽开始菜单.</p>
+<p>开始菜单(或活动窗口的菜单栏) 可以通过发送任何按键来屏蔽. 以下示例禁用左 <kbd>Win</kbd> 键激活开始菜单的功能, 同时仍允许将其用于修饰键:</p>
 <pre>~LWin::Send "{Blind}{vk07}"</pre>
-<p><strong>Send:</strong> <a href="Send.htm">Send</a>, <a href="ControlSend.htm">ControlSend</a> and related often release modifier keys as part of their normal operation. 例如, the hotkey <code>&lt;#a::SendText Address</code> usually must release the left <kbd>Win</kbd> key prior to sending the contents of <em>Address</em>, and press the left <kbd>Win</kbd> key back down afterward (so that other <kbd>Win</kbd> key combinations continue working). The mask key may be sent in such cases to prevent a <kbd>Win</kbd> or <kbd>Alt</kbd> keyup from activating a menu.</p>
+<p><strong>Send:</strong> <a href="Send.htm">Send</a>, <a href="ControlSend.htm">ControlSend</a> 和相关的经常释放修饰键作为其正常操作的一部分. 例如, 热键 <code>&lt;#a::SendText Address</code> 通常必须在发送 <em>Address</em> 的内容之前释放左 <kbd>Win</kbd> 键, 之后再按下左 <kbd>Win</kbd> 键(以便其他 <kbd>Win</kbd> 键组合继续工作). 在这种情况下, 可以发送掩码键, 以防止 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 松开后激活菜单.</p>
 
 <h2 id="Related">相关</h2>
-<p>See <a href="https://www.autohotkey.com/board/topic/20619-extraneous-control-key-presses-generated-by-or-hotkeys/">this thread</a> for background information.</p>
+<p>有关背景信息, 请参阅<a href="https://www.autohotkey.com/board/topic/20619-extraneous-control-key-presses-generated-by-or-hotkeys/">这个帖子</a>.</p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
