@@ -24,20 +24,24 @@
   <li><a href="#Wheel">鼠标滚轮热键</a></li>
   <li><a href="#Remarks">热键技巧和备注</a></li>
   <li><a href="#AltTabDetail">Alt-Tab 热键</a></li>
-  <li><a href="#Function">函数热键</a></li>
+  <li><a href="#Function">命名的函数热键</a></li>
 </ul>
 
 <h2 id="Intro">介绍和简单示例</h2>
 <p>热键有时也称为快捷键, 因为它们能简便地触发动作(例如运行程序或<a href="misc/Macros.htm">键盘宏</a>). 在下面的例子中, <kbd>Win</kbd>+<kbd>N</kbd> 被设置为启动记事本. 磅的符号 [#] 表示 <kbd>Win</kbd> 键, 它被称为 <em>修饰符</em>:</p>
 <pre>#n::
-Run "notepad"
-return</pre>
-<p>在前面的最后一行中, <code><a href="commands/Return.htm">return</a></code> 用来结束此热键. 不过, 如果热键只需要执行单行语句, 那么此行可以直接放在双冒号的右边. 换句话说, <code>return</code> 可以省略:</p>
+{
+    Run "notepad"
+}
+</pre>
+<p id="HotBraces">In the above, the braces serves to define a <a href="Functions.htm">function body</a> for the hotkey. When the hotkey is triggered, the function is called and passed the name of the hotkey (which excludes the trailing colons), as its first parameter, <code>ThisHotkey</code>. If a hotkey needs to execute only a single line, that line can be listed to the right of the double-colon. In other words, braces are implicit:</p>
 <pre>#n::Run "notepad"</pre>
+<p id="otb">The opening brace may also be specified on the same line as the double-colon. See <a href="commands/Block.htm#otb">Blocks (One True Brace)</a>.</p>
 <p>要在热键中使用多个修饰键, 那么需要把它们连续地列出来(顺序无关紧要). 下面的例子中使用 <code>^!s</code> 来表示 <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd>:/p>
 <pre>^!s::
-<a href="commands/Send.htm">Send</a> "Sincerely,{enter}John Smith"  <em>; 此行发送键击到活动(最前面的) 窗口.</em>
-return</pre>
+{
+    <a href="commands/Send.htm">Send</a> "Sincerely,{enter}John Smith"  <em>; 此行发送键击到活动(最前面的) 窗口.</em>
+}</pre>
 <h2 id="Symbols">热键修饰符</h2>
 <p>在定义热键时您可以使用下列修饰符:</p>
 <table class="info fixed">
@@ -100,7 +104,7 @@ return</pre>
     <td><p>触发热键时,  热键中按键原有的功能不会被屏蔽(对操作系统隐藏). 在下面的两个例子中, 用户的鼠标按钮点击会被发送到活动窗口:</p>
       <pre>~RButton::MsgBox "You clicked the right mouse button."
 ~RButton &amp; C::MsgBox "You pressed C while holding down the right mouse button."</pre>
-      <p>与其他前缀符号不同, 可以在热键的某些<a href="commands/_If.htm#variant">变体</a>中使用颚化符(波浪号) 前缀而其他的不使用. 然而, 如果应用于颚化符(波浪号) <a href="#prefix">前缀</a>的任何自定义组合键没有被关闭或暂停, 它会影响那个前缀键在 <em>所有</em> 组合中的行为.</p>
+      <p>与其他前缀符号不同, 可以在热键的某些<a href="commands/_HotIf.htm#variant">变体</a>中使用颚化符(波浪号) 前缀而其他的不使用. 然而, 如果应用于颚化符(波浪号) <a href="#prefix">前缀</a>的任何自定义组合键没有被关闭或暂停, 它会影响那个前缀键在 <em>所有</em> 组合中的行为.</p>
       <p>用于替代 <a href="#alttab">alt-tab</a> 的特殊按键总是忽略颚化符(波浪号) 前缀.</p>
       <p>如果把颚化符(<a href="#prefix">前缀键</a>) 用在自定义修饰键中且此修饰键自身也作为热键, 则在按下此修饰键时会触发热键而不会被延迟到按键释放的时候. 例如, 上文中 <em>~RButton</em> 热键在按下此按键时就会触发.</p>
       <p>如果颚化符前缀只应用于自定义组合键, 而不应用于非组合热键, 按键的原生功能将持续被屏蔽. 例如, 下面的脚本, 按住 <kbd>Menu</kbd> 键将会一直显示一个 ToolTip 而不会触发上下文菜单:</p>
@@ -137,22 +141,21 @@ LControl::MsgBox "You released LControl without having used it to modify any oth
 <p>
 多个热键可以垂直地叠放来让它们执行相同的动作. 例如:</p>
 <pre>^Numpad0::
-^Numpad1::
-MsgBox "Pressing either Control+Numpad0 or Control+Numpad1 will display this message."
-return</pre>
+^Numpad1::MsgBox "Pressing either Control+Numpad0 or Control+Numpad1 will display this message."
+</pre>
 <p>通过不为按键或按键组合的热键指定任何操作可以在整个系统中完全禁用它们. 下面的例子中禁用了右 <kbd>Win</kbd> 键:</p>
 <pre>RWin::return</pre>
 
 <h2 id="Context">上下文相关的热键</h2>
-<p><a href="commands/_If.htm">#If</a> 指令可以用来让热键根据不同的条件执行不同的动作(或什么都不做). 例如:</p>
-<pre>#If WinActive("ahk_class Notepad")
+<p><a href="commands/_HotIf.htm">#HotIf</a> 指令可以用来让热键根据不同的条件执行不同的动作(或什么都不做). 例如:</p>
+<pre>#HotIf WinActive("ahk_class Notepad")
 ^a::MsgBox "你在记事本中按下了 Ctrl-A. 而在其他窗口中按下 Ctrl-A 将原样发送."
 #c::MsgBox "你在记事本中按下了 Win-C."
 
-#If
+#HotIf
 #c::MsgBox "你在非记事本程序中按下了 Win-C."
 
-#If <a href="commands/_If.htm#Examples">MouseIsOver</a>("ahk_class Shell_TrayWnd") <em>; 有关 MouseIsOver, 请参阅 <a href="commands/_If.htm#ExVolume">#If 的示例 1</a>.</em>
+#HotIf <a href="commands/_If.htm#Examples">MouseIsOver</a>("ahk_class Shell_TrayWnd") <em>; 有关 MouseIsOver, 请参阅 <a href="commands/_HotIf.htm#ExVolume">#HotIf 的示例 1</a>.</em>
 WheelUp::Send "{Volume_Up}"     <em>; 在任务栏上滚动滚轮: 增加/减小音量.</em>
 WheelDown::Send "{Volume_Down}" <em>;</em>
 </pre>
@@ -167,17 +170,17 @@ Numpad0::Send "{Numpad0}"  <em>; 让 Numpad0 <i>释放</i> 时产生 Numpad0 键
 <p><strong>释放时触发:</strong> 使用上面的其中一个自定义组合热键可以在 <em>释放</em> Numpad0 时执行指定的动作, 但不包括按住 Numpad0 时您又按下了其他按键的情况. 可以在其中某个热键前使用<a href="#Tilde">颚化符(波浪号) 前缀</a>来避免这种行为.</p>
 <p id="combo_mods"><strong>修饰:</strong> 与普通热键不同的是, 自定义组合在默认情况下表现得就像拥有一个<a href="#wildcard">通配符(*)</a> 修饰一样. 例如, <code>1 &amp; 2::</code> 当按下 <kbd>1</kbd> 和 <kbd>2</kbd> 时, 无论 <kbd>Ctrl</kbd> 或 <kbd>Alt</kbd> 是否被按住都会触发, 然而 <code>^1::</code> 仅在 <kbd>Ctrl</kbd>+<kbd>1</kbd> 组合键时触发, 而 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>1</kbd> 不会触发.</p>
 <p>对于普通的修饰键, 一般的热键会比 "自定义" 组合工作得更好. 例如, <code>&lt;+s::</code> 就是比 <code>LShift &amp; s::</code> 更好的用法.</p>
-<p>不支持组合三个或更多的键. 一般来说组合键支持你键盘上物理存在的所有按键, 都可以用 <a href="commands/_If.htm">#If</a> 和 <a href="commands/GetKeyState.htm">GetKeyState</a> 探测状态, 但是也可能出现不一致的情况. 例如:</p>
+<p>不支持组合三个或更多的键. 一般来说组合键支持你键盘上物理存在的所有按键, 都可以用 <a href="commands/_HotIf.htm">#HotIf</a> 和 <a href="commands/GetKeyState.htm">GetKeyState</a> 探测状态, 但是也可能出现不一致的情况. 例如:</p>
 <pre><em>; 以任何顺序按下 AppsKey 和 Alt, 然后按下反斜杠键(/).</em>
-#if GetKeyState("AppsKey", "P")
+#HotIf GetKeyState("AppsKey", "P")
 Alt &amp; /::MsgBox "Hotkey activated."
 
 <em>; 如果对调 AppsKey 和 Alt, 则必须先按下 Alt(一次按一个):</em>
-#if GetKeyState("Alt", "P")
+#HotIf GetKeyState("Alt", "P")
 AppsKey &amp; /::MsgBox "Hotkey activated."
 
 <em>; 同时按下这三个键: [ &amp; ] &amp; \::</em>
-#if GetKeyState("[") &amp;&amp; GetKeyState("]")
+#HotIf GetKeyState("[") &amp;&amp; GetKeyState("]")
 \::MsgBox</pre>
 <p><strong>键盘钩子:</strong> 涉及键盘键的自定义的组合键总是使用键盘钩子, 使用前缀键作为后缀的任何热键也是如此. 例如, <code>a &amp; b::</code> 导致 <code>^a::</code> 总是使用键盘钩子.</p>
 
@@ -201,43 +204,47 @@ RControl &amp; Enter::ShiftAltTab  <em>; 甚至不需要释放右 control, 直�
 </ul>
 <p>鼠标滚轮的一些最有用的热键包括滚动窗口文本的可选模式. 例如, 使用下面的一对热键可以在您按住左 <kbd>Control</kbd> 键并转动滚轮时进行水平滚动而不是垂直滚动:</p>
 <pre>~LControl &amp; WheelUp::  <em>; 向左滚动.</em>
-Loop 2  <em>; &lt;-- 增加这个值来加快滚动速度.</em>
-    SendMessage 0x114, 0, 0, ControlGetFocus("A")  <em>; 0x114 是 WM_HSCROLL, 它后面的 0 是 SB_LINELEFT.</em>
-return
+{
+    Loop 2  <em>; &lt;-- 增加这个值来加快滚动速度.</em>
+        SendMessage 0x114, 0, 0, ControlGetFocus("A")  <em>; 0x114 是 WM_HSCROLL, 它后面的 0 是 SB_LINELEFT.</em>
+}
 
 ~LControl &amp; WheelDown::  <em>; 向右滚动.</em>
-Loop 2  <em>; &lt;-- 增加这个值来加快滚动速度.</em>
-    SendMessage 0x114, 1, 0, ControlGetFocus("A")  <em>; 0x114 是 WM_HSCROLL, 它后面的 1 是 SB_LINERIGHT.</em>
-return</pre>
+{
+    Loop 2  <em>; &lt;-- 增加这个值来加快滚动速度.</em>
+        SendMessage 0x114, 1, 0, ControlGetFocus("A")  <em>; 0x114 是 WM_HSCROLL, 它后面的 1 是 SB_LINERIGHT.</em>
+}</pre>
 <p>最后, 由于鼠标滚轮热键只产生按下事件(从没有弹起事件), 所以它们无法用作<a href="#keyup">弹起热键</a>.</p>
 
 <h2 id="Remarks">热键技巧和备注</h2>
 <p>根据 <kbd>NumLock</kbd> 的状态, 每个小键盘上的按键可以运行两个不同的热键子程序. 或者, 小键盘上的按键也可以运行相同的热键子程序, 而不管 <kbd>NumLock</kbd> 的状态如何. 例如:</p>
 <pre>NumpadEnd::
-Numpad1::
-MsgBox "This hotkey is launched regardless of whether NumLock is on."
-return</pre>
+Numpad1::MsgBox "This hotkey is launched regardless of whether NumLock is on."
+</pre>
 <p>如果<a href="#Tilde">波浪号(~)</a> 与<a href="#prefix">前缀键</a>一起使用, 即使只是一次, 它会更改所有组合键的前缀键的行为. 例如, 在下面的两个热键中, 活动窗口都会接收到右键点击, 尽管只是其中一个热键使用了波浪号:</p>
 <pre>~RButton &amp; LButton::MsgBox "You pressed the left mouse button while holding down the right."
 RButton &amp; WheelUp::MsgBox "You turned the mouse wheel up while holding down the right button."</pre>
-<p><a href="commands/Suspend.htm">Suspend</a> 函数可以临时禁用所有的热键, 但不包括您要排除的那些. 要获得更高的选择性, 请使用 <a href="commands/_If.htm">#If</a>.</p>
+<p><a href="commands/Suspend.htm">Suspend</a> 函数可以临时禁用所有的热键, 但不包括您要排除的那些. 要获得更高的选择性, 请使用 <a href="commands/_HotIf.htm">#HotIf</a>.</p>
 <p>通过使用 <a href="commands/Hotkey.htm">Hotkey</a> 函数, 可以在脚本运行时动态创建热键. Hotkey 函数还可以单独修改, 禁用或启用脚本的现有热键.</p>
 <p>操纵杆热键当前不支持修饰符前缀(如 ^(<kbd>Control</kbd>) 和 #(<kbd>Win</kbd>)). 但是, 您可以使用 <a href="commands/GetKeyState.htm">GetKeyState</a> 来模拟此效果, 如下例所示:</p>
 <pre>Joy2::
-if not GetKeyState(&quot;Control&quot;)  <em>; 左边和右边的 Control 键都没有按下.</em>
-    return  <em>; 即什么都不做.</em>
-MsgBox "You pressed the first joystick's second button while holding down the Control key."
-return</pre>
+{
+    if not GetKeyState(&quot;Control&quot;)  <em>; 左边和右边的 Control 键都没有按下.</em>
+        return  <em>; 即什么都不做.</em>
+    MsgBox "You pressed the first joystick's second button while holding down the Control key."
+}</pre>
 <p>热键在继续之前可能需要等待自己的修饰键被释放. 请参考下面的例子:</p>
 <pre>^!s::Send "{Delete}"</pre>
 <p>按下 <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> 会让系统以为您按下了 <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd>(由于系统对 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd> 的侵略性检测). 要解决此问题, 请使用 <a href="commands/KeyWait.htm">KeyWait</a> 来等待按键释放; 例如:</p>
 <pre>^!s::
-KeyWait "Control"
-KeyWait "Alt"
-Send "{Delete}"
-return</pre>
-<p>如果热键标签(如 <code>#z::</code>) 产生了类似&quot;Invalid Hotkey(无效热键)&quot;的错误, 那么您的系统键盘布局/语言可能不包含该特殊字符(此时为 &quot;Z&quot;). 尝试使用您键盘布局中您知道存在的其他字符.</p>
-<p>热键标签可以作为 <a href="commands/Gosub.htm">Gosub</a> 或 <a href="commands/Goto.htm">Goto</a> 的目标. 例如: <code>Gosub "^!s"</code>.</p>
+{
+    KeyWait "Control"
+    KeyWait "Alt"
+    Send "{Delete}"
+}
+</pre>
+<p>如果形如 <code>#z::</code> 这样的热键产生了类似 &quot;Invalid Hotkey(无效热键)&quot; 的错误, 那么您的系统键盘布局/语言可能不包含指定的字符(本例中为 &quot;Z&quot;). 尝试使用您键盘布局中您知道存在的其他字符.</p>
+<p>只有在函数被命名的情况下, 脚本才能明确地调用热键的函数, 请参阅<a href="#Function">命名的函数热键</a>.</p>
 <p>热键的一个常见用途是启动和停止重复的动作, 例如一系列的键击或鼠标点击. 关于这方面的例子, 请参阅<a href="FAQ.htm#repeat">这个 FAQ 主题</a>.</p>
 <p>最后, 每个脚本都是<a href="misc/Threads.htm">准多线程的</a>, 这样可以在之前的热键子程序还在运行时启动新的热键. 例如, 即使在当前热键显示 <a href="commands/MsgBox.htm">MsgBox</a> 时也能启动新的热键.</p>
 
@@ -258,36 +265,39 @@ WheelUp::ShiftAltTab</pre>
 <p>要取消热键调用的Alt-tab菜单而不激活所选窗口, 请使用如下所示的热键. 可能需要进行调整, 具体取决于: 1) 最初显示 alt-tab 菜单的方式; 和 2) 脚本是否安装了<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
 <pre>LCtrl &amp; CapsLock::AltTab
 <strong>!</strong>MButton::  <em>; 鼠标中键. <strong>!</strong> 前缀让它在按住 Alt 键时激发(当 alt-tab 菜单可见时, alt 键是按住的).</em>
-if WinExist("ahk_class #32771")  <em>; 表示 alt-tab 菜单出现在屏幕上.</em>
-    Send "<strong>!</strong>{Escape}{Alt up}"
-return</pre>
-<p>当前, 所有特殊的 Alt-tab 动作必须像上面的例子那样直接指定到热键上(即它们无法像函数那样使用). 它们<span class="red">不受 <a href="commands/_If.htm">#If</a> 的影响</span>.</p>
+{
+    if WinExist("ahk_class #32771")  <em>; 表示 alt-tab 菜单出现在屏幕上.</em>
+        Send "<strong>!</strong>{Escape}{Alt up}"
+}</pre>
+<p>当前, 所有特殊的 Alt-tab 动作必须像上面的例子那样直接指定到热键上(即它们无法像函数那样使用). 它们<span class="red">不受 <a href="commands/_HotIf.htm">#HotIf</a> 的影响</span>.</p>
 <p>也可以通过热键创建自定义 alt-tab 的动作. 在下面的示例中, 您可以按下 <kbd>F1</kbd> 显示菜单并在其中向前移动. 然后可以按下 <kbd>F2</kbd> 来激活选择的窗口(或按下 <kbd>Escape</kbd> 来取消):</p>
 <pre>*F1::Send "{Alt down}{tab}" <em>; 在这种情况下需要星号.</em>
 !F2::Send "{Alt up}"  <em>; 释放 Alt 键, 激活选择的窗口.</em>
 ~*Escape::
-if WinExist("ahk_class #32771")
-    Send "{Escape}{Alt up}"  <em>; 取消菜单而不激活选择的窗口.</em>
-return</pre>
+{
+    if WinExist("ahk_class #32771")
+        Send "{Escape}{Alt up}"  <em>; 取消菜单而不激活选择的窗口.</em>
+}</pre>
 
-<h2 id="Function">函数热键</h2>
-<p>一个或多个热键可以关联到一个<a href="Functions.htm">函数</a>, 只需在热键标签后立即定义该函数, 如下例所示:</p>
+<h2 id="Function">命名的函数热键</h2>
+<p>如果需要在不触发热键本身的情况下调用热键的函数, 则可以为一个或多个热键分配一个命名的<a href="Functions.htm">函数</a>, 只需在热键的双冒号之后简单地定义该函数即可, 例如:</p>
 <pre><em>; Ctrl+Shift+O 在资源管理器中打开包含的文件夹.
 ; Ctrl+Shift+E 打开文件夹并选中当前编辑的文件.
 ; 支持 SciTE 和 Notepad++.</em>
 ^+o::
 ^+e::
-    editor_open_folder() {
+    editor_open_folder()
+    {
         path := WinGetTitle("A")
         if RegExMatch(path, "\*?\K(.*)\\[^\\]+(?= [-*] )", path)
-            if (FileExist(path[0]) &amp;&amp; A_ThisHotkey = "^+e")
+            if (FileExist(path[0]) &amp;&amp; ThisHotkey = "^+e")
                 Run Format('explorer.exe /select,"{1}"', path[0])
             else
                 Run Format('explorer.exe "{1}"', path[1])·
     }</pre>
 <p id="function-details">热字串也可以这样定义. 可以将多个热键或热字串堆叠在一起以调用同一个函数.</p>
-<p>在热键/热字串标签或标签和函数之间仅允许空白, 注释或者指令. 以这种方式定义的热键/热键标签对 <a href="commands/IsLabel.htm">IsLabel</a>, <a href="commands/Gosub.htm">Gosub</a> 或其他函数不可见; 然而, <a href="Scripts.htm#auto">自动执行段</a>也会在第一个热键/热字串处结束, 即使它关联了函数.</p>
-<p>使用函数的的主要好处是可以使用局部变量, 当两个或多个热键为不同目的使用相同的变量名时, 可以避免冲突. 它还支持自我描述热键, 就像上面的代码其中函数名称描述了热键那样.</p>
+<p>在热键/热字符串和函数之间只能有空格或注释.</p>
+<p>命名函数还支持自我描述热键, 就像上面的代码其中函数名称描述了热键那样.</p>
 <p><a href="commands/Hotkey.htm">Hotkey</a> 函数也可以关联函数或函数对象到一个热键.</p>
 
 </body>

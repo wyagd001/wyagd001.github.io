@@ -72,7 +72,7 @@ Exception handling
 <h3 id="strings">字符串</h3>
 <p><em>字符串</em> 只是文本. 每个字符串实际上是一个由字符组成的序列或 <em>字符串</em>, 但可以视为单个实体. 字符串的 <em>长度</em> 是序列中字符的数量, 而字符串中字符的 <em>位置</em> 只是该字符的序号. 按 AutoHotkey 中的约定, 第一个字符的位置为 1.</p>
 <p id="numeric-strings"><strong>数字字符串:</strong>当数学运算或比较需要时, 数字字符串(或任何其他受支持的<a href="#numbers">数字格式</a>) 自动解释为数字.</p>
-<p>脚本中如何书写原义文本, 取决于上下文. 例如, 在表达式中, <a href="Language.htm#strings">字符串</a>必须括在双引号中. 在指令(除了 #If) 和自动替换热字串中, 不需要双引号.</p>
+<p>脚本中如何书写原义文本, 取决于上下文. 例如, 在表达式中, <a href="Language.htm#strings">字符串</a>必须括在双引号中. 在指令(除了 #HotIf) 和自动替换热字串中, 不需要双引号.</p>
 <p>有关字符串如何工作的更详细说明, 请参阅<a href="#string-encoding">字符编码</a>.</p>
 
 <h3 id="numbers">数字</h3>
@@ -103,7 +103,7 @@ Exception handling
   <li>对象是不能被包含的; 它们只是<a href="#references-to-objects">引用</a>. 例如, <code>alpha := []</code> 创建一个新<a href="objects/Array.htm">数组</a>并在 <em>alpha</em> 中存储一个引用. <code>bravo := alpha</code> 复制引用(不是对象) 到 <code>bravo</code>, 因此两者都引用同一个对象. 当一个数组或变量被认为包含一个对象时, 它实际上包含的是对该对象的引用.</li>
   <li>只有在在引用同一个对象时, 两个对象引用才被视为相等的.</li>
   <li>当结果需要布尔值时, 对象总是被视为 <i>true</i> , 例如在 <code>if obj</code>, <code>!obj</code> 或 <code>obj ? x : y</code>.</li>
-  <li>每个对象都有一个惟一的地址(内存中的位置), <a href="Variables.htm#amp">地址运算符</a>可以检索该地址, 但通常不直接使用. 此地址唯一标识对象, 但仅在释放对象之前.</li>
+  <li>每个对象都有一个惟一的地址(内存中的位置), <a href="Objects.htm#ObjPtr">ObjPtr</a> 函数可以检索该地址, 但通常不直接使用. 此地址唯一标识对象, 但仅在释放对象之前.</li>
   <li>如果在不需要对象的任何上下文中使用对象, 则通常将其视为空字符串. 例如, <code>MsgBox(myObject)</code> 显示一个空的消息框. 不要依赖这种行为, 因为它可能会改变.</li>
 </ul>
 <p class="note"><strong>注意:</strong> 所有从<a href="objects/Object.htm">对象</a>派生的对象都具有额外的共享行为, 属性和方法.</p>
@@ -166,7 +166,7 @@ myObj[arg1, arg2, ..., argN] := value
 <h3 id="built-in-variables">内置变量</h3>
 <p>程序中内置了许多有用的变量, 可以通过任何脚本来引用. 除特殊说明外, 这些变量是只读的; 也就是说, 他们的内容不能被脚本直接改变. 按照惯例, 这些变量中的大部分以前缀 <code>A_</code> 开头, 所以最好避免使用这个前缀作为你自己的变量.</p>
 <p>某些变量如 <a href="Variables.htm#KeyDelay">A_KeyDelay</a> 和 <a href="Variables.htm#TitleMatchMode">A_TitleMatchMode</a> 代表控制脚本行为的设置, 并为每个<a href="misc/Threads.htm">线程</a>保留不同的值. 这允许由新线程(如热键, 菜单, 计时器等) 启动的子例程在不影响其他线程的情况下更改设置.</p>
-<p>一些特殊的变量不是周期性地更新, 而是脚本引用变量时检索或计算它们的值. 例如, <a href="misc/Clipboard.htm">Clipboard</a> 以文本形式检索剪贴板的当前内容, <a href="Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 计算自热键被按下以来经过的毫秒数.</p>
+<p>一些特殊的变量不是周期性地更新, 而是脚本引用变量时检索或计算它们的值. 例如, <a href="misc/Clipboard.htm">A_Clipboard</a> 以文本形式检索剪贴板的当前内容, <a href="Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 计算自热键被按下以来经过的毫秒数.</p>
 <p>相关: <a href="Variables.htm#BuiltIn">内置变量列表</a>.</p>
 
 <h3 id="environment-variables">环境变量</h3>
@@ -219,7 +219,7 @@ ControlSend "^{Home}",, "A"          <em>; 正确. 省略控件.</em>
 <p><em>控制流</em> 是执行单个语句的顺序. 通常,  语句从上到下依次执行, 但控制流语句可以重写这一点, 例如, 指定语句重复执行语句, 或者仅在满足某一条件时才这样做.</p>
 <dl>
   <dt id="statement">语句</dt>
-  <dd><p><em>语句</em> 只是语言中最小的独立元素, 表示一些要执行的操作. 在 AutoHotkey 中, 语句包括赋值, 函数调用和其他表达式. 但是, 指令, 标签(包括热键和热字串), 以及没有赋值的声明都不是语句; 当程序首次启动时, 在脚本<em>执行</em>之前, 它们将被处理.</p></dd>
+  <dd><p><em>语句</em> 只是语言中最小的独立元素, 表示一些要执行的操作. 在 AutoHotkey 中, 语句包括赋值, 函数调用和其他表达式. 但是, 指令, 双冒号热键和热字串标签, 以及没有赋值的声明都不是语句; 当程序首次启动时, 在脚本<em>执行</em>之前, 它们将被处理.</p></dd>
   <dt id="execute">执行</dt>
   <dd><p>实施, 执行, 求值, 使生效, 等等. <em>执行</em> 基本上与非编程语言有相同的含义.</p></dd>
   <dt id="cf-body">主体(正文)</dt>
@@ -269,8 +269,8 @@ Send "Hello, world!"
   <tr><td>65</td><td>98</td><td>99</td><td>0</td></tr>
 </table>
 <p><strong>编码:</strong> 字符串的 <em>编码</em> 定义了符号如何映射到序数, 以及序数到字节. 尽管有许多不同的编码, 但是由于所有由 AutoHotkey 支持的编码都包含 ASCII 作为子集, 所以字符编码 0 到 127 总是具有相同的含义. 例如, 'A' 的字符编码总是 65.</p>
-<p id="null-termination"><strong>空终止符:</strong> 每个字符串都以 "空终止符" 结束, 换句话说, 二进制值为零的字符标志着字符串的结束. 字符串的长度不需要存储, 因为它可以通过空终止符的位置推断出来. 为了提高性能, AutoHotkey 有时也存储长度, 比如字符串存储在变量中时.</p>
-<p class="warning"><strong>注意:</strong> 由于依赖于空终止符, 许多内置函数通常不支持包含空终止符的字符串. 但是, 支持对此类字符串的基本操作; 例如 串联, <code>==</code>, <code>!==</code>, <code>Chr(0)</code>, <a href="commands/StrLen.htm">StrLen</a>, <a href="commands/SubStr.htm">SubStr</a>, 赋值, 参数值和 <a href="commands/Return.htm">return</a>.</p>
+<p id="null-termination"><strong>空终止符:</strong> 每个字符串都以 "空终止符" 结束, 换句话说, 一个序数为零的字符标志着字符串的结束. 字符串的长度可以通过空终止符的位置推断出来. 为了提高性能, AutoHotkey 有时也存储长度, 并允许在字符串的长度范围内使用空终止符.</p>
+<p class="warning"><strong>注意:</strong> 由于依赖于空终止符, 许多内置函数和大多数表达式运算符通常不支持包含空终止符的字符串, 而是只读到第一个空字符. 但是, 支持对此类字符串的基本操作; 例如 串联, <code>==</code>, <code>!==</code>, <code>Chr(0)</code>, <a href="commands/StrLen.htm">StrLen</a>, <a href="commands/SubStr.htm">SubStr</a>, 赋值, 参数值和 <a href="commands/Return.htm">return</a>.</p>
 <p id="native-encoding"><strong>原生编码:</strong> 尽管 AutoHotkey 提供了使用各种编码处理文本的方法, 但是内置的命令和函数--在某种程度上包括语言本身--都假定字符串值是在一个特定的编码中. 这被称为 <em>原生</em> 编码. 原生编码取决于 AutoHotkey 的版本:</p>
 <ul>
   <li>

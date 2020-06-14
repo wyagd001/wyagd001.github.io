@@ -23,6 +23,7 @@
   <ul>
     <li><a href="#strings">字符串 / 文本</a></li>
     <li><a href="#variables">变量</a></li>
+    <li><a href="#constants">常量</a></li>
     <li><a href="#operators">运算符</a></li>
     <li><a href="#function-calls">函数调用</a>
     <ul>
@@ -123,6 +124,15 @@ MsgBox "这行没有被注释."
 <p>要为变量赋值, 请使用 <code>:=</code> <a href="Variables.htm#AssignOp">赋值运算符</a>, 如 <code>MyVar := &quot;Some text&quot;</code>.</p>
 <p>表达式中的 <em>百分号</em> 用于创建<a href="#dynamic-variables">动态变量引用</a>和<a href="Functions.htm#DynCall">动态函数调用</a>, 但这些很不常见.</p>
 
+<h3 id="constants">常量关键字</h3>
+<p>常量就是一个不可改变的值, 给定一个符号名称. AutoHotkey 目前有以下常量:</p>
+<table class="info">
+  <tr><th>名称</th><th>值</th><th>类型</th><th></th></tr>
+  <tr><td><code>False</code></td><td><code>0</code></td><td><a href="Concepts.htm#numbers">整数</a></td><td><a href="Variables.htm#Boolean">布尔值</a> false, 有时表示 "off", "no", 等等.</td></tr>
+  <tr><td><code>True</code></td><td><code>1</code></td><td><a href="Concepts.htm#numbers">整数</a></td><td><a href="Variables.htm#Boolean">布尔值</a> true, 有时表示 "on", "yes", 等等.</td></tr>
+</table>
+<p>与只读<a href="Variables.htm#BuiltIn">内置变量</a>不同, 些变量不能通过<a href="#dynamic-variables">动态引用</a>返回.</p>
+
 <h3 id="operators">运算符</h3>
 <p><em>运算符</em> 采用符号或符号组的形式(如 <code>+</code> 或 <code>:=</code>), 或者下列其中一个单词 <code>and</code>, <code>or</code>, <code>not</code>, <code>is</code>, <code>in</code> 或 <code>contains</code>. 它们将一个, 两个或三个值作为输入, 并返回一个值作为结果. 用作运算输入的值或子表达式称为 <em>运算元</em>.</p>
 <ul>
@@ -140,10 +150,10 @@ MsgBox "这行没有被注释."
 </p>
 <p>对于刚接触编程的人来说, 括号的要求起初可能看起来很神秘或冗长, 但它们允许将函数调用与其他操作结合起来. 例如, 只有当两个键被物理按下时, 表达式 <code>GetKeyState(&quot;Shift&quot;, &quot;P&quot;) and GetKeyState(&quot;Ctrl&quot;, &quot;P&quot;)</code> 才会返回 1.</p>
 <p>函数名与变量名是分开的. 例如, <code>Round</code> 可以同时是变量名和函数名, 而 <code>Round := 1</code> 不会以任何方式影响 <code>Round(n)</code>.</p>
-<p>与普通<a href="Functions.htm#Global">全局变量</a>不同, 默认情况下函数可以在其他函数的内部调用. 但是, <a href="Functions.htm#nested">套嵌函数</a>(即, 在另一个函数中 <em>定义的</em> 任何函数) 只能在包含它们的函数内通过名称来访问.</p>
+<p>与普通<a href="Functions.htm#Global">全局变量</a>不同, 默认情况下函数可以在其他函数的内部调用. 但是, <a href="Functions.htm#nested">嵌套函数</a>(即, 在另一个函数中 <em>定义的</em> 任何函数) 只能在包含它们的函数内通过名称来访问.</p>
 
 <h4 id="function-call-statements">函数调用语句</h4>
-<p>如果不需要函数的返回值, 并且函数名写在行首(或者在其他允许<a href="Concepts.htm#statement">语句</a>的上下文中, 如下面的 <code>else</code> 或 <a href="Hotkeys.htm">hotkey 标签</a>), 则可以省略括号. 在这种情况下, 行的其余部分作为函数的参数列表. 例如:</p>
+<p>如果不需要函数的返回值, 并且函数名写在行首(或者在其他允许<a href="Concepts.htm#statement">语句</a>的上下文中, 如下面的 <code>else</code> 或 <a href="Hotkeys.htm">hotkey</a>), 则可以省略括号. 在这种情况下, 行的其余部分作为函数的参数列表. 例如:</p>
 <pre>result := MsgBox("This one requires parentheses.",, "OKCancel")
 MsgBox "This one doesn't. The result was " result "."</pre>
 <p>在同一上下文中调用<a href="Concepts.htm#methods">方法</a>时, 也可以省略圆括号, 但仅当目标对象是变量或直接命名的属性时才可以省略圆括号, 如 <code>myVar.myMethod</code> 或 <code>myVar.myProp.myMethod</code>.</p>
@@ -251,16 +261,16 @@ Loop Parse t, "`n"
 <p>循环变量也可以在循环主体外部使用, 例如在循环中调用的函数或子程序中.</p>
 
 <h3 id="not-control-flow">非控制流</h3>
-<p>像指令, 标签(包括热键和热字串) 和没有赋值的声明 在脚本从文件加载的时候被处理, 它们不受控制流的制约. 换句话说, 在脚本执行任何控制流程语句之前, 它们将无条件生效. 同样, #If 指令不能影响控制流; 它只是设置代码中指定的任何热键标签和热字串的标准. 每次按下时都会计算热键的条件, 而不是在代码中遇到 #If 指令时.</p>
+<p>像指令, 标签, 双冒号热键和热字串标签, 和没有赋值的声明都会在脚本加载文件的时候被处理, 它们不受控制流的制约. 换句话说, 在脚本执行任何控制流程语句之前, 它们将无条件生效. 同样, <a href="commands/_HotIf.htm">#HotIf</a> 指令不能影响控制流; 它只是设置代码中指定的任何热键和热字串的条件. 每次按下时都会计算热键的条件, 而不是在代码中遇到 #HotIf 指令时.</p>
 
 <h2 id="structure-of-a-script">脚本的结构</h2>
 
 <h3 id="auto-execute-section">自动执行段</h3>
-<p>脚本加载完成后, 从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>, 脚本的第一个<a href="Hotkeys.htm">热键/热字串标签</a>, 或脚本的物理结束(无论哪一种). 这个脚本的顶部被称为 <em>自动执行段(部分)</em>, 但它实际上只是程序启动后调用的一个<a href="#subroutines">子程序</a>.</p>
-<p class="warning"><strong>注意:</strong> 虽然脚本的 <em>第一个</em> 热键/热字串标签有与 <a href="commands/Return.htm">return</a> 相同的效果, 但是其他热键和标签不会.</p>
+<p>脚本加载完成后, 从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>,  或脚本的物理结束(无论哪一种). 这个脚本的顶部被称为 <em>自动执行段(部分)</em>, 但它实际上只是程序启动后调用的一个<a href="#subroutines">子程序</a>.</p>
 <p>自动执行段通常用于配置适用于每个新启动的<a href="misc/Threads.htm">线程</a>的设置. 有关详情, 请参阅<a href="Scripts.htm#auto">脚本顶部</a>.</p>
 
 <h3 id="subroutines">子程序</h3>
+<p class="note"><strong>注意:</strong> 一般应使用函数代替标签子程序.</p>
 <p><em>子程序</em> 是一个可重复使用的代码块, 可以 <em>调用</em> 它来执行一些任务.</p>
 <p>脚本使用子程序来定义当按下特定热键或发生其他事件时应该发生什么. 脚本也可以通过使用 <a href="commands/Gosub.htm">Gosub</a> 直接调用子程序.</p>
 <p>任何<a href="#labels">标签</a>都可以作为子程序的起点. 子程序没有明确的标记结束点, 而是通过 <a href="commands/Return.htm">Return</a> 或在线程退出时, 将控制权返回给子程序的调用者时作为结束. 例如:</p>
@@ -273,7 +283,7 @@ return
 <p>请注意: 由于标签在正常执行期间到达时没有效果(标签这行就像不存在一样), 因此在此示例中, 对话框将显示两次: 一次在子程序运行时, 一次在子程序返回之后. 一个重要的结果是不能在另一个子程序中定义一个子程序
 , 因为内部子程序的 &quot;主体&quot; 会自动执行然后 <em>return</em>, 从而有效地终止外部子程序.</p>
 <p>子程序通常应该与任何其他代码块分开定义, 但也可以在<a href="Functions.htm#gosub">函数内定义</a>, 允许子程序访问该函数的静态变量(和局部变量, 但仅在函数运行时).</p>
-<p class="warning"><strong>注意:</strong> 函数内定义的子程序在使用局部变量和<a href="#dynamic-variables">动态变量引用</a>方面有一定的限制. 有关详情, 请参阅<a href="Functions.htm#gosub">在函数中使用子程序</a>.
+<p class="warning"><strong>注意:</strong> 函数内定义的子程序在使用局部变量和<a href="#dynamic-variables">动态变量引用</a>方面有一定的限制. 有关详情, 请参阅<a href="Functions.htm#gosub">在函数中使用子程序</a>. 一般应使用<a href="Functions.htm#nested">嵌套函数</a>代替.
 </p>
 
 <h3 id="user-defined-functions">用户自定义函数</h3>
@@ -347,23 +357,11 @@ Loop 3
 <p>用于形成最终变量名称的 &quot;index(索引)&quot; 不一定是数字; 它可以是一个字母或关键字, 使伪数组类似于<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>或<a href="Objects.htm">对象</a>.</p>
 
 <h3 id="labels">标签</h3>
-<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 目标或形成<a href="#subroutines">子程序</a>. 有三种标签: 普通标签, <a href="Hotkeys.htm">热键</a>标签和<a href="Hotstrings.htm">热字串</a>标签.</p>
-<p>普通标签由一个名称后跟一个冒号组成.</p>
+<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 目标或形成<a href="#subroutines">子程序</a>.</p>
+<p>标签由一个名称后跟一个冒号组成.</p>
 <pre>this_is_a_label:
 </pre>
-<p>热键标签由一个热键后跟双冒号组成.</p>
-<pre>^a::
-</pre>
-<p>热字串标签由一个冒号, 零个或多个<a href="Hotstrings.htm#Options">选项</a>, 另一个冒号, 缩写字符和双冒号组成.</p>
-<pre>:*:btw::
-</pre>
-<p>通常, 除了空格和注释之外, 其他代码不能与标签一起写在同一行上. 然而:</p>
-<ul>
-  <li>热键标签可以直接后跟着函数调用或其他语句来创建 <em>单行</em> 热键. 换句话说, 如果函数调用, 赋值或表达式与热键标签位于同一行上, 它的行为就好像跟着 <code>return</code> 一样.</li>
-  <li>热键和写在双冒号右边的<a href="KeyList.htm">键名</a>实际上是<a href="misc/Remap.htm"><em>重映射</em></a>, 这是<a href="misc/Remap.htm#actually">热键对</a>的快速写法. 例如, <code>a::b</code> 创建热键和标签 <code>*a</code> 和 <code>*a Up</code>, 并不创建名为 <code>a</code> 的标签.</li>
-  <li>热字串和写在最后的双冒号的右边的文本是一个 <em>自动替换</em> 热字串. 自动替换热字串不作为标签.</li>
-</ul>
-<p>有关详情, 请参阅<a href="misc/Labels.htm">标签</a>.</p>
+<p>除了空格和注释外, 其他代码不能和标签写在同一行.有关详情, 请参阅<a href="misc/Labels.htm">标签</a>.</p>
 
 </body>
 </html>

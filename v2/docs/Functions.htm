@@ -23,7 +23,7 @@
   <li><a href="#Local">局部变量</a></li>
   <li><a href="#DynCall">动态调用函数</a></li>
   <li><a href="#ShortCircuit">优化布尔求值</a></li>
-  <li><a href="#nested">套嵌函数</a></li>
+  <li><a href="#nested">嵌套函数</a></li>
   <li><a href="#remarks">Return, Exit 及一般说明</a></li>
   <li><a href="#include">使用 #Include 在多个脚本间共享函数</a></li>
   <li><a href="#lib">函数库: 标准库和用户库</a></li>
@@ -62,7 +62,7 @@ Add 2, 3  <em>; 如果在行的起始处使用, 括号可以省略.</em></pre>
 <p><a href="commands/IsByRef.htm">IsByRef</a> 函数可用于判断调用者是否为给定的 ByRef 参数提供了变量.</p>
 <p>已知限制:</p>
 <ul>
-  <li>不可能通过引用将对象的属性(如 <code>foo.bar</code>), <a href="misc/Clipboard.htm">剪贴板</a>或其他<a href="Variables.htm#BuiltIn">内置变量</a>传递给函数. 相反, 函数表现得就像没有 <em>ByRef</em> 一样.</li>
+  <li>不可能通过引用将对象的属性(如 <code>foo.bar</code>), <a href="misc/Clipboard.htm">A_Clipboard</a>(剪贴板) 或其他<a href="Variables.htm#BuiltIn">内置变量</a>传递给函数. 相反, 函数表现得就像没有 <em>ByRef</em> 一样.</li>
   <li id="recurse">尽管函数可以递归调用它自己, 但是如果它传递它自己的一个<a href="#Local">局部变量</a>或非 ByRef 参数给自己的 <em>ByRef</em>, 那么新一层的 <em>ByRef</em> 参数将引用它自己那个名称的局部变量而不是之前那层的. 然而, 当函数传递给它自己<a href="#Global">全局变量</a>, <a href="#static">静态变量</a>或 <em>ByRef</em> 参数时不会产生这样的问题.</li>
   <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>MyFunc(Var, Var++)</code> 会意外地传递 1 和 0, 即使函数的首个参数不是 <em>ByRef</em> 类型时. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
   <li>ByRef 不直接支持函数调用 COM 客户端, 或调用 COM 方法. 作为替代, 脚本接受或必须传递一个包含有 <a href="commands/ComObjType.htm">VarType</a> 和值的地址的<a href="commands/ComObject.htm#ByRef">包装对象</a>.</li>
@@ -150,8 +150,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 <ul>
   <li>该对象可以是一个<a href="objects/Array.htm">数组</a>, 任何其他类型的可枚举对象(任何带有 <a href="Objects.htm#__Enum">__Enum</a> 方法的对象) 或<a href="objects/Enumerator.htm">枚举器</a>. 如果对象不是一个数组, 那么每次调用 __Enum 计数为 1, 每次调用枚举器仅使用一个参数.</li>
   <li>没有值的<a href="objects/Array.htm">数组</a>元素(如 <code>[,2]</code> 中的第一个元素) 相当于省略了参数; 也就是说, 如果参数是可选的, 则使用它的默认值, 否则将抛出异常.</li>
-  <li>当直接调用用户定义的函数时, 对象可以通过名称与函数参数相同的属性来提供参数值. 但是, 位置参数优先. 调用方法或内置函数时不支持命名参数.</li>
-  <li>目标函数也可以是可变参数的, 在这种情况下与正式定义的参数不对应的属性将被丢弃.</li>
+  <li>当直接调用用户定义的函数时, 对象可以通过名称与函数参数相同的属性来提供参数值. 但是, 如上所述, 对象必须是可枚举的, 但枚举器(可以是对象本身) 可以返回零项. 位置参数优先于属性, 未使用的属性将被忽略. 调用方法或内置函数时, 不支持命名参数.</li>
   <li>这样的语法还可以用于调用对象的方法或检索对象的属性; 例如, <code>Object.Property[Params*]</code>.</li>
 </ul>
 <p>已知限制:</p>
@@ -163,11 +162,11 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 <h3 id="Local">局部变量</h3>
 <p>局部变量是特定于单个函数的, 只在该函数内可见. 因此, 局部变量可能具有与全局变量相同的名称, 并且两个变量都有单独的内容. 不同的函数也可以安全地使用相同的变量名.</p>
 <p>当函数返回值时, 所有非<a href="#static">静态</a>的局部变量都自动释放(变为空), 除了绑定到<a href="#closures">闭包</a>的变量.</p>
-<p>像 <a href="misc/Clipboard.htm">Clipboard</a>, <a href="misc/ErrorLevel.htm">ErrorLevel</a> 和 <a href="Variables.htm#TimeIdle">A_TimeIdle</a> 这样的内置变量永远不会是局部的(它们可以从任何地方访问), 并且不能被重新声明.</p>
+<p>像 <a href="misc/Clipboard.htm">A_Clipboard</a> 和 <a href="Variables.htm#TimeIdle">A_TimeIdle</a> 这样的内置变量永远不会是局部的(它们可以从任何地方访问), 并且不能被重新声明. (This does not apply to built-in classes such as <a href="objects/Object.htm">Object</a>; they are predefined as <a href="#SuperGlobal">super-global</a> variables.)</p>
 <p id="AssumeLocal">默认情况下, 函数是<strong>假定-局部</strong>的. 在函数内访问或创建的变量默认为局部的, 但以下情况除外:</p>
 <ul>
   <li><a href="#SuperGlobal">超级-全局</a>变量, 包括<a href="Objects.htm#Custom_Classes">类</a>.</li>
-  <li>在<a href="#nested">套嵌函数</a>内, 可以访问由闭合它的函数创建的非-动态局部或静态变量.</li>
+  <li>在<a href="#nested">嵌套函数</a>内, 可以访问由闭合它的函数创建的非-动态局部或静态变量.</li>
 </ul>
 <p>如下所示, 也可以重写默认模式(通过声明变量或改变函数的模式).</p>
 <p id="ForceLocal"><strong>强制-局部模式</strong>: 如果函数的第一行是单词 "local", 则假定所有变量引用都是局部的, 除非它们在函数 <em>内</em> 声明为全局的. 与默认模式不同, 强制-局部模式具有以下行为:</p>
@@ -259,8 +258,8 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>从上面的例子可以看出, 任何耗时的函数一般应该在 <em>AND</em> 或 <em>OR</em> 的右侧调用从而提高性能. 此技术还可用于防止在其参数之一传递其认为不合适的值时(如空字符串) 调用函数.</p>
 <p><a href="Variables.htm#ternary">三元条件运算符(?:)</a> 也通过不计算丢弃的分支进行求值优化.</p>
 
-<h2 id="nested">套嵌函数</h2>
-<p><em>套嵌</em> 函数是在另一个函数中定义的函数. 例如:</p>
+<h2 id="nested">嵌套函数</h2>
+<p><em>嵌套</em> 函数是在另一个函数中定义的函数. 例如:</p>
 <pre>
 outer(x) {
     inner(y) {
@@ -373,7 +372,6 @@ timertest()
 <h2 id="remarks">Return, Exit 及一般说明</h2>
 <p>如果函数内的执行流在遇到 <a href="commands/Return.htm">Return</a> 前到达了函数的闭括号, 那么函数结束并返回空值(空字符串) 给其调用者. 当函数明确省略 <a href="commands/Return.htm">Return</a> 的参数时, 也返回空值.</p>
 <p>当函数使用 <a href="commands/Exit.htm">Exit</a> 命令终止<a href="misc/Threads.htm">当前线程</a>时, 其调用者不会接收到返回值. 例如, 这个语句 <code>Var := Add(2, 3)</code> 中, 如果 <code>Add()</code> 退出了那么 <code>Var</code> 会保持不变. 如果函数出现了运行时错误(当这个错误没有被 <a href="commands/Try.htm">Try</a>/<a href="commands/Catch.htm">Catch</a> 语句捕获时), 例如<a href="commands/Run.htm">运行</a>了一个不存在的文件, 也会出现同样的情况.</p>
-<p>若要返回一个额外的容易记住的值, 那么函数可以修改 <a href="misc/ErrorLevel.htm">ErrorLevel</a> 的值来实现.</p>
 <p>要使用一个或多个空值(空字符串) 调用函数, 可以使用空的引号对, 例如: <code>FindColor(ColorName, &quot;&quot;)</code>.</p>
 <p>因为调用函数不会开启新<a href="misc/Threads.htm">线程</a>, 所以函数对设置(如 <a href="commands/SendMode.htm">SendMode</a> 和 <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>) 做出的任何改变对其调用者同样有效.</p>
 <p>函数的调用者可以传递不存在的变量或<a href="misc/Arrays.htm">数组</a>元素给它, 这在函数期望相应的参数为 <a href="#ByRef">ByRef</a> 时非常有用. 例如, 调用 <code>GetNextLine(BlankArray%i%)</code> 会自动地创建变量 <code>BlankArray%i%</code>, 而该变量是<a href="#Local">局部的</a>还是全局的(取决于调用者是否在函数中, 以及<a href="#AssumeGlobal">假定-全局模式</a>是否有效).</p>

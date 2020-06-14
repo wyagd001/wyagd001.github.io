@@ -106,20 +106,12 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   <tr id="unary">
     <td style="text-align:center"><strong>-<br>
     !<br>
-    ~<br>
-    &amp;</strong></td>
+    ~</strong></td>
     <td>
       <p><strong>一元负号(-)</strong>: 反转其运算元的符号.</p>
       <p><strong>一元正号(+)</strong>: <code>+N</code> 等同于 <code>-(-N)</code>. 应用于纯数字时无效, 但可用于将数字字符串转换为纯数字.</p>
       <p><strong>逻辑非(!)</strong>: 如果运算元为空或 0, 那么逻辑非的结果为 1, 这表示 &quot;true&quot;. 否则, 结果为 0(false). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~)</strong>: 此运算符对运算元按位取反. 如果运算元为浮点值, 则在计算前把它截断成整数. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果.</p>
-      <p id="amp"><strong>取址(&amp;)</strong>: <code>&amp;MyVar</code> 在内存中检索 <em>MyVar</em> 内容的地址, 其中 <em>MyVar</em> 是用户创建的变量. <em>MyVar</em> 的内容可以是字符串, 64 位整数, 64 位浮点数或对象. 这通常与 <a href="commands/DllCall.htm#struct">DllCall 结构</a>一起使用.</p>
-      <p><em>MyVar</em> 通常在通过任何<a href="Variables.htm#AssignOp">赋值运算符</a>(包括 ++ 和 --) 重新赋值之后, 或者用作内置函数的输出变量之后地址无效. 函数的<a href="Functions.htm#Local">局部</a>变量的内容的地址在函数返回后无效. 对象的地址只在其最后一个<a href="Objects.htm#Reference_Counting">引用</a>被释放之前有效.</p> 
-        <p>取址运算符可以与其他字符串一起使用, 如 <code>&amp;"string"</code>, <code>&amp;(x . y)</code> 或 <code>&amp;A_LoopField</code>, 但有以下限制:</p>
-      <ul>
-        <li>永远不应该修改寻址内存, 例如将其传递给 DllCall 输出参数.</li>
-        <li>从临时值(包括由内置变量返回的值) 获取的地址应仅在表达式或<a href="Language.htm#function-call-statements">函数调用语句</a>的求值完成之前被视为有效. 在此之后, 可以将内存用于其他内容.</li>
-      </ul>
     </td>
   </tr>
   <tr id="MulDiv">
@@ -245,7 +237,7 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
     </td>
     <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中. 最简单的赋值运算符为<a href="commands/SetExpression.htm">冒号等号(:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#FloorDivide">向下舍除</a> 把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 类似的, <code>Var <strong>.=</strong> &quot;abc&quot;</code> 为 <code>Var := Var <strong>.</strong> &quot;abc&quot;</code> 的一种简写形式.</p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>.</p>
-    <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 这样还允许赋值作为 <a href="Functions.htm#ByRef">ByRef</a> 去传递, 或获取它的<a href="#amp">地址</a>; 例如: <code>&amp;(x:=&quot;abc&quot;)</code>.</p>
+    <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 这样还允许赋值作为 <a href="Functions.htm#ByRef">ByRef</a> 去传递, 或获取它的地址; 例如: <code>StrPtr(x:=&quot;abc&quot;)</code>.</p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
     <p>赋值还可以针对对象的属性, 如 <code>myArray.Length += n</code> 或 <code>myArray[i] .= t</code>. 当赋值给一个属性时, 子表达式的结果是赋值的值, 而不是变量引用.</p>
     </td>
@@ -328,7 +320,7 @@ sumfn := Func("Sum")</pre>
   <li>用户空闲时间: <a href="#TimeIdle">A_TimeIdle</a>, <a href="#TimeIdlePhysical">A_TimeIdlePhysical</a>, <a href="#TimeIdleKeyboard">A_TimeIdleKeyboard</a>, <a href="#TimeIdleMouse">A_TimeIdleMouse</a></li>
   <li>热键, 热字串和自定义菜单项: <a href="#ThisHotkey">A_ThisHotkey</a>, <a href="#EndChar">A_EndChar</a>, <a href="#h">(...更多...)</a></li>
   <li>操作系统和用户信息: <a href="#OSVersion">A_OSVersion</a>, <a href="#Screen">A_ScreenWidth</a>, <a href="#Screen">A_ScreenHeight</a>, <a href="#os">(...更多...)</a></li>
-  <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#EventInfo">A_EventInfo</a>, <a href="misc/Clipboard.htm">Clipboard</a>, <a href="misc/ErrorLevel.htm">ErrorLevel</a></li>
+  <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#EventInfo">A_EventInfo</a>, <a href="misc/Clipboard.htm">A_Clipboard</a></li>
   <li>Loop: <a href="#Index">A_Index</a>, <a href="#loop">(...更多...)</a></li>
 </ul>
 <h3>特殊字符</h3>
@@ -407,11 +399,6 @@ sumfn := Func("Sum")</pre>
     <td>A_AhkPath</td>
     <td><p>对于未编译脚本: 实际运行当前脚本的 EXE 文件的完整路径和名称. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
     <p>对于<a href="Scripts.htm#ahk2exe">已编译脚本</a>: 除了通过注册表条目 <em>HKLM\SOFTWARE\AutoHotkey\InstallDir</em> 获取 AutoHotkey 目录外, 其他的和上面相同. 如果找不到这个注册表条目, 则 A_AhkPath 为空.</p></td>
-  </tr>
-  <tr id="IsUnicode">
-    <td>A_IsUnicode</td>
-    <td><p>当字符串为 Unicode(16 位) 时值为 1, 字符串为 ANSI(8 位) 时为空字符串(这会被视为 <a href="#Boolean">false</a>). 字符串的格式取决于用来运行当前脚本的 AutoHotkey.exe 的版本, 如果为已编译脚本, 则取决于用来编译它的主程序.</p>
-    <p>目前所有的 AutoHotkey v2 可执行文件都是  Unicode(16 位) 构建的, 所以它的值始终是 1.</p></td>
   </tr>
   <tr id="IsCompiled">
     <td>A_IsCompiled</td>
@@ -648,10 +635,10 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
 <table class="info">
   <tr id="ThisHotkey">
     <td>A_ThisHotkey</td>
-    <td><p>最近执行的<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">非自动替换热字串</a>(如果没有则为空), 例如 #z. 如果<a href="misc/Threads.htm">当前线程</a>被其他热键中断, 那么此变量的值会变化, 所以如果之后需要在子程序中使用原来的值, 则必须马上把它复制到另一个变量中.</p>
-      <p>首次创建热键时 -- 通过 <a href="commands/Hotkey.htm">Hotkey 函数</a>或<a href="Hotkeys.htm">双冒号标签</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="commands/_If.htm#variant">变体</a>共享.</p>
+    <td><p>最近执行的<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">非自动替换热字串</a>(如果没有则为空), 例如 #z. 如果<a href="misc/Threads.htm">当前线程</a>被其他热键或热字串中断, 那么此变量的值会变化, 所以一般情况下, 最好使用 <a href="Hotkeys.htm#HotBraces">ThisHotkey</a> 参数.</p>
+      <p>首次创建热键时 -- 通过 <a href="commands/Hotkey.htm">Hotkey 函数</a>或<a href="Hotkeys.htm">双冒号语法</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="commands/_HotIf.htm#variant">变体</a>共享.</p>
       <p>当热字符串是首次创建时, 用于创建它的确切文本将成为热字符串的永久名称.</p>
-      <p>另请参阅: <a href="#ThisLabel">A_ThisLabel</a></p></td>
+  </td>
   </tr>
   <tr id="PriorHotkey">
     <td>A_PriorHotkey</td>
@@ -848,11 +835,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   </tr>
   <tr>
     <td>Clipboard</td>
-    <td><strong>读取/写入:</strong> 系统剪贴板的内容, 可以读取或写入. 请参阅 <a href="misc/Clipboard.htm">Clipboard</a> 章节.</td>
-  </tr>
-  <tr>
-    <td>ErrorLevel</td>
-    <td><strong>读取/写入:</strong> 请参阅 <a href="misc/ErrorLevel.htm">ErrorLevel</a>.</td>
+    <td><strong>读取/写入:</strong> 系统剪贴板的内容, 可以读取或写入. 请参阅 <a href="misc/Clipboard.htm">A_Clipboard</a> 章节.</td>
   </tr>
   <tr id="LastError">
     <td>A_LastError</td>
@@ -862,6 +845,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   <tr id="TrueFalse">
     <td>True<br />False</td>
     <td><p>包含 1 和 0. 它们可以用来使脚本更具可读性. 有关详细信息, 请参阅<a href="Concepts.htm#boolean">布尔值</a>.</p>
+      <p>这些实际上是<a href="Language.htm#constants">关键字</a>, 而不是变量.</p>
     </td>
   </tr>
 </table>

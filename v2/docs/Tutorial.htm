@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<!--Tutorial by tidbit, from http://ahkscript.github.io/AHK_Tutorial/
-                Modified to fit with the AutoHotkey documentation.-->
 <meta name="author" content="tidbit" />
 <meta name="description" content="Learn how to download and install AutoHotkey, to create a script, to use hotkeys and hotstrings, to send keystrokes, to run programs, etc." />
 <meta name="keywords" content="ahk, autohotkey, tutorial, beginners guide" />
@@ -106,14 +104,16 @@
     <li>一个新窗口被弹出, 也许是记事本. 如果是这样就成功了!
     <p>现在你已经创建了一个脚本, 我们需要加点内容到脚本中. 有关所有内置函数和变量的列表, 请参阅<a href="#s5">第 5 节</a>.</p>
     <p>这是一个使用 <a href="commands/Send.htm">Send</a> 函数创建的一个包含热键的简单脚本, 当你按下热键后, 它会向窗口发送一段文字:</p>
-    <pre>^j::
-Send "My First Script"
-return</pre>
+    <pre>
+^j::
+{
+    Send "My First Script"
+}</pre>
     <p>稍后我们将进行更深入的研究. 在此之前, 我们先解释一下上面的代码:</p>
     <ul>
         <li>第一行: <code>^j::</code> 是热键. <code>^</code> 代表 <kbd>Ctrl</kbd>, <code>j</code> 是字母 <kbd>J</kbd>. 任何在 <code>::</code> <b>左边</b> 的字符表示您需要按下的热键.</li>
-        <li>第二行: <code>Send "My First Script"</code> 表示如何 <strong>send(发送)</strong> 按键. <code>Send</code> 是函数, 任何在空格之后 括在引号内的内容都将被键入.</li>
-        <li>第三行: <code>return</code>. Return 将会成为你最好的朋友. 从字面上看, 它 <strong>阻止</strong> 代码继续向下移动. 当您的脚本开始包含很多内容时, 这将避免许多问题.</li>
+        <li>这一行: <code>Send "My First Script"</code> 表示如何 <strong>send(发送)</strong> 按键. <code>Send</code> 是函数, 任何在空格之后括在引号内的内容都将被键入.</li>
+        <li>The lines with <code>{</code> and <code>}</code> marks the start end end of the <a href="Hotkeys.htm">hotkey</a>.</li>
     </ul>
     </li>
     <li>保存文件.</li>
@@ -146,33 +146,30 @@ return</pre>
 <h2 id="s2">2 - 热键 &amp; 热字串</h2>
 
 <p>什么是热键? 热键是一个发热的按键, 开个玩笑. 热键是用来触发某些动作的按键或组合按键. 例如:</p>
-<pre>^j::
-Send "My First Script"
-return</pre>
+<pre>^j::Send "My First Script"</pre>
 <p>什么是热字串? 当你键入它们时, 热字串主要用于扩展缩写(自动替换). 当然, 它也可以用来启动任何脚本动作. 例如:</p>
 <pre>::ftw::Free the whales</pre>
 <p>这两个例子的区别在于, 当你按下 <kbd>Ctrl</kbd>+<kbd>J</kbd> 时, 热键将会触发, 而热字串会将你输入的"ftw"转换为"Free the whales".</p>
 <p><i>"那么, 该如何创建一个热键?"</i> 好问题. 热键是通过一对冒号(::) 创建的. 按键名或组合按键名必须在 <code>::</code> 的<b>左边</b>. 代码则跟在后面, 以 <code>Return</code> 结束.</p>
 <p class="note"><strong>注意:</strong> 当然也有例外情况, 但很多时候容易引起混乱, 所以在向导页中不会涉及到它, 至少不是现在.</p>
-<pre>Esc::
-MsgBox "Escape!!!!"
-return
-</pre>
+<pre>Esc::MsgBox "Escape!!!!"</pre>
 <p>热字串在要触发的文本两边各有一对冒号(::). 替换后的文本在第二对冒号(::) 的<b>右边</b>.</p>
 <p>如上所述, 热字串也可以启动脚本动作. 和热键一样 <i>"几乎能做任何事情"</i>.</p>
 <pre>::btw::
-MsgBox "You typed btw."
-return</pre>
+{
+    MsgBox "You typed btw."
+}</pre>
 <p>有一个好消息是: 你可以为每一个热键, 热字串, 标签以及许多我们尚未讨论的其他内容编写多行代码.</p>
 <pre>^j::
-MsgBox "Wow!"
-MsgBox "There are"
-Run "notepad.exe"
-WinActivate "Untitled - Notepad"  <em>; 无标题 - 记事本</em>
-WinWaitActive "Untitled - Notepad"
-Send "7 lines{!}{Enter}"
-SendInput "inside the CTRL{+}J hotkey."
-return</pre>
+{
+    MsgBox "Wow!"
+    MsgBox "There are"
+    Run "notepad.exe"
+    WinActivate "Untitled - Notepad"  <em>; 无标题 - 记事本</em>
+    WinWaitActive "Untitled - Notepad"
+    Send "7 lines{!}{Enter}"
+    SendInput "inside the CTRL{+}J hotkey."
+}</pre>
 
 <h3 id="s21">a. 键和其神秘符号</h3>
 <p>你可能会问<i>"我怎么知道 ^ 代表 <kbd>Ctrl</kbd>?!"</i>. 好问题! 为了帮助你学习 ^ 和其它符号的意思, 注意看这个表:</p>
@@ -206,13 +203,9 @@ return</pre>
 <p>此外, 对于所有/大多数能用于热键双冒号<b>左边</b>的热键名称, 请参阅<a href="KeyList.htm">按键列表</a>.</p>
 <p>你可以通过在两个按键(除手柄键) 之间, 使用 <code>&nbsp;&amp;&nbsp;</code> 来定义一个组合热键. 在下面的例子中, 你要按下<kbd>Numpad0</kbd>, 再按下<kbd>Numpad1</kbd> 或 <kbd>Numpad2</kbd>, 才能触发热键:</p>
 
-<pre>Numpad0 &amp; Numpad1::
-MsgBox "You pressed Numpad1 while holding down Numpad0."
-return
-
-Numpad0 &amp; Numpad2::
-Run "notepad.exe"
-return</pre>
+<pre>Numpad0 &amp; Numpad1::MsgBox "You pressed Numpad1 while holding down Numpad0."
+Numpad0 &amp; Numpad2::Run "notepad.exe"
+</pre>
 
 <p>如果你想知道热字串是否和热键一样有很酷的修饰符, 答案是有!热字串的修饰符在第一对冒号(::) 之间, 例如. 例如:</p>
 <pre>:*:ftw::Free the whales</pre>
@@ -225,49 +218,37 @@ return</pre>
 #IfWinExist</pre>
 <p>这些特殊的命令(技术上称为"指令") 可以创建对上下文敏感的热键和热字串. 只需指定一个窗口标题. 但在某些情况下, 您可能希望指定某个标准(如 HWND, 组或类). 这些都比较高级, 在这里有更深入的介绍: <a href="misc/WinTitle.htm">The WinTitle Parameter &amp; the Last Found Window</a>.</p>
 <pre>#If WinActive("Untitled - Notepad")
-#Space::
-MsgBox "You pressed WIN+SPACE in Notepad."
-return</pre>
+#Space::MsgBox "You pressed WIN+SPACE in Notepad."</pre>
 <p>要关闭后续热键或热字串的上下文敏感性, 请指定任意 #IfWin 指令, 但将其所有参数留空. 例如:</p><pre><em>; 无标题 - 记事本</em>
 #If WinActive("Untitled - Notepad")
-!q::
-MsgBox "You pressed ALT+Q in Notepad."
-return
+!q::MsgBox "You pressed ALT+Q in Notepad."
 
 <em>; 任何标题不是无标题 - 记事本的窗口</em>
 #If
-!q::
-MsgBox "You pressed ALT+Q in any window."
-return</pre>
+!q::MsgBox "You pressed ALT+Q in any window."
+</pre>
 <p>当 #ifwin 指令在脚本中从未使用, 所有的热键和热字串对所有窗口生效.</p>
 <p>#IfWin 指令是与位置相关的: 它们将影响脚本中的位于他们之间所有热键和热字串. 它们也相互排斥的; 也就是说, 只有最近的一个会有效.</p>
 <pre><em>; 记事本</em>
 #If WinActive("ahk_class Notepad")
-#Space::
-MsgBox "You pressed WIN+SPACE in Notepad."
-return
+#Space::MsgBox "You pressed WIN+SPACE in Notepad."
 ::msg::You typed msg in Notepad
 
 <em>; MSPaint</em>
 #If WinActive("Untitled - Paint")
-#Space::
-MsgBox "You pressed WIN+SPACE in MSPaint!"
-return
+#Space::MsgBox "You pressed WIN+SPACE in MSPaint!"
 ::msg::You typed msg in MSPaint!</pre>
 <p class="note">想要了解更多信息以及类似的指令, 请查看 <a href="commands/_If.htm">#If</a> 页面.</p>
 <h3 id="s23">c. 一个文件包含多个热键/热字串</h3>
 <p>这是一些人的想法. 因此, 我在这里声明一下: AutoHotkey 有能力将<i>任意多</i> 的热键和热字串放在一个文件中. 不管是 1 个, 还是 3253 个(或者更多).</p>
-<pre>#i::
-Run "http://www.google.com/"
-return
+<pre>#i::Run "https://www.google.com/"
 
 ^p::
-Run "notepad.exe"
-return
+{
+    Run "notepad.exe"
+}
 
-~j::
-Send "ack"
-return
+~j::Send "ack"
 
 :*:acheiv::achiev
 ::achievment::achievement
@@ -283,12 +264,14 @@ return
 <pre class="NoIndent">::btw::by the way  <em>; 当您按下一个<a href="Hotstrings.htm#EndChars">默认的结束符</a>时, 用"by the way"替换掉"btw".</em></pre>
 <pre class="NoIndent">:*:btw::by the way  <em>; 替换"btw"为"By the way"而不需要按下结束符.</em></pre>
 <pre class="NoIndent">^n::  <em>; CTRL+N 热键</em>
-Run "notepad.exe"  <em>; 当你按下 Ctrl+N, 将启动记事本.</em>
-return  <em>; 热键内容结束, 这之后的内容将不会触发.</em></pre>
+{
+    Run "notepad.exe"  <em>; 当你按下 Ctrl+N, 将启动记事本.</em>
+}  <em>; 热键内容结束, 这之后的内容将不会触发.</em></pre>
 <pre class="NoIndent">^b::  <em>; CTRL+B 热键</em>
-Send "{Ctrl down}c{Ctrl up}"  <em>; 复制选定的文本. 也可以使用 ^c, 但这种方法更加可靠.</em>
-SendInput "[b]{Ctrl down}v{Ctrl up}[/b]" <em>; 将选定的文本包装在 BBCode 标签中, 以便在论坛中以粗体显示.</em>
-return  <em>; 热键内容结束, 这之后的内容将不会触发.</em></pre>
+{
+    Send "{Ctrl down}c{Ctrl up}"  <em>; 复制选定的文本. 也可以使用 ^c, 但这种方法更加可靠.</em>
+    SendInput "[b]{Ctrl down}v{Ctrl up}[/b]" <em>; 将选定的文本包装在 BBCode 标签中, 以便在论坛中以粗体显示.</em>
+}  <em>; 热键内容结束, 这之后的内容将不会触发.</em></pre>
 
 <h2 id="s3">3 - 发送按键</h2>
 <p>现在你决定发送(输入) 一些按键到一个程序中. 你可以使用 <a href="commands/Send.htm">Send</a> 函数. 该函数表示发送按键, 模拟打字或按键操作.</p>
@@ -322,14 +305,11 @@ return  <em>; 热键内容结束, 这之后的内容将不会触发.</em></pre>
 <p>一个例子显示了不应该对热键做的情景:</p>
 <pre><em>; 当你创建热键时...
 ; 错误的</em>
-{LCtrl}::
-Send "AutoHotkey"
-return
+{LCtrl}::Send "AutoHotkey"
 
 <em>; 正确的</em>
-LCtrl::
-Send "AutoHotkey"
-return</pre>
+LCtrl::Send "AutoHotkey"
+</pre>
 <p>很多人都有一个共同的问题, 他们认为大括号放在文档中仅仅是为了好玩. 而实际上<b>大括号是需要的</b>. 它将告诉 AutoHotkey <code>{!}</code> 表示 "感叹号", 而不是要 "按下 <kbd>Alt</kbd> 键". 所以要仔细查看 <a href="commands/Send.htm">Send</a> 页上的特殊键表格, 确保在合适的地方加上大括号. 例如:</p>
 <pre>Send "This text has been typed{!}" <em>;  注意大括号中的感叹号? 这是因为, 如果没有 {}, AHK 将按下 Alt 键.</em>
 </pre>
@@ -393,7 +373,7 @@ Run A_MyDocuments
 
 <em>; 打开一些网页:</em>
 Run "https://www.autohotkey.com"
-Run "http://www.google.com"</pre>
+Run "https://www.google.com"</pre>
 <p class="note">想要深入了解更多信息和示例, 请查看 <a href="commands/Run.htm">Run</a> 页面.</p>
 
 <h2 id="s5">5 - 命令和函数</h2>
@@ -508,11 +488,11 @@ if (<strong>Var1</strong> != <strong>Var2</strong>)
 
 <h3 id="s62">b. 获取用户输入</h3>
 <p>有时候你想让用户来选择某些值. 这可以有很多种方法, 但其中最简单的办法就是使用 <a href="commands/InputBox.htm">InputBox</a>. 下面的例子展示了如何向用户提出一系列问题并根据用户的输入完成一些事情:</p>
-<pre>OutputVar := InputBox("What is your first name?", "Question 1")
+<pre>OutputVar := InputBox("What is your first name?", "Question 1").Value
 if (OutputVar = "Bill")
     MsgBox "That's an awesome name, " OutputVar "."
 
-OutputVar2 := InputBox("Do you like AutoHotkey?", "Question 2")
+OutputVar2 := InputBox("Do you like AutoHotkey?", "Question 2").Value
 if (OutputVar2 = "yes")
     MsgBox "Thank you for answering " OutputVar2 ", " OutputVar "! We will become great friends."
 else

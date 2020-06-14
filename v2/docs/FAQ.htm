@@ -91,10 +91,11 @@
 <p>任何想在脚本启动时立即执行的行都应该出现在脚本的顶部, 要在首个<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>或 <a href="commands/Return.htm">Return</a> 之前. 有关详情, 请参阅<a href="Scripts.htm#auto">自动执行段</a>.</p>
 <p>还有, 含有多行执行语句的<a href="Hotkeys.htm">热键</a>必须把它的首行写在热键的 <em>下面</em> 而不能在同一行. 例如:</p>
 <pre>#space::  <em>;  Win+空格键</em>
-Run "Notepad"
-WinWaitActive "Untitled - Notepad"
-WinMaximize
-return</pre>
+{
+    Run "Notepad"
+    WinWaitActive "Untitled - Notepad"
+    WinMaximize
+}</pre>
 <h3 id="vista">为什么我的脚本在前一个系统运行良好却无法工作于 Windows <em>xxx</em>?</h3>
 <p>这个问题有许多的影响因素, 例如:</p>
 <ul>
@@ -106,7 +107,7 @@ return</pre>
 <p>也请参考以下问题:</p>
 
 <h3 id="uac">我该如何处理用户账户控制(UAC) 导致的问题?</h3>
-<p><a href="http://windows.microsoft.com/en-US/windows7/What-is-User-Account-Control">用户账户控制(UAC)</a> 是导致问题的常见原因, 特别在系统由 Windows XP/Vista/7 升级到 Vista/7/8/10 时. UAC 存在于 Windows Vista 及更后的系统, 在新系统或新安装时默认是被激活的, 并且在 Windows 8 及之后的系统中很难被禁止.</p>
+<p><a href="https://en.wikipedia.org/wiki/User_Account_Control">用户账户控制(UAC)</a> 是导致问题的常见原因, 特别在系统由 Windows XP/Vista/7 升级到 Vista/7/8/10 时. UAC 存在于 Windows Vista 及更后的系统, 在新系统或新安装时默认是被激活的, 并且在 Windows 8 及之后的系统中很难被禁止.</p>
 <p>在默认情况下, UAC 保护 "提权" 程序(程序以管理员权限运行) 不被非提权程序自动化, 因为这将允许他们绕过安全限制. 热键也将被屏蔽, 因此, 非提权程序不能监视用于提权程序的输入.</p>
 <p>UAC 也阻止了 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a> 和 <a href="commands/BlockInput.htm">BlockInput</a> 的正常工作.</p>
 <p>常见的解决方案如下:</p>
@@ -214,27 +215,29 @@ PostMessage 0x111, 65303,,, "Script's File Name.ahk - AutoHotkey"  <em>; Reload(
 <p>要停止在 <a href="commands/Loop.htm">Loop</a> 中重复的操作, 请参考下面这个可运行示例, 热键启动和停止自身重复动作. 换句话说, 按下热键将开始循环. 再次按下同样的热键将停止循环.</p>
 <pre>#MaxThreadsPerHotkey 3
 <strong>#z::  <em>; Win+Z 热键(可根据您的喜好改变此热键).</em></strong>
-#MaxThreadsPerHotkey 1
-if KeepWinZRunning  <em>; 这说明一个潜在的<a href="misc/Threads.htm">线程</a>正在下面的循环中运行.</em>
 {
-    KeepWinZRunning := false  <em>; 向那个线程的循环发出停止的信号.</em>
-    return  <em>; 结束此线程, 这样才可以让下面的线程恢复并得知上一行所做的更改.</em>
+    static KeepWinZRunning := false
+    if KeepWinZRunning  <em>; This means an underlying <a href="misc/Threads.htm">thread</a> is already running the loop below.</em>
+    {
+        KeepWinZRunning := false  <em>; Signal that thread's loop to stop.</em>
+        return  <em>; End this thread so that the one underneath will resume and see the change made by the line above.</em>
 }
-<em>; Otherwise:</em>
-KeepWinZRunning := true
-Loop
-{
-    <strong><em>;  以下四行是您要重复的动作(可根据您的需要修改它们):</em></strong>
-    ToolTip "Press Win-Z again to stop this from flashing."
-    Sleep 1000
-    ToolTip
-    Sleep 1000
-    <strong><em>; 但请不要修改下面剩下的内容.</em></strong>
-    if not KeepWinZRunning  <em>; 用户再次按下 Win-Z 来向循环发出停止的信号.</em>
-        break  <em>; 跳出此循环.</em>
+    <em>; Otherwise:</em>
+    KeepWinZRunning := true
+    Loop
+    {
+        <strong><em>; The next four lines are the action you want to repeat (update them to suit your preferences):</em></strong>
+        ToolTip "Press Win-Z again to stop this from flashing."
+        Sleep 1000
+        ToolTip
+        Sleep 1000
+        <strong><em>; But leave the rest below unchanged.</em></strong>
+        if not KeepWinZRunning  <em>; The user signaled the loop to stop by pressing Win-Z again.</em>
+            break  <em>; Break out of this loop.</em>
+    }
+    KeepWinZRunning := false  <em>; Reset in preparation for the next press of this hotkey.</em>
 }
-KeepWinZRunning := false  <em>; 复位, 为下一次使用热键做准备.</em>
-return</pre>
+#MaxThreadsPerHotkey 1</pre>
 <h3 id="help">如何在任意编辑器中获取上下文相关的 AutoHotkey 函数帮助?</h3>
 <p>为此 Rajat 创建了<a href="scripts/ContextSensitiveHelp.htm">这个脚本</a>.</p>
 <h3 id="load">如何检测一个网页何时加载完毕?</h3>
@@ -244,11 +247,11 @@ return</pre>
 MouseMove 0, 0  <em>; 阻止状态栏显示鼠标悬停链接, 而不是&quot;完成&quot;.</em>
 WinWait "Yahoo! - "
 WinActivate
-<a href="commands/StatusBarWait.htm">StatusBarWait</a> "完成", 30
-if ErrorLevel
+if StatusBarWait("完成", 30)
+    MsgBox "The page is done loading."
+else
     MsgBox "The wait timed out or the window was closed."
-else 
-    MsgBox "The page is done loading."</pre>
+</pre>
 <h3 id="time">如何比较或操作日期与时间?</h3>
 <p><a href="commands/DateAdd.htm">DateAdd</a> 函数能对 <a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式表示的时间字符串加上或减去一些天数, 小时, 分钟或秒. 后面的例子从指定的时间中减去 7 天:</p>
 <pre>Result := DateAdd(VarContainingTimestamp, -7, "days")</pre>
@@ -300,12 +303,13 @@ Submit(Btn, *)
 <h3 id="DoublePress">如何检测按键或按钮的双击?</h3>
 <p>像下面那样使用<a href="Variables.htm#h">热键的内置变量</a>:</p>
 <pre>~Ctrl::
-    if (A_ThisHotkey = A_PriorHotkey &amp;&amp; A_TimeSincePriorHotkey &lt; 200)
+{
+    if (ThisHotkey = A_PriorHotkey &amp;&amp; A_TimeSincePriorHotkey &lt; 200)
         MsgBox "double-press"
-return</pre>
+}</pre>
 <h3 id="HotContext">如何让<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">热字串</a>只在特定的程序中有效? 换句话说, 在特定的窗口不活动时我想让特定的按键执行它原来的功能.</h3>
-<p>首选的方法是使用 <a href="commands/_If.htm">#If</a>. 例如:</p>
-<pre>#if WinActive("ahk_class Notepad")
+<p>首选的方法是使用  <a href="commands/_HotIf.htm">#HotIf</a>. 例如:</p>
+<pre>#HotIf WinActive("ahk_class Notepad")
 ^a::MsgBox "You pressed Control-A while Notepad is active."
 </pre>
 <h3 id="HotPrefix">如何让前缀按键执行它原来的功能, 而不是什么都不做?</h3>

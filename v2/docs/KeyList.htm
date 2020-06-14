@@ -36,6 +36,7 @@
   <li><a href="#Joystick">操纵杆</a></li>
   <li><a href="#remote">手持遥控</a></li>
   <li><a href="#SpecialKeys">特殊按键</a></li>
+  <li><a href="#IME">CapsLock 和 IME</a></li>
 </ul>
 
 <h2 id="mouse">鼠标</h2>
@@ -43,11 +44,11 @@
 <table class="info">
   <tr>
     <td style="width:12em">LButton</td>
-    <td>鼠标左键</td>
+    <td>主鼠标按钮. 对应哪个物理按钮取决于系统设置; 默认情况下, 它是鼠标左键.</td>
   </tr>
   <tr>
     <td>RButton</td>
-    <td>鼠标右键</td>
+    <td>副鼠标按钮. 对应哪个物理按钮取决于系统设置; 默认情况下, 它是鼠标右键.</td>
   </tr>
   <tr>
     <td>MButton</td>
@@ -88,7 +89,9 @@
 <table class="info">
   <tr>
     <td style="width:12em">CapsLock</td>
-    <td><kbd>CapsLock</kbd>(大小写锁定键)</td>
+    <td><kbd>CapsLock</kbd>(大小写锁定键)
+      <p class="warning"><strong>Note:</strong> Windows IME may interfere with the detection and functionality of CapsLock; see <a href="#IME">CapsLock and IME</a> for details.</p>
+    </td>
   </tr>
   <tr>
     <td>Space</td>
@@ -424,9 +427,9 @@
   <li>向下滚动到页面的底部. 在底部附近的某个地方可以看到您按键的按下和弹起事件. 注: 一些按键不生成事件, 因此这里看不到它们的事件. 如果是这种情况, 那么您不能直接把此特殊按键设为热键, 因为您的键盘驱动或硬件在很低的的层面处理它, AutoHotkey 无法访问. 有关可能的解决方案, 请参阅下文.</li>
   <li>如果检测到了您的按键, 请记下列表中第二列的 3 位十六进制值(例如 <strong>159</strong>).</li>
   <li>要把此键定义为热键, 请参照此例:
-<pre><strong>SC159::</strong> <em>; 替换 159 为您的按键的值.</em>
-MsgBox A_ThisHotkey " was pressed."
-return</pre></li>
+<pre>
+<strong>SC159::</strong>MsgBox ThisHotkey " was pressed." <em>; 替换 159 为您的按键的值.</em>
+</pre>Also see <a href="Hotkeys.htm#HotBraces">ThisHotkey</a>.</li>
 </ol>
 <p><strong>反向</strong>: 要把其他键重映射 <em>为</em> "神秘按键", 请参照此例:</p>
 <pre><em>; 把 159 替换为上面找到的值. 把 FF(如果需要) 替换为
@@ -445,5 +448,37 @@ return</pre></li>
 	禁用或移除您键盘或鼠标的附带软件, 或者让它使用更标准的驱动, 例如操作系统内置的那个. 这里假设您特殊的键盘或鼠标使用自己的驱动并且您不使用其自带驱动和软件提供的功能.</p>
   </li>
 </ol>
+
+<h2 id="IME">CapsLock and IME</h2>
+<p>Some configurations of Windows IME (such as Japanese input with English keyboard) use CapsLock to toggle between modes. In such cases, CapsLock is suppressed by the IME and cannot be detected by AutoHotkey. However, the <kbd>Alt</kbd>+<kbd>CapsLock</kbd>, <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd> and <kbd>Shift</kbd>+<kbd>CapsLock</kbd> shortcuts can be disabled with a workaround. Specifically, send a key-up to modify the state of the IME, but prevent any other effects by signalling the keyboard hook to suppress the event. The following function can be used for this purpose:</p>
+<pre filename="SendSuppressedKeyUp.ahk">
+<em>; Requires AutoHotkey v1.1.26+, and the keyboard hook must be installed.</em>
+#InstallKeybdHook
+SendSuppressedKeyUp(key) {
+    DllCall("keybd_event"
+        , "char", GetKeyVK(key)
+        , "char", GetKeySC(key)
+        , "uint", KEYEVENTF_KEYUP := 0x2
+        , "uptr", KEY_BLOCK_THIS := 0xFFC3D450)
+}
+</pre>
+<p>After copying the function into a script or saving it as <em>SendSuppressedKeyUp.ahk</em> in a <a href="Functions.htm#lib">function library</a>, it can be used as follows:</p>
+<pre>
+<em>; Disable Alt+key shortcuts for the IME.</em>
+~LAlt::SendSuppressedKeyUp("LAlt")
+
+<em>; Test hotkey:</em>
+!CapsLock::MsgBox % A_ThisHotkey
+
+<em>; Remap CapsLock to LCtrl in a way compatible with IME.</em>
+*CapsLock::
+    Send {Blind}{LCtrl DownR}
+    SendSuppressedKeyUp("LCtrl")
+    return
+*CapsLock up::
+    Send {Blind}{LCtrl Up}
+    return
+</pre>
+
 </body>
 </html>

@@ -42,7 +42,7 @@ ul.list_of_p li { margin: 1em 0; }
   <li><a href="#Extended_Usage">扩展用法</a> - <a href="#Function_References">函数引用</a>, <a href="#Usage_Arrays_of_Arrays">数组嵌套</a></li>
   <li><a href="#Custom_Objects">自定义对象</a> - <a href="#creating-a-base-object">创建基对象</a>, <a href="#Custom_Classes">类</a>, <a href="#Custom_NewDelete">创建和销毁</a>, <a href="#Meta_Functions">元函数</a></li>
   <li><a href="#primitive">原始值</a></li>
-  <li><a href="#Implementation">实现</a> - <a href="#Reference_Counting">引用计数</a>, <a href="#Implementation_Pointers">对象的指针</a></li>
+  <li><a href="#Implementation">实现</a> - <a href="#Reference_Counting">引用计数</a>, <a href="#ObjPtr">对象的指针</a></li>
 </ul>
 
 <span id="Syntax"></span><h2 id="Usage">基本用法</h2>
@@ -284,7 +284,7 @@ other.test()</pre>
 <p>加载脚本时, 它构造一个<a href="objects/Class.htm">类</a>对象并将其存储在<a href="Functions.htm#SuperGlobal">超级-全局</a>变量 <i>ClassName</i> 中. 要在<a href="Functions.htm#ForceLocal">强制-局部</a>函数中引用该类, 需要一个声明, 如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的全名. 每个类的全名存储在 <code><i>ClassName</i>.Prototype.__Class</code>.</p>
 <p>因为类是通过变量引用的, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := Box.new()</code> 将会用其本身的实例替换 <em>Box</em> 中的类对象. 每当尝试覆盖一个类时, <a href="commands/_Warn.htm#ClassOverwrite">#Warn ClassOverwrite</a> 允许在加载时显示一个警告.</p>
 <p>在本文档中, 单词 "class" 本身通常表示用 <code>class</code> 关键字构造的类对象.</p>
-<p>类定义可以包含变量声明, 方法定义和套嵌的类定义.</p>
+<p>类定义可以包含变量声明, 方法定义和嵌套的类定义.</p>
 
 <h4 id="Custom_Classes_var">实例变量</h4>
 <p><em>实例变量</em> 是类的每个实例都拥有独立的副本. 他们如同普通赋值一样被声明, 但 <code>this.</code> 前缀被忽略(仅限于类主体内时):</p>
@@ -521,7 +521,7 @@ MsgBox "".test  <em>; 1</em>
 
 <h2 id="Implementation">实现</h2>
 <span id="Refs"></span><h3 id="Reference_Counting">引用计数</h3>
-<p>当脚本不再引用对象时, AutoHotkey 使用基本引用计数机制来自动释放对象使用的资源. 脚本作者不应该显式地调用这种机制, 除非打算直接处理未托管的<a href="#Implementation_Pointers">对象的指针</a>.</p>
+<p>当脚本不再引用对象时, AutoHotkey 使用基本引用计数机制来自动释放对象使用的资源. 脚本作者不应该显式地调用这种机制, 除非打算直接处理未托管的<a href="#ObjPtr">对象的指针</a>.</p>
 <p>表达式中的函数, 方法或运算符返回的临时引用在表达式的计算完成或中止后释放. 在下面的例子中, 新的 GMem 对象只有在 MsgBox 返回后才被释放.</p>
 <pre>MsgBox <a href="commands/DllCall.htm">DllCall</a>("GlobalSize", "ptr", GMem.new(0, 20).ptr, "ptr")  <em>; 20</em></pre>
 <p class="note"><strong>注意:</strong> 在本例中, <code>.ptr</code> 可以省略, 因为 <a href="commands/DllCall.htm#ptr">Ptr</a> 参数类型允许对象具有 <code>Ptr</code> 属性. 但是, 上面显示的模式甚至可以用于其他属性名.</p>
@@ -533,15 +533,22 @@ MsgBox "".test  <em>; 1</em>
 </ul>
 <p>虽然当程序退出时, 操作系统会回收对象占用的内存, 但是除非释放了对对象的所有引用, 否则不会调用 <a href="#Custom_NewDelete">__Delete</a>. 如果它释放了操作系统不能自动回收的其他资源, 比如临时文件, 那么这一点很重要.</p>
 
-<span id="AddressCast"></span><h3 id="Implementation_Pointers">对象的指针</h3>
-<p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后检索. 可以通过 <code>address := &amp;object</code> 来检索对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道对象中的一个. 如果对象的最后一个 <em>已知</em> 引用被释放, 该对象将被删除. 因此, 脚本必须设法通知对象它的引用增加了. 可以这样做:</p>
-<pre><a href="commands/ObjAddRef.htm">ObjAddRef</a>(address := &amp;object)</pre>
+<h3 id="ObjPtr">对象的指针</h3>
+<p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后检索. 可以通过 <code>address := ObjPtr(myObject)</code> 来检索对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道对象中的一个. 如果对象的最后一个 <em>已知</em> 引用被释放, 该对象将被删除. 因此, 脚本必须设法通知对象它的引用增加了. 可以这样做(the two lines below are equivalent):</p>
+<pre>
+ObjAddRef(address := ObjPtr(myObject))
+address := ObjPtrAddRef(myObject)
+</pre>
 <p>脚本还必须在对象使用该引用完成时通知该对象:</p>
-<pre><a href="commands/ObjAddRef.htm">ObjRelease</a>(address)</pre>
+<pre>ObjRelease(address)</pre>
 <p>一般来说, 对象地址的每个新副本都应该被视为对象的另一个引用, 所以脚本必须在获得副本之后立即调用 ObjAddRef, 并在丢弃副本之前立即调用 ObjRelease. 例如, 每当通过类似 <code>x := address</code> 这样复制地址时, 就应该调用一次 ObjAddRef. 同样的, 当脚本使用 <em>x</em> 完时(或者用其他值覆盖 <em>x</em>), 就应该调用一次 ObjRelease.</p>
-<p>若要将地址转换为正确的引用, 请使用 Object 函数:</p>
-<pre>MyObject := Object(address)</pre>
-<p>注意, Object 函数甚至可以在对象创建之前就可以使用, 比如 <a href="commands/ComObjCreate.htm">COM 对象</a>和<a href="objects/File.htm">文件对象</a>.</p>
+<p id="ObjFromPtr">要将地址转换为一个合适的引用, 请使用 ObjFromPtr 函数:</p>
+<pre>myObject := ObjFromPtr(address)</pre>
+<p>ObjFromPtr 假定 <em>address</em> 是一个引用计数, 并声称对它的所有权. 换句话说, <code>myObject := ""</code> 会导致原本由 <em>address</em> 代表的引用被释放. 之后, <em>address</em> 必须被认为是无效的. 如果要改用一个新的引用, 可以使用下面的一种方法:</p>
+<pre>
+ObjAddRef(address), myObject := ObjFromPtr(address)
+myObject := ObjFromPtrAddRef(address)
+</pre>
 
 </body>
 </html>
