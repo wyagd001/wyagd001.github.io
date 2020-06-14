@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<h1>智能感应 <span class="headnote">作者: Jon</span></h1>
+<h1>智能感应 <span class="headnote">作者: Rajat</span></h1>
 
 <p>此脚本会在您编辑 AutoHotkey 脚本时进行监视. 当它看到您输入命令后跟着逗号或空格后, 会显示此命令的参数列表以给您提示. 此外, 您可以按下 <kbd>Ctrl</kbd>+<kbd>F1</kbd>(或您选择的其他热键) 来显示帮助文件中此命令的页面. 要取消参数列表, 请按 <kbd>Escape</kbd> 或 <kbd>Enter</kbd>.
 </p>
@@ -49,8 +49,9 @@ if I_Icon != ""
         TraySetIcon I_Icon
 
 <em>; Determine AutoHotkey's location:</em>
-ahk_dir := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\AutoHotkey", "InstallDir")
-if ErrorLevel  <em>; Not found, so look for it in some other common locations.</em>
+try
+    ahk_dir := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\AutoHotkey", "InstallDir")
+catch  <em>; Not found, so look for it in some other common locations.</em>
 {
     if A_AhkPath
         SplitPath A_AhkPath,, ahk_dir
@@ -74,9 +75,9 @@ Loop Read, ahk_dir "\Extras\Editors\Syntax\Commands.txt"
 
     <em>; Directives have a first space instead of a first comma.</em>
     <em>; So use whichever comes first as the end of the command name:</em>
-    I_cPos := InStr(I_FullCmd, ",")
+    I_cPos := InStr(I_FullCmd, "(")
     I_sPos := InStr(I_FullCmd, "`s")
-    if (!I_cPos or (I_cPos &gt; I_sPos and I_sPos))
+    if (!I_cPos or (I_cPos > I_sPos and I_sPos))
         I_EndPos := I_sPos
     else
         I_EndPos := I_cPos
@@ -100,7 +101,7 @@ Loop Read, ahk_dir "\Extras\Editors\Syntax\Commands.txt"
 Loop
 {
     <em>; Editor window check:</em>
-    if !InStr(WinGetTitle("A"), I_Editor)
+    if !WinActive(I_Editor)
     {
         ToolTip
         Sleep 500
@@ -108,18 +109,19 @@ Loop
     }
     
     <em>; Get all keys till endkey:</em>
-    I_Word := Input("V", "{Enter}{Escape}{Space},")
-    I_EndKey := ErrorLevel
+    I_Hook := I_Input("V", "{Enter}{Escape}{Space},")
+    I_Word := I_Hook.Input
+    I_EndKey := I_Hook.EndKey
     
     <em>; ToolTip is hidden in these cases:</em>
-    if I_EndKey = "EndKey:Enter" or I_EndKey = "EndKey:Escape"
+    if I_EndKey = "Enter" or I_EndKey = "Escape"
     {
         ToolTip
         Continue
     }
 
     <em>; Editor window check again!</em>
-    if !InStr(WinGetTitle("A"), I_Editor)
+    if !WinActive(I_Editor)
     {
         ToolTip
         Continue
@@ -160,10 +162,23 @@ Loop
     
     <em>; Show matched command to guide the user:</em>
     I_ThisFullCmd := I_FullCmd%I_Index%
-    CaretGetPos CaretX, CaretY
-    ToolTip I_ThisFullCmd, CaretX, CaretY + 20
+    CaretGetPos I_CaretX, I_CaretY
+    ToolTip I_ThisFullCmd, I_CaretX, I_CaretY + 20
 }
 
+
+
+<em>; This script was originally written for AutoHotkey v1.
+; I_Input() is a rough reproduction of the Input command.</em>
+I_Input(Options:="", EndKeys:="", MatchList:="") {
+    static ih
+    if IsSet(ih) && ih.InProgress
+        ih.Stop()
+    ih := InputHook(Options, EndKeys, MatchList)
+    ih.Start()
+    ih.Wait()
+    return ih
+}
 
 
 I_HelpHotkey:

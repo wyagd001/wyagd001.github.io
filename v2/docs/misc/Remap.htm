@@ -89,10 +89,10 @@ b::a</pre>
 <p>您可以通过将这些示例复制到一个新的文本文件(如 "Remap") 中来尝试其中任何一个示例, 然后启动文件.</p>
 <p>有关键和鼠标按钮名称的完整列表, 请参阅<a href="../KeyList.htm">按键列表</a>.</p>
 <h2 id="remarks">备注</h2>
-<p><a href="../commands/_If.htm">#If</a> 指令可用于仅在指定的窗口(或者当满足任何给定条件时) 激活选定的重映射. 例如:</p>
-<pre>#If WinActive("ahk_class Notepad")
+<p><a href="../commands/_HotIf.htm">#HotIf</a> 指令可用于仅在指定的窗口(或者当满足任何给定条件时) 激活选定的重映射. 例如:</p>
+<pre>#HotIf WinActive("ahk_class Notepad")
 a::b  <em>; 使 'a' 键发送 'b' 键, 但仅在记事本中有效.</em>
-#If  <em>; 这里让后续的重映射和热键对所有窗口生效.</em></pre>
+#HotIf  <em>; 这里让后续的重映射和热键对所有窗口生效.</em></pre>
 <p>重映射按键或按钮在以下方面是 "完全的":</p>
 <ul>
   <li>按住修饰符(例如 <kbd>Ctrl</kbd> 或 <kbd>Shift</kbd>) 时按下原始键, 会让那个修饰符对目标键生效. 例如, <code>b::a</code> 会在您按下 <kbd>Ctrl</kbd>+<kbd>B</kbd> 时产生 <kbd>Ctrl</kbd>+<kbd>A</kbd> 的效果.</li>
@@ -103,37 +103,39 @@ a::b  <em>; 使 'a' 键发送 'b' 键, 但仅在记事本中有效.</em>
 <p id="HookHotkeys">尽管被重映射的按键可以触发普通热键, 但默认情况下它不能触发鼠标热键或<a href="../commands/_UseHook.htm">钩子热键</a>(请使用 <a href="../commands/ListHotkeys.htm">ListHotkeys</a> 来找出哪些热键使用了"钩子"). 例如, 如果重映射 <code>a::b</code> 有效, 那么按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd> 会触发 <code>^!b</code> 热键, 但仅在 <code>^!b</code> 不是钩子热键的时候. 如果 <code>^!b</code> 是钩子热键, 而且您希望使用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd> 来执行和 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>B</kbd> 相同的动作, 那么您可以把 <code>^!a</code> 定义为热键. 例如:</p>
 <pre>a::b
 ^!a::
-^!b::
-ToolTip "You pressed " A_ThisHotkey
-return</pre>
+^!b::ToolTip "You pressed " A_ThisHotkey
+</pre>
 <p>或者, 使用 <a href="../commands/_InputLevel.htm">#InputLevel</a> 来覆盖此默认行为. 例如:</p>
 <pre>#InputLevel 1
 a::b
 
 #InputLevel 0
-^!b::
-ToolTip "You pressed " A_ThisHotkey
-return</pre>
+^!b::ToolTip "You pressed " A_ThisHotkey
+</pre>
 <p id="SendPlay">如果在自动运行段(脚本的顶部) 使用了 <a href="../commands/SendMode.htm">SendMode</a>, 那么它会影响所有的重映射. 但是, 由于重映射使用 <a href="../commands/Send.htm#blind">Send "{Blind}"</a> 而 <a href="../commands/SendMode.htm">SendPlay 模式</a>不完全支持 {Blind}, 所以一些映射在 SendPlay 模式中可能无法正常运行(尤其是 <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd> 和 <kbd>Win</kbd>). 要解决此问题, 当您脚本中含有重映射时请避免在自动执行段中使用 SendPlay; 而仅在整个脚本需要的地方使用 <a href="../commands/Send.htm#SendPlay">SendPlay</a> 函数而不是 Send. 或者, 您可以把您的重映射转换为热键(如下所述), 这样就显式调用 SendEvent 而不是 Send.</p>
+<p id="EscapeBrace">If <code>DestinationKey</code> is meant to be <kbd>{</kbd>, it has to be <a href="EscapeChar.htm">escaped</a>, for example, <code>x::`{</code>. Otherwise it is interpreted as the opening brace for the <a href="../Hotkeys.htm">hotkey</a>'s function.</p>
 <p id="actually">加载脚本时, 每个重映射会被转换为一对<a href="../Hotkeys.htm">热键</a>. 例如, 包含重映射 <code>a::b</code> 的脚本实际包含下面的两个热键:</p>
 <pre>*<strong>a</strong>::
-SetKeyDelay -1   <em>; 如果目标键是鼠标按钮, 则使用 SetMouseDelay 代替.</em>
-Send "<a href="../commands/Send.htm#blind">{Blind}</a>{<strong>b</strong> DownR}"  <em>; <a href="../commands/Send.htm#DownR">DownR</a> 和 Down 相似, 不过使用 DownTemp 时脚本中后面的其他 Send 命令则不会假定 "b" 仍然处于按下的状态.</em>
-return
+{
+    SetKeyDelay -1   <em>; 如果目标键是鼠标按钮, 则使用 SetMouseDelay 代替.</em>
+    Send "<a href="../commands/Send.htm#blind">{Blind}</a>{<strong>b</strong> DownR}"  <em>; <a href="../commands/Send.htm#DownR">DownR</a> 和 Down 相似, 不过使用 DownTemp 时脚本中后面的其他 Send 命令则不会假定 "b" 仍然处于按下的状态.</em>
+}
 
 *<strong>a up</strong>::
-SetKeyDelay -1  <em>; 请参阅下面的注意事项来了解在这段代码中两处 SetKeyDelay 都没有指定按键时长的原因.</em>
-Send "{Blind}{<strong>b</strong> Up}"
-return</pre>
+{
+    SetKeyDelay -1  <em>; 请参阅下面的注意事项来了解在这段代码中两处 SetKeyDelay 都没有指定按键时长的原因.</em>
+    Send "{Blind}{<strong>b</strong> Up}"
+}</pre>
 <p>但是, 上面的两个热键在下列环境中会发生变化:</p>
 <ol>
   <li>当源按键为左 <kbd>Ctrl</kbd> 键而目标键为 <kbd>Alt</kbd> 键, 会把 <code>Send "{Blind}{LAlt DownR}"</code> 这行语句替换为 <code>Send "{Blind}<strong>{LCtrl up}</strong>{LAlt DownR}"</code>. 如果源按键为右 <kbd>Ctrl</kbd> 键也会如此, 除非使用了 <code>{RCtrl up}</code>.</li>
   <li>当键盘按键被重映射为鼠标按钮时(例如 <code>RCtrl::RButton</code>), 在上面的热键中会使用 SetMouseDelay 代替 SetKeyDelay. 而且, 上面的首个热键会被替换为下面的热键, 这样避免了由于键盘的自动重复功能生成的重复的鼠标点击:
     <pre>*RCtrl::
-SetMouseDelay -1
-if not GetKeyState(&quot;RButton&quot;)  <em>; 即鼠标右键还没有按下.</em>
-    Send "{Blind}{RButton DownR}"
-return</pre>
+{
+    SetMouseDelay -1
+    if not GetKeyState(&quot;RButton&quot;)  <em>; 即鼠标右键还没有按下.</em>
+        Send "{Blind}{RButton DownR}"
+}</pre>
   </li>
   <li>当源按键为<a href="../Hotkeys.htm#combo">自定义组合键</a>时, 通配符修饰符(*) 被省略以允许热键工作.</li>
 </ol>
@@ -158,16 +160,18 @@ Hotkey "*a up", "Off"</pre>
 *#Right::MouseMove 10, 0, 0, "R"  <em>; Win+RightArrow =&gt; 右移光标</em>
 
 *&lt;#RCtrl::  <em>; 左 Win + 右 Control =&gt; Left-click(按住 Control/Shift 来进行 Control-Click 或 Shift-Click).</em>
-SendEvent "{Blind}{LButton down}"
-KeyWait "RCtrl"  <em>; 防止键盘自动重复导致的重复鼠标点击.</em>
-SendEvent "{Blind}{LButton up}"
-return
+{
+    SendEvent "{Blind}{LButton down}"
+    KeyWait "RCtrl"  <em>; 防止键盘自动重复导致的重复鼠标点击.</em>
+    SendEvent "{Blind}{LButton up}"
+}
 
 *&lt;#AppsKey::  <em>; 左 Win + AppsKey =&gt; Right-click</em>
-SendEvent "{Blind}{RButton down}"
-KeyWait "AppsKey"  <em>; 防止键盘自动重复导致重复的鼠标点击.</em>
-SendEvent "{Blind}{RButton up}"
-return</pre>
+{
+    SendEvent "{Blind}{RButton down}"
+    KeyWait "AppsKey"  <em>; 防止键盘自动重复导致重复的鼠标点击.</em>
+    SendEvent "{Blind}{RButton up}"
+}</pre>
 <h2 id="registry">使用注册表的"扫描码映射"功能进行重映射</h2>
 <p><strong>优点:</strong></p>
 <ul>

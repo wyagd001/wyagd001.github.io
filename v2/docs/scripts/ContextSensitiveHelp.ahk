@@ -1,5 +1,5 @@
 ﻿; Context Sensitive Help in Any Editor -- by Rajat
-; http://www.autohotkey.com
+; https://www.autohotkey.com
 ; This script makes Ctrl+2 (or another hotkey of your choice) show the help file
 ; page for the selected AutoHotkey function or keyword. If nothing is selected,
 ; the function name will be extracted from the beginning of the current line.
@@ -16,8 +16,8 @@ $^2::
 SetWinDelay 10
 SetKeyDelay 0
 
-C_ClipboardPrev := Clipboard
-Clipboard := ""
+C_ClipboardPrev := A_Clipboard
+A_Clipboard := ""
 ; Use the highlighted word if there is one (since sometimes the user might
 ; intentionally highlight something that isn't a function):
 Send "^c"
@@ -27,12 +27,12 @@ if !ClipWait(0.1)
     Send "{home}+{end}^c"
     if !ClipWait(0.2)  ; Rare, so no error is reported.
     {
-        Clipboard := C_ClipboardPrev
+        A_Clipboard := C_ClipboardPrev
         return
     }
 }
-C_Cmd := Trim(Clipboard)  ; This will trim leading and trailing tabs & spaces.
-Clipboard := C_ClipboardPrev  ; Restore the original clipboard for the user.
+C_Cmd := Trim(A_Clipboard)  ; This will trim leading and trailing tabs & spaces.
+A_Clipboard := C_ClipboardPrev  ; Restore the original clipboard for the user.
 Loop Parse, C_Cmd, "`s"  ; The first space is the end of the function.
 {
     C_Cmd := A_LoopField
@@ -41,8 +41,9 @@ Loop Parse, C_Cmd, "`s"  ; The first space is the end of the function.
 if !WinExist("AutoHotkey Help")
 {
     ; Determine AutoHotkey's location:
-    ahk_dir := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\AutoHotkey", "InstallDir")
-    if ErrorLevel  ; Not found, so look for it in some other common locations.
+    try
+        ahk_dir := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\AutoHotkey", "InstallDir")
+    catch  ; Not found, so look for it in some other common locations.
     {
         if A_AhkPath
             SplitPath A_AhkPath,, ahk_dir

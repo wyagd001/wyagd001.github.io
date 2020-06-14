@@ -48,6 +48,7 @@ tocData = [
   ]],
   ["环境变量","",
   [
+    ["Clipboard","misc/Clipboard.htm"],
     ["ClipboardAll","commands/ClipboardAll.htm"],
     ["ClipWait","commands/ClipWait.htm"],
     ["EnvGet","commands/EnvGet.htm"],
@@ -61,13 +62,13 @@ tocData = [
     ["缓冲对象","objects/Buffer.htm"],
     ["BufferAlloc","commands/BufferAlloc.htm"],
     ["CallbackCreate","commands/CallbackCreate.htm"],
-    ["ComCall","commands/ComCall.htm"],
     ["DllCall","commands/DllCall.htm"],
     ["NumGet","commands/NumGet.htm"],
     ["NumPut","commands/NumPut.htm"],
     ["StrGet","commands/StrGet.htm"],
+    ["StrPtr","commands/StrPtr.htm"],
     ["StrPut","commands/StrPut.htm"],
-    ["VarSetCapacity","commands/VarSetCapacity.htm"],
+    ["VarSetStrCapacity","commands/VarSetStrCapacity.htm"],
     ["COM","",
     [
       ["ComObjActive","commands/ComObjActive.htm"],
@@ -77,7 +78,6 @@ tocData = [
       ["ComObjCreate","commands/ComObjCreate.htm"],
       ["ComObjGet","commands/ComObjGet.htm"],
       ["ComObject","commands/ComObject.htm"],
-      ["ComObjError","commands/ComObjError.htm"],
       ["ComObjFlags","commands/ComObjFlags.htm"],
       ["ComObjQuery","commands/ComObjQuery.htm"],
       ["ComObjType","commands/ComObjType.htm"],
@@ -221,11 +221,11 @@ tocData = [
   [
     ["热键和热字串","Hotkeys.htm",
     [
+      ["#HotIf","commands/_HotIf.htm"],
+      ["#HotIfTimeout","commands/_HotIfTimeout.htm"],
       ["#HotkeyInterval","commands/_HotkeyInterval.htm"],
       ["#HotkeyModifierTimeout","commands/_HotkeyModifierTimeout.htm"],
       ["#Hotstring","commands/_Hotstring.htm"],
-      ["#If","commands/_If.htm"],
-      ["#IfTimeOut","commands/_IfTimeout.htm"],
       ["#InputLevel","commands/_InputLevel.htm"],
       ["#MaxHotkeysPerInterval","commands/_MaxHotkeysPerInterval.htm"],
       ["#MaxThreads","commands/_MaxThreads.htm"],
@@ -256,7 +256,6 @@ tocData = [
     ["List of Keys","KeyList.htm"],
     ["KeyHistory","commands/KeyHistory.htm"],
     ["KeyWait","commands/KeyWait.htm"],
-    ["Input","commands/Input.htm"],
     ["InputHook","commands/InputHook.htm"],
     ["MouseClick","commands/MouseClick.htm"],
     ["MouseClickDrag","commands/MouseClickDrag.htm"],
@@ -289,8 +288,7 @@ tocData = [
     ["IsSet","commands/IsSet.htm"],
     ["ListLines","commands/ListLines.htm"],
     ["ListVars","commands/ListVars.htm"],
-    ["OutputDebug","commands/OutputDebug.htm"],
-    ["VarSetCapacity","commands/VarSetCapacity.htm"]
+    ["OutputDebug","commands/OutputDebug.htm"]
   ]],
   ["对象类型","",
   [
@@ -370,7 +368,8 @@ tocData = [
     ["StrReplace","commands/StrReplace.htm"],
     ["StrSplit","commands/StrSplit.htm"],
     ["SubStr","commands/SubStr.htm"],
-    ["Trim","commands/Trim.htm"]
+    ["Trim","commands/Trim.htm"],
+    ["VarSetStrCapacity","commands/VarSetStrCapacity.htm"]
   ]],
   ["窗口","commands/Win.htm",
   [
@@ -482,11 +481,11 @@ tocData = [
     ["#ClipboardTimeout","commands/_ClipboardTimeout.htm"],
     ["#DllLoad","commands/_DllLoad.htm"],
     ["#ErrorStdOut","commands/_ErrorStdOut.htm"],
+    ["#HotIf","commands/_HotIf.htm"],
+    ["#HotIfTimeout","commands/_HotIfTimeout.htm"],
     ["#HotkeyInterval","commands/_HotkeyInterval.htm"],
     ["#HotkeyModifierTimeout","commands/_HotkeyModifierTimeout.htm"],
     ["#Hotstring","commands/_Hotstring.htm"],
-    ["#If","commands/_If.htm"],
-    ["#IfTimeout","commands/_IfTimeout.htm"],
     ["#Include[Again]","commands/_Include.htm"],
     ["#InputLevel","commands/_InputLevel.htm"],
     ["#InstallKeybdHook","commands/_InstallKeybdHook.htm"],

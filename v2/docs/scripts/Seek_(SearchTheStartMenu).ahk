@@ -1,6 +1,6 @@
 ﻿/*
 Seek (based on the v1 script by Phi)
-http://www.autohotkey.com
+https://www.autohotkey.com
 Navigating the Start Menu can be a hassle, especially if you have installed
 many programs over time. 'Seek' lets you specify a case-insensitive key
 word/phrase that it will use to filter only the matching programs and

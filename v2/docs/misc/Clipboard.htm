@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Clipboard - 定义 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="Clipboard is a built-in variable that reflects the current contents of the Windows clipboard." />
+<meta name="description" content="A_Clipboard is a built-in variable that reflects the current contents of the Windows clipboard." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,22 +13,22 @@
 
 <h1>Clipboard</h1>
 
-<p><em>Clipboard</em> 是一个<a href="../Concepts.htm#built-in-variables">内置变量</a>, 它包含当前 Windows 剪贴板中可以用文本形式表示的内容.</p>
+<p><em>A_Clipboard</em> 是一个<a href="../Concepts.htm#built-in-variables">内置变量</a>, 它包含当前 Windows 剪贴板中可以用文本形式表示的内容.</p>
 
-<p id="CopiedFiles"><em>Clipboard</em> 中的每行文本通常都是以回车和换行符(CR+LF) 结尾, 它们在脚本中表示为 <code>`r`n</code>. 文件(例如从资源管理器窗口中使用 <kbd>Control</kbd>+<kbd>C</kbd> 复制的文件) 被视为文本: 每当在脚本中引用 <em>Clipboard</em> 时, 它们会被自动转换为它们的文件名(完整路径). 要逐个提取这些文件, 请参照此例:</p>
-<pre><a href="../commands/LoopParse.htm">Loop Parse</a>, Clipboard, "`n", "`r"
+<p id="CopiedFiles"><em>A_Clipboard</em> 中的每行文本通常都是以回车和换行符(CR+LF) 结尾, 它们在脚本中表示为 <code>`r`n</code>. 文件(例如从资源管理器窗口中使用 <kbd>Control</kbd>+<kbd>C</kbd> 复制的文件) 被视为文本: 每当在脚本中引用 <em>A_Clipboard</em> 时, 它们会被自动转换为它们的文件名(完整路径). 要逐个提取这些文件, 请参照此例:</p>
+<pre><a href="../commands/LoopParse.htm">Loop Parse</a> A_Clipboard, "`n", "`r"
 {
     Result := MsgBox("File number " A_Index " is " A_LoopField ".`n`nContinue?",, 4)
     if Result = "No"
         break
 }</pre>
-<p>要按字母顺序排列文件名, 请使用 <a href="../commands/Sort.htm">Sort</a> 函数. 要把剪贴板中的文件名写入到文件中, 请使用 <code><a href="../commands/FileAppend.htm">FileAppend</a> Clipboard "`r`n", "C:\My File.txt"</code>. 要改变脚本持续尝试打开剪贴板的时间 -- 例如另一个程序在使用剪贴板的时候 -- 请使用 <a href="../commands/_ClipboardTimeout.htm">#ClipboardTimeout</a>.</p>
+<p>要按字母顺序排列文件名, 请使用 <a href="../commands/Sort.htm">Sort</a> 函数. 要把剪贴板中的文件名写入到文件中, 请使用 <code><a href="../commands/FileAppend.htm">FileAppend</a> A_Clipboard "`r`n", "C:\My File.txt"</code>. 要改变脚本持续尝试打开剪贴板的时间 -- 例如另一个程序在使用剪贴板的时候 -- 请使用 <a href="../commands/_ClipboardTimeout.htm">#ClipboardTimeout</a>.</p>
 
 <p><a href="../commands/ClipWait.htm">ClipWait</a> 可用于检测剪贴板何时包含数据(可选包括非文本数据):</p>
-<pre>Clipboard := ""  <em>; 先让剪贴板为空, 这样可以使用 ClipWait 检测文本什么时候被复制到剪贴板中.</em>
+<pre>A_Clipboard := ""  <em>; 先让剪贴板为空, 这样可以使用 ClipWait 检测文本什么时候被复制到剪贴板中.</em>
 Send "^c"
 <a href="../commands/ClipWait.htm">ClipWait</a>  <em>; 等待剪贴板中出现文本.</em>
-MsgBox "Control-C copied the following contents to the clipboard:`n`n" Clipboard</pre>
+MsgBox "Control-C copied the following contents to the clipboard:`n`n" A_Clipboard</pre>
 
 
 <h2>相关</h2>
@@ -40,11 +40,11 @@ MsgBox "Control-C copied the following contents to the clipboard:`n`n" Clipboard
 <h2>示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
-<pre>Clipboard := "my text"   <em>; 给定剪贴板全新的内容.</em>
-Clipboard := ""  <em>; 剪贴板置空.</em>
-Clipboard := Clipboard   <em>; 把任何复制的文件, HTML 或其他格式的文本转换为纯文本.</em>
-Clipboard := Clipboard " Text to append."   <em>; 追加一些文本到剪贴板.</em>
-Clipboard := StrReplace(Clipboard, "ABC", "DEF")   <em>; 把剪贴板中所有 ABC 替换为 DEF(同时把剪贴板的内容转换为纯文本).</em></pre>
+<pre>A_Clipboard := "my text"   <em>; 给定剪贴板全新的内容.</em>
+A_Clipboard := ""  <em>; 剪贴板置空.</em>
+A_Clipboard := A_Clipboard   <em>; 把任何复制的文件, HTML 或其他格式的文本转换为纯文本.</em>
+A_Clipboard .= " Text to append."   <em>; 追加一些文本到剪贴板.</em>
+A_Clipboard := StrReplace(A_Clipboard, "ABC", "DEF")   <em>; 把剪贴板中所有 ABC 替换为 DEF(同时把剪贴板的内容转换为纯文本).</em></pre>
 </div>
 
 <p><strong>使用 AutoHotkey v1 编写的剪贴板实用工具:</strong></p>
