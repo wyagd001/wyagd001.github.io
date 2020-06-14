@@ -45,8 +45,7 @@
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为由于错误而无法复制的文件数, 否则为 0.</p>
-<p>在任何一种情况下, 如果源文件为单个文件(没有通配符) 且此文件不存在, 则 ErrorLevel 设置为 0. 要判断这种情况, 请在复制前对源文件使用 <a href="FileExist.htm">FileExist</a>.</p>
+<p>An exception is thrown if any files failed to be copied, and <a href="Throw.htm#Exception">Exception.Extra</a> is set to the number of failures. 但是, 如果源文件为单个文件(没有通配符) 且此文件不存在, 则不会抛出异常. 要判断这种情况, 请在复制前对源文件使用 <a href="FileExist.htm">FileExist</a>.</p>
 <p>与 <a href="FileMove.htm">FileMove</a> 不同, 即使在覆盖模式生效的情况下, 复制一个文件来覆盖它自己始终被视为错误.</p>
 <p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0(零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError  包含了没有找到文件原因的错误码.</p>
 
@@ -73,16 +72,23 @@ CopyFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite := false)
 <em>; 复制匹配 SourcePattern 的所有文件和文件夹到 DestinationFolder 文件夹中且
 ; 返回无法复制的文件/文件夹的数目.</em>
 {
+    ErrorCount := 0
     <em>; 首先复制所有文件(不是文件夹):</em>
-    FileCopy SourcePattern, DestinationFolder, DoOverwrite
-    ErrorCount := ErrorLevel
+    try
+        FileCopy SourcePattern, DestinationFolder, DoOverwrite
+    catch Err
+        ErrorCount := Err.Extra
     <em>; 现在复制所有文件夹:</em>
     Loop Files, SourcePattern, "D"  <em>; D 表示 &quot;只检索文件夹&quot;.</em>
     {
-        DirCopy A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
-        ErrorCount += ErrorLevel
-        if ErrorLevel  <em>; 报告每个出现问题的文件夹名称.</em>
+        try
+            DirCopy A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
+        catch
+        {
+            ErrorCount += 1
+            <em>; 报告每个出现问题的文件夹名称.</em>
             MsgBox "Could not copy " A_LoopFilePath " into " DestinationFolder
+        }
     }
     return ErrorCount
 }</pre>

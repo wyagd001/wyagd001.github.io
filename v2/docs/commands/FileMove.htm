@@ -45,7 +45,7 @@
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为由于错误而无法移动的文件数, 否则为 0. 但是, 如果源文件为单个文件(没有通配符) 且此文件不存在, 则 ErrorLevel 被置为 0. 要判断这种情况, 请在移动前对源文件使用 <a href="FileExist.htm">FileExist()</a>.</p>
+<p>An exception is thrown if any files failed to be moved, and <a href="Throw.htm#Exception">Exception.Extra</a> is set to the number of failures. 但是, 如果源文件为单个文件(没有通配符) 且此文件不存在, 则不会抛出异常. 要判断这种情况, 请在移动前对源文件使用 <a href="FileExist.htm">FileExist()</a>.</p>
 <p>与 <a href="FileCopy.htm">FileCopy</a> 不同, 移动一个文件来覆盖它自己总被认为是成功的, 即使在覆盖模式没有生效的情况下.</p>
 <p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0(零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
 
@@ -73,18 +73,25 @@ MoveFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite := false)
 <em>; 移动匹配 SourcePattern 的所有文件和文件夹到 DestinationFolder 文件夹中且
 ; 返回无法移动的文件/文件夹的数目.</em>
 {
+    ErrorCount := 0
     if DoOverwrite = 1
         DoOverwrite := 2  <em>; 请参阅 <a href="DirMove.htm">DirMove</a> 了解模式 2 与模式 1 的区别.</em>
     <em>; 首先移动所有文件(不是文件夹):</em>
-    FileMove SourcePattern, DestinationFolder, DoOverwrite
-    ErrorCount := ErrorLevel
+    try
+        FileMove SourcePattern, DestinationFolder, DoOverwrite
+    catch Err
+        ErrorCount := Err.Extra
     <em>; 现在移动所有文件夹:</em>
     Loop Files, SourcePattern, "D"  <em>; D 表示 "只获取文件夹".</em>
     {
-        DirMove A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
-        ErrorCount += ErrorLevel
-        if ErrorLevel  <em>; 报告每个出现问题的文件夹名称.</em>
+        try
+            DirMove A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
+        catch
+        {
+            ErrorCount += 1
+            <em>; 报告每个出现问题的文件夹名称.</em>
             MsgBox "Could not move " A_LoopFilePath " into " DestinationFolder
+        }
     }
     return ErrorCount
 }</pre>

@@ -22,13 +22,13 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
     <p>产生事件的对象.</p>
-    <p>如果对象不支持 IConnectionPointContainer 接口, 或无法获取对象类的类型信息, 将显示一条错误信息. 可通过 <a href="ComObjError.htm">ComObjError</a> 或 <a href="Try.htm">try</a>/<a href="Catch.htm">catch</a> 禁止或处理此错误信息.</p>
+    <p>如果对象不支持 IConnectionPointContainer 接口, 或无法获取对象类的类型信息, 将显示一条错误信息. 可通过 <a href="Try.htm">try</a>/<a href="Catch.htm">catch</a> 禁止或处理此错误信息.</p>
     <p>如果对象支持, 使用 IProvideClassInfo 接口以接收此对象类的类型信息. 否则, ComObjConnect 尝试通过对象的 IDispatch 接口以接收类型信息, 这可能不可靠.</p>
   </dd>
 
   <dt>Prefix</dt>
   <dd>
-      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Objects.htm">对象</a></p>
       <p>当事件发生时, 用于确定调用哪个函数的前缀字符串.</p>
       <p>如果省略, 则对象为 "disconnected"; 即脚本将不再接收其事件通知.</p>
       <p>此参数可以为脚本定义的对象. 事件发生时, 会调用相应的方法. 首个参数, 通常为隐式传递的参数 <code>this</code>, 其引用脚本定义的对象, 而非 COM 对象. 要捕获所有事件, 而又不想为每个事件定义方法, 可定义 <a href="../Objects.htm#Meta_Functions">__Call 元函数</a>.</p>
@@ -44,17 +44,17 @@
     return <i>ReturnValue</i>
 }</pre>
 <p><i>Prefix</i> 为用户定义的前缀, 而 <b>EventName</b> 是函数应该处理的任何事件的名称.</p>
-<p><i>Params</i> 对应于事件拥有的任何参数. 如果事件没有参数, 则应该完全忽略 <i>Params</i>. <i>ComObject</i> 是可选的, 并且只能在定义正确数量的 <i>Params</i> 时使用; 它包含对传递给 ComObjConnect 的原始包装器对象的引用. &quot;ComObject&quot; 应该替换为在您的脚本上下文中更有意义的名称.</p>
+<p><i>Params</i> 对应于事件拥有的任何参数. 如果事件没有参数, 则应该完全忽略 <i>Params</i>. <i>ComObject</i> 是一个额外的参数, 它包含对传递给 ComObjConnect 的原始封装对象的引用, 它从未被包含在 COM 事件的文档中. &quot;ComObject&quot; 应该替换为在您的脚本上下文中更有意义的名称.</p>
 <p>注意, 事件处理程序可能有返回值. 要返回特定的 COM 类型的值, 使用 <a href="ComObject.htm">ComObject(type, value)</a>. 例如, <code>return ComObject(0,0)</code> 返回一个 VT_EMPTY 类型的变体, 相当于从一个 JavaScript 函数返回 <code>undefined</code>(或没有返回).</p>
 <p>调用 <code>ComObjConnect(yourObject, "<i>Prefix</i>")</code> 来启用事件处理.</p>
 <p>调用 <code>ComObjConnect(yourObject)</code> 来断开对象(停止处理事件).</p>
 <p>如果参数的数目未知, 可以使用<a href="../Functions.htm#Variadic">可变参数函数</a>.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>失败时, 函数可能会抛出异常, 退出脚本或返回空字符串, 具体取决于当前的 <a href="ComObjError.htm">ComObjError</a> 设置和<a href="ComObjError.htm#factors">其他因素</a>.</p>
+<p>失败时抛出异常.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="http://msdn.microsoft.com/en-us/library/ccxe1xe6.aspx">WScript.ConnectObject (MSDN)</a></p>
+<p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="http://msdn.microsoft.com/en-us/library/ccxe1xe6.aspx">WScript.ConnectObject (MSDN)</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExIE">

@@ -54,17 +54,16 @@ if (ih.Input = CtrlC)
   <dd>
     <p>以逗号分隔的关键词列表, 其中任何一个都将导致终止输入(在这种情况下, EndReason 将被设置为单词 Match). 用户输入的内容必须完全匹配匹配列表中的某个词组(除非有 <a href="#asterisk">* 选项</a>). 此外, <strong>分隔符逗号周围的任何空格或制表符都是有意义的</strong>, 这意味着它们是匹配字符串的一部分. 例如, 如果 <em>MatchList</em> 为 <code>ABC , XYZ</code>, 则用户必须在 ABC 之后或 XYZ 之前键入空格以形成匹配.</p>
     <p>两个连续的逗号产生单个原义逗号. 例如, 后面的匹配列表会在 string1 的末尾产生单个原义逗号: <code>string1,,,string2</code>. 类似的, 后面的匹配列表仅包含其中有一个原义逗号的单个项目: <code>single,,item</code>.</p>
-    <p>因为 <em>MatchList</em> 中的项目不被视为单独的参数, 所以列表可以完全包含在一个变量中. 事实上, 如果此列表的长度超过 16383, 那么列表的全部或部分必须包含在变量中, 因为这个长度是任何脚本行的最大长度. 例如, <em>MatchList</em> 可能由 <code>%List1%,%List2%,%List3%</code> 组成 -- 其中每个变量都包含匹配词组的子列表.</p>
+    <p>因为 <em>MatchList</em> 中的项目不被视为单独的参数, 所以列表可以完全包含在一个变量中. 事实上, 如果此列表的长度超过 16383, 那么列表的全部或部分必须包含在变量中, 因为这个长度是任何脚本行的最大长度. 例如, <em>MatchList</em> 可能由 <code>List1 "," List2 "," List3</code> 组成 -- 其中每个变量都包含匹配词组的子列表.</p>
   </dd>
 
 </dl>
 
 <h2 id="stack">Input 堆栈</h2>
 <p>任何数量的 InputHook 对象都可以在任何时候创建和进行, 但是它们启动的顺序会影响 Input 的收集方式.</p>
-<p>当每个 Input 开始时(通过 <a href="#Start">Start</a> 方法或 <a href="Input.htm">Input</a> 函数), 它被推到堆栈的顶部, 只有当 Input 终止时才从堆栈中删除. 键盘事件按最近开始到最早的顺序传递给每个输入. 如果一个输入抑制了一个给定的键盘事件, 那么它就不会再向下传递.</p>
+<p>当每个 Input 开始时(通过 <a href="#Start">Start</a> 方法), 它被推到堆栈的顶部, 只有当 Input 终止时才从堆栈中删除. 键盘事件按最近开始到最早的顺序传递给每个输入. 如果一个输入抑制了一个给定的键盘事件, 那么它就不会再向下传递.</p>
 <p>如果击键的<a href="SendLevel.htm">发送级别</a>低于 InputHook 的 <a href="#MinSendLevel">MinSendLevel</a>, 则忽略 <a href="Send.htm">Sent</a> 的击键. 在这种情况下, 击键仍然可以由堆栈中较低的输入来处理.</p>
 <p>多个 InputHook 都可以与 <a href="#MinSendLevel">MinSendLevel</a> 一起使用, 以分别收集发送的击键和实际击键.</p>
-<p>调用 <a href="Input.htm">Input</a> 函数将终止任何由先前的 Input 函数启动的输入, 但保留任何活动的 InputHook. 如果输入 <a href="Input.htm#vis">visible(不可见)</a>, 它中断的任何 InputHook 通常不会收集任何输入, 直到 Input 函数返回.</p>
 
 <h2 id="object">InputHook 对象</h2>
 <p>InputHook 函数返回一个 InputHook 对象, 该对象具有以下方法和属性.</p>
@@ -350,11 +349,10 @@ if (ih.Input = CtrlC)
 <p>如果您使用多种语言或键盘布局, 则 Input 会使用活动窗口的键盘布局而不是脚本的(不论 Input 是否<a href="#vis">可见</a>).</p>
 <p>尽管不够灵活, 但<a href="../Hotstrings.htm">热字串</a>更容易使用.</p>
 
-<h2 id="comparison">InputHook vs. Input</h2>
-<p>InputHook 和 <a href="Input.htm">Input</a> 函数是用于相同底层功能的两个不同接口. 以下内容大致相同:</p>
+<h2 id="comparison">InputHook vs. Input (v1)</h2>
+<p>在 AutoHotkey v1.1 中, InputHook 是 Input 命令的替代品, 提供了更大的灵活性. 在 2.0 版本中删除了 Input 命令, 但下面的代码基本相同:</p>
 <pre>
-OutputVar := Input(Options, EndKeys, MatchList)
-</pre><pre>
+<em>; Input OutputVar, % Options, % EndKeys, % MatchList  ; v1</em>
 ih := InputHook(Options, EndKeys, MatchList)
 ih.Start()
 ErrorLevel := ih.Wait()
@@ -362,29 +360,29 @@ if (ErrorLevel = "EndKey")
     ErrorLevel .= ":" ih.EndKey
 OutputVar := ih.Input
 </pre>
-<p>Input 函数终止任何先前由它启动的 Input, 而 InputHook 允许同时<a href="#stack">多个 Input</a>.</p>
+<p>Input 命令终止任何先前由它启动的 Input, 而 InputHook 允许同时<a href="#stack">多个 Input</a>.</p>
 <p><em>Options</em> 解释相同, 但默认设置不同:</p>
 <ul>
-  <li>Input 函数将输入的长度限制为 16383, 而 InputHook 将其限制为 1023. 这可以使用 <a href="#option-l">L 选项</a>来改写, 并且没有绝对最大值.</li>
-  <li>默认情况下, Input 函数会阻止文本和非文本击键, 如果使用 <a href="Input.htm#vis">V 选项</a>, 则不会阻止. 相比之下, InputHook 默认只阻止文本击键(<a href="#VisibleNonText">VisibleNonText</a> 默认为 true), 因此大多数热键可以在输入正在进行时使用.</li>
+  <li>Input 命令将输入的长度限制为 16383, 而 InputHook 将其限制为 1023. 这可以使用 <a href="#option-l">L 选项</a>来改写, 并且没有绝对最大值.</li>
+  <li>默认情况下, Input 命令会阻止文本和非文本击键, 如果使用 <a href="Input.htm#vis">V 选项</a>, 则不会阻止. 相比之下, InputHook 默认只阻止文本击键(<a href="#VisibleNonText">VisibleNonText</a> 默认为 true), 因此大多数热键可以在输入正在进行时使用.</li>
 </ul>
-<p>Input 函数在进行时会阻塞<a href="../misc/Threads.htm">线程</a>, 而 InputHook 允许线程继续, 甚至退出(这允许中断的任何线程继续运行). 脚本可以注册一个 <a href="#OnEnd">OnEnd</a> 函数, 当输入终止时调用该函数, 而不是等待.</p>
-<p>Input 函数只在输入终止后返回用户的输入, 
+<p>Input 命令在进行时会阻塞<a href="../misc/Threads.htm">线程</a>, 而 InputHook 允许线程继续, 甚至退出(这允许中断的任何线程继续运行). 脚本可以注册一个 <a href="#OnEnd">OnEnd</a> 函数, 当输入终止时调用该函数, 而不是等待.</p>
+<p>Input 命令只在输入终止后返回用户的输入, 
 而 InputHook 的 <a href="Input.htm">Input</a> 属性允许在任何时候检索它. 脚本可以注册一个 <a href="#OnChar">OnChar</a> 函数, 以便在字符增加时调用, 而不是不断地检查 Input 属性.</p>
 <p>InputHook 通过 <a href="#KeyOpt">KeyOpt</a> 方法对单个按键提供了更多控制.  这包括添加或删除结束键, 抑制或不抑制特定键, 或忽略特定键生成的文本.</p>
-<p>与 Input 函数不同, InputHook 可用于检测不产生文本的键, 而 <em>不</em> 终止输入. 这是通过注册 <a href="#OnKeyDown">OnKeyDown</a> 函数和使用 <a href="#KeyOpt">KeyOpt</a> 或 <a href="#NotifyNonText">NotifyNonText</a> 来指定相关键来完成的.</p>
+<p>与 Input 命令不同, InputHook 可用于检测不产生文本的键, 而 <em>不</em> 终止输入. 这是通过注册 <a href="#OnKeyDown">OnKeyDown</a> 函数和使用 <a href="#KeyOpt">KeyOpt</a> 或 <a href="#NotifyNonText">NotifyNonText</a> 来指定相关键来完成的.</p>
 <p>如果 <em>MatchList</em> 中的项目导致 Input 终止, 可以参考 <a href="#Match">Match</a> 属性来确定到底是哪个匹配(当 <a href="#asterisk">* 选项</a>存在时这更有用).</p>
 <p>尽管脚本可以在 Input 函数返回后查询 <a href="GetKeyState.htm">GetKeyState</a>, 但有时它无法准确反映输入终止时按下了哪些键. InputHook 的 <a href="#EndMods">EndMods</a> 属性反映了 Input 终止时修饰键的逻辑状态.</p>
 <p>在向后兼容性方面有一些不同之处:</p>
 <ul>
-  <li>Input 函数以大写存储结束键 <kbd>A</kbd>-<kbd>Z</kbd>, 即使某些键盘布局中的一些字母是小写的. 将值传递给 <a href="Send.htm">Send</a> 会产生 Shift 的击键, 而不是普通的击键. 相比之下, InputHook 的 <a href="#EndKeys">EndKeys</a> 属性始终返回规范化的名称; 即按下该键而不按住 <kbd>Shift</kbd> 或其他修饰键时产生的字符.</li>
-  <li><p>如果 <em>EndKeys</em> 中使用的键的名称对应于两个物理键共享 VK(如 <kbd>NumpadUp</kbd> 和 <kbd>Up</kbd>), 则 Input 函数通过 VK 处理主键通过 SC处理次要键, 而 InputHook 都通过 SC 来处理. <code>{vkNN}</code> 表示可以通过 VK 来处理按键.</p>
-  <p>当结束键由 VK 处理时, 两个物理键都可以终止输入. 例如, <code>{NumpadUp}</code> 将导致通过按下 <kbd>Up</kbd> 终止 Input 函数, 但是 ErrorLevel 将包含 <code>EndKey:NumpadUp</code>, 因为只考虑 VK.</p>
-  <p>当结束键由 SC 处理时, Input 函数将始终为任何给定 VK 的已知辅助 SC 生成名称, 并始终为任何其他键生成 <code>sc<i>NNN</i></code>. 与之相比, InputHook 产生按键名(如果有).</p></li>
+  <li>Input 命令以大写存储结束键 <kbd>A</kbd>-<kbd>Z</kbd>, 即使某些键盘布局中的一些字母是小写的. 将值传递给 <a href="Send.htm">Send</a> 会产生 Shift 的击键, 而不是普通的击键. 相比之下, InputHook 的 <a href="#EndKeys">EndKeys</a> 属性始终返回规范化的名称; 即按下该键而不按住 <kbd>Shift</kbd> 或其他修饰键时产生的字符.</li>
+  <li><p>如果 <em>EndKeys</em> 中使用的键的名称对应于两个物理键共享 VK(如 <kbd>NumpadUp</kbd> 和 <kbd>Up</kbd>), 则 Input 命令通过 VK 处理主键通过 SC 处理次要键, 而 InputHook 都通过 SC 来处理. <code>{vkNN}</code> 表示可以通过 VK 来处理按键.</p>
+  <p>当结束键由 VK 处理时, 两个物理键都可以终止输入. 例如, <code>{NumpadUp}</code> 将导致通过按下 <kbd>Up</kbd> 终止 Input 命令, 但是 ErrorLevel 将包含 <code>EndKey:NumpadUp</code>, 因为只考虑 VK.</p>
+  <p>当结束键由 SC 处理时, Input 命令将始终为任何给定 VK 的已知辅助 SC 生成名称, 并始终为任何其他键生成 <code>sc<i>NNN</i></code>. 与之相比, InputHook 产生按键名(如果有).</p></li>
 </ul>
 
 <h2 id="Related">相关</h2>
-<p><a href="Input.htm">Input</a>, <a href="KeyWait.htm">KeyWait</a>, <a href="../Hotstrings.htm">Hotstrings</a>, <a href="InputBox.htm">InputBox</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="IfIn.htm">if var in/contains MatchList</a></p>
+<p><a href="KeyWait.htm">KeyWait</a>, <a href="../Hotstrings.htm">Hotstrings</a>, <a href="InputBox.htm">InputBox</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="../misc/Threads.htm">Threads</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExKeyWaitAny">
@@ -400,7 +398,7 @@ KeyWaitAny(Options:="")
     ih := InputHook(Options)
     ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
     ih.Start()
-    ErrorLevel := ih.Wait()  <em>; 将 EndReason 存储在 ErrorLevel 中</em>
+    ih.Wait()
     return ih.EndKey  <em>; 返回按键名称</em>
 }
 </pre>
@@ -417,7 +415,7 @@ KeyWaitCombo(Options:="")
     <em>; Exclude the modifiers</em>
     ih.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-ES")
     ih.Start()
-    ErrorLevel := ih.Wait()  <em>; 将 EndReason 存储在 ErrorLevel 中</em>
+    ih.Wait()
     return ih.EndMods . ih.EndKey  <em>; 返回字符串, 例如 &lt;^&lt;+Esc</em>
 }
 </pre>

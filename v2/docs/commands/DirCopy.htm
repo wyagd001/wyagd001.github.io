@@ -42,8 +42,9 @@
 
 </dl>
 
-<h2>ErrorLevel</h2>
-<p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0. 但是, 如果源目录包含任何由 <em>PageName.htm</em> 的文件和相应的名称为 <em>PageName_files</em> 的目录组成的保存的网页, 那么即使复制成功也可能提示错误.</p>
+<h2 id="Error_Handling">错误处理</h2>
+<p>An exception is thrown if an error occurs.</p>
+<p>但是, 如果源目录包含任何由 <em>PageName.htm</em> 的文件和相应的名称为 <em>PageName_files</em> 的目录组成的保存的网页, 那么即使复制成功也可能抛出异常.</p>
 <h2 id="Remarks">备注</h2>
 <p>如果目标目录的结构不存在, 则可行时会进行创建.</p>
 <p>由于该操作将以递归方式复制文件夹及其所有子文件夹和文件, 因此将文件夹复制到自身内部某个位置的结果是不确定的. 要解决此问题, 请先将其复制到自身外部, 然后使用 <a href="DirMove.htm">DirMove</a> 将其复制移动到所需位置.</p>
@@ -70,8 +71,9 @@ Result := MsgBox("A copy of the folder '" SourceFolder "' will be put into '" Ta
 if Result = "No"
     return
 SplitPath SourceFolder, SourceFolderName  <em>; 仅从它的完整路径中提取文件夹名称.</em>
-DirCopy SourceFolder, TargetFolder "\" SourceFolderName
-if ErrorLevel
+try
+    DirCopy SourceFolder, TargetFolder "\" SourceFolderName
+catch
     MsgBox "The folder could not be copied, perhaps because a folder of that name already exists in '" TargetFolder "'."
 return</pre>
 </div>

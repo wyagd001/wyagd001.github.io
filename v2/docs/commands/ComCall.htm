@@ -170,16 +170,11 @@ class TaskbarList {
 
    <em>; 在新实例上由 TaskbarList.new() 调用.</em>
    __new() {
-       this.ptr := ComObjCreate(TaskbarList.CLSID, TaskbarList.IID)
-       <em>; 如果使用 ComObjError(0), this.ptr 可以为 0.</em>
-       if !this.ptr
-           throw Exception("COM-related error")
+        this.comobj := ComObjCreate(TaskbarList.CLSID, TaskbarList.IID)
+        this.ptr := this.comobj.ptr
        <em>; 通过 ITaskbarList 请求初始化.</em>
        this.HrInit()
    }
-
-   <em>; 删除此对象时释放接口指针.</em>
-   __delete() =&gt; this.ptr &amp;&amp; ObjRelease(this.ptr)
 }
 </pre>
 </div>

@@ -22,7 +22,7 @@
   <dt>Func</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>当未处理的错误发生时调用的函数的名称或<a href="../objects/Functor.htm">函数对象</a>. 该函数将异常对象作为参数, 并可能返回一个非零的整数来阻止默认的错误对话框.</p>
+    <p>当未处理的错误发生时调用的函数的名称或<a href="../objects/Functor.htm">函数对象</a>. 请参阅, 下面的 <em>Callback</em>.</p>
   </dd>
   
   <dt>AddRemove</dt>
@@ -36,10 +36,30 @@
 
 </dl>
 
+<h2>Callback</h2>
+<p>The callback function should accept two parameters:</p>
+<pre class="Syntax"><i>Callback</i>(Thrown, Mode)</pre>
+<dl>
+  <dt>Thrown</dt>
+  <dd><em>Thrown</em> is the thrown value, usually an <a href="Throw.htm#Exception">exception object</a>.</dd>
+  <dt>Mode</dt>
+  <dd>One of the following strings:
+    <ul>
+      <li><code>"Return"</code>: <em>Thrown</em> is a continuable runtime error. The thread continues if the callback returns -1; otherwise the thread exits.</li>
+      <li><code>"Exit"</code>: <em>Thrown</em> is a non-continuable runtime error or a value <a href="Throw.htm">thrown</a> by the script. The thread will exit.</li>
+      <li><code>"ExitApp"</code>: <em>Thrown</em> is a critical runtime error, such as corruption detected by DllCall. The program will exit.</li>
+    </ul>
+  </dd>
+</dl>
+<p>The callback function can return one of the following values (other values are reserved for future use and should be avoided):</p>
+<ul>
+  <li><code>0</code>, <code>""</code> or no <code>return</code>: Allow error handling to proceed as normal.</li>
+  <li><code>1</code>: Suppress the default error dialog and any remaining error callbacks.</li>
+  <li><code>-1</code>: As above, but if <em>Mode</em> is <code>"Return"</code>, execution of the current thread is permitted to continue.</li>
+</ul>
+
 <h2 id="Remarks">备注</h2>
 <p><em>Func</em> 只会被调用来处理通常会导致显示错误消息的错误或异常. 加载时的错误无法调用, 因为在加载脚本完毕之前无法调用 OnError.</p>
-<p>如果任何错误函数返回一个非零整数, 则线程退出. 如果在错误函数中发生错误(或抛出异常), 则会为新错误显示错误消息并退出线程. 否则, 将调用整个错误函数, 显示错误消息并退出该线程.</p>
-<p><em>Func</em> 的第一个参数接收抛出的值或<a href="Throw.htm#Exception">异常</a>对象. 如果是一个对象, 可以修改它来影响默认的错误对话框显示的内容.</p>
 <p><em>Func</em> 在当前<a href="../misc/Threads.htm">线程</a>中被调用, 在线程退出之前(即在调用堆栈展开之前).</p>
 
 <h2 id="Related">相关</h2>
@@ -47,16 +67,85 @@
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
+<p><a href="#ExBasic">#1</a>: Logging errors to a text file instead of displaying them to the user.</p>
 <pre>
 OnError "LogError"
 %cause% := error
 
-LogError(exception) {
+LogError(exception, mode) {
     FileAppend "Error on line " exception.Line ": " exception.Message "`n"
         , "errorlog.txt"
     return true
 }
+</pre>
+</div>
+
+<div class="ex" id="ExAccumulator">
+<p><a href="#ExAccumulator">#2</a>: Use OnError to implement alternative error handling methods. Caveat: OnError is ineffective while <a href="Try.htm">Try</a> is active.</p>
+<pre>
+AccumulateErrors()
+{
+    local ea := ErrorAccumulator.new()
+    ea.Start()
+    return ea
+}
+
+class ErrorAccumulator
+{
+    Errors := []                        <em>; Array for accumulated errors.</em>
+    _cb := Func("AccumulateError").Bind(this.Errors)
+    Start() => OnError(this._cb, -1)    <em>; Register our cb before others.</em>
+    Stop() => OnError(this._cb, 0)      <em>; Unregister our cb.</em>
+    Last => this.Errors[-1]             <em>; Most recent error.</em>
+    Count => this.Errors.Length         <em>; Number of accumulated errors.</em>
+    __item[i] => this.Errors[i]         <em>; Shortcut for indexing.</em>
+    __delete() => this.Stop()           <em>; For tying to function scope.</em>
+}
+
+<em>; This is the OnError callback function. 'errors' is given a value via Bind().</em>
+AccumulateError(errors, e, mode)
+{
+    if mode != "Return" <em>; Not continuable.</em>
+        return
+    if e.What = "" <em>; Expression defect or similar, not a built-in function.</em>
+        return
+    try {
+        <em>; Try to print the error to stdout.</em>
+        FileAppend Format("{1} ({2}) : ({3}) {4}`n", e.File, e.Line, e.What, e.Message), "*"
+        if HasProp(e, "extra")
+            FileAppend "     Specifically: " e.Extra "`n", "*"
+    }
+    errors.Push(e)
+    return -1 <em>; Continue.</em>
+}
+
+RearrangeWindows()
+{
+    <em>; Start accumulating errors in 'err'.</em>
+    local err := AccumulateErrors()
+
+    <em>; Do some things that might fail...</em>
+    MonitorGetWorkArea , left, top, right, bottom
+    width := (right-left)//2, height := bottom-top
+    WinMove left, top, width, height, A_ScriptFullPath
+    WinMove left+width, top, width, height, "AutoHotkey v2 Help"
+
+    <em>; Check if any errors occurred.</em>
+    if err.Count
+        MsgBox err.Count " error(s); last error at line #" err.Last.Line
+    else
+        MsgBox "No errors"
+
+    <em>; Stop is called automatically when the variable goes out of scope,
+    ; since only we have a reference to the object.  This causes OnError
+    ; to be called to unregister the callback.
+    ;err.Stop()</em>
+}
+
+<em>; Call the test function which suppresses and accumulates errors.</em>
+RearrangeWindows()
+<em>; Call another function to show normal error behaviour is restored.</em>
+WinMove 0, 0, width, height, "non-existent window"
 </pre>
 </div>
 
