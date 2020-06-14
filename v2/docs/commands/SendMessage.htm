@@ -30,7 +30,7 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
     <p>The message parameters. If omitted, each parameter defaults to 0.</p>
-    <p>Each parameter must be an <a href="../Concepts.htm#numbers">integer</a> or an object with a <a href="../objects/Buffer.htm#Ptr">Ptr</a> property, such as a <a href="../objects/Buffer.htm">Buffer</a>. For messages which require a pointer to a string, use a Buffer or the <a href="../Variables.htm#amp">address operator</a>. If the string contained by a variable is changed by passing the variable's address to SendMessage, the variable's length must be updated afterward by calling <a href="VarSetCapacity.htm#neg1">VarSetCapacity(MyVar, -1)</a>.</p>
+    <p>Each parameter must be an <a href="../Concepts.htm#numbers">integer</a> or an object with a <a href="../objects/Buffer.htm#Ptr">Ptr</a> property, such as a <a href="../objects/Buffer.htm">Buffer</a>. For messages which require a pointer to a string, use a Buffer or the <a href="StrPtr.htm">StrPtr</a> function. If the string contained by a variable is changed by passing the variable's address to SendMessage, the variable's length must be updated afterward by calling <a href="VarSetStrCapacity.htm#neg1">VarSetStrCapacity(MyVar, -1)</a>.</p>
     <p>If AutoHotkey or the target window is 32-bit, only the parameter's low 32 bits are used; that is, values are truncated if outside the range -2147483648 to 2147483647 (-0x80000000 to 0x7FFFFFFF) for signed values, or 0 to 4294967295 (0xFFFFFFFF) for unsigned values. If AutoHotkey and the target window are both 64-bit, any integer value <a href="../Concepts.htm#pure-numbers">supported by AutoHotkey</a> can be used.</p>
   </dd>
 
@@ -68,29 +68,34 @@
   <dt>Timeout</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The maximum number of milliseconds to wait for the target window to process the message. If omitted, it defaults to 5000 (milliseconds), which is also the default behaviour in older versions of AutoHotkey which did not support this parameter. If the message is not processed within this time, the function finishes and sets ErrorLevel to 1.</p>
+    <p>The maximum number of milliseconds to wait for the target window to process the message. If omitted, it defaults to 5000 (milliseconds). If the message is not processed within this time, an exception is thrown.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>This function returns an empty string if there was a problem or the message timed out. Otherwise, it returns the result of the message, which might sometimes be a &quot;reply&quot; depending on the nature of the message and its target window.</p>
+<p>This function returns the result of the message, which might sometimes be a &quot;reply&quot; depending on the nature of the message and its target window.</p>
 <p>The range of possible values depends on the target window and the version of AutoHotkey that is running.  When using a 32-bit version of AutoHotkey, or if the target window is 32-bit, the result is a 32-bit unsigned integer between 0 and 4294967295. When using the 64-bit version of AutoHotkey with a 64-bit window, the result is a 64-bit signed integer between -9223372036854775808 and 9223372036854775807.</p>
 <p>If the result is intended to be a 32-bit signed integer (a value from -2147483648 to 2147483648), it can be truncated to 32-bit and converted to a signed value as follows:</p>
 <pre>MsgReply := MsgReply &lt;&lt; 32 &gt;&gt; 32</pre>
 <p>This conversion may be necessary even on AutoHotkey 64-bit, because results from 32-bit windows are zero-extended. 例如, a result of -1 from a 32-bit window is seen as 0xFFFFFFFF on any version of AutoHotkey, whereas a result of -1 from a 64-bit window is seen as 0xFFFFFFFF on AutoHotkey 32-bit and -1 on AutoHotkey 64-bit.</p>
 
-<h2>ErrorLevel</h2>
-<p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> is set to 1 if there was a problem such as the target window or control not existing, or if SendMessage timed out. Otherwise, it is set to 0.</p>
+<h2 id="Error_Handling">错误处理</h2>
+<p>An exception is thrown in the following cases:</p>
+<ul>
+  <li>The target window or control could not be found.</li>
+  <li>The message timed out.</li>
+  <li>The message could not be sent. For example, if the target window is running at a higher integrity level than the script (i.e. it is running as admin while the script is not), messages may be blocked.</li>
+</ul>
 
 <h2 id="Remarks">备注</h2>
 <p>This function should be used with caution because sending a message to the wrong window (or sending an invalid message) might cause unexpected behavior or even crash the target application. This is because most applications are not designed to expect certain types of messages from external sources.</p>
 <p>SendMessage waits for the target window to process the message, up until the timeout period expires. By contrast, <a href="PostMessage.htm">PostMessage</a> places the message in the message queue associated with the target window without waiting for acknowledgement or reply.</p>
-<p>String parameters must be passed by <a href="../Variables.htm#amp">address</a>. 例如:</p>
+<p>String parameters must be passed by <a href="StrPtr.htm">address</a>. For example:</p>
 <pre>Run "Notepad"
 WinWait "Untitled - Notepad"
-SendMessage 0xC, 0, <strong>&amp;&quot;New Notepad Title&quot;</strong>  <em>; 0XC is WM_SETTEXT</em></pre>
+SendMessage 0xC, 0, StrPtr("New Notepad Title")  <em>; 0XC is WM_SETTEXT</em></pre>
 <p>To send a message to all windows in the system, including those that are hidden or disabled, specify <code>ahk_id 0xFFFF</code> for <em>WinTitle</em> (0xFFFF is HWND_BROADCAST). This technique should be used only for messages intended to be broadcast, such as the following example:</p>
 <pre>SendMessage 0x1A,,,, "ahk_id 0xFFFF"  <em>; 0x1A is WM_SETTINGCHANGE</em></pre>
 <p>To have a script receive a message, use <a href="OnMessage.htm">OnMessage</a>.</p>
@@ -105,10 +110,11 @@ SendMessage 0xC, 0, <strong>&amp;&quot;New Notepad Title&quot;</strong>  <em>; 0
 <div class="ex" id="ExMonitorPower">
 <p><a href="#ExMonitorPower">#1</a>: Turns off the monitor via hotkey. In the SendMessage line, replace the number 2 with -1 to turn the monitor on or replace it with 1 to activate the monitor's low-power mode.</p>
 <pre>#o::  <em>; Win+O hotkey</em>
-Sleep 1000  <em>; Give user a chance to release keys (in case their release would wake up the monitor again).
-; Turn Monitor Off:</em>
-SendMessage 0x112, 0xF170, 2,, "Program Manager"  <em>; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.</em>
-return</pre>
+{
+    Sleep 1000  <em>; Give user a chance to release keys (in case their release would wake up the monitor again).
+    ; Turn Monitor Off:</em>
+    SendMessage 0x112, 0xF170, 2,, "Program Manager"  <em>; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.</em>
+}</pre>
 </div>
 
 <div class="ex" id="ExScreenSave">
@@ -130,11 +136,9 @@ return</pre>
 <p><a href="#ExWinamp">#5</a>: This example asks Winamp which track number is currently active. See <a href="../misc/Winamp.htm">Automating Winamp</a> for more information.</p>
 <pre>SetTitleMatchMode 2
 track := SendMessage(1024, 0, 120,, "- Winamp")
-if !ErrorLevel
-{
-    track++  <em>; Winamp's count starts at 0, so adjust by 1.</em>
-    MsgBox "Track #" track " is active or playing."
-}</pre>
+track++  <em>; Winamp's count starts at 0, so adjust by 1.</em>
+MsgBox "Track #" track " is active or playing."
+</pre>
 </div>
 
 <div class="ex" id="ExPID">

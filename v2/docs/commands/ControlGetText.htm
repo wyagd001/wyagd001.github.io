@@ -53,14 +53,15 @@
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>函数返回指定控件的文本. 如果没有匹配的控件, 则返回空字符串, 而 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1.</p>
+<p>函数返回指定控件的文本.</p>
 
-<h2>ErrorLevel</h2>
-<p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0.</p>
+<h2 id="Error_Handling">错误处理</h2>
+<p>失败时抛出异常. or if the window or control could not be found.</p>
+
 <h2 id="Remarks">备注</h2>
 <p class="note"><strong>注意</strong>: 要获取列表视图, 列表框或组合框的文本, 请使用 <a href="ControlGetList.htm">ControlGetList</a>.</p>
-<p>如果获取的文本看起来像被截短了(不完整), 请在 ControlGetText 前尝试使用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(Text, 55)</code>[将 55 替换为比截断的文本大得多的大小]. 因为某些应用程序不能正确响应 WM_GETTEXTLENGTH 消息, 所以这是必要的, 否则会导致 AutoHotkey 把输出变量设的过小以致无法保存所有的文本.</p>
-<p>如果目标控件(例如打开大文档的编辑器) 包含大量文本, 则此函数可能会使用大量 RAM. 但是, 变量的内存在使用后可以通过将其赋值为空来释放, 例如 <code>Text := ""</code>.</p>
+<p>如果获取的文本看起来像被截短了(不完整), it may be necessary to retrieve the text by sending the WM_GETTEXT message via <a href="SendMessage.htm">SendMessage</a> instead. 因为某些应用程序不能正确响应 WM_GETTEXTLENGTH 消息, 所以这是必要的, 否则会导致 AutoHotkey 把输出变量设得过小以致无法保存所有的文本.</p>
+<p>如果目标控件(例如打开大文档的编辑器) 包含大量文本, 则此函数可能会使用大量的 RAM. 但是, 变量的内存在使用后可以通过将其赋值为空来释放, 例如 <code>Text := ""</code>.</p>
 <p>从大多数控件类型检索的文本使用回车和换行符(`r`n) 而不是单独的换行符(`n) 来表示每行的结尾.</p>
 <p>不必执行 <code>SetTitleMatchMode "Slow"</code>, 因为 ControlGetText 始终使用慢速方法检索文本(因为它适用于更广泛的控件类型).</p>
 <p>若要检索窗口中所有控件的列表, 请使用 <a href="WinGetControls.htm">WinGetControls</a> 或 <a href="WinGetControlsHwnd.htm">WinGetControlsHwnd</a>.</p>

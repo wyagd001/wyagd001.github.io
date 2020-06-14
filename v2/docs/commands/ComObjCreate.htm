@@ -27,27 +27,46 @@
   <dt>IID</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>对象支持的接口标识符.</p>
+    <p>要返回的接口的标识符. 在大多数情况下, 它是省略的; 如果省略, 它默认为 <code>"{00020400-0000-0000-C000-000000000046}"</code>(IID_IDispatch).</code></p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
-<p>类型: <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-<p>失败时, 函数可能会抛出异常, 退出脚本或返回空字符串, 具体取决于当前的 <a href="ComObjError.htm">ComObjError</a> 设置和<a href="ComObjError.htm#factors">其他因素</a>.</p>
-<p>如果指定了 IID, 则返回接口指针. 脚本完成指针操作后, 通常必须调用 <a href="ObjAddRef.htm">ObjRelease</a>.</p>
-<p>否则, 返回对脚本可用的新包装对象的<a href="../Concepts.htm#references-to-objects">引用</a>. 请参阅<a href="../Objects.htm#Usage_Objects">对象语法</a>.</p>
+<p>类型: <a href="ComObject.htm#Returns">ComObject</a></p>
+<p>该函数返回一个 COM 包装器对象.</p>
+<p>如果省略了 IID 或标识了 IDispatch 接口, 则包装对象的类型为 VT_DISPATCH(9), 脚本可以使用正常的<a href="../Objects.htm#Usage_Objects">对象语法</a>调用对象的属性和方法. 否则, 包装对象的类型为 VT_UNKNOWN(13)。在这两种情况下, <a href="ComCall.htm">ComCall</a> 都可以用来调用原生接口方法.</p>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>失败时抛出异常, 例如参数无效或对象不支持由 <em>IID</em> 指定的接口.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="ComObject.htm">ComObject</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjArray.htm">ComObjArray</a>, <a href="ComObjError.htm">ComObjError</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/dcw63t7z.aspx">CreateObject (MSDN)</a></p>
+<p><a href="ComObject.htm">ComObject</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjArray.htm">ComObjArray</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="ComCall.htm">ComCall</a>, <a href="http://msdn.microsoft.com/en-us/library/dcw63t7z.aspx">CreateObject (MSDN)</a></p>
 
 <h2 id="Examples">示例</h2>
 <p>有关更多的示例列表, 请参阅后面的的论坛主题: <a href="https://www.autohotkey.com/forum/topic61509.html">https://www.autohotkey.com/forum/topic61509.html</a>.</p>
 <div class="ex" id="ExIE">
 <p><a href="#ExIE">#1</a></p>
-<pre>ie := <b>ComObjCreate</b>("InternetExplorer.Application")
+<pre>ie := ComObjCreate("InternetExplorer.Application")
 ie.Visible := true  <em>; 此语句在 IE7 中无法正常执行.</em>
 ie.Navigate("https://www.autohotkey.com/")
+</pre>
+</div>
+<div class="ex" id="ExWallpaper">
+<p><a href="#ExWallpaper">#2</a>: Retrieve the path of the desktop's current wallpaper.</p>
+<pre>
+AD_GETWP_BMP := 0
+AD_GETWP_LAST_APPLIED := 0x00000002
+CLSID_ActiveDesktop := "{75048700-EF1F-11D0-9888-006097DEACF9}"
+IID_IActiveDesktop := "{F490EB00-1240-11D1-9888-006097DEACF9}"
+cchWallpaper := 260
+GetWallpaper := 4
+
+AD := ComObjCreate(CLSID_ActiveDesktop, IID_IActiveDesktop)
+wszWallpaper := BufferAlloc(cchWallpaper * 2)
+ComCall(GetWallpaper, AD, "ptr", wszWallpaper, "uint", cchWallpaper, "uint", AD_GETWP_LAST_APPLIED)
+Wallpaper := StrGet(wszWallpaper, "UTF-16")
+MsgBox "Wallpaper: " Wallpaper
 </pre>
 </div>
 

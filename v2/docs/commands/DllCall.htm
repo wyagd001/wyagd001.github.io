@@ -48,15 +48,15 @@
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-<p>DllCall 返回 <em>Function</em> 返回的实际值. 如果 <em>Function</em> 的类型不返回值, the result is an undefined value of the specified return type (默认为整数).</p>
+<p>DllCall 返回 <em>Function</em> 返回的实际值. 如果 <em>Function</em> 属于不返回值的类型, 则结果为指定返回类型的未定义值(默认为整数).</p>
 
 <h2 id="types">参数和返回值的类型</h2>
 <table class="info">
 <tr id="str">
 <td>Str</td>
 <td><p>例如 &quot;Blue&quot; 或 MyVar 这样的字符串. 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, <i>MyVar</i>)</code>.</p>
-  <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串. </p>
-  <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 <strong>字节</strong>. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
+  <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串.</p>
+  <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p></p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
   <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量(如果已传递). 它可以用在期望 &quot;TCHAR **&quot; 或 &quot;LPTSTR *&quot; 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
@@ -90,13 +90,11 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 </tr>
 <tr>
   <td>Short</td>
-  <td>16 位整数, 其范围是 -32768(-0x8000) 到 32767(0x7FFF). <a href="#unsigned">无符号</a> Short(UShort) 能用于
-期望 BYTE 的函数中.</td>
+  <td>16 位整数, 其范围是 -32768(-0x8000) 到 32767(0x7FFF). <a href="#unsigned">无符号</a> Short(UShort) 能用于期望 BYTE 的函数中.</td>
 </tr>
 <tr>
   <td>Char</td>
-  <td>8 位整数, 其范围是 -128(-0x80) 到 127(0x7F). <a href="#unsigned">无符号</a> character(UChar) 能用于
-期望 WORD 的函数中.</td>
+  <td>8 位整数, 其范围是 -128(-0x80) 到 127(0x7F). <a href="#unsigned">无符号</a> character(UChar) 能用于期望 WORD 的函数中.</td>
 </tr>
 <tr>
   <td>Float</td>
@@ -121,7 +119,7 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
   <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, 因此每当将裸变量作为参数传递时, 该变量的内容就会被更新. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall(&quot;MyDll\MyFunction&quot;, &quot;Int*&quot;, MyVar)</code>.</p>
     <p>通常, 星号可用于参数类型或返回类型以 &quot;LP&quot; 开头的函数. 最常见的示例是 LPDWORD, 它是指向 DWORD 的指针. 由于 DWORD 是 32 位无符号整数, 因此请使用 &quot;UInt*&quot; 或 &quot;UIntP&quot; 表示 LPDWORD. 星号不能用于字符串类型(如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 应使用 <a href="#str">&quot;Str&quot;</a> 或 &quot;Ptr&quot;, 具体取决于您传递变量还是变量地址.</p>
     <p class="note"><strong>注意</strong>: &quot;Char*&quot; 与 <a href="#str">&quot;Str&quot;</a> 不同, 因为 &quot;Char*&quot; 传递一个 8 位数字的地址, 而 <a href="#str">&quot;Str&quot;</a> 传递一系列字符的地址, 该字符可以是 16 位(Unicode) 或 8 位("AStr"), 具体取决于 AutoHotkey 的版本. 同样, &quot;UInt*&quot; 传递的是 32 位数字的地址, 因此如果函数期望值的数组或大于 32 位的结构, 则不应使用 "UInt*".</p>
-    <p>由于 AutoHotkey 中的变量没有固定类型, 因此传递给函数的地址指向临时内存, 而不是变量本身. 不必在变量上调用 <a href="VarSetCapacity.htm">VarSetCapacity</a>, 因为 DllCall 将在函数返回后正确更新它.</p>
+    <p>由于 AutoHotkey 中的变量没有固定类型, 因此传递给函数的地址指向临时内存, 而不是变量本身. 不必在变量上调用 <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, 因为 DllCall 将在函数返回后正确更新它.</p>
     </td>
 </tr>
 <tr id="unsigned">
@@ -169,20 +167,20 @@ DllCall(&quot;<strong>FreeLibrary</strong>&quot;, &quot;Ptr&quot;, hModule)  <em
 Loop 500
     DllCall(<strong>MulDivProc</strong>, &quot;Int&quot;, 3, &quot;Int&quot;, 4, &quot;Int&quot;, 3)</pre>
 <p>如果 DllCall 的首个参数是原义的字符串如 <code>"MulDiv"</code> 并且包含了函数的 DLL 在脚本开始前已正常装载了, 或者已成功通过 <a href="_DllLoad.htm">#DllLoad</a> 加载, 那么此字符串会自动被解析为函数地址. 这种内置的优化比上面显示的示例更有效.</p>
-<p>最后, 当将字符串变量传递给不会改变字符串长度的函数时, 通过将变量<a href="../Variables.htm#amp">按地址</a>(例如 &amp;MyVar) 而不是 &quot;<a href="#str">str</a>&quot;(特别是当字符串很长时), 可以提高性能. 后面的例子把字符串转换成大写: <code>DllCall(&quot;CharUpper&quot;, &quot;<strong>Ptr</strong>&quot;, <strong>&amp;</strong>MyVar, &quot;Ptr&quot;)</code>.</p>
+<p>最后, 当将字符串变量传递给不会改变字符串长度的函数时, 通过将变量按地址传递(例如 <code>StrPtr(MyVar)</code>), 而不是以 "<a href="#str">str</a>" 的形式传递, 可以提高性能(特别是当字符串很长时). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", "<strong>Ptr</strong>", StrPtr(MyVar), "Ptr")</code>.</p>
 
 <h2 id="struct">结构和数组</h2>
 <p>结构是内存中连续存储的 <em>成员</em>(空间) 的集合. 大多数成员倾向于是整数.</p>
-<p>可以通过将结构的原始二进制数据存储在普通变量中来调用接受结构(或存储块数组) 地址的函数. 通常使用以下步骤:</p>
-<p>1) 调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyStruct, 123, 0)</code> 以确保目标变量足够大以容纳结构的数据. 将 123 替换为至少与结构大小一样大的数字. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步经常调用 NumPut.</p>
-<p>2) 如果目标函数最初使用结构中的值, 请调用 <code><a href="NumPut.htm">NumPut</a>(123, MyStruct, 4, "UInt")</code> 初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>&amp;Var</code> 来存储变量的<a href="../Variables.htm#amp">地址</a>). 将 <code>4</code> 替换为目标成员的偏移量(有关 &quot;offset&quot; 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
-<p>3) 调用目标函数, 将 <em>MyStruct</em> 的 <a href="../Variables.htm#amp">address</a> 作为 Ptr 参数传递. 例如, <code>DllCall(&quot;MyDll\MyFunc&quot;, &quot;Ptr&quot;, <strong>&amp;</strong>MyStruct)</code>. 该功能将检查和/或更改某些成员.</p>
+<p>接受结构(或内存块数组) 地址的函数可以通过某种方式分配内存并将内存地址传递给函数来调用. <a href="BufferAlloc.htm">BufferAlloc</a> 函数和 <a href="../objects/Buffer.htm">Buffer</a>对象被推荐用于此目的. 一般使用以下步骤:</p>
+<p>1) 调用 <code>MyStruct := BufferAlloc(123, 0)</code> 来分配一个缓冲来保存结构体的数据. 将 <code>123</code> 替换为至少与结构大小一样大的数字, 以字节为单位. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步中频繁调用 NumPut.</p>
+<p>2) 如果目标函数使用结构中的初始值, 请调用 <code><a href="NumPut.htm">NumPut</a>("UInt", 123, MyStruct, 4)</code>初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>StrPtr(Var)</code> 来存储字符串的地址). 将 <code>4</code> 替换为目标成员的偏移量(有关 &quot;offset&quot; 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则如 <code>"Ptr"</code>.</p>
+<p>3) 调用目标函数, 将 <em>MyStruct</em> 作为 Ptr 参数传递. 例如, <code>DllCall("MyDll\MyFunc", "Ptr", MyStruct)</code>. 该函数将检查和/或更改一些成员. DllCall 会自动使用缓冲的地址, 通常使用 <code>MyStruct.Ptr</code> 来检索.</p>
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code>从结构中检索任何所需的整数. 将 <code>4</code> 替换为结构中目标构件的偏移量. 第一个成员的偏移量始终为 0. 第二个成员的偏移量为 0 加第一个成员的大小(通常为 4). 第二个成员之后的成员是前一个成员的偏移量加上前一个成员的大小. 大多数成员 -- 如 DWORD, Int 和<a href="#Int">其他类型的 32 位整数</a> -- 的大小为 4 个字节. 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
 <p>有关实际用法, 请参阅 <a href="#ExStruct">Structure 示例</a>.</p>
 
 <h2 id="limits">已知限制</h2>
-<p>当把<a href="../Variables.htm#amp">变量的地址</a>(例如 <code>&amp;MyVar</code>) 传递给函数而此函数修改了变量内容的长度, 那么后面使用这个变量可能出现错误. 要解决此问题, 有下面几种方法: 1) 传递 <em>MyVar</em> 作为 <a href="#str">&quot;Str&quot;</a> 参数而不是 Ptr/地址; 2) 在调用 DllCall 调用 <code><a href="VarSetCapacity.htm#neg1">VarSetCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>
-<p>由函数保存到变量中的任何二进制零会隐藏这个零右边的所有数据; 即大多数内置函数无法访问或修改此类数据. 但是, 这样的数据可以使用<a href="../Variables.htm#amp">地址运算符</a>和 <a href="NumPut.htm">NumPut</a>/<a href="NumGet.htm">NumGet</a>, 以及 DllCall 本身进行操作.</p>
+<p>当一个变量的字符串地址(例如 <code>StrPtr(MyVar)</code>) 被传递给一个函数, 并且该函数改变了变量内容的长度时, 那么后面使用这个变量可能出现错误. 要解决此问题, 有下面几种方法: 1) 将 <em>MyVar</em> 作为 <a href="#str">"Str"</a> 参数传递, 而不是 Ptr/地址; 2) 在调用 DllCall 后, 调用 <code><a href="VarSetStrCapacity.htm#neg1">VarSetStrCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>
+<p>由函数保存到变量中的任何二进制零都可以作为终止符, 防止大多数内置函数访问或更改零右边的所有数据. 但是, 这样的数据可以使用 <a href="StrPtr.htm">StrPtr</a> 检索字符串的地址, 并将其传递给其他函数, 例如 <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a>, <a href="StrGet.htm">StrGet</a>, <a href="StrPut.htm">StrPut</a>, 以及 DllCall 本身进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会在与预期不同的内存地址中返回相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar := "ABC"
 result := DllCall(&quot;CharLower&quot;, &quot;<strong><u>Str</u></strong>&quot;, DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, MyVar, &quot;<strong><u>Str</u></strong>&quot;), &quot;Str&quot;)</pre>
@@ -198,7 +196,7 @@ result := DllCall(&quot;CharLower&quot;, &quot;<strong><u>Str</u></strong>&quot;
 <p>但是, AutoHotkey 可以通过 <a href="https://docs.microsoft.com/en-us/dotnet/standard/native-interop/com-callable-wrapper">COM 可调用包装器</a>来使用 CLR. 除非该库也已注册为通用 COM 组件, 否则必须先通过 DllCall 手动初始化 CLR 本身. 有关详情, 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>(其当前使用的 DllCall 与 AutoHotkey v2 不兼容).</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a>, <a href="../Functions.htm">Functions</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
+<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, <a href="../Functions.htm">Functions</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExMessageBox">
@@ -241,17 +239,27 @@ MsgBox &quot;Elapsed QPC time is &quot; . (CounterAfter - CounterBefore) / freq 
 
 <div class="ex" id="ExMouseSpeed">
 <p><a href="#ExMouseSpeed">#6</a>: 这是个临时减慢鼠标移动速度的热键, 这样有助于准确定位. 按住 <kbd>F1</kbd> 来降低鼠标速度. 释放后则恢复原来的速度.</p>
-<pre>F1::
-SPI_GETMOUSESPEED := 0x70
-SPI_SETMOUSESPEED := 0x71
-<em>; 获取鼠标当前的速度以便稍后恢复:</em>
-DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, SPI_GETMOUSESPEED, &quot;UInt&quot;, 0, &quot;Ptr*&quot;, OrigMouseSpeed := 0, &quot;UInt&quot;, 0)
-<em>; 现在在倒数第二个参数中设置较低的速度 (范围为 1-20, 10 是默认值):</em>
-DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, SPI_SETMOUSESPEED, &quot;UInt&quot;, 0, &quot;Ptr&quot;, <strong>3</strong>, &quot;UInt&quot;, 0)
-KeyWait "F1"  <em>; 这里避免了由于键盘的重复特性导致再次执行 DllCall.</em>
-return
+<pre>
+F1::
+F1 up::
+{
+    static SPI_GETMOUSESPEED := 0x70
+    static SPI_SETMOUSESPEED := 0x71
+    static OrigMouseSpeed := 0
 
-F1 up::DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, SPI_SETMOUSESPEED, &quot;UInt&quot;, 0, &quot;Ptr&quot;, OrigMouseSpeed, &quot;UInt&quot;, 0)  <em>; 恢复原来的速度.</em></pre>
+    switch ThisHotkey
+    {
+    case "F1":
+        <em>; 获取鼠标当前的速度以便稍后恢复:</em>
+        DllCall("SystemParametersInfo", "UInt", SPI_GETMOUSESPEED, "UInt", 0, "Ptr*", OrigMouseSpeed, "UInt", 0)
+        <em>; 现在在倒数第二个参数中设置较低的速度 (范围为 1-20, 10 是默认值):</em>
+        DllCall("SystemParametersInfo", "UInt", SPI_SETMOUSESPEED, "UInt", 0, "Ptr", 3, "UInt", 0)
+        KeyWait "F1"  <em>; 这里避免了由于键盘的重复特性导致再次执行 DllCall.</em>
+
+    case "F1 up":
+        DllCall("SystemParametersInfo", "UInt", SPI_SETMOUSESPEED, "UInt", 0, "Ptr", OrigMouseSpeed, "UInt", 0)  <em>; Restore the original speed.</em>
+    }
+}</pre>
 </div>
 
 <div class="ex" id="ExWatchScrollBar">
@@ -282,8 +290,8 @@ if !hFile
     return
 }
 TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
-StrLen := StrLen(TestString) * (A_IsUnicode ? 2 : 1)
-DllCall(&quot;WriteFile&quot;, &quot;Ptr&quot;, hFile, &quot;Str&quot;, TestString, &quot;UInt&quot;, StrLen, &quot;UIntP&quot;, BytesActuallyWritten, &quot;Ptr&quot;, 0)
+StrSize := StrLen(TestString) * 2
+DllCall("WriteFile", "Ptr", hFile, "Str", TestString, "UInt", StrSize, "UIntP", BytesActuallyWritten, "Ptr", 0)
 DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
@@ -298,7 +306,7 @@ if !hFile
     return
 }
 <em>; 为要读取的字符串分配一块内存:</em>
-Buf := BufferAlloc(StrLen)
+Buf := BufferAlloc(StrSize)
 DllCall(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Ptr&quot;, Buf, &quot;UInt&quot;, Buf.Size, &quot;UIntP&quot;, BytesActuallyRead, &quot;Ptr&quot;, 0)
 DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 MsgBox "The following string was read from the file: " StrGet(Buf)</pre>

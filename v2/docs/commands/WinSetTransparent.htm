@@ -48,12 +48,8 @@
     </dd>
 </dl>
 
-<h2 id="Return_Value">返回值</h2>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-<p>函数返回 1(true) 表示成功, 或 0(false) 表示失败.</p>
-
 <h2 id="Error_Handling">错误处理</h2>
-<p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0. 如果找不到目标窗口或无法应用更改, 则失败.</p>
+<p>如果找不到窗口, 或无法应用更改, 则抛出异常.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>例如, 要使任务栏透明, 请使用 <code>WinSetTransparent 150, "ahk_class Shell_TrayWnd"</code>. 类似地, 要使经典的开始菜单透明, 请参阅<a href="#ExTransStartMenu">示例 #1</a>. 要使开始菜单的子菜单透明, 还需要包含<a href="#ExTransMenu">示例 #2</a> 中的脚本.</p>
@@ -86,24 +82,27 @@ WatchForMenu()
 <div class="ex" id="ExTransHotkey">
 <p><a href="#ExTransHotkey">#3</a>: 这里是一些演示 WinSetTransparent 和 <a href="WinSetTransColor.htm">WinSetTransColor</a> 效果的一些热键. 注意: 如果在鼠标光标悬停在 TransColor 造成的不可见的像素上时按下其中一个热键, 则这个像素下面可见的窗口将会被替代!</p>
 <pre>#t::  <em>; 按下 Win+T 来让鼠标光标下的颜色透明.</em>
-MouseGetPos MouseX, MouseY, MouseWin
-MouseRGB := PixelGetColor(MouseX, MouseY)
-<em>;  似乎有必要首先关闭任何现有的透明度:</em>
-WinSetTransColor "Off", "ahk_id " MouseWin
-WinSetTransColor MouseRGB " 220", "ahk_id " MouseWin
-return
+{
+    MouseGetPos MouseX, MouseY, MouseWin
+    MouseRGB := PixelGetColor(MouseX, MouseY)
+    <em>;  似乎有必要首先关闭任何现有的透明度:</em>
+    WinSetTransColor "Off", "ahk_id " MouseWin
+    WinSetTransColor MouseRGB " 220", "ahk_id " MouseWin
+}
 
 #o::  <em>; 按下 Win+O 来关闭鼠标下窗口的透明度.</em>
-MouseGetPos ,, MouseWin
-WinSetTransColor "Off", "ahk_id " MouseWin
-return
+{
+    MouseGetPos ,, MouseWin
+    WinSetTransColor "Off", "ahk_id " MouseWin
+}
 
 #g::  <em>; 按下 Win+G 来显示鼠标下窗口的当前透明设置.</em>
-MouseGetPos ,, MouseWin
-Transparent := WinGetTransparent("ahk_id " MouseWin)
-TransColor := WinGetTransColor("ahk_id " MouseWin)
-ToolTip "Translucency:`t" Transparent "`nTransColor:`t" TransColor
-return</pre>
+{
+    MouseGetPos ,, MouseWin
+    Transparent := WinGetTransparent("ahk_id " MouseWin)
+    TransColor := WinGetTransColor("ahk_id " MouseWin)
+    ToolTip "Translucency:`t" Transparent "`nTransColor:`t" TransColor
+}</pre>
 </div>
 
 </body>

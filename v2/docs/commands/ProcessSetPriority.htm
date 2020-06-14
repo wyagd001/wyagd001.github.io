@@ -65,21 +65,22 @@ MsgBox "The newly launched Notepad's PID is " NewPID</pre>
 <h3 id="ex2">示例 #2</h3>
 <p><a href="#ExHotkey">#2</a>: 一个改变活动窗口进程优先级的热键:</p>
 <pre>#z:: <em>; Win+Z 热键</em>
-Gui := GuiCreate(, "Set Priority")
-Gui.Add("Text",, "
-(
-    Press Escape to cancel, or double-click a new
-    priority level for the following window:
-)")
-Gui.Add("Text", "wp", WinGetTitle("A"))
-LB := Gui.Add("ListBox", "r5 vLB", "Normal||High|Low|BelowNormal|AboveNormal")
-SetPriority := Func("SetPriority").bind(WinGetPID("A"))
-LB.OnEvent("DoubleClick", SetPriority)
-Gui.Add("Button", "default", "OK").OnEvent("Click", SetPriority)
-Gui.OnEvent("Escape", (*) =&gt; Gui.Destroy())
-Gui.OnEvent("Close", (*) =&gt; Gui.Destroy())
-Gui.Show()
-return
+{
+    Gui := GuiCreate(, "Set Priority")
+    Gui.Add("Text",, "
+    (
+        Press Escape to cancel, or double-click a new
+        priority level for the following window:
+    )")
+    Gui.Add("Text", "wp", WinGetTitle("A"))
+    LB := Gui.Add("ListBox", "r5 vLB", "Normal||High|Low|BelowNormal|AboveNormal")
+    SetPriority := Func("SetPriority").bind(WinGetPID("A"))
+    LB.OnEvent("DoubleClick", SetPriority)
+    Gui.Add("Button", "default", "OK").OnEvent("Click", SetPriority)
+    Gui.OnEvent("Escape", (*) =&gt; Gui.Destroy())
+    Gui.OnEvent("Close", (*) =&gt; Gui.Destroy())
+    Gui.Show()
+}
 
 SetPriority(PID, this, *)
 {

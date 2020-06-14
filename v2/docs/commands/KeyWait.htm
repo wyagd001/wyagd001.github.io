@@ -39,7 +39,7 @@
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-<p>This function returns 0 (false) if the function timed out or 1 (true) otherwise.</p>
+<p>如果该函数超时, 则此函数返回 0(false), 否则返回 1(true).</p>
 
 <h2 id="Remarks">备注</h2>
 <p>The physical state of a key or mouse button will usually be the same as the logical state unless the keyboard and/or mouse hooks are installed, in which case it will accurately reflect whether or not the user is physically holding down the key. You can determine if your script is using the hooks via the <a href="KeyHistory.htm">KeyHistory</a> function or menu item. You can force either or both of the hooks to be installed by adding the <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> and <a href="_InstallMouseHook.htm">#InstallMouseHook</a> directives to the script.</p>
@@ -47,9 +47,9 @@
 <p>To wait for two or more keys to be released, use KeyWait consecutively. 例如:</p>
 <pre>KeyWait "Control"  <em>; Wait for both Control and Alt to be released.</em>
 KeyWait "Alt"</pre>
-<p>To wait for any one key among a set of keys to be pressed down, 请参阅 the examples section of the <a href="Input.htm">Input</a> function.</p>
+<p>To wait for any one key among a set of keys to be pressed down, 请参阅 the examples section of the <a href="InputHook.htm">InputHook</a> function.</p>
 <h2 id="Related">相关</h2>
-<p><a href="GetKeyState.htm">GetKeyState</a>, <a href="../KeyList.htm">Key List</a>, <a href="Input.htm">Input</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a>, <a href="ClipWait.htm">ClipWait</a>, <a href="WinWait.htm">WinWait</a></p>
+<p><a href="GetKeyState.htm">GetKeyState</a>, <a href="../KeyList.htm">Key List</a>, <a href="InputHook.htm">InputHook</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a>, <a href="ClipWait.htm">ClipWait</a>, <a href="WinWait.htm">WinWait</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a>: Basic usage</p>
@@ -62,31 +62,34 @@ KeyWait "LAlt", "L"  <em>; Wait for the left Alt key to be logically released.</
 <div class="ex" id="ExHotkey">
 <p><a href="#ExHotkey">#2</a>: A simple hotkey</p>
 <pre>CapsLock::
-KeyWait "CapsLock"  <em>; Wait for user to physically release it.</em>
-MsgBox "You pressed and released the CapsLock key."
-return</pre>
+{
+    KeyWait "CapsLock"  <em>; Wait for user to physically release it.</em>
+    MsgBox "You pressed and released the CapsLock key."
+}</pre>
 </div>
 
 <div class="ex" id="ExRemap">
 <p><a href="#ExRemap">#3</a>: Remapping a key or mouse button (this is only for illustration because it would be easier to use the <a href="../misc/Remap.htm">built-in remapping feature</a>). The left mouse button is kept held down while NumpadAdd is down, which effectively transforms NumpadAdd into the left mouse button.</p>
 <pre>*NumpadAdd::
-MouseClick "left",,, 1, 0, "D"  <em>; Hold down the left mouse button.</em>
-KeyWait "NumpadAdd"  <em>; Wait for the key to be released.</em>
-MouseClick "left",,, 1, 0, "U"  <em>; Release the mouse button.</em>
-return</pre>
+{
+    MouseClick "left",,, 1, 0, "D"  <em>; Hold down the left mouse button.</em>
+    KeyWait "NumpadAdd"  <em>; Wait for the key to be released.</em>
+    MouseClick "left",,, 1, 0, "U"  <em>; Release the mouse button.</em>
+}</pre>
 </div>
 
 <div class="ex" id="ExDouble">
 <p><a href="#ExDouble">#4</a>: Detects when a key has been double-pressed (similar to double-click). KeyWait is used to stop the keyboard's auto-repeat feature from creating an unwanted double-press when you hold down the RControl key to modify another key. It does this by keeping the hotkey's thread running, which blocks the auto-repeats by relying upon #MaxThreadsPerHotkey being at its default setting of 1. Note: There is a more elaborate script to distinguish between single, double, and triple-presses at the bottom of the <a href="SetTimer.htm">SetTimer</a> page.</p>
 <pre>~RControl::
-if (A_PriorHotkey != &quot;~RControl&quot; or A_TimeSincePriorHotkey &gt; 400)
 {
-    <em>; Too much time between presses, so this isn't a double-press.</em>
-    KeyWait "RControl"
-    return
-}
-MsgBox "You double-pressed the right control key."
-return</pre>
+    if (A_PriorHotkey != &quot;~RControl&quot; or A_TimeSincePriorHotkey &gt; 400)
+    {
+        <em>; Too much time between presses, so this isn't a double-press.</em>
+        KeyWait "RControl"
+        return
+    }
+    MsgBox "You double-pressed the right control key."
+}</pre>
 </div>
 
 </body>

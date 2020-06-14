@@ -33,24 +33,21 @@
     </dd>
 </dl>
 
-<h2 id="Return_Value">返回值</h2>
-<p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-<p>函数返回 1(true) 表示成功, 或者返回 0(false) 表示失败.</p>
-
-<h2>ErrorLevel</h2>
-<p>如果遇到问题, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1, 否则设置为 0. 如果托盘已经处于指定的状态(打开或关闭), <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0.</p>
+<h2 id="Error_Handling">错误处理</h2>
+<p>失败时抛出异常. if detected.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>在允许脚本继续之前, 函数会等待弹出或收回完成.</p>
-<p>函数可能无法在网络驱动器或非-CD/DVD 驱动器上工作. 如果在这种情况下失败, 或者由于其他原因失败, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 1. 要弹出其他类型的媒体或设备, 请参阅页面底部的 <a href="#ExDllCall">DllCall 示例</a>.</p>
+<p>函数可能无法在网络驱动器或非-CD/DVD 驱动器上工作. 如果在这种情况下失败, 或者由于其他原因失败, 抛出异常. 要弹出其他类型的媒体或设备, 请参阅页面底部的 <a href="#ExDllCall">DllCall 示例</a>.</p>
 <p>可以通过测量函数完成所需的时间来判断以前的托盘状态. 例如, 下面的热键将托盘切换到相反的状态(打开或关闭):</p>
 <pre>#c::
-DriveEject()
-<em>; 如果函数快速完成, 则托盘已经处于弹出状态.
-; 在那样的情况下, 收回托盘::</em>
-if (A_TimeSinceThisHotkey &lt; 1000)  <em>; 需要时调整这个时间值.</em>
-    DriveEject(, true)
-return</pre>
+{
+    DriveEject()
+    <em>; 如果函数快速完成, 则托盘已经处于弹出状态.
+    ; 在那样的情况下, 收回托盘::</em>
+    if (A_TimeSinceThisHotkey &lt; 1000)  <em>; 需要时调整这个时间值.</em>
+        DriveEject(, true)
+}</pre>
 
 <h2 id="Related">相关</h2>
 <p><a href="DriveGetStatusCD.htm">DriveGetStatusCD</a>, <a href="Drive.htm">驱动器函数</a></p>

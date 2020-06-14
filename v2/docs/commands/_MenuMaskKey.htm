@@ -30,7 +30,8 @@
 <h2 id="Remarks">备注</h2>
 <p>掩饰键会自动发送, 以防止开始菜单或活动窗口的菜单栏在未预期的时间激活.</p>
 <p>默认的掩饰键为 <kbd>Ctrl</kbd>. 此指令可用于将掩饰键更改为具有较少副作用的键.</p>
-<p>好的候选者是通常不会有效果的虚拟按键代码, 例如 vk07, 微软的文档是 "未定义的", 或 vkFF, 它被保留为 "没有映射"(一个没有功能的键). 某些值, 如 0 VK 和非 0 SC, 可能无法抑制开始菜单. 按键码不需要匹配按键的存在.</p>
+<p>好的候选者是通常不会有效果的虚拟按键代码, 例如 vkE8, 微软的文档是 "未定义的", 或 vkFF, 它被保留为 "没有映射"(一个没有功能的键). 某些值, 如 0 VK 和非 0 SC, 可能无法抑制开始菜单. 按键码不需要匹配按键的存在.</p>
+<p class="note"><strong>注意</strong>: Microsoft can assign an effect to an unassigned key code at any time. For example, vk07 was once undefined and safe to use, but since Windows 10 1909 it is reserved for opening the game bar.</p>
 <p>指定 <code>vk00sc000</code> 将禁用所有自动掩饰.</p>
 <p>这个设置是全局的, 这意味着只需要指定一次(在脚本的任何位置) 就可以影响整个脚本的行为.</p>
 <p><strong>Hotkeys:</strong> 如果是使用键盘钩子或鼠标钩子实现的热键, 则最终的按键可能对活动窗口和系统是不可见的. 如果系统 <em>仅</em> 检测到 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 按下和松开, 而期间没有其他键按下, 通常会激活一个菜单. 为防止这种情况发生, 键盘或鼠标钩子可能会自动发送掩饰键.</p>
@@ -46,7 +47,7 @@
 <p>如果没有安装键盘钩子, 鼠标热键会立即发送掩饰键.</p>
 <p>带有<a href="../Hotkeys.htm#Tilde">颚化符修饰键</a>的热键并不会阻止按键的原有功能, 因此不会引发掩饰键. 像 <code>~#a::</code> 这样的热键仍然屏蔽开始菜单, 因为系统检测到 <kbd>Win</kbd> 键已经与另一个键组合使用. 但是, 鼠标热键和 <kbd>Win</kbd> 键本身(<code>~LWin::</code> 和 <code>~RWin::</code>) 不会屏蔽开始菜单.</p>
 <p>开始菜单(或活动窗口的菜单栏) 可以通过发送任何按键来屏蔽. 以下示例禁用左 <kbd>Win</kbd> 键激活开始菜单的功能, 同时仍允许将其用于修饰键:</p>
-<pre>~LWin::Send "{Blind}{vk07}"</pre>
+<pre>~LWin::Send "{Blind}{vkE8}"</pre>
 <p><strong>Send:</strong> <a href="Send.htm">Send</a>, <a href="ControlSend.htm">ControlSend</a> 和相关的经常释放修饰键作为其正常操作的一部分. 例如, 热键 <code>&lt;#a::SendText Address</code> 通常必须在发送 <em>Address</em> 的内容之前释放左 <kbd>Win</kbd> 键, 之后再按下左 <kbd>Win</kbd> 键(以便其他 <kbd>Win</kbd> 键组合继续工作). 在这种情况下, 可以发送掩码键, 以防止 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 松开后激活菜单.</p>
 
 <h2 id="Related">相关</h2>
@@ -54,16 +55,23 @@
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>#MenuMaskKey vk07  <em>; vk07 is unassigned.</em>
+<p><a href="#ExBasic">#1</a>: Basic usage</p>
+<pre>#MenuMaskKey vkE8  <em>; Change the masking key to something unassigned such as vkE8.</em>
+#Space::Run A_ScriptDir  <em>; An additional Ctrl keystroke is not triggered.</em></pre>
+</div>
+
+<div class="ex" id="ExAdvanced">
+<p><a href="#ExAdvanced">#2</a>: Shows in detail how this directive causes vkFF to be sent instead of LControl.</p>
+<pre>#MenuMaskKey vkFF  <em>; vkFF is no mapping.</em>
 #UseHook
 #Space::
 !Space::
+{
     KeyWait "LWin"
     KeyWait "RWin"
     KeyWait "Alt"
     KeyHistory
-return</pre>
+}</pre>
 </div>
 
 </body>

@@ -66,7 +66,7 @@
       <li>如果省略或为空, 则该函数以主音量/静音控制或由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/mmdeviceapi/nf-mmdeviceapi-immdevice-activate">IMMDevice::Activate</a> 返回的接口为目标.</li>
     </ul>
     <p>如果只指定索引, 则忽略显示名称. 例如, <code>1</code>, <code>"1"</code> 和 <code>":1"</code> 使用第一个组件, 而不管名称如何, 而 <code>""</code> 使用主控制.</p>
-    <p>如果声音设备缺少指定的 <em>Component</em>, 则 ErrorLevel 将指示问题.</p>
+    <p>如果声音设备缺少指定的 <em>Component</em>, 则抛出异常.</p>
   </dd>
 
   <dt id="device">Device</dt>
@@ -94,38 +94,46 @@ scLV := scGui.Add('ListView', "w600 h400"
 
 devMap := Map()
 
-<em>; 对于每个可用的声音设备, 首先查询其名称.
-; 还可以通过检查 ErrorLevel 来允许空白名称.</em>
-while (devName := SoundGetName(, dev := A_Index)) || !ErrorLevel
+loop
 {
+    <em>; For each loop iteration, try to get the corresponding device.</em>
+    try
+        devName := SoundGetName(, dev := A_Index)
+    catch  <em>; No more devices.</em>
+        break
+
     <em>; 如果需要, 使用 ":index" 来限定名称.</em>
     devName := Qualify(devName, devMap, dev)
 
     <em>; 如有可能, 获取主音量和静音设置.</em>
-    vol := SoundGetVolume( , dev)
-    if !ErrorLevel
-        vol := Round(vol, 2)
-    mute := SoundGetMute( , dev)
+    vol := mute := ""
+    try vol := Round(SoundGetVolume( , dev), 2)
+    try mute := SoundGetMute( , dev)
+
     <em>; 仅在至少检索到一项时显示主设置.</em>
     if vol != "" || mute != ""
         scLV.Add("", "", dev, devName, vol, mute)
 
     <em>; 对于每个组件, 首先查询其名称.</em>
     cmpMap := Map()
-    while (cmpName := SoundGetName(cmp := A_Index, dev)) || !ErrorLevel
+
+    loop
     {
+        try
+            cmpName := SoundGetName(cmp := A_Index, dev)
+        catch
+            break
         <em>; 如有可能, 检索该组件的音量和静音设置.</em>
-        vol := SoundGetVolume(cmp, dev)
-        if !ErrorLevel
-            vol := Round(vol, 2)
-        mute := SoundGetMute(cmp, dev)
+        vol := mute := ""
+        try vol := Round(SoundGetVolume(cmp, dev), 2)
+        try mute := SoundGetMute(cmp, dev)
         <em>; 显示此组件, 即使它不支持音量或静音,
         ; 因为它可能通过 SoundGetInterface() 支持其他控制.</em>
         scLV.Add("", Qualify(cmpName, cmpMap, A_Index), dev, devName, vol, mute)
     }
 }
 
-Loop 5
+loop 5
     scLV.ModifyCol(A_Index, 'AutoHdr Logical')
 scGui.Show()
 
@@ -136,7 +144,7 @@ Qualify(name, names, overallIndex)
         return overallIndex
     key := StrLower(name)
     index := names.Has(key) ? ++names[key] : (names[key] := 1)
-    return (index > 1 || InStr(name, ':') || name is 'integer') ? name ':' index : name
+    return (index &gt; 1 || InStr(name, ':') || name is 'integer') ? name ':' index : name
 }</pre>
 </div>
 
