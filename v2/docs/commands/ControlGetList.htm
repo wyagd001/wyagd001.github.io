@@ -65,11 +65,10 @@
 <p>此函数从 ListView, ListBox, ComboBox 或 DropDownList 返回项目/行的列表. 对于 ListView, 在每一行中, 除最后一个字段外的每个字段(列) 都将以制表符(`t) 结尾. 若要分别访问项目/行, 请使用 <a href="LoopParse.htm">parsing loop</a>, 如<a href="#ExListView">示例 #1</a> 和<a href="#ExComboBox">示例 #2</a> 所示.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>成功时, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0. 失败时, 设置为 1 且返回值为空. 在以下情况下会失败: 1) 目标窗口或控件不存在; 2) 目标 ListView 的类型不是 SysListView32; 3) 拥有 ListView 的进程无法打开, 这可能是由于缺少用户权限或因为它已被锁定; 4) <a href="#ColN">Col<em>N</em> 选项</a>指定不存在的列.</p>
-<p>如果检测到无效参数, 则抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
+<p>失败时抛出异常. 在以下情况下会失败: 1) 目标窗口或控件不存在; 2) 目标 ListView 的类型不是 SysListView32; 3) 拥有 ListView 的进程无法打开, 这可能是由于缺少用户权限或因为它已被锁定; 4) <a href="#ColN">Col<em>N</em> 选项</a>指定不存在的列.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>一些应用程序将其 ListView 文本单独存储, 从而防止检索它们的文本. 在这些情况下, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 通常设置为 0(表示成功), 但是所有检索到的字段都是空的.</p>
+<p>一些应用程序将其 ListView 文本单独存储, 从而防止检索它们的文本. 在这些情况下, 通常不会抛出异常, 但是所有检索到的字段都是空的.</p>
 <p>ListView 中的列可以通过 <a href="SendMessage.htm">SendMessage</a> 调整大小, 如下例所示:</p>
 <pre>SendMessage(4126, 0, 80, "SysListView321", WinTitle)  <em>; 4126 是 LVM_SETCOLUMNWIDTH 消息.</em></pre>
 <p>在上面, 0 表示第一列(第二列指定 1, 2 为第三列, 依此类推). 此外, 80 是新宽度. 用 -1 替换 80 以自动调整列大小. 将其替换为 -2 即可执行相同操作, 但还要考虑标题文本的宽度.</p>
