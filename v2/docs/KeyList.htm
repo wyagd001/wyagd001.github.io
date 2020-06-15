@@ -90,7 +90,7 @@
   <tr>
     <td style="width:12em">CapsLock</td>
     <td><kbd>CapsLock</kbd>(大小写锁定键)
-      <p class="warning"><strong>Note:</strong> Windows IME may interfere with the detection and functionality of CapsLock; see <a href="#IME">CapsLock and IME</a> for details.</p>
+      <p class="warning"><strong>注意:</strong> Windows IME 可能会干扰 CapsLock 的检测和功能; 有关详情, 请参阅 <a href="#IME">CapsLock 和 IME</a>.</p>
     </td>
   </tr>
   <tr>
@@ -429,7 +429,7 @@
   <li>要把此键定义为热键, 请参照此例:
 <pre>
 <strong>SC159::</strong>MsgBox ThisHotkey " was pressed." <em>; 替换 159 为您的按键的值.</em>
-</pre>Also see <a href="Hotkeys.htm#HotBraces">ThisHotkey</a>.</li>
+</pre>另请参阅 <a href="Hotkeys.htm#HotBraces">ThisHotkey</a>.</li>
 </ol>
 <p><strong>反向</strong>: 要把其他键重映射 <em>为</em> "神秘按键", 请参照此例:</p>
 <pre><em>; 把 159 替换为上面找到的值. 把 FF(如果需要) 替换为
@@ -449,10 +449,10 @@
   </li>
 </ol>
 
-<h2 id="IME">CapsLock and IME</h2>
-<p>Some configurations of Windows IME (such as Japanese input with English keyboard) use CapsLock to toggle between modes. In such cases, CapsLock is suppressed by the IME and cannot be detected by AutoHotkey. However, the <kbd>Alt</kbd>+<kbd>CapsLock</kbd>, <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd> and <kbd>Shift</kbd>+<kbd>CapsLock</kbd> shortcuts can be disabled with a workaround. Specifically, send a key-up to modify the state of the IME, but prevent any other effects by signalling the keyboard hook to suppress the event. The following function can be used for this purpose:</p>
+<h2 id="IME">CapsLock 和 IME</h2>
+<p>Windows IME 的某些配置(如 日文输入与英文键盘) 使用 CapsLock 来切换模式. 在这种情况下, CapsLock 被 IME 压制, 并且无法被 AutoHotkey 检测到. 不过 <kbd>Alt</kbd>+<kbd>CapsLock</kbd>, <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd> 和 <kbd>Shift</kbd>+<kbd>CapsLock</kbd> 等快捷键可以通过变通的方法禁用. 具体来说, 发送松开按键来修改 IME 的状态, 但通过给键盘钩子发送信号来抑制该事件, 从而防止任何其他影响. 可以使用以下函数来实现这一目的:</p>
 <pre filename="SendSuppressedKeyUp.ahk">
-<em>; Requires AutoHotkey v1.1.26+, and the keyboard hook must be installed.</em>
+<em>; 必须安装键盘钩子.</em>
 #InstallKeybdHook
 SendSuppressedKeyUp(key) {
     DllCall("keybd_event"
@@ -462,15 +462,15 @@ SendSuppressedKeyUp(key) {
         , "uptr", KEY_BLOCK_THIS := 0xFFC3D450)
 }
 </pre>
-<p>After copying the function into a script or saving it as <em>SendSuppressedKeyUp.ahk</em> in a <a href="Functions.htm#lib">function library</a>, it can be used as follows:</p>
+<p>将函数复制到脚本中或保存为 <em>SendSuppressedKeyUp.ahk</em> 放入<a href="Functions.htm#lib">函数库</a>, 可以按照以下方式使用该函数:</p>
 <pre>
-<em>; Disable Alt+key shortcuts for the IME.</em>
+<em>; 禁止 IME 的 Alt+key 快捷键.</em>
 ~LAlt::SendSuppressedKeyUp("LAlt")
 
-<em>; Test hotkey:</em>
+<em>; 测试热键:</em>
 !CapsLock::MsgBox % A_ThisHotkey
 
-<em>; Remap CapsLock to LCtrl in a way compatible with IME.</em>
+<em>; 重映射 CapsLock 为 LCtrl 以与 IME 兼容的方式.</em>
 *CapsLock::
     Send {Blind}{LCtrl DownR}
     SendSuppressedKeyUp("LCtrl")

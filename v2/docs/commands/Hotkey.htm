@@ -37,8 +37,8 @@
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
       <p>当按下热键时, 要执行的子程序(作为一个新的<a href="../misc/Threads.htm">线程</a>). 它可以是函数名称, <a href="../objects/Functor.htm">函数对象</a>, 或不带冒号的<a href="../Hotkeys.htm">热键</a>名称.</p>
-      <p>If <em>Callback</em> is a function, it is called with one parameter, the <a href="../Hotkeys.htm#HotBraces">name</a> of the hotkey. Hotkeys defined with <a href="../Hotkeys.htm">double-colons</a> automatically use the parameter name <code>ThisHotkey</code>. Hotkeys can also be <a href="../Hotkeys.htm#Function">assigned a function name</a> without the Hotkey function.</p>
-      <p>If <em>Callback</em> is a hotkey name, its original function is used; specifically, the original function of the hotkey variant corresponding to the current <a href="HotIf.htm">HotIf</a> criteria. This is usually used to restore a hotkey's original function after having changed it, but can be used to assign the function of a different hotkey, provided that both hotkeys use the same HotIf criteria.</p>
+      <p>如果 <em>Callback</em> 是一个函数, 那么它的调用只有一个参数, 即热键的<a href="../Hotkeys.htm#HotBraces">名称</a>. 用<a href="../Hotkeys.htm">双冒号</a>定义的热键自动使用参数名 <code>ThisHotkey</code>. 热键也可以不使用热键函数而<a href="../Hotkeys.htm#Function">指定一个函数名</a>.</p>
+      <p>如果 <em>Callback</em> 是热键名称, 则使用其原始函数; 具体来说, 就是对应当前 <a href="HotIf.htm">HotIf</a> 条件的热键变体的原始函数. 这通常用于恢复热键改变后的原始函数, 但也可以用于分配不同热键的函数, 前提是两个热键使用相同的 HotIf 条件.</p>
       <p>如果 <em>KeyName</em> 已经作为热键, 那么参数可以为空, 这种情况下回调不会被改变. 这在仅需要改变热键 <em>Options</em> 时很有用.</p>
       <p class="note"><strong>注意</strong>: 如果指定了函数, 但热键之前已经使用此命令禁用了, 那么热键会保持禁用状态. 要启用它, 请在 <em>Options</em> 中包含单词 ON.</p>
       <p>此参数还可以是下列特定值的其中一个:</p>
@@ -65,7 +65,7 @@
 
 <h2 id="Error_Handling">错误处理</h2>
 <p>如果参数无效或内存分配失败, 则抛出异常.</p>
-<p>One of the following exceptions may be thrown if the hotkey is invalid or could not be created:</p>
+<p>如果热键无效或无法创建, 则会抛出以下异常:</p>
 <table class="info">
   <tr>
     <th style="white-space: nowrap">错误</th>
@@ -73,24 +73,24 @@
   </tr>
   <tr>
     <td>"Invalid key name."</td>
-    <td>The <em>KeyName</em> parameter specifies one or more keys that are either not recognized or not supported by the current keyboard layout/language. <a href="Throw.htm#Exception">Exception.Extra</a> contains the key name; e.g. "Entre" from <code>!Entre</code>.</td>
+    <td><em>KeyName</em> 参数指定一个或多个当前键盘布局/语言不识别或不支持的键. <a href="Throw.htm#Exception">Exception.Extra</a> 包含键名; 例如 <code>!Entre</code> 中的 "Entre".</td>
   </tr>
   <tr>
     <td>"Unsupported prefix key."</td>
-    <td>For example, using the mouse wheel as a prefix in a hotkey such as <code>WheelDown &amp; Enter</code> is not supported. <a href="Throw.htm#Exception">Exception.Extra</a> contains the prefix key.</td>
+    <td>例如, 不支持将鼠标滚轮作为热键 <code>WheelDown &amp; Enter</code> 的前缀. <a href="Throw.htm#Exception">Exception.Extra</a> 包含前缀键.</td>
   </tr>
   <tr>
     <td>"This AltTab hotkey must have exactly one modifier/prefix."<br>
     "This AltTab hotkey must specify which key (L or R)."</td>
-    <td>The <em>KeyName</em> parameter is not suitable for use with the <a href="../Hotkeys.htm#alttab">AltTab or ShiftAltTab</a> actions. A combination of two keys is required. For example: <code>RControl &amp; RShift::AltTab</code>. <a href="Throw.htm#Exception">Exception.Extra</a> contains <em>KeyName</em>.</td>
+    <td>The <em>KeyName</em> 参数不适合与 <a href="../Hotkeys.htm#alttab">AltTab or ShiftAltTab</a> 动作一起使用. 需要两个键的组合. 例如: <code>RControl &amp; RShift::AltTab</code>. <a href="Throw.htm#Exception">Exception.Extra</a> 包含 <em>KeyName</em>.</td>
   </tr>
   <tr>
     <td>"Nonexistent hotkey."</td>
-    <td>The function attempted to modify a nonexistent hotkey. <a href="Throw.htm#Exception">Exception.Extra</a> contains <em>KeyName</em>.</td>
+    <td>该函数试图修改一个不存在的热键. <a href="Throw.htm#Exception">Exception.Extra</a> 包含 <em>KeyName</em>.</td>
   </tr>
   <tr>
     <td>"Nonexistent hotkey variant (IfWin)."</td>
-    <td>The function attempted to modify a nonexistent <a href="#variant">variant</a> of an existing hotkey. To solve this, use <a href="HotIf.htm">HotIf</a> to set the criteria to match those of the hotkey to be modified. <a href="Throw.htm#Exception">Exception.Extra</a> contains <em>KeyName</em>.</td>
+    <td>该函数试图修改一个不存在的现有热键<a href="#variant">变体</a>. 要解决这个问题, 请使用 <a href="HotIf.htm">HotIf</a> 设置条件使其与要修改的热键的条件相匹配. <a href="Throw.htm#Exception">Exception.Extra</a> 包含 <em>KeyName</em>.</td>
   </tr>
   <tr>
     <td>"Max hotkeys."</td>
@@ -98,7 +98,7 @@
   </tr>
 </table>
 <p><br>
-Tip: <a href="Try.htm">Try</a>-<a href="Catch.htm">Catch</a> can be used to test for the existence of a hotkey variant.</p>
+提示: <a href="Try.htm">Try</a>-<a href="Catch.htm">Catch</a> 可以用来测试是否存在热键变体.</p>
 <pre>
 try
     Hotkey "^!p"

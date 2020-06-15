@@ -22,7 +22,7 @@
   <dt>Func</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>当未处理的错误发生时调用的函数的名称或<a href="../objects/Functor.htm">函数对象</a>. 请参阅, 下面的 <em>Callback</em>.</p>
+    <p>当未处理的错误发生时调用的函数的名称或<a href="../objects/Functor.htm">函数对象</a>. 请参阅下面的 <em>Callback</em>.</p>
   </dd>
   
   <dt>AddRemove</dt>
@@ -37,25 +37,25 @@
 </dl>
 
 <h2>Callback</h2>
-<p>The callback function should accept two parameters:</p>
+<p>回调函数应该接受两个参数:</p>
 <pre class="Syntax"><i>Callback</i>(Thrown, Mode)</pre>
 <dl>
   <dt>Thrown</dt>
-  <dd><em>Thrown</em> is the thrown value, usually an <a href="Throw.htm#Exception">exception object</a>.</dd>
+  <dd><em>Thrown</em> 是抛出的值, 通常是一个<a href="Throw.htm#Exception">异常对象</a>.</dd>
   <dt>Mode</dt>
-  <dd>One of the following strings:
+  <dd>以下字符串之一:
     <ul>
-      <li><code>"Return"</code>: <em>Thrown</em> is a continuable runtime error. The thread continues if the callback returns -1; otherwise the thread exits.</li>
-      <li><code>"Exit"</code>: <em>Thrown</em> is a non-continuable runtime error or a value <a href="Throw.htm">thrown</a> by the script. The thread will exit.</li>
-      <li><code>"ExitApp"</code>: <em>Thrown</em> is a critical runtime error, such as corruption detected by DllCall. The program will exit.</li>
+      <li><code>"Return"</code>: <em>Thrown</em> 的是一个可持续的运行时错误. 如果回调返回 -1, 则线程继续; 否则线程退出.</li>
+      <li><code>"Exit"</code>: <em>Thrown</em> 是一个不可持续的运行时错误或脚本 <a href="Throw.htm">thrown</a> 的一个值. 线程将退出.</li>
+      <li><code>"ExitApp"</code>: <em>Thrown</em> 是一个关键的运行时错误, 如 DllCall 检测到的损坏. 程序将退出.</li>
     </ul>
   </dd>
 </dl>
-<p>The callback function can return one of the following values (other values are reserved for future use and should be avoided):</p>
+<p>回调函数可以返回以下值之一(其他值是为将来使用而保留的, 应该避免):</p>
 <ul>
-  <li><code>0</code>, <code>""</code> or no <code>return</code>: Allow error handling to proceed as normal.</li>
-  <li><code>1</code>: Suppress the default error dialog and any remaining error callbacks.</li>
-  <li><code>-1</code>: As above, but if <em>Mode</em> is <code>"Return"</code>, execution of the current thread is permitted to continue.</li>
+  <li><code>0</code>, <code>""</code> 或没有 <code>return</code>: 允许错误处理正常进行.</li>
+  <li><code>1</code>: 抑制默认错误对话框和任何剩余的错误回调.</li>
+  <li><code>-1</code>: 同上, 但如果 <em>Mode</em> 为 <code>"Return"</code>, 则允许继续执行当前线程.</li>
 </ul>
 
 <h2 id="Remarks">备注</h2>
@@ -67,7 +67,7 @@
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: Logging errors to a text file instead of displaying them to the user.</p>
+<p><a href="#ExBasic">#1</a>: 将错误记录到文本文件, 而不是显示给用户.</p>
 <pre>
 OnError "LogError"
 %cause% := error
@@ -81,7 +81,7 @@ LogError(exception, mode) {
 </div>
 
 <div class="ex" id="ExAccumulator">
-<p><a href="#ExAccumulator">#2</a>: Use OnError to implement alternative error handling methods. Caveat: OnError is ineffective while <a href="Try.htm">Try</a> is active.</p>
+<p><a href="#ExAccumulator">#2</a>: 使用 OnError 来实现其他错误处理方法. 注意: 当 <a href="Try.htm">Try</a> 处于活动状态时, OnError 是无效的.</p>
 <pre>
 AccumulateErrors()
 {
@@ -92,59 +92,59 @@ AccumulateErrors()
 
 class ErrorAccumulator
 {
-    Errors := []                        <em>; Array for accumulated errors.</em>
+    Errors := []                        <em>; 累计错误数组.</em>
     _cb := Func("AccumulateError").Bind(this.Errors)
-    Start() => OnError(this._cb, -1)    <em>; Register our cb before others.</em>
-    Stop() => OnError(this._cb, 0)      <em>; Unregister our cb.</em>
-    Last => this.Errors[-1]             <em>; Most recent error.</em>
-    Count => this.Errors.Length         <em>; Number of accumulated errors.</em>
-    __item[i] => this.Errors[i]         <em>; Shortcut for indexing.</em>
-    __delete() => this.Stop()           <em>; For tying to function scope.</em>
+    Start() => OnError(this._cb, -1)    <em>; 先注册 cb.</em>
+    Stop() => OnError(this._cb, 0)      <em>; 取消注册 cb.</em>
+    Last => this.Errors[-1]             <em>; 最近的错误.</em>
+    Count => this.Errors.Length         <em>; 累计错误的数目.</em>
+    __item[i] => this.Errors[i]         <em>; 索引.</em>
+    __delete() => this.Stop()           <em>; 用于与函数范围绑定.</em>
 }
 
-<em>; This is the OnError callback function. 'errors' is given a value via Bind().</em>
+<em>; 这是 OnError 回调函数. 'errors' 是通过 Bind() 给定的值.</em>
 AccumulateError(errors, e, mode)
 {
-    if mode != "Return" <em>; Not continuable.</em>
+    if mode != "Return" <em>; 不可继续.</em>
         return
-    if e.What = "" <em>; Expression defect or similar, not a built-in function.</em>
+    if e.What = "" <em>; 表达式缺陷或类似的, 不是内置函数.</em>
         return
     try {
-        <em>; Try to print the error to stdout.</em>
+        <em>; 尝试将错误打印到 stdout.</em>
         FileAppend Format("{1} ({2}) : ({3}) {4}`n", e.File, e.Line, e.What, e.Message), "*"
         if HasProp(e, "extra")
             FileAppend "     Specifically: " e.Extra "`n", "*"
     }
     errors.Push(e)
-    return -1 <em>; Continue.</em>
+    return -1 <em>; 继续.</em>
 }
 
 RearrangeWindows()
 {
-    <em>; Start accumulating errors in 'err'.</em>
+    <em>; 开始在 'err' 中累积错误.</em>
     local err := AccumulateErrors()
 
-    <em>; Do some things that might fail...</em>
+    <em>; 做一些可能失败的事情...</em>
     MonitorGetWorkArea , left, top, right, bottom
     width := (right-left)//2, height := bottom-top
     WinMove left, top, width, height, A_ScriptFullPath
     WinMove left+width, top, width, height, "AutoHotkey v2 Help"
 
-    <em>; Check if any errors occurred.</em>
+    <em>; 检查是否发生任何错误.</em>
     if err.Count
         MsgBox err.Count " error(s); last error at line #" err.Last.Line
     else
         MsgBox "No errors"
 
-    <em>; Stop is called automatically when the variable goes out of scope,
-    ; since only we have a reference to the object.  This causes OnError
-    ; to be called to unregister the callback.
-    ;err.Stop()</em>
+    <em>; 当变量超出作用域时, Stop 会被自动调用,
+    ; 因为只有我们有一个对象的引用. 这将导致 OnError
+    ; 被调用来解除回调.
+    ; err.Stop()</em>
 }
 
-<em>; Call the test function which suppresses and accumulates errors.</em>
+<em>; 调用抑制和累积错误的测试函数.</em>
 RearrangeWindows()
-<em>; Call another function to show normal error behaviour is restored.</em>
+<em>; 调用另一个函数来显示恢复正常的错误行为.</em>
 WinMove 0, 0, width, height, "non-existent window"
 </pre>
 </div>
