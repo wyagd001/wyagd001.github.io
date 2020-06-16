@@ -366,6 +366,7 @@ class GMem
     }
 }</pre>
 <p>__Delete 不可被任何含有 "__Class" 键的对象调用. <a href="#Custom_Classes">Class objects(类对象)</a> 默认包含这个键.</p>
+<p>如果类有定义这些方法的父类, 则通常应该调用 <code>base.__New()</code>(带有适当的参数) 和 <code>base.__Delete()</code>. 否则, 只调用方法的最派生的定义, 不包括目标对象本身中的任何定义.</p>
 <p><span class="ver">[v1.1.28+]:</span> 如果在 __Delete 执行时抛出了异常或运行时错误, 并且未在 __Delete 中处理, 则它就像从一个新<a href="misc/Threads.htm">线程</a>调用 __Delete. 也就是说, 显示一个错误对话框并 __Delete 返回, 但是线程不会退出(除非它已经退出). 在 v1.1.28 之前, 未处理的异常会导致不一致的行为.</p>
 
 <h3 id="Meta_Functions">元函数(Meta-Functions)</h3>
@@ -385,6 +386,8 @@ class <i>ClassName</i> {
 <i>ClassName</i> := { __Get: Func("<i>MyGet</i>"), __Set: Func("<i>MySet</i>"), __Call: Func("<i>MyCall</i>") }
 </pre>
 <p>元函数定义了向目标对象中请求不存在的键时的行为. 例如, 如果 <code>obj.key</code> 尚未赋值, 那么它会调用 <i>__Get</i> 元函数. 同样地, <code>obj.key := value</code> 调用 <i>__Set</i> 而 <code>obj.key()</code> 调用 <i>__Call</i>. 这些元函数(或方法)需要在 <code>obj.base</code>, <code>obj.base.base</code> 或类似的基中定义.</p>
+<p>元函数的定义一般和方法一样, 但不遵循相同的规则(除了被脚本显式调用的时候). 它们必须在基对象中定义; 目标对象本身的任何定义都会被忽略. 适用于目标对象的 __Get, __Set 和 __Call 的每个定义都会根据下面的规则自动调用, 而且不应该调用 <code>base.__Get(key)</code> 或类似的方法. <a href="#Custom_NewDelete">__New</a> 和 <a href="#Custom_NewDelete">__Delete</a> 必须在基对象中定义, 但其他方面的行为就像方法一样.</p>
+<p class="note"><strong>注意:</strong> AutoHotkey v2 用更传统的方法替换了元函数.</p>
 <p>当脚本获取, 设置或调用目标对象中的键不存在时, 将按如下方式调用基对象:</p>
 <ul class="list_of_p">
   <li>如果此基对象定义了相应的元函数, 那么调用它. 如果元函数明确 <code>return</code>, 则把返回值作为运算的结果(不受调用元函数方式的影响) 并把控制权归还脚本. 其他情况继续按以下方法进行.

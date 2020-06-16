@@ -12,6 +12,7 @@
   "Declarations":"声明",
   "Operators":"运算符",
   "Commands":"命令",
+  "Ahk2Exe Compiler":"Ahk2Exe 编译器",
   "S̲earch":"搜索(S)",
   "Shortcut: ALT+S":"快捷键: ALT+S",
   "Highlight keywords":"高亮关键词",

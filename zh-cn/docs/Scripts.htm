@@ -24,7 +24,7 @@
   <li><a href="#intro">简介</a></li>
   <li><a href="#auto">脚本顶部(自动执行段)</a>: 当脚本启动时, 这部分会自动执行.</li>
   <li><a href="#continuation">把过长的行分割成一系列短行</a>: 这样可以提高脚本的可读性和可维护性.</li>
-  <li><a href="#ahk2exe">把脚本转换成 EXE(ahk2exe)</a>: 把 .ahk 脚本转换成可以在任何 PC 上运行的 .exe 文件.</li>
+  <li><a href="#ahk2exe">把脚本转换成 EXE(Ahk2Exe)</a>: 把 .ahk 脚本转换成可以在任何 PC 上运行的 .exe 文件.</li>
   <li><a href="#cmd">向脚本传递命令行参数</a>: %1%, %2% 等变量包含了传入的参数.</li>
   <li><a href="#cp">脚本文件代码页</a>: 在脚本中可靠地使用非 ASCII 字符.</li>
   <li><a href="#debug">调试脚本</a>: 如何找出无法正常工作的脚本中的问题.</li>
@@ -103,40 +103,91 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <p>一个延续片段后面可以紧跟着包含另一个延续片段的开括号的一行. 这样使得上面提到的选项可以在创建单行的过程中进行改变.</p>
 <p>不支持通过 <a href="commands/_Include.htm">#Include</a> 的方法把延续片段各部分连接起来.</p>
 
-<h2 id="ahk2exe">把脚本转换成 EXE(ahk2exe)</h2>
-<p>程序中已包含了脚本编译器(感谢 fincs 提供).</p>
-<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本需要<a href="commands/_Include.htm">加载</a>的任何文件以及通过 <a href="commands/FileInstall.htm">FileInstall</a> 命令内嵌的任何文件.</p>
+<h2 id="ahk2exe">把脚本转换成 EXE(Ahk2Exe)</h2>
+<p>程序中已包含了脚本编译器(感谢 fincs 提供, 以及 TAC109 的补充).</p>
+<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本需要<a href="commands/_Include.htm">加载</a>的任何文件以及通过 <a href="commands/FileInstall.htm">FileInstall</a> 命令内嵌的任何文件. <span class="ver">[v1.1.33+]:</span> 可以使用<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>包含其他文件.</p>
 <p>使用 Ahk2Exe 有下列几种方式:</p>
-<ol>
-  <li><strong>GUI 界面</strong>: 运行菜单菜单中的 "Convert .ahk to .exe" 菜单项.</li>
-  <li><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器时时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它会在稍后出现在相同目录中. 注: 这样生成的 EXE 文件会使用与前面的方法 #1 最后一次使用时相同的自定义图标, .bin 文件以及 <a href="#mpress">MPRESS</a> 设置.</li>
-  <li id="ahk2exeCmd"><strong>命令行</strong>: 编译器可以使用下列参数在命令行中运行:
-  <pre class="no-highlight">Ahk2Exe.exe /in MyScript.ahk [/out MyScript.exe] [/icon MyIcon.ico] [/bin AutoHotkeySC.bin] [/mpress 0or1]</pre>
-  例如:
-<pre class="no-highlight">Ahk2Exe.exe /in "MyScript.ahk" /icon "MyIcon.ico"</pre>
-用法:
 <ul>
-<li>含有空格的参数应该包围在双引号中.</li>
-<li>如果省略了 "out" 文件, 则使用脚本的主文件名作为 EXE 的主文件名.</li>
-</ul></li>
-</ol>
+  <li>
+  <p><strong>GUI 界面</strong>: 运行开始菜单中的 "Convert .ahk to .exe" 菜单项.</p>
+  </li>
+  <li>
+  <p><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器时时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它会在稍后出现在相同目录中. 注: 这样生成的 EXE 文件会使用与前面的方法 #1 最后一次使用时相同的自定义图标, .bin 文件以及 <a href="#mpress">compression</a> 设置.</li>
+  </li>
+  <li id="ahk2exeCmd">
+    <p><strong>命令行</strong>: 编译器可以通过以下参数对从命令行运行(第一个参数是必须的, 其余参数是可选的):</p>
+    <style>
+      #param_pairs td:not(:last-child) {
+        white-space: nowrap;
+      }
+    </style>
+    <table class="info" id="param_pairs">
+      <tr>
+        <th>参数对</th>
+        <th>意义</th>
+      </tr>
+      <tr id="SlashIn">
+        <td>/in <i>script_name</i><br>/inGui <i>script_name</i></td>
+        <td>(必须指定其中之一.) 要编译的脚本的路径和名称. <code>/in</code> 会立即编译脚本. <span class="ver">[v1.1.33+]:</span> <code>/inGui</code> 将首先显示 GUI 界面.</td>
+      </tr>
+      <tr id="SlashOut">
+        <td>/out <i>exe_name</i></td>
+        <td>要创建的 .exe 的路径/名称. 默认值是输入文件的 directory\base_name 加上 .exe 的扩展名.</td>
+      </tr>
+      <tr id="slashIcon">
+        <td>/icon <i>icon_name</i></td>
+        <td>要使用的图标文件. 默认为 GUI 界面中最后使用的图标.</td>
+      </tr>
+      <tr id="SlashBin">
+        <td>/bin <i>file_name</i></td>
+        <td>要使用的 .bin 文件. 默认情况下是 GUI 界面中最后使用的 .bin 文件名.</td>
+      </tr>
+      <tr id="SlashCp">
+        <td>/cp <i>codepage</i></td>
+        <td><span class="ver">[v1.1.23.01+]:</span> 覆盖用于读取脚本文件的默认代码页. 有关详情, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">codepage</a>. 注意, unicode 脚本应该以字节顺序标记(BOM) 开始, 因此不需要使用这个参数.</td>
+      </tr>
+      <tr id="SlashCompress">
+        <td>/compress <i>n</i></td>
+        <td><span class="ver">[v1.1.33+]:</span> 是否 <a href="#mpress">Compress(压缩)</a> exe 文件? 0 = 不压缩, 1 = 使用 MPRESS(如果存在), 2 = 使用 UPX(如果存在). 默认值是 GUI 界面中使用的最后一个设置.</td>
+      </tr>
+      <tr id="SlashAhk">
+        <td>/ahk <i>file_name</i></td>
+        <td><span class="ver">[v1.1.33+]:</span> 编译脚本时使用的 AutoHotkey.exe 的 path\name. 默认为 AutoHotkey.exe, 位于编译器上方的目录中. 如果没有, 则使用安装的 Autohotkey.exe.</td>
+      </tr>
+      <tr id="SlashMpress">
+        <td class="warning"><strong>不推荐:</strong><br>/mpress <i>0or1</i></td>
+        <td class="warning">使用 MPRESS <a href="#mpress">压缩</a> exe 文件? 0 = 不压缩, 1 = 压缩. 默认值是 GUI 界面中使用的最后一个设置.</td>
+      </tr>
+    </table>
+    <p>例如:</p>
+    <pre class="no-highlight">Ahk2Exe.exe /in "MyScript.ahk" /icon "MyIcon.ico"</pre>
+  </li>
+</ul>
 <p>注意:</p>
 <ul>
+  <li>包含空格的参数必须用双引号括起来.</li>
   <li>进行编译通常并不会提升脚本的性能.</li>
   <li>截至 v1.1.01, 还不支持密码保护和 /NoDecompile 选项.</li>
-  <li>命令 <a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> 和 "<a href="commands/Menu.htm">Menu, Tray, ShowMainWindow</a>" 会影响已编译脚本的行为.</li>
-  <li>使用类似 <a href="http://www.angusj.com/resourcehacker/">Resource Hacker</a>(免费软件) 的工具编辑 "AutoHotkeySC.bin" 文件可以给已编译脚本添加自定义版本信息(和在资源管理器的文件属性对话框中看到的那些). 此文件包含在 AutoHotkey 安装目录的 "Compiler" 子文件夹中. 可以使用 <a href="https://github.com/mercury233/compile-ahk">Compile AHK</a> 简化这个过程. 截至 v1.1.01, 可以直接编辑已编译脚本而不是 AutoHotkeySC.bin.</li>
-  <li>还可以使用上面的方法改变所有已编译脚本现有的图标或为它们添加新图标.</li>
-  <li>如果脚本以编译的形式运行, 则内置变量 A_IsCompiled 的值为 1. 否则为空.</li>
-  <li>传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符中, 但可以通过像重定向到文件的方法 "捕获". <span class="ver">[v1.0.43+]</span></li>
-  <li>另外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 错误类型更多信息请访问 <a href="https://github.com/fincs/Ahk2Exe/blob/master/ErrorCodes.md">GitHub(ErrorCodes.md)</a>. <span class="ver">[v1.1.22.03+]</span></li>
+  <li>命令 <a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> 和 &quot;<a href="commands/Menu.htm#MainWindow">Menu, Tray, MainWindow</a>&quot; 会影响编译后脚本的行为.</li>
+   <li>如果脚本以编译的形式运行, 则内置变量 <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 的值为 1. 否则为空.</li>
+   <li><span class="ver">[v1.0.43+]:</span> 传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符中, 但可以通过像重定向输出到文件的方法 "捕获".</li>
+  <li> <span class="ver">[v1.1.22.03+]:</span> 此外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 这些错误代码可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 上找到.</li>
 </ul>
-<p>编译器的源码和新版本可以在 <a href="https://github.com/fincs/Ahk2Exe">GitHub</a> 找到.</p>
+<p>编译器的源码和新版本可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe">GitHub</a> 找到.</p>
+<h3 id="CompilerDirectives">脚本编译器指令</h3>
+<p><span class="ver">[v1.1.33+]:</span> 脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
+<ul>
+  <li>能够改变版本信息(如名称, 描述, 版本...).</li>
+  <li>能够为编译后的脚本添加资源.</li>
+  <li>能够调整编译的一些杂项.</li>
+  <li>能够从编译后的脚本中删除代码部分.</li>
+</ul>
+<p>更多细节, 请参阅<a href="misc/Ahk2ExeDirectives.htm">脚本编译器指令</a>.</p>
 
 <h3 id="mpress">压缩编译脚本</h3>
-<p>Ahk2Exe 可选用 MPRESS(MATCODE Software 出品的一款免费软件) 压缩编译脚本. 如果在 AutoHotKey 安装目录的"Compiler"子目录存在 <strong>mpress.exe</strong>, 编译时将自动使用 MPRESS 来压缩, 除非指定了 <code>/mpress 0</code> 参数或在界面中设置不启用压缩. </p>
-<p>官网(2016 年 3 月该网站已下线): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a></p>
-<p>镜像(下载信息): <a href="https://autohotkey.com/mpress/">https://autohotkey.com/mpress/</a></p>
+<p>Ahk2Exe 可以选择使用 MPRESS 或 <span class="ver">[v1.1.33+]</span> UPX 免费软件来压缩编译后的脚本. 如果 <strong>MPRESS.exe</strong> 和/或 <strong>UPX.exe</strong> 已被复制到安装 AutoHotkey 的 "Compiler" 子文件夹中, 则可以通过 <code>/compress</code> 参数或 GUI 设置来压缩 .exe 文件.</p>
+<p><strong>MPRESS</strong> 官网(介绍与下载): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a><br>MPRESS 镜像: <a href="https://www.autohotkey.com/mpress/">https://www.autohotkey.com/mpress/</a></p>
+<p><strong>UPX</strong> 官网(介绍与下载): <a href="https://upx.github.io/">https://upx.github.io/</a></p>
 <p><strong>注意:</strong> 压缩编译脚本可以保护脚本不被诸如记事本或 PE 编辑器这类的工具随意查看, 但并不能保护脚本源码不被专用的提取工具提取.</p>
 
 <h2 id="cmd">向脚本传递命令行参数</h2>
@@ -146,7 +197,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <pre>CompiledScript.exe [<i>Switches</i>] [<i>Script Parameters</i>]</pre>
 <p><strong>Switches:</strong> 零个或多个下列开关:</p>
 <table class="info">
-  <tr><th>开关</th><th>释义</th><th>是否支持编译?</th></tr>
+  <tr><th>开关</th><th>释义</th><th style="width:60px">是否支持编译?</th></tr>
   <tr id="SlashF">
     <td>/f 或 /force</td>
     <td>无条件强制启动, 忽略任何警告对话框. 和 <a href="commands/_SingleInstance.htm">#SingleInstance Off</a> 的效果相同.</td>
@@ -158,8 +209,11 @@ FileAppend, %Var%, C:\My File.txt</pre>
     <td>是</td>
   </tr>
   <tr id="ErrorStdOut">
-    <td>/ErrorStdOut</td>
-    <td>把阻止脚本运行的语法错误发送到标准输出而不显示在对话框中. 请参阅 <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a> 了解详情. 这可以联合 /iLib 来验证脚本而不用运行它.</td>
+    <td>/ErrorStdOut<span class="optional">=<em>Encoding</em></span></td>
+    <td> 
+      <p>把阻止脚本运行的语法错误发送到标准输出而不显示在对话框中. 请参阅 <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a> 了解详情. 这可以联合 /iLib 来验证脚本而不用运行它.</p>
+      <p><span class="ver">[v1.1.33+]:</span> 可以选择指定<a href="commands/FileEncoding.htm">编码</a>. 例如, <code>/ErrorStdOut=UTF-8</code> 在将消息写入 stderr 之前将其编码为 UTF-8.</p>
+    </td>
     <td>是</td>
   </tr>
   <tr id="SlashDebug">
@@ -169,7 +223,10 @@ FileAppend, %Var%, C:\My File.txt</pre>
   </tr>
   <tr id="CPn">
     <td>/CP<i>n</i></td>
-    <td><span class="ver">[AHK_L 51+]:</span> 覆盖用于读取脚本文件的默认代码页. 想了解更多信息, 请参阅<a href="#cp">脚本文件代码页</a>.</td>
+    <td>
+      <p><span class="ver">[AHK_L 51+]:</span> 覆盖用于读取脚本文件的默认代码页. 想了解更多信息, 请参阅<a href="#cp">脚本文件代码页</a>.</p>
+      <p><span class="ver">[v1.1.33+]:</span> 如果在安装程序中启用了 "Default to UTF-8" 选项, 那么 ".ahk" 文件类型就会在包括 <code>/CP65001</code> 在内的命令行中注册. 这将导致所有通过 shell(Explorer(资源管理器)) 启动的脚本在没有 UTF-16 字节顺序标记的情况下默认为 UTF-8. 通过直接运行 AutoHotkey.exe 启动的脚本仍然默认为 <code>CP0</code>, 因为没有 <code>/CP65001</code> 开关.</p>
+    </td>
     <td>否</td>
   </tr>
   <tr>
@@ -274,7 +331,7 @@ Pause</pre>
 <h3 id="idebug">交互调试 <span class="ver">[AHK_L 11+]</span></h3>
 <p>通过受支持的 <a href="AHKL_DBGPClients.htm">DBGp 客户端</a>可以进行交互调试. 一般支持下列操作:</p>
 <ul>
-  <li>设置和移除断点 - 遇到<a href="http://en.wikipedia.org/wiki/Breakpoint">断点</a>时暂停执行.</li>
+  <li>设置和移除断点 - 遇到<a href="https://en.wikipedia.org/wiki/Breakpoint">断点</a>时暂停执行.</li>
   <li>单步调试代码 - 逐语句, 逐过程或跳出函数和子程序.</li>
   <li>检查所有变量或特殊变量.</li>
   <li>查看正在运行的子程序和函数的堆栈.</li>

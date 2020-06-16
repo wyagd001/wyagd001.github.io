@@ -20,6 +20,7 @@
     ["标签","misc/Labels.htm"],
     ["线程","misc/Threads.htm"],
     ["调试客户端(DBGp)","AHKL_DBGPClients.htm"],
+    ["编译器指令","misc/Ahk2ExeDirectives.htm"],
     ["对象","Objects.htm",
     [
       ["基本用法","Objects.htm#Usage"],
