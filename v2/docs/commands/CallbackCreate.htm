@@ -138,17 +138,17 @@ EnumWindowsProc(hwnd, lParam)
 <pre>TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
 TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, &quot;UInt&quot;, TextBackgroundColor)
 
-Gui := GuiCreate()
-Text := Gui.Add("Text",, "Here is some text that is given`na custom background color.")
+MyGui := Gui.New()
+Text := MyGui.Add("Text",, "Here is some text that is given`na custom background color.")
 
 <em>; 64 位脚本必须调用 SetWindowLongPtr 代替 SetWindowLong:</em>
 SetWindowLong := A_PtrSize=8 ? "SetWindowLongPtr" : "SetWindowLong"
 
 WindowProcNew := <strong>CallbackCreate</strong>("WindowProc")  <em>; 避免子类化中使用快速模式.</em>
-WindowProcOld := DllCall(SetWindowLong, &quot;Ptr&quot;, Gui.Hwnd, &quot;Int&quot;, -4  <em>; -4 为 GWL_WNDPROC</em>
+WindowProcOld := DllCall(SetWindowLong, &quot;Ptr&quot;, MyGui.Hwnd, &quot;Int&quot;, -4  <em>; -4 为 GWL_WNDPROC</em>
     , &quot;Ptr&quot;, WindowProcNew, &quot;Ptr&quot;) <em>; 返回值必须设置为 &quot;Ptr&quot; 或 &quot;UPtr&quot; 而不是 &quot;Int&quot;.</em>
 
-Gui.Show
+MyGui.Show
 
 WindowProc(hwnd, uMsg, wParam, lParam)
 {

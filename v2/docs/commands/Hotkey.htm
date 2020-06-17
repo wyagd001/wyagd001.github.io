@@ -155,18 +155,31 @@ HotIfWinActive, "ahk_class Notepad"
 Hotkey "^!c", "MyFuncForNotepad"  <em>; 创建仅在记事本中有效的热键 Ctrl-Alt-C.</em></pre>
 </div>
 
-<div class="ex" id="ExampleIfFn">
-<p><a href="#ExampleIfFn">#3</a>: 这个界面允许你注册简单的三键组合热键:</p>
+<div class="ex" id="ExIfWin">
+<p><a href="#ExIfWin">#3</a>: Create Alt-W as a hotkey that works only in Notepad.</p>
 <pre>
-Gui := GuiCreate()
-Gui.Add("Text", "xm", "Prefix key:")
-Gui.Add("Edit", "yp x100 w100 vPrefix", "Space")
-Gui.Add("Text", "xm", "Suffix hotkey:")
-Gui.Add("Edit", "yp x100 w100 vSuffix", "f &amp; j")
-Gui.Add("Button", "Default", "Register").OnEvent("Click", "RegisterHotkey")
-Gui.OnEvent("Close", (*) =&gt; ExitApp())
-Gui.OnEvent("Escape", (*) =&gt; ExitApp())
-Gui.Show()
+HotIfWinActive "ahk_class Notepad"
+Hotkey "!w", "ToggleWordWrap"  <em>; !w = Alt-W</em>
+
+ToggleWordWrap(ThisHotkey)
+{
+    MenuSelect "A",, "Format", "Word Wrap"
+}
+</pre>
+</div>
+
+<div class="ex" id="ExampleIfFn">
+<p><a href="#ExampleIfFn">#4</a>: 这个界面允许你注册简单的三键组合热键:</p>
+<pre>
+HkGui := Gui.New()
+HkGui.Add("Text", "xm", "Prefix key:")
+HkGui.Add("Edit", "yp x100 w100 vPrefix", "Space")
+HkGui.Add("Text", "xm", "Suffix hotkey:")
+HkGui.Add("Edit", "yp x100 w100 vSuffix", "f &amp; j")
+HkGui.Add("Button", "Default", "Register").OnEvent("Click", "RegisterHotkey")
+HkGui.OnEvent("Close", (*) =&gt; ExitApp())
+HkGui.OnEvent("Escape", (*) =&gt; ExitApp())
+HkGui.Show()
 
 RegisterHotkey(this, *)
 {

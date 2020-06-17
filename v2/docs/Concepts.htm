@@ -159,9 +159,10 @@ myObj[arg1, arg2, ..., argN] := value
 <p>值得注意的是, 一个变量和它的值是不一样的. 例如, 我们可以说 &quot;<code>myArray</code> 是一个数组&quot;, 但是我们真正的意思是 myArray 是一个包含对数组的引用的变量. 我们通过使用变量的名称来引用其值, 但是 &quot;myArray&quot; 实际上只是变量的名称; 数组对象不知道它有一个名称, 并且可以被许多不同的变量引用(因此有很多的名称).</p>
 
 <h3 id="uninitialised-variables">未初始化变量</h3>
-<p><em>初始化</em> 变量是给它分配一个起始值. 虽然程序会自动初始化所有的变量(一个空字符串是默认值), 但是脚本在使用之前初始化它的变量是一个好习惯. 这样, 任何阅读脚本的人都可以看到脚本将使用哪些变量以及他们预期具有的起始值.</p>
-<p>脚本通常需要初始化任何预期包含数字的变量. 例如, 如果 x 从未被赋值 <code>x := x + 1</code> 将不起作用, 因为 <em>空字符串</em> 被认为是非数字的. 脚本应该分配一个起始值, 如 <code>x := 0</code>. 有些情况下空值 <em>是</em> 被假定为 0, 但是最好不要依赖这个方法.</p>
-<p>脚本作者可以使用 <a href="commands/_Warn.htm">#Warn</a> 指令来帮助查找变量被使用而未被脚本初始化的情况. <a href="commands/IsSet.htm">IsSet</a> 可用于判定变量是否已经被初始化了.</p>
+<p><em>初始化</em> 变量就是给它分配一个起始值. 虽然程序会自动为所有变量提供一个默认值(空字符串), 但通常认为脚本在使用每个变量之前, 总是显式地给它赋值是一个好习惯. 这有助于作者发现错误, 例如拼写错误的名称和忘记赋值, 并可能帮助阅读脚本的人了解它使用了哪些变量以及如何使用.</p>
+<p>默认情况下, 每当访问一个没有先赋值的变量时, 就会显示一个警告. 目前, 可以使用 <a href="commands/_Warn.htm">#Warn UseUnset</a> 指令禁用此功能, 但未来的更新可能会用错误来代替此警告.</p>
+<p>通常情况下, 脚本有必要初始化任何一个预计将容纳一个数字的变量. 例如, 如果 x 从来没有被赋值过, <code>x := x + 1</code> 将无法工作, 因为 <em>空字符串</em> 被认为是非数字的. 脚本应该分配一个起始值, 如 <code>x := 0</code>. 在某些情况下, 空值被假定为 0(例如某些内置函数的参数), 但最好不要依赖这一点, 因为对这些错误的检测将在未来的版本中得到改进.</p>
+<p><a href="commands/IsSet.htm">IsSet</a> 可以用来确定一个变量是否已经初始化.</p>
 
 <h3 id="built-in-variables">内置变量</h3>
 <p>程序中内置了许多有用的变量, 可以通过任何脚本来引用. 除特殊说明外, 这些变量是只读的; 也就是说, 他们的内容不能被脚本直接改变. 按照惯例, 这些变量中的大部分以前缀 <code>A_</code> 开头, 所以最好避免使用这个前缀作为你自己的变量.</p>
@@ -320,7 +321,7 @@ MsgBox 0.1 + 0.2 = 0.3   <em>; 0(不相等)</em>
 <p><strong>大小写敏感性:</strong> ASCII 字符不区分大小写. 例如, <code>CurrentDate</code> 等同于 <code>currentdate</code>. 但是, 大写的非 ASCII 字符(如 'Ä') <em>不</em> 被认为等同于他们的小写字母, 不管当前用户的区域设置如何. 这有助于脚本在多个语言环境中保持一致.</p>
 <p><strong>最大长度:</strong> 253 个字符.</p>
 <p><strong>允许的字符:</strong> 字母, 数字, 下划线(_) 和非 ASCII 字符; 然而, 第一个字符不能是数字.</p>
-<p id="reserved-words"><strong>保留单词:</strong> <code>and</code>, <code>contains</code>, <code>in</code>, <code>is</code>, <code>not</code> 和 <code>or</code>. 这些单词保留作<a href="Language.htm#operators">运算符</a>使用.</p>
+<p id="reserved-words"><strong>保留单词:</strong> <code>and</code>, <code>contains</code>, <code>in</code>, <code>is</code>, <code>not</code>, <code>or</code>, <code>true</code>, <code>false</code>, <code>super</code>. 由于这些单词在表达方式上有其他用途, 因此予以保留.</p>
 <p>声明关键字和控制流语句的名称也是保留的, 主要用于检测错误. 这包括: <code>Break</code>, <code>Catch</code>, <code>Continue</code>, <code>Else</code>, <code>Finally</code>, <code>For</code>, <code>Global</code>, <code>Gosub</code>, <code>Goto</code>, <code>If</code>, <code>Local</code>, <code>Loop</code>, <code>Return</code>, <code>Static</code>, <code>Throw</code>, <code>Try</code>, <code>Until</code>, <code>While</code>.</p>
 <p>允许将属性, 方法和窗口组的名称作为保留字.</p>
 

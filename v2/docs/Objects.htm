@@ -211,7 +211,7 @@ thing_test(this) {
 
 <h3 id="delegation">委托</h3>
 <p>对象是 <em>基于原型的</em>. 也就是说, 没有在对象本身中定义的任何属性或方法都可以在对象的<a href="objects/Object.htm#Base">基</a>中定义. 这被称为 <em>委托继承</em> 或 <em>差异继承</em>, 因为对象只能实现使其不同的部分, 而将其余部分委派给其基.</p>
-<p>虽然基对象通常也称为原型, 但我们使用 "类的<a href="objects/Class.htm#Prototype">原型</a>" 来表示该类的每个实例所基于的对象, 而使用 "基" 来表示一个实例所基于的对象(或有时是当前类的<a href="#Custom_Classes_base">基类/超类</a>).</p>
+<p>虽然基对象通常也称为原型, 但我们使用 "类的<a href="objects/Class.htm#Prototype">原型</a>" 来表示该类的每个实例所基于的对象, 而使用 "基" 来表示一个实例所基于的对象.</p>
 <p class="note">AutoHotkey 的对象设计主要受 JavaScript 和 Lua, 略带 C# 的影响. 我们使用 <code><i>obj</i>.base</code> 代替 JavaScript 的 <code><i>obj</i>.__proto__</code> 和 <code><i>cls</i>.Prototype</code> 代替 JavaScript 的 <code><i>func</i>.prototype</code>. (使用类对象代替构造函数.)</p>
 
  <p>对象的基也用于标识其类型或类. 例如, <code>x := []</code> 创建 <em>基于</em> <code>Array.Prototype</code> 的对象, 这意味着表达式 <code>x 是 Array</code> 并且 <code>x.HasBase(Array.Prototype)</code> 为 true, 而 <code>type(x)</code> 返回 "Array".</p>
@@ -281,15 +281,15 @@ other.test()</pre>
      ShorterProperty[] =&gt; <i>计算属性值的表达式</i>
 }
 </pre>
-<p>加载脚本时, 它构造一个<a href="objects/Class.htm">类</a>对象并将其存储在<a href="Functions.htm#SuperGlobal">超级-全局</a>变量 <i>ClassName</i> 中. 要在<a href="Functions.htm#ForceLocal">强制-局部</a>函数中引用该类, 需要一个声明, 如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的全名. 每个类的全名存储在 <code><i>ClassName</i>.Prototype.__Class</code>.</p>
-<p>因为类是通过变量引用的, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := Box.new()</code> 将会用其本身的实例替换 <em>Box</em> 中的类对象. 每当尝试覆盖一个类时, <a href="commands/_Warn.htm#ClassOverwrite">#Warn ClassOverwrite</a> 允许在加载时显示一个警告.</p>
+<p>加载脚本时, 它构造一个<a href="objects/Class.htm">类</a>对象并将其存储在<a href="Functions.htm#SuperGlobal">超级-全局</a>常量(只读变量) <i>ClassName</i> 中. 要在<a href="Functions.htm#ForceLocal">强制-局部</a>函数中引用该类, 需要一个声明, 如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的全名. 每个类的全名存储在 <code><i>ClassName</i>.Prototype.__Class</code>.</p>
+<p>由于类名和变量之间的歧义, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := Box.new()</code> 将无法工作, 因为 <code>box</code> 和 <code>Box</code> 都解析为同一事物. 试图以这种方式重新分配一个顶层(非嵌套) 类会导致加载时错误.</p>
 <p>在本文档中, 单词 "class" 本身通常表示用 <code>class</code> 关键字构造的类对象.</p>
 <p>类定义可以包含变量声明, 方法定义和嵌套的类定义.</p>
 
 <h4 id="Custom_Classes_var">实例变量</h4>
 <p><em>实例变量</em> 是类的每个实例都拥有独立的副本. 他们如同普通赋值一样被声明, 但 <code>this.</code> 前缀被忽略(仅限于类主体内时):</p>
 <pre>InstanceVar := Expression</pre>
-<p>每次使用 <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a> 创建类的新实例时, 都会计算这些声明, 在所有基类声明被求值之后, 但在调用 <a href="#Custom_NewDelete">__New</a> 之前. 这是通过自动创建一个名为 <em>__Init</em> 的方法来实现的, 该方法包含对 <code>base.__Init()</code> 的调用, 并将每个声明插入其中. 因此, 单个类定义不能同时包含 __Init 方法和实例变量声明.</p>
+<p>每次使用 <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a> 创建类的新实例时, 都会计算这些声明, 在所有基类声明被求值之后, 但在调用 <a href="#Custom_NewDelete">__New</a> 之前. 这是通过自动创建一个名为 <em>__Init</em> 的方法来实现的, 该方法包含对 <code>super.__Init()</code> 的调用, 并将每个声明插入其中. 因此, 单个类定义不能同时包含 __Init 方法和实例变量声明.</p>
 <p><em>Expression</em> 可以通过 <code>this</code> 访问其他实例变量和方法, 但是所有其他变量引用都假定是全局的.</p>
 <p>要访问实例变量, 总是要指定目标对象; 例如, <code><b>this</b>.InstanceVar</code>.</p>
 <p>支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 例如, <code>x := {}, x.y := 42</code> 声明了 <code>x</code> 并初始化了 <code>this.x.y</code>.</p>
@@ -325,16 +325,18 @@ Method()
 }
 </pre>
 
-<p id="Custom_Classes_base">在方法的内部, 伪关键字 <code>base</code> 可用于访问在派生类中重写的父类中的方法或属性. 例如, <code>base.Method()</code> 在类定义中将会调用 <em>BaseClassName</em> 中定义的 <em>Method</em> 版本. 除非显式地命名<a href="#Meta_Functions">元函数</a>, 否则不会调用它们. 注意:</p>
-<ul>
-  <li><code>base.Method()</code> 总是调用基类的当前方法的定义, 即使 <code>this</code> 完全是从那个类派生的 <em>subclass</em> 或其他类派生而来的.</li>
-  <li><code>base.Method()</code> 隐式传递 <code>this</code> 作为首个(隐藏)参数.</li>
-</ul>
-<p><code>base</code> 仅在后面跟着点 <code>.</code> 或方括号 <code>[]</code> 时才有特殊含义, 所以像 <code>obj := base, obj.Method()</code> 这样的代码将不起作用. 通过把 <i>base</i> 赋为非空值可以禁用它的特殊行为, 但是不建议这样做.</p>
-
 <p><a href="Variables.htm#fat-arrow">胖箭头语法</a>可以用来定义一个单行方法, 返回一个表达式:</p>
 <pre>Method() =&gt; <i>Expression</i></pre>
 <p>另请参阅: <a href="objects/Object.htm#DefineMethod">DefineMethod</a></p>
+
+<h4 id="Custom_Classes_super">Super</h4>
+<p>Inside a method a property getter/setter, the keyword <code>super</code> can be used in place of <code>this</code> to access the superclass versions of methods or properties which are overridden in a derived class. For example, <code>super.Method()</code> in the class defined above would typically call the version of <em>Method</em> which was defined within <em>BaseClassName</em>. Note:</p>
+<ul>
+  <li><code>super.Method()</code> always invokes the base of the class or prototype object associated with the current method's original definition, even if <code>this</code> is derived from a <em>subclass</em> of that class or some other class entirely.</li>
+  <li><code>super.Method()</code> implicitly passes <code>this</code> as the first (hidden) parameter.</li>
+  <li>Since it is not known where (or whether) <em>ClassName</em> exists within the chain of base objects, <em>ClassName</em> itself is used as the starting point. Therefore, <code>super.x()</code> is mostly equivalent to <code><i>ClassName</i>.Prototype.base.GetMethod("x").Call(this)</code> (but without <em>Prototype</em> when <em>Method</em> is static). However, <code><i>ClassName</i>.Prototype</code> is resolved at load time.</li>
+</ul>
+<p>The keyword <code>super</code> must be followed by a dot <code>.</code> or brackets <code>[]</code>.</p>
 
 <h4 id="Custom_Classes_property">属性</h4>
 <p>属性定义创建一个<a href="objects/Object.htm#DefineProp">动态属性</a>, 它会调用一个方法, 而不是简单地存储或返回一个值.</p>
@@ -353,7 +355,7 @@ Method()
 <p>如果属性不能接受参数(方括号被省略或为空), 参数将自动转发给 <em>get</em> 返回的对象的 <a href="#__Item">__Item</a> 属性. 例如, <code>this.Property[x]</code> 与 <code>(this.Property)[x]</code> 或 <code>y := this.Property, y[x]</code> 具有相同的效果.</p>
 <p>静态属性可以在属性名之前加上独立的关键字 <code>static</code> 来定义. 在这种情况下, <code>this</code> 指的是类本身或子类.</p>
 <p><em>set</em> 的返回值会被忽略. 例如, <code>val := obj.Property := 42</code> 总是赋值 <code>val := 42</code> 不管该属性做什么, 除非它抛出异常或退出线程.</p>
-<p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_base">base.Property</a></code> 访问其基类中定义的属性. 如果没有定义 <em>Get</em> 或 <em>Set</em>, 则可以从基对象继承它. 如果没有定义 <em>Get</em>, 则属性可以返回从基继承的值. 如果在该类和所有基对象中没有定义 <em>Set</em>, 则该属性为只读(尝试设置该属性会抛出异常).</p>
+<p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_super">super.Property</a></code> 访问其基类中定义的属性. 如果没有定义 <em>Get</em> 或 <em>Set</em>, 则可以从基对象继承它. 如果没有定义 <em>Get</em>, 则属性可以返回从基继承的值. 如果在该类和所有基对象中没有定义 <em>Set</em>, 则该属性为只读(尝试设置该属性会抛出异常).</p>
 <p>内部 <em>get</em> 与 <em>set</em> 是独立的两方法, 故不可共享变量(除非存储于 <code>this</code> 中).</p>
 <p>另请参阅: <a href="objects/Object.htm#DefineProp">DefineProp</a></p>
 <p><a href="#Meta_Functions">元函数</a>提供了广泛的控制属性访问, 方法调用的机制, 但更复杂及易错.</p>

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>Value is Type - 语法 &amp; 使用 | AutoHotkey v2</title>
+<title>List of Is Functions - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="Within an expression, the &quot;Value is Type&quot; statement checks whether a value is of a given type or is numeric, uppercase, etc." />
 <meta name="ahk:equiv-v1" content="commands/IfIs.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -12,85 +12,89 @@
 </head>
 <body>
 
-<h1><em>Value</em> is <em>Type</em></h1>
+<h1>Is Functions</h1>
 
-<p>在表达式中, 检查值是否是给定类型, 数字, 大写字母等. </p>
+<pre class="Syntax">Result := Is<i>Something</i>(Value)</pre>
 
-<pre class="Syntax"><span class="func">if</span> <i>Value</i> is <i>Type</i>
-<span class="func">if</span> !(<i>Value</i> is <i>Type</i>) </pre>
-<h2 id="Parameters">参数</h2>
-<dl>
+<p>These functions perform various checks. There are three categories:</p>
+<ul>
+  <li><a href="#cat-type">Type</a>: Check the type of a value, or whether a string can be interpreted as a value of that type.</li>
+  <li><a href="#cat-misc">Misc</a>: Check miscellaneous conditions based on a given value or variable reference.</li>
+  <li><a href="#cat-string">String</a>: Check that a string matches a specific pattern. <em>Value</em> must be a string, otherwise an exception is thrown.</li>
+</ul>
 
-  <dt>Value</dt>
-  <dd><p>产生要检查的值的<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
-
-  <dt>Type</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>产生类型字符串或对象的<a href="../Variables.htm#Expressions">表达式</a>, 如下所述.</p>
-  </dd>
-
-</dl>
-
-<h2 id="Types">类型字符串</h2>
-<p>类型字符串不区分大小写.</p>
 <table class="info">
-  <tr>
-    <th>&nbsp;</th><th></th>
+  <tr id="cat-type">
+    <th>Type</th><th></th>
   </tr>
   <tr id="integer">
-    <td style="width:15%">integer(整数)</td>
+    <td style="width:15%">IsInteger</td>
     <td>如果 <em>Value</em> 是整数或不带小数点的纯数字字符串(十进制或十六进制), 则为 True. 允许前导和尾随空格和制表符. 该字符串可以以加号或减号开头, 并且不能为空.</td>
   </tr>
   <tr id="float">
-    <td>float(浮点数)</td>
+    <td>IsFloat</td>
     <td>如果 <em>Value</em> 是浮点数或包含小数点的纯数字字符串, 则为 True. 允许前导和尾随空格和制表符. 该字符串可以以加号, 减号或小数点开头, 并且不能为空.</td>
   </tr>
   <tr id="number">
-    <td>number(数字)</td>
-    <td>如果 <code><i>Value</i> is "integer" or <i>Value</i> is "float"</code> 为 true, 则为 True.</td>
+    <td>IsNumber</td>
+    <td>如果 <code>IsInteger(<i>Value</i>) or IsFloat(<i>Value</i>)</code> 为 true, 则为 True.</td>
   </tr>
   <tr id="object">
-    <td>object(对象)</td>
-    <td>如果 <em>Value</em> 是一个<a href="../Objects.htm">对象</a>, 则为 True.</td>
+    <td><a href="IsObject.htm">IsObject</a></td>
+    <td>True if <em>Value</em> is an <a href="../Objects.htm">object</a>. This includes objects derived from <a href="../objects/Object.htm">Object</a>, prototype objects such as <code>0.base</code>, and COM objects, but not numbers or strings.</td>
+  </tr>
+  <tr id="cat-misc">
+    <th>Misc</th><th></th>
   </tr>
   <tr id="byref">
-    <td>byref</td>
+    <td><a href="IsByRef.htm">IsByRef</a></td>
     <td>如果 <em>Value</em> 是对 <a href="../Functions.htm#ByRef">ByRef 参数</a>的引用, 并且函数的调用者传递了变量引用, 则为 True.</td>
   </tr>
-  <tr>
-    <th>字符串</th><th></th>
+  <tr id="func">
+    <td><a href="IsFunc.htm">IsFunc</a></td>
+    <td>If <em>Value</em> is the <strong>name</strong> of a function defined within the current scope, the return value is 1 plus the minimum number of parameters required by the function; if <em>Value</em> is an object, an exception is thrown; otherwise, the return value is 0.</td>
   </tr>
-  <tr>
-    <td>digit</td>
+  <tr id="label">
+    <td><a href="IsLabel.htm">IsLabel</a></td>
+    <td>True if <em>Value</em> is the name of a <a href="../misc/Labels.htm">label</a> defined within the current scope.</td>
+  </tr>
+  <tr id="set">
+    <td><a href="IsSet.htm">IsSet</a></td>
+    <td>True if the variable <em>Value</em> has been assigned a value. </td>
+  </tr>
+  <tr id="cat-string">
+    <th>String</th><th></th>
+  </tr>
+  <tr id="digit">
+    <td>IsDigit</td>
     <td>如果 <em>Value</em> 是一个正整数, 一个空字符串, 或仅包含字符 0 到 9 的字符串, 则为 True. 不允许使用其他字符, 例如以下字符: 空格, 制表符, 正号, 负号, 小数点, 十六进制数字, 以及 0x 前缀.</td>
   </tr>
-  <tr>
-    <td>xdigit</td>
+  <tr id="xdigit">
+    <td>IsXDigit</td>
     <td>十六进制数字: 与 <em>digit</em> 相同, 但也允许使用字符 A 到 F(大写或小写). 如果存在前缀 0x, 则可以接受.</td>
   </tr>
-  <tr>
-    <td>alpha</td>
+  <tr id="alpha">
+    <td>IsAlpha</td>
     <td>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含字母字符. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非字母的字符时, 则为 False. 例如, 如果 <em>Value</em> 包含一个空格后跟字母, 则 <em>不被</em> 视为 <em>alpha</em>. </td>
   </tr>
-  <tr>
-    <td>upper</td>
+  <tr id="upper">
+    <td>IsUpper</td>
     <td>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含大写字母字符, 则为 True. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非大写字母的字符时, 则为 False.</td>
   </tr>
-  <tr>
-    <td>lower</td>
+  <tr id="lower">
+    <td>IsLower</td>
     <td>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含小写字母字符, 则为 True. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非小写字母的字符时, 则为 False.</td>
   </tr>
-  <tr>
-    <td>alnum</td>
+  <tr id="alnum">
+    <td>IsAlnum</td>
     <td>除了还允许 0 到 9 的数字外, 其他与 <em>alpha</em> 相同.</td>
   </tr>
-  <tr>
-    <td>space</td>
+  <tr id="space">
+    <td>IsSpace</td>
     <td>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含下列空白字符: 空格(<a href="../Variables.htm">A_Space</a> 或 `s), 制表符(<a href="../Variables.htm">A_Tab</a> 或 `t), 换行符(`n), 回车符(`r), 垂直制表符(`v) 和 进纸符(`f), 则为 True.</td>
   </tr>
   <tr id="time">
-    <td>time</td>
+    <td>IsTime</td>
     <td><p>如果 <em>Value</em> 是有效的日期时间戳, 可以是 <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式的全部或开始部分, 则为 True. 例如, 类似 2004 这样的 4 位字符串被视为有效的. 使用 <a href="StrLen.htm">StrLen</a> 确定是否存在其他时间分量.</p>
       <p>小于 1601 的年份会被视为无效的, 因为操作系统通常不支持它们. 被视为有效的最大年份为 9999. </p>
       <p>可以使用单词 DATE 代替 TIME, 效果相同.</p>
@@ -98,19 +102,8 @@
   </tr>
 </table>
 
-<h2 id="Objects">对象</h2>
-<p>与对象一起使用时, <code>is</code> 运算符将执行 <em>实例</em> 检查. 对于 <code>x is y</code>, <em>y</em> 必须具有包含对对象的引用的 <a href="../objects/Class.htm#Prototype">Prototype</a> 属性. 如果 <em>x</em> 的基对象等于或派生自 <code>y.Prototype</code>, 也就是说, 如果 <code>x.HasBase(y.Prototype)</code> 为真, 则结果为 True; . <em>HasBase</em> 或 <em>Base</em> 的所有自定义定义都将被忽略, 并且 <em>Prototype</em> 必须是自有的属性.</p>
-<pre>
-MsgBox([] is Array)               <em>; True</em>
-MsgBox(Array is Array)            <em>; False</em>
-MsgBox(Array.Prototype is Array)  <em>; False</em>
-MsgBox(Array.Prototype is Object) <em>; True</em>
-</pre>
-
 <h2 id="Remarks">备注</h2>
-<p><code>is</code> 可以在任何需要表达式的地方使用. <a href="../Variables.htm#Operators">优先规则</a>适用, 例如, <code>x or y is z</code> 等同于 <code>x or (y is z)</code>.</p>
-<p>要检查多种类型, 请多次使用 <code>is</code>. 例如, <code>x is "integer" or x is "space"</code>.</p>
-<p>由于在脚本开始执行之前, 原义数字(如 <code>128</code>, <code>0x7F</code> 和 <code>1.0</code>) 会转换为纯数字, 因此原义数字的格式会丢失. 所以, 类型检查将以数字的十进制形式进行操作. 例如, <code>0x7F is "digit"</code> 等同于 <code>"128" is "digit"</code>.</p>
+<p>由于在脚本开始执行之前, 原义数字(如 <code>128</code>, <code>0x7F</code> 和 <code>1.0</code>) 会转换为纯数字, 因此原义数字的格式会丢失. To avoid confusion, the string functions listed above throw an exception if they are given a pure number.</p>
 <p>除非已使用 <a href="StringCaseSense.htm">StringCaseSense Locale</a> 区域设置, 否则系统区域设置将被忽略.</p>
 
 <h2 id="Related">相关</h2>
@@ -119,12 +112,14 @@ MsgBox(Array.Prototype is Object) <em>; True</em>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
-<pre>if var is "float"
+<pre>
+if isFloat(var)
     MsgBox var " is a floating point number."
-else if var is 'integer'
+else if isInteger(var)
     MsgBox var " is an integer."
-if var is "time"
-    MsgBox var " is also a valid date-time."</pre>
+if isTime(var)
+    MsgBox var  " is also a valid date-time."
+</pre>
 </div>
 
 </body>
