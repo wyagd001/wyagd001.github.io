@@ -10,79 +10,79 @@
 <script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
 </head>
 <body>
-<h1>Script Compiler Directives <span class="ver">[v1.1.33+]</span></h1>
-<h2>Table of Contents</h2>
+<h1>脚本编译器指令 <span class="ver">[v1.1.33+]</span></h1>
+<h2>目录</h2>
 <ul>
-  <li><a href="#Intro1">Introduction</a></li>
-  <li><a href="#IgnoreKeep">Directives that control the script behaviour</a>:</li>
+  <li><a href="#Intro1">介绍</a></li>
+  <li><a href="#IgnoreKeep">控制脚本行为的指令</a>:</li>
   <ul>
     <li><a href="#IgnoreKeep">IgnoreBegin</a></li>
     <li><a href="#IgnoreKeep">IgnoreEnd</a></li>
     <li><a href="#IgnoreKeep">IgnoreKeep</a></li>
   </ul>
-  <li><a href="#Directives">Directives that control executable metadata</a>:</li>
+  <li><a href="#Directives">控制可执行文件元数据的指令</a>:</li>
   <ul>
-    <li><a href="#Intro2">Introduction</a></li>
-    <li><a href="#AddResource">AddResource</a>: Adds a resource to the .exe.</li>
-    <li><a href="#Bin">Bin</a>: Specifies the binary version of AutoHotkey to use.</li>
-    <li><a href="#ConsoleApp">ConsoleApp</a>: Sets Console mode.</li>
-    <li><a href="#Cont">Cont</a>: Specifies a directive continuation line.</li>
-    <li><a href="#Debug">Debug</a>: Shows directive debugging text.</li>
-    <li><a href="#ExeName">ExeName</a>: Specifies the location and name for the .exe.</li>
-    <li><a href="#Let">Let</a>: Sets a user variable.</li>
-    <li><a href="#Obey">Obey</a>: Obeys a command or expression.</li>
-    <li><a href="#PostExec">PostExec</a>: Runs a program after compilation.</li>
-    <li><a href="#SetMainIcon">SetMainIcon</a>: Sets the main icon.</li>
-    <li><a href="#SetProp">Set<i>Prop</i></a>: Sets an .exe property.</li>
-    <li><a href="#Set">Set</a>: Sets a miscellaneous property.</li>
-    <li><a href="#UpdateManifest">UpdateManifest</a>: Changes the .exe's manifest.</li>
-    <li><a href="#UseResourceLang">UseResourceLang</a>: Changes the resource language.</li>
+    <li><a href="#Intro2">介绍</a></li>
+    <li><a href="#AddResource">AddResource</a>: 为 .exe 添加一个资源.</li>
+    <li><a href="#Bin">Bin</a>: 指定 AutoHotkey 的二进制版本.</li>
+    <li><a href="#ConsoleApp">ConsoleApp</a>: 设置 Console 模式.</li>
+    <li><a href="#Cont">Cont</a>: 指定指令的延续行.</li>
+    <li><a href="#Debug">Debug</a>: 显示指令的调试文本.</li>
+    <li><a href="#ExeName">ExeName</a>: 指定 .exe 的位置和名称.</li>
+    <li><a href="#Let">Let</a>: 设置一个用户变量.</li>
+    <li><a href="#Obey">Obey</a>: 服从一个命令或表达式.</li>
+    <li><a href="#PostExec">PostExec</a>: 编译后运行程序.</li>
+    <li><a href="#SetMainIcon">SetMainIcon</a>: 设置主图标.</li>
+    <li><a href="#SetProp">Set<i>Prop</i></a>: 设置 .exe 的一个属性.</li>
+    <li><a href="#Set">Set</a>: 设置各种属性.</li>
+    <li><a href="#UpdateManifest">UpdateManifest</a>: 更改 .exe 的 manifest.</li>
+    <li><a href="#UseResourceLang">UseResourceLang</a>: 更改资源语言.</li>
   </ul>
 </ul>
-<h2 id="Intro1">Introduction</h2>
-<p>Script compiler directives allow the user to specify details of how a script is to be compiled via <a href="../Scripts.htm#ahk2exe">Ahk2Exe</a>. Some of the features are:</p>
+<h2 id="Intro1">介绍</h2>
+<p>脚本编译器指令允许用户指定如何通过 <a href="../Scripts.htm#ahk2exe">Ahk2Exe</a> 编译脚本的细节. 其中一些特点是:</p>
 <ul>
-  <li>Ability to change the version information (such as the name, description, version...).</li>
-  <li>Ability to add resources to the compiled script.</li>
-  <li>Ability to tweak several miscellaneous aspects of compilation.</li>
-  <li>Ability to remove code sections from the compiled script and vice versa.</li>
+  <li>能够改变版本信息(如名称, 描述, 版本...).</li>
+  <li>能够为编译后的脚本添加资源.</li>
+  <li>能够调整编译的一些选项.</li>
+  <li>能够从编译后的脚本中删除代码部分.</li>
 </ul>
-<p>The script compiler looks for special comments in the source script and recognises these as Compiler Directives. All compiler directives are introduced by the string <code>@Ahk2Exe-</code>, preceded by the comment flag (usually <code>;</code>).</p>
+<p>脚本编译器在源代码中寻找特殊的注释, 并将其识别为编译器指令. 所有的编译器指令都是由字符串 <code>@Ahk2Exe-</code> 引入的, 前面有注释标志(通常为 <code>;</code>).</p>
 
-<h2 id="IgnoreKeep">Directives that control the script behaviour</h2>
-<p>It is possible to remove code sections from the compiled script by wrapping them in directives:</p>
+<h2 id="IgnoreKeep">控制脚本行为的指令</h2>
+<p>可以通过包装它们在指令中, 从编译后的脚本中删除代码片段:</p>
 <pre class="NoIndent">MsgBox This message appears in both the compiled and uncompiled script
 <em>;@Ahk2Exe-IgnoreBegin</em>
 MsgBox This message does NOT appear in the compiled script
 <em>;@Ahk2Exe-IgnoreEnd</em>
 MsgBox This message appears in both the compiled and uncompiled script
 </pre>
-<p>The reverse is also possible, i.e. marking a code section to only be executed in the compiled script:</p>
+<p>反过来说也是可以的, 即标记代码片段只在编译后的脚本中执行:</p>
 <pre class="NoIndent"><em>/*@Ahk2Exe-Keep
 MsgBox This message appears only in the compiled script
 */</em>
 MsgBox This message appears in both the compiled and uncompiled script
 </pre>
-<p>This has advantage over <a href="../Variables.htm#IsCompiled">A_IsCompiled</a> because the code is completely removed from the compiled script during preprocessing, thus making the compiled script smaller. The reverse is also true: it will not be necessary to check for <a href="../Variables.htm#IsCompiled">A_IsCompiled</a> because the code is inside a comment block in the uncompiled script.</p>
+<p>这比 <a href="../Variables.htm#IsCompiled">A_IsCompiled</a> 的优势在于, 在预处理过程中, 代码被完全从编译脚本中移除，从而使编译脚本更小. 反之亦然: 不需要检查 <a href="../Variables.htm#IsCompiled">A_IsCompiled</a> 因为代码在未编译的脚本中的注释块中.</p>
 
-<h2 id="Directives">Directives that control executable metadata</h2>
-<h3 id="Intro2">Introduction</h3>
-<p>In the parameters of these directives, the following escape sequences are supported: <code>``</code>, <code>`,</code>, <code>`n</code>, <code>`r</code> and <code>`t</code>. Commas <em>always</em> need to be escaped, regardless of the parameter position. "Integer" refers to unsigned 16-bit integers (0..0xFFFF).</p>
+<h2 id="Directives">控制可执行程序元数据的指令</h2>
+<h3 id="Intro2">介绍</h3>
+<p>在这些指令的参数中, 支持以下转义序列: <code>``</code>, <code>`,</code>, <code>`n</code>, <code>`r</code> 和 <code>`t</code>. <em>无论</em> 参数的位置如何, 都需要对逗号进行转义. "Integer" 是指无符号的 16 位整数(0..0xFFFF).</p>
 
-<p>If required, directive parameters can reference the following list of standard built-in variables by enclosing the variable name with <code>%</code> signs:</p>
-<p id="group1"><strong>Group 1:</strong> <a href="../Variables.htm#AhkPath">A_AhkPath</a>, <a href="../Variables.htm#AppData">A_AppData</a>, <a href="../Variables.htm#AppDataCommon">A_AppDataCommon</a>, <a href="../Variables.htm#ComputerName">A_ComputerName</a>, <a href="../Variables.htm#ComSpec">A_ComSpec</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#DesktopCommon">A_DesktopCommon</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#ProgramsCommon">A_ProgramsCommon</a>, <a href="../Variables.htm#ScriptDir">A_ScriptDir</a>, <a href="../Variables.htm#ScriptFullPath">A_ScriptFullPath</a>, <a href="../Variables.htm#ScriptName">A_ScriptName</a>, <a href="../Variables.htm#Space">A_Space</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#StartMenuCommon">A_StartMenuCommon</a>, <a href="../Variables.htm#Startup">A_Startup</a>, <a href="../Variables.htm#StartupCommon">A_StartupCommon</a>, <a href="../Variables.htm#Tab">A_Tab</a>, <a href="../Variables.htm#Temp">A_Temp</a>, <a href="../Variables.htm#UserName">A_UserName</a>, <a href="../Variables.htm#WinDir">A_WinDir</a>.</p>
+<p>如果需要, 指令参数可以通过使用 <code>%</code>(百分号) 括住变量名来引用以下标准内置变量列表:</p>
+<p id="group1"><strong>组 1:</strong> <a href="../Variables.htm#AhkPath">A_AhkPath</a>, <a href="../Variables.htm#AppData">A_AppData</a>, <a href="../Variables.htm#AppDataCommon">A_AppDataCommon</a>, <a href="../Variables.htm#ComputerName">A_ComputerName</a>, <a href="../Variables.htm#ComSpec">A_ComSpec</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#DesktopCommon">A_DesktopCommon</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#ProgramsCommon">A_ProgramsCommon</a>, <a href="../Variables.htm#ScriptDir">A_ScriptDir</a>, <a href="../Variables.htm#ScriptFullPath">A_ScriptFullPath</a>, <a href="../Variables.htm#ScriptName">A_ScriptName</a>, <a href="../Variables.htm#Space">A_Space</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#StartMenuCommon">A_StartMenuCommon</a>, <a href="../Variables.htm#Startup">A_Startup</a>, <a href="../Variables.htm#StartupCommon">A_StartupCommon</a>, <a href="../Variables.htm#Tab">A_Tab</a>, <a href="../Variables.htm#Temp">A_Temp</a>, <a href="../Variables.htm#UserName">A_UserName</a>, <a href="../Variables.htm#WinDir">A_WinDir</a>.</p>
 
-<p><strong>Group 2:</strong> <a href="../Variables.htm#AhkVersion">A_AhkVersion</a>, <a href="../Variables.htm#IsCompiled">A_IsCompiled</a>, <a href="../Variables.htm#IsUnicode">A_IsUnicode</a>, <a href="../Variables.htm#PtrSize">A_PtrSize</a>.</p>
+<p><strong>组 2:</strong> <a href="../Variables.htm#AhkVersion">A_AhkVersion</a>, <a href="../Variables.htm#IsCompiled">A_IsCompiled</a>, <a href="../Variables.htm#IsUnicode">A_IsUnicode</a>, <a href="../Variables.htm#PtrSize">A_PtrSize</a>.</p>
 
-<p id="WorkFileName">In addition to these variable names, the special variable <strong>A_WorkFileName</strong> holds the temporary name of the processed .exe file. This can be used to pass the file name as a parameter to any <a href="#PostExec">PostExec</a> directives which need to access the generated .exe.</p>
+<p id="WorkFileName">除了这些变量名之外, 特殊变量 <strong>A_WorkFileName</strong> 还保存着处理后的 .exe 文件的临时名称. 这可以用来将文件名作为参数传递给任何需要访问生成的 .exe 文件的 <a href="#PostExec">PostExec</a> 指令.</p>
 
-<p id="PriorLine">Also, the special variable <strong>A_PriorLine</strong> contains the source line immediately preceding the current compiler directive. Intervening lines of blanks and comments only are ignored, as are any intervening compiler directive lines. This variable can be used to 'pluck' constant information from the script source, and use it in later compiler directives. An example would be accessing the version number of the script, which may be changed often. Accessing the version number in this way means that it needs to be changed only once in the source code, and the change will get copied through to the necessary directive. (See the RegEx example below for more information.)</p>
+<p id="PriorLine">另外, 特殊变量 <strong>A_PriorLine</strong> 包含了紧接当前编译器指令之前的源代码行. 只忽略中间的空白行和注释, 以及任何中间的编译器指令行. 这个变量可以用来从脚本源代码中 "提取" 常量信息, 并在以后的编译器指令中使用它. 一个例子是访问脚本的版本号, 因为它可能会经常改变. 以这种方式访问版本号, 意味着在源代码中只需要更改一次, 更改的内容会被复制到必要的指令中. (有关详情, 请参阅下面的 RegEx 示例.)</p>
 
-<p>As well, special user variables can be created with the format <code>U_<i>Name</i></code> using the <a href="#Let">Let</a> and <a href="#Obey">Obey</a> directives, described below.</p>
+<p>同样, 也可以使用下面描述的 <a href="#Let">Let</a> 和 <a href="#Obey">Obey</a> 指令, 创建格式为 <code>U_<i>Name</i></code> 的特殊用户变量.</p>
 
-<p>In addition to being available for directive parameters, all variables can be accessed from any RT_MENU, RT_DIALOG, RT_STRING, RT_ACCELERATORS, RT_HTML, and RT_MANIFEST file supplied to the <a href="#AddResource">AddResource</a> directive, below.</p>
+<p>除了可用于指令参数外, 所有的变量都可以从任何 RT_MENU, RT_DIALOG, RT_STRING, RT_ACCELERATORS, RT_HTML 和 RT_MANIFEST 文件中访问, 提供给下面的 <a href="#AddResource">AddResource</a> 指令.</p>
 
-<p>If needed, the value returned from the above variables can be manipulated by including at the end of the built-in variable name before the ending <code>%</code>, up to 2 parameters (called p2 and p3) all separated by tilde <code>~</code>. The p2 and p3 parameters will be used as literals in the 2nd and 3rd parameters of a <a href="../commands/RegExReplace.htm">RegExReplace</a> function to manipulate the value returned. (See <a href="RegEx-QuickRef.htm">RegEx Quick Reference</a>.) Note that p3 is optional.</p>
+<p>如果需要, the value returned from the above variables can be manipulated by including at the end of the built-in variable name before the ending <code>%</code>, up to 2 parameters (called p2 and p3) all separated by tilde <code>~</code>. The p2 and p3 parameters will be used as literals in the 2nd and 3rd parameters of a <a href="../commands/RegExReplace.htm">RegExReplace</a> function to manipulate the value returned. (See <a href="RegEx-QuickRef.htm">RegEx Quick Reference</a>.) Note that p3 is optional.</p>
 
 <p>To include a tilde as data in p2 or p3, preceded it with a back-tick, i.e. <code>`~</code>. To include a back-tick character as data in p2 or p3, double it, i.e. <code>``</code>.</p>
 
@@ -104,15 +104,15 @@ MsgBox This message appears in both the compiled and uncompiled script
 <p><strong>Other examples:</strong> Other working examples which can be downloaded and examined, are available from <a href="https://github.com/AutoHotkey/Ahk2Exe/releases/tag/DemoCode_1">here</a>.</p>
 
 <h3 id="AddResource">AddResource</h3>
-<p>Adds a resource to the compiled executable. (Also see <a href="#UseResourceLang">UseResourceLang</a> below)</p>
+<p>将资源添加到已编译的可执行文件中. (另请参阅下面的 <a href="#UseResourceLang">UseResourceLang</a>)</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-AddResource</span> FileName <span class="optional">, ResourceName</span></pre>
 <dl>
   <dt>FileName</dt>
-  <dd>The filename of the resource to add. The type of the resource (as an integer or string) can be explicitly specified by prepending an asterisk to it: <code>*type Filename</code>. If omitted, Ahk2Exe automatically detects the type according to the file extension.</dd>
+  <dd>要添加的资源的文件名. 资源的类型(as an integer or string) 可以通过附加一个星号显式指定: <code>*type Filename</code>. 如果省略, Ahk2Exe 会根据文件扩展名自动检测类型.</dd>
   <dt>ResourceName</dt>
-  <dd><i>(Optional)</i> The name that the resource will have (can be a string or an integer). If omitted, it defaults to the name (with no path) of the file, in uppercase.</dd>
+  <dd><i>(可选)</i> 资源将具有的名称(can be a string or an integer). 如果省略, 则默认为文件的名称(没有路径), 大写.</dd>
 </dl>
-<p>Here is a list of common standard resource types and the extensions that trigger them by default.</p>
+<p>下面是缺省情况下触发它们的通用标准资源类型和扩展的列表.</p>
 <ul>
   <li>2 (RT_BITMAP): <code>.bmp</code>, <code>.dib</code></li>
   <li>4 (RT_MENU)</li>
@@ -133,20 +133,20 @@ MsgBox This message appears in both the compiled and uncompiled script
 ;@Ahk2Exe-AddResource Icon4.ico, 208  ; Replaces 'S on red'</pre>
 
 <h3 id="Bin">Bin</h3>
-<p>Specifies the Binary version of AutoHotkey to be included in the generated .exe. (This overrides anything specified in the GUI or CLI.) This directive can be specified many times if necessary, but only in the top level script file (i.e. not in an <a href="../commands/_Include.htm">#Include</a> file). The compiler will be run at least once for each <em>Bin</em> directive found. (If an actual comment is appended to this directive, it must use the <code>&nbsp;;</code> flag. To truly comment out this directive, insert a space after the first comment flag.)</p>
+<p>指定要包含在生成的 .exe 文件中的 AutoHotkey 的二进制版本. (这将覆盖任何在 GUI 或 CLI 中指定的内容.) 如果有必要, 这个指令可以指定很多次, 但只能在顶层脚本文件中指定(即不能在 <a href="../commands/_Include.htm">#Include</a> 的文件中指定). 每找到一个 <em>Bin</em> 指令, T编译器就会至少运行一次. (如果在此指令中附加了实际的注释, 则必须使用  <code>&nbsp;;</code> 标志. 要真正注释这个指令, 请在第一个注释标志后插入一个空格.)</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-Bin</span> [Path\]Name <span class="optional">, [Exe_path\][Name], Codepage</span></pre>
 <dl>
   <dt>[Path\]Name</dt>
-  <dd>The *.bin file to use. If no extension is supplied, <code>.bin</code> is assumed. A DOS mask may be specified for <em>Name</em>, e.g. <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code>, or <code>*bit</code> for all three. If no path is specified, the standard *.bin files in the compiler folder are searched. The compiler will be run for each *.bin file that matches. Any use of built-in variable replacements must only be from <a href="#group1">group 1</a> above.</dd>
+  <dd>要使用的 *.bin 文件. 如果没有提供扩展名, 则假定为 <code>.bin</code>. 可以为 <em>Name</em> 指定一个 DOS 掩码, 例如 <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code> 或为这三种掩码指定 <code>*bit</code>. 如果没有指定路径, 则会搜索编译器文件夹中的标准 *.bin 文件. 编译器将为每个匹配的 *.bin 文件运行. 任何内置变量替换的使用都必须是来自上述的<a href="#group1">组 1</a>.</dd>
   <dt>[Exe_path\][Name]</dt>
-  <dd><i>(Optional)</i> The file name to be given to the .exe. Any extension supplied will be replaced by <code>.exe</code>. If no path is specified, the .exe will be created in the script folder. If no name is specified, the .exe will have the default name. (This parameter can be overridden by the <a href="#ExeName">ExeName</a> directive.)</dd>
+  <dd><i>(可选)</i> The file name to be given to the .exe. Any extension supplied will be replaced by <code>.exe</code>. If no path is specified, the .exe will be created in the script folder. If no name is specified, the .exe will have the default name. (This parameter can be overridden by the <a href="#ExeName">ExeName</a> directive.)</dd>
   <dt>Codepage</dt>
-  <dd><i>(Optional)</i> Overrides the default <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">codepage</a>
+  <dd><i>(可选)</i> Overrides the default <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">codepage</a>
   used to process script files. (Scripts should begin with a Unicode byte-order-mark (BOM), rendering the use of this parameter unnecessary.)</dd>
 </dl>
 
 <h3 id="ConsoleApp">ConsoleApp</h3>
-<p>Changes the executable subsystem to Console mode.</p>
+<p>将可执行子系统更改为控制台模式.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-ConsoleApp</span></pre>
 
 <h3 id="Cont">Cont</h3>
@@ -154,15 +154,15 @@ MsgBox This message appears in both the compiled and uncompiled script
 <pre class="Syntax"><span class="func">;@Ahk2Exe-Cont</span> Text</pre>
 <dl>
   <dt>Text</dt>
-  <dd>The text to be appended to the previous directive line, before that line is processed. The text starts after the single space following the <code>Cont</code> key-word.</dd>
+  <dd>在处理前一个指令行之前, 附加到该指令行的文本. 文本开始于 <code>Cont</code> 关键字后面的单个空格之后.</dd>
 </dl>
 
 <h3 id="Debug">Debug</h3>
-<p>Shows a msgbox with the supplied text, for debugging purposes.</p>
+<p>显示带有提供文本的 msgbox, 用于调试.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-Debug</span> Text</pre>
 <dl>
   <dt>Text</dt>
-  <dd>The text to be shown. Include any special variables between <code>%</code> signs to see the (manipulated) contents.</dd>
+  <dd>要显示的文本. Include any special variables between <code>%</code> signs to see the (manipulated) contents.</dd>
 </dl>
 
 <h3 id="ExeName">ExeName</h3>
@@ -242,64 +242,64 @@ MsgBox This message appears in both the compiled and uncompiled script
 </dl>
 
 <h3 id="SetProp">Set<em>Prop</em></h3>
-<p>Changes a property in the compiled executable's version information. Note that all properties are processed in alphabetical order, regardless of the order they are specified.</p>
+<p>更改已编译可执行文件的版本信息中的属性. 注意, 无论指定属性的顺序如何, 所有属性都按字母顺序处理.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-Set<i>Prop</i></span> Value</pre>
 <dl>
   <dt><em>Prop</em></dt>
   <dd>
-    <p>The name of the property to change. Must be one of those listed below.</p>
+    <p>要更改的属性的名称. 必须是下列名单之一.</p>
     <table class="info">
       <tr>
-        <th>Property</th>
-        <th>Description</th>
+        <th>属性</th>
+        <th>描述</th>
       </tr>
       <tr>
         <td>CompanyName</td>
-        <td>Changes the company name.</td>
+        <td>更改公司名称.</td>
       </tr>
       <tr>
         <td>Copyright</td>
-        <td>Changes the legal copyright information.</td>
+        <td>更改法定版权信息.</td>
       </tr>
       <tr>
         <td>Description</td>
-        <td>Changes the file description.</td>
+        <td>更改文件说明.</td>
       </tr>
       <tr>
         <td>FileVersion</td>
-        <td>Changes the file version, in both text and raw binary format. (See <em>Version</em> below, for more details.)</td>
+        <td>更改文件版本, 包括文本和原始二进制格式. (有关详情, 请参阅下面的 <em>Version</em>.)</td>
       </tr>
       <tr>
         <td>InternalName</td>
-        <td>Changes the internal name.</td>
+        <td>更改内部名称.</td>
       </tr>
       <tr>
         <td>Language</td>
-        <td>Changes the <a href="Languages.htm">language code</a>. <br>Please note that hexadecimal numbers must have an <code>0x</code> prefix.</td>
+        <td>更改<a href="Languages.htm">语言代码</a>. <br>请注意, 十六进制数字必须有 <code>0x</code> 前缀.</td>
       </tr>
       <tr>
         <td>LegalTrademarks</td>
-        <td>Changes the legal trademarks information.</td>
+        <td>更改合法商标信息.</td>
       </tr>
       <tr>
         <td>Name</td>
-        <td>Changes the product name and the internal name.</td>
+        <td>更改产品名称和内部名称.</td>
       </tr>
       <tr>
         <td>OrigFilename</td>
-        <td>Changes the original filename information.</td>
+        <td>更改原始文件名信息.</td>
       </tr>
       <tr>
         <td>ProductName</td>
-        <td>Changes the product name.</td>
+        <td>更改产品名称.</td>
       </tr>
       <tr>
         <td>ProductVersion</td>
-        <td>Changes the product version, in both text and raw binary format. (See <em>Version</em> below, for more details.)</td>
+        <td>更改产品版本, 包括文本和原始二进制格式. (有关详情, 请参阅下面的 <em>Version</em>.)</td>
       </tr>
       <tr>
         <td>Version</td>
-        <td>Changes the file version and the product version, in both text and raw binary format.<br>Ahk2Exe fills the binary version fields with the period-delimited numbers (up to four) that may appear at the beginning of the version text. Unfilled fields are set to zero. For example, <code>1.3-alpha</code> would produce a binary version number of <code>1.3.0.0</code>. If this property is not modified, it defaults to the AutoHotkey version used to compile the script.</td>
+        <td>更改文件版本和产品版本, 包括文本和原始二进制格式.<br>Ahk2Exe fills the binary version fields with the period-delimited numbers (up to four) that may appear at the beginning of the version text. Unfilled fields are set to zero. 例如, <code>1.3-alpha</code> would produce a binary version number of <code>1.3.0.0</code>. 如果这个属性没有被修改, 它默认为用于编译脚本的 AutoHotkey 版本.</td>
       </tr>
     </table>
   </dd>
