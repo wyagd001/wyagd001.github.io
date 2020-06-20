@@ -3,6 +3,7 @@
 <head>
 <title>#HotIf - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The #HotIf directive creates context-sensitive hotkeys and hotstrings. Such hotkeys perform a different action (or none at all) depending on the result of an expression." />
+<meta name="ahk:equiv-v1" content="commands/_If.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -23,7 +24,7 @@
   <dt>Expression</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
-    <p>任何有效的<a href="../Variables.htm#Expressions">表达式</a>.</p>
+    <p>任何有效的<a href="../Variables.htm#Expressions">表达式</a>.  This becomes the return value of an implicit function which has one parameter (<a href="../Hotkeys.htm#HotBraces">ThisHotkey</a>). As with hotkey functions, variable references are <a href="../Functions.htm#AssumeLocal">local by default</a>, so to use a global variable, <a href="../Functions.htm#SuperGlobal">declare it</a> outside of the expression.</p>
   </dd>
 
 </dl>
@@ -31,7 +32,8 @@
 <h2 id="howto">基本操作</h2>
 <p>#HotIf 指令设置表达式, 随后创建的热键将使用该表达式来确定是否应激活它们. 当按下键, 鼠标按钮或组合键, 或者在程序需要知道热键是否处于活动状态时, 将对该表达式求值.</p>
 <p>要生成上下文敏感的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>, 只需在它们前面加上 #HotIf 指令. 例如:</p>
-<pre>#HotIf WinActive("ahk_class Notepad") or WinActive(MyWindowTitle)
+<pre>global MyWinTitle := "Example window title"
+#HotIf WinActive("ahk_class Notepad") or WinActive(MyWindowTitle)
 #Space::MsgBox "You pressed Win+Spacebar in Notepad or " MyWindowTitle</pre>
 <p>#HotIf 指令是与位置相关的: 它会影响脚本中在它后面的所有热键和热字串, 直到下一个 #HotIf 指令.</p>
 <p class="warning"><strong>注意:</strong> 与 <a href="If.htm">if 语句</a>不同, 大括号对 #HotIf 指令无效.</p>
@@ -53,10 +55,11 @@ Enter::Send "!o"  <em>; 按下 &quot;Enter&quot; 打开 reminder, 而不是 snoo
 ^!c::MsgBox "You pressed Control+Alt+C in a window other than Notepad/WordPad."</pre>
 <p>如果有多个变体符合触发条件, 那么仅触发最早创建的那个. 这种情况的例外是全局变体(不带 #HotIf 条件的那个): 它的优先级总是最低的, 仅当其他变体都不触发时它才会被触发(此例外不适用<a href="../Hotstrings.htm">热字串</a>).</p>
 <p>创建重复热键时, <a href="../Hotkeys.htm#Symbols"> 修饰符</a> 的顺序(如 ^!+#) 没有关系. 例如, <code>^!c</code> 等同于 <code>!^c</code>.但是, 按键必须拼写一致. 例如, 为了这个目的时, <em>Esc</em> 不同于 <em>Escape</em>(尽管大小写无关). 最后, 任何带有<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不带通配符的热键是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 都可以有他们各自的变体.</p>
-<p><a href="GroupAdd.htm">窗口组</a>可以用来使热键为一组窗口执行, 例如:
+<p><a href="GroupAdd.htm">窗口组</a>可以用来使热键为一组窗口执行. 例如:
 <pre>
-GroupAdd "MyGroup" , "ahk_class Notepad"
-GroupAdd "MyGroup" , "ahk_class WordPadClass"
+GroupAdd "MyGroup", "ahk_class Notepad"
+GroupAdd "MyGroup", "ahk_class WordPadClass"
+
 #HotIf WinActive("ahk_group MyGroup")
 #z::MsgBox "You pressed Win+Z in either Notepad or WordPad."
 </pre>
@@ -76,7 +79,7 @@ GroupAdd "MyGroup" , "ahk_class WordPadClass"
   <li>如果达到<a href="_HotIfTimeout.htm#LowLevelHooksTimeout">系统定义的超时</a>, 系统可能会停止通知脚本键盘或鼠标输入(有关详细信息, 请参阅 #HotIfTimeout).</li>
   <li>在计算表达式时, 发送击键或鼠标单击(例如, 从它调用的函数中), 可能会导致并发, 应该避免.</li>
 </ul>
-<p><a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <a href="../Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 是基于当前正在计算的 #HotIf 表达式的热键来设置的.</p>
+<p><a href="../Hotkeys.htm#HotBraces">ThisHotkey</a>, <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <a href="../Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 是基于当前正在计算的 #HotIf 表达式的热键来设置的.</p>
 <p><a href="../Variables.htm#PriorHotkey">A_PriorHotkey</a> 和 <a href="../Variables.htm#TimeSincePriorHotkey">A_TimeSincePriorHotkey</a> 暂时包含对应 "This" 变量的前一个值.</p>
 
 <h2 id="optimization">优化</h2>
@@ -88,11 +91,11 @@ GroupAdd "MyGroup" , "ahk_class WordPadClass"
   <li>当表达式被预编译时, 空白和括号会被完全处理, 因此不会影响这种优化.</li>
 </ul>
 <p>如果表达式符合这些条件, 则直接由程序计算, 不会出现在 <a href="ListLines.htm">ListLines</a> 中.</p>
-<p>在使用<a href="Hotkey.htm">热键</a>函数修改现有的热键变体之前, 通常 <code>HotIf</code> 必须与原始表达式文本一起使用. 然而, 第一个具有给定组合条件的唯一表达式也可以被该条件引用. 例如:</p>
+<p>在使用<a href="Hotkey.htm">热键</a>函数修改现有的热键变体之前, 通常 <<a href="HotIf.htm">HotIf</a> 函数必须与原始表达式文本一起使用. 然而, 第一个具有给定组合条件的唯一表达式也可以被该条件引用. 例如:</p>
 <pre>
 HotIfWinExist "ahk_class Notepad"
 Hotkey "#n", "Off"  <em>; 关闭热键.</em>
-Hotkey 'If', 'WinExist("ahk_class Notepad")'
+HotIf 'WinExist("ahk_class Notepad")'
 Hotkey "#n", "On"   <em>; 打开同一个热键.</em>
 
 #HotIf WinExist("ahk_class Notepad")
@@ -100,7 +103,7 @@ Hotkey "#n", "On"   <em>; 打开同一个热键.</em>
 </pre>
 <p>注意, 任何变量的使用都会取消表达式的资格. 如果在创建热键后, 变量的值永远不会改变, 有两种策略可以最大限度地降低 #HotIf 的滞后风险或其他固有问题:</p>
 <ul>
-  <li>使用 <code><a href="HotIf.htm#IfWin">HotIfWin...</a>, MyTitleVar</code> 来设置条件和 <code><a href="Hotkey.htm">Hotkey</a> KeyName, Label</code> 来创建热键变体.</li>
+  <li>使用 <code class="no-highlight"><a href="HotIf.htm#IfWin">HotIfWin...</a> MyTitleVar</code> 来设置条件和 <code><a href="Hotkey.htm">Hotkey</a> KeyName, Label</code> 来创建热键变体.</li>
   <li>使用常量表达式, 如 <code>#HotIf WinActive("ahk_group MyGroup")</code> 和并在脚本的其他地方使用 <code><a href="GroupAdd.htm">GroupAdd</a> "MyGroup", MyTitleVar</code> 定义窗口组.</li>
 </ul>
 
@@ -176,8 +179,8 @@ NumpadAdd::
     else
         Hotkey "WheelUp", "WheelUp"
     return
-    ; Nested function:
-    DoubleUp(ThisHotkey) => Send("{Volume_Up 2}")
+    ; 嵌套函数:
+    DoubleUp(ThisHotkey) =&gt; Send("{Volume_Up 2}")
 }
 </pre>
 </div>

@@ -26,9 +26,9 @@
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>热键的按键的名称, 包括所有<a href="../Hotkeys.htm#Symbols">修饰符</a>. 例如, 指定 <code>#c</code> 来触发 <kbd>Win</kbd>+<kbd>C</kbd> 热键.</p>
     <p>如果 <em>KeyName</em> 已经是现有的热键, 那么将使用此函数的其他参数值更新原来的热键.</p>
-    <p><em>KeyName</em> 也可以是现有的热键的名称(用双冒号创建), 这样会使用此函数的其他参数值更新原来的热键.</p>
+    <p><em>KeyName</em> 也可以是现有的热键的名称(用双冒号语法创建), 这样会使用此函数的其他参数值更新原来的热键.</p>
     <p>指定 <em>现有的</em> 热键, <em>KeyName</em> 是不区分大小写的. 但是, 按键名称必须和现有的热键拼写相同(例如在这种情况下 Esc 与 Escape 是不同的). 此外, <a href="../Hotkeys.htm#Symbols">修饰符</a>(如 ^!+#) 的顺序是无关紧要的. <a href="GetKeyName.htm">GetKeyName</a> 可用于获取标准的按键名称.</p>
-    <p>热键首次创建时 -- 无论是通过 Hotkey 函数还是脚本中的<a href="../Hotkeys.htm">双冒号标签</a> -- 其键名以及修饰符的顺序成为此热键的固定名称, 正如 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <em>Callback</em> 的参数所反映的那样. 这个名称由热键的所有<a href="_HotIf.htm#variant">变体</a>共享, 并且即使之后 Hotkey  函数使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
+    <p>热键首次创建时 -- 无论是通过 Hotkey 函数还是脚本中的<a href="../Hotkeys.htm">双冒号语法</a> -- 其键名以及修饰符的顺序成为此热键的固定名称, 正如 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <em>Callback</em> 的参数所反映的那样. 这个名称由热键的所有<a href="_HotIf.htm#variant">变体</a>共享, 并且即使之后 Hotkey  函数使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
     <p>如果热键变体已经存在, 则根据 <em>KeyName</em> 是否包含<a href="../Hotkeys.htm#Tilde">颚化符前缀(~)</a> 更新它的行为.</p>
     <p>使用<a href="../Hotkeys.htm#prefixdollar">钩子前缀($)</a> 可添加到现有热键上. 这个前缀影响所有热键的变体且不能被删除.</p>
   </dd>
@@ -37,7 +37,7 @@
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
       <p>当按下热键时, 要执行的子程序(作为一个新的<a href="../misc/Threads.htm">线程</a>). 它可以是函数名称, <a href="../objects/Functor.htm">函数对象</a>, 或不带冒号的<a href="../Hotkeys.htm">热键</a>名称.</p>
-      <p>如果 <em>Callback</em> 是一个函数, 那么它的调用只有一个参数, 即热键的<a href="../Hotkeys.htm#HotBraces">名称</a>. 用<a href="../Hotkeys.htm">双冒号</a>定义的热键自动使用参数名 <code>ThisHotkey</code>. 热键也可以不使用热键函数而<a href="../Hotkeys.htm#Function">指定一个函数名</a>.</p>
+      <p>如果 <em>Callback</em> 是一个函数, 那么它的调用只有一个参数, 即热键的<a href="../Hotkeys.htm#HotBraces">名称</a>. 用<a href="../Hotkeys.htm">双冒号语法</a>定义的热键自动使用参数名 <code>ThisHotkey</code>. 热键也可以不使用热键函数而<a href="../Hotkeys.htm#Function">指定一个函数名</a>.</p>
       <p>如果 <em>Callback</em> 是热键名称, 则使用其原始函数; 具体来说, 就是对应当前 <a href="HotIf.htm">HotIf</a> 条件的热键变体的原始函数. 这通常用于恢复热键改变后的原始函数, 但也可以用于分配不同热键的函数, 前提是两个热键使用相同的 HotIf 条件.</p>
       <p>如果 <em>KeyName</em> 已经作为热键, 那么参数可以为空, 这种情况下回调不会被改变. 这在仅需要改变热键 <em>Options</em> 时很有用.</p>
       <p class="note"><strong>注意</strong>: 如果指定了函数, 但热键之前已经使用此命令禁用了, 那么热键会保持禁用状态. 要启用它, 请在 <em>Options</em> 中包含单词 ON.</p>
@@ -109,7 +109,7 @@ catch
 <h2 id="Remarks">备注</h2>
 <p><a href="HotIf.htm">当前的 HotIf  设置</a>决定了 Hotkey 函数将操作热键的哪个<a href="#variant">变体</a>.</p>
 <p>如果需要根据活动窗口的类型来自动禁用选择的热键或热字串, 使用 <code>Hotkey "^!c", "Off"</code> 通常不如 <a href="_HotIf.htm">#HotIf</a> 带有 <a href="WinActive.htm">WinActive</a>/<a href="WinExist.htm">WinExist</a>(或它们的动态副本 <a href="HotIf.htm#IfWin">HotIfWinActive/Exist</a>) 来的方便.</p>
-<p>通过<a href="../Hotkeys.htm">双冒号</a>创建的热键比使用 Hotkey 函数执行地更好, 因为在脚本启动时会批量启用它们(而非一个一个地启用). 因此, 最好使用此函数仅创建那些在脚本开始运行后才知道其键名的热键. 一种此类情况是, 当通过 <a href="IniRead.htm">INI 文件</a>来配置脚本各种操作的热键时使用此函数.</p>
+<p>通过<a href="../Hotkeys.htm">双冒号语法</a>创建的热键比使用 Hotkey 函数执行地更好, 因为在脚本启动时会批量启用它们(而非一个一个地启用). 因此, 最好使用此函数仅创建那些在脚本开始运行后才知道其键名的热键. 一种此类情况是, 当通过 <a href="IniRead.htm">INI 文件</a>来配置脚本各种操作的热键时使用此函数.</p>
 <p>如果脚本被<a href="Suspend.htm">挂起了</a>, 那么新增加/启用的热键也将是挂起的, 直到挂起状态被关闭(除非它们像 <a href="Suspend.htm">Suspend</a> 页面中描述的那样进行了豁免).</p>
 <p>如果由这个函数所做的更改是合理的将会安装或移除<a href="_InstallKeybdHook.htm">键盘</a>和/或<a href="_InstallMouseHook.htm">鼠标</a>钩子.</p>
 <p>尽管 Hotkey 函数不能直接启用或禁用其他脚本中的热键, 但在大多数情况下它可以通过创建或启用相同的热键来<a href="../misc/Override.htm">覆盖</a>它们. 这样是否有效取决于下列因素: 1) 在其他脚本中需要被覆盖的热键是否为<a href="ListHotkeys.htm">钩子热键</a>(非钩子热键总是可以成功覆盖); 2) 最近启动的热键通常优先于其他脚本中的相同热键(因此, 如果脚本是最近启动的, 那么它的覆盖应该总是会成功);  3) 此热键的启用或创建是否会重新激活<a href="_InstallKeybdHook.htm">键盘</a>或<a href="_InstallMouseHook.htm">鼠标</a>钩子(如果是, 那么覆盖总是会成功).</p>
@@ -140,7 +140,7 @@ Hotkey "^!c", "MyFuncForAllOtherWindows"</pre>
 
 MyFunc(ThisHotkey)
 {
-    MsgBox "You pressed " A_ThisHotkey
+    MsgBox "You pressed " ThisHotkey
 }</pre>
 </div>
 

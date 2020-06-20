@@ -62,7 +62,7 @@ Add 2, 3  <em>; 如果在行的起始处使用, 括号可以省略.</em></pre>
 <p><a href="commands/IsByRef.htm">IsByRef</a> 函数可用于判断调用者是否为给定的 ByRef 参数提供了变量.</p>
 <p>已知限制:</p>
 <ul>
-  <li>不可能通过引用将对象的属性(如 <code>foo.bar</code>), <a href="misc/Clipboard.htm">A_Clipboard</a>(剪贴板) 或其他<a href="Variables.htm#BuiltIn">内置变量</a>传递给函数. 相反, 函数表现得就像没有 <em>ByRef</em> 一样.</li>
+  <li>不可能通过引用将对象的属性(如 <code>foo.bar</code>), <a href="misc/A_Clipboard.htm">A_Clipboard</a>(剪贴板) 或其他<a href="Variables.htm#BuiltIn">内置变量</a>传递给函数. 相反, 函数表现得就像没有 <em>ByRef</em> 一样.</li>
   <li id="recurse">尽管函数可以递归调用它自己, 但是如果它传递它自己的一个<a href="#Local">局部变量</a>或非 ByRef 参数给自己的 <em>ByRef</em>, 那么新一层的 <em>ByRef</em> 参数将引用它自己那个名称的局部变量而不是之前那层的. 然而, 当函数传递给它自己<a href="#Global">全局变量</a>, <a href="#static">静态变量</a>或 <em>ByRef</em> 参数时不会产生这样的问题.</li>
   <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>MyFunc(Var, Var++)</code> 会意外地传递 1 和 0, 即使函数的首个参数不是 <em>ByRef</em> 类型时. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
   <li>ByRef 不直接支持函数调用 COM 客户端, 或调用 COM 方法. 作为替代, 脚本接受或必须传递一个包含有 <a href="commands/ComObjType.htm">VarType</a> 和值的地址的<a href="commands/ComObject.htm#ByRef">包装对象</a>.</li>
@@ -174,7 +174,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 <h3 id="Local">局部变量</h3>
 <p>局部变量是特定于单个函数的, 只在该函数内可见. 因此, 局部变量可能具有与全局变量相同的名称, 并且两个变量都有单独的内容. 不同的函数也可以安全地使用相同的变量名.</p>
 <p>当函数返回值时, 所有非<a href="#static">静态</a>的局部变量都自动释放(变为空), 除了绑定到<a href="#closures">闭包</a>的变量.</p>
-<p>像 <a href="misc/Clipboard.htm">A_Clipboard</a> 和 <a href="Variables.htm#TimeIdle">A_TimeIdle</a> 这样的内置变量永远不会是局部的(它们可以从任何地方访问), 并且不能被重新声明. (This does not apply to built-in classes such as <a href="objects/Object.htm">Object</a>; they are predefined as <a href="#SuperGlobal">super-global</a> variables.)</p>
+<p>像 <a href="misc/A_Clipboard.htm">A_Clipboard</a> 和 <a href="Variables.htm#TimeIdle">A_TimeIdle</a> 这样的内置变量永远不会是局部的(它们可以从任何地方访问), 并且不能被重新声明. (This does not apply to built-in classes such as <a href="objects/Object.htm">Object</a>; they are predefined as <a href="#SuperGlobal">super-global</a> variables.)</p>
 <p id="AssumeLocal">默认情况下, 函数是<strong>假定-局部</strong>的. 在函数内访问或创建的变量默认为局部的, 但以下情况除外:</p>
 <ul>
   <li><a href="#SuperGlobal">超级-全局</a>变量, 包括<a href="Objects.htm#Custom_Classes">类</a>.</li>

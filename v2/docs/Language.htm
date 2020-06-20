@@ -174,8 +174,7 @@ Run("notepad.exe", , , notepadPID)
 <p><code>Alpha.%vBeta%</code>, <code>Alpha.%vBeta%[Param]</code> 和 <code>Alpha.%vBeta%()</code> 也是成员访问, 但 <em>vBeta</em> 是一个变量或子表达式. 这允许在脚本运行时确定属性或方法的名称. 以这种方式调用方法时需要括号.</p>
 <p><code>Alpha[Index]</code> 访问 <code>Alpha</code> 的 <em>默认属性</em>, 将 <code>Index</code> 作为参数. 在这种情况下, <em>Alpha</em> 和 <em>Index</em> 都是变量, 几乎可以用任何子表达式替换. 此语法通常用于检索<a href="objects/Array.htm">数组</a>或 <a href="objects/Map.htm">Map</a> 中的元素.</p>
 <p id="array-literal"><code>[A, B, C]</code> 创建一个初始内容为 A, B 和 C(本例中的所有变量) 的<a href="objects/Array.htm">数组</a>, 其中 A 是元素 1.</p>
-<p id="object-literal"><code>{Prop1: Value1, Prop2: Value2}</code> 创建一个<a href="objects/Object.htm">对象</a>, 其中 <em>Prop1</em> 和 <em>Prop2</em> 为原义的属性名. 可以使用上面描述的 <em>成员访问</em> 语法检索值.</p>
-<p class="warning"><strong>注意:</strong> <code>:</code> 的左侧只能使用原义的<a href="Concepts.htm#names">名称</a>. 目前允许使用其他子表达式, 但这是将对象用作关联数组后使用时遗留下来的, 并且可能会更改.</p>
+<p id="object-literal"><code>{Prop1: Value1, Prop2: Value2}</code> 创建一个<a href="objects/Object.htm">对象</a>, 其中 <em>Prop1</em> 和 <em>Prop2</em> 为原义的属性名. 稍后可以使用上面描述的 <em>成员访问</em> 语法检索值. 要将属性名作为表达式进行计算, 请用百分号将其括起来. 例如: <code>{%NameVar%: ValueVar}</code>.</p></p>
 <p><code>MyFunc(Params*)</code> 是一个<a href="Functions.htm#VariadicCall">可变函数调用</a>. 星号必须紧接在函数参数列表末尾的右括号之前. <em>Params</em> 必须是返回<a href="objects/Array.htm">数组</a>或其他可枚举对象的变量或子表达式. 虽然在任何地方使用 <code>Params*</code> 都是无效的, 但它可以用在数组标识符(<code>[A, B, C, ArrayToAppend*]</code>) 或属性参数列表(<code>Alpha.Beta[Params*]</code> 或 <code>Alpha[Params*]</code>) 中.</p>
 
 <h3 id="expression-statements">表达式语句</h3>
@@ -244,7 +243,7 @@ Run("notepad.exe", , , notepadPID)
 <p><a href="commands/Break.htm">Break</a> 退出(终止) 一个循环, 有效地跳到循环主体后面的下一行.</p>
 <p><a href="commands/Continue.htm">Continue</a> 跳过当前循环迭代的其余部分, 并开始一个新的循环.</p>
 <p><a href="commands/Until.htm">Until</a> 表达式计算结果为 true 时, 循环终止. 表达式在每次迭代之后被重新计算.</p>
-<p><a href="#labels">标签</a>可以用来 &quot;命名&quot; <a href="commands/Continue.htm">Continue</a> 和 <a href="commands/Break.htm">Break</a> 的循环. 这允许脚本轻松地继续或跳出任何数量的嵌套循环而不使用 <a href="commands/Goto.htm">Goto</a>.</p>
+<p id="named-loops"><a href="#labels">标签</a>可以用来 &quot;命名&quot; <a href="commands/Continue.htm">Continue</a> 和 <a href="commands/Break.htm">Break</a> 的循环. 这允许脚本轻松地继续或跳出任何数量的嵌套循环而不使用 <a href="commands/Goto.htm">Goto</a>.</p>
 <p>内置变量 <strong>A_Index</strong> 包含当前循环迭代的编号. 它在第一次执行循环主体时为 1. 第二次时为 2; 依次类推. 如果一个内部循环被外部循环包围, 则内部循环优先. A_Index 适用于所有类型的循环, 但在循环之外为 0.</p>
 <p>对于某些循环类型, 其他内置变量返回有关当前循环项 (注册表键/值, 文件, 子字符串或文本行) 的信息. 这些变量的名称以 <strong>A_Loop</strong> 开头, 如 A_LoopFileName 和 A_LoopReadLine. 它们的值总是对应于最近开始的(但还没有停止) 循环的适应类型. 例如, A_LoopField 返回最里层解析循环中的当前子字符串, 即使它在文件或注册表循环中使用.</p>
 <pre>t := &quot;column 1`tcolumn 2`nvalue 1`tvalue 2&quot;
@@ -357,8 +356,7 @@ Loop 3
 <p>用于形成最终变量名称的 &quot;index(索引)&quot; 不一定是数字; 它可以是一个字母或关键字, 使伪数组类似于<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>或<a href="Objects.htm">对象</a>.</p>
 
 <h3 id="labels">标签</h3>
-<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 目标或形成<a href="#subroutines">子程序</a>.</p>
-<p>标签由一个名称后跟一个冒号组成.</p>
+<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 的目标或形成<a href="#subroutines">子程序</a>, 或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由一个名称后跟一个冒号组成:</p>
 <pre>this_is_a_label:
 </pre>
 <p>除了空格和注释外, 其他代码不能和标签写在同一行. 有关详情, 请参阅<a href="misc/Labels.htm">标签</a>.</p>

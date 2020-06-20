@@ -15,16 +15,15 @@
 
 <p>强制使用钩子实现全部或部分键盘<a href="../Hotkeys.htm">热键</a>.</p>
 
-<pre class="Syntax"><span class="func">#UseHook</span> <span class="optional">OnOff</span></pre>
+<pre class="Syntax"><span class="func">#UseHook</span> <span class="optional">Setting</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>OnOff</dt>
+  <dt>Setting</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>指定以下单词之一(如果省略, 默认为 On):</p>
-    <p><strong>On</strong>: 将用<a href="_InstallKeybdHook.htm">键盘钩子</a>来实现从这里到下一个 <code>#UseHook OFF</code>(如果有的话) 之间的所有键盘热键.</p>
-    <p><strong>Off</strong>: 用默认方法实现热键(不能使用 RegisterHotkey() 时, 才使用键盘钩子).</p>
+    <p>指定以下文字值之一(如果省略, 则默认为 <strong>True</strong>):</p>
+    <p><strong>True</strong> 或 <strong>1</strong>: 将用<a href="_InstallKeybdHook.htm">键盘钩子</a>来实现从这里到下一个 <code>#UseHook false</code>(如果有的话) 之间的所有键盘热键.</p>
+    <p><strong>False</strong> 或 <strong>0</strong>: 用默认方法实现热键(不能使用 RegisterHotkey() 时, 才使用键盘钩子).</p>
   </dd>
 
 </dl>
@@ -33,7 +32,7 @@
 <p>一般情况下, 只要有可能都会用 windows API 函数 RegisterHotkey() 来实现键盘热键. 不过在一些情况下, 如果使用<a href="_InstallKeybdHook.htm">键盘钩子</a>可能响应性更好.</p>
 <p>切换此指令为 ON 相当于在每个受影响的热键定义中使用 <a href="../Hotkeys.htm#prefixdollar">$ 前缀</a>.</p>
 <p>与所有 # 指令一样 -- 只在脚本启动时处理一次 --  <code>#UseHook</code> 不应该像函数那样放在脚本中(即它不需要被包含在子程序中). 相反, 应该把它放在您希望影响的首个热键之前.</p>
-<p>默认情况下, 使用<a href="_InstallKeybdHook.htm">键盘钩子</a>的热键不会被 <a href="Send.htm">Send</a> 函数的方法触发. 同样地, 鼠标热键也不会被像 <a href="Click.htm">Click</a> 这样的内置函数触发, 因为所有的鼠标热键都使用<a href="_InstallMouseHook.htm">鼠标钩子</a>. 一种解决方法是使用 <a href="Gosub.htm">Gosub</a> 直接跳转到此热键的子程序. 例如: <code>Gosub #LButton</code>.</p>
+<p>默认情况下, 使用<a href="_InstallKeybdHook.htm">键盘钩子</a>的热键不会被 <a href="Send.htm">Send</a> 函数的方法触发. 同样地, 鼠标热键也不会被像 <a href="Click.htm">Click</a> 这样的内置函数触发, 因为所有的鼠标热键都使用<a href="_InstallMouseHook.htm">鼠标钩子</a>. 一种解决方法是<a href="../Hotkeys.htm#Function">命名热键的函数</a>, 然后直接调用. 例如: <code>Gosub #LButton</code>.</p>
 <p><a href="_InputLevel.htm">#InputLevel</a> 和 <a href="SendLevel.htm">SendLevel</a> 对 Send 函数是否触发热键和热字串提供了额外的控制功能.</p>
 <p>如果脚本中未使用此指令, 那么它会表现的就像此设置为 OFF 那样.</p>
 
@@ -45,7 +44,7 @@
 <pre>#UseHook  <em>; 强制从这里往后的热键使用键盘钩子.</em>
 #x::MsgBox "This hotkey will be implemented with the hook."
 #y::MsgBox "And this one too."
-#UseHook off
+#UseHook false
 #z::MsgBox "But not this one."</pre>
 </div>
 

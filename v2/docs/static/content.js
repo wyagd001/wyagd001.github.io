@@ -90,6 +90,7 @@ var structure = new ctor_structure;
 var toc = new ctor_toc;
 var index = new ctor_index;
 var search = new ctor_search;
+var features = new ctor_features;
 
 scriptElement.insertAdjacentHTML('afterend', structure.metaViewport);
 var isPhone = (document.documentElement.clientWidth <= 600);
@@ -127,10 +128,10 @@ var isPhone = (document.documentElement.clientWidth <= 600);
         if (!cache.translate)
           loadScript(structure.dataPath, function() {
             cache.set('translate', translateData);
-            addFeatures();
+            features.add();
           });
         else
-          addFeatures();
+          features.add();
       });
       $(window).on('message onmessage', function(event) {
         var data = JSON.parse(event.originalEvent.data);
@@ -244,12 +245,12 @@ var isPhone = (document.documentElement.clientWidth <= 600);
       cache.set('translate', translateData);
       structure.modify();
       if (!isFrameCapable)
-        $(document).ready(addFeatures);
+        $(document).ready(features.add);
     });
   else {
     structure.modify();
     if (!isFrameCapable)
-      $(document).ready(addFeatures);
+      $(document).ready(features.add);
   }
   if (!cache.toc_data)
     loadScript(toc.dataPath, function() {
@@ -802,7 +803,7 @@ function ctor_structure()
   self.metaViewport = '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">';
   self.template = '<div id="body">' +
   '<div id="head"><div class="h-area"><div class="h-tabs"><ul><li data-translate title="Shortcut: ALT+C" data-content="C̲ontent"></li><li data-translate title="Shortcut: ALT+N" data-content="In̲dex"></li><li data-translate title="Shortcut: ALT+S" data-content="S̲earch"></li></ul></div><div class="h-tools sidebar"><ul><li class="sidebar" title="Hide or show the sidebar" data-translate>&#926;</li></ul></div><div class="h-tools online"><ul><li class="home" title="Go to the homepage" data-translate><a href="' + location.protocol + '//' + location.host + '/v2/docs/AutoHotkey.htm'  + '">&#916;</a></li><li class="language" title="Change the language" data-translate=2><span data-translate data-content="en"></span><ul class="dropdown languages selected"><li><a title="English (英文)" data-content="en"></a></li><li><a title="Deutsch (德文)" data-content="de"></a></li><li><a title="&#xD55C;&#xAD6D;&#xC5B4 (韩文)" data-content="ko"></a></li><li><a title="&#x4E2D;&#x6587; (中文)" data-content="zh"></a></li></ul></li><li class="version" title="Change the version" data-translate=2><span data-translate data-content="v1"></span><ul class="dropdown versions selected"><li><a title="AHK v1.1" data-content="v1"></a></li><li><a title="AHK v2.0" data-content="v2"></a></li></ul></li><li class="edit" title="Edit this document on GitHub" data-translate=2><a data-content="E"></a></li></ul></div><div class="h-tools chm"><ul><li class="back" title="Go back" data-translate=2>&#9668;</li><li class="forward" title="Go forward" data-translate=2>&#9658;</li><li class="zoom" title="Change the font size" data-translate=2 data-content="Z"></li><li class="print" title="Print this document" data-translate=2 data-content="P"></li><li class="browser" title="Open this document in the default browser (requires internet connection). Middle-click to copy the link address." data-translate><a target="_blank">¬</a></li></ul></div><div class="h-tools main visible"><ul><li class="color" title="Use the dark or light theme" data-translate=2 data-content="C"></li><li class="settings" title="Open the help settings" data-translate=2>&#1029;</li></ul></div></div></div>' +
-  '<div id="main"><div id="left"><div class="toc"></div><div class="index"><div class="input"><input type="search" placeholder="Search" data-translate=2 /></div><div class="select"><select size="1" class="empty"><option value="-1" class="empty" selected data-translate>Filter</option><option value="0" data-translate>Directives</option><option value="1" data-translate>Built-in Variables</option><option value="2" data-translate>Built-in Functions</option><option value="3" data-translate>Control Flow Statements</option><option value="4" data-translate>Operators</option><option value="5" data-translate>Declarations</option></select></div><div class="list"></div></div><div class="search"><div class="input"><input type="search" placeholder="Search" data-translate=2 /></div><div class="checkbox"><input type="checkbox" id="highlightWords"><label for="highlightWords" data-translate>Highlight keywords</label><div class="updown" title="Go to previous/next occurrence" data-translate><div class="up"><div class="triangle-up"></div></div><div class="down"><div class="triangle-down"></div></div></div></div><div class="list"></div></div><div class="load"><div class="lds-dual-ring"></div></div></div><div class="dragbar"></div><div id="right" tabIndex="-1">'+(isFrameCapable?'<iframe frameBorder="0" id="frame" src="">':'<div class="area">');
+  '<div id="main"><div id="left"><div class="toc"></div><div class="index"><div class="input"><input type="search" placeholder="Search" data-translate=2 /></div><div class="select"><select size="1" class="empty"><option value="-1" class="empty" selected data-translate>Filter</option><option value="0" data-translate>Directives</option><option value="1" data-translate>Built-in Variables</option><option value="2" data-translate>Built-in Functions</option><option value="3" data-translate>Control Flow Statements</option><option value="4" data-translate>Operators</option><option value="5" data-translate>Declarations</option><option value="99" data-translate>Ahk2Exe Compiler</option></select></div><div class="list"></div></div><div class="search"><div class="input"><input type="search" placeholder="Search" data-translate=2 /></div><div class="checkbox"><input type="checkbox" id="highlightWords"><label for="highlightWords" data-translate>Highlight keywords</label><div class="updown" title="Go to previous/next occurrence" data-translate><div class="up"><div class="triangle-up"></div></div><div class="down"><div class="triangle-down"></div></div></div></div><div class="list"></div></div><div class="load"><div class="lds-dual-ring"></div></div></div><div class="dragbar"></div><div id="right" tabIndex="-1">'+(isFrameCapable?'<iframe frameBorder="0" id="frame" src="">':'<div class="area">');
   self.template = isIE8 ? self.template.replace(/ data-content="(.*?)">/g, '>$1') : self.template;
   self.build = function() { document.write(self.template); }; // Write HTML before DOM is loaded to prevent flickering.
   self.modify = function() { // Modify elements added via build.
@@ -1344,23 +1345,25 @@ function ctor_structure()
 
 // --- Modify elements provided by the HTML site ---
 
-function addFeatures()
+function ctor_features()
 {
-  var content = document.querySelectorAll('#right .area, #right body')[0];
+  var self = this;
+  self.add = function() {
+    var content = document.querySelectorAll('#right .area, #right body')[0];
 
-  $.queueFunc.add(modifyTables);
-  $.queueFunc.add(modifyHeaders);
-  $.queueFunc.add(modifyLinks);
-  $.queueFunc.add(modifyVersions);
-  $.queueFunc.add(modifyCodes);
-  addFooter();
-  $.queueFunc.add(addBackButton);
-  scrollToPos();
-  $.queueFunc.add(highlightWords);
-
+    $.queueFunc.add(self.modifyTables(content));
+    $.queueFunc.add(self.modifyHeaders(content));
+    $.queueFunc.add(self.modifyLinks(content));
+    $.queueFunc.add(self.modifyVersions(content));
+    $.queueFunc.add(self.modifyCodeBoxes(content));
+    self.addFooter(content);
+    $.queueFunc.add(self.addBackButton(content));
+    self.scrollToPos();
+    $.queueFunc.add(self.highlightWords);
+  };
   // --- Responsive tables (mobile) ---
 
-  function modifyTables() {
+  self.modifyTables = function(content) {
     if (!isPhone)
       return;
     var tables = content.querySelectorAll('table.info');
@@ -1391,11 +1394,11 @@ function addFeatures()
       newTable += '</table>';
       table.outerHTML = newTable;
     }
-  }
+  };
 
   // --- Generate anchors for anchor-less head lines ---
 
-  function modifyHeaders() {
+  self.modifyHeaders = function(content) {
     if (isInsideCHM)
       return;
     var hs = content.querySelectorAll('h2, h3, h4, h5, h6');
@@ -1432,11 +1435,11 @@ function addFeatures()
       }
       h.innerHTML = headLink + innerHTML + '</a>';
     }
-  }
+  };
 
   // --- Open external links in a new tab/window ---
 
-  function modifyLinks() {
+  self.modifyLinks = function(content) {
     var as = content.querySelectorAll("a[href^='http']");
     for(var i = 0; i < as.length; i++) {
       var a = as[i];
@@ -1445,11 +1448,11 @@ function addFeatures()
         a.target = "_blank";
       }
     }
-  }
+  };
 
   // --- Add links for version annotations ---
 
-  function modifyVersions() {
+  self.modifyVersions = function(content) {
     var spans = content.querySelectorAll("span.ver");
     for(var i = 0; i < spans.length; i++) {
       var span = spans[i], m, title, href;
@@ -1472,14 +1475,27 @@ function addFeatures()
       // outerHTML/innerHTML not possible here because IE8 doesn't allow nested links:
       $(span).html('<a href="' + workingDir + href + '" title="' + title + '">' + text + '</a>');
     }
-  }
+  };
 
-  // --- Useful features for code boxes ---
+  // --- Add useful features for code boxes ---
   
-  function modifyCodes() {
+  self.modifyCodeBoxes = function(content) {
     var pres = content.querySelectorAll("pre, code");
+    // Add select and download buttons:
+    self.addCodeBoxButtons(pres);
+    // Add syntax highlighting:
+    if (!isIE8) {
+      if (cache.index_data) {
+        self.addSyntaxColors(pres);
+      } else {
+        loadScript(index.dataPath, function() {cache.set('index_data', indexData); self.addSyntaxColors(pres);});
+      }
+    }
+  };
 
-    // Provide select and download buttons:
+  // --- Add select and download buttons for code boxes ---
+
+  self.addCodeBoxButtons = function(pres) {
     for(var i = 0; i < pres.length; i++) {
       var pre = pres[i];
       if (pre.tagName == 'CODE')
@@ -1553,16 +1569,11 @@ function addFeatures()
         }
       });
     }
+  };
 
-    // Syntax highlighting:
-    if (!isIE8) {
-      if (cache.index_data) {
-          addSyntaxColors(pres);
-      } else {
-        loadScript(index.dataPath, function() { cache.set('index_data', indexData); addSyntaxColors(pres); });
-      }
-    }
-    function addSyntaxColors(pres) {
+  // --- Add syntax highlighting for code boxes ---
+
+  self.addSyntaxColors = function(pres) {
       // Create lists of syntax elements by using index data to reduce code size.
       // An index entry counts as syntax element, if its third field is one of the following digits:
       /* 
@@ -1572,6 +1583,7 @@ function addFeatures()
           3 - control flow statement
           4 - operator
           5 - declaration
+          99 - Ahk2Exe compiler
       */
       var syntax = [], dict = {}, entry = '', type = '';
       var assignOp = "(?:&lt;&lt;|<<|&gt;&gt;|>>|\\/\\/|\\^|&amp;|&|\\||\\.|\\/|\\*|-|\\+|:)=";
@@ -1874,21 +1886,20 @@ function addFeatures()
         out += wrap(param.slice(lastIndex), 'str', false);
         return out;
       }
-    }
-  }
+  };
 
   // --- Add footer at the bottom of the site ---
 
-  function addFooter() {
+  self.addFooter = function(content) {
     var div = document.createElement('div');
     div.className = 'footer';
     div.innerHTML = 'Copyright &copy; 2003-' + new Date().getFullYear() + ' ' + location.host + ' - LIC: <a href="' + scriptDir + '/../license.htm" class="no-ext">GNU GPLv2</a>';
     content.appendChild(div);
-  }
+  };
 
   // --- Add back-to-top button ---
 
-  function addBackButton() {
+  self.addBackButton = function(content) {
     var div = document.createElement('div');
     div.className = 'back-to-top';
     div.title = T('Back to top');
@@ -1909,22 +1920,23 @@ function addFeatures()
     $('div.back-to-top').on('click', function() {
       $(document.body).add(document.documentElement).add('#right').animate({scrollTop: 0}, 100);
     });
-  }
+  };
 
   // --- Ensure setting right scroll position when traversing history ---
 
-  function scrollToPos() {
+  self.scrollToPos = function() {
     if (supportsHistory && history.state)
       document.getElementById('right').scrollTop = history.state.scrollTop;
-  }
+  };
 
   // --- Highlight search words with jQuery Highlight plugin ---
 
-  function highlightWords() {
+  self.highlightWords = function() {
     if (cache.search_highlightWords && cache.clickTab == 2)
       search.highlightWords(cache.search_input);
+  };
+
   }
-}
 
 // --- Get the working directory of the site ---
 

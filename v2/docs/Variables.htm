@@ -301,7 +301,7 @@ sumfn := Func("Sum")</pre>
     <td style="text-align:center"><strong>{a: b, c: d}</strong></td>
     <td>
       <p><strong>对象标识符</strong>. 创建一个<a href="objects/Object.htm">对象</a>. 其中的每一对项目由一个原义的属性名称 <code>a</code> 和一个属性值表达式 <code>b</code> 组成. 例如, <code>x := {a: b}</code> 等同于 <code>x := Object("a", b)</code> 或 <code>x := Object(), x.a := b</code>. 可以在对象文本中设置 <a href="objects/Object.htm#Base">Base</a>, 但是所有其他属性都设置为 <em>自有的属性</em>, 可能会覆盖从基对象继承的属性.</p>
-      <p class="warning"><strong>注意:</strong> 如果属性名不是有效的标识符, 它将被解释为表达式, 但是在以后的更新中可能会发生变化. 如果属性名需要一个表达式或变量, 则使用单独的赋值(<code>x.%a% := b</code>) 或对象函数(<code>Object(a, b)</code>).</p>
+      <p>要使用动态属性名, 请将子表达式用百分号括起来. 例如: <code>{%nameVar%: valueVar}</code>.</p>
     </td>
   </tr>
 </table>
@@ -320,7 +320,7 @@ sumfn := Func("Sum")</pre>
   <li>用户空闲时间: <a href="#TimeIdle">A_TimeIdle</a>, <a href="#TimeIdlePhysical">A_TimeIdlePhysical</a>, <a href="#TimeIdleKeyboard">A_TimeIdleKeyboard</a>, <a href="#TimeIdleMouse">A_TimeIdleMouse</a></li>
   <li>热键, 热字串和自定义菜单项: <a href="#ThisHotkey">A_ThisHotkey</a>, <a href="#EndChar">A_EndChar</a>, <a href="#h">(...更多...)</a></li>
   <li>操作系统和用户信息: <a href="#OSVersion">A_OSVersion</a>, <a href="#Screen">A_ScreenWidth</a>, <a href="#Screen">A_ScreenHeight</a>, <a href="#os">(...更多...)</a></li>
-  <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#EventInfo">A_EventInfo</a>, <a href="misc/Clipboard.htm">A_Clipboard</a></li>
+  <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#EventInfo">A_EventInfo</a>, <a href="#Clipboard">A_Clipboard</a>, <a href="#misc">(...更多...)</li>
   <li>Loop: <a href="#Index">A_Index</a>, <a href="#loop">(...更多...)</a></li>
 </ul>
 <h3>特殊字符</h3>
@@ -638,7 +638,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
     <td><p>最近执行的<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">非自动替换热字串</a>(如果没有则为空), 例如 #z. 如果<a href="misc/Threads.htm">当前线程</a>被其他热键或热字串中断, 那么此变量的值会变化, 所以一般情况下, 最好使用 <a href="Hotkeys.htm#HotBraces">ThisHotkey</a> 参数.</p>
       <p>首次创建热键时 -- 通过 <a href="commands/Hotkey.htm">Hotkey 函数</a>或<a href="Hotkeys.htm">双冒号语法</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="commands/_HotIf.htm#variant">变体</a>共享.</p>
       <p>当热字符串是首次创建时, 用于创建它的确切文本将成为热字符串的永久名称.</p>
-  </td>
+    </td>
   </tr>
   <tr id="PriorHotkey">
     <td>A_PriorHotkey</td>
@@ -818,7 +818,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
     <td>沿屏幕宽度每逻辑英寸的像素数. 在具有多个显示监视器的系统中, 此值对于所有监视器都是相同的.在大多数系统中该值为 96; 它取决于系统文本大小(DPI) 设置. 另请参阅 GUI 的 <a href="objects/Gui.htm#DPIScale">-DPIScale</a> 选项.</td>
   </tr>
 </table>
-<h3>杂项</h3>
+<h3 id="misc">杂项</h3>
 <table class="info">
   <tr id="Cursor">
     <td>A_Cursor</td>
@@ -833,9 +833,9 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
 <p>注意: 与类似 A_ThisHotkey 这样的变量不同, 每个<a href="misc/Threads.htm">线程</a>保留自身的 A_EventInfo 值. 因此, 如果一个线程被另一个中断, 在这个线程恢复时它仍将看到这些变量的原来/正确的值.</p>
       <p><strong>读取/写入:</strong> 脚本也可以设置 A_EventInfo, 但只能在指针可用的范围内接受无符号整数(32-bit 或 64-bit 取决于 AutoHotkey 的版本).</p></td>
   </tr>
-  <tr>
-    <td>Clipboard</td>
-    <td><strong>读取/写入:</strong> 系统剪贴板的内容, 可以读取或写入. 请参阅 <a href="misc/Clipboard.htm">A_Clipboard</a> 章节.</td>
+  <tr id="Clipboard">
+    <td>A_Clipboard</td>
+    <td><strong>读取/写入:</strong> 系统剪贴板的内容, 可以读取或写入. 有关详情, 请参阅 <a href="misc/A_Clipboard.htm">A_Clipboard</a>.</td>
   </tr>
   <tr id="LastError">
     <td>A_LastError</td>
@@ -844,7 +844,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   </tr>
   <tr id="TrueFalse">
     <td>True<br />False</td>
-    <td><p>包含 1 和 0. 它们可以用来使脚本更具可读性. 有关详细信息, 请参阅<a href="Concepts.htm#boolean">布尔值</a>.</p>
+    <td><p>包含 1 和 0. 它们可以用来使脚本更具可读性. 有关详情, 请参阅<a href="Concepts.htm#boolean">布尔值</a>.</p>
       <p>这些实际上是<a href="Language.htm#constants">关键字</a>, 而不是变量.</p>
     </td>
   </tr>
