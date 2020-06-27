@@ -1,9 +1,9 @@
-; Using a Joystick as a Mouse
-; http://www.autohotkey.com
-; This script converts a joystick into a three-button mouse.  It allows each
-; button to drag just like a mouse button and it uses virtually no CPU time.
-; Also, it will move the cursor faster depending on how far you push the joystick
-; from center. You can personalize various settings at the top of the script.
+﻿; 把操纵杆作为鼠标使用
+; https://www.autohotkey.com
+; 此脚本把操纵杆转换为三键的鼠标.
+; 它允许每个按钮像鼠标按钮那样拖动,且它几乎不消耗 CPU 时间.
+; 还有, 您将操纵杆推离中央越远, 它会让光标移动的越快.
+; 您可以在脚本的顶部个性化各种设置.
 
 ; Increase the following value to make the mouse cursor move faster:
 JoyMultiplier = 0.30

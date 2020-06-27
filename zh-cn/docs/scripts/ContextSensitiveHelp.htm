@@ -1,88 +1,15 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
+
 <head>
-<title>上下文帮助 - 脚本示例 | AutoHotkey</title>
-<meta name="description" content="The context sensitive help script allows pressing a hotkey in any editor to show the help file page for the selected AutoHotkey command or keyword." />
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<link href="../static/theme.css" rel="stylesheet" type="text/css" />
-<script src="../static/content.js" type="text/javascript"></script>
+  <meta http-equiv="refresh" content="0; url=index.htm#ContextSensitiveHelp">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="canonical" href="index.htm#ContextSensitiveHelp">
+  <title>Redirection</title>
 </head>
+
 <body>
-
-<h1>任意编辑器中的上下文帮助 <span class="headnote">作者: Rajat</span></h1>
-
-<p>此脚本设置 <kbd>Ctrl</kbd>+<kbd>2</kbd> (或您选择的其他热键) 来显示选择的 AutoHotkey 命令或关键字的帮助文件页面. 如果没有选择任何内容, 那么会提取当前行开始处的命令名.
-</p>
-<p><a href="ContextSensitiveHelp.ahk">下载此脚本</a> &nbsp;| &nbsp;<a href="index.htm">其他示例脚本</a> &nbsp;| &nbsp;<a href="../AutoHotkey.htm">主页</a></p>
-
-<pre class="NoIndent"><em>; 下面的热键使用剪贴板来实现与最大数目的
-; 编辑器兼容 (因为 ControlGet 在大多数高级编辑器中无法工作).
-; 它会在之后恢复剪贴板原来的内容, 但只是纯文本,
-; 这样似乎比什么都不做要好.</em>
-
-$^2::
-<em>; 下面的值只在此热键执行期间有效.
-; 因此, 不需要恢复它们原来的值
-; 因为在线程结束时会自动进行这个操作:</em>
-SetWinDelay 10
-SetKeyDelay 0
-AutoTrim, On
-
-if A_OSType = WIN32_WINDOWS  <em>; Windows 9x</em>
-    Sleep, 500  <em>; 提供一些时间让用户释放按键.</em>
-
-C_ClipboardPrev = %clipboard%
-clipboard =
-<em>; 如果有高亮的单词, 则使用它 (因为有时用户可能
-; 故意高亮一些不是命令的内容):</em>
-Send, ^c
-ClipWait, 0.1
-if ErrorLevel &lt;&gt; 0
-{
-    <em>; 获取整行, 因为编辑器编辑器可能对导航键进行不同的处理:</em>
-    Send, {home}+{end}^c
-    ClipWait, 0.2
-    if ErrorLevel &lt;&gt; 0  <em>; 罕见的情况, 所以不报告错误.</em>
-    {
-        clipboard = %C_ClipboardPrev%
-        return
-    }
-}
-C_Cmd = %clipboard%  <em>; 这样会移除前导和尾随的 tab 和空格.</em>
-clipboard = %C_ClipboardPrev%  <em>; 恢复剪贴板为原来的内容.</em>
-Loop, parse, C_Cmd, %A_Space%`,  <em>; 命令末尾的首个空格或逗号.</em>
-{
-    C_Cmd = %A_LoopField%
-    break <em>; 即我们只需要循环一次.</em>
-}
-IfWinNotExist, AutoHotkey Help
-{
-    <em>; 判断 AutoHotkey 的位置:</em>
-    RegRead, ahk_dir, HKEY_LOCAL_MACHINE, SOFTWARE\AutoHotkey, InstallDir
-    if ErrorLevel  <em>; 没有找到, 所以在其他一些常见位置寻找.</em>
-    {
-        if A_AhkPath
-            SplitPath, A_AhkPath,, ahk_dir
-        else IfExist ..\..\AutoHotkey.chm
-            ahk_dir = ..\..
-        else IfExist %A_ProgramFiles%\AutoHotkey\AutoHotkey.chm
-            ahk_dir = %A_ProgramFiles%\AutoHotkey
-        else
-        {
-            MsgBox Could not find the AutoHotkey folder.
-            return
-        }
-    }
-    Run %ahk_dir%\AutoHotkey.chm
-    WinWait AutoHotkey Help
-}
-<em>; 上面设置了我们下面要使用的 "最后找到的" 窗口:</em>
-WinActivate
-WinWaitActive
-StringReplace, C_Cmd, C_Cmd, #, {#}
-Send, !n{home}+{end}%C_Cmd%{enter}
-return
-</pre>
+  <p>Redirecting to <a href="index.htm#ContextSensitiveHelp">Context Sensitive Help in Any Editor</a>.</p>
 </body>
+
 </html>

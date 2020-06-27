@@ -1,8 +1,7 @@
-; Volume On-Screen-Display (OSD) -- by Rajat
-; http://www.autohotkey.com
-; This script assigns hotkeys of your choice to raise and lower the
-; master and/or wave volume.  Both volumes are displayed as different
-; color bar graphs.
+﻿; 屏显音量(OSD) -- 作者: Rajat
+; https://www.autohotkey.com
+; 此脚本把您选择的热键设置为增加和降低总音量和/或波形音量.
+; 这两种音量以不同的颜色条图形显示.
 
 ;_________________________________________________ 
 ;_______User Settings_____________________________ 

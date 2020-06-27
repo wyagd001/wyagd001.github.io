@@ -1,11 +1,11 @@
-; Joystick Test Script
-; http://www.autohotkey.com
-; This script helps determine the button numbers and other attributes
-; of your joystick. It might also reveal if your joystick is in need
-; of calibration; that is, whether the range of motion of each of its
-; axes is from 0 to 100 percent as it should be. If calibration is
-; needed, use the operating system's control panel or the software
-; that came with your joystick.
+﻿; 操纵杆测试脚本
+; https://www.autohotkey.com
+; 此脚本帮助您判断操纵杆的按钮数目和其他属性.
+; 它还可能显示您的操纵杆是否需要校准;
+; 即它的每个轴向的活动范围是否在百分之零到百分之百的范围内,
+; 这是它应该处于的范围.
+; 如果需要校准,
+; 请使用操作系统控制面板或操纵杆的自带软件.
 
 ; July 6, 2005: Added auto-detection of joystick number.
 ; May 8, 2005 : Fixed: JoyAxes is no longer queried as a means of

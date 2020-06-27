@@ -1,10 +1,9 @@
-; On-Screen Keyboard (requires XP/2k/NT) -- by Jon
-; http://www.autohotkey.com
-; This script creates a mock keyboard at the bottom of your screen that shows
-; the keys you are pressing in real time. I made it to help me to learn to
-; touch-type (to get used to not looking at the keyboard).  The size of the
-; on-screen keyboard can be customized at the top of the script. Also, you
-; can double-click the tray icon to show or hide the keyboard.
+﻿; 屏幕键盘(需要 XP/2k/NT) -- 作者 Jon
+; https://www.autohotkey.com
+; 此脚本会在屏幕的底部创建一个模拟键盘来实时显示您按下的按键. 
+; 我写这个是为了帮我学习盲打(来适应不去看键盘).
+; 在脚本的顶部可以自定义屏幕键盘的大小.
+; 还有, 您可以双击托盘图标来显示或隐藏键盘.
 
 ;---- Configuration Section: Customize the size of the on-screen keyboard and
 ; other options here.
@@ -156,7 +155,7 @@ Loop
 {
 	Transform, k_char, Chr, %k_ASCII%
 	StringUpper, k_char, k_char
-	if k_char not in <,>,^,~,�,`,
+	if k_char not in <,>,^,~,?`,
 		Hotkey, ~*%k_char%, k_KeyPress
 		; In the above, the asterisk prefix allows the key to be detected regardless
 		; of whether the user is holding down modifier keys such as Control and Shift.

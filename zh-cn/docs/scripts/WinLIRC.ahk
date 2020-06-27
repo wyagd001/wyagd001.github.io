@@ -1,11 +1,11 @@
-; WinLIRC Client
-; http://www.autohotkey.com
-; This script receives notifications from WinLIRC whenever you press
-; a button on your remote control. It can be used to automate Winamp,
-; Windows Media Player, etc. It's easy to configure. For example, if
-; WinLIRC recognizes a button named "VolUp" on your remote control,
-; create a label named VolUp and beneath it use the command
-; "SoundSet +5" to increase the soundcard's volume by 5%.
+﻿; WinLIRC 客户端
+; https://www.autohotkey.com
+; 每当您在遥控器上按下按钮时此脚本会接收到来自 WinLIRC 的通知.
+; 它可以用来自动操作 Winamp, Windows Media Player, 等等.
+; 它配置起来很简单. 例如, 如果 WinLIRC 
+; 能识别您遥控器上名称为 "VolUp" 的按钮,
+; 那么创建名为 VolUp 的标签并在它后面使用命令
+; "SoundSet +5" 来增加声卡 5% 的音量.
 
 ; Here are the steps to use this script:
 ; 1) Configure WinLIRC to recognize your remote control and its buttons.
@@ -97,7 +97,7 @@ return
 
 ; The examples above give a feel for how to accomplish common tasks.
 ; To learn the basics of AutoHotkey, check out the Quick-start Tutorial
-; at http://www.autohotkey.com/docs/Tutorial.htm
+; at https://www.autohotkey.com/docs/Tutorial.htm
 
 ; ----------------------------
 ; END OF CONFIGURATION SECTION

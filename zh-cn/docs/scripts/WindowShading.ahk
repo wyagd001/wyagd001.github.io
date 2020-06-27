@@ -1,10 +1,10 @@
-; Window Shading (roll up a window to its title bar) -- by Rajat
-; http://www.autohotkey.com
-; This script reduces a window to its title bar and then back to its
-; original size by pressing a single hotkey.  Any number of windows
-; can be reduced in this fashion (the script remembers each).  If the
-; script exits for any reason, all "rolled up" windows will be
-; automatically restored to their original heights.
+﻿; 窗口卷起(卷起窗口到标题栏) -- by Rajat
+; https://www.autohotkey.com
+; 此脚本通过单个热键实现裁减窗口到它的标题栏,
+; 再次使用热键后恢复为原始大小.
+; 这种方式可以裁减任意数目的窗口(脚本会记住每个窗口原来的大小).
+; 如果脚本由于任何原因退出了,
+; 那么所有 "卷起" 的窗口会自动恢复为它们原来的高度.
 
 ; Set the height of a rolled up window here.  The operating system
 ; probably won't allow the title bar to be hidden regardless of

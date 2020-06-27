@@ -1,10 +1,10 @@
-; ToolTip Mouse Menu (requires XP/2k/NT) -- by Rajat
-; http://www.autohotkey.com
-; This script displays a popup menu in response to briefly holding down
-; the middle mouse button.  Select a menu item by left-clicking it.
-; Cancel the menu by left-clicking outside of it.  A recent improvement
-; is that the contents of the menu can change depending on which type of
-; window is active (Notepad and Word are used as examples here).
+﻿; 工具提示样式的鼠标菜单(需要 XP/2k/NT) -- 作者: Rajat
+; https://www.autohotkey.com
+; 此脚本显示弹出菜单来响应短暂地按下鼠标中键的动作.
+; 左键点击来选择菜单项.
+; 在菜单外点击来取消菜单.
+; 最近的改进是可以根据活动的窗口类型来改变菜单的内容.
+; (这里使用了记事本和 Word 作为例子).
 
 ; You can set any title here for the menu:
 MenuTitle = -=-=-=-=-=-=-=-

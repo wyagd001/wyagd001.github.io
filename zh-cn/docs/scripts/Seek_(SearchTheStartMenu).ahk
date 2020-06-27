@@ -1,13 +1,11 @@
-; Seek -- by Phi
-; http://www.autohotkey.com
-; Navigating the Start Menu can be a hassle, especially
-; if you have installed many programs over time. 'Seek'
-; lets you specify a case-insensitive key word/phrase
-; that it will use to filter only the matching programs
-; and directories from the Start Menu, so that you can
-; easily open your target program from a handful of
-; matched entries. This eliminates the drudgery of
-; searching and traversing the Start Menu.
+﻿; Seek(搜索) -- 作者: Phi
+; https://www.autohotkey.com
+; 浏览开始菜单可能是件麻烦事,
+; 尤其在您安装了很多程序的时候.
+; 'Seek' 能让您指定不区分大小写的关键词/短语,
+; 用它从开始菜单里筛选出匹配的程序和目录,
+; 以便您可以轻松地从少数匹配的项目中打开目标程序.
+; 这样就不用在开始菜单中做查找和穿越的苦力活了.
 
 ;*****************************************************************
 ;
@@ -53,7 +51,7 @@
 ;
 ;    To use Seek.ahk, first, you'll need to install
 ;    AutoHotkey v1.0.25 or higher on your PC (download from
-;    http://www.autohotkey.com). Next, run the command:
+;    https://www.autohotkey.com). Next, run the command:
 ;
 ;    X:\myTools\AutoHotkey\AutoHotkey.exe Y:\myAHK\Seek.ahk
 ;
@@ -115,7 +113,7 @@
 ; TECHNICAL NOTES:
 ;
 ; - 'Seek' requires Chris Mallett's AutoHotkey v1.0.25
-;   or higher version (http://www.autohotkey.com).
+;   or higher version (https://www.autohotkey.com).
 ;   Thanks to Chris for his great work on AutoHotkey. :)
 ;
 ; - The following environment variables must be valid:

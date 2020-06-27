@@ -1,10 +1,11 @@
-; IntelliSense -- by Rajat (requires XP/2k/NT)
-; http://www.autohotkey.com
-; This script watches while you edit an AutoHotkey script.  When it sees you
-; type a command followed by a comma or space, it displays that command's
-; parameter list to guide you.  In addition, you can press Ctrl+F1 (or
-; another hotkey of your choice) to display that command's page in the help
-; file. To dismiss the parameter list, press Escape or Enter.
+﻿; 智能感应(需要 XP/2k/NT) -- 作者: Rajat
+; https://www.autohotkey.com
+; 此脚本会在您编辑 AutoHotkey 脚本时进行监视.
+; 当它看到您输入命令后跟着逗号或空格后,
+; 会显示此命令的参数列表以给您提示.
+; 此外, 您可以按下 Ctrl+F1(或您选择的其他热键)  
+; 来显示帮助文件中此命令的页面.
+; 要取消参数列表, 请按下 Escape 或 Enter.
 
 ; Requires v1.0.41+
 

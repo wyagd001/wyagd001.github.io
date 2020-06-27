@@ -1,9 +1,7 @@
-; Changing MsgBox's Button Names
-; http://www.autohotkey.com
-; This is a working example script that uses a timer to change
-; the names of the buttons in a MsgBox dialog. Although the button
-; names are changed, the IfMsgBox command still requires that the
-; buttons be referred to by their original names.
+﻿; 改变 MsgBox 的按钮名称
+; https://www.autohotkey.com
+; 这是个可运行示例脚本, 它使用计时器改变 MsgBox 对话框中按钮的名称.
+; 尽管改变了按钮名称, 但 IfMsgBox 命令中仍需要引用它们原始的按钮名称表示的按钮.
 
 #SingleInstance
 SetTimer, ChangeButtonNames, 50 

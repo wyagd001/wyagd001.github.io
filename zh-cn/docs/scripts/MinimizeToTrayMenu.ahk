@@ -1,10 +1,10 @@
-; Minimize Window to Tray Menu
-; http://www.autohotkey.com
-; This script assigns a hotkey of your choice to hide any window so that
-; it becomes an entry at the bottom of the script's tray menu.  Hidden
-; windows can then be unhidden individually or all at once by selecting
-; the corresponding item on the menu.  If the script exits for any reason,
-; all the windows that it hid will be unhidden automatically.
+﻿; 最小化窗口到托盘菜单
+; https://www.autohotkey.com
+; 此脚本会设置您选择的热键来隐藏任意的窗口,
+; 让这些窗口成为脚本托盘菜单底部的条目.
+; 通过在菜单上选择相应的项目可以显示个别隐藏的窗口或全部显示.
+; 如果由于任何原因脚本退出了,
+; 那么它隐藏的所有窗口都会自动显示.
 
 ; CHANGES:
 ; July 22, 2005 (changes provided by egilmour):

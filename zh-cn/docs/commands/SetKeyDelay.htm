@@ -37,6 +37,7 @@
 <h2>备注</h2>
     <p class="note"><strong>注意</strong>: SetKeyDelay 的设置不会影响 <a href="Send.htm#SendInputDetail">SendInput</a>; 在这种模式的键击之间没有延时. 当 <a href="SendMode.htm">SendMode Input</a> 生效时对于 <a href="Send.htm">Send</a> 同样如此.</p>
 <p>在每次 <a href="Send.htm">Send</a> 或 <a href="ControlSend.htm">ControlSend</a> 发送键击后会自动进行短暂的延时. 这样做提高了脚本的可靠性, 因为窗口有时无法响应快速的键击流.</p>
+<p>在延迟(睡眠) 期间, 使当前线程<a href="../misc/Threads.htm#Interrupt">不可中断</a>.</p>
 <p>由于操作系统计时系统的精确度, 延时可能会被向上取整到最近的 10 或 15 的倍数. 例如, 在大部分 Windows XP 系统上介于 1 和 10(含边界) 的延时都相当于 10 或 15(可能也适用于 2k).</p>
 <p>对于 Send/SendEvent 模式, 延时为 0 时实际内部会执行 Sleep(0), 这样会将脚本时间片的剩余部分分配给其他需要的进程. 如果没有进程需要, 那么 Sleep(0) 相当于完全没有延时. 与之相比, 延时为 -1 则从不休眠. 为了提高可靠性, 推荐使用 0 而不是 -1.</p>
 <p>当延时设为 -1 时, 脚本的进程优先级会成为传统的 <a href="SendMode.htm">SendEvent 模式</a>中键击发送速度的重要因素. 要提升脚本的优先级, 请使用 <code><a href="Process.htm">Process</a>, Priority,, High</code>. 尽管这通常会使得键击发送的速度超过<a href="WinActivate.htm">活动窗口</a>的处理速度, 不过系统会自动对它们进行缓冲. 在 <a href="Send.htm">Send</a> 命令完成后, 被缓冲的键击会继续到达目标窗口(即使此窗口现在已经不是活动窗口). 这种情况一般是不要紧的, 因为任何后续发送给相同窗口的键击会排列在缓冲中的那些键击之后.</p>

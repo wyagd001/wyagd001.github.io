@@ -1,14 +1,14 @@
-; Easy Access to Favorite Folders -- by Savage
-; http://www.autohotkey.com
-; When you click the middle mouse button while certain types of
-; windows are active, this script displays a menu of your favorite
-; folders.  Upon selecting a favorite, the script will instantly
-; switch to that folder within the active window.  The following
-; window types are supported: 1) Standard file-open or file-save
-; dialogs; 2) Explorer windows; 3) Console (command prompt) windows.
-; The menu can also be optionally shown for unsupported window
-; types, in which case the chosen favorite will be opened as a new
-; Explorer window.
+﻿; 轻松访问收藏夹 -- 作者: Savage
+; https://www.autohotkey.com
+; 当您在某些类型的窗口活动时点击鼠标中键,
+; 脚本会显示您的收藏夹菜单.
+; 选择收藏夹中的文件夹后,
+; 脚本会让活动窗口立即切换到那个文件夹.
+; 支持下列窗口类型:
+; 1) 标准的文件打开或文件保存对话框; 2) 资源管理器窗口;
+; 3) 控制台(命令提示符) 窗口.
+; 对于不支持的窗口类型也可以显示此菜单,
+; 此时选择的收藏夹中的文件夹会在新的资源管理器窗口中打开
 
 ; Note: In Windows Explorer, if "View > Toolbars > Address Bar" is
 ; not enabled, the menu will not be shown if the hotkey chosen below

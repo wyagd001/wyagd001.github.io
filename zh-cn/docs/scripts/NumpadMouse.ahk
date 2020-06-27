@@ -1,10 +1,9 @@
-; Using Keyboard Numpad as a Mouse -- by deguix
-; http://www.autohotkey.com
-; This script makes mousing with your keyboard almost as easy
-; as using a real mouse (maybe even easier for some tasks).
-; It supports up to five mouse buttons and the turning of the
-; mouse wheel.  It also features customizable movement speed,
-; acceleration, and "axis inversion".
+﻿; 把小键盘作为鼠标使用 -- 作者: deguix
+; https://www.autohotkey.com
+; 此脚本用您的键盘来实现鼠标操作,
+; 几乎相当于真正的鼠标(在一些任务中甚至更方便).
+; 它支持多达五个鼠标按钮和鼠标滚轮的转动.
+; 它还具有能自定义移动速度, 加速和 "轴反转" 的特点.
 
 /*
 o------------------------------------------------------------o
@@ -55,7 +54,7 @@ o------------------------------------------------------------o
 | ^Numpad9/^Numpad3     | Inc./dec. wheel maximum speed per  |
 |                       | button press*.                     |
 | Numpad4/Numpad6       | Inc./dec. rotation angle to        |
-|                       | right in degrees. (i.e. 180� =     |
+|                       | right in degrees. (i.e. 180?=     |
 |                       | = inversed controls).              |
 |------------------------------------------------------------|
 | * = These options are affected by the mouse wheel speed    |
@@ -71,7 +70,7 @@ o------------------------------------------------------------o
 
 ; Using the keyboard hook to implement the Numpad hotkeys prevents
 ; them from interfering with the generation of ANSI characters such
-; as �.  This is because AutoHotkey generates such characters
+; as ?  This is because AutoHotkey generates such characters
 ; by holding down ALT and sending a series of Numpad keystrokes.
 ; Hook hotkeys are smart enough to ignore such keystrokes.
 #UseHook
@@ -100,11 +99,11 @@ Temp = 0
 Temp2 = 0
 
 MouseRotationAnglePart = %MouseRotationAngle%
-;Divide by 45� because MouseMove only supports whole numbers,
-;and changing the mouse rotation to a number lesser than 45�
+;Divide by 45?because MouseMove only supports whole numbers,
+;and changing the mouse rotation to a number lesser than 45?
 ;could make strange movements.
 ;
-;For example: 22.5� when pressing NumpadUp:
+;For example: 22.5?when pressing NumpadUp:
 ;  First it would move upwards until the speed
 ;  to the side reaches 1.
 MouseRotationAnglePart /= 45
@@ -376,7 +375,7 @@ If MouseRotationAnglePart >= 8
 	MouseRotationAnglePart = 0
 MouseRotationAngle = %MouseRotationAnglePart%
 MouseRotationAngle *= 45
-ToolTip, Mouse rotation angle: %MouseRotationAngle%�
+ToolTip, Mouse rotation angle: %MouseRotationAngle%?
 SetTimer, RemoveToolTip, 1000
 return
 ButtonRotationAngleDown:
@@ -385,7 +384,7 @@ If MouseRotationAnglePart < 0
 	MouseRotationAnglePart = 7
 MouseRotationAngle = %MouseRotationAnglePart%
 MouseRotationAngle *= 45
-ToolTip, Mouse rotation angle: %MouseRotationAngle%�
+ToolTip, Mouse rotation angle: %MouseRotationAngle%?
 SetTimer, RemoveToolTip, 1000
 return
 
