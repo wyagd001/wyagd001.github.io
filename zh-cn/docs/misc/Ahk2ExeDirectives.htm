@@ -30,7 +30,7 @@
     <li><a href="#Debug">Debug</a>: 显示指令的调试文本.</li>
     <li><a href="#ExeName">ExeName</a>: 指定 .exe 的位置和名称.</li>
     <li><a href="#Let">Let</a>: 设置一个用户变量.</li>
-    <li><a href="#Obey">Obey</a>: 服从一个命令或表达式.</li>
+    <li><a href="#Obey">Obey</a>: 执行一个命令或表达式.</li>
     <li><a href="#PostExec">PostExec</a>: 编译后运行程序.</li>
     <li><a href="#SetMainIcon">SetMainIcon</a>: 设置主图标.</li>
     <li><a href="#SetProp">Set<i>Prop</i></a>: 设置 .exe 的一个属性.</li>
@@ -187,14 +187,14 @@ MsgBox This message appears in both the compiled and uncompiled script
 </dl>
 
 <h3 id="Obey">Obey</h3>
-<p>Obeys isolated AutoHotkey commands or expressions, with result in <code>U_<i>Name</i></code>.</p>
+<p>执行独立于 AutoHotkey 的命令或表达式, 结果为 <code>U_<i>Name</i></code>.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-Obey</span> Name, CmdOrExp <span class="optional">, Extra</span></pre>
 <dl>
   <dt>Name</dt>
   <dd>要接收结果的变量名称(带或不带前缀 <code>U_</code>).</dd>
   <dt>CmdOrExp</dt>
   <dd>
-    <p> to obey 的命令或表达式.</p>
+    <p>要执行的命令或表达式.</p>
     <p><strong>Command</strong> 格式必须使用 <em>Name</em> 作为输出变量(通常是第一个参数), 例如</p>
     <pre>;@Ahk2Exe-Obey U_date, FormatTime U_date`, R D2 T2</pre>
     <p><strong>Expression</strong> 的格式必须以 <code>=</code> 开头, 例如</p>
@@ -223,15 +223,15 @@ MsgBox This message appears in both the compiled and uncompiled script
     </ul>
   </dd>
 </dl>
-<p><strong>示例 1:</strong> (To use these examples, first download <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> and compile it according to the instructions in the downloaded script.)</p>
-<p>This example can be used to remove a reference to "AutoHotkey" in the generated .exe to disguise that it is a compiled AutoHotkey script:</p>
+<p><strong>示例 1:</strong> (要使用这些例子, 首先要下载 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 并根据下载的脚本中的说明进行编译.)</p>
+<p>这个例子可以用来删除生成的 .exe 文件中对 "AutoHotkey" 的引用, 以掩盖它是一个编译过的 AutoHotkey 脚本:</p>
 <pre>;@Ahk2Exe-Obey U_au, = "%A_IsUnicode%" ? 2 : 1    ; Script ANSI or Unicode?
 ;@Ahk2Exe-PostExec "BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "%U_au%2.&gt;AUTOHOTKEY SCRIPT&lt;. DATA              "</pre>
-<p><strong>示例 2:</strong> This example will alter a UPX compressed .exe so that it can't be de-compressed with <code>UPX -d</code>:</p>
+<p><strong>示例 2:</strong> 这个例子将改变一个 UPX 压缩的 .exe 文件, 使它不能用 <code>UPX -d</code> 来解压:</p>
 <pre>;@Ahk2Exe-PostExec "BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "11.UPX." "1.UPX!.", 2</pre>
-<p>There are other examples mentioned in the <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> script.</p>
+<p>在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 脚本中还有其他例子.</p>
 
 <h3 id="SetMainIcon">SetMainIcon</h3>
 <p>覆盖用于编译的自定义 EXE 图标. (要改变其他图标, 请参阅 <a href="#AddResource">AddResource</a> 示例.)</p>
@@ -299,12 +299,12 @@ MsgBox This message appears in both the compiled and uncompiled script
       </tr>
       <tr>
         <td>Version</td>
-        <td>更改文件版本和产品版本, 包括文本和原始二进制格式.<br>Ahk2Exe fills the binary version fields with the period-delimited numbers (up to four) that may appear at the beginning of the version text. Unfilled fields are set to zero. 例如, <code>1.3-alpha</code> would produce a binary version number of <code>1.3.0.0</code>. 如果这个属性没有被修改, 它默认为用于编译脚本的 AutoHotkey 版本.</td>
+        <td>更改文件版本和产品版本, 包括文本和原始二进制格式.<br>Ahk2Exe 用可能出现在版本文本开头的以周期限定的数字(最多 4 个) 填充二进制版本字段. 未填写的字段被设置为零. 例如, <code>1.3-alpha</code> 会产生 <code>1.3.0.0</code> 的二进制版本号. 如果这个属性没有被修改, 它默认为用于编译脚本的 AutoHotkey 版本.</td>
       </tr>
     </table>
   </dd>
   <dt>Value</dt>
-  <dd>The value to set the property to.</dd>
+  <dd>要设置属性的值.</dd>
 </dl>
 
 <h3 id="Set">Set</h3>

@@ -23,7 +23,7 @@
 </ul>
 <span id="Variables"></span><h2 id="Intro">变量</h2>
 <p>有关一般说明和变量如何工作的详细信息, 请参阅<a href="Concepts.htm#variables">变量</a>.</p>
-<p id="assigning"><strong>给变量赋值</strong>: 要将字符串或数字存储在变量中, 有两种方法: <a href="Language.htm#legacy-syntax">传统方式</a>和<a href="Language.htm#expressions">表达式</a>. 传统方法使用等号运算符<a href="commands/SetEnv.htm">等号运算符(=)</a> 来指定<a href="Language.htm#unquoted-text"><strong>不加引号的</strong>原义字符串</a>或用百分号括起来的变量. 例如:</p>
+<p id="assigning"><strong>给变量赋值</strong>: 要将字符串或数字存储在变量中, 有两种方法: <a href="Language.htm#legacy-syntax">传统方式</a>和<a href="Language.htm#expressions">表达式</a>. 传统方法使用<a href="commands/SetEnv.htm">等号运算符(=)</a> 来指定<a href="Language.htm#unquoted-text"><strong>不加引号的</strong>原义字符串</a>或用百分号括起来的变量. 例如:</p>
 <pre>MyNumber = 123
 MyString = This is a literal string.
 CopyOfVar = %Var%  <em>; 和 = 运算符一起使用时, 需要使用百分号来获取变量的内容.</em></pre>
@@ -111,7 +111,8 @@ msgbox % z ; 结果为 z=1
   <tr id="pow">
     <td style="text-align:center"><strong>**</strong></td>
     <td>
-      <p><strong>幂</strong>. 底数和指数都可以为小数. 如果指数为负数, 即使底数和指数都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以 <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样且得到结果 -4. 因此, 要让负号的优先级高于幂运算, 需要把它们包围在括号中, 例如 <code>(-2)**2</code>.</p>      <p class="note"><strong>注意</strong>: 不支持底数为负数且指数为小数的情况, 例如 <code>(-2)**0.5</code>; 它会产生空字符串. 但 <code>(-2)**2</code> 和 <code>(-2)**2.0</code> 都是支持的. 该运算符用下面的例子来说明,<pre>
+      <p><strong>幂</strong>. 底数和指数都可以为小数. 如果指数为负数, 即使底数和指数都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以 <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样且得到结果 -4. 因此, 要让负号的优先级高于幂运算, 需要把它们包围在括号中, 例如 <code>(-2)**2</code>.</p>
+      <p class="note"><strong>注意</strong>: 不支持底数为负数且指数为小数的情况, 例如 <code>(-2)**0.5</code>; 它会产生空字符串. 但 <code>(-2)**2</code> 和 <code>(-2)**2.0</code> 都是支持的. 该运算符用下面的例子来说明:<pre>
 msgbox % 2**-2     ; 结果为 0.250000
 msgbox % 2**(-2)   ; 结果为 0.250000
 msgbox % -2**2     ; 结果为 -4
@@ -120,6 +121,7 @@ msgbox % (-2)**2   ; 结果为 4
 msgbox % (-2)**2.0 ; 结果为 4.000000
 msgbox % (-2)**0.5 ; 结果为空
 </pre></p>
+      <p class="warning"><strong>注意</strong>: 与数学上的对应项不同, ** 在 AutoHotkey v1 中是左结合的. 例如, <code>x ** y ** z</code> 计算为 <code>(x ** y) ** z</code>.</p>
     </td>
   </tr>
   <tr id="unary">
@@ -318,7 +320,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   <li>GUI 窗口和菜单栏: <a href="#Gui">A_Gui</a>, <a href="#GuiControl">A_GuiControl</a>, <a href="#GuiEvent">A_GuiEvent</a>, <a href="#EventInfo">A_EventInfo</a>, <a href="#gui">(...更多...)</a></li>
   <li>热键, 热字串和自定义菜单项: <a href="#ThisHotkey">A_ThisHotkey</a>, <a href="#EndChar">A_EndChar</a>, <a href="#ThisMenuItem">A_ThisMenuItem</a>, <a href="#h">(...更多...)</a></li>
   <li>操作系统和用户信息: <a href="#OSVersion">A_OSVersion</a>, <a href="#Screen">A_ScreenWidth</a>, <a href="#Screen">A_ScreenHeight</a>, <a href="#os">(...更多...)</a></li>
-  <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#Caret">A_CaretX</a>, <a href="#Caret">A_CaretY</a>, <a href="#Clipboard">Clipboard</a>, <a href="misc/Clipboard.htm#ClipboardAll">ClipboardAll</a>, <a href="#ErrorLevel">ErrorLevel</a>, <a href="#misc">(...更多...)</a></li>
+  <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#Caret">A_CaretX</a>, <a href="#Caret">A_CaretY</a>, <a href="#Clipboard">Clipboard</a>, <a href="#ClipboardAll">ClipboardAll</a>, <a href="#ErrorLevel">ErrorLevel</a>, <a href="#misc">(...更多...)</a></li>
   <li>循环: <a href="#Index">A_Index</a>, <a href="#loop">(...更多...)</a></li>
 </ul>
 <h3>特殊字符</h3>
@@ -938,7 +940,7 @@ return
   </tr>
   <tr id="ClipboardAll">
     <td>ClipboardAll</td>
-    <td><strong>可读取/写入:</strong> 剪贴板中的完整内容(包含格式和文本). 有关详情, 请参阅 <a href="misc/Clipboard.htm#ClipboardAll">ClipboardAll</a>.</td>
+    <td>剪贴板中的完整内容(包含格式和文本). 有关详情, 请参阅 <a href="misc/Clipboard.htm#ClipboardAll">ClipboardAll</a>.</td>
   </tr>
   <tr id="ErrorLevel">
     <td>ErrorLevel</td>
