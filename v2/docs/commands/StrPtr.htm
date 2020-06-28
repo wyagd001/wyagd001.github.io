@@ -12,43 +12,43 @@
 <body>
 
 <h1>StrPtr</h1>
-<p>Returns the current memory address of a string.</p>
+<p>返回字符串的当前内存地址.</p>
 <pre class="Syntax">Address := <span class="func">StrPtr</span>(Value)</pre>
 
-<h2>Parameters</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>Value</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#strings">String</a></p>
-	</dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+  </dd>
 
 </dl>
 
-<h2>Return Value</h2>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-<p>This function returns the current memory address of <em>Value</em>.</p>
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+<p>该函数返回 <em>Value</em> 的当前内存地址.</p>
 
-<h2>Remarks</h2>
-<p>The lifetime of an address and which operations are valid to perform on it depend on how <em>Value</em> was passed to this function. There are three distinct cases, shown as example code below. In all cases, if the string will <strong>not</strong> be modified, the return value can be passed <em>directly</em> to a <a href="DllCall.htm">DllCall</a> function or <a href="SendMessage.htm">SendMessage</a>.</p>
+<h2 id="Remarks">备注</h2>
+<p>一个地址的寿命以及对它进行哪些操作是有效的, 取决于 <em>Value</em> 是如何传递给这个函数的. 有三种不同的情况, 如下例代码所. 在所有情况下, 如果字符串 <strong>不会</strong> 被修改, 返回值可以 <em>直接</em> 传递给 <a href="DllCall.htm">DllCall</a> 函数或 <a href="SendMessage.htm">SendMessage</a>.</p>
 <pre>Ptr := StrPtr(MyVar)</pre>
-<p>If <em>Value</em> is a <a href="../Concepts.htm#variable-references">variable reference</a> (and not a built-in variable), the return value is the memory address of the variable's internal string buffer. <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar)</code> returns the size of the buffer <strong>in characters</strong>, excluding the terminating null character.</p>
-<p>The address should be considered valid <em>only</em> until the variable is freed or has been reassigned by means of any of the <a href="../Variables.htm#AssignOp">assignment operators</a> or by passing it to a built-in function. The address of the contents of a function's <a href="../Functions.htm#Local">local</a> variable is not valid after the function returns, as local variables are freed automatically.</p>
-<p>The address can be stored in a <a href="DllCall.htm#struct">structure</a> or another variable, and passed indirectly to <a href="DllCall.htm">DllCall</a> or <a href="SendMessage.htm">SendMessage</a> or used in other ways, for as long as it remains valid as described above.</p>
-<p>The script may change the value of the string indirectly by passing the address to <a href="NumPut.htm">NumPut</a>, <a href="DllCall.htm">DllCall</a> or <a href="SendMessage.htm">SendMessage</a>. If the length of the string is changed this way, the variable's internal length property must be updated by calling <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, -1)</code>.</p>
+<p>如果 <em>Value</em> 是一个<a href="../Concepts.htm#variable-references">变量引用</a>(而不是内置变量), 那么返回值就是变量内部字符串缓冲的内存地址. <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar)</code> <strong>以字符为单位</strong> 返回缓冲的大小, 不包括终止的空字符.</p>
+<p>这个地址应该被认为是有效的, 直到变量被释放或被重新赋值(通过<a href="../Variables.htm#AssignOp">赋值运算符</a>或将其传递给内置函数). 在函数返回后, 函数的<a href="../Functions.htm#Local">局部</a> 变量的内容地址是无效的, 因为局部变量是自动释放的.</p>
+<p>该地址可以存储在 <a href="DllCall.htm#struct">structure(结构体)</a> 或其他变量中, 并间接传递给 <a href="DllCall.htm">DllCall</a> 或 <a href="SendMessage.htm">SendMessage</a> 或以其他方式使用, 只要它仍然有效, 如上所述.</p>
+<p>脚本可以通过将地址间接传递给 <a href="NumPut.htm">NumPut</a>, <a href="DllCall.htm">DllCall</a> 或 <a href="SendMessage.htm">SendMessage</a> 来改变字符串的值. 如果以这种方式改变了字符串的长度, 必须通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, -1)</code> 来更新变量的内部长度属性.</p>
 <pre>Ptr := StrPtr("literal string")</pre>
-<p>The address of a literal string is valid until the program exits. The script should not attempt to modify the string. The address can be stored in a <a href="DllCall.htm#struct">structure</a> or another variable, and passed indirectly to <a href="DllCall.htm">DllCall</a> or <a href="SendMessage.htm">SendMessage</a> or used in other ways.</p>
+<p>原义字符串的地址是有效的, 直到程序退出. 脚本不应试图修改该字符串. 该地址可以存储在<a href="DllCall.htm#struct">结构体</a>或其他变量中, 并间接传递给 <a href="DllCall.htm">DllCall</a> 或 <a href="SendMessage.htm">SendMessage</a> 或以其他方式使用.</p>
 <pre>SendMessage 0xC, 0, StrPtr(A_ScriptName " changed this title"),, "A"</pre>
-<p>The address of a temporary string is valid only until evaluation of the overall expression or function call statement is completed, after which time it must not be used. For the example above, the address is valid until SendMessage returns. All of the following yield temporary strings:</p>
+<p>临时字符串的地址只在整体表达式的计算或函数调用语句完成之前有效, 之后不得使用. 对于上面的例子, 地址在 SendMessage 返回之前都是有效的. 以下所有内容都会产生临时字符串:</p>
 <ul>
-  <li>Concatenation.</li>
-  <li>Built-in variables such as <a href="../Variables.htm#ScriptName">A_ScriptName</a>.</li>
-  <li>Functions which return strings.</li>
-  <li>Accessing properties of an object, array elements or map elements.</li>
+  <li>连接.</li>
+  <li>内置变量, 如 <a href="../Variables.htm#ScriptName">A_ScriptName</a>.</li>
+  <li>返回字符串的函数.</li>
+  <li>访问对象的属性, 数组元素或映射元素.</li>
 </ul>
-<p>If not explicitly covered above, it is safe to assume the string is temporary.</p>
+<p>如果上面没有明确说明, 可以认为字符串是临时的.</p>
 
-<h2>Related</h2>
+<h2 id="Related">相关</h2>
 <p><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, <a href="DllCall.htm">DllCall</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a></p>
 
 

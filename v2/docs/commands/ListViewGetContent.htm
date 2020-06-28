@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>ControlGetList - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The ControlGetList function returns a list of items/rows from a ListView, ListBox, ComboBox, or DropDownList." />
+<title>ListViewGetContent - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The ListViewGetContent function returns a list of items/rows from a ListView." />
 <meta name="ahk:equiv-v1" content="commands/ControlGet.htm#List" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,19 +12,18 @@
 </head>
 <body>
 
-<h1>ControlGetList</h1>
+<h1>ListViewGetContent</h1>
 
-<p>返回列表视图, 列表框, 组合框或下拉列表中的项目/行列表.</p>
+<p>返回列表视图中的项目/行列表.</p>
 
-<pre class="Syntax">List := <span class="func">ControlGetList</span>(<span class="optional">Options, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
+<pre class="Syntax">List := <span class="func">ListViewGetContent</span>(<span class="optional">Options, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
     <dt>Options</dt>
     <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>如果控件是一个列表视图, 则指定检索什么(参见下面). 对于其他控件类型, <em>Options</em> 应该为空白/空.</p>
-        <p>如果 <em>Options</em> 参数为空或省略, 则检索 ListView 中的所有文本. 否则, 请指定以下零或多个单词, 每个单词与下一个单词用空格或制表符分隔:</p>
+        <p>指定检索什么. If blank or omitted, all the text in the ListView is retrieved. Otherwise, specify zero or more of the following words, each separated from the next with a space or tab:</p>
         <p><strong>Selected:</strong> 只返回选中(突出显示) 的行, 而不是所有行. 如果没有, 则返回值为空.</p>
         <p><strong>Focused:</strong> 只返回聚焦行. 如果没有, 则返回值为空.</p>
         <p id="ColN"><strong>Col4:</strong> 仅获取第四列(字段) 而不是所有列(把 4 替换为您选择的数字).</p>
@@ -62,10 +61,10 @@
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>此函数从 ListView, ListBox, ComboBox 或 DropDownList 返回项目/行的列表. 对于 ListView, 在每一行中, 除最后一个字段外的每个字段(列) 都将以制表符(`t) 结尾. 若要分别访问项目/行, 请使用 <a href="LoopParse.htm">parsing loop</a>, 如<a href="#ExListView">示例 #1</a> 和<a href="#ExComboBox">示例 #2</a> 所示.</p>
+<p>此函数从 ListView 返回项目/行的列表. 在每一行中, 除最后一个字段外的每个字段(列) 都将以制表符(`t) 结尾. 若要分别访问项目/行, 请使用 <a href="LoopParse.htm">parsing loop</a>, 如<a href="#ExListView">示例 #1</a> 所示.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>失败时抛出异常. 在以下情况下会失败: 1) 目标窗口或控件不存在; 2) 目标 ListView 的类型不是 SysListView32; 3) 拥有 ListView 的进程无法打开, 这可能是由于缺少用户权限或因为它已被锁定; 4) <a href="#ColN">Col<em>N</em> 选项</a>指定不存在的列.</p>
+<p>失败时抛出异常. 在以下情况下会失败: 1) 目标窗口或控件不存在; 2) a message could not be sent to the target control; 3) 拥有 ListView 的进程无法打开, 这可能是由于缺少用户权限或因为它已被锁定; 4) <a href="#ColN">Col<em>N</em> 选项</a>指定不存在的列.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>一些应用程序将其 ListView 文本单独存储, 从而防止检索它们的文本. 在这些情况下, 通常不会抛出异常, 但是所有检索到的字段都是空的.</p>
@@ -75,25 +74,18 @@
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="WinGetList.htm">WinGetList</a>, <a href="Control.htm">Control 函数</a></p>
+<p><a href="ControlGetItems.htm">ControlGetItems</a>, <a href="WinGetList.htm">WinGetList</a>, <a href="Control.htm">Control 函数</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExListView">
 <p><a href="#ExListView">#1</a>: 从 ListView 中提取各个行和字段:</p>
-<pre>List := ControlGetList("Selected", "SysListView321", WinTitle)
+<pre>List := ListViewGetContent("Selected", "SysListView321", WinTitle)
 Loop Parse, List, "`n"  <em>; 行由换行符(`n) 分隔.</em>
 {
     RowNumber := A_Index
     Loop Parse, A_LoopField, A_Tab  <em>; 每行中的字段(列) 由制表符(A_Tab) 分隔.</em>
         MsgBox "Row #" RowNumber " Col #" A_Index " is " A_LoopField
 }</pre>
-</div>
-
-<div class="ex" id="ExComboBox">
-<p><a href="#ExComboBox">#2</a>: 分别访问以下项目:</p>
-<pre>List := ControlGetList("", "ComboBox1", WinTitle)
-Loop Parse, List, "`n"
-    MsgBox "Item number " A_Index " is " A_LoopField</pre>
 </div>
 
 </body>

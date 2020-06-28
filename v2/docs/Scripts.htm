@@ -139,17 +139,17 @@ FileAppend Var, "C:\My File.txt"</pre>
 
 <h2 id="ahk2exe">把脚本转换成 EXE(Ahk2Exe)</h2>
 <p>程序中包含了脚本编译器(由 fincs 提供, TAC109 的添加).</p>
-<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器,, the script, any files it <a href="commands/_Include.htm">includes</a>, and any files it has incorporated via the <a href="commands/FileInstall.htm">FileInstall</a> function. Additional files can be included using <a href="misc/Ahk2ExeDirectives.htm">Compiler Directives</a>.</p>
+<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本, 脚本<a href="commands/_Include.htm">包含</a>的任何文件, 以及通过 <a href="commands/FileInstall.htm">FileInstall</a> 函数内嵌的任何文件. 可以使用<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>包含其他文件.</p>
 <p>Ahk2Exe 的使用方法如下:</p>
 <ul>
   <li>
-    <p><strong>GUI Interface</strong>: Run the &quot;Convert .ahk to .exe&quot; item in the Start Menu.</p>
+    <p><strong>GUI 界面</strong>: 运行开始菜单中的 &quot;Convert .ahk to .exe&quot; 项目.</p>
   </li>
   <li>
-    <p><strong>Right-click</strong>: Within an open Explorer window, you can right-click any .ahk file and select &quot;Compile Script&quot; (only available if the script compiler option was chosen when AutoHotkey was installed). This creates an EXE file of the same base filename as the script, which appears after a short time in the same directory. Note: The EXE file is produced using the same custom icon, .bin file and <a href="#mpress">compression</a> setting that were last used by Method #1 above.</p>
+    <p><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 文件上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器选项时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它稍后会出现在同一目录下. 注: EXE 文件的生成使用的是前面的方法 #1 中最后使用的自定义图标, .bin 文件以及<a href="#mpress">压缩</a>设置.</p>
   </li>
   <li id="ahk2exeCmd">
-    <p><strong>Command Line</strong>: The compiler can be run from the command line with the following parameter pairs (the first is mandatory while the rest are optional):</p>
+    <p><strong>命令行</strong>: 编译器可以通过以下参数从命令行运行(the first is mandatory while the rest are optional):</p>
     <style>
       #param_pairs td:not(:last-child) {
         white-space: nowrap;
@@ -162,23 +162,23 @@ FileAppend Var, "C:\My File.txt"</pre>
       </tr>
       <tr id="SlashIn">
         <td>/in <i>script_name</i><br>/inGui <i>script_name</i></td>
-        <td>(Mandatory to specify one of these.) The path and name of the script to compile. <code>/in</code> compiles the script immediately. <span class="ver">[v1.1.33+]:</span> <code>/inGui</code> will show the GUI interface first.</td>
+        <td>(Mandatory to specify one of these.) 要编译的脚本的路径和名称. <code>/in</code> compiles the script immediately. <span class="ver">[v1.1.33+]:</span> <code>/inGui</code> will show the GUI interface first.</td>
       </tr>
       <tr id="SlashOut">
         <td>/out <i>exe_name</i></td>
-        <td>The path\name of the output .exe to be created. Default is the directory\base_name of the input file plus extension of .exe.</td>
+        <td>要创建的 .exe 的路径/名称. 默认值是输入文件的 directory\base_name 加上 .exe 的扩展名.</td>
       </tr>
       <tr id="slashIcon">
         <td>/icon <i>icon_name</i></td>
-        <td>The icon file to be used. Default is the last icon used in the GUI interface.</td>
+        <td>要使用的图标文件. 默认为 GUI 界面中最后使用的图标.</td>
       </tr>
       <tr id="SlashBin">
         <td>/bin <i>file_name</i></td>
-        <td>The .bin file to be used. Default is the last .bin file name used in the GUI interface.</td>
+        <td>要使用的 .bin 文件. 默认情况下是 GUI 界面中最后使用的 .bin 文件名.</td>
       </tr>
       <tr id="SlashCp">
         <td>/cp <i>codepage</i></td>
-        <td>Overrides the default codepage used to read script files. For more details, see <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">codepage</a>. Note that unicode scripts should begin with a byte-order-mark (BOM), rendering the use of this parameter unnecessary.</td>
+        <td>覆盖用于读取脚本文件的默认代码页. 有关详情, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">codepage</a>. 注意, Unicode 脚本应该以字节顺序标记(BOM) 开始, 因此不需要使用这个参数.</td>
       </tr>
       <tr id="SlashCompress">
         <td>/compress <i>n</i></td>
@@ -193,30 +193,30 @@ FileAppend Var, "C:\My File.txt"</pre>
         <td class="warning"><a href="#mpress">Compress</a> the exe with MPRESS? 0 = no, 1 = yes. Default is the last setting used in the GUI interface.</td>
       </tr>
     </table>
-    <p>For example:</p>
+    <p>例如:</p>
     <pre class="no-highlight">Ahk2Exe.exe /in "MyScript.ahk" /icon "MyIcon.ico"</pre>
   </li>
 </ul>
 <p>注意:</p>
 <ul>
-  <li>Parameters containing spaces must be enclosed in double quotes.</li>
+  <li>包含空格的参数必须用双引号括起来.</li>
   <li>编译通常不会提高脚本的性能.</li>
   <li><a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> 和 <a href="Variables.htm#AllowMainWindow">A_AllowMainWindow</a> 会影响已编译脚本的行为.</li>
-  <li>The built-in variable <a href="Variables.htm#IsCompiled">A_IsCompiled</a> contains 1 if the script is running in compiled form. Otherwise, it is blank.</li>
-  <li>When parameters are passed to Ahk2Exe, a message indicating the success or failure of the compiling process is written to stdout. Although the message will not appear at the command prompt, it can be &quot;caught&quot; by means such as redirecting output to a file. </li>
-  <li>Additionally in the case of a failure, Ahk2Exe has exit codes indicating the kind of error that occurred. These error codes can be found at <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a>.</li>
+  <li>如果脚本以编译的形式运行, 则内置变量 <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 的值为 1. 否则为空.</li>
+  <li>传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符中, 但可以通过像重定向输出到文件的方法 "捕获".</li>
+  <li>此外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 这些错误代码可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 上找到.</li>
 </ul>
-<p>The compiler's source code and newer versions can be found at <a href="https://github.com/AutoHotkey/Ahk2Exe">GitHub</a>.</p>
+<p>编译器的源码和新版本可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe">GitHub</a> 找到.</p>
 
-<h3 id="CompilerDirectives">Script Compiler Directives</h3>
-<p><span class="ver">[v1.1.33+]:</span> Script compiler directives allow the user to specify details of how a script is to be compiled. Some of the features are:</p>
+<h3 id="CompilerDirectives">脚本编译器指令</h3>
+<p><span class="ver">[v1.1.33+]:</span> 脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
 <ul>
-  <li>Ability to change the version information (such as the name, description, version...).</li>
-  <li>Ability to add resources to the compiled script.</li>
-  <li>Ability to tweak several miscellaneous aspects of compilation.</li>
-  <li>Ability to remove code sections from the compiled script and vice versa.</li>
+  <li>能够改变版本信息(如名称, 描述, 版本...).</li>
+  <li>能够为编译后的脚本添加资源.</li>
+  <li>能够调整编译的一些杂项.</li>
+  <li>能够从编译后的脚本中删除代码部分.</li>
 </ul>
-<p>See <a href="misc/Ahk2ExeDirectives.htm">Script Compiler Directives</a> for more details.</p>
+<p>有关详情, 请参阅<a href="misc/Ahk2ExeDirectives.htm">脚本编译器指令</a>.</p>
 
 <h3 id="mpress">压缩编译的脚本</h3>
 <p>Ahk2Exe optionally uses MPRESS or <span class="ver">[v1.1.33+]</span> UPX freeware to compress compiled scripts. If <strong>MPRESS.exe</strong> and/or <strong>UPX.exe</strong> has been copied to the "Compiler" subfolder where AutoHotkey was installed, either can be used to compress the .exe as directed by the <code>/compress</code> parameter or the GUI setting. </p>
@@ -243,7 +243,7 @@ FileAppend Var, "C:\My File.txt"</pre>
     <td>支持</td>
   </tr>
   <tr id="ErrorStdOut">
-    <td>/ErrorStdOut<span class="optional">=<em>Encoding</em></span></td>
+    <td>/ErrorStdOut<br><br>/ErrorStdOut=<em>Encoding</em></td>
     <td>
       <p>Send syntax errors that prevent a script from launching to stderr rather than displaying a dialog. See <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a> for details. This can be combined with /iLib to validate the script without running it.</p>
       <p><span class="ver">[v1.1.33+]:</span> An <a href="commands/FileEncoding.htm">encoding</a> can optionally be specified. For example, <code>/ErrorStdOut=UTF-8</code> encodes messages as UTF-8 before writing them to stderr.</p>
@@ -311,11 +311,10 @@ FileAppend Var, "C:\My File.txt"</pre>
 }</pre>
 
 <h2 id="cp">脚本文件代码页</h2>
-<p>In order for non-ASCII characters to be read correctly from file, the encoding used when the file was saved (typically by the text editor) must match what AutoHotkey uses when it reads the file. If it does not match, characters will be decoded incorrectly. AutoHotkey uses the following rules to decide which encoding to use:</p>
+<p>为了使非 ASCII 字符能够正确地从文件中读取, 文件保存时使用的编码(通常由文本编辑器) 必须与 AutoHotkey 读取文件时使用的编码一致. 如果不匹配, 字符将被错误地解码. AutoHotkey 使用以下规则来决定使用哪种编码:</p>
 <ul>
   <li>如果文件以 UTF-8 或 UTF-16(LE) 字节顺序标记开头, 则使用相应的代码页并且忽略 <a href="#CPn">/CP<i>n</i></a> 开关.</li>
   <li>如果在命令行中传递了 <a href="#CPn">/CP<i>n</i></a> 开关, 则使用代码页 <i>n</i>. 有关有效的代码页标识符数字列表, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">MSDN</a>.
-  <p class="note"><strong>Note:</strong> The "Default to UTF-8" option in the AutoHotkey <span class="ver">[v1.1.33+]</span> installer adds <code>/CP65001</code> to the command line for all scripts launched via the shell (Explorer).</p></li>
   <li>在其他所有情况下, 使用使用 UTF-8(此默认值不同于 AutoHotkey v1).</li>
 </ul>
 <p>注意这仅适用于 AutoHotkey 加载脚本的时候, 而不包括脚本自身的文件 I/O. <a href="commands/FileEncoding.htm">FileEncoding</a> 决定了脚本读取或写入文件时使用的默认编码, 然而 <a href="commands/IniRead.htm">IniRead</a> 和 <a href="commands/IniWrite.htm">IniWrite</a> 总是使用 UTF-16 或 ANSI.</p>
