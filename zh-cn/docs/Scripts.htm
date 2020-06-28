@@ -105,14 +105,14 @@ FileAppend, %Var%, C:\My File.txt</pre>
 
 <h2 id="ahk2exe">把脚本转换成 EXE(Ahk2Exe)</h2>
 <p>程序中已包含了脚本编译器(感谢 fincs 提供, 以及 TAC109 的补充).</p>
-<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本需要<a href="commands/_Include.htm">加载</a>的任何文件以及通过 <a href="commands/FileInstall.htm">FileInstall</a> 命令内嵌的任何文件. <span class="ver">[v1.1.33+]:</span> 可以使用<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>包含其他文件.</p>
+<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本, 脚本<a href="commands/_Include.htm">包含</a>的任何文件以及通过 <a href="commands/FileInstall.htm">FileInstall</a> 命令内嵌的任何文件. <span class="ver">[v1.1.33+]:</span> 可以使用<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>包含其他文件.</p>
 <p>使用 Ahk2Exe 有下列几种方式:</p>
 <ul>
   <li>
   <p><strong>GUI 界面</strong>: 运行开始菜单中的 "Convert .ahk to .exe" 菜单项.</p>
   </li>
   <li>
-  <p><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器时时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它会在稍后出现在相同目录中. 注: 这样生成的 EXE 文件会使用与前面的方法 #1 最后一次使用时相同的自定义图标, .bin 文件以及 <a href="#mpress">compression</a> 设置.</li>
+  <p><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它会在稍后出现在相同目录中. 注: EXE 文件的生成使用的是前面的方法 #1 中最后使用的自定义图标, .bin 文件以及<a href="#mpress">压缩</a>设置.</li>
   </li>
   <li id="ahk2exeCmd">
     <p><strong>命令行</strong>: 编译器可以通过以下参数从命令行运行.  如果使用了任何的命令行参数, 除非使用的是 <code class="no-highlight">/gui</code>, 否则脚本会立即被编译:</p>
@@ -132,7 +132,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
       </tr>
       <tr id="SlashOut">
         <td>/out <i>exe_name</i></td>
-        <td>要创建的 .exe 的路径/名称. 默认值是输入文件的 directory\base_name 加上 .exe 的扩展名.</td>
+        <td>要创建的 .exe 的路径\名称. 默认值是输入文件的 directory\base_name 加上 .exe 的扩展名.</td>
       </tr>
       <tr id="slashIcon">
         <td>/icon <i>icon_name</i></td>
@@ -156,7 +156,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
       </tr>
       <tr id="SlashGui">
         <td>/gui</td>
-        <td><span class="ver">[v1.1.33+]:</span> Show the GUI instead of immediately compiling. The other parameters can be used to override the settings last used in the GUI. <code>/in</code> is optional in this case.</td>
+        <td><span class="ver">[v1.1.33+]:</span> 显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中使用的设置. <code>/in</code> 在这种情况下是可选的.</td>
       </tr>
       <tr id="SlashMpress">
         <td class="warning"><strong>不推荐:</strong><br>/mpress <i>0or1</i></td>
@@ -213,7 +213,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
     <td>是</td>
   </tr>
   <tr id="ErrorStdOut">
-    <td>/ErrorStdOut<span class="optional">=<em>Encoding</em></span></td>
+    <td>/ErrorStdOut<br><br>/ErrorStdOut=<em>Encoding</em></td>
     <td> 
       <p>把阻止脚本运行的语法错误发送到标准输出而不显示在对话框中. 请参阅 <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a> 了解详情. 这可以联合 /iLib 来验证脚本而不用运行它.</p>
       <p><span class="ver">[v1.1.33+]:</span> 可以选择指定<a href="commands/FileEncoding.htm">编码</a>. 例如, <code>/ErrorStdOut=UTF-8</code> 在将消息写入 stderr 之前将其编码为 UTF-8.</p>
@@ -299,10 +299,11 @@ FileAppend, %Var%, C:\My File.txt</pre>
 }</pre>
 
 <h2 id="cp">脚本文件代码页 <span class="ver">[AHK_L 51+]</span></h2>
-<p>用来加载脚本的代码页决定了脚本中可以使用的字符.</p>
+<p>为了使非 ASCII 字符能够正确地从文件中读取, 文件保存时使用的编码(通常由文本编辑器) 必须与 AutoHotkey 读取文件时使用的编码一致. 如果不匹配, 字符将被错误地解码. AutoHotkey 使用以下规则来决定使用哪种编码:</p>
 <ul>
-  <li>如果文件以 UTF-8 或 UTF-16(LE) 字节顺序标记开头, 则会忽略 <a href="#CPn">/CP<i>n</i></a> 开关并为其使用适合的代码页.</li>
-  <li>如果在命令行中传递了 <a href="#CPn">/CP<i>n</i></a> 开关, 则使用代码页 <i>n</i>. 想了解可能的值列表, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">MSDN</a>.</li>
+  <li>如果文件以 UTF-8 或 UTF-16(LE) 字节顺序标记开头, 则使用相应的代码页并且忽略 <a href="#CPn">/CP<i>n</i></a> 开关.</li>
+  <li>如果在命令行中传递了 <a href="#CPn">/CP<i>n</i></a> 开关, 则使用代码页 <i>n</i>. 有关可能值的列表, 请参阅 <a href="https://docs.microsoft.com/en-au/windows/win32/intl/code-page-identifiers">Code Page Identifiers</a>.
+  <p class="note"><strong>注意:</strong> AutoHotkey <span class="ver">[v1.1.33+]</span> 安装程序中的 "Default to UTF-8" 选项为所有通过 shell(资源管理器) 启动的脚本在命令行中添加 <code>/CP65001</code>.</p></li>
   <li>在其他所有情况中使用系统默认的 ANSI 代码页.</li>
 </ul>
 <p>注意这仅适用于 AutoHotkey 加载脚本的时候, 而不包括脚本自身的文件 I/O. <a href="commands/FileEncoding.htm">FileEncoding</a> 决定了脚本读取或写入文件时使用的默认编码, 然而 <a href="commands/IniRead.htm">IniRead</a> 和 <a href="commands/IniWrite.htm">IniWrite</a> 总是使用 UTF-16 或 ANSI.</p>
