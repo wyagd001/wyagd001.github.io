@@ -149,7 +149,7 @@ FileAppend Var, "C:\My File.txt"</pre>
     <p><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 文件上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器选项时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它稍后会出现在同一目录下. 注: EXE 文件的生成使用的是前面的方法 #1 中最后使用的自定义图标, .bin 文件以及<a href="#mpress">压缩</a>设置.</p>
   </li>
   <li id="ahk2exeCmd">
-    <p><strong>命令行</strong>: 编译器可以通过以下参数从命令行运行(the first is mandatory while the rest are optional):</p>
+    <p><strong>命令行</strong>: 编译器可以通过使用下面显示的参数从命令行中运行. 如果使用任何命令行参数, 脚本会立即被编译, 除非使用 <code class="no-highlight">/gui</code>.</p>
     <style>
       #param_pairs td:not(:last-child) {
         white-space: nowrap;
@@ -157,12 +157,12 @@ FileAppend Var, "C:\My File.txt"</pre>
     </style>
     <table class="info" id="param_pairs">
       <tr>
-        <th>Parameter pair</th>
-        <th>Meaning</th>
+        <th>参数对</th>
+        <th>释义</th>
       </tr>
       <tr id="SlashIn">
-        <td>/in <i>script_name</i><br>/inGui <i>script_name</i></td>
-        <td>(Mandatory to specify one of these.) 要编译的脚本的路径和名称. <code>/in</code> compiles the script immediately. <span class="ver">[v1.1.33+]:</span> <code>/inGui</code> will show the GUI interface first.</td>
+        <td>/in <i>script_name</i></td>
+        <td>要编译的脚本的路径和名称. 如果使用任何其他参数, 这是强制性的, 除非使用了 <code class="no-highlight">/gui</code>.</td>
       </tr>
       <tr id="SlashOut">
         <td>/out <i>exe_name</i></td>
@@ -178,19 +178,23 @@ FileAppend Var, "C:\My File.txt"</pre>
       </tr>
       <tr id="SlashCp">
         <td>/cp <i>codepage</i></td>
-        <td>覆盖用于读取脚本文件的默认代码页. 有关详情, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">codepage</a>. 注意, Unicode 脚本应该以字节顺序标记(BOM) 开始, 因此不需要使用这个参数.</td>
+        <td>覆盖用于读取脚本文件的默认代码页.  关于可能的值列表, 请参阅 <a href="https://docs.microsoft.com/en-au/windows/win32/intl/code-page-identifiers">Code Page Identifiers</a>. 注意, Unicode 脚本应该以字节顺序标记(BOM) 开始, 因此不需要使用这个参数.</td>
       </tr>
       <tr id="SlashCompress">
         <td>/compress <i>n</i></td>
-        <td><span class="ver">[v1.1.33+]:</span> <a href="#mpress">Compress</a> the exe? 0 = no, 1 = use MPRESS if present, 2 = use UPX if present. Default is the last setting used in the GUI interface.</td>
+        <td>是否<a href="#mpress">压缩</a> exe 文件? 0 = 不压缩, 1 = 使用 MPRESS(如果存在), 2 = 使用 UPX(如果存在). 默认值是 GUI 界面中最后使用的设置.</td>
       </tr>
       <tr id="SlashAhk">
         <td>/ahk <i>file_name</i></td>
-        <td><span class="ver">[v1.1.33+]:</span> The path\name of AutoHotkey.exe to be used when compiling the script. Default is AutoHotkey.exe in the directory immediately above that containing the compiler. If not there, the installed Autohotkey.exe is used.</td>
+        <td>编译脚本时使用的 AutoHotkey.exe 的 path\name. 默认为 AutoHotkey.exe, 位于编译器上方的目录中. 如果没有, 则使用安装的 Autohotkey.exe.</td>
+      </tr>
+      <tr id="SlashGui">
+        <td>/gui</td>
+        <td>显示 GUI 而不是立即编译。其他参数可以用来覆盖上次在 GUI 中使用的设置. <code>/in</code> 在这种情况下是可选的.</td>
       </tr>
       <tr id="SlashMpress">
-        <td class="warning"><strong>Deprecated:</strong><br>/mpress <i>0or1</i></td>
-        <td class="warning"><a href="#mpress">Compress</a> the exe with MPRESS? 0 = no, 1 = yes. Default is the last setting used in the GUI interface.</td>
+        <td class="warning"><strong>不推荐:</strong><br>/mpress <i>0or1</i></td>
+        <td class="warning">使用 MPRESS <a href="#mpress">压缩</a> exe 文件? 0 = 不压缩, 1 = 压缩. 默认值是 GUI 界面中最后使用的设置.</td>
       </tr>
     </table>
     <p>例如:</p>
@@ -209,7 +213,7 @@ FileAppend Var, "C:\My File.txt"</pre>
 <p>编译器的源码和新版本可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe">GitHub</a> 找到.</p>
 
 <h3 id="CompilerDirectives">脚本编译器指令</h3>
-<p><span class="ver">[v1.1.33+]:</span> 脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
+<p>脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
 <ul>
   <li>能够改变版本信息(如名称, 描述, 版本...).</li>
   <li>能够为编译后的脚本添加资源.</li>
@@ -219,9 +223,9 @@ FileAppend Var, "C:\My File.txt"</pre>
 <p>有关详情, 请参阅<a href="misc/Ahk2ExeDirectives.htm">脚本编译器指令</a>.</p>
 
 <h3 id="mpress">压缩编译的脚本</h3>
-<p>Ahk2Exe optionally uses MPRESS or <span class="ver">[v1.1.33+]</span> UPX freeware to compress compiled scripts. If <strong>MPRESS.exe</strong> and/or <strong>UPX.exe</strong> has been copied to the "Compiler" subfolder where AutoHotkey was installed, either can be used to compress the .exe as directed by the <code>/compress</code> parameter or the GUI setting. </p>
-<p><strong>MPRESS</strong> official website (downloads and information): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a><br>MPRESS mirror: <a href="https://www.autohotkey.com/mpress/">https://www.autohotkey.com/mpress/</a></p>
-<p><strong>UPX</strong> official website (downloads and information): <a href="https://upx.github.io/">https://upx.github.io/</a></p>
+<p>Ahk2Exe 可以选择使用 MPRESS 或 UPX 这两款免费软件来压缩编译后的脚本. 如果 <strong>MPRESS.exe</strong> 和/或 <strong>UPX.exe</strong> 已被复制到安装 AutoHotkey 的 "Compiler" 子文件夹中, 则可以通过 <code>/compress</code> 参数或 GUI 设置来压缩 .exe 文件.</p>
+<p><strong>MPRESS</strong> 官网(介绍与下载): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a><br>MPRESS 镜像: <a href="https://www.autohotkey.com/mpress/">https://www.autohotkey.com/mpress/</a></p>
+<p><strong>UPX</strong> 官网(介绍与下载): <a href="https://upx.github.io/">https://upx.github.io/</a></p>
 <p><strong>注意:</strong> 压缩编译脚本可以保护脚本不被诸如记事本或 PE 编辑器这类的工具随意查看, 但并不能保护脚本源码不被专用的提取工具提取.</p>
 
 <h2 id="cmd">向脚本传递命令行参数</h2>
@@ -245,8 +249,8 @@ FileAppend Var, "C:\My File.txt"</pre>
   <tr id="ErrorStdOut">
     <td>/ErrorStdOut<br><br>/ErrorStdOut=<em>Encoding</em></td>
     <td>
-      <p>Send syntax errors that prevent a script from launching to stderr rather than displaying a dialog. See <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a> for details. This can be combined with /iLib to validate the script without running it.</p>
-      <p><span class="ver">[v1.1.33+]:</span> An <a href="commands/FileEncoding.htm">encoding</a> can optionally be specified. For example, <code>/ErrorStdOut=UTF-8</code> encodes messages as UTF-8 before writing them to stderr.</p>
+      <p>把阻止脚本运行的语法错误发送到标准输出而不显示在对话框中. 有关详情, 请参阅 <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a>. 这可以联合 /iLib 来验证脚本而不用运行它.</p>
+      <p>可以选择指定<a href="commands/FileEncoding.htm">编码</a>. 例如, <code>/ErrorStdOut=UTF-8</code> 在将消息写入 stderr 之前将其编码为 UTF-8.</p>
     </td>
     <td>支持</td>
   </tr>
@@ -259,7 +263,7 @@ FileAppend Var, "C:\My File.txt"</pre>
     <td>/CP<i>n</i></td>
     <td>
       <p>覆盖用于读取脚本文件的默认代码页. 有关详情, 请参阅<a href="#cp">脚本文件代码页</a>.</p>
-      <p><span class="ver">[v1.1.33+]:</span> If "Default to UTF-8" is enabled in the installer, the ".ahk" file type is registered with a command line including <code>/CP65001</code>. This causes all scripts launched through the shell (Explorer) to default to UTF-8 in the absence of a UTF-16 byte order mark. Scripts launched by running AutoHotkey.exe directly still default to <code>CP0</code>, as the <code>/CP65001</code> switch is absent.</p>
+      <p>如果在安装程序中启用了 "Default to UTF-8" 选项, 那么 ".ahk" 文件类型就会注册带有 <code>/CP65001</code> 的命令行. 这将导致所有通过 shell(资源管理器) 启动的脚本在没有 UTF-16 字节顺序标记的情况下默认为 UTF-8. 通过直接运行 AutoHotkey.exe 启动的脚本仍然默认为 <code>CP0</code>, 因为没有 <code>/CP65001</code> 开关.</p>
     </td>
     <td>不支持</td>
   </tr>
@@ -314,7 +318,7 @@ FileAppend Var, "C:\My File.txt"</pre>
 <p>为了使非 ASCII 字符能够正确地从文件中读取, 文件保存时使用的编码(通常由文本编辑器) 必须与 AutoHotkey 读取文件时使用的编码一致. 如果不匹配, 字符将被错误地解码. AutoHotkey 使用以下规则来决定使用哪种编码:</p>
 <ul>
   <li>如果文件以 UTF-8 或 UTF-16(LE) 字节顺序标记开头, 则使用相应的代码页并且忽略 <a href="#CPn">/CP<i>n</i></a> 开关.</li>
-  <li>如果在命令行中传递了 <a href="#CPn">/CP<i>n</i></a> 开关, 则使用代码页 <i>n</i>. 有关有效的代码页标识符数字列表, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">MSDN</a>.
+  <li>如果在命令行中传递了 <a href="#CPn">/CP<i>n</i></a> 开关, 则使用代码页 <i>n</i>. 有关可能值的列表, 请参阅 <a href="https://docs.microsoft.com/en-au/windows/win32/intl/code-page-identifiers">Code Page Identifiers</a>.
   <li>在其他所有情况下, 使用使用 UTF-8(此默认值不同于 AutoHotkey v1).</li>
 </ul>
 <p>注意这仅适用于 AutoHotkey 加载脚本的时候, 而不包括脚本自身的文件 I/O. <a href="commands/FileEncoding.htm">FileEncoding</a> 决定了脚本读取或写入文件时使用的默认编码, 然而 <a href="commands/IniRead.htm">IniRead</a> 和 <a href="commands/IniWrite.htm">IniWrite</a> 总是使用 UTF-16 或 ANSI.</p>

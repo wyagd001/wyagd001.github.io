@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>NumPut - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The NumPut function stores a number in binary format at the specified address+offset." />
+<meta name="description" content="The NumPut function stores one or more numbers in binary format at the specified address+offset." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,10 +12,8 @@
 <body>
 
 <h1>NumPut</h1>
-<p>以二进制格式把数字存储到指定地址+偏移的位置.</p>
+<p>将一个或多个数字以二进制格式存储到指定地址+偏移的位置.</p>
 <pre class="Syntax"><span class="func">NumPut</span> Type, Number, <span class="optional">Type2, Number2, ...</span> Target <span class="optional">, Offset := 0</span></pre>
-<p class="warning"><strong>不推荐:</strong> 正考虑删除下面的语法以支持上面的语法.</p>
-<pre class="Syntax"><span class="func">NumPut</span> Number, Target <span class="optional">, Offset := 0</span><span class="optional">, Type := "UPtr"</span></pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -23,7 +21,7 @@
   <dt>Type</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>下列字符串的其中一个(省略时默认为 UPtr):<br>
+      <p>下列字符串的其中一个:<br>
     UInt, UInt64, Int, Int64, Short, UShort, Char, UChar, Double, Float, Ptr 或 UPtr</p>
       <p>对于所有整数类型, 或者在传递纯整数时, 有符号与无符号并不影响结果, 因为使用了二进制补码来表示有符号整数.</p>
       <p>作为原义字符串使用时, 这些类型名必须用引号括起来.</p>
@@ -53,13 +51,12 @@
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>函数返回最后写入的项右边的地址. 这在写入一系列不同类型的数字时经常使用, 例如在 <a href="DllCall.htm">DllCall</a> 中使用的结构. 但是, 在某些情况下, 使用如下所述的多参数模式可能更简单有效.</p>
+<p>函数返回最后写入的项右边的地址. 这在写入一个不连续的数字序列时, 例如在 <a href="DllCall.htm">DllCall</a> 中使用的结构, 有些字段没有被设置, 就可以使用这个函数. 但是, 在许多情况下, 指定多个 <em>Type</em>, <em>Number</em> 对更简单有效. 将地址传回 NumPut 比传给一个具有更新的 <em>Offset</em> 的类 Buffer 对象更不安全.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>可以在第一个 <em>Number</em> 之后, 通过重复任意次数的 <em>Type</em> 和 <em>Number</em> 来写入数字序列. 每个数字都写入前一个数字之后的下一个字节, 不带填充. 创建用于 <a href="DllCall.htm">DllCall</a> 的结构时, 请注意, 由于数据对齐要求, 某些字段可能需要添加显式填充.</p>
 <p>如果整数太大而无法放入指定的 <em>Type</em>, 那么它的高位会被忽略; 例如 <code>NumPut(257, buf, 0, &quot;Char&quot;)</code> 将存储数字 1.</p>
 <p>如果目标地址无效, 则可能抛出异常. 但是, 一些无效地址不能被检测到, 并可能导致不可预知的行为. 传递<a href="../objects/Buffer.htm">缓冲</a>对象而不是地址可以确保目标地址总是可以得到验证.</p>
-<p class="warning"><strong>不推荐:</strong> 如果只使用了三个参数, 并且 <em>Number</em> 第一个参数, 则第三个参数可以是 <em>Offset</em>, 也可以是 <em>Type</em>. 例如, <code>NumPut(x, buf, "int")</code> 是有效的.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="NumGet.htm">NumGet</a>, <a href="DllCall.htm">DllCall</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a></p>
