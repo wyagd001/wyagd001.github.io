@@ -18,7 +18,6 @@
 <ul>
   <li><a href="#install">如果 AutoHotkey 无法安装我该怎么办?</a></li>
   <li><a href="#rightclick">如何恢复 .ahk 文件的右键菜单选项?</a></li>
-  <li><a href="#autoexec">为什么我脚本中的某些行总是无法执行?</a></li>
   <li><a href="#vista">为什么我的脚本在前一个系统运行良好却无法工作于 Windows <em>xxx</em>?</a></li>
   <li><a href="#uac">我该如何处理用户账户控制(UAC) 导致的问题?</a></li>
   <li><a href="#DefaultScript">因为脚本出错而无法启动, 我不能通过托盘图标编辑我的脚本. 我能在别的地方找到我的脚本吗?</a></li>
@@ -87,15 +86,6 @@
 <p>这可以通过应用<a href="misc/remove-userchoice.reg" download="remove-userchoice.reg">此注册表文件</a>来完成.</p>
 <p>还可能需要修复默认注册表值, 方法是重新安装 AutoHotkey 或运行 AutoHotkey Setup(从开始菜单) 并在窗口顶部选择 <em>apply(应用)</em>.</p>
 
-<h3 id="autoexec">为什么我脚本中的某些行总是无法执行?</h3>
-<p>任何想在脚本启动时立即执行的行都应该出现在脚本的顶部, 要在首个<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>或 <a href="commands/Return.htm">Return</a> 之前. 有关详情, 请参阅<a href="Scripts.htm#auto">自动执行段</a>.</p>
-<p>还有, 含有多行执行语句的<a href="Hotkeys.htm">热键</a>必须把它的首行写在热键的 <em>下面</em> 而不能在同一行. 例如:</p>
-<pre>#space::  <em>;  Win+空格键</em>
-{
-    Run "Notepad"
-    WinWaitActive "Untitled - Notepad"
-    WinMaximize
-}</pre>
 <h3 id="vista">为什么我的脚本在前一个系统运行良好却无法工作于 Windows <em>xxx</em>?</h3>
 <p>这个问题有许多的影响因素, 例如:</p>
 <ul>
@@ -137,10 +127,9 @@
 <p>如果你想要打开的程序位于 <code>A_WinDir "\System32"</code> 并且你是在 64 位系统中使用 32 位的 AutoHotkey, <a href="https://msdn.microsoft.com/en-us/library/aa384187">File System Redirector</a> 将会产生干扰. 为避免该问题, 请使用 <code>A_WinDir "\SysNative"</code> 代替; 这是一个仅在 64 位系统上运行的 32 位程序可见的虚拟目录.</p>
 
 <h3 id="nonascii">为什么脚本中的非 ASCII 字符显示或发送不正确?</h3>
-<p>简短的回答: 将脚本保存为带有 BOM 的 UTF-8.</p>
-<p>虽然 AutoHotkey 支持 Unicode 文本, 但它是为了向后兼容而优化的, 这意味着默认为 ANSI 编码, 而不是国际上推荐的 UTF-8. 除非以字节顺序标记开始, 否则 AutoHotkey 不会自动识别 UTF-8 文件.</p>
-<p>换句话说, 缺少字节顺序标记的 UTF-8 文件被错误地解释, 导致非 ASCII 字符被错误地解码. 要解决此问题, 请将文件保存为带有 BOM 的 UTF-8 文件或<a href="Scripts.htm#cp">添加 /CP65001 命令行开关</a>.</p>
-<p>要在记事本中保存为带有 BOM 的 UTF-8 文件, 请在另存为对话框的 <em>编码</em> 下拉菜单中选择 <em>UTF-8</em>.</p>
+<p>简短的回答: 将脚本保存为 UTF-8.</p>
+<p>非 ASCII 字符由不同的二进制值来表示, 这取决于所选择的编码. 为了让这些字符被正确的解释, 您的文本编辑器和 AutoHotkey 必须在 <em>同一个代码页</em>. AutoHotkey v2 默认所有的脚本文件都是 UTF-8, 尽管可以通过 <a href="Scripts.htm#cp">/CP 命令行开关</a>来重写.</p>
+<p>要在记事本中保存为 UTF-8 文件, 请在另存为对话框的 <em>编码</em> 下拉菜单中选择 <em>UTF-8</em> 或 <em>UTF-8 with BOM</em>. 请注意, Windows 10 1903 及以后版本的记事本默认为 UTF-8.</p>
 <p>要读取缺少字节顺序标记的其他 UTF-8 文件, 请使用 <code><a href="commands/FileEncoding.htm">FileEncoding</a> UTF-8-RAW</code>, <a href="commands/FileRead.htm">FileRead</a> 的 <code>*P65001</code> 选项, 或 <a href="commands/FileOpen.htm">FileOpen</a> 的第三个参数<code>"UTF-8-RAW"</code>. <code>-RAW</code> 后缀可以省略, 但是在这种情况下, 任何新创建的文件都会有一个字节顺序标记.</p>
 <p>请注意, 使用标准 INI 函数访问 INI 文件不支持 UTF-8; 它们必须保存为 ANSI 或 UTF-16.
 

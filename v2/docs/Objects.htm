@@ -297,7 +297,7 @@ other.test()</pre>
 <h4 id="Custom_Classes_staticvar">Static/Class 变量</h4>
 <p>静态/类变量属于类, 但是它们的值可以被子类继承. 和实例变量一样声明, 但使用 static 关键字:</p>
 <pre>static ClassVar := Expression</pre>
-<p>这些声明只在初始化类时计算一次. 在当前版本中, 类是按照它们在脚本中出现的顺序初始化的, 在<a href="Scripts.htm#auto">自动执行部分</a>计算之前, 以及函数包含的任何静态声明之前. 为此, 会自动定义一个名为 <em>__Init</em> 的静态方法.</p>
+<p>这些声明只在初始化类时被计算一次. 在当前版本中, 类是按照它们在脚本中出现的顺序初始化的, 在脚本顶部的<a href="Scripts.htm#auto">启动执行</a>之前. 为此, 会自动定义一个名为 <em>__Init</em> 的静态方法.</p>
 <p>每个声明在类对象中存储一个值. <i>Expression</i> 中的任何变量引用都被认为是全局的.</p>
 <p>若要给类变量赋值, 始终指定类对象; 例如, <code><b>ClassName</b>.ClassVar := Value</code>. 如果一个子类不拥有该名称的属性, <code><i>Subclass</i>.ClassVar</code> 也可以用来检索值; 因此, 如果该值是对象的引用, 则默认情况下子类将共享该对象. 然而, <code><i>Subclass</i>.ClassVar := y</code> 将值存储在 <em>Subclass</em>, 而不是 <em>ClassName</em> 中.</p>
 <p>支持形如 <code>x.y := z</code> 的声明, 假设 <code>x</code> 已在类中声明. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>.</p>
@@ -479,7 +479,7 @@ class <i>ClassName</i> {
   </ul></li>
 </ul>
 <p>但是, 目前只能通过原始值的 <code>base</code> 属性(或派生原型对象) 访问这些对象. <a href="objects/Object.htm">Object.Prototype</a> 也是基于 Any 原型的, 因此在该原型上定义的任何方法或属性都将被除 ComObject 之外的所有类型的值继承. 类似地, 所有原始值从原始值继承, 所有数字从数字继承.</p>
-<p>虽然检查字符串的<a href="commands/Type.htm">类型</a>通常更快, 但是可以通过检查值是否具有给定的基来测试值的类型. 例如, 如果 <em>n</em> 是一个纯整数或浮点数, 则 <code>n.HasBase(0.base.base)</code> 为真, 但如果 <em>n</em> 是一个数字字符串, 则不为真, 因为字符串原型不是从数字原型派生而来的. 相比之下, 如果 <em>n</em> 是数字或数字字符串<code>n is 'number'</code> 为真.</p>
+<p>虽然检查字符串的<a href="commands/Type.htm">类型</a>通常更快, 但是可以通过检查值是否具有给定的基来测试值的类型. 例如, 如果 <em>n</em> 是一个纯整数或浮点数, 则 <code>n.HasBase(0.base.base)</code> 为真, 但如果 <em>n</em> 是一个数字字符串, 则不为真, 因为字符串原型不是从数字原型派生而来的. 相比之下, 如果 <em>n</em> 是数字或数字字符串<code>IsNumber(n)</code> 为真.</p>
 <p>不是通过数字和字符串引用原型对象, 下面的代码可以用来创建缺少的类:</p>
 <pre><em>; 定义原始类.</em>
 global Any := Class.new()
@@ -507,7 +507,7 @@ Any.Prototype := (
     ).base
   ).base
 </pre>
-<p><code>is</code> 运算符可以与这些类一起使用. 例如, <code>n is Number</code> 等同于 <code>n.HasBase(Number.Prototype)</code>, 除非 HasBase 方法已经被 <em>n</em> 覆盖. 注意, 对于 AutoHotkey 的类型层次结构中的任何值, <code>x is Any</code> 通常为真, 而对于 COM 对象则为假.</p>
+<p><a href="Variables.htm#is"><code>is</code></a> 运算符可以与这些类一起使用. 例如, <code>n is Number</code> 等同于 <code>n.HasBase(Number.Prototype)</code>, 除非 HasBase 方法已经被 <em>n</em> 覆盖. 注意, 对于 AutoHotkey 的类型层次结构中的任何值, <code>x is Any</code> 通常为真, 而对于 COM 对象则为假.</p>
 
 <h3 id="primitive-extension">添加属性和方法</h3>
 <p>通过修改该类型的原型对象, 可以为该类型的所有值添加属性和方法. 但是, 由于原始值不是对象并且不能具有自己的属性或方法, 因此原始原型对象不会从 <code>Object.Prototype</code> 派生. 换句话说, 默认情况下无法访问诸如 <a href="objects/Object.htm#DefineProp">DefineProp</a> 和 <a href="objects/Object.htm#DefineMethod">DefineMethod</a> 之类的方法. 可以间接调用它们. 例如:</p>

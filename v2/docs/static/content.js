@@ -1404,7 +1404,7 @@ function ctor_features()
   self.modifyHeaders = function() {
     if (isInsideCHM)
       return;
-    var hs = self.querySelectorAll('h2, h3, h4, h5, h6');
+    var hs = self.content.querySelectorAll('h2, h3, h4, h5, h6');
     for(var i = 0; i < hs.length; i++) {
       var h = hs[i];
       var id = h.getAttribute('id');

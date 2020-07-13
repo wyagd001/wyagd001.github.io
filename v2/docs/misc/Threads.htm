@@ -34,16 +34,16 @@
 <h2 id="Interrupt">线程可中断性</h2>
 <p>对于大多数类型的事件, 只有在当前线程 <em>可中断</em> 的情况下, 才允许启动新的线程. 一个线程可以因为一些原因而 <em>不可中断</em>, 包括:</p>
 <ul>
-  <li>线程已被标记为 <em>critical</em>. <a href="../commands/Critical.htm">Critical</a> 可能已经被线程本身或从<a href="../Scripts.htm#auto">自动执行段</a>调用.</li>
+  <li>线程已被标记为 <em>critical</em>. <a href="../commands/Critical.htm">Critical</a> 可能已经被线程本身或被<a href="../Scripts.htm#auto">自动执行线程</a>调用.</li>
   <li>线程运行时间不够长, 无法满足线程中断设置的成为可中断的条件, 如 <a href="../commands/Thread.htm#Interrupt">Thread "Interrupt"</a> 设置的.</li>
   <li>脚本的一个菜单正在显示(如托盘图标菜单或菜单栏).</li>
-  <li><a href="../commands/Send.htm">Send</a>(最常见的是由于 <a href="../commands/SetKeyDelay.htm">SetKeyDelay</a>), <a href="../commands/WinActivate.htm">WinActivate</a> 或 <a href="Clipboard.htm">Clipboard</a> 操作正在执行延迟.</li>
+  <li><a href="../commands/Send.htm">Send</a>(最常见的是由于 <a href="../commands/SetKeyDelay.htm">SetKeyDelay</a>), <a href="../commands/WinActivate.htm">WinActivate</a> 或 <a href="A_Clipboard.htm">Clipboard</a> 操作正在执行延迟.</li>
   <li><a href="../commands/OnExit.htm">OnExit</a> 子程序正在执行.</li>
   <li>由于达到了 <a href="../commands/_MaxHotkeysPerInterval.htm">#MaxHotkeysPerInterval</a> 的限制, 或者由于激活键盘或鼠标钩子的问题(非常罕见), 正在显示一个警告对话框.</li>
 </ul>
 <h3 id="Behave">不可中断线程的特性</h3>
 <p>与高优先级线程不同, 线程不可中断时产生的事件不会被丢弃. 例如, 在当前线程不可中断时用户按下了<a href="../Hotkeys.htm">热键</a>热键就会被无限期地缓冲, 直到当前线程结束或变得可中断时, 热键才作为新的线程启动.</p>
-<p>在紧急情况下, 任何线程都可能被中断. 紧急情况包括: 1) <a href="../commands/OnExit.htm">OnExit</a> 回调; 2) 任何监视消息号小于 0x312(或被这些消息触发的<a href="../commands/RegisterCallback.htm">回调</a>) 的 <a href="../commands/OnMessage.htm">OnMessage</a> 函数; 和 3) 紧急线程自身间接触发的任何<a href="../commands/RegisterCallback.htm">回调</a>(例如, 通过 <a href="../commands/PostMessage.htm">SendMessage</a> 或 <a href="../commands/DllCall.htm">DllCall</a>). 要避免被这些事件中断, 可以临时禁用这些函数.</p>
+<p>在紧急情况下, 任何线程都可能被中断. 紧急情况包括: 1) <a href="../commands/OnExit.htm">OnExit</a> 回调; 2) 任何监视消息号小于 0x312(或被这些消息触发的<a href="../commands/CallbackCreate.htm">回调</a>) 的 <a href="../commands/OnMessage.htm">OnMessage</a> 函数; 和 3) 紧急线程自身间接触发的任何<a href="../commands/CallbackCreate.htm">回调</a>(例如, 通过 <a href="../commands/PostMessage.htm">SendMessage</a> 或 <a href="../commands/DllCall.htm">DllCall</a>). 要避免被这些事件中断, 可以临时禁用这些函数.</p>
 <p>当显示 <a href="../commands/MsgBox.htm">MsgBox</a> 或其他对话框时, <a href="../commands/Critical.htm">critical</a> 会变得可中断. 但与 <a href="../commands/Thread.htm">Thread Interrupt</a> 不同的是, 在用户解除对话框后, 线程又变成了 critical(因此不可中断).</p>
 
 </body>

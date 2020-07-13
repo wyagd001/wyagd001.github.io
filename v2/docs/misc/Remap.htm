@@ -112,7 +112,7 @@ a::b
 #InputLevel 0
 ^!b::ToolTip "You pressed " A_ThisHotkey
 </pre>
-<p id="SendPlay">如果在自动运行段(脚本的顶部) 使用了 <a href="../commands/SendMode.htm">SendMode</a>, 那么它会影响所有的重映射. 但是, 由于重映射使用 <a href="../commands/Send.htm#blind">Send "{Blind}"</a> 而 <a href="../commands/SendMode.htm">SendPlay 模式</a>不完全支持 {Blind}, 所以一些映射在 SendPlay 模式中可能无法正常运行(尤其是 <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd> 和 <kbd>Win</kbd>). 要解决此问题, 当您脚本中含有重映射时请避免在自动执行段中使用 SendPlay; 而仅在整个脚本需要的地方使用 <a href="../commands/Send.htm#SendPlay">SendPlay</a> 函数而不是 Send. 或者, 您可以把您的重映射转换为热键(如下所述), 这样就显式调用 SendEvent 而不是 Send.</p>
+<p id="SendPlay">如果在<a href="../Scripts.htm#auto">脚本启动时</a>使用了 <a href="../commands/SendMode.htm">SendMode</a>, 那么它会影响所有的重映射. 但是, 由于重映射使用 <a href="../commands/Send.htm#blind">Send "{Blind}"</a> 而 <a href="../commands/SendMode.htm">SendPlay 模式</a>不完全支持 {Blind}, 所以一些映射在 SendPlay 模式中可能无法正常运行(尤其是 <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd> 和 <kbd>Win</kbd>). 要解决此问题, 当您脚本中含有重映射时请避免在<a href="../Scripts.htm#auto">脚本启动时</a>使用 <code>SendMode "Play"</code>; 而仅在整个脚本需要的地方使用 <a href="../commands/Send.htm#SendPlay">SendPlay</a> 函数而不是 Send. 或者, 您可以把您的重映射转换为热键(如下所述), 这样就显式调用 SendEvent 而不是 Send.</p>
 <p id="EscapeBrace">如果 <em>DestinationKey</em> 是按键 <code>{</code>, 它必须进行<a href="EscapeChar.htm">转义</a>, 例如, <code>x::`{</code>. 否则它将被解释为<a href="../Hotkeys.htm">热键</a>函数的左大括号.</p>
 <p id="actually">加载脚本时, 每个重映射会被转换为一对<a href="../Hotkeys.htm">热键</a>. 例如, 包含重映射 <code>a::b</code> 的脚本实际包含下面的两个热键:</p>
 <pre>*<strong>a</strong>::
@@ -139,7 +139,7 @@ a::b
   </li>
   <li>当源按键为<a href="../Hotkeys.htm#combo">自定义组合键</a>时, 通配符修饰符(*) 被省略以允许热键工作.</li>
 </ol>
-<p>注意, SetKeyDelay 的第二个参数(<a href="../commands/SetKeyDelay.htm#dur">按下持续时间</a>) 在上面的热键中被省略了. 这是因为按下持续时间不适用于独立的按键按下或按键弹起事件, 例如 <code>{b down}</code> 和 <code>{b up}</code>. 但是, 它适用于 <kbd>Shift</kbd>/<kbd>Ctrl</kbd>/<kbd>Alt</kbd>/<kbd>Win</kbd> 按键状态的改变, 这会影响像 <code>a::B</code> 或 <code>a::^b</code> 这样的重映射. 因此, 通过<a href="../Scripts.htm#auto">自动执行段</a>生效的任何按下持续时间将会应用于所有这类重映射.</p>
+<p>注意, SetKeyDelay 的第二个参数(<a href="../commands/SetKeyDelay.htm#dur">按下持续时间</a>) 在上面的热键中被省略了. 这是因为按下持续时间不适用于独立的按键按下或按键弹起事件, 例如 <code>{b down}</code> 和 <code>{b up}</code>. 但是, 它适用于 <kbd>Shift</kbd>/<kbd>Ctrl</kbd>/<kbd>Alt</kbd>/<kbd>Win</kbd> 按键状态的改变, 这会影响像 <code>a::B</code> 或 <code>a::^b</code> 这样的重映射. 因此, 脚本在<a href="../Scripts.htm#auto">脚本启动</a>期间设置的任何按下持续时间将会应用于所有此类重映射.</p>
 <p>由于重映射会被简单转换为上面描述的热键, 所以 <a href="../commands/Suspend.htm">Suspend</a> 也会影响它们. 同样地, <a href="../commands/Hotkey.htm">Hotkey</a> 函数可以禁用或修改重映射. 例如, 下面的两个函数会禁用重映射 <code>a::b</code>.</p>
 <pre>Hotkey "*a", "Off"
 Hotkey "*a up", "Off"</pre>

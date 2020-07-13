@@ -22,7 +22,7 @@
 <h2>目录</h2>
 <ul>
   <li><a href="#intro">简介</a></li>
-  <li><a href="#auto">脚本顶部(自动执行段)</a>: 当脚本启动时, 会自动执行的部分.</li>
+  <li><a href="#auto">脚本启动(自动执行线程)</a>: 在启动脚本时会立即执行, 并更改默认设置.</li>
   <li><a href="#continuation">把过长的行分割成一系列短行</a>: 这样可以提高脚本的可读性和可维护性.</li>
   <li><a href="#ahk2exe">把脚本转换成 EXE(Ahk2Exe)</a>: 把 .ahk 脚本转换成可以在任何 PC 上运行的 .exe 文件.</li>
   <li><a href="#cmd">向脚本传递命令行参数</a>: A_Args 变量包含了传入的参数.</li>
@@ -32,13 +32,15 @@
 <h2 id="intro">简介</h2>
 <p>每个脚本都是纯文本文件, 其中包含了可由程序(AutoHotkey.exe) 执行的文本行. 脚本中还可以包含<a href="Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>或者甚至完全由它们组成. 不过, 在不包含热键和热字串时, 脚本会在启动后从上往下按顺序执行其中的函数.</p>
 <p>程序会把脚本逐行加载到内存中, 每行最多可以包含 16,383 个字符. 在加载过程中, 脚本会被<a href="misc/Performance.htm">优化</a>和检查. 将列出所有的语法错误, 更正它们后脚本才能运行.</p>
-<h2 id="auto">脚本顶部(自动执行段)</h2>
-<p>脚本加载完成后, 它会从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/Exit.htm">Exit</a>, 或脚本的实际结束(无论最先遇到哪个). 脚本的这个顶端部分被称为 <em>自动执行段</em>.</p>
-<p id="persistent">脚本没有<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, 可见的 <a href="objects/Gui.htm">GUIs</a>, 激活的<a href="commands/OnMessage.htm">消息监视</a>, 激活的<a href="commands/SetTimer.htm">计时器</a>, 激活的<a href="commands/OnClipboardChange.htm">OnClipboardChange</a> 回调函数, 自定义托盘<a href="objects/Menu.htm">菜单项目</a> 和 <a href="commands/_Persistent.htm">#Persistent</a> 指令, 那么它会在自动执行段完成后终止. 否则, 它会以空闲状态继续运行, 从而对热键, 热字串, <a href="objects/GuiOnEvent.htm">GUI 事件</a>, <a href="objects/Menu.htm">自定义菜单项目</a>和<a href="commands/SetTimer.htm">计时器</a>这些事件进行响应. 如果在自动执行段完成后, 这些条件发生了改变(例如, 禁用了最后一个计时器), 脚本可能会在最后一个正在运行的线程完成后或最后一个 GUI 关闭后退出.</p>
-<p>每个由<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="objects/Menu.htm">菜单项</a>, <a href="objects/GuiOnEvent.htm">GUI 事件</a>或<a href="commands/SetTimer.htm">计时器</a>启动的<a href="misc/Threads.htm">线程</a>以以下属性的默认值重新开始, 这些值在自动执行部分中设置. 如果没有设置, 则使用标准的默认值(与下面每个页面中注明的一样): <a href="commands/CoordMode.htm">CoordMode</a>, <a href="commands/Critical.htm">Critical</a>, <a href="commands/DetectHiddenText.htm">DetectHiddenText</a>, <a href="commands/DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="commands/FileEncoding.htm">FileEncoding</a>, <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/SendLevel.htm">SendLevel</a>, <a href="commands/SendMode.htm">SendMode</a>, <a href="commands/SetControlDelay.htm">SetControlDelay</a>, <a href="commands/SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>, <a href="commands/SetKeyDelay.htm">SetKeyDelay</a>, <a href="commands/SetMouseDelay.htm">SetMouseDelay</a>, <a href="commands/SetRegView.htm">SetRegView</a>, <a href="commands/SetStoreCapsLockMode.htm">SetStoreCapsLockMode</a>, <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="commands/SetWinDelay.htm">SetWinDelay</a>, <a href="commands/StringCaseSense.htm">StringCaseSense</a> 和 <a href="commands/Thread.htm">Thread</a>.</p>
-<p>如果自动执行段执行了很长时间才结束(或永不结束), 上面这些设置的默认值将在 100 毫秒后自动生效. 当自动执行段最终结束(如果可能) 时, 在自动执行段末尾生效的那些设置才更新为默认值. 因此, 通常最好在包含<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="commands/SetTimer.htm">计时器</a>或<a href="objects/Menu.htm">自定义菜单项</a>的脚本顶部设置自己想要的默认值. 还要注意, 每个<a href="misc/Threads.htm">线程</a>会保存它自己的上述设置的集合. 在一个线程中对这些设置的改变不会影响其他<a href="misc/Threads.htm">线程</a>.</p>
 
-<p>除空格外, <code>/*</code> 必须出现在行首, 而 <code>*/</code> 只能出现在行首或行尾. 省略 <code>*/</code> 也是有效的, 在这种情况下, 文件的其余部分被注释掉.</p>
+<h2 id="auto">脚本启动(自动执行线程)</h2>
+<p>脚本加载完成后, <em>自动执行线程</em>在脚本的顶行开始执行, 直到被指示停止为止, 例如 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">ExitApp</a> 或 <a href="commands/Exit.htm">Exit</a>. 脚本的物理结束也作为 <a href="commands/Exit.htm">Exit</a>.</p>
+
+<p id="persistent">没有<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, 可见的 <a href="objects/Gui.htm">GUI</a>, 活动的<a href="commands/OnMessage.htm">消息监视</a>, 活动的<a href="commands/SetTimer.htm">计时器</a>, 活动的<a href="commands/OnClipboardChange.htm">剪贴板监视器</a>, 自定义托盘<a href="objects/Menu.htm">菜单项目</a>和 <a href="commands/_Persistent.htm">#Persistent</a> 指令的脚本, 将在完成启动后终止. 否则, 它会以空闲状态继续运行, 从而对热键, 热字串, <a href="objects/GuiOnEvent.htm">GUI 事件</a>, <a href="objects/Menu.htm">自定义菜单项目</a>和<a href="commands/SetTimer.htm">计时器</a>这些事件做出响应. 如果这些条件在启动完成后发生变化(例如, 禁用了最后一个计时器), 脚本可能会在最后一个正在运行的线程完成后或最后一个 GUI 关闭后退出.</p>
+<p>每个新启动的<a href="misc/Threads.htm">线程</a>(不管是由<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="commands/SetTimer.htm">计时器</a>还是其他事件启动的) 都会以启动时设置的下列属性的默认值重新开始. 如果没有设置, 则使用标准的默认值(与下面每个页面中注明的一样): <a href="commands/CoordMode.htm">CoordMode</a>, <a href="commands/Critical.htm">Critical</a>, <a href="commands/DetectHiddenText.htm">DetectHiddenText</a>, <a href="commands/DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="commands/FileEncoding.htm">FileEncoding</a>, <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/SendLevel.htm">SendLevel</a>, <a href="commands/SendMode.htm">SendMode</a>, <a href="commands/SetControlDelay.htm">SetControlDelay</a>, <a href="commands/SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>, <a href="commands/SetKeyDelay.htm">SetKeyDelay</a>, <a href="commands/SetMouseDelay.htm">SetMouseDelay</a>, <a href="commands/SetRegView.htm">SetRegView</a>, <a href="commands/SetStoreCapsLockMode.htm">SetStoreCapsLockMode</a>, <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="commands/SetWinDelay.htm">SetWinDelay</a>, <a href="commands/StringCaseSense.htm">StringCaseSense</a> 和 <a href="commands/Thread.htm">Thread</a>.</p>
+<p>如果自动执行线程在 100 毫秒后仍在运行, 它的当前设置将成为默认设置. 当自动执行线程最终完成时(如果有的话), 默认值会再次更新. 因此, 通常最好在执行任何可能需要时间来完成的代码之前, 在脚本的顶部对默认设置进行任何想要的更改. 还要注意的是, 每个<a href="misc/Threads.htm">线程</a>都会保留自己的上述设置的集合. 对这些设置的更改不会影响其他线程<a href="misc/Threads.htm">线程</a>.</p>
+<p>传统上, 脚本的顶部被称为 <em>自动执行段</em>. 然而, 自动执行线程并不限于脚本的顶部. 在自动执行线程上调用的任何函数也可能影响默认设置. 由于在执行过程中遇到指令和函数, 热键, 热字串和类定义时都会被跳过, 因此有可能将启动代码放在每个文件中. 例如, 一组热键使用的全局变量可能会被初始化在这些热键的上方(甚至下方), 而不是在脚本的顶部.</p>
+
 <h2 id="continuation">把长行分割成一系列短行</h2>
 <p>长行可以分成一些小行, 以提高可读性和可维护性. 这样不会降低脚本的执行速度, 因为在脚本启动时这些短行会在内存中合并起来.</p>
 <p>有三种方法, 通常可以组合使用:</p>
@@ -352,9 +354,9 @@ Pause</pre>
 <p>通过受支持的 <a href="AHKL_DBGPClients.htm">DBGp 客户端</a>可以进行交互调试. 通常可以执行以下操作:</p>
 <ul>
   <li>设置和移除断点 - 遇到<a href="https://en.wikipedia.org/wiki/Breakpoint">断点</a>时暂停执行.</li>
-  <li>单步调试代码 - 逐语句, 逐过程或跳出函数和子程序.</li>
+  <li>单步调试代码 - 逐语句, 逐过程或跳出函数.</li>
   <li>检查所有变量或指定的变量.</li>
-  <li>查看正在运行的子程序和函数的堆栈.</li>
+  <li>查看正在运行的线程和函数的堆栈.</li>
 </ul>
 <p>注意在已编译脚本中此功能是禁用的.</p>
 <p>要启用交互调试, 首先要运行受支持的调试器客户端, 然后使用命令行开关 <b>/Debug</b> 运行脚本.</p>

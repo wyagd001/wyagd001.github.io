@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>标签 - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="Labels identify a line of code, and can be used as Goto targets or to form subroutines." />
+<meta name="description" content="Labels identify a line of code, and can be used as Goto targets or to specify a loop to break out of or continue." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -17,42 +17,31 @@
 <ul>
   <li><a href="#syntax-and-usage">语法和用法</a></li>
   <li><a href="#look-alikes">类标签</a></li>
-  <li><a href="#subroutines">子程序</a></li>
   <li><a href="#dynamic-labels">动态标签</a></li>
   <li><a href="#named-loops">命名的循环</a></li>
   <li><a href="#related">相关的</a></li>
 </ul>
 
 <h2 id="syntax-and-usage">语法和用法</h2>
-<p>标签用来标识代码行, 可以作为 <a href="../commands/Goto.htm">Goto</a> 的目标, 组成<a href="../commands/Gosub.htm">子程序</a>, 或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由名称和冒号(:) 组成.</p>
+<p>标签用来标识代码行, 可以作为 <a href="../commands/Goto.htm">Goto</a> 的目标或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由<a href="../Concepts.htm#names">名称</a>和冒号(:) 组成.</p>
 <pre>this_is_a_label:
 </pre>
 <p>除了空格和注释外, 其他代码不能和标签写在同一行.</p>
 <p><strong>名称:</strong> 标签名不区分大小写, 且可以由除空格, tab, 逗号以及<a href="EscapeChar.htm">转义字符</a>(`) 外的其他字符组成. 然而, 考虑到命名的惯例, 通常最好仅使用字母, 数字和下划线(例如: <em>MyListView</em>, <em>Menu_File_Open</em> 和 <em>outer_loop</em>).</p>
-<p><strong>作用域:</strong> 每个函数都有自己的局部标签列表, 只能在函数内部使用. 如果局部标签具有与全局标签相同的名称, 则局部标签优先(全局标签不可访问). 局部标签不能与<a href="../commands/Hotkey.htm">热键</a>或<a href="../commands/Hotstring.htm">热字串</a>函数一起使用.</p>
+<p><strong>作用域:</strong> 每个函数都有自己的局部标签列表. Inside a function, only that function's labels are visible/accessible to the script.</p>
 <p><strong>目标:</strong> 标签的目标是下一个可执行的代码行. 可执行代码包含函数, 赋值, <a href="../Variables.htm#Expressions">表达式</a>和<a href="../commands/Block.htm">区块</a>, 但不包括指令, 标签, 热键或热字串. 在下面的例子中, <code>run_notepad_1</code> 和 <code>run_notepad_2</code> 标签都指向 <code>Run</code> 行:</p>
 <pre>run_notepad_1:
 run_notepad_2:
     Run "notepad"
     return
 </pre>
-<p><strong>执行:</strong> 与指令类似, 正常执行到标签时标签会被忽略. 在下面的例子中, 消息框会显示两次: 一次是在执行 <a href="../commands/Gosub.htm">Gosub</a> 的目标子程序时, 再次是在前面的子程序返回后:</p>
-<pre>Gosub Label1
-
-Label1:
-MsgBox <a href="../Variables.htm#ThisLabel">A_ThisLabel</a>
-return</pre>
-
+<p><strong>执行:</strong> 与指令类似, 正常执行到标签时标签会被忽略.</p>
 <h2 id="look-alikes">类标签</h2>
 <p>热键和热字串定义看起来类似于标签, 但不是标签.</p>
 <p><a href="../Hotkeys.htm">热键</a>由热键和双冒号组成.</p>
 <pre>^a::</pre>
 <p><a href="../Hotstrings.htm">热字串</a>由一个冒号, 零或多个<a href="../Hotstrings.htm#Options">选项</a>, 另一个冒号, 一个缩写和双冒号组成.</p>
 <pre>:*:btw::</pre>
-
-<h2 id="subroutines">子程序</h2>
-<p>子程序是一部分代码, 可以对它进行 <em>调用</em> 来执行特定的任务. 子程序的执行从目标标签开始, 一直执行到遇上 <a href="../commands/Return.htm">Return</a> 或 <a href="../commands/Exit.htm">Exit</a>. 由于子程序的结尾决定于流控制, 所以任何标签既作为 Goto 的目标同时也是子程序的开始.</p>
-<p class="warning"><strong>注意:</strong> 由于执行是通过标签进行的, 因此将子程序及其终止 <code>return</code> 放在错误的位置可能会中断脚本流. 一般建议使用<a href="../Functions.htm">函数</a>来代替.</p>
 
 <h2 id="dynamic-labels">动态标签</h2>
 <p>在某些情况下, 可以用<a href="../Variables.htm">变量</a>代替标签名. 在这种情况下, 存储在变量中的名称被用来定位目标标签. 但是, 性能会稍微降低, 因为每次都必须 &quot;查找&quot; 目标标签名而不是只在脚本首次加载时查找一次.</p>
@@ -61,9 +50,7 @@ return</pre>
 <p>标签还可以用来标识循环, 以便用于 <a href="../commands/Continue.htm">Continue</a> 和 <a href="../commands/Break.htm">Break</a> 语句. 这样脚本可以很方便地继续或退出任意数目的内嵌循环.</p>
 
 <h2 id="related">相关</h2>
-<p><a href="../Functions.htm">Functions</a>, <a href="../commands/IsLabel.htm">IsLabel</a>, <a href="../Variables.htm#ThisLabel">A_ThisLabel</a>, <a href="../commands/Gosub.htm">Gosub</a>, <a href="../commands/Goto.htm">Goto</a>, <a href="../commands/SetTimer.htm">SetTimer</a>, <a href="../commands/Hotkey.htm">Hotkey</a></p>
-
-
+<p><a href="../Functions.htm">Functions</a>, <a href="../commands/IsLabel.htm">IsLabel</a>, <a href="../commands/Goto.htm">Goto</a>, <a href="../commands/Break.htm">Break</a>, <a href="../commands/Continue.htm">Continue</a></p>
 
 </body>
 </html>

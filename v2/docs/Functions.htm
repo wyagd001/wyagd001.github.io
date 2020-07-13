@@ -30,7 +30,7 @@
   <li><a href="#BuiltIn">内置函数</a></li>
 </ul>
 <h2 id="intro">介绍和简单示例</h2>
-<p id="define">函数类似于子程序(<a href="commands/Gosub.htm">Gosub</a>), 不过它还可以从调用者那里接受参数(输入). 此外, 函数还可以返回值给调用者. 参考下面的简单函数, 其接受两个数字并返回它们的和:</p>
+<p id="define">函数类似于子程序, 不过它还可以从调用者那里接受参数(输入). 此外, 函数还可以返回值给调用者. 参考下面的简单函数, 其接受两个数字并返回它们的和:</p>
 <pre>Add(x, y)
 {
     <a href="commands/Return.htm">return</a> x + y
@@ -375,12 +375,6 @@ timertest()
 </pre>
 <p id="circular-closure">最好不要在闭包的任何自由变量中存储对闭包的引用, 因为这会创建一个<a href="Objects.htm#Circular_References">循环引用</a>, 必须在释放闭包之前将其打断, 例如清除变量.</p>
 
-<h3 id="gosub">在函数中使用子程序</h3>
-<p>函数也可以包含子程序, 这些子程序限制更大, 但可能比嵌套函数执行得更快. 与其他子程序一样, 使用 <a href="commands/Gosub.htm">Gosub</a> 启动它们并在 return 处 <a href="commands/Return.htm">Return</a>(在这种情况下 Return 将属于 Gosub 而不是函数).</p>
-<p id="GosubPublic">如果函数使用 <a href="commands/Gosub.htm">Gosub</a> 跳转到公共子程序(位于函数括号外的子程序), 则外部的所有变量都是全局的, 且在子程序返回前无法访问函数自身的<a href="#Local">局部变量</a>. 但是, A_ThisFunc 仍将包含该函数的名称.</p>
-<p>虽然 <a href="commands/Goto.htm">Goto</a> 不能用于从函数内部跳转到外部, 但可以在函数中使用 <a href="commands/Gosub.htm">Gosub</a> 到外部/公共的子程序, 然后在那里使用.</p>
-<p>尽管一般不鼓励使用 <a href="commands/Goto.htm">Goto</a>, 但可以在函数内部使用它来跳转到同一函数中的另一个位置.  这有助于简化具有多个返回点的复杂函数, 所有这些返回点都需要在返回之前进行一些清理.</p>
-
 <h2 id="remarks">Return, Exit 及一般说明</h2>
 <p>如果函数内的执行流在遇到 <a href="commands/Return.htm">Return</a> 前到达了函数的闭括号, 那么函数结束并返回空值(空字符串) 给其调用者. 当函数明确省略 <a href="commands/Return.htm">Return</a> 的参数时, 也返回空值.</p>
 <p>当函数使用 <a href="commands/Exit.htm">Exit</a> 命令终止<a href="misc/Threads.htm">当前线程</a>时, 其调用者不会接收到返回值. 例如, 这个语句 <code>Var := Add(2, 3)</code> 中, 如果 <code>Add()</code> 退出了那么 <code>Var</code> 会保持不变. 如果函数出现了运行时错误(当这个错误没有被 <a href="commands/Try.htm">Try</a>/<a href="commands/Catch.htm">Catch</a> 语句捕获时), 例如<a href="commands/Run.htm">运行</a>了一个不存在的文件, 也会出现同样的情况.</p>
@@ -394,9 +388,10 @@ timertest()
 <pre>Add(x, y) {
     return x + y
 }</pre>
+
 <h2 id="include">使用 #Include 在多个脚本间共享函数</h2>
-<p>可以使用 <a href="commands/_Include.htm">#Include</a> 指令(<em>即使在脚本的顶部</em>) 从外部文件中加载函数.</p>
-<p>说明: 当脚本的执行流遇到函数定义时, 它会跳过函数(使用一种瞬时的方法) 并在函数闭括号后恢复执行. 因此, 开始执行时执行流不会陷入函数中, 也不会因为在脚本的最顶部存在一个或多个函数而影响到<a href="Scripts.htm#auto">自动执行段</a>.</p>
+<p>可以使用 <a href="commands/_Include.htm">#Include</a> 指令从外部文件中加载函数.</p>
+
 <h2 id="lib">函数库: 标准库和用户库</h2>
 <p>脚本可以不需要通过 <a href="commands/_Include.htm">#Include</a> 而调用外部文件中的函数. 要达到此目的, 必须在下面某个库文件夹中存在与函数同名的文件:</p>
 <pre><a href="Variables.htm#ScriptDir">A_ScriptDir</a> "\Lib\"  <em>; 本地库.</em>

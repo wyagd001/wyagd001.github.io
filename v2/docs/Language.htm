@@ -41,9 +41,8 @@
   </ul></li>
   <li><a href="#structure-of-a-script">脚本的结构</a>
   <ul>
-    <li><a href="#auto-execute-section">自动执行段</a></li>
-    <li><a href="#subroutines">子程序</a></li>
-    <li><a href="#user-defined-functions">用户定义的函数</a></li>
+    <li><a href="#global-code">全局代码</a></li>
+    <li><a href="#functions">函数</a></li>
     <li><a href="#-include">#Include</a></li>
   </ul></li>
   <li><a href="#misc">杂项</a>
@@ -203,8 +202,7 @@ Run("notepad.exe", , , notepadPID)
   <li>一个<a href="commands/Block.htm">块</a>(用一对大括号表示) 将零个或多个语句组合为一个语句.</li>
   <li><a href="commands/If.htm">If 语句</a>导致其主体被执行或不依赖条件. 其后可以跟一个 <a href="commands/Else.htm">Else</a> 语句, 只有当条件不满足时才执行.</li>
   <li><a href="commands/Goto.htm">Goto</a> 跳转到指定的标签并继续执行.</li>
-  <li><a href="commands/Gosub.htm">Gosub</a> 调用一个<a href="#subroutines">子程序</a>.</li>
- <li><a href="commands/Return.htm">Return</a> 从一个<a href="#subroutines">子程序</a>或函数返回.</li>
+ <li><a href="commands/Return.htm">Return</a> 从一个函数返回.</li>
   <li>一个 <a href="#loop-statement">Loop(循环) 语句</a> (<a href="commands/Loop.htm">Loop</a>, <a href="commands/While.htm">While</a> 或 <a href="commands/For.htm">For</a>) 重复执行其主体.
   <ul>
     <li><a href="commands/Break.htm">Break</a> 退出(终止) 一个循环.</li>
@@ -226,7 +224,7 @@ Run("notepad.exe", , , notepadPID)
 <ul>
   <li><a href="commands/Block.htm">块</a>的左大括号可以写在 <a href="commands/If.htm">If</a>, <a href="commands/Else.htm">Else</a>, <a href="#loop-statement">Loop</a>, <a href="commands/While.htm">While</a>, <a href="commands/For.htm">For</a>, <a href="commands/Try.htm">Try</a>, <a href="commands/Catch.htm">Catch</a> 或 <a href="commands/Finally.htm">Finally</a> 语句(基本上是任何具有<a href="Concepts.htm#cf-body">主体</a>的控制流语句) 同一行的末尾. 这被称为 One True Brace(OTB) 样式.</li>
   <li><a href="commands/Else.htm">Else</a>, <a href="commands/Try.htm">Try</a> 和 <a href="commands/Finally.htm">Finally</a> 允许任何有效的语句在其右侧, 因为它们需要一个<a href="Concepts.htm#cf-body">主体</a>但没有参数.</li>
-  <li><a href="commands/If.htm">If</a>, <a href="commands/While.htm">While</a>, <a href="commands/Return.htm">Return</a>, <a href="commands/Until.htm">Until</a>, <a href="commands/Loop.htm">Loop <em>Count</em></a>, <a href="commands/Goto.htm">Goto</a> 和 <a href="commands/Gosub.htm">Gosub</a> 允许在名称后立即使用左括号, 将整个参数列表括起来. 虽然这些看起来像函数调用, 但它们不是, 也不能在表达式中间使用. 例如, <code>if(expression)</code>.</li>
+  <li><a href="commands/If.htm">If</a>, <a href="commands/While.htm">While</a>, <a href="commands/Return.htm">Return</a>, <a href="commands/Until.htm">Until</a>, <a href="commands/Loop.htm">Loop <em>Count</em></a> 和 <a href="commands/Goto.htm">Goto</a> 允许在名称后立即使用左括号, 将整个参数列表括起来. 虽然这些看起来像函数调用, 但它们不是, 也不能在表达式中间使用. 例如, <code>if(expression)</code>.</li>
   <li>不能通过定义具有相同名称的函数来覆盖控制流语句.</li>
 </ul>
 
@@ -258,69 +256,72 @@ Loop Parse t, "`n"
     }
 }
 </pre>
-<p>循环变量也可以在循环主体外部使用, 例如在循环中调用的函数或子程序中.</p>
+<p>循环变量也可以在循环主体外部使用, 例如在循环中调用的函数中.</p>
 
 <h3 id="not-control-flow">非控制流</h3>
 <p>像指令, 标签, 双冒号热键和热字串标签, 和没有赋值的声明都会在脚本加载文件的时候被处理, 它们不受控制流的制约. 换句话说, 在脚本执行任何控制流程语句之前, 它们将无条件生效. 同样, <a href="commands/_HotIf.htm">#HotIf</a> 指令不能影响控制流; 它只是设置代码中指定的任何热键和热字串的条件. 每次按下时都会计算热键的条件, 而不是在代码中遇到 #HotIf 指令时.</p>
 
 <h2 id="structure-of-a-script">脚本的结构</h2>
 
-<h3 id="auto-execute-section">自动执行段</h3>
-<p>脚本加载完成后, 从顶行开始执行, 直到遇到 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">Exit</a>,  或脚本的物理结束(无论哪一种). 这个脚本的顶部被称为 <em>自动执行段(部分)</em>, 但它实际上只是程序启动后调用的一个<a href="#subroutines">子程序</a>.</p>
-<p>自动执行段通常用于配置适用于每个新启动的<a href="misc/Threads.htm">线程</a>的设置. 有关详情, 请参阅<a href="Scripts.htm#auto">脚本顶部</a>.</p>
+<h3 id="global-code">全局代码</h3>
+<p>脚本加载完成后, <em>自动执行线程</em> 从脚本的顶行开始执行, 一直到被指示停止为止, 比如通过 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">ExitApp</a> 或 <a href="commands/Exit.htm">Exit</a>. 脚本的物理结束也作为 <a href="commands/Exit.htm">Exit</a>.</p>
+<p>全局代码, 或全局<a href="Concepts.htm#scope">范围</a>内的代码, 是任何不在函数或类定义内的可执行代码. 那里的任何变量引用都被称为<a href="Functions.htm#Global">全局的</a>, 因为它们可以被任何函数(通过适当的声明) 访问. 这样的代码通常用于配置适用于每个新启动的<a href="misc/Threads.htm">线程</a>的设置, 或者<a href="Concepts.htm#uninitialised-variables">初始化</a>热键和其他函数使用的全局变量.</p>
+<p>在启动时执行的代码(在脚本启动时立即执行) 通常被放在文件的顶部. 然而, 这样的代码也可以放在整个文件中, 在函数和类定义之间(但不是在里面). 这是因为每当在执行过程中遇到的每个函数或类定义的主体都会被跳过. 在某些情况下, 脚本的整个目的可能用全局代码来执行.</p>
+<p><strong>相关:</strong> <a href="Scripts.htm#auto">脚本启动(自动执行线程)</a></p>
 
 <h3 id="subroutines">子程序</h3>
-<p class="note"><strong>注意:</strong> 一般应使用函数代替标签子程序.</p>
-<p><em>子程序</em> 是一个可重复使用的代码块, 可以 <em>调用</em> 它来执行一些任务.</p>
-<p>脚本使用子程序来定义当按下特定热键或发生其他事件时应该发生什么. 脚本也可以通过使用 <a href="commands/Gosub.htm">Gosub</a> 直接调用子程序.</p>
-<p>任何<a href="#labels">标签</a>都可以作为子程序的起点. 子程序没有明确的标记结束点, 而是通过 <a href="commands/Return.htm">Return</a> 或在线程退出时, 将控制权返回给子程序的调用者时作为结束. 例如:</p>
-<pre>gosub Label1
+<p><em>子程序</em>(也称为 <em>sub</em> 或 <em>procedure</em>) 是一个可重复使用的代码块, 可按需执行. 子程序是通过定义 <em>函数</em> 创建的(见下文). 这些术语通常可以在 AutoHotkey v2 中互换, 函数是子程序的唯一类型.</p>
 
-Label1:
-MsgBox A_ThisLabel
-return
-</pre>
-<p>请注意: 由于标签在正常执行期间到达时没有效果(标签这行就像不存在一样), 因此在此示例中, 对话框将显示两次: 一次在子程序运行时, 一次在子程序返回之后. 一个重要的结果是不能在另一个子程序中定义一个子程序
-, 因为内部子程序的 &quot;主体&quot; 会自动执行然后 <em>return</em>, 从而有效地终止外部子程序.</p>
-<p>子程序通常应该与任何其他代码块分开定义, 但也可以在<a href="Functions.htm#gosub">函数内定义</a>, 允许子程序访问该函数的静态变量(和局部变量, 但仅在函数运行时).</p>
-<p class="warning"><strong>注意:</strong> 函数内定义的子程序在使用局部变量和<a href="#dynamic-variables">动态变量引用</a>方面有一定的限制. 有关详情, 请参阅<a href="Functions.htm#gosub">在函数中使用子程序</a>. 一般应使用<a href="Functions.htm#nested">嵌套函数</a>代替.
-</p>
+<h3 id="functions">函数</h3>
+<p><strong>相关:</strong> <a href="Functions.htm">函数</a>(有关函数定义)</p>
+<p>除了调用许多有用的<a href="commands/index.htm">预置函数</a>外, 脚本还可以定义自己的函数. 这些函数一般有两种使用方式:</p>
+<ol>
+  <li>函数可以被脚本本身调用. 这种函数可能被用来避免重复, 使代码更容易管理, 或者可能用于其他目的.</li>
+  <li>函数可以被程序调用, 以响应一些事件, 例如用户按下热键. 例如, 每个热键都与一个函数相关联, 每当热键被按下时就会执行.</li>
+</ol>
+<p>有多种方法可以定义一个函数. 如下所示:</p>
+<ul>
+  <li>A <a href="Functions.htm">function definition</a> combining a name, parentheses and a <a href="commands/Block.htm">block</a> of code. This defines a function which can be executed by name with a <a href="#function-calls">function call</a> or <a href="#function-call-statements">function call statement</a>. For example:
+<pre>SayHello()  <em>; Define the SayHello function.</em>
+{
+    MsgBox "Hello!"
+}
 
-<h3 id="user-defined-functions">用户自定义函数</h3>
-<p>一般来说, <a href="Functions.htm">函数</a>是一种子程序. 但是, 在 AutoHotkey 文档中, &quot;子程序&quot; 通常指的是由标签定义的子程序类型(如上所述).</p>
-<p>用户定义的函数与子程序的不同之处在于它们可以 <em>接受参数</em> 并 <em>返回一个值</em>, 并且它们可以具有<a href="Functions.htm#Local">局部变量</a>. 它们可以通过脚本中的<a href="#function-calls">函数调用</a>或程序本身调用, 例如, 如果函数被传递给 <a href="commands/Hotkey.htm">Hotkey</a> 或 <a href="commands/SetTimer.htm">SetTimer</a>.</p>
-<p>函数是使用类似于函数调用的语法来定义的, 随后是用大括号括起来的代码块:</p>
+SayHello  <em>; Call the SayHello function.</em></pre>
+  </li>
+  <li>A <a href="Hotkeys.htm">hotkey</a> or <a href="Hotstrings.htm">hotstring</a> definition, combining a hotkey or hotstring with a single <a href="Concepts.htm#statement">statement</a> or a <a href="commands/Block.htm">block</a> of code. This type of function cannot be called directly, but is executed whenever the hotkey or hotstring is activated. For example:
+<pre>#w::Run "wordpad"  <em>; Press Win-W to run Wordpad.</em>
+#n::  <em>; Press Win-N to run Notepad.</em>
+{
+    Run "notepad"
+}</pre>
+  </li>
+  <li>A <a href="Variables.htm#fat-arrow">fat arrow expression</a> defines a function which evaluates an <a href="#expressions">expression</a> and <a href="Concepts.htm#return-a-value">returns</a> its result, instead of executing a block of code. Such functions usually have no name as they are are passed directly to another function. For example:
+    <pre>SetTimer () => MsgBox("Hello!"), -1000  <em>; Says hello after 1 second.</em></pre></pre>
+  </li>
+  <li>The fat arrow syntax can also be used outside of expressions as shorthand for a normal function or method definition. For example, the following is equivalent to the SayHello definition above, except that this one returns "OK":
+    <pre>SayHello() => MsgBox("Hello!")</pre>
+  </li>
+</ul>
+<p>Variables in functions are <a href="Functions.htm#Local">local</a> to that function by default, except when referring to a local variable of an outer function inside a <a href="Functions.htm#nested">nested function</a>, or any variable when <code>=&gt;</code> is used in the global scope (not inside a class or another function).</p>
+<p>A function can optionally <a href="Concepts.htm#parameters">accept parameters</a>. Parameters are defined by listing them inside the parentheses. For example:</p>
 <pre>MyFunction(FirstParameter, Second, ByRef Third, Fourth:=&quot;&quot;)
 {
-    ...
+    <em>;...</em>
     return &quot;a value&quot;
 }
 </pre>
 <p>和函数调用一样, 函数名和左括号之间不能有空格.</p>
 <p>右括号和左大括号之间的换行符是可选的. 两者之间可以有任意数量的空格或注释.</p>
 <p><a href="Functions.htm#ByRef">ByRef</a> 表示该参数接受变量引用, 使该参数成为调用者传递的变量的别名. 如果调用者没有传递一个变量, 那么这个参数就像一个普通的局部变量. ByRef 参数也可以是可选的.</p>
-<p><a href="Functions.htm#optional">可选</a>参数通过在参数名称后面指定 <code>:=</code> 和一个默认值, 该值必须是加引号的原义字符串, 数字, <code>true</code> 或 <code>false</code>.</p>
+<p><a href="Functions.htm#optional">可选</a>参数通过在参数名称后面指定 <code>:=</code> 和一个默认值, 该值必须是加引号的原义字符串, 数字, <code>true</code>, <code>false</code> 或 <code>unset</code>.</p>
 <p>函数可以<a href="Functions.htm#return">返回一个值</a>. 如果不是, 则默认返回一个空字符串.</p>
-<p>一个函数不能在另一个函数中定义. 另外, 函数定义的位置并不重要; 在脚本中定义的任何函数都可以从其他地方调用.</p>
+<p>函数定义不需要在调用该函数之前.</p>
 <p class="note">有关详情, 请参阅<a href="Functions.htm">函数</a>.</p>
 
 <h3 id="-include">#Include</h3>
 <p><a href="commands/_Include.htm">#Include</a> 指令使脚本的行为就像指定文件的内容出现在这个确切位置一样. 这通常用于将代码组织到单独的文件中, 或者使用其他用户编写的脚本库.</p>
-<p class="warning"><strong>注意:</strong> 以下段落详细说明了一些常见的混淆点.
-</p>
-<p>使用 #Include 时, 重要的是要考虑文件的内容如果放置在该位置将会产生什么效果, 因为 #Include 将具有相同的效果. 例如:</p>
-<ul>
-  <li>
-<p>#Include 一般不应该在子程序或函数的中间使用.</p>
-</li>
-  <li>
-<p>在脚本的<a href="#auto-execute-section">自动执行段</a>使用 #Include 需要特别的考虑, 因为自动执行段基本上只是一个子程序. 如果子程序的执行会在到达一个 <code>return</code> 时终止, 而不管 <code>return</code> 是在哪个文件中. 同样, 如果文件包含一个热键/热字串, 它可能被认为是脚本的 <em>第一个</em> 热键/热字串, 它将扮演 <code>return</code> 的角色.</p>
-</li>
-  <li>
-<p>脚本只有一个<a href="#auto-execute-section">自动执行段</a>, 而不是每个文件一个.</p>
-</li>
-</ul>
-<p>#Include 可以在<a href="#auto-execute-section">自动执行段</a>安全地使用, 以包含仅包含函数定义的文件, 因为函数定义(但不是函数调用) 在执行期间被跳过. 如果一个文件包含其他代码, 可以通过 <a href="commands/Goto.htm">Goto</a> 跳过文件的内容来避免破坏自动执行段.</p>
+<p>An #Include file can contain <a href="#global-code">global code</a> to be executed during <a href="Scripts.htm#auto">script startup</a>, but as with code in the main script file, such code will be executed only if the auto-execute thread is not terminated (such as with an unconditional <code>Return</code>) prior to the #Include directive. A <a href="commands/_Warn.htm#Unreachable">warning</a> is displayed by default if any code cannot be executed due to a prior <code>Return</code>.</p>
 <p>与 C/C++ 不同, 如果以前的指令已包含该文件, #Include 不做任何事情. 要多次包含同一文件的内容, 请使用 <a href="commands/_Include.htm">#IncludeAgain</a>.</p>
 <p>如果包含函数的脚本文件被保存在一个标准的位置并进行适当的命名, 则它们可以 <em>自动包含</em>, 而不必使用 #Include. 其效果与在主脚本文件末尾使用 #Include 相似. 有关详情, 请参阅<a href="Functions.htm#lib">函数库</a>.</p>
 
@@ -357,7 +358,7 @@ Loop 3
 <p>用于形成最终变量名称的 &quot;index(索引)&quot; 不一定是数字; 它可以是一个字母或关键字, 使伪数组类似于<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>或<a href="Objects.htm">对象</a>.</p>
 
 <h3 id="labels">标签</h3>
-<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 的目标或形成<a href="#subroutines">子程序</a>, 或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由一个名称后跟一个冒号组成:</p>
+<p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 的目标, 或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由一个名称后跟一个冒号组成:</p>
 <pre>this_is_a_label:
 </pre>
 <p>除了空格和注释外, 其他代码不能和标签写在同一行. 有关详情, 请参阅<a href="misc/Labels.htm">标签</a>.</p>
