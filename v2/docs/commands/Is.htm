@@ -14,7 +14,7 @@
 
 <h1>Is 函数</h1>
 
-<pre class="Syntax">Result := Is<i>Something</i>(Value)</pre>
+	<pre class="Syntax">Result := Is<i>Something</i>(Value <span class="optional">, Mode</span>)</pre>
 
 <p>这些函数进行各种检查. 有三类:</p>
 <ul>
@@ -22,13 +22,14 @@
   <li><a href="#cat-misc">Misc</a>: 根据给定的值或变量引用, 检查杂项条件.</li>
   <li><a href="#cat-string">String</a>: 检查一个字符串是否符合特定的模式. <em>Value</em> 必须是一个字符串, 否则抛出异常.</li>
 </ul>
+<p><em>Mode</em> 仅对 IsAlpha, IsAlnum, IsUpper 和 IsLower 有效. 默认情况下, 只考虑 ASCII 字母. 要根据当前用户的区域规则执行检查, 请为  <em>Mode</em> 参数指定字符串 <code>"Locale"</code>. 也可以通过指定 0 或 1 来使用默认模式.</p>
 
 <h2 id="cat-type">Type</h2>
 <p>检查一个值的类型, 或者一个字符串是否可以被解释为该类型的值.</p>
 <table class="info">
   <tr>
-    <th style="width:15%">Function</th>
-    <th>Description</th>
+    <th style="width:15%">函数</th>
+    <th>描述</th>
   </tr>
   <tr id="integer">
     <td>IsInteger</td>
@@ -52,8 +53,8 @@
 <p>根据给定的值或变量引用, 检查杂项条件.</p>
 <table class="info">
   <tr>
-    <th style="width:15%">Function</th>
-    <th>Description</th>
+    <th style="width:15%">函数</th>
+    <th>描述</th>
   </tr>
   <tr id="byref">
     <td><a href="IsByRef.htm">IsByRef</a></td>
@@ -77,8 +78,8 @@
 <p>检查一个字符串是否符合特定的模式. <em>Value</em> 必须是一个字符串, 否则抛出异常.</p>
 <table class="info">
   <tr>
-    <th style="width:15%">Function</th>
-    <th>Description</th>
+    <th style="width:15%">函数</th>
+    <th>描述</th>
   </tr>
   <tr id="digit">
     <td>IsDigit</td>
@@ -90,19 +91,28 @@
   </tr>
   <tr id="alpha">
     <td>IsAlpha</td>
-    <td>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含字母字符. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非字母的字符时, 则为 False. 例如, 如果 <em>Value</em> 包含一个空格后跟字母, 则 <em>不被</em> 视为 <em>alpha</em>. </td>
+    <td>
+      <p>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含字母字符. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非字母的字符时, 则为 False. 例如, 如果 <em>Value</em> 包含一个空格后跟字母, 则 <em>不被</em> 视为 <em>alpha</em>.</p>
+      <p>默认情况下, 只考虑ASCII字母. 如果要根据当前用户的区域规则来执行检查, 请使用 <code>IsAlpha(Value, "Locale")</code>.</p>
+    </td>
   </tr>
   <tr id="upper">
     <td>IsUpper</td>
-    <td>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含大写字母字符, 则为 True. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非大写字母的字符时, 则为 False.</td>
+    <td>
+      <p>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含大写字母字符, 则为 True. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非大写字母的字符时, 则为 False.</p>
+      <p>默认情况下, 只考虑ASCII字母. 如果要根据当前用户的区域规则来执行检查, 请使用 <code>IsUpper(Value, "Locale")</code>.</p>
+    </td>
   </tr>
   <tr id="lower">
     <td>IsLower</td>
-    <td>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含小写字母字符, 则为 True. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非小写字母的字符时, 则为 False.</td>
+    <td>
+      <p>如果 <em>Value</em> 是字符串, 可以为空字符串或仅包含小写字母字符, 则为 True. 如果字符串任意位置有任何 digit, 空格, 制表符, 标点或其他非小写字母的字符时, 则为 False.</p>
+      <p>默认情况下, 只考虑ASCII字母. 如果要根据当前用户的区域规则来执行检查, 请使用 <code>IsLower(Value, "Locale")</code>.</p>
+</td>
   </tr>
   <tr id="alnum">
     <td>IsAlnum</td>
-    <td>除了还允许 0 到 9 的数字外, 其他与 <em>alpha</em> 相同.</td>
+    <td>除了还允许 0 到 9 的数字外, 其他与 <a href="#alpha">IsAlpha</a> 相同.</td>
   </tr>
   <tr id="space">
     <td>IsSpace</td>
@@ -118,8 +128,7 @@
 </table>
 
 <h2 id="Remarks">备注</h2>
-<p>由于在脚本开始执行之前, 原义数字(如 <code>128</code>, <code>0x7F</code> 和 <code>1.0</code>) 会转换为纯数字, 因此原义数字的格式会丢失. To avoid confusion, the string functions listed above throw an exception if they are given a pure number.</p>
-<p>除非已使用 <a href="StringCaseSense.htm">StringCaseSense Locale</a> 区域设置, 否则系统区域设置将被忽略.</p>
+<p>由于在脚本开始执行之前, 原义数字(如 <code>128</code>, <code>0x7F</code> 和 <code>1.0</code>) 会转换为纯数字, 因此原义数字的格式会丢失. 为了避免混淆, 上面列出的字符串函数如果给定一个纯数字, 则抛出异常.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../Variables.htm#YYYY">A_YYYY</a>, <a href="FileGetTime.htm">FileGetTime</a>, <a href="If.htm">If</a>, <a href="StrLen.htm">StrLen</a>, <a href="InStr.htm">InStr</a>, <a href="StrLower.htm">StrUpper</a>, <a href="DateAdd.htm">DateAdd</a></p>

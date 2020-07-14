@@ -14,7 +14,7 @@
 
 <h1>StrCompare</h1>
 <p>按字母顺序比较两个字符串.</p>
-<pre class="Syntax">Result := <span class="func">StrCompare</span>(String1, String2 <span class="optional">, CaseSensitive := false</span>)</pre>
+<pre class="Syntax">Result := <span class="func">StrCompare</span>(String1, String2 <span class="optional">, CaseSense := false</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -23,9 +23,14 @@
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>要比较的字符串.</p>
   </dd>
-  <dt>CaseSensitive</dt>
+  <dt>CaseSense</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#strings">字符串</a></p>
+    <p>One of the following values (defaults to 0 if omitted):</p>
+    <p><code>"On"</code> or <code>1</code> (<code>True</code>): The comparison is case sensitive.</p>
+    <p><code>"Off"</code> or <code>0</code> (<code>False</code>): The letters A-Z are considered identical to their lowercase counterparts.</p>
+    <p id="Locale"><code>"Locale"</code>: The comparison is case insensitive according to the rules of the current user's locale. For example, most English and Western European locales treat not only the letters A-Z as identical to their lowercase counterparts, but also non-ASCII letters like &Auml; and &Uuml; as identical to theirs. <em>Locale</em> is 1 to 8 times slower than <em>Off</em> depending on the nature of the strings being compared.</p>
+    <p><code>"Logical"</code>: Like <em>Locale</em>, but digits in the strings are considered as numerical content rather than text. For example, "A2" is considered less than "A10". However, if two numbers differ only by the presence of a leading zero, the string with leading zero may be considered <em>less</em> than the other string. The exact behavior may differ between OS versions.</p>
     <p>如果参数 <em>CaseSensitive</em> 被省略或为 0(false), 则比较不区分大小写(不区分的方法取决于 <a href="StringCaseSense.htm">StringCaseSense</a>); 否则, 大小写必须完全匹配, 才能认为字符串是相同的.</p>
   </dd>
 </dl>
@@ -38,12 +43,15 @@
   <li>正整数, 如果 <em>String1</em> 大于 <em>String2</em></li>
   <li>负整数, 如果 <em>String1</em> 小于 <em>String2</em></li>
 </ul>
+<p>To check for a specific relationship between the two strings, compare the result to 0. For example:</p>
+<pre>a_less_than_b := StrCompare(a, b) &lt; 0
+a_greater_than_or_equal_to_b := StrCompare(a, b) &gt;= 0</pre>
 
 <h2 id="Remarks">备注</h2>
 <p>此函数通常用于 <a href="Sort.htm#callback">sort 回调</a>.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="StringCaseSense.htm">StringCaseSense</a>, <a href="Sort.htm">Sort</a></p>
+<p><a href="Sort.htm">Sort</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">

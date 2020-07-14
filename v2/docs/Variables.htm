@@ -112,7 +112,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
       <p><strong>一元负号(-)</strong>: 反转其运算元的符号.</p>
       <p><strong>一元正号(+)</strong>: <code>+N</code> 等同于 <code>-(-N)</code>. 应用于纯数字时无效, 但可用于将数字字符串转换为纯数字.</p>
       <p><strong>逻辑非(!)</strong>: 如果运算元为空或 0, 那么逻辑非的结果为 1, 这表示 &quot;true&quot;. 否则, 结果为 0(false). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
-      <p><strong>按位非(~)</strong>: 此运算符对运算元按位取反. 如果运算元为浮点值, 则在计算前把它截断成整数. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果.</p>
+      <p><strong>按位非(~)</strong>: 此运算符对运算元按位取反. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果. 如果操作数是一个浮点值, 则抛出异常.</p>
     </td>
   </tr>
   <tr id="MulDiv">
@@ -123,7 +123,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     <td><p><strong>乘(*)</strong>: 如果两个输入都为整数, 则结果为整数; 否则结果为浮点数.</p>
       <p><strong>其他用途</strong>: 星号(*) 运算符也用于<a href="Functions.htm#VariadicCall">可变参数函数调用</a>.</p>
       <p id="divide"><strong>真除(/)</strong>: 即使两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
-      <p id="FloorDivide"><strong>向下舍除(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点格式, 则执行浮点除法并把结果向左截断到最近的整数. 例如, <code>5//3.0</code> 结果为 1.0 而 <code>5.0//-3</code> 结果为 -2.0. 虽然浮点除法的结果是一个整数, 但它是以浮点格式存储的, 因此使用它的任何其他东西都将会将它视为浮点格式. 有关取模, 请参阅 <a href="commands/Math.htm#Mod">Mod</a>.</p>
+      <p id="IntegerDivide"><strong>整数除法(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点格式, 则抛出异常. 有关取模, 请参阅 <a href="commands/Math.htm#Mod">Mod</a>.</p>
     <p><a href="#AssignOp">*= 和 /= 运算符</a>是用变量的值乘以或除以另一个值的一种简写形式. 例如, <code>Var*=2</code> 和 <code>Var:=Var*2</code>会得到相同的结果(不过前者执行的更好).</p>
     <p>除数为零, 则导致抛出异常.</p></td>
   </tr>
@@ -137,7 +137,10 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   <tr id="bitshift">
     <td style="text-align:center"><strong>&lt;&lt;<br>
     &gt;&gt;</strong></td>
-    <td><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点输入在计算前会被截取成整数. 左移(<strong>&lt;&lt;</strong>) 相当于 <em>Value1</em> 乘以 &quot;2 的 <em>Value2</em> 次幂&quot;. 右移(<strong>&gt;&gt;</strong>) 相当于 <em>Value1</em> 除以 &quot;2 的 <em>Value2</em> 次幂&quot; 并将结果四舍五入到数轴左侧最接近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2. 如果 <em>Value2</em> 小于 0 或大于 63(截断后), 则抛出异常.</td>
+    <td>
+      <p><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 左移(<strong>&lt;&lt;</strong>) 相当于 <em>Value1</em> 乘以 &quot;2 的 <em>Value2</em> 次幂&quot;. 右移(<strong>&gt;&gt;</strong>) 相当于 <em>Value1</em> 除以 &quot;2 的 <em>Value2</em> 次幂&quot; 并将结果四舍五入到数轴左侧最接近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2. 如果 <em>Value2</em> 小于 0 或大于 63(截断后), 则抛出异常.</p>
+      <p>如果任何一个输入是浮点数, 则抛出异常.</p>
+    </td>
   </tr>
   <tr id="bitwise">
     <td style="text-align:center"><strong>&amp;<br>
@@ -171,8 +174,7 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
     <td style="text-align:center"><strong>&gt;&nbsp;&nbsp;&nbsp;&lt;<br>
     &gt;= &lt;=</strong></td>
     <td>
-      <p><strong>大于(&gt;)</strong>, <strong>小于(&lt;)</strong>, <strong>大于或等于(&gt;=)</strong> 和 <strong>小于或等于(&lt;=)</strong>. 如果某个输入不是数字(或都是字符串), 则按字母顺序比较. 例如, 2 &lt; &quot;10&quot; 结果为 <em>true</em>, 然而 &quot;2&quot; &lt; &quot;10&quot; 结果为 <em>false</em>. 只有在 <a href="commands/StringCaseSense.htm">StringCaseSense</a> 打开时, 比较才会区分大小写. 另请参阅: <a href="commands/Sort.htm">Sort</a></p>
-      <p>当比较字符串时, 这些运算符的比较仅到第一个二进制零为止.</p>
+      <p><strong>大于(&gt;)</strong>, <strong>小于(&lt;)</strong>, <strong>大于或等于(&gt;=)</strong> 和 <strong>小于或等于(&lt;=)</strong>. 输入的数据是以数字方式进行比较的. 如果其中一个输入不是数字或数字字符串, 则抛出异常.</p>
     </td>
   </tr>
   <tr id="equal">
@@ -181,8 +183,9 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
       !=<br>
       !==</strong></td>
     <td>
-      <p><strong>不区分大小写的等号(=) / 不等号(!=)</strong> 和 <strong>区分大小写的等号(==) / 不等号(!==)</strong>. 运算符 <strong>==</strong> 和 <strong>=</strong> 是一样的, 除了当某个输入不是数字(或都是字符串), 在这种情况下 <strong>==</strong> 总是区分大小写的, 而 <strong>=</strong> 总是不区分大小写的(不区分大小写的方法取决于 <a href="commands/StringCaseSense.htm">StringCaseSense</a>). <strong>!=</strong> 和 <strong>!==</strong> 与其对应的没有 <strong>!</strong> 的运算符是一样的, 只是其结果取反.</p>
+      <p><strong>不区分大小写的等号(=) / 不等号(!=)</strong> 和 <strong>区分大小写的等号(==) / 不等号(!==)</strong>. 运算符 <strong>==</strong> 的行为和 <strong>=</strong> 是一样的, 除非其中一个输入不是数字(或都是字符串), 在这种情况下 <strong>==</strong> 总是区分大小写的, 而 <strong>=</strong> 总是不区分大小写的. <strong>!=</strong> 和 <strong>!==</strong> 与其对应的没有 <strong>!</strong> 的运算符是一样的, 只是其结果取反.</p>
       <p><strong>==</strong> 和 <strong>!==</strong> 运算符可用于比较包含二进制零的字符串. 除了 <strong>~=</strong> 之外的所有其他比较运算符仅比较到第一个二进制零.</p>
+      <p>对于不区分大小写的比较, 只有 ASCII 字母 A-Z 才会被认为等同于它们的小写字母. 如果要根据当前用户区域规则进行比较, 请使用 <a href="commands/StrCompare.htm">StrCompare</a> 并为 <em>CaseSense</em> 参数指定 "Locale".</p>
     </td>
   </tr>
   <tr>
@@ -236,7 +239,7 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
         &gt;&gt;=<br>
         &lt;&lt;=</strong>
     </td>
-    <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中. 最简单的赋值运算符为<a href="commands/SetExpression.htm">冒号等号(:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#FloorDivide">向下舍除</a> 把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 类似的, <code>Var <strong>.=</strong> &quot;abc&quot;</code> 为 <code>Var := Var <strong>.</strong> &quot;abc&quot;</code> 的一种简写形式.</p>
+    <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中. 最简单的赋值运算符为<a href="commands/SetExpression.htm">冒号等号(:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#IntegerDivide">整数除法</a>把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 类似的, <code>Var <strong>.=</strong> &quot;abc&quot;</code> 为 <code>Var := Var <strong>.</strong> &quot;abc&quot;</code> 的一种简写形式.</p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>.</p>
     <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 这样还允许赋值作为 <a href="Functions.htm#ByRef">ByRef</a> 去传递, 或获取它的地址; 例如: <code>StrPtr(x:=&quot;abc&quot;)</code>.</p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
@@ -518,10 +521,6 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   <tr id="DetectHiddenText">
     <td>A_DetectHiddenText</td>
     <td>可以用来获取或设置是否检测窗口中的隐藏文本. 可能的值是 0(禁止) 和 1(启用). 有关详情, 请参阅 <a href="commands/DetectHiddenText.htm">DetectHiddenText</a>.</td>
-  </tr>
-  <tr id="StringCaseSense">
-    <td>A_StringCaseSense</td>
-    <td>可以用来获取或设置字符串比较是否区分大小写. 可能的值是 0(禁止), 1(启用) 和 Locale. 有关详情, 请参阅 <a href="commands/StringCaseSense.htm">StringCaseSense</a>.</td>
   </tr>
   <tr id="FileEncoding">
     <td>A_FileEncoding</td>

@@ -291,7 +291,7 @@ if !hFile
 }
 TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
 StrSize := StrLen(TestString) * 2
-DllCall("WriteFile", "Ptr", hFile, "Str", TestString, "UInt", StrSize, "UIntP", BytesActuallyWritten, "Ptr", 0)
+DllCall("WriteFile", "Ptr", hFile, "Str", TestString, "UInt", StrSize, "UIntP", BytesActuallyWritten := 0, "Ptr", 0)
 DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
@@ -307,7 +307,7 @@ if !hFile
 }
 <em>; 为要读取的字符串分配一块内存:</em>
 Buf := BufferAlloc(StrSize)
-DllCall(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Ptr&quot;, Buf, &quot;UInt&quot;, Buf.Size, &quot;UIntP&quot;, BytesActuallyRead, &quot;Ptr&quot;, 0)
+DllCall(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Ptr&quot;, Buf, &quot;UInt&quot;, Buf.Size, &quot;UIntP&quot;, BytesActuallyRead := 0, &quot;Ptr&quot;, 0)
 DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
 MsgBox "The following string was read from the file: " StrGet(Buf)</pre>
 </div>
@@ -450,10 +450,10 @@ DllCall(vtable(tbl,4), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http:/
 ObjRelease(tbl)
 
 vtable(ptr, n) {
-    <em>; NumGet(ptr+0) 返回对象的虚函数表(简称为 vtable) 的地址
+    <em>; NumGet(ptr, "ptr") 返回对象的虚函数表(简称为 vtable) 的地址
     ; 表达式的其余部分从
     ; vtable 中获取第 n 个函数的地址.</em>
-    return NumGet(NumGet(ptr+0), n*A_PtrSize)
+    return NumGet(NumGet(ptr, "ptr"), n*A_PtrSize, "ptr")
 }
 </pre>
 </div>
