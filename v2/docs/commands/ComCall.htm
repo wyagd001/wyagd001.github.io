@@ -63,11 +63,11 @@
  <h2 id="Remarks">备注</h2>
 <p>以下 DllCall 主题也适用于 ComCall:</p>
 <ul>
-  <li><a href="DllCall.htm#types">Types of Arguments and Return Values</a></li>
-  <li><a href="DllCall.htm#error">Errors</a></li>
-  <li><a href="DllCall.htm#except">Native Exceptions and A_LastError</a></li>
-  <li><a href="DllCall.htm#struct">Structures and Arrays</a></li>
-  <li><a href="DllCall.htm#limits">Known Limitations</a></li>
+  <li><a href="DllCall.htm#types">参数和返回值的类型</a></li>
+  <li><a href="DllCall.htm#error">错误</a></li>
+  <li><a href="DllCall.htm#except">原生异常和 A_LastError</a></li>
+  <li><a href="DllCall.htm#struct">结构和数组</a></li>
+  <li><a href="DllCall.htm#limits">已知限制</a></li>
   <li><a href="DllCall.htm#dotnet">.NET Framework</a></li>
 </ul>
 
@@ -82,8 +82,8 @@
   <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a> 虚拟函数列表中的方法:
     IUnknown:
       0 QueryInterface  -- 使用 <a href="ComObjQuery.htm">ComObjQuery</a> 代替
-      1 AddRef          -- use <a href="ObjAddRef.htm">ObjAddRef</a> instead
-      2 Release         -- use <a href="ObjAddRef.htm">ObjRelease</a> instead
+      1 AddRef          -- 使用 <a href="ObjAddRef.htm">ObjAddRef</a> 代替
+      2 Release         -- 使用 <a href="ObjAddRef.htm">ObjRelease</a> 代替
     ITaskbarList:
       3 HrInit
       4 AddTab
@@ -94,14 +94,8 @@
 IID_ITaskbarList  := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
 CLSID_TaskbarList := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
-<em>; 创建 TaskbarList 对象并将其地址存储在 tbl 中.</em>
+<em>; 创建 TaskbarList 对象.</em>
 tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskbarList)
-
-<em>; 由于上面指定了 IID, tbl 是指针(一个整数).
-; 指针可以包装起来以便自动释放
-; 当脚本不再具有对包装对象的引用时.
-; 如果删除以下行, 示例仍然有效:</em>
-tbl := ComObject(13, tbl)
 
 activeHwnd := WinExist("A")
 
@@ -110,19 +104,9 @@ ComCall(5, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com
 Sleep 3000
 ComCall(4, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
 
-if IsObject(tbl)  <em>; 是否是 ComObject(13, tbl)?</em>
-{
-    <em>; 完成对象后, 只需将所有引用替换为
-    ; 其他一些值(如果是局部变量, 就返回):</em>
-    tbl := ""
-}
-else
-{
-    <em>; 因为指针没有被包装, 所以必须手动释放它
-    ; (虽然任何对象或相应的库使用的内存
-    ; 当程序退出时, 将被回收).</em>
-    ObjRelease(tbl)
-}
+<em>; 完成对象后, 只需将所有引用替换为
+; 其他一些值(如果是局部变量, 就返回):</em>
+tbl := ""
 </pre>
 </div>
 

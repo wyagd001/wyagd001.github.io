@@ -43,9 +43,9 @@
 
   <dt id="if-func">FunctionObject</dt>
   <dd>
-    <p>Sets the criteria to a given <a href="../objects/Functor.htm">function object</a>. Subsequently-created hotkeys will only execute if calling the given function object yields a non-zero number. This is like <code>HotIf "Expression"</code>, except that each hotkey can have many <a href="Hotkey.htm#variant">variants</a> (one per object). <em>FunctionObject</em> must be an object with a <em>call</em> method taking one parameter, the <a href="../Hotkeys.htm#HotBraces">name</a> of the hotkey.</p>
-    <p>Once passed to the HotIf function, the object will never be deleted (but memory will be reclaimed by the OS when the process exits).</p>
-    <p>The <a href="Hotkey.htm#ExampleIfFn">"three-key combination" Hotkey example</a> uses this mode of HotIf.</p>
+    <p>为给定的<a href="../objects/Functor.htm">函数对象</a>设置条件. 随后创建的热键只有在调用给定的函数对象产生一个非零的数字时才会执行. 这类似于 <code>HotIf "Expression"</code>, 只不过每个热键可以有很多<a href="Hotkey.htm#variant">变体</a>(每个对象一个). <em>FunctionObject</em> 必须是具有一个 <em>call</em> 方法的对象, 该方法接受一个参数, 即热键的<a href="../Hotkeys.htm#HotBraces">名称</a>.</p>
+    <p>一旦传递给 HotIf 函数, 该对象将永远不会被删除(但进程退出时, 内存将被操作系统回收).</p>
+    <p><a href="Hotkey.htm#ExampleIfFn">"三键组合" 热键的例子</a>使用了 HotIf 这种模式.</p>
   </dd>
 
 </dl>
@@ -61,35 +61,36 @@
 <h3 id="Parameters_3">参数</h3>
 <dl>
 
-  <dt>(all parameters omitted)</dt>
-  <dd><p>Sets blank criteria (turns off context-sensitivity).</p></dd>
+  <dt>(省略所有参数)</dt>
+  <dd><p>设置空白条件(关闭上下文相关性).</p></dd>
 
   <dt>WinTitle, WinText</dt>
   <dd>
-    <p>Specifies the window title and other criteria that should be used to identify a window. Depending on which function is called, affected hotkeys and hotstrings are active only while a matching window is active, exists, is not active, or does not exist.</p>
-    <p>Since the parameters are evaluated before the function is called, any variable reference becomes permanent at that moment. In other words, subsequent changes to the contents of the variable are not seen by existing hotkeys.</p>
-    <p><em>WinTitle</em> and <em>WinText</em> have the same meaning as for <a href="WinActive.htm">WinActive</a> or <a href="WinExist.htm">WinExist</a>, but they use the default settings for <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> and <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> as set by the <a href="../Scripts.htm#auto">auto-execute thread</a>. See <a href="../misc/WinTitle.htm">WinTitle</a> for details.</p>
+    <p>指定用于识别窗口的窗口标题和其他条件. 根据所调用的函数, 受影响的热键和热字符串只有在匹配的窗口处于活动状态, 存在, 不活动, 或不存在时才会被激活.</p>
+    <p>由于参数在函数被调用之前就已经被计算了, 因此任何变量引用都会在那一刻成为永久性的. 换句话说, 变量内容的后续变化不会被现有的热键看到.</p>
+    <p><em>WinTitle</em> 和 <em>WinText</em> 的含义与 <a href="WinActive.htm">WinActive</a> 或 <a href="WinExist.htm">WinExist</a> 中的相同, 但它们使用<a href="../Scripts.htm#auto">自动执行线程</a>设置的 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 的默认设置. 有关详情, 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
   </dd>
 
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>An exception is thrown if HotIf's parameter is invalid, such as if it does not match an existing expression and is not a valid callback function.</p>
+<p>如果 HotIf 的参数无效, 例如它不匹配现有的表达式, 并且不是一个有效的回调函数, 则抛出异常.</p>
 
 <h2 id="remarks">备注</h2>
-<p>HotIf allows context-sensitive <a href="../Hotkeys.htm">hotkeys</a> to be created and modified while the script is running (by contrast, the <a href="_HotIf.htm">#HotIf</a> directive is positional and takes effect before the script begins executing). For example:</p>
+<p>HotIf 允许在脚本运行时创建和修改上下文相关的<a href="../Hotkeys.htm">热键</a>(相比之下, <a href="_HotIf.htm">#HotIf</a> 指令是位置性的, 在脚本开始执行前生效). 例如:</p>
 <pre>HotIfWinActive "ahk_class Notepad"
-Hotkey "^!e", "MyLabel"  <em>; Creates a hotkey that works only in Notepad.</em></pre>
-<p>Using HotIf puts context sensitivity into effect for all subsequently created <a href="../Hotkeys.htm">hotkeys</a> in the current <a href="../misc/Threads.htm">thread</a>, and affects which hotkey variants the <a href="Hotkey.htm">Hotkey</a> function modifies. Only the most recent call to any of the HotIf functions in the current thread will be in effect.</p>
-<p>To turn off context sensitivity (such as to make subsequently-created hotkeys work in all windows), call any HotIf function but omit the parameters. For example: <code>HotIf</code> or <code>HotIfWinActive</code>.</p>
-<p>Before HotIf is used in a hotkey or hotstring <a href="../misc/Threads.htm">thread</a>, the Hotkey and Hotstring functions default to the same context as the hotkey or hotstring that launched the thread. In other words, <code>Hotkey A_ThisHotkey, "Off"</code> turns off the current hotkey even if it is context-sensitive. All other threads default to creating or modifying global hotkeys, unless that default is overridden by using HotIf during <a href="../Scripts.htm#auto">script startup</a>.</p>
-<p>When a mouse or keyboard hotkey is disabled via a HotIf function or directive, it performs its native function; that is, it passes through to the active window as though there is no such hotkey. However, joystick hotkeys always pass through, whether they are disabled or not.</p>
+Hotkey "^!e", "MyLabel"  <em>; 创建一个只在记事本中工作的热键.</em></pre>
+<p>使用 HotIf 会使当前<a href="../misc/Threads.htm">线程</a>中把所有随后创建或修改的<a href="../Hotkeys.htm">热键</a>都变成上下文相关的, 并影响 <a href="Hotkey.htm">Hotkey</a> 函数修改哪些热键变体. 只有最近一次对当前线程中任何 HotIf 函数的调用才会生效.</p>
+<p>要关闭上下文相关性(也就是说, 使后续创建的热键在所有窗口中工作), 调用任意
+ HotIf 函数, 但省略参数. 例如: <code>HotIf</code> 或 <code>HotIfWinActive</code>.</p>
+<p>在热键或热字串<a href="../misc/Threads.htm">线程</a>中使用 HotIf 之前, 热键和热串函数默认与启动该线程的热键或热串的上下文相同. 换句话说, <code>Hotkey A_ThisHotkey, "Off"</code> 关闭当前热键, 即使它是上下文相关的. 所有其他线程都默认创建或修改全局热键, 除非在<a href="../Scripts.htm#auto">脚本启动时</a>使用 HotIf 覆盖了该默认值.</p>
+<p>使用 HotIf 函数或指令禁用鼠标或键盘热键后, 它会执行其原来的功能; 也就是说, 它传递到活动窗口, 就好像不存在热键一样. 然而, 操纵杆热键总是有效, 无论禁用与否.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="Hotkey.htm">Hotkey</a> (function), <a href="../Hotkeys.htm">Hotkeys</a> (general), <a href="_HotIf.htm">#HotIf</a>, <a href="../misc/Threads.htm">Threads</a></p>
+<p><a href="Hotkey.htm">Hotkey</a>(函数), <a href="../Hotkeys.htm">热键</a>(描述), <a href="_HotIf.htm">#HotIf</a>, <a href="../misc/Threads.htm">线程</a></p>
 
 <h2 id="examples">示例</h2>
-<p>See <a href="Hotkey.htm#ExOther">Hotkey</a> for examples.</p>
+<p>有关示例, 请参阅 <a href="Hotkey.htm#ExOther">Hotkey</a>.</p>
 
 </body>
 </html>

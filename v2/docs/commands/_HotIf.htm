@@ -54,7 +54,7 @@ Enter::Send "!o"  <em>; 按下 &quot;Enter&quot; 打开 reminder, 而不是 snoo
 #HotIf
 ^!c::MsgBox "You pressed Control+Alt+C in a window other than Notepad/WordPad."</pre>
 <p>如果有多个变体符合触发条件, 那么仅触发最早创建的那个. 这种情况的例外是全局变体(不带 #HotIf 条件的那个): 它的优先级总是最低的, 仅当其他变体都不触发时它才会被触发(此例外不适用<a href="../Hotstrings.htm">热字串</a>).</p>
-<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols"> 修饰符</a> 的顺序(如 ^!+#) 没有关系. 例如, <code>^!c</code> 等同于 <code>!^c</code>.但是, 按键必须拼写一致. 例如, 为了这个目的时, <em>Esc</em> 不同于 <em>Escape</em>(尽管大小写无关). 最后, 任何带有<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不带通配符的热键是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 都可以有他们各自的变体.</p>
+<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序(如 ^!+#) 没有关系. 例如, <code>^!c</code> 等同于 <code>!^c</code>. 但是, 按键必须拼写一致. 例如, 为了这个目的时, <em>Esc</em> 不同于 <em>Escape</em>(尽管大小写无关). 最后, 任何带有<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不带通配符的热键是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 都可以有他们各自的变体.</p>
 <p><a href="GroupAdd.htm">窗口组</a>可以用来使热键为一组窗口执行. 例如:
 <pre>
 GroupAdd "MyGroup", "ahk_class Notepad"
@@ -83,7 +83,7 @@ GroupAdd "MyGroup", "ahk_class WordPadClass"
 <p><a href="../Variables.htm#PriorHotkey">A_PriorHotkey</a> 和 <a href="../Variables.htm#TimeSincePriorHotkey">A_TimeSincePriorHotkey</a> 暂时包含对应 "This" 变量的前一个值.</p>
 
 <h2 id="optimization">优化</h2>
-<p>为避免对 <a href="WinActive.htm">WinActive</a> 或 <a href="WinExist.htm">WinExist</a> 的简单调用进行表达式计算, 对 #HotIf 进行了优化, 从而降低了在这种情况下出现<a href="#lag">滞后</a>或其他问题的风险. 具体来说:</p>
+<p>为避免对 <a href="WinActive.htm">WinActive</a> 或 <a href="WinExist.htm">WinExist</a> 的简单调用而去计算表达式, 对 #HotIf 进行了优化, 从而降低了在这种情况下出现<a href="#lag">滞后</a>或其他问题的风险. 具体来说:</p>
 <ul>
   <li>表达式必须包含一次对 <a href="WinExist.htm">WinExist</a> 或 <a href="WinActive.htm">WinActive</a> 的调用.</li>
   <li>每个参数必须是一个单引号的字符串, 并且不得使用超过两个参数.</li>
@@ -91,7 +91,7 @@ GroupAdd "MyGroup", "ahk_class WordPadClass"
   <li>当表达式被预编译时, 空白和括号会被完全处理, 因此不会影响这种优化.</li>
 </ul>
 <p>如果表达式符合这些条件, 则直接由程序计算, 不会出现在 <a href="ListLines.htm">ListLines</a> 中.</p>
-<p>在使用<a href="Hotkey.htm">热键</a>函数修改现有的热键变体之前, 通常 <<a href="HotIf.htm">HotIf</a> 函数必须与原始表达式文本一起使用. 然而, 第一个具有给定组合条件的唯一表达式也可以被该条件引用. 例如:</p>
+<p>在使用<a href="Hotkey.htm">热键</a>函数修改现有的热键变体之前, 通常 <a href="HotIf.htm">HotIf</a> 函数必须与原始表达式文本一起使用. 然而, 第一个具有给定组合条件的唯一表达式也可以被该条件引用. 例如:</p>
 <pre>
 HotIfWinExist "ahk_class Notepad"
 Hotkey "#n", "Off"  <em>; 关闭热键.</em>
@@ -108,17 +108,17 @@ Hotkey "#n", "On"   <em>; 打开同一个热键.</em>
 </ul>
 
 <h2 id="general-remarks">备注</h2>
-<p>适当的时候, #HotIf 也会将前缀键恢复到它们的原生功能(如 <code>a &amp; b</code>, <a href="../Hotkeys.htm#prefix">前缀键</a> 是热键中的 <kbd>A</kbd>). 当给定的前缀键没有启用热键时, 就会发生这种情况.</p>
+<p>适当的时候, #HotIf 也会将前缀键恢复到它们的原生功能(如 <code>a &amp; b</code>, <a href="../Hotkeys.htm#prefix">前缀键</a>是热键中的 <kbd>A</kbd>). 当给定的前缀键没有启用热键时, 就会发生这种情况.</p>
 <p>当 Gosub 或 Goto 用于跳转到一个热键或热字符串标签时, 它会跳转到最接近脚本顶部的变体.</p>
 <p>当前被 #HotIf 禁用的热键, 它的按键或鼠标按钮在 <a href="KeyHistory.htm">KeyHistory</a> 的 "Type" 列中显示时会带有 "#" 字符. 这可以帮助调试脚本.</p>
 <p><a href="../Hotkeys.htm#alttab">Alt-tab 热键</a>不受 #HotIf 影响: 它们对所有窗口都有效.</p>
-<p><a href="../misc/WinTitle.htm#LastFoundWindow">最后找到的窗口</a> 可以通过 #HotIf 来设置. 例如:</p>
+<p><a href="../misc/WinTitle.htm#LastFoundWindow">最后找到的窗口</a>可以通过 #HotIf 来设置. 例如:</p>
 <pre>#HotIf <a href="WinExist.htm">WinExist</a>("ahk_class Notepad")
 #n::<a href="WinActivate.htm">WinActivate</a>  <em>; 激活由 WinExist() 找到的窗口.</em></pre>
 
 <h2 id="Related">相关</h2>
 <p><a href="_HotIfTimeout.htm">#HotIfTimeout</a> 可以用于覆盖默认的超时时间值.</p>
-<p><a href="Hotkey.htm">Hotkey function</a>, <a href="../Hotkeys.htm">Hotkeys</a>, <a href="../Hotstrings.htm">Hotstrings</a>, <a href="Suspend.htm">Suspend</a>, <a href="WinActive.htm">WinActive</a>, <a href="WinExist.htm">WinExist</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a></p>
+<p><a href="Hotkey.htm">Hotkey 函数</a>, <a href="../Hotkeys.htm">热键</a>, <a href="../Hotstrings.htm">热字串</a>, <a href="Suspend.htm">Suspend</a>, <a href="WinActive.htm">WinActive</a>, <a href="WinExist.htm">WinExist</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a></p>
 
 <h2 id="Examples">示例</h2>
 
@@ -152,8 +152,10 @@ MouseIsOver(WinTitle) {
 ^Del::Send "^+{Right}{Del}"
 
 ActiveControlIsOfClass(Class) {
-    FocusedControl := ControlGetFocus("A")
-    FocusedControlClass := WinGetClass("ahk_id " FocusedControl)
+    FocusedControl := 0
+    try FocusedControl := ControlGetFocus("A")
+    FocusedControlClass := ""
+    try FocusedControlClass := WinGetClass(FocusedControl)
     return (FocusedControlClass=Class)
 }
 </pre>
@@ -168,7 +170,7 @@ Esc::ExitApp
 </div>
 
 <div class="ex" id="ExDynamic">
-<p><a href="#ExDynamic">#4</a>:动态热键. 这个例子需要<a href="#ExVolume">示例 #1</a> 中的 MousIsOver 函数:</p>
+<p><a href="#ExDynamic">#4</a>: 动态热键. 这个例子需要<a href="#ExVolume">示例 #1</a> 中的 MousIsOver 函数:</p>
 <pre>
 NumpadAdd::
 {

@@ -61,19 +61,15 @@ CapsLock &amp; Numpad2::
 ReloadAllAhkScripts(ThisHotkey)
 {
      DetectHiddenWindows True
-     allAhkExe := WinGetList("ahk_class AutoHotkey")
-    Loop allAhkExe.Length
+    for hwnd in WinGetList("ahk_class AutoHotkey")
     {
-         hwnd := allAhkExe[A_Index]
-         if (hwnd = A_ScriptHwnd)  <em>; ignore the current window for reloading</em>
-         {
+        if (hwnd = A_ScriptHwnd)  <em>; ignore the current window for reloading</em>
              continue
-         }
-         PostMessage 0x111, 65303,,, "ahk_id" . hwnd
+        PostMessage 0x111, 65303,,, hwnd
      }
      Reload
  }
- </pre>
+</pre>
 <p>This above was for PostMessage. <a href="../commands/SendMessage.htm">SendMessage</a> works the same way but additionally waits for a return value, which can be used for things such as getting the currently playing track in Winamp (see <a href="Winamp.htm">Automating Winamp</a> for an example).</p>
 <p>Here are some more notes:</p>
 <ul>

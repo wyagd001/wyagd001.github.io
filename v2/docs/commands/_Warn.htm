@@ -13,7 +13,7 @@
 
 <h1>#Warn</h1>
 
-<p>Enables or disables warnings for specific conditions which may indicate an error, such as a typo or missing "global" declaration.</p>
+<p>启用或禁用特定条件下的警告, 这些条件可能会产生错误, 例如书写错误或缺少 "全局" 声明.</p>
 
 <pre class="Syntax"><span class="func">#Warn</span> <span class="optional">WarningType, WarningMode</span></pre>
 
@@ -24,25 +24,34 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
 
-    <p>The type of warning to enable or disable. If omitted, it defaults to <i>All</i>.</p>
-	    <p class="warning"><strong>Note:</strong> The UseUnset warnings are enabled by default. Disabling them is not recommended as there are plans to remove the option and replace the warning with an error.</p>
-    <p id="UseUnset"><strong>UseUnsetLocal</strong> or <strong>UseUnsetGlobal</strong>: Warn when a variable is read without having previously been assigned a value or initialized with <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>. If the variable is intended to be empty, assign an empty string to suppress this warning.</p>
-    <p><a href="IsSet.htm">IsSet</a> can be used to detect whether a variable has been set without triggering a warning, regardless of whether the warning is enabled.</p>
-    <p>For the MsgBox mode, only one warning is displayed for each global variable, or for each local variable each time the function is called. This is achieved by initializing the variable when the warning is displayed, so subsequent calls to <a href="IsSet.htm">IsSet</a> are also affected.</p>
-    <p>This is split into separate warning types for locals and globals because it is more common to use a global variable without prior initialization, due to their persistent and script-wide nature. For this reason, some script authors may wish to enable this type of warning for locals but disable it for globals.</p>
+    <p>要启用或禁用的警告类型. 如果省略, 默认为 <i>All</i>.</p>
+    <p class="warning"><strong>注意:</strong> UseUnset 警告是默认启用的. 不建议禁用它们, 因为有计划删除该选项并以错误代替警告.</p>
+    <p id="UseUnset"><strong>UseUnsetLocal</strong> 或 <strong>UseUnsetGlobal</strong>: 在读取之前没有赋值或使用 <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a> 初始化的变量时产生警告. 如果期望这种变量为空, 则可以为它赋值空字符串来屏蔽这样的警告.</p>
+    <p><a href="IsSet.htm">IsSet</a> 可以用来检测一个变量是否被设置而不触发警告, 无论警告是否被启用.</p>
+    <p>对于 MsgBox 模式, 每个全局变量或每次调用函数时每个局部变量只显示一个警告. 这是通过在显示警告时初始化变量来实现的, 因此后续对 <a href="IsSet.htm">IsSet</a> 的调用也会受到影响.</p>
+    <p>之所以将其分为局部和全局的单独警告类型, 是因为由于全局变量的持久性和全脚本范围的特性, 在没有事先初始化的情况下使用全局变量是比较常见的. 出于这个原因, 一些脚本作者可能希望为局部启用这种类型的警告, 而为全局禁用它.</p>
     <pre>#Warn
 <em>;y := ""  ; This would suppress the warning.</em>
 x := y    <em>; y hasn't been assigned a value.</em></pre>
-    <p id="LocalSameAsGlobal"><strong>LocalSameAsGlobal</strong>: Before the script starts to run, display a warning for each <em>undeclared</em> local variable which has the same name as a global variable. This is intended to prevent errors caused by forgetting to declare a global variable inside a function before attempting to access it. If the variable really was intended to be local, a declaration such as <code>local x</code> or <code>static y</code> can be used to suppress the warning. This warning is never shown for variables inside a <a href="../Functions.htm#ForceLocal">force-local</a> function.</p>
+    <p id="VarUnset"><strong>VarUnset</strong>: 在脚本开始运行之前, 为每个从未以下列任何方式使用的变量的第一个引用显示一个警告:</p>
+    <ul>
+      <li>作为一个直接的, 非动态赋值的目标, 如 <code>MyVar := ""</code>.</li>
+      <li>在非动态函数调用中传递给输出或 ByRef 参数.</li>
+      <li>在一个非动态函数调用中传递给 IsSet. 例如, 一个包含 <code>IsSet(MyLib_Global)</code> 的脚本不会警告任何其他对同一变量的引用, 但可能会警告其他名为 <code>MyLib_Global</code> 的变量.</li>
+      <li>传递给动态函数调用或方法调用的参数(不管它是否是 ByRef, 因为在加载时无法确定).</li>
+    </ul>
+    <p class="warning"><strong>已知限制:</strong> Although short-circuit capable operators such as <code>&amp;&amp;</code>, <code>||</code> and ternary can produce a variable reference for an assignment or ByRef parameter, currently only the right-hand branch is identified as being assigned. For example, <code>MouseGetPos(b ? x1 : x2)</code> may only mark <code>x2</code> as assigned.</p>
+    <p id="LocalSameAsGlobal"><strong>LocalSameAsGlobal</strong>: 在脚本开始运行之前, 为每个 <em>未声明</em> 的局部变量显示一个警告, 该变量的名称与全局变量相同. 这是为了防止在试图访问全局变量之前, 忘记在函数中声明全局变量而导致的错误. 如果该变量确实是局部变量, 那么可以使用诸如 <code>local x</code> 或 <code>static y</code> 这样的声明来抑制该警告. 对于<a href="../Functions.htm#ForceLocal">强制-局部</a>函数中的变量, 不会显示这个警告.</p>
+    <p>默认情况下, 这个警告是禁用的.</p>
     <pre>#Warn
 g := 1
 ShowG() {       <em>; The warning is displayed even if the function is never called.</em>
     <em>;global g   ; &lt;-- This is required to access the global variable.</em>
     MsgBox g  <em>; Without the declaration, "g" is an empty local variable.</em>
 }</pre>
-    <p id="Unreachable"><strong>Unreachable</strong>: Before the script starts to run, show a warning for each line that immediately follows a <code>Return</code>, <code>Break</code>, <code>Continue</code>, <code>Throw</code> or <code>Goto</code> at the same nesting level, unless that line is the target of a label. Any such line would never be executed.</p>
-    <p>If the code is intended to be unreachable - such as if a <code>return</code> has been used to temporarily disable a block of code, or a hotkey or hotstring has been temporarily disabled by commenting it out - consider commenting out the unreachable code as well. Alternatively, the warning can be suppressed by defining a <a href="../misc/Labels.htm">label</a> above the first unreachable line.</p>
-    <p><strong>All</strong>: Apply the given <em>WarningMode</em> to all supported warning types.</p>
+    <p id="Unreachable"><strong>Unreachable</strong>: 在脚本开始运行之前, 对紧跟在同一嵌套层的 <code>Return</code>, <code>Break</code>, <code>Continue</code>, <code>Throw</code> 或 <code>Goto</code> 之后的每一行发出警告, 除非该行是一个标签的目标. 任何这样的行都不会被执行.</p>
+    <p>如果代码的目的是不可到达的 - 例如, 如果使用 <code>return</code> 暂时禁用一个代码块, 或者通过注释的方式暂时禁用热键或热字符串 - 可以考虑把不可到达的代码也注释掉. 另外, 也可以通过在第一行不可到达的代码上方定义一个<a href="../misc/Labels.htm">标签</a>来抑制警告.</p>
+    <p><strong>All</strong>: 将给定的 <em>WarningMode</em> 应用于所有支持的警告类型.</p>
   </dd>
 
   <dt>WarningMode</dt>
@@ -58,9 +67,9 @@ ShowG() {       <em>; The warning is displayed even if the function is never cal
 
 </dl>
 <h2 id="Remarks">备注</h2>
-	<p>By default, all warnings are off.</p>
-	<p>Warnings can't be enabled or disabled at run-time; the settings are determined when a script loads.  Therefore, the location in the script is not significant (and, like other # directives, #Warn cannot be executed conditionally).</p>
-	<p>However, the ordering of multiple #Warn directives is significant: the last occurrence that sets a given warning determines the mode for that warning.  So, 例如, the two statements below have the combined effect of enabling all warnings except UseUnsetGlobal:</p>
+	<p>默认情况下, 所有的警告都是启用的并且使用 MsgBox 模式, 除了 LocalSameAsGlobal, 它是禁用的.</p>
+	<p>警告不能在运行时启用或禁用; 其设置是在脚本加载时确定的. 因此, 在脚本中的位置并不重要(而且, 像其他 # 指令一样, #Warn 不能被有条件地执行).</p>
+	<p>然而, 多个 #Warn 指令的顺序是很重要的: 最后出现的设置给定警告的指令决定了该警告的模式.  因此, 例如, 下面两个语句的综合效果是启用除 UseUnsetGlobal 以外的所有警告:</p>
 <pre>#Warn All
 #Warn UseUnsetGlobal, Off
 </pre>
@@ -70,7 +79,7 @@ ShowG() {       <em>; The warning is displayed even if the function is never cal
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
 <pre>
-#Warn All, Off                    <em>; Disable all warnings.  This is the default state.</em>
+#Warn All, Off                    <em>; Disable all warnings.  Not recommended.</em>
 #Warn                             <em>; Enable every type of warning; show each warning in a message box.</em>
 #Warn UseUnsetLocal, OutputDebug  <em>; Warn when a local variable is used before it's set; send warning to OutputDebug.</em>
 </pre>

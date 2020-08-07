@@ -112,9 +112,7 @@ TheFunc(params) {
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExWinList">
 <p><a href="#ExWinList">#1</a>: 下面是个可运行脚本, 它显示了所有顶层窗口的摘要.</p>
-<pre><em>; 考虑到性能和内存的保持, 只为指定的回调调用一次 CallbackCreate:</em>
-if not EnumAddress  <em>; 由于只能从这个线程调用, 所以可以使用快速模式:</em>
-    EnumAddress := <strong>CallbackCreate</strong>(&quot;EnumWindowsProc&quot;, &quot;Fast&quot;)
+<pre>EnumAddress := <strong>CallbackCreate</strong>(&quot;EnumWindowsProc&quot;, &quot;Fast&quot;)  <em>; 快速模式是可以的, 因为它只会在这个线程中被调用.</em>
 
 DetectHiddenWindows True  <em>; 由于是快速模式, 所以此设置也会在回调中生效.</em>
 
@@ -124,11 +122,11 @@ MsgBox Output  <em>; 显示由回调收集的信息.</em>
     
 EnumWindowsProc(hwnd, lParam)
 {
-    global Output
-    title := WinGetTitle("ahk_id " hwnd)
-    class := WinGetClass("ahk_id " hwnd)
-    if title
-        Output .= &quot;HWND: &quot; . hwnd . &quot;`tTitle: &quot; . title . &quot;`tClass: &quot; . class . &quot;`n&quot;
+    global Output := ""
+    win_title := WinGetTitle(hwnd)
+    win_class := WinGetClass(hwnd)
+    if win_title
+        Output .= &quot;HWND: &quot; . hwnd . &quot;`tTitle: &quot; . win_title . &quot;`tClass: &quot; . win_class . &quot;`n&quot;
     return true  <em>; 告知 EnumWindows() 继续执行, 一直到枚举完所有的窗口.</em>
 }</pre>
 </div>

@@ -57,15 +57,14 @@ Add 2, 3  <em>; 如果在行的起始处使用, 括号可以省略.</em></pre>
 <p>在上述例子中, <em>ByRef</em> 的使用让相应的参数变成从调用者传递进来的变量的一个别名. 换句话说, 参数和调用者的变量都引用内存中相同的内容. 这样使得 Swap 函数可以通过移动 <em>Left</em> 的内容到 <em>Right</em> 中来修改调用者的变量, 反之亦然.</p>
 <p>与之相比, 在上述例子中如果没有使用 <em>ByRef</em>, <em>Left</em> 和 <em>Right</em> 将是调用者变量的副本, 因此 Swap 函数不会对外部产生影响.</p>
 <p>由于 <a href="commands/Return.htm">return</a> 只能返回一个值给函数的调用者, 所以可以使用 <em>ByRef</em> 返回更多的结果. 这是通过函数将调用者传递进来的变量(通常为空值的变量) 赋值实现的.</p>
-<p>传递大字符串给函数时, 使用 <em>ByRef</em> 提高了性能, 并且通过避免生成字符串的副本节约了内存. 同样地, 使用 <em>ByRef</em> 送回长字符串给调用者通常比类似 <code>Return HugeString</code> 的方式执行的更好.</p>
+<p>传递大字符串给函数时, 使用 <em>ByRef</em> 提高了性能, 并且通过避免生成字符串的副本节约了内存. 同样地, 使用 <em>ByRef</em> 送回长字符串给调用者通常比类似 <code>Return HugeString</code> 的方式执行的更好. 然而, 函数接收到的不是对字符串的引用, 而是对 <em>变量</em> 的引用. 未来的改进可能会取代 ByRef 在这些方面的使用.</p>
 <p>如果传递给 ByRef 参数的变量是不可修改的, 那么函数会表现的就像没有 "ByRef" 关键字一样. 例如, <code>Swap(A_Index, i)</code> 保存 <i>A_Index</i> 的值到 <i>i</i>, 但是当 <i>Swap</i> 函数返回时赋给 <i>Left</i> 的值会被丢弃.</p>
 <p><a href="commands/IsByRef.htm">IsByRef</a> 函数可用于判断调用者是否为给定的 ByRef 参数提供了变量.</p>
 <p>已知限制:</p>
 <ul>
   <li>不可能通过引用将对象的属性(如 <code>foo.bar</code>), <a href="misc/A_Clipboard.htm">A_Clipboard</a>(剪贴板) 或其他<a href="Variables.htm#BuiltIn">内置变量</a>传递给函数. 相反, 函数表现得就像没有 <em>ByRef</em> 一样.</li>
-  <li id="recurse">尽管函数可以递归调用它自己, 但是如果它传递它自己的一个<a href="#Local">局部变量</a>或非 ByRef 参数给自己的 <em>ByRef</em>, 那么新一层的 <em>ByRef</em> 参数将引用它自己那个名称的局部变量而不是之前那层的. 然而, 当函数传递给它自己<a href="#Global">全局变量</a>, <a href="#static">静态变量</a>或 <em>ByRef</em> 参数时不会产生这样的问题.</li>
   <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>MyFunc(Var, Var++)</code> 会意外地传递 1 和 0, 即使函数的首个参数不是 <em>ByRef</em> 类型时. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
-  <li>ByRef 不直接支持函数调用 COM 客户端, 或调用 COM 方法. 作为替代, 脚本接受或必须传递一个包含有 <a href="commands/ComObjType.htm">VarType</a> 和值的地址的<a href="commands/ComObject.htm#ByRef">包装对象</a>.</li>
+  <li>调用 COM 方法时, 不直接支持 ByRef. 作为替代, 脚本必须传递一个包含有 <a href="commands/ComObjType.htm">VarType</a> 和值的地址的<a href="commands/ComObject.htm#ByRef">包装对象</a>.</li>
 </ul>
 <h2 id="optional">可选参数</h2>
 <p>定义函数时, 可以把它的一个或多个参数标记为可选的. 这是通过追加 <code>:=</code> 后跟参数的默认值来实现的, 默认值必须是下列值之一: <code>true</code>, <code>false</code>, <code>unset</code>, 原义的整数, 原义的浮点数, 或引号包围的/原义的字符串例如 "fox" 或 "".</p>
@@ -213,7 +212,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
     global LogFileName
     FileAppend LoggedLines ": " TextToLog "`n", LogFileName
 }</pre>
-<p id="InitStatic">静态变量可以在声明的同一行初始化, 方法是 在它后面跟 <code>:=</code> 和任意<a href="Variables.htm#Expressions">表达式</a>. 例如: <code>static X:=0, Y:=&quot;fox&quot;</code>. 静态声明的计算与 <a href="#Local">local</a> 声明相同, 只是在静态初始化器(或组合初始化器组) 被成功计算后, 它将有效地从控制流中移除, 并且不会再执行第二次.</p>
+<p id="InitStatic">静态变量可以在声明的同一行初始化, 方法是在它后面跟 <code>:=</code> 和任意<a href="Variables.htm#Expressions">表达式</a>. 例如: <code>static X:=0, Y:=&quot;fox&quot;</code>. 静态声明的计算与 <a href="#Local">local</a> 声明相同, 只是在静态初始化器(或组合初始化器组) 被成功计算后, 它将有效地从控制流中移除, 并且不会再执行第二次.</p>
 <p id="AssumeStatic"><strong>假定-静态模式</strong>: 函数的第一行是单词 &quot;static&quot;, 将函数定义为假定-静态模式, 假定其所有变量都是静态的(参数除外). 例如:</p>
 <pre>GetFromStaticArray(WhichItemNumber)
 {
@@ -241,12 +240,12 @@ DemonstrateForceStatic()
     MsgBox
 }
 </pre>
-<h3>关于局部和全局变量的更多信息</h3>
+<h3 id="More_about_locals_and_globals">关于局部和全局变量的更多信息</h3>
 <p>如下面的例子所示, 通过逗号分隔, 可以在同一行声明多个变量:</p>
 <pre>global LogFileName, MaxRetries := 5
 static TotalAttempts := 0, PrevResult</pre>
-<p id="DeclareInit">局部或全局变量可以在声明的同一行初始化, 方法是在变量后跟着 <code>:=</code> 以及任意<a href="Variables.htm#Expressions">表达式</a>. 与<a href="#InitStatic">静态变量初始化</a>不同, 局部和全局变量的初始化在每次调用函数时都执行, 但只有当控制流实际到达它们时才执行. 换句话说, 像 <code>local x := 0</code> 和写成单独的两行的效果是一样的: <code>local x</code> 后面跟着 <code>x := 0</code>. 静态初始化需要使用 <code>:=</code>, 而局部和全局初始化允许使用任何<a href="Variables.htm#AssignOp">赋值运算符</a>.</p>
-<p>因为单词 <em>local</em>, <em>global</em> 和 <em>static</em> 都是在脚本运行时立即处理的, 所以不能使用 <a href="commands/If.htm">If 语句</a>有条件地声明变量. 换句话说, If 或 Else 的<a href="commands/Block.htm">区块</a>内的声明无条件对声明和函数的闭括号之间的所有行生效(但声明中包含的任何初始化仍然是有条件的). 同时还需注意当前还不支持声明动态变量, 如 <code>global Array%i%</code>.</p>
+<p id="DeclareInit">通过在变量后面赋值, 变量可以在声明的同一行进行初始化. 与<a href="#InitStatic">静态变量初始化</a>不同, 局部和全局变量的初始化在每次调用函数时都执行. 换句话说, 像 <code>local x := 0</code> 和写成单独的两行的效果是一样的: <code>local x</code> 后面跟着 <code>x := 0</code>. 局部和全局初始化允许使用任何<a href="Variables.htm#AssignOp">赋值运算符</a>, 但是像 <code>global HitCount += 1</code> 这样的复合赋值需要变量之前已经被赋值.</p>
+<p>因为单词 <em>local</em>, <em>global</em> 和 <em>static</em> 都是在脚本运行时立即处理的, 所以不能使用 <a href="commands/If.htm">If 语句</a>有条件地声明变量. 换句话说, If 或 Else 的<a href="commands/Block.htm">区块</a>内的声明无条件对声明和函数的闭括号之间的所有行生效(但声明中包含的任何初始化仍然是有条件的). 像 <code>global Array%i%</code> 这样的动态声明是不可能的, 因为所有对 <code>Array1</code> 或 <code>Array99</code> 这样的变量的非动态引用都已经被解析为地址了.</p>
 
 <h2 id="DynCall">动态调用函数</h2>
 <p>通过百分号可以动态调用函数(包括<a href="#BuiltIn">内置函数</a>). 例如, <code>%Var%(x, &quot;fox&quot;)</code> 将调用名称或<a href="Objects.htm#Function_References">引用</a>保存在 <em>Var</em> 中的函数. 同样地, <code>Func%A_Index%()</code> 将调用 Func1() 或 Func2() 等, 这取决于 A_Index 的当前值.</p>
@@ -283,11 +282,10 @@ outer(x) {
 outer("title")
 </pre>
 <p>嵌套函数不能在紧接着包含它的函数外部访问, 但是可以在该函数内部的任何地方访问, 包括在其他嵌套函数内部.</p>
-<p>默认情况下, 嵌套函数可以访问包含它的任何函数的非动态局部变量和静态变量, 但不能访问动态创建的 ByRef 参数或变量. outer 函数中的<a href="#Global">全局</a>声明也适用于嵌套函数, 除非被<a href="#ForceLocal">强制-局部</a>覆盖.</p>
-<p>如果一个函数声明为<a href="#ForceLocal">强制-局部</a>或<a href="#AssumeGlobal">假定-全局</a>, 那么在该函数之<em>外</em> 创建的任何局部或静态变量都不能直接用于该函数本身或其任何嵌套函数.</p>
+<p>默认情况下, 嵌套函数可以访问任何包含它的函数的任何局部变量, 只要该变量是<a href="#static">静态的</a>, 或者是被源函数和嵌套函数或它自己的一个嵌套函数以非动态方式引用. outer 函数中的<a href="#Global">全局</a>声明也适用于嵌套函数, 除非被<a href="#ForceLocal">强制-局部</a>覆盖.</p>
+<p>如果一个函数声明为<a href="#ForceLocal">强制-局部</a>或<a href="#AssumeGlobal">假定-全局</a>, 那么在该函数之<em>外</em> 创建的任何局部或静态变量都不能直接用于该函数本身或其任何嵌套函数. 相反, 一个<a href="#AssumeStatic">假定-静态</a>的嵌套函数仍然可以引用外部函数的变量, 除非它也是<a href="#ForceLocal">强制-局部</a>函数.</p>
 <p>默认情况下, 函数是<a href="#AssumeLocal">假定-局部</a>的, 即使是嵌套函数, 甚至那些在<a href="#AssumeStatic">假定-静态</a>函数中的函数也是如此. 但是, 如果 outer 函数是<a href="#AssumeGlobal">假定-全局</a>, 那么嵌套函数默认为假定-全局, 只是它们可以引用 outer 函数的局部变量和静态变量.</p>
-<p>嵌套函数是假定-静态, 仍然可以引用来自 outer 函数的变量, 除非它也是<a href="#ForceLocal">强制-局部</a>的.</p>
-<p>仅当嵌套函数(或其自己的嵌套函数之一) 也包含对变量的非动态引用时, outer 函数才能解析嵌套函数内部的动态变量引用为该变量.</p>
+
 <pre>
 oo:="11111"
 pp:="aaaaa"

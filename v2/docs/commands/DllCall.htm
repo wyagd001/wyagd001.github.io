@@ -230,10 +230,10 @@ MsgBox Format("{:010}", 432)
 
 <div class="ex" id="ExQPC">
 <p><a href="#ExQPC">#5</a>: 演示 QueryPerformanceCounter(), 它提供了比 <a href="../Variables.htm#TickCount">A_TickCount</a> 的 10ms 更高的精确度.</p>
-<pre>DllCall(&quot;QueryPerformanceFrequency&quot;, &quot;Int64*&quot;, freq)
-DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterBefore)
+<pre>DllCall(&quot;QueryPerformanceFrequency&quot;, &quot;Int64*&quot;, freq := 0)
+DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterBefore := 0)
 Sleep 1000
-DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterAfter)
+DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterAfter := 0)
 MsgBox &quot;Elapsed QPC time is &quot; . (CounterAfter - CounterBefore) / freq * 1000 &quot; ms&quot;</pre>
 </div>
 
@@ -268,7 +268,7 @@ F1 up::
 
 WatchScrollBar()
 {
-    FocusedHwnd := ControlGetFocus("A")
+    try FocusedHwnd := ControlGetFocus("A")
     if !FocusedHwnd  <em>; 没有焦点控件.</em>
         return
     <em>; 在工具提示中显示垂直或水平滚动条的位置:</em>
@@ -334,7 +334,7 @@ SystemCursor(cmd)  <em>; cmd = "Show|Hide|Toggle|Reload"</em>
                 , "Int", 32, "Int", 32
                 , "Ptr", BufferAlloc(32*4, 0xFF)
                 , "Ptr", BufferAlloc(32*4, 0))
-            c[id] := {"default": h_default, "blank": h_blank}
+            c[id] := {default: h_default, blank: h_blank}
         }
     }
     switch cmd
@@ -397,12 +397,12 @@ SetSystemTime(YYYYMMDDHHMISS)
 
     <a href="NumPut.htm">NumPut</a>( "UShort", SubStr(YYYYMMDDHHMISS, 1, 4)  <em>; YYYY(年)</em>
           , "UShort", SubStr(YYYYMMDDHHMISS, 5, 2)  <em>; MM(月, 01-12)</em>
-          , "UShort", 0                             <em>; Unused (day of week)</em>
+          , "UShort", 0                             <em>; Unused(周几)</em>
           , "UShort", SubStr(YYYYMMDDHHMISS, 7, 2)  <em>; DD(日)</em>
           , "UShort", SubStr(YYYYMMDDHHMISS, 9, 2)  <em>; HH(小时, 00-24)</em>
           , "UShort", SubStr(YYYYMMDDHHMISS, 11, 2) <em>; MI(分钟)</em>
           , "UShort", SubStr(YYYYMMDDHHMISS, 13, 2) <em>; SS(秒)</em>
-          , "UShort", 0                             <em>; Unused (millisecond)</em>
+          , "UShort", 0                             <em>; Unused(毫秒)</em>
           , SystemTime)
 
     return DllCall(&quot;SetSystemTime&quot;, &quot;Ptr&quot;, SystemTime)
@@ -419,13 +419,13 @@ SetSystemTime(YYYYMMDDHHMISS)
 </div>
 
 <div class="ex" id="ExTaskbar">
-<p><a href="#ExTaskbar">#13</a>: 从任务栏移除活动窗口 3 秒. Compare this to the <a href="ComCall.htm#ExTaskbar">equivalent ComCall example</a>.</p>
+<p><a href="#ExTaskbar">#13</a>: 从任务栏移除活动窗口 3 秒. 可以对比一下<a href="ComCall.htm#ExTaskbar">等同效果的 ComCall 示例</a>.</p>
 <pre><em>/*
   Methods in <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a>'s VTable:
     IUnknown:
-      0 QueryInterface  -- use <a href="ComObjQuery.htm">ComObjQuery</a> instead
-      1 AddRef          -- use <a href="ObjAddRef.htm">ObjAddRef</a> instead
-      2 Release         -- use <a href="ObjAddRef.htm">ObjRelease</a> instead
+      0 QueryInterface  -- 使用 <a href="ComObjQuery.htm">ComObjQuery</a> 代替
+      1 AddRef          -- 使用 <a href="ObjAddRef.htm">ObjAddRef</a> 代替
+      2 Release         -- 使用 <a href="ObjAddRef.htm">ObjRelease</a> 代替
     ITaskbarList:
       3 HrInit
       4 AddTab
@@ -436,18 +436,18 @@ SetSystemTime(YYYYMMDDHHMISS)
 IID_ITaskbarList  := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
 CLSID_TaskbarList := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
-<em>; 创建 TaskbarList 对象并把它的地址保存到 tbl.</em>
+<em>; 创建 TaskbarList 对象.</em>
 tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskbarList)
 
 activeHwnd := WinExist("A")
 
-DllCall(vtable(tbl,3), "ptr", tbl)                     <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774650.aspx">HrInit</a>()</em>
-DllCall(vtable(tbl,5), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774648.aspx">DeleteTab</a>(activeHwnd)</em>
+DllCall(vtable(tbl.ptr,3), "ptr", tbl)                     <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774650.aspx">HrInit</a>()</em>
+DllCall(vtable(tbl.ptr,5), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774648.aspx">DeleteTab</a>(activeHwnd)</em>
 Sleep 3000
-DllCall(vtable(tbl,4), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
+DllCall(vtable(tbl.ptr,4), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
 
 <em>; 非包装接口指针必须手动释放.</em>
-ObjRelease(tbl)
+ObjRelease(tbl.ptr)
 
 vtable(ptr, n) {
     <em>; NumGet(ptr, "ptr") 返回对象的虚函数表(简称为 vtable) 的地址
