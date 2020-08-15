@@ -150,7 +150,7 @@ if (ih.Input = CtrlC)
 <div class="methodShort" id="EndKey"><h2>EndKey</h2>
 <p>返回<a href="#EndKeys">结束键</a>的名称, 按下结束键以终止 Input.</p>
 <pre class="Syntax">KeyName := InputHook.EndKey</pre>
-<p>注意, EndKey 返回按键的 "标准" 名称, 而不管它在 <em>EndKeys</em> 中是如何编写的. 例如, <code>{Esc}</code> 和 <code>{vk1B}</code> 都产生 <code>Escape</code>. <a href="GetKey.htm">GetKeyName</a> 可用于检索标准名称.</p>
+<p>注意, EndKey 返回按键的 "标准" 名称, 而不管它在 <em>EndKeys</em> 中是如何编写的. 例如, <code>{Esc}</code> 和 <code>{vk1B}</code> 都产生 <code>Escape</code>. <a href="GetKeyName.htm">GetKeyName</a> 可用于检索标准名称.</p>
 <p>如果使用 <a href="#E">E 选项</a>, EndKey 返回输入的实际字符(如果合适). 否则, 键名将根据脚本的活动键盘布局来确定.</p>
 <p>如果 <a href="#EndReason">EndReason</a> 不是 "EndKey", EndKey 返回一个空字符串.</p>
 </div>
@@ -364,11 +364,11 @@ OutputVar := ih.Input
 <p><em>Options</em> 解释相同, 但默认设置不同:</p>
 <ul>
   <li>Input 命令将输入的长度限制为 16383, 而 InputHook 将其限制为 1023. 这可以使用 <a href="#option-l">L 选项</a>来改写, 并且没有绝对最大值.</li>
-  <li>默认情况下, Input 命令会阻止文本和非文本击键, 如果使用 <a href="Input.htm#vis">V 选项</a>, 则不会阻止. 相比之下, InputHook 默认只阻止文本击键(<a href="#VisibleNonText">VisibleNonText</a> 默认为 true), 因此大多数热键可以在输入正在进行时使用.</li>
+  <li>默认情况下, Input 命令会阻止文本和非文本击键, 如果使用 <a href="InputHook.htm#vis">V 选项</a>, 则不会阻止. 相比之下, InputHook 默认只阻止文本击键(<a href="#VisibleNonText">VisibleNonText</a> 默认为 true), 因此大多数热键可以在输入正在进行时使用.</li>
 </ul>
 <p>Input 命令在进行时会阻塞<a href="../misc/Threads.htm">线程</a>, 而 InputHook 允许线程继续, 甚至退出(这允许中断的任何线程继续运行). 脚本可以注册一个 <a href="#OnEnd">OnEnd</a> 函数, 当输入终止时调用该函数, 而不是等待.</p>
 <p>Input 命令只在输入终止后返回用户的输入, 
-而 InputHook 的 <a href="Input.htm">Input</a> 属性允许在任何时候检索它. 脚本可以注册一个 <a href="#OnChar">OnChar</a> 函数, 以便在字符增加时调用, 而不是不断地检查 Input 属性.</p>
+而 InputHook 的 <a href="InputHook.htm">Input</a> 属性允许在任何时候检索它. 脚本可以注册一个 <a href="#OnChar">OnChar</a> 函数, 以便在字符增加时调用, 而不是不断地检查 Input 属性.</p>
 <p>InputHook 通过 <a href="#KeyOpt">KeyOpt</a> 方法对单个按键提供了更多控制.  这包括添加或删除结束键, 抑制或不抑制特定键, 或忽略特定键生成的文本.</p>
 <p>与 Input 命令不同, InputHook 可用于检测不产生文本的键, 而 <em>不</em> 终止输入. 这是通过注册 <a href="#OnKeyDown">OnKeyDown</a> 函数和使用 <a href="#KeyOpt">KeyOpt</a> 或 <a href="#NotifyNonText">NotifyNonText</a> 来指定相关键来完成的.</p>
 <p>如果 <em>MatchList</em> 中的项目导致 Input 终止, 可以参考 <a href="#Match">Match</a> 属性来确定到底是哪个匹配(当 <a href="#asterisk">* 选项</a>存在时这更有用).</p>
