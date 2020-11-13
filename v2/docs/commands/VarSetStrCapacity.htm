@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>VarSetStrCapacity - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The VarSetStrCapacity function enlarges a variable's holding capacity or frees its memory." />
+<meta name="description" content="The VarSetStrCapacity function enlarges a variable's holding capacity or frees its memory. This is not normally needed, but may be used with DllCall or SendMessage or to optimize repeated concatenation." />
 <meta name="ahk:equiv-v1" content="commands/VarSetCapacity.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,19 +17,19 @@
 <p>增加变量的容量或释放其内存. 一般情况下不需要, 但可以与 <a href="DllCall.htm">DllCall</a> 或 <a href="SendMessage.htm">SendMessage</a> 一起使用, 或者优化重复连接.</p>
 <pre class="Syntax">GrantedCapacity := <span class="func">VarSetStrCapacity</span>(TargetVar <span class="optional">, RequestedCapacity</span>)</pre>
 
-<h2>Parameters</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>TargetVar</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#variables">Variable</a></p>
-    <p>A reference to a variable. For example: <code>VarSetStrCapacity(MyVar, 1000)</code>. This can also be a dynamic variable such as <code>Array%i%</code> or a <a href="../Functions.htm#ByRef">function's ByRef parameter</a>.</p>
+    <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
+    <p>变量的引用. 例如: <code>VarSetStrCapacity(MyVar, 1000)</code>. 这也可以是动态变量, 例如 <code>Array%i%</code> 或是 <a href="../Functions.htm#ByRef">函数的 ByRef 参数</a>.</p>
   </dd>
 
   <dt>RequestedCapacity</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-    <p>If omitted, the variable's current capacity will be returned and its contents will not be altered. Otherwise, anything currently in the variable is lost (the variable becomes blank).</p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>如果省略, 则函数将返回变量当前的容量且不会改变其的内容. 否则, 变量中的所有内容将会丢弃(变量被置空).</p>
     <p>Specify for <em>RequestedCapacity</em> the number of characters that the variable should be able to hold after the adjustment. <em>RequestedCapacity</em> does not include the internal zero terminator. For example, specifying 1 would allow the variable to hold up to one character in addition to its internal terminator. Note: the variable will auto-expand if the script assigns it a larger value later.</p>
     <p>Since this function is often called simply to ensure the variable has a certain minimum capacity, for performance reasons, it shrinks the variable only when <em>RequestedCapacity</em> is 0. In other words, if the variable's capacity is already greater than <em>RequestedCapacity</em>, it will not be reduced (but the variable will still made blank for consistency).</p>
     <p>Therefore, to explicitly shrink a variable, first free its memory with <code>VarSetStrCapacity(Var, 0)</code> and then use <code>VarSetStrCapacity(Var, NewCapacity)</code> -- or simply let it auto-expand from zero as needed.</p>
@@ -40,11 +40,11 @@
 
 </dl>
 
-<h2>Return Value</h2>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>This function returns the number of characters that Var can now hold, which will be greater than or equal to <em>RequestedCapacity</em>.</p>
 
-<h2>Failure</h2>
+<h2 id='Failure'>失败</h2>
 <p>An exception is thrown under any of the following conditions:</p>
 <ul>
   <li><em>VarName</em> is not a valid variable reference. It is not possible to pass an <a href="../Objects.htm#Usage_Objects">object property</a> or <a href="../Variables.htm#BuiltIn">built-in variable</a> by reference, and therefore not valid to pass one to this function.</li>
@@ -52,13 +52,13 @@
   <li><em>RequestedCapacity</em> is less than -1 or greater than can theoretically be supported by the current platform.</li>
 </ul>
 
-<h2 id="Remarks">Remarks</h2>
+<h2 id="Remarks">备注</h2>
 <p>The <a href="../objects/Buffer.htm">Buffer</a> object offers superior clarity and flexibility when dealing with binary data, structures, DllCall and similar. For instance, a Buffer object can be assigned to a property or array element or be passed to or returned from a function without copying its contents.</p>
 <p>This function can be used to enhance performance when building a string by means of gradual concatenation. This is because multiple automatic resizings can be avoided when you have some idea of what the string's final length will be. In such a case, <em>RequestedCapacity</em> need not be accurate: if the capacity is too small, performance is still improved and the variable will begin auto-expanding when the capacity has been exhausted. If the capacity is too large, some of the memory is wasted, but only temporarily because all the memory can be freed after the operation by means of <code>VarSetStrCapacity(Var, 0)</code> or <code>Var := &quot;&quot;</code>.</p>
 
-<h2>Related</h2>
+<h2 id="Related">相关</h2>
 <p><a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="DllCall.htm">DllCall</a>, <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a></p>
-<h2>Examples</h2>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a>: Optimize by ensuring <em>MyVar</em> has plenty of space to work with.</p>
 <pre>VarSetStrCapacity(MyVar, 5120000)  <em>; ~10 MB</em>

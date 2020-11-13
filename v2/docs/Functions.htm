@@ -13,7 +13,7 @@
 
 <h1>函数</h1>
 
-<h2>目录</h2>
+<h2 id="Table_of_Contents">目录</h2>
 <ul>
   <li><a href="#intro">介绍和简单示例</a></li>
   <li><a href="#param">参数</a></li>
@@ -22,7 +22,7 @@
   <li><a href="#Variadic">可变参数函数</a></li>
   <li><a href="#Local">局部变量</a></li>
   <li><a href="#DynCall">动态调用函数</a></li>
-  <li><a href="#ShortCircuit">优化布尔求值</a></li>
+  <li><a href="#ShortCircuit">短路型布尔值的计算</a></li>
   <li><a href="#nested">嵌套函数</a></li>
   <li><a href="#remarks">Return, Exit 及一般说明</a></li>
   <li><a href="#include">使用 #Include 在多个脚本间共享函数</a></li>
@@ -257,17 +257,17 @@ static TotalAttempts := 0, PrevResult</pre>
 </ul>
 <p>最后, 对函数的动态调用比正常调用稍慢, 因为正常的调用在脚本开始运行前就已经解析(查找) 了.</p>
 
-<h2 id="ShortCircuit">优化布尔求值</h2>
-<p>当在<a href="Variables.htm#Expressions">表达式</a>中使用 <em>AND, OR</em> 和<a href="Variables.htm#ternary">三元运算符</a>时, 会对它们进行优化来提高性能(无论当前是否存在函数调用). 通过不计算表达式中那些不影响最终结果的部分来进行优化运算. 为了说明这个概念, 请看这个例子:</p>
+<h2 id="ShortCircuit">短路型布尔值的计算</h2>
+<p>当在<a href="Variables.htm#Expressions">表达式</a>中使用 <em>AND, OR</em> 和<a href="Variables.htm#ternary">三元运算符</a>时, 它们会短路以提高性能(无论当前是否存在函数调用). 短路操作是通过不计算表达式中那些不影响最终结果的部分来进行优化运算. (译者注: 只要碰到了 true 或者等价于 true 的就短路, 只要短路了就不会继续往后执行了, 碰到 false 就短路的情况也是同样.) 为了说明这个概念, 请看这个例子:</p>
 <pre>if (ColorName != &quot;&quot; AND not FindColor(ColorName))
     MsgBox ColorName " could not be found."</pre>
-<p>在上面的例子中, 如果 <em>ColorName</em> 变量为空则永远不会调用 FindColor() 函数. 这是由于 <em>AND</em> 的左侧结果将为 <em>false</em>, 因此其右边不可能让最终的结果为 <em>true</em>.</p>
-<p>由于此特性, 所以需要注意到, 如果在 <em>AND</em> 或 <em>OR</em> 的右侧调用函数, 那么函数可能永远不会产生副作用(例如改变全局变量的内容).</p>
-<p>还需要注意在嵌套的 <em>AND</em> 和 <em>OR</em> 串联表达式的求值优化. 例如, 在后面的表达式中每当 <em>ColorName</em> 为空时只会进行最左边的比较. 这是因为此时最左边的比较已经足以确定最终的结果:</p>
+<p>在上面的例子中, 如果 <em>ColorName</em> 变量为空, 则永远不会调用 FindColor() 函数. 这是由于 <em>AND</em> 的左侧结果为 <em>false</em>, 因此其右边不可能让最终的结果为 <em>true</em>.</p>
+<p>由于此特性, 所以需要注意到, 如果在 <em>AND</em> 或 <em>OR</em> 的右侧调用函数, 那么该函数产生的任何副作用(例如改变全局变量的内容) 可能永远不会发生.</p>
+<p>还需要注意在嵌套的 <em>AND</em> 和 <em>OR</em> 串联表达式的求值短路. 例如, 在下面的表达式中每当 <em>ColorName</em> 为空时, 只会进行最左边的比较. 这是因为此时最左边的比较已经足以确定最终的结果:</p>
 <pre>if (ColorName = &quot;&quot; <u>OR</u> FindColor(ColorName, Region1) <u>OR</u> FindColor(ColorName, Region2))
     break   <em>; 搜索内容为空或找到了匹配.</em></pre>
-<p>从上面的例子可以看出, 任何耗时的函数一般应该在 <em>AND</em> 或 <em>OR</em> 的右侧调用从而提高性能. 此技术还可用于防止在其参数之一传递其认为不合适的值时(如空字符串) 调用函数.</p>
-<p><a href="Variables.htm#ternary">三元条件运算符(?:)</a> 也通过不计算丢弃的分支进行求值优化.</p>
+<p>从上面的例子可以看出, 任何耗时的函数一般应该在 <em>AND</em> 或 <em>OR</em> 的右侧调用从而提高性能. 这种技术也可以用来防止一个函数在它的一个参数会被传递一个它认为不合适的值(如空字符串) 时被调用.</p>
+<p><a href="Variables.htm#ternary">三元条件运算符(?:)</a> 也通过不计算丢弃的分支来实现短路.</p>
 
 <h2 id="nested">嵌套函数</h2>
 <p><em>嵌套</em> 函数是在另一个函数中定义的函数. 例如:</p>

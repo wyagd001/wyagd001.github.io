@@ -34,54 +34,54 @@
   <dt id="MaxThreads">MaxThreads</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>This integer is normally omitted, in which case the monitor function is limited to one <a href="../misc/Threads.htm">thread</a> at a time. This is usually best because otherwise, the script would process messages out of chronological order whenever the monitor function interrupts itself. Therefore, as an alternative to <em>MaxThreads</em>, consider using <em>Critical</em> as described <a href="#Critical">below</a>.</p>
-    <p>Specify 0 to unregister the previously registered function identified by <em>Function</em>.</p>
-    <p>By default, when multiple functions are registered for a single <em>MsgNumber</em>, they are called in the order that they were registered. To register a function to be called before any previously registered functions, specify a negative value for <em>MaxThreads</em>. 例如, <code>OnMessage Msg, Fn, -2</code> registers <code>Fn</code> to be called before any other functions previously registered for <em>Msg</em>, and allows <em>Fn</em> a maximum of 2 threads. However, if the function is already registered, the order will not change unless it is unregistered and then re-registered.</p>
+    <p>这个整数通常被省略, 在这种情况下, 监控函数一次只能处理一个<a href="../misc/Threads.htm">线程</a>. 这通常是最好的, 因为否则每当监控函数中断时, 脚本就会按时间顺序处理消息. 因此, 作为 <em>MaxThreads</em> 的替代方案, 可以考虑使用 <em>Critical</em>, 如<a href="#Critical">下</a>所示.</p>
+    <p>指定 0 来取消注册之前由 <em>Function</em> 标识的函数.</p>
+    <p>默认情况下, 当为一个 <em>MsgNumber</em> 注册了多个函数时, 会按照注册的顺序调用它们. 要在之前注册的函数之前注册一个函数, 请为 <em>MaxThreads</em> 指定一个负值. 例如, <code>OnMessage Msg, Fn, -2</code> 将 <code>Fn</code> 注册为在之前为 <em>Msg</em> 注册的任何其他函数之前被调用, 并且允许 <em>Fn</em> 最多有 2 个线程. 但是, 如果函数已经被注册了, 除非取消注册然后重新注册, 否则顺序不会改变.</p>
   </dd>
 
 </dl>
 
-<h2 id="Usage">Usage</h2>
+<h2 id="Usage">使用</h2>
 
-<p>Any number of functions or <a href="../objects/Functor.htm">function objects</a> can monitor a given <em>MsgNumber</em>.</p>
-<p>Either of these two lines registers a function object to be called <strong>after</strong> any previously registered 函数:</p>
+<p>任何数量的函数或<a href="../objects/Functor.htm">函数对象</a>都可以监视一个给定的 <em>MsgNumber</em>.</p>
+<p>这两行中的任何一行都会注册一个函数对象, 以便在任何先前注册的函数 <strong>之后</strong> 被调用:</p>
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function     <em>; Option 1 - omit MaxThreads</em>
 <span class="func">OnMessage</span> MsgNumber, Function, 1  <em>; Option 2 - specify MaxThreads 1</em></pre>
-<p>This registers a function object to be called <strong>before</strong> any previously registered 函数:</p>
+<p>注册一个函数对象, 以便在任何先前注册的函数 <strong>之前</strong> 被调用:</p>
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function, -1</pre>
-<p>To unregister a function object, specify 0 for <em>MaxThreads</em>:</p>
+<p>要取消注册一个函数对象, 请将 <em>MaxThreads</em> 指定为 0:</p>
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function, 0</pre>
 
 <h2 id="Failure">失败</h2>
-<p>An exception is thrown if <em>Function</em>:</p>
+<p>当 <em>Function</em> 出现以下情况时将抛出异常:</p>
 <ol>
-  <li>is not an object or the name of a user-defined function; or</li>
-  <li>is known to require more than four parameters.</li>
+  <li>不是一个对象或用户定义的函数名; 或者</li>
+  <li>已知需要四个以上的参数.</li>
 </ol>
 
-<h2>函数的参数</h2>
-<p>A <a href="../Functions.htm">function</a> assigned to monitor one or more messages can accept up to four parameters:</p>
+<h2 id="The_Functions_Parameters">函数的参数</h2>
+<p><a href="../Functions.htm">函数</a>可以监视一个或多个消息并接受最多四个参数:</p>
 <pre>MyMessageMonitor(wParam, lParam, msg, hwnd)
 {
     ... body of function...
 }</pre>
-<p>Although the names you give the parameters do not matter, the following information is sequentially assigned to them:</p>
-<p>Parameter #1: The message's WPARAM value.<br>
-Parameter #2: The message's LPARAM value.<br>
-Parameter #3: The message number, which is useful in cases where a function monitors more than one message.<br>
-Parameter #4: The HWND (unique ID) of the window or control to which the message was sent. The HWND can be used directly in a <a href="../misc/WinTitle.htm#ahk_id">WinTitle parameter</a>.</p>
-<p>WPARAM and LPARAM are unsigned 32-bit integers (from 0 to 2<sup>32</sup>-1) or signed 64-bit integers (from -2<sup>63</sup> to 2<sup>63</sup>-1) depending on whether the exe running the script is 32-bit or 64-bit. For 32-bit scripts, if an incoming parameter is intended to be a signed integer, any negative numbers can be revealed by following this example:</p>
+<p>尽管您赋予参数的名称并不重要, 但以下信息将按顺序分配给它们:</p>
+<p>参数 #1: 消息的 WPARAM 值.<br>
+参数 #2: 消息的 LPARAM 值.<br>
+参数 #3: 消息号, 这在一个函数监视多个消息的情况下很有用.<br>
+参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). HWND 可以直接用于 <a href="../misc/WinTitle.htm#ahk_id">WinTitle 参数</a>.</p>
+<p>WPARAM 和 LPARAM 是无符号的 32 位整数(从 0 到 2<sup>32</sup>-1) 或有符号的 64 位整数(从 -2<sup>63</sup> 到 2<sup>63</sup>-1), 这取决于运行脚本的 exe 程序是 32 位还是 64 位. 对于 32 位的脚本, 如果传入参数预期为有符号整数, 则可以参照这个例子得到负数:</p>
 <pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; Checking <a href="../Variables.htm#PtrSize">A_PtrSize</a> ensures the script is 32-bit.</em>
     wParam := -(~wParam) - 1</pre>
-<p>You can omit one or more parameters from the end of the list if the corresponding information is not needed, but in this case an asterisk must be specified as the final parameter. 例如, a function defined as <code>MyMsgMonitor(wParam, lParam, *)</code> would receive only the first two parameters, and one defined as <code>MyMsgMonitor(*)</code> would receive none of them.</p>
+<p>如果不需要相应的信息, 你可以从列表末尾省略一个或多个参数, 但在这种情况下, 必须指定一个星号作为最后的参数. 例如, 一个定义为 <code>MyMsgMonitor(wParam, lParam, *)</code> 函数将只接收前两个参数, 而定义为 <code>MyMsgMonitor(*)</code> 的函数将不接收任何参数.</p>
 
-<h2>Additional Information Available to the Function</h2>
-<p>In addition to the parameters received above, the function may also consult the built-in variable <a href="../Variables.htm#EventInfo">A_EventInfo</a>, which contains 0 if the message was sent via SendMessage. If sent via PostMessage, it contains the <a href="../Variables.htm#TickCount">tick-count time</a> the message was posted.</p>
+<h2 id="Additional_Information_Available_to_the_Function">函数中可用的附加信息</h2>
+<p>除了上面接收到的参数外, 该函数还可以查询内置变量 <a href="../Variables.htm#EventInfo">A_EventInfo</a>, 如果消息是通过 SendMessage 发送的, 则其为 0. 如果是通过 PostMessage 发送的, 则其为消息发出时的 <a href="../Variables.htm#TickCount">tick-count time</a> the message was posted.</p>
 <p>A monitor function's <a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a> starts off as the parent window to which the message was sent (even if it was sent to a control). If the window is hidden but not a GUI window (such as the script's main window), turn on <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> before using it. 例如:</p>
 <pre>DetectHiddenWindows True
 MsgParentWindow := WinExist()  <em>; This stores the unique ID of the window to which the message was sent.</em></pre>
 
-<h2>What the Function Should <em>Return</em></h2>
+<h2 id="What_the_Function_Should_Return">What the Function Should <em>Return</em></h2>
 <p>If a monitor function uses <a href="Return.htm">Return</a> without any parameters, or it specifies a blank value such as &quot;&quot; (or it never uses Return at all), the incoming message goes on to be processed normally when the function finishes. The same thing happens if the function <a href="Exit.htm">Exits</a> or causes a runtime error such as <a href="Run.htm">running</a> a nonexistent file. By contrast, returning an integer causes it to be sent immediately as a reply; that is, the program does not process the message any further. 例如, a function monitoring WM_LBUTTONDOWN (0x201) may return an integer to prevent the target window from being notified that a mouse click has occurred. In many cases (such as a message arriving via <a href="PostMessage.htm">PostMessage</a>), it does not matter which integer is returned; but if in doubt, 0 is usually safest.</p>
 <p>The range of valid return values depends on whether the exe running the script is 32-bit or 64-bit. Non-empty return values must be between -2<sup>31</sup> and 2<sup>32</sup>-1 for 32-bit scripts (<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>) and between -2<sup>63</sup> and 2<sup>63</sup>-1 for 64-bit scripts (<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code>).</p>
 <p>If there are multiple functions monitoring a given message number, they are called one by one until one returns a non-empty value.</p>
