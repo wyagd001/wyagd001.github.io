@@ -76,32 +76,32 @@
 <p>如果不需要相应的信息, 你可以从列表末尾省略一个或多个参数, 但在这种情况下, 必须指定一个星号作为最后的参数. 例如, 一个定义为 <code>MyMsgMonitor(wParam, lParam, *)</code> 函数将只接收前两个参数, 而定义为 <code>MyMsgMonitor(*)</code> 的函数将不接收任何参数.</p>
 
 <h2 id="Additional_Information_Available_to_the_Function">函数中可用的附加信息</h2>
-<p>除了上面接收到的参数外, 该函数还可以查询内置变量 <a href="../Variables.htm#EventInfo">A_EventInfo</a>, 如果消息是通过 SendMessage 发送的, 则其为 0. 如果是通过 PostMessage 发送的, 则其为消息发出时的 <a href="../Variables.htm#TickCount">tick-count time</a> the message was posted.</p>
-<p>A monitor function's <a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a> starts off as the parent window to which the message was sent (even if it was sent to a control). If the window is hidden but not a GUI window (such as the script's main window), turn on <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> before using it. 例如:</p>
+<p>除了上面接收到的参数外, 该函数还可以查询内置变量 <a href="../Variables.htm#EventInfo">A_EventInfo</a>, 如果消息是通过 SendMessage 发送的, 则其为 0. 如果是通过 PostMessage 发送的, 则其为消息发出时的 <a href="../Variables.htm#TickCount">tick-count 时间</a>.</p>
+<p>监听函数的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始与消息发送到的父窗口相同(即使消息是发送到控件的). 如果窗口是隐藏的, 但不是 GUI 窗口(例如脚本的主窗口), 在使用它之前打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 例如:</p>
 <pre>DetectHiddenWindows True
-MsgParentWindow := WinExist()  <em>; This stores the unique ID of the window to which the message was sent.</em></pre>
+MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口的唯一 ID.</em></pre>
 
-<h2 id="What_the_Function_Should_Return">What the Function Should <em>Return</em></h2>
-<p>If a monitor function uses <a href="Return.htm">Return</a> without any parameters, or it specifies a blank value such as &quot;&quot; (or it never uses Return at all), the incoming message goes on to be processed normally when the function finishes. The same thing happens if the function <a href="Exit.htm">Exits</a> or causes a runtime error such as <a href="Run.htm">running</a> a nonexistent file. By contrast, returning an integer causes it to be sent immediately as a reply; that is, the program does not process the message any further. 例如, a function monitoring WM_LBUTTONDOWN (0x201) may return an integer to prevent the target window from being notified that a mouse click has occurred. In many cases (such as a message arriving via <a href="PostMessage.htm">PostMessage</a>), it does not matter which integer is returned; but if in doubt, 0 is usually safest.</p>
-<p>The range of valid return values depends on whether the exe running the script is 32-bit or 64-bit. Non-empty return values must be between -2<sup>31</sup> and 2<sup>32</sup>-1 for 32-bit scripts (<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>) and between -2<sup>63</sup> and 2<sup>63</sup>-1 for 64-bit scripts (<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code>).</p>
-<p>If there are multiple functions monitoring a given message number, they are called one by one until one returns a non-empty value.</p>
+<h2 id="What_the_Function_Should_Return">函数应该 <em>Return</em>(返回) 什么</h2>
+<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 &quot;&quot;(甚至没有使用 Return), 则当此函数结束时, 传入的消息将继续被正常处理. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exits</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与此相反, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 返回哪个整数并不重要; 不过如果不确定, 0 通常是最安全的.</p>
+<p>有效返回值的范围取决于运行脚本的 exe 文件是 32 位还是 64 位. 对于 32 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>) 脚本, 非空的返回值必须在 -2<sup>31</sup> 和 2<sup>32</sup>-1 之间, 对于 64 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code>) 脚本, 必须在 -2<sup>63</sup> 和 2<sup>63</sup>-1 之间.</p>
+<p>如果有多个函数监听一个给定的消息号, 它们会被逐一调用, 直到其中一个函数返回一个非空值.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>Unlike a normal function-call, the arrival of a monitored message calls the function as a new <a href="../misc/Threads.htm">thread</a>. Because of this, the function starts off fresh with the default values for settings such as <a href="SendMode.htm">SendMode</a> and <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
-<p>Messages sent to a control (rather than being posted) are not monitored because the system routes them directly to the control behind the scenes. This is seldom an issue for system-generated messages because most of them are posted.</p>
-<p>Any script with active message monitors is automatically <a href="../Scripts.htm#persistent">persistent</a>, which means that it will not exit until <a href="ExitApp.htm">ExitApp</a> is used.</p>
-<p id="Critical">If a message arrives while its function is still running due to a previous arrival of the same message, the function will not be called again (except if <a href="#MaxThreads">MaxThreads</a> is greater than 1); instead, the message will be treated as unmonitored. If this is undesirable, a message greater than or equal to 0x312 can be buffered until its function completes by specifying <a href="Critical.htm">Critical</a> as the first line of the function. Alternatively, <a href="Thread.htm">Thread Interrupt</a> can achieve the same thing as long as it lasts long enough for the function to finish. By contrast, a message less than 0x312 cannot be buffered by Critical or Thread Interrupt (however, Critical may help because it checks messages <a href="Critical.htm#Interval">less often</a>, which gives the function more time to finish). The only way to guarantee that no such messages are missed is to ensure the function finishes in under 6 milliseconds (though this limit can be raised via <a href="Critical.htm#Interval"><em>Critical 30</em></a>). One way to do this is to have it queue up a future thread by <a href="PostMessage.htm">posting</a> to its own script a monitored message number higher than 0x312. That message's function should use <a href="Critical.htm">Critical</a> as its first line to ensure that its messages are buffered.</p>
-<p>If a monitored message that is numerically less than 0x312 arrives while the script is absolutely uninterruptible -- such as while a <a href="../objects/Menu.htm#Show">menu</a> is displayed, a <a href="SetKeyDelay.htm">KeyDelay</a>/<a href="SetMouseDelay.htm">MouseDelay</a> is in progress, or the clipboard is being <a href="_ClipboardTimeout.htm">opened</a> -- the message's function will not be called and the message will be treated as unmonitored.  By contrast, a monitored message of 0x312 or higher will be buffered during  these uninterruptible periods; that is, its function will be called when the script becomes interruptible.</p>
-<p>If a monitored message numerically less than 0x312 arrives while the script is uninterruptible merely due to the settings of <a href="Thread.htm">Thread Interrupt</a> or <a href="Critical.htm">Critical</a>, the current thread will be interrupted so that the function can be called. By contrast, a monitored message of 0x312 or higher will be buffered until the thread finishes or becomes interruptible.</p>
-<p>The <a href="../misc/Threads.htm">priority</a> of OnMessage threads is always 0. Consequently, no messages are monitored or buffered when the current thread's priority is higher than 0.</p>
-<p>Caution should be used when monitoring system messages (those below 0x400). 例如, if a monitor function does not finish quickly, the response to the message might take longer than the system expects, which might cause side-effects. Unwanted behavior may also occur if a monitor function returns an integer to suppress further processing of a message, but the system expected different processing or a different response.</p>
-<p>When the script is displaying a system dialog such as <a href="MsgBox.htm">MsgBox</a>, any message posted to a control is not monitored. 例如, if the script is displaying a MsgBox and the user clicks a button in a GUI window, the WM_LBUTTONDOWN message is sent directly to the button without calling the monitor function.</p>
-<p>Although an external program may post messages directly to a script's thread via PostThreadMessage() or other API call, this is not recommended because the messages would be lost if the script is displaying a system window such as a <a href="MsgBox.htm">MsgBox</a>. Instead, it is usually best to post or send the messages to the script's main window or one of its GUI windows.</p>
+<p>与普通的函数调用不同, 当一个被监听的消息到达时, 函数会作为一个新的<a href="../misc/Threads.htm">线程</a>被调用. 因此, 函数会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
+<p>Send(发送)(而不是 Post) 到控件的消息不会被监听, 因为系统直接把它们发送给后台的控件了. 对于系统生成的消息来说, 这很少是一个问题, 因为大多数信息都是 Post 的.</p>
+<p>任何具有活动消息监控器的脚本都会自动<a href="../Scripts.htm#persistent">持续运行</a>, 这意味着它不会退出, 直到使用 <a href="ExitApp.htm">ExitApp</a>.</p>
+<p id="Critical">如果由于之前有相同的消息到达, 而消息的函数仍在运行, 则不会再次调用函数(除非 <a href="#MaxThreads">MaxThreads</a> 大于 1); 相反, 消息将被视为未被监控. 如果不希望出现这种情况, 可以通过在函数的第一行指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲大于或等于 0x312 的消息, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的目的, 只要它持续的时间足够函数完成. 相反, 小于 0x312 的消息不能被 Critical 或 Thread Interrupt 缓冲 (然而, Critical 可能会有帮助, 因为它检查消息的<a href="Critical.htm#Interval">频率较低</a>, 这给了函数更多的时间来完成). 保证不漏掉此类消息的唯一方法是确保函数在 6 毫秒内完成(尽管这个限制可以通过 <a href="Critical.htm#Interval"><em>Critical 30</em></a> 来提高). 一种方法是通过向自己的脚本<a href="PostMessage.htm">发布(Post)</a> 一个高于 0x312 的监控消息号, 让它为未来的线程排队. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲.</p>
+<p>如果在小于 0x312 的受监听消息当脚本完全不可中断时到达(例如在显示<a href="../objects/Menu.htm#Show">菜单</a>, 正在进行 <a href="SetKeyDelay.htm">KeyDelay</a>/<a href="SetMouseDelay.htm">MouseDelay</a>, 或剪贴板正被<a href="_ClipboardTimeout.htm">打开</a>) -- 则不会调用此函数而消息会被视为未监听的.  相反, 一个等于或大于 0x312 的受监听消息在这些不可中断期间会被缓冲起来; 即当脚本变成可中断时会调用它的处理函数.</p>
+<p>如果消息号小于 0x312 的受监听消息在脚本仅由于 <a href="Thread.htm">Thread Interrupt</a> 或 <a href="Critical.htm">Critical</a> 的设置而不可中断时到达, 则会中断当前线程而调用消息处理函数. 相反, 等于或大于 0x312  的受监听消息则会被缓冲到线程结束或变成可中断之后.</p>
+<p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
+<p>监听系统消息(小于 0x400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果监听函数返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>
+<p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递(Post) 到控件的消息. 例如, 如果脚本正显示 MsgBox 而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
+<p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递(Post) 消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">MsgBox</a>) . 则消息会丢失. 相反, 通常最好投递或发送(Send) 消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
 <h2 id="Related">相关</h2>
 <p><a href="CallbackCreate.htm">CallbackCreate</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">Functions</a>, <a href="../misc/SendMessageList.htm">List of Windows Messages</a>, <a href="../misc/Threads.htm">Threads</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExLButtonDown">
-<p><a href="#ExLButtonDown">#1</a>: The following is a working script that monitors mouse clicks in a GUI window. Related topic: <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu</a> event</p>
+<p><a href="#ExLButtonDown">#1</a>: 下面是个可运行脚本, 它监听在 GUI 窗口中的鼠标点击. 相关主题: <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu</a> event</p>
 <pre>MyGui := Gui.New(, "Example Window")
 MyGui.Add("Text",, "Click anywhere in this window.")
 MyGui.Add("Edit", "w200")
@@ -126,8 +126,8 @@ WM_LBUTTONDOWN(wParam, lParam, msg, hwnd)
 </div>
 
 <div class="ex" id="ExShutdown">
-<p><a href="#ExShutdown">#2</a>: The following script detects system shutdown/logoff and allows the user to abort it. On Windows Vista and later, the system displays a user interface showing which program is blocking shutdown/logoff and allowing the user to force shutdown/logoff. On older OSes, the script displays a confirmation prompt. Related topic: <a href="OnExit.htm">OnExit</a></p>
-<pre><em>; The following DllCall is optional: it tells the OS to shut down this script first (prior to all other applications).</em>
+<p><a href="#ExShutdown">#2</a>: 下面的脚本检测系统的关机/注销动作并允许您中止它. 在 Windows Vista 及更高的版本中, 系统会显示一个用户界面, 显示哪个程序正在阻止关机/注销, 并允许用户强制关机/注销. 在较旧的操作系统上, 脚本显示一个确认提示. 相关主题: <a href="OnExit.htm">OnExit</a></p>
+<pre><em>; 下面的 DllCall 是可选的: 它告诉操作系统首先要关闭此脚本(在其他所有程序之前).</em>
 DllCall("kernel32.dll\SetProcessShutdownParameters", "UInt", 0x4FF, "UInt", 0)
 OnMessage(0x11, "WM_QUERYENDSESSION")
 return
@@ -135,34 +135,33 @@ return
 WM_QUERYENDSESSION(wParam, lParam, *)
 {
     ENDSESSION_LOGOFF := 0x80000000
-    if (lParam &amp; ENDSESSION_LOGOFF)  <em>; User is logging off.</em>
+    if (lParam &amp; ENDSESSION_LOGOFF)  <em>; 用户正在注销.</em>
         EventType := "Logoff"
-    else  <em>; System is either shutting down or restarting.</em>
+    else  <em>; 系统正在关机或重启.</em>
         EventType := "Shutdown"
     try
     {
-        <em>; Set a prompt for the OS shutdown UI to display.  We do not display
-        ; our own confirmation prompt because we have only 5 seconds before
-        ; the OS displays the shutdown UI anyway.  Also, a program without
-        ; a visible window cannot block shutdown without providing a reason.</em>
+        <em>; 设置显示操作系统关闭 UI 的提示. 我们不会显示自己的确认提示
+        ; 因为我们只有 5 秒钟的时间, 操作系统会显示关机 UI
+        ; 同样, 没有可见窗口的程序在没有提供原因的情况下无法阻止关机.</em>
         BlockShutdown("Example script attempting to prevent " EventType ".")
         return false
     }
     catch
     {
-        <em>; ShutdownBlockReasonCreate is not available, so this is probably
-        ; Windows XP, 2003 or 2000, where we can actually prevent shutdown.</em>
+        <em>; ShutdownBlockReasonCreate 不可用,
+        ; 所以这可能是 Windows XP, 2003 或 2000, 我们实际上可以防止关机.</em>
         Result := MsgBox(EventType " in progress. Allow it?",, "YN")
         if (Result = "Yes")
-            return true  <em>; Tell the OS to allow the shutdown/logoff to continue.</em>
+            return true  <em>; 通知操作系统允许关机/注销操作继续.</em>
         else
-            return false  <em>; Tell the OS to abort the shutdown/logoff.</em>
+            return false  <em>; 通知操作系统中止关机/注销操作.</em>
     }
 }
 
 BlockShutdown(Reason)
 {
-    <em>; If your script has a visible GUI, use it instead of A_ScriptHwnd.</em>
+    <em>; 如果您的脚本具有可见的 GUI, 请使用它代替 A_ScriptHwnd.</em>
     DllCall("ShutdownBlockReasonCreate", "ptr", A_ScriptHwnd, "wstr", Reason)
     OnExit("StopBlockingShutdown")
 }
@@ -175,48 +174,48 @@ StopBlockingShutdown(*)
 </div>
 
 <div class="ex" id="ExCustom">
-<p><a href="#ExCustom">#3</a>: Have a script receive a custom message and up to two numbers from some other script or program (to send strings rather than numbers, see the example after this one).</p>
+<p><a href="#ExCustom">#3</a>: 让脚本接收其他脚本或程序的自定义消息和最多两个数字(要发送字符串而不是数字, 请参阅下一个示例).</p>
 <pre>OnMessage 0x5555, &quot;MsgMonitor&quot;
 OnMessage 0x5556, &quot;MsgMonitor&quot;
 
 MsgMonitor(wParam, lParam, msg, *)
 {
-    <em>; Since returning quickly is often important, it is better to use a ToolTip than</em>
-    <em>; something like MsgBox that would prevent the function from finishing:</em>
+    <em>; 由于尽快返回常常很重要, 所以最好使用 ToolTip 而不是</em>
+    <em>; 类似 MsgBox 的进行显示, 以避免阻止函数结束:</em>
     ToolTip "Message " msg " arrived:`nWPARAM: " wParam "`nLPARAM: " lParam
 }
 
-<em>; The following could be used inside some other script to run the function inside the above script:</em>
+<em>; 下面的代码可用于其他脚本内来激发运行上面脚本中的函数:</em>
 SetTitleMatchMode 2
 DetectHiddenWindows True
 if WinExist(&quot;Name of Receiving Script.ahk ahk_class AutoHotkey&quot;)
-    PostMessage 0x5555, 11, 22  <em>; The message is sent  to the &quot;<a href="../misc/WinTitle.htm#LastFoundWindow">last found window</a>&quot; due to WinExist above.</em>
-DetectHiddenWindows False  <em>; Must not be turned off until after PostMessage.</em></pre>
+    PostMessage 0x5555, 11, 22  <em>; 因为上面的 WinExist, 所以消息被发送到 &quot;<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>&quot;.</em>
+DetectHiddenWindows False  <em>; 必须在 PostMessage 之后才能关闭.</em></pre>
 </div>
 
 <div class="ex" id="ExSendString">
-<p><a href="#ExSendString">#4</a>: Send a string of any length from one script to another. Both scripts must use the same <a href="../Concepts.htm#native-encoding">native encoding</a>. This is a working example. To use it, save and run both of the following scripts then press <kbd>Win</kbd>+<kbd>Space</kbd> to show an InputBox that will prompt you to type in a string.</p>
-<p>Save the following script as <strong>Receiver.ahk</strong> then launch it:</p>
+<p><a href="#ExSendString">#4</a>: 从一个脚本发送任意长度的字符串到另一个脚本. 这是个可运行的示例. 两个脚本必须使用相同的<a href="../Concepts.htm#native-encoding">原生编码</a>. 要使用它, 请保存并运行下面的两个脚本, 然后按下 <kbd>Win</kbd>+<kbd>Space</kbd> 来显示 InputBox 来让您输入字符串.</p>
+<p>保存下面的脚本为 <strong>Receiver.ahk</strong>, 然后运行它:</p>
 <pre filename="Receiver.ahk">#SingleInstance
 OnMessage 0x4a, &quot;Receive_WM_COPYDATA&quot;  <em>; 0x4a is WM_COPYDATA</em>
 return
 
 Receive_WM_COPYDATA(wParam, lParam, msg, hwnd)
 {
-    StringAddress := NumGet(lParam, 2*A_PtrSize, "Ptr")  <em>; Retrieves the CopyDataStruct's lpData member.</em>
-    CopyOfData := StrGet(StringAddress)  <em>; Copy the string out of the structure.</em>
-    <em>; Show it with ToolTip vs. MsgBox so we can return in a timely fashion:</em>
+    StringAddress := NumGet(lParam, 2*A_PtrSize, "Ptr")  <em>; 检索 CopyDataStruct 的 lpData 成员.</em>
+    CopyOfData := StrGet(StringAddress)  <em>; 从结构中复制字符串.</em>
+    <em>; 比起 MsgBox, 应该用 ToolTip 显示, 这样我们可以及时返回:</em>
     ToolTip A_ScriptName "`nReceived the following string:`n" CopyOfData
-    return true  <em>; Returning 1 (true) is the traditional way to acknowledge this message.</em>
+    return true  <em>;  返回 1(true) 是回复此消息的传统方式.</em>
 }</pre>
-<p>Save the following script as <strong>Sender.ahk</strong> then launch it. After that, press the <kbd>Win</kbd>+<kbd>Space</kbd> hotkey.</p>
+<p>保存下面的脚本为 <strong>Sender.ahk</strong>, 接着运行它. 然后, 按下 <kbd>Win</kbd>+<kbd>Space</kbd> 热键.</p>
 <pre filename="Sender.ahk">TargetScriptTitle := "Receiver.ahk ahk_class AutoHotkey"
 
-#space::  <em>; Win+Space hotkey. Press it to show an InputBox for entry of a message string.</em>
+#space::  <em>; Win+Space 热键. 按下此热键会显示 InputBox 用于输入消息字符串.</em>
 {
     global TargetScriptTitle
     ib := InputBox("Enter some text to Send:", "Send text via WM_COPYDATA")
-    if ib.Result = "Cancel"  <em>; User pressed the Cancel button.</em>
+    if ib.Result = "Cancel"  <em>; 用户按下了取消按钮.</em>
         return
     result := Send_WM_COPYDATA(ib.Value, TargetScriptTitle)
     if result = ""
@@ -225,30 +224,30 @@ Receive_WM_COPYDATA(wParam, lParam, msg, hwnd)
         MsgBox "Message sent but the target window responded with 0, which may mean it ignored it."
 }
 
-Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; ByRef saves a little memory in this case.
-; This function sends the specified string to the specified window and returns the reply.
-; The reply is 1 if the target window processed the message, or 0 if it ignored it.</em>
+Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; 在这种情况中使用 ByRef 能节约一些内存.
+; 此函数发送指定的字符串到指定的窗口然后返回收到的回复.
+; 如果目标窗口处理了消息则回复为 1, 而消息被忽略了则为 0.</em>
 {
-    CopyDataStruct := BufferAlloc(3*A_PtrSize)  <em>; Set up the structure's memory area.</em>
-    <em>; First set the structure's cbData member to the size of the string, including its zero terminator:</em>
+    CopyDataStruct := BufferAlloc(3*A_PtrSize)  <em>; 分配结构的内存区域.</em>
+    <em>; 首先设置结构的 cbData 成员为字符串的大小, 包括它的零终止符:</em>
     SizeInBytes := (StrLen(StringToSend) + 1) * 2
-    NumPut( "Ptr", SizeInBytes  <em>; OS requires that this be done.</em>
-          , "Ptr", StrPtr(StringToSend)  <em>; Set lpData to point to the string itself.</em>
+    NumPut( "Ptr", SizeInBytes  <em>; 操作系统要求这个需要完成.</em>
+          , "Ptr", StrPtr(StringToSend)  <em>; 设置 lpData 为到字符串自身的指针.</em>
           , CopyDataStruct, A_PtrSize)
     Prev_DetectHiddenWindows := A_DetectHiddenWindows
     Prev_TitleMatchMode := A_TitleMatchMode
     DetectHiddenWindows True
     SetTitleMatchMode 2
-    TimeOutTime := 4000  <em>; Optional. Milliseconds to wait for response from receiver.ahk. Default is 5000
-    ; Must use SendMessage not PostMessage.</em>
-    RetValue := SendMessage(0x4a, 0, CopyDataStruct,, TargetScriptTitle,,,, TimeOutTime) <em>; 0x4a is WM_COPYDATA.</em>
-    DetectHiddenWindows Prev_DetectHiddenWindows  <em>; Restore original setting for the caller.</em>
-    SetTitleMatchMode Prev_TitleMatchMode         <em>; Same.</em>
-    return RetValue  <em>; Return SendMessage's reply back to our caller.</em>
+    TimeOutTime := 4000  <em>; 可选的. 等待 receiver.ahk 响应的毫秒数. 默认是 5000
+    ; 必须使用发送 SendMessage 而不是投递 PostMessage.</em>
+    RetValue := SendMessage(0x4a, 0, CopyDataStruct,, TargetScriptTitle,,,, TimeOutTime) <em>; 0x4a 是 WM_COPYDATA.</em>
+    DetectHiddenWindows Prev_DetectHiddenWindows  <em>; 恢复调用者原来的设置.</em>
+    SetTitleMatchMode Prev_TitleMatchMode         <em>; 同样.</em>
+    return RetValue  <em>; 返回 SendMessage 的回复给我们的调用者.</em>
 }</pre>
 </div>
 
-<p>See the <a href="../scripts/index.htm#WinLIRC">WinLIRC client script</a> for a demonstration of how to use OnMessage to receive a notification when data has arrived on a network connection.</p>
+<p>有关如何使用 OnMessage 来接收网络连接上数据到达时的通知的演示, 请参阅 <a href="../scripts/index.htm#WinLIRC">WinLIRC 客户端脚本</a>.</p>
 
 </body>
 </html>

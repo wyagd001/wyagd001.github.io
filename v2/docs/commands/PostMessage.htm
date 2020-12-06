@@ -13,7 +13,7 @@
 
 <h1>PostMessage</h1>
 
-<p>Places a message in the message queue of a window or control.</p>
+<p>将消息放入窗口或控件的消息队列中.</p>
 
 <pre class="Syntax"><span class="func">PostMessage</span> Msg <span class="optional">, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <h2 id="Parameters">参数</h2>
@@ -22,22 +22,22 @@
   <dt>Msg</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The message number to send. See the <a href="../misc/SendMessageList.htm">message list</a> to determine the number.</p>
+    <p>要发送的消息的编号. 请参阅<a href="../misc/SendMessageList.htm">消息列表</a>来确定编号.</p>
   </dd>
 
   <dt>wParam, lParam</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The message parameters. If omitted, each parameter defaults to 0.</p>
-    <p>Each parameter must be an <a href="../Concepts.htm#numbers">integer</a>.</p>
-    <p>If AutoHotkey or the target window is 32-bit, only the parameter's low 32 bits are used; that is, values are truncated if outside the range -2147483648 to 2147483647 (-0x80000000 to 0x7FFFFFFF) for signed values, or 0 to 4294967295 (0xFFFFFFFF) for unsigned values. If AutoHotkey and the target window are both 64-bit, any integer value <a href="../Concepts.htm#pure-numbers">supported by AutoHotkey</a> can be used.</p>
+    <p>消息的参数. 如果省略, 每个参数默认为 0.</p>
+    <p>每个参数必须是<a href="../Concepts.htm#numbers">整数</a>.</p>
+    <p>如果 AutoHotkey 或目标窗口是 32 位的, 则只使用参数的低 32 位; 也就是说, 如果超出了有符号值的范围 -2147483648 到 2147483647(-0x80000000 to 0x7FFFFFFF), 或者超出了无符号值的范围 0 到 4294967295(0xFFFFFFFF), 则值会被截断. 如果 AutoHotkey 和目标窗口都是 64 位的, 可以使用 <a href="../Concepts.htm#pure-numbers">AutoHotkey 所支持的</a>任何整数值.</p>
   </dd>
 
   <dt>Control</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>If this parameter is omitted, the message will be posted directly to the target window rather than one of its controls. Otherwise, this parameter can be the control's ClassNN, text or HWND, or an object with a <code>Hwnd</code> property. For details, 请参阅 <a href="Control.htm#Parameter">The Control Parameter</a>.</p>
-    <p>If this parameter specifies a HWND (as an integer or object), it is not required to be the HWND of a control (child window). That is, it can also be the HWND of a top-level window.</p>
+    <p>如果省略此参数, 则消息会被直接发送到目标窗口而不是它的某个控件. 否则, 这个参数可以是控件的 ClassNN, 文本或 HWND, 或者是一个具有 <code>Hwnd</code> 属性的对象. 有关详情, 请参阅<a href="Control.htm#Parameter">控件参数</a>.</p>
+    <p>如果这个参数指定了一个 HWND(作为一个整数或对象), 那么它不需要是一个控件(子窗口) 的 HWND. 也就是说, 它也可以是一个顶层窗口的 HWND.</p>
   </dd>
 
   <dt>WinTitle</dt>
@@ -67,26 +67,26 @@
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>An exception is thrown in the following cases:</p>
+<p>在以下情况下会抛出异常:</p>
 <ul>
-  <li>The target window or control could not be found.</li>
-  <li>The message could not be posted. For example, if the target window is running at a higher integrity level than the script (i.e. it is running as admin while the script is not), messages may be blocked.</li>
+  <li>找不到目标窗口或控件.</li>
+  <li>消息不能被发送. 例如, 如果目标窗口运行在比脚本更高的完整性级别上(例如, 它以管理员身份运行, 而脚本不是), 消息可能被阻止.</li>
 </ul>
 
 <h2 id="Remarks">备注</h2>
-<p>This function should be used with caution because sending a message to the wrong window (or sending an invalid message) might cause unexpected behavior or even crash the target application. This is because most applications are not designed to expect certain types of messages from external sources.</p>
-<p>PostMessage places the message in the message queue associated with the target window. It does not wait for acknowledgement or reply. By contrast, <a href="SendMessage.htm">SendMessage</a> waits for the target window to process the message, up until the timeout period expires.</p>
-<p>Unlike <a href="SendMessage.htm">SendMessage</a>, PostMessage usually only sends basic numeric values, not pointers to structures or strings.</p>
-<p>To send a message to all windows in the system, including those that are hidden or disabled, specify <code>0xFFFF</code> for <em>WinTitle</em> (0xFFFF is HWND_BROADCAST). This technique should be used only for messages intended to be broadcast.</p>
-<p>To have a script receive a message, use <a href="OnMessage.htm">OnMessage</a>.</p>
-<p>See the <a href="../misc/SendMessage.htm">Message Tutorial</a> for an introduction to using this function.</p>
+<p>应该小心使用该函数, 因为发送消息到错误的窗口(或发送错误的消息) 可能导致意外的行为或者甚至让目标应用程序崩溃. 这是因为大多数应用程序并不是设计用于从外部来源中接受某些类型的消息.</p>
+<p>PostMessage 将消息放入与目标窗口相关联的消息队列中. 它不会等待确认或回复. 相比之下, <a href="SendMessage.htm">SendMessage</a> 会等待目标窗口处理消息, 直到超时期结束.</p>
+<p>与 <a href="SendMessage.htm">SendMessage</a> 不同, PostMessage 通常只发送数值, 而不是结构或字符串的指针.</p>
+<p>要发送消息到系统中的所有窗口, 包括隐藏或禁用的那些, 请在 <em>WinTitle</em> 中指定 <code>0xFFFF</code>(0xFFFF 是 HWND_BROADCAST). 这种技术应该只用于目标为广播的消息.</p>
+<p>要让脚本接收消息, 请使用 <a href="OnMessage.htm">OnMessage</a>.</p>
+<p>请参阅<a href="../misc/SendMessage.htm">消息指南</a>来查看使用这些命令的介绍.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="SendMessage.htm">SendMessage</a>, <a href="../misc/SendMessageList.htm">Message List</a>, <a href="../misc/SendMessage.htm">Message Tutorial</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="../misc/Winamp.htm">Automating Winamp</a>, <a href="DllCall.htm">DllCall</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="MenuSelect.htm">MenuSelect</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExSwitchKeybLang">
-<p><a href="#ExSwitchKeybLang">#1</a>: Switch the active window's keyboard layout/language to English (US):</p>
+<p><a href="#ExSwitchKeybLang">#1</a>: 切换活动窗口的键盘布局/语言为英语(US):</p>
 <pre>PostMessage 0x50, 0, 0x4090409,, "A"  <em>; 0x50 is WM_INPUTLANGCHANGEREQUEST.</em></pre>
 </div>
 

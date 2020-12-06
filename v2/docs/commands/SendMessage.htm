@@ -14,7 +14,7 @@
 
 <h1>SendMessage</h1>
 
-<p>Sends a message to a window or control and waits for acknowledgement.</p>
+<p>发送消息到窗口或控件并等待回复.</p>
 
 <pre class="Syntax">Result := <span class="func">SendMessage</span>(Msg <span class="optional">, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText, Timeout</span>)</pre>
 <h2 id="Parameters">参数</h2>
@@ -23,22 +23,22 @@
   <dt>Msg</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The message number to send. See the <a href="../misc/SendMessageList.htm">message list</a> to determine the number.</p>
+    <p>要发送的消息的编号. 请参阅<a href="../misc/SendMessageList.htm">消息列表</a>来确定编号.</p>
   </dd>
 
   <dt>wParam, lParam</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>The message parameters. If omitted, each parameter defaults to 0.</p>
-    <p>Each parameter must be an <a href="../Concepts.htm#numbers">integer</a> or an object with a <a href="../objects/Buffer.htm#Ptr">Ptr</a> property, such as a <a href="../objects/Buffer.htm">Buffer</a>. For messages which require a pointer to a string, use a Buffer or the <a href="StrPtr.htm">StrPtr</a> function. If the string contained by a variable is changed by passing the variable's address to SendMessage, the variable's length must be updated afterward by calling <a href="VarSetStrCapacity.htm#neg1">VarSetStrCapacity(MyVar, -1)</a>.</p>
-    <p>If AutoHotkey or the target window is 32-bit, only the parameter's low 32 bits are used; that is, values are truncated if outside the range -2147483648 to 2147483647 (-0x80000000 to 0x7FFFFFFF) for signed values, or 0 to 4294967295 (0xFFFFFFFF) for unsigned values. If AutoHotkey and the target window are both 64-bit, any integer value <a href="../Concepts.htm#pure-numbers">supported by AutoHotkey</a> can be used.</p>
+    <p>消息的参数. 如果省略, 每个参数默认为 0.</p>
+    <p>每个参数必须是一个<a href="../Concepts.htm#numbers">整数</a>或一个具有 <a href="../objects/Buffer.htm#Ptr">Ptr</a> 属性的对象, 比如 <a href="../objects/Buffer.htm">Buffer</a>. 对于需要指向字符串指针的消息, 使用 Buffer 或 <a href="StrPtr.htm">StrPtr</a> 函数. 如果通过将变量的地址传递给 SendMessage 来改变变量所包含的字符串, 那么之后必须通过调用 <a href="VarSetStrCapacity.htm#neg1">VarSetStrCapacity(MyVar, -1)</a> 来更新变量的长度.</p>
+    <p>如果 AutoHotkey 或目标窗口是 32 位的, 则只使用参数的低 32 位; 也就是说, 如果超出了有符号值的范围 -2147483648 到 2147483647(-0x80000000 to 0x7FFFFFFF), 或者超出了无符号值的范围 0 到 4294967295(0xFFFFFFFF), 则值会被截断. 如果 AutoHotkey 和目标窗口都是 64 位的, 可以使用 <a href="../Concepts.htm#pure-numbers">AutoHotkey 所支持的</a>任何整数值.</p>
   </dd>
 
   <dt>Control</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>If this parameter is omitted, the message will be sent directly to the target window rather than one of its controls. Otherwise, this parameter can be the control's ClassNN, text or HWND, or an object with a <code>Hwnd</code> property. For details, 请参阅 <a href="Control.htm#Parameter">The Control Parameter</a>.</p>
-    <p>If this parameter specifies a HWND (as an integer or object), it is not required to be the HWND of a control (child window). That is, it can also be the HWND of a top-level window.</p>
+    <p>如果省略此参数, 则消息会被直接发送到目标窗口而不是它的某个控件. 否则, 这个参数可以是控件的 ClassNN, 文本或 HWND, 或者是一个具有<code>Hwnd</code> 属性的对象. 有关详情, 请参阅<a href="Control.htm#Parameter">控件参数</a>.</p>
+    <p>如果这个参数指定了一个 HWND(作为一个整数或对象), 那么它不需要是一个控件(子窗口) 的 HWND. 也就是说, 它也可以是一个顶层窗口的 HWND.</p>
   </dd>
 
   <dt>WinTitle</dt>
@@ -68,38 +68,38 @@
   <dt>Timeout</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The maximum number of milliseconds to wait for the target window to process the message. If omitted, it defaults to 5000 (milliseconds). If the message is not processed within this time, an exception is thrown.</p>
+    <p>等待目标窗口处理消息的最大毫秒数. 如果省略, 默认为 5000(ms). 如果消息在这段时间内没有被处理, 则会抛出一个异常.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>This function returns the result of the message, which might sometimes be a &quot;reply&quot; depending on the nature of the message and its target window.</p>
-<p>The range of possible values depends on the target window and the version of AutoHotkey that is running.  When using a 32-bit version of AutoHotkey, or if the target window is 32-bit, the result is a 32-bit unsigned integer between 0 and 4294967295. When using the 64-bit version of AutoHotkey with a 64-bit window, the result is a 64-bit signed integer between -9223372036854775808 and 9223372036854775807.</p>
-<p>If the result is intended to be a 32-bit signed integer (a value from -2147483648 to 2147483648), it can be truncated to 32-bit and converted to a signed value as follows:</p>
+<p>该函数返回消息的结果, 有时可能是一个 &quot;回复&quot;, 这取决于消息的性质及其目标窗口.</p>
+<p>可能的值范围取决于目标窗口和正在运行的 AutoHotkey 版本. 当使用 32 位版本的 AutoHotkey, 或者如果目标窗口是 32 位的, 结果是一个 32 位的无符号整数, 介于 0 和 4294967295 之间. 当使用 64 位版本的 AutoHotkey 和 64 位窗口时, 结果是介于 -9223372036854775808 和 9223372036854775807 之间的 64 位有符号整数.</p>
+<p>如果期望结果是一个 32 位有符号的整数(从 -2147483648 到 2147483648 的值), 它可以被截断为 32 位, 并转换成一个有符号的值, 如下所示:</p>
 <pre>MsgReply := MsgReply &lt;&lt; 32 &gt;&gt; 32</pre>
-<p>This conversion may be necessary even on AutoHotkey 64-bit, because results from 32-bit windows are zero-extended. 例如, a result of -1 from a 32-bit window is seen as 0xFFFFFFFF on any version of AutoHotkey, whereas a result of -1 from a 64-bit window is seen as 0xFFFFFFFF on AutoHotkey 32-bit and -1 on AutoHotkey 64-bit.</p>
+<p>即使在 64 位的 AutoHotkey 上, 这种转换也是必要的, 因为来自 32 位窗口的结果是零扩展的. 例如, 来自 32 位窗口的 -1 结果在任何版本的 AutoHotkey 上都被视为 0xFFFFFFFF, 而来自 64 位窗口的 -1 在 32 位 AutoHotkey 被视为 0xFFFFFFFF, 在 64 位 AutoHotkey 被视为 -1.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>An exception is thrown in the following cases:</p>
+<p>在以下情况下会抛出异常:</p>
 <ul>
-  <li>The target window or control could not be found.</li>
-  <li>The message timed out.</li>
-  <li>The message could not be sent. For example, if the target window is running at a higher integrity level than the script (i.e. it is running as admin while the script is not), messages may be blocked.</li>
+  <li>找不到目标窗口或控件.</li>
+  <li>消息超时.</li>
+  <li>消息不能被发送. 例如, 如果目标窗口运行在比脚本更高的完整性级别上(例如, 它以管理员身份运行, 而脚本不是), 消息可能被阻止.</li>
 </ul>
 
 <h2 id="Remarks">备注</h2>
-<p>This function should be used with caution because sending a message to the wrong window (or sending an invalid message) might cause unexpected behavior or even crash the target application. This is because most applications are not designed to expect certain types of messages from external sources.</p>
-<p>SendMessage waits for the target window to process the message, up until the timeout period expires. By contrast, <a href="PostMessage.htm">PostMessage</a> places the message in the message queue associated with the target window without waiting for acknowledgement or reply.</p>
-<p>String parameters must be passed by <a href="StrPtr.htm">address</a>. For example:</p>
+<p>应该小心使用该函数, 因为发送消息到错误的窗口(或发送错误的消息) 可能导致意外的行为或者甚至让目标应用程序崩溃. 这是因为大多数应用程序并不是设计用于从外部来源中接受某些类型的消息.</p>
+<p>SendMessage 等待目标窗口处理消息, 直到超时期结束. 与此相反, <a href="PostMessage.htm">PostMessage</a> 将消息放入与目标窗口相关联的消息队列中, 而无需等待确认或回复.</p>
+<p>字符串参数必须按<a href="StrPtr.htm">地址</a>传递. 例如:</p>
 <pre>Run "Notepad"
 WinWait "Untitled - Notepad"
 SendMessage 0xC, 0, StrPtr("New Notepad Title")  <em>; 0XC is WM_SETTEXT</em></pre>
-<p>To send a message to all windows in the system, including those that are hidden or disabled, specify <code>0xFFFF</code> for <em>WinTitle</em> (0xFFFF is HWND_BROADCAST). This technique should be used only for messages intended to be broadcast, such as the following example:</p>
+<p>要发送消息到系统中的所有窗口, 包括隐藏或禁用的那些, 请在 <em>WinTitle</em> 中指定 <code>0xFFFF</code>(0xFFFF 是 HWND_BROADCAST). 这种技术应该只用于目标为广播的消息, 例如:</p>
 <pre>SendMessage 0x1A,,,, 0xFFFF  <em>; 0x1A is WM_SETTINGCHANGE</em></pre>
-<p>To have a script receive a message, use <a href="OnMessage.htm">OnMessage</a>.</p>
-<p>See the <a href="../misc/SendMessage.htm">Message Tutorial</a> for an introduction to using this function.</p>
+<p>要让脚本接收消息, 请使用 <a href="OnMessage.htm">OnMessage</a>.</p>
+<p>请参阅<a href="../misc/SendMessage.htm">消息指南</a>来查看使用这些命令的介绍.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
 
 <h2 id="Related">相关</h2>
@@ -108,41 +108,41 @@ SendMessage 0xC, 0, StrPtr("New Notepad Title")  <em>; 0XC is WM_SETTEXT</em></p
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExMonitorPower">
-<p><a href="#ExMonitorPower">#1</a>: Turns off the monitor via hotkey. In the SendMessage line, replace the number 2 with -1 to turn the monitor on or replace it with 1 to activate the monitor's low-power mode.</p>
-<pre>#o::  <em>; Win+O hotkey</em>
+<p><a href="#ExMonitorPower">#1</a>: 通过热键关闭显示器. 在 SendMessage 行中, 将数字 2 替换为 -1 以打开显示器, 或将其替换为 1 以激活显示器的低功耗模式.</p>
+<pre>#o::  <em>; Win+O 热键</em>
 {
-    Sleep 1000  <em>; Give user a chance to release keys (in case their release would wake up the monitor again).
-    ; Turn Monitor Off:</em>
+    Sleep 1000  <em>; 让用户有机会释放按键(以防释放它们时再次唤醒显视器).
+    ; 关闭显示器:</em>
     SendMessage 0x112, 0xF170, 2,, "Program Manager"  <em>; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.</em>
 }</pre>
 </div>
 
 <div class="ex" id="ExScreenSave">
-<p><a href="#ExScreenSave">#2</a>: Start the user's chosen screen saver:</p>
+<p><a href="#ExScreenSave">#2</a>: 启动用户选择的屏幕保护程序:</p>
 <pre>SendMessage 0x112, 0xF140, 0,, "Program Manager"  <em>; 0x112 is WM_SYSCOMMAND, and 0xF140 is SC_SCREENSAVE.</em></pre>
 </div>
 
 <div class="ex" id="ExVScrollUp">
-<p><a href="#ExVScrollUp">#3</a>:  Scroll up by one line (for a control that has a vertical scroll bar):</p>
+<p><a href="#ExVScrollUp">#3</a>: 向上滚动一行(用于含垂直滚动条的控件):</p>
 <pre>SendMessage 0x115, 0, 0, ControlGetFocus("A")</pre>
 </div>
 
 <div class="ex" id="ExVScrollDown">
-<p><a href="#ExVScrollDown">#4</a>: Scroll down by one line:</p>
+<p><a href="#ExVScrollDown">#4</a>: 向下滚动一行:</p>
 <pre>SendMessage 0x115, 1, 0, ControlGetFocus("A")</pre>
 </div>
 
 <div class="ex" id="ExWinamp">
-<p><a href="#ExWinamp">#5</a>: This example asks Winamp which track number is currently active. See <a href="../misc/Winamp.htm">Automating Winamp</a> for more information.</p>
+<p><a href="#ExWinamp">#5</a>: 这个例子请求 Winamp 的当前活动的轨道编号(有关详情, 请参阅 <a href="../misc/Winamp.htm">Automating Winamp</a>.</p>
 <pre>SetTitleMatchMode 2
 track := SendMessage(1024, 0, 120,, "- Winamp")
-track++  <em>; Winamp's count starts at 0, so adjust by 1.</em>
+track++  <em>; Winamp 的计数从 "0" 开始, 所以加 1 进行调整.</em>
 MsgBox "Track #" track " is active or playing."
 </pre>
 </div>
 
 <div class="ex" id="ExPID">
-<p><a href="#ExPID">#6</a>: To find the process ID of an AHK script (an alternative to <a href="WinGetPID.htm">WinGetPID</a>):</p>
+<p><a href="#ExPID">#6</a>: 找出 AHK 脚本的进程 ID(另一种方法是 <a href="WinGetPID.htm">WinGetPID</a>):</p>
 <pre class="NoIndent">SetTitleMatchMode 2
 DetectHiddenWindows true
 pid := SendMessage(0x44, 0x405, 0, , "SomeOtherScript.ahk - AutoHotkey v")

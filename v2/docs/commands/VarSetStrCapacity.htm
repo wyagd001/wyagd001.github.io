@@ -30,37 +30,37 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>如果省略, 则函数将返回变量当前的容量且不会改变其的内容. 否则, 变量中的所有内容将会丢弃(变量被置空).</p>
-    <p>Specify for <em>RequestedCapacity</em> the number of characters that the variable should be able to hold after the adjustment. <em>RequestedCapacity</em> does not include the internal zero terminator. For example, specifying 1 would allow the variable to hold up to one character in addition to its internal terminator. Note: the variable will auto-expand if the script assigns it a larger value later.</p>
-    <p>Since this function is often called simply to ensure the variable has a certain minimum capacity, for performance reasons, it shrinks the variable only when <em>RequestedCapacity</em> is 0. In other words, if the variable's capacity is already greater than <em>RequestedCapacity</em>, it will not be reduced (but the variable will still made blank for consistency).</p>
-    <p>Therefore, to explicitly shrink a variable, first free its memory with <code>VarSetStrCapacity(Var, 0)</code> and then use <code>VarSetStrCapacity(Var, NewCapacity)</code> -- or simply let it auto-expand from zero as needed.</p>
-    <p>For performance reasons, freeing a variable whose previous capacity was less than 64 characters might have no effect because its memory is of a permanent type. In this case, the current capacity will be returned rather than 0.</p>
-    <p>For performance reasons, the memory of a variable whose capacity is less than 4096 bytes is not freed by storing an empty string in it (e.g. <code>Var := &quot;&quot;</code>). However, <code>VarSetStrCapacity(Var, 0)</code> does free it.</p>
-    <p id="neg1">Specify -1 for <em>RequestedCapacity</em> to update the variable's internally-stored string length to the length of its current contents. This is useful in cases where the string has been altered indirectly, such as by passing its <a href="StrPtr.htm">address</a> via <a href="DllCall.htm">DllCall</a> or <a href="SendMessage.htm">SendMessage</a>. In this mode, VarSetStrCapacity returns the length rather than the capacity.</p>
+    <p>指定 <em>RequestedCapacity</em> 为调整后变量所能容纳的字节数. <em>RequestedCapacity</em> 不包括内部零终止符. 例如, 指定 1 将允许变量在其内部结束符之外最多容纳一个字符. 注意: 如果脚本稍后给它分配一个更大的值, 变量将自动展开.</p>
+    <p>因此可以经常简单地调用此函数来确保变量占用最小的空间, 出于性能的考虑, 它只在 <em>RequestedCapacity</em> 为 0 的时候才会缩小变量. 换句话说, 如果变量的容量已经大于 <em>RequestedCapacity</em>, 它就不会被缩小(但为了保持一致性, 变量会被置空).</p>
+    <p>因此, 要显式地缩小变量, 首先请使用 <code>VarSetStrCapacity(Var, 0)</code> 释放它占用的内存, 然后使用 <code>VarSetStrCapacity(Var, NewCapacity)</code> -- 或者简单地让它自动按需从零扩展.</p>
+    <p>出于性能考虑, 要释放一个原来容量小于 64 字符的变量可能会没有效果, 因为它的内存是永久类型的. 在这种情况下, 会返回当前容量, 而不是 0.</p>
+    <p>出于性能考虑, 容量小于 4096 字节的变量的内存不能通过赋值空字符串的方法来释放(例如 <code>Var := &quot;&quot;</code>). 然而, <code>VarSetStrCapacity(Var, 0)</code> 可释放它.</p>
+    <p id="neg1">为 <em>RequestedCapacity</em> 指定 -1, 将变量内部存储的字符串长度更新为其当前内容的长度. 这在字符串被间接改变的情况下很有用, 比如通过 <a href="DllCall.htm">DllCall</a> 或 <a href="SendMessage.htm">SendMessage</a> 传递其<a href="StrPtr.htm">地址</a>. 在这种模式下, VarSetStrCapacity 返回的是长度而不是容量.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>This function returns the number of characters that Var can now hold, which will be greater than or equal to <em>RequestedCapacity</em>.</p>
+<p>该函数返回 Var 现在可以容纳的字符数, 该字符数将大于或等于 <em>RequestedCapacity</em>.</p>
 
 <h2 id='Failure'>失败</h2>
-<p>An exception is thrown under any of the following conditions:</p>
+<p>在以下任何一种情况下都会抛出异常:</p>
 <ul>
-  <li><em>VarName</em> is not a valid variable reference. It is not possible to pass an <a href="../Objects.htm#Usage_Objects">object property</a> or <a href="../Variables.htm#BuiltIn">built-in variable</a> by reference, and therefore not valid to pass one to this function.</li>
-  <li>The requested capacity is too large to fit within any single contiguous memory block available to the script. In rare cases, this may be due to the system running out of memory.</li>
-  <li><em>RequestedCapacity</em> is less than -1 or greater than can theoretically be supported by the current platform.</li>
+  <li><em>VarName</em> 不是一个有效的变量引用. 不可能通过引用传递一个<a href="../Objects.htm#Usage_Objects">对象属性</a>或<a href="../Variables.htm#BuiltIn">内置变量</a>, 因此不能将其传递给该函数.</li>
+  <li>请求的容量太大, 无法容纳在脚本可用的任何一个连续的内存块中. 在极少数情况下, 这可能是由于系统内存耗尽所致.</li>
+  <li><em>RequestedCapacity</em> 小于 -1 或大于当前平台理论上可以支持的容量.</li>
 </ul>
 
 <h2 id="Remarks">备注</h2>
-<p>The <a href="../objects/Buffer.htm">Buffer</a> object offers superior clarity and flexibility when dealing with binary data, structures, DllCall and similar. For instance, a Buffer object can be assigned to a property or array element or be passed to or returned from a function without copying its contents.</p>
-<p>This function can be used to enhance performance when building a string by means of gradual concatenation. This is because multiple automatic resizings can be avoided when you have some idea of what the string's final length will be. In such a case, <em>RequestedCapacity</em> need not be accurate: if the capacity is too small, performance is still improved and the variable will begin auto-expanding when the capacity has been exhausted. If the capacity is too large, some of the memory is wasted, but only temporarily because all the memory can be freed after the operation by means of <code>VarSetStrCapacity(Var, 0)</code> or <code>Var := &quot;&quot;</code>.</p>
+<p><a href="../objects/Buffer.htm">Buffer</a> 对象在处理二进制数据, 结构体, DllCall 和类似的东西时, 提供了卓越的清晰度和灵活性. 例如, Buffer 对象可以分配给一个属性或数组元素, 或者传递给一个函数或从一个函数返回, 而不需要复制其内容.</p>
+<p>在通过渐进式连接的方式构建一个字符串时, 可以使用这个函数来提高性能. 这是因为当你对字符串的最终长度有一定了解时, 可以避免多次自动调整大小. 在这种情况下, <em>RequestedCapacity</em> 不需要太准确: 如果容量太小, 性能仍然会得到提高, 当容量用完后, 变量将开始自动扩展. 如果容量过大, 则会浪费部分内存, 但只是暂时的, 因为所有的内存都可以在操作后通过 <code>VarSetStrCapacity(Var, 0)</code> 或 <code>Var := &quot;&quot;</code> 来释放.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer object</a>, <a href="DllCall.htm">DllCall</a>, <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: Optimize by ensuring <em>MyVar</em> has plenty of space to work with.</p>
+<p><a href="#ExBasic">#1</a>: 通过确保 <em>MyVar</em> 有足够的工作空间来优化.</p>
 <pre>VarSetStrCapacity(MyVar, 5120000)  <em>; ~10 MB</em>
 Loop
 {
@@ -71,26 +71,26 @@ Loop
 </div>
 
 <div class="ex" id="ExString">
-<p><a href="#ExString">#2</a>: Use a variable to receive a string from an external function via <a href="DllCall.htm">DllCall</a>. (Note that the use of <a href="BufferAlloc.htm#ExString">BufferAlloc</a> may be preferred; in particular, when dealing with non-Unicode strings.)</p>
+<p><a href="#ExString">#2</a>: 使用一个变量通过 <a href="DllCall.htm">DllCall</a> 从外部函数接收一个字符串. (注意, 使用 <a href="BufferAlloc.htm#ExString">BufferAlloc</a> 可能是首选; 尤其是在处理非 Unicode 字符串时.)</p>
 <pre>max_chars := 10
 
 Loop 2
 {
-    <em>; Allocate space for use with DllCall.</em>
+    <em>; 分配用于 DllCall 的空间.</em>
     VarSetStrCapacity(buf, max_chars)
 
     if (A_Index = 1)
-        <em>; Alter the variable indirectly via DllCall.</em>
+        <em>; 通过 DllCall 间接修改变量.</em>
         DllCall("wsprintf", <span class="red">"Ptr", StrPtr(buf)</span>, "Str", "0x%08x", "UInt", 4919, "CDecl")
     else
-        <em>; Use "str" to update the length automatically:</em>
+        <em>; 使用 "str" 来自动更新长度:</em>
         DllCall("wsprintf", <span class="blue">"Str", buf</span>, "Str", "0x%08x", "UInt", 4919, "CDecl")
 
-    <em>; Concatenate a string to demonstrate why the length needs to be updated:</em>
+    <em>; 连接字符串以演示为什么需要更新长度:</em>
     wrong_str := buf . "&lt;end&gt;"
     wrong_len := StrLen(buf)
 
-    <em>; Update the variable's length.</em>
+    <em>; 更新变量的长度.</em>
     VarSetStrCapacity(buf, -1)
 
     right_str := buf . "&lt;end&gt;"

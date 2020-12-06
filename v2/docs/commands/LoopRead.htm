@@ -32,17 +32,17 @@
       <p>在循环期间保持打开的文件的名称, 如果未指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
       <p>在循环的主体内, 使用 <a href="FileAppend.htm">FileAppend</a> 函数, 不带 <em>Filename</em> 参数(即省略它) 来追加到这个特殊的文件. 以这种方式追加到一个文件比使用 2 个参数模式的 <a href="FileAppend.htm">FileAppend</a> 执行地更好, 因为每次操作时不需要关闭文件和再重新打开. 如果需要的话, 记得在文本后加入换行符(`n) 或回车符和换行符(`r`n).</p>
       <p>如果没有向文件写入任何内容, 文件就不会被打开. 如果循环执行零迭代或从未调用 <a href="FileAppend.htm">FileAppend</a>, 就会发生这种情况.</p>
-      <p><strong>选项</strong>: The end of line (EOL) translation mode and output file encoding depend on which options are passed in the opening call to <a href="FileAppend.htm">FileAppend</a> (i.e. the first call which omits <em>Filename</em>). Subsequent calls ignore the <em>Options</em> parameter. EOL translation is not performed by default; that is, linefeed (`n) characters are written as-is unless the <code>"`n"</code> option is present.</p>
-      <p><strong>Standard Output (stdout)</strong>: Specifying an asterisk (*) for <em>OutputFile</em> sends any text written by <a href="FileAppend.htm">FileAppend</a> to standard output (stdout). Although such output can be redirected to a file, piped to another EXE, or captured by <a href="_ErrorStdOut.htm">fancy text editors</a>, it will not appear at the command prompt it was launched from. See <a href="FileAppend.htm">FileAppend</a> for more details.</p>
+      <p><strong>选项</strong>: 行末(EOL) 转换模式和输出文件编码取决于在 <a href="FileAppend.htm">FileAppend</a> 的首次调用中传递的选项(即省略 <em>Filename</em> 的首次调用). 随后的调用会忽略 <em>Options</em> 参数. 默认情况下不执行 EOL 转换; 也就是说, 除非存在 <code>"`n"</code> 选项, 否则换行符(`n) 将按原样写入.</p>
+      <p><strong>标准输出(stdout)</strong>:指定 <em>OutputFile</em> 为星号(*) 可以把 <a href="FileAppend.htm">FileAppend</a> 写入的任何文本发送到标准输出(stdout). 尽管这样的输出可以重定向到文件, 指向另一个 EXE 的管道或被<a href="_ErrorStdOut.htm">高级文本编辑器</a>捕获, 然而它不会出现在运行它的命令提示符中. 有关详情, 请参阅 <a href="FileAppend.htm">FileAppend</a>.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>A file-reading loop is useful when you want to operate on each line contained in a text file, one at a time. The file is kept open for the entire operation to avoid having to re-scan each time to find the next line.</p>
-<p id="LoopReadLine">The built-in variable <strong>A_LoopReadLine</strong> exists within any file-reading loop. It contains the contents of the current line excluding the carriage return and linefeed (`r`n) that marks the end of the line. If an inner file-reading loop is enclosed by an outer file-reading loop, the innermost loop's file-line will take precedence.</p>
-<p>Lines up to 65,534 characters long can be read. If the length of a line exceeds this, its remaining characters will be read during the next loop iteration.</p>
-<p><a href="StrSplit.htm">StrSplit</a> or a <a href="LoopParse.htm">parsing loop</a> is often used inside a file-reading loop to parse the contents of each line retrieved from <em>InputFile</em>. 例如, if <em>InputFile</em>'s lines are each a series of tab-delimited fields, those fields can individually retrieved as in this example:</p>
+<p>当您想对包含在文本文件中的内容逐行进行操作时, 文件读取循环很有用. 在整个操作过程中, 文件是打开的, 以避免每次都要重新扫描以找到下一行.</p>
+<p id="LoopReadLine">内置变量 <strong>A_LoopReadLine</strong> 存在于任何文件读取循环中. 它包含当前行的内容, 不包括回车和标志行结束的换行符(`r`n). 如果一个内部的文件读取循环被一个外部的文件读取循环所包围, 那么最内部循环的文件行将优先.</p>
+<p>读取长度为 65,534 个字符的行. 如果行的长度超过了这个长度, 其剩余的字符将在下一个循环迭代时被读取.</p>
+<p><a href="StrSplit.htm">StrSplit</a> 或<a href="LoopParse.htm">解析循环</a>通常用于文件读取循环中, 以解析从 <em>InputFile</em> 中获取的每一行的内容. 例如, 如果 <em>InputFile</em> 的每一行都是一系列以 tab 分隔的字段, 那么这些字段可以像这个例子一样单独检索:</p>
 <pre>Loop read, "C:\Database Export.txt"
 {
     Loop parse, A_LoopReadLine, A_Tab
@@ -50,17 +50,17 @@
         MsgBox "Field number " A_Index " is " A_LoopField "."
     }
 }</pre>
-<p>To load an entire file into a variable, use <a href="FileRead.htm">FileRead</a> because it performs much better than a loop (especially for large files).</p>
-<p>To have multiple files open simultaneously, use <a href="FileOpen.htm">FileOpen</a>.</p>
+<p>要加载整个文件内容到变量中, 请使用 <a href="FileRead.htm">FileRead</a>, 因为它比循环执行的更好(尤其对于大文件).</p>
+<p>要同时打开多个文件, 请使用 <a href="FileOpen.htm">FileOpen</a>.</p>
 <p>请参阅 <a href="Loop.htm">Loop</a> 了解关于<a href="Block.htm">区块</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 A_Index 变量(其存在于各种类型的循环中) 的相关信息.</p>
-<p>To control how the file is decoded when no byte order mark is present, use <a href="FileEncoding.htm">FileEncoding</a>.</p>
+<p>在不存在字节顺序标记时要控制如何解码文件, 请使用 <a href="FileEncoding.htm">FileEncoding</a>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="FileEncoding.htm">FileEncoding</a>, <a href="FileOpen.htm">FileOpen</a>/<a href="../objects/File.htm">File Object</a>, <a href="FileRead.htm">FileRead</a>, <a href="FileAppend.htm">FileAppend</a>, <a href="Sort.htm">Sort</a>, <a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">Blocks</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileSetTime.htm">FileSetTime</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExFileAppend">
-<p><a href="#ExFileAppend">#1</a>: Only those lines of the 1st file that contain the word FAMILY will be written to the 2nd file. Uncomment the first line to overwrite rather than append to any existing file.</p>
+<p><a href="#ExFileAppend">#1</a>: 只有首个文件中包含单词 FAMILY 的那些行才会写入第二个文件中. 取消注释首行可以覆盖而不是追加到任何现有的文件中.</p>
 <pre><em>;FileDelete "C:\Docs\Family Addresses.txt"</em>
 
 Loop read, "C:\Docs\Address List.txt", "C:\Docs\Family Addresses.txt"
@@ -81,7 +81,7 @@ Loop read, "C:\Docs\Address List.txt", "C:\Docs\Family Addresses.txt"
 <pre>
 SourceFile := FileSelect(3,, "Pick a text or HTML file to analyze.")
 if SourceFile = ""
-    return  <em>; This will exit in this case.</em>
+    return  <em>; 此时将退出.</em>
 
 SplitPath SourceFile,, SourceFilePath,, SourceFileNoExt
 DestFile := SourceFilePath "\" SourceFileNoExt " Extracted Links.txt"
@@ -104,49 +104,49 @@ return
 
 URLSearch(URLSearchString)
 {
-    <em>; It's done this particular way because some URLs have other URLs embedded inside them:
-    ; Find the left-most starting position:</em>
-    URLStart := 0  <em>; Set starting default.</em>
+    <em>; 由于在一些 URL(网址) 中内嵌有其他的 URL, 所以用这种特殊的方法进行处理:
+    ; 找到最左边的起始位置:</em>
+    URLStart := 0  <em>; 设置起始默认值.</em>
     for URLPrefix in ["https://", "http://", "ftp://", "www."]
     {
         ThisPos := InStr(URLSearchString, URLPrefix)
-        if !ThisPos  <em>; This prefix is disqualified.</em>
+        if !ThisPos  <em>; 此前缀被取消资格.</em>
             continue
         if !URLStart
             URLStart := ThisPos
-        else <em>; URLStart has a valid position in it, so compare it with ThisPos.</em>
+        else <em>; URLStart 里面有一个有效的位置, 所以要和 ThisPos 比较一下.</em>
         {
             if ThisPos &amp;&amp; ThisPos &lt; URLStart
                 URLStart := ThisPos
         }
     }
 
-    if !URLStart  <em>; No URLs exist in URLSearchString.</em>
+    if !URLStart  <em>; 在 URLSearchString 中不存在 URL.</em>
         return
 
-    <em>; Otherwise, extract this URL:</em>
-    URL := SubStr(URLSearchString, URLStart)  <em>; Omit the beginning/irrelevant part.</em>
-    Loop parse, URL, " `t&lt;&gt;"  <em>; Find the first space, tab, or angle bracket (if any).</em>
+    <em>; 否则, 提取该 URL:</em>
+    URL := SubStr(URLSearchString, URLStart)  <em>; 忽略开始/无效部分.</em>
+    Loop parse, URL, " `t&lt;&gt;"  <em>; 找到首个空格, tab 或尖括号(如果有).</em>
     {
         URL := A_LoopField
-        break  <em>; i.e. perform only one loop iteration to fetch the first "field".</em>
+        break  <em>; 即仅执行一次循环来获取首个 "片段".</em>
     }
-    <em>; If the above loop had zero iterations because there were no ending characters found,
-    ; leave the contents of the URL var untouched.
+    <em>; 如果上面的循环因为没有找到结尾字符而导致迭代次数为零,
+    ; 那么 URL 变量的内容保持不变.
 
-    ; If the URL ends in a double quote, remove it.  For now, StrReplace is used, but
-    ; note that it seems that double quotes can legitimately exist inside URLs, so this
-    ; might damage them:</em>
+    ; 如果 URL 以双引号结束, 那么移除它. 暂时使用 StringReplace, 不过注意
+    ; 双引号似乎可以合法存在于 URL 中, 所以这样做
+    ; 可能破坏它们:</em>
     URLCleansed := StrReplace(URL, '"')
     FileAppend URLCleansed "`n"
     global LinkCount += 1
 
-    <em>; See if there are any other URLs in this line:</em>
+    <em>; 看看当前行中是否含有其他 URL:</em>
     CharactersToOmit := StrLen(URL)
     CharactersToOmit += URLStart
     URLSearchString := SubStr(URLSearchString, CharactersToOmit)
     
-    <em>; Recursive call to self:</em>
+    <em>; 到自身的递归调用:</em>
     URLSearch(URLSearchString)
 }
 </pre>

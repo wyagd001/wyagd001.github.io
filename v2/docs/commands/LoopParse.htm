@@ -45,18 +45,18 @@ Loop Parse, NewHTML, "&cent;" <em>; Parse the string based on the cent symbol.</
   <dt>OmitChars</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>An optional list of characters (case sensitive) to exclude from the beginning and end of each substring. 例如, if <em>OmitChars</em> is <code>A_Space A_Tab</code>, spaces and tabs will be removed from the beginning and end (but not the middle) of every retrieved substring.</p>
-    <p>If <em>Delimiters</em> is blank, <em>OmitChars</em> indicates which characters should be excluded from consideration (the loop will not see them).</p>
+    <p>可选的字符列表(区分大小写), 用来从每个子字符串的开始和结尾部分移除这些字符. 例如, 如果 <em>OmitChars</em> 是 <code>A_Space A_Tab</code>, 那么每个解析出来的子字符串中开始和结尾部分(但中间的不会) 的空格和 tab 会被移除.</p>
+    <p>如果 <em>Delimiters</em> 为空, 那么 <em>OmitChars</em> 表示应该考虑移除哪些字符(它们将不会出现在循环中).</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>A string parsing loop is useful when you want to operate on each field contained in a string, one at a time. Parsing loops use less memory than <a href="StrSplit.htm">StrSplit</a> (though either way the memory use is temporary) and in most cases they are easier to use.</p>
-<p id="LoopField">The built-in variable <strong>A_LoopField</strong> exists within any parsing loop. It contains the contents of the current substring (field). If an inner parsing loop is enclosed by an outer parsing loop, the innermost loop's field will take precedence.</p>
-<p>Although there is no built-in variable &quot;A_LoopDelimiter&quot;, the example at the very bottom of this page demonstrates how to detect which delimiter was encountered for each field.</p>
-<p>There is no restriction on the size of the input string or its fields.</p>
-<p>To arrange the fields in a different order prior to parsing, use the <a href="Sort.htm">Sort</a> function.</p>
+<p>当你想对一个字符串中包含的每一个片段进行操作时, 字符串解析循环很有用. 解析循环比 <a href="StrSplit.htm">StrSplit</a> 使用更少的内存且在大多数情况下更容易使用(尽管无论哪种方式使用的内存都是暂时的).</p>
+<p id="LoopField">内置变量 <strong>A_LoopField</strong> 存在于任何解析循环中. 它包含了当前子字符串(片段) 的内容. 如果一个内层解析循环包含在一个外层解析循环中, 则最内层循环的片段将具有优先权.</p>
+<p>尽管不存在内置变量 &quot;A_LoopDelimiter&quot;, 不过在此页面最底部的例子演示了如何检测在分割每个片段时是由于遇到哪个分隔符.</p>
+<p>输入字符串或其片段没有大小限制.</p>
+<p>要在解析前按不同的顺序排列字段, 请使用 <a href="Sort.htm">Sort</a> 函数.</p>
 <p>请参阅 <a href="Loop.htm">Loop</a> 了解关于<a href="Block.htm">区块</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 A_Index 变量(其存在于各种类型的循环中) 的相关信息.</p>
 <h2 id="Related">相关</h2>
 <p><a href="StrSplit.htm">StrSplit</a>, <a href="LoopRead.htm">file-reading loop</a>, <a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">Blocks</a>, <a href="Sort.htm">Sort</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileSetTime.htm">FileSetTime</a></p>
@@ -71,8 +71,8 @@ Loop parse, Colors, ","
 </div>
 
 <div class="ex" id="ExFileRead">
-<p><a href="#ExFileRead">#2</a>: Read the lines inside a variable, one by one (similar to a <a href="LoopRead.htm">file-reading</a> loop). A file can be loaded into a variable via <a href="FileRead.htm">FileRead</a>:</p>
-<pre>Loop parse, FileContents, "`n", "`r"  <em>; Specifying `n prior to `r allows both Windows and Unix files to be parsed.</em>
+<p><a href="#ExFileRead">#2</a>: 按行读取变量的内容, 一行接一行(类似于 <a href="LoopRead.htm">file-reading</a> 循环). 文件可以通过 <a href="FileRead.htm">FileRead</a> 加载到变量中:</p>
+<pre>Loop parse, FileContents, "`n", "`r"  <em>; 在 `r 之前指定 `n, 这样可以同时支持对 Windows 和 Unix 文件的解析.</em>
 {
     Result := MsgBox("Line number " A_Index " is " A_LoopField ".`n`nContinue?",, "y/n")
 }
@@ -80,7 +80,7 @@ until Result = "No"</pre>
 </div>
 
 <div class="ex" id="ExClipboard">
-<p><a href="#ExClipboard">#3</a>: This is the same as the example above except that it's for the clipboard. It's useful whenever the clipboard contains files, such as those copied from an open Explorer window (the program automatically converts such files to their file names):</p>
+<p><a href="#ExClipboard">#3</a>: 除了用于剪贴板外, 这个例子和上一个一样. 每当剪贴板包含文件时这个例子很有用, 例如从打开的资源管理器窗口复制的文件(程序自动把这些文件转换为它们的文件名):</p>
 <pre>Loop parse, A_Clipboard, "`n", "`r"
 {
     Result := MsgBox("File number " A_Index " is " A_LoopField ".`n`nContinue?",, "y/n")
@@ -89,7 +89,7 @@ until Result = "No"</pre>
 </div>
 
 <div class="ex" id="ExCSV">
-<p><a href="#ExCSV">#4</a>: Parse a comma separated value (CSV) file:</p>
+<p><a href="#ExCSV">#4</a>: 解析逗号分隔值(CSV) 文件:</p>
 <pre>Loop read, "C:\Database Export.csv"
 {
     LineNumber := A_Index
@@ -103,17 +103,17 @@ until Result = "No"</pre>
 </div>
 
 <div class="ex" id="ExDelimiter">
-<p><a href="#ExDelimiter">#5</a>: Determining which delimiter was encountered.</p>
-<pre><em>; Initialize string to search.</em>
+<p><a href="#ExDelimiter">#5</a>: 判断遇到了哪个分隔符.</p>
+<pre><em>; 初始化要搜索的字符串.</em>
 Colors := "red,green|blue;yellow|cyan,magenta"
-<em>; Initialize counter to keep track of our position in the string.</em>
+<em>; 初始化计数器来跟踪字符串中我们的位置.</em>
 Position := 0
 
 Loop Parse, Colors, ",|;"
 {
-    <em>; Calculate the position of the delimiter at the end of this field.</em>
+    <em>; 计算在这个字段末尾分隔符的位置.</em>
     Position += StrLen(A_LoopField) + 1
-    <em>; Retrieve the delimiter found by the parsing loop.</em>
+    <em>; 获取解析循环中找到的分隔符.</em>
     Delimiter := SubStr(Colors, Position, 1)
 
     MsgBox "Field: " A_LoopField "`nDelimiter: " Delimiter
