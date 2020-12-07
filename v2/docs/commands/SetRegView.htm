@@ -12,7 +12,7 @@
 <body>
 
 <h1>SetRegView</h1>
-<p>Sets the registry view used by <a href="RegRead.htm">RegRead</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="RegDelete.htm">RegDelete</a> and <a href="LoopReg.htm">Loop Reg</a>, allowing them in a 32-bit script to access the 64-bit registry view and vice versa.</p>
+<p>设置 <a href="RegRead.htm">RegRead</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="RegDelete.htm">RegDelete</a> 和 <a href="LoopReg.htm">Loop Reg</a> 使用的注册表视图, 允许它们在 32 位脚本中访问 64 位注册表视图, 反之亦然.</p>
 <pre class="Syntax"><span class="func">SetRegView</span> RegView</pre>
 
 <h2 id="Parameters">参数</h2>
@@ -21,45 +21,45 @@
   <dt>RegView</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#strings">字符串</a></p>
-      <p>Specify <strong>32</strong> to view the registry as a 32-bit application would, or <strong>64</strong> to view the registry as a 64-bit application would.</p>
-      <p>Specify the word <strong>Default</strong> to restore normal behaviour.</p>
+      <p>指定 <strong>32</strong> 以 32 位程序的方式来查看注册表, 而 <strong>64</strong> 以 64 位程序的方式浏览注册表.</p>
+      <p>指定单词 <strong>Default</strong> 来恢复到默认的行为.</p>
   </dd>
 
 </dl>
 
-<h2>General 备注</h2>
-<p>This function is only useful on Windows 64-bit.  It has no effect on Windows 32-bit.</p>
-<p>On 64-bit systems, 32-bit applications run on a subsystem of Windows called <a href="http://msdn.microsoft.com/en-us/library/aa384249">WOW64</a>.  By default, the system redirects certain <a href="http://msdn.microsoft.com/en-us/library/aa384253">registry keys</a> to prevent conflicts.  例如, in a 32-bit script, <code>HKLM\SOFTWARE\AutoHotkey</code> is redirected to <code>HKLM\SOFTWARE\Wow6432Node\AutoHotkey</code>.  SetRegView allows the registry functions in a 32-bit script to access redirected keys in the 64-bit registry view and vice versa.</p>
+<h2 id="Remarks">备注</h2>
+<p>此命令仅在 64 位 Windows 上有用. 它在 32 位 Windows 中没有效果.</p>
+<p>在 64 位系统中, 32 位程序运行于被称为 <a href="http://msdn.microsoft.com/en-us/library/aa384249">WOW64</a> 的 Windows 子系统中. 默认情况下, 系统会重定向某些<a href="http://msdn.microsoft.com/en-us/library/aa384253">注册表键</a>来避免冲突. 例如, 在 32 位脚本中, <code>HKLM\SOFTWARE\AutoHotkey</code> 会被重定向到 <code>HKLM\SOFTWARE\Wow6432Node\AutoHotkey</code>.  SetRegView 允许 32 位脚本中的注册表命令访问在 64 位注册表视图中被重定向的键, 反之亦然.</p>
 
-<p>The built-in variable <em>A_RegView</em> contains the current setting.  Every newly launched <a href="../misc/Threads.htm">thread</a> (such as a <a href="../Hotkeys.htm">hotkey</a>, <a href="../objects/Menu.htm">custom menu item</a>, or <a href="SetTimer.htm">timed</a> subroutine) starts off fresh with the default setting for this function. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
+<p>内置变量 <em>A_RegView</em> 包含了当前设置. 每个新运行的<a href="../misc/Threads.htm">线程</a>(例如<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时</a>子程序) 都会以此函数的默认设置开始. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="RegRead.htm">RegRead</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="RegDelete.htm">RegDelete</a>, <a href="RegDeleteKey.htm">RegDeleteKey</a>, <a href="LoopReg.htm">Loop Reg</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: Shows how to set a specific registry view, and how registry redirection affects the script.</p>
+<p><a href="#ExBasic">#1</a>: 演示了如何设置特定的注册表视图以及注册表重定向对脚本的影响.</p>
 <pre>
-<em>; Access the registry as a 32-bit application would.</em>
+<em>; 以 32 位程序的方式访问注册表.</em>
 SetRegView 32
 RegWrite "REG_SZ", "HKLM\SOFTWARE\Test.ahk", "Value", 123
 
-<em>; Access the registry as a 64-bit application would.</em>
+<em>; 以 64 位程序的方式访问注册表.</em>
 SetRegView 64
 value := RegRead("HKLM\SOFTWARE\Wow6432Node\Test.ahk", "Value")
 RegDelete "HKLM\SOFTWARE\Wow6432Node\Test.ahk"
 
 MsgBox "Read value '" value "' via Wow6432Node."
 
-<em>; Restore the registry view to the default, which
-; depends on whether the script is 32-bit or 64-bit.</em>
+<em>; 恢复默认的注册表视图, 这
+; 取决于脚本是 32 位还是 64 位的.</em>
 SetRegView "Default"
 <em>;...</em>
 </pre>
 </div>
 
 <div class="ex" id="Ex32Or64">
-<p><a href="#Ex32Or64">#2</a>: Shows how to detect the type of EXE and operating system on which the script is running.</p>
+<p><a href="#Ex32Or64">#2</a>: 演示了如何判断正在运行脚本的 EXE 和操作系统的类型.</p>
 <pre>if (A_PtrSize = 8)
     script_is := "64-bit"
 else <em>; if (A_PtrSize = 4)</em>
