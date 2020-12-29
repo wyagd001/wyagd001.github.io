@@ -30,7 +30,7 @@
 </ul>
 
 <h2 id="Intro">入门和简单示例</h2>
-<p>Tree-View 通过缩进父项目下的子项目来显示出层级关系. 最常见的例子是资源管理器的驱动器和文件夹数.</p>
+<p>Tree-View 通过缩进父项目下的子项目来显示出层级关系. 最常见的例子是资源管理器的驱动器和文件夹树.</p>
 <p>树视图通常看起来像这样:</p>
 <img src="../static/pics/ctrl_treeview.png" alt="TreeView" />
 <p>创建 TreeView 的语法为:</p>
@@ -65,7 +65,7 @@ Gui, Add, TreeView, <strong>ImageList%ImageListID%</strong>
 <a href="#TV_Add">TV_Add</a>("Name of Item", 0, "Icon4")  <em>; 添加项目到 TreeView 并给它分配文件夹图标.</em>
 Gui Show</pre>
 <p><strong>Lines</strong>: 指定 <code>-Lines</code>(负 Lines) 来避免显示连接父项目和它们的子项目之间的网状线. 但是, 移除这些线也阻止了顶级项目坐标加号/减号按钮的显示.</p>
-<p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每项的文本/名称. 要编辑某项, 请选择它接着按下 <kbd>F2</kbd> 键（请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对某个项目点击一次来选择它, 至少等半秒, 然后再次点击同一项目进行编辑. 编辑后, 可以对一个项目在其同级项目之间按字母顺序进行重新定位, 请参考下面的例子:</p>
+<p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每项的文本/名称. 要编辑某项, 请选择它接着按下 <kbd>F2</kbd> 键(请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对某个项目点击一次来选择它, 至少等半秒, 然后再次点击同一项目进行编辑. 编辑后, 可以对一个项目在其同级项目之间按字母顺序进行重新定位, 请参考下面的例子:</p>
 <pre>Gui, Add, TreeView, -ReadOnly gMyTree  <em>; 有关 gMyTree, 请参阅 <a href="#notify">TreeView 的 g-标签</a>.</em>
 <em>; ...</em>
 MyTree:
@@ -107,14 +107,14 @@ return</pre>
 <h3 id="TV_Add">TV_Add</h3>
 <p>添加新的项目到 TreeView 并返回其唯一的项目 ID 号(失败时返回 0).</p>
 <pre class="Syntax"><span class="func">TV_Add</span>(Name, <span class="optional">ParentItemID, Options</span>)</pre>
-<p><em>Name</em> 是项目显示的文本, 它可以为文本或数值(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). <em>ParentItemID</em> 为新项目的父项的(省略它或指定 0 来添加顶级项目). 当添加大量项目时, 在添加项目前使用 <code>GuiControl, -Redraw, MyTreeView</code> 并且在添加项目后使用 <code>GuiControl, +Redraw, MyTreeView</code> 可以提升性能.</p>
+<p><em>Name</em> 是项目显示的文本, 它可以为文本或数值(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). <em>ParentItemID</em> 为新项目的父项的 ID(省略它或指定 0 来添加顶级项目). 当添加大量项目时, 在添加项目前使用 <code>GuiControl, -Redraw, MyTreeView</code> 并且在添加项目后使用 <code>GuiControl, +Redraw, MyTreeView</code> 可以提升性能.</p>
 
 <h4>TV_Add() 和 TV_Modify() 中的选项参数</h4>
 <p><em>Options</em> 参数是一个包含零个或多个下表中单词的字符串(不区分大小写). 在单词间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
 <p id="Bold"><strong>Bold</strong>: 用粗体显示项目的名称. 以后要取消项目名称的粗体显示, 请使用 <code>TV_Modify(ItemID, "-Bold")</code>. <span class="ver">[v1.1.30.01+]:</span> 单词 <em>Bold</em> 后可以可选地紧跟着 0 或 1 以指示起始状态.</p>
 <p id="Check"><strong>Check</strong>: 在项目的坐标显示一个复选标记(需要 TreeView 含有<a href="#Checked">复选框</a>). 以后要取消复选它, 请使用 <code>TV_Modify(ItemID, "-Check")</code>. 在单词 <em>Check</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Check"</code> 和 <code>"Check" <strong>.</strong> VarContainingOne</code> 是相同的(这里中间使用的是<a href="../Variables.htm#concat">连接运算符</a>).</p>
 <p id="Expand"><strong>Expand</strong>: 展开此项以让其子项目显示出来(如果有). 以后要折叠项目, 请使用 <code>TV_Modify(ItemID, "-Expand")</code>. 如果没有子项目, 那么 <a href="#TV_Modify">TV_Modify()</a> 返回 0 而不是它的项目 ID. 与之相比, <a href="#TV_Add">TV_Add()</a> 标记此项目为展开的以防以后要添加子项目. 与下面的 "Select" 不同, 展开一个项目不会自动展开其父项目. 最后, 在单词 <em>Expand</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Expand"</code> 和 <code>"Expand" <strong>.</strong> VarContainingOne</code> 是相同的.</p>
-<p><strong>First | Sort | N</strong>: 这些选项仅适用于 <a href="#TV_Add">TV_Add()</a>. 它们指定新项目相对于 其同级项目的位置(此处 <em>同级项目</em> 是同一级别的其他任何项目). 如果这些选项都不存在, 则新项目被添加到同级项目的最后一个/底部. 否则, 请指定 <em>First</em> 来添加项目到同级项目的第一个/顶部, 或指定 <em>Sort</em> 来按字母顺序插入新项目到同级项目中间. 如果指定一个纯整数(<strong>N</strong>), 则假定它为同级项目的 ID 号, 新项目会被插入到它的后面(如果整数 N 是唯一使用的选项, 则它不需要括在引号中).</p>
+<p><strong>First | Sort | N</strong>: 这些选项仅适用于 <a href="#TV_Add">TV_Add()</a>. 它们指定新项目相对于其同级项目的位置(此处 <em>同级项目</em> 是同一级别的其他任何项目). 如果这些选项都不存在, 则新项目被添加到同级项目的最后一个/底部. 否则, 请指定 <em>First</em> 来添加项目到同级项目的第一个/顶部, 或指定 <em>Sort</em> 来按字母顺序插入新项目到同级项目中间. 如果指定一个纯整数(<strong>N</strong>), 则假定它为同级项目的 ID 号, 新项目会被插入到它的后面(如果整数 N 是唯一使用的选项, 则它不需要括在引号中).</p>
 <p><strong>Icon</strong>: 指定单词 <em>Icon</em> 后紧跟着此项目图标的编号, 项目图标显示在项目名称的左边. 如果此选项不存在, 则使用<a href="#ImageList">图像列表</a>中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有图像列表, 则既不显示图标也不为图标保留空间.</p>
 <p id="Select"><strong>Select</strong>: 选择项目. 因为一次只能选择一个项目, 此时任何原来选择的项目会自动取消选择. 此外, 如果有必要此选项会展开其父项目以显示新选择的项目. 要找出当前选择的项目, 请使用 <a href="#TV_GetSelection">TV_GetSelection()</a>.</p>
 <p><strong>Sort</strong>: 对于 <a href="#TV_Modify">TV_Modify()</a>, 此选项按字母顺序排列指定项目的子项目. 要对所有顶级项目进行排序, 请使用 <code>TV_Modify(0, "Sort")</code>. 如果不含子项目, 则返回 0 而不是所修改项目的 ID.</p>

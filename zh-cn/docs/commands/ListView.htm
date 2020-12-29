@@ -96,7 +96,7 @@ ExitApp</pre>
 <h2 id="BuiltIn">ListView 中的内置函数</h2>
 <p>所有的 ListView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <code><a href="Gui.htm#Default">Gui, 2:Default</a></code> 进行改变). 如果默认窗口不存在或不含有 ListView 控件, 则所有函数返回零来表明此问题.</p>
 <p id="GuiLV">如果窗口含有多个 ListView 控件, 默认情况下函数操作于最近添加的那个. 要改变这种情况, 请指定 <code>Gui, ListView, ListViewName</code>, 其中 <em>ListViewName</em> 为 ListView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN 或 <span class="ver">[in v1.1.04+]</span> 其 HWND. 一旦改变后, 所有现有和将来的<a href="../misc/Threads.htm">线程</a>将使用指定的 ListView. <span class="ver">[v1.1.23+]:</span> <a href="../Variables.htm#DefaultListView">A_DefaultListView</a> 包含了当前的设置.</p>
-<p id="RowNumber">当在此页面使用短语 "row number", 它指的是 ListView 中行的当前位置. 最上面一行为 1, 第二行为 2, 依此类推. 添加一行后, 其行号会因为排序, 删除和插入其他行而发生变化. 因此, 要根据内容查找特定的一行或多行, 通常最好在循环中使用 <a href="#LV_GetText">LV_GetText()</a>.</p>
+<p id="RowNumber">当在此页面使用短语 "row number(行号)", 它指的是 ListView 中行的当前位置. 最上面一行为 1, 第二行为 2, 依此类推. 添加一行后, 其行号会因为排序, 删除和插入其他行而发生变化. 因此, 要根据内容查找特定的一行或多行, 通常最好在循环中使用 <a href="#LV_GetText">LV_GetText()</a>.</p>
 
 <p id="bifRow"><strong>行函数</strong></p>
 <ul>
@@ -137,11 +137,11 @@ ExitApp</pre>
 <p id="ColN"><strong>ColN</strong>: 指定单词 Col 后紧跟着列号, 从此列开始往后应用参数 <em>Col1</em> 和其后参数的内容. 此选项通常和 <a href="#LV_Modify">LV_Modify()</a> 一起使用来修改行中的个别字段, 而不会影响其他字段.</p>
 <p id="Focus"><strong>Focus</strong>: 设置键盘焦点到此行(通常和 Select 一起使用). 以后要取消它的焦点, 请使用 <code>LV_Modify(RowNumber, "-Focus")</code>.</p>
 <p><strong>Icon</strong>: 指定单词 Icon 后紧跟着这行图标的编号, 这行图标显示在首列的左侧. 如果此选项不存在, 则使用<a href="#IL">图像列表</a>中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则<a href="#View">报告视图</a>中既不显示图标也不为其保留空间.</p>
-<p><strong>Select</strong>: 选择行. 以后要取消选择, 请使用 <code>LV_Modify(RowNumber, "-Select")</code>. 当选择行时, 通常最好确保至少有一行总含有<a href="#Focus">焦点属性</a>, 因为这样允许Appskey在焦点行附近显示其<a href="Gui.htm#GuiContextMenu">上下文菜单</a>(如果有). 单词 <em>Select</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Select"</code> 和 <code>"Select" <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>). 这种技术也适用于上面的 <em>Focus</em> 和 <em>Check</em>.</p>
+<p><strong>Select</strong>: 选择行. 以后要取消选择, 请使用 <code>LV_Modify(RowNumber, "-Select")</code>. 当选择行时, 通常最好确保至少有一行总含有<a href="#Focus">焦点属性</a>, 因为这样允许 Apps 键在焦点行附近显示其<a href="Gui.htm#GuiContextMenu">上下文菜单</a>(如果有). 单词 <em>Select</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Select"</code> 和 <code>"Select" <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>). 这种技术也适用于上面的 <em>Focus</em> 和 <em>Check</em>.</p>
 <p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>: 必要时通过滚动 ListView 来确保指定行完全可见. 此参数仅对 <a href="#LV_Modify">LV_Modify()</a> 有效; 例如: <code>LV_Modify(RowNumber, &quot;Vis&quot;)</code>.</p>
 
 <h3 id="LV_Insert">LV_Insert</h3>
-<p>在指定行之前插入一个新行</p>
+<p>在指定行之前插入一个新行.</p>
 <pre class="Syntax"><span class="func">LV_Insert</span>(RowNumber <span class="optional">, Options, Col1, Col2, ...</span>)</pre>
 <p>除了它的不同的第一个参数(它为新插入的行指定行号) 之外, 它的行为与 <a href="#LV_Add">LV_Add()</a> 相同. 在 <em>RowNumber</em> 下或下面的任何行都向下移动, 为新行腾出空间. 如果 <em>RowNumber</em> 大于列表中行的数目(甚至可以高至 2147483647), 则新行被添加到列表的底部. 要了解 <em>Options</em>, 请参阅<a href="#RowOptions">行选项</a>.</p>
 
@@ -182,9 +182,9 @@ ExitApp</pre>
 
 <h4>列选项: 排序</h4>
 <p id="Case"><strong>Case</strong>: 让列排序区分大小写(仅影响<a href="#Text">文本</a>列). 如果 <em>Case</em>, <em>CaseLocale</em> 以及 <em>Logical</em> 选项都省略, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
-<p><strong>CaseLocale</strong> <span class="ver">[v1.0.43.03+]:</span> 让列排序基于当前用户的区域设置且不区分大小写(仅影响<a href="#Text">文本</a>列). 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 ? 和 ü 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起.</p>
+<p><strong>CaseLocale</strong> <span class="ver">[v1.0.43.03+]:</span> 让列排序基于当前用户的区域设置且不区分大小写(仅影响<a href="#Text">文本</a>列). 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 &Auml; 和 &Uuml; 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起.</p>
 <p id="Desc"><strong>Desc</strong>: 降序排列. 用户首次对此列排序时使用下降的顺序.</p>
-<p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]:</span> 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如, 字符串"T33"将被视为大于 "T4".<em>Logical</em> 需要 Windows XP 或更高版本(在较旧的操作系统中, 会自动使用 <em>CaseLocale</em> 代替). 此外, <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
+<p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]:</span> 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如, 字符串 "T33" 将被视为大于 "T4". <em>Logical</em> 需要 Windows XP 或更高版本(在较旧的操作系统中, 会自动使用 <em>CaseLocale</em> 代替). 此外, <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
 <p><strong>NoSort</strong>: 避免用户点击此列对自动排序产生的影响. 要禁用所有列的排序而不仅是其中的子集, 请在 ListView 的选项中包含 <a href="#NoSort">NoSort</a>. 如果 ListView 含有 g-标签, 则当用户点击 no-sort 的列时仍会接收到 <a href="#ColClick">ColClick 通知</a>.</p>
 <p><strong>Sort</strong>: 立即对列按升序排列(即使它含有 <a href="#Desc">Desc</a> 选项).</p>
 <p><strong>SortDesc</strong>: 立即对列按降序排列.</p>
@@ -263,12 +263,12 @@ IsChecked := (ErrorLevel &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选�
 <h2>G-标签通知(次要)</h2>
 <p>如果 ListView 的<a href="#Options">选项</a>中含有单词 AltSubmit, 则其 g-标签会运行的更频繁并且 <strong>A_GuiEvent</strong> 还可能包含下列值:</p>
 <p><strong>Normal</strong>: 用户左键单击了一行. 变量 A_EventInfo 包含焦点行号.</p>
-<p><strong>RightClick</strong>: 用户右键单击了一行. 变量 A_EventInfo 包含焦点行号. 在大多数情况下, 最好不要通过显示菜单来响应此通过. 而应使用 <a href="Gui.htm#GuiContextMenu">GuiContextMenu 标签</a>, 因为它还能识别 Appskey. 例如:</p>
-<pre>GuiContextMenu:  <em>; 运行此标签来响应右键点击或按下 Appskey.</em>
+<p><strong>RightClick</strong>: 用户右键单击了一行. 变量 A_EventInfo 包含焦点行号. 在大多数情况下, 最好不要通过显示菜单来响应此通过. 而应使用 <a href="Gui.htm#GuiContextMenu">GuiContextMenu 标签</a>, 因为它还能识别 Apps 键. 例如:</p>
+<pre>GuiContextMenu:  <em>; 运行此标签来响应右键点击或按下 Apps 键.</em>
 if (A_GuiControl != "MyListView")  <em>; 这个检查是可选的. 让它只为 ListView 中的点击显示菜单.</em>
     return
 <em>; 在提供的坐标处显示菜单, A_GuiX 和 A_GuiY. 应该使用这些
-; 因为即使用户按下 Appskey 它们也会提供正确的坐标:</em>
+; 因为即使用户按下 Apps 键它们也会提供正确的坐标:</em>
 Menu, MyContextMenu, Show, %A_GuiX%, %A_GuiY%
 return</pre>
 <p><strong>A</strong>: 激活了一行, 这种情况默认发生在双击这行的时候. 变量 A_EventInfo 包含目标行号.</p>
@@ -314,7 +314,7 @@ ExitApp</pre>
 <h3 id="IL_Destroy">IL_Destroy</h3>
 <p>删除指定的图像列表, 成功时返回 1, 而失败返回 0.</p>
 <pre class="Syntax"><span class="func">IL_Destroy</span>(ImageListID)</pre>
-<p>通常没必要销毁图像列表, 因为一旦关联到 ListView, 当 ListView 或其父窗口销毁时它们会被自动销毁. 但是, 如果一个 ListView 和其他 ListView 共享图像列(通过在选项中包含 <code>0x40</code>),  在所有使用此图像列表的 ListView 销毁后脚本应该明确地销毁它.同样地, 如果脚本使用一个新的图像列表代替 ListView 中原来的, 则应该明确销毁原来的图像列表.</p>
+<p>通常没必要销毁图像列表, 因为一旦关联到 ListView, 当 ListView 或其父窗口销毁时它们会被自动销毁. 但是, 如果一个 ListView 和其他 ListView 共享图像列表(通过在选项中包含 <code>0x40</code>),  在所有使用此图像列表的 ListView 销毁后脚本应该明确地销毁它. 同样地, 如果脚本使用一个新的图像列表代替 ListView 中原来的, 则应该明确销毁原来的图像列表.</p>
 
 <h2 id="Remarks">ListView 备注</h2>
 <p><a href="Gui.htm#Submit">Gui Submit</a> 命令对 ListView 控件没有效果. 因此, 脚本可以使用 ListView 的<a href="Gui.htm#var">关联变量</a>(如果有) 来保存其他数据而不用担心它会被覆盖.</p>
@@ -330,12 +330,12 @@ MsgBox % &quot;Enter was pressed. The focused row number is &quot; . LV_GetNext(
 return</pre>
 <p>使用键盘除了在行与行之间导航外, 用户还可以通过输入首列中一个项目名称的前几个字符来进行增量搜索. 这使得选择对象跳转到最近匹配的行.</p>
 <p>尽管 ListView 中的每个字段可以存储任意长度的文本, 但仅显示开始的 260 个字符.</p>
-<p>尽管 ListView 中可以使用的最大行数仅受系统可用内存的限制, 但参照 <a href="#Count">Count</a> 选项中描述的方法可以极大地提高添加行的性能..</p>
+<p>尽管 ListView 中可以使用的最大行数仅受系统可用内存的限制, 但参照 <a href="#Count">Count</a> 选项中描述的方法可以极大地提高添加行的性能.</p>
 <p>可以使用图片作为 ListView 周围的背景(即作为 ListView 的框架). 要实现这个效果, 请在 ListView 后创建<a href="GuiControls.htm#Picture">图片控件</a>并且在图片控件的<em>选项</em>中包含 <code>0x4000000</code>(这是 WS_CLIPSIBLINGS).</p>
 <p>脚本可以在每个窗口中创建多个 ListView. 要对非默认的 ListView 进行操作, 请参阅<a href="#BuiltIn">内置函数</a>.</p>
 <p>最好不要使用 <a href="PostMessage.htm">SendMessage</a> 直接插入或删除列. 这是因为程序为每个列维护一个<a href="#Integer">排序参数</a>集, 而这会让它们无法同步. 作为替代, 请使用<a href="#bifCol">内置列函数</a>.</p>
 <p>要对 ListView 执行一些操作(例如调整大小, 隐藏或改变字体), 请使用 <a href="GuiControl.htm">GuiControl</a>.</p>
-<p>要从外部的 ListView(不属于脚本自身的那些), 请使用 <a href="ControlGet.htm#List">ControlGet List</a>.</p>
+<p>要从外部的 ListView(不属于脚本自身的那些) 中提取文本, 请使用 <a href="ControlGet.htm#List">ControlGet List</a>.</p>
 
 <h2>相关</h2>
 <p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="Gui.htm">Gui</a>, <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="../misc/Styles.htm#ListView">ListView 样式表</a></p>
@@ -423,7 +423,7 @@ Loop %Folder%\*.*
             ExtChar := SubStr(FileExt, A_Index, 1)
             if not ExtChar  <em>; 没有更多字符了.</em>
                 break
-            <em>; 把每个字符与不同的位位置进行运算来得到唯一 ID:</em>
+            <em>; 把每个字符与不同的位置进行运算来得到唯一 ID:</em>
             ExtID := ExtID | (Asc(ExtChar) &lt;&lt; (8 * (A_Index - 1)))
         }
         <em>; 检查此文件扩展名的图标是否已经在图像列表中. 如果是,</em>
@@ -455,7 +455,7 @@ Loop %Folder%\*.*
     <em>; 在 ListView 中创建新行并把它和上面的图标编号进行关联:</em>
     <a href="#LV_Add">LV_Add</a>("Icon" . IconNumber, A_LoopFileName, A_LoopFileDir, A_LoopFileSizeKB, FileExt)
 }
-GuiControl, +Redraw, MyListView  <em>; 重新启用重绘 (上面把它禁用了).</em>
+GuiControl, +Redraw, MyListView  <em>; 重新启用重绘(上面把它禁用了).</em>
 LV_ModifyCol()  <em>; 根据内容自动调整每列的大小.</em>
 LV_ModifyCol(3, 60) <em>; 把 Size 列加宽一些以便显示出它的标题.</em>
 return
@@ -483,11 +483,11 @@ if (A_GuiEvent = "DoubleClick")  <em>; 脚本还可以检查许多其他的可�
 }
 return
 
-<a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>:  <em>; 运行此标签来响应右键点击或按下 Appskey.</em>
+<a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>:  <em>; 运行此标签来响应右键点击或按下 Apps 键.</em>
 if (A_GuiControl != "MyListView")  <em>; 仅在 ListView 中点击时才显示菜单.</em>
     return
 <em>; 在提供的坐标处显示菜单, A_GuiX 和 A_GuiY. 应该使用这些
-; 因为即使用户按下 Appskey 它们也会提供正确的坐标:</em>
+; 因为即使用户按下 Apps 键, 它们也会提供正确的坐标:</em>
 Menu, MyContextMenu, Show, %A_GuiX%, %A_GuiY%
 return
 
@@ -522,7 +522,7 @@ Loop
 return
 
 GuiSize:  <em>; 扩大或缩小 ListView 来响应用户对窗口大小的改变.</em>
-if (A_EventInfo = 1)  <em>; 窗口被最小化了.  无需进行操作.</em>
+if (A_EventInfo = 1)  <em>; 窗口被最小化了. 无需进行操作.</em>
     return
 <em>; 否则, 窗口的大小被调整过或被最大化了. 调整 ListView 的大小来适应.</em>
 GuiControl, Move, MyListView, % "W" . (A_GuiWidth - 20) . " H" . (A_GuiHeight - 40)
