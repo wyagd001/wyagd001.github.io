@@ -15,435 +15,435 @@
 
 <h2 id="Table_of_Contents">目录</h2>
 <ul>
-  <li><a href="#Intro">Introduction and Simple Example</a></li>
-  <li><a href="#Options">Options and Styles</a></li>
-  <li><a href="#View">View Modes</a>: Report (default), Icon, Tile, Small-Icon, and List.</li>
+  <li><a href="#Intro">入门和简单示例</a></li>
+  <li><a href="#Options">选项和样式</a></li>
+  <li><a href="#View">视图模式</a>: 报告(默认), 图标, 平铺, 小图标和列表.</li>
   <li><a href="#BuiltIn">内置方法</a>:
     <ul>
-      <li><a href="#bifRow">Row methods (adding, modifying, and deleting rows)</a></li>
-      <li><a href="#bifCol">Column methods</a></li>
-      <li><a href="#bifGet">Getting data out of a ListView</a></li>
-      <li><a href="#bifIcon">Setting icons</a></li>
+      <li><a href="#bifRow">行的方法(添加, 修改和删除行)</a></li>
+      <li><a href="#bifCol">列的方法</a></li>
+      <li><a href="#bifGet">从 ListView 中获取数据</a></li>
+      <li><a href="#bifIcon">设置图标</a></li>
     </ul>
   </li>
-  <li><a href="#Events">Events</a></li>
-  <li><a href="#IL">ImageLists</a> (the means by which icons are added to a ListView)</li>
-  <li><a href="#Remarks">ListView Remarks</a></li>
-  <li><a href="#Examples">Examples</a></li>
+  <li><a href="#Events">事件</a></li>
+  <li><a href="#IL">图像列表</a>(把图标添加到 ListView 的方法)</li>
+  <li><a href="#Remarks">ListView 的备注</a></li>
+  <li><a href="#Examples">示例</a></li>
 </ul>
-<h2 id="Intro">Introduction and Simple Example</h2>
-<p>A List-View is one of the most elaborate controls provided by the operating system. In its most recognizable form, it displays a tabular view of rows and columns, the most common example of which is Explorer's list of files and folders (detail view).</p>
-<p>A list view usually looks like this:</p>
+<h2 id="Intro">入门和简单示例</h2>
+<p>List-View 是由操作系统提供的最精心设计的控件之一. 在其最容易识别的形式中, 它显示一个多行多列组成的表格视图, 最常见的例子是资源管理器的文件和文件夹列表(详细信息视图).</p>
+<p>列表视图通常是这样的:</p>
 <img src="../static/ctrl_listview.png" alt="ListView" />
-<p>Though it may be elaborate, a ListView's basic features are easy to use. The syntax for creating a ListView is:</p>
+<p>尽管它可能是精细的, 但 ListView 的基本功能也易于使用. 创建 ListView 的语法为:</p>
 <pre class="Syntax" id="GuiAdd">LV := GuiObj.<span class="func">Add</span>("ListView", Options, ["ColumnTitle1","ColumnTitle2","..."])</pre>
-<p>Here is a working script that creates and displays a ListView containing a list of files in the user's &quot;My Documents&quot; folder:</p>
-<pre><em>; Create the window.</em>
+<p>这是一个可运行脚本, 它创建并显示一个 ListView 其中包含用户的 &quot;我的文档&quot; 目录中的文件列表:</p>
+<pre><em>; 创建窗口.</em>
 MyGui := Gui.New()
 
-<em>; Create the ListView with two columns, Name and Size:</em>
+<em>; 创建含名称和大小两列的 ListView:</em>
 LV := MyGui.Add("ListView", "r20 w700", ["Name","Size (KB)"])
 
-<em>; Notify the script whenever the user double clicks a row:</em>
+<em>; 每当用户双击某行时, 通知脚本:</em>
 LV.OnEvent("DoubleClick", "LV_DoubleClick")
 
-<em>; Gather a list of file names from a folder and put them into the ListView:</em>
+<em>; 从文件夹中获取文件名列表并把它们放入 ListView:</em>
 Loop Files, A_MyDocuments "\*.*"
     <a href="#Add">LV.Add</a>(, A_LoopFileName, A_LoopFileSizeKB)
 
-<a href="#ModifyCol">LV.ModifyCol</a>  <em>; Auto-size each column to fit its contents.</em>
-LV.ModifyCol(2, "Integer")  <em>; For sorting purposes, indicate that column 2 is an integer.</em>
+<a href="#ModifyCol">LV.ModifyCol</a>  <em>; 根据内容自动调整每列的大小.</em>
+LV.ModifyCol(2, "Integer")  <em>; 为了进行排序, 指出列 2 是整数.</em>
 
-<em>; Display the window.</em>
+<em>; 显示窗口.</em>
 MyGui.Show
 
 LV_DoubleClick(LV, RowNumber)
 {
-    RowText := <a href="#GetText">LV.GetText</a>(RowNumber)  <em>; Get the text from the row's first field.</em>
+    RowText := <a href="#GetText">LV.GetText</a>(RowNumber)  <em>; 从行的第一个字段中获取文本.</em>
     ToolTip("You double-clicked row number " RowNumber ". Text: '" RowText "'")
 }</pre>
-<h2 id="Options">Options and Styles for the <em>Options</em> parameter</h2>
-<p><strong>Background:</strong> Specify the word Background followed immediately by a color name (see <a href="../misc/Colors.htm">color chart</a>) or RGB value (the 0x prefix is optional). Examples: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>. If this option is not present, the ListView initially defaults to the system's default background color. Specifying <code>BackgroundDefault</code> or <code>-Background</code> applies the system's default background color (usually white). 例如, a ListView can be restored to the default color via <code>LV.Opt("+BackgroundDefault")</code>.</p>
-<p><strong>C</strong>: Text color. Specify the letter C followed immediately by a color name (see <a href="../misc/Colors.htm">color chart</a>) or RGB value (the 0x prefix is optional). Examples: <code>cRed</code>, <code>cFF2211</code>, <code>c0xFF2211</code>, <code>cDefault</code>.</p>
-<p id="Checked"><strong>Checked:</strong> Provides a checkbox at the left side of each row. When <a href="#Add">adding</a> a row, specify the word <em>Check</em> in its options to have the box to start off checked instead of unchecked. The user may either click the checkbox or press the spacebar to check or uncheck a row.</p>
-<p id="Count"><strong>Count:</strong> Specify the word Count followed immediately by the total number of rows that the ListView will ultimately contain. This is not a limit: rows beyond the count can still be added. Instead, this option serves as a hint to the control that allows it to allocate memory only once rather than each time a row is added, which greatly improves row-adding performance (it may also improve sorting performance). To improve performance even more, use <code>LV.Opt("-Redraw")</code> prior to adding a large number of rows. Afterward, use <code>LV.Opt("+Redraw")</code> to re-enable redrawing (which also repaints the control).</p>
-<p><strong>Grid:</strong> Provides horizontal and vertical lines to visually indicate the boundaries between rows and columns.</p>
-<p><strong>Hdr:</strong> Specify <code>-Hdr</code> (minus Hdr) to omit the special top row that contains column titles. To make it visible later, use <code>LV.Opt("+Hdr")</code>.</p>
-<p id="LVS_EX"><strong>LV:</strong> Specify the string LV followed immediately by the number of an <a href="../misc/Styles.htm#LVS_EX">extended ListView style</a>. These styles are entirely separate from generic extended styles. 例如, specifying <code><strong>-E</strong>0x200</code> would remove the generic extended style WS_EX_CLIENTEDGE to eliminate the control's default border. By contrast, specifying <code><strong>-LV</strong>0x20</code> would remove <a href="#frs">LVS_EX_FULLROWSELECT</a>.</p>
-<p><strong>LV0x10</strong>: Specify <code>-LV0x10</code> to prevent the user from dragging column headers to the left or right to reorder them. However, it is usually not necessary to do this because the physical reordering of columns does not affect the column order seen by the script. 例如, the first column will always be column 1 from the script's point of view, even if the user has physically moved it to the right of other columns.</p>
-<p id="frs"><strong>LV0x20</strong>: Specify <code>-LV0x20</code> to require that a row be clicked at its first field to select it (normally, a click on <em>any</em> field will select it). The advantage of this is that it makes it easier for the user to drag a rectangle around a group of rows to select them.</p>
-<p><strong>Multi:</strong> Specify <code>-Multi</code> (minus Multi) to prevent the user from selecting more than one row at a time.</p>
-<p><strong>NoSortHdr:</strong> Prevents the header from being clickable. It will take on a flat appearance rather than its normal button-like appearance. Unlike most other ListView styles, this one cannot be changed after the ListView is created.</p>
-<p id="NoSort"><strong>NoSort:</strong> Turns off the automatic sorting that occurs when the user clicks a column header. However, the header will still behave visually like a button (unless NoSortHdr has been specified). In addition, the <a href="../objects/GuiOnEvent.htm#ColClick">ColClick</a> event is still raised, so the script can respond with a custom sort or other action.</p>
-<p id="ReadOnly"><strong>ReadOnly:</strong>  Specify <code>-ReadOnly</code> (minus ReadOnly) to allow editing of the text in the first column of each row. To edit a row, select it then press the <kbd>F2</kbd> key (see the <a href="#WantF2">WantF2</a> option below). Alternatively, you can click a row once to select it, wait at least half a second, then click the same row again to edit it.</p>
-<p><strong>R</strong>: Rows of height (upon creation). Specify the letter R followed immediately by the number of rows for which to make room inside the control. 例如, <code>R10</code> would make the control 10 rows tall. If the ListView is created with a <a href="#View">view mode</a> other than report view, the control is sized to fit rows of icons instead of rows of text. Note: adding <a href="#IL">icons</a> to a ListView's rows will increase the height of each row, which will make this option inaccurate.</p>
-<p id="Sort"><strong>Sort:</strong> The control is kept alphabetically sorted according to the contents of the first column.</p>
-<p id="SortDesc"><strong>SortDesc:</strong> Same as above except in descending order.</p>
-<p id="WantF2"><strong>WantF2</strong>: Specify <code>-WantF2</code> (minus WantF2) to prevent an <kbd>F2</kbd> keystroke from <a href="#ReadOnly">editing</a> the currently focused row. This setting is ignored unless <code>-<a href="#ReadOnly">ReadOnly</a></code> is also in effect.</p>
-<p><strong>(Unnamed numeric styles):</strong> Since styles other than the above are rarely used, they do not have names. See the <a href="../misc/Styles.htm#ListView">ListView styles table</a> for a list.</p>
-<h2 id="View">View Modes</h2>
-<p>A ListView has five viewing modes, of which the most common is report view (which is the default). To use one of the other views, specify its name in the options list. The view can also be changed after the control is created; 例如: <code>LV.Opt("+IconSmall")</code>.</p>
-<p><strong>Icon:</strong> Shows a large-icon view. In this view and all the others except <em>Report</em>, the text in columns other than the first is not visible. To display icons in this mode, the ListView must have a large-icon <a href="#IL">ImageList</a> assigned to it.</p>
-<p><strong>Tile</strong>: Shows a large-icon view but with ergonomic differences such as displaying each item's text to the right of the icon rather than underneath it. <a href="#Checked">Checkboxes</a> do not function in this view.</p>
-<p><strong>IconSmall:</strong> Shows a small-icon view.</p>
-<p><strong>List:</strong> Shows a small-icon view in list format, which displays the icons in columns. The number of columns depends on the width of the control and the width of the widest text item in it.</p>
-<p><strong>Report:</strong> Switches back to report view, which is the initial default. 例如: <code>LV.Opt("+Report")</code>.</p>
-<h2 id="BuiltIn">Built-in Methods for ListViews</h2>
-<p>Additionally to the <a href="../objects/GuiControl.htm">default methods/properties of a GUI control</a>, the following methods can be specified for a ListView. If the associated <a href="../objects/GuiControl.htm">GuiControl object</a> does not exist or does not belongs to a ListView, the ListView methods throw an <a href="Catch.htm#RuntimeErrors">exception</a>.</p>
-<p id="RowNumber">When the phrase &quot;row number&quot; is used on this page, it refers to a row's current position within the ListView. The top row is 1, the second row is 2, and so on. After a row is added, its row number tends to change due to sorting, deleting, and inserting of other rows. Therefore, to locate specific row(s) based on their contents, it is usually best to use <a href="#GetText">LV.GetText</a> in a loop.</p>
-<h3 id="bifRow">Row Methods</h3>
+<h2 id="Options"><em>Options</em> 参数的选项和样式</h2>
+<p><strong>Background:</strong> 指定单词 Background 后面紧跟着颜色名称(请参阅<a href="../misc/Colors.htm">颜色列表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>. 如果此选项不存在, ListView 初始默认为系统默认的背景色. 指定 <code>BackgroundDefault</code> 或 <code>-Background</code> 来应用系统的默认背景颜色(通常为白色). 例如, 使用 <code>LV.Opt("+BackgroundDefault")</code> 可以把 ListView 恢复为默认的颜色.</p>
+<p><strong>C</strong>: 文本颜色. 指定字母 C 后面紧跟着颜色名称(请参阅<a href="../misc/Colors.htm">颜色列表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>cRed</code>, <code>cFF2211</code>, <code>c0xFF2211</code>, <code>cDefault</code>.</p>
+<p id="Checked"><strong>Checked:</strong> 在每行的左侧提供一个复选框. 当<a href="#Add">添加</a>行时, 在其选项中指定单词 <em>Check</em> 来让复选框初始为选中而不是未选中状态. 用户可以点击复选框或按下空格键来选中或取消选中一行.</p>
+<p id="Count"><strong>Count:</strong> 指定单词 Count 后面跟着 ListView 最后会包含的总行数. 这不是限制: 超过此数目后仍然可以添加行. 相反, 此选项给控件一个暗示, 允许它一次性的而不是每次添加一行时分配内存, 这样极大地提高了添加行时的性能(这也可以提高排序性能). 要提升更多的性能, 请在添加大量行之前使用 <code>LV.Opt("-Redraw")</code>. 随后, 使用 <code>LV.Opt("+Redraw")</code>  来重新启用重绘(这样也重绘了控件).</p>
+<p><strong>Grid:</strong> 提供水平的和垂直的线以形象地显示出行与行和列与列之间的边界.</p>
+<p><strong>Hdr:</strong> 指定  <code>-Hdr</code>(负 Hdr) 来隐藏包含列标题的特殊顶行. 后面要让它显示, 请使用 <code>LV.Opt("+Hdr")</code>.</p>
+<p id="LVS_EX"><strong>LV:</strong> 指定字符串 LV 后面紧跟着<a href="../misc/Styles.htm#LVS_EX">扩展 ListView 样式</a>的数字. 这些样式完全独立于通用扩展样式. 例如, 指定 <code><strong>-E</strong>0x200</code> 会移除通用扩展样式 WS_EX_CLIENTEDGE, 这样将会移除控件的默认边框. 与之相比, 指定 <code><strong>-LV</strong>0x20</code> 会移除 <a href="#frs">LVS_EX_FULLROWSELECT</a> 选择整行的效果.</p>
+<p><strong>LV0x10</strong>: 指定 <code>-LV0x10</code> 阻止用户通过拖动列标题到左边或右边来对它们重新排序. 然而, 通常没必要这么做, 因为列的实际重排不会影响脚本看到的列顺序. 例如, 从脚本的角度看第一列总是列 1, 即使用户实际已经把它移动到其他列的右边.</p>
+<p id="frs"><strong>LV0x20</strong>: 指定 <code>-LV0x20</code> 来要求点击一行的第一个字段才可以进行选择(正常情况下, 点击 <em>任意</em> 字段都可以选择). 这样的好处是用户可以更方便地拖动矩形包围一组行来选择它们.</p>
+<p><strong>Multi:</strong> 指定 <code>-Multi</code>(负 Multi) 来禁止用户一次选择多行.</p>
+<p><strong>NoSortHdr:</strong> 禁止点击标题. 此时会显示平坦的外观而不是正常的类似按钮的外观. 与其他大多数 ListView 样式不同, 此样式在 ListView 创建后无法改变.</p>
+<p id="NoSort"><strong>NoSort:</strong> 关闭当用户点击标题时发生的自动排序. 然而, 标题的外观看起来仍像按钮(除非指定了 NoSortHdr). 此外, the <a href="../objects/GuiOnEvent.htm#ColClick">ColClick</a> 事件仍然会被触发, 所以脚本可以用自定义的排序或其他操作来响应.</p>
+<p id="ReadOnly"><strong>ReadOnly:</strong>  指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每行首列的文本. 要编辑某行, 请在选择后按下 <kbd>F2</kbd> 键(请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对一行点击一次来选择它, 至少等待半秒钟, 然后再次点击同一行进行编辑.</p>
+<p><strong>R</strong>: 行高(创建时). 指定字母 R 后面紧跟着要在控件中留出空间的行数. 例如, <code>R10</code> 会设置控件为 10 行的高度. 如果 ListView 是用报表视图以外的<a href="#View">视图模式</a>创建的, 那么控件的大小将适合于图标行而不是文本行. 注意: 在 ListView 的行中添加<a href="#IL">图标</a>将增加每行的高度, 这将使该选项不准确.</p>
+<p id="Sort"><strong>Sort:</strong> 控件根据第一列的内容按字母顺序进行排序.</p>
+<p id="SortDesc"><strong>SortDesc:</strong> 和上面一样, 不过这里是降序排列.</p>
+<p id="WantF2"><strong>WantF2</strong>: 指定 <code>-WantF2</code>(负 WantF2) 阻止 <kbd>F2</kbd> 键<a href="#ReadOnly">编辑</a>当前聚焦的行. 这个设置会被忽略, 除非 <code>-<a href="#ReadOnly">ReadOnly</a></code> 也有效.</p>
+<p><strong>(未命名的数值样式):</strong> 由于上述以外的其他样式很少使用, 所以没有为它们命名. 请参阅 <a href="../misc/Styles.htm#ListView">ListView 样式表</a>了解这些样式.</p>
+<h2 id="View">视图模式</h2>
+<p>ListView 有五种视图模式, 其中最常见的是报告视图(这是默认的). 要使用其他某种视图, 请在选项列表中指定它的名称. 还可以在控件创建后改变视图模式; 例如: <code>LV.Opt("+IconSmall")</code>.</p>
+<p><strong>Icon:</strong> 显示大图标视图. 在该视图和除 <em>Report</em> 之外的所有其他视图中, 除第一列之外的其他列中的文本是不可见的. 要在这种模式下显示图标, 必须有一个大图标 <a href="#IL">ImageList</a> 分配给它.</p>
+<p><strong>Tile</strong>: 显示大图标视图, 但具有人体工学差异, 例如每项的文本显示在图标的右边而不是下面. <a href="#Checked">Checkboxes</a> 在此视图中不起作用.</p>
+<p><strong>IconSmall:</strong> 显示小图标视图.</p>
+<p><strong>List:</strong> 以列表格式显示小图标视图, 其中图标显示在列中. 列数取决于控件的宽度和其中最宽的文本项的宽度.</p>
+<p><strong>Report:</strong> 切换回报告视图, 这是最初的默认模式. 例如: <code>LV.Opt("+Report")</code>.</p>
+<h2 id="BuiltIn">ListViews 的内置方法</h2>
+<p>除了<a href="../objects/GuiControl.htm"> GUI 控件的默认方法/属性</a>外, 还可以为 ListView 指定以下方法. 如果关联的 <a href="../objects/GuiControl.htm">GuiControl 对象</a>不存在或不属于 ListView, ListView 方法会抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
+<p id="RowNumber">当在此页面使用短语 &quot;行号&quot; 时, 它指的是行在 ListView 中的当前位置. 最上面的行是 1, 第二行是 2, 以此类推. 当行被添加后, 它的行号往往会因为其他行的排序, 删除和插入而改变. 因此, 如果要根据行的内容找到特定的行, 通常最好在循环中使用 <a href="#GetText">LV.GetText</a>.</p>
+<h3 id="bifRow">行的方法</h3>
   <div class="methodShort" id="Add">
     <h3>Add</h3>
-    <p>Adds a new row to the bottom of the list, and returns the new <a href="#RowNumber">row number</a>, which is not necessarily the last row if the ListView has the <a href="#Sort">Sort</a> or <a href="#SortDesc">SortDesc</a> style.</p>
+    <p>添加新行到列表底部, 并返回新的<a href="#RowNumber">行号</a>, 如果 ListView 具有 <a href="#Sort">Sort</a> 或 <a href="#SortDesc">SortDesc</a> 样式, 则不一定是最后一行.</p>
     <pre class="Syntax">NewRowNumber := LV.<span class="func">Add</span>(<span class="optional">Options, Col1, Col2, ...</span>)</pre>
     <dl>
       <dt id="RowOptions">Options</dt>
       <dd>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>A string containing zero or more words from the list below (not case sensitive). Separate each word from the next with a space or tab. To remove an option, precede it with a minus sign. To add an option, a plus sign is permitted but not required.</p>
-<p><strong>Check</strong>: Shows a checkmark in the row (if the ListView has <a href="#Checked">checkboxes</a>). To later uncheck it, use <code>LV.Modify(RowNumber, &quot;-Check&quot;)</code>.</p>
-<p id="ColN"><strong>Col</strong>: Specify the word Col followed immediately by the column number at which to begin applying the parameters <em>Col1</em> and beyond. This is most commonly used with <a href="#Modify">LV.Modify</a> to alter individual fields in a row without affecting those that lie to their left.</p>
-<p id="Focus"><strong>Focus</strong>: Sets keyboard focus to the row (often used in conjunction with Select). To later de-focus it, use <code>LV.Modify(RowNumber, &quot;-Focus&quot;)</code>.</p>
-<p><strong>Icon</strong>: Specify the word Icon followed immediately by the number of this row's icon, which is displayed in the left side of the first column. If this option is absent, the first icon in the <a href="#IL">ImageList</a> is used. To display a blank icon, specify a number that is larger than the number of icons in the ImageList. If the control lacks a small-icon ImageList, no icon is displayed nor is any space reserved for one in <a href="#View">report view</a>.</p>
-<p><strong>Select</strong>: Selects the row. To later deselect it, use <code>LV.Modify(RowNumber, &quot;-Select&quot;)</code>. When selecting rows, it is usually best to ensure that at least one row always has the <a href="#Focus">focus property</a> because that allows the Apps key to display its <a href="../objects/GuiOnEvent.htm#ContextMenu">context menu</a> (if any) near the focused row. The word <em>Select</em> may optionally be followed immediately by a 0 or 1 to indicate the starting state. In other words, both <code>&quot;Select&quot;</code> and <code>&quot;Select&quot; <strong>.</strong> VarContainingOne</code> are the same (the period used here is the <a href="../Variables.htm#concat">concatenation operator</a>). This technique also works with <em>Focus</em> and <em>Check</em> above.</p>
-<p id="Vis"><strong>Vis</strong>: Ensures that the specified row is completely visible by scrolling the ListView, if necessary. This has an effect only for LV.Modify; 例如: <code>LV.Modify(RowNumber, &quot;Vis&quot;)</code>.</p>
+<p>一个包含零个或多个下表中单词的字符串(不区分大小写). 在单词间使用空格或 tab 分隔. 要移除某个选项, 请在该选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
+<p><strong>Check</strong>: 在行中显示选中标记(需要 ListView 含有 <a href="#Checked">checkboxes</a>). 以后要取消选中它, 请使用 <code>LV.Modify(RowNumber, &quot;-Check&quot;)</code>.</p>
+<p id="ColN"><strong>Col</strong>: 指定单词 Col 后紧跟着列号, 从此列开始往后应用参数 <em>Col1</em> 及以后. 此选项通常和 <a href="#Modify">LV.Modify</a> 一起使用来修改行中的个别字段, 而不会影响其左侧的字段.</p>
+<p id="Focus"><strong>Focus</strong>: 设置键盘焦点到此行(通常和 Select 一起使用). 以后要取消它的焦点, 请使用 <code>LV.Modify(RowNumber, &quot;-Focus&quot;)</code>.</p>
+<p><strong>Icon</strong>: 指定单词 Icon 后紧跟着这行图标的编号, 这行图标显示在首列的左侧. 如果此选项不存在, 则使用 <a href="#IL">ImageList</a> 中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则<a href="#View">报告视图</a>中既不显示图标也不为其保留空间.</p>
+<p><strong>Select</strong>: 选择行. 以后要取消选择, 请使用 <code>LV.Modify(RowNumber, &quot;-Select&quot;)</code>. 当选择行时, 通常最好确保至少有一行总含有<a href="#Focus">聚焦属性</a>, 为这样允许 Apps 键在焦点行附近显示其<a href="../objects/GuiOnEvent.htm#ContextMenu">上下文菜单</a>(如果有). 单词 <em>Select</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, both <code>&quot;Select&quot;</code> 和 <code>&quot;Select&quot; <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>). 这种技术也适用于上面的 <em>Focus</em> 和 <em>Check</em>.</p>
+<p id="Vis"><strong>Vis</strong>: 必要时通过滚动 ListView 来确保指定行完全可见. 此参数仅对 LV.Modify 有效; 例如: <code>LV.Modify(RowNumber, &quot;Vis&quot;)</code>.</p>
       </dd>
       <dt>Col1, Col2, ...</dt>
       <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>The columns of the new row, which can be text or numeric (including numeric <a href="../Variables.htm#Expressions">expression</a> results). To make any field blank, specify &quot;&quot; or the equivalent. If there are too few fields to fill all the columns, the columns at the end are left blank. If there are too many fields, the fields at the end are completely ignored.</p>
+    <p>新行的列, 可以是文本或数字(包括数字<a href="../Variables.htm#Expressions">表达式</a>的结果). 要使任何字段成为空, 请指定 &quot;&quot; 或等价物. 如果字段太少无法填满所有的列, 那么末尾的列将被留空. 如果字段太多, 末尾的字段将被完全忽略.</p>
       </dd>
     </dl>
   </div>
   <div class="methodShort" id="Insert">
     <h3>Insert</h3>
-    <p>Inserts a new row at the specified row number, and returns the new <a href="#RowNumber">row number</a>.</p>
+    <p>在指定行之前插入一个新行, 并返回新的<a href="#RowNumber">行号</a>.</p>
     <pre class="Syntax">NewRowNumber := LV.<span class="func">Insert</span>(RowNumber <span class="optional">, Options, Col1, Col2, ...</span>)</pre>
     <dl>
       <dt>RowNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The row number for the newly inserted row. Any rows at or beneath <em>RowNumber</em> are shifted downward to make room for the new row. If <em>RowNumber</em> is greater than the number of rows in the list (even as high as 2147483647), the new row is added to the end of the list.</p>
+        <p>新插入的行的行号. 任何位于 <em>RowNumber</em> 或其下方的行都会被向下移动, 以便为新行腾出空间. 如果 <em>RowNumber</em> 大于列表中的行数(甚至大于 2147483647), 新的行将被添加到列表的最后.</p>
       </dd>
       <dt>Options</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>See <a href="#RowOptions">row options</a>.</p>
+        <p>请参阅 <a href="#RowOptions">row 选项</a>.</p>
       </dd>
       <dt>Col1, Col2, ...</dt>
       <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>The columns of the new row, which can be text or numeric (including numeric <a href="../Variables.htm#Expressions">expression</a> results). To make any field blank, specify &quot;&quot; or the equivalent. If there are too few fields to fill all the columns, the columns at the end are left blank. If there are too many fields, the fields at the end are completely ignored.</p>
+    <p>新行的列, 可以是文本或数字(包括数字<a href="../Variables.htm#Expressions">表达式</a>的结果). 要使任何字段成为空, 请指定 &quot;&quot; 或等价物. 如果字段太少无法填满所有的列, 那么末尾的列将被留空. 如果字段太多, 末尾的字段将被完全忽略.</p>
       </dd>
     </dl>
   </div>
   <div class="methodShort" id="Modify">
     <h3>Modify</h3>
-    <p>Modifies the attributes and/or text of a row, and returns 1 upon success and 0 upon failure.</p>
+    <p>修改行的属性和/或文本, 成功后返回 1, 失败后返回 0.</p>
     <pre class="Syntax">LV.<span class="func">Modify</span>(RowNumber <span class="optional">, Options, NewCol1, NewCol2, ...</span>)</pre>
-    <p>Note: When only the first two parameters are present, only the row's attributes and not its text are changed.</p>
+    <p>注意: 如果只存在前两个参数, 则仅修改行的属性而不改变其文本.</p>
     <dl>
       <dt>RowNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The row to modify. If <em>RowNumber</em> is 0, <u>all</u> rows in the control are modified (in this case the return value is 1 on complete success and 0 if any part of the operation failed).</p>
+        <p>要修改的行. 如果 <em>RowNumber</em> 为 0, 那么控件中的 <u>所有</u> 的行都会被修改(在这种情况下, 如果操作完全成功, 返回值为 1, 如果操作的任何部分失败, 返回值为 0).</p>
       </dd>
       <dt>Options</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>The <a href="#ColN">ColN option</a> may be used to update specific columns without affecting the others. For other options, 请参阅 <a href="#RowOptions">row options</a>.</p>
+        <p><a href="#ColN">ColN 选项</a>可用于更新特定的列而不影响其他列. 有关其他选项, 请参阅 <a href="#RowOptions">row 选项</a>.</p>
       </dd>
       <dt>NewCol1, NewCol2, ...</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>The new columns of the specified row, which can be text or numeric (including numeric <a href="../Variables.htm#Expressions">expression</a> results). To make any field blank, specify &quot;&quot; or the equivalent. If there are too few parameters to cover all the columns, the columns at the end are not changed. If there are too many fields, the fields at the end are completely ignored.</p>
+        <p>指定行的新列, 可以是文本或数字(包括数字<a href="../Variables.htm#Expressions">表达式</a>的结果). 要使任何字段成为空, 请指定 &quot;&quot; 或等价物. 如果字段太少无法填满所有的列, 那么末尾的列将被留空. 如果字段太多, 末尾的字段将被完全忽略.</p>
       </dd>
     </dl>
   </div>
   <div class="methodShort" id="Delete">
     <h3>Delete</h3>
-    <p>Deletes the specified row, and returns 1 upon success and 0 upon failure.</p>
+    <p>删除指定行, 成功后返回 1, 失败后返回 0.</p>
     <pre class="Syntax">LV.<span class="func">Delete</span>(<span class="optional">RowNumber</span>)</pre>
     <dl>
       <dt>RowNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The row to delete. If this parameter is omitted, <strong>all</strong> rows in the ListView are deleted.</p>
+        <p>要删除的行. 如果省略此参数, 则删除 ListView 中 <strong>所有的</strong> 行.</p>
       </dd>
     </dl>
   </div>
-  <h3 id="bifCol">Column Methods</h3>
+  <h3 id="bifCol">列的方法</h3>
   <div class="methodShort" id="ModifyCol">
     <h3>ModifyCol</h3>
-    <p>Modifies the attributes and/or text of the specified column and its header, and returns 1 upon success and 0 upon failure.</p>
+    <p>修改指定列和标题的属性和/或文本, 成功后返回 1, 失败后返回 0.</p>
     <pre class="Syntax">LV.<span class="func">ModifyCol</span>(<span class="optional">ColumnNumber, Options, ColumnTitle</span>)</pre>
-    <p>Note: If all parameters are omitted, the width of every column is adjusted to fit the contents of the rows. If only the first parameter is present, only the specified column is auto-sized. Auto-sizing has no effect when not in Report (Details) view.</p>
+    <p>注意: 如果省略所有参数, 则调整所有列的宽度以适应行的内容. 如果仅存在首个参数, 则仅调整指定列的大小. 只有在报告(详细信息) 视图中自动调整大小才有效果.</p>
     <dl>
       <dt>ColumnNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The column to modify. The first column is number 1 (not 0).</p>
+        <p>要修改的列. 第一列编号为 1(不是 0).</p>
       </dd>
       <dt id="ColOptions">Options</dt>
       <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>A string containing zero or more words from the list below (not case sensitive). Separate each word from the next with a space or tab. To remove an option, precede it with a minus sign. To add an option, a plus sign is permitted but not required.</p>
-    <p><strong>Column Options: General</strong></p>
-    <p><strong>N</strong>: Specify for N the new width of the column, in pixels. This number can be unquoted if is the only option. 例如, the following are both valid: <code>LV.ModifyCol(1, 50)</code> and <code>LV.ModifyCol(1, &quot;50 Integer&quot;)</code>.</p>
-    <p><strong>Auto</strong>: Adjusts the column's width to fit its contents. This has no effect when not in Report (Details) view.</p>
-    <p><strong>AutoHdr</strong>: Adjusts the column's width to fit its contents and the column's header text, whichever is wider. If applied to the last column, it will be made at least as wide as all the remaining space in the ListView. It is usually best to apply this setting only after the rows have been added because that allows any newly-arrived vertical scroll bar to be taken into account when sizing the last column. This option has no effect when not in Report (Details) view.</p>
-    <p><strong>Icon</strong>: Specify the word Icon followed immediately by the number of the <a href="#IL">ImageList's</a> icon to display next to the column header's text. Specify <code>-Icon</code> (minus icon) to remove any existing icon.</p>
-    <p><strong>IconRight</strong>: Puts the icon on the right side of the column rather than the left.</p>
-    <p><strong>Column Options: Data Type</strong></p>
-    <p><strong>Float</strong>: For sorting purposes, indicates that this column contains floating point numbers (hexadecimal format is not supported). Sorting performance for Float and Text columns is up to 25 times slower than it is for integers.</p>
-    <p id="Integer"><strong>Integer</strong>: For sorting purposes, indicates that this column contains integers. To be sorted properly, each integer must be 32-bit; that is, within the range -2147483648 to 2147483647. If any of the values are not integers, they will be considered zero when sorting (unless they start with a number, in which case that number is used). Numbers may appear in either decimal or hexadecimal format (e.g. <code>0xF9E0</code>).</p>
-    <p id="Text"><strong>Text</strong>: Changes the column back to text-mode sorting, which is the initial default for every column. Only the first 8190 characters of text are significant for sorting purposes (except for the <a href="#Logical"><em>Logical</em> option</a>, in which case the limit is 4094).</p>
-    <p><strong>Column Options: Alignment / Justification</strong></p>
-    <p><strong>Center</strong>: Centers the text in the column. To center an Integer or Float column, specify the word Center after the word Integer or Float.</p>
-    <p><strong>Left</strong>: Left-justifies the column's text, which is the initial default for every column. On older operating systems, the first column might have a forced left-justification.</p>
-    <p><strong>Right</strong>: Right-justifies the column's text. This attribute need not be specified for Integer and Float columns because they are right-justified by default. That default can be overridden by specifying something such as <code>&quot;Integer Left&quot;</code> or <code>&quot;Float Center&quot;</code>.</p>
-    <p><strong>Column Options: Sorting</strong></p>
-    <p id="Case"><strong>Case</strong>: The sorting of the column is case sensitive (affects only <a href="#Text">text</a> columns). If the options <em>Case</em>, <em>CaseLocale</em>, and <em>Logical</em> are all omitted, the uppercase letters A-Z are considered identical to their lowercase counterparts for the purpose of the sort.</p>
-    <p><strong>CaseLocale</strong>: The sorting of the column is case insensitive based on the current user's locale (affects only <a href="#Text">text</a> columns). 例如, most English and Western European locales treat the letters A-Z and ANSI letters like &Auml; and &Uuml; as identical to their lowercase counterparts. This method also uses a &quot;word sort&quot;, which treats hyphens and apostrophes in such a way that words like &quot;coop&quot; and &quot;co-op&quot; stay together.</p>
-    <p id="Desc"><strong>Desc</strong>: Descending order. The column starts off in descending order the first time the user sorts it.</p>
-    <p id="Logical"><strong>Logical</strong>: Same as <em>CaseLocale</em> except that any sequences of digits in the text are treated as true numbers rather than mere characters. For example, the string &quot;T33&quot; would be considered greater than &quot;T4&quot;. <em>Logical</em> and <em>Case</em> are currently mutually exclusive: only the one most recently specified will be in effect.</p>
-    <p><strong>NoSort</strong>: Prevents a user's click on this column from having any automatic sorting effect. However, the <a href="../objects/GuiOnEvent.htm#ColClick">ColClick</a> event is still raised, so the script can respond with a custom sort or other action. To disable sorting for all columns rather than only a subset, include <a href="#NoSort">NoSort</a> in the ListView's options.</p>
-    <p><strong>Sort</strong>: Immediately sorts the column in ascending order (even if it has the <a href="#Desc">Desc</a> option).</p>
-    <p><strong>SortDesc</strong>: Immediately sorts the column in descending order.</p>
-    <p><strong>Uni</strong>: Unidirectional sort. This prevents a second click on the same column from reversing the sort direction.</p>
+    <p>一个包含零个或多个下表中单词的字符串(不区分大小写). 在单词间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
+    <p><strong>列的选项: 常规</strong></p>
+    <p><strong>N</strong>: 指定 N 为列的新宽度, 单位为像素. 如果是唯一的选择, 这个数字可以不加引号. 例如, 后面两种形式都是有效的: <code>LV.ModifyCol(1, 50)</code> and <code>LV.ModifyCol(1, &quot;50 Integer&quot;)</code>.</p>
+    <p><strong>Auto</strong>: 调整列宽来适应其内容. 只有在报告(详细信息) 视图中此选项才有效果.</p>
+    <p><strong>AutoHdr</strong>: 调整列宽来适应其内容和列标题的文本, 以其中较宽的为准. 当应用于最后一列时, 它将被设置为至少和 ListView 中剩余空间的宽度一样. 通常最好仅在行已经添加后才应用此设置, 因为这样允许当调整最后一列的大小时考虑到可能新增加的垂直滚动栏. 只有在报告(详细信息) 视图中此选项才有效果.</p>
+    <p><strong>Icon</strong>: 指定单词 Icon 后紧跟着<a href="#IL">图像列表</a>中要显示在列标题文本后的图标的编号. 指定 <code>-Icon</code>(负 icon) 来移除任何现有的图标.</p>
+    <p><strong>IconRight</strong>:  把图标放在列的右边而不是左.</p>
+    <p><strong>列的选项: 数据类型</strong></p>
+    <p><strong>Float</strong>: 为了进行排序, 指明此列包含浮点数(不支持十六进制格式). 浮点数和文本列的排序性能最多可能比整数列的慢 25 倍.</p>
+    <p id="Integer"><strong>Integer</strong>: 为了进行排序, 指明此列包含整数. 要正确排序, 每个整数必须是 32 位的; 即在范围 -2147483648 到 2147483647 内. 任何非整数的值在排序时将被视为零(不过如果这些值以一个数字开头, 则使用这个数字). 数字格式可以为十进制或十六进制(例如 <code>0xF9E0</code>).</p>
+    <p id="Text"><strong>Text</strong>: 更改列返回到文本模式进行排序, 这是每列初始默认的排序方式. 在排序时只有文本开始的 8190 个字符是有意义的(如果如果使用了 <a href="#Logical"><em>Logical</em> 选项</a>, 此时限制为 4094).</p>
+    <p><strong>列的选项: 对齐/字距调整</strong></p>
+    <p><strong>Center</strong>: 让文本居于列中央. 要让 Integer 或 Float 列居中, 请把单词 Center 加到 Integer 或 Float 后.</p>
+    <p><strong>Left</strong>: 让列文本左对齐, 这是每列初始默认的对齐方式. 在较旧的操作系统中, 首列可能会强制进行左对齐.</p>
+    <p><strong>Right</strong>: 让列文本右对齐. 对于 Integer 和 Float 数列不需要指定此属性, 因为它们默认是右对齐的. 通过指定例如 <code>&quot;Integer Left&quot;</code> 或 <code>&quot;Float Center&quot;</code> 的字符串可以覆盖此默认的对齐方式.</p>
+    <p><strong>列的选项: 排序</strong></p>
+    <p id="Case"><strong>Case</strong>: 让列排序区分大小写(仅影响<a href="#Text">文本</a>列). 如果 <em>Case</em>, <em>CaseLocale</em> 和 <em>Logical</em> 选项都省略, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
+    <p><strong>CaseLocale</strong>: 让列排序基于当前用户的区域设置且不区分大小写(仅影响<a href="#Text">文本</a>列). 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 &Auml; 和 &Uuml; 等同于它们的小写形式. 这种方法也使用 &quot;单词排序&quot;, 它把单词中的连字符和撇号例如 &quot;coop&quot; 和 &quot;co-op&quot; 保持在一起.</p>
+    <p id="Desc"><strong>Desc</strong>: 降序排列. 用户首次对此列排序时使用下降的顺序.</p>
+    <p id="Logical"><strong>Logical</strong>: 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如, 字符串 &quot;T33&quot; 将被视为大于 &quot;T4&quot;. <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
+    <p><strong>NoSort</strong>: 避免用户点击此列对自动排序产生的影响. 然而, <a href="../objects/GuiOnEvent.htm#ColClick">ColClick</a> 事件仍然会被触发, 所以脚本可以用自定义的排序或其他操作来响应. 要禁用所有列的排序而不仅是其中的子集, 请在 ListView 的选项中包含 <a href="#NoSort">NoSort</a>.</p>
+    <p><strong>Sort</strong>: 立即对列按升序排列(即使它含有 <a href="#Desc">Desc</a> 选项).</p>
+    <p><strong>SortDesc</strong>: 立即对列按降序排列.</p>
+    <p><strong>Uni</strong>: 单向排序. 此选项防止在相同列进行第二次点击来反转排序方向.</p>
       </dd>
       <dt>ColumnTitle</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>The new column header. Omit this parameter to left it unchanged.</p>
+        <p>新列的标题. 省略此参数, 使其保持不变.</p>
       </dd>
     </dl>
   </div>
   <div class="methodShort" id="InsertCol">
     <h3>InsertCol</h3>
-    <p>Inserts a new column at the specified column number, and returns the new column's position number.</p>
+    <p>在指定列之前插入一个新列, 并返回新的列的位置编号.</p>
     <pre class="Syntax">NewColumnNumber := LV.<span class="func">InsertCol</span>(ColumnNumber <span class="optional">, Options, ColumnTitle</span>)</pre>
     <dl>
       <dt>ColumnNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The column number of the newly inserted column. Any column at or on the right side of <em>ColumnNumber</em> are shifted to the right to make room for the new column. The first column is 1 (not 0). The maximum number of columns in a ListView is 200. If <em>ColumnNumber</em> is larger than the number of columns currently in the control, the new column is added next to the last column on the right side. The newly inserted column starts off with empty contents beneath it unless it is the first column, in which case it inherits the old first column's contents and the old first column acquires blank contents.</p>
+        <p>新插入列的列号. 在 <em>ColumnNumber</em> 处和其右侧的任何列都会向右移动, 以便为新列腾出空间. 第一列的编号为 1(不是 0). ListView 中的最大列数是 200. 如果 <em>ColumnNumber</em> 大于当前控件中的列数, 则新列被添加到列表的末尾(最右边). 新插入的列初始内容为空, 然而如果它是首列则会继承原来首列的内容, 同时原来首列的内容变为空的.</p>
       </dd>
       <dt>Options</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>The new column's attributes -- such as whether or not it uses <a href="#Integer">integer sorting</a> -- always start off at their defaults unless changed via <em><a href="#ColOptions">Options</a></em>.</p>
+        <p>新列的属性 -- 如是否使用<a href="#Integer">整数排序</a> -- 总是以默认值开始, 除非通过 <em><a href="#ColOptions">选项</a></em> 更改.</p>
       </dd>
       <dt>ColumnTitle</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>The new column header.</p>
+        <p>新列的标题.</p>
       </dd>
     </dl>
   </div>
   <div class="methodShort" id="DeleteCol">
     <h3>DeleteCol</h3>
-    <p>Deletes the specified column and all of the contents beneath it, and returns 1 upon success and 0 upon failure.</p>
+    <p>删除指定的列及其中所有内容, 成功后返回 1, 失败后返回 0.</p>
     <pre class="Syntax">LV.<span class="func">DeleteCol</span>(ColumnNumber)</pre>
     <dl>
       <dt>ColumnNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The column to delete. Once a column is deleted, the column numbers of any that lie to its right are reduced by 1. Consequently, calling <code>LV.DeleteCol(2)</code> twice would delete the second and third columns.</p>
+        <p>要删除的列. 当一列被删除后, 位于其右侧的列号将减少 1. 因此, 调用 <code>LV.DeleteCol(2)</code> 两次将删除第二列和第三列.</p>
       </dd>
     </dl>
   </div>
-  <h3 id="bifGet">Getting Data Out of a ListView</h3>
+  <h3 id="bifGet">从 ListView 中获取数据</h3>
   <div class="methodShort" id="GetCount">
     <h3>GetCount</h3>
-    <p>Returns the number of rows or columns in the control.</p>
+    <p>返回控件中行或列的总数.</p>
     <pre class="Syntax">CountNumber := LV.<span class="func">GetCount</span>(<span class="optional">Mode</span>)</pre>
     <dl>
       <dt>Mode</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>When this parameter is omitted, it returns the total number of rows in the control. When this parameter is &quot;S&quot; or &quot;Selected&quot;, the count includes only the selected/highlighted rows. When this parameter is &quot;Col&quot; or &quot;Column&quot;, it returns the number of columns in the control. The return value will be retrieved instantly, because the control keeps track of these counts.</p>
+        <p>当此参数被省略时, 返回控件中的总行数. 当此参数为 &quot;S&quot; 或 &quot;Selected&quot; 时, 计数只包括选中/高亮的行. 当该参数为 &quot;Col&quot; 或 &quot;Column&quot; 时, 返回控件中的列数. 返回值将被即时检索, 因为控件会跟踪这些计数.</p>
       </dd>
     </dl>
-    <p>This method is often used in the top line of a Loop, in which case the method would get called only once (prior to the first iteration). 例如:</p>
+    <p>这个方法通常用于 Loop 的顶行, 在这种情况下, 这个方法只会被调用一次(在首次循环前). 例如:</p>
     <pre>Loop LV.GetCount
 {
     RetrievedText := LV.GetText(A_Index)
     if InStr(RetrievedText, &quot;some filter text&quot;)
-        LV.Modify(A_Index, &quot;Select&quot;)  <em>; Select each row whose first field contains the filter-text.</em>
+        LV.Modify(A_Index, &quot;Select&quot;)  <em>; 选择首个字段包含过滤文本的所有行.</em>
 }</pre>
-    <p>To retrieve the widths of a ListView's columns -- for uses such as saving them to an INI file to be remembered between sessions -- follow this example:</p>
+    <p>要获取 ListView 的列宽 -- 用于例如保存它们到 INI 文件以便在会话期间保持一致 -- 请参照此例:</p>
     <pre>
 Loop LV.GetCount("Column")
 {
-    ColWidth := SendMessage(4125, A_Index - 1, 0, LV)  <em>; 4125 is LVM_GETCOLUMNWIDTH.</em>
+    ColWidth := SendMessage(4125, A_Index - 1, 0, LV)  <em>; 4125 是 LVM_GETCOLUMNWIDTH.</em>
     MsgBox("Column " A_Index "'s width is " ColWidth ".")
 }</pre>
   </div>
   <div class="methodShort" id="GetNext">
     <h3>GetNext</h3>
-    <p>Returns the row number of the next selected, checked, or focused row, otherwise zero.</p>
+    <p>返回下一个选择, 选中或具有焦点的行的行号, 否则为零.</p>
     <pre class="Syntax">RowNumber := LV.<span class="func">GetNext</span>(<span class="optional">StartingRowNumber, RowType</span>)</pre>
     <dl>
       <dt>StartingRowNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>If omitted or less than 1, the search begins at the top of the list. Otherwise, the search begins at the row after <em>StartingRowNumber</em>.</p>
+        <p>如果省略或小于 1, 则从列表的顶部开始搜索. 否则, 从 <em>StartingRowNumber</em> 行后开始搜索.</p>
       </dd>
       <dt>RowType</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-        <p>If omitted, it searches for the next selected/highlighted row. Otherwise, specify &quot;C&quot; or &quot;Checked&quot; to find the next checked row; or &quot;F&quot; or &quot;Focused&quot; to find the focused row (there is never more than one focused row in the entire list, and sometimes there is none at all).</p>
+        <p>如果省略 , 则搜索下一个选择的/高亮的行. 否则, 指定 &quot;C&quot; 或 &quot;Checked&quot; 来寻找下一个选中的行; 或 &quot;F&quot; 或 &quot;Focused&quot; 来寻找焦点行(在整个列表中不可能有多个焦点行, 且有时甚至没有).</p>
       </dd>
     </dl>
-    <p>The following example reports all selected rows in the ListView:</p>
-    <pre>RowNumber := 0  <em>; This causes the first loop iteration to start the search at the top of the list.</em>
+    <p>下面的例子, 报告 ListView 中所有选择的行:</p>
+    <pre>RowNumber := 0  <em>; 这样使得首次循环从列表的顶部开始搜索.</em>
 Loop
 {
-    RowNumber := LV.GetNext(RowNumber)  <em>; Resume the search at the row after that found by the previous iteration.</em>
-    if not RowNumber  <em>; The above returned zero, so there are no more selected rows.</em>
+    RowNumber := LV.GetNext(RowNumber)  <em>; 在前一次找到的位置后继续搜索.</em>
+    if not RowNumber  <em>; 上面返回零, 所以选择的行已经都找到了.</em>
         break
     Text := LV.GetText(RowNumber)
     MsgBox('The next selected row is #' RowNumber ', whose first field is &quot;' Text '&quot;.')
 }</pre>
-    <p>An alternate method to find out if a particular row number is checked is the following:</p>
+    <p>判断一个特定的行是否被选中的另一种方法如下:</p>
     <pre>
-ItemState := SendMessage(4140, RowNumber - 1, 0xF000, LV)  <em>; 4140 is LVM_GETITEMSTATE. 0xF000 is LVIS_STATEIMAGEMASK.</em>
-IsChecked := (ItemState &gt;&gt; 12) - 1  <em>; This sets IsChecked to true if <i>RowNumber</i> is checked or false otherwise.</em></pre>
+ItemState := SendMessage(4140, RowNumber - 1, 0xF000, LV)  <em>; 4140 是 LVM_GETITEMSTATE. 0xF000 是 LVIS_STATEIMAGEMASK.</em>
+IsChecked := (ItemState &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选中的则设置 IsChecked 为真, 否则为假.</em></pre>
   </div>
   <div class="methodShort" id="GetText">
     <h3>GetText</h3>
-    <p>Retrieves the text at the specified row and column number.</p>
+    <p>检索指定行号和列号的文本.</p>
     <pre class="Syntax">RetrievedText := LV.<span class="func">GetText</span>(RowNumber <span class="optional">, ColumnNumber</span>)</pre>
     <dl>
       <dt>RowNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The number of the row, whose text to be retrieved. If this parameter is 0, the column header text is retrieved. <em>RetrievedText</em> has a maximum length of 8191.</p>
+        <p>要检索文本的行的编号. 如果该参数为 0, 则获取列标题的文本. <em>RetrievedText</em> 的最大长度为 8191.</p>
       </dd>
       <dt>ColumnNumber</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The number of the column, where the specified row is located. If omitted, it defaults to 1 (the text in the first column). Column numbers seen by the script are not altered by any dragging and dropping of columns the user may have done. 例如, the original first column is still number 1 even if the user drags it to the right of other columns.</p>
+        <p>列的编号, 指定行所在的位置. 如果省略, 默认为 1(第一列的文本). 脚本看到的列号不会因为用户拖放列而改变. 例如, 最初首列的编号仍是 1, 即使用户把它拖到其他列的右边.</p>
       </dd>
     </dl>
   </div>
-  <h3 id="bifIcon">Setting Icons</h3>
+  <h3 id="bifIcon">设置图标</h3>
   <div class="methodShort" id="SetImageList">
     <h3>SetImageList</h3>
-    <p>Sets or replaces the <a href="#IL">ImageList</a>, and returns the ImageListID that was previously associated with this control (or 0 if none).</p>
+    <p>设置或替换 <a href="#IL">ImageList(图像列表)</a>, 并返回之前与该控件相关联的 ImageListID(如果没有, 则返回 0).</p>
     <pre class="Syntax">PrevImageListID := LV.<span class="func">SetImageList</span>(ImageListID <span class="optional">, IconType</span>)</pre>
     <dl>
       <dt>ImageListID</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>The number returned from a previous call to <a href="ListView.htm#IL_Create">IL_Create</a>.</p>
+        <p>从之前调用 <a href="ListView.htm#IL_Create">IL_Create</a> 返回的数字.</p>
       </dd>
       <dt>IconType</dt>
       <dd>
         <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-        <p>If the second parameter is omitted, the type of icons in the ImageList is detected automatically as large or small. Otherwise, specify 0 for large icons, 1 for small icons, and 2 for state icons (state icons are not yet directly supported, but they could be used via <a href="SendMessage.htm">SendMessage</a>).</p>
+        <p>如果省略第二个参数, 则自动检测 ImageList 中的图标类型为大图标或小图标. 否则, 指定 0 为大图标, 1 为小图标, 2 为状态图标(状态图标还不直接支持, 但可以通过 <a href="SendMessage.htm">SendMessage</a> 使用).</p>
       </dd>
     </dl>
-<p>This method is normally called prior to adding any rows to the ListView.</p>
-    <p>A ListView may have up to two ImageLists: small-icon and/or large-icon. This is useful when the script allows the user to switch to and from the large-icon view. To add more than one ImageList to a ListView, call LV.SetImageList a second time, specifying the ImageListID of the second list. A ListView with both a large-icon and small-icon ImageList should ensure that both lists contain the icons in the same order. This is because the same ID number is used to reference both the large and small versions of a particular icon.</p>
-<p>Although it is traditional for all <a href="#View">viewing modes</a> except Icon and Tile to show small icons, this can be overridden by passing a large-icon list to LV.SetImageList and specifying 1 (small-icon) for the second parameter. This also increases the height of each row in the ListView to fit the large icon.</p>
+<p>这个方法通常在向 ListView 添加任何行之前被调用.</p>
+    <p>一个 ListView 最多可以有两个图像列表: 小图标和/或大图标. 当脚本允许用户在大图标视图之间进行切换时, 这很有用. 要再关联一个图像列表到 ListView, 	请再次调用 LV.SetImageList, 指定第二个列表的 ImageListID. 一个同时拥有大图标和小图标 ImageList 的 ListView 应该确保两个列表中的图标顺序相同. 这是因为相同的 ID 号被用来引用特定图标的大版本和小版本.</p>
+<p>尽管除了图标模式和平铺模式外, 传统的所有的<a href="#View">视图模式</a>都显示小图标, 但可以通过传递一个大图标列表到 LV_SetImageList() 并且在第二个参数中指定 1(小图标) 覆盖此行为. 这也增加了 ListView 中每行的高度以适合大图标.</p>
     <p>
-      Any such detached ImageList should normally be destroyed via <a href="ListView.htm#IL_Destroy">IL_Destroy</a>.</p>
+      任何这种分离的图像列表通常都应该通过 <a href="ListView.htm#IL_Destroy">IL_Destroy</a> 来销毁.</p>
   </div>
 
-<h2 id="Events">Events</h2>
-<p>The following events can be detected by calling <a href="../objects/GuiOnEvent.htm">OnEvent</a> to register a callback function or method:</p>
+<h2 id="Events">事件</h2>
+<p>以下事件可以通过调用 <a href="../objects/GuiOnEvent.htm">OnEvent</a> 来注册一个回调函数或方法来检测:</p>
 <table class="info">
-  <tr><th>Event</th><th>Raised when...</th></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#Click">Click</a></td><td>The control is clicked.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a></td><td>The control is double-clicked.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#ColClick">ColClick</a></td><td>A column header is clicked.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a></td><td>The user right-clicks the control or presses the <kbd>Menu</kbd> key or <kbd>Shift</kbd>+<kbd>F10</kbd> while the control has the keyboard focus.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#Focus">Focus</a></td><td>The control gains the keyboard focus.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a></td><td>The control loses the keyboard focus.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#ItemCheck">ItemCheck</a></td><td>An item is checked or unchecked.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#ItemEdit">ItemEdit</a></td><td>An item's label is edited by the user.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#ItemFocus">ItemFocus</a></td><td>The focused item changes.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#ItemSelect">ItemSelect</a></td><td>An item is selected or deselected.</td></tr>
+  <tr><th>事件</th><th>当...触发</th></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#Click">Click</a></td><td>控件被点击.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a></td><td>控件被双击.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#ColClick">ColClick</a></td><td>列标题被点击.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a></td><td>当控件拥有键盘焦点时, 用户右键单击控件或按下 <kbd>Menu</kbd> 键或 <kbd>Shift</kbd>+<kbd>F10</kbd>.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#Focus">Focus</a></td><td>控件获得键盘焦点.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a></td><td>控件失去键盘焦点.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#ItemCheck">ItemCheck</a></td><td>一个项目被选中或取消选中.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#ItemEdit">ItemEdit</a></td><td>一个项目的标签被用户编辑.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#ItemFocus">ItemFocus</a></td><td>焦点项目改变.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#ItemSelect">ItemSelect</a></td><td>一个项目被选中或取消选中.</td></tr>
 </table>
-<p>Additional (rarely-used) notifications can be detected by using <a href="../objects/GuiOnNotify.htm">OnNotify</a>. These notifications are <a href="https://msdn.microsoft.com/library/ff485962">documented at MSDN</a>. MSDN does not show the numeric value of each notification code; those can be found in the Windows SDK or by searching the Internet.</p>
+<p>额外的(很少使用的) 通知可以通过使用 <a href="../objects/GuiOnNotify.htm">OnNotify</a> 来检测. 这些通知在 <a href="https://msdn.microsoft.com/library/ff485962">MSDN 上都有文档</a>. MSDN 没有显示每个通知代码的数值; 这些可以在 Windows SDK 中找到, 或者在互联网上搜索.</p>
 
-<h2 id="IL">ImageList <span class="headnote">(the means by which icons are added to a ListView)</span></h2>
-<p>An Image-List is a group of identically sized icons stored in memory. Upon creation, each ImageList is empty. The script calls IL_Add repeatedly to add icons to the list, and each icon is assigned a sequential number starting at 1. This is the number to which the script refers to display a particular icon in a row or column header. Here is a working example that demonstrates how to put icons into a ListView's rows:</p>
-<pre>MyGui := Gui.New()  <em>; Create a MyGui window.</em>
-LV := MyGui.Add("ListView", "h200 w180", ["Icon &amp; Number","Description"])  <em>; Create a ListView.</em>
-ImageListID := <a href="#IL_Create">IL_Create</a>(10)  <em>; Create an ImageList to hold 10 small icons.</em>
-LV.<a href="#SetImageList">SetImageList</a>(ImageListID)  <em>; Assign the above ImageList to the current ListView.</em>
-Loop 10  <em>; Load the ImageList with a series of icons from the DLL.</em>
+<h2 id="IL">ImageList(图像列表)<span class="headnote">(将图标添加到 ListView 的方法)</span></h2>
+<p>图像列表是存储在内存中的一组相同大小的图标. 在创建时, 每个图像列表是空的. 脚本重复调用 IL_Add 来添加图标到列表中, 且给每个图标分配一个序号, 序号从 1 开始. 脚本引用此编号在一行中或列标题中显示一个特定的图标. 这是个可运行示例, 其中演示了如何在 ListView 的行中显示图标:</p>
+<pre>MyGui := Gui.New()  <em>; 创建 MyGui 窗口.</em>
+LV := MyGui.Add("ListView", "h200 w180", ["Icon &amp; Number","Description"])  <em>; 创建 ListView.</em>
+ImageListID := <a href="#IL_Create">IL_Create</a>(10)  <em>; 创建加载 10 个小图标的图像列表.</em>
+LV.<a href="#SetImageList">SetImageList</a>(ImageListID)  <em>; 把上面的图像列表指定给当前的 ListView.</em>
+Loop 10  <em>; 把 DLL 中的一系列图标装入图像列表.</em>
     <a href="#IL_Add">IL_Add</a>(ImageListID, &quot;shell32.dll&quot;, A_Index) 
-Loop 10  <em>; Add rows to the ListView (for demonstration purposes, one for each icon).</em>
+Loop 10  <em>; 在 ListView 中添加行(出于演示的目的, 每个图标一行).</em>
     LV.Add(&quot;Icon&quot; . A_Index, A_Index, &quot;n/a&quot;)
-LV.ModifyCol(&quot;Hdr&quot;)  <em>; Auto-adjust the column widths.</em>
+LV.ModifyCol(&quot;Hdr&quot;)  <em>; 自动调整列宽.</em>
 MyGui.Show</pre>
 <h3 id="IL_Create">IL_Create</h3>
-  <p>Creates a new ImageList, initially empty, and returns the unique ID of the ImageList (or 0 upon failure).</p>
+  <p>创建一个新的图像列表, 初始为空, 返回图像列表的唯一 ID(失败时为 0).</p>
   <pre class="Syntax">UniqueID := <span class="func">IL_Create</span>(<span class="optional">InitialCount := 2, GrowCount := 5, LargeIcons := false</span>)</pre>
   <dl>
     <dt>InitialCount</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-      <p>The number of icons you expect to put into the list immediately (if omitted, it defaults to 2).</p>
+      <p>你希望立即放入列表中的图标数量(如果省略, 默认为 2).</p>
     </dd>
     <dt>GrowCount</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-      <p>The number of icons by which the list will grow each time it exceeds the current list capacity (if omitted, it defaults to 5).</p>
+      <p>列表的图标数量, 每次超过当前列表的容量时, 列表的图标数量将增长(如果省略, 默认为 5).</p>
     </dd>
     <dt>LargeIcons</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-      <p>If this parameter is true, the ImageList will contain large icons. If it is false, it will contain small icons (this is the default when omitted). Icons added to the list are scaled automatically to conform to the system's dimensions for small and large icons.</p>
+      <p>如果这个参数为真, 则图像列表将包含大图标. 如果为假, 则它包含小图标(这是省略时的默认情况). 会按比例对添加到列表中的图标自动进行缩放以符合系统中大图标和小图标的尺寸.</p>
     </dd>
   </dl>
 <h3 id="IL_Add">IL_Add</h3>
-  <p>Adds an icon or picture to the specified ImageList, and returns the new icon's index (1 is the first icon, 2 is the second, and so on).</p>
+  <p>添加图标或图片到指定的图像列表, 并返回新图标的索引(首个图标索引为 1, 第二个为 2, 依此类推).</p>
   <pre class="Syntax">IconIndex := <span class="func">IL_Add</span>(ImageListID, Filename <span class="optional">, IconNumber := 1, ResizeNonIcon</span>)</pre>
   <dl>
     <dt>ImageListID</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-      <p>The ID of a ImageList created by <a href="#IL_Create">IL_Create</a>.</p>
+      <p><a href="#IL_Create">IL_Create</a> 创建的图像列表的 ID.</p>
     </dd>
     <dt>Filename</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>The name of an icon (.ICO), cursor (.CUR), animated cursor (.ANI) file (animated cursors will not actually be animated when displayed in a ListView), or a <a href="../misc/ImageHandles.htm">bitmap or icon handle</a> like <code>"HBITMAP:" handle</code>. Other sources of icons include the following types of files: EXE, DLL, CPL, SCR, and other types that contain icon resources.</p>
+      <p>图标(.ICO), 光标(.CUR) 或动画光标(.ANI) 文件的名称(动态光标在 ListView 中显示时实际将不会动), 或<a href="../misc/ImageHandles.htm">位图或图标句柄 </a>, 如 <code>"HBITMAP:" handle</code>. 图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR, 以及包含图标资源的其他类型.</p>
     </dd>
     <dt>IconNumber</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-      <p>To use an icon group other than the first one in the file, specify its number for <em>IconNumber</em>. If <em>IconNumber</em> is negative, its absolute value is assumed to be the resource ID of an icon within an executable file. In the following example, the default icon from the second icon group would be used: <code>IL_Add(ImageListID, &quot;C:\My Application.exe&quot;, 2)</code>.</p>
+      <p>要使用文件中第一个以外的图标组, 请在 <em>IconNumber</em> 指定它的编号. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, &quot;C:\My Application.exe&quot;, 2)</code>.</p>
     </dd>
     <dt>ResizeNonIcon</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-      <p>Non-icon images such as BMP, GIF and JPG may also be loaded. However, in this case the last two parameters should be specified to ensure correct behavior: <em>IconNumber</em> should be the mask/transparency color number (0xFFFFFF [the color white] might be best for most pictures); and <em>ResizeNonIcon</em> should be non-zero to cause the picture to be scaled to become a single icon, or zero to divide up the image into however many icons can fit into its actual width.</p>
-      <p>Supported image formats include ANI, BMP, CUR, EMF, Exif, GIF, ICO, JPG, PNG, TIF, and WMF.</p>
+      <p>还可以加载非图标图像, 例如 BMP, GIF 和 JPG. 然而, 此时应该指定最后两个参数以确保正确执行: <em>IconNumber</em> 应该为屏蔽的/透明的颜色编码(对于大多数图片 0xFFFFFF[白色] 可能是最佳的); 而 <em>ResizeNonIcon</em> 应该为非零值来缩放图片为单个图标, 或者为零来把图像分割为多个可以匹配实际宽度的图标.</p>
+      <p>支持的图片类型包括 ANI, BMP, CUR, EMF, Exif, GIF, ICO, JPG, PNG, TIF 和 WMF.</p>
     </dd>
   </dl>
 <h3 id="IL_Destroy">IL_Destroy</h3>
-  <p>Deletes the specified ImageList, and returns 1 upon success and 0 upon failure.</p>
+  <p>删除指定的图像列表, 成功时返回 1, 而失败返回 0.</p>
   <pre class="Syntax">Success := <span class="func">IL_Destroy</span>(ImageListID)</pre>
   <dl>
     <dt>ImageListID</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-      <p>The ID of a ImageList created by <a href="#IL_Create">IL_Create</a>.</p>
+      <p><a href="#IL_Create">IL_Create</a> 创建的图像列表的 ID.</p>
     </dd>
   </dl>
   <p>
-    Note: It is normally not necessary to destroy ImageLists because once attached to a ListView, they are destroyed automatically when the ListView or its parent window is destroyed. However, if the ListView shares ImageLists with other ListViews (by having <code>0x40</code> in its options), the script should explicitly destroy the ImageList after destroying all the ListViews that use it. Similarly, if the script replaces one of a ListView's old ImageLists with a new one, it should explicitly destroy the old one.</p>
+    注意: 通常没必要销毁图像列表, 因为一旦关联到 ListView, 当 ListView 或其父窗口销毁时它们会被自动销毁. 但是, 如果一个 ListView 和其他 ListView 共享图像列表(通过在选项中包含 <code>0x40</code>), 在所有使用此图像列表的 ListView 销毁后脚本应该显式地销毁它. 同样地, 如果脚本使用一个新的图像列表代替 ListView 中原来的, 则应该显式销毁原来的图像列表.</p>
 
-<h2 id="Remarks">ListView Remarks</h2>
-<p><a href="../objects/Gui.htm#Submit">Gui.Submit</a> has no effect on a ListView control.</p>
-<p>After a column is sorted -- either by means of the user clicking its header or the script calling <code>LV.<a href="#ModifyCol">ModifyCol</a>(1, &quot;Sort&quot;)</code> -- any subsequently added rows will appear at the bottom of the list rather than obeying the sort order. The exception to this is the <a href="#Sort">Sort</a> and <a href="#SortDesc">SortDesc</a> styles, which move newly added rows into the correct positions.</p>
-<p id="Enter">To detect when the user has pressed <kbd>Enter</kbd> while a ListView has focus, use a <a href="GuiControls.htm#DefaultButton">default button</a> (which can be hidden if desired). 例如:</p>
+<h2 id="Remarks">ListView 的备注</h2>
+<p><a href="../objects/Gui.htm#Submit">Gui.Submit</a> 对 ListView 控件没有效果.</p>
+<p>在对某个列进行排序后 -- 通过用户点击其标题或脚本调用 <code>LV.<a href="#ModifyCol">ModifyCol</a>(1, &quot;Sort&quot;)</code> -- 任何随后添加的行将出现在列表的底部而不会遵循排序顺序. 例外情况是 <a href="#Sort">Sort</a> 和 <a href="#SortDesc">SortDesc</a> 样式, 它们会把新添加的行移动正确的位置.</p>
+<p id="Enter">当 ListView 拥有焦点时如果要检测到用户是否按下 <kbd>Enter</kbd> 键, 请使用<a href="GuiControls.htm#DefaultButton">默认按钮</a>(如果需要则可以隐藏它). 例如:</p>
 <pre>MyGui.Add("Button", "Hidden Default", "OK").OnEvent("Click", "LV_Enter")
 ...
 LV_Enter(*) {
@@ -452,140 +452,140 @@ LV_Enter(*) {
         return
     MsgBox("Enter was pressed. The focused row number is " LV.GetNext(0, "Focused"))
 }</pre>
-<p>In addition to navigating from row to row with the keyboard, the user may also perform incremental search by typing the first few characters of an item in the first column. This causes the selection to jump to the nearest matching row.</p>
-<p>Although any length of text can be stored in each field of a ListView, only the first 260 characters are displayed.</p>
-<p>Although the maximum number of rows in a ListView is limited only by available system memory, row-adding performance can be greatly improved as described in the <a href="#Count">Count</a> option.</p>
-<p>A picture may be used as a background around a ListView (that is, to frame the ListView). To do this, create the <a href="GuiControls.htm#Picture">picture control</a> after the ListView and include <code>0x4000000</code> (which is WS_CLIPSIBLINGS) in the picture's <em>Options</em>.</p>
-<p>A script may create more than one ListView per window.</p>
-<p>It is best not to insert or delete columns directly with <a href="SendMessage.htm">SendMessage</a>. This is because the program maintains a collection of <a href="#Integer">sorting preferences</a> for each column, which would then get out of sync. Instead, use the <a href="#bifCol">built-in column methods</a>.</p>
-<p>To perform actions such as resizing, hiding, or changing the font of a ListView, 请参阅 <a href="../objects/GuiControl.htm">GuiControl object</a>.</p>
-<p>To extract text from external ListViews (those not owned by the script), use a href="ListViewGetContent.htm">ListViewGetContent</a>.</p>
+<p>使用键盘除了在行与行之间导航外, 用户还可以通过输入首列中一个项目名称的前几个字符来进行增量搜索. 这使得选择对象跳转到最近匹配的行.</p>
+<p>尽管 ListView 中的每个字段可以存储任意长度的文本, 但仅显示开始的 260 个字符.</p>
+<p>尽管 ListView 中可以使用的最大行数仅受系统可用内存的限制, 但参照 <a href="#Count">Count</a> 选项中描述的方法可以极大地提高添加行的性能.</p>
+<p>可以使用图片作为 ListView 周围的背景(即作为 ListView 的框架). 要实现这个效果, 请在 ListView 后创建<a href="GuiControls.htm#Picture">图片控件</a>并且在图片控件的 <em>Options</em> 中包含 <code>0x4000000</code>(这是 WS_CLIPSIBLINGS).</p>
+<p>脚本可以在每个窗口中创建多个 ListView.</p>
+<p>最好不要使用 <a href="SendMessage.htm">SendMessage</a> 直接插入或删除列. 这是因为程序为每个列维护一个<a href="#Integer">排序参数</a>集, 而这会让它们无法同步. 作为替代, 请使用<a href="#bifCol">内置的列的方法</a>.</p>
+<p>要对 ListView 执行一些操作(例如调整大小, 隐藏或改变字体), 请参阅 <a href="../objects/GuiControl.htm">GuiControl 对象</a>.</p>
+<p>要从外部 ListView(那些不属于脚本自身的) 中提取文本, 请使用 <a href="ListViewGetContent.htm">ListViewGetContent</a>.</p>
 <h2 id="Related">相关</h2>
-<p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">Other Control Types</a>, <a href="../objects/Gui.htm#New">Gui.New</a>, <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu event</a>, <a href="../objects/Gui.htm">Gui object</a>, <a href="../objects/GuiControl.htm">GuiControl object</a>, <a href="../misc/Styles.htm#ListView">ListView styles table</a></p>
+<p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="../objects/Gui.htm#New">Gui.New</a>, <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu 事件</a>, <a href="../objects/Gui.htm">Gui 对象</a>, <a href="../objects/GuiControl.htm">GuiControl 对象</a>, <a href="../misc/Styles.htm#ListView">ListView 样式列表</a></p>
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
-<pre><em>; Select or de-select all rows by specifying 0 as the row number:</em>
-LV.<a href="#Modify">Modify</a>(0, &quot;Select&quot;)   <em>; Select all.</em>
-LV.Modify(0, &quot;-Select&quot;)  <em>; De-select all.</em>
-LV.Modify(0, &quot;-Check&quot;)  <em>; Uncheck all the <a href="#Checked">checkboxes</a>.</em>
+<pre><em>; 指定行号为 0 来选择或取消选择所有行:</em>
+LV.<a href="#Modify">Modify</a>(0, &quot;Select&quot;)   <em>; 选择所有.</em>
+LV.Modify(0, &quot;-Select&quot;)  <em>; 取消选择所有.</em>
+LV.Modify(0, &quot;-Check&quot;)  <em>; 取消选中所有 <a href="#Checked">checkboxes</a>.</em>
 
-<em>; Auto-size all columns to fit their contents:</em>
-LV.<a href="#ModifyCol">ModifyCol</a>  <em>; There are no parameters in this mode.</em></pre>
+<em>; 自动根据内容调整所有列的宽度:</em>
+LV.<a href="#ModifyCol">ModifyCol</a>  <em>; 此时不需要参数.</em></pre>
 </div>
 
 <div class="ex" id="ExAdvanced">
-<p><a href="#ExAdvanced">#2</a>: The following is a working script that is more elaborate than the one near the top of this page. It displays the files in a folder chosen by the user, with each file assigned the icon associated with its type. The user can double-click a file, or right-click one or more files to display a context menu:</p>
-<pre><em>; Create a GUI window:</em>
-MyGui := Gui.New("+Resize")  <em>; Allow the user to maximize or drag-resize the window.</em>
+<p><a href="#ExAdvanced">#2</a>: 下面是一个比页面顶部的脚本更复杂的可工作的脚本. 它显示用户选择的文件夹中的文件, 且每个文件分配一个与其类型关联的图标. 用户在一个文件上双击或在一个或多个文件上右击后, 会显示上下文菜单:</p>
+<pre><em>; 创建 GUI 窗口:</em>
+MyGui := Gui.New("+Resize")  <em>; 允许用户最大化窗口或拖动来改变窗口的大小.</em>
 
-<em>; Create some buttons:</em>
+<em>; 创建一些按钮:</em>
 B1 := MyGui.Add("Button", "Default", "Load a folder")
 B2 := MyGui.Add("Button", "x+20", "Clear List")
 B3 := MyGui.Add("Button", "x+20", "Switch View")
 
-<em>; Create the ListView and its columns via <a href="#GuiAdd">MyGui.Add</a>:</em>
+<em>; 通过 <a href="#GuiAdd">MyGui.Add</a> 创建 ListView 及其列:</em>
 LV := MyGui.Add("ListView", "xm r20 w700 vLV", ["Name","In Folder","Size (KB)","Type"])
-<a href="#ModifyCol">LV.ModifyCol</a>(3, "Integer")  <em>; For sorting, indicate that the Size column is an integer.</em>
+<a href="#ModifyCol">LV.ModifyCol</a>(3, "Integer")  <em>; 为了排序, 表示 Size 列中的内容是整数.</em>
 
-<em>; Create an ImageList so that the ListView can display some icons:</em>
+<em>; 创建图像列表, 这样 ListView 才可以显示图标:</em>
 ImageListID1 := <a href="#IL_Create">IL_Create</a>(10)
-ImageListID2 := IL_Create(10, 10, true)  <em>; A list of large icons to go with the small ones.</em>
+ImageListID2 := IL_Create(10, 10, true)  <em>; 搭配小图标列表的大图标列表.</em>
 
-<em>; Attach the ImageLists to the ListView so that it can later display the icons:</em>
+<em>; 将图像列表附加到 ListView 上, 这样它就可以在以后显示图标:</em>
 <a href="#SetImageList">LV.SetImageList</a>(ImageListID1)
 LV.SetImageList(ImageListID2)
 
-<em>; Apply control events:</em>
+<em>; 应用控件事件:</em>
 LV.OnEvent("<a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>", "RunFile")
 LV.OnEvent("<a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a>", "ShowContextMenu")
 B1.OnEvent("Click", Func("LoadFolder").bind(ImageListID1, ImageListID2))
 B2.OnEvent("Click", (*) =&gt; <a href="#Delete">LV.Delete</a>())
 B3.OnEvent("Click", "SwitchView")
 
-<em>; Apply window events:</em>
+<em>; 应用窗口事件:</em>
 MyGui.OnEvent("Size", "Gui_Size")
 
-<em>; Display the window:</em>
+<em>; 显示窗口:</em>
 MyGui.Show()
 
 LoadFolder(ImageListID1, ImageListID2, this, *)
 {
     static IconMap := Map()
     LV := this.Gui["LV"]
-    this.Gui.Opt("+OwnDialogs")  <em>; Forces user to dismiss the following dialog before using main window.</em>
+    this.Gui.Opt("+OwnDialogs")  <em>; 强制用户在使用主窗口前解除以下对话框.</em>
     Folder := DirSelect(, 3, "Select a folder to read:")
-    if not Folder  <em>; The user canceled the dialog.</em>
+    if not Folder  <em>; 用户取消对话框.</em>
         return
 
-    <em>; Check if the last character of the folder name is a backslash, which happens for root
-    ; directories such as C:\. If it is, remove it to prevent a double-backslash later on.</em>
+    <em>; 检查文件夹名称的最后一个字符是否为反斜杠, 对于根目录则会如此,
+    ; 例如 C:\. 如果是, 则移除这个反斜杠以避免之后出现两个反斜杠.</em>
     if SubStr(Folder, -1, 1) = "\"
-        Folder := SubStr(Folder, 1, -1)  <em>; Remove the trailing backslash.</em>
+        Folder := SubStr(Folder, 1, -1)  <em>; 移除尾部的反斜杠.</em>
 
-    <em>; Calculate buffer size required for SHFILEINFO structure.</em>
+    <em>; 计算 SHFILEINFO 结构需要的缓冲大小.</em>
     sfi_size := A_PtrSize + 688
     sfi := BufferAlloc(sfi_size)
 
-    <em>; Gather a list of file names from the selected folder and append them to the ListView:</em>
-    LV.Opt("-Redraw")  <em>; Improve performance by disabling redrawing during load.</em>
+    <em>; 获取所选择文件夹中的文件名列表并添加到 ListView:</em>
+    LV.Opt("-Redraw")  <em>; 在加载时禁用重绘来提升性能.</em>
     Loop Files, Folder "\*.*"
     {
-        FileName := A_LoopFilePath  <em>; Must save it to a writable variable for use below.</em>
+        FileName := A_LoopFilePath  <em>; 必须保存到可写的变量中供后面使用.</em>
 
-        <em>; Build a unique extension ID to avoid characters that are illegal in variable names,
-        ; such as dashes. This unique ID method also performs better because finding an item
-        ; in the array does not require search-loop.</em>
-        SplitPath(FileName,,, FileExt)  <em>; Get the file's extension.</em>
+        <em>; 建立唯一的扩展 ID 以避免变量名中的非法字符,
+        ; 例如破折号. 这种使用唯一 ID 的方法也会执行地更好,
+        ; 因为在数组中查找项目不需要进行搜索循环.</em>
+        SplitPath(FileName,,, FileExt)  <em>; 获取文件扩展名.</em>
         if FileExt ~= "^(EXE|ICO|ANI|CUR)$"
         {
-            ExtID := FileExt  <em>; Special ID as a placeholder.</em>
-            IconNumber := 0  <em>; Flag it as not found so that these types can each have a unique icon.</em>
+            ExtID := FileExt  <em>; 特殊 ID 作为占位符.</em>
+            IconNumber := 0  <em>; 将其标记为未找到, 以便这些类型可以有一个唯一的图标.</em>
         }
-        else  <em>; Some other extension/file-type, so calculate its unique ID.</em>
+        else  <em>; 其他的扩展名/文件类型, 计算它们的唯一 ID.</em>
         {
-            ExtID := 0  <em>; Initialize to handle extensions that are shorter than others.</em>
-            Loop 7     <em>; Limit the extension to 7 characters so that it fits in a 64-bit value.</em>
+            ExtID := 0  <em>; 进行初始化来处理比其他更短的扩展名.</em>
+            Loop 7     <em>; 限制扩展名为 7 个字符, 这样之后计算的结果才能存放到 64 位值.</em>
             {
                 ExtChar := SubStr(FileExt, A_Index, 1)
-                if not ExtChar  <em>; No more characters.</em>
+                if not ExtChar  <em>; 没有更多字符了.</em>
                     break
-                <em>; Derive a Unique ID by assigning a different bit position to each character:</em>
+                <em>; 把每个字符与不同的位置进行运算来得到唯一 ID:</em>
                 ExtID := ExtID | (Ord(ExtChar) &lt;&lt; (8 * (A_Index - 1)))
             }
-            <em>; Check if this file extension already has an icon in the ImageLists. If it does,
-            ; several calls can be avoided and loading performance is greatly improved,
-            ; especially for a folder containing hundreds of files:</em>
+            <em>; 检查此文件扩展名的图标是否已经在图像列表中. 如果是,
+            ; 可以避免多次调用并极大提高性能,
+            ; 尤其对于包含数以百计文件的文件夹而言:</em>
             IconNumber := IconMap.Has(ExtID) ? IconMap[ExtID] : 0
         }
-        if not IconNumber  <em>; There is not yet any icon for this extension, so load it.</em>
+        if not IconNumber  <em>; 此扩展名还没有相应的图标, 所以进行加载.</em>
         {
-            <em>; Get the high-quality small-icon associated with this file extension:</em>
+            <em>; 取与此文件扩展名关联的高质量小图标:</em>
             if not DllCall("Shell32\SHGetFileInfoW", "Str", FileName
-            , "Uint", 0, "Ptr", sfi, "UInt", sfi_size, "UInt", 0x101)  <em>; 0x101 is SHGFI_ICON+SHGFI_SMALLICON</em>
-                IconNumber := 9999999  <em>; Set it out of bounds to display a blank icon.</em>
-            else <em>; Icon successfully loaded.</em>
+            , "Uint", 0, "Ptr", sfi, "UInt", sfi_size, "UInt", 0x101)  <em>; 0x101 是 SHGFI_ICON+SHGFI_SMALLICON</em>
+                IconNumber := 9999999  <em>; 把它设置到范围外来显示空图标.</em>
+            else <em>; 成功加载图标.</em>
             {
-                <em>; Extract the hIcon member from the structure:</em>
+                <em>; 从结构中提取 hIcon 成员:</em>
                 hIcon := NumGet(sfi, 0, "Ptr")
-                <em>; Add the HICON directly to the small-icon and large-icon lists.
-                ; Below uses +1 to convert the returned index from zero-based to one-based:</em>
+                <em>; 直接添加 HICON 到小图标和大图标列表.
+                ; 下面加上 1 来把返回的索引从基于零转换到基于一:</em>
                 IconNumber := DllCall("ImageList_ReplaceIcon", "Ptr", ImageListID1, "Int", -1, "Ptr", hIcon) + 1
                 DllCall("ImageList_ReplaceIcon", "Ptr", ImageListID2, "Int", -1, "Ptr", hIcon)
-                <em>; Now that it's been copied into the ImageLists, the original should be destroyed:</em>
+                <em>; 现在已经把它复制到图像列表, 所以应销毁原来的:</em>
                 DllCall("DestroyIcon", "Ptr", hIcon)
-                <em>; Cache the icon to save memory and improve loading performance:</em>
+                <em>; 缓存图标来节省内存并提升加载性能:</em>
                 IconMap[ExtID] := IconNumber
             }
         }
 
-        <em>; Create the new row in the ListView and assign it the icon number determined above:</em>
+        <em>; 在 ListView 中创建新行并把它和上面的图标编号进行关联:</em>
         <a href="#Add">LV.Add</a>("Icon" . IconNumber, A_LoopFileName, A_LoopFileDir, A_LoopFileSizeKB, FileExt)
     }
-    LV.Opt("+Redraw")  <em>; Re-enable redrawing (it was disabled above).</em>
-    LV.ModifyCol()  <em>; Auto-size each column to fit its contents.</em>
-    LV.ModifyCol(3, 60)  <em>; Make the Size column at little wider to reveal its header.</em>
+    LV.Opt("+Redraw")  <em>; 重新启用重绘(上面把它禁用了).</em>
+    LV.ModifyCol()  <em>; 根据内容自动调整每列的大小.</em>
+    LV.ModifyCol(3, 60)  <em>; 把 Size 列加宽一些以便显示出它的标题.</em>
 }
 
 SwitchView(this, *)
@@ -593,38 +593,38 @@ SwitchView(this, *)
     static IconView := false
     LV := this.Gui["LV"]
     if not IconView
-        LV.Opt("+Icon")        <em>; Switch to icon view.</em>
+        LV.Opt("+Icon")        <em>; 切换到图标视图.</em>
     else
-        LV.Opt("+Report")      <em>; Switch back to details view.</em>
-    IconView := not IconView   <em>; Invert in preparation for next time.</em>
+        LV.Opt("+Report")      <em>; 切换回详细信息视图.</em>
+    IconView := not IconView   <em>; 进行反转以为下次做准备.</em>
 }
 
 RunFile(LV, RowNumber)
 {
-    FileName := <a href="#GetText">LV.GetText</a>(RowNumber, 1) <em>; Get the text of the first field.</em>
-    FileDir := LV.GetText(RowNumber, 2)  <em>; Get the text of the second field.</em>
+    FileName := <a href="#GetText">LV.GetText</a>(RowNumber, 1) <em>; 获取首个字段的文本.</em>
+    FileDir := LV.GetText(RowNumber, 2)  <em>; 获取第二个字段的文本.</em>
     try Run(FileDir "\" FileName)
     if A_LastError
         MsgBox("Could not open " FileDir "\" FileName ".")
 }
 
-ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; In response to right-click or Apps key.</em>
+ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; 响应右键或 Apps 键.</em>
 {
-    <em>; Create the popup menu to be used as the context menu:</em>
+    <em>; 创建弹出式菜单, 作为上下文菜单使用:</em>
     static ContextMenu := <a href="../objects/Menu.htm#New">Menu.New</a>()
     <a href="../objects/Menu.htm#Add">ContextMenu.Add</a>("Open", "OpenOrProperties")
     ContextMenu.Add("Properties", "OpenOrProperties")
     ContextMenu.Add("Clear from ListView", "ClearRows")
-    <a href="../objects/Menu.htm#Default">ContextMenu.Default</a> := "Open"  <em>; Make "Open" a bold font to indicate that double-click does the same thing.
-    ; Show the menu at the provided coordinates, X and Y.  These should be used
-    ; because they provide correct coordinates even if the user pressed the Apps key:</em>
+    <a href="../objects/Menu.htm#Default">ContextMenu.Default</a> := "Open"  <em>; 将 "Open(打开)" 改为粗体字, 以表明这是双击的默认动作.
+    ; 在所提供的 X 和 Y 坐标处显示菜单.
+    ; 这些应该被使用, 因为即使用户按了 Apps 键, 它们也能提供正确的坐标:</em>
     <a href="../objects/Menu.htm#Show">ContextMenu.Show</a>(X, Y)
 
-    OpenOrProperties(ItemName, *)  <em>; The user selected "Open" or "Properties" in the context menu.</em>
+    OpenOrProperties(ItemName, *)  <em>; 用户在上下文菜单中选择了 "Open" 或 "Properties".</em>
     {
-        FileName := LV.GetText(Item, 1) <em>; Get the text of the first field.</em>
-        FileDir := LV.GetText(Item, 2)  <em>; Get the text of the second field.</em>
-        if (ItemName = "Open")  <em>; User selected "Open" from the context menu.</em>
+        FileName := LV.GetText(Item, 1) <em>; 获取首个字段的文本.</em>
+        FileDir := LV.GetText(Item, 2)  <em>; 获取第二个字段的文本.</em>
+        if (ItemName = "Open")  <em>; 用户在上下文菜单中选择了 "Open".</em>
             try Run(FileDir "\" FileName)
         else
             try Run("properties " FileDir "\" FileName)
@@ -632,27 +632,27 @@ ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; In response to right-click 
             MsgBox("Could not perform requested action on " FileDir "\" FileName ".")
     }
 
-    ClearRows(*)  <em>; The user selected "Clear" in the context menu.</em>
+    ClearRows(*)  <em>; 用户在上下文菜单中选择了 "Clear".</em>
     {
-        RowNumber := 0  <em>; This causes the first iteration to start the search at the top.</em>
+        RowNumber := 0  <em>; 这会使得首次循环从顶部开始搜索.</em>
         Loop
         {
-            <em>; Since deleting a row reduces the RowNumber of all other rows beneath it,
-            ; subtract 1 so that the search includes the same row number that was previously
-            ; found (in case adjacent rows are selected):</em>
+            <em>; 由于删除了一行使得此行下面的所有行的行号都减小了,
+            ; 所以把行号减 1, 这样搜索里包含的行号才会与之前找到的行号相一致
+            ; (以防选择了相邻行):</em>
             RowNumber := LV.GetNext(RowNumber - 1)
-            if not RowNumber  <em>; The above returned zero, so there are no more selected rows.</em>
+            if not RowNumber  <em>; 上面返回零, 所以没有更多选择的行了.</em>
                 break
-            LV.Delete(RowNumber)  <em>; Clear the row from the ListView.</em>
+            LV.Delete(RowNumber)  <em>; 从 ListView 中删除行.</em>
         }
     }
 }
 
-Gui_Size(this, MinMax, Width, Height)  <em>; Expand/Shrink ListView in response to the user's resizing.</em>
+Gui_Size(this, MinMax, Width, Height)  <em>; 扩大或缩小 ListView 来响应用户对窗口大小的改变.</em>
 {
-    if MinMax = -1  <em>; The window has been minimized. No action needed.</em>
+    if MinMax = -1  <em>; 窗口被最小化了. 无需进行操作.</em>
         return
-    <em>; Otherwise, the window has been resized or maximized. Resize the ListView to match.</em>
+    <em>; 否则, 窗口的大小被调整过或被最大化了. 调整 ListView 的大小来适应.</em>
     this["LV"].Move(,, Width - 20, Height - 40)
 }</pre>
 </div>

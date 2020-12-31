@@ -94,159 +94,159 @@ MyEdit.Value := FileRead("C:\My File.txt")</pre>
 <p><strong>更强大的编辑控件</strong>: HiEdit 是免费, 多选项卡, 支持大文件且消耗很少内存的编辑控件. 它可以编辑文本和二进制文件. 有关详情和演示, 请参阅 <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/HiEdit">HiEdit on GitHub</a>.</p>
 
 <h2 id="UpDown">UpDown</h2>
-<p>描述: A pair of arrow buttons that the user can click to increase or decrease a value. By default, an UpDown control automatically snaps onto the previously added control. This previous control is known as the UpDown's <em>buddy control</em>. The most common example is a &quot;spinner&quot;, which is an UpDown attached to an <a href="#Edit">Edit control</a>.</p>
+<p>描述: 一对箭头组成的按钮, 用户点击后会增加或减少值. 默认情况下, UpDown 控件自动依附于前一个添加的控件上. 这里的前一个控件被称为 UpDown 的 <em>伙伴控件</em>. 最常见的例子是 &quot;微调器&quot;, 由 UpDown 附加到 <a href="#Edit">Edit 控件</a>.</p>
 <p>例如:</p>
 <pre>MyGui.Add("Edit")
 MyGui.Add("UpDown", "vMyUpDown Range1-10", 5)</pre>
 <p>外观:</p>
 <img src="../static/ctrl_updown.png" alt="UpDown" />
-<p>In the example above, the Edit control is the UpDown's buddy control. Whenever the user presses one of the arrow buttons, the number in the Edit control is automatically increased or decreased.</p>
-<p>An UpDown's buddy control can also be a <a href="#Text">Text control</a> or <a href="#ListBox">ListBox</a>. However, due to OS limitations, controls other than these (such as ComboBox and DropDownList) might not work properly with the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event and other features.</p>
-<p>Specify the UpDown's starting position as the last parameter (if omitted, it starts off at 0 or the number in the allowable range that is closest to 0).</p>
-<p>When <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> or <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> is used, the return value is the current numeric position of the UpDown. If the UpDown is attached to an Edit control and you do not wish to validate the user's input, it is best to use the UpDown's value rather than the Edit's. This is because the UpDown will always yield an in-range number, even when the user has typed something non-numeric or out-of-range in the Edit control. On a related note, numbers with more than three digits get a <a href="../misc/Styles.htm#UpDownSep">thousands separator</a> (such as comma) by default. These separators are returned by the Edit control but not by the UpDown control.</p>
-<p>Whenever the user clicks one of the arrow buttons or presses an arrow key on the keyboard, the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised.</p>
+<p>在上面的例子中, Edit 控件是 UpDown 的伙伴控件. 每当用户按下了增减按钮的其中一个, Edit 控件中的数字会自动增加或减少.</p>
+<p>UpDown 的伙伴控件也可以是 <a href="#Text">Text 控件</a>或 <a href="#ListBox">ListBox</a>. 然而, 由于操作系统的限制, 除了这些以外的其他控件类型(例如 ComboBox 和 DropDownList) 可能无法和 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件以及其他特性一起正常工作.</p>
+<p>在最后一个参数中指定 UpDown 的初始位置(如果省略, 则初始为 0 或允许的范围中最接近 0 的数字).</p>
+<p>当使用 <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 或 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 时, 返回值是 UpDown 的当前数字位置. 如果 UpDown 与 Edit 控件相连, 而您又不想验证用户的输入, 那么最好使用 UpDown 的值而不是 Edit 的值. 这是因为 UpDown 总是会产生一个范围内的数字, 即使用户在编辑控件中输入了一些非数字或超出范围的数字. 与此相关的是, 超过三位数的数字默认会有一个<a href="../misc/Styles.htm#UpDownSep">千位分隔符</a>(如逗号). 这些分隔符是由 Edit 控件返回的, 但不是由 UpDown 控件返回的.</p>
+<p>每当用户点击一个箭头按钮或按下键盘上的一个箭头键时, 就会触发 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件.</p>
 
-<h3>UpDown Options</h3>
-<p id="Horz"><strong>Horz</strong>: Make's the control's buttons point left/right rather than up/down. By default, <em>Horz</em> also makes the control isolated (no buddy). This can be overridden by specifying <code>Horz 16</code> in the control's options.</p>
-<p><strong>Left</strong>: Puts the UpDown on the left side of its buddy rather than the right.</p>
-<p><strong>Range</strong>: Sets the range to be something other than 0 to 100. After the word Range, specify the minimum, a dash, and maximum. 例如, <code>Range1-1000</code> would allow a number between 1 and 1000 to be selected; <code>Range-50-50</code> would allow a number between -50 and 50; and <code>Range-10--5</code> would allow a number between -10 and -5. The minimum and maximum may be swapped to cause the arrows to move in the opposite of their normal direction. The broadest allowable range is -2147483648-2147483647. Finally, if the buddy control is a <a href="#ListBox">ListBox</a>, the range defaults to 32767-0 for verticals and the inverse for horizontals (<a href="#Horz">Horz</a>).</p>
-<p><strong>Wrap</strong>: Causes the control to wrap around to the other end of its range when the user attempts to go beyond the minimum or maximum. Without <em>Wrap</em>, the control stops when the minimum or maximum is reached.</p>
-<p><strong>-16</strong> (minus 16): Causes a vertical UpDown to be isolated; that is, it will have no buddy. This also causes the control to obey any specified width, height, and position rather than conforming to the size of its buddy control. In addition, an isolated UpDown tracks its own position internally. This position can be retrieved normally by means such as <a href="../objects/Gui.htm#Submit">MyGui.Submit</a>.</p>
-<p id="UpDownSep"><strong>0x80</strong>: Include <code>0x80</code> in <em>Options</em> to omit the thousands separator that is normally present between every three decimal digits in the buddy control. However, this style is normally not used because the separators are omitted from the number whenever the script retrieves it from the UpDown control itself (rather than its buddy control).</p>
-<p><strong>Increments other than 1</strong>: In <a href="http://numeric.nerim.net/AutoHotkey/Scripts/UpDown%20-%20Non-unitary%20increments.ahk">this script</a>, NumEric demonstrates how to change an UpDown's increment to a value other than 1 (such as 5 or 0.1).</p>
-<p>See also: <a href="../objects/Gui.htm#PosSize">position and sizing of controls</a>.</p>
+<h3 id="UpDown_Options">UpDown 选项</h3>
+<p id="Horz"><strong>Horz(水平)</strong>: 使控件的按钮点指向左/右而不是上/下. 默认情况下, <em>Horz</em> 还会让控件变成孤立的(没有伙伴控件). 通过在控件选项中指定 <code>Horz 16</code> 可以覆盖此特性.</p>
+<p><strong>Left</strong>: 把 UpDown 放在其伙伴控件的左边而不是右边.</p>
+<p><strong>Range</strong>: 使用 0 到 100 外的其他范围. 在单词 Range 后指定最小值, 破折号和最大值. 例如, <code>Range1-1000</code> 将允许选择一个介于 1 和 1000 之间的数字; <code>Range-50-50</code> 将允许介于 -50 和 50 之间的数字; 而 <code>Range-10--5</code> 将允许介于 -10 和 -5 之间的数字. 交换最小值和最大值可以让箭头往与正常方向相反的方向移动. 最大的允许范围是 -2147483648-2147483647. 最后, 如果伙伴控件为 <a href="#ListBox">ListBox</a>, 那么垂直的默认范围是 32767-0, 而水平的则反向(<a href="#Horz">Horz</a>).</p>
+<p><strong>Wrap</strong>: 当用户试图超出最小值或最大值时使得控件返回到其范围的另一端. 如果没有 <em>Wrap</em>, 当达到最小值或最大值时控件会停止.</p>
+<p><strong>-16</strong>(负 16): 让垂直的 UpDown 成为孤立的; 即让它没有伙伴控件. 这还可以让控件符合任何指定的宽度, 高度和位置而不是适应于其伙伴控件的大小. 此外, 孤立的 UpDown 会内部跟踪它自己的位置. 使用如 <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 可以正常获取此位置.</p>
+<p id="UpDownSep"><strong>0x80</strong>: 在 <em>Options</em> 中包含 <code>0x80</code> 来省略伙伴控件中正常出现在每三位十进制数间的千位分隔符. 然而, 通常不使用此样式, 因为当脚本从 UpDown 控件(而不是其伙伴控件) 获取的数字中不包含分隔符.</p>
+<p><strong>使用 1 以外的其他增量</strong>: 在<a href="http://numeric.nerim.net/AutoHotkey/Scripts/UpDown%20-%20Non-unitary%20increments.ahk">此脚本</a>中, 演示了如何改变 UpDown 增量为 1 以外的其他值(例如 5 或 0.1).</p>
+<p>另请参阅: <a href="../objects/Gui.htm#PosSize">控件的位置和大小</a>.</p>
 
-<span id="Pic"></span><h2 id="Picture">Picture (or Pic)</h2>
-<p>Description: An area containing an image (see last two paragraphs for supported file types). The last parameter is the filename of the image, which is assumed to be in <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> if an absolute path isn't specified.</p>
+<span id="Pic"></span><h2 id="Picture">Picture(或 Pic)</h2>
+<p>描述: 包含图像的区域(请参阅最后两段来了解支持的文件类型). 最后一个参数是图像的文件名, 如果未指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
 <p>例如:</p>
 <pre>MyGui.Add("Picture", "w300 h-1", "C:\My Pictures\Company Logo.gif")</pre>
-<p>To retain the image's actual width and/or height, omit the W and/or H options. Otherwise, the image is scaled to the specified width and/or height (this width and height also determines which icon to load from a multi-icon .ICO file). To shrink or enlarge the image while preserving its aspect ratio, specify -1 for one of the dimensions and a positive number for the other. 例如, specifying <code>w200 h-1</code> would make the image 200 pixels wide and cause its height to be set automatically. If the picture cannot be loaded or displayed (e.g. file not found), the control is left empty and its width and height are set to zero.</p>
-<p>Picture controls support the <a href="../objects/GuiOnEvent.htm#Click">Click</a> and <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a> events, with the same <a href="#SS_NOTIFY">caveat</a> as Text controls.</p>
-<p>To use a picture as a background for other controls, the picture should normally be added prior to those controls. However, if those controls are input-capable and the picture has the <a href="#SS_NOTIFY">SS_NOTIFY style</a> (which may be added automatically by <a href="../objects/GuiOnEvent.htm">OnEvent</a>), create the picture after the other controls and include <code>0x4000000</code> (which is WS_CLIPSIBLINGS) in the picture's <em>Options</em>. This trick also allows a picture to be the background behind a <a href="#Tab">Tab control</a> or <a href="ListView.htm">ListView</a>.</p>
-<p id="IconSupport"><strong>Icons, cursors, and animated cursors</strong>: Icons and cursors may be loaded from the following types of files: ICO, CUR, ANI, EXE, DLL, CPL, SCR, and other types that contain icon resources. To use an icon group other than the first one in the file, include in <em>Options</em> the word Icon followed by the number of the group. In the following example, the default icon from the second icon group would be used: <code>MyGui.Add("Picture", "Icon2", "C:\My Application.exe")</code>.</p>
-<p id="PicAltSubmit">Specifying the word AltSubmit in <em>Options</em> tells the program to use Microsoft's GDIPlus.dll to load the image, which might result in a different appearance for GIF, BMP, and icon images. For example, it would load a GIF that has a transparent background as a transparent bitmap, which allows the <a href="../objects/Gui.htm#BackgroundTrans">BackgroundTrans</a> option to take effect (but icons support transparency without AltSubmit).</p>
-<p>Formats supported without the use of GDIPlus include GIF, JPG, BMP, ICO, CUR, and ANI images. GDIPlus is used by default for other image formats, such as PNG, TIF, Exif, WMF and EMF.</p>
-<p><strong>Animated GIFs</strong>: Although animated GIF files can be displayed in a picture control, they will not actually be animated. To solve this, use the AniGIF DLL (which is free for non-commercial use) as demonstrated at the <a href="https://www.autohotkey.com/boards/viewtopic.php?t=6457">AutoHotkey Forums</a>. Alternatively, the <a href="#ActiveX">ActiveX</a> control type can be used. 例如:</p>
-<pre><em>; Specify below the path to the GIF file to animate (local files are allowed too):</em>
+<p>要保持图像的实际宽度和/或高度, 请省略 W 和/或 H 选项. 否则, 缩放图像的尺寸到指定的宽度和/或高度(此宽度和高度也决定了从多图标的 .ICO 文件中加载哪个图标). 要保持高宽比来缩放图像, 请在其中一个尺寸中指定 -1 而在另一个中指定正数. 例如, 指定 <code>w200 h-1</code> 将缩放图像到 200 像素的宽度同时自动设置其高度. 如果图片无法加载或显示(例如找不到文件), 则控件被留空且设置其宽度和高度为零.</p>
+<p>Picture(图片) 控件支持 <a href="../objects/GuiOnEvent.htm#Click">Click</a> 和 <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a> 事件, 其<a href="#SS_NOTIFY">注意事项</a>与 Text 控件相同.</p>
+<p>要使用图片作为其他控件的背景, 则应该在其他控件之前正常添加图片. 然而, 如果这些控件是可输入型且此图片控件含有 <a href="#SS_NOTIFY">SS_NOTIFY 样式</a>(可能由 <a href="../objects/GuiOnEvent.htm">OnEvent</a> 自动添加), 则在其他控件之后创建图片, 并在图片的 <em>Options</em> 中包含 <code>0x4000000</code>(即 WS_CLIPSIBLINGS). 这个技巧还可以让图片成为 <a href="#Tab">Tab 控件</a>或 <a href="ListView.htm">ListView</a> 后面的背景.</p>
+<p id="IconSupport"><strong>图标, 光标和动画光标</strong>: 图标和光标可以从下列类型的文件中加载: ICO, CUR, ANI, EXE, DLL, CPL, SCR 以及包含图标资源的其他类型. 要使用文件中的图标组而不是首个图标, 请在 <em>Options</em> 包含单词 Icon 和图标组编号. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>MyGui.Add("Picture", "Icon2", "C:\My Application.exe")</code>.</p>
+<p id="PicAltSubmit">在 <em>Options</em> 中指定单词 AltSubmit 会让程序使用微软的 GDIPlus.dll 来加载图像, 这可能让 GIF, BMP 和图标图像产生不同的外观. 例如, 它可以把含透明背景的 ICO/GIF 作为透明的位图进行加载, 这样允许 <a href="../objects/Gui.htm#BackgroundTrans">BackgroundTrans</a> 选项生效(但图标支持透明而无需 AltSubmit).</p>
+<p>在不使用 GDIPlus 的情况下, 支持的格式包括 GIF, JPG, BMP, ICO, CUR 和 ANI 图像. GDIPlus 默认用于其他图像格式, 如 PNG, TIF, Exif, WMF 和 EMF.</p>
+<p><strong>动态 GIFs</strong>: 虽然 GIF 动画文件可以显示在图片控件中, 但实际上它们并不会动起来. 要解决此问题, 请使用 AniGIF DLL(对非商业用途免费), 演示的例子请参阅 <a href="https://www.autohotkey.com/boards/viewtopic.php?t=6457">AutoHotkey 论坛</a>. 此外, 可以使用 <a href="#ActiveX">ActiveX</a> 控件类型. 例如:</p>
+<pre><em>; 指定下面的路径到 GIF 文件以实现动态效果(也允许使用本地文件):</em>
 pic := "http://www.animatedgif.net/cartoons/A_5odie_e0.gif"
 MyGui := Gui.New()
 MyGui.Add("ActiveX", "w100 h150", "mshtml:&lt;img src='" pic "' /&gt;")
 MyGui.Show</pre>
-<p>A <a href="../misc/ImageHandles.htm">bitmap or icon handle</a> can be used instead of a filename. 例如, <code>"HBITMAP:" handle</code>.</p>
+<p><a href="../misc/ImageHandles.htm">bitmap(位图) 或 icon(图标) 的句柄</a>可完全替代文件名使用. 例如, <code>"HBITMAP:" handle</code>.</p>
 
 <h2 id="Button">Button</h2>
-<p>Description: A pushbutton, which can be pressed to trigger an action.  In this case, the last parameter is the name of the button (shown on the button itself), which may include linefeeds (`n) to start new lines.</p>
+<p>描述: 按下后可以触发动作的按钮.  此时最后一个参数为按钮的名称(显示在按钮上), 其中可以包含换行符(`n) 来开始新行.</p>
 <p>例如:</p>
 <pre>MyBtn := MyGui.Add("Button", "Default w80", "OK")
 MyBtn.OnEvent("Click", "MyBtn_Click")  <em>; Call MyBtn_Click when clicked.</em>
 </pre>
 <p>外观:</p>
 <img src="../static/ctrl_button.png" alt="Button" />
-<p>The <a href="../objects/GuiOnEvent.htm#Click">Click</a> event is raised whenever the user clicks the button or presses <kbd>Space</kbd> or <kbd>Enter</kbd> while it has the focus.</p>
-<p>The <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> and <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> events are also supported. As these events are only raised if the control has the BS_NOTIFY (0x4000) style, it is added automatically by <a href="../objects/GuiOnEvent.htm">OnEvent</a>.</p>
-<p id="DefaultButton">The example above includes the word <strong>Default</strong> in its <em>Options</em> to make "OK" the default button. The default button's <a href="../objects/GuiOnEvent.htm#Click">Click event</a> is automatically triggered whenever the user presses <kbd>Enter</kbd>, except when the keyboard focus is on a different button or a multi-line edit control having the <a href="#WantReturn">WantReturn</a> style. To later change the default button to another button, follow this example, which makes the Cancel button become the default: <code>MyGui["Cancel"].<a href="../objects/GuiControl.htm#Opt">Opt</a>("+Default")</code>. To later change the window to have no default button, follow this example: <code>MyGui["OK"].Opt("-Default")</code>.</p>
-<p>An ampersand (&amp;) may be used in the button name to underline one of its letters. 例如:</p>
+<p>每当用户点击按钮或在其具有焦点时按下 <kbd>Space</kbd> 或 <kbd>Enter</kbd> 键, <a href="../objects/GuiOnEvent.htm#Click">Click</a> 事件就会被触发.</p>
+<p>同时也支持 <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> 和 <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件. 由于这些事件只有在控件具有 BS_NOTIFY(0x4000) 样式时才会被触发, 所以它是由 <a href="../objects/GuiOnEvent.htm">OnEvent</a> 自动添加的.</p>
+<p id="DefaultButton">上面的例子在其 <em>Options</em> 中包含单词 <strong>Default</strong> 来让 "OK" 成为默认按钮. 每当用户按下 <kbd>Enter</kbd> 键时会自动触发默认按钮的 <a href="../objects/GuiOnEvent.htm#Click">Click 事件</a>, 除非此时键盘焦点在另一个按钮上或具有 <a href="#WantReturn">WantReturn</a> 样式的多行编辑控件中. 以后要改变默认按钮为另一个按钮, 请参照此例, 这里让 Cancel 按钮成为默认按钮: <code>MyGui["Cancel"].<a href="../objects/GuiControl.htm#Opt">Opt</a>("+Default")</code>. 以后要让窗口没有默认按钮, 请参照此例: <code>MyGui["OK"].Opt("-Default")</code>.</p>
+<p>在按钮名称中使用和符号(&amp;) 可以让其中的某个字母带下划线显示. 例如:</p>
 <pre>MyGui.Add("Button",, "&amp;Pause")</pre>
-<p>In the example above, the letter P will be underlined, which allows the user to press <kbd>Alt</kbd>+<kbd>P</kbd> as <a href="../objects/Gui.htm#ShortcutKey">shortcut key</a>. To display a literal ampersand, specify two consecutive ampersands (&amp;&amp;).</p>
+<p>在上面的示例中, 字母 P 将被添加下划线, 这允许用户按下 <kbd>Alt</kbd>+<kbd>P</kbd> 作为其<a href="../objects/Gui.htm#ShortcutKey">快捷键</a>. 要显示一个原义的和符号, 请指定两个连续的和符号(&amp;&amp;).</p>
 
-<p>Known limitation: Certain desktop themes might not display a button's text properly. If this occurs, try including <code>-Wrap</code> (minus Wrap) in the control's options. However, this also prevents having more than one line of text.</p>
+<p>已知限制: 某些桌面主题可能无法正确的显示按钮文本. 如果遇到此情况, 请尝试在控件的选项中包含 <code>-Wrap</code>(负 Wrap). 不过这样也使得按钮名称中无法包含多行文本.</p>
 
 <h2 id="Checkbox">Checkbox</h2>
-<p>Description: A small box that can be checked or unchecked to represent On/Off, Yes/No, etc.</p>
+<p>描述: 一个小方框, 可以选中或取消选中来表示 On/Off, Yes/No, 等等.</p>
 <p>例如:</p>
 <pre>MyGui.Add("CheckBox", "vShipToBillingAddress", "Ship to billing address?")</pre>
 <p>外观:</p>
 <img src="../static/ctrl_check.png" alt="Checkbox" />
-<p>The last parameter is a label displayed next to the box, which is typically used as a prompt or description of what the checkbox does. It may include linefeeds (`n) to start new lines. If a width (W) is specified in <em>Options</em> but no <a href="../objects/Gui.htm#R">rows (R)</a> or height (H), the control's text will be word-wrapped as needed, and the control's height will be set automatically.</p>
-<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns the number 1 for checked, 0 for unchecked, and -1 for gray/indeterminate.</p>
-<p>Specify the word <strong>Check3</strong> in <em>Options</em> to enable a third "indeterminate" state that displays a gray checkmark or a square instead of a black checkmark (the indeterminate state indicates that the checkbox is neither checked nor unchecked). Specify the word <strong>Checked</strong> or <strong>CheckedGray</strong> in <em>Options</em> to have the checkbox start off checked or indeterminate, respectively. The word Checked may optionally be followed immediately by a 0, 1, or -1 to indicate the starting state. In other words, <code>"Checked"</code> and <code>"Checked" VarContainingOne</code> are the same.</p>
-<p>Whenever the checkbox is clicked, it automatically cycles between its two or three possible states, and then raises the <a href="../objects/GuiOnEvent.htm#Click">Click</a> event, allowing the script to immediately respond to the user's input.</p>
-<p>The <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> and <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> events are also supported. As these events are only raised if the control has the BS_NOTIFY (0x4000) style, it is added automatically by <a href="../objects/GuiOnEvent.htm">OnEvent</a>. This style is not applied by default as it prevents rapid clicks from changing the state of the checkmark (such as if the user clicks twice to toggle from unchecked to checked and then to indeterminate).</p>
-<p>Known limitation: Certain desktop themes might not display a checkbox's text properly. If this occurs, try including <code>-Wrap</code> (minus Wrap) in the control's options. However, this also prevents having more than one line of text.</p>
+<p>最后一个参数是紧跟着方框显示的标注, 这通常是关于复选框用途的提示或描述. 它可以包含换行符(`n) 来开始新行. 如果 <em>Options</em> 中指定了宽度(W) 而没有指定<a href="../objects/Gui.htm#R">行数(R)</a> 或高度(H), 那么在需要时控件的文本将自动换行, 同时自动设置控件的高度.</p>
+<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 返回数字 1 表示选中, 0 表示未选中, -1 表示灰色/不确定.</p>
+<p>在 <em>Options</em> 中指定单词 <strong>Check3</strong> 来启用第三种状态即显示灰色的选择标记而不是黑色的(灰色状态表示复选框既不处于选中状态也不处于未选中状态). 在 <em>Options</em> 中指定单词 <strong>Checked</strong> 或 <strong>CheckedGray</strong> 可以让复选框初始状态分别为黑色选中状态或灰色状态. 单词 Checked 后面可以紧跟着 0, 1 或 -1来表示初始状态. 换句话说, <code>"Checked"</code> 和 <code>"Checked" VarContainingOne</code> 是一样的.</p>
+<p>每当复选框被点击时, 它就会自动在它的两个或三个可能的状态之间循环, 然后触发 <a href="../objects/GuiOnEvent.htm#Click">Click</a> 事件, 允许脚本立即响应用户的输入.</p>
+<p>同时也支持 <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> 和 <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件. 由于这些事件只有在控件具有 BS_NOTIFY(0x4000) 样式时才会被触发, 所以它是由 <a href="../objects/GuiOnEvent.htm">OnEvent</a> 自动添加的. 默认情况下不应用该样式, 因为它可以阻止快速点击改变复选标记的状态(例如用户点击两次从未选中切换到选中, 然后再切换到不确定).</p>
+<p>已知限制: 某些桌面主题可能无法正确的显示 checkbox 的文本. 如果遇到此情况, 请尝试在控件的选项中包含 <code>-Wrap</code>(负 Wrap). 不过这样也使得按钮名称中无法包含多行文本.</p>
 
 <h2 id="Radio">Radio</h2>
-<p>Description: A radio button is a small empty circle that can be checked (on) or unchecked (off).</p>
+<p>描述: 单选按钮是一个小空圆, 可以被选中(打开) 或不选中(关闭).</p>
 <p>例如:</p>
 <pre>MyGui.Add("Radio", "vMyRadioGroup", "Wait for all items to be in stock before shipping.")</pre>
 <p>外观:</p>
 <img src="../static/ctrl_radio.png" alt="Radio" />
-<p>These controls usually appear in <em>radio groups</em>, each of which contains two or more radio buttons. When the user clicks a radio button to turn it on, any others in its radio group are turned off automatically (the user may also navigate inside a group with the arrow keys). A radio group is created automatically around all consecutively added radio buttons. To start a new group, specify the word <strong>Group</strong> in the <em>Options</em> of the first button of the new group -- or simply add a non-radio control in between, since that automatically starts a new group.</p>
-<p>For the last parameter, specify the label to display to the right of the radio button. This label is typically used as a prompt or description, and it may include linefeeds (`n) to start new lines. If a width (W) is specified in <em>Options</em> but no rows (R) or height (H), the control's text will be word-wrapped as needed, and the control's height will be set automatically.</p>
-<p>Specify the word <strong>Checked</strong> in <em>Options</em> to have the button start off in the &quot;on&quot; state. The word Checked may optionally be followed immediately by a 0 or 1 to indicate the starting state: 0 for unchecked and 1 for checked. In other words, <code>"Checked"</code> and <code>"Checked" VarContainingOne</code> are the same.</p>
-<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns the number 1 for &quot;on&quot; and 0 for &quot;off&quot;. To instead retrieve the position number of the selected radio option within a radio group, <a href="../objects/GuiControl.htm#Name">name</a> only one of the radio buttons and use <a href="../objects/Gui.htm#submit-radio">MyGui.Submit</a>.</p>
-<p>The <a href="../objects/GuiOnEvent.htm#Click">Click</a> event is raised whenever the user turns on the button. Unlike the single-variable mode in the previous paragraph, the event callback must be registered for each button in a radio group for which it should be called. This allows the flexibility to ignore the clicks of certain buttons. </p>
-<p>The <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> and <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> events are also supported. As these events are only raised if the control has the BS_NOTIFY (0x4000) style, it is added automatically by <a href="../objects/GuiOnEvent.htm">OnEvent</a>.</p>
-<p>Known limitation: Certain desktop themes might not display a radio button's text properly. If this occurs, try including <code>-Wrap</code> (minus Wrap) in the control's options. However, this also prevents having more than one line of text.</p>
+<p>这些控件经常出现在 <em>单选按钮组</em> 中, 每组包含两个或多个单选按钮. 当用户点击一个单选按钮来打开它时, 其所在的单选按钮组中其他所有的单选按钮会自动关闭(在单选按钮组中用户也可以使用方向键导航). 在所有连续添加的单选按钮周围会自动创建一个单选按钮组. 要开始一个新组, 请在新组的首个单选按钮的 <em>Options</em> 中指定单词 <strong>Group</strong> -- 或者在新组和之前的组之间简单地添加一个非单选按钮控件, 因为这样会自动开始一个新组.</p>
+<p>在最后一个参数中指定的标注会显示在单选按钮的右侧. 此标注通常作为提示或描述, 它可以包含换行符(`n) 来开始新行. 如果在 <em>Options</em> 中指定了宽度(W) 而没有指定行数(R) 或高度(H), 那么在需要时控件的文本将自动换行, 同时自动设置控件的高度.</p>
+<p>在 <em>Options</em> 中指定单词 <strong>Checked</strong> 来让按钮初始为选中状态. 可以在单词 Checked 后紧跟着 0 或 1 来表示初始状态: 0 表示未选中, 而 1 表示选中. 换句话说, <code>"Checked"</code> 和 <code>"Checked" VarContainingOne</code> 是一样的.</p>
+<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 返回数字 1 表示 &quot;on&quot;, 0 表示 &quot;off&quot;. 如果要在单选组中检索所选单选选项的位置号, 只需<a href="../objects/GuiControl.htm#Name">命名</a>其中一个单选按钮, 然后使用 <a href="../objects/Gui.htm#submit-radio">MyGui.Submit</a>.</p>
+<p>每当用户打开按钮时, 就会触发 <a href="../objects/GuiOnEvent.htm#Click">Click</a> 事件. 与前一段的单变量模式不同, 事件回调必须为单选组中的每个按钮注册, 并为其调用. 这样就可以灵活地忽略某些按钮的点击. </p>
+<p>同时也支持 <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> 和 <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件. 由于这些事件只有在控件具有 BS_NOTIFY(0x4000) 样式时才会被触发, 所以它是由 <a href="../objects/GuiOnEvent.htm">OnEvent</a> 自动添加的.</p>
+<p>已知限制: 某些桌面主题可能无法正确的显示 checkbox 的文本. 如果遇到此情况, 请尝试在控件的选项中包含 <code>-Wrap</code>(负 Wrap). 不过这样也使得按钮名称中无法包含多行文本.</p>
 
-<span id="DDL"></span><h2 id="DropDownList">DropDownList (or DDL)</h2>
-<p>Description: A list of choices that is displayed in response to pressing a small button.  In this case, the last parameter of <a href="../objects/Gui.htm#Add">MyGui.Add</a> is an <a href="../objects/Array.htm">Array</a> like <code>["Choice1","Choice2","Choice3"]</code>.</p>
+<span id="DDL"></span><h2 id="DropDownList">DropDownList(或 DDL)</h2>
+<p>描述: 当按下一个小按钮时显示的选择列表. 此时, <a href="../objects/Gui.htm#Add">MyGui.Add</a> 的最后一个参数是像 <code>["Choice1","Choice2","Choice3"]</code> 这样的<a href="../objects/Array.htm">数组</a>.</p>
 <p>例如:</p>
 <pre>MyGui.Add("DropDownList", "vColorChoice", ["Black","White","Red","Green","Blue"])
 </pre>
 <p>外观:</p>
 <img src="../static/ctrl_ddl.png" alt="DDL" />
-<p>To have one of the items pre-selected when the window first appears, include in <em>Options</em> the word <strong>Choose</strong> followed immediately by the number of an item to be pre-selected. For example, <code>Choose5</code> would pre-select the fifth item (as with other options, it can also be a variable such as <code>"Choose" Var</code>). After the control is created, use <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a>, <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> or <a href="../objects/GuiControl.htm#Choose">GuiCtrl.Choose</a> to change the selection, and <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a> or <a href="../objects/GuiControl.htm#Delete">GuiCtrl.Delete</a> to add or remove entries from the list.</p>
-<p>Specify either the word <strong>Uppercase</strong> or <strong>Lowercase</strong> in <em>Options</em> to automatically convert all items in the list to uppercase or lowercase. Specify the word <strong>Sort</strong> to automatically sort the contents of the list alphabetically (this also affects any items  added later via <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a>). The Sort option also enables incremental searching whenever the list is dropped down; this allows an item to be selected by typing the first few characters of its name.</p>
-<p>When <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> or <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> is used, the return value is the position number of the currently selected item (the first item is 1, the second is 2, etc.) or zero if none is selected. To get its text instead, use <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>.</p>
-<p>Whenever the user selects a new item, the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised. The <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> and <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> events are also supported.</p>
-<p>Use the <a href="../objects/Gui.htm#R">R or H option</a> to control the height of the popup list. 例如, specifying <code>R5</code> would make the list 5 rows tall, while <code>H400</code> would set the total height of the selection field and list to 400 pixels. If both R and H are omitted, the list will automatically expand to take advantage of the available height of the user's desktop.</p>
-<p id="ComboBoxHeight">To set the height of the selection field or list items, use the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb775911">CB_SETITEMHEIGHT</a> message as in the example below:</p>
+<p>要在窗口第一次出现时预选其中一个项目, 请在 <em>Options</em> 中加入单词 <strong>Choose</strong> 后面紧跟着要预选的项目编号. 例如, <code>Choose5</code> 会预选第五项(和其他选项一样, 它也可以为变量, 例如 <code>"Choose" Var</code>). 在控件创建后, 请使用 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a>, <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> 或 <a href="../objects/GuiControl.htm#Choose">GuiCtrl.Choose</a> 来改变选择, 和使用 <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a> 或 <a href="../objects/GuiControl.htm#Delete">GuiCtrl.Delete</a> 来添加或移除列表中的条目.</p>
+<p>在 <em>Options</em> 中指定单词 <strong>Uppercase</strong> 或 <strong>Lowercase</strong> 来把列表中的所有项目自动转换成大写字母或小写字母. 指定单词 <strong>Sort</strong> 来按字母顺序自动排列列表的内容(这也会影响后面通过 <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a> 添加的所有项目). Sort 选项还会启用在弹出下拉列表时的增量搜索; 这使得可以通过输入一个项目名称的前几个字符来选择此项.</p>
+<p>当使用 <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 或 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 时, 返回值是当前选中的项目的位置号(第一个项目是 1, 第二个项目是 2, 等等.), 如果没有选中, 则返回值为 0. 如果要获取其文本, 则使用 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>.</p>
+<p>每当用户选择一个新的项目时, 就会触发 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件. 同时也支持 <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> 和 <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件.</p>
+<p>使用 <a href="../objects/Gui.htm#R">R 或 H 选项</a>来控制弹出列表的高度. 例如, 指定 <code>R5</code> 会设置列表为 5 行高, 而 <code>H400</code> 会设置选区字段和列表的总高度为 400 像素. 如果同时省略 R 和 H 选项, 则列表会自动扩展到用户桌面的可用高度.</p>
+<p id="ComboBoxHeight">要设置选区字段或列表项的高度, 请使用 <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb775911">CB_SETITEMHEIGHT</a> 消息, 如下例所示:</p>
 <pre>MyGui := Gui.New()
 DDL := MyGui.Add("DDL", "vcbx w200 Choose1", ["One","Two"])
 <em>; CB_SETITEMHEIGHT = 0x153</em>
-PostMessage(0x153, -1, 50, DDL)  <em>; Set height of selection field.</em>
-PostMessage(0x153, 0, 50, DDL)  <em>; Set height of list items.</em>
+PostMessage(0x153, -1, 50, DDL)  <em>; 设置选区字段的高度.</em>
+PostMessage(0x153, 0, 50, DDL)  <em>; 设置列表项的高度.</em>
 MyGui.Show("h70")</pre>
 
 <h2 id="ComboBox">ComboBox</h2>
-<p>Description: Same as DropDownList but also permits free-form text to be entered as an alternative to picking an item from the list.</p>
+<p>描述: 和 DropDownList 一样, 但也允许输入自由格式的文本, 作为从列表中选择项目的替代.</p>
 <p>例如:</p>
 <pre>MyGui.Add("ComboBox", "vColorChoice", ["Red","Green","Blue","Black","White"])
 </pre>
 <p>外观:</p>
 <img src="../static/ctrl_combo.png" alt="ComboBox" />
-<p>In addition to allowing all the same options as DropDownList above, the word <strong>Limit</strong> may be included in <em>Options</em> to restrict the user's input to the visible width of the ComboBox's edit field. Also, the word <strong>Simple</strong> may be specified to make the ComboBox behave as though it is an Edit field with a ListBox beneath it.</p>
-<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns the position number of the currently selected item (the first item is 1, the second is 2, etc.) or 0 if the control contains text which does not match a list item. To get the contents of the ComboBox's edit field, use <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> stores the text, unless the word <strong>AltSubmit</strong> is in the control's <em>Options</em> and the text matches a list item, in which case it stores the position number of the item.</p>
-<p>Whenever the user selects a new item or changes the control's text, the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised. The <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> and <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> events are also supported.</p>
+<p>除了可以使用上面描述的所有 DropDownList 选项外, <em>Options</em> 中还可以包含单词 <strong>Limit</strong> 来限制用户的输入在 ComboBox 编辑区域的可见宽度内. 此外, 可以指定单词  <strong>Simple</strong> 来让 ComboBox 表现的像一个下方带有 ListBox 的 Edit 区域.</p>
+<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 返回当前选中项的位置编号(第一项为 1, 第二项为 2, 等等.), 如果控件包含的文本与列表项不匹配, 则返回 0. 要获得 ComboBox 的编辑栏的内容, 使用 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 会存储文本,  除非在控件的 <em>Options</em> 中含有单词 <strong>AltSubmit</strong> 并且文本与列表项相匹配, 在这种情况下, 它会存储该项目的位置编号.</p>
+<p>每当用户选择一个新的项目或更改控件的文本时, 就会触发 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件. 同时也支持 <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> 和 <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件.</p>
 
 <h2 id="ListBox">ListBox</h2>
-<p>Description: A relatively tall box containing a list of choices that can be selected. In this case, the last parameter of <a href="../objects/Gui.htm#Add">MyGui.Add</a> is an <a href="../objects/Array.htm">Array</a> like <code>["Choice1","Choice2","Choice3"]</code>.</p>
+<p>描述: 一个包含选择列表的较高的框. 此时, <a href="../objects/Gui.htm#Add">MyGui.Add</a> 的最后一个参数是像  <code>["Choice1","Choice2","Choice3"]</code> 这样的<a href="../objects/Array.htm">数组</a>.</p>
 <p>例如:</p>
 <pre>MyGui.Add("ListBox", "r5 vColorChoice", ["Red","Green","Blue","Black","White"])
 </pre>
 <p>外观:</p>
 <img src="../static/ctrl_list.png" alt="ListBox" />
-<p id="ChooseLB">To have one of the items pre-selected when the window first appears, include in <em>Options</em> the word <strong>Choose</strong> followed immediately by the number of an item to be pre-selected. For example, <code>Choose5</code> would pre-select the fifth item. To have multiple items pre-selected, use <a href="../objects/GuiControl.htm#Choose">GuiCtrl.Choose</a> multiple times (requires the <a href="#ListBoxMulti">Multi</a> option). After the control is created, use <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a>, <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> or <a href="../objects/GuiControl.htm#Choose">GuiCtrl.Choose</a> to change the selection, and <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a> or <a href="../objects/GuiControl.htm#Delete">GuiCtrl.Delete</a> to add or remove entries from the list.</p>
-<p>If the <a href="#ListBoxMulti">Multi</a> option is absent, <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns the position number of the currently selected item (the first item is 1, the second is 2, etc.) or 0 if there is no item selected. To get the selected item's text instead, use <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. If the <a href="#ListBoxMulti">Multi</a> option is used, <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> and <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> return an array of items instead of a single item.</p>
-<p><a href="../objects/Gui.htm#Submit">MyGui.Submit</a> stores <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> by default, but stores <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> instead if the word <strong>AltSubmit</strong> is in the control's <em>Options</em>.</p>
-<p>Whenever the user selects or deselects one or more items, the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised. The <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> and <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> events are also supported.</p>
-<p id="LBRedraw">When adding a large number of items to a ListBox, performance may be improved by using <code>MyListBox.Opt("-Redraw")</code> prior to the operation, and <code>MyListBox.Opt("+Redraw")</code> afterward.</p>
+<p id="ChooseLB">要在窗口第一次出现时预选其中一个项目, 请在 <em>Options</em> 中加入单词 <strong>Choose</strong> 后面紧跟着要预选的项目编号. 例如, <code>Choose5</code> 会预选第五项. 若要预选多个项目, 可多次使用 <a href="../objects/GuiControl.htm#Choose">GuiCtrl.Choose</a>(需要 <a href="#ListBoxMulti">Multi</a> 选项). 在控件创建后, 请使用 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a>, <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> 或 <a href="../objects/GuiControl.htm#Choose">GuiCtrl.Choose</a> 来改变选择, 和使用 <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a> 或 <a href="../objects/GuiControl.htm#Delete">GuiCtrl.Delete</a> 来添加或移除列表中的条目.</p>
+<p>如果没有 <a href="#ListBoxMulti">Multi</a> 选项, <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 返回当前所选项目的位置编号(第一个项目为 1, 第二个项目为 2, 等等.), 如果没有选择项目, 则返回 0. 如果要获取所选项目的文本, 则使用 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. 如果使用 <a href="#ListBoxMulti">Multi</a> 选项, <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 和 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> 将返回一个项目数组, 而不是单个项目.</p>
+<p><a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 默认存储 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>, 但如果控件的 <em>Options</em> 中包含单词 <strong>AltSubmit</strong>, 则存储 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a>.</p>
+<p>每当用户选择或取消选择一个或多个项目时, 就会触发 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件. 同时也支持 <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> 和 <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件.</p>
+<p id="LBRedraw">当在 ListBox 中添加大量的项目时, 在操作之前使用 <code>MyListBox.Opt("-Redraw")</code>, 在操作之后使用 <code>MyListBox.Opt("+Redraw")</code>, 可以提高性能.</p>
 
-<h3>ListBox Options</h3>
-<p><strong>Choose</strong>: See <a href="#ChooseLB">above</a>.</p>
-<p id="ListBoxMulti"><strong>Multi</strong>: Allows more than one item to be selected simultaneously via shift-click and control-click (to avoid the need for shift/control-click, specify <a href="../misc/Styles.htm#LBS_MULTIPLESEL">the number 8</a> instead of the word Multi). In this case, <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> or <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns an array of selected position numbers. 例如, <code>[1, 2, 3]</code> would indicate that the first three items are selected. To get an array of selected texts instead, use <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. To extract the individual items from the array, use <code>MyListBox.Text[1]</code> (1 would be the first item) or a <a href="For.htm">For-loop</a> such as this example:</p>
+<h3 id="ListBox_Options">ListBox 选项</h3>
+<p><strong>Choose</strong>: 请参阅<a href="#ChooseLB">上面</a>.</p>
+<p id="ListBoxMulti"><strong>Multi</strong>: 允许使用 shift-click 和 control-click 同时选择多个项目(如果不希望使用 shift/control-click, 请指定<a href="../misc/Styles.htm#LBS_MULTIPLESEL">数字 8</a> 代替单词  Multi). 此时, <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 或 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 返回一个选定位置编号的数组. 例如, <code>[1, 2, 3]</code> 表示前三个项目被选中. 如果要得到一个选定的文本数组, 可以使用 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. 要从数组中提取单个项目, 使用 <code>MyListBox.Text[1]</code>(1 是第一个项目) 或 <a href="For.htm">For-loop</a> 如下例所示:</p>
 <pre>For Index, Field in MyListBox.Text
 {
     MsgBox "Selection number " Index " is " Field
 }</pre>
-<p><strong>ReadOnly</strong>: Prevents items from being visibly highlighted when they are selected (but <a href="../objects/Gui.htm#Submit">MyGui.Submit</a>, <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> or <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> will still return the selected item).</p>
-<p><strong>Sort</strong>: Automatically sorts the contents of the list alphabetically (this also affects any items added later via <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a>). The Sort option also enables incremental searching, which allows an item to be selected by typing the first few characters of its name.</p>
-<p><strong>Tn</strong>: The letter T may be used to set tab stops, which can be used to format the text into columns. If the letter T is not used, tab stops are set at every 32 dialog units (the width of each &quot;dialog unit&quot; is determined by the operating system). If the letter T is used only once, tab stops are set at every <strong>n</strong> units across the entire width of the control. 例如, <code>MyGui.Add("ListBox", "vMyListBox t64")</code> would double the default distance between tab stops. To have custom tab stops, specify the letter T multiple times as in the following example: <code>MyGui.Add("ListBox", "vMyListBox t8 t16 t32 t64 t128")</code>. One tab stop is set for each of the absolute column positions in the list, up to a maximum of 50 tab stops.</p>
-<p><strong>0x100</strong>: Include 0x100 in <em>Options</em> to turn on the LBS_NOINTEGRALHEIGHT style. This forces the ListBox to be exactly the height specified rather than a height that prevents a partial row from appearing at the bottom. This option also prevents the ListBox from shrinking when its font is changed.</p>
-<p>To specify the number of rows of text (or the height and width), 请参阅 <a href="../objects/Gui.htm#PosSize">position and sizing of controls</a>.</p>
+<p><strong>ReadOnly</strong>: 对选择的项目不进行高亮显示(但 <a href="../objects/Gui.htm#Submit">MyGui.Submit</a>, <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 或 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> 仍会返回选择的项目).</p>
+<p><strong>Sort</strong>: 按字母顺序自动排列列表的内容(这也会影响后面通过 <a href="../objects/GuiControl.htm#Add">GuiCtrl.Add</a> 添加的所有项目). Sort 选项还会启用增量搜索; 这使得可以通过输入一个项目名称的前几个字符来选择此项.</p>
+<p><strong>Tn</strong>: 字母 T 可以用来设置制表位, 它可以把文本格式成列. 如果没有使用字母 T, 则每 32 个对话框单位设置一次制表位(每个 &quot;对话框单位&quot; 的宽度由操作系统决定). 如果仅使用一次字母 T, 则每 <strong>n</strong> 个单位设置一次横跨整个控件宽度的制表位. 例如, <code>MyGui.Add("ListBox", "vMyListBox t64")</code> 将设置制表位之间的距离为默认的两倍. 要自定义制表位, 请指定字母 T 多次, 如下例所示: <code>MyGui.Add("ListBox", "vMyListBox t8 t16 t32 t64 t128")</code>. 在列表中每个绝对的列位置设置一个制表位, 制表位数目最大可达 50 个.</p>
+<p><strong>0x100</strong>: 在 <em>Options</em> 中包含 0x100 来打开 LBS_NOINTEGRALHEIGHT  样式. 此选项强制 ListBox 准确符合指定的高度而不是适应于避免在底部的行只显示一部分的高度. 此选项也避免了其字体改变时 ListBox 缩小的情况.</p>
+<p>要指定文本的行数(或高度和宽度), 请参阅<a href="../objects/Gui.htm#PosSize">控件的位置和大小</a>.</p>
 
-<h2>ListView and TreeView</h2>
-<p>See separate pages <a href="ListView.htm">ListView</a> and <a href="TreeView.htm">TreeView</a>.</p>
+<h2>ListView 和 TreeView</h2>
+<p>请参阅 <a href="ListView.htm">ListView</a> 和 <a href="TreeView.htm">TreeView</a> 的单独页面.</p>
 
 <h2 id="Link">Link</h2>
-<p>Description: A text control that can contain links similar to those found in a web browser. Within the control's text, enclose the link text within <code>&lt;A&gt;</code> and <code>&lt;/A&gt;</code> to create a clickable link. Although this looks like HTML, Link controls only support the opening <code>&lt;A&gt;</code> tag (optionally with an ID and/or HREF attribute) and closing <code>&lt;/A&gt;</code> tag.</p>
+<p>描述: 一个可以包含类似于网络浏览器中的链接的文本控件. 在控件的文本中, 将链接文本包含在 <code>&lt;A&gt;</code> 和 <code>&lt;/A&gt;</code> 中, 以创建一个可点击的链接. 虽然这看起来像 HTML, 但 Link 控件只支持左 <code>&lt;A&gt;</code> 标签(可选择使用 ID 和/或 HREF 属性) 和右<code>&lt;/A&gt;</code> 标签.</p>
 <p>例如:</p>
 <pre>MyGui.Add("Link",, 'This is a &lt;a href="https://www.autohotkey.com"&gt;link&lt;/a&gt;')
 MyGui.Add("Link",, 'Links may be used anywhere in the text like &lt;a id="A"&gt;this&lt;/a&gt; or &lt;a id="B"&gt;that&lt;/a&gt;')</pre>
 <p>外观:</p>
 <img src="../static/ctrl_link.png" alt="Link" />
 
-<p>Whenever the user clicks on a link, the <a href="../objects/GuiOnEvent.htm#Click">Click</a> event is raised. If the control has no Click callback (registered by calling <a href="../objects/GuiOnEvent.htm">OnEvent</a>), the link's HREF is automatically executed as though passed to the <a href="Run.htm">Run</a> function.</p>
+<p>每当用户点击一个链接, 就会触发 <a href="../objects/GuiOnEvent.htm#Click">Click</a> 事件. 如果控件没有 Click 回调(通过调用 <a href="../objects/GuiOnEvent.htm">OnEvent</a> 注册), 链接的 HREF 会自动执行, 就像传递给 <a href="Run.htm">Run</a> 函数一样.</p>
 <pre>Gui := Gui.New()
 Link := MyGui.Add("Link",
     , 'Click to run &lt;a href="notepad" id="notepad"&gt;Notepad&lt;/a&gt; or open '
@@ -260,17 +260,17 @@ Link_Click(Ctrl, ID, HREF)
 MyGui.Show()</pre>
 
 <h2 id="Hotkey">Hotkey</h2>
-<p>Description: A box that looks like a single-line edit control but instead accepts a keyboard combination pressed by the user. 例如, if the user presses <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> on an English keyboard layout, the box would display &quot;Ctrl + Alt + C&quot;.</p>
+<p>描述: 一个看起来像单行编辑控件的框, 但它接受用户按下的按键组合. 例如, 在英语键盘布局的系统中如果用户按下 <kbd>Control</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, 那么此框中将显示 &quot;Ctrl + Alt + C&quot;.</p>
 <p>例如:</p>
 <pre>MyGui.Add("Hotkey", "vChosenHotkey")</pre>
 <p>外观:</p>
 <img src="../static/ctrl_hotkey.png" alt="Hotkey" />
-<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns the control's hotkey modifiers and name, which are compatible with the <a href="Hotkey.htm">Hotkey</a> function. Examples: <code>^!C</code>, <code>+!Home</code>, <code>+^Down</code>, <code>^Numpad1</code>, <code>!NumpadEnd</code>. If there is no hotkey in the control, the value is blank.</p>
-<p class="note"><strong>Note</strong>: Some keys are displayed the same even though they are retrieved as different names. 例如, both <code>^Numpad7</code> and <code>^NumpadHome</code> might be displayed as Ctrl + Num 7.</p>
-<p>By default, the control starts off with no hotkey specified. To instead have a default, specify its modifiers and name as the last parameter as in this example: <code>MyGui.Add("Hotkey", "vChosenHotkey", "^!p")</code><br>
-The only modifiers supported are ^ (Control), ! (Alt), and + (Shift). See the <a href="../KeyList.htm">key list</a> for available key names.</p>
-<p>Whenever the user changes the control's content (by pressing a key), the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised.</p>
-<p class="note"><strong>Note</strong>: The event is raised even when an incomplete hotkey is present. 例如, if the user holds down the <kbd>Control</kbd> key, the event is raised once and <a href="../objects/GuiControl.htm#Value">Value</a> returns only a circumflex (^). When the user completes the hotkey, the event is raised again and <a href="../objects/GuiControl.htm#Value">Value</a> returns the complete hotkey.</p>
+<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 返回控件的热键修饰符和名称, 与<a href="Hotkey.htm">热键</a>函数兼容. 例如: <code>^!C</code>, <code>+!Home</code>, <code>+^Down</code>, <code>^Numpad1</code>, <code>!NumpadEnd</code>. 如果控件中没有热键, 则该值为空白.</p>
+<p class="note"><strong>注意</strong>: 一些按键即使它们作为不同的名称获取也显示为相同的名称. 例如, <code>^Numpad7</code> 和 <code>^NumpadHome</code> 都可能显示为 Ctrl + Num 7.</p>
+<p>默认情况下, 控件在初始时不含有热键. 要让控件含有默认的热键, 请在最后一个参数中指定热键修饰符和按键名称, 如此例所示: <code>MyGui.Add("Hotkey", "vChosenHotkey", "^!p")</code><br>
+支持的修饰符仅包含 ^(Control), !(Alt) 和 +(Shift). 请参阅<a href="../KeyList.htm">按键列表</a>了解可用的按键名称.</p>
+<p>每当用户改变控件的内容时(通过按键), 则将触发 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件.</p>
+<p class="note"><strong>注意</strong>: 即使存在不完整的热键, 该事件也会被触发. 例如, 如果用户按住 <kbd>Control</kbd> 键, 该事件就会被触发一次, <a href="../objects/GuiControl.htm#Value">Value</a> 只返回一个抑扬符(^). 当用户完成热键时, 事件再次被触发, <a href="../objects/GuiControl.htm#Value">Value</a> 返回完整的热键.</p>
 <p>要限制用户可以使用的热键类型, 请在选项中包含单词 <strong>Limit</strong> 接着一个或多个下列数字的和:</p>
 <ul>
   <li>1: 阻止不带有修饰符的按键</li>
@@ -283,302 +283,292 @@ The only modifiers supported are ^ (Control), ! (Alt), and + (Shift). See the <a
   <li>128: 阻止 <kbd>Shift</kbd>+<kbd>Control</kbd>+<kbd>Alt</kbd>.</li>
 </ul>
 <p>例如, <code>Limit1</code> 将阻止输入不带修饰符的热键(例如单独的字母和数字), 而 <code>Limit15</code> 则要求至少有两个修饰键. 如果用户输入了被禁止的修饰键组合, 则自动使用  <kbd>Control</kbd>+<kbd>Alt</kbd> 组合代替.</p>
-<p>The Hotkey control has limited capabilities. 例如, it does not support mouse/joystick hotkeys or the <kbd>Win</kbd> key (LWin and RWin). One way to work around this is to provide one or more <a href="#Checkbox">checkboxes</a> as a means for the user to enable extra modifiers such as the <kbd>Win</kbd> key.</p>
+<p>Hotkey 控件对热键的支持有限. 例如, 它不支持鼠标/游戏杆热键或 <kbd>Win</kbd> 键(LWin 和 RWin). 解决此问题的一种方法是提供一个或多个 <a href="#Checkbox">checkbox</a> 作为用户启用额外的修饰键的工具, 如 <kbd>Win</kbd> 键.</p>
 
 <h2 id="DateTime">DateTime</h2>
-<p>Description: A box that looks like a single-line edit control but instead accepts a date and/or time. A drop-down calendar is also provided.</p>
+<p>描述: 一个看起来像单行编辑控件的框, 不过它接受日期和/或时间. 同时提供下拉日历.</p>
 <p>例如:</p>
 <pre>MyGui.Add("DateTime", "vMyDateTime", "LongDate")
 </pre>
 <p>外观:</p>
 <img src="../static/ctrl_datetime.png" alt="DateTime" />
-<p>The last parameter is a format string, as described below.</p>
+<p>最后一个参数可以为下列的其中一个.</p>
 <div class="methodShort" id="DateTimeFormat">
 <h3>SetFormat</h3>
-<p>Sets the display format of a DateTime control.</p>
+<p>设置 DateTime 控件的显示格式.</p>
 <pre class="Syntax">DateTime.<span class="func">SetFormat</span>(<span class="optional">Format</span>)</pre>
 <dl><dt>Format</dt><dd>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>One of the following:</p>
-<p><strong>ShortDate</strong> (or omitted/blank): Uses the locale's short date format. 例如, in some locales it would look like: 6/1/2005</p>
-<p><strong>LongDate</strong>: Uses the locale's long date format. 例如, in some locales it would look like: Wednesday, June 01, 2005</p>
-<p><strong>Time</strong>: Shows only the time using the locale's time format. Although the date is not shown, it is still present in the control and will be retrieved along with the time in the <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> format. For example, in some locales it would look like: 9:37:45 PM</p>
-<p><strong>(custom format)</strong>: Specify any combination of <a href="FormatTime.htm">date and time formats</a>. 例如, <code>"M/d/yy HH:mm"</code> would look like 6/1/05 21:37. Similarly, <code>"dddd MMMM d, yyyy hh:mm:ss tt"</code> would look like Wednesday June 1, 2005 09:37:45 PM. Letters and numbers to be displayed literally should be enclosed in single quotes as in this example: <code>"'Date:' MM/dd/yy 'Time:' hh:mm:ss tt"</code>. By contrast, non-alphanumeric characters such as spaces, tabs, slashes, colons, commas, and other punctuation do not need to be enclosed in single quotes. The exception to this is the single quote character itself: to produce it literally, use four consecutive single quotes (''''), or just two if the quote is already inside an outer pair of quotes.</p>
+<p>下列之一:</p>
+<p><strong>ShortDate</strong>(或省略/空白): 使用区域设置的短日期格式. 例如, 在某些区域设置中它看起来像这样: 6/1/2005</p>
+<p><strong>LongDate</strong>: 使用区域设置的长日期格式. 例如, 在某些区域设置中它看起来像这样: Wednesday, June 01, 2005</p>
+<p><strong>Time</strong>: 仅显示时间, 使用区域设置的时间格式. 尽管不显示日期, 但它仍然存在于控件中并且与 <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式的时间一起被获取. 例如, 在某些区域它看起来像这样: 9:37:45 PM</p>
+<p><strong>(自定义格式)</strong>: 指定<a href="FormatTime.htm">日期和时间格式</a>的任意组合. 例如, <code>"M/d/yy HH:mm"</code> 显示的时间看起来像 6/1/05 21:37. 同样, <code>"dddd MMMM d, yyyy hh:mm:ss tt"</code> 显示的时间看起来像  June 1, 2005 09:37:45 PM. 想要原义显示的字母和数字应该括在一对单引号中, 如此例所示: <code>"'Date:' MM/dd/yy 'Time:' hh:mm:ss tt"</code>. 与之相比, 非字母数字字符(例如空格, tab, 斜杠, 冒号, 逗号和其他标点) 不需要包围在单引号中. 例外情况是单引号字符本身: 要产生原义的单引号, 请使用四个连续的单引号(''''), 不过如果它们已经包含在一对外部引号中则仅使用连续的两个就行了.</p>
 </dd></dl>
 </div>
 
-<h3>DateTime Usage</h3>
-<p id="ChooseDT">To have a date other than today pre-selected, include in <em>Options</em> the word <strong>Choose</strong> followed immediately by a date in YYYYMMDD format. 例如, <code>Choose20050531</code> would pre-select May 31, 2005 (as with other options, it can also be a variable such as <code>"Choose" Var</code>). To have no date/time selected, specify <strong>ChooseNone</strong>. <em>ChooseNone</em> also creates a checkbox inside the control that is unchecked whenever the control has no date. Whenever the control has no date, <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> or <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> will retrieve a blank value (empty string).</p>
-<p>The time of day may optionally be present. However, it must always be preceded by a date when going into or coming out of the control. The format of the time portion is HH24MISS (hours, minutes, seconds), where HH24 is expressed in 24-hour format; 例如, 09 is 9am and 21 is 9pm. Thus, a complete date-time string would have the format <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a>.</p>
+<h3 id="DateTime_Usage">DateTime 的用法</h3>
+<p id="ChooseDT">要预选今天外的其他日期, 请在 <em>Options</em> 中包含单词 <strong>Choose</strong> 紧跟着 YYYYMMDD 格式的日期. 例如, <code>Choose20050531</code> 将预选 May 31, 2005(和其他选项一样, 它还可以为变量, 例如  <code>"Choose" Var</code>). 要不预选日期/时间, 请指定 <strong>ChooseNone</strong>. <em>ChooseNone</em> 还在控件内部创建了一个复选框, 只要控件没有日期, 这个复选框就会被取消选中. 当控件中没有选择日期时, <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 或 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 将检索一个空白值(空字符串).</p>
+<p>日期的时间部分是可选的. 但是, 当进入或离开控件时, 时间部分必须总是在日期之前. 时间部分的格式为 HH24MISS(小时数, 分钟数, 秒数), 其中 HH24 含义是用 24 小时格式表示; 例如, 09 为 9am, 而 21 为 9pm. 因此, 完整的日期时间字符串的格式应为 <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a>.</p>
 <p>当指定了 YYYYMMDDHH24MISS 格式的日期时, 只有前导部分是不能缺少的. 其他任何省略的元素将使用下列默认值代替: MM: 月份 01, DD: 日期 01, HH24: 小时 00, MI: 分钟 00, SS: 秒 00.</p>
-<p>Within the drop-down calendar, the today-string at the bottom can be clicked to select today's date. In addition, the year and month name are clickable and allow easy navigation to a new month or year.</p>
+<p>在下拉日历中, 可以点击底部的今日字符串来选择今天的日期. 此外, 还可以点击年份和月份名称来方便地导航到新的月份或年份.</p>
 <p id="DateTime_Keyboard_Navigation">键盘导航: 使用 <kbd>&uarr;</kbd>/<kbd>&darr;</kbd> 方向键, <kbd>+</kbd>/<kbd>-</kbd> 和 <kbd>Home</kbd>/<kbd>End</kbd> 来增加或减少控件的值. 使用 <kbd>&larr;</kbd> 和 <kbd>&rarr;</kbd> 方向键在控件中的区域间移动. 在下拉日历中, 使用方向键在日期间移动; 使用 <kbd>PageUp</kbd>/<kbd>PageDown</kbd> 在月份间往后/往前移动; 使用 <kbd>Home</kbd>/<kbd>End</kbd> 选择当月的第一天/最后一天.</p>
-<p>When <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> or <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> is used, the return value is the selected date and time in <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> format. Both the date and the time are present regardless of whether they were actually visible in the control.</p>
-<p>Whenever the user changes the date or time, the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised. The <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> and <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> events are also supported.</p>
+<p>当使用 <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 或 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 时, 返回值是所选的日期和时间, 格式为 <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a>. 无论日期和时间是否在控件中实际可见, 它们都是存在的.</p>
+<p>每当用户更改日期或时间时, 就会触发 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件. 同时也支持 <a href="../objects/GuiOnEvent.htm#Focus">Focus</a> 和 <a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件.</p>
 
-<h3>DateTime Options</h3>
-<p><strong>Choose</strong>: See <a href="#ChooseDT">above</a>.</p>
-<p><strong>Range</strong>: Restricts how far back or forward in time the selected date can be. After the word Range, specify the minimum and maximum dates in YYYYMMDD format (with a dash between them). 例如, <code>Range20050101-20050615</code> would restrict the date to the first 5.5 months of 2005. Either the minimum or maximum may be omitted to leave the control unrestricted in that direction. 例如, <code>Range20010101</code> would prevent a date prior to 2001 from being selected and <code>Range-20091231</code> (leading dash) would prevent a date later than 2009 from being selected. Without the Range option, any date between the years 1601 and 9999 can be selected. The time of day cannot be restricted.</p>
-<p><strong>Right</strong>: Causes the drop-down calendar to drop down on the right side of the control instead of the left.</p>
-<p><strong>1</strong>: Specify the number 1 in <em>Options</em> to provide an up-down control to the right of the control to modify date-time values, which replaces the button of the drop-down month calendar that would otherwise be available. This does not work in conjunction with the format option LongDate described above.</p>
-<p id="ChooseNone"><strong>2</strong>: Specify the number 2 in <em>Options</em> to provide a checkbox inside the control that the user may uncheck to indicate that no date/time is selected. Once the control is created, this option cannot be changed.</p>
+<h3 id="DateTime_Options">DateTime 选项</h3>
+<p><strong>Choose</strong>: 请参阅<a href="#ChooseDT">上面</a>.</p>
+<p><strong>Range</strong>: 限制可以选择的日期范围. 在单词 Range 后指定以 YYYYMMDD 格式表示的最小和最大的日期(它们之间使用破折号连接). 例如, <code>Range20050101-20050615</code> 将限制可选择的日期为 5.5 年的前 5 个半月. 最小或最大的日期可以省略, 此时控件中在这个方向上的日期不受限制. 例如, <code>Range20010101</code> 将禁止选择早于 2001 年的日期而 <code>Range-20091231</code>有前导的破折号) 将禁止选择迟于 2009 年的日期. 如果不含 Range 选项, 则可以选择介于 1601 和 9999 年份之间的任何日期. 无法限制日期的时间部分.</p>
+<p><strong>Right</strong>: 让下拉日历在控件的右边而不是左边拉下.</p>
+<p><strong>1</strong>: 在 <em>Options</em> 中指定数字 1 会在此控件的右边提供一个增减控件来修改日期和时间的值, 这会取代其他地方可用的下拉月历的修改按钮. 这不能和上面所述的 LongDate 格式选项联用.</p>
+<p id="ChooseNone"><strong>2</strong>: 在 <em>Options</em> 中指定数字 2 在控件中提供复选框, 用户可以取消此复选框选择来表示没有选择日期/时间. 控件创建后无法改变此选项.</p>
 
 <h2 id="MonthCal">MonthCal</h2>
-<p>Description: A tall and wide control that displays all the days of the month in calendar format. The user may select a single date or a range of dates.</p>
+<p>描述: 一个又高又宽的控件, 其中以日历的格式显示一个月中的所有日子. 用户可以选择单个日期或日期范围.</p>
 <p>例如:</p>
 <pre>MyGui.Add("MonthCal", "vMyCalendar")</pre>
 <p>外观:</p>
 <img src="../static/ctrl_monthcal.png" alt="MonthCal" />
-<p>To have a date other than today pre-selected, specify it as the third parameter in YYYYMMDD format (e.g. <code>20050531</code>). A range of dates may also be pre-selected by including a dash between two dates (e.g. <code>"20050525-20050531"</code>).</p>
-<p>It is usually best to omit width (W) and height (H) for a MonthCal because it automatically sizes itself to fit exactly one month. To display more than one month vertically, specify <code>R2</code> or higher in <em>Options</em>. To display more than one month horizontally, specify <code>W-2</code> (W negative two) or higher. These options may both be present to expand in both directions.</p>
-<p>The today-string at the bottom of the control can be clicked to select today's date. In addition, the year and month name are clickable and allow easy selection of a new year or month.</p>
-<p>键盘导航: 在 MonthCal 中完全支持键盘导航, 但只有当它具有键盘焦点时才支持. 有关支持的键盘快捷方式, 请参阅<a href="#DateTime_Keyboard_Navigation">DateTime 的键盘导航</a>(带有下拉日历).</p>
-<p>When <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> or <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> is used, the return value is the selected date in YYYYMMDD format (without any time portion). However, when the <a href="#MonthCalMulti">multi-select</a> option is in effect, the minimum and maximum dates are retrieved with a dash between them (e.g. <code>20050101-20050108</code>). If only a single date was selected in a multi-select calendar, the minimum and maximum are both present but identical. <a href="StrSplit.htm">StrSplit</a> can be used to separate the dates. 例如, the following would put the minimum in Date[1] and the maximum in Date[2]: <code>Date := StrSplit(MyMonthCal.Value, "-")</code>.</p>
-<p>当用户更改选择时, 将引发<a href="../objects/GuiOnEvent.htm#Change">更改</a>事件.</p>
-<p>When specifying dates in the YYYYMMDD format, the MM and/or DD portions may be omitted, in which case they are assumed to be 1. 例如, <code>200205</code> is seen as 20020501, and <code>2005</code> is seen as 20050101.</p>
+<p>要预选今天外的其他日期, 请在最后一个参数中指定 YYYYMMDD 格式的日期(例如 <code>20050531</code>). 通过在两个日期间包含破折号可以预选一个日期范围(例如 <code>"20050525-20050531"</code>).</p>
+<p>通常最好忽略 MonthCal 的宽度(W) 和高度(H), 这样它会自动调整大小来准确适应一个月份. 要垂直地显示多个月份, 请在 <em>Options</em> 中指定 <code>R2</code> 或更高. 要水平地显示多个月份, 请指定 <code>W-2</code>(W 负 2)  或更高. 这两个选项可以同时出现, 此时会在两个方向上扩展.</p>
+<p>可以点击控件底部的今日字符串来选择今天的日期. 此外, 还可以点击年份和月份名称来方便地选择新的月份或年份.</p>
+<p>键盘导航: 在 MonthCal 中完全支持键盘导航, 但只有当它具有键盘焦点时才支持. 有关支持的键盘快捷方式, 请参阅 <a href="#DateTime_Keyboard_Navigation">DateTime 的键盘导航</a>(带有下拉日历).</p>
+<p>当使用 <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 或 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 时, 返回值是所选的以 YYYYMMDD 格式表示的日期(没有任何时间部分). 但是, 存在<a href="#MonthCalMulti">多选</a>选项时, 会得到以破折号连接的最小和最大日期(例如 <code>20050101-20050108</code>). 在可以多选的日历中如果仅选择单个日期, 则最小和最大日期都会存在但它们是相同的. 可以使用 <a href="StrSplit.htm">StrSplit</a> 来分隔日期. 例如,下面将把最小值放在 Date[1] 中, 最大值放在 Date[2] 中: <code>Date := StrSplit(MyMonthCal.Value, "-")</code>.</p>
+<p>当用户更改选择时, 将触发<a href="../objects/GuiOnEvent.htm#Change">更改</a>事件.</p>
+<p>指定 YYYYMMDD 格式的日期时, MM 和/或 DD 部分可以省略, 此时它们默认为 1. 例如, <code>200205</code> 被视为 20020501, 而 <code>2005</code>被视为 20050101.</p>
 
-<h3>MonthCal Options</h3>
-<p id="MonthCalMulti"><strong>Multi</strong>: Multi-select. Allows the user to shift-click or click-drag to select a range of adjacent dates (the user may still select a single date too). This option may be specified explicitly or put into effect automatically by means of specifying a selection range when the control is created. 例如: <code>MyGui.Add("MonthCal", "vMyCal", "20050101-20050108")</code>. Once the control is created, this option cannot be changed.</p>
-<p><strong>Range</strong>: Restricts how far back or forward in time the calendar can go. After the word Range, specify the minimum and maximum dates in YYYYMMDD format (with a dash between them). 例如, <code>Range20050101-20050615</code> would restrict the selection to the first 5.5 months of 2005. Either the minimum or maximum may be omitted to leave the calendar unrestricted in that direction. 例如, <code>Range20010101</code> would prevent a date prior to 2001 from being selected and <code>Range-20091231</code> (leading dash) would prevent a date later than 2009 from being selected. Without the Range option, any date between the years 1601 and 9999 can be selected.</p>
-<p><strong>4</strong>: Specify the number 4 in <em>Options</em> to display week numbers (1-52) to the left of each row of days. Week 1 is defined as the first week that contains at least four days.</p>
-<p><strong>8</strong>: Specify the number 8 in <em>Options</em> to prevent the circling of today's date within the control.</p>
-<p><strong>16</strong>: Specify the number 16 in <em>Options</em> to prevent the display of today's date at the bottom of the control.</p>
+<h3 id="MonthCal_Options">MonthCal 选项</h3>
+<p id="MonthCalMulti"><strong>Multi</strong>: 多选. 允许用户使用 shift-click 或 click-drag 来选择一个连续的日期范围(此时用户仍然可以选择单个日期). 可以明确指定此选项或在创建控件时通过指定一个选择范围的方法来让此选项自动生效. 例如: <code>MyGui.Add("MonthCal", "vMyCal", "20050101-20050108")</code>. 控件创建后无法改变此选项.</p>
+<p><strong>Range</strong>: 限制日历中可以选择的时间范围. 在单词 Range 后指定以 YYYYMMDD 格式表示的最小和最大的日期(它们之间使用破折号连接). 例如, <code>Range20050101-20050615</code> 将限制选区为 2005 年的前 5 个半月. 最小或最大的日期可以省略, 此时日历中在这个方向上的日期不受限制. 例如, <code>Range20010101</code> 将禁止选择早于 2001 年的日期而 <code>Range-20091231</code>(有前导的破折号) 将禁止选择迟于 2009 年的日期. 如果不含 Range 选项, 则可以选择介于 1601 和 9999 年份之间的任何日期.</p>
+<p><strong>4</strong>: 在 <em>Options</em> 中指定数字 4 来在每行日期的左边显示周数(1-52). Week 1 被定义为至少包含四天的第一周.</p>
+<p><strong>8</strong>: 在 <em>Options</em> 中指定数字 8 来禁止控件中当前日期往复循环.</p>
+<p><strong>16</strong>: 在 <em>Options</em> 中指定数字 16 来禁止在控件的底部显示今天的日期.</p>
 
 <h2 id="Slider">Slider</h2>
-<p>Description: A sliding bar that the user can move along a vertical or horizontal track. The standard volume control in the taskbar's tray is an example of a slider.</p>
+<p>描述: 一个滑动栏, 用户可以让它沿着垂直或水平轨道移动. 滑动栏的一个常见的例子是在任务栏托盘中的标准音量控件.</p>
 <p>例如:</p>
 <pre>MyGui.Add("Slider", "vMySlider", 50)</pre>
 <p>外观:</p>
 <img src="../static/ctrl_slider.png" alt="Slider" />
-<p>Specify the starting position of the slider as the last parameter. If the last parameter  is omitted, the slider starts off at 0 or the number in the allowable range that is closest to 0.</p>
-<p>The user may slide the control by the following means: 1) dragging the bar with the mouse; 2) clicking inside the bar's track area with the mouse; 3) turning the mouse wheel while the control has focus; or 4) pressing the following keys while the control has focus: <kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PageUp</kbd>, <kbd>PageDown</kbd>, <kbd>Home</kbd>, and <kbd>End</kbd>.</p>
-<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> and <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> return or store the current numeric position of the slider.</p>
+<p>请在最后一个参数中指定滑动栏的初始位置. 如果最后一个参数省略, 则滑动栏初始位置为 0 或允许的范围中最接近 0 的数字.</p>
+<p>用户可以通过下列方法滑动控件: 1) 使用鼠标拖拉滑动栏; 2) 用鼠标在滑动栏的轨道区域点击; 3) 当焦点在控件上时转动鼠标滚轮; 或 4) 当焦点在控件上时使用下列键: <kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PageUp</kbd>, <kbd>PageDown</kbd>, <kbd>Home</kbd> 和 <kbd>End</kbd>.</p>
+<p><a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 和 <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 返回或存储滑块的当前数值位置.</p>
 
-<h3 id="slider-change">Detecting Changes</h3>
-<p>By default, the slider's <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised when the user has stopped moving the slider, such as by releasing the mouse button after having dragging it. If the control has the <strong>AltSubmit</strong> option, the Change event is also raised (very frequently) after each visible movement of the bar while the user is dragging it with the mouse.</p>
+<h3 id="slider-change">检测变化</h3>
+<p>默认情况下, 当用户停止移动滑块时, 例如在拖动滑块后释放鼠标按钮, 就会触发滑块的 <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件. 如果控件有 <strong>AltSubmit</strong> 选项, 那么当用户用鼠标拖动滑块时, 每次滑块的可见移动后, 也将触发 Change 事件(非常频繁).</p>
 <pre class="Syntax">Ctrl_<span class="func">Change</span>(GuiCtrlObj, Info)</pre>
 <dl>
   <dt>Info</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>A numeric value from the table below indicating how the slider was moved. These values and the corresponding names are defined in the Windows SDK.</p>
+    <p>下表中的数值, 表示滑块的移动方式. 这些值和相应的名称在 Windows SDK 中定义了.</p>
   </dd>
 </dl>
 <table class="info">
-  <tr><th>Value</th><th>Name</th><th>Meaning</th></tr>
-  <tr><td>0</td><td>TB_LINEUP</td><td>The user pressed the <kbd>&larr;</kbd> or <kbd>&uarr;</kbd> key.</td></tr>
-  <tr><td>1</td><td>TB_LINEDOWN</td><td>The user pressed the <kbd>&rarr;</kbd> or <kbd>&darr;</kbd> key.</td></tr>
-  <tr><td>2</td><td>TB_PAGEUP</td><td>The user pressed the <kbd>PageUp</kbd> key.</td></tr>
-  <tr><td>3</td><td>TB_PAGEDOWN</td><td>The user pressed the <kbd>PageDown</kbd> key.</td></tr>
-  <tr><td>4</td><td>TB_THUMBPOSITION</td><td>The user moved the slider via the mouse wheel, or finished a drag-and-drop to a new position.</td></tr>
-  <tr><td>6</td><td>TB_TOP</td><td>The user pressed the <kbd>Home</kbd> key to send the slider to the left or top side. </td></tr>
-  <tr><td>7</td><td>TB_BOTTOM</td><td>The user pressed the <kbd>End</kbd> key to send the slider to the right or bottom side. </td></tr>
-  <tr><td colspan="3"><strong>Only if the AltSubmit option is used:</strong></td></tr>
-  <tr><td>5</td><td>TB_THUMBTRACK</td><td>The user is currently dragging the slider via the mouse; that is, the mouse button is currently down.</td></tr>
-  <tr><td>8</td><td>TB_ENDTRACK</td><td>The user has finished moving the slider, either via the mouse or the keyboard. Note: With the exception of mouse wheel movement (#4), the Change event is raised again for #8 even though it was already raised with one of the digits above.</td></tr>
+  <tr><th>值</th><th>名称</th><th>意义</th></tr>
+  <tr><td>0</td><td>TB_LINEUP</td><td>用户按下了 <kbd>&larr;</kbd> 或 <kbd>&uarr;</kbd> 键.</td></tr>
+  <tr><td>1</td><td>TB_LINEDOWN</td><td>用户按下了 <kbd>&rarr;</kbd> 或 <kbd>&darr;</kbd> 键.</td></tr>
+  <tr><td>2</td><td>TB_PAGEUP</td><td>用户按下了 <kbd>PageUp</kbd> 键.</td></tr>
+  <tr><td>3</td><td>TB_PAGEDOWN</td><td>用户按下了 <kbd>PageDown</kbd> 键.</td></tr>
+  <tr><td>4</td><td>TB_THUMBPOSITION</td><td>用户用鼠标滚轮移动了滑块或已经把滑块拖放到新的位置.</td></tr>
+  <tr><td>6</td><td>TB_TOP</td><td>用户按下了 <kbd>Home</kbd>  键来移动滑块到左端或顶部.</td></tr>
+  <tr><td>7</td><td>TB_BOTTOM</td><td>用户按下了 <kbd>End</kbd> 键来移动滑块到右端或底部.</td></tr>
+  <tr><td colspan="3"><strong>仅当使用 AltSubmit 选项时:</strong></td></tr>
+  <tr><td>5</td><td>TB_THUMBTRACK</td><td>用户正用鼠标拖动滑块, 即鼠标按钮当前是按住的.</td></tr>
+  <tr><td>8</td><td>TB_ENDTRACK</td><td>用户已经使用鼠标或键盘移动了滑块. 注意: 除了鼠标滚轮移动(#4) 之外, Change 事件在 #8 中再次被触发, 尽管它已经被上面的一个数字触发了.</td></tr>
 </table>
 
-<h3>Slider Options</h3>
-<p><strong>Buddy1</strong> and <strong>Buddy2</strong>: Specifies up to two existing controls to automatically reposition at the ends of the slider. Buddy1 is displayed at the left or top side (depending on whether the Vertical option is present). Buddy2 is displayed at the right or bottom side. After the word Buddy1 or Buddy2, specify the <a href="../objects/GuiControl.htm#Name">Name</a> or <a href="../objects/GuiControl.htm#Hwnd">HWND</a> of an existing control. 例如, <code>Buddy1MyTopText</code> would assign the control whose name is MyTopText. The text or ClassNN of a control can also be used, but only up to the first space or tab.</p>
-<p><strong>Center</strong>: The thumb (the bar moved by the user) will be blunt on both ends rather than pointed at one end.</p>
-<p><strong>Invert</strong>: Reverses the control so that the lower value is considered to be on the right/bottom rather than the left/top. This is typically used to make a vertical slider move in the direction of a traditional volume control. Note: The ToolTip option described below will not obey the inversion and therefore should not be used in this case.</p>
-<p><strong>Left</strong>: The thumb (the bar moved by the user) will point to the top rather than the bottom. But if the Vertical option is in effect, the thumb will point to the left rather than the right.</p>
-<p><strong>Line</strong>: Specifies the number of positions to move when the user presses one of the arrow keys. After the word Line, specify number of positions to move. 例如: <code>Line2</code>.</p>
-<p><strong>NoTicks</strong>: Omits tickmarks alongside the track.</p>
-<p><strong>Page</strong>: Specifies the number of positions to move when the user presses the <kbd>PageUp</kbd> or <kbd>PageDown</kbd> key. After the word Page, specify number of positions to move. 例如: <code>Page10</code>.</p>
-<p><strong>Range</strong>: Sets the range to be something other than 0 to 100. After the word Range, specify the minimum, a dash, and maximum. 例如, <code>Range1-1000</code> would allow a number between 1 and 1000 to be selected; <code>Range-50-50</code> would allow a number between -50 and 50; and <code>Range-10--5</code> would allow a number between -10 and -5.</p>
-<p><strong>Thick</strong>: Specifies the length of the thumb (the bar moved by the user). After the word Thick, specify the thickness in pixels (e.g. <code>Thick30</code>). To go beyond a certain thickness, it is probably necessary to either specify the Center option or remove the theme from the control (which can be done by specifying <code>-Theme</code> in the control's options).</p>
-<p><strong>TickInterval</strong>: Provides tickmarks alongside the track at the specified interval. After the word TickInterval, specify the interval at which to display additional tickmarks (if the interval is omitted, it is assumed to be 1). 例如, <code>TickInterval10</code> would display a tickmark once every 10 positions.</p>
-<p><strong>ToolTip</strong>: Creates a tooltip that reports the numeric position of the slider as the user is dragging it. To have the tooltip appear in a non-default position, specify one of the following instead: <code>ToolTipLeft</code> or <code>ToolTipRight</code> (for vertical sliders); <code>ToolTipTop</code> or <code>ToolTipBottom</code> (for horizontal sliders).</p>
-<p><strong>Vertical</strong>: Makes the control slide up and down rather than left and right.</p>
-<p>The above options can be changed via <a href="../objects/GuiControl.htm#Opt">GuiCtrl.Opt</a> after the control is created.</p>
+<h3 id="Slider_Options">Slider 选项</h3>
+<p><strong>Buddy1</strong> 和 <strong>Buddy2</strong>:  最多可以指定两个现有的控件来自动定位到滑动条的两侧. Buddy1 显示在左边或顶部(取决于是否存在 Vertical 选项). Buddy2 显示在右侧或底部. 在单词 Buddy1 或 Buddy2 后指定现有控件的<a href="../objects/GuiControl.htm#Name">名称</a>或 <a href="../objects/GuiControl.htm#Hwnd">HWND</a>. 例如, <code>Buddy1MyTopText</code> 将分配变量名为 MyTopText 的控件. 控件的文本或 ClassNN 也能使用, 但只到第一个空格或制表符.</p>
+<p><strong>Center</strong>: 滑块(用户移动的滑动栏) 两端将是钝的而不指向其中一端.</p>
+<p><strong>Invert</strong>: 反转控件, 把较低值作为右边/底端而不是左边/顶端. 此选项常用来让垂直滑动栏在传统的音量控件方向上移动. 注: 下面描述的工具提示选项不会遵循反转, 因此此时不应该使用.</p>
+<p><strong>Left</strong>: 滑块(用户移动的滑动栏) 将指向上方而不是下方(原文中为顶端和底端, 这里用上/下放是为了避免和滑动栏的顶端/底端混淆). 但如果存在 Vertical 选项, 则滑块将指向左边而不是右边.</p>
+<p><strong>Line</strong>: 指定当用户按下其中一个方向键时要移动位置的数目. 在单词 Line 后指定移动位置的数目. 例如: <code>Line2</code>.</p>
+<p><strong>NoTicks</strong>: 不在轨道旁边显示刻度标记.</p>
+<p><strong>Page</strong>: 指定当用户按下 <kbd>PageUp</kbd> 或 <kbd>PageDown</kbd> 键时移动位置的数目. 在单词 Page 后指定移动位置的数目. 例如: <code>Page10</code>.</p>
+<p><strong>Range</strong>: 使用 0 到 100 外的其他范围. 在单词 Range 后指定最小值, 破折号和最大值. 例如, <code>Range1-1000</code> 将允许选择一个介于 1 和 1000 之间的数字; <code>Range-50-50</code> 将允许介于 -50 和 50 之间的数字; 而 <code>Range-10--5</code> 将允许介于 -10 和 -5 之间的数字.</p>
+<p><strong>Thick</strong>: 指定滑块的长度. 在单词 Thick 后指定以像素为单位的厚度(例如 <code>Thick30</code>). 如果要超过一定的厚度, 可能需要指定 Center 选项或者从控件中删除主题(可以通过在控件的选项中指定 <code>-Theme</code> 来实现).</p>
+<p><strong>TickInterval</strong>: 在轨道旁边指定间隔的位置显示刻度标记. 在单词 TickInterval 后指定间隔来显示附加的刻度标记(如果省略从未设置, 则默认为 1). 例如, <code>TickInterval10</code>将每隔 10 位置显示一个刻度标记.</p>
+<p><strong>ToolTip</strong>: 创建工具提示, 当用户拖动滑动栏时显示它的数字位置. 要让工具提示不显示在默认位置, 请指定下列单词的其中一个代替: <code>ToolTipLeft</code> 或 <code>ToolTipRight</code>(对于水平滑动条); <code>ToolTipTop</code> 或 <code>ToolTipBottom</code>(对于水平滑动条).</p>
+<p><strong>Vertical</strong>: 让控件上下滑动而不是左右滑动.</p>
+<p>在控件创建后, 可以使用 <a href="../objects/GuiControl.htm#Opt">GuiCtrl.Opt</a> 来改变上面的选项.</p>
 
 <h2 id="Progress">Progress</h2>
-<p>Description: A dual-color bar typically used to indicate how much progress has been made toward the completion of an operation.</p>
+<p>描述: 一个双彩条, 通常用来指示一个操作接近完成的程度.</p>
 <p>例如:</p>
 <pre>MyGui.Add("Progress", "w200 h20 cBlue vMyProgress", 75)</pre>
 <p>外观:</p>
 <img src="../static/ctrl_progress.png" alt="Progress" />
-<p>Specify the starting position of the bar as the third parameter (if omitted, the bar starts off at 0 or the number in the allowable range that is closest to 0). To later change the position of the bar, follow these examples, all of which operate upon a progress bar whose <a href="../objects/GuiControl.htm#Name">Name</a> is MyProgress:</p>
-<pre>MyGui["MyProgress"].<a href="../objects/GuiControl.htm#Value">Value</a> += 20  <em>; Increase the current position by 20.</em>
-MyGui["MyProgress"].Value := 50  <em>; Set the current position to 50.</em></pre>
-<p>For horizontal Progress Bars, the thickness of the bar is equal to the control's height. For vertical Progress Bars it is equal to the control's width.</p>
+<p>在最后一个参数中指定进度条的初始位置(如果省略, 则进度条的初始位置为 0 或允许的范围中最接近 0 的数字). 之后要改变进度条的位置, 请参照下面的例子, 所有这些都是在一个<a href="../objects/GuiControl.htm#Name">名称为</a> MyProgress 的进度条上操作:</p>
+<pre>MyGui["MyProgress"].<a href="../objects/GuiControl.htm#Value">Value</a> += 20  <em>; 增加 20 到当前位置.</em>
+MyGui["MyProgress"].Value := 50  <em>; 设置当前位置为 50.</em></pre>
+<p>对于水平进度条, 进度条的厚度等于控件的高度. 对于垂直进度条它等于控件的宽度.</p>
 
-<h3>Progress Options</h3>
-<p><strong>Cn</strong>: Changes the bar's color. Specify for <strong>n</strong> one of the 16 primary HTML <a href="../misc/Colors.htm">color names</a> or a 6-digit RGB color value. Examples: <code>cRed</code>, <code>cFFFF33</code>, <code>cDefault</code>. If the C option is never used (or <code>cDefault</code> is specified), the system's default bar color will be used.</p>
-<p><strong>BackgroundN</strong>: Changes the bar's background color. Specify for <strong>n</strong> one of the 16 primary HTML <a href="../misc/Colors.htm">color names</a> or a 6-digit RGB color value. Examples: <code>BackgroundGreen</code>, <code>BackgroundFFFF33</code>, <code>BackgroundDefault</code>. If the Background option is never used (or <code>BackgroundDefault</code> is specified), the background color will be that of the window or <a href="#Tab">tab control</a> behind it.</p>
-<p><strong>Range</strong>: Sets the range to be something other than 0 to 100. After the word Range, specify the minimum, a dash, and maximum. 例如, <code>Range0-1000</code> would allow numbers between 0 and 1000; <code>Range-50-50</code> would allow numbers between -50 and 50; and <code>Range-10--5</code> would allow numbers between -10 and -5.</p>
-<p><strong>Smooth</strong>: Displays a simple continuous bar. If this option is not used and the bar does not have any custom colors, the bar's appearance is defined by the current system theme. Otherwise, the bar appears as a length of segments.</p>
-<p><strong>Vertical</strong>: Makes the bar rise or fall vertically rather than move along horizontally.</p>
-<p>The above options can be changed via <a href="../objects/GuiControl.htm#Opt">GuiCtrl.Opt</a> after the control is created.</p>
+<h3 id="Progress_Options">Progress 选项</h3>
+<p><strong>Cn</strong>: 改变进度条的颜色. 指定 <strong>n</strong> 为 16 种 HTML <a href="../misc/Colors.htm">基础颜色</a>之一或 6 位的 RGB 颜色值. 例如: <code>cRed</code>, <code>cFFFF33</code>, <code>cDefault</code>. 如果从没有使用过 C 选项(或指定了 <code>cDefault</code>), 则使用系统默认的进度条颜色.</p>
+<p><strong>BackgroundN</strong>: 改变进度条的背景颜色. 指定 <strong>n</strong> 为 16 种 HTML <a href="../misc/Colors.htm">基础颜色</a>之一或 6 位的 RGB 颜色值. 例如: <code>BackgroundGreen</code>, <code>BackgroundFFFF33</code>, <code>BackgroundDefault</code>. 如果从没有使用过 Background 选项(或指定了 <code>BackgroundDefault</code>), 则使用窗口的或进度条后<a href="#Tab">选项卡控件</a>的颜色作为背景颜色.</p>
+<p><strong>Range</strong>: 使用 0 到 100 外的其他范围. 在单词 Range 后指定最小值, 破折号和最大值. 例如, <code>Range0-1000</code> 将允许一个介于 0 和 1000 之间的数字; <code>Range-50-50</code> 将允许介于 -50 和 50 之间的数字; 而 <code>Range-10--5</code> 将允许介于 -10 和 -5 之间的数字.</p>
+<p><strong>Smooth</strong>: 显示一个简单的连续条. 如果不使用该选项, 并且进度条没有任何自定义颜色, 则进度条的外观由当前系统主题定义. 否则, 进度条将显示为一段段的长度.</p>
+<p><strong>Vertical</strong>: 让进度条垂直上升或下降而不是水平移动.</p>
+<p>在控件创建后, 可以使用 <a href="../objects/GuiControl.htm#Opt">GuiCtrl.Opt</a> 来改变上面的选项.</p>
 
 <h2 id="GroupBox">GroupBox</h2>
-<p>Description: A rectangular border/frame, often used around other controls to indicate they are related. In this case, the last parameter is the title of the box, which if present is displayed at its upper-left edge.</p>
+<p>描述: 一个矩形的框, 常用来封装一组相关的控件. 此时最后一个参数为分组框的标题, 其(如果存在) 显示在分组框的左上角.</p>
 <p>例如:</p>
 <pre>MyGui.Add("GroupBox", "w200 h100", "Geographic Criteria")
 </pre>
 <p>外观:</p>
 <img src="../static/ctrl_group.png" alt="GroupBox" />
-<p>By default, a GroupBox's title may have only one line of text. This can be overridden by specifying <code>Wrap</code> in <em>Options</em>.</p>
-<p>To specify the number of rows inside the control (or its height and width), 请参阅 <a href="../objects/Gui.htm#PosSize">position and sizing of controls</a>.</p>
+<p>默认情况下, 分组框的标题可以只有一行文本. 在 <em>Options</em> 中指定 <code>Wrap</code> 可以改变此特性.</p>
+<p>要指定控件中的行数(或高度和宽度), 请参阅<a href="../objects/Gui.htm#PosSize">控件的位置和大小</a>.</p>
 
 <span id="Tab2"></span><h2 id="Tab">Tab3</h2>
-<p>Description: A large control containing multiple pages, each of which contains other controls. From this point forward, these pages are referred to as &quot;tabs&quot;.</p>
-<p>There are three types of Tab control:</p>
+<p>描述: 一个包含多个页面的大型控件, 其中每个页面包含其他控件. 从这里开始, 这些页面被称为 &quot;选项卡(标签页)&quot;.</p>
+<p>选项卡控件有以下三种类型:</p>
 <ul>
-  <li><strong>Tab3</strong>: Fixes some issues which affect Tab2 and Tab. Controls are placed within an invisible "tab dialog" which moves and resizes with the tab control. The tab control is themed by default.</li>
-  <li><strong>Tab2</strong>: Fixes rare redrawing problems in the original "Tab" control but introduces <a href="#Tab2_Issues">some other problems</a>.</li>
-  <li><strong>Tab</strong>: Retained for backward compatibility because of <a href="#Tab_vs">differences in behavior</a> between Tab2/Tab3 and Tab.</li>
+  <li><strong>Tab3</strong>: 修复若干影响 Tab2 和 Tab 的问题. 各控件位于一个可见的 "标签页对话框", 其位置和大小随选项卡控件的移动和大小的改变而改变. 选项卡控件使用默认主题.</li>
+  <li><strong>Tab2</strong>: 修正了原有 "Tab" 控件罕见的重绘问题, 但是引入了<a href="#Tab2_Issues">一些其他问题</a>.</li>
+  <li><strong>Tab</strong>: 保留向后兼容性, 因为在 Tab2/Tab3 和 Tab 之间有着<a href="#Tab_vs">行为差异</a>.</li>
 </ul>
 <p>例如:</p>
 <pre>MyGui.Add("Tab3",, ["General","View","Settings"])</pre>
 <p>外观:</p>
 <img src="../static/ctrl_tab.png" alt="Tab" />
-<p id="ChooseTab">The last parameter above is an <a href="../objects/Array.htm">Array</a> of tab names. To have one of the tabs pre-selected when the window first appears, include in <em>Options</em> the word <strong>Choose</strong> followed immediately by the number of a tab to be pre-selected. For example, <code>Choose5</code> would pre-select the fifth tab (as with other options, it can also be a variable such as <code>"Choose" Var</code>). After the control is created, use <a href="../objects/GuiControl.htm#Value">Value</a>, <a href="../objects/GuiControl.htm#Text">Text</a> or <a href="../objects/GuiControl.htm#Choose">Choose</a> to change the selected tab, and <a href="../objects/GuiControl.htm#Add">Add</a> or <a href="../objects/GuiControl.htm#Delete">Delete</a> to add or remove tabs.</p>
-<p id="TabCmd">After creating a Tab control, subsequently added controls automatically belong to its first tab. This can be changed at any time by following these examples (in this case, <em>Tab</em> is the <a href="../objects/GuiControl.htm">GuiControl object</a> of the first tab control and <em>Tab2</em> of the second one):</p>
-<pre>Tab.<a href="../objects/GuiControl.htm#UseTab">UseTab</a>()  <em>; Future controls are not part of any tab control.</em>
-Tab.UseTab(3)  <em>; Future controls are owned by the third tab of the current tab control.</em>
-Tab2.UseTab(3)  <em>; Future controls are owned by the third tab of the second tab control.</em>
-Tab.UseTab("Name")  <em>; Future controls are owned by the tab whose name starts with <i>Name</i> (not case sensitive).</em>
-Tab.UseTab("Name", true)  <em>; Same as above but requires exact match (not case sensitive).</em></pre>
-<p>It is also possible to use any of the examples above to assign controls to a tab or tab-control that does not yet exist (except in the case of the <em>Name</em> method). But in that case, the relative positioning options described below are not supported.</p>
-<p id="Tab_Positioning1"><strong>Positioning</strong>: When each tab of a Tab control receives its first sub-control, that sub-control will have a special default position under the following conditions: 1) The X and Y coordinates are both omitted, in which case the first sub-control is positioned at the upper-left corner of the tab control's interior (with a standard <a href="../objects/Gui.htm#MarginX">margin</a>), and sub-controls beyond the first are positioned beneath the previous control; 2) The <a href="../objects/Gui.htm#PosPlus">X+n and/or Y+n</a> positioning options are specified, in which case the sub-control is positioned relative to the upper-left corner of the tab control's interior. 例如, specifying <code>x+10 y+10</code> would position the control 10 pixels right and 10 pixels down from the upper left corner.</p>
-<p><strong>Current tab</strong>: <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns the position number of the currently selected tab (the first tab is 1, the second is 2, etc.). To get its text instead, use <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> stores <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a> by default, but stores <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> instead if the word <strong>AltSubmit</strong> is in the control's <em>Options</em>.</p>
-<p><strong>Detecting tab selection</strong>: Whenever the user switches tabs, the <a href="../objects/GuiOnEvent.htm#Change">Change</a> event is raised.</p>
-<p id="Tab_Keyboard"><strong>Keyboard navigation</strong>: The user may press <kbd>Control</kbd>+<kbd>PageDown</kbd>/<kbd>PageUp</kbd> to navigate from page to page in a tab control; if the keyboard focus is on a control that does not belong to a Tab control, the window's first Tab control will be navigated. <kbd>Control</kbd>+<kbd>Tab</kbd> and <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>Tab</kbd> may also be used except that they will not work if the currently focused control is a multi-line Edit control.</p>
-<p id="Tab_Limits"><strong>Limits</strong>: Each window may have no more than 255 tab controls. Each tab control may have no more than 256 tabs (pages). In addition, a tab control may not contain other tab controls.</p>
+<p id="ChooseTab">上面的最后一个参数是一个标签页名称的<a href="../objects/Array.htm">数组</a>. 要在窗口初次出现时预选其中的某个选项卡, 请在 <em>Options</em> 中包含单词 <strong>Choose</strong> 紧跟着想预选的选项卡的编号. 例如, <code>Choose5</code> 会预选第五个选项卡(和其他选项一样, 它也可以为变量, 例如 <code>"Choose" Var</code>). 要在控件创建后改变选择的选项卡, 请使用 <a href="../objects/GuiControl.htm#Value">Value</a>, <a href="../objects/GuiControl.htm#Text">Text</a> 或 <a href="../objects/GuiControl.htm#Choose">Choose</a> 和 <a href="../objects/GuiControl.htm#Add">Add</a> 或 <a href="../objects/GuiControl.htm#Delete">Delete</a> 来添加或删除选项卡.</p>
+<p id="TabCmd">创建选项卡控件后, 随后添加的控件自动属于其首个选项卡. 这可以在任何时候改变, 请参照这些例子(在本例中, <em>Tab</em>  是第一个选项卡控件的 <a href="../objects/GuiControl.htm">GuiControl 对象</a>, 而 <em>Tab2</em> 是第二个标签控件的 GuiControl 对象):</p>
+<pre>Tab.<a href="../objects/GuiControl.htm#UseTab">UseTab</a>()  <em>; 随后的控件不属于任何选项卡控件的一部分.</em>
+Tab.UseTab(3)  <em>; 随后的控件属于当前选项卡控件的第三个选项卡.</em>
+Tab2.UseTab(3)  <em>; 随后的控件属于第二个选项卡控件的第三个选项卡.</em>
+Tab.UseTab("Name")  <em>; 随后的控件属于名称以 <i>Name</i>(不区分大小写) 开始的选项卡.</em>
+Tab.UseTab("Name", true)  <em>; 与上面相同, 不过这里需要准确匹配(并区分大小写).</em></pre>
+<p>还可以使用上面的每个例子分配控件到还不存在的选项卡或选项卡控件(不包括使用 <em>Name</em> 方法的情况). 但在此情况下, 不支持下面描述的相对位置选项.</p>
+<p id="Tab_Positioning1"><strong>位置</strong>: 当一个选项卡控件的每个选项卡接收到其首个子控件, 此子控件在下列情况下将具有特殊的默认位置: 1) 同时省略 X 和 Y 坐标, 此时首个子控件放在选项卡控件内部的左上角(带有标准的<a href="../objects/Gui.htm#MarginX">边距</a>), 而首个子控件后的其他子控件放在之前控件的下面; 2) 指定了 <a href="../objects/Gui.htm#PosPlus">X+n 和/或 Y+n</a> 位置选项, 此时子控件放在相对于选项卡控件内部的左上角的位置. 例如, 指定 <code>x+10 y+10</code> 会把控件放置在左上角往右和往下各 10 个像素的位置.</p>
+<p><strong>当前标签页</strong>: <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 返回当前选中的标签页的位置编号(第一个标签页是 1, 第一个标签页是 2, 等等.). 要获取其文本, 请使用 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>. <a href="../objects/Gui.htm#Submit">MyGui.Submit</a> 默认存储 <a href="../objects/GuiControl.htm#Text">GuiCtrl.Text</a>, 但如果控件的 <em>Options</em> 中含有单词 <strong>AltSubmit</strong>, 则存储 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a>.</p>
+<p><strong>检测标签页选择</strong>: 每当用户切换标签页时, <a href="../objects/GuiOnEvent.htm#Change">Change</a> 事件就会被触发.</p>
+<p id="Tab_Keyboard"><strong>键盘导航</strong>: 用户可以按下 <kbd>Control</kbd>+<kbd>PageDown</kbd>/<kbd>PageUp</kbd> 来在选项卡控件的页面间导航; 如果键盘焦点在不属于选项卡的控件上, 则会导航到窗口的首个选项卡控件. 也可以使用 <kbd>Control</kbd>+<kbd>Tab</kbd> 和 <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>Tab</kbd>, 除非当前焦点控件在多行编辑控件中(此时它们不起作用).</p>
+<p id="Tab_Limits"><strong>限制</strong>: 每个窗口的选项卡控件不能超过 255 个. 每个选项卡控件不能含有超过 256 个选项卡(页面). 此外, 选项卡控件不能包含其他选项卡控件.</p>
 
 <h3 id="Tab_vs">Tab3 vs. Tab2 vs. Tab</h3>
-<p id="Tab_Parent"><strong>Parent window</strong>: The parent window of a control affects the positioning and visibility of the control and tab-key navigation order. If a sub-control is added to an existing Tab3 control, its parent window is the "tab dialog", which fills the tab control's display area. Most other controls, including sub-controls of Tab or Tab2 controls, have no parent other than the GUI window itself.</p>
-<p id="Tab_Positioning"><strong>Positioning</strong>: For Tab and Tab2, sub-controls do not necessarily need to exist within their tab control's boundaries: they will still be hidden and shown whenever their tab is selected or de-selected. This behavior is especially appropriate for the &quot;buttons&quot; style described below.</p>
-<p>For Tab3, sub-controls assigned to a tab <em>before</em> the tab control is created behave as though added to a Tab or Tab2 control. All other sub-controls are visible only within the display area of the tab control.</p>
-<p>If a Tab3 control is moved, its sub-controls are moved with it. Tab and Tab2 controls do not have this behavior.</p>
-<p>In the rare case that <a href="WinMove.htm">WinMove</a> (or an equivalent DllCall) is used to move a control, the coordinates must be relative to the parent window of the control, which might not be the GUI (see <a href="#Tab_Parent">above</a>). By contrast, <a href="../objects/GuiControl.htm#Move">GuiCtrl.Move</a> takes GUI coordinates and <a href="ControlMove.htm">ControlMove</a> takes window coordinates, regardless of the control's parent window.</p>
-<p id="Tab_Autosize"><strong>Autosizing</strong>: If not specified by the script, the width and/or height of the Tab3 control are automatically calculated at one of the following times (whichever comes first after the control is created):</p>
+<p id="Tab_Parent"><strong>父窗口</strong>: 控件的父窗口影响控件的位置和可见性以及 Tab 键的导航顺序. 如果控件添加到已存在的 Tab3 选项卡控件, 其父窗口是 "tab dialog", 该父窗口填充选项卡控件的显示区域. 大部分其他控件, 包括 Tab 或 Tab2 中的子控件, 没有父窗口除了 Gui 界面本身.</p>
+<p id="Tab_Positioning"><strong>位置</strong>: 对于 Tab 和 Tab2, 子控件不需要在他们的选项卡控件的边界内: 当标签页是激活或未激活时他们总是会显示和隐藏. 这种行为特别适合下面描述的 &quot;按钮&quot; 样式.</p>
+<p>对于 Tab3, 在标签页控件创建之 <em>前</em>, 添加子控件的行为与 Tab 或 Tab2 是一致的. 所有其他子控件只在选项卡控件的显示区域内可见.</p>
+<p>如果 Tab3 控件移动, 他的子控件也随之移动. Tab 和 Tab2 控件没有这个行为.</p>
+<p>在极少数情况下, <a href="WinMove.htm">WinMove</a>(或等效的 DllCall) 用于移动控件, 坐标必须相对于控件的父窗口, 而不是 Gui(参阅<a href="#Tab_Parent">上面的信息)</a>). 相比之下, <a href="../objects/GuiControl.htm#Move">GuiCtrl.Move</a> 采用 GUI 坐标, <a href="ControlMove.htm">ControlMove</a> 采用窗口坐标, 与控件的父窗口无关.</p>
+<p id="Tab_Autosize"><strong>自动尺寸</strong>: 如果脚本没有指定, 在下列情况下 Tab3 控件的宽度 和/或 高度将会自动计算(在控件创建后以先到者为准):</p>
 <ul>
-  <li>The first time the Tab3 control ceases to be the current tab control. This can occur as a result of calling <a href="#TabCmd">GuiCtrl.UseTab</a> (with or without parameters) or creating another tab control.</li>
-  <li>The first time <a href="../objects/Gui.htm#Show">MyGui.Show</a> is called for that particular Gui.</li>
+  <li>第一次 Tab3 控件不再是当前标签页控件. 这可能是调用了 <a href="#TabCmd">GuiCtrl.UseTab</a>(有或没有参数) 或创建另一个标签页控件所导致的.</li>
+  <li>对于特定的 Gui, 首次调用 <a href="../objects/Gui.htm#Show">MyGui.Show</a>.</li>
 </ul>
-<p>The calculated size accounts for sub-controls which exist when autosizing occurs, plus the default margins. The size is calculated only once, and will not be recalculated even if controls are added later. If the Tab3 control is empty, it receives the same default size as a Tab or Tab2 control.</p>
-<p>Tab and Tab2 controls are not autosized; they receive an arbitrary default size.</p>
-<p id="Tab_TabOrder"><strong>Tab-key navigation order</strong>: The navigation order via the <kbd>Tab</kbd> key usually depends on the order in which the controls are created. When tab controls are used, the order also depends on the type of tab control:</p>
+<p>存在的子控件计算尺寸时, 自动调整的尺寸再加上默认边距. 尺寸只计算一次, 即使添加控件也不会重新计算. 如果 Tab3 控件是空的, 与 Tab 或 Tab2 控件相同的默认大小.</p>
+<p>Tab 和 Tab2 控件不会自动计算尺寸; 它们接受任意默认大小.</p>
+<p id="Tab_TabOrder"><strong>Tab 键导航顺序</strong>: <kbd>Tab</kbd> 键导航顺序通常取决于控件创建的顺序. 当选项卡控件激活时, 顺序也取决于选项卡控件的类型:</p>
 <ul>
-  <li>Tab and Tab2 allow their sub-controls to be mixed with other controls within the tab-key order.</li>
-  <li>Tab2 puts its tab buttons after its sub-controls in the tab-key order.</li>
-  <li>Tab3 groups its sub-controls within the tab-key order and puts them after its tab buttons.</li>
+  <li>Tab 和 Tab2 允许其子控件与其他控件混合.</li>
+  <li>Tab2 将标签页按钮置于其子控件之后.</li>
+  <li>Tab3 的子控件组合在一起并置于标签页按钮之后.</li>
 </ul>
-<p id="Tab_Notifs"><strong>Notification messages (Tab3)</strong>: Common and <a href="#Custom">Custom</a> controls typically send notification messages to their <a href="#Tab_Parent">parent window</a>. Any WM_COMMAND, WM_NOTIFY, WM_VSCROLL, WM_HSCROLL or WM_CTLCOLOR' messages received by a Tab3 control's <a href="#Tab_Parent">tab dialog</a> are forwarded to the GUI window and can be detected by using <a href="OnMessage.htm">OnMessage</a>. If the tab control is themed and the sub-control lacks the <a href="../objects/Gui.htm#BackgroundTrans">+BackgroundTrans</a> option, WM_CTLCOLORSTATIC is fully handled by the tab dialog and not forwarded. Other notification messages (such as custom messages) are not supported.</p>
-<p id="Tab2_Issues"><strong>Known issues with Tab2</strong>:</p>
+<p id="Tab_Notifs"><strong>通知消息(Tab3)</strong>: 命令和<a href="#Custom">自定义</a>控件通常向他们的<a href="#Tab_Parent">父窗口</a>发送通知消息. Tab3 控件的 <a href="#Tab_Parent">tab dialog</a> 接收到的任何 WM_COMMAND, WM_NOTIFY, WM_VSCROLL, WM_HSCROLL 或 WM_CTLCOLOR 消息转发到 GUI 窗口和能被 <a href="OnMessage.htm">OnMessage</a> 检测. 如果标签页控件使用主题并且其子控件没有 <a href="../objects/Gui.htm#BackgroundTrans">+BackgroundTrans</a> 选项, tab dialog 处理 WM_CTLCOLORSTATIC 消息而不转发. 其他的通知消息(例如自定义消息) 不被支持.</p>
+<p id="Tab2_Issues"><strong>Tab2 选项卡控件的已知问题</strong>:</p>
 <ul>
-  <li><a href="../objects/Gui.htm#BackgroundTrans">BackgroundTrans</a> has no effect inside a Tab2 control.</li>
-  <li><a href="#ActiveX">WebBrowser</a> controls do not redraw correctly.</li>
-  <li>AnimateWindow and possibly other Win32 API calls can cause the tab's controls to disappear.</li>
+  <li><a href="../objects/Gui.htm#BackgroundTrans">BackgroundTrans</a> 在 Tab2 控件中没有效果.</li>
+  <li><a href="#ActiveX">WebBrowser</a> 控件重绘不正确.</li>
+  <li>动态窗口和其他的某些 Win32 API 调用导致其中的控件不显示.</li>
 </ul>
-<p id="Tab_Issues"><strong>Known issues with Tab</strong>:</p>
+<p id="Tab_Issues"><strong>Tab 选项卡控件的已知问题</strong>:</p>
 <ul>
-  <li>Activating a GUI window by clicking certain parts of its controls, such as scrollbars, might redraw improperly.</li>
-  <li><a href="../objects/Gui.htm#BackgroundTrans">BackgroundTrans</a> has no effect if the Tab control contains a ListView.</li>
-  <li><a href="#ActiveX">WebBrowser</a> controls are invisible.</li>
+  <li>通过单击界面窗口中的某个控件来激活界面窗口, 例如滚动条, 将会出现重绘不正确的情况.</li>
+  <li>如果 Tab 控件包含 ListView 控件, <a href="../objects/Gui.htm#BackgroundTrans">BackgroundTrans</a> 没有效果.</li>
+  <li><a href="#ActiveX">WebBrowser</a> 控件不可见.</li>
 </ul>
 
-<h3>Tab Options</h3>
-<p><strong>Choose</strong>: See <a href="#ChooseTab">above</a>.</p>
-<p><strong>Background</strong>: Specify <code>-Background</code> (minus Background) to override the <a href="../objects/Gui.htm#BackColor">window's custom background color</a> and use the system's default Tab control color. Specify <code>+Theme -Background</code> to make the Tab control conform to the current desktop theme. However, most control types will look strange inside such a Tab control because their backgrounds will not match that of the tab control. This can be fixed for some control types (such as <a href="#Text">Text</a>) by adding BackgroundTrans to their options.</p>
-<p><strong>Buttons</strong>: Creates a series of buttons at the top of the control rather than a series of tabs (in this case, there will be no border by default because the display area does not typically contain controls).</p>
-<p><strong>Left/Right/Bottom</strong>: Specify one of these words to have the tabs on the left, right, or bottom side instead of the top. See <a href="../misc/Styles.htm#TCS_VERTICAL">TCS_VERTICAL</a> for limitations on Left and Right.</p>
-<p><strong>Wrap</strong>: Specify <code>-Wrap</code> (minus Wrap) to prevent the tabs from taking up more than a single row (in which case if there are too many tabs to fit, arrow buttons are displayed to allow the user to slide more tabs into view).</p>
-<p>To specify the number of rows of text inside the control (or its height and width), 请参阅 <a href="../objects/Gui.htm#PosSize">position and sizing of controls</a>.</p>
-<p><strong>Icons in Tabs</strong>: An icon may be displayed next to each tab's name/text via <a href="SendMessage.htm">SendMessage</a>. This is demonstrated in the forum topic <a href="https://www.autohotkey.com/forum/topic6060.html">Icons in tabs</a>.</p>
+<h3 id="Tab_Options">Tab 选项</h3>
+<p><strong>Choose</strong>: 请参阅<a href="#ChooseTab">上面描述的内容</a>.</p>
+<p><strong>Background</strong>: 指定 <code>-Background</code>(负 Background) 覆盖<a href="../objects/Gui.htm#BackColor">窗口的自定义背景颜色</a>, 而使用系统默认的选项卡控件的颜色. 指定 <code>+Theme -Background</code> 来让选项卡控件适应于当前桌面主题. 然而, 在这样选项卡控件内的大多数类型的控件看起来会很奇怪, 因为它们的背景颜色不匹配选项卡控件的背景颜色. 对于某些类型的控件(例如 <a href="#Text">Text</a>), 这种情况可以在它们的选项中添加 BackgroundTrans 来修复.</p>
+<p><strong>Buttons</strong>: 在控件的顶部创建一系列按钮而不是选项卡(此时在默认情况下将没有边界, 因为显示的区域实际并不包含控件).</p>
+<p><strong>Left/Right/Bottom</strong>: 指定这些单词的其中一个让选项卡显示在左边, 右边或底部而不是顶部. 请参阅 <a href="../misc/Styles.htm#TCS_VERTICAL">TCS_VERTICAL</a> 了解对于 Left 和 Right 的限制.</p>
+<p><strong>Wrap</strong>: 指定 <code>-Wrap</code>(负 Wrap) 阻止选项卡占用多行(此时为了适应过多的选项卡, 会显示箭头按钮以允许用户滑动来查看更多选项卡).</p>
+<p>要指定控件中文本的行数(或高度和宽度), 请参阅<a href="../objects/Gui.htm#PosSize">控件的位置和大小</a>.</p>
+<p><strong>在选项卡中添加图标</strong>: 通过 <a href="SendMessage.htm">SendMessage</a> 可以在每个选项卡的名称/文本旁边显示图标. 演示的例子请参阅论坛主题 <a href="https://www.autohotkey.com/forum/topic6060.html">Icons in tabs</a>.</p>
 
 <h2 id="StatusBar">StatusBar</h2>
-<p>Description: A row of text and/or icons attached to the bottom of a window, which is typically used to report changing conditions.</p>
+<p>描述: 附加到窗口底部的一行文本和/或图标, 通常用来报告状态的变化.</p>
 <p>例如:</p>
 <pre>SB := MyGui.Add("StatusBar",, "Bar's starting text (omit to start off empty).")
 SB.SetText(&quot;There are &quot; . RowCount . &quot; rows selected.&quot;)</pre>
 <p>外观:</p>
 <img src="../static/ctrl_status.png" alt="StatusBar" />
-<p>The simplest use of a status bar is to call <a href="#SB_SetText">SB.SetText</a> whenever something changes that should be reported to the user. To report more than one piece of information, divide the bar into sections via <a href="#SB_SetParts">SB.SetParts</a>. To display icon(s) in the bar, call <a href="#SB_SetIcon">SB.SetIcon</a>.</p>
+<p>状态栏最简单的用法是每当应该报告给用户一些状态改变时调用 <a href="#SB_SetText">SB.SetText</a>. 要报告多片的信息, 请使用 <a href="#SB_SetParts">SB.SetParts</a> 把状态栏分成多段. 要在状态栏中显示图标, 请调用 <a href="#SB_SetIcon">SB.SetIcon</a>.</p>
 
-<h3 id="StatusBar_Methods">StatusBar Methods</h3>
+<h3 id="StatusBar_Methods">StatusBar 方法</h3>
 
 <div class="methodShort" id="SB_SetText">
 <h3>SetText</h3>
-<p>Displays <em>NewText</em> in the specified part of the status bar, and returns 1 upon success and 0 upon failure.</p>
+<p>在状态栏指定部分显示 <em>NewText</em>, 成功时返回 1, 失败时返回 0.</p>
 <pre class="Syntax">Success := SB.<span class="func">SetText</span>(NewText <span class="optional">, PartNumber := 1, Style := 0</span>)</pre>
 <dl><dt>NewText</dt><dd>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>Up to two tab characters (`t) may be present anywhere in <em>NewText</em>:
- anything to the right of the first tab is centered within the part, and
- anything to the right of the second tab is right-justified.</p></dd><dt>PartNumber</dt><dd>
+<p>在 <em>NewText</em> 中的任意地方可以使用最多两个两个制表符(`t):
+ 第一个制表符右边的任何东西在该部分中居中, 而第二个制表符右边的任何东西是右对齐的.</p></dd><dt>PartNumber</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>If <em>PartNumber</em> is omitted, it defaults to 1. Otherwise, specify an integer between 1 and 256.</p></dd><dt>Style</dt><dd>
+<p>如果省略 <em>PartNumber</em>, 则使用默认值 1. 否则, 请指定介于 1 和 256 之间的整数.</p></dd><dt>Style</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>If <em>Style</em> is omitted, it defaults to 0, which uses a traditional
- border that makes that part of the bar look sunken. Otherwise, specify 1
- to have no border or 2 to have border that makes that part of the bar 
-look raised.</p></dd></dl>
+<p>如果省略 <em>Style</em>, 则使用默认值 0, 此时使用让状态栏那部分看起来凹陷的传统边界. 否则, 指定 1 为无边框, 2 为带边框, 让状态栏看起来是凸起的.</p></dd></dl>
 </div>
 
 <div class="methodShort" id="SB_SetParts">
 <h3>SetParts</h3>
-<p>Divides the bar into multiple sections according to the specified widths (in pixels), and returns a non-zero value (the status bar's <a href="../objects/GuiControl.htm#Hwnd">HWND</a>).</p>
+<p>根据指定的宽度(单位为像素) 把状态栏分成多个部分, 并返回非零值(状态栏的 <a href="../objects/GuiControl.htm#Hwnd">HWND</a>).</p>
 <pre class="Syntax">Hwnd := SB.<span class="func">SetParts</span>(<span class="optional">Width1, Width2, ... Width255</span>)</pre>
 <dl><dt>Width1 ... Width255</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>If all parameters are omitted, the bar is restored to having only a 
-single, long part. Otherwise, specify the width of each part except the 
-last (the last will fill the remaining width of the bar). 例如, <code>SB.SetParts(50, 50)</code> would create three parts: the first two of width 50 and the last one of all the remaining width.</p></dd></dl>
-<p>Note: Any parts "deleted" by <code>SB.SetParts()</code> will start off with no text 
-the next time they are shown (furthermore, their icons are automatically
- destroyed).</p></div>
+<p>如果省略所有参数, 则状态栏恢复为只有一个很长的部分. 否则, 指定除了最后一部分外的其他每个部分的宽度(最后一部分将填充状态栏的剩余宽度). 例如, <code>SB.SetParts(50, 50)</code> 将创建三个部分: 前两个部分的宽度都为 50, 而最后一部分占据剩余的所有宽度.</p></dd></dl>
+<p>注意: 通过 <code>SB.SetParts()</code> "删除" 的任何部分下次显示时都不会显示文本(而且它们的图标会自动销毁).</p></div>
 
 <div class="methodShort" id="SB_SetIcon">
 <h3>SetIcon</h3>
-<p>Displays a small icon to the left of the text in the specified part, and returns the icon's handle.</p>
+<p>在指定部分的文本左边显示一个小图标, 并返回图标的句柄.</p>
 <pre class="Syntax">HICON := SB.<span class="func">SetIcon</span>(Filename <span class="optional">, IconNumber := 1, PartNumber := 1</span>)</pre>
 <dl><dt>FileName</dt><dd>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>The path of an icon or image file. For a list of supported formats, 请参阅 <a href="#IconSupport">the Picture control</a>.</p>
-<p>A <a href="../misc/ImageHandles.htm">bitmap or icon handle</a> can be used instead of a filename. 例如, <code>SB.SetIcon("HICON:" handle)</code>.</p></dd>
+<p>图标或图像文件的路径. 关于支持的格式列表, 请参阅<a href="#IconSupport">图片控件</a>.</p>
+<p>可以使用<a href="../misc/ImageHandles.htm">位图或图标句柄</a>来代替文件名. 例如, <code>SB.SetIcon("HICON:" handle)</code>.</p></dd>
 <dt>IconNumber</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>To use an icon group other than the first one in the file, specify its number for <em>IconNumber</em>. 例如, <code>SB.SetIcon("Shell32.dll", 2)</code> would use the default icon from the second icon group. If <em>IconNumber</em> is negative, its absolute value is assumed to be the resource ID of an icon within an executable file.</p></dd><dt>PartNumber</dt><dd>
+<p>要使用文件中第一个以外的图标组, 请为 <em>IconNumber</em> 指定其编号. 例如, <code>SB.SetIcon("Shell32.dll", 2)</code> 将使用第二个图标组中的默认图标. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID.</p></dd><dt>PartNumber</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>If <em>PartNumber</em> is omitted, it defaults to 1. Otherwise, specify an integer between 1 and 256.</p></dd></dl>
-<p>Note: The HICON is a system resource that can be safely ignored by most 
-scripts because it is destroyed automatically when the status bar's 
-window is destroyed. Similarly, any old icon is destroyed when 
-<code>SB.SetIcon()</code> replaces it with a new one. This can be avoided via:
+<p>如果省略 <em>PartNumber</em>, 则默认为 1. 否则, 请指定介于 1 和 256 之间的整数.</p></dd></dl>
+<p>注意: 是一种系统资源, 它可以被大多数脚本安全地忽略, 因为当状态栏的窗口被销毁时它会被自动销毁. 同样, 当 
+<code>SB.SetIcon()</code> 用新图标替换旧图标时会销毁旧图标. 这种情况可以使用以下方法避免:
 </p>
 <pre>MyGui.Opt("+LastFound")
 <a href="SendMessage.htm">SendMessage</a>(0x40F, part_number - 1, my_hIcon, "msctls_statusbar321")  <em>; 0x40F is SB_SETICON.</em></pre></div>
 
 <div class="methodShort" id="SB_SetProgress">
 <h3>SetProgress</h3>
-<p>Creates and controls a progress bar inside the status bar. This function is available at <a href="https://www.autohotkey.com/forum/topic37754.html">www.autohotkey.com/forum/topic37754.html</a></p></div>
+<p>创建和控制状态栏中的进度条. 此函数可以从 <a href="https://www.autohotkey.com/forum/topic37754.html">www.autohotkey.com/forum/topic37754.html</a> 获取.</p></div>
 
-<h3 id="StatusBar_Usage">StatusBar Usage</h3>
-<p><strong>Reacting to mouse clicks</strong>: Whenever the user clicks on the bar, the <a href="../objects/GuiOnEvent.htm#Click">Click</a>, <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a> or <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu</a> event is raised, and the <em>Info</em> or <em>Item</em> parameter contains the part number. However, the part number might be a very large integer if the user clicks near the sizing grip at the right side of the bar.</p>
-<p><strong>Font and color</strong>: Although the font size, face, and style can be set via <a href="../objects/Gui.htm#SetFont">MyGui.SetFont</a> (just like normal controls), the text color cannot be changed. The status bar's background color may be changed by specifying in <em>Options</em> the word <strong>Background</strong> followed immediately by a color name (see <a href="../misc/Colors.htm">color chart</a>) or RGB value (the 0x prefix is optional). Examples: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>, <code>BackgroundDefault</code>.</p>
-<p><strong>Hiding the StatusBar</strong>: Upon creation, the bar can be hidden via <code>MyStatusBar := MyGui.Add("StatusBar", "Hidden")</code>. To hide it sometime after creation, use <code>MyStatusBar.Visible := false</code>. To show it, use <code>MyStatusBar.Visible := true</code>. Note: Hiding the bar does not reduce the height of the window. If that is desired, one easy way is <code>MyGui.Show("<a href="../objects/Gui.htm#AutoSize">AutoSize</a>")</code>.</p>
-<p><strong>Styles (rarely used)</strong>: See the <a href="../misc/Styles.htm#StatusBar">StatusBar styles table</a>.</p>
-<p><strong>Known limitations</strong>: 1) Any control that overlaps the status bar might sometimes get drawn on top of it.  One way to avoid this is to dynamically shrink such controls via <a href="../objects/GuiOnEvent.htm#Size">Size</a> event. 2) There is a limit of one status bar per window.</p>
-<p><strong>Example</strong>: <a href="TreeView.htm#ExAdvanced">Example #1</a> at the bottom of the TreeView page demonstrates a multipart status bar.</p>
+<h3 id="StatusBar_Usage">StatusBar 的使用</h3>
+<p><strong>对鼠标点击做出反应</strong>: 每当用户点击状态栏时, <a href="../objects/GuiOnEvent.htm#Click">Click</a>, <a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a> 或 <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu</a> 事件都会被触发, <em>Info</em> 或 <em>Item</em> 参数包含状态栏部分的编号. 但是, 如果用户点击状态栏右边靠近大小调整手柄的地方时, 目标部分的编号可能是很大的整数.</p>
+<p><strong>字体和颜色</strong>: 尽管字体大小, 外观和样式可以使用 <a href="../objects/Gui.htm#SetFont">MyGui.SetFont</a> 来设置(像普通控件一样), 但是无法改变文本颜色. 状态栏的背景颜色可以通过在 <em>Options</em> 中指定单词 <strong>Background</strong> 后紧跟颜色名称(请参阅<a href="../misc/Colors.htm">颜色表</a>) 或 RGB 值(0x 前缀是可选的). 例如: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>, <code>BackgroundDefault</code>.</p>
+<p><strong>隐藏状态栏</strong>: 创建时, 可以使用 <code>MyStatusBar := MyGui.Add("StatusBar", "Hidden")</code> 隐藏状态栏. 要在创建后某个时候隐藏它, 请使用 <code>MyStatusBar.Visible := false</code>. 要显示, 请使用 <code>MyStatusBar.Visible := true</code>. 注意: 隐藏状态栏不会降低窗口的高度. 如果希望这样, 一个简便的方法是 <code>MyGui.Show("<a href="../objects/Gui.htm#AutoSize">AutoSize</a>")</code>.</p>
+<p><strong>样式(很少使用)</strong>: 请参阅<a href="../misc/Styles.htm#StatusBar">状态栏样式表</a>.</p>
+<p><strong>已知限制</strong>: 1) 如果某个控件的位置和状态栏重叠, 那么它有可能会被绘制在状态栏的上方. 避免这种情况的一种方法是通过 <a href="../objects/GuiOnEvent.htm#Size">Size</a> 事件动态地缩小这样的控件. 2) 每个窗口只允许有一个状态栏控件.</p>
+<p><strong>示例</strong>: <a href="TreeView.htm#ExAdvanced">示例 #1</a> 在 TreeView 页面底部演示了一个多部分的状态栏.</p>
 <span id="IE_Control"></span><h2 id="ActiveX">ActiveX</h2>
-<p>ActiveX components such as the MSIE browser control can be embedded into a GUI window by following this example:</p>
+<p>ActiveX 组件(例如 MSIE 浏览器控件) 可以嵌入到 GUI 窗口, 请参照此例:</p>
 <pre>MyGui := Gui.New()
-WB := MyGui.Add("ActiveX", "w980 h640", "<a href="http://msdn.microsoft.com/en-us/library/aa752085">Shell.Explorer</a>").Value  <em>; The last parameter is the name of the ActiveX component.</em>
-WB.<a href="http://msdn.microsoft.com/en-us/library/aa752093">Navigate</a>("https://www.autohotkey.com/boards/")  <em>; This is specific to the web browser control.</em>
+WB := MyGui.Add("ActiveX", "w980 h640", "<a href="http://msdn.microsoft.com/en-us/library/aa752085">Shell.Explorer</a>").Value  <em>; 最后一个参数是 ActiveX 组件的名称.</em>
+WB.<a href="http://msdn.microsoft.com/en-us/library/aa752093">Navigate</a>("https://www.autohotkey.com/boards/")  <em>; 这是特定于网页浏览器控件的.</em>
 MyGui.Show()</pre>
-<p>When the control is created, the ActiveX object can be retrieved via <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a>.</p>
-<p>To handle events exposed by the object, use <a href="ComObjConnect.htm">ComObjConnect</a> as demonstrated below:</p>
+<p>当控件被创建时, ActiveX 对象可以通过 <a href="../objects/GuiControl.htm#Value">GuiCtrl.Value</a> 来检索.</p>
+<p>要处理对象公开的事件, 可以使用 <a href="ComObjConnect.htm">ComObjConnect</a>, 如下所示:</p>
 <pre>MyGui := Gui.New()
 URL := MyGui.Add("Edit", "w930 r1", "https://www.autohotkey.com/boards/")
 MyGui.Add("Button", "x+6 yp w44 Default", "Go").OnEvent("Click", "ButtonGo")
 WB := MyGui.Add("ActiveX", "xm w980 h640", "Shell.Explorer").Value
-<strong>ComObjConnect</strong>(WB, WB_events)  <em>; Connect WB's events to the WB_events class object.</em>
+<strong>ComObjConnect</strong>(WB, WB_events)  <em>; 连接 WB 事件到 WB_events 类对象.</em>
 MyGui.Show()
-<em>; Continue on to load the initial page:</em>
+<em>; 继续加载初始页面:</em>
 ButtonGo()
 
 ButtonGo(*) {
@@ -589,18 +579,18 @@ ButtonGo(*) {
 class WB_events {
     <a href="http://msdn.microsoft.com/en-us/library/aa768334">NavigateComplete2</a>(wb, NewURL) {
         global    
-        URL.Value := NewURL  <em>; Update the URL edit control.</em>
+        URL.Value := NewURL  <em>; 更新 URL 编辑控件.</em>
     }
 }</pre>
-<p><a href="ComObjType.htm">ComObjType</a> can be used to determine the type of the retrieved object.</p>
+<p><a href="ComObjType.htm">ComObjType</a> 可以用来确定检索对象的类型.</p>
 
 <h2 id="Custom">Custom</h2>
-<p>Other controls which are not directly supported by AutoHotkey can be also embedded into a GUI window. In order to do so, include in <em>Options</em> the word <strong>Class</strong> followed by the Win32 class name of the desired control. Examples:</p>
-<pre>MyGui.Add("Custom", "ClassComboBoxEx32")  <em>; Adds a <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb775740.aspx">ComboBoxEx</a> control.</em>
-MyGui.Add("Custom", "ClassScintilla")  <em>; Adds a <a href="https://scintilla.org/">Scintilla</a> control. Note that the SciLexer.dll library must be loaded before the control can be added.</em></pre>
-<p>AutoHotkey uses the standard Windows control text routines when text is to be retrieved/replaced in the control via <code>MyGui.Add</code> or <code>GuiCtrl.Value</code>.</p>
-<p><strong>Events</strong>: Since the meaning of each notification code depends on the control which sent it, <a href="../objects/GuiOnEvent.htm">OnEvent</a> is not supported for Custom controls. However, if the control sends notifications in the form of a WM_NOTIFY or WM_COMMAND message, the script can use <a href="../objects/GuiOnNotify.htm">OnNotify</a> or <a href="../objects/GuiOnCommand.htm">OnCommand</a> to detect them.</p>
-<p>Here is an example that shows how to add and use an <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb761374.aspx">IP address control</a>:</p>
+<p>AutoHotkey 不直接支持的控件也可以嵌入到 GUI 窗口. 要实现这样的操作, 在 <em>Options</em> 中包含单词 <strong>Class</strong> 后跟所需控件的 Win32 类名. 例如:</p>
+<pre>MyGui.Add("Custom", "ClassComboBoxEx32")  <em>; 添加 <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb775740.aspx">ComboBoxEx</a> 控件.</em>
+MyGui.Add("Custom", "ClassScintilla")  <em>; 添加 <a href="https://scintilla.org/">Scintilla</a> 控件. 注意必须加载 SciLexer.dll 库后才能添加此控件.</em></pre>
+<p>AutoHotkey 通过 <code>MyGui.Add</code> 或 <code>GuiCtrl.Value</code> 使用标准的 Windows 操作方法来获取或替换控件中的文本.</p>
+<p><strong>Events</strong>: 由于每个通知代码的含义取决于发送它的控件, 因此 <a href="../objects/GuiOnEvent.htm">OnEvent</a>不支持自定义控件. 然而, 如果控件以 WM_NOTIFY 或 WM_COMMAND 消息的形式发送通知, 脚本可以使用 <a href="../objects/GuiOnNotify.htm">OnNotify</a> 或 <a href="../objects/GuiOnCommand.htm">OnCommand</a> 来检测它们.</p>
+<p>下面这个例子演示了如何添加和使用 <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb761374.aspx">IP 地址控件</a>:</p>
 <pre>MyGui := Gui.New()
 IP := MyGui.Add("Custom", "ClassSysIPAddress32 r1 w150 vIP")
 IP.OnCommand(0x300, "IP_EditChange")  <em>; 0x300 = EN_CHANGE</em>
@@ -626,7 +616,7 @@ IP_EditChange(this)
 
 IP_FieldChange(this, NMIPAddress)
 {
-    <em>; Extract info from the NMIPAddress structure.</em>
+    <em>; 从 NMIPADDRESS 结构体中提取信息.</em>
     iField := NumGet(NMIPAddress, 3*A_PtrSize + 0, "int")
     iValue := NumGet(NMIPAddress, 3*A_PtrSize + 4, "int")
     if (iValue &gt;= 0)
@@ -640,7 +630,7 @@ IPCtrlSetAddress(GuiCtrl, IPAddress)
     static WM_USER := 0x400
     static IPM_SETADDRESS := WM_USER + 101
 
-    <em>; Pack the IP address into a 32-bit word for use with SendMessage.</em>
+    <em>; 把 IP 地址打包成 32 位字以用于 SendMessage.</em>
     IPAddrWord := 0
     Loop Parse IPAddress, "."
         IPAddrWord := (IPAddrWord * 256) + A_LoopField
