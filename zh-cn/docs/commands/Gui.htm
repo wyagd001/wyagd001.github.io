@@ -249,7 +249,7 @@ if WinExist()
 <p>可以省略高度或宽度以保持不变(例如 <code>+MinSize640x</code> 或 <code>+MinSizex480</code>). 而且, 可以多次指定 Min/MaxSize 以便在一个方向上使用窗口当前的尺寸而另一个则使用指定的大小. 例如, <code>+MinSize +MinSize640x</code> 表示最小高度限制为窗口当前的大小而最小宽度限制为 640.</p>
 <p>如果从没有使用 <em>MinSize</em> 和 <em>MaxSize</em>, 则使用操作系统的默认值(同样地, 可以使用 <code>Gui -MinSize -MaxSize</code> 恢复为此默认值).</p>
 <p class="note"><strong>注意</strong>: 必须含有 <a href="#Resize">+Resize</a> 才能允许用户调节窗口的大小.</p>
-<p id="OwnDialogs"><strong>OwnDialogs</strong>: 在每个<a href="../misc/Threads.htm">线程</a>( 例如 ButtonOK 子线程) 中指定 <code>Gui +OwnDialogs</code>, 这样所有后续的 <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a> 以及 <a href="FileSelectFolder.htm">FileSelectFolder</a> 对话框才会成为当前窗口的子窗口. 这时这些对话框成为模式对话框, 这意味着用户必须先关闭这些对话框才能和它们的父窗口进行交互. 与之相比, <a href="ToolTip.htm">ToolTip</a>, <a href="Progress.htm">Progress</a> 和 <a href="Progress.htm">SplashImage</a> 窗口即使成为了其他窗口的子窗口也为非模式的; 它们仅仅是永远显示在其父窗口的上面. 在模式和非模式窗口两种情况中, 当它们的父窗口<a href="#Destroy">销毁</a>时它们也会被自动销毁.</p>
+<p id="OwnDialogs"><strong>OwnDialogs</strong>: 在每个<a href="../misc/Threads.htm">线程</a>(例如 ButtonOK 子线程) 中指定 <code>Gui +OwnDialogs</code>, 这样所有后续的 <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a> 以及 <a href="FileSelectFolder.htm">FileSelectFolder</a> 对话框才会成为当前窗口的子窗口. 这时这些对话框成为模式对话框, 这意味着用户必须先关闭这些对话框才能和它们的父窗口进行交互. 与之相比, <a href="ToolTip.htm">ToolTip</a>, <a href="Progress.htm">Progress</a> 和 <a href="Progress.htm">SplashImage</a> 窗口即使成为了其他窗口的子窗口也为非模式的; 它们仅仅是永远显示在其父窗口的上面. 在模式和非模式窗口两种情况中, 当它们的父窗口<a href="#Destroy">销毁</a>时它们也会被自动销毁.</p>
 <p>一般情况下打开这个设置后不需要再切换到关闭, 因为它不影响其他<a href="../misc/Threads.htm">线程</a>. 但是, 如果一个线程需要显示从属和非从属对话框, 则可以使用 <code>Gui -OwnDialogs</code> 关闭此设置.</p>
 <p>如果在前缀中没有使用窗口名称(例如使用 <code>Gui +OwnDialogs</code> 而不是 <code>Gui MyGui:+OwnDialogs</code>), 则当前<a href="#DefaultWin">线程的默认窗口</a>将拥有这些从属对话框.</p>
 <p id="Owner"><strong>Owner</strong>: 使用 <em>+Owner</em> 可以让当前窗口从属于另一个窗口. 从属的窗口默认不显示在任务栏, 并且它总是显示在其父窗口的上面. 当其父窗口销毁时它也被自动销毁. <em>+Owner</em> 必须在父窗口创建 <u>后</u> 使用, 而在 <span class="ver">[v1.1.05]</span> 及更高版本中可以在从属窗口创建前面或后面使用. <em>+owner</em> 有两种使用方法, 如下所示:</p>
@@ -367,7 +367,7 @@ gui, show</pre>
 <p id="BackgroundTrans"><strong>BackgroundTrans</strong>: 使用透明的背景, 这样可以让任何一个在 Text, Picture 或 GroupBox 后面的控件显示出来. 例如, 在 Picture 控件上显示一个透明背景的 Text 可以让文字看起来就像图片的一部分. 以后可以使用 <code><a href="GuiControl.htm">GuiControl</a> +background</code> 移除此选项. 请参阅 <a href="GuiControls.htm#PicAltSubmit">Picture 控件的 AltSubmit 部分</a>来了解关于透明图像的更多细节. 已知限制: 对包含了 <a href="GuiControls.htm#Tab">ListView</a> 的 <a href="ListView.htm">Tab 控件</a>中的其他控件, BackgroundTrans 可能无法正确应用.</p>
 <p><strong>-Background</strong>(即负 Background): 使用标准的背景颜色代替 <a href="#Color">Gui Color</a> 命令设置的那个颜色. 此选项常用于让 Tab 控件使用其标准颜色代替窗口颜色. 以后可以使用 <code><a href="GuiControl.htm">GuiControl</a> +background</code> 移除此选项.</p>
 <p><strong>Border</strong>: 为控件增加一个细边框. 对于大多数控件不需要使用此选项, 因为它们已经含有特定于类型的边框. 添加一个边框到 <em>现有</em> 控件时, 可能需要给控件的宽度和高度增加 1 个像素.</p>
-<p id="HwndOutputVar"><strong>Hwnd</strong><em>OutputVar</em> <span class="ver">[v1.0.46.01+]:</span> 在 <a href="#Add">Gui Add</a> 中使用时, 此选项保存新建控件的窗口句柄(HWND) 到 <em>OutputVar</em>. 例如: <code>Gui, Add, Edit, vMyEdit HwndMyEditHwnd</code>. 如果在函数中使用, <em>MyEditHwnd</em> 会被视为<a href="../Functions.htm#DynVar">函数动态变量</a>. 控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall()</a>. 它还可以直接用在 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a>(即使 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样对于隐藏控件也是有效的) 或 <span class="ver">[in v1.1.04+]</span> GuiControl 和 GuiControlGet 的<em>ControlID</em> 参数. 相关提示, 父窗口的 HWND 可以使用 <a href="#GuiHwndOutputVar">Gui MyGui:+HwndOutputVar</a> 获取.</p>
+<p id="HwndOutputVar"><strong>Hwnd</strong><em>OutputVar</em> <span class="ver">[v1.0.46.01+]:</span> 在 <a href="#Add">Gui Add</a> 中使用时, 此选项保存新建控件的窗口句柄(HWND) 到 <em>OutputVar</em>. 例如: <code>Gui, Add, Edit, vMyEdit HwndMyEditHwnd</code>. 如果在函数中使用, <em>MyEditHwnd</em> 会被视为<a href="../Functions.htm#DynVar">函数动态变量</a>. 控件的 HWND 常用于 <a href="PostMessage.htm">PostMessage</a>, <a href="PostMessage.htm">SendMessage</a> 和 <a href="DllCall.htm">DllCall()</a>. 它还可以直接用在 <a href="../misc/WinTitle.htm#ahk_id">ahk_id WinTitle</a>(即使 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样对于隐藏控件也是有效的) 或在 <span class="ver">[ v1.1.04+]</span> 中 GuiControl 和 GuiControlGet 的<em>ControlID</em> 参数. 相关提示, 父窗口的 HWND 可以使用 <a href="#GuiHwndOutputVar">Gui MyGui:+HwndOutputVar</a> 获取.</p>
 <p><strong>Theme</strong>: 使用此选项可以让新建的控件忽略窗口当前的主题设置. 它对于现有控件没有效果; 不过, 这种情况可能在将来的版本中改变. 请参阅 <a href="#Theme">Gui +/-Theme</a> 了解详情.</p>
 <p><strong>(未命名样式)</strong>: 在十进制或十六进制的<a href="../misc/Styles.htm">样式编号</a>前加上加号或减号表示添加或删除此样式. 如果省略了符号, 则默认为加号.</p>
 <p><strong>(未命名扩展样式)</strong>: 在字母 E 和十进制或十六进制的扩展样式编号前加上加号或减号表示添加或删除此扩展样式. 如果省略了符号, 则默认为加号. 例如, <code>E0x200</code> 表示添加 WS_EX_CLIENTEDGE 样式, 它可以为图片和其他控件增加一个下沉的边框样式. 尽管这里没有列出其他的扩展样式编号(因为它们极少使用), 不过可以通过在 <a href="https://www.microsoft.com">www.microsoft.com</a> 中搜索 WS_EX_CLIENTEDGE 找到它们.</p>
@@ -468,10 +468,10 @@ Loop, Parse, FileList, `n
 <p>其他 GUI 事件可以使用 <a href="OnMessage.htm">OnMessage()</a> 来检测和响应. 例如, 当用户把鼠标移动到窗口中特殊的控件时脚本可以通过工具提示显示相关帮助. 请参阅演示 <a href="#ExToolTip">GUI 工具提示示例</a>.</p>
 
 <h2 id="MultiWin">创建多个 GUI 窗口</h2>
-<p>要对非<a href="#DefaultWin">默认</a>窗口进行操作, 需要在子命令前加上窗口名称或编号(在 <span class="ver">[in v1.1.03+]</span>, 还可以使用 <a href="#GuiHwndOutputVar">HWND</a>) 和一个冒号, 例如:</p>
+<p>要对非<a href="#DefaultWin">默认</a>窗口进行操作, 需要在子命令前加上窗口名称或编号(在 <span class="ver">[v1.1.03+]</span> 中, 还可以使用 <a href="#GuiHwndOutputVar">HWND</a>) 和一个冒号, 例如:</p>
 <pre>Gui, <strong>MyGui:</strong>Add, Text,, Text for about-box.
 Gui, <strong>MyGui:</strong>Show</pre>
-<p>使用 <code><a href="#Default">Gui MyGui:Default</a></code> 后可以去除上面使用的"MyGui:"前缀. 此外, 在由窗口运行的 <a href="#DefaultWin">GUI 线程</a>中对此窗口进行操作时可以不加前缀.</p>
+<p>使用 <code><a href="#Default">Gui MyGui:Default</a></code> 后可以去除上面使用的 "MyGui:" 前缀. 此外, 在由窗口运行的 <a href="#DefaultWin">GUI 线程</a>中对此窗口进行操作时可以不加前缀.</p>
 <p id="Name"><span class="ver">[v1.1.03+]:</span> Gui 名称必须遵循和<a href="../Concepts.htm#names">变量名</a>相同的规则. 在 1 到 99 范围外或长于两个字符(例如 0x01) 的数字必须为现有 Gui 的 HWND, 否则命令执行失败. 可以创建的窗口数仅受系统可用资源的限制.</p>
 <p><span class="ver">[v1.1.04+]:</span> 使用 <a href="#New">Gui, New</a> 可以创建任何数目的未命名 GUI 窗口.</p>
 
@@ -498,13 +498,13 @@ ExitApp  <em>; 上面的所有标签都会执行这个语句.</em></pre>
 <pre>iconsize := 32  <em>; alt-tab 任务切换器中图标的理想尺寸在不同版本的系统中有所不同.</em>
 hIcon := LoadPicture("My Icon.ico", "Icon1 w" iconsize " h" iconsize, imgtype)
 Gui +LastFound
-SendMessage 0x80, 1, hIcon  <em>; 0x80 是 WM_SETICON; 1 表示 ICON_BIG (而0 表示 ICON_SMALL).</em>
-Gui Show
-旧版使用 DllCall 的例子留做记录, 不推荐
-hIcon := <a href="DllCall.htm">DllCall</a>(&quot;LoadImage&quot;, uint, 0
-    , str, "My Icon.ico"  <em>; 图标文件名 (此文件可以包含多种尺寸的图标).</em>
+SendMessage 0x80, 1, hIcon  <em>; 0x80 是 WM_SETICON; 1 表示 ICON_BIG(而 0 表示 ICON_SMALL).</em>
+Gui Show</pre>
+<p>旧版使用 DllCall 的例子留做记录, 不推荐.</p>
+<pre>hIcon := <a href="DllCall.htm">DllCall</a>(&quot;LoadImage&quot;, uint, 0
+    , str, "My Icon.ico"  <em>; 图标文件名(此文件可以包含多种尺寸的图标).</em>
     , uint, 1  <em>; 图像类型: IMAGE_ICON</em>
-    , int, 32, int, 32  <em>; 想要的高度和宽度 (可以让 LoadImage 确定哪个是最佳图标).</em>
+    , int, 32, int, 32  <em>; 想要的高度和宽度(可以让 LoadImage 确定哪个是最佳图标).</em>
     , uint, 0x10)  <em>; Flags: LR_LOADFROMFILE</em>
 Gui +LastFound
 <a href="PostMessage.htm">SendMessage</a>, 0x80, 1, hIcon
@@ -650,7 +650,7 @@ Gui, Add, Text, vMyText cLime, XXXXX YYYYY  <em>; XX &amp; YY 用来自动调整
 ; 让此颜色的所有像素透明且让文本显示为半透明 (150):</em>
 WinSet, TransColor, %CustomColor% 150
 SetTimer, UpdateOSD, 200
-Gosub, UpdateOSD  <em>; 立即进行第一此更新而不等待计时器.</em>
+Gosub, UpdateOSD  <em>; 立即进行第一次更新而不等待计时器.</em>
 Gui, Show, x0 y400 NoActivate  <em>; NoActivate 让当前活动窗口继续保持活动状态.</em>
 return
 
