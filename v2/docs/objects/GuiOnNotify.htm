@@ -13,59 +13,59 @@
 <body>
 
 <h1>OnNotify</h1>
-<p>Registers a function or method to be called when a control notification is received via the <a href="https://msdn.microsoft.com/library/bb775583">WM_NOTIFY</a> message.</p>
+<p>注册一个函数或方法, 当通过 <a href="https://msdn.microsoft.com/library/bb775583">WM_NOTIFY</a> 消息接收到控制通知时调用.</p>
 <pre class="Syntax">GuiControl.<span class="func">OnNotify</span>(NotifyCode, Callback <span class="optional">, AddRemove := 1</span>)</pre>
 
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
   <dt>GuiControl</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
-    <p>The <a href="GuiControl.htm">GuiControl</a> object of the control to monitor.</p>
+    <p>要监控的控件的 <a href="GuiControl.htm">GuiControl</a> 对象.</p>
   </dd>
   
   <dt>NotifyCode</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>The control-defined notification code to monitor.</p>
+    <p>要监控的控件定义的通知代码.</p>
   </dd>
   
   <dt>Callback</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a> or <a href="../Concepts.htm#objects">Object</a></p>
-    <p>The function, method or object to call when the event is raised.</p>
-    <p>If this parameter is a string, its meaning depends on whether the GUI has an <a href="../objects/Gui.htm#EventObj">event sink</a> (that is, whether <a href="../objects/Gui.htm#New">Gui.New</a>'s <em>EventObj</em> parameter was specified). If the GUI has an event sink, the string must be the name of a method belonging to the event sink; otherwise, it must be the name of a function.</p>
-    <p>To register a function regardless of whether the GUI has an event sink, pass a <a href="Func.htm">function reference</a>.</p>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
+    <p>事件发生时要调用的函数, 方法或对象.</p>
+    <p>如果这个参数是一个字符串, 它的含义取决于 GUI 是否有<a href="../objects/Gui.htm#EventObj">事件接收器</a>(即是否指定了 <a href="../objects/Gui.htm#New">Gui.New</a> 的 <em>EventObj</em> 参数). 如果 GUI 有事件接收器, 那么这个字符串必须是属于事件接收器的方法的名称; 否则, 它必须是一个函数的名称.</p>
+    <p>无论 GUI 是否有事件接收器, 要注册一个函数, 请传递<a href="Func.htm">函数引用</a>.</p>
   </dd>
   
   <dt>AddRemove</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>One of the following values:<br>
-    <strong>1</strong> (the default): Call the callback after any previously registered callbacks.<br>
-    <strong>-1</strong>: Call the callback before any previously registered callbacks.<br>
-    <strong>0</strong>: Do not call the callback.</p>
+    <p>以下数值之一:<br>
+    <strong>1</strong>(默认): 在任何先前注册的回调之后调用回调.<br>
+    <strong>-1</strong>: 在任何先前注册的回调之前调用回调.<br>
+    <strong>0</strong>: 不调用该回调.</p>
   </dd>
 </dl>
 
 <h2 id="WM_NOTIFY">WM_NOTIFY</h2>
-<p>Certain types of controls send a <a href="https://msdn.microsoft.com/library/bb775583">WM_NOTIFY</a> message whenever an interesting event occurs or the control requires information from the program. The <em>lParam</em> parameter of this message contains a pointer to a structure containing information about the notification. The type of structure depends on the notification code and the type of control which raised the notification, but is always based on <a href="https://msdn.microsoft.com/library/bb775514">NMHDR</a>.</p>
-<p>To determine which notifications are available (if any), what type of structure they provide and how they interpret the return value, refer to the control's documentation. <a href="https://msdn.microsoft.com/library/bb773169">Control Library (MSDN)</a> contains links to each of the the Windows common controls. The notification codes (numbers) can be found in the Windows SDK, or by searching the Internet.</p>
-<p>AutoHotkey uses the <em>idFrom</em> and <em>hwndFrom</em> fields to identify which control sent the notification, in order to dispatch it to the appropriate object. The <em>code</em> field contains the notification code. Since these must match up to the <em>GuiControl</em> and <em>NotifyCode</em> used to register the callback, they are rarely useful to the script.</p>
+<p>每当发生要监控事件或控件需要从程序中获取信息时, 某些类型的控件就会发送一条 <a href="https://msdn.microsoft.com/library/bb775583">WM_NOTIFY</a> 消息. 该消息的 <em>lParam</em> 参数包含一个指向包含通知信息的结构的指针. 结构的类型取决于通知代码和触发通知的控件类型, 但总是基于 <a href="https://msdn.microsoft.com/library/bb775514">NMHDR</a>.</p>
+<p>要确定哪些通知是可用的(如果有的话), 它们提供的结构类型以及它们如何解释返回值, 请参考控件的文档. <a href="https://msdn.microsoft.com/library/bb773169">Control Library (MSDN)</a> 包含了每个 Windows 常用控件的链接. 通知代码(编号) 可以在 Windows SDK 中找到, 或者在互联网上搜索.</p>
+<p>AutoHotkey 使用 <em>idFrom</em> 和 <em>hwndFrom</em> 字段来识别是哪个控件发送的通知, 以便将其派遣到相应的对象. <em>code</em> 字段包含通知代码. 由于这些字段必须与用于注册回调的 <em>GuiControl</em> 和 <em>NotifyCode</em> 相匹配, 所以它们对脚本很少有用.</p>
 
-<h2 id="Callback_Parameters">Callback Parameters</h2>
-<p>The <a href="GuiOnEvent.htm#Callback_Parameters">notes for OnEvent</a> regarding <code>this</code> and bound functions also apply to OnNotify.</p>
-<p>The callback receives two parameters:</p>
+<h2 id="Callback_Parameters">Callback 参数</h2>
+<p><a href="GuiOnEvent.htm#Callback_Parameters">OnEvent</a> 中关于 <code>this</code> 和绑定函数的说明, 也适用于 OnNotify.</p>
+<p>回调接收两个参数:</p>
 <pre class="Syntax"><i>Callback</i>(GuiControl, lParam)</pre>
-<p>As noted above, <em>lParam</em> is the address of a notification structure derived from <a href="https://msdn.microsoft.com/library/bb775514">NMHDR</a>. Its exact type depends on the type of control and notification code. If the structure contains additional information about the notification, the callback can retrieve it with <a href="../commands/NumGet.htm">NumGet</a> and/or <a href="../commands/StrGet.htm">StrGet</a>.</p>
+<p>如上所述, <em>lParam</em> 是 <a href="https://msdn.microsoft.com/library/bb775514">NMHDR</a> 导出的通知结构的地址. 它的确切类型取决于控件和通知代码的类型. 如果该结构包含了关于通知的附加信息, 回调可以用 <a href="../commands/NumGet.htm">NumGet</a> 和/或 <a href="../commands/StrGet.htm">StrGet</a> 检索它.</p>
 
-<h2 id="Callback_Return_Value">Callback Return Value</h2>
-<p>If multiple callbacks have been registered for an event, a callback may return a non-empty value to prevent any remaining callbacks from being called.</p>
-<p>The return value may have additional meaning, depending on the notification. 例如, the ListView notification <a href="https://msdn.microsoft.com/library/bb774798">LVN_BEGINLABELEDIT</a> (-175 or -105) prevents the user from editing the label if the callback returns TRUE (1).</p>
+<h2 id="Callback_Return_Value">Callback 返回值</h2>
+<p>如果一个事件已经注册了多个回调, 回调可以返回一个非空值, 以防止任何剩余的回调被调用.</p>
+<p>根据通知的不同, 返回值可能有额外的意义. 例如, 如果回调返回 TRUE(1), ListView 通知 <a href="https://msdn.microsoft.com/library/bb774798">LVN_BEGINLABELEDIT</a>(-175 或 -105) 会阻止用户编辑标签.</p>
 
-<h2 id="Related">Related</h2>
-<p>These notes for <a href="GuiOnEvent.htm">OnEvent</a> also apply to OnNotify: <a href="GuiOnEvent.htm#Threads">Threads</a>, <a href="GuiOnEvent.htm#Destroying_the_GUI">Destroying the GUI</a>.</p>
-<p><a href="GuiOnCommand.htm">OnCommand</a> can be used for notifications which are sent as a WM_COMMAND message.</p>
+<h2 id="Related">相关</h2>
+<p><a href="GuiOnEvent.htm">OnEvent</a> 的说明也适用于 OnNotify: <a href="GuiOnEvent.htm#Threads">线程</a>, <a href="GuiOnEvent.htm#Destroying_the_GUI">销毁 GUI</a>.</p>
+<p><a href="GuiOnCommand.htm">OnCommand</a> 可以用于作为 WM_COMMAND 消息发送的通知.</p>
 
 </body>
 </html>
