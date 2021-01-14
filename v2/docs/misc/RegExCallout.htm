@@ -11,49 +11,49 @@
 </head>
 <body>
 
-<h1>Regular Expression Callouts</h1>
+<h1>正则表达式调出</h1>
 
-<p>Callouts provide a means of temporarily passing control to the script in the middle of regular expression pattern matching. For detailed information about the PCRE-standard callout feature, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>.</p>
+<p>调出提供了一种在正则表达式模式匹配过程中临时将控制权传递给脚本的方法. 关于 PCRE 标准调出功能的详细信息, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>.</p>
 
-<p>Callouts are currently supported only by <a href="../commands/RegExMatch.htm">RegExMatch</a> and <a href="../commands/RegExReplace.htm">RegExReplace</a>.</p>
+<p>目前只有 <a href="../commands/RegExMatch.htm">RegExMatch</a> 和 <a href="../commands/RegExReplace.htm">RegExReplace</a> 支持调出.</p>
 
 <h2 id="toc">目录</h2>
 <ul>
-    <li><a href="#syntax">Syntax</a></li>
-    <li><a href="#callout-functions">Callout Functions</a></li>
+    <li><a href="#syntax">语法</a></li>
+    <li><a href="#callout-functions">调出函数</a></li>
     <li><a href="#EventInfo">EventInfo</a></li>
-    <li><a href="#auto">Auto-Callout</a></li>
-    <li><a href="#remarks">Remarks</a></li>
+    <li><a href="#auto">自动调出</a></li>
+    <li><a href="#remarks">备注</a></li>
 </ul>
 
-<h2 id="syntax">Syntax</h2>
+<h2 id="syntax">语法</h2>
 
-<p>The syntax for a callout in AutoHotkey is <span class="Syntax">(?C<em>Number</em>:<em>Function</em>)</span>, where both <em>Number</em> and <em>Function</em> are optional. Colon ':' is allowed only if <em>Function</em> is specified, and is optional if <em>Number</em> is omitted. If <em>Function</em> is specified but is not the name of a user-defined function, a compile error occurs and pattern-matching does not begin.</p>
+<p>在 AutoHotkey 中调出的语法为 <span class="Syntax">(?C<em>Number</em>:<em>Function</em>)</span>, 其中 <em>Number</em> 和 <em>Function</em> 都是可选的. 只有在指定了 <em>Function</em>才允许使用冒号 ':', 而如果省略 <em>Number</em> 则冒号也可以省略. 如果指定的 <em>Function</em> 不是自定义的函数名称, 则会出现编译错误且不会开始模式匹配.</p>
 
-<p>If <em>Function</em> is omitted, the function name must be specified in a variable named <b>pcre_callout</b>. If both a global variable and local variable exist with this name, the local variable takes precedence. If <em>pcre_callout</em> does not contain the name of a user-defined function, callouts which omit <em>Function</em> are ignored.</p>
+<p>如果省略 <em>Function</em>, 则必须在名为 <b>pcre_callout</b> 的变量中指定函数名称. 如果全局变量和局部变量都以这个名称存在, 则以局部变量为准. 如果 <em>pcre_callout</em> 不包含用户定义的函数名, 那么省略 <em>Function</em> 的调出将被忽略.</p>
 
-<h2 id="callout-functions">Callout Functions</h2>
+<h2 id="callout-functions">Callout 函数</h2>
 
 <pre class="Syntax"><i>MyFunction</i>(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
 {
     ...
 }</pre>
-<p>Callout functions may define up to 5 parameters:</p>
+<p>调出函数最多可以定义 5 个参数:</p>
 <ul>
-  <li><b>Match</b>: Equivalent to the <em>OutputVar</em> of RegExMatch, including the creation of array variables if appropriate.</li>
-  <li><b>CalloutNumber</b>: Receives the <em>Number</em> of the callout.</li>
-  <li><b>FoundPos</b>: Receives the position of the current potential match.</li>
-  <li><b>Haystack</b>: Receives the <em>Haystack</em> passed to RegExMatch or RegExReplace.</li>
-  <li><b>NeedleRegEx</b>: Receives the <em>NeedleRegEx</em> passed to RegExMatch or RegExReplace.</li>
+  <li><b>Match</b>: 相当于 RegExMatch 中的 <em>OutputVar</em>, 包括在适当情况下创建数组变量.</li>
+  <li><b>CalloutNumber</b>: 接收调出的 <em>Number</em>.</li>
+  <li><b>FoundPos</b>: 接收当前潜在匹配的位置.</li>
+  <li><b>Haystack</b>: 接收传递给 RegExMatch 或 RegExReplace 的 <em>Haystack</em>.</li>
+  <li><b>NeedleRegEx</b>: 接收传递给 RegExMatch 或 RegExReplace 的 <em>NeedleRegEx</em>.</li>
 </ul>
-<p>These names are suggestive only. Actual names may vary.</p>
+<p>这些名称只是提示性的. 实际中可以使用其他的名称.</p>
 
-<p>Pattern-matching may proceed or fail depending on the return value of the callout function:</p>
+<p>模式匹配是继续进行或失败, 取决于调出函数的返回值:</p>
 <ul>
-  <li>If the function returns <b>0</b> or does not return a numeric value, matching proceeds as normal.</li>
-  <li>If the function returns <b>1</b> or greater, matching fails at the current point, but the testing of other matching possibilities goes ahead.</li>
-  <li>If the function returns <b>-1</b>, matching is abandoned.</li>
-  <li>If the function returns a value less than -1, it is treated as a PCRE error code and matching is abandoned. This causes RegExMatch and RegExReplace to throw an exception; the <em>Extra</em> property of the exception object contains the error code.</li>
+  <li>如果函数返回 <b>0</b> 或没有返回数值, 则匹配操作如常进行.</li>
+  <li>如果函数返回 <b>1</b> 或更大的数字, 则在当前位置匹配失败, 但继续进行剩余部分的匹配测试.</li>
+  <li>如果函数返回 <b>-1</b>, 则匹配中止.</li>
+  <li>如果函数返回小于 -1, 的值, 则它被视为 PCRE 错误码且匹配中止. 这将导致 RegExMatch 和 RegExReplace 抛出异常; 异常对象的 <em>Extra</em> 属性包含错误码.</li>
 </ul>
 
 <p>例如:</p>
@@ -63,11 +63,11 @@ Callout(m,*) {
     MsgBox "m[0]=" m[0] "`nm[1]=" m[1] "`nm[2]=" m[2]
     return 1
 }</pre>
-<p>In the above example, <em>Func</em> is called once for each substring which matches the part of the pattern preceding the callout. <span class="Syntax">\b</span> is used to exclude incomplete words in matches such as <em>The quic</em>, <em>The qui</em>, <em>The qu</em>, etc.</p>
+<p>在上面的例子中, 对于匹配调出之前的那部分模式的每个子字符串都会调用一次 <em>Func</em>. 使用 <span class="Syntax">\b</span> 排除匹配到不完整的单词, 例如 <em>The quic</em>, <em>The qui</em>, <em>The qu</em>, 等等.</p>
 
 <h2 id="EventInfo">EventInfo</h2>
 
-<p>Additional information is available by accessing the pcre_callout_block structure via <b>A_EventInfo</b>.</p>
+<p>通过 <b>A_EventInfo</b> 访问 pcre_callout_block 结构可以获得附加信息.</p>
 <pre>version           := NumGet(A_EventInfo,  0, "Int")
 callout_number    := NumGet(A_EventInfo,  4, "Int")
 offset_vector     := NumGet(A_EventInfo,  8, "Ptr")
@@ -77,52 +77,52 @@ start_match       := NumGet(A_EventInfo, 12 + A_PtrSize*2, "Int")
 current_position  := NumGet(A_EventInfo, 16 + A_PtrSize*2, "Int")
 capture_top       := NumGet(A_EventInfo, 20 + A_PtrSize*2, "Int")
 capture_last      := NumGet(A_EventInfo, 24 + A_PtrSize*2, "Int")
-pad := A_PtrSize=8 ? 4 : 0  <em>; Compensate for 64-bit data alignment.</em>
+pad := A_PtrSize=8 ? 4 : 0  <em>; 补足 64 位的数据偏移.</em>
 callout_data      := NumGet(A_EventInfo, 28 + pad + A_PtrSize*2, "Ptr")
 pattern_position  := NumGet(A_EventInfo, 28 + pad + A_PtrSize*3, "Int")
 next_item_length  := NumGet(A_EventInfo, 32 + pad + A_PtrSize*3, "Int")
 if (version &gt;= 2)
     mark   := StrGet(NumGet(A_EventInfo, 36 + pad + A_PtrSize*3, "Int"), "UTF-8")
 </pre>
-<p>For more information, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>, <a href="../commands/NumGet.htm">NumGet</a> and <a href="../Variables.htm#PtrSize">A_PtrSize</a>.</p>
+<p>有关详情, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>, <a href="../commands/NumGet.htm">NumGet</a> 和 <a href="../Variables.htm#PtrSize">A_PtrSize</a>.</p>
 
-<h2 id="auto">Auto-Callout</h2>
+<h2 id="auto">自动调出</h2>
 
-<p>Including <span class="Syntax">C</span> in the options of the pattern enables the auto-callout mode. In this mode, callouts equivalent to <span class="Syntax">(?C255)</span> are inserted before each item in the pattern. 例如, the following template may be used to debug regular expressions:</p>
-<pre><em>; Set the default callout function.</em>
+<p>在模式的选项中包含 <span class="Syntax">C</span> i来启用自动调出模式. 在这种情况下的调出相当于在模式里的每项前插入了 <span class="Syntax">(?C255)</span>. 例如, 下面的模板可以用来调试正则表达式:</p>
+<pre><em>; 设置默认的调出函数.</em>
 pcre_callout := "DebugRegEx"
 
-<em>; Call RegExMatch with auto-callout option C.</em>
+<em>; 使用自动调出选项 C 来调用 RegExMatch.</em>
 RegExMatch("xxxabc123xyz", "C)abc.*xyz")
 
 DebugRegEx(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
 {
-    <em>; See pcre.txt for descriptions of these fields.</em>
+    <em>; 请参阅 pcre.txt 了解这些字段的说明.</em>
     start_match       := NumGet(A_EventInfo, 12 + A_PtrSize*2, "Int")
     current_position  := NumGet(A_EventInfo, 16 + A_PtrSize*2, "Int")
     pad := A_PtrSize=8 ? 4 : 0
     pattern_position  := NumGet(A_EventInfo, 28 + pad + A_PtrSize*3, "Int")
     next_item_length  := NumGet(A_EventInfo, 32 + pad + A_PtrSize*3, "Int")
 
-    <em>; Point out &gt;&gt;current match&lt;&lt;.</em>
+    <em>; 指出 &gt;&gt;当前匹配&lt;&lt;.</em>
     _HAYSTACK:=SubStr(Haystack, 1, start_match)
         . "&gt;&gt;" SubStr(Haystack, start_match + 1, current_position - start_match)
         . "&lt;&lt;" SubStr(Haystack, current_position + 1)
     
-    <em>; Point out &gt;&gt;next item to be evaluated&lt;&lt;.</em>
+    <em>; 指出 &gt;&gt;要计算的下一个项目&lt;&lt;.</em>
     _NEEDLE:=  SubStr(NeedleRegEx, 1, pattern_position)
         . "&gt;&gt;" SubStr(NeedleRegEx, pattern_position + 1, next_item_length)
         . "&lt;&lt;" SubStr(NeedleRegEx, pattern_position + 1 + next_item_length)
     
     ListVars
-    <em>; Press Pause to continue.</em>
+    <em>; 按下 Pause 继续.</em>
     Pause
 }</pre>
 
-<h2 id="remarks">Remarks</h2>
+<h2 id="remarks">备注</h2>
 
-<p>Callouts are executed on the current quasi-thread, but the previous value of A_EventInfo will be restored after the callout function returns.</p>
-<p>PCRE is optimized to abort early in some cases if it can determine that a match is not possible. For all callouts to be called in such cases, it may be necessary to disable these optimizations by specifying <code>(*NO_START_OPT)</code> at the start of the pattern.</p>
+<p>调出在当前的半线程中执行, 但在调出函数返回后将恢复 A_EventInfo 原来的值.</p>
+<p>在一些可以确定不会发生匹配的情况下, 则会对 PCRE 进行优化来提早中止. 对于在这些情况中的所有调出, 可能需要在模式的开始处指定 <code>(*NO_START_OPT)</code> 来禁用这种优化.</p>
 
 </body>
 </html>

@@ -15,191 +15,194 @@ table.info td:first-child {text-align: center}
 </style>
 </head>
 <body>
-<h1>Regular Expressions (RegEx) - Quick Reference</h1>
+<h1>正则表达式(RegEx) - 快速参考</h1>
 
 <h2 id="toc">目录</h2>
 <ul>
-  <li><a href="#fundamentals">Fundamentals</a></li>
-  <li><a href="#Options">Options (case sensitive)</a></li>
-  <li><a href="#Common">Commonly Used Symbols and Syntax</a></li>
+  <li><a href="#fundamentals">基础</a></li>
+  <li><a href="#Options">选项(区分大小写)</a></li>
+  <li><a href="#Common">常用符号和语法</a></li>
 </ul>
 
-<h2 id="fundamentals">Fundamentals</h2>
-<p><strong>Match anywhere</strong>: By default, a regular expression matches a substring <em>anywhere</em> inside the string to be searched. 例如, the regular expression <span class="regex">abc</span> matches <span class="subj">abc</span>123, 123<span class="subj">abc</span>, and 123<span class="subj">abc</span>xyz. To require the match to occur only at the beginning or end, use an <a href="#anchor">anchor</a>.</p>
-<p><strong>Escaped characters</strong>: Most characters like abc123 can be used literally inside a regular expression. However, the characters <strong>\.*?+[{|()^$</strong> must be preceded by a backslash to be seen as literal. 例如, <span class="regex">\.</span> is a literal period and <span class="regex">\\</span> is a literal backslash. Escaping can be avoided by using \Q...\E. 例如: \QLiteral Text\E.</p>
-<p><strong>Case-sensitive</strong>: By default, regular expressions are case-sensitive. This can be changed via the &quot;i&quot; option. 例如, the pattern <span class="regex">i)abc</span> searches for &quot;abc&quot; without regard to case. See below for other modifiers.</p>
+<h2 id="fundamentals">基础</h2>
+<p><strong>Match anywhere(在任意位置进行匹配)</strong>: 默认情况下, 正则表达式匹配要搜索的字符串中任意位置的子字符串 <em>anywhere</em>. 例如, 正则表达式 <span class="regex">abc</span> 可以匹配 <span class="subj">abc</span>123, 123<span class="subj">abc</span> 和 123<span class="subj">abc</span>xyz. 要限制在开始或末尾进行匹配, 请使用<a href="#anchor">锚</a>.</p>
+<p><strong>转义字符</strong>: 大多数字符(例如 abc123) 可以原义使用在正则表达式中. 然而, 字符 <strong>\.*?+[{|()^$</strong> 必须在前面加上反斜杠才能被视为原义. 例如, <span class="regex">\.</span> 表示一个原义的句点, <span class="regex">\\</span> 表示一个原义的反斜杠. 使用 \Q...\E 能避免转义. 例如: \QLiteral Text\E.</p>
+<p><strong>区分大小写</strong>: 默认情况下, 正则表达式是区分大小写的. 这种特性可以使用 &quot;i&quot; 选项进行改变. 例如, 模式 <span class="regex">i)abc</span> 会搜索所有大小写形式的 &quot;abc&quot;. 请参阅下面了解其他的修饰符选项.</p>
 
-<h2 id="Options">Options (case sensitive)</h2>
-<p>At the very beginning of a regular expression, specify zero or more of the following options followed by a close-parenthesis. 例如, the pattern &quot;<span class="red">im)</span>abc&quot; would search for <em>abc</em> with the case-insensitive and multiline options (the parenthesis may be omitted when there are no options). Although this syntax breaks from tradition, it requires no special delimiters (such as forward-slash), and thus there is no need to escape such delimiters inside the pattern. In addition, performance is improved because the options are easier to parse.</p>
+<h2 id="Options">选项(区分大小写)</h2>
+<p>在正则表达式的最前面, 指定零个或多个下列选项后面跟着闭括号. 例如, 模式 &quot;<span class="red">im)</span>abc&quot; 将使用不区分大小写和多行选项来搜索 <em>abc</em>(如果不含选项, 则圆括号可以省略). 尽管这种语法有别于传统, 不过它不需要特殊的分隔符(例如正斜杠), 因此不需要对模式中的这样的分隔符进行转义. 此外, 由于很容易解析出选项, 所以提升了性能.</p>
 <table class="info">
   <tr id="opt_i">
     <td><strong>i</strong></td>
-    <td>Case-insensitive matching, which treats the letters A through Z as identical to their lowercase counterparts.</td>
+    <td>	不区分大小写匹配, 它把字母 A 到 Z 视为等同于它们的小写副本.</td>
   </tr>
   <tr id="Multiline">
     <td><strong>m</strong></td>
-    <td><p>Multiline. Views <em>Haystack</em> as a collection of individual lines (if it contains newlines) rather than as a single continuous line. Specifically, it changes the following:</p>
-      <p>1) Circumflex (^) matches immediately after all internal newlines -- as well as at the start of <em>Haystack</em> where it always matches (but it does not match after a newline <em>at the very end</em> of <em>Haystack</em>).</p>
-      <p>2) Dollar-sign ($) matches before any newlines in <em>Haystack</em> (as well as at the very end where it always matches).</p>
-      <p>例如, the pattern &quot;<span class="red">m)</span>^abc$&quot; would not match the <em>Haystack</em>&quot;xyz`r`nabc&quot; unless the &quot;m&quot; option is present.</p>
-      <p>The &quot;D&quot; option is ignored when &quot;m&quot; is present.</p></td>
+    <td><p>多行. 把 <em>Haystack</em> 视为许多单独的行(如果它包含换行符) 的集合而不是一个单个的连续行. 具体地, 它会改变下列方式:</p>
+      <p>1) 抑扬符(^) 能匹配紧跟在内部所有换行符之后的位置, 如同它总能匹配 <em>Haystack</em> 的开始处一样(但它不会匹配 <em>Haystack</em> <em>最后的</em> 换行符之后的位置 ).</p>
+      <p>2) 美元符($) 能匹配 <em>Haystack</em> 中任何换行符之前的位置(如同它总能匹配最后面的位置).</p>
+      <p>例如, 模式 &quot;<span class="red">m)</span>^abc$&quot; 中包含了 &quot;m&quot; 选项才能在 <em>Haystack</em> &quot;xyz`r`nabc&quot; 中形成匹配.</p>
+      <p>使用了 &quot;m&quot; 选项时, &quot;D&quot; 选项会被忽略.</p></td>
   </tr>
   <tr id="opt_s">
     <td><strong>s</strong></td>
-    <td>DotAll. This causes a period (.) to match all characters including newlines (normally, it does not match newlines). However, when the newline character is at its default of CRLF (`r`n), two dots are required to match it (not one). Regardless of this option, a negative class such as [^a] always matches newlines.</td>
+    <td>DotAll. 此选项会让句点(.) 匹配包含换行符在内的所有字符(一般情况下, 它不能匹配换行符). 然而, 如果换行符是默认的 CRLF(`r`n), 则必须使用两个句点才能进行匹配(不是一个). 不论是否使用此选项, 排除型字符类(例如 [^a]) 总能匹配换行符.</td>
   </tr>
   <tr id="opt_x">
     <td><strong>x</strong></td>
-    <td>Ignores whitespace characters in the pattern except when escaped or inside a character class. The characters `n and `t are among those ignored because by the time they get to PCRE, they are already raw/literal whitespace characters (by contrast, \n and \t are not ignored because they are PCRE escape sequences). The <strong>x</strong> option also ignores characters between a non-escaped # outside a character class and the next newline character, inclusive. This makes it possible to include comments inside complicated patterns. However, this applies only to data characters; whitespace may never appear within special character sequences such as (?(, which begins a conditional subpattern.</td>
+    <td>忽略模式中的空白字符, 除非被转义或在字符类中. 字符 `n 和 `t 是被忽略的字符, 因为当它们进入 PCRE 时, 它们已经是原始的/原义的空白字符(与之相比, \n 和 \t 则不会被忽略, 因为它们是 PCRE 的转义序列). <strong>x</strong> 选项还会忽略字符类外面的非转义 # 和下一个换行符之间的字符(包括它们). 这使得在复杂的模式中添加注释成为可能. 然而, 这只适用于数据字符; 空白字符可能永远都不会出现在特殊字符序列中, 例如 (?(, 它以条件子模式开头.</td>
   </tr>
   <tr id="opt_A">
     <td><strong>A</strong></td>
-    <td>Forces the pattern to be anchored; that is, it can match only at the start of <em>Haystack</em>. Under most conditions, this is equivalent to explicitly anchoring the pattern by means such as &quot;^&quot;.</td>
+    <td>强制锚定模式; 也就是说, 它只能在 <em>Haystack</em> 的开始处进行匹配. 在大多数情况下, 这相当于使用 &quot;^&quot; 等方式显式地锚定.</td>
   </tr>
   <tr id="opt_D">
     <td><strong>D</strong></td>
-    <td>Forces dollar-sign ($) to match at the very end of <em>Haystack</em>, even if <em>Haystack</em>'s last item is a newline. Without this option, $ instead matches right before the final newline (if there is one). Note: This option is ignored when the &quot;m&quot; option is present.</td>
+    <td>强制美元符($) 匹配 <em>Haystack</em> 的末端, 即使 <em>Haystack</em> 的最后的字符是换行符. 如果没有此选项, 则 $ 会匹配最后的换行符(如果有) 之前的位置. 注意: 使用了 &quot;m&quot; 选项时, 该选项会被忽略.</td>
   </tr>
   <tr id="opt_J">
     <td><strong>J</strong></td>
-    <td>Allows duplicate <a href="../commands/RegExMatch.htm#NamedSubPat">named subpatterns</a>. 
+    <td>允许重复的<a href="../commands/RegExMatch.htm#NamedSubPat">命名子模式</a>. 
 
 
- This can be useful for patterns in which only one of a collection of identically-named subpatterns can match. Note: If more than one instance of a particular name matches something, only the leftmost one is stored. Also, variable names are not case-sensitive.</td>
+ 这对于一组命名相同的子模式中只有一个可以匹配的模式来说是很有用的. 注意: 如果一个特定名称有多个实例匹配, 则只存储最左边的那个. 另外, 变量名不区分大小写.</td>
   </tr>
   <tr id="opt_U">
     <td><strong>U</strong></td>
-    <td>Ungreedy. 
+    <td>非贪婪. 
 
 
- Makes the quantifiers *+?{} consume only those characters absolutely necessary to form a match, leaving the remaining ones available for the next part of the pattern. When the &quot;U&quot; option is not in effect, an individual quantifier can be made non-greedy by following it with a question mark. Conversely, when &quot;U&quot; <em>is</em> in effect, the question mark makes an individual quantifier greedy.</td>
+ 让限定符 *+?{} 在形成匹配时只消耗必需的那些字符, 把剩下的部分留给模式的后面部分. 没有使用 &quot;U&quot; 选项时, 可以在这些字符后加上问号来限定它们为非贪婪的. 相反地, <em>使用了</em> &quot;U&quot; 选项时, 问号会成为贪婪匹配的限定符.</td>
   </tr>
   <tr id="opt_extra">
     <td><strong>X</strong></td>
-    <td>PCRE_EXTRA. Enables PCRE features that are incompatible with Perl. Currently, the only such feature is that any backslash in a pattern that is followed by a letter that has no special meaning causes an exception to be thrown. This option helps reserve unused backslash sequences for future use. Without this option, a backslash followed by a letter with no special meaning is treated as a literal (e.g. \g and g are both recognized as a literal g). Regardless of this option, non-alphabetic backslash sequences that have no special meaning are always treated as literals (e.g. \/ and / are both recognized as forward-slash).</td>
+    <td>PCRE_EXTRA. 启用不兼容 Perl 的 PCRE 特性. 目前, 这样做的唯一功能是在模式中的任意反斜杠后跟着没有特殊含义的字母时, 都会导致抛出一个异常. 此选项有助于保留未使用的反斜杠序列供将来使用. 如果没有此选项, 反斜杠后跟着没有特殊含义的字母时会被视为原义的(即 \g 和 g 都被识别为原义的 g). 不论是否使用此选项, 没有特殊含义的非字母反斜杠序列总是被视为原义的(即 \/ 和 / 都被视为正斜杠).</td>
   </tr>
   <tr id="Study">
     <td><strong>S</strong></td>
-    <td>Studies the pattern to try improve its performance. This is useful when a particular pattern (especially a complex one) will be executed many times. If PCRE finds a way to improve performance, that discovery is stored alongside the pattern in the cache for use by subsequent executions of the same pattern (subsequent uses of that pattern should also specify the S option because finding a match in the cache requires that the option letters exactly match, including their order).</td>
+    <td>研究模式来提高性能. 它可用于要执行多次的特定模式(尤其是复杂的模式). 如果 PCRE 找到了提高性能的方法, 则会把这个发现储存到缓存中模式的旁边, 供后续执行相同模式时使用(后续使用此模式时还需要指定 S 选项, 因为要找到缓存中相同的模式则它们的选项也必须完全相同, 包括它们的顺序). (这里的研究主要指在进行匹配前使用其他一些通常较简单快速的方法进行判断, 例如假设模式至少匹配 5 个字符, 而源字符串只有 3 个, 那么正则表达式引擎会直接返回 "没有匹配" 的结果, 而不会进行匹配.)</td>
   </tr>
   <tr id="opt_Callout">
     <td><strong>C</strong></td>
-    <td>Enables the auto-callout mode. See <a href="../misc/RegExCallout.htm#auto">Regular Expression Callouts</a> for more info.</td>
+    <td>启用自动调出模式. 请参阅<a href="../misc/RegExCallout.htm#auto">正则表达式调出</a>了解更多信息.</td>
   </tr>
   <tr id="NEWLINE_ANY">
     <td><strong>`a</strong></td>
-    <td><p>Enables recognition of additional newline markers. By default, only `r`n, `n and `r are recognized. With this option enabled, `v/VT/vertical tab/chr(0xB), `f/FF/formfeed/chr(0xC), NEL/next-line/chr(0x85), LS/line separator/chr(0x2028) and PS/paragraph separator/chr(0x2029) are also recognized.</p>
-      <p>The `a, `n and `r options affect the behavior of <a href="../misc/RegEx-QuickRef.htm#anchor">anchors (^ and $)</a> and the <a href="../misc/RegEx-QuickRef.htm#dot">dot/period pattern</a>.</p>
-      <p>`a also puts (*BSR_UNICODE) into effect, which causes \R to match any kind of newline. By default, \R matches `n, `r and `r`n; this behaviour can be restored by combining options as follows: `a)(*BSR_ANYCRLF)</p>
+    <td><p>启用识别额外的换行标记. 默认情况下, 只识别 `r`n, `n 和 `r. 启用该选项后, 还可识别 `v/VT/vertical tab/chr(0xB), `f/FF/formfeed/chr(0xC), NEL/next-line/chr(0x85), LS/line separator/chr(0x2028) 和 PS/paragraph separator/chr(0x2029).</p>
+      <p>`a, `n 和 `r 选项会影响<a href="../misc/RegEx-QuickRef.htm#anchor">锚点(^ 和 $)</a> 和<a href="../misc/RegEx-QuickRef.htm#dot">句点/句号模式</a>的行为.</p>
+      <p>`a 也会使 (*BSR_UNICODE) 生效, 这将导致 \R 匹配任何类型的换行. 默认情况下, \R 匹配 `n, `r 和 `r`n; 这种行为可以通过以下选项组合来恢复: `a)(*BSR_ANYCRLF)</p>
     </td>
   </tr>
   <tr id="opt_esc_n">
     <td><strong>`n</strong></td>
-    <td>Causes a solitary linefeed (`n) to be the only recognized newline marker (see above).</td>
+    <td>使单独的换行(`n) 成为唯一可识别的换行标记(见上文).</td>
   </tr>
   <tr id="opt_esc_r">
     <td><strong>`r</strong></td>
-    <td>Causes a solitary carriage return (`r) to be the only recognized newline marker (see above).</td>
+    <td>使单独的回车(`r) 成为唯一可识别的换行标记(见上文).</td>
   </tr>
 </table>
-<p class="note"><strong>Note</strong>: Spaces and tabs may optionally be used to separate each option from the next.</p>
+<p class="note"><strong>注意</strong>: 在两个选项间可以使用空格或 tab 分隔.</p>
 
-<h2 id="Common">Commonly Used Symbols and Syntax</h2>
+<h2 id="Common">常用符号和语法</h2>
 <table class="info">
 	<tr id="dot">
 		<td><strong>.</strong></td>
-		<td>By default, a dot matches any single character except `r in a newline (`r`n) sequence, but this can be changed by using the <a href="#opt_s">DotAll (s)</a>, <a href="#opt_esc_n">linefeed (`n)</a>, <a href="#opt_esc_r">carriage return (`r)</a>, or <a href="#NEWLINE_ANY">`a</a> options. For example, <span class="regex">ab.</span> matches <span class="subj">abc</span> and <span class="subj">abz</span> and <span class="subj">ab_</span>.</td>
+		<td>默认情况下, 句点匹配换行符(`r`n) 中除 `r 外的任何单个字符, 但是这种特性可以使用 <a href="#opt_s">DotAll (s)</a>, <a href="#opt_esc_n">linefeed (`n)</a>, <a href="#opt_esc_r">carriage return (`r)</a> 或 <a href="#NEWLINE_ANY">`a</a> 选项进行更改. 例如, <span class="regex">ab.</span> 匹配 <span class="subj">abc</span> 和 <span class="subj">abz</span> 以及 <span class="subj">ab_</span>.</td>
 	</tr>
 	<tr>
 		<td><strong>*</strong></td>
-		<td><p>An asterisk matches zero or more of the preceding character, <a href="#class">class</a>, or <a href="#subpat">subpattern</a>. 例如, <span class="regex">a*</span> matches <span class="subj">a</span>b and <span class="subj">aaa</span>b. It also matches at the very beginning of any string that contains no &quot;a&quot; at all.</p>
-	      <p><strong>Wildcard:</strong> The dot-star pattern <span class="regex">.*</span> is one of the most permissive because it matches zero or more occurrences of <em>any</em> character (except newline: `r and `n). 例如, <span class="regex">abc.*123</span> matches <span class="subj">abcAnything123</span> as well as <span class="subj">abc123</span>.</p>		  </td>
+		<td><p>星号匹配零个或多个前面的字符, <a href="#class">类</a>或<a href="#subpat">子模式</a>. 例如, <span class="regex">a*</span> 匹配 <span class="subj">a</span>b 和 <span class="subj">aaa</span>b. 它还可以匹配任何不包含 &quot;a&quot; 的字符串的开头.</p>
+	      <p><strong>通配符:</strong> 句点星号模式 <span class="regex">.*</span> 是匹配范围最广的模式之一, 因为它可以匹配零个或多个 <em>任意</em> 字符(除了换行符: `r 和 `n). 例如, <span class="regex">abc.*123</span> 可以匹配 <span class="subj">abcAnything123</span>, 也能匹配 
+<span class="subj">abc123</span>.</p></td>
 	</tr>
 	<tr>
 	  <td><strong>?</strong></td>
-	  <td>A question mark matches zero or one of the preceding character, <a href="#class">class</a>, or <a href="#subpat">subpattern</a>. Think of this as &quot;the preceding item is optional&quot;. 例如, <span class="regex">colou?r</span> matches both <span class="subj">color</span> and <span class="subj">colour</span> because the &quot;u&quot; is optional.</td>
+	  <td>问号匹配零或一个前面的字符, <a href="#class">类</a>或<a href="#subpat">子模式</a>. 可以理解为 &quot;前面的项目是可选的&quot;. 例如, <span class="regex">colou?r</span> 可以匹配 <span class="subj">color</span> 和 <span class="subj">colour</span>, 因为 &quot;u&quot; 是可选的.</td>
   </tr>
 	<tr>
 	  <td><strong>+</strong></td>
-	  <td>A plus sign matches one or more of the preceding character, <a href="#class">class</a>, or <a href="#subpat">subpattern</a>. For example <span class="regex">a+</span> matches <span class="subj">a</span>b and <span class="subj">aaa</span>b. But unlike <span class="regex">a*</span> and <span class="regex">a?</span>, the pattern <span class="regex">a+</span> does not match at the beginning of strings that lack an &quot;a&quot; character.</td>
+	  <td>加号匹配一个或多个前面的字符, <a href="#class">类</a>或<a href="#subpat">子模式</a>. 例如 <span class="regex">a+</span> 可以匹配 <span class="subj">a</span>b 和 <span class="subj">aaa</span>b. 但与 <span class="regex">a*</span> 和 <span class="regex">a?</span>不同的是, 模式 <span class="regex">a+</span> 不会匹配开头不是 &quot;a&quot; 的字符串.</td>
   </tr>
 	<tr>
 	  <td>{min,max}</td>
-	  <td><p>Matches between <em>min</em> and <em>max</em> occurrences of the preceding character, <a href="#class">class</a>, or <a href="#subpat">subpattern</a>. 例如, <span class="regex">a{1,2}</span> matches  <span class="subj">a</span>b but only the first two a's in <span class="subj">aa</span>ab.</p>
-        <p>Also, {3} means exactly 3 occurrences, and {3<strong>,</strong>} means 3 or more occurrences. Note: The specified numbers must be less than 65536, and the first must be less than or equal to the second.</p></td>
+	  <td><p>匹配出现次数介于 <em>min</em> 和 <em>max</em> 的前面的字符, <a href="#class">类</a>或<a href="#subpat">子模式</a>. 例如, <span class="regex">a{1,2}</span> 可以匹配  <span class="subj">a</span>b, 但只匹配 <span class="subj">aa</span>ab 中的前两个 a.</p>
+        <p>此外, {3} 表示准确匹配 3 次, 而 {3<strong>,</strong>} 则表示匹配 3 次或更多. 注意: 指定的数字必须小于 65536, 且第一个必须小于或等于第二个.</p></td>
   </tr>
 	<tr id="class">
 	  <td><strong>[...]</strong></td>
-	  <td><p><strong>Classes of characters:</strong> The square brackets enclose a list or range of characters (or both). 例如, <span class="regex">[abc]</span> means &quot;any single character that is either a, b or c&quot;. Using a dash in between creates a range; 例如, <span class="regex">[a-z]</span> means &quot;any single character that is between lowercase a and z (inclusive)&quot;. Lists and ranges may be combined; for example <span class="regex">[a-zA-Z0-9_]</span> means &quot;any single character that is alphanumeric or underscore&quot;.</p>
-	    <p>A character class may be followed by *, ?, +, or {min,max}. 例如, <span class="regex">[0-9]+</span> matches one or more occurrence of any digit; thus it matches xyz<span class="subj">123</span> but not abcxyz.</p>            
-        <p>The following POSIX named sets are also supported via the form [[:xxx:]], where xxx is one of the following words: alnum, alpha, ascii (0-127), blank (space or tab), cntrl (control character), digit (0-9), xdigit (hex digit), print, graph (print excluding space), punct, lower, upper, space (whitespace), word (same as <a href="#word">\w</a>).</p>
-        <p>Within a character class, characters do not need to be escaped except when they have special meaning inside a class; e.g. <span class="regex">[\^a]</span>, <span class="regex">[a\-b]</span>, <span class="regex">[a\]]</span>, and <span class="regex">[\\a]</span>.</p></td>
+	  <td><p><strong>
+字符类:</strong> 方括号将一个字符列表或字符范围(或两者) 括在一起. 例如, <span class="regex">[abc]</span> 表示 &quot;a, b 或 c 的中任何一个字符&quot;. 使用破折号来创建范围; 例如, <span class="regex">[a-z]</span> 表示 &quot;在小写字母 a 和 z(包含的) 之间的任何一个字符&quot;. 列表和范围可以组合在一起; 例如 <span class="regex">[a-zA-Z0-9_]</span> 表示 &quot;字母, 数字或下划线中的任何一个字符&quot;.</p>
+	    <p>字符类后面可以使用 *, ?, + 或 {min,max}. 例如, <span class="regex">[0-9]+</span> 匹配一个或多个任意数字; 因此它可以匹配 xyz<span class="subj">123</span> 但不会匹配 abcxyz.</p>            
+        <p>通过 [[:xxx:]] 的形式还支持下列 POSIX 命名集, 其中 xxx 是下列单词的其中一个: alnum, alpha, ascii(0-127), blank(space 或 tab), cntrl(控制字符), digit (0-9), xdigit(十六进制数字), print, graph(排除了空格的打印字符), punct, lower, upper, space(whitespace), word(等同于 <a href="#word">\w</a>).</p>
+        <p>在字符类中, 只有在类中具有特殊含义的字符才需要进行转义; 例如 <span class="regex">[\^a]</span>, <span class="regex">[a\-b]</span>, <span class="regex">[a\]]</span> 和 <span class="regex">[\\a]</span>.</p></td>
   </tr>
 	<tr>
 	  <td><strong>[^...]</strong></td>
-	  <td>Matches any single character that is <strong>not</strong> in the class. 例如, <span class="regex">[^/]*</span> matches zero or more occurrences of any character that is <em>not</em> a forward-slash, such as <span class="subj">http:</span>//. Similarly, <span class="regex">[^0-9xyz]</span> matches any single character that isn't a digit and isn't the letter x, y, or z.</td>
+	  <td>匹配任意一个 <strong>不在</strong> 类中的字符. 例如, <span class="regex">[^/]*</span> 匹配零个或多个 <em>不是</em> 正斜杠的任意字符, 例如 <span class="subj">http:</span>//. 同样地, <span class="regex">[^0-9xyz]</span> 匹配既不是数字也不是 x, y 或 z 的任何一个字符.</td>
   </tr>
 	<tr>
 	  <td><strong>\d</strong></td>
-	  <td>Matches any single digit (equivalent to the class <span class="regex">[0-9]</span>). Conversely, capital \D means &quot;any <em>non</em>-digit&quot;. This and the other two below can also be used inside a <a href="#class">class</a>; 例如, <span class="regex">[\d.-]</span> means &quot;any single digit, period, or minus sign&quot;.</td>
+	  <td>匹配任意一个数字(等同于类 <span class="regex">[0-9]</span>). 相反的, 大写的 \D 表示 &quot;任意的 <em>非</em>-数字字符&quot;. 这个和下面的两个都可以用在<a href="#class">类</a>中; 例如, <span class="regex">[\d.-]</span> 表示 &quot;任何数字, 句点或负号&quot;.</td>
   </tr>
 	<tr>
 	  <td><strong>\s</strong></td>
-	  <td>Matches any single whitespace character, mainly space, tab, and newline (`r and `n). Conversely, capital \S means &quot;any <em>non</em>-whitespace character&quot;.</td>
+	  <td>匹配任意单个空白字符 , 主要是空格, tab 和 换行符(`r 和 `n). 相反的, 大写的 \S 表示 &quot;任意的 <em>非</em>-空白字符&quot;.</td>
   </tr>
 	<tr id="word">
 	  <td><strong>\w</strong></td>
-	  <td>Matches any single &quot;word&quot; character, namely alphanumeric or underscore. This is equivalent to <span class="regex">[a-zA-Z0-9_]</span>. Conversely, capital \W means &quot;any <em>non</em>-word character&quot;.</td>
+	  <td>匹配任何单个 &quot;单词&quot; 即字母, 数字或下划线. 这等同于 <span class="regex">[a-zA-Z0-9_]</span>. 相反的, 大写的 \W 表示 &quot;任意的 <em>非</em>-单词字符&quot;.</td>
   </tr>
 	<tr id="anchor">
 	  <td><strong>^<br>
         $</strong></td>
-	  <td><p>Circumflex (^) and dollar sign ($) are called <em>anchors</em> because they don't consume any characters; instead, they tie the pattern to the beginning or end of the string being searched.</p>
-	    <p><span class="regex">^</span> may appear at the beginning of a pattern to require the match to occur at the very beginning of a line. 例如, <span class="regex">^abc</span> matches <span class="subj">abc</span>123 but not 123abc.</p>
-	    <p><span class="regex">$</span> may appear at the end of a pattern to require the match to occur at the very end of a line. 例如, <span class="regex">abc$</span> matches 123<span class="subj">abc</span> but not abc123.</p>
-      <p>The two anchors may be combined. 例如, <span class="regex">^abc$</span> matches only <span class="subj">abc</span> (i.e. there must be no other characters before or after it).</p>
-      <p>If the text being searched contains multiple lines, the anchors can be made to apply to each line rather than the text as a whole by means of the <a href="#Multiline">&quot;m&quot; option</a>. 例如, <span class="regex">m)^abc$</span> matches 123`r`n<span class="subj">abc</span>`r`n789. But without the &quot;m&quot; option, it wouldn't match.</p></td>
+	  <td><p>抑扬符(^) 和美元符($) 被称为 <em>锚</em> , 因为它们不消耗任何字符; 相反地, 它们把模式限定在被搜索字符串的开始或末尾进行匹配.</p>
+	    <p><span class="regex">^</span> 出现在模式的开头, 要求匹配发生在行的最开始. 例如, <span class="regex">^abc</span> 可以匹配 <span class="subj">abc</span>123, 但不匹配 123abc.</p>
+	    <p><span class="regex">$</span> 出现在模式的末尾, 要求匹配发生在行的最末端. 例如, <span class="regex">abc$</span> 可以匹配 123<span class="subj">abc</span>, 但不匹配 abc123.</p>
+      <p>这两个锚还可以组合使用. 例如, <span class="regex">^abc$</span> 仅匹配 <span class="subj">abc</span>(即在它的前面或后面不能有另外的字符).</p>
+      <p>如果被搜索的文本包含多行, 则可以使用 <a href="#Multiline">&quot;m&quot; 选项</a>让锚应用于每行而不是把所有文本作为整体. 例如, <span class="regex">m)^abc$</span> 可以匹配 123`r`n<span class="subj">abc</span>`r`n789. 但如果没有 &quot;m&quot; 选项, 则不会匹配.</p></td>
   </tr>
 	<tr>
 	  <td><strong>\b</strong></td>
-	  <td>\b means &quot;word boundary&quot;, which is like an anchor because it doesn't consume any characters. It requires the current character's <a href="#word">status as a word character (\w)</a> to be the opposite of the previous character's. It is typically used to avoid accidentally matching a word that appears inside some other word. 例如, <span class="regex">\bcat\b</span> doesn't match catfish, but it matches <span class="subj">cat</span> regardless of what punctuation and whitespace surrounds it. Capital \B is the opposite: it requires that the current character <em>not</em> be at a word boundary.</td>
+	  <td>\b 表示 &quot;单词边界&quot;, 它类似锚, 因为它不消耗任何字符. 它要求当前字符的<a href="#word">状态为单词字符(\w)</a>, 与前一个字符的状态相反. 它通常用来避免意外地匹配到在其他单词内的某个单词. 例如, <span class="regex">\bcat\b</span> 不会匹配 catfish, 但它可以匹配不论周围是否有标点或空白的 <span class="subj">cat</span>. 大写的 \B 则相反: 它要求当前字符 <em>不是</em> 单词的边界.</td>
   </tr>
 	<tr>
 	  <td><strong>|</strong></td>
-	  <td>The vertical bar separates two or more alternatives. A match occurs if <em>any</em> of the alternatives is satisfied. 例如, <span class="regex">gray|grey</span> matches both <span class="subj">gray</span> and <span class="subj">grey</span>. Similarly, the pattern <span class="regex">gr(a|e)y</span> does the same thing with the help of the parentheses described below.</td>
+	  <td>竖线将两个或多个可选项目分隔开来. 如果可选项目中 <em>任何一个</em> 满足条件, 则会形成匹配. 例如, <span class="regex">gray|grey</span> 既可以匹配 <span class="subj">gray</span> 也可以匹配 <span class="subj">grey</span>. 同样地, 模式 <span class="regex">gr(a|e)y</span> 中通过下面描述的括号的帮助可以实现同样的作用.</td>
   </tr>
 	<tr id="subpat">
 	  <td><strong>(...)</strong></td>
-	  <td><p>Items enclosed in parentheses are most commonly used to:</p>
+	  <td><p>
+括在括号中的项目常用于:</p>
 	    <ul>
-	      <li>Determine the order of evaluation. 例如, <span class="regex">(Sun|Mon|Tues|Wednes|Thurs|Fri|Satur)day</span> matches the name of any day.</li>
-	      <li>Apply <span class="regex">*</span>, <span class="regex">?</span>, <span class="regex">+</span>, or <span class="regex">{min,max}</span> to a <em>series</em> of characters rather than just one. 例如, <span class="regex">(abc)+</span> matches one or more occurrences of the string &quot;abc&quot;; thus it matches <span class="subj">abcabc</span>123 but not ab123 or bc123.</li>
-          <li id="capture">Capture a subpattern such as the dot-star in <span class="regex">abc<span class="red">(.*)</span>xyz</span>. 例如, <a href="../commands/RegExMatch.htm">RegExMatch</a> stores the substring that matches each subpattern in its <a href="../commands/RegExMatch.htm#MatchObject">output array</a>. Similarly, <a href="../commands/RegExReplace.htm">RegExReplace</a> allows the substring that matches each subpattern to be reinserted into the result via <a href="../commands/RegExReplace.htm#BackRef">backreferences</a> like $1. To use the parentheses without the side-effect of capturing a subpattern, specify <span class="regex">?:</span> as the first two characters inside the parentheses; 例如: <span class="regex">(<span class="red">?:</span>.*)</span></li>
-	      <li>Change <a href="#Options">options</a> on-the-fly. 例如, <span class="regex">(?im)</span> turns on the case-insensitive and multiline options for the remainder of the pattern (or subpattern if it occurs inside a subpattern). Conversely, <span class="regex">(?-im)</span> would turn them both off. All options are supported except DPS`r`n`a.</li>
+	      <li>确定求值的顺序. 例如, <span class="regex">(Sun|Mon|Tues|Wednes|Thurs|Fri|Satur)day</span> 可以匹配任何一天的名称.</li>
+	      <li>把 <span class="regex">*</span>, <span class="regex">?</span>, <span class="regex">+</span> 或 <span class="regex">{min,max}</span> 应用到 <em>系列</em> 字符而不只是单个字符. 例如, <span class="regex">(abc)+</span> 匹配一个或多个 &quot;abc&quot; 字符串; 因此它可以匹配 <span class="subj">abcabc</span>123, 但不会匹配 ab123 或 bc123.</li>
+          <li id="capture">捕获子模式, 如 <span class="regex">abc<span class="red">(.*)</span>xyz</span> 中被圆括号包围的句点和星号. 例如, <a href="../commands/RegExMatch.htm">RegExMatch</a> 在其<a href="../commands/RegExMatch.htm#MatchObject">输出数组</a>中存储了匹配每个子模式的子串. 类似地, <a href="../commands/RegExReplace.htm">RegExReplace</a> 允许将与每个子模式匹配的子串通过<a href="../commands/RegExReplace.htm#BackRef">反向引用</a>(如 $1) 重新插入到结果中. 要使用小括号而不产生捕获子模式的副作用, 请指定 <span class="regex">?:</span> 为小括号内的前两个字符; 例如: <span class="regex">(<span class="red">?:</span>.*)</span></li>
+	      <li>即时更改<a href="#Options">选项</a>. 例如, <span class="regex">(?im)</span> 会为模式的后续部分打开不区分大小写和多行选项(如果它在子模式中则它会改变子模式的选项). 相反地, <span class="regex">(?-im)</span> 会关闭它们. 支持除 DPS`r`n`a 外的所有选项.</li>
 	    </ul></td>
   </tr>
 	<tr>
 	  <td><strong>\t<br>
   \r<br>
-  etc.</strong></td>
-	  <td><p>These escape sequences stand for special characters. The most common ones are <span class="regex">\t</span> (tab), <span class="regex">\r</span> (carriage return), and <span class="regex">\n</span> (linefeed). In AutoHotkey, an accent (`) may optionally be used in place of the backslash in these cases. Escape sequences in the form  \xhh are also supported, in which <em>hh</em> is the hex code of any ANSI character between 00 and FF.</p>
-      <p><span class="regex">\R</span> matches <code>`r`n</code>, <code>`n</code> and <code>`r</code> (however, \R inside a <a href="#class">character class</a> is merely the letter &quot;R&quot;).</p></td>
+  等等.</strong></td>
+	  <td><p>这些转义序列代表着特殊的字符. 最常见的有 <span class="regex">\t</span>(tab), <span class="regex">\r</span>(回车), and <span class="regex">\n</span>(换行). 在 AutoHotkey 中, 在这些情况下, 可以选择使用重音符(`) 来代替反斜杠. 还支持  \xhh 形式的转义序列, 其中 <em>hh</em>是介于 00 和 FF 之间的任意 ANSI 字符的十六进制码.</p>
+      <p><span class="regex">\R</span> 匹配 <code>`r`n</code>, <code>`n</code> 和 <code>`r</code>(然而, \R 在<a href="#class">类</a>中仅仅表示字母 &quot;R&quot;).</p></td>
   </tr>
   <tr id="slashP">
     <td><strong>\p{xx}<br>\P{xx}<br>\X</strong></td>
-    <td><p>Unicode character properties. <span class="regex">\p{xx}</span> matches a character with the xx property while <span class="regex">\P{xx}</span> matches any character <i>without</i> the xx property. 例如, <span class="regex">\pL</span> matches any letter and <span class="regex">\p{Lu}</span> matches any upper-case letter. <span class="regex">\X</span> matches any number of characters that form an extended Unicode sequence.</p>
-    <p>For a full list of supported property names and other details, search for "\p{xx}" at <a href="http://www.pcre.org/pcre.txt">www.pcre.org/pcre.txt</a>.</p></td>
+    <td><p>Unicode 字符属性. <span class="regex">\p{xx}</span> 匹配具有 xx 属性的字符, 而 <span class="regex">\P{xx}</span> 匹配任意 <i>不具有</i> xx 属性的字符. 例如, <span class="regex">\pL</span> 匹配任意一个字母, 而 <span class="regex">\p{Lu}</span> 匹配任意一个大写字母. <span class="regex">\X</span> 匹配任意数量的扩展 Unicode 序列中的字符.</p>
+    <p>对于受支持的属性名称的完整列表和其他细节, 请在 <a href="http://www.pcre.org/pcre.txt">www.pcre.org/pcre.txt</a> 中搜索 "\p{xx}".</p></td>
   </tr>
   <tr id="UCP">
     <td><strong>(*UCP)</strong></td>
-    <td><p>For performance, \d, \D, \s, \S, \w, \W, \b and \B recognize only ASCII characters by default. If the pattern begins with <span class="regex">(*UCP)</span>, Unicode properties will be used to determine which characters match. 例如, \w becomes equivalent to <span class="regex">[\p{L}\p{N}_]</span> and \d becomes equivalent to <span class="regex">\p{Nd}</span>.</p>
+    <td><p>出于性能考虑, \d, \D, \s, \S, \w, \W, \b 和 \B 只识别 ASCII 字符. 如果模式以 <span class="regex">(*UCP)</span> 开头, Unicode 属性将被用来确定哪些字符匹配. 例如, \w 变成相当于 <span class="regex">[\p{L}\p{N}_]</span>, 而 \d 变成等同于 <span class="regex">\p{Nd}</span>.</p>
     </td>
   </tr>
 </table>
-<p><strong>Greed</strong>: By default, <span class="regex">*</span>, <span class="regex">?</span>, <span class="regex">+</span>, and <span class="regex">{min,max}</span> are greedy because they consume all characters up through the <em>last</em> possible one that still satisfies the entire pattern. To instead have them stop at the <em>first</em> possible character, follow them with a question mark. 例如, the pattern <span class="regex">&lt;.+&gt;</span> (which lacks a question mark) means: &quot;search for a &lt;, followed by one or more of any character, followed by a &gt;&quot;. To stop this pattern from matching the <em>entire</em> string <span class="subj"><span class="red"><strong>&lt;</strong></span>em&gt;text&lt;/em<span class="red"><strong>&gt;</strong></span></span>, append a question mark to the plus sign: <span class="regex">&lt;.+<span class="red">?</span>&gt;</span>. This causes the match to stop at the first '&gt;' and thus it matches only the first tag <span class="subj"><span class="red"><strong>&lt;</strong></span>em<span class="red"><strong>&gt;</strong></span></span>.</p>
-<p><strong>Look-ahead and look-behind assertions</strong>: The groups <span class="regex">(?=...)</span>, <span class="regex">(?!...)</span>, <span class="regex">(?&lt;=...)</span>, and <span class="regex">(?&lt;!...)</span> are called <em>assertions</em> because they demand a condition to be met but don't consume any characters. 例如, <span class="regex">abc(?=.*xyz)</span> is a look-ahead assertion that requires the string xyz to exist somewhere to the right of the string abc (if it doesn't, the entire pattern is not considered a match). <span class="regex">(?=...)</span> is called a <em>positive</em> look-ahead because it requires that the specified pattern exist. Conversely, <span class="regex">(?!...)</span> is a <em>negative</em> look-ahead because it requires that the specified pattern <em>not</em> exist. Similarly, <span class="regex">(?&lt;=...)</span> and <span class="regex">(?&lt;!...)</span> are positive and negative look-<em>behinds</em> (respectively) because they look to the <em>left</em> of the current position rather than the right. Look-behinds are more limited than look-aheads because they do not support quantifiers of varying size such as <span class="regex">*</span>, <span class="regex">?</span>, and <span class="regex">+</span>. The escape sequence \K is similar to a look-behind assertion because it causes any previously-matched characters to be omitted from the final matched string. 例如, <span class="regex">foo\Kbar</span> matches &quot;foobar&quot; but reports that it has matched &quot;bar&quot;.</p>
-<p><strong>Related</strong>: Regular expressions are supported by <a href="../commands/RegExMatch.htm">RegExMatch</a>, <a href="../commands/RegExReplace.htm">RegExReplace</a>, and <a href="../commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>.</p>
-<p class="note"><strong>Final note</strong>: Although this page touches upon most of the commonly-used RegEx features, there are quite a few other features you may want to explore such as conditional subpatterns. The complete PCRE manual is at <a href="http://www.pcre.org/pcre.txt">www.pcre.org/pcre.txt</a></p>
+<p><strong>贪婪</strong>: 默认情况下, <span class="regex">*</span>, <span class="regex">?</span>, <span class="regex">+</span> 和 <span class="regex">{min,max}</span>是贪婪的, 因为它们消耗到  <em>最后一个</em> 能满足整个模式的可能的所有字符. 要让它们停在 <em>第一个</em> 可能的字符, 请在它们后面加上问号. 例如, 模式 <span class="regex">&lt;.+&gt;</span>(其中没有问号) 表示: &quot;搜索一个 &lt;, 接着一个或多个任意字符, 然后是一个 &gt;&quot;. 要阻止该模式匹配 <em>整个</em> 字符串 <span class="subj"><span class="red"><strong>&lt;</strong></span>em&gt;text&lt;/em<span class="red"><strong>&gt;</strong></span></span>, 请在加号后面加上一个问号: <span class="regex">&lt;.+<span class="red">?</span>&gt;</span>. 这将导致匹配停在第一个 '&gt;' 处, 因此它只匹配第一个标签 <span class="subj"><span class="red"><strong>&lt;</strong></span>em<span class="red"><strong>&gt;</strong></span></span>.</p>
+<p><strong>预测和回顾断言</strong>: 组 <span class="regex">(?=...)</span>, <span class="regex">(?!...)</span>, <span class="regex">(?&lt;=...)</span> 和 <span class="regex">(?&lt;!...)</span> 被称为 <em>断言</em>, 因为它们要求符合某个条件但不消耗任何字符. 例如, <span class="regex">abc(?=.*xyz)</span> 中含有预测断言, 它要求在字符串 abc 右边的某个位置存在字符串 xyz(如果不存在, 则匹配失败). <span class="regex">(?=...)</span> 被称为 <em>正</em> 预测断言, 因为它要求指定的模式存在. 相反, <span class="regex">(?!...)</span> 被称为 <em>负</em> 预测断言, 因为它要求指定的模式 <em>不</em> 存在. 同样地, <span class="regex">(?&lt;=...)</span> 和 <span class="regex">(?&lt;!...)</span> 分别是正的和负的 <em>回顾</em> 断言, 因为它们检查当前位置的 <em>左边</em> 而不是右边. 回顾比预测受到更多的限制, 因为它们不支持可变大小的限定符, 例如 <span class="regex">*</span>, <span class="regex">?</span> 和 <span class="regex">+</span>. 转义序列 \K 类似于回顾断言, 因为它会让前一个匹配的字符在最后的匹配字符串中省略. 例如, <span class="regex">foo\Kbar</span> 可以匹配 &quot;foobar&quot;, 但报告匹配的结果为 &quot;bar&quot;.</p>
+<p><strong>相关</strong>: <a href="../commands/RegExMatch.htm">RegExMatch</a>, <a href="../commands/RegExReplace.htm">RegExReplace</a> 和 <a href="../commands/SetTitleMatchMode.htm">SetTitleMatchMode</a> 支持正则表达式.</p>
+<p class="note"><strong>最后说明</strong>: 尽管这个页面涉及了大多数常用的正则表达式功能, 但是还有相当一部分您可能希望了解的其他功能没有提及, 例如条件子模式. 完整的 PCRE 手册请访问  <a href="http://www.pcre.org/pcre.txt">www.pcre.org/pcre.txt</a></p>
 
 </body>
 </html>
