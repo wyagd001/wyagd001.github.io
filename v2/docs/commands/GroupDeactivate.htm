@@ -13,7 +13,7 @@
 
 <h1>GroupDeactivate</h1>
 
-<p>Similar to <a href="GroupActivate.htm">GroupActivate</a> except activates the next window <strong>not</strong> in the group.</p>
+<p>类似于 <a href="GroupActivate.htm">GroupActivate</a>, 不同的是它激活 <strong>不</strong> 在组中的下一个窗口.</p>
 
 <pre class="Syntax"><span class="func">GroupDeactivate</span> GroupName <span class="optional">, Mode</span></pre>
 <h2 id="Parameters">参数</h2>
@@ -22,31 +22,31 @@
   <dt>GroupName</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>The name of the target group, as originally defined by <a href="GroupAdd.htm">GroupAdd</a>.</p>
+    <p>目标组的名称, 最初由 <a href="GroupAdd.htm">GroupAdd</a> 定义.</p>
   </dd>
 
   <dt>Mode</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>If omitted, the function activates the oldest non-member window. To change this behavior, specify the following letter:</p>
-    <p><strong>R:</strong> The newest non-member window (the one most recently active) is activated, but only if a member of the group is active when the function is given. &quot;R&quot; is useful in cases where you temporarily switch to working on an unrelated task. When you return to the group via <a href="GroupActivate.htm">GroupActivate</a>, GroupDeactivate, or <a href="GroupClose.htm">GroupClose</a>, the  window you were most recently working with is activated rather than the oldest window.</p>
+    <p>如果省略, 函数将激活最老的非成员窗口. 要更改此行为, 请指定以下字母:</p>
+    <p><strong>R:</strong> 最新的非成员窗口(最近激活的窗口) 被激活, 但仅当函数运行时该组的成员处于活动状态时才会激活. &quot;R&quot; 在临时切换到处理不相关任务的情况下非常有用. 当您使用 <a href="GroupActivate.htm">GroupActivate</a>, GroupDeactivate 或 <a href="GroupClose.htm">GroupClose</a> 返回组时, 会激活您最近工作的窗口而不是最老的窗口.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>GroupDeactivate causes the first window that does <strong>not</strong> match any of the group's window specifications to be activated. Using GroupDeactivate a second time will activate the next window in the series and so on. Normally, GroupDeactivate is assigned to a hotkey so that this window-traversal behavior is automated by pressing that key.</p>
-<p>This function is useful in cases where you have a collection of favorite windows that are almost always running. By adding these windows to a group, you can use GroupDeactivate to visit each window that isn't one of your favorites and decide whether to close it. This allows you to clean up your desktop much more quickly than doing it manually.</p>
-<p>GroupDeactivate selects windows in a manner similar to the <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> system hotkey. Specifically:</p>
+<p>GroupDeactivate 会激活 <strong>不</strong> 匹配组中任何窗口规格的首个窗口. 再次使用 GroupDeactivate 将激活系列窗口中的下一个. 通常给 GroupDeactivate 分配一个热键, 以便使用热键自动遍历窗口.</p>
+<p>此函数可用于您拥有几乎总是在运行的常用窗口集合时. 通过把这些窗口添加到一个组中, 您可以使用 GroupDeactivate 访问每个不常用窗口并决定是否关闭它. 此函数可以让您快速清理桌面, 比手动快得多.</p>
+<p>GroupDeactivate 选择窗口的方式类似于 <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> 系统热键. 具体来说:</p>
 <ul>
-  <li>Owned windows, such as certain dialogs and tool windows, are not evaluated. However, if the owner window is eligible for activation, the most recently active owned window is activated instead, unless the owner was active more recently. This is determined by calling <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastactivepopup">GetLastActivePopup</a>.</li>
-  <li>Windows with the WS_EX_TOPMOST or WS_EX_NOACTIVATE styles are skipped.</li>
-  <li>Windows with the WS_EX_TOOLWINDOW style but without the WS_EX_APPWINDOW style are skipped. (These windows are generally also omitted from Alt-Tab and the taskbar.)</li>
-  <li>Disabled windows are skipped, unless a window it owns (such as a modal dialog) was active more recently than the window itself.</li>
-  <li>Hidden or cloaked windows are skipped.</li>
-  <li>The Desktop is skipped.</li>
+  <li>子窗口, 如某些对话框和工具窗口, 不会被计算在内. 但是, 如果父窗口符合激活条件, 则会激活最近激活的子窗口, 除非父窗口最近是激活的. 这是通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastactivepopup">GetLastActivePopup</a> 来确定的.</li>
+  <li>具有 WS_EX_TOPMOST 或 WS_EX_NOACTIVATE 样式的窗口将被跳过.</li>
+  <li>具有 WS_EX_TOOLWINDOW 样式但没有 WS_EX_APPWINDOW 样式的窗口将被跳过. (这些窗口通常也会从 Alt-Tab 和任务栏中省略.)</li>
+  <li>被禁用的窗口会被跳过, 除非它拥有的窗口(比如模式对话框) 比窗口本身更早被激活.</li>
+  <li>隐藏或 cloaked 的窗口会被跳过.</li>
+  <li>桌面会被跳过.</li>
 </ul>
-<p>Although the taskbar is skipped due to the WS_EX_TOPMOST style, it is activated if there are no other eligible windows and the active window matches the group.</p>
+<p>虽然由于 WS_EX_TOPMOST 样式任务栏被跳过, 但如果没有其他符合条件的窗口并且活动窗口与组匹配, 任务栏就会被激活.</p>
 <p>关于窗口组的更多细节, 请参阅 <a href="GroupAdd.htm">GroupAdd</a>.</p>
 <h2 id="Related">相关</h2>
 <p><a href="GroupAdd.htm">GroupAdd</a>, <a href="GroupActivate.htm">GroupActivate</a>, <a href="GroupClose.htm">GroupClose</a></p>
