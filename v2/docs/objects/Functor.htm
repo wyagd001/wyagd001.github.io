@@ -30,11 +30,11 @@
   <li><a href="../commands/SetTimer.htm">SetTimer</a></li>
 </ul>
 
-<h2 id="User-Defined">User-Defined</h2>
+<h2 id="User-Defined">用户自定义</h2>
 <!-- TODO: Explain how a user-defined object could be useful -->
-<p>User-defined function objects must define a <em>Call</em> method containing the implementation of the "function".</p>
+<p>用户定义的函数对象必须包含一个 "函数" 实现的 <em>Call</em> 方法定义.</p>
 <pre>class YourClassName {
-    Call(a, b) {  <em>; Declare parameters as needed, or an <a href="../Functions.htm#Variadic">array*</a>.</em>
+    Call(a, b) {  <em>; 按需声明参数, 或 <a href="../Functions.htm#Variadic">array*</a>.</em>
         <em>;...</em>
         return c
     }
@@ -42,24 +42,24 @@
 }
 </pre>
 <h3 id="User-Defined-Examples">示例</h3>
-<p>The following example defines a function array which can be called; when called, it calls each element of the array in turn.</p>
+<p>下面的例子定义了一个可以被调用的函数数组; 当被调用时, 它依次调用数组中的每个元素.</p>
 <pre>class FuncArrayType extends Array {
     Call(params*) {
-        <em>; Call a list of functions.</em>
+        <em>; 调用函数列表.</em>
         Loop this.Length
             %this[A_Index]%(params*)
     }
 }
 
-<em>; Create an array of functions.</em>
+<em>; 创建一个函数数组.</em>
 funcArray := FuncArrayType.new()
-<em>; Add some functions to the array (can be done at any point).</em>
+<em>; 向数组中添加函数(可以在任何位置完成).</em>
 funcArray.Push(Func("One"))
 funcArray.Push(Func("Two"))
-<em>; Create an object which uses the array as a method.</em>
+<em>; 创建一个使用数组作为方法的对象.</em>
 obj := {}
 obj.DefineMethod("method", funcArray)
-<em>; Call the method.</em>
+<em>; 调用方法.</em>
 %obj.method%("foo", "bar")
 
 One(param1, param2) {
@@ -79,24 +79,24 @@ Two(param1, param2) {
   <li>通过调用 <a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> 函数, 其绑定参数值和方法名至目标对象.</li>
 </ul>
 <p>可以调用绑定函数对象, 如下例所示. 当绑定函数对象被调用时, 它调用绑定的函数或方法, 传递绑定的参数和后面跟着的调用者传递的任何参数. 未绑定的参数位置是从调用者的参数列表中指定的位置(从左到右). 例如:</p>
-<pre>fn := Func("RealFn").Bind(1)  <em>; Bind first parameter only</em>
+<pre>fn := Func("RealFn").Bind(1)  <em>; 只绑定第一个参数</em>
 %fn%(2)    <em>; 显示 "1, 2"</em>
 fn.Call(3) <em>; 显示 "1, 3"</em>
 
-fn := Func("RealFn").Bind( , 1)  <em>; Bind second parameter only</em>
+fn := Func("RealFn").Bind( , 1)  <em>; 只绑定第二个参数</em>
 %fn%(2)    <em>; 显示 "2, 1"</em>
 fn.Call(3) <em>; 显示 "3, 1"</em>
-%fn%(, 4)  <em>; Error: 'a' was omitted</em>
+%fn%(, 4)  <em>; 错误: 'a' 被省略了</em>
 
 RealFn(a, b, c:="c") {
     MsgBox a ", " b
 }</pre>
-<p><a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> can be used to bind to a method even when it isn't possible to retrieve a reference to the method itself. 例如:</p>
+<p><a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> 可用于绑定方法, 即使是在无法检索到方法本身的引用时. 例如:</p>
 <pre>file := FileOpen(A_ScriptFullPath, "r")
 getLine := ObjBindMethod(file, "ReadLine")
 MsgBox %getLine%()  <em>; 显示此文件的第一行.</em></pre>
 <p>更多复杂的例子, 请参阅 <a href="../commands/SetTimer.htm#ExampleClass">SetTimer</a>.</p>
-<p>Other properties and methods are inherited from <a href="Func.htm">Func</a>, but do not reflect the properties of the target function or method (which is not required to be implemented as a function). The BoundFunc acts as an anonymous variadic function with no other formal parameters, similar to the <a href="../Variables.htm#fat-arrow">fat arrow function</a> below:</p>
+<p>其他的属性和方法都是从 <a href="Func.htm">Func</a> 继承过来的, 但不反映目标函数或方法的属性(不需要作为一个函数来实现). BoundFunc 作为一个匿名的变量函数, 没有其他形式上的参数, 类似于下面的<a href="../Variables.htm#fat-arrow">胖箭头函数</a>:</p>
 <pre>Func_Bind(func, bound_args*) {
     return (args*) => (args.InsertAt(1, bound_args*), %func%(args*))
 }</pre>
