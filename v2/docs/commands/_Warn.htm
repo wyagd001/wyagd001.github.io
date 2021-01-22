@@ -31,8 +31,8 @@
     <p>对于 MsgBox 模式, 每个全局变量或每次调用函数时每个局部变量只显示一个警告. 这是通过在显示警告时初始化变量来实现的, 因此后续对 <a href="IsSet.htm">IsSet</a> 的调用也会受到影响.</p>
     <p>之所以将其分为局部和全局的单独警告类型, 是因为由于全局变量的持久性和全脚本范围的特性, 在没有事先初始化的情况下使用全局变量是比较常见的. 出于这个原因, 一些脚本作者可能希望为局部启用这种类型的警告, 而为全局禁用它.</p>
     <pre>#Warn
-<em>;y := ""  ; This would suppress the warning.</em>
-x := y    <em>; y hasn't been assigned a value.</em></pre>
+<em>;y := ""  ; 这将屏蔽警告.</em>
+x := y    <em>; y 还没有被赋值.</em></pre>
     <p id="VarUnset"><strong>VarUnset</strong>: 在脚本开始运行之前, 为每个从未以下列任何方式使用的变量的第一个引用显示一个警告:</p>
     <ul>
       <li>作为一个直接的, 非动态赋值的目标, 如 <code>MyVar := ""</code>.</li>
@@ -40,14 +40,14 @@ x := y    <em>; y hasn't been assigned a value.</em></pre>
       <li>在一个非动态函数调用中传递给 IsSet. 例如, 一个包含 <code>IsSet(MyLib_Global)</code> 的脚本不会警告任何其他对同一变量的引用, 但可能会警告其他名为 <code>MyLib_Global</code> 的变量.</li>
       <li>传递给动态函数调用或方法调用的参数(不管它是否是 ByRef, 因为在加载时无法确定).</li>
     </ul>
-    <p class="warning"><strong>已知限制:</strong> Although short-circuit capable operators such as <code>&amp;&amp;</code>, <code>||</code> and ternary can produce a variable reference for an assignment or ByRef parameter, currently only the right-hand branch is identified as being assigned. For example, <code>MouseGetPos(b ? x1 : x2)</code> may only mark <code>x2</code> as assigned.</p>
+    <p class="warning"><strong>已知限制:</strong> 虽然具有短路能力的运算符(如 <code>&amp;&amp;</code>, <code>||</code> 和三元运算符) 可以为赋值或 ByRef 参数产生一个变量引用, 但目前只有右边的分支被识别为赋值. 例如, <code>MouseGetPos(b ? x1 : x2)</code> 可能只将 <code>x2</code> 标记为赋值.</p>
     <p id="LocalSameAsGlobal"><strong>LocalSameAsGlobal</strong>: 在脚本开始运行之前, 为每个 <em>未声明</em> 的局部变量显示一个警告, 该变量的名称与全局变量相同. 这是为了防止在试图访问全局变量之前, 忘记在函数中声明全局变量而导致的错误. 如果该变量确实是局部变量, 那么可以使用诸如 <code>local x</code> 或 <code>static y</code> 这样的声明来抑制该警告. 对于<a href="../Functions.htm#ForceLocal">强制-局部</a>函数中的变量, 不会显示这个警告.</p>
     <p>默认情况下, 这个警告是禁用的.</p>
     <pre>#Warn
 g := 1
-ShowG() {       <em>; The warning is displayed even if the function is never called.</em>
-    <em>;global g   ; &lt;-- This is required to access the global variable.</em>
-    MsgBox g  <em>; Without the declaration, "g" is an empty local variable.</em>
+ShowG() {       <em>; 即使从未调用这个函数也会显示警告.</em>
+    <em>;global g   ; &lt;-- 访问全局变量时需要这行.</em>
+    MsgBox g  <em>; 没有声明, 所以 "g" 是个空的局部变量.</em>
 }</pre>
     <p id="Unreachable"><strong>Unreachable</strong>: 在脚本开始运行之前, 对紧跟在同一嵌套层的 <code>Return</code>, <code>Break</code>, <code>Continue</code>, <code>Throw</code> 或 <code>Goto</code> 之后的每一行发出警告, 除非该行是一个标签的目标. 任何这样的行都不会被执行.</p>
     <p>如果代码的目的是不可到达的 - 例如, 如果使用 <code>return</code> 暂时禁用一个代码块, 或者通过注释的方式暂时禁用热键或热字符串 - 可以考虑把不可到达的代码也注释掉. 另外, 也可以通过在第一行不可到达的代码上方定义一个<a href="../misc/Labels.htm">标签</a>来抑制警告.</p>
@@ -58,11 +58,11 @@ ShowG() {       <em>; The warning is displayed even if the function is never cal
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
 
-    <p>A value indicating how warnings should be delivered. If omitted, it defaults to <em>MsgBox</em>.</p>
-    <p><strong>MsgBox</strong>: Show a message box describing the warning. Note that once the message box is dismissed, the script will continue as usual.</p>
-    <p><strong>StdOut</strong>: Send a description of the warning to <em>stdout</em> (the program's standard output stream), along with the filename and line number. This allows fancy editors such as SciTE to capture warnings without disrupting the script - the user can later jump to each offending line via the editor's output pane.</p>
-    <p><strong>OutputDebug</strong>: Send a description of the warning to the debugger for display. If a debugger is not active, this will have no effect. 有关详细信息, 请参阅 <a href="OutputDebug.htm">OutputDebug</a>.</p>
-    <p><strong>Off</strong>: Disable warnings of the given <em>WarningType</em>.</p>
+    <p>表示如何发送警告的值. 如果省略, 则默认为 <em>MsgBox</em>.</p>
+    <p><strong>MsgBox</strong>: 显示一个描述警告的消息框. 请注意, 一旦消息框被删除, 脚本将照常继续.</p>
+    <p><strong>StdOut</strong>: 将警告的描述发送到 <em>stdout</em>(程序的标准输出流), 以及文件名和行号. 这允许像 SciTE 这样的高级编辑器在不中断脚本的情况下捕获警告 - 用户可以在以后通过编辑器的输出窗格跳转到每个违规行.</p>
+    <p><strong>OutputDebug</strong>: 将警告的描述发送到调试器上显示. 如果调试器不是活动的, 则没有效果. 有关详情, 请参阅 <a href="OutputDebug.htm">OutputDebug</a>.</p>
+    <p><strong>Off</strong>: 禁用给定 <em>WarningType</em> 的警告.</p>
   </dd>
 
 </dl>
@@ -74,14 +74,14 @@ ShowG() {       <em>; The warning is displayed even if the function is never cal
 #Warn UseUnsetGlobal, Off
 </pre>
 <h2 id="Related">相关</h2>
-<p><a href="../Functions.htm#Local">Local and Global Variables</a></p>
+<p><a href="../Functions.htm#Local">局部和全局变量</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
 <pre>
-#Warn All, Off                    <em>; Disable all warnings.  Not recommended.</em>
-#Warn                             <em>; Enable every type of warning; show each warning in a message box.</em>
-#Warn UseUnsetLocal, OutputDebug  <em>; Warn when a local variable is used before it's set; send warning to OutputDebug.</em>
+#Warn All, Off                    <em>; 禁用所有警告. 不推荐.</em>
+#Warn                             <em>; 启用每种警告并将它们显示到消息框中.</em>
+#Warn UseUnsetLocal, OutputDebug  <em>; 当一个局部变量在被设置之前被使用时发出警告; 发送警告到 OutputDebug.</em>
 </pre>
 </div>
 
