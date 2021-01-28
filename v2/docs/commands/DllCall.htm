@@ -60,7 +60,7 @@
   <p></p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
   <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量(如果已传递). 它可以用在期望 &quot;TCHAR **&quot; 或 &quot;LPTSTR *&quot; 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
-  <p class="note"><strong>注意</strong>: 在将字符串传递给函数时, 请注意函数所期望的字符串的<a href="../Compat.htm#DllCall"><i>type</i>.</p></td>
+  <p class="note"><strong>注意</strong>: 在将字符串传递给函数时, 请注意函数所期望的字符串的 <a href="../Compat.htm#DllCall"><i>type</i>(类型).</p></td>
 </tr>
 <tr>
   <td><span id="wstr"></span>WStr</td>
@@ -171,7 +171,7 @@ Loop 500
 
 <h2 id="struct">结构和数组</h2>
 <p>结构是内存中连续存储的 <em>成员</em>(空间) 的集合. 大多数成员倾向于是整数.</p>
-<p>接受结构(或内存块数组) 地址的函数可以通过某种方式分配内存并将内存地址传递给函数来调用. <a href="BufferAlloc.htm">BufferAlloc</a> 函数和 <a href="../objects/Buffer.htm">Buffer</a>对象被推荐用于此目的. 一般使用以下步骤:</p>
+<p>接受结构(或内存块数组) 地址的函数可以通过某种方式分配内存并将内存地址传递给函数来调用. <a href="BufferAlloc.htm">BufferAlloc</a> 函数和 <a href="../objects/Buffer.htm">Buffer</a> 对象被推荐用于此目的. 一般使用以下步骤:</p>
 <p>1) 调用 <code>MyStruct := BufferAlloc(123, 0)</code> 来分配一个缓冲来保存结构体的数据. 将 <code>123</code> 替换为至少与结构大小一样大的数字, 以字节为单位. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步中频繁调用 NumPut.</p>
 <p>2) 如果目标函数使用结构中的初始值, 请调用 <code><a href="NumPut.htm">NumPut</a>("UInt", 123, MyStruct, 4)</code>初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>StrPtr(Var)</code> 来存储字符串的地址). 将 <code>4</code> 替换为目标成员的偏移量(有关 &quot;offset&quot; 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则如 <code>"Ptr"</code>.</p>
 <p>3) 调用目标函数, 将 <em>MyStruct</em> 作为 Ptr 参数传递. 例如, <code>DllCall("MyDll\MyFunc", "Ptr", MyStruct)</code>. 该函数将检查和/或更改一些成员. DllCall 会自动使用缓冲的地址, 通常使用 <code>MyStruct.Ptr</code> 来检索.</p>
