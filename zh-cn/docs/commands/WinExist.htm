@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>WinExist() / IfWin[Not]Exist | AutoHotkey</title>
-<meta name="description" content="The WinExist function and IfWinExist statement check if a matching window exists." />
+<title>WinExist() | AutoHotkey</title>
+<meta name="description" content="The WinExist function checks if the specified window exists and returns the unique ID (HWND) of the first matching window." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,93 +11,57 @@
 </head>
 <body>
 
-<h1>WinExist() / IfWin[Not]Exist</h1>
-<p>检查是否存在匹配的窗口. <em>WinExist()</em> 返回首个匹配窗口的<a href="WinGet.htm">唯一 ID(HWND)</a>.</p>
+<h1>WinExist()</h1>
+<p>检查是否存在指定的窗口, 并返回第一个匹配窗口的唯一 ID(HWND)</a>.</p>
+<pre class="Syntax">UniqueID := <span class="func">WinExist</span>(<span class="optional">WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
 
-<h2 id="function">WinExist()</h2>
-<pre class="Syntax">UniqueID := <span class="func">WinExist</span>(WinTitle <span class="optional">, WinText, ExcludeTitle, ExcludeText</span>)</pre>
-
-<h3>参数</h3>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>WinTitle</dt>
   <dd><p>窗口标题或识别目标窗口的其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
 
   <dt>WinText</dt>
-  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON 时, 那么会检测隐藏文本元素.</p></dd>
+  <dd>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON 时, 那么会检测隐藏文本元素.</dd>
 
   <dt>ExcludeTitle</dt>
-  <dd><p>标题中含有此参数值的窗口将被排除.</p></dd>
+  <dd>标题中含有此参数值的窗口将被排除.</dd>
 
   <dt>ExcludeText</dt>
-  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
+  <dd>文本中含有此参数值的窗口将被排除.</dd>
 
 </dl>
 
-<h3>返回值</h3>
-<p>函数返回首个匹配窗口的<a href="../misc/WinTitle.htm#ahk_id">唯一 ID(HWND)</a> (作为十六进制整数)(没有找到匹配时则为 0). 因为所有非零数字被视为 &quot;true(真)&quot;, 所以每当 <em>WinTitle</em> 存在时, <code>if WinExist(WinTitle)</code> 语句为真.</p>
+<h2 id="Return_Value">返回值</h2>
+<p>函数返回首个匹配窗口的<a href="../misc/WinTitle.htm#ahk_id">唯一 ID(HWND)</a> (作为十六进制整数)(没有找到匹配时则为 0).</p>
+<p>因为所有非零数字被视为 "true(真)", 所以每当 <em>WinTitle</em> 存在时, <code>if WinExist(WinTitle)</code> 语句为真.</p>
 
-<h3>示例</h3>
-<pre class="NoIndent">if WinExist(&quot;ahk_class Notepad&quot;) or WinExist(&quot;ahk_class&quot; . ClassName)
-    WinActivate  <em>; 使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</em>
-
-MsgBox % &quot;The active window's ID is &quot; . WinExist(&quot;A&quot;)</pre>
-  <pre class="NoIndent">If !WinExist(&quot;Calculator&quot;)  <em>; 相等于 IfWinNotExist, Calculator</em>
-     return</pre>
-
-<h2 id="command">IfWin[Not]Exist</h2>
-<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此命令. 使用 <a href="#function">WinExist</a> 函数作为代替.</p>
-<pre class="Syntax">
-<span class="func">IfWinExist</span> <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
-<span class="func">IfWinNotExist</span> <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
-</pre>
-
-<h3>参数</h3>
-<dl>
-
-  <dt>WinTitle</dt>
-  <dd><p>窗口标题或识别目标窗口的其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
-
-  <dt>WinText</dt>
-  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd><p>标题中含有此参数值的窗口将被排除.</p>
-    <p class="note"><strong>注意</strong>: 由于向后兼容性, 所以如果此参数准确匹配某个命令名, 那么 <em>IfWin[Not]Exist</em> 会将其作为命令解释. 要变通解决此问题, 请使用 <a href="#function">WinExist</a> 函数代替.</p></dd>
-
-  <dt>ExcludeText</dt>
-  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
-
-</dl>
-
-<h3>备注</h3>
-<p><a href="SetWinDelay.htm">SetWinDelay</a> 不适用于此命令.</p>
-
-<h3>示例</h3>
-<pre class="NoIndent">IfWinExist, Untitled - Notepad
-{
-    WinActivate  <em>; 自动使用上面找到的窗口.</em>
-    WinMaximize  <em>; 同上</em>
-    Send, Some text.{Enter}
-    return
-}</pre>
-<pre class="NoIndent">IfWinNotExist, Calculator
-    return
-else
-{
-    WinActivate  <em>; 前面的"IfWinNotExist"也设置了上次找到的窗口.</em>
-    WinMove, 40, 40  <em>; 把它移动到新位置.</em>
-    return
-}</pre>
-
-<h2>备注</h2>
-<p>如果省略所有参数, 那么将检查<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>看它是否仍然存在(如果是 IfWinNotExist 则检查其是否不存在).</p>
-<p>如果函数或命令确定了某个符合的窗口存在, 那么<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>将更新为此窗口. 换句话说, 如果 <em>WinExist</em> 或 <em>IfWinExist</em> 计算结果为 true(真) 或 <em>IfWinNotExist</em> 计算结果为 false(假), 那么将更新<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</p>
+<h2 id="Remarks">备注</h2>
+<p>如果省略所有参数, 那么将检查<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>看它是否仍然存在.</p>
+<p>如果符合的窗口存在, 那么<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>将更新为此窗口.</p>
 <p>要获取控件的 HWND(用于 <a href="PostMessage.htm">Post/SendMessage</a> 或 <a href="DllCall.htm">DllCall</a> 中), 请使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a> 或 <a href="MouseGetPos.htm">MouseGetPos</a>.</p>
-<p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时, 才能检测到隐藏窗口.</p>
+<p><a href="SetWinDelay.htm">SetWinDelay</a> 不适用于此函数.</p>
+<p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 时, 才能检测到隐藏窗口.</p>
 
-<h2>相关</h2>
-<p><a href="WinActive.htm">WinActive() / IfWinActive</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a>, <a href="Process.htm">Process</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="_IfWinActive.htm">#IfWinActive/Exist</a></p>
-	
+<h2 id="Related">相关</h2>
+<p><a href="IfWinExist.htm">IfWinExist / IfWinNotExist</a>, <a href="WinActive.htm">WinActive()</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>, <a href="Process.htm">Process</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="_IfWinActive.htm">#IfWinActive/Exist</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExLastFound">
+<p><a href="#ExLastFound">#1</a>: 激活记事本或另一个窗口, 这取决于 WinExist 函数找到的是哪个窗口. 注意, "ahk_" 关键字和它的标准值之间的空格可以省略; 这在使用变量时特别有用, 如第二个 WinExist 所示</p>
+<pre>if WinExist("ahk_class Notepad") or WinExist("ahk_class" ClassName)
+    WinActivate <em>; 使用 WinExist 找到的窗口.</em></pre>
+</div>
+
+<div class="ex" id="ExA">
+<p><a href="#ExA">#2</a>: 获取和报告活动窗口的唯一 ID(HWND).</p>
+<pre>MsgBox % "The active window's ID is " WinExist("A")</pre>
+</div>
+
+<div class="ex" id="ExNot">
+<p><a href="#ExNot">#3</a>: 如果计算器不存在则返回.</p>
+<pre>if not WinExist("Calculator")
+    return</pre>
+</div>
 </body>
 </html>
