@@ -19,7 +19,7 @@
   <li><a href="Language.htm">脚本语言</a>: 有关语法的具体详细信息(如何编写脚本).</li>
 </ul>
 
-<h2>目录</h2>
+<h2 id="toc">目录</h2>
 <ul>
   <li><a href="#intro">简介</a></li>
   <li><a href="#auto">脚本顶部(自动执行段)</a>: 当脚本启动时, 这部分会自动执行.</li>
@@ -76,19 +76,19 @@ A line of text.
 <p id="LTrim"><strong>LTrim</strong>: 删除每行开头的空格和 tab. 主要用来允许延续片段使用缩进. 此外, 通过在一行中指定 <code>#LTrim</code> 自身可以为多个延续片段打开此选项. <code>#LTrim</code> 跟位置有关: 会影响它下面的所有延续片段. 使用 <code>#LTrim Off</code> 可以关闭此设置.</p>
 <p><strong>RTrim0</strong>(RTrim 后跟着一个零): 关闭自动删除每行末尾的空格和 tab 的设置.</p>
 <p id="CommentOption"><strong>Comments</strong>(或 <strong>Comment</strong> 或 <strong>Com</strong> 或 <strong>C</strong>) <span class="ver">[v1.0.45.03+]</span>: 允许在延续片段中使用<a href="Language.htm#comments">分号注释</a>(但不支持 <code>/*..*/</code>). 这样的注释(以及它们左边的空格和 tab) 会在连接时完全被忽略而不是当成原义文本处理. 每个注释可以放在一行的右侧或单独一行.</p>
-<p><strong>%(百分号)</strong>: 把百分号视为原义字符而不是变量引用. 这样就不需要把每个百分号<a href="commands/_EscapeChar.htm">转义</a>成原义字符. 在百分号已经为原义的地方不需要使用此选项, 例如, <a href="Hotstrings.htm">自动替换热字串</a>.</p>
+<p><strong>%(百分号)</strong>: 把百分号视为原义字符而不是变量引用. 这样就不需要把每个百分号<a href="misc/EscapeChar.htm">转义</a>成原义字符. 在百分号已经为原义的地方不需要使用此选项, 例如, <a href="Hotstrings.htm">自动替换热字串</a>.</p>
 <p><strong>,(逗号)</strong>: 把逗号作为分隔符而不是原义逗号. 这个非常少用的选项只有在命令的参数之间才需要, 因为在<a href="Functions.htm">函数调用</a>中逗号的类型没有影响. 并且, 此选项只会转换那些真正的分隔参数的逗号. 换句话说, 一旦到了命令的最后一个参数(或者命令没有参数), 那么会忽略此选项而把后续的逗号当成原义逗号.</p>
-<p id="accent"><strong>`(重音符)</strong>: 把每个反引号视为原义字符而不是<a href="commands/_EscapeChar.htm">转义符</a>. 此选项同时也避免了需要分别对逗号和百分号进行明确地转义. 此外, 它还阻止对任何特定的转义序列例如 `r 和 `t 进行转义.</p>
+<p id="accent"><strong>`(重音符)</strong>: 把每个反引号视为原义字符而不是<a href="misc/EscapeChar.htm">转义符</a>. 此选项同时也避免了需要分别对逗号和百分号进行明确地转义. 此外, 它还阻止对任何特定的转义序列例如 `r 和 `t 进行转义.</p>
 <p id="non-continuation"><strong>)</strong> <span class="ver">[v1.1.01+]</span>: 如果一个右括号出现在延续代码的参数中(除了作为 <a href="#Join">Join</a> 的选项参数), 那么这一行将重新解释为一个表达式, 而不是作为一段延续代码的开始. 这将避免类似 <code>(x.y)[z]()</code> 的表达式需要对左括号进行转义.</p>
 <p><u>备注</u></p>
-<p>当没有指定<a href="#accent">重音符(`) 选项</a>时, 支持在延续片段中使用<a href="commands/_EscapeChar.htm">转义序列</a>, 例如 `n(换行) 和 `t(tab).</p>
+<p>当没有指定<a href="#accent">重音符(`) 选项</a>时, 支持在延续片段中使用<a href="misc/EscapeChar.htm">转义序列</a>, 例如 `n(换行) 和 `t(tab).</p>
 <p>没有使用<a href="#CommentOption">注释选项</a>时, 不支持在延续片段中使用分号和 /*..*/ 添加注释, 因为它们会被视为原义文本. 不过, 可以在片段的底行和顶行添加注释. 例如:</p>
 <pre>FileAppend,   <em>; 注释.
 ; 注释.</em>
 ( LTrim Join    <em>; 注释.</em>
     &nbsp;; This is <strong>not</strong> a comment; it is literal. Include the word <i>Comments</i> in the line above to make it a comment.
 ), C:\File.txt   <em>; 注释.</em></pre>
-<p>由上面可知, 延续片段中的分号不需要进行<a href="commands/_EscapeChar.htm">转义</a>.</p>
+<p>由上面可知, 延续片段中的分号不需要进行<a href="misc/EscapeChar.htm">转义</a>.</p>
 <p>使用延续片段无法生成总长度超过 16,383 字符的行(如果尝试这么做, 那么程序在启动时会弹出警告). 解决此问题的一种方法是把一系列内容连接到变量中. 例如:</p>
 <pre>Var =
 (
@@ -172,7 +172,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
   <li>包含空格的参数必须用双引号括起来.</li>
   <li>进行编译通常并不会提升脚本的性能.</li>
   <li>截至 v1.1.01, 还不支持密码保护和 /NoDecompile 选项.</li>
-  <li>命令 <a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> 和 &quot;<a href="commands/Menu.htm#MainWindow">Menu, Tray, MainWindow</a>&quot; 会影响编译后脚本的行为.</li>
+  <li>命令 <a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a> 和 "<a href="commands/Menu.htm#MainWindow">Menu, Tray, MainWindow</a>" 会影响编译后脚本的行为.</li>
    <li>如果脚本以编译的形式运行, 则内置变量 <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 的值为 1. 否则为空.</li>
    <li><span class="ver">[v1.0.43+]:</span> 传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符中, 但可以通过像重定向输出到文件的方法 "捕获".</li>
   <li> <span class="ver">[v1.1.22.03+]:</span> 此外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 这些错误代码可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 上找到.</li>
@@ -254,7 +254,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <p><code><i>AutoHotkey</i>.ahk</code> 的文件名取决于 Autohotkey 的文件名. 例如重命名 AutoHotkey.exe 为 MyScript.exe, 它会尝试打开 <code>MyScript.ahk</code>. 如果你运行 AutoHotkeyU32.exe 没有参数则会运行 AutoHotkeyU32.ahk.</p>
 <p>注意: 在早期版本 <a href="AHKL_ChangeLog.htm#L51">revision 51</a>, 程序会在工作目录寻找 AutoHotkey.ini 或者我的文档下的 AutoHotkey.ahk.</p>
 <p><span class="ver">[v1.1.17+]:</span> 星号(*) 加在文件名上会打开标准输入通道(stdin) 的脚本. 例如 <a href="commands/Run.htm#ExecScript">ExecScript()</a>.</p>
-<p id="cmd_args"><strong>Script Parameters:</strong> 你想要传递给脚本的参数用空格分隔. 单个参数如果包含空格需要在两端加上引号(<strong>&quot;</strong>). 如果参数本身包含引号(<strong>&quot;</strong>) 则需要转义(\&quot;). 因此, 加引号参数(例如&quot;C:\My Documents<span class="red">\&quot;</span>) 末尾的斜杠(\) 都被当作原义的引号(就是说, 脚本将接收到字符串 C:\My Documents<span class="red">&quot;</span>). 要移除引号, 使用<code><a href="commands/StringReplace.htm">StringReplace</a>, 1, 1, <span class="red">&quot;</span>,, All</code>.</p>
+<p id="cmd_args"><strong>Script Parameters:</strong> 你想要传递给脚本的参数用空格分隔. 单个参数如果包含空格需要在两端加上引号(<strong>"</strong>). 如果参数本身包含引号(<strong>"</strong>) 则需要转义(\"). 因此, 加引号参数(例如"C:\My Documents<span class="red">\"</span>) 末尾的斜杠(\) 都被当作原义的引号(就是说, 脚本将接收到字符串 C:\My Documents<span class="red">"</span>). 要移除引号, 使用<code><a href="commands/StringReplace.htm">StringReplace</a>, 1, 1, <span class="red">"</span>,, All</code>.</p>
 <p><span class="ver">[v1.1.27+]:</span> 传入参数, 如果存在, 作为数组存储在内置变量 <strong>A_Args</strong> 中, 可以使用<a href="Objects.htm#Usage_Simple_Arrays">数组语法</a>来访问. <code>A_Args[1]</code> 包含第一个参数. 下面的示例在传递给它的参数太少时退出脚本:</p>
 <pre>if A_Args.Length() &lt; 3
 {
@@ -358,7 +358,7 @@ if WinExist(ScriptPath " ahk_class AutoHotkey")
 </pre>
 <p>当调试器连接后, 通过发送 "detach" DBGp 命令可以在不终止脚本的情况下分离调试器.</p>
 
-<h2>脚本展示</h2>
+<h2 id="Script_Showcase">脚本展示</h2>
 <p>请参阅<a href="scripts/">此页面</a>了解一些有用的脚本.</p>
 </body>
 </html>

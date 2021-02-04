@@ -13,7 +13,7 @@
 <body>
 <h1>变量和表达式</h1>
 
-<h2>目录</h2>
+<h2 id="toc">目录</h2>
 <ul>
   <li><a href="#Intro">变量</a></li>
   <li><a href="#Expressions">表达式</a></li>
@@ -40,7 +40,7 @@ MyVar := ""</pre>
 <pre><a href="commands/MsgBox.htm">MsgBox</a> The value in the variable named Var is %Var%.
 CopyOfVar = %Var%</pre>
 <p>与之相比, 表达式方法省去了变量名两边的百分号, 但<a href="Language.htm#strings">原义的字符串</a>必须包围在双引号中. 所以, 下面的表达式作用等同于上面的例子:</p>
-<pre>MsgBox % &quot;The value in the variable named Var is &quot; . Var . &quot;.&quot;  <em>; 使用句点连接(join 拼接) 两个字符串.</em>
+<pre>MsgBox % "The value in the variable named Var is " . Var . "."  <em>; 使用句点连接(join 拼接) 两个字符串.</em>
 CopyOfVar := Var</pre>
 <p>在上面的 MsgBox 这行, 通过使用<a href="Language.htm#-expression">百分号和空格</a>把参数从传统模式改变为表达式模式. 因为所有的命令默认情况下使用传统模式(除了另外注明的那些), 所以这是必须的.</p>
 <p><strong>变量的比较</strong>: 请阅读下面表达式部分中关于不同类型变量比较的重要提示, 尤其是关于何时使用小括号的内容.</p>
@@ -49,9 +49,9 @@ CopyOfVar := Var</pre>
 <p class="note">有关结构化概述和进一步说明, 请参阅<a href="Language.htm#expressions">表达式</a>.</p>
 <p>表达式用来对一系列变量, 原义字符串和/或原义数字执行一个或多个操作.</p>
 <p>表达式中的变量名称不用包围在百分号中(<a href="misc/Arrays.htm#pseudo">伪数组</a>和其他的<a href="#ref">双重引用</a>除外). 所以, 为了与变量区别, 原义的字符串必须用双引号包围. 例如:</p>
-<pre>if (CurrentSetting &gt; 100 or FoundColor != &quot;Blue&quot;)
+<pre>if (CurrentSetting &gt; 100 or FoundColor != "Blue")
     MsgBox The setting is too high or the wrong color is present.</pre>
-<p>在上面的例子中, 因为 &quot;Blue&quot; 是原义字符串, 所以包围在双引号中. 要在原义字符串中包含<em>真实的</em>引号字符, 请指定两个连续的引号, 如同此例中的两次演示: <code>"她说, <span class="red">""</span>一天一个苹果.<span class="red">""</span>"</code>.</p>
+<p>在上面的例子中, 因为 "Blue" 是原义字符串, 所以包围在双引号中. 要在原义字符串中包含<em>真实的</em>引号字符, 请指定两个连续的引号, 如同此例中的两次演示: <code>"她说, <span class="red">""</span>一天一个苹果.<span class="red">""</span>"</code>.</p>
 <p class="warning"><strong>注意</strong>: 有几种类型的 <a href="Language.htm#if-statement">If 语句</a>看起来像表达式, 但实际上不是.</p>
 <p><strong>空字符串</strong>: 要在表达式中使用空字符串, 请指定一对空引号. 例如, 当 <em>MyVar</em> 非空时语句 <code>if (MyVar != "")</code> 的结果为真. 然而, 在<a href="commands/IfEqual.htm">传统 if 语句</a>中, 一对空引号会被视为原义的字符串. 例如, 当 <em>MyVar</em> 仅包含一对真实的引号时语句 <code>if MyVar = ""</code> 结果为真. 因此, 要使用传统的 if 语句判断变量是否为空, 则需要让 = 或 != 的右侧为空, 例如: <code>if Var =</code>.</p>
 <p>相关提示, 任何无效的表达式例如 <code>(x +* 3)</code> 会产生空字符串.</p>
@@ -69,7 +69,7 @@ ContinueSearch := true</pre>
 <p id="percent-space"><strong>强制使用表达式</strong>: 通过在表达式前加上百分号和空格或 tab, 能把表达式用在不直接支持表达式的参数中(除了像 <a href="commands/StringLen.htm">StringLen</a> 的 OutputVar 和 InputVar 的那些参数). 这种技巧常用来访问<a href="misc/Arrays.htm">数组</a>. 例如:</p>
 <pre><a href="commands/FileAppend.htm">FileAppend</a>, % MyArray%i%, My File.txt
 <a href="commands/FileAppend.htm">FileAppend</a>, % MyPseudoArray%i%, My File.txt
-<a href="commands/MsgBox.htm">MsgBox</a> % &quot;The variable MyVar contains &quot; . MyVar . &quot;.&quot;
+<a href="commands/MsgBox.htm">MsgBox</a> % "The variable MyVar contains " . MyVar . "."
 <a href="commands/Loop.htm">Loop</a> % Iterations + 1
 <a href="commands/WinSet.htm">WinSet</a>, Transparent, % X + 100
 <a href="commands/Control.htm">Control</a>, Choose, % CurrentSelection - 1</pre>
@@ -216,7 +216,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
 	&lt;&gt; !=</strong></td>
     <td>
       <p><strong>Equal (=)</strong>, <strong>区分大小写的等于(==)</strong> 和 <strong>不等于(&lt;&gt; 或 !=)</strong>. 如果两个输入都是<a href="Concepts.htm#numbers">数字</a>或<a href="Concepts.htm#numeric-strings">数字字符串</a>时, 则会对其进行数字比较; 否则按字母顺序进行比较. 运算符 <strong>!=</strong> 和 <strong>&lt;&gt;</strong> 在功能上是完全相同的. 运算符 <strong>==</strong> 的行为与 <strong>=</strong> 完全相同, 除了其中一个输入不是数字时, <strong>==</strong> 总是区分大小写, 而 <strong>=</strong> 总是不区分大小写(不区分大小写的方法取决于 <a href="commands/StringCaseSense.htm">StringCaseSense</a>). 与之相比, <strong>&lt;&gt;</strong> 和 <strong>!=</strong> 都遵循 <a href="commands/StringCaseSense.htm">StringCaseSense</a>.</p>
-      <p class="note"><strong>注意</strong>: I 在 AutoHotkey v1 中, 直接在表达式中使用的带引号字符串(或与带引号的字符串连接的结果) 始终不被认为是数字.</p>
+      <p class="note"><strong>注意</strong>: 在 AutoHotkey v1 中, 直接在表达式中使用的带引号字符串(或与带引号的字符串连接的结果) 始终不被认为是数字.</p>
       <p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用 &lt;&gt; 运算符. 使用 != 运算符作为代替.</p>
     </td>
   </tr>
@@ -310,7 +310,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
 <h2 id="BuiltIn">内置变量</h2>
 <p>下面的变量被内置到程序中, 可以被任何脚本引用.</p>
 <p class="note">有关一般信息, 请参阅<a href="Concepts.htm#built-in-variables">内置变量</a>.</p>
-<h3>目录</h3>
+<h3 id="BuiltIn_TOC">目录</h3>
 <ul>
   <li>特殊字符: <a href="#Space">A_Space</a>, <a href="#Tab">A_Tab</a></li>
   <li>脚本属性: <a href="#CommandLine">命令行参数</a>, <a href="#WorkingDir">A_WorkingDir</a>, <a href="#ScriptDir">A_ScriptDir</a>, <a href="#ScriptName">A_ScriptName</a>, <a href="#prop">(...更多...)</a></li>
@@ -323,7 +323,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   <li>杂项: <a href="#Cursor">A_Cursor</a>, <a href="#Caret">A_CaretX</a>, <a href="#Caret">A_CaretY</a>, <a href="#Clipboard">Clipboard</a>, <a href="#ClipboardAll">ClipboardAll</a>, <a href="#ErrorLevel">ErrorLevel</a>, <a href="#misc">(...更多...)</a></li>
   <li>循环: <a href="#Index">A_Index</a>, <a href="#loop">(...更多...)</a></li>
 </ul>
-<h3>特殊字符</h3>
+<h3 id="Special_Characters">特殊字符</h3>
 <table class="info">
   <tr id="Space">
     <td>A_Space</td>
@@ -380,8 +380,8 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="ThisLabel">
     <td>A_ThisLabel<br>
-	<span class="ver">[v1.0.46.16+]</span></td>
-    <td>当前正在执行的<a href="misc/Labels.htm">标签</a>(子程序) 的名称(没有则为空); 例如: MyLabel. 每当脚本执行 <a href="commands/Gosub.htm">Gosub</a>/<a href="commands/Return.htm">Return</a> 或 <a href="commands/Goto.htm">Goto</a> 时会更新此变量的值. 执行自动调用的标签时也会更新此变量的值, 例如<a href="commands/SetTimer.htm">计时器</a>, <a href="commands/Gui.htm#DefaultWin">GUI 线程</a>, <a href="commands/Menu.htm">菜单项</a>, <a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="misc/Clipboard.htm#OnClipboardChange">OnClipboardChange</a> 和 <a href="commands/OnExit.htm">OnExit</a>. 不过, 当执行从前面的语句"进入"一个标签时不会更新 A_ThisLabel 的值, 即此时它还是保持原来的值. 另请参阅: <a href="#ThisHotkey">A_ThisHotkey</a> 和 <a href="commands/IsLabel.htm">IsLabel()</a></td>
+    <span class="ver">[v1.0.46.16+]</span></td>
+    <td>当前正在执行的<a href="misc/Labels.htm">标签</a>(子程序) 的名称(没有则为空); 例如: MyLabel. 每当脚本执行 <a href="commands/Gosub.htm">Gosub</a>/<a href="commands/Return.htm">Return</a> 或 <a href="commands/Goto.htm">Goto</a> 时会更新此变量的值. 执行自动调用的标签时也会更新此变量的值, 例如<a href="commands/SetTimer.htm">计时器</a>, <a href="commands/Gui.htm#DefaultWin">GUI 线程</a>, <a href="commands/Menu.htm">菜单项</a>, <a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="commands/OnClipboardChange.htm#label">OnClipboardChange 标签</a>和 <a href="commands/OnExit.htm#command">OnExit 标签</a>. 不过, 当执行从前面的语句 "进入" 一个标签时不会更新 A_ThisLabel 的值, 即此时它还是保持原来的值. 另请参阅: <a href="#ThisHotkey">A_ThisHotkey</a> 和 <a href="commands/IsLabel.htm">IsLabel()</a></td>
   </tr>
   <tr id="AhkVersion">
     <td>A_AhkVersion</td>
@@ -404,7 +404,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="ExitReason">
     <td>A_ExitReason</td>
-    <td>最近一次要求脚本终止的原因. 除非脚本含有 <a href="commands/OnExit.htm">OnExit</a> 子程序并且此子程序当前正在运行或被退出尝试至少调用过一次, 否则此变量为空. 请参阅 <a href="commands/OnExit.htm">OnExit</a> 了解详情.</td>
+    <td>最近一次要求脚本终止的原因. 除非脚本含有 <a href="commands/OnExit.htm#command">OnExit</a> 子程序并且此子程序当前正在运行或被退出尝试至少调用过一次, 否则此变量为空. 请参阅 <a href="commands/OnExit.htm#command">OnExit</a> 了解详情.</td>
   </tr>
 </table>
 <h3 id="date">日期和时间</h3>
@@ -618,7 +618,7 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
     <td>当 A_IconFile 为空时此变量为空. 否则, 它的值为 A_IconFile 中的图标编号(通常为 1).</td>
   </tr>
 </table>
-<h3>用户空闲时间</h3>
+<h3 id="User_Idle_Time">用户空闲时间</h3>
 <table class="info">
   <tr id="TimeIdle">
     <td>A_TimeIdle</td>
@@ -682,7 +682,7 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
     <td>A_EventInfo</td>
     <td><p>包含下列事件的额外信息:</p>
       <ul>
-        <li><a href="misc/Clipboard.htm#OnClipboardChange">OnClipboardChange 标签</a></li>
+        <li><a href="misc/Clipboard.htm#OnClipboardChange#label">OnClipboardChange 标签</a></li>
         <li><a href="Hotkeys.htm#Wheel">鼠标滚轮热键</a>(WheelDown/Up/Left/Right)</li>
         <li><a href="commands/OnMessage.htm">OnMessage()</a></li>
         <li><a href="commands/RegisterCallback.htm">RegisterCallback()</a></li>

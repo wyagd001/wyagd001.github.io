@@ -13,7 +13,7 @@
 <body>
 <h1>函数</h1>
 
-<h2>目录</h2>
+<h2 id="toc">目录</h2>
 <ul>
   <li><a href="#intro">介绍和简单示例</a></li>
   <li><a href="#param">参数</a></li>
@@ -44,8 +44,8 @@
 <pre>if <a href="#InStr">InStr</a>(MyVar, "fox")
     MsgBox The variable MyVar contains the word fox.</pre>
 <p>最后, 通常在命令的参数中也可以调用函数(除了像 <a href="commands/StringLen.htm">StringLen</a> 中的 OutputVar 和 InputVar 这种参数之外). 另外, 在不支持<a href="Variables.htm#Expressions">表达式</a>的参数中调用函数时必须加上 "% " 前缀(百分号加一个空格), 例如:</p>
-<pre>MsgBox % &quot;The answer is: &quot; . Add(3, 2)</pre>
-<p>在原生支持表达式的参数中也允许加上 "% " 前缀, 但它只是会被忽略. (译者注: 总之在你不确定是否应该加 "% " 前缀的情况下, 加上总是没错的.)</p>
+<pre>MsgBox % "The answer is: " . Add(3, 2)</pre>
+<p>在原生支持表达式的参数中也允许加上 "% " 前缀, 但它只是会被忽略.</p>
 <h2 id="param">参数</h2>
 <p>定义函数时, 其参数都在其名称后面的括号中列出(函数名和左括号之间不能有空格). 如果函数不接受任何参数, 请把括号留空, 例如: <code>GetCurrentTimestamp()</code>.</p>
 <p id="ByRef"><strong>ByRef 参数</strong>: 从函数的角度看, 参数本质上是<a href="#Local">局部变量</a>, 除非它们被定义为 <em>ByRef</em>, 例如:</p>
@@ -240,7 +240,7 @@ DemonstrateForceStatic()
     MsgBox
 }
 </pre>
-<h3>关于局部和全局变量的更多信息</h3>
+<h3  id="More_about_locals_and_globals">>关于局部和全局变量的更多信息</h3>
 <p>通过逗号分隔多个变量这样可以在同一行声明它们, 例如:</p>
 <pre>global LogFileName, MaxRetries := 5
 static TotalAttempts := 0, PrevResult</pre>
@@ -260,7 +260,7 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>最后, 对函数的动态调用比正常调用稍慢, 因为正常的调用在脚本开始运行前解析(查询).</p>
 <h2 id="ShortCircuit">优化布尔求值</h2>
 <p>当在<a href="Variables.htm#Expressions">表达式</a>中使用 <em>AND, OR</em> 和<a href="Variables.htm#ternary">三元运算符</a>时, 会对它们进行优化来提高性能(不管当前是否存在函数调用). 通过不计算表达式中那些不影响最终结果的部分来进行优化运算. 为了说明这个概念, 请看这个例子:</p>
-<pre>if (ColorName != &quot;&quot;  AND not FindColor(ColorName))
+<pre>if (ColorName != ""  AND not FindColor(ColorName))
     MsgBox %ColorName% could not be found.</pre>
 <p>在上面的例子中, 如果 <em>ColorName</em> 变量为空则永远不会调用 FindColor() 函数. 这是由于 <em>AND</em> 的左侧结果将为 <em>false</em>, 因此其右边不可能让最终的结果为 <em>true</em>.</p>
 <p>由于此特性, 所以需要注意到, 如果在 <em>AND</em> 或 <em>OR</em> 的右侧调用函数, 那么函数可能永远不会产生副作用(例如改变全局变量的内容).</p>
@@ -289,7 +289,7 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>因为调用函数不会开启新<a href="misc/Threads.htm">线程</a>, 所以函数对设置例如 <a href="commands/SendMode.htm">SendMode</a> 和 <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a> 做出的任何改变对其调用者同样有效.</p>
 <p>函数的调用者可以传递不存在的变量或<a href="misc/Arrays.htm">数组</a>元素给它, 当函数期望和 <a href="#ByRef">ByRef</a> 一致的参数时这很有用. 例如, 调用 <code>GetNextLine(BlankArray%i%)</code> 会自动地创建<a href="#Local">局部</a>或全局的变量 <code>BlankArray%i%</code>(是局部还是全局取决于调用者是否在函数内并且它的<a href="#AssumeGlobal">假设全局模式</a>是否有效).</p>
 <p>在函数中使用 <a href="commands/ListVars.htm">ListVars</a> 时, 它会显示函数的<a href="#Local">局部变量</a>及其内容. 这样可以帮助调试脚本.</p>
-<h2>风格和命名约定</h2>
+<h2  id="Style_and_Naming_Conventions">风格和命名约定</h2>
 <p>您也许会发现, 如果给复杂函数中的特定变量加上独特的前缀会让函数更容易阅读和维护. 例如, 使用 "p" 或 "p_" 开头来命名函数中的每个参数可以让它们的性质一目了然, 尤其是当函数中有许多<a href="#Local">局部变量</a>吸引您的注意力的时候. 同样地, 前缀 "r" 或 "r_" 可以用于 <a href="#ByRef">ByRef 参数</a>, 而 "s" 或 "s_" 可以用于<a href="#static">静态变量</a>.</p>
 <p>在定义函数时可以使用 <a href="commands/Block.htm#otb">One True Brace(OTB) 风格</a>. 例如:</p>
 <pre>Add(x, y) {
@@ -315,7 +315,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
 <p>如果脚本定义了与内置函数同名的函数, 那么内置函数会被覆盖. 例如, 脚本会调用它自己定义的 WinExist() 函数来代替标准的那个. 然而, 这样脚本将无法调用原来的函数.</p>
 <p>在 DLL 文件中的外部函数可以使用 <a href="commands/DllCall.htm">DllCall()</a> 调用.</p>
 <p>下列内置函数都可以通过点击它们的名称查看详细信息.</p>
-<h3>常用函数</h3>
+<h3  id="Frequently-used_Functions">常用函数</h3>
 <table class="info">
   <tr>
     <th style="width:150px">函数</th>
@@ -326,7 +326,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
     <td>检查文件或文件夹是否存在且返回它的属性.</td>
   </tr>
   <tr id="GetKeyState">
-    <td><a href="commands/GetKeyState.htm">GetKeyState</a></td>
+    <td><a href="commands/GetKeyState.htm#function">GetKeyState</a></td>
     <td>获取指定键盘按键是否被按下的状态, 当指定按键被按下时返回 true(1) 否则返回 false(0).</td>
   </tr>
   <tr id="InStr">
@@ -342,15 +342,15 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
     <td>替换字符串中匹配模式(正则表达式) 出现的地方.</td>
   </tr>
   <tr id="StrLen">
-    <td><a href="commands/StringLen.htm">StrLen</a></td>
+    <td><a href="commands/StrLen.htm">StrLen</a></td>
     <td>获取给定字符串的长度.</td>
   </tr>
   <tr id="StrReplace">
-    <td><a href="commands/StringReplace.htm">StrReplace</a></td>
+    <td><a href="commands/StrReplace.htm">StrReplace</a></td>
     <td>用新的字符串替换指定字符串出现的地方.</td>
   </tr>
   <tr id="StrSplit">
-    <td><a href="commands/StringSplit.htm">StrSplit</a></td>
+    <td><a href="commands/StrSplit.htm">StrSplit</a></td>
     <td>使用指定的分隔符把一个字符串分解成多个子字符串并保存到数组中.</td>
   </tr>
   <tr id="SubStr">
@@ -359,14 +359,14 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
   </tr>
   <tr id="WinActive">
     <td><a href="commands/WinActive.htm">WinActive</a></td>
-    <td>如果指定的窗口存在且为活动窗口(顶层), 则返回其唯一 ID(HWND).</td>
+    <td>检查指定的窗口是否处于活动状态, 并返回其唯一 ID(HWND).</td>
   </tr>
   <tr id="WinExist">
     <td><a href="commands/WinExist.htm">WinExist</a></td>
-    <td>返回首个匹配窗口的 唯一ID(HWND).</td>
+    <td>检查是否存在指定的窗口, 并返回第一个匹配窗口的唯一 ID(HWND).</td>
   </tr>
 </table>
-<h3>杂项函数</h3>
+<h3 id="Miscellaneous_Functions">杂项函数</h3>
 <table class="info">
   <tr>
     <th style="width:150px">函数</th>
@@ -485,7 +485,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
     <td>相当于对象类型的内置方法的函数, 如 <a href="objects/Object.htm#InsertAt">ObjInsertAt</a>. 通常建议使用相应的方法.</td>
   </tr>
   <tr id="OnClipboardChange">
-    <td><a href="commands/OnClipboardChange.htm">OnClipboardChange</a></td>
+    <td><a href="commands/OnClipboardChange.htm#function">OnClipboardChange</a></td>
     <td>注册一个每当剪贴板内容发生改变时都会运行的函数或<a href="objects/Functor.htm">函数对象</a>.</td>
   </tr>
   <tr id="OnError">
@@ -493,7 +493,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
     <td>指定一个在未处理错误发生时自动运行的函数.</td>
   </tr>
   <tr id="OnExit">
-    <td><a href="commands/OnExit.htm">OnExit</a></td>
+    <td><a href="commands/OnExit.htm#function">OnExit</a></td>
     <td>指定一个在脚本退出时自动运行的函数.</td>
   </tr>
   <tr id="OnMessage">
@@ -653,7 +653,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
   </tr>
 </table>
 
-<h3>其他函数</h3>
+<h3 id="Other_Functions">其他函数</h3>
 <p><a href="https://github.com/polyethene/AutoHotkey-Scripts/blob/master/Functions.ahk">Polyethene 的命令函数</a>: 为每个有 OutputVar 的 AutoHotkey 命令提供了可调用的函数. 可以通过 <a href="commands/_Include.htm">#Include</a> 把这个库包含在任何脚本中.</p>
 </body>
 </html>
