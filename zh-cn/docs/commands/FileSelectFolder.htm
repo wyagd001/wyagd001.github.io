@@ -17,7 +17,7 @@
 <p>显示可以让用户选择文件夹的标准对话框.</p>
 
 <pre class="Syntax"><span class="func">FileSelectFolder</span>, OutputVar <span class="optional">, StartingFolder, Options, Prompt</span></pre>
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>OutputVar</dt>
@@ -29,8 +29,7 @@ Folder := RegExReplace(Folder, "\\$")  <em>; 移除默认的反斜杠, 如果存
   <dd><p>如果为空或省略, 则对话框的初始选择对象为用户的我的文档文件夹(或可能是我的电脑). 可以指定 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>例如 <code>::{20d04fe0-3aea-1069-a2d8-08002b30309d}</code>(即我的电脑) 来从特定的专用文件夹开始导航.</p>
       <p>否则, 此参数最常见的用法是星号后面紧跟着初始选择的驱动器或文件夹的绝对路径. 例如, <code>*C:\</code> 会初始选择 C 驱动器. 同样地, <code>*C:\My Folder</code> 会初始选择这个特殊的文件夹.</p>
       <p>星号表示允许用户从起始文件夹向上导航(接近根目录). 如果没有星号, 则强制用户在 <em>StartingFolder </em>中选择文件夹(或 <em>StartingFolder</em> 自身). 省略星号的一个好处是最初 <em>StartingFolder</em> 会显示为树形展开状态, 这样可以节省用户点击前面加号的时间.</p>
-      <p>如果使用星号, 则向上导航可以被限制到桌面外的其他文件夹. 在星号前加上最上级文件夹的绝对路径跟着一个空格或 tab 即可实现. 在下面的例子中, 将不允许用户导航到比 C:\My Folder 更上级的文件夹(不过初始选择对象为 C:\My Folder\Projects):<br>
-      <code>C:\My Folder *C:\My Folder\Projects</code></p>
+      <p>如果使用星号, 则向上导航可以被限制到桌面外的其他文件夹. 在星号前加上最上级文件夹的绝对路径跟着一个空格或 tab 即可实现. 例如, <code>C:\My Folder *C:\My Folder\Projects</code> 将不允许用户导航到比 C:\My Folder 更上级的文件夹(不过初始选择对象为 C:\My Folder\Projects):</p>
     </dd>
 
   <dt>Options</dt>
@@ -48,10 +47,10 @@ Folder := RegExReplace(Folder, "\\$")  <em>; 移除默认的反斜杠, 如果存
 
 </dl>
 
-<h2>错误处理</h2>
+<h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果用户没有选择文件却解除了对话框(例如按下了取消按钮), 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1. 如果系统拒绝显示对话框(罕见), 那么它也被设置为 1. 否则被置为 0.</p>
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>文件夹选择对话框通常如下所示:</p>
 <img src="../static/pics/dlg_folder.png" alt="FileSelectFolder" />
 <p>GUI 窗口可以使用 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> 的方法显示文件夹选择模式对话框. 模式对话框在其消失之前会阻止用户与 GUI 窗口进行交互.</p>
@@ -59,21 +58,21 @@ Folder := RegExReplace(Folder, "\\$")  <em>; 移除默认的反斜杠, 如果存
 <pre><a href="Thread.htm">Thread</a>, NoTimers
 FileSelectFolder, OutputVar,, 3
 Thread, NoTimers, false</pre>
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="FileSelectFile.htm">FileSelectFile</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="ToolTip.htm">ToolTip</a>, <a href="Gui.htm">GUI</a>, <a href="../misc/CLSID-List.htm">CLSID List</a>, <a href="FileCopyDir.htm">FileCopyDir</a>, <a href="FileMoveDir.htm">FileMoveDir</a>, <a href="SplitPath.htm">SplitPath</a></p>
 <p>此外, 操作系统提供了标准的对话框让用户选取字体, 颜色或图标. 使用 <a href="DllCall.htm">DllCall()</a> 可以显示这些对话框, 演示的例子请参阅 <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a>.</p>
-<h2>示例</h2>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
+<p><a href="#ExBasic">#1</a>: Allows the user to select a folder and provides both an edit field and a "make new folder" button.</p>
 <pre>FileSelectFolder, OutputVar, , 3
 if OutputVar =
     MsgBox, You didn't select a folder.
 else
-    MsgBox, You selected folder &quot;%OutputVar%&quot;.</pre>
+    MsgBox, You selected folder "%OutputVar%".</pre>
 </div>
 
 <div class="ex" id="ExCLSID">
-<p><a href="#ExCLSID">#2</a>: <a href="../misc/CLSID-List.htm">CLSID</a> 例子:</p>
+<p><a href="#ExCLSID">#2</a>: <a href="../misc/CLSID-List.htm">CLSID</a> 例子. Allows the user to select a folder in the "My Computer" directory.</p>
 <pre>FileSelectFolder, OutputVar, ::{20d04fe0-3aea-1069-a2d8-08002b30309d}  <em>; 我的电脑.</em></pre>
 </div>
 

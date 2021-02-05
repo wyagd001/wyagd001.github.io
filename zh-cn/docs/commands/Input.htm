@@ -17,14 +17,14 @@
 <p>等待用户输入字符串.</p>
 
 <pre class="Syntax"><span class="func">Input</span> <span class="optional">, OutputVar, Options, EndKeys, MatchList</span></pre>
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>OutputVar</dt>
   <dd><p>用来保存用户输入文本的变量名(默认情况下, 模拟输入也被保存下来).</p>
       <p>如果省略此参数和其他参数, 那么会终止在其他<a href="../misc/Threads.htm">线程</a>中正在执行的任何 Input 并且将那个 Input 的 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为单词 NewInput. 与之相比, 如果终止了之前的 Input 则把当前线程的 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0, 如果没有需要终止的 Input 则为 1.</p>
-      <p><em>OutputVar</em> 本身并不记录键击. 而是记录通过键击根据活动窗口的键盘布局/语言产生的字符. 因此, 不产生字符的键击(例如 <kbd>PageUp</kbd> 和 <kbd>Home</kbd>) 不会被记录下来(尽管可以通过下面的 <em>EndKeys</em> 参数识别它们).</p>
-      <p class="warning"><strong>注意:</strong> <kbd>Escape</kbd> 键被转换为 ASCII ESC 字符, <code>Chr(27)</code>. 这可以通过在 <em>EndKeys</em> 中包含 <code>{Esc}</code> 来避免, 在这种情况下, 按下 <kbd>Escape</kbd> 将终止输入.</p>
+      <p><em>OutputVar</em> 本身并不记录键击. 而是记录通过键击根据活动窗口的键盘布局/语言产生的字符. 因此, 不产生字符的键击(例如 <kbd>PgUp</kbd> 和 <kbd>Home</kbd>) 不会被记录下来(尽管可以通过下面的 <em>EndKeys</em> 参数识别它们).</p>
+      <p class="warning"><strong>注意:</strong> <kbd>Esc</kbd> 键被转换为 ASCII ESC 字符, <code>Chr(27)</code>. 这可以通过在 <em>EndKeys</em> 中包含 <code>{Esc}</code> 来避免, 在这种情况下, 按下 <kbd>Esc</kbd> 将终止输入.</p>
       <p>会原义保存空白字符, 例如 <kbd>Tab</kbd>(`t). <kbd>Enter</kbd> 被保存为换行符(`n).</p></dd>
 
   <dt>选项</dt>
@@ -33,7 +33,7 @@
       <p><strong>C</strong>: 区分大小写. 一般情况下, <em>MatchList</em> 是不区分大小写的(在 1.0.43.03 之前的版本中, 只有字母 A-Z 被认为具有大小写形式, 而像 ü/ü 这样的字母则没有).</p>
       <p><strong>I</strong>: 忽略由 AutoHotkey 脚本产生的所有字符, 例如 <a href="Send.htm#SendEvent">SendEvent</a> 命令. 然而, 不论此设置如何, <a href="Send.htm#SendInput">SendInput</a> 和 <a href="Send.htm#SendPlay">SendPlay</a> 模式生成的输入总是被忽略. <span class="ver">[v1.1.31+]:</span> 选项字母后面可以跟着一个数字来设置最低发送级别. <code>I</code> 等同于 <code>I1</code>, 而 <code>I0</code> 等同于没有指定该选项.</p></p>
       <p><strong>L</strong>: 长度限制(例如 <code>L5</code>). 允许输入文本的最大长度. 当文本到达这个长度, 则输入会被终止且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为单词 Max, 不过如果此时文本匹配 <em>MatchList</em> 中的某个词组, 则把 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为单词 Match. 如果未指定, 则长度限制为 16383, 这也是 <span class="ver">[v1.1.31]</span> 之前版本的绝对最大长度.</p>
-      <p><strong>M</strong>: 如果含修饰符的键击(例如 <kbd>Control</kbd>+<kbd>A</kbd> 到 <kbd>Control</kbd>+<kbd>Z</kbd>) 对应于真实的 ASCII 字符, 则会识别并对它们进行转译. 参考这个例子, 其中识别了 <kbd>Control</kbd>+<kbd>C</kbd>: </p>
+      <p><strong>M</strong>: 如果含修饰符的键击(例如 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>) 对应于真实的 ASCII 字符, 则会识别并对它们进行转译. 参考这个例子, 其中识别了 <kbd>Ctrl</kbd>+<kbd>C</kbd>: </p>
       <pre>Transform, CtrlC, Chr, 3 <em>; 把 Ctrl-C 对应的字符保存到 CtrlC 变量.</em>
 Input, OutputVar, L1 M
 if OutputVar = %CtrlC%
@@ -48,9 +48,9 @@ ExitApp</pre>
 
   <dt>EndKeys</dt>
   <dd><p>零个或多个按键组成的列表, 按下其中的任何一个都可以终止输入(<em>EndKey</em> 自身不会被写入 <em>OutputVar</em>). 使用此方式终止输入后, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为单词 EndKey 后跟着冒号和 <em>EndKey</em> 的名称. 例如: <code>EndKey:.</code>, <code>EndKey:Escape</code>.</p>
-      <p><em>EndKey</em> 列表使用类似于 <a href="Send.htm">Send</a> 命令的格式. 例如, 指定 <code>{Enter}.{Esc}</code> 会使得 <kbd>Enter</kbd>, <kbd>.</kbd> 或 <kbd>Escape</kbd> 其中任何一个都可以终止输入. 要使用大括号作为终止键, 请指定 <code>{{}</code> 和/或 <code>{}}</code>.</p>
-      <p>要使用 <kbd>Control</kbd>, <kbd>Alt</kbd> 或 <kbd>Shift</kbd> 作为终止键, 请指定它们的左和/或右的版本, 而不是中性版本. 例如, 指定 <code>{LControl}{RControl}</code> 而不是 <code>{Control}</code>.</p>
-      <p><span class="ver">[v1.0.14+]</span>: 尽管不支持诸如 <kbd>Alt</kbd>+<kbd>C</kbd>(!c) 这样的修饰键, 但支持某些需要按住 <kbd>shift</kbd> 键来输入的字符, 标点符号, 例如 <code>?!:@&amp;{}</code>. <span class="ver">[v1.1.20+]</span>: 其他字符推荐使用上述的 <strong>E</strong> 选项. 当同时使用 <strong>E</strong> 和 <strong>M</strong> 选项时, 通过在 <em>EndKeys</em> 中包括相应的 ASCII 控制字符来支持 <kbd>Control</kbd>+<kbd>A</kbd> 到 <kbd>Control</kbd>+<kbd>Z</kbd>.</p>
+      <p><em>EndKey</em> 列表使用类似于 <a href="Send.htm">Send</a> 命令的格式. 例如, 指定 <code>{Enter}.{Esc}</code> 会使得 <kbd>Enter</kbd>, <kbd>.</kbd> 或 <kbd>Esc</kbd> 其中任何一个都可以终止输入. 要使用大括号作为终止键, 请指定 <code>{{}</code> 和/或 <code>{}}</code>.</p>
+      <p>要使用 <kbd>Ctrl</kbd>, <kbd>Alt</kbd> 或 <kbd>Shift</kbd> 作为终止键, 请指定它们的左和/或右的版本, 而不是中性版本. 例如, 指定 <code>{LControl}{RControl}</code> 而不是 <code>{Control}</code>.</p>
+      <p><span class="ver">[v1.0.14+]</span>: 尽管不支持诸如 <kbd>Alt</kbd>+<kbd>C</kbd>(!c) 这样的修饰键, 但支持某些需要按住 <kbd>shift</kbd> 键来输入的字符, 标点符号, 例如 <code>?!:@&amp;{}</code>. <span class="ver">[v1.1.20+]</span>: 其他字符推荐使用上述的 <strong>E</strong> 选项. 当同时使用 <strong>E</strong> 和 <strong>M</strong> 选项时, 通过在 <em>EndKeys</em> 中包括相应的 ASCII 控制字符来支持 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</p>
       <p>还可以指定明确的虚拟按键代码, 例如 <code>{vkFF}</code>. 只有在一个按键没有指定名称且按下时不产生可见的字符这样少见的情况下, 这种方法才有用. 它的虚拟按键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p>
     </dd>
 
@@ -62,7 +62,7 @@ ExitApp</pre>
 
 </dl>
 
-<h2>错误处理</h2>
+<h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span> 此命令在不带参数调用且没有 Input 正在执行时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <table class="info">
   <tr>
@@ -95,7 +95,7 @@ ExitApp</pre>
     </td>
   </tr>
 </table>
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>如果在使用此命令时另一个<a href="../misc/Threads.htm">线程</a>中的 Input 正在执行, 则那个 Input 会被终止且其 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 会被设置为单词 NewInput. 之后(如果给出了参数), 新的 Input 开始执行.</p>
 <p>在执行 Input 时, 仍然可以启动新的<a href="../misc/Threads.htm">线程</a>(例如, <a href="Menu.htm">自定义菜单项</a>和<a href="SetTimer.htm">计时子程序</a>). 同样地, 当 Input <a href="#vis">可见</a>时键盘<a href="../Hotkeys.htm">热键</a>仍然是有效的. 如果 Input 不可见, 那么只会触发<a href="_UseHook.htm">钩子热键</a>.</p>
 <p>脚本中首次使用此命令时, 会安装<a href="_InstallKeybdHook.htm">键盘钩子</a>(在还没有安装时). 同时, 脚本变成<a href="_Persistent.htm">持续运行的</a>, 这意味着应该使用 <a href="ExitApp.htm">ExitApp</a> 结束脚本. 键盘钩子会一直保持加载状态, 直到下一次使用 <a href="Suspend.htm">Suspend</a> 或 <a href="Hotkey.htm">Hotkey</a> 命令, 此时如果没有任何热键或热字串需要那么它会被移除.</p>
@@ -103,33 +103,33 @@ ExitApp</pre>
 <p>尽管不够灵活, 但<a href="Hotstrings.htm">热字串</a>通常比 Input 命令更容易使用.</p>
 <p><a href="InputHook.htm">InputHook()</a> 比 Input 命令更灵活.</p>
 
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="KeyWait.htm">KeyWait</a>, <a href="Hotstrings.htm">热字串</a>, <a href="InputBox.htm">InputBox</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="../misc/Threads.htm">线程</a>, <a href="IfIn.htm">if var in/contains MatchList</a></p>
-<h2>示例</h2>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExAnyKey">
 <p><a href="#ExAnyKey">#1</a>: 等待用户按下任意键. 产生不可见字符的这些键(例如 修饰键, 功能键和方向键) 已经被列为终止键, 这样就能检测到它们.</p>
 <pre>Input, SingleKey, L1, {LControl}{RControl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}{AppsKey}{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}{Left}{Right}{Up}{Down}{Home}{End}{PgUp}{PgDn}{Del}{Ins}{BS}{CapsLock}{NumLock}{PrintScreen}{Pause}</pre>
 </div>
 
 <div class="ex" id="ExHotkey">
-<p><a href="#ExHotkey">#2</a>: 这是个可运行的热键示例. 由于此热键含有颚化符(~) 前缀, 所以它本身的键击会被传递到活动窗口. 因此, 如果您键入 <code>[btw</code>(或其他某个匹配词组) 到任意编辑器中, 脚本会自动执行您选择的动作(例如替换键入的文本):</p>
+<p><a href="#ExHotkey">#2</a>: 由于此热键含有颚化符(~) 前缀, 所以它本身的键击会被传递到活动窗口. 因此, 如果您键入 <code>[btw</code>(或其他某个匹配词组) 到任意编辑器中, 脚本会自动执行您选择的动作(例如替换键入的文本). 有关此示例的另一个版本, 请参阅 <a href="Switch.htm#ExInput">Switch</a>.</p>
 <pre>~[::
 Input, UserInput, V T5 L4 C, {enter}.{esc}{tab}, btw,otoh,fl,ahk,ca
 if (ErrorLevel = "Max")
 {
-    MsgBox, You entered &quot;%UserInput%&quot;, which is the maximum length of text.
+    MsgBox, You entered "%UserInput%", which is the maximum length of text.
     return
 }
 if (ErrorLevel = "Timeout")
 {
-    MsgBox, You entered &quot;%UserInput%&quot; at which time the input timed out.
+    MsgBox, You entered "%UserInput%" at which time the input timed out.
     return
 }
 if (ErrorLevel = "NewInput")
     return
 If InStr(ErrorLevel, "EndKey:")
 {
-    MsgBox, You entered &quot;%UserInput%&quot; and terminated the input with %ErrorLevel%.
+    MsgBox, You entered "%UserInput%" and terminated the input with %ErrorLevel%.
     return
 }
 <em>; 否则, 找到了匹配.</em>
@@ -144,7 +144,6 @@ else if (UserInput = "ca")
 else if (UserInput = "ahk")
     Run, https://www.autohotkey.com
 return</pre>
-<p>有关此示例的另一个版本, 请参阅 <a href="Switch.htm#ExInput">Switch</a>.</p>
 </div>
 
 </body>

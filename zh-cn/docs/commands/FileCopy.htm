@@ -16,7 +16,7 @@
 <p>复制一个或多个文件.</p>
 
 <pre class="Syntax"><span class="func">FileCopy</span>, SourcePattern, DestPattern <span class="optional">, Overwrite</span></pre>
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>SourcePattern</dt>
@@ -39,28 +39,36 @@
 
 </dl>
 
-<h2>错误处理</h2>
+<h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p><a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为由于错误而无法复制的文件数, 否则为 0.</p>
 <p>在这两种情况中, 如果源文件为单个文件(没有通配符) 且此文件不存在, 则 ErrorLevel 被置为 0. 要判断这种情况, 请在复制前对源文件使用 <a href="FileExist">FileExist()</a> 或 <a href="IfExist.htm">IfExist</a>.</p>
 <p>与 <a href="FileMove.htm">FileMove</a> 不同, 复制一个文件来覆盖它自己总是会导致错误, 即使在改写模式生效的情况下.</p>
 <p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0(零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
 
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>FileCopy 只复制文件. 若要复制文件夹中的内容(它的所有文件和子文件夹, 而不复制文件夹本身), 请参照下面的示例部分. 若要复制单个文件夹(及其子文件夹), 请使用 <a href="FileCopyDir.htm">FileCopyDir</a>.</p>
 <p>在遇到错误后操作仍会继续进行.</p>
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="FileMove.htm">FileMove</a>, <a href="FileCopyDir.htm">FileCopyDir</a>, <a href="FileMoveDir.htm">FileMoveDir</a>, <a href="FileDelete.htm">FileDelete</a></p>
-<h2>示例</h2>
-<div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>FileCopy, C:\My Documents\List1.txt, D:\Main Backup\  <em>; 复制文件并保留原来的文件名.</em>
-FileCopy, C:\My File.txt, C:\My File New.txt  <em>; 复制文件到同一个文件夹并改变文件名.</em>
-FileCopy, C:\Folder1\*.txt, D:\New Folder\*.bkp  <em>; 复制到新位置并改变扩展名.</em></pre>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExKeepOrigName">
+<p><a href="#ExKeepOrigName">#1</a>: 复制文件并保留原来的文件名.</p>
+<pre>FileCopy, C:\My Documents\List1.txt, D:\Main Backup\</pre>
+</div>
+
+<div class="ex" id="ExNewName">
+<p><a href="#ExNewName">#2</a>: 复制文件到同一个文件夹并改变文件名.</p>
+<pre>FileCopy, C:\My File.txt, C:\My File New.txt</pre>
+</div>
+
+<div class="ex" id="ExNewExt">
+<p><a href="#ExNewExt">#3</a>: 复制到新位置并改变扩展名.</p>
+<pre>FileCopy, C:\Folder1\*.txt, D:\New Folder\*.bkp</pre>
 </div>
 
 <div class="ex" id="ExCopyAll">
-<p><a href="#ExCopyAll">#2</a>: 下面的例子复制一个文件夹中所有文件和文件夹到另一个文件夹中:</p>
+<p><a href="#ExCopyAll">#4</a>: 复制一个文件夹中所有文件和文件夹到另一个文件夹中:</p>
 <pre>ErrorCount := CopyFilesAndFolders("C:\My Folder\*.*", "D:\Folder to receive all files &amp; folders")
 if (ErrorCount != 0)
     MsgBox %ErrorCount% files/folders could not be copied.

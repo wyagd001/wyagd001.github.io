@@ -13,7 +13,7 @@
 <body>
 <h1>TreeView <span class="ver">[v1.0.44+]</span></h1>
 
-<h2>目录</h2>
+<h2 id="toc">目录</h2>
 <ul>
   <li><a href="#Intro">入门和简单示例</a></li>
   <li><a href="#Options">选项和样式</a></li>
@@ -182,8 +182,8 @@ Loop
 <h3 id="TV_Get">TV_Get</h3>
 <p>如果指定项目含有指定的属性, 则返回它的 ID.</p>
 <pre class="Syntax"><span class="func">TV_Get</span>(ItemID, Attribute)</pre>
-<p>如果指定的项目具有指定的属性, 则返回它自己的 <em>ItemID</em>. 否则返回 0. 对于 <em>Attribute</em>, 指定 &quot;E&quot;, &quot;Expand&quot; 或 &quot;Expanded&quot; 来判断此项当前是否<a href="#Expand">展开的</a>(即它的子项目是显示的); 指定 &quot;C&quot;, &quot;Check&quot; 或 &quot;Checked&quot; 来判断此项是否含有<a href="#Check">复选标记</a>; 或指定 &quot;B&quot; 或 &quot;Bold&quot; 来判断此项当前是否为<a href="#Bold">粗体</a>.</p>
-<p class="note"><strong>提示:</strong> 因为在 IF 语句中把任何非零值视为 &quot;true&quot;, 所以下面两行功能相同: <code>if TV_Get(ItemID, &quot;Checked&quot;) = ItemID</code> 和 <code>if TV_Get(ItemID, &quot;Checked&quot;)</code>.</p>
+<p>如果指定的项目具有指定的属性, 则返回它自己的 <em>ItemID</em>. 否则返回 0. 对于 <em>Attribute</em>, 指定 "E", "Expand" 或 "Expanded" 来判断此项当前是否<a href="#Expand">展开的</a>(即它的子项目是显示的); 指定 "C", "Check" 或 "Checked" 来判断此项是否含有<a href="#Check">复选标记</a>; 或指定 "B" 或 "Bold" 来判断此项当前是否为<a href="#Bold">粗体</a>.</p>
+<p class="note"><strong>提示:</strong> 因为在 IF 语句中把任何非零值视为 "true", 所以下面两行功能相同: <code>if TV_Get(ItemID, "Checked") = ItemID</code> 和 <code>if TV_Get(ItemID, "Checked")</code>.</p>
 
 <h3 id="TV_SetImageList">TV_SetImageList <span class="ver">[v1.1.02+]</span></h3>
 <p>设置或替换 TreeView 的 <a href="#ImageList">ImageList</a>.</p>
@@ -235,7 +235,7 @@ return</pre>
 <p>要执行一些操作, 例如调整大小, 隐藏或改变 TreeView 的字体, 请使用 <a href="GuiControl.htm">GuiControl</a>.</p>
 <p>Tree View eXtension(TVX) 扩展了 TreeView 的功能, 增加对移动, 插入和删除的支持. 演示的例子请参阅 <a href="https://www.autohotkey.com/forum/topic19021.html">www.autohotkey.com/forum/topic19021.html</a></p>
 
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="ListView.htm">ListView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="Gui.htm">Gui</a>, <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a></p>
 
 <h2 id="Examples">示例</h2>
@@ -254,7 +254,7 @@ Gui +Resize
 <em>; 创建图像列表并在其中放入一些标准的系统图标:</em>
 ImageListID := <a href="ListView.htm#IL_Create">IL_Create</a>(5)
 Loop 5 
-    <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, &quot;shell32.dll&quot;, A_Index)
+    <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, "shell32.dll", A_Index)
 <em>; 创建 <a href="#GuiAdd">TreeView</a> 和 ListView, 让它们像在 Windows 资源管理器中那样靠在一起:</em>
 Gui, Add, TreeView, vMyTreeView r20 w%TreeViewWidth% gMyTreeView ImageList%ImageListID% <em>; <a href="#ImageList">ImageList</a></em>
 Gui, Add, ListView, vMyListView r20 w%ListViewWidth% x+10, Name|Modified
@@ -282,11 +282,11 @@ AddSubFoldersToTree(Folder, ParentItemID = 0)
     <em>; 此函数添加指定文件夹中所有子文件夹到 TreeView.</em>
     <em>; 它还可以调用自己来递归获取到任意深度的内嵌文件夹.</em>
     Loop %Folder%\*.*, 2  <em>; 获取所有文件夹的子文件夹.</em>
-        AddSubFoldersToTree(A_LoopFileFullPath, <a href="#TV_Add">TV_Add</a>(A_LoopFileName, ParentItemID, &quot;Icon4&quot;))
+        AddSubFoldersToTree(A_LoopFileFullPath, <a href="#TV_Add">TV_Add</a>(A_LoopFileName, ParentItemID, "Icon4"))
 }
 
 MyTreeView:  <em>; 此子程序处理用户的操作(例如点击).</em>
-if (A_GuiEvent != "S")  <em>; 即除了&quot;选择树中的新项目&quot;以外的其他操作.</em>
+if (A_GuiEvent != "S")  <em>; 即除了"选择树中的新项目"以外的其他操作.</em>
     return  <em>; 什么都不做.
 ; 否则, 把选择的文件夹中的内容放入 ListView.
 ; 首先确定选择的文件夹的完整路径:</em>
@@ -309,15 +309,15 @@ FileCount := 0  <em>; 在下面循环之前初始化.</em>
 TotalSize := 0
 Loop %SelectedFullPath%\*.*  <em>; 为了简化, 这里省略了文件夹, 所以只在 ListView 中显示文件.</em>
 {
-    LV_Add(&quot;&quot;, A_LoopFileName, A_LoopFileTimeModified)
+    LV_Add("", A_LoopFileName, A_LoopFileTimeModified)
     FileCount += 1
     TotalSize += A_LoopFileSize
 }
 GuiControl, +Redraw, MyListView
 
 <em>; 更新状态栏的三个部分, 让它们显示当前选择的文件夹的信息:</em>
-<a href="GuiControls.htm#SB_SetText">SB_SetText</a>(FileCount . &quot; files&quot;, 1)
-SB_SetText(Round(TotalSize / 1024, 1) . &quot; KB&quot;, 2)
+<a href="GuiControls.htm#SB_SetText">SB_SetText</a>(FileCount . " files", 1)
+SB_SetText(Round(TotalSize / 1024, 1) . " KB", 2)
 SB_SetText(SelectedFullPath, 3)
 return
 
@@ -325,8 +325,8 @@ GuiSize:  <em>; 当用户改变窗口大小时扩展/收缩 ListView 和 TreeVie
 if (A_EventInfo = 1)  <em>; 窗口被最小化了. 无需进行操作.</em>
     return
 <em>; 否则, 窗口的大小被调整过或被最大化了. 调整控件大小以适应.</em>
-GuiControl, Move, MyTreeView, % &quot;H&quot; . (A_GuiHeight - 30)  <em>; -30 用于状态栏和边距.</em>
-GuiControl, Move, MyListView, % &quot;H&quot; . (A_GuiHeight - 30) . &quot; W&quot; . (A_GuiWidth - TreeViewWidth - 30)
+GuiControl, Move, MyTreeView, % "H" . (A_GuiHeight - 30)  <em>; -30 用于状态栏和边距.</em>
+GuiControl, Move, MyListView, % "H" . (A_GuiHeight - 30) . " W" . (A_GuiWidth - TreeViewWidth - 30)
 return
 
 GuiClose:  <em>; 当用户关闭 TreeView 所在的 GUI 窗口时退出脚本.</em>

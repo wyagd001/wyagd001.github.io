@@ -16,7 +16,7 @@
 <p>在文件末尾处追加(写入) 文本(如果有必要, 首先创建文件).</p>
 
 <pre class="Syntax"><span class="func">FileAppend</span> <span class="optional">, Text, Filename, Encoding</span></pre>
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>Text</dt>
@@ -29,10 +29,10 @@
     <p><strong>行结束符(EOL) 转换</strong>: 在文件名前面加个星号可以阻止 EOL 转换. 这使得每个换行符(`n) 被写作单个换行符(LF) 而不是 Windows 标准的 CR+LF. 例如: <code>*C:\My Unix File.txt</code></p>
     <p>如果文件尚未打开(由于在<a href="LoopReadFile.htm">文件读取循环</a>中), 且 <em>Text</em> 包含任意的回车和换行符对(`r`n), 则会自动禁用 EOL 转换. 换句话说, 前一段中描述的星号选项自动生效. 不过, 当 <em>Text</em> 包含 `r`n 如果指定星号可以改善性能, 因为程序不需要扫描 <em>Text</em> 检查其中是否包含 `r`n.</p>
      <p id="stdout"><strong>标准输出(stdout)</strong>: 在 <em>Filename</em> 指定星号(*) 可以把 <em>Text</em> 发送到标准输出(stdout). 这样文本可以重定向到文件, 指向另一个 EXE 的管道或被<a href="_ErrorStdOut.htm">高级文本编辑器</a>捕获. 例如, 在命令提示符中输入后面的例子是有效的:</p>
-      <pre class="no-highlight">&quot;%ProgramFiles%\AutoHotkey\AutoHotkey.exe&quot; &quot;My Script.ahk&quot; &gt;&quot;Error Log.txt&quot;</pre>
+      <pre class="no-highlight">"%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script.ahk" &gt;"Error Log.txt"</pre>
     <p>然而, 发送到标准输出的文本将不会出现在运行它的命令提示符中. 解决此问题的方法是把脚本的输出通过管道传递给另一个命令或程序. 例如:</p>
-      <pre class="no-highlight">&quot;%ProgramFiles%\AutoHotkey\AutoHotkey.exe&quot; &quot;My Script.ahk&quot; |more</pre>
-      <pre class="no-highlight">For /F &quot;tokens=*&quot; %L in ('&quot;&quot;%ProgramFiles%\AutoHotkey\AutoHotkey.exe&quot; &quot;My Script .ahk&quot;&quot;') do @Echo %L</pre>
+      <pre class="no-highlight">"%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script.ahk" |more</pre>
+      <pre class="no-highlight">For /F "tokens=*" %L in ('""%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script .ahk""') do @Echo %L</pre>
     <p><span class="ver">[v1.1.20+]:</span> 在 <em>Filename</em> 指定两个星号(**) 可以把 <em>Text</em> 发送到标准错误输出(stderr).</p>
     </dd>
 
@@ -41,25 +41,25 @@
 
 </dl>
 
-<h2>错误处理</h2>
+<h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
 <p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
 
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>要覆盖现有的文件, 请在使用 FileAppend 前用 <a href="FileDelete.htm">FileDelete</a> 删除它.</p>
 <p>追加文本后目标文件会自动关闭(除非在<a href="LoopReadFile.htm">文件读取/写入循环</a>中以单参数模式使用 FileAppend 时).</p>
 <p><span class="ver">[AHK_L 42+]:</span> 追加模式的 <a href="FileOpen.htm">FileOpen()</a> 比 FileAppend 提供了更多的控制性并且允许文件保持打开状态而不是每次打开关闭文件. 一旦以追加模式打开文件后, 请使用 <code>file.<a href="../objects/File.htm#Write">Write</a>(string)</code> 来追加字符串. 文件对象通过 <a href="../objects/File.htm#RawWrite">RawWrite</a>/<a href="../objects/File.htm#RawRead">RawRead</a> 或 <a href="../objects/File.htm#WriteNum">Write<i>Num</i></a>/<a href="../objects/File.htm#ReadNum">Read<i>Num</i></a> 还支持二进制 I/O, 然而 FileAppend 仅支持文本.</p>
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="FileOpen.htm">FileOpen()</a> / <a href="../objects/File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="FileReadLine.htm">FileReadLine</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="FileDelete.htm">FileDelete</a>, <a href="OutputDebug.htm">OutputDebug</a>, <a href="../Scripts.htm#continuation">延续片段</a></p>
-<h2>示例</h2>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
+<p><a href="#ExBasic">#1</a>: Creates a file, if necessary, and appends a line.</p>
 <pre>FileAppend, Another line.`n, C:\My Documents\Test.txt</pre>
 </div>
 
 <div class="ex" id="ExContSect">
-<p><a href="#ExContSect">#2</a>: 下面的例子使用<a href="../Scripts.htm#continuation">延续片段</a>来提高可读性和可维护性:</p>
+<p><a href="#ExContSect">#2</a>: 使用<a href="../Scripts.htm#continuation">延续片段</a>来提高可读性和可维护性.</p>
 <pre>FileAppend,
 (
 A line of text.
@@ -70,7 +70,7 @@ Variable references such as %Var% are expanded by default.
 </div>
 
 <div class="ex" id="FTP">
-<p><a href="#FTP">#3</a>: 下面的例子演示了如何使用操作系统内置的 FTP 命令自动进行 FTP 上传. 此脚本已经在 Windows XP 中测试通过.</p>
+<p><a href="#FTP">#3</a>: 演示了如何使用操作系统内置的 FTP 命令自动进行 FTP 上传. 此脚本已经在 Windows XP 中测试通过.</p>
 <pre>FTPCommandFile := A_ScriptDir "\FTPCommands.txt"
 FTPLogFile := A_ScriptDir "\FTPLog.txt"
 FileDelete %FTPCommandFile%  <em>; 避免之前运行意外中止带来的问题.</em>

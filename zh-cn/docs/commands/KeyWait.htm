@@ -16,7 +16,7 @@
 <p>等待按键或鼠标/操纵杆按钮被松开或按下.</p>
 
 <pre class="Syntax"><span class="func">KeyWait</span>, KeyName <span class="optional">, Options</span></pre>
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>KeyName</dt>
@@ -33,28 +33,40 @@
 
 </dl>
 
-<h2>ErrorLevel</h2>
+<h2 id="ErrorLevel">ErrorLevel</h2>
 <p>命令超时后 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>如果没有安装键盘和/或鼠标钩子, 则按键或鼠标按钮的物理状态通常和逻辑状态一致(有时逻辑状态可能比物理状态滞后); 如果安装了钩子, 则它会准确反映出用户是否按下了按键. 您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 命令或菜单项确定脚本中是否使用了钩子. 通过添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 和 <a href="_InstallMouseHook.htm">#InstallMouseHook</a> 指令到脚本中您可以强制安装其中一种或两种钩子.</p>
 <p>当此命令处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
 <p>要等待两个或多个按键被释放, 请连续使用 KeyWait. 例如:</p>
 <pre>KeyWait Control  <em>; 等待 Control 和 Alt 被释放.</em>
 KeyWait Alt</pre>
 <p>要等待一组按键中的任意一个被按下, 请参阅 <a href="Input.htm">Input</a> 命令的示例部分.</p>
-<h2>相关</h2>
-<p><a href="GetKeyState.htm">GetKeyState</a>, <a href="../KeyList.htm">按键列表</a>, <a href="Input.htm">Input</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a>, <a href="ClipWait.htm">ClipWait</a>, <a href="WinWait.htm">WinWait</a></p>
-<h2>示例</h2>
+<h2 id="Related">相关</h2>
+<p><a href="GetKeyState.htm#function">GetKeyState()</a>, <a href="../KeyList.htm">按键列表</a>, <a href="Input.htm">Input</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a>, <a href="ClipWait.htm">ClipWait</a>, <a href="WinWait.htm">WinWait</a></p>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: 基本用法</p>
-<pre>KeyWait, a  <em>; 等待 A 被释放.</em>
-KeyWait, LButton, D  <em>; 等待鼠标左键被按下.</em>
-KeyWait, Joy1, D T3  <em>; 等待首个操纵杆按钮在 3 秒内被按下.</em>
-KeyWait, LAlt, L  <em>; 等待左 Alt 键被逻辑释放.</em></pre>
+<p><a href="#ExBasic">#1</a>: 等待 A 键被释放.</p>
+<pre>KeyWait, a</pre>
+</div>
+
+<div class="ex" id="ExDown">
+<p><a href="#ExDown">#2</a>: 等待鼠标左键被按下.</p>
+<pre>KeyWait, LButton, D</pre>
+</div>
+
+<div class="ex" id="ExTimeout">
+<p><a href="#ExTimeout">#3</a>: 等待首个操纵杆按钮在 3 秒内被按下.</p>
+<pre>KeyWait, Joy1, D T3</pre>
+</div>
+
+<div class="ex" id="ExLogical">
+<p><a href="#ExLogical">#4</a>: 等待左 Alt 键被逻辑释放.</p>
+<pre>KeyWait, LAlt, L</pre>
 </div>
 
 <div class="ex" id="ExHotkey">
-<p><a href="#ExHotkey">#2</a>: 简单的热键</p>
+<p><a href="#ExHotkey">#5</a>: When pressing this hotkey, KeyWait waits for the user to physically release the CapsLock key. As a result, subsequent statements are performed on release instead of press. This behavior is similar to <code>~CapsLock up::</code>.</p>
 <pre>~CapsLock::
 KeyWait, CapsLock  <em>; 等待用户实际释放.</em>
 MsgBox You pressed and released the CapsLock key.
@@ -62,7 +74,7 @@ return</pre>
 </div>
 
 <div class="ex" id="ExRemap">
-<p><a href="#ExRemap">#3</a>: 重映射按键或鼠标按钮(这里仅为了演示, 因为使用<a href="misc/Remap.htm">内置的重映射功能</a>会更容易). 当 NumpadAdd 按下时持续按住鼠标左键, 这样实际上把 NumpadAdd 映射成了鼠标左键.</p>
+<p><a href="#ExRemap">#6</a>: 重映射按键或鼠标按钮(这里仅为了演示, 因为使用<a href="misc/Remap.htm">内置的重映射功能</a>会更容易). 当 NumpadAdd 按下时持续按住鼠标左键, 这样实际上把 NumpadAdd 映射成了鼠标左键.</p>
 <pre>*NumpadAdd::
 MouseClick, left,,, 1, 0, D  <em>; 按住鼠标左键.</em>
 KeyWait, NumpadAdd  <em>; 等待按键被释放.</em>
@@ -71,7 +83,7 @@ return</pre>
 </div>
 
 <div class="ex" id="ExDouble">
-<p><a href="#ExDouble">#4</a>: 检测什么时候按下了某个按键两次(类似于双击). 当您按下 RControl 修饰另一个键时, 使用 KeyWait 来停止键盘自动重复功能以避免产生不想要的两次按下. 它通过保持热键线程的运行来实现这一点, 这依赖于 #MaxThreadsPerHotkey 默认设置值为 1, 从而阻止自动重复. 注意: 在 <a href="SetTimer.htm">SetTimer</a> 页面的底部有一个更精巧的脚本, 能分辨出单次, 两次和三次按下的区别.</p>
+<p><a href="#ExDouble">#7</a>: 检测什么时候按下了某个按键两次(类似于双击). 当您按下 RControl 修饰另一个键时, 使用 KeyWait 来停止键盘自动重复功能以避免产生不想要的两次按下. 它通过保持热键线程的运行来实现这一点, 这依赖于 #MaxThreadsPerHotkey 默认设置值为 1, 从而阻止自动重复. 注意: 在 <a href="SetTimer.htm">SetTimer</a> 页面的底部有一个更精巧的脚本, 能分辨出单次, 两次和三次按下的区别.</p>
 <pre>~RControl::
 if (A_PriorHotkey != "~RControl" or A_TimeSincePriorHotkey &gt; 400)
 {

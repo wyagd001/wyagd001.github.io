@@ -16,7 +16,7 @@
 <p>指定当脚本接收到指定消息时自动调用的<a href="../Functions.htm">函数</a>或<a href="../objects/Functor.htm">函数对象</a>.</p>
 
 <pre class="Syntax"><span class="func">OnMessage</span>(MsgNumber <span class="optional">, Function, MaxThreads</span>)</pre>
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>MsgNumber</dt>
@@ -118,15 +118,15 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>监听系统消息(小于 0x400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应可能超过系统预期的时间, 这样可能会导致一些副作用. 如果监听函数为了阻止对消息的进一步处理而返回整数而系统期望不同的处理或响应时, 可能会发生不想要的行为.</p>
 <p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递到控件的消息. 例如, 如果脚本正显示 MsgBox 而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
 <p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">MsgBox</a>) 则消息会丢失. 相反, 通常最好投递或发送消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="OnExit.htm">OnExit</a>, <a href="../misc/Clipboard.htm#OnClipboardChange">OnClipboardChange</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall()</a></p>
-<h2>示例</h2>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExLButtonDown">
 <p><a href="#ExLButtonDown">#1</a>: 下面是个可运行脚本, 它监听在 GUI 窗口中的鼠标点击. 相关主题: <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a></p>
 <pre>Gui, Add, Text,, Click anywhere in this window.
 Gui, Add, Edit, w200 vMyEdit
 Gui, Show
-OnMessage(0x201, &quot;WM_LBUTTONDOWN&quot;)
+OnMessage(0x201, "WM_LBUTTONDOWN")
 return
 
 WM_LBUTTONDOWN(wParam, lParam)
@@ -134,7 +134,7 @@ WM_LBUTTONDOWN(wParam, lParam)
     X := lParam &amp; 0xFFFF
     Y := lParam &gt;&gt; 16
     if A_GuiControl
-        Ctrl := &quot;`n(in control &quot; . A_GuiControl . &quot;)&quot;
+        Ctrl := "`n(in control " . A_GuiControl . ")"
     ToolTip You left-clicked in Gui window #%A_Gui% at client coordinates %X%x%Y%.%Ctrl%
 }
 
@@ -145,8 +145,8 @@ ExitApp</pre>
 <div class="ex" id="shutdown">
 <p><a href="#shutdown">#2</a>: 下面的脚本检测系统的关机/注销动作并允许您中止它. 在 Windows Vista 及更高的版本中, 系统会显示一个用户界面, 显示哪个程序正在阻止关机/注销, 并允许用户强制关机/注销. 在较旧的操作系统上, 脚本显示一个确认提示. 相关主题: <a href="OnExit.htm">OnExit</a></p>
 <pre><em>; 下面的 DllCall 是可选的: 它告诉操作系统要首先关闭此脚本(在其他所有程序之前).</em>
-DllCall(&quot;kernel32.dll\SetProcessShutdownParameters&quot;, &quot;UInt&quot;, 0x4FF, &quot;UInt&quot;, 0)
-OnMessage(0x11, &quot;WM_QUERYENDSESSION&quot;)
+DllCall("kernel32.dll\SetProcessShutdownParameters", "UInt", 0x4FF, "UInt", 0)
+OnMessage(0x11, "WM_QUERYENDSESSION")
 return
 
 WM_QUERYENDSESSION(wParam, lParam)
@@ -192,8 +192,8 @@ StopBlockingShutdown()
 
 <div class="ex" id="ExCustom">
 <p><a href="#ExCustom">#3</a>: 让脚本接收其他脚本或程序的自定义消息和最多两个数字(要发送字符串而不是数字, 请参阅下一个示例).</p>
-<pre>OnMessage(0x5555, &quot;MsgMonitor&quot;)
-OnMessage(0x5556, &quot;MsgMonitor&quot;)
+<pre>OnMessage(0x5555, "MsgMonitor")
+OnMessage(0x5556, "MsgMonitor")
 
 MsgMonitor(wParam, lParam, msg)
 {

@@ -17,17 +17,19 @@
 <p>注册一个每当剪贴板内容发生改变时都会运行的<a href="../Functions.htm">函数</a>或<a href="../objects/Functor.htm">函数对象</a>.</p>
 <pre class="Syntax"><span class="func">OnClipboardChange</span>(Func <span class="optional">, AddRemove</span>)</pre>
 
-<h3>参数</h3>
+<h3 id="Parameters">参数</h3>
 <dl>
 
   <dt>Func</dt>
   <dd><p>要调用的函数或<a href="../objects/Functor.htm">函数对象</a>名称. 函数的参数和返回值<a href="#Func">如下</a>所述.</p></dd>
   
   <dt>AddRemove</dt>
-  <dd><p>下列数值之一:<br>
-  <strong>1</strong>(默认): 在先前任意的注册函数之后调用该函数.<br>
-  <strong>-1</strong>: 在先前任意的注册函数之前调用该函数.<br>
-  <strong>0</strong>: 不调用该函数.</p>
+  <dd><p>如果为空或省略, 则默认为 1(在先前任意的注册函数之后调用该函数). 否则, 请指定以下数字之一:</p>
+    <ul>
+      <li>1 = 在先前任意的注册函数之后调用该函数.</li>
+      <li>-1 = 在先前任意的注册函数之前调用该函数.</li>
+      <li>0 = 不调用该函数.</li>
+    </ul>
   <p>如果存在 OnClipboardChange 标签, 它总是会被率先调用.</p></dd>
 
 </dl>
@@ -36,18 +38,40 @@
 <pre class="Syntax"><i>FunctionName</i>(Type)</pre>
 <dl>
   <dt>Type</dt>
-  <dd><p>下列数值之一:<br>
-    <strong>0</strong> 剪贴板为空;<br>
-    <strong>1</strong> 可以用文本表示的内容(包括从资源管理器窗口<a href="../misc/Clipboard.htm#CopiedFiles">复制文件</a>);<br>
-    <strong>2</strong> 完全是非文本的内容, 如图片.</p></dd>
+  <dd><p>下列数值之一:</p>
+    <ul>
+      <li>0 = 剪贴板当前为空.</li>
+     <li>1 = 剪贴板包含可以用文本形式表示的内容(包括从资源管理器窗口<a href="../misc/Clipboard.htm#CopiedFiles">复制的文件</a>).</li>
+     <li>2 = 剪贴板包含完全是非文本的内容, 例如图片.</li>
+    </ul>
+  </dd>
   
   <dt><em>返回值</em></dt>
   <dd><p>如果这是最近的或仅有的 OnClipboardChange 函数, 其返回值会被忽略. 否则, 此函数会返回一个非零整数来阻止随后的函数被调用.</p></dd>
 </dl>
 
-<h3 id="FunctionExample">示例</h3>
-<p>此例等同于<a href="#LabelExample">下面的例子</a>, 只是在脚本首次启动时不会马上调用此函数, 而仅当剪贴板的内容发生改变时才会调用该函数.</p>
-<pre>#Persistent
+<h2 id="label">OnClipboardChange 标签</h2>
+<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用这种方法. 使用 <a href="#function">OnClipboardChange</a> 函数代替.</p>
+<p>当任何程序(甚至脚本本身) 改变了剪贴板内容时一个以 OnClipboardChange 命名的标签(如果存在) 会自动执行. 这个标签在脚本启动时也会执行一次.</p>
+<p>内置变量 A_EventInfo 包含以下数值之一:<br>
+<ul>
+  <li>0 = 剪贴板当前为空.</li>
+  <li>1 = 剪贴板包含可以用文本形式表示的内容(包括从资源管理器窗口<a href="../misc/Clipboard.htm#CopiedFiles">复制的文件</a>).</li>
+  <li>2 = 剪贴板包含完全是非文本的内容, 例如图片.</li>
+</ul>
+
+<h2 id="Remarks">备注</h2>
+<p>在 OnClipboardChange 函数或标签正在运行时如果剪贴板内容改变, 这时的剪贴板通知事件会丢失. 如果不希望这样, 在标签的首行指定 <a href="Critical.htm">Critical</a>. 不过, 这样做也会缓冲/延迟在 OnClipboardChange 线程运行期间产生的其他<a href="../misc/Threads.htm">线程</a>的运行(例如热键的按击).</p>
+<p>如果是脚本本身改变了剪贴板内容, 脚本中的 OnClipboardChange 函数或标签通常不会立即执行; 也就是说紧接在改变剪贴板命令后面的命令就像提前运行了一样. 要强制立即执行这个函数或标签, 请在改变剪贴板内容后使用短暂的延迟, 例如 <code><a href="Sleep.htm">Sleep</a> 20</code>.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="../misc/Clipboard.htm">Clipboard</a>, <a href="OnExit.htm#function">OnExit()</a>, <a href="OnExit.htm#command">OnExit</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExFnVsLabel">
+<p><a href="#ExFnVsLabel">#1</a>: 函数 vs. 标签.</p>
+<p>尽管方法不同, 但这两个例子都有相同的效果; 即, 用简短的 ToolTip 显示每次剪贴板的更改. 注意, 脚本首次启动时不会马上调用此函数; 仅当剪贴板的内容发生改变时才会调用该函数.</p>
+<pre id="FunctionExample">#Persistent
 OnClipboardChange("ClipChanged")
 return
 
@@ -56,15 +80,6 @@ ClipChanged(Type) {
     Sleep 1000
     ToolTip  <em>; 关闭提示.</em>
 }</pre>
-
-<h2 id="label">OnClipboardChange 标签</h2>
-<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用这种方法. 使用 <a href="#function">OnClipboardChange</a> 函数代替.</p>
-<p>当任何程序(甚至脚本本身) 改变了剪贴板内容时一个以 OnClipboardChange 命名的标签(如果存在) 会自动执行. 这个标签在脚本启动时也会执行一次.</p>
-<p>内置变量 A_EventInfo 包含:<br>
-0 如果剪贴板当前为空;<br>
-1 如果剪贴板包含可以用文本形式表示的内容(包括从资源管理器窗口<a href="../misc/Clipboard.htm#CopiedFiles">复制的文件</a>);<br>
-2 如果剪贴板包含完全是非文本的内容, 例如图片.</p>
-<p>下例是一个可运行的脚本. 脚本运行时, 会用简短的 ToolTip 显示每次剪贴板的更改.</p>
 <pre id="LabelExample">#Persistent
 return
 
@@ -73,13 +88,7 @@ ToolTip Clipboard data type: %A_EventInfo%
 Sleep 1000
 ToolTip  <em>; 关闭提示.</em>
 return</pre>
-
-<h2>备注</h2>
-<p>在 OnClipboardChange 函数或标签正在运行时如果剪贴板内容改变, 这时的剪贴板通知事件会丢失. 如果不希望这样, 在标签的首行指定 <a href="Critical.htm">Critical</a>. 不过, 这样做也会缓冲/延迟在 OnClipboardChange 线程运行期间产生的其他<a href="../misc/Threads.htm">线程</a>的运行(例如热键的按击).</p>
-<p>如果是脚本本身改变了剪贴板内容, 脚本中的 OnClipboardChange 函数或标签通常不会立即执行; 也就是说紧接在改变剪贴板命令后面的命令就像提前运行了一样. 要强制立即执行这个函数或标签, 请在改变剪贴板内容后使用短暂的延迟, 例如 <code><a href="Sleep.htm">Sleep</a> 20</code>.</p>
-
-<h2>相关</h2>
-<p><a href="../misc/Clipboard.htm">Clipboard</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a></p>
+</div>
 
 </body>
 </html>

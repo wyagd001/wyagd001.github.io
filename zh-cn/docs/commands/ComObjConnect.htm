@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>ComObjConnect() | AutoHotkey</title>
-<meta name="description" content="The ComObjConnect function connects the object's event sources to functions with a given prefix." />
+<meta name="description" content="The ComObjConnect function connects a COM object's event sources to functions with a given prefix." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,10 +12,10 @@
 <body>
 
 <h1>ComObjConnect() <span class="ver">[AHK_L 53+]</span></h1>
-<p>链接对象的事件到给定的前缀名的响应函数.</p>
+<p>链接 COM 对象的事件到给定的前缀名的响应函数.</p>
 <pre class="Syntax"><span class="func">ComObjConnect</span>(ComObject <span class="optional">, Prefix</span>)</pre>
 
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>ComObject</dt>
@@ -42,33 +42,33 @@
     return <i>ReturnValue</i>
 }</pre>
 <p><i>Prefix(前缀)</i> 为用户定义; 而 <b>EventName(事件名称)</b> 为期望此函数响应的事件名称, 定义于产生事件的对象.</p>
-<p><i>Params(参数)</i> 对应于事件包含的所有参数. 如果事件不含有参数, <i>Params</i> 应完全省略. <i>ComObject</i> 为可选, 仅当 <i>Params</i> 的数目正确时; 它包含了到传递给 ComObjConnect 的原始包装器(转换器) 对象的引用. &quot;ComObject&quot;应被替换为与您脚本上下文相关的更有意义的名称.</p>
+<p><i>Params(参数)</i> 对应于事件包含的所有参数. 如果事件不含有参数, <i>Params</i> 应完全省略. <i>ComObject</i> 为可选, 仅当 <i>Params</i> 的数目正确时; 它包含了到传递给 ComObjConnect 的原始包装器(转换器) 对象的引用. "ComObject"应被替换为与您脚本上下文相关的更有意义的名称.</p>
 <p>注意, 事件处理程序可以产生返回值. 要返回特定的 COM 类型的值, 使用 <a href="ComObjActive.htm#param">ComObject(类型, 值)</a>. 例如, <code>return ComObject(0,0)</code> 返回类型为 VT_EMPTY 的变体, 其等效于从 JavaScript 函数中返回 <code>undefined</code>(或未返回).</p>
 <p>调用 <code>ComObjConnect(目标对象, "<i>Prefix</i>")</code> 以启用事件处理.</p>
 <p>调用 <code>ComObjConnect(目标对象)</code> 以断开对象(停止事件处理).</p>
 <p>如果参数的数目未知, 可用<a href="../Functions.htm#Variadic">可变参数函数</a>.</p>
 
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p>脚本必须保留对 <em>ComObject</em> 的引用, 否则它将自动释放, 并与其 COM 对象断开连接, 从而阻止任何进一步的事件被检测. 没有标准的方法来检测何时不再需要连接, 因此脚本必须通过调用 ComObjConnect 来手动断开连接.</p>
 <p>可能需要使用 <a href="_Persistent.htm">#Persistent</a> 指令, 以便在脚本监听事件时保持脚本运行.</p>
 <p>失败时, 函数可能会抛出异常, 退出脚本或返回空字符串, 具体取决于当前的 <a href="ComObjError.htm">ComObjError()</a> 设置和<a href="ComObjError.htm#factors">其他因素</a>.</p>
 
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="ComObjCreate.htm">ComObjCreate()</a>, <a href="ComObjGet.htm">ComObjGet()</a>, <a href="ComObjActive.htm">ComObjActive()</a>, <a href="ComObjError.htm">ComObjError()</a>, <a href="http://msdn.microsoft.com/en-us/library/ccxe1xe6.aspx">WScript.ConnectObject (MSDN)</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExIE">
-<p><a href="#ExIE">#1</a></p>
-<pre>ie := ComObjCreate("<a href="http://msdn.microsoft.com/en-us/library/aa752084.aspx">InternetExplorer.Application</a>")
+<p><a href="#ExIE">#1</a>: 启动 Internet Explorer 的实例, 并将事件连接到相应的前缀为 "IE_" 的脚本函数. 有关 COM 对象和下面使用的 DocumentComplete 事件的详情, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/aa752084.aspx">InternetExplorer object (Microsoft Docs)</a>.</p>
+<pre>ie := ComObjCreate("InternetExplorer.Application")
 
 <em>; 把事件连接到带"IE_"前缀的脚本函数.</em>
-<b>ComObjConnect</b>(ie, "IE_")
+ComObjConnect(ie, "IE_")
 
 ie.Visible := true  <em>; 已知此语句在 IE7 上无法正常执行.</em>
 ie.Navigate("https://www.autohotkey.com/")
 #Persistent
 
-<b>IE_<a href="http://msdn.microsoft.com/en-us/library/aa768329.aspx">DocumentComplete</a></b>(ieEventParam, url, ieFinalParam) {
+IE_DocumentComplete(ieEventParam, url, ieFinalParam) {
     global ie
     if (ie != ieEventParam)
         s .= "第一个参数是新的包装器对象.`n"

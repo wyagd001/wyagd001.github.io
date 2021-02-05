@@ -13,7 +13,7 @@
 <body>
 <h1>ListView</h1>
 
-<h2>目录</h2>
+<h2 id="toc">目录</h2>
 <ul>
   <li><a href="#Intro">入门和简单示例</a></li>
   <li><a href="#Options">选项和样式</a></li>
@@ -44,7 +44,7 @@ Gui, Add, ListView, r20 w700 gMyListView, Name|Size (KB)
 
 <em>; 从文件夹中获取文件名列表并把它们放入 ListView:</em>
 Loop, %A_MyDocuments%\*.*
-    <a href="#LV_Add">LV_Add</a>(&quot;&quot;, A_LoopFileName, A_LoopFileSizeKB)
+    <a href="#LV_Add">LV_Add</a>("", A_LoopFileName, A_LoopFileSizeKB)
 
 <a href="#LV_ModifyCol">LV_ModifyCol</a>()  <em>; 根据内容自动调整每列的大小.</em>
 LV_ModifyCol(2, "Integer")  <em>; 为了进行排序, 指出列 2 是整数.</em>
@@ -57,21 +57,21 @@ MyListView:
 if (A_GuiEvent = "DoubleClick")
 {
     <a href="#LV_GetText">LV_GetText</a>(RowText, A_EventInfo)  <em>; 从行的第一个字段中获取文本.</em>
-    ToolTip You double-clicked row number %A_EventInfo%. Text: &quot;%RowText%&quot;
+    ToolTip You double-clicked row number %A_EventInfo%. Text: "%RowText%"
 }
 return
 
 GuiClose:  <em>; 表示当窗口关闭时脚本应自动退出.</em>
 ExitApp</pre>
 
-<h2 id="Options">用于 &quot;<em>Gui, Add, ListView, <u>Options</u></em>&quot; 的选项和样式</h2>
+<h2 id="Options">用于 "<em>Gui, Add, ListView, <u>Options</u></em>" 的选项和样式</h2>
 <p id="AltSubmit"><strong>AltSubmit:</strong> 通知脚本有比正常更多的 ListView 事件类型. 换句话说, g-标签会运行地更频繁. 请参阅 <a href="#notify">ListView 通知</a>了解详情.</p>
 <p><strong>Background:</strong> 指定单词 Background 后面紧跟着颜色名称(请参阅<a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>. 如果此选项不存在, 则 ListView 初始默认的背景颜色由 <a href="Gui.htm#Color">Gui Color</a> 的最后一个参数设置(如果没有, 则使用系统默认的背景颜色). 指定 <code>BackgroundDefault</code> 来应用系统的默认背景颜色(通常为白色). 例如, 使用 <code>GuiControl, +BackgroundDefault, MyListView</code> 可以把 ListView 恢复为默认的颜色.</p>
 <p><strong>C</strong>: 文本颜色. 指定字母 C 后面紧跟着颜色名称(请参阅<a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>cRed</code>, <code>cFF2211</code>, <code>c0xFF2211</code>, <code>cDefault</code>.</p>
 <p id="Checked"><strong>Checked:</strong> 在每行的左侧提供一个复选框. 当<a href="#LV_Add">添加</a>行时, 在其选项中指定单词 <em>Check</em> 来让复选框初始为选中而不是未选中状态. 用户可以点击复选框或按下空格键来选中或取消选中一行.</p>
 <p id="Count"><strong>Count:</strong> 指定单词 Count 后面跟着 ListView 最后会包含的总行数. 这不是限制: 超过此数目后仍然可以添加行. 相反, 此选项给控件一个暗示, 允许它一次性的而不是每次添加一行时分配内存, 这样极大地提高了添加行时的性能(这也可以提高排序性能). 要提升更多的性能, 请在添加大量行之前使用 <code>GuiControl, -Redraw, MyListView</code>. 随后, 使用 <code>GuiControl, +Redraw, MyListView</code> 来重新启用重绘(这样也重绘了控件).</p>
 <p><strong>Grid:</strong> 提供水平的和垂直的线以形象地显示出行与行和列与列之间的边界.</p>
-<p><strong>Hdr:</strong> 指定 <code>-Hdr</code>(负 Hdr) 来隐藏包含列标题的特殊顶行. 后面要让它显示, 请使用 <code>GuiControl, +Hdr, MyListView</code>.</p>
+<p><strong>Hdr:</strong> 指定 <code>-Hdr</code>(负 Hdr) 以省略标题(包含列标题的特殊顶行). 后面要让它显示, 请使用 <code>GuiControl, +Hdr, MyListView</code>.</p>
 <p id="LVS_EX"><strong>LV:</strong> 指定字符串 LV 后面紧跟着<a href="../misc/Styles.htm#LVS_EX">扩展 ListView 样式</a>的数字. 这些样式完全独立于通用扩展样式. 例如, 指定 <code><strong>-E</strong>0x200</code> 会移除通用扩展样式 WS_EX_CLIENTEDGE, 这样将会移除控件的默认边框. 与之相比, 指定 <code><strong>-LV</strong>0x20</code> 会移除 <a href="#frs">LVS_EX_FULLROWSELECT</a> 选择整行效果.</p>
 <p><strong>LV0x10</strong>: 指定 <code>-LV0x10</code> 阻止用户通过拖动列标题到左边或右边来对它们重新排序. 然而, 通常没必要这么做, 因为列的实际重排不会影响脚本看到的列顺序. 例如, 从脚本的角度看第一列总是 column 1, 即使用户实际已经把它移动到其他列的右边.</p>
 <p id="frs"><strong>LV0x20</strong>: 指定 <code>-LV0x20</code> 来要求点击一行的第一个字段才可以进行选择(正常情况下, 点击<em>任意</em>字段都可以选择). 这样的好处是用户可以更方便地拖动矩形包围一组行来选择它们.</p>
@@ -128,7 +128,7 @@ ExitApp</pre>
 <h3 id="LV_Add">LV_Add</h3>
 <p>添加新行到列表底部.</p>
 <pre class="Syntax"><span class="func">LV_Add</span>(<span class="optional">Options, Field1, Field2, ...</span>)</pre>
-<p>参数 <em>Field1</em> 和其后的字段是新行的列内容, 可以是文本或数字(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). 要让任何字段为空, 请指定 &quot;&quot; 或等价物. 如果参数中太少字段而无法填满所有列, 则留空后面剩下的列. 如果太多字段, 则忽略后面多出的字段.</p>
+<p>参数 <em>Field1</em> 和其后的字段是新行的列内容, 可以是文本或数字(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). 要让任何字段为空, 请指定 "" 或等价物. 如果参数中太少字段而无法填满所有列, 则留空后面剩下的列. 如果太多字段, 则忽略后面多出的字段.</p>
 <p>失败时, LV_Add() 返回 0. 成功时它返回新<a href="#RowNumber">行号</a>, 如果 ListView 含有 <a href="#Sort">Sort</a> 或 <a href="#SortDesc">SortDesc</a> 样式则此行不一定是最后一行.</p>
 
 <h4 id="RowOptions">行选项</h4>
@@ -138,7 +138,7 @@ ExitApp</pre>
 <p id="Focus"><strong>Focus</strong>: 设置键盘焦点到此行(通常和 Select 一起使用). 以后要取消它的焦点, 请使用 <code>LV_Modify(RowNumber, "-Focus")</code>.</p>
 <p><strong>Icon</strong>: 指定单词 Icon 后紧跟着这行图标的编号, 这行图标显示在首列的左侧. 如果此选项不存在, 则使用<a href="#IL">图像列表</a>中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则<a href="#View">报告视图</a>中既不显示图标也不为其保留空间.</p>
 <p><strong>Select</strong>: 选择行. 以后要取消选择, 请使用 <code>LV_Modify(RowNumber, "-Select")</code>. 当选择行时, 通常最好确保至少有一行总含有<a href="#Focus">焦点属性</a>, 因为这样允许 Apps 键在焦点行附近显示其<a href="Gui.htm#GuiContextMenu">上下文菜单</a>(如果有). 单词 <em>Select</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Select"</code> 和 <code>"Select" <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>). 这种技术也适用于上面的 <em>Focus</em> 和 <em>Check</em>.</p>
-<p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>: 必要时通过滚动 ListView 来确保指定行完全可见. 此参数仅对 <a href="#LV_Modify">LV_Modify()</a> 有效; 例如: <code>LV_Modify(RowNumber, &quot;Vis&quot;)</code>.</p>
+<p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>: 必要时通过滚动 ListView 来确保指定行完全可见. 此参数仅对 <a href="#LV_Modify">LV_Modify()</a> 有效; 例如: <code>LV_Modify(RowNumber, "Vis")</code>.</p>
 
 <h3 id="LV_Insert">LV_Insert</h3>
 <p>在指定行之前插入一个新行.</p>
@@ -222,7 +222,7 @@ Loop % LV_GetCount("Column")
 <h3 id="LV_GetNext">LV_GetNext</h3>
 <p>返回下一个选择的, 选中的或焦点行的行号.</p>
 <pre class="Syntax"><span class="func">LV_GetNext</span>(<span class="optional">StartingRowNumber, RowType</span>)</pre>
-<p>如果没有找到, 则返回零. 如果 <em>StartingRowNumber</em> 省略或小于 1, 则从列表的顶部开始搜索. 否则, 从 <em>StartingRowNumber</em> 行后开始搜索. 如果省略 <em>RowType</em>, 则函数搜索下一个选择的/高亮的行. 否则, 指定 &quot;C&quot; 或 &quot;Checked&quot; 来寻找下一个选中的行; 或指定 &quot;F&quot; 或 &quot;Focused&quot; 来寻找焦点行(在整个列表中不可能有多个焦点行, 且有时甚至没有). 下面的例子, 报告 ListView 中所有选择的行:</p>
+<p>如果没有找到, 则返回零. 如果 <em>StartingRowNumber</em> 省略或小于 1, 则从列表的顶部开始搜索. 否则, 从 <em>StartingRowNumber</em> 行后开始搜索. 如果省略 <em>RowType</em>, 则函数搜索下一个选择的/高亮的行. 否则, 指定 "C" 或 "Checked" 来寻找下一个选中的行; 或指定 "F" 或 "Focused" 来寻找焦点行(在整个列表中不可能有多个焦点行, 且有时甚至没有). 下面的例子, 报告 ListView 中所有选择的行:</p>
 <pre>RowNumber := 0  <em>; 这样使得首次循环从列表的顶部开始搜索.</em>
 Loop
 {
@@ -306,7 +306,7 @@ ExitApp</pre>
 <h3 id="IL_Add">IL_Add</h3>
 <p>添加图标或图片到指定的 <em>ImageListID</em> 并返回新图标的索引(首个图标索引为 1, 第二个为 2, 依此类推).</p>
 <pre class="Syntax"><span class="func">IL_Add</span>(ImageListID, Filename <span class="optional">, IconNumber, ResizeNonIcon</span>)</pre>
-<p><em>Filename</em> 为图标(.ICO), 光标(.CUR) 或动画光标(.ANI) 文件的名称(动画光标在 ListView 中显示时实际将不会动). 图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR, 以及包含图标资源的其他类型. 要使用文件中第一个以外的图标组, 请在 <em>IconNumber</em> 指定它的编号. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, &quot;C:\My Application.exe&quot;, 2)</code>.</p>
+<p><em>Filename</em> 为图标(.ICO), 光标(.CUR) 或动画光标(.ANI) 文件的名称(动画光标在 ListView 中显示时实际将不会动). 图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR, 以及包含图标资源的其他类型. 要使用文件中第一个以外的图标组, 请在 <em>IconNumber</em> 指定它的编号. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
 <p>还可以加载非图标图像, 例如 BMP, GIF 和 JPG. 然而, 此时应该指定最后两个参数以确保正确执行: <em>IconNumber</em> 应该为屏蔽的/透明的颜色编码(对于大多数图片 0xFFFFFF [白色] 可能是最佳的); 而 <em>ResizeNonIcon</em> 应该为非零值来缩放图片为单个图标, 或者为零来把图像分割为多个可以匹配实际宽度的图标.</p>
 <p>在所有的操作系统中都支持 GIF, JPG, BMP, ICO, CUR 和 ANI 图像. 在 Windows XP 或更高版本中, 还支持其他图像格式, 例如 PNG, TIF, Exif, WMF 和 EMF. 比 XP 早的操作系统可以通过复制微软免费的 GDI+ DLL 到 AutoHotkey.exe 文件夹中来提供支持(但如果是<a href="Scripts.htm#ahk2exe">已编译脚本</a>, 则复制此 DLL 到脚本的文件夹). 要下载这个 DLL, 请在 <a href="https://www.microsoft.com">www.microsoft.com</a> 搜索下列短语: gdi redistributable</p>
 <p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">bitmap(位图) 或 icon(图标) 句柄</a>可用于替代文件名称. 例如, <code>HBITMAP:%handle%</code>.</p>
@@ -326,7 +326,7 @@ ButtonOK:
 GuiControlGet, FocusedControl, FocusV
 if (FocusedControl != "MyListView")
     return
-MsgBox % &quot;Enter was pressed. The focused row number is &quot; . LV_GetNext(0, &quot;Focused&quot;)
+MsgBox % "Enter was pressed. The focused row number is " . LV_GetNext(0, "Focused")
 return</pre>
 <p>使用键盘除了在行与行之间导航外, 用户还可以通过输入首列中一个项目名称的前几个字符来进行增量搜索. 这使得选择对象跳转到最近匹配的行.</p>
 <p>尽管 ListView 中的每个字段可以存储任意长度的文本, 但仅显示开始的 260 个字符.</p>
@@ -337,7 +337,7 @@ return</pre>
 <p>要对 ListView 执行一些操作(例如调整大小, 隐藏或改变字体), 请使用 <a href="GuiControl.htm">GuiControl</a>.</p>
 <p>要从外部的 ListView(不属于脚本自身的那些) 中提取文本, 请使用 <a href="ControlGet.htm#List">ControlGet List</a>.</p>
 
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="Gui.htm">Gui</a>, <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="../misc/Styles.htm#ListView">ListView 样式表</a></p>
 
 <h2 id="Examples">示例</h2>
@@ -363,7 +363,7 @@ Gui, Add, Button, x+20, Switch View
 
 <em>; 通过 <a href="#GuiAdd">Gui Add</a> 创建 ListView 及其列:</em>
 Gui, Add, ListView, xm r20 w700 vMyListView gMyListView, Name|In Folder|Size (KB)|Type
-<a href="#LV_ModifyCol">LV_ModifyCol</a>(3, &quot;Integer&quot;)  <em>; 为了排序, 表示 Size 列中的内容是整数.</em>
+<a href="#LV_ModifyCol">LV_ModifyCol</a>(3, "Integer")  <em>; 为了排序, 表示 Size 列中的内容是整数.</em>
 
 <em>; 创建图像列表, 这样 ListView 才可以显示图标:</em>
 ImageListID1 := <a href="#IL_Create">IL_Create</a>(10)

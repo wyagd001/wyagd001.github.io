@@ -16,7 +16,7 @@
 <p>判断字符串是否包含某个匹配模式(正则表达式).</p>
 
 <pre class="Syntax">FoundPos := <span class="func">RegExMatch</span>(Haystack, NeedleRegEx <span class="optional">, OutputVar, StartingPosition := 1</span>)</pre>
-<h2>参数</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>Haystack</dt>
@@ -40,7 +40,7 @@
 
 </dl>
 
-<h2>返回值</h2>
+<h2 id="Return_Value">返回值</h2>
 <p>函数返回在字符串 <em>Haystack</em> 中最左边出现 <em>NeedleRegEx</em> 的位置. 位置 1 表示第一个字符. 0 表示没有找到匹配. 如果发生错误(比如 <em>NeedleRegEx</em> 出现语法错误), 将返回空字符串同时 ErrorLevel 被设为<a href="#ErrorLevel">下面</a>列表中除了 0 之外的值.</p>
 
 <h2 id="ErrorLevel">错误处理</h2>
@@ -75,31 +75,31 @@
 <p>要在一个较大的字符串中搜索简单的子字符串, 请使用 <a href="InStr.htm">InStr()</a> 因为它比 RegExMatch() 更快.</p>
 <p>为了提升性能, 最近使用的 100 个正则表达式会被缓存在内存中(以已编译的形式).</p>
 <p>多次使用一个正则表达式时(例如在循环中), 使用<a href="../misc/RegEx-QuickRef.htm#Study">研究选项(S)</a> 可以提高性能.</p>
-<h2>备注</h2>
+<h2 id="Remarks">备注</h2>
 <p id="NamedSubPat">可以为子模式指定名称, 例如模式 "(?P&lt;Year&gt;\d{4})" 中的 <em>Year</em>. 这种名称最多可以由 32 个字母数字和下划线组成. 下面的限制不适用于 "O"(匹配对象) 模式: 尽管命名的子模式在正则表达式运算时还可以使用它们的编号(例如 \1 为到实际匹配首个捕获子模式的字符串的后向引用), 然而它们被存储到<a href="#Array">输出伪数组</a>时 <em>只</em> 通过名称(而不是编号). 例如, 如果 "Year" 是首个子模式, 则 <em>OutputVarYear</em> 会被设置为匹配的子字符串, 但 <em>OutputVar1</em> 不会发生变化(如果有则它会保持原来的值). 然而, 如果在 "Year" 后含有<a href="../misc/RegEx-QuickRef.htm#subpat">未命名子模式</a>, 则它会被存储到 <em>OutputVar2</em>, 而不是 <em>OutputVar1</em>.</p>
 <p>大多数字符(例如 abc123) 可以直接使用在正则表达式中. 然而, <strong>\.*?+[{|()^$</strong> 这些字符则必须在其前面加上反斜杠来进行匹配. 例如, <strong>\.</strong> 表示一个原义的句点而 <strong>\\</strong> 表示一个原义的反斜杠. 使用 \Q...\E 能避免转义. 例如: <code>\QLiteral Text\E</code>.</p>
 <p>在正则表达式中, 特殊字符(如制表符和换行符) 可以使用一个重音符(`) 或反斜杠(\) 进行转义. 例如, 不含 <b>x</b> 选项时 `t 等同于 \t.</p>
 <p>要了解正则表达式的基础(或复习正则表达式的语法), 请参阅<a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</p>
 <p>AutoHotkey 的正则表达式是使用来自 <a href="http://www.pcre.org/">www.pcre.org</a> 的兼容 Perl 的正则表达式(PCRE) 实现的.</p>
 <p><span class="ver">[AHK_L 31+]:</span> 在<a href="../Variables.htm#Expressions">表达式</a>中, <code>a <a href="../Variables.htm#regex">~=</a> b</code> 能被当作 <code>RegExMatch(a, b)</code> 的缩写.</p>
-<h2>相关</h2>
+<h2 id="Related">相关</h2>
 <p><a href="RegExReplace.htm">RegExReplace()</a>, <a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>, <a href="../misc/RegExCallout.htm">正则表达式调出</a>, <a href="InStr.htm">InStr()</a>, <a href="IfInString.htm">IfInString</a>, <a href="StringGetPos.htm">StringGetPos</a>, <a href="SubStr.htm">SubStr()</a>, <a href="SetTitleMatchMode.htm#RegEx">SetTitleMatchMode RegEx</a>, <a href="https://www.autohotkey.com/forum/topic16164.html">全局匹配和 Grep(论坛链接)</a></p>
 <p>文本数据的常见来源: <a href="FileRead.htm">FileRead</a>, <a href="URLDownloadToFile.htm">UrlDownloadToFile</a>, <a href="../misc/Clipboard.htm">Clipboard</a>, <a href="GuiControls.htm#Edit">GUI Edit 控件</a></p>
-<h2>示例</h2>
+<h2 id="Examples">示例</h2>
 <p>有关普通 RegEx 的示例, 请参阅<a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</p>
 
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
-<pre>MsgBox % RegExMatch(&quot;xxxabc123xyz&quot;, &quot;abc.*xyz&quot;)  <em>; 显示 4, 这是找到匹配的位置.</em>
-MsgBox % RegExMatch(&quot;abc123123&quot;, &quot;123$&quot;)  <em>; 显示 7, 因为 $ 要求在末端进行匹配.</em>
-MsgBox % RegExMatch(&quot;abc123&quot;, &quot;i)^ABC&quot;)  <em>; 显示 1, 因为通过不区分大小写选项实现了匹配.</em>
-MsgBox % RegExMatch(&quot;abcXYZ123&quot;, &quot;abc(.*)123&quot;, SubPat)  <em>; 显示 1, 并把 "XYZ" 保存到 SubPat1.</em>
-MsgBox % RegExMatch(&quot;abc123abc456&quot;, &quot;abc\d+&quot;, &quot;&quot;, 2)  <em>; 显示 7 而不是 1, 这是由于 StartingPosition 为 2 而不是 1.</em></pre>
+<pre>MsgBox % RegExMatch("xxxabc123xyz", "abc.*xyz")  <em>; 显示 4, 这是找到匹配的位置.</em>
+MsgBox % RegExMatch("abc123123", "123$")  <em>; 显示 7, 因为 $ 要求在末端进行匹配.</em>
+MsgBox % RegExMatch("abc123", "i)^ABC")  <em>; 显示 1, 因为通过不区分大小写选项实现了匹配.</em>
+MsgBox % RegExMatch("abcXYZ123", "abc(.*)123", SubPat)  <em>; 显示 1, 并把 "XYZ" 保存到 SubPat1.</em>
+MsgBox % RegExMatch("abc123abc456", "abc\d+", "", 2)  <em>; 显示 7 而不是 1, 这是由于 StartingPosition 为 2 而不是 1.</em></pre>
 </div>
 
 <div class="ex" id="ExObject">
 <p><a href="#ExObject">#2</a>: 匹配对象</p>
-<pre>FoundPos := RegExMatch(&quot;Michiganroad 72&quot;, &quot;O)(.*) (?&lt;nr&gt;\d+)&quot;, SubPat)  <em>; 开始的 "O)" 将 SubPat 变成一个对象.</em>
+<pre>FoundPos := RegExMatch("Michiganroad 72", "O)(.*) (?&lt;nr&gt;\d+)", SubPat)  <em>; 开始的 "O)" 将 SubPat 变成一个对象.</em>
 Msgbox % SubPat.Count() ": " SubPat.Value(1) " " SubPat.Name(2) "=" SubPat["nr"]  <em>; 显示 "2: Michiganroad nr=72"</em></pre>
 </pre>
 </div>
