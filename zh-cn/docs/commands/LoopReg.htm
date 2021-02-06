@@ -28,18 +28,21 @@
       <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG(或这些的缩写, 如 HKLM) 开始. 要访问<a href="#remote">远程注册表</a>, 请在前面加上计算机名和冒号, 就像在本例中一样: \\workstation01:HKEY_LOCAL_MACHINE</p></dd>
 
   <dt>Mode</dt>
-  <dd><p>零个或多个下列字母:</p>
-      <p><code>K</code>: 包含键名.<br>
-      <code>V</code>: 包含键值. K 和 V 都被省略时, 默认包含键值.<br>
-      <code>R</code>: 递归子键. 若省略 R, <em>KeyName</em> 下的子键中的键名和键值都不会被包含.</p></dd>
-
+  <dd><p>If blank or omitted, only values are included and subkeys are not recursed into. Otherwise, specify one or more of the following letters:</p>
+    <ul>
+      <li>K = 包含键名.</li>
+      <li>V = 包含键值. K 和 V 都被省略时, 默认包含键值.</li>
+      <li>R = 递归子键. 若省略 R, <em>KeyName</em> 下的子键中的键名和键值都不会被包含.</li>
+    </ul>
+  </dd>
+  
 </dl>
 
 <h2 id="old">传统语法</h2>
-<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此语法. 而是使用<a href="#new">新语法</a>.</p>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此语法. 而是使用<a href="#new">新语法</a>.</p>
 <pre class="Syntax"><span class="func">Loop</span>, RootKey <span class="optional">, Key, IncludeSubkeys?, Recurse?</span></pre>
 
-<h3>参数</h3>
+<h3 id="Old_Parameters">参数</h3>
 <dl>
 
   <dt>RootKey</dt>
@@ -50,19 +53,25 @@
   <dd><p>键名(例如 Software\SomeApplication). 如果为空或省略, 将获取 <em>根键</em> 的内容.</p></dd>
   
   <dt>IncludeSubkeys?</dt>
-  <dd><p>0(默认值) 不获取 <em>Key</em> 中包含的子键(仅获取值).<br>
-      1 获取所有的值和子键.<br>
-      2 仅获取子键 (不获取值).</p></dd>
-
+  <dd><p>If blank or omitted, it defaults to 0 (only values are retrieved). Otherwise, specify one of the following digits:</p>
+    <ul>
+      <li>0 = 不获取 <em>Key</em> 中包含的子键(仅获取值).</li>
+      <li>1 = 获取所有的值和子键.</li>
+      <li>2 = 仅获取子键(不获取值).</li>
+    </ul>
+  </dd>
+  
   <dt>Recurse?(递归?)</dt>
-  <dd>0(默认值) 不对子键进行递归.<br>
-      1 对子键进行递归, 以便获取包含在其中的所有值和子键.</dd>
-
+    <ul>
+      <li>0 = 不对子键进行递归.</li>
+      <li>1 = 对子键进行递归, 以便获取包含在其中的所有值和子键.</li>
+    </ul>
+  </dd>
 </dl>
 
 <h2 id="Remarks">备注</h2>
 <p>当您想对注册表值或子键集合中的项逐个进行操作时, 注册表循环很有用. 值和子键以逆序获取(自下而上), 这样在循环中使用 <a href="RegDelete.htm">RegDelete</a> 不会扰乱循环自身.</p>
-<p id="vars">下列变量存在于任何注册表循环中.如果一个内层注册表循环包含在一个外层注册表循环中,那么最内层循环的注册表项将具有优先权:</p>
+<p id="vars">下列变量存在于任何注册表循环中. 如果一个内层注册表循环包含在一个外层注册表循环中, 那么最内层循环的注册表项将具有优先权:</p>
 <table class="info">
   <tr>
     <td>A_LoopRegName</td>
@@ -116,13 +125,13 @@
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExRegDelete">
-<p><a href="#ExRegDelete">#1</a>: 删除用户输入的 Internet Explorer 的 URL 历史:</p>
+<p><a href="#ExRegDelete">#1</a>: 删除用户输入的 Internet Explorer 的 URL 历史.</p>
 <pre>Loop, HKEY_CURRENT_USER, Software\Microsoft\Internet Explorer\TypedURLs
     RegDelete</pre>
 </div>
 
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#2</a>: 有效的测试脚本:</p>
+<p><a href="#ExBasic">#2</a>: 有效的测试脚本.</p>
 <pre>Loop, Reg, HKEY_CURRENT_USER\Software\Microsoft\Windows, KVR
 {
     if (A_LoopRegType = "key")
@@ -139,7 +148,7 @@
 </div>
 
 <div class="ex" id="ExRegSearch">
-<p><a href="#ExRegSearch">#3</a>: 用于在整个注册表中递归搜索特殊值的可运行示例.</p>
+<p><a href="#ExRegSearch">#3</a>: 在整个注册表中递归搜索特殊值.</p>
 <pre>SetBatchLines -1  <em>; 让搜索以最快速度进行.</em>
 RegSearchTarget := "Notepad"  <em>; 告知子程序搜索的目标.</em>
 Gosub, RegSearch

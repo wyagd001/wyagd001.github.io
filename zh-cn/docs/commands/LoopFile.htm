@@ -18,7 +18,7 @@
 <h2 id="new">新语法 <span class="ver">[v1.1.21+]</span></h2>
 <pre class="Syntax"><span class="func">Loop, Files</span>, FilePattern <span class="optional">, Mode</span></pre>
 
-<h3>参数</h3>
+<h3 id="New_Parameters">参数</h3>
 <dl>
 
   <dt>Files</dt>
@@ -27,21 +27,24 @@
   <dt>FilePattern(文件模式)</dt>
   <dd><p>单个文件或文件夹的名称或者通配符模式, 例如 <code>C:\Temp\*.tmp</code>. 如果未指定绝对路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>.</p>
      <p>支持星号和问号作为通配符使用. 当模式出现在文件的长/普通名称或其 <a href="#LoopFileShortName">8.3 短名称</a>时出现匹配.</p>
-     <p>如果此参数为单个文件或文件夹(即不含通配符) 且 <em>Mode</em> 包含 <code>R</code>, 同时指定的文件名出现在多个被搜索的文件夹中, 那么将找到多个匹配.</p></dd>
+     <p>如果此参数为单个文件或文件夹(即不含通配符) 且 <em>Mode</em> 包含 R, 同时指定的文件名出现在多个被搜索的文件夹中, 那么将找到多个匹配.</p></dd>
 
   <dt>Mode(方式)</dt>
-  <dd><p>零个或多个下列字母(的组合):</p>
-      <p><code>D</code> : 包含目录(文件夹).<br>
-      <code>F</code> : 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录 .<br>
-      <code>R</code> : 递归子目录. 如果省略 R, 则不包含子目录中的文件和目录.</p></dd>
-
+  <dd><p>If blank or omitted, only files are included and subdirectories are not recursed into. Otherwise, specify one or more of the following letters:</p>
+      <ul>
+      <li>D = 包含目录(文件夹).</li>
+      <li>F = 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录 .</li>
+      <li>R = 递归子目录. 如果省略 R, 则不包含子目录中的文件和目录.</li>
+    </ul>
+  </dd>
+  
 </dl>
 
 <h2 id="old">传统语法</h2>
-<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此语法. 而是使用<a href="#new">新语法</a>.</p>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此语法. 而是使用<a href="#new">新语法</a>.</p>
 <pre class="Syntax"><span class="func">Loop</span>, FilePattern <span class="optional">, IncludeFolders?, Recurse?</span></pre>
 
-<h3>参数</h3>
+<h3 id="Old_Parameters">参数</h3>
 <dl>
 
   <dt>FilePattern</dt>
@@ -50,19 +53,24 @@
       <p>如果此参数为单个文件或文件夹(即不含通配符) 且 <em>Recurse</em> 值为 1, 同时指定的文件名出现在多个被搜索的文件夹中, 那么将找到多个匹配.</p></dd>
 
   <dt>IncludeFolders?(包含子文件夹?)</dt>
- <dd><p>使用下列的其中一个数字, 或留空以使用默认值:<br>
-      0(默认) 不获取文件夹(仅文件).<br>
-      1 获取所有匹配通配符模式的文件和文件夹.<br>
-      2 仅获取文件夹(不获取文件).</p></dd>
+  <dd><p>If blank or omitted, it defaults to 0 (only files are retrieved). Otherwise, specify one of the following digits:</p>
+      <ul>
+      <li>0 = 不获取文件夹(仅文件).</li>
+      <li>1 = 获取所有匹配通配符模式的文件和文件夹.</li>
+      <li>2 = 仅获取文件夹(不获取文件).</li>
+    </ul>
+  </dd>
   
   <dt>Recurse?(递归?)</dt>
-  <dd>使用下列的其中一个数字, 或留空以使用默认值:<br>
-      0(默认) 不对子文件夹进行递归.<br>
-      1 递归子文件夹, 以便获取包含在其中的匹配 <em>FilePattern</em> 的文件和文件夹. 将递归所有子文件夹, 而不仅是名称匹配 <em>FilePattern</em> 的那些.</dd>
-
+  <dd><p>If blank or omitted, it defaults to 0 (subfolders are not recursed into). Otherwise, specify one of the following digits:</p>
+      <li>0 = 不对子文件夹进行递归.</li>
+      <li>1 = 递归子文件夹, 以便获取包含在其中的匹配 <em>FilePattern</em> 的文件和文件夹. 将递归所有子文件夹, 而不仅是名称匹配 <em>FilePattern</em> 的那些.</li>
+    </ul>
+  </dd>
+  
 </dl>
 
-<h2>可在文件循环中使用的特殊变量</h2>
+<h2 id="Special_Variables">可在文件循环中使用的特殊变量</h2>
 <p>下列变量存在于任何文件循环中. 如果一个内层文件循环包含在一个外层文件循环中, 那么最内层循环的文件将具有优先权:</p>
 <table class="info">
   <tr id="LoopFileName">
@@ -150,7 +158,7 @@ Loop, Parse, FileList, `n
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
+<p><a href="#ExBasic">#1</a>: Reports the full path of each text file located in a directory and in its subdirectories.</p>
 <pre>Loop Files, %A_ProgramFiles%\*.txt, R  <em>; 递归子文件夹.</em>
 {
     MsgBox, 4, , Filename = %A_LoopFileFullPath%`n`nContinue?
@@ -160,7 +168,7 @@ Loop, Parse, FileList, `n
 </div>
 
 <div class="ex" id="ExSize">
-<p><a href="#ExSize">#2</a>: 计算文件夹的大小, 包括其所有子文件夹中的文件:</p>
+<p><a href="#ExSize">#2</a>: 计算文件夹的大小, 包括其所有子文件夹中的文件.</p>
 <pre>SetBatchLines, -1  <em>; 让操作以最快速度进行.</em>
 FolderSizeKB := 0
 FileSelectFolder, WhichFolder  <em>; 让用户选取文件夹.</em>
@@ -186,7 +194,7 @@ Loop, parse, FileList, `n
 </div>
 
 <div class="ex" id="ExSortDate">
-<p><a href="#ExSortDate">#4</a>: 获取根据修改日期排序的文件名:</p>
+<p><a href="#ExSortDate">#4</a>: 获取根据修改日期排序的文件名.</p>
 <pre>FileList := ""
 Loop, Files, %A_MyDocuments%\Photos\*.*, FD  <em>; 包含文件和子目录</em>
     FileList .= A_LoopFileTimeModified "`t" A_LoopFileName "`n"
@@ -203,7 +211,7 @@ Loop, Parse, FileList, `n
 </div>
 
 <div class="ex" id="ExFileCopy">
-<p><a href="#ExFileCopy">#5</a>: 仅复制比目标位置中它们的副本更新的源文件:</p>
+<p><a href="#ExFileCopy">#5</a>: 仅复制比目标位置中它们的副本更新的源文件.</p>
 
 <pre>CopyIfNewer:
 <em>; 调用者已经为我们赋值了变量 CopySourcePattern 和 CopyDest.</em>

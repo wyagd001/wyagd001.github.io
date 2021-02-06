@@ -19,12 +19,12 @@
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>OutputVarX/Y</dt>
+  <dt>OutputVarX, OutputVarY</dt>
   <dd><p>用来保存首个匹配 <em>ColorID</em> 像素的 X 和 Y 坐标(如果没有发现匹配, 则此变量被置空). 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p>
     <p>其中一个或两个参数都可以留空, 此时可以使用 ErrorLevel(请参阅下面) 来判断是否找到了匹配.</p></dd>
 
   <dt>X1, Y1</dt>
-  <dd><p>要搜索的矩形区域的起始角的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. <strong>坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置</strong>.</p></dd>
+  <dd><p>要搜索的矩形区域的起始角的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p></dd>
 
   <dt>X2, Y2</dt>
   <dd><p>要搜索的矩形区域的结束角的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p></dd>
@@ -33,11 +33,11 @@
   <dd><p>要搜索的十进制或十六进制的颜色 ID, 使用蓝绿红(BGR) 格式, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 颜色 ID 可以使用 Window Spy(可从托盘菜单打开) 或 <a href="PixelGetColor.htm">PixelGetColor</a> 来确定. 例如: <code>0x9d6346</code>.</p></dd>
 
   <dt>Variation</dt>
-  <dd><p>一个介于 0 和 255(包含的) 之间的数字, 用于表示此颜色红/绿/蓝成分强度在每个方向上允许的渐变值(可以为<a href="../Variables.htm#Expressions">表达式</a>). 此参数用于需要寻找的颜色渐变值可能变化时. 如果指定 255 为浮动的渐变值, 则匹配所有颜色. 默认渐变值为 0.</p></dd>
+  <dd><p>一个介于 0 和 255(包含的) 之间的数字, 用于表示此颜色红/绿/蓝成分强度在每个方向上允许的渐变值(可以为<a href="../Variables.htm#Expressions">表达式</a>). 例如, 如果指定值为 2 并且 <var>ColorID</var> 为 0x444444, 那么从 0x424242 到 0x464646 的任何颜色都将被视为匹配. 此参数用于需要寻找的颜色渐变值可能变化时. 如果指定 255 为浮动的渐变值, 则匹配所有颜色. 默认渐变值为 0.</p></dd>
 
   <dt>Mode</dt>
   <dd><p>此参数可以包含单词 Fast, RGB 或同时包含两者(同时包含两者时它们之间请用空格分隔; 即 <em>Fast RGB</em>).</p>
-      <p id="fast"><strong>Fast</strong>: 使用快速的搜索方法, 在大多数情况下此方法可以明显减少搜索时消耗的 CPU 时间. 尽管此方法支持颜色深度低至 8 位(256 色), 不过在 24 位或 32 位颜色深度下此快速模式执行地更好. 如果屏幕的颜色深度为 16 位或更低, 则 <em>Variation</em> 参数在慢速模式和快速模式的行为可能有轻微的差异. 最后, 快速模式按行搜索屏幕(从上往下) 而不是按列. 因此, 如果屏幕上有多个匹配的像素, 则快速模式可能找到一个和慢速模式不同的像素.</p>
+      <p id="fast"><strong>Fast</strong>: 使用快速的搜索方法, 在大多数情况下此方法可以明显减少搜索时消耗的 CPU 时间. 尽管此方法支持颜色深度低至 8 位(256 色), 不过在 24 位或 32 位颜色深度下此快速模式执行地更好. 如果屏幕的颜色深度为 16 位或更低, 则 <em>Variation</em> 参数在慢速模式和快速模式的行为可能有轻微的差异. 最后, 快速模式按行搜索屏幕, 而不是按列. 因此, 如果屏幕上有多个匹配的像素, 则快速模式可能找到一个和慢速模式不同的像素.</p>
       <p><strong>RGB</strong>: 把 <em>ColorID</em> 解释为 RGB 值而不是 BGR. 即交换了其中的红色和蓝色的成分.</p></dd>
 
 </dl>
@@ -58,7 +58,7 @@
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
+<p><a href="#ExBasic">#1</a>: Searches a region of the active window for a pixel and stores in <var>Px</var> and <var>Py</var> the X and Y coordinates of the first pixel that matches the specified color with 3 shades of variation.</p>
 <pre>PixelSearch, Px, Py, 200, 200, 300, 300, 0x9d6346, 3, Fast
 if ErrorLevel
     MsgBox, That color was not found in the specified region.

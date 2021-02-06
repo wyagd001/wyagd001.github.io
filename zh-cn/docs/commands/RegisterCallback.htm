@@ -44,7 +44,7 @@
 
 </dl>
 
-<h2>回调函数的参数</h2>
+<h2 id="The_Callback_Functions_Parameters">回调函数的参数</h2>
 <p>分配了回调地址的<a href="Functions.htm">函数</a>可以接受多达 31 个参数. 允许有<a href="../Functions.htm#optional">可选参数</a>, 这可用于函数被多个调用者调用时.</p>
 <p>正确的解析此参数需要您对 x86 的调用转换机制有所了解. 在 AutoHotKey 中没有形参的概念, 回调的参数列表由整数和一些必要的重解析组成.</p>
 
@@ -84,7 +84,7 @@ TheFunc(params*) {
 <p>大部分回调使用 <em>stdcall</em> 调用约定, 这种方式需要固定的参数数目. 在这种情况下, <em>ParamCount</em> 必须设置为参数列表的大小, Int64 需要两倍于 32 位的参数.</p>
 <p>对于 <em>Cdecl</em> 或 64 位调用约定, <em>ParamCount</em> 仅被已经赋值的参数所影响. 如果省略, 所有可选参数被设为他们的默认值, 且不参与 <em>params</em> 保存地址大小的计算.</p>
 
-<h2>函数应该 <em>返回</em> 什么</h2>
+<h2 id="What_the_Function_Should_Return">函数应该 <em>返回</em> 什么</h2>
 <p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至从不使用 Return), 则返回 0 给 <em>Address</em> 的调用者. 否则, 函数应该返回一个介于 -2147483648 和 4294967295 之间的整数, 它会被返回给 <em>Address</em> 的调用者.</p>
 
 <h2 id="Threads">快速与慢速</h2>
@@ -92,16 +92,16 @@ TheFunc(params*) {
 <p>与之相比, <a href="#Fast">快速模式</a>会继承在调用函数时刚好在运行的<a href="../misc/Threads.htm">线程</a>的全局设置. 而且, 函数对全局设置的任何修改(包括 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 和<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在<a href="../misc/Threads.htm">当前线程</a>生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
 <p>要避免被自己(或其他任何线程) 中断, 回调函数可以在它的首行使用 <a href="Critical.htm">Critical</a>. 然而, 通过小于 0x312 消息达到的间接调用函数时, 这并不是完全有效的(增加 Critical 的<a href="Critical.htm#Interval">间隔</a>也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="PostMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall()</a>.</p>
 
-<h2>内存</h2>
+<h2 id="Memory">内存</h2>
 <p>每次使用 RegisterCallback() 都会分配少量的内存(32 字节加上系统开销). 由于操作系统在脚本退出时会自动释放这些内存, 所以任何分配少量, <em>固定</em> 数量的回调的脚本不需要明确地(显式) 释放内存. 与之相比, 不确定/无限制次数调用 RegisterCallback() 的脚本应明确对任何不使用的回调执行下列操作:</p>
 <pre>DllCall("GlobalFree", "Ptr", Address, "Ptr")</pre>
 
 <h2 id="Related">相关</h2>
-<p><a href="DllCall.htm">DllCall()</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort 的回调</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a></p>
+<p><a href="DllCall.htm">DllCall()</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="OnExit.htm#function">OnExit()</a>, <a href="OnExit.htm#command">OnExit</a>, <a href="OnClipboardChange.htm#function">OnClipboardChange()</a>, <a href="OnClipboardChange.htm#label">OnClipboardChange Label</a>, <a href="Sort.htm#callback">Sort 的回调</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExWinList">
-<p><a href="#ExWinList">#1</a>: 下面是个可运行脚本, 它显示了所有顶层窗口的摘要.</p>
+<p><a href="#ExWinList">#1</a>: 显示所有顶层窗口的摘要.</p>
 <pre><em>; 考虑到性能和内存的保持, 只为指定的回调调用一次 RegisterCallback():</em>
 if not EnumAddress  <em>; 由于只能从这个线程调用, 所以可以使用快速模式:</em>
     EnumAddress := <strong>RegisterCallback</strong>("EnumWindowsProc", "Fast")

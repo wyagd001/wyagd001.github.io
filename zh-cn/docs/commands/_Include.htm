@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>#Include[Again] | AutoHotkey</title>
+<title>#Include / #IncludeAgain | AutoHotkey</title>
 <meta name="description" content="The #Include and #IncludeAgain directives cause the script to behave as though the specified file's contents are present at this exact position." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<h1>#Include[Again]</h1>
+<h1>#Include / #IncludeAgain</h1>
 
 <p>使脚本表现得好像指定文件的内容出现在这个位置一样.</p>
 
@@ -24,7 +24,7 @@
 <dl>
 
   <dt>FileOrDirName</dt>
-  <dd><p>如下所示的文件或目录的路径. 这 <strong>不能</strong> 包含双引号, 通配符, 或对非内置变量的引用. 不能使用除分号(<strong>`;</strong>) 之外的<a href="_EscapeChar.htm">转义序列</a>, 也不需要使用, 因为像百分号这样的字符是按原义处理的.</p>
+  <dd><p>如下所示的文件或目录的路径. 这 <strong>不能</strong> 包含双引号, 通配符, 或对非内置变量的引用. 不能使用除分号(<strong>`;</strong>) 之外的<a href="../misc/EscapeChar.htm">转义序列</a>, 也不需要使用, 因为像百分号这样的字符是按原义处理的.</p>
   <p>不属于有效变量引用部分的百分号是原义解释的. 所有内置变量都是有效的, 除了 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, <a href="../Scripts.htm#cmd_args">A_Args</a> 和<a href="../Scripts.htm#cmd_args_old">数字变量</a>. 在 <span class="ver">[v1.1.28]</span> 之前, 只支持 <a href="../Variables.htm#ScriptDir">%A_ScriptDir%</a>, <a href="../Variables.htm#AppData">%A_AppData%</a>, <a href="../Variables.htm#AppDataCommon">%A_AppDataCommon%</a> 和 <span class="ver">[v1.1.11+]</span> 中的 <a href="../Variables.htm#LineFile">%A_LineFile%</a>.</p>
   <p>已知限制: 编译脚本时, 变量由编译器计算, 并且可能与脚本最终执行时返回的值不同. Ahk2Exe v1.1.30.00 及之前的版本只支持上面列出的四个变量. <span class="ver">[v1.1.30.01+]:</span> 还支持以下变量: <a href="../Variables.htm#AhkPath">A_AhkPath</a>, <a href="../Variables.htm#ComputerName">A_ComputerName</a>, <a href="../Variables.htm#ComSpec">A_ComSpec</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#DesktopCommon">A_DesktopCommon</a>, <a href="../Variables.htm#IsCompiled">A_IsCompiled</a>, <a href="../Variables.htm#IsUnicode">A_IsUnicode</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#ProgramsCommon">A_ProgramsCommon</a>, <a href="../Variables.htm#ScriptFullPath">A_ScriptFullPath</a>, <a href="../Variables.htm#ScriptName">A_ScriptName</a>, <a href="../Variables.htm#Space">A_Space</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#StartMenuCommon">A_StartMenuCommon</a>, <a href="../Variables.htm#Startup">A_Startup</a>, <a href="../Variables.htm#StartupCommon">A_StartupCommon</a>, <a href="../Variables.htm#Tab">A_Tab</a>, <a href="../Variables.htm#Temp">A_Temp</a>, <a href="../Variables.htm#UserName">A_UserName</a>, <a href="../Variables.htm#WinDir">A_WinDir</a>.</p>
     <p><strong>File:</strong> 要包含的文件名, 如果未指定绝对路径, 则假定该文件位于启动/工作目录中(除了 <a href="../Scripts.htm#ahk2exe">Ahk2Exe</a>, 假定该文件在脚本自己的目录中). 注意: <a href="SetWorkingDir.htm">SetWorkingDir</a> 对 #Include 没有效果, 因为 #Include 是在脚本开始执行之前处理的.</p>
@@ -42,20 +42,26 @@
 <p>#Include 常用来加载在外部文件中定义的<a href="Functions.htm">函数</a>. 和子程序标签不同, 可以在脚本的顶部包含<a href="Functions.htm">函数</a>而不影响<a href="../Scripts.htm#auto">自动执行段</a>.</p>
 <p>与其他 # 指令类似, 不能根据条件执行 #Include. 换句话说, 这个例子不起作用:</p>
 <pre>if (x = 1)
-    #Include SomeFile.ahk  <em>; 不管 x 的值是什么此行都会执行.</em>
-    y := 2  <em>; 而此行属于上面的 IF, 因为 # 指令不属于 IF.</em></pre>
+    #Include SomeFile.ahk  <em>; 不管 x 的值是什么此行都会执行.</em></pre>
 <p>通过调用<a href="../Functions.htm#lib">库函数</a>中的函数名称可以自动将文件包含进来(即不需要使用 #Include).</p>
-<p><span class="ver">[v1.1.11+]: </span>使用 <code><a href="../Variables.htm#LineFile">%A_LineFile%</a>\..</code> 可以引用包含当前文件的目录, 即使当前文件不是主脚本文件也有效. 例如, <code>#Include %A_LineFile%\..\other.ahk</code>.<br>
-<span class="ver">[v1.1.28+]:</span> <code><a href="../Variables.htm#AhkPath">%A_AhkPath%</a>\..</code> 可用于引用包含 AutoHotkey.exe 的目录.</p>
+<p><span class="ver">[v1.1.11+]: </span>使用 <code><a href="../Variables.htm#LineFile">%A_LineFile%</a>\..</code> 可以引用包含当前文件的目录, 即使当前文件不是主脚本文件也有效. 例如, <code>#Include %A_LineFile%\..\other.ahk</code>. <span class="ver">[v1.1.28+]:</span> <code><a href="../Variables.htm#AhkPath">%A_AhkPath%</a>\..</code> 可用于引用包含 AutoHotkey.exe 的目录.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../Functions.htm#lib">函数库</a>, <a href="Functions.htm">函数</a>, <a href="FileInstall.htm">FileInstall</a></p>
 <h2 id="Examples">示例</h2>
-<div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>#Include C:\My Documents\Scripts\Utility Subroutines.ahk
-#Include %A_ScriptDir%  <em>; 为后续的 #Include 和 FileInstall 改变工作目录.</em>
-#Include C:\My Scripts  <em>; 和上面相同, 不过这里指定明确的命名目录.</em></pre>
+<div class="ex" id="ExFile">
+<p><a href="#ExBasic">#1</a></p>	<p><a href="#ExFile">#1</a>: Includes the contents of the specified file into the current script.</p>
+<pre>#Include C:\My Documents\Scripts\Utility Subroutines.ahk</pre>
+</div>
+
+<div class="ex" id="ExDir">
+<p><a href="#ExDir">#2</a>: Changes the working directory for subsequent #Includes and FileInstalls.</p>
+<pre>#Include %A_ScriptDir%</pre>
+</div>
+
+<div class="ex" id="ExDir2">
+<p><a href="#ExDir2">#3</a>: Same as above but for an explicitly named directory.</p>
+<pre>#Include C:\My Scripts</pre>
 </div>
 
 </body>

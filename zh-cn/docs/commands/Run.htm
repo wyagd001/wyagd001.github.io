@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Run[Wait] | AutoHotkey</title>
+<title>Run / RunWait | AutoHotkey</title>
 <meta name="description" content="The Run and RunWait commands run an external program. RunWait will wait until the program finishes before continuing." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<h1>Run[Wait]</h1>
+<h1>Run / RunWait</h1>
 
 <p>运行外部程序. 与 Run 不同, RunWait 会等待程序结束才继续往后执行.</p>
 
@@ -52,7 +52,7 @@
 <p>RunWait: 设置 ErrorLevel 为程序的退出代码(32 位的有符号整数). 如果使用了 UseErrorLevel 且运行失败, 则把它设置为单词 ERROR.</p>
 <h2 id="Remarks">备注</h2>
 <p>与 Run 不同, RunWait 会等待 <em>Target</em> 关闭或退出, 此时 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为程序的退出代码(32 位的有符号整数). 一些程序即使它们仍在运行但看起来立即返回了; 这些程序启动了另外的进程.</p>
-<p>如果 <em>Target</em> 包含逗号, 则必须对它们进行<a href="_EscapeChar.htm">转义</a>, 如同下面例子中的三次演示:</p>
+<p>如果 <em>Target</em> 包含逗号, 则必须对它们进行<a href="../misc/EscapeChar.htm">转义</a>, 如同下面例子中的三次演示:</p>
 <pre>Run rundll32.exe shell32.dll<span class="style3">`,</span>Control_RunDLL desk.cpl<span class="style3">`,`,</span> 3  <em>; 打开控制面板 &gt; 显示属性 &gt; 设置</em></pre>
 <p>通过 <a href="../Variables.htm#ComSpec">ComSpec</a>(cmd.exe) 运行程序时(也许由于您需要重定向程序的输入和输出), 如果可执行程序的路径或名称包含空格, 则整个字符串必须括在一对外部的引号中. 在下面的例子中, 外部引号显示为红色, 而内部所有的引号显示为黑色:</p>
 <pre>Run %comSpec% /c <span class="style3">"</span>"C:\My Utility.exe" "param 1" "second param" &gt;"C:\My File.txt"<span class="style3">"</span></pre>
@@ -65,7 +65,7 @@ Run ::{645ff040-5081-101b-9f08-00aa002f954e}  <em>; 打开回收站.</em></pre>
 <table class="info">
   <tr>
     <td style="width:8%">*<i>动词</i></td>
-    <td><span class="ver">[AHK_L 57+]:</span> 任何系统定义或自定义的动词. 例如: <code>Run *Compile %A_ScriptFullPath%</code><br>在 Windows Vista 和更高版本中, 可以使用 <a href="#RunAs">*RunAs</a> 动词代替 <i>以管理员身份运行</i> 右键菜单.</td>
+    <td><span class="ver">[AHK_L 57+]:</span> 任何系统定义或自定义的动词. 例如: <code>Run *Compile %A_ScriptFullPath%</code>. 在 Windows Vista 和更高版本中, 可以使用 <a href="#RunAs">*RunAs</a> 动词代替 <i>以管理员身份运行</i> 右键菜单.</td>
   </tr>
   <tr>
     <td>properties(属性)</td>
@@ -130,31 +130,50 @@ MsgBox A_IsAdmin: %A_IsAdmin%`nCommand line: %full_command_line%</pre>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>Run, Notepad.exe, C:\My Documents, max
+<p><a href="#ExBasic">#1</a>: Run is able to launch Windows system programs from any directory. Note that executable file extensions such as .exe can be omitted.</p>
+<pre>Run, notepad</pre>
+</div>
 
-Run, mailto:someone@domain.com?subject=This is the subject line&amp;body=This is the message body's text.
-Run, ReadMe.doc, , Max UseErrorLevel  <em>; 最大化运行, 且在失败时不显示对话框.</em>
+<div class="ex" id="ExURL">
+<p><a href="#ExURL">#2</a>: Run is able to launch URLs:</p>
+<p>The following opens an internet address in the user's default web browser.</p>
+<pre>Run, https://www.google.com</pre>
+<p>The following opens the default e-mail application with the recipient filled in.</p>
+<pre>Run, mailto:someone@somedomain.com</pre>
+<p>The following does the same as above, plus the subject and body.</p>
+<pre>Run, mailto:someone@somedomain.com?subject=This is the subject line&amp;body=This is the message body's text.</pre>
+</div>
+
+<div class="ex" id="ExErrorLevel">
+<p><a href="#ExErrorLevel">#3</a>: Opens a document in a maximized application and displays a custom error message on failure.</p>
+<pre>Run, ReadMe.doc, , Max UseErrorLevel
 if (ErrorLevel = "ERROR")
-    MsgBox The document could not be launched.
+    MsgBox The document could not be launched.</pre>
+</div>
 
-RunWait, %ComSpec% /c dir c:\ &gt;&gt;c:\DirTest.txt, , min
-Run, c:\DirTest.txt
-Run, properties c:\DirTest.txt
+<div class="ex" id="ExVerb">
+<p><a href="#ExVerb">#4</a>: Runs the dir command in minimized state and stores the output in a text file. After that, the text file and its properties dialog will be opened.</p>
+<pre>#Persistent
+RunWait, %ComSpec% /c dir C:\ &gt;&gt;C:\DirTest.txt, , Min
+Run, C:\DirTest.txt
+Run, properties C:\DirTest.txt</pre>
+</div>
 
-Run, https://www.google.com <em>; 即可以运行任意网址.</em>
-Run, mailto:someone@somedomain.com  <em>; 这样应该会打开默认的电子邮件程序.</em>
+<div class="ex" id="ExCLSID">
+<p><a href="#ExCLSID">#5</a>: Run is able to launch <a href="../misc/CLSID-List.htm">CLSIDs</a>:</p>
+<p>The following opens the recycle bin.</p>
+<pre>Run, ::{645ff040-5081-101b-9f08-00aa002f954e}</pre>
+<p>The following opens the "My Computer" directory.</p>
+<pre>Run, ::{20d04fe0-3aea-1069-a2d8-08002b30309d}</pre>
+</div>
 
-Run ::{20d04fe0-3aea-1069-a2d8-08002b30309d}  <em>; 打开"我的电脑"文件夹.</em>
-Run ::{645ff040-5081-101b-9f08-00aa002f954e}  <em>; 打开回收站.</em>
-
-<em>; 要连续执行多个命令, 请在命令间使用"&amp;&amp;"分隔:</em>
-Run, %ComSpec% /c dir /b &gt; C:\list.txt &amp;&amp; type C:\list.txt &amp;&amp; pause
-</pre>
+<div class="ex" id="ExMultipleCmds">
+<p><a href="#ExMultipleCmds">#6</a>: To run multiple commands consecutively, use "&amp;&amp;" between each.</p>
+<pre>Run, %ComSpec% /c dir /b &gt; C:\list.txt &amp;&amp; type C:\list.txt &amp;&amp; pause</pre>
 </div>
 
 <div class="ex" id="StdOut">
-<p><a href="#StdOut">#2</a>: 以下可用于运行命令并获取其的输出:</p>
+<p><a href="#StdOut">#7</a>: The following functions can be used to run a command and retrieve its output or to run multiple commands in one go and retrieve their output.</p>
 <pre>MsgBox % RunWaitOne("dir " A_ScriptDir)
 
 <em>; ...或一次执行多条命令并获取其输出:</em>
@@ -187,7 +206,7 @@ RunWaitMany(commands) {
 </div>
 
 <div class="ex" id="ExecScript">
-<p><a href="#ExecScript">#3</a>: 在新的 AutoHotkey 进程中执行给定的代码.</p>
+<p><a href="#ExecScript">#8</a>: 在新的 AutoHotkey 进程中执行给定的代码.</p>
 <pre>ExecScript(Script, Wait:=true)
 {
     shell := ComObjCreate("WScript.Shell")

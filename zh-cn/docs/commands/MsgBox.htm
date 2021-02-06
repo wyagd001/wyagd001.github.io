@@ -23,8 +23,8 @@
 <dl>
 
   <dt>Text(文本)</dt>
-  <dd><p>如果省略所有的参数, MsgBox 会显示"Press OK to continue."文本. 否则, 此参数表示消息框中显示的文本, 用来引导用户如何操作或提示信息.</p>
-    <p>可以使用<a href="_EscapeChar.htm">转义序列</a>来显示特殊字符. 例如, `n 表示换行符, 它结束当前行并开始一个新行. 因此使用 text1`n`ntext2 会在 text1 和 text2 之间添加一个空行.</p>
+  <dd><p>如果省略所有的参数, 消息框会显示 "Press OK to continue." 文本. 否则, 此参数表示消息框中显示的文本, 用来引导用户如何操作或提示信息.</p>
+    <p>可以使用<a href="../misc/EscapeChar.htm">转义序列</a>来显示特殊字符. 例如, `n 表示换行符, 它结束当前行并开始一个新行. 因此使用 text1`n`ntext2 会在 text1 和 text2 之间添加一个空行.</p>
     <p>如果 <em>Text</em> 较长, 可以通过<a href="../Scripts.htm#continuation">延续片段</a>的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p></dd>
 
   <dt>Options(选项)</dt>
@@ -37,13 +37,13 @@
   <dt id="Timeout">Timeout(超时)</dt>
   <dd><p>(可选) 以秒为单位的超时时间, 默认情况下可以为小数但不能是表达式. <span class="ver">[v1.1.06+]</span>: 此参数可以强制为表达式, 例如 <code>% mins*60</code>.</p>
     <p>如果这个值超过 2147483(24.8 天), 那么它会被设置为 2147483. 经过这个超时时间后消息框将自动关闭且 <a href="IfMsgBox.htm">IfMsgBox</a> 命令将看到表示超时状态的值 TIMEOUT.</p>
-    <p><span class="ver">[v1.1.30.01]</span> 修复以下限制: 如果 MsgBox 仅含有一个 "确定" 按钮, 且当 MsgBox 自身的<a href="../misc/Threads.htm">线程</a>由于被另一个线程中断而处于非活动状态, 那么 <a href="IfMsgBox.htm">IfMsgBox</a> 将认为 MsgBox 超时用户按下了 "确定" 按钮.</p></dd>
+    <p><span class="ver">[v1.1.30.01]</span> 修复以下限制: 如果消息框仅含有一个 "确定" 按钮, 且当消息框自身的<a href="../misc/Threads.htm">线程</a>由于被另一个线程中断而处于非活动状态, 那么 <a href="IfMsgBox.htm">IfMsgBox</a> 将认为消息框超时且用户按下了 "确定" 按钮.</p></dd>
 
 </dl>
 
-<h2><em>选项</em> 参数的值</h2>
+<h2 id="Options"><em>Options</em> 参数的值</h2>
 <p><em>选项</em> 参数可以是以下组的值的组合(和).</p>
-<h3>组 #1: 按钮</h3>
+<h3 id="Group_1_Buttons">组 #1: 按钮</h3>
 <p>若要指定在消息框中显示的按钮, 请添加以下值 <strong>之一</strong>:</p>
 <table class="info">
   <tr>
@@ -87,7 +87,7 @@
     <td>0x6</td>
   </tr>
   </table>
-<h3>组 #2: 图标</h3>
+<h3 id="Group_2_Icon">组 #2: 图标</h3>
 <p>要在消息框中显示一个图标, 请添加以下值 <strong>之一</strong>:</p>
 <table class="info">
   <tr>
@@ -116,7 +116,7 @@
     <td>0x40</td>
   </tr>
   </table>
-<h3>组 #3: 默认按钮</h3>
+<h3 id="Group_3_Default_Button">组 #3: 默认按钮</h3>
 <p>若要指定默认按钮, 请添加以下值 <strong>之一</strong>:</p>
 <table class="info">
   <tr>
@@ -140,7 +140,7 @@
     <td>0x300</td>
   </tr>
   </table>
-<h3>组 #4: 模式</h3>
+<h3 id="Group_4_Modality">组 #4: 模式</h3>
 <p>若要指定对话框的模式, 请添加以下值 <strong>之一</strong>:</p>
 <table class="info">
   <tr>
@@ -165,7 +165,7 @@
     <td>0x40000</td>
   </tr>
   </table>
-<h3>组 #5: 其他选项</h3>
+<h3 id="Group_5_Other_Options">组 #5: 其他选项</h3>
 <p>若要指定其他选项, 请添加以下值中的 <strong>一个或多个</strong>:</p>
 <table class="info">
   <tr>
@@ -192,49 +192,61 @@
 <h2 id="Remarks">备注</h2>
 <p>消息框通常看起来像这样:</p>
 <img src="../static/pics/dlg_message.png" alt="MsgBox" />
-<p>使用上面的表格时, 可以把您期望用于 MsgBox 的选项值加在一起. 例如, 要显示一个默认按钮为 "否" 的 "是"/"否" 消息框, 那么需要把 <em>Options</em> 的值设置为 256+4(260). 使用十六进制表示为 0x100+0x4(0x104).</p>
-<p>MsgBox 对逗号的处理比较智能, 所以通常不需要对 <em>Text</em> 参数中的逗号进行<a href="_EscapeChar.htm">转义</a>.</p>
-<p>要判断用户在最近的 MsgBox 中按下了哪个按钮, 请使用 <a href="IfMsgBox.htm">IfMsgBox</a> 命令. 例如:</p>
+<p>使用上面的表格时, 可以把您期望用于消息框的选项值加在一起. 例如, 要显示一个默认按钮为 "否" 的 "是"/"否" 消息框, 那么需要把 <em>Options</em> 的值设置为 256+4(260). 使用十六进制表示为 0x100+0x4(0x104).</p>
+<p>MsgBox 对逗号的处理比较智能, 所以通常不需要对 <em>Text</em> 参数中的逗号进行<a href="../misc/EscapeChar.htm">转义</a>.</p>
+<p>要判断用户在最近的消息框中按下了哪个按钮, 请使用 <a href="IfMsgBox.htm">IfMsgBox</a> 命令. 例如:</p>
 <pre>MsgBox, 4,, Would you like to continue? (press Yes or No)
 IfMsgBox Yes
     MsgBox You pressed Yes.
 else
     MsgBox You pressed No.</pre>
 <p>参照<a href="../scripts/index.htm#MsgBoxButtonNames">这个例子</a>可以自定义按钮的名称.</p>
-<p><strong>提示</strong>: 当 MsgBox 窗口活动时按下 <kbd>Ctrl</kbd>+<kbd>C</kbd> 将复制其中的文本到剪贴板. 这适用于所有的 MsgBox, 而不仅是 AutoHotkey 生成的那些.</p>
+<p><strong>提示</strong>: 当消息框窗口活动时按下 <kbd>Ctrl</kbd>+<kbd>C</kbd> 将复制其中的文本到剪贴板. 这适用于所有的消息框, 而不仅是 AutoHotkey 生成的那些.</p>
 <p><strong>GUI 窗口当作 MsgBox</strong>: 通过 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> 的方法一个 GUI 窗口可以显示为 <em>模式</em> 对话框(MsgBox). <em>模式</em> 对话框在其消失之前会阻止用户与原来的 GUI 窗口进行交互. 此时, 不需要指定上表中的系统模式或任务模式选项.</p>
 <p>当 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> <em>无效</em> 时, 在用户响应 MsgBox 前可以使用任务模式选项(8192) 来禁用所有的脚本窗口.</p>
 <p><strong>"帮助" 按钮</strong>: 在 <em>Options</em> 中使用了 "帮助" 按钮选项(16384) 时, 只有符合下面两个条件, 那么按下 "帮助" 按钮才会有效果:</p>
 <ol>
-  <li>MsgBox 是由 GUI 窗口通过 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> 的方法显示的.</li>
-  <li>脚本正在监听 WM_HELP 消息(0x53). 例如: <code><a href="OnMessage.htm">OnMessage</a>(0x53, "WM_HELP")</code>. 调用 WM_HELP() 函数时, 它可以通过如显示另一个窗口或 MsgBox 的方法引导用户.</li>
+  <li>消息框是由 GUI 窗口通过 <a href="Gui.htm#OwnDialogs">Gui +OwnDialogs</a> 的方法显示的.</li>
+  <li>脚本正在监听 WM_HELP 消息(0x53). 例如: <code><a href="OnMessage.htm">OnMessage</a>(0x53, "WM_HELP")</code>. 调用 WM_HELP() 函数时, 它可以通过如显示另一个窗口或消息框的方法引导用户.</li>
 </ol>
-<p><strong>关闭按钮(在 MsgBox 的标题栏)</strong>: 由于 MsgBox 窗口是操作系统内置的特性, 所以它的 <strong>X</strong> 按钮仅在某些按钮存在时才会启用. 如果只有一个 "确定" 按钮, 那么点击 <strong>X</strong> 按钮等同于按下 "确定" 按钮. 其他情况下, 只有含有 "取消" 按钮时才会启用 X 按钮, 此时点击 <strong>X</strong> 等同于按下 "取消" 按钮.</p>
+<p><strong>关闭按钮(在消息框的标题栏)</strong>: 由于 消息框窗口是操作系统内置的特性, 所以它的 <strong>X</strong> 按钮仅在某些按钮存在时才会启用. 如果只有一个 "确定" 按钮, 那么点击 <strong>X</strong> 按钮等同于按下 "确定" 按钮. 其他情况下, 只有含有 "取消" 按钮时才会启用 X 按钮, 此时点击 <strong>X</strong> 等同于按下 "取消" 按钮.</p>
 <h2 id="Related">相关</h2>
 <p><a href="IfMsgBox.htm">IfMsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="FileSelectFile.htm">FileSelectFile</a>, <a href="FileSelectFolder.htm">FileSelectFolder</a>, <a href="ToolTip.htm">ToolTip</a>, <a href="Gui.htm">GUI</a></p>
 <h2 id="Examples">示例</h2>
-<div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>MsgBox This is the 1-parameter method. Commas (,) do not need to be escaped.
-MsgBox, 4, , This is the 3-parameter method. Commas (,) do not need to be escaped.
-MsgBox, 4, , Do you want to continue? (Press YES or NO)
+<div class="ex" id="ExOneParam">
+<p><a href="#ExOneParam">#1</a>: The 1-parameter method. A quick and easy way to show information. The user can press an OK button to close the message box and continue execution.</p>
+<pre>MsgBox This is the 1-parameter method. Commas (,) do not need to be escaped.</pre>
+</div>
+
+<div class="ex" id="ExThreeParam">
+<p><a href="#ExThreeParam">#2</a>: The 3-parameter method. Use the first and second parameter to specify the options and the title.</p>
+<pre>MsgBox, 4, , This is the 3-parameter method. Commas (,) do not need to be escaped.</pre>
+</div>
+
+<div class="ex" id="ExIfMsgBox">
+<p><a href="#ExIfMsgBox">#3</a>: Use <a href="IfMsgBox.htm">IfMsgBox</a> to determine which button the user pressed in the most recent message box.</p>
+<pre>MsgBox, 4, , Do you want to continue? (Press YES or NO)
 IfMsgBox No
-    return
-MsgBox, 4, , 4-parameter method: this MsgBox will time out in 5 seconds.  Continue?, 5
+    return</pre>
+</div>
+
+<div class="ex" id="ExTimeout">
+<p><a href="#ExTimeout">#4</a>: The 4-parameter method. Use the fourth parameter (Timeout) to automatically close the message box after a certain number of seconds.</p>
+<pre>MsgBox, 4, , 4-parameter method: this MsgBox will time out in 5 seconds.  Continue?, 5
 IfMsgBox Timeout
     MsgBox You didn't press YES or NO within the 5-second period.
 else IfMsgBox No
     return</pre>
- </div>
+</div>
 
 <div class="ex" id="ExExpression">
-<p><a href="#ExExpression">#2</a>: 通过在任何参数前加上 <code>% </code>, 可以让此参数支持<a href="../Variables.htm#Expressions">表达式</a>. 在下面的例子中, 执行数学运算, 访问<a href="../misc/Arrays.htm#pseudo">伪数组</a>元素和调用函数. 所有这些项目都可以通过 "." 运算符串联成 MsgBox 可以显示的单个字符串:</p>
+<p><a href="#ExExpression">#5</a>: 通过在任何参数前加上 <code>% </code>, 可以让此参数支持<a href="../Variables.htm#Expressions">表达式</a>. 在下面的例子中, 执行数学运算, 访问<a href="../misc/Arrays.htm#pseudo">伪数组</a>元素和调用函数. 所有这些项目都可以通过 "." 运算符串联成 MsgBox 可以显示的单个字符串.</p>
 <pre>MsgBox % "New width for object #" . A_Index . " is: " . RestrictWidth(ObjectWidth%A_Index% * ScalingFactor)</pre>
 </div>
 
 <div class="ex" id="ExFocus">
-<p><a href="#ExFocus">#3</a>: 下面的例子提醒用户 MsgBox 即将获取焦点(如果用户正在输入).</p>
-<pre>SplashTextOn,,, A MsgBox is about to appear.
+<p><a href="#ExFocus">#6</a>: 提醒用户消息框即将获取焦点(如果用户正在输入).</p>
+<pre>SplashTextOn,,, A message box is about to appear.
 Sleep 3000
 SplashTextOff
 MsgBox The backup process has completed.</pre>

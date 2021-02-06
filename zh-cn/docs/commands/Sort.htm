@@ -27,7 +27,7 @@
 
 </dl>
 
-<h2>选项</h2>
+<h2 id="Options">选项</h2>
 <p><u>由零个或多个下列字母组成的字符串(可任意顺序, 字母间可以用空格分隔):</u></p>
 <p><strong>C</strong>: 区分大小写的排序(如果同时存在 <strong>N</strong> 选项则此选项被忽略). 如果同时省略 <strong>C</strong> 和 <strong>CL</strong>, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
 <p><strong>CL</strong> <span class="ver">[v1.0.43.03+]:</span> 基于当前用户区域设置的不区分大小写的排序. 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 &Auml; 和 &Uuml; 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起. 根据需要排序的内容, 它的执行性能比默认的不区分方法差了 1 到 8 倍.</p>
@@ -53,17 +53,17 @@ C:\AAA\BBB.txt</pre>
 <p>可以使用 <a href="_MaxMem.htm">#MaxMem</a> 增加变量所的最大内存空间.</p>
 <p>对占用大内存的变量进行排序后当它的内容不再需要时, 您可以清空它来释放占用的内存, 例如 <code>MyVar =</code>.</p>
 <h2 id="Related">相关</h2>
-<p><a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="LoopParse.htm">解析循环</a>, <a href="StringSplit.htm">StringSplit</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="../misc/Clipboard.htm">剪贴板</a>, <a href="_MaxMem.htm">#MaxMem</a></p>
+<p><a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="LoopParse.htm">解析循环</a>, <a href="StrSplit.htm">StrSplit()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="../misc/Clipboard.htm">剪贴板</a>, <a href="_MaxMem.htm">#MaxMem</a>, <a href="StringSplit.htm">StringSplit</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExNumbers">
-<p><a href="#ExNumbers">#1</a></p>
+<p><a href="#ExNumbers">#1</a>: Sorts a comma-separated list of numbers.</p>
 <pre>MyVar := "5,3,7,9,1,13,999,-4"
-<strong>Sort</strong> MyVar, N D,  <em>; 数值排序, 使用逗号作为分隔符.</em>
+Sort MyVar, N D,  <em>; 数值排序, 使用逗号作为分隔符.</em>
 MsgBox %MyVar%   <em>; 结果是 -4,1,3,5,7,9,13,999</em></pre>
 </div>
 
 <div class="ex" id="ExFileContents">
-<p><a href="#ExFileContents">#2</a>: 下面的例子对文件的内容进行排序:</p>
+<p><a href="#ExFileContents">#2</a>: 对文件的内容进行排序.</p>
 <pre><a href="FileRead.htm">FileRead</a>, Contents, C:\Address List.txt
 if not ErrorLevel  <em>; 装载成功.</em>
 {
@@ -75,20 +75,20 @@ if not ErrorLevel  <em>; 装载成功.</em>
 </div>
 
 <div class="ex" id="ExFilenames">
-<p><a href="#ExFilenames">#3</a>: 下面的例子设置 <kbd>Win</kbd>+<kbd>C</kbd> 热键来从打开的资源管理器窗口中复制文件, 对其中的文件名进行排序后放回剪贴板:</p>
-<pre>#c::
+<p><a href="#ExFilenames">#3</a>: 设置热键来从打开的资源管理器窗口中复制文件, 对其中的文件名进行排序后放回剪贴板.</p>
+<pre>#c:: <em>; Win+C</em>
 Clipboard := "" <em>; 必须为空以检测是否有效.</em>
 Send ^c
 ClipWait 2
 if ErrorLevel
     return
-<strong>Sort</strong> Clipboard
+Sort Clipboard
 MsgBox Ready to be pasted:`n%Clipboard%
 return</pre>
 </div>
 
 <div class="ex" id="ExCustom">
-<p><a href="#ExCustom">#4</a>: 下面的例子演示了通过回调函数进行自定义排序.</p>
+<p><a href="#ExCustom">#4</a>: 演示通过回调函数进行自定义排序.</p>
 <pre>MyVar := "def`nabc`nmno`nFGH`nco-op`ncoop`ncop`ncon`n"
 <strong>Sort</strong>, MyVar, F StringSort
 StringSort(a1, a2)
@@ -97,14 +97,14 @@ StringSort(a1, a2)
 }
 
 MyVar := "5,3,7,9,1,13,999,-4"
-<strong>Sort</strong>, MyVar, F IntegerSort D,
+Sort, MyVar, F IntegerSort D,
 IntegerSort(a1, a2)
 {
     return a1 - a2  <em>; 按上升的数值顺序进行排序.  此方法只有在两个数字的差不会超出 64 位有符号整数的范围才有效.</em>
 }
 
 MyVar := "1,2,3,4"
-<strong>Sort</strong>, MyVar, F ReverseDirection D,  <em>; 反转列表, 这样它包含了 4,3,2,1</em>
+Sort, MyVar, F ReverseDirection D,  <em>; 反转列表, 这样它包含了 4,3,2,1</em>
 ReverseDirection(a1, a2, offset)
 {
     return offset  <em>; 如果原始列表中 a2 在 a1 的后面则偏移是正数; 否则为负数.</em>

@@ -109,7 +109,7 @@
 <p><strong>矩形或椭圆形</strong>: 如果指定了 <strong>W</strong> 和 <strong>H</strong> 选项, 那么会设置新显示的区域为矩形, 且其左上角的坐标为首个(且唯一) <strong>X-Y</strong> 坐标对. 但是, 如果同时指定了 <strong>E</strong> 选项, 那么会设置窗口形状为椭圆形而不是矩形. 例如: <code>WinSet, Region, 50-0 W200 H250 E, WinTitle</code>.</p>
 <p><strong>多边形</strong>: 如果 <strong>W</strong> 和 <strong>H</strong> 选项都不存在, 新的显示区域将是一个由多对 <strong>X-Y</strong> 坐标对确定的多边形(每对坐标以窗口左上角为原点).  例如, 如果指定了三对坐标, 那么在多数时候窗口形状会被设置为三角形. 坐标对彼此间的相对顺序有时很重要. 此外, 可以在 <em>Options</em> 中指定单词 <strong>Wind</strong> 从而使用缠绕法代替变换方法来确定多边形的形状.</p>
 <p>如果设置失败, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 成功则为 0. 出现以下情况时会设置失败: 1) 目标窗口不存在; 2) <em>Options</em> 有一个或多个选项无效; 3) 指定了超过 2000 对坐标; 4) 指定的形状是无效的或不适用于目标窗口.</p>
-<p>请参阅本页底部<a href="#ExRegion">示例 #5</a> 和<a href="#ExRegionAdvanced">示例 #6</a>, 了解如何去使用此子命令.</p>
+<p>请参阅本页底部<a href="#ExRegion">示例 #7</a>, 了解如何去使用此子命令.</p>
 
 <div id="trans">
   <h3 id="Transparent">Transparent</h3>
@@ -118,7 +118,7 @@
 <pre class="Syntax"><span class="func">WinSet</span>, Transparent <span class="optional">, N, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>指定 <em>N</em> 为介于 0 和 255 之间的数字来表示透明度: 0 表示完全透明, 255 表示完全不透明.</p>
 <p>指定单词 <code>Off</code> 可以完全关闭窗口的透明度. 这在功能上与 <code>WinSet, <a href="#TransColor">TransColor</a>, Off, <i>WinTitle</i></code> 相同. 指定 <code>Off</code> 与指定 255 的区别是, 这样可以提升性能并降低系统资源的占用.</p>
-<p>例如, 要使任务栏透明, 请使用 <code>WinSet, Transparent, 150, ahk_class Shell_TrayWnd</code>. 类似地, 要使经典的开始菜单透明, 请参见<a href="#ExTransStartMenu">示例 #3</a>. 要使开始菜单的子菜单透明, 还需要包含<a href="#ExTransMenu">示例 #4</a> 中的脚本.</p>
+<p>例如, 要使任务栏透明, 请使用 <code>WinSet, Transparent, 150, ahk_class Shell_TrayWnd</code>. 类似地, 要使经典的开始菜单透明, 请参见<a href="#ExTransStartMenu">示例 #5</a>. 要使开始菜单的子菜单透明, 还需要包含<a href="#ExTransMenu">示例 #6</a> 中的脚本.</p>
 <p>在使用 <code>Off</code> 之前, 将透明级别设置为 255, 可以避免窗口重绘问题, 比如黑色背景. 如果窗口仍无法正确重绘, 那么请参阅 <a href="#Redraw">Redraw</a> 了解可能的解决方法.</p>
 <p><span class="ver">[v1.1.24.05+]</span>: 这个子命令也适用于缺少标题(标题栏) 并且缺少<a href="#AlwaysOnTop">置顶</a>属性的窗口.</p>
 
@@ -143,6 +143,80 @@
 <p><a href="WinGet.htm">WinGet</a>, <a href="WinHide.htm">WinHide</a>, <a href="WinSetTitle.htm">WinSetTitle</a>, <a href="WinMove.htm">WinMove</a>, <a href="WinActivate. htm">WinActivate</a>, <a href="Control.htm">Control</a></p>
 
 <h2 id="Examples">示例</h2>
+<div class="ex" id="ExTransparent">
+<p><a href="#ExTransparent">#1</a>: Makes Notepad a little bit transparent.</p>
+<pre>WinSet, Transparent, 200, Untitled - Notepad</pre>
+</div>
+
+<div class="ex" id="ExTransColor">
+<p><a href="#ExTransColor">#2</a>: Makes all white pixels in Notepad invisible.</p>
+<pre>WinSet, TransColor, White, Untitled - Notepad</pre>
+</div>
+
+<div class="ex" id="ExAlwaysOnTop">
+<p><a href="#ExAlwaysOnTop">#3</a>: Toggles the always-on-top status of the calculator.</p>
+<pre>WinSet, AlwaysOnTop, Toggle, Calculator</pre>
+</div>
+
+<div class="ex" id="ExTransHotkey">
+<p><a href="#ExTransHotkey">#4</a>: Demonstrates the effects of the sub-commands <a href="#Transparent">Transparent</a> and <a href="#TransColor">TransColor</a>. Note: If you press one of the hotkeys while the mouse cursor is hovering over a pixel that is invisible as a result of TransColor, the window visible beneath that pixel will be acted upon instead! Also, <kbd>Win</kbd>+<kbd>G</kbd> will have an effect only on Windows XP or later because retrieval of transparency settings is not supported by Windows 2000.</p>
+<pre>#t::  <em>; Press Win+T to make the color under the mouse cursor invisible.</em>
+MouseGetPos, MouseX, MouseY, MouseWin
+PixelGetColor, MouseRGB, %MouseX%, %MouseY%, RGB
+<em>; It seems necessary to turn off any existing transparency first:</em>
+WinSet, TransColor, Off, ahk_id %MouseWin%
+WinSet, TransColor, %MouseRGB% 220, ahk_id %MouseWin%
+return
+
+#o::  <em>; Press Win+O to turn off transparency for the window under the mouse.</em>
+MouseGetPos,,, MouseWin
+WinSet, TransColor, Off, ahk_id %MouseWin%
+return
+
+#g::  <em>; Press Win+G to show the current settings of the window under the mouse.</em>
+MouseGetPos,,, MouseWin
+WinGet, Transparent, Transparent, ahk_id %MouseWin%
+WinGet, TransColor, TransColor, ahk_id %MouseWin%
+ToolTip Translucency:`t%Transparent%`nTransColor:`t%TransColor%
+return</pre>
+</div>
+
+<div class="ex" id="ExTransStartMenu">
+<p><a href="#ExTransStartMenu">#5</a>: Makes the classic Start Menu transparent (to additionally make the Start Menu's submenus transparent, see <a href="#ExTransMenu">example #6</a>).</p>
+<pre>DetectHiddenWindows, On
+WinSet, Transparent, 150, ahk_class BaseBar</pre>
+</div>
+
+<div class="ex" id="ExTransMenu">
+<p><a href="#ExTransMenu">#6</a>: Makes all or selected menus transparent throughout the system as soon as they appear. Note that although such a script cannot make its own menus transparent, it can make those of other scripts transparent.</p>
+<pre>#Persistent
+SetTimer, WatchForMenu, 5
+return  <em>; End of auto-execute section.</em>
+
+WatchForMenu:
+DetectHiddenWindows, On  <em>; Might allow detection of menu sooner.</em>
+if WinExist("ahk_class #32768")
+    WinSet, Transparent, 150  <em>; Uses the window found by the above line.</em>
+return</pre>
+</div>
+
+<div class="ex" id="ExRegion">
+<p><a href="#ExRegion">#7</a>: Usage of the <a href="#Region">Region</a> sub-command:</p>
+<p>The following makes all parts of Notepad outside this rectangle invisible.</p>
+<pre>WinSet, Region, 50-0 W200 H250, ahk_class Notepad</pre>
+<p>The following does the same as above but with corners rounded to 40x40.</p>
+<pre>WinSet, Region, 50-0 W200 H250 R40-40, ahk_class Notepad</pre>
+<p>The following creates an ellipse instead of a rectangle.</p>
+<pre>WinSet, Region, 50-0 W200 H250 E, ahk_class Notepad</pre>
+<p>The following creates a triangle with apex pointing down.</p>
+<pre>WinSet, Region, 50-0 250-0 150-250, ahk_class Notepad</pre>
+<p>The following restores the window to its original/default display area.</p>
+<pre>WinSet, Region,, ahk_class Notepad</pre>
+<p>The following creates a see-through rectangular hole inside Notepad (or any other window). There are two rectangles specified below: an outer and an inner. Each rectangle consists of 5 pairs of X/Y coordinates because the first pair is repeated at the end to "close off" each rectangle.</p>
+<pre>WinSet, Region, 0-0 300-0 300-300 0-300 0-0   100-100 200-100 200-200 100-200 100-100, ahk_class Notepad</pre>
+</div>
+
+
 <div class="ex" id="ExBasic">
 <p><a href="#ExBasic">#1</a></p>
 <pre>WinSet, Transparent, 200, Untitled - Notepad <em>; 让窗口稍有点透明.</em>

@@ -32,25 +32,11 @@
 
 </dl>
 
-<h3>示例</h3>
-<pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
-
-; 此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>
-<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 <span class="ver">[v1.1.08+]</span></em>
-
-RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">\</span>SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
-MsgBox, Program files are in: %OutputVar%
-
-<em>; 另一种返回 Program Files 目录路径的方法:</em>
-EnvGet OutputVar, % <a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles"
-MsgBox, Program files are in: %OutputVar%
-</pre>
-
 <h2 id="old">传统语法</h2>
-<p class="warning"><strong>不推荐:</strong> 不推荐在新脚本中使用此语法. 而是使用<a href="#new">新语法</a>.</p>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此语法. 而是使用<a href="#new">新语法</a>.</p>
 <pre class="Syntax"><span class="func">RegRead</span>, OutputVar, RootKey, SubKey <span class="optional">, ValueName</span></pre>
 
-<h3>参数</h3>
+<h3 id="Old_Parameters">参数</h3>
 <dl>
 
   <dt>OutputVar</dt>
@@ -66,20 +52,6 @@ MsgBox, Program files are in: %OutputVar%
   <dd><p>要获取的值名. 如果省略, 则获取 <em>Subkey</em> 的默认值, 这是在注册表中值名显示为 "(默认)" 的值. 如果没有默认值(即注册表中显示 "数值未设置"), 则 <em>OutputVar</em> 置空且 ErrorLevel 设置为 1.</p></dd>
 
 </dl>
-
-<h3>示例</h3>
-<pre class="NoIndent"><em>; 例子: 返回 Program Files 目录的路径.
-
-; 此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.
-</em>
-<a href="SetRegView.htm">SetRegView</a> 64  <em>; 需要 <span class="ver">[v1.1.08+]</span></em>
-
-RegRead, OutputVar, HKEY_LOCAL_MACHINE<span class="red">,</span> SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
-MsgBox, Program files are in: %OutputVar%
-
-<em>; 另一种返回 Program Files 目录路径的方法:</em>
-EnvGet OutputVar, % <a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles"
-MsgBox, Program files are in: %OutputVar%</pre>
 
 <h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
@@ -100,8 +72,24 @@ MsgBox, Program files are in: %OutputVar%</pre>
 <p><a href="RegDelete.htm">RegDelete</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
 
 <h2 id="Examples">示例</h2>
+<div class="ex" id="ExNewVsOld">
+<p><a href="#ExNewVsOld">#1</a>: 新语法 vs. 旧语法.</p>
+<p>Despite the different syntax, both examples have the same effect; that is, they read a value from the registry and store it in <var>OutputVar</var>.</p>
+<pre>RegRead, OutputVar, HKEY_LOCAL_MACHINE\Software\SomeApplication, TestValue</pre>
+<pre>RegRead, OutputVar, HKEY_LOCAL_MACHINE, Software\SomeApplication, TestValue</pre>
+</div>
+
+<div class="ex" id="ExProgramFiles">
+<p><a href="#ExProgramFiles">#2</a>: Retrieves and reports the path of the "Program Files" directory. See <a href="EnvGet.htm#ExProgramFiles">EnvGet example #2</a> for an alternative method.</p>
+<pre><em>; 此行确保在 64 位系统上运行非 64 位脚本时也能正常返回 64 位的 Program Files 目录路径.</em>
+<a href="SetRegView.htm">SetRegView</a> 64  <em>; Requires <span class="ver">[v1.1.08+]</span></em>
+
+RegRead, OutputVar, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion, ProgramFilesDir
+MsgBox, Program files are in: %OutputVar%</pre>
+</div>
+
 <div class="ex" id="ExType">
-<p><a href="#ExType">#1</a>: 下面的例子获取注册表值的类型(例如 REG_SZ 或 REG_DWORD).</p>
+<p><a href="#ExType">#3</a>: 获取注册表值的类型(例如 REG_SZ 或 REG_DWORD).</p>
 <pre>MsgBox % RegKeyType("HKCU", "Environment", "TEMP")
 return
 
