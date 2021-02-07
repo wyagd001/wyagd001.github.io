@@ -44,15 +44,15 @@
 <table class="info">
 <tr id="str">
 <td>Str</td>
-<td><p>例如"Blue"或 MyVar 这样的字符串型, 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
+<td><p>例如 "Blue" 或 MyVar 这样的字符串型, 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
   <p>然而, 如果函数需要保存超过变量当前容量的字符串, 则在调用前必须确保此变量的容量足够大. 这可以通过调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是为 <em>MyVar</em> 保留的容量.</p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 的<a href="../Variables.htm#Expressions">表达式</a>. 如果这样, 则不会调用函数并设置 ErrorLevel 的值为 -2.</p>
   <p>支持<a href="#asterisk">星号变量</a> "Str*" 但极少使用. 它可以用在期望如 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中.</p>
-  <p class="note"><strong>注意</strong>: 传递字符串给函数时, 应该注意函数期望什么<a href="../Compat.htm#DllCall"><i>类型</i>的字符串</a>.</p></td>
+  <p class="note"><strong>注意</strong>: 传递字符串给函数时, 应该注意函数期望什么<a href="../Compat.htm#DllCall"> <i>类型</i> 的字符串</a>.</p></td>
 </tr>
 <tr>
   <td><span id="astr"></span><span id="wstr"></span>AStr<br>WStr</td>
-  <td><span class="ver">[AHK_L 42+]:</span> <b>A</b>NSI 或 Unicode (<b>宽</b> 字符) 字符串型. 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>了解等同的 Win32 类型和其他细节.</td>
+  <td><span class="ver">[AHK_L 42+]:</span> <b>A</b>NSI 或 Unicode(<b>宽</b> 字符) 字符串型. 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>了解等同的 Win32 类型和其他细节.</td>
 </tr>
 <tr>
   <td>Int64</td>
@@ -95,7 +95,7 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
     (后缀)</td>
   <td><p>在上述任一类型后附加星号(星号前可以含有空格) 表示传递参数的地址而不是参数的值(被调用函数必须接受地址). 由于这时函数可能修改参数的值, 所以每当不受保护的变量作为参数传递时, 变量的内容都会被更新. 例如, 后面的调用将通过地址传递 MyVar 的内容给 MyFunction, 但也会更新 MyVar 来反映 MyFunction 对它作出的改变: <code>DllCall("MyDll\MyFunction", "Int*", MyVar)</code>.</p>
     <p>一般说来, 星号可用于函数中以 "LP" 开始的参数类型或返回值类型. 最常见的例子是 LPDWORD, 这是指向 DWORD 的指针. 因为 DWORD 是无符号 32 位整型, 所以用 "UInt*" 或 "UIntP" 来表示 LPDWORD. 星号不应该用于字符串类型(例如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 根据您需要传递的是变量还是其地址应该使用 <a href="#str">"Str"</a> 或 "Ptr".</p>
-    <p class="note"><strong>注意</strong>: "Char*"与<a href="#str">"Str"</a>类型是不同的, 因为"Char*"传递 8 位数的地址, 而<a href="#str">"Str"</a>传递一系列字符的地址, 根据 AutoHotkey 版本的不同它可能是 8 位(ANSI) 或 16 位(Unicode) 的, 同样地, "UInt*"会传递 32 位数的地址, 所以不应该使用在函数期望大于 32 位的结构或值的数组的时候.</p>
+    <p class="note"><strong>注意</strong>: "Char*" 与 <a href="#str">"Str"</a> 类型是不同的, 因为 "Char*" 传递 8 位数的地址, 而 <a href="#str">"Str"</a> 传递一系列字符的地址, 根据 AutoHotkey 版本的不同它可能是 8 位(ANSI) 或 16 位(Unicode) 的, 同样地, "UInt*" 会传递 32 位数的地址, 所以不应该使用在函数期望大于 32 位的结构或值的数组的时候.</p>
     <p>由于 AutoHotkey 中的变量没有固定的类型, 所以传递给函数的地址指向临时内存而不是变量自身, 不需要对这样的变量调用 <a href="VarSetCapacity.htm">VarSetCapacity()</a>, 因为在函数返回后 DllCall() 会正确的更新变量.</p>
     </td>
 </tr>

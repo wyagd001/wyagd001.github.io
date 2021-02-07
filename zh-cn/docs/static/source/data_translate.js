@@ -48,5 +48,5 @@
   "Back to top":"返回顶部",
   "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later":"适用于:\nAutoHotkey_L Revision {0} 及以后版本 \nAutoHotkey v1.0.90.00 及以后版本",
   "Applies to AutoHotkey {0} and later":"适用于 AutoHotkey {0} 及以后版本",
-  "Deprecated. New scripts should use {0} instead.":true
+  "Deprecated. New scripts should use {0} instead.":"过时的. 新脚本应使用 {0} 代替."
 };
