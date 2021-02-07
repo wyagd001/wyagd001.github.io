@@ -36,7 +36,7 @@
     <p><strong>*n</strong>(渐变值): 指定 <strong>n</strong> 为介于 0 和 255(包含的) 之间的数字, 用于表示每个像素颜色红/绿/蓝通道强度在每个方向上允许的渐变值. 例如, 如果指定了 <code>*2</code>, 并且像素的颜色是 0x444444, 那么从 0x424242 到 0x464646 的任何颜色都将被视为匹配. 此参数可用于图像的颜色轻微变化或 <em>ImageFile</em> 使用的格式(例如 GIF 或 JPG) 不能准确表示屏幕上的图像的时候. 如果指定 255 为浮动的渐变值, 则匹配所有颜色. 默认渐变值为 0.</p>
     <p><strong>*TransN</strong>: 此选项通过指定图像内的某种颜色能匹配屏幕上的任何颜色, 使得更容易找到匹配. 它常用于寻找含有透明区域的 PNG, GIF 和 TIF 文件(然而, 对于图标则不需要此选项, 因为它们的透明度是自动支持的). 对于 GIF 文件, <code>*TransWhite</code> 很可能会有用. 对于 PNG 和 TIF 文件, <code>*TransBlack</code> 可能是最佳的. 否则, 指定 <strong>N</strong> 为其他颜色名称或 RGB 值(请参阅<a href="Progress.htm#colors">颜色图表</a>进行了解或使用 <a href="PixelGetColor.htm">PixelGetColor</a> 的 RGB 模式). 例如: <code>*TransBlack</code>, <code>*TransFFFFAA</code>, <code>*Trans0xFFFFAA</code>.</p>    
     <p><strong>*wn</strong> 和 <strong>*hn</strong>: 用于缩放图像尺寸的目标宽度和高度(此宽度和高度也决定了从多图标的 .ICO 文件中加载哪个图标). 如果同时省略这两个选项, 则把从 ICO, DLL 或 EXE 文件中加载的图标调整到系统默认的小图标大小, 通常为 16X16(通过指定 <code>*w0 *h0</code> 您可以强制使用实际/内部的大小). 图标外的其他图像以它们的实际大小加载. 要保持高宽比来缩放图像, 请在其中一个尺寸中指定 -1 而在另一个中指定正数. 例如, 指定 <code>*w200 *h-1</code> 将缩放图像到 200 像素的宽度同时自动设置其高度.</p>
-    <p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">bitmap(位图) 或 icon handle(图标句柄)</a> 可用于替代文件名. 例如, <code>HBITMAP:*%handle%</code>.</p>
+    <p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">位图或图标句柄</a>可用于替代文件名. 例如, <code>HBITMAP:*%handle%</code>.</p>
   </dd>
 
 </dl>
@@ -66,12 +66,12 @@
 <p><a href="PixelSearch.htm">PixelSearch</a>, <a href="PixelGetColor.htm">PixelGetColor</a>, <a href="CoordMode.htm">CoordMode</a>, <a href="MouseGetPos.htm">MouseGetPos</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: Searches a region of the active window for an image and stores in <var>FoundX</var> and <var>FoundY</var> the X and Y coordinates of the upper-left pixel of where the image was found.</p>
+<p><a href="#ExBasic">#1</a>: 在活动窗口的某个区域搜索图像, 并在 <var>FoundX</var> 和 <var>FoundY</var> 中存储找到图像的左上角像素的 X 和 Y 坐标.</p>
 <pre>ImageSearch, FoundX, FoundY, 40, 40, 300, 300, C:\My Images\test.bmp</pre>
 </div>
 
 <div class="ex" id="ExScreen">
-<p><a href="#ExScreen">#2</a>: Searches a region of the screen for an image and stores in <var>FoundX</var> and <var>FoundY</var> the X and Y coordinates of the upper-left pixel of where the image was found, including advanced error handling.</p>
+<p><a href="#ExScreen">#2</a>: 在屏幕的某个区域搜索图像，并在 <var>FoundX</var> 和 <var>FoundY</var> 中存储找到图像的左上角像素的 X 和 Y 坐标, 包括高级错误处理.</p>
 <pre>CoordMode Pixel  <em>; 将下面的坐标解释为相对于屏幕而不是活动窗口.</em>
 ImageSearch, FoundX, FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, *Icon3 %A_ProgramFiles%\SomeApp\SomeApp.exe
 if (ErrorLevel = 2)
