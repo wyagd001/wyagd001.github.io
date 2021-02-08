@@ -13,24 +13,18 @@
 <body>
 <h1>TreeView</h1>
 
-<h2 id="Table_of_Contents">目录</h2>
+<h2 id="toc">目录</h2>
 <ul>
   <li><a href="#Intro">入门和简单示例</a></li>
-  <li><a href="#Options">选项和样式</a></li>
-  <li><a href="#BuiltIn">内置方法</a>:
-    <ul>
-      <li><a href="#bifAddModifyDelete">添加/修改/删除项目</a></li>
-      <li><a href="#bifGet">获取 TreeView 的数据</a></li>
-      <li><a href="#bifIcon">设置图标</a></li>
-    </ul>
-  </li>
+  <li><a href="#Options">选项参数的选项和样式</a></li>
+  <li><a href="#BuiltIn">TreeView 的内置方法</a></li>
   <li><a href="#Events">事件</a></li>
   <li><a href="#Remarks">备注</a></li>
-  <li><a href="#Examples">长示例</a></li>
+  <li><a href="#Examples">示例</a></li>
 </ul>
 <h2 id="Intro">入门和简单示例</h2>
 <p>Tree-View 通过缩进父项目下的子项目来显示出层级关系. 最常见的例子是资源管理器的驱动器和文件夹树.</p>
-<p>树视图通常看起来像这样:</p>
+<p>TreeView 通常看起来像这样:</p>
 <img src="../static/ctrl_treeview.png" alt="TreeView" />
 <p>创建 TreeView 的语法为:</p>
 <pre class="Syntax" id="GuiAdd">TV := GuiObj.<span class="func">Add</span>("TreeView", Options)</pre>
@@ -45,13 +39,13 @@ P2C2 := TV.Add("Parent 2's second child", P2)
 P2C2C1 := TV.Add("Child 2's first child", P2C2)
 
 MyGui.Show  <em>; 显示窗口和 TreeView.</em></pre>
-<h2 id="Options"><em>Options</em> 参数的选项和样式</h2>
+<h2 id="Options">Options 参数的选项和样式</h2>
 <p><strong>Background:</strong> 指定单词 Background 后面紧跟着颜色名称(请参阅<a href="../misc/Colors.htm">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>. 如果此选项不存在, 则 TreeView 初始的背景颜色默认为系统默认的背景颜色. 指定 <code>BackgroundDefault</code> 或 <code>-Background</code> 来应用系统的默认背景颜色(通常为白色). 例如, 使用 <code>TV.Opt("+BackgroundDefault")</code> 可以把 TreeView 恢复为默认的颜色.</p>
 <p><strong>Buttons</strong>: 指定 <code>-Buttons</code>(负 Buttons) 来避免在每个含有子项目的项目左边显示加号或减号按钮.</p>
 <p><strong>C</strong>: 文本颜色. 指定字母 C 后面紧跟着颜色名称(请参阅<a href="../misc/Colors.htm">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>cRed</code>, <code>cFF2211</code>, <code>c0xFF2211</code>, <code>cDefault</code>.</p>
-<p id="Checked"><strong>Checked:</strong> 在每项的左边提供一个复选框. 当<a href="#Add">添加</a>项目时, 在其选项中指定单词 <em>Check</em> 来让复选框初始为选中而不是未选中状态. 用户可以点击复选框或按下空格键来选中或取消选中项目. 要找出 TreeView 中当前选中了哪些项目, 请调用 <a href="#GetNext">TV.GetNext</a> 或 <a href="#Get">TV.Get</a>.</p>
+<p id="Checked"><strong>Checked:</strong> 在每项的左边提供一个复选框. 当<a href="#Add">添加</a>项目时, 在其选项中指定单词 <em>Check</em> 来让复选框初始为选中而不是未选中状态. 用户可以点击复选框或按下空格键来选中或取消选中项目. 要找出 TreeView 中当前选中了哪些项目, 请调用 <a href="#GetNext">GetNext 方法</a>或 <a href="#Get">Get 方法</a>.</p>
 <p><strong>HScroll</strong>: 指定 <code>-HScroll</code>(负 HScroll) 来禁用控件中的水平滚动(而且控件将不显示任何水平滚动条).</p>
-<p id="ImageList"><strong>ImageList</strong>: 这是把图标添加到 TreeView 的方法. 指定单词 <em>ImageList</em> 后紧跟着由之前调用 <a href="ListView.htm#IL_Create">IL_Create</a>. 返回的 ImageListID. 此选项仅在创建 TreeView 时才有效果(但是, <a href="#SetImageList">TV.SetImageList</a> 没有此限制). 这里是一个可运行示例:</p>
+<p id="ImageList"><strong>ImageList</strong>: 这是把图标添加到 TreeView 的方法. 指定单词 <em>ImageList</em> 后紧跟着由之前调用 <a href="ListView.htm#IL_Create">IL_Create</a>. 返回的 ImageListID. 此选项仅在创建 TreeView 时才有效果(但是, <a href="#SetImageList">SetImageList 方法</a>没有此限制). 这里是一个可运行示例:</p>
 <pre>MyGui := Gui.New()
 ImageListID := <a href="ListView.htm#IL_Create">IL_Create</a>(10)  <em>; 创建初始容量为 10 个图标的图像列表.</em>
 Loop 10  <em>; 加载一些标准系统图标到图像列表中.</em>
@@ -73,7 +67,27 @@ MyTree_Edit(TV, Item)
 <p><strong>(未命名的数值样式):</strong> 由于上述以外的其他样式很少使用, 所以没有为它们命名. 请参阅 <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a>了解这些样式.</p>
 <h2 id="BuiltIn">TreeViews 的内置方法</h2>
 <p>除了<a href="../objects/GuiControl.htm">GUI 控件的默认方法/属性</a>外, 还可以为 TreeView 指定以下方法. 如果关联的 <a href="../objects/GuiControl.htm">GuiControl 对象</a>不存在或不属于 TreeView, TreeView 方法会抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
-<h3 id="bifAddModifyDelete">添加, 修改和删除项目</h3>
+<p><strong>项目方法:</strong></p>
+<ul>
+  <li><a href="#Add">Add</a>: 添加新的项目到 TreeView.</li>
+  <li><a href="#Modify">Modify</a>: 修改项目的属性和/或名称.</li>
+  <li><a href="#Delete">Delete</a>: 删除指定项目或所有项目.</li>
+</ul>
+<p><strong>检索方法:</strong></p>
+<ul>
+  <li><a href="#GetSelection">GetSelection</a>: 返回选择项目的 ID 号.</li>
+  <li><a href="#GetCount">GetCount</a>: 返回控件中项目的总数.</li>
+  <li><a href="#GetParent">GetParent</a>: 返回指定项目的父项目的 ID.</li>
+  <li><a href="#GetChild">GetChild</a>: 返回指定项目的第一个/最上面的子项目的 ID.</li>
+  <li><a href="#GetPrev">GetPrev</a>: 返回指定项目上面一个的同级项目的 ID 号.</li>
+  <li><a href="#GetNext">GetNext</a>: 返回指定项目下面一个项目的 ID 号.</li>
+  <li><a href="#GetText">GetText</a>: 检索指定项目的文本/名称.</li>
+  <li><a href="#Get">Get</a>: 如果指定项目含有指定的属性, 则返回一个非零值(项目 ID).</li>
+</ul>
+<p><strong>其他方法:</strong></p>
+<ul>
+  <li><a href="#SetImageList">SetImageList</a>: 设置或替换用于显示图标的 ImageList.</li>
+</ul>
 <div class="methodShort" id="Add">
   <h3>Add</h3>
   <p>添加新的项目到 TreeView, 并返回其唯一的项目 ID 号.</p>
@@ -95,13 +109,13 @@ MyTree_Edit(TV, Item)
       <p>包含下表中零个或多个单词的字符串(不区分大小写). 在单词间使用空格或 tab 分隔. 要移除某个选项, 请在该选项前加上负号. 要添加选项, 选项前允许使用正号, 但不是必须的(可以省略).</p>
       <p id="Bold"><strong>Bold</strong>: 用粗体显示项目的名称. 以后要取消项目名称的粗体显示, 请使用 <code>TV.Modify(ItemID, &quot;-Bold&quot;)</code>. 单词 <em>Bold</em> 后可以可选地紧跟着 0 或 1 以指示起始状态.</p>
       <p id="Check"><strong>Check</strong>: 在项目的坐标显示一个复选标记(需要 TreeView 含有<a href="#Checked">复选框</a>). 以后要取消选中, 请使用 <code>TV.Modify(ItemID, &quot;-Check&quot;)</code>. 在单词 <em>Check</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>&quot;Check&quot;</code> 和 <code>&quot;Check&quot; <strong>.</strong> VarContainingOne</code> 是等同的(这里中间使用的是<a href="../Variables.htm#concat">连接运算符</a>).</p>
-      <p id="Expand"><strong>Expand</strong>: 展开此项以让其子项目显示出来(如果有). 以后要折叠项目, 请使用 <code>TV.Modify(ItemID, &quot;-Expand&quot;)</code>. 如果没有子项目, 那么 <a href="#Modify">TV.Modify</a> 返回 0 而不是它的项目 ID. 与之相比, <a href="#Add">TV.Add</a> 标记项目为展开, 以备以后添加子项目时使用. 与下面的 &quot;Select&quot; 不同, 展开一个项目不会自动展开其父项目. 最后, 在单词 <em>Expand</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>&quot;Expand&quot;</code> 和 <code>&quot;Expand&quot; <strong>.</strong> VarContainingOne</code> 是等同的.</p>
-      <p><strong>First | Sort | N</strong>: 这些选项仅适用于 <a href="#Add">TV.Add</a>. 它们指定新项目相对于 其同级项目的位置(<em>同级项目</em> 是同一级别的其他任何项目). 如果这些选项都不存在, 则新项目被添加到同级项目的最后/底部. 否则, 请指定 <em>First</em> 来添加项目到同级项目的第一个/顶部, 或指定 <em>Sort</em> 来按字母顺序插入新项目到同级项目中间. 如果指定一个纯整数(<strong>N</strong>), 则假定它为同级项目的 ID 号, 新项目会被插入到它的后面(如果整数 N 是唯一使用的选项, 则它不需要括在引号中).</p>
+      <p id="Expand"><strong>Expand</strong>: 展开此项以让其子项目显示出来(如果有). 以后要折叠项目, 请使用 <code>TV.Modify(ItemID, &quot;-Expand&quot;)</code>. 如果没有子项目, 那么 <a href="#Modify">Modify 方法</a>返回 0 而不是它的项目 ID. 与之相比, <a href="#Add">Add 方法</a>标记项目为展开, 以备以后添加子项目时使用. 与下面的 &quot;Select&quot; 不同, 展开一个项目不会自动展开其父项目. 最后, 在单词 <em>Expand</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>&quot;Expand&quot;</code> 和 <code>&quot;Expand&quot; <strong>.</strong> VarContainingOne</code> 是等同的.</p>
+      <p><strong>First | Sort | N</strong>: 这些选项仅适用于 <a href="#Add">Add 方法</a>. 它们指定新项目相对于 其同级项目的位置(<em>同级项目</em> 是同一级别的其他任何项目). 如果这些选项都不存在, 则新项目被添加到同级项目的最后/底部. 否则, 请指定 <em>First</em> 来添加项目到同级项目的第一个/顶部, 或指定 <em>Sort</em> 来按字母顺序插入新项目到同级项目中间. 如果指定一个纯整数(<strong>N</strong>), 则假定它为同级项目的 ID 号, 新项目会被插入到它的后面(如果整数 N 是唯一使用的选项, 则它不需要括在引号中).</p>
       <p><strong>Icon</strong>: 指定单词 <em>Icon</em> 后紧跟着此项目图标的编号, 项目图标显示在项目名称的左边. 如果此选项不存在, 则使用<a href="#ImageList">图像列表</a>中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有图像列表, 则既不显示图标也不为图标保留空间.</p>
-      <p id="Select"><strong>Select</strong>: 选择项目. 因为一次只能选择一个项目, 此时任何原来选择的项目会自动取消选择. 此外, 如果有必要此选项会展开其父项目以显示新选择的项目. 要找出当前选择的项目, 请调用 <a href="#GetSelection">TV.GetSelection</a>.</p>
-      <p><strong>Sort</strong>: 对于 <a href="#Modify">TV.Modify</a>, 此选项按字母顺序排列指定项目的子项目. 要对所有顶级项目进行排序, 请使用 <code>TV.Modify(0, &quot;Sort&quot;)</code>. 如果不含子项目, 则返回 0 而不是所修改项目的 ID.</p>
+      <p id="Select"><strong>Select</strong>: 选择项目. 因为一次只能选择一个项目, 此时任何原来选择的项目会自动取消选择. 此外, 如果有必要此选项会展开其父项目以显示新选择的项目. 要找出当前选择的项目, 请调用 <a href="#GetSelection">GetSelection 方法</a>.</p>
+      <p><strong>Sort</strong>: 对于 <a href="#Modify">Modify 方法</a>, 此选项按字母顺序排列指定项目的子项目. 要对所有顶级项目进行排序, 请使用 <code>TV.Modify(0, &quot;Sort&quot;)</code>. 如果不含子项目, 则返回 0 而不是所修改项目的 ID.</p>
       <p><strong>Vis</strong>: 在需要时, 通过滚动 TreeView 和/或展开其父项目来确保此项目完全可见.</p>
-      <p><strong>VisFirst</strong>: 和上面一样, 不过在可行时它还会滚动 TreeView 使得此项显示在顶部. 此选项与 <a href="#Modify">TV.Modify</a> 比与 <a href="#Add">TV.Add</a> 一起使用通常更有效.</p>
+      <p><strong>VisFirst</strong>: 和上面一样, 不过在可行时它还会滚动 TreeView 使得此项显示在顶部. 此选项与 <a href="#Modify">Modify 方法</a>比与 <a href="#Add">Add 方法</a>一起使用通常更有效.</p>
     </dd>
   </dl>
   <p>&nbsp;注意: 当添加大量项目时, 可以在添加项目之前使用 <code>TV.Opt(&quot;-Redraw&quot;)</code>, 之后使用 <code>TV.Opt(&quot;+Redraw&quot;)</code> 来提高性能.</p>
@@ -130,7 +144,7 @@ MyTree_Edit(TV, Item)
 </div>
 <div class="methodShort" id="Delete">
   <h3>Delete</h3>
-  <p>删除指定项目, 成功后返回 1, 失败后返回 0.</p>
+  <p>删除指定项目或所有项目, 成功后返回 1, 失败后返回 0.</p>
   <pre class="Syntax">TV.<span class="func">Delete</span>(<span class="optional">ItemID</span>)</pre>
   <dl>
     <dt>ItemID</dt>
@@ -191,7 +205,7 @@ MyTree_Edit(TV, Item)
 <div class="methodShort" id="GetNext">
   <h3>GetNext</h3>
   <p>返回指定项目下面一个项目的 ID 号(如果没有则为 0).</p>
-  <pre class="Syntax">NextItemID := TV.<span class="func">GetNext</span>(<span class="optional">ItemID := 0, ItemType := ""</span>)</pre>
+  <pre class="Syntax">NextItemID := TV.<span class="func">GetNext</span>(<span class="optional">ItemID, ItemType</span>)</pre>
   <dl>
     <dt>ItemID</dt>
     <dd>
@@ -244,10 +258,9 @@ Loop
   </dl>
   <p><strong>提示</strong>: 因为在 IF 语句中把任何非零值视为 &quot;true&quot;, <code>if TV.Get(ItemID, &quot;Checked&quot;) = ItemID</code> 和 <code>if TV.Get(ItemID, &quot;Checked&quot;)</code> 在功能上是相同的.</p>
 </div>
-<h3 id="bifIcon">设置图标</h3>
 <div class="methodShort" id="SetImageList">
   <h3>SetImageList</h3>
-  <p>设置或替换 <a href="ListView.htm#IL">ImageList</a>, 并返回之前与该控件关联的 ImageListID(如果没有, 则返回 0).</p>
+  <p>设置或替换用于显示图标的 <a href="ListView.htm#IL">ImageList</a>, 并返回之前与该控件关联的 ImageListID(如果没有, 则返回 0).</p>
   <pre class="Syntax">PrevImageListID := TV.<span class="func">SetImageList</span>(ImageListID <span class="optional">, IconType</span>)</pre>
     <dl>
       <dt>ImageListID</dt>
@@ -292,7 +305,7 @@ ButtonOK(*) {
 }</pre>
 <p>使用键盘除了在项与项之间导航外, 用户还可以通过输入一个项目名称的前几个字符来进行增量搜索. 这使得选择对象跳转到最近匹配的项目.</p>
 <p>尽管 TreeView 中的每个项目可以存储任意长度的文本, 但仅显示开始的 260 个字符.</p>
-<p>尽管理论上 TreeView 中的项目数可以多达 65536, 然而接近此数目时添加项的性能将显著降低. 通过使用 <a href="#Add">TV.Add</a> 中描述的重绘提示可以稍微减轻这种情况.</p>
+<p>尽管理论上 TreeView 中的项目数可以多达 65536, 然而接近此数目时添加项的性能将显著降低. 通过使用 <a href="#Add">Add 方法</a>中描述的重绘提示可以稍微减轻这种情况.</p>
 <p id="ILremarks">与 <a href="ListView.htm">ListViews</a>, 不同, 当 TreeView 销毁时它的图像列表不会自动被销毁. 因此, 如果 TreeView 中使用的图像列表以后不再用于其他地方, 则在销毁 TreeView 所在的窗口后脚本应调用 <a href="ListView.htm#IL_Destroy">IL_Destroy</a> 来销毁此图像列表. 然而, 如果脚本很快将退出, 这样做是没必要的, 因为那时所有的图像列表会自动被销毁.</p>
 <p>脚本可以在每个窗口中创建多个 TreeView.</p>
 <p>要执行一些操作, 例如调整大小, 隐藏或改变 TreeView 的字体, 请参阅 <a href="../objects/GuiControl.htm">GuiControl 对象</a>.</p>
