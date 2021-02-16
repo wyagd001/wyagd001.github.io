@@ -22,8 +22,8 @@
   <dt>[DllFile\]Function</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-      <p>DLL 或 EXE 文件名后面跟着一个反斜杠和函数名. 例如: <code>&quot;MyDLL\MyFunction&quot;</code>(文件扩展名省略时默认为 &quot;.dll&quot;). 如果未指定绝对路径, 则假定 <em>DllFile</em> 在系统的 PATH 指定的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
-      <p id="std">当调用位于 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数时, 可以省略 <em>DllFile</em>. 例如, <code>&quot;User32\IsWindowVisible&quot;</code> 和 <code>&quot;IsWindowVisible&quot;</code> 产生相同的结果.</p>
+      <p>DLL 或 EXE 文件名后面跟着一个反斜杠和函数名. 例如: <code>"MyDLL\MyFunction"</code>(文件扩展名省略时默认为 ".dll"). 如果未指定绝对路径, 则假定 <em>DllFile</em> 在系统的 PATH 指定的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+      <p id="std">当调用位于 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数时, 可以省略 <em>DllFile</em>. 例如, <code>"User32\IsWindowVisible"</code> 和 <code>"IsWindowVisible"</code> 产生相同的结果.</p>
       <p>如果使用指定的名称无法找到函数, 则自动附加 "W"(Unicode) 前缀. 例如, <code>"MessageBox"</code> 等同于 <code>"MessageBoxW"</code>.</p>
       <p>当 <em>重复 </em> 调用 DLL 时, 通过<a href="#load">预先加载此 DLL 文件</a>可以显著改善执行效率.</p>
       <p>此参数也可以仅是一个表示需调用函数的内存地址的整数. 如 <a href="#COM">COM</a> 和 <a href="CallbackCreate.htm">CallbackCreate</a> 提供的地址.</p>
@@ -38,8 +38,8 @@
   <dt>Cdecl ReturnType</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p id="cdecl">通常省略单词 <em>Cdecl</em>, 因为大多数函数使用标准调用约定而不是 &quot;C&quot; 调用约定(像 wsprintf 这样接受可变数目参数的函数在这点上是个例外). 注意, 不支持大多数面向对象的 C++ 函数使用的 <i>thiscall</i> 约定.</p>
-      <p>如果此参数存在, 那么单词 <em>Cdecl</em> 应该在返回值类型前列出(如果有). 在单词间使用空格或 tab 分隔. 例如: <code>&quot;Cdecl Str&quot;</code>.</p>
+      <p id="cdecl">通常省略单词 <em>Cdecl</em>, 因为大多数函数使用标准调用约定而不是 "C" 调用约定(像 wsprintf 这样接受可变数目参数的函数在这点上是个例外). 注意, 不支持大多数面向对象的 C++ 函数使用的 <i>thiscall</i> 约定.</p>
+      <p>如果此参数存在, 那么单词 <em>Cdecl</em> 应该在返回值类型前列出(如果有). 在单词间使用空格或 tab 分隔. 例如: <code>"Cdecl Str"</code>.</p>
       <p>因为在 64 位代码中不存在单独的 "C" 调用约定, 所以在 AutoHotkey 的 64 位版本中可以使用 <i>Cdecl</i> 但没有效果.</p>
       <p><em>ReturnType</em>: 如果函数返回 32 位的有符号整型(Int), BOOL, 或没有返回值, 则 <em>ReturnType</em> 可以省略. 否则, 需要指定下面<a href="#types">类型表</a>中参数类型的其中一个. 还支持<a href="#asterisk">星号后缀</a>.</p>
   </dd>
@@ -54,12 +54,12 @@
 <table class="info">
 <tr id="str">
 <td>Str</td>
-<td><p>例如 &quot;Blue&quot; 或 MyVar 这样的字符串. 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, <i>MyVar</i>)</code>.</p>
+<td><p>例如 "Blue" 或 MyVar 这样的字符串. 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
   <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串.</p>
   <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p></p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
-  <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量(如果已传递). 它可以用在期望 &quot;TCHAR **&quot; 或 &quot;LPTSTR *&quot; 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
+  <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量(如果已传递). 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
   <p class="note"><strong>注意</strong>: 在将字符串传递给函数时, 请注意函数所期望的字符串的 <a href="../Compat.htm#DllCall"><i>type</i>(类型).</p></td>
 </tr>
 <tr>
@@ -84,7 +84,7 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 </tr>
 <tr id="Int">
   <td>Int</td>
-  <td><p>32 位整数(最常用的整数类型), 其范围是 -2147483648(-0x80000000) 到 2147483647(0x7FFFFFFF). Int 有时也被称为 &quot;Long&quot;.</p>
+  <td><p>32 位整数(最常用的整数类型), 其范围是 -2147483648(-0x80000000) 到 2147483647(0x7FFFFFFF). Int 有时也被称为 "Long".</p>
     <p>在函数期望 BOOL 类型的参数中也应该使用 Int(BOOL 值应该是 1 或 0).</p>
     <p><a href="#unsigned">无符号</a>的 Int(UInt) 也经常使用, 例如用作 DWORD.</p></td>
 </tr>
@@ -106,7 +106,7 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 </tr>
 <tr id="ptr">
   <td>Ptr</td>
-  <td><p><a href="../Variables.htm#PtrSize">指针大小</a>的整数, 等同于 Int 或 Int64, 具体取决于运行脚本的 exe 是 32 位还是 64 位. <i>Ptr</i> 应该用于指向数组或结构(如 RECT* 或 LPPOINT) 以及几乎所有句柄(如 HWND, HBRUSH 或 HBITMAP) 的指针. 如果参数是指向简单数值的指针( 如 LPDWORD 或 int*), 通常应该使用 * 或 P 后缀代替 &quot;Ptr&quot;.</p>
+  <td><p><a href="../Variables.htm#PtrSize">指针大小</a>的整数, 等同于 Int 或 Int64, 具体取决于运行脚本的 exe 是 32 位还是 64 位. <i>Ptr</i> 应该用于指向数组或结构(如 RECT* 或 LPPOINT) 以及几乎所有句柄(如 HWND, HBRUSH 或 HBITMAP) 的指针. 如果参数是指向简单数值的指针( 如 LPDWORD 或 int*), 通常应该使用 * 或 P 后缀代替 "Ptr".</p>
   <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在此类属性, 则抛出异常. 通常, 该对象是 <a href="BufferAlloc.htm">BufferAlloc</a> 创建的 <a href="../objects/Buffer.htm">Buffer</a> 对象.</p>
   <p>如果将对象传递给 Ptr* 参数, 则在调用之前将检索对象的 <code>Ptr</code> 属性值, 并将包含该值的临时变量的地址传递给函数. 函数返回后, 新值将分配回该对象的 <code>Ptr</code> 属性.</p>
   <p><i>Ptr</i> 也可以和 * 或 P 后缀一起使用; 此时它应该用在通过 LPVOID* 或类似类型输出指针的函数中.</p>
@@ -116,9 +116,9 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 <tr id="asterisk">
   <td>* 或 P<br>
     (后缀)</td>
-  <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, 因此每当将裸变量作为参数传递时, 该变量的内容就会被更新. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall(&quot;MyDll\MyFunction&quot;, &quot;Int*&quot;, MyVar)</code>.</p>
-    <p>通常, 星号可用于参数类型或返回类型以 &quot;LP&quot; 开头的函数. 最常见的示例是 LPDWORD, 它是指向 DWORD 的指针. 由于 DWORD 是 32 位无符号整数, 因此请使用 &quot;UInt*&quot; 或 &quot;UIntP&quot; 表示 LPDWORD. 星号不能用于字符串类型(如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 应使用 <a href="#str">&quot;Str&quot;</a> 或 &quot;Ptr&quot;, 具体取决于您传递变量还是变量地址.</p>
-    <p class="note"><strong>注意</strong>: &quot;Char*&quot; 与 <a href="#str">&quot;Str&quot;</a> 不同, 因为 &quot;Char*&quot; 传递一个 8 位数字的地址, 而 <a href="#str">&quot;Str&quot;</a> 传递一系列字符的地址, 该字符可以是 16 位(Unicode) 或 8 位("AStr"), 具体取决于 AutoHotkey 的版本. 同样, &quot;UInt*&quot; 传递的是 32 位数字的地址, 因此如果函数期望值的数组或大于 32 位的结构, 则不应使用 "UInt*".</p>
+  <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, 因此每当将裸变量作为参数传递时, 该变量的内容就会被更新. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall("MyDll\MyFunction", "Int*", MyVar)</code>.</p>
+    <p>通常, 星号可用于参数类型或返回类型以 "LP" 开头的函数. 最常见的示例是 LPDWORD, 它是指向 DWORD 的指针. 由于 DWORD 是 32 位无符号整数, 因此请使用 "UInt*" 或 "UIntP" 表示 LPDWORD. 星号不能用于字符串类型(如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 应使用 <a href="#str">"Str"</a> 或 "Ptr", 具体取决于您传递变量还是变量地址.</p>
+    <p class="note"><strong>注意</strong>: "Char*" 与 <a href="#str">"Str"</a> 不同, 因为 "Char*" 传递一个 8 位数字的地址, 而 <a href="#str">"Str"</a> 传递一系列字符的地址, 该字符可以是 16 位(Unicode) 或 8 位("AStr"), 具体取决于 AutoHotkey 的版本. 同样, "UInt*" 传递的是 32 位数字的地址, 因此如果函数期望值的数组或大于 32 位的结构, 则不应使用 "UInt*".</p>
     <p>由于 AutoHotkey 中的变量没有固定类型, 因此传递给函数的地址指向临时内存, 而不是变量本身. 不必在变量上调用 <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, 因为 DllCall 将在函数返回后正确更新它.</p>
     </td>
 </tr>
@@ -147,25 +147,25 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
   <li>参数传递了一个意外类型的值. 例如, 将计算结果为数字的<a href="../Variables.htm#Expressions">表达式</a>传递给字符串(<a href="#str">str</a>) 参数, 将非数字字符串传递给数值参数, 或者将对象传递给 <em>非</em> <a href="#ptr">Ptr</a> 类型的参数.</li>
   <li>无法访问或加载指定的 <em>DllFile</em>. 如果没有明确指明 <em>DllFile</em> 的路径, 则该文件必须存在于系统的 PATH 或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 如果用户没有访问文件的权限, 或者 AutoHotkey 是 32 位而 DLL 是 64 位(反之亦然), 也都可能发生此错误.</li>
   <li>在 DLL 中找不到指定的函数.</li>
-  <li>该函数已被调用, 但由于致命异常而中止. <code>Exception.Extra</code> 包含异常代码. 例如, 0xC0000005 表示 &quot;访问冲突&quot;. 在这种情况下, 线程将中止(如果没有使用 <a href="Try.htm">try</a> 的话), 但是仍将更新所有<a href="#asterisk">星号变量</a>. 致命异常的一个例子是取消引用无效指针(如 NULL(0)). 由于 <a href="#cdecl">Cdecl</a> 函数永远不会产生下一段中描述的错误, 因此当传递给它的参数太少时, 它可能会生成异常.</li>
+  <li>该函数已被调用, 但由于致命异常而中止. <code>Exception.Extra</code> 包含异常代码. 例如, 0xC0000005 表示 "访问冲突". 在这种情况下, 线程将中止(如果没有使用 <a href="Try.htm">try</a> 的话), 但是仍将更新所有<a href="#asterisk">星号变量</a>. 致命异常的一个例子是取消引用无效指针(如 NULL(0)). 由于 <a href="#cdecl">Cdecl</a> 函数永远不会产生下一段中描述的错误, 因此当传递给它的参数太少时, 它可能会生成异常.</li>
   <li>该函数已被调用, 但传递了太多或太少的参数. <code>Exception.Extra</code> 包含参数列表不正确的字节数. 如果为正, 则传递了太多的参数(或参数太大), 或者调用需要 <a href="#cdecl">CDecl</a>. 如果为负, 则传递的参数太少. 应该纠正这种情况, 以确保函数的可靠运行. 出现此错误也可能表示抛出了异常. 请注意, 由于使用 x64 调用约定, 因此 64 位版本永远不会引发此错误.</li>
 </ul>
 
 <h2 id="except">原生异常和 A_LastError</h2>
-<p>尽管有内置的异常处理机制, 仍可能因使用 DllCall 使脚本崩溃. 当函数不直接生成异常但产生不适当的数据时, 如无效的指针或未终止的字符串, 可能会发生这种情况. 如果脚本向其传递了不合适的值, 如无效的指针或容量不足的 <a href="#str">&quot;str&quot;</a>, 则可能不是函数的错误. 当脚本指定了不适当的参数类型或返回类型时, 如声明函数产生的普通整数是<a href="#asterisk">星号变量</a>或 <a href="#str">str</a>, 脚本也可能崩溃.</p>
+<p>尽管有内置的异常处理机制, 仍可能因使用 DllCall 使脚本崩溃. 当函数不直接生成异常但产生不适当的数据时, 如无效的指针或未终止的字符串, 可能会发生这种情况. 如果脚本向其传递了不合适的值, 如无效的指针或容量不足的 <a href="#str">"str"</a>, 则可能不是函数的错误. 当脚本指定了不适当的参数类型或返回类型时, 如声明函数产生的普通整数是<a href="#asterisk">星号变量</a>或 <a href="#str">str</a>, 脚本也可能崩溃.</p>
 <p>内置变量 <a href="../Variables.htm#LastError">A_LastError</a> 包含操作系统的 GetLastError() 函数的结果.</p>
 
 <h2 id="load">性能</h2>
 <p>当需要重复调用一个 DLL 时, 预先明确装载它可以显著提高执行效率(<em>对于<a href="#std">标准的 DLL</a> 文件如 User32 这是没有必要的, 因为它是常驻的</em>). 这种做法避免了 DllCall 每次都需要在内部调用 LoadLibrary 和 FreeLibrary. 例如:</p>
-<pre>hModule := DllCall(&quot;<strong>LoadLibrary</strong>&quot;, &quot;Str&quot;, &quot;MyFunctions.dll&quot;, &quot;Ptr&quot;)  <em>; 避免在循环中使用 DllCall 来加载库.</em>
+<pre>hModule := DllCall("<strong>LoadLibrary</strong>", "Str", "MyFunctions.dll", "Ptr")  <em>; 避免在循环中使用 DllCall 来加载库.</em>
 Loop Files, "C:\My Documents\*.*", "R"
-    result := DllCall(&quot;MyFunctions\BackupFile&quot;, &quot;Str&quot;, A_LoopFilePath)
-DllCall(&quot;<strong>FreeLibrary</strong>&quot;, &quot;Ptr&quot;, hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
+    result := DllCall("MyFunctions\BackupFile", "Str", A_LoopFilePath)
+DllCall("<strong>FreeLibrary</strong>", "Ptr", hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
 <p>通过预先查找函数的地址甚至可以获得更快的性能. 例如:</p>
 <pre><em>; 在下面的示例中, 如果 DLL 还没有装载, 使用 LoadLibrary 代替 GetModuleHandle.</em>
-<strong>MulDivProc</strong> := DllCall(&quot;GetProcAddress&quot;, &quot;Ptr&quot;, DllCall(&quot;GetModuleHandle&quot;, &quot;Str&quot;, &quot;<strong>kernel32</strong>&quot;, &quot;Ptr&quot;), &quot;AStr&quot;, &quot;<strong>MulDiv</strong>&quot;, &quot;Ptr&quot;)
+<strong>MulDivProc</strong> := DllCall("GetProcAddress", "Ptr", DllCall("GetModuleHandle", "Str", "<strong>kernel32</strong>", "Ptr"), "AStr", "<strong>MulDiv</strong>", "Ptr")
 Loop 500
-    DllCall(<strong>MulDivProc</strong>, &quot;Int&quot;, 3, &quot;Int&quot;, 4, &quot;Int&quot;, 3)</pre>
+    DllCall(<strong>MulDivProc</strong>, "Int", 3, "Int", 4, "Int", 3)</pre>
 <p>如果 DllCall 的首个参数是原义的字符串如 <code>"MulDiv"</code> 并且包含了函数的 DLL 在脚本开始前已正常装载了, 或者已成功通过 <a href="_DllLoad.htm">#DllLoad</a> 加载, 那么此字符串会自动被解析为函数地址. 这种内置的优化比上面显示的示例更有效.</p>
 <p>最后, 当将字符串变量传递给不会改变字符串长度的函数时, 通过将变量按地址传递(例如 <code>StrPtr(MyVar)</code>), 而不是以 "<a href="#str">str</a>" 的形式传递, 可以提高性能(特别是当字符串很长时). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", "<strong>Ptr</strong>", StrPtr(MyVar), "Ptr")</code>.</p>
 
@@ -173,7 +173,7 @@ Loop 500
 <p>结构是内存中连续存储的 <em>成员</em>(空间) 的集合. 大多数成员倾向于是整数.</p>
 <p>接受结构(或内存块数组) 地址的函数可以通过某种方式分配内存并将内存地址传递给函数来调用. <a href="BufferAlloc.htm">BufferAlloc</a> 函数和 <a href="../objects/Buffer.htm">Buffer</a> 对象被推荐用于此目的. 一般使用以下步骤:</p>
 <p>1) 调用 <code>MyStruct := BufferAlloc(123, 0)</code> 来分配一个缓冲来保存结构体的数据. 将 <code>123</code> 替换为至少与结构大小一样大的数字, 以字节为单位. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步中频繁调用 NumPut.</p>
-<p>2) 如果目标函数使用结构中的初始值, 请调用 <code><a href="NumPut.htm">NumPut</a>("UInt", 123, MyStruct, 4)</code>初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>StrPtr(Var)</code> 来存储字符串的地址). 将 <code>4</code> 替换为目标成员的偏移量(有关 &quot;offset&quot; 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则如 <code>"Ptr"</code>.</p>
+<p>2) 如果目标函数使用结构中的初始值, 请调用 <code><a href="NumPut.htm">NumPut</a>("UInt", 123, MyStruct, 4)</code>初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>StrPtr(Var)</code> 来存储字符串的地址). 将 <code>4</code> 替换为目标成员的偏移量(有关 "offset" 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则如 <code>"Ptr"</code>.</p>
 <p>3) 调用目标函数, 将 <em>MyStruct</em> 作为 Ptr 参数传递. 例如, <code>DllCall("MyDll\MyFunc", "Ptr", MyStruct)</code>. 该函数将检查和/或更改一些成员. DllCall 会自动使用缓冲的地址, 通常使用 <code>MyStruct.Ptr</code> 来检索.</p>
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code>从结构中检索任何所需的整数. 将 <code>4</code> 替换为结构中目标构件的偏移量. 第一个成员的偏移量始终为 0. 第二个成员的偏移量为 0 加第一个成员的大小(通常为 4). 第二个成员之后的成员是前一个成员的偏移量加上前一个成员的大小. 大多数成员 -- 如 DWORD, Int 和<a href="#Int">其他类型的 32 位整数</a> -- 的大小为 4 个字节. 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
 <p>有关实际用法, 请参阅 <a href="#ExStruct">Structure 示例</a>.</p>
@@ -183,8 +183,8 @@ Loop 500
 <p>由函数保存到变量中的任何二进制零都可以作为终止符, 防止大多数内置函数访问或更改零右边的所有数据. 但是, 这样的数据可以使用 <a href="StrPtr.htm">StrPtr</a> 检索字符串的地址, 并将其传递给其他函数, 例如 <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a>, <a href="StrGet.htm">StrGet</a>, <a href="StrPut.htm">StrPut</a>, 以及 DllCall 本身进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会在与预期不同的内存地址中返回相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar := "ABC"
-result := DllCall(&quot;CharLower&quot;, &quot;<strong><u>Str</u></strong>&quot;, DllCall(&quot;CharUpper&quot;, &quot;Str&quot;, MyVar, &quot;<strong><u>Str</u></strong>&quot;), &quot;Str&quot;)</pre>
-<p>要变通解决此问题, 请把上面两个带下划线的 &quot;Str&quot; 值修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整数传递给 CharLower.</p>
+result := DllCall("CharLower", "<strong><u>Str</u></strong>", DllCall("CharUpper", "Str", MyVar, "<strong><u>Str</u></strong>"), "Str")</pre>
+<p>要变通解决此问题, 请把上面两个带下划线的 "Str" 值修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整数传递给 CharLower.</p>
 <p>处理字符串时可能遇到某些限制. 更多详情, 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
 
 <h2 id="COM">组件对象模型(COM)</h2>
@@ -200,27 +200,27 @@ result := DllCall(&quot;CharLower&quot;, &quot;<strong><u>Str</u></strong>&quot;
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExMessageBox">
-<p><a href="#ExMessageBox">#1</a>: 调用 Windows API 函数 &quot;MessageBox&quot; 并报告用户按下了哪个按钮.</p>
-<pre>WhichButton := DllCall(&quot;MessageBox&quot;, &quot;Int&quot;, 0, &quot;Str&quot;, &quot;Press Yes or No&quot;, &quot;Str&quot;, &quot;Title of box&quot;, &quot;Int&quot;, 4)
+<p><a href="#ExMessageBox">#1</a>: 调用 Windows API 函数 "MessageBox" 并报告用户按下了哪个按钮.</p>
+<pre>WhichButton := DllCall("MessageBox", "Int", 0, "Str", "Press Yes or No", "Str", "Title of box", "Int", 4)
 MsgBox "You pressed button #" WhichButton</pre>
 </div>
 
 <div class="ex" id="ExWallpaper">
 <p><a href="#ExWallpaper">#2</a>: 将桌面墙纸更改为指定的位图(.bmp) 文件.</p>
-<pre>DllCall(&quot;SystemParametersInfo&quot;, &quot;UInt&quot;, 0x14, &quot;UInt&quot;, 0, &quot;Str&quot;, A_WinDir <strong>.</strong> &quot;\winnt.bmp&quot;, &quot;UInt&quot;, 2)</pre>
+<pre>DllCall("SystemParametersInfo", "UInt", 0x14, "UInt", 0, "Str", A_WinDir <strong>.</strong> "\winnt.bmp", "UInt", 2)</pre>
 </div>
 
 <div class="ex" id="ExIsWindowVisible">
-<p><a href="#ExIsWindowVisible">#3</a>: 调用 API 函数 &quot;IsWindowVisible&quot; 来判断记事本窗口是否可见.</p>
+<p><a href="#ExIsWindowVisible">#3</a>: 调用 API 函数 "IsWindowVisible" 来判断记事本窗口是否可见.</p>
 <pre>DetectHiddenWindows True
-if not DllCall(&quot;IsWindowVisible&quot;, &quot;Ptr&quot;, WinExist(&quot;Untitled - Notepad&quot;))  <em>; WinExist 返回 HWND.</em>
+if not DllCall("IsWindowVisible", "Ptr", WinExist("Untitled - Notepad"))  <em>; WinExist 返回 HWND.</em>
     MsgBox "The window is not visible."</pre>
 </div>
 
 <div class="ex" id="ExWsprintf">
 <p><a href="#ExWsprintf">#4</a>: 调用 API 的 wsprintf() 函数来给数字 432 加上前导零以填充到 10 个字符的长度(0000000432).</p>
 <pre>ZeroPaddedNumber := BufferAlloc(20)  <em>; 确保缓冲足够大以便容纳新的字符串.</em>
-DllCall(&quot;wsprintf&quot;, &quot;Ptr&quot;, ZeroPaddedNumber, &quot;Str&quot;, &quot;%010d&quot;, &quot;Int&quot;, 432, &quot;Cdecl&quot;)  <em>; 需要 Cdecl 调用约定.</em>
+DllCall("wsprintf", "Ptr", ZeroPaddedNumber, "Str", "%010d", "Int", 432, "Cdecl")  <em>; 需要 Cdecl 调用约定.</em>
 MsgBox StrGet(ZeroPaddedNumber)
 
 <em>; 此外, 使用 <a href="Format.htm">Format</a> 函数配合 0 标志可以达到同样的效果:</em>
@@ -230,15 +230,15 @@ MsgBox Format("{:010}", 432)
 
 <div class="ex" id="ExQPC">
 <p><a href="#ExQPC">#5</a>: 演示 QueryPerformanceCounter(), 它提供了比 <a href="../Variables.htm#TickCount">A_TickCount</a> 的 10ms 更高的精确度.</p>
-<pre>DllCall(&quot;QueryPerformanceFrequency&quot;, &quot;Int64*&quot;, freq := 0)
-DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterBefore := 0)
+<pre>DllCall("QueryPerformanceFrequency", "Int64*", freq := 0)
+DllCall("QueryPerformanceCounter", "Int64*", CounterBefore := 0)
 Sleep 1000
-DllCall(&quot;QueryPerformanceCounter&quot;, &quot;Int64*&quot;, CounterAfter := 0)
-MsgBox &quot;Elapsed QPC time is &quot; . (CounterAfter - CounterBefore) / freq * 1000 &quot; ms&quot;</pre>
+DllCall("QueryPerformanceCounter", "Int64*", CounterAfter := 0)
+MsgBox "Elapsed QPC time is " . (CounterAfter - CounterBefore) / freq * 1000 " ms"</pre>
 </div>
 
 <div class="ex" id="ExMouseSpeed">
-<p><a href="#ExMouseSpeed">#6</a>: 这是个临时减慢鼠标移动速度的热键, 这样有助于准确定位. 按住 <kbd>F1</kbd> 来降低鼠标速度. 释放后则恢复原来的速度.</p>
+<p><a href="#ExMouseSpeed">#6</a>: 按下热键临时减慢鼠标移动速度, 这样有助于准确定位. 按住 <kbd>F1</kbd> 来降低鼠标速度. 释放后则恢复原来的速度.</p>
 <pre>
 F1::
 F1 up::
@@ -277,13 +277,13 @@ WatchScrollBar()
 </div>
 
 <div class="ex" id="ExFile">
-<p><a href="#ExFile">#8</a>: 这是个可运行脚本, 它写入一些文本到文件, 然后从文件读取回内存. 在同时读取或写入多个文件时, 使用这种方法可以改善性能. 此外, 使用 <a href="FileOpen.htm">FileOpen</a> 可以实现<a href="FileOpen.htm#ExWriteRead">同样的目的</a>.</p>
+<p><a href="#ExFile">#8</a>: 写入一些文本到文件, 然后从文件读取回内存. 在同时读取或写入多个文件时, 使用这种方法可以改善性能. 此外, 使用 <a href="FileOpen.htm">FileOpen</a> 可以实现<a href="FileOpen.htm#ExWriteRead">同样的目的</a>.</p>
 <pre>FileName := FileSelect("S16",, "Create a new file:")
 if FileName = ""
     return
 GENERIC_WRITE := 0x40000000  <em>; 以写入而不是读取的方式打开文件.</em>
 CREATE_ALWAYS := 2  <em>; 创建新文件(覆盖任何现有的文件).</em>
-hFile := DllCall(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_WRITE, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;UInt&quot;, CREATE_ALWAYS, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0, &quot;Ptr&quot;)
+hFile := DllCall("CreateFile", "Str", FileName, "UInt", GENERIC_WRITE, "UInt", 0, "Ptr", 0, "UInt", CREATE_ALWAYS, "UInt", 0, "Ptr", 0, "Ptr")
 if !hFile
 {
     MsgBox "Can't open '" FileName "' for writing."
@@ -292,14 +292,14 @@ if !hFile
 TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
 StrSize := StrLen(TestString) * 2
 DllCall("WriteFile", "Ptr", hFile, "Str", TestString, "UInt", StrSize, "UIntP", BytesActuallyWritten := 0, "Ptr", 0)
-DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
+DllCall("CloseHandle", "Ptr", hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
 GENERIC_READ := 0x80000000  <em>; 以读取而不是写入的方式来打开文件.</em>
 OPEN_EXISTING := 3  <em>; 此标志表示要打开的文件必须已经存在.</em>
 FILE_SHARE_READ := 0x1 <em>; 这个和下一个标志表示其他进程是否可以打开我们已经打开的文件.</em>
 FILE_SHARE_WRITE := 0x2
-hFile := DllCall(&quot;CreateFile&quot;, &quot;Str&quot;, FileName, &quot;UInt&quot;, GENERIC_READ, &quot;UInt&quot;, FILE_SHARE_READ|FILE_SHARE_WRITE, &quot;Ptr&quot;, 0, &quot;UInt&quot;, OPEN_EXISTING, &quot;UInt&quot;, 0, &quot;Ptr&quot;, 0)
+hFile := DllCall("CreateFile", "Str", FileName, "UInt", GENERIC_READ, "UInt", FILE_SHARE_READ|FILE_SHARE_WRITE, "Ptr", 0, "UInt", OPEN_EXISTING, "UInt", 0, "Ptr", 0)
 if !hFile
 {
     MsgBox "Can't open '" FileName "' for reading."
@@ -307,8 +307,8 @@ if !hFile
 }
 <em>; 为要读取的字符串分配一块内存:</em>
 Buf := BufferAlloc(StrSize)
-DllCall(&quot;ReadFile&quot;, &quot;Ptr&quot;, hFile, &quot;Ptr&quot;, Buf, &quot;UInt&quot;, Buf.Size, &quot;UIntP&quot;, BytesActuallyRead := 0, &quot;Ptr&quot;, 0)
-DllCall(&quot;CloseHandle&quot;, &quot;Ptr&quot;, hFile)  <em>; 关闭文件.</em>
+DllCall("ReadFile", "Ptr", hFile, "Ptr", Buf, "UInt", Buf.Size, "UIntP", BytesActuallyRead := 0, "Ptr", 0)
+DllCall("CloseHandle", "Ptr", hFile)  <em>; 关闭文件.</em>
 MsgBox "The following string was read from the file: " StrGet(Buf)</pre>
 </div>
 
@@ -359,7 +359,7 @@ SystemCursor(cmd)  <em>; cmd = "Show|Hide|Toggle|Reload"</em>
 <pre>Run "Notepad"
 WinWait "Untitled - Notepad"  <em>; 这里同时设置了 "<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>" 以用于下面的 WinExist.</em>
 Rect := BufferAlloc(16)  <em>; RECT 结构由四个 32 位整数组成(即 4*4=16).</em>
-DllCall(&quot;GetWindowRect&quot;, &quot;Ptr&quot;, WinExist(), &quot;Ptr&quot;, Rect)  <em>; WinExist 返回 HWND.</em>
+DllCall("GetWindowRect", "Ptr", WinExist(), "Ptr", Rect)  <em>; WinExist 返回 HWND.</em>
 L := NumGet(Rect, 0, "Int"), T := NumGet(Rect, 4, "Int")
 R := NumGet(Rect, 8, "Int"), B := NumGet(Rect, 12, "Int")
 MsgBox Format("Left {1} Top {2} Right {3} Bottom {4}", L, T, R, B)</pre>
@@ -372,16 +372,16 @@ MsgBox Format("Left {1} Top {2} Right {3} Bottom {4}", L, T, R, B)</pre>
       , "Int", A_ScreenWidth//2   <em>; 右</em>
       , "Int", A_ScreenHeight//2  <em>; 下</em>
       , Rect)
-hDC := DllCall(&quot;GetDC&quot;, "Ptr", 0, "Ptr")  <em>; 传递零来获取桌面的设备上下文.</em>
-hBrush := DllCall(&quot;CreateSolidBrush&quot;, "UInt", 0x0000FF, "Ptr")  <em>; 创建红色画刷(0x0000FF 是 BGR 格式).</em>
-DllCall(&quot;FillRect&quot;, "Ptr", hDC, "Ptr", Rect, "Ptr", hBrush)  <em>; 使用上面的画刷填充指定的矩形.</em>
-DllCall(&quot;ReleaseDC&quot;, "Ptr", 0, "Ptr", hDC)  <em>; 清理.</em>
-DllCall(&quot;DeleteObject&quot;, "Ptr", hBrush)  <em>; 清理.</em></pre>
+hDC := DllCall("GetDC", "Ptr", 0, "Ptr")  <em>; 传递零来获取桌面的设备上下文.</em>
+hBrush := DllCall("CreateSolidBrush", "UInt", 0x0000FF, "Ptr")  <em>; 创建红色画刷(0x0000FF 是 BGR 格式).</em>
+DllCall("FillRect", "Ptr", hDC, "Ptr", Rect, "Ptr", hBrush)  <em>; 使用上面的画刷填充指定的矩形.</em>
+DllCall("ReleaseDC", "Ptr", 0, "Ptr", hDC)  <em>; 清理.</em>
+DllCall("DeleteObject", "Ptr", hBrush)  <em>; 清理.</em></pre>
 </div>
 
 <div class="ex" id="ExSystemTime">
 <p><a href="#ExSystemTime">#12</a>: 结构的例子. 将系统的时钟更改为指定的日期和时间. 请注意改变时间为将来的日期可能会导致计划任务提早运行!</p>
-<pre>SetSystemTime(&quot;20051008142211&quot;)  <em>; 传递<a href="FileSetTime.htm#YYYYMMDD">时间戳</a>(本地的, 非 UTC).</em>
+<pre>SetSystemTime("20051008142211")  <em>; 传递<a href="FileSetTime.htm#YYYYMMDD">时间戳</a>(本地的, 非 UTC).</em>
 
 SetSystemTime(YYYYMMDDHHMISS)
 <em>; 设置系统时钟为指定的日期和时间.
@@ -405,7 +405,7 @@ SetSystemTime(YYYYMMDDHHMISS)
           , "UShort", 0                             <em>; Unused(毫秒)</em>
           , SystemTime)
 
-    return DllCall(&quot;SetSystemTime&quot;, &quot;Ptr&quot;, SystemTime)
+    return DllCall("SetSystemTime", "Ptr", SystemTime)
 }</pre>
 </div>
 

@@ -13,7 +13,7 @@
 
 <h1>#ErrorStdOut</h1>
 
-<p>把任何阻止脚本运行的语法错误发送到 <strong>stderr</strong>, 而不是显示一个对话框.</p>
+<p>把任何阻止脚本运行的语法错误发送到标准错误(stderr), 而不是显示一个对话框.</p>
 
 <pre class="Syntax"><span class="func">#ErrorStdOut</span> <span class="optional">Encoding</span></pre>
 
@@ -21,7 +21,7 @@
 <dl>
   <dt>Encoding</dt>
   <dd>
-    <p><a href="FileEncoding.htm">编码字符串</a>指定如何对输出进行编码. 例如, <code>#ErrorStdOut UTF-8</code> 将错误信息编码为 UTF-8 然后再发送到 stdout. 无论捕获输出的程序是什么, 都必须支持 UTF-8, 并且在某些情况下可能需要配置为期望 UTF-8. 如果省略, 它默认为 <code>CP0</code>.</p>
+    <p><a href="FileEncoding.htm">编码字符串</a>指定如何对输出进行编码. 例如, <code>#ErrorStdOut UTF-8</code> 将错误信息编码为 UTF-8 然后再发送到 stderr. 无论捕获输出的程序是什么, 都必须支持 UTF-8, 并且在某些情况下可能需要配置为期望 UTF-8. 如果省略, 它默认为 <code>CP0</code>.</p>
     <p class="note"><strong>注意:</strong> 这个参数不是一个表达式, 但可以用引号括起来(可以是 '单引号' 或 "双引号").</p>
   </dd>
 </dl>
@@ -30,41 +30,45 @@
 <p>错误被写入 stderr, 而不是 stdout. 命令行和高级编辑器往往会同时显示这些信息.</p>
 <p>这个指令可以让诸如 TextPad, SciTE, Crimson 和 EditPlus 这些高级编辑器在语法错误发生时跳到有问题的行. 由于必须将 #ErrorStdOut 指令添加到脚本中, 所以通常最好设置编辑器使用<a href="../Scripts.htm#cmd">命令行开关</a> <strong>/ErrorStdOut</strong> 来启动任何 AutoHotkey 脚本(详情请参阅下面的设置说明).</p>
 <p>因为 AutoHotkey 不是控制台程序, 所以错误将不会直接出现在命令行中. 不过, 可以通过管道或重定向捕获这样的输出. 例如:</p>
-<pre class="no-highlight">&quot;C:\Program Files\AutoHotkey\AutoHotkey.exe&quot; /ErrorStdOut &quot;My Script.ahk&quot; <strong>2&gt;&amp;1 |more</strong>
-&quot;C:\Program Files\AutoHotkey\AutoHotkey.exe&quot; /ErrorStdOut &quot;My Script.ahk&quot; <strong>2&gt;&quot;Syntax-Error Log.txt&quot;</strong></pre>
+<pre class="no-highlight">"C:\Program Files\AutoHotkey\AutoHotkey.exe" /ErrorStdOut "My Script.ahk" <strong>2&gt;&amp;1 |more</strong>
+"C:\Program Files\AutoHotkey\AutoHotkey.exe" /ErrorStdOut "My Script.ahk" <strong>2&gt;"Syntax-Error Log.txt"</strong></pre>
 <p>您还可以通过下载 <a href="https://www.autohotkey.com/misc/cb.zip">cb.zip</a>(4 KB) 然后按照以下示例, 将输出直接通过管道传输到剪贴板:</p>
-<pre class="no-highlight">&quot;C:\Program Files\AutoHotkey\AutoHotkey.exe&quot; /ErrorStdOut &quot;My Script.ahk&quot; <strong>2&gt;&amp;1 |cb.exe</strong></pre>
+<pre class="no-highlight">"C:\Program Files\AutoHotkey\AutoHotkey.exe" /ErrorStdOut "My Script.ahk" <strong>2&gt;&amp;1 |cb.exe</strong></pre>
 <p class="note"><strong>注意:</strong> <code>2&gt;&amp;1</code> 将 stderr 重定向到 stdout, 而 <code>2&gt;<i>Filename</i></code> 只将 stderr 重定向到一个文件.</p>
 
-<h2>特定编辑器的设置说明</h2>
-<p><strong>EditPlus</strong>:<br>
-在菜单栏选择 Tools(工具) > Configure User Tools(配置用户工具).<br>
-点击按钮: Add Tool(添加) &gt; Program(应用程序)<br>
-Menu Text(菜单文本): Your choice<br>
-Command(命令): C:\Program Files\AutoHotkey\AutoHotkey.exe<br>
-Argument(参数): /ErrorStdOut &quot;$(FilePath)&quot;<br>
-Initial directory(初始目录): $(FileDir)<br>
-Capture output(捕获输出): Yes</p>
+<h2 id="Instructions_for_specific_editors">特定编辑器的设置说明</h2>
+<p><strong>EditPlus</strong>:</p>
+<ol>
+  <li>在菜单栏选择 Tools(工具) > Configure User Tools(配置用户工具).</li>
+  <li>点击按钮: Add Tool(添加) &gt; Program(应用程序)</li>
+  <li>Menu Text(菜单文本): 你自己填写</li>
+  <li>Command(命令): C:\Program Files\AutoHotkey\AutoHotkey.exe</li>
+  <li>Argument(参数): /ErrorStdOut "$(FilePath)"</li>
+  <li>Initial directory(初始目录): $(FileDir)</li>
+  <li>Capture output(捕获输出): Yes</li>
+</ol>
 
-<p><strong>TextPad</strong>:<br>
-在菜单栏选择 Configure &gt; Preferences.<br>
-展开 Tools(工具) 菜单.<br>
-点击 Add 按钮然后选择 &quot;Program&quot;.<br>
-复制并粘贴(调整为您的 cmd.exe 路径): <em>C:\Windows\System32\cmd.exe</em> -- 然后点击 OK.<br>
-  三击列表框中新添加的项(cmd.exe) 并将其重命名为您选择的自定义名称(如 Launch Script).<br>
-  点击 Apply. <br>
-  从左侧树列表中选择新增的项, 然后填写下列信息:<br>
-  Command(应该已经填好): cmd.exe(或者是它的完整路径)<br>
-  Parameters(调整为您的 AutoHotkey.exe 路径): /c &quot;&quot;C:\Program Files\AutoHotkey\AutoHotkey.exe&quot; /ErrorStdOut &quot;$File&quot;&quot;<br>
-  Initial folder: $FileDir<br>
-  选择下列框:
-  1) Run minimized; 2) Capture output.<br>
-  点击 OK. 新添加的项就应该已经出现在 Tools 菜单中了.</p>
+<p><strong>TextPad</strong>:</p>
+<ol>
+  <li>在菜单栏选择 Configure &gt; Preferences.</li>
+  <li>展开 Tools(工具) 菜单.</li>
+  <li>点击 Add 按钮然后选择 "Program".</li>
+  <li>复制并粘贴(调整为您的 cmd.exe 路径): <code>C:\Windows\System32\cmd.exe</code> -- 然后点击 OK.</li>
+  <li>三击列表框中新添加的项(cmd.exe) 并将其重命名为您选择的自定义名称(如 Launch Script).</li>
+  <li>点击 Apply. </li>
+  <li>从左侧树列表中选择新增的项, 然后填写下列信息:</li>
+  <li>Command(应该已经填好): cmd.exe(或者是它的完整路径)</li>
+  <li>Parameters(调整为您的 AutoHotkey.exe 路径): /c ""C:\Program Files\AutoHotkey\AutoHotkey.exe" /ErrorStdOut "$File""</li>
+  <li>Initial folder: $FileDir</li>
+  <li>选择下列框: 1) Run minimized; 2) Capture output.</li>
+  <li>点击 OK. 新添加的项就应该已经出现在 Tools 菜单中了.</li>
+</ol>
+
 <h2 id="Related">相关</h2>
-<p><a href="FileAppend.htm">FileAppend</a>(因为它也可以发送文本到 stdout)</p>
+<p><a href="FileAppend.htm">FileAppend</a>(因为它也可以发送文本到 stderr 或 stdout)</p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
+<p><a href="#ExBasic">#1</a>: 发送任何阻止脚本启动的语法错误到 stderr, 而不是显示一个对话框.</p>
 <pre>#ErrorStdOut</pre>
 </div>
 

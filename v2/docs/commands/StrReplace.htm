@@ -3,7 +3,6 @@
 <head>
 <title>StrReplace - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The StrReplace function replaces the specified substring with a new string." />
-<meta name="ahk:equiv-v1" content="commands/StringReplace.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,10 +12,9 @@
 <body>
 
 <h1>StrReplace</h1>
-
 <p>用新字符串替换指定的子字符串.</p>
+<pre class="Syntax">ReplacedStr := <span class="func">StrReplace</span>(Haystack, Needle <span class="optional">, ReplaceText, CaseSense, OutputVarCount, Limit</span>)</pre>
 
-<pre class="Syntax">NewStr := <span class="func">StrReplace</span>(Haystack, SearchText <span class="optional">, ReplaceText, CaseSense, OutputVarCount, Limit := -1</span>)</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -26,7 +24,7 @@
     <p>内容被搜索和替换的字符串.</p>
   </dd>
 
-  <dt>SearchText</dt>
+  <dt>Needle</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>要搜索的字符串.</p>
@@ -35,7 +33,7 @@
   <dt>ReplaceText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>替换 <em>SearchText</em> 的文本. 如果省略或为空, 那么 <em>SearchText</em> 会被替换为空. 换句话说, 它将在返回值中被省略.</p>
+    <p>替换 <em>Needle</em> 的文本. 如果省略或为空, 那么 <em>Needle</em> 会被替换为空. 换句话说, 它将在返回值中被省略.</p>
   </dd>
 
   <dt>CaseSense</dt>
@@ -66,27 +64,28 @@
 <p>此函数返回指定字符串的替换版本.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>内置变量 <a href="../Variables.htm">A_Space</a> 和 <a href="../Variables.htm">A_Tab</a> 分别包含了单个空格和单个制表符. 当在 <em>SearchText</em> 的开头或结尾或单独搜索空格和制表符时, 这很有用.</p>
+<p>内置变量 <a href="../Variables.htm">A_Space</a> 和 <a href="../Variables.htm">A_Tab</a> 分别包含了单个空格和单个制表符. 当在 <em>Needle</em> 的开头或结尾或单独搜索空格和制表符时, 这很有用.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="RegExReplace.htm">RegExReplace</a>, <a href="InStr.htm">InStr</a>, <a href="SubStr.htm">SubStr</a>, <a href="StrLen.htm">StrLen</a>, <a href="StrLower.htm">StrLower</a>, <a href="StrLower.htm">StrUpper</a></p>
 
 <h2 id="Examples">示例</h2>
-<div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre><em>; 移除剪贴板中所有的 CR+LF:</em>
-A_Clipboard := StrReplace(A_Clipboard, "`r`n")
-
-<em>; 用加号替换所有空格:</em>
-NewStr := StrReplace(OldStr, A_Space, "+")</pre>
+<div class="ex" id="ExClipboard">
+<p><a href="#ExClipboard">#1</a>: 移除剪贴板中所有的 CR+LF.</p>
+<pre>A_Clipboard := StrReplace(A_Clipboard, "`r`n")</pre>
 </div>
 
-<div class="ex" id="ExBlank">
-<p><a href="#ExBlank">#2</a>: 移除变量中所有空行:</p>
+<div class="ex" id="ExVar">
+<p><a href="#ExVar">#2</a>: 用加号替换所有空格.</p>
+<pre>NewStr := StrReplace(OldStr, A_Space, "+")</pre>
+</div>
+
+<div class="ex" id="ExRemoveBlankLines">
+<p><a href="#ExRemoveBlankLines">#3</a>: 移除变量文本中所有空行.</p>
 <pre>Loop
 {
-    MyString := StrReplace(MyString, "`r`n`r`n", "`r`n", ReplaceCount)
-    if ReplaceCount = 0  <em>; 不需要再进行替换.</em>
+    MyString := StrReplace(MyString, "`r`n`r`n", "`r`n",, Count)
+    if (Count = 0)  <em>; 不再需要更多的替换.</em>
         break
 }</pre>
 </div>

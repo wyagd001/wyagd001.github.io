@@ -46,7 +46,7 @@
 <h2 id="Options">选项</h2>
 <p><u>由零个或多个下列字母组成的字符串(可任意顺序, 字母间可以用空格分隔):</u></p>
 <p><strong>C</strong>: 区分大小写的排序(如果存在 <strong>N</strong> 选项, 则此选项被忽略). 如果同时省略 <strong>C</strong> 和 <strong>CL</strong>, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
-<p><strong>CL</strong>: 基于当前用户区域设置的不区分大小写的排序. 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母(如 &Auml; 和 &Uuml;) 等同于它们的小写形式. 这种方法还使用了 &quot;单词排序&quot;, 它以这样的方式(像 &quot;coop&quot; 和 &quot;co-op&quot; 这样的单词保持在一起) 处理连字符和撇号. 根据被排序项目的内容, 它的执行性能比默认的不区分方法差了 1 到 8 倍.</p>
+<p><strong>CL</strong>: 基于当前用户区域设置的不区分大小写的排序. 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母(如 &Auml; 和 &Uuml;) 等同于它们的小写形式. 这种方法还使用了 "单词排序", 它以这样的方式(像 "coop" 和 "co-op" 这样的单词保持在一起) 处理连字符和撇号. 根据被排序项目的内容, 它的执行性能比默认的不区分方法差了 1 到 8 倍.</p>
 <p><strong>Dx</strong>: 指定 <strong>x</strong> 作为分隔符, 它决定了每个项目的开始和结束位置. 如果此选项不存在, 则 <strong>x</strong> 默认为换行符(`n), 这样当字符串的行以 LF(`n) 或 CR+LF(`r`n) 结尾时都可以正确排序.</p>
 <p><strong>N</strong>: 数字排序: 每个项目都被假定为数字而不是字符串进行排序(例如, 如果此选项不存在, 则根据字母顺序字符串 233 被认为小于字符串 40). 十进制和十六进制字符串(例如 0xF1) 都被认为是数字. 不是以数字开头的字符串在排序中被看成是零. 把数字作为 64 位浮点值进行处理, 这样可以考虑到小数部分的每位数字(如果有).</p>
 <p><strong>Pn</strong>: 根据字符位置 <strong>n</strong>(不使用十六进制的 <strong>n</strong>) 对项目进行排序(每个项目从第 n 个字符开始进行比较). 如果不使用该选项, <strong>n</strong> 默认为 1, 即第一个字符的位置. 排序会从第 <strong>n</strong> 个字符开始将每个字符串与其他字符串进行比较. 如果 <strong>n</strong> 大于任何字符串的长度, 则在排序时, 该字符串将被视为空白. 当与选项 <strong>N</strong>(数字排序) 一起使用时, 将使用字符串的字符位置, 这不一定与数字的数字位置相同.</p>
@@ -54,7 +54,7 @@
 <p><strong>Random</strong>: 随机排序. 此选项会使得除 <strong>D</strong>, <strong>Z</strong> 和 <strong>U</strong> 外的其他选项被忽略(尽管如此, 但 <strong>N</strong>, <strong>C</strong> 和 <strong>CL</strong> 仍会影响对于重复项的检测). 示例:</p>
 <pre>MyVar := Sort(MyVar, "Random")
 MyVar := Sort(MyVar, "Random Z D|")</pre>
-<p id="unique"><strong>U</strong>: 移除列表中的重复项目使得每个项目都是唯一的. 如果 <strong>C</strong> 选项有效, 则项目的大小写必须匹配才会被认为是等同的. 如果 <strong>N</strong> 选项有效, 那么像 2 这样的项目将被认为是 2.0 的重复. 如果 <strong>Pn</strong> 或 <strong>\</strong>(反斜杠) 选项有效, 则整个项目必须相同才看成是重复项, 而不仅是用于排序的子字符串. 如果 <strong>Random</strong> 选项或<a href="#callback">自定义排序</a>生效, 只有当排序结果中出现相邻的重复项时, 重复项才会被删除. 例如, 当 &quot;A|B|A&quot; 被随机排序时, 结果可能包含一个或两个 A.</p>
+<p id="unique"><strong>U</strong>: 移除列表中的重复项目使得每个项目都是唯一的. 如果 <strong>C</strong> 选项有效, 则项目的大小写必须匹配才会被认为是等同的. 如果 <strong>N</strong> 选项有效, 那么像 2 这样的项目将被认为是 2.0 的重复. 如果 <strong>Pn</strong> 或 <strong>\</strong>(反斜杠) 选项有效, 则整个项目必须相同才看成是重复项, 而不仅是用于排序的子字符串. 如果 <strong>Random</strong> 选项或<a href="#callback">自定义排序</a>生效, 只有当排序结果中出现相邻的重复项时, 重复项才会被删除. 例如, 当 "A|B|A" 被随机排序时, 结果可能包含一个或两个 A.</p>
 <p><strong>Z</strong>: 要理解此选项, 请考虑内容为 RED`nGREEN`nBLUE`n 的变量. 如果不存在 <strong>Z</strong> 选项, 则最后的换行符(`n) 会被认为是最后那个项目的一部分, 因此变量中只有三个项目. 但如果指定了选项 <strong>Z</strong>, 则最后的 `n(如果存在) 将被认为分隔了列表最后的一个空项目, 因此变量中有四个项目(最后一个是空的).</p>
 <p><strong>\</strong>: 根据每个项目中最后的反斜杠后面的子字符串进行排序. 如果项目中不含有反斜杠, 则使用整个项目作为排序的子字符串. 此选项可用于排序单独的文件名称(即不包含路径), 例如在下面的例子中, 排序后 AAA.txt 行在 BBB.txt 行的上面, 因为在排序中它们的目录被忽略了:</p>
 <pre>C:\BBB\AAA.txt
@@ -64,7 +64,7 @@ C:\AAA\BBB.txt</pre>
 <h2 id="callback">自定义排序</h2>
 <p>自定义排序是通过向 <em>Callback</em> 参数提供一个<a href="../Functions.htm">函数</a>或<a href="../objects/Functor.htm">函数对象</a>来实现的, 该函数或对象可以比较列表中的任意两个项目. 该函数必须接受两个或三个参数:</p>
 <pre class="Syntax">MyFunction(first, second <span class="optional">, offset</span>)</pre>
-<p>当函数认为第一个参数大于第二个参数时, 它应该返回正整数; 当判断出两个参数相等时, 应该返回 0, &quot;&quot;, 或空; 否则, 它应该返回负整数. 如果返回值中存在小数部分, 则忽略该部分(即 0.8 等同于 0).</p>
+<p>当函数认为第一个参数大于第二个参数时, 它应该返回正整数; 当判断出两个参数相等时, 应该返回 0, "", 或空; 否则, 它应该返回负整数. 如果返回值中存在小数部分, 则忽略该部分(即 0.8 等同于 0).</p>
 <p>如果存在, 第三个参数接收第二项与第一项的偏移量(以字符为单位), 就像在原始/未排序列表中看到的那样(见示例).</p>
 <p>该函数使用与调用它的排序函数相同的全局(或线程特定) 设置.</p>
 <p class="note"><strong>注意</strong>: 当存在 <em>Callback</em>(回调) 时, 除了 <strong>D</strong>, <strong>Z</strong> 和 <strong>U</strong> 之外的所有选项都会被忽略(尽管 <strong>N</strong>, <strong>C</strong> 和 <strong>CL</strong> 仍然会影响<a href="#unique">重复项</a>的检测).</p>
@@ -78,14 +78,14 @@ C:\AAA\BBB.txt</pre>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExNumbers">
-<p><a href="#ExNumbers">#1</a></p>
+<p><a href="#ExNumbers">#1</a>: 对以逗号分隔的数字列表进行排序.</p>
 <pre>MyVar := "5,3,7,9,1,13,999,-4"
-MyVar := <strong>Sort</strong>(MyVar, "N D,")  <em>; 数值排序, 使用逗号作为分隔符.</em>
+MyVar := Sort(MyVar, "N D,")  <em>; 数值排序, 使用逗号作为分隔符.</em>
 MsgBox MyVar   <em>; 结果为 -4,1,3,5,7,9,13,999</em></pre>
 </div>
 
 <div class="ex" id="ExFileContents">
-<p><a href="#ExFileContents">#2</a>: 下面的例子对文件的内容进行排序:</p>
+<p><a href="#ExFileContents">#2</a>: 对文件的内容进行排序.</p>
 <pre>Contents := <a href="FileRead.htm">FileRead</a>("C:\Address List.txt")
 FileDelete "C:\Address List (alphabetical).txt"
 FileAppend <strong>Sort</strong>(Contents), "C:\Address List (alphabetical).txt"
@@ -93,19 +93,19 @@ Contents := ""  <em>; 释放内存.</em></pre>
 </div>
 
 <div class="ex" id="ExFilenames">
-<p><a href="#ExFilenames">#3</a>: 下面的例子设置 <kbd>Win</kbd>+<kbd>C</kbd> 热键来从打开的资源管理器窗口中复制文件, 对其中的文件名进行排序后放回剪贴板:</p>
-<pre>#c::
+<p><a href="#ExFilenames">#3</a>: 设置 <kbd>Win</kbd>+<kbd>C</kbd> 热键来从打开的资源管理器窗口中复制文件, 对其中的文件名进行排序后放回剪贴板.</p>
+<pre>#c:: <em>; Win+C</em>
 {
     A_Clipboard := "" <em>; 必须为空以检测是否有效.</em>
     Send "^c"
     if !ClipWait(2)
         return
-    MsgBox "Ready to be pasted:`n" <strong>Sort</strong>(A_Clipboard)
+    MsgBox "Ready to be pasted:`n" Sort(A_Clipboard)
 }</pre>
 </div>
 
 <div class="ex" id="ExCustom">
-<p><a href="#ExCustom">#4</a>: 下面的例子演示了通过回调函数进行自定义排序.</p>
+<p><a href="#ExCustom">#4</a>: 演示通过回调函数进行自定义排序.</p>
 <pre>MyVar := "This`nis`nan`nexample`nstring`nto`nbe`nsorted"
 MsgBox <strong>Sort</strong>(MyVar,, "LengthSort")
 LengthSort(a1, a2, *)
@@ -122,7 +122,7 @@ IntegerSort(a1, a2, *)
 }
 
 MyVar := "1,2,3,4"
-MsgBox <strong>Sort</strong>(MyVar, "D,", "ReverseDirection")  <em>; 将列表反转, 使其包含 4,3,2,1</em>
+MsgBox Sort(MyVar, "D,", "ReverseDirection")  <em>; 将列表反转, 使其包含 4,3,2,1</em>
 ReverseDirection(a1, a2, offset)
 {
     return offset  <em>; 如果 a2 在原列表中 a1 之后, 则偏移量为正; 否则为负.</em>

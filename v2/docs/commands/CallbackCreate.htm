@@ -33,7 +33,7 @@
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>指定零个或多个下列单词或字符串. 在选项间使用空格分隔(例如 <code>"C Fast"</code>).</p>
     <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>Function</em> 时都启动新的<a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, 但必须避免调用 <em>Address</em> 的线程发生变化(例如当回调函数被传入的消息触发). 这是因为 <em>FunctionName</em> 能改变在它被调用时正在运行的线程的全局设置(例如 <a href="../Variables.htm#LastError">A_LastError</a> 和<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>). 有关详情, 请参阅<a href="#Threads">备注</a>.</p>
-    <p><strong>CDecl</strong> 或 <strong>C</strong>: 让 <em>Address</em> 遵循 &quot;C&quot; 调用约定. 此选项通常省略, 因为在回调函数中使用标准调用约定更为常用. 64 位版本的 AutoHotkey 会忽略这个选项, 它使用 x64 调用约定.</p>
+    <p><strong>CDecl</strong> 或 <strong>C</strong>: 让 <em>Address</em> 遵循 "C" 调用约定. 此选项通常省略, 因为在回调函数中使用标准调用约定更为常用. 64 位版本的 AutoHotkey 会忽略这个选项, 它使用 x64 调用约定.</p>
     <p><strong>&amp;</strong>: 将参数列表的地址(单个整数) 传递给 <em>Function</em>, 而不是传递给各个参数. 可以使用 <a href="NumGet.htm">NumGet</a> 检索参数值. 当使用标准的 32 位调用约定时, <em>ParamCount</em> 必须以 DWORDs 指定参数列表的大小(字节数除以 4).</p>
   </dd>
 
@@ -87,14 +87,14 @@ wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
 <p id="Indirect"><strong>按址接收参数:</strong> 如果使用 <code>&amp;</code> 选项, 函数接收第一个回调参数的 <i>地址</i>. 例如:</p>
 <pre>
 callback := CallbackCreate("TheFunc", "F&amp;", 3)  <em>; 32 位中必须指定参数列表的大小.</em>
-DllCall(callback, &quot;float&quot;, 10.5, &quot;int64&quot;, 42)
+DllCall(callback, "float", 10.5, "int64", 42)
 TheFunc(params) {
     MsgBox <a href="NumGet.htm">NumGet</a>(params, 0, "float") ", " NumGet(params, A_PtrSize, "int64")
 }</pre>
 <p>32 位程序中的大多数回调都使用 <em>stdcall</em> 调用约定, 该约定需要固定数量的参数. 在这种情况下, 必须将 <em>ParamCount</em> 设置为参数列表的大小, 其中 Int64 和 Double 都计为两个 32 位参数. 使用 <em>Cdecl</em> 或 64 位调用约定时, <em>ParamCount</em> 无效.</p>
 
-<h2>函数应该 <em>Return</em> 什么</h2>
-<p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或者指定空白值, 如 &quot;&quot;(或者根本不使用 Return), 则将 0 返回给回调的调用者. 否则, 函数应该返回一个整数, 然后将其返回给调用者. AutoHotkey 32-bit 将返回值截断为 32 位, 而 AutoHotkey 64-bit 则支持 64 位返回值. 不支持返回大于此值的结构(按值).</p>
+<h2 id="What_the_Function_Should_Return">函数应该 <em>Return</em> 什么</h2>
+<p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或者指定空白值, 如 ""(或者根本不使用 Return), 则将 0 返回给回调的调用者. 否则, 函数应该返回一个整数, 然后将其返回给调用者. AutoHotkey 32-bit 将返回值截断为 32 位, 而 AutoHotkey 64-bit 则支持 64 位返回值. 不支持返回大于此值的结构(按值).</p>
 
 <h2 id="Threads">Fast vs. Slow</h2>
 <p>默认/慢速模式使该函数以默认值(如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>) 重新启动. 这些默认值可以在<a href="../Scripts.htm#auto">脚本启动</a>中更改.</p>
@@ -111,13 +111,13 @@ TheFunc(params) {
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExWinList">
-<p><a href="#ExWinList">#1</a>: 下面是个可运行脚本, 它显示了所有顶层窗口的摘要.</p>
-<pre>EnumAddress := <strong>CallbackCreate</strong>(&quot;EnumWindowsProc&quot;, &quot;Fast&quot;)  <em>; 快速模式是可以的, 因为它只会在这个线程中被调用.</em>
+<p><a href="#ExWinList">#1</a>: 显示所有顶层窗口的摘要.</p>
+<pre>EnumAddress := <strong>CallbackCreate</strong>("EnumWindowsProc", "Fast")  <em>; 快速模式是可以的, 因为它只会在这个线程中被调用.</em>
 
 DetectHiddenWindows True  <em>; 由于是快速模式, 所以此设置也会在回调中生效.</em>
 
 <em>; 把控制传给 EnumWindows(), 它会重复调用回调:</em>
-DllCall(&quot;EnumWindows&quot;, &quot;Ptr&quot;, EnumAddress, &quot;Ptr&quot;, 0)
+DllCall("EnumWindows", "Ptr", EnumAddress, "Ptr", 0)
 MsgBox Output  <em>; 显示由回调收集的信息.</em>
     
 EnumWindowsProc(hwnd, lParam)
@@ -126,15 +126,15 @@ EnumWindowsProc(hwnd, lParam)
     win_title := WinGetTitle(hwnd)
     win_class := WinGetClass(hwnd)
     if win_title
-        Output .= &quot;HWND: &quot; . hwnd . &quot;`tTitle: &quot; . win_title . &quot;`tClass: &quot; . win_class . &quot;`n&quot;
+        Output .= "HWND: " . hwnd . "`tTitle: " . win_title . "`tClass: " . win_class . "`n"
     return true  <em>; 告知 EnumWindows() 继续执行, 一直到枚举完所有的窗口.</em>
 }</pre>
 </div>
 
 <div class="ex" id="ExSubclassGUI">
-<p><a href="#ExSubclassGUI">#2</a>: 下面是个可运行脚本, 它演示了如何在脚本中通过把 GUI 窗口的 WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的背景颜色被改变为自定义颜色.</p>
+<p><a href="#ExSubclassGUI">#2</a>: 演示如何在脚本中通过把 GUI 窗口的 WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的背景颜色被改变为自定义颜色.</p>
 <pre>TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
-TextBackgroundBrush := DllCall(&quot;CreateSolidBrush&quot;, &quot;UInt&quot;, TextBackgroundColor)
+TextBackgroundBrush := DllCall("CreateSolidBrush", "UInt", TextBackgroundColor)
 
 MyGui := Gui.New()
 Text := MyGui.Add("Text",, "Here is some text that is given`na custom background color.")
@@ -143,8 +143,8 @@ Text := MyGui.Add("Text",, "Here is some text that is given`na custom background
 SetWindowLong := A_PtrSize=8 ? "SetWindowLongPtr" : "SetWindowLong"
 
 WindowProcNew := <strong>CallbackCreate</strong>("WindowProc")  <em>; 避免子类化中使用快速模式.</em>
-WindowProcOld := DllCall(SetWindowLong, &quot;Ptr&quot;, MyGui.Hwnd, &quot;Int&quot;, -4  <em>; -4 为 GWL_WNDPROC</em>
-    , &quot;Ptr&quot;, WindowProcNew, &quot;Ptr&quot;) <em>; 返回值必须设置为 &quot;Ptr&quot; 或 &quot;UPtr&quot; 而不是 &quot;Int&quot;.</em>
+WindowProcOld := DllCall(SetWindowLong, "Ptr", MyGui.Hwnd, "Int", -4  <em>; -4 为 GWL_WNDPROC</em>
+    , "Ptr", WindowProcNew, "Ptr") <em>; 返回值必须设置为 "Ptr" 或 "UPtr" 而不是 "Int".</em>
 
 MyGui.Show
 
@@ -154,11 +154,11 @@ WindowProc(hwnd, uMsg, wParam, lParam)
     global Text, TextBackgroundColor, TextBackgroundBrush, WindowProcOld
     if (uMsg = 0x138 &amp;&amp; lParam = Text.Hwnd)  <em>; 0x138 为 WM_CTLCOLORSTATIC.</em>
     {
-        DllCall(&quot;SetBkColor&quot;, &quot;Ptr&quot;, wParam, &quot;UInt&quot;, TextBackgroundColor)
+        DllCall("SetBkColor", "Ptr", wParam, "UInt", TextBackgroundColor)
         return TextBackgroundBrush  <em>; 返回 HBRUSH 来通知操作系统我们改变了 HDC.</em>
     }
     <em>; 否则(因为上面没有返回), 将所有的未处理事件传递给原来的 WindowProc.</em>
-    return DllCall(&quot;CallWindowProc&quot;, &quot;Ptr&quot;, WindowProcOld, &quot;Ptr&quot;, hwnd, &quot;UInt&quot;, uMsg, &quot;Ptr&quot;, wParam, &quot;Ptr&quot;, lParam)
+    return DllCall("CallWindowProc", "Ptr", WindowProcOld, "Ptr", hwnd, "UInt", uMsg, "Ptr", wParam, "Ptr", lParam)
 }</pre>
 </div>
 

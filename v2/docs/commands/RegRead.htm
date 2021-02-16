@@ -56,25 +56,24 @@
 <h2 id="Related">相关</h2>
 <p><a href="RegDelete.htm">RegDelete</a>, <a href="RegDeleteKey.htm">RegDeleteKey</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
 <h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a>: 从注册表中读取一个值并将其存储在 <var>TestValue</var>.</p>
+<pre>TestValue := RegRead("HKEY_LOCAL_MACHINE\Software\SomeApplication", "TestValue")</pre>
+</div>
 
 <div class="ex" id="ExProgramFiles">
-<p><a href="#ExProgramFiles">#1</a>: 检索 Program Files(程序文件) 目录的路径.</p>
+<p><a href="#ExProgramFiles">#2</a>: 检索并报告 "Program Files"(程序文件) 目录的路径. See <a href="EnvGet.htm#ExProgramFiles">EnvGet example #2</a> for an alternative method.</p>
 <pre><em>; 此行确保在 64 位系统上运行非 64 位脚本时
 ; 也能正常返回 64 位的 Program Files 目录路径.</em>
 <a href="SetRegView.htm">SetRegView</a> 64
 
 ProgramFilesDir := RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion", "ProgramFilesDir")
-MsgBox "Program files are in: " ProgramFilesDir
-
-<em>; 另一种返回 Program Files 目录路径的方法:</em>
-ProgramFilesDir := EnvGet(<a href="../Variables.htm#Is64bitOS">A_Is64bitOS</a> ? "ProgramW6432" : "ProgramFiles")
-MsgBox "Program files are in: " ProgramFilesDir
-</pre>
+MsgBox "Program files are in: " ProgramFilesDir</pre>
 </div>
 
 <div class="ex" id="ExType">
-<p><a href="#ExType">#2</a>:  下面的例子检索注册表值的类型(例如 REG_SZ 或 REG_DWORD).</p>
-<pre>MsgBox RegKeyType(&quot;HKCU&quot;, &quot;Environment&quot;, &quot;TEMP&quot;)
+<p><a href="#ExType">#3</a>: 检索注册表值的类型(例如 REG_SZ 或 REG_DWORD).</p>
+<pre>MsgBox RegKeyType("HKCU", "Environment", "TEMP")
 return
 
 RegKeyType(RootKey, SubKey, ValueName)  <em>; 此函数返回指定值的类型.</em>
@@ -82,7 +81,7 @@ RegKeyType(RootKey, SubKey, ValueName)  <em>; 此函数返回指定值的类型.
     Loop Reg, RootKey "\" SubKey
         if (A_LoopRegName = ValueName)
             return A_LoopRegType
-    return &quot;Error&quot;
+    return "Error"
 }</pre>
 </div>
 

@@ -22,7 +22,18 @@
   <dt>Attributes</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>要改变的属性(请参阅备注).</p>
+    <p>要改变的属性. 例如, <code>+HA-R</code>.</p>
+    <p>要方便地打开, 关闭或切换属性, 请分别在以下一个或多个属性字母前加上加号(+), 减号(-) 或脱字符(^):</p>
+    <ul>
+      <li>R = 只读</li>
+      <li>A = 存档</li>
+      <li>S = 系统</li>
+      <li>H = 隐藏</li>
+      <li>N = 普通(仅在单独使用此属性时才有效)</li>
+      <li>O = 离线</li>
+      <li>T = 临时</li>
+    </ul>
+    <p class="note"><strong>注意</strong>: 当前, 此函数无法改变文件的压缩状态.</p>
   </dd>
 
   <dt>FilePattern</dt>
@@ -35,11 +46,12 @@
   <dt>Mode</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>零个或多个以下字母:</p>
-    <p><code>D</code>: 包含目录(文件夹).<br>
-    <code>F</code>: 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录.<br>
-    <code>R</code>: 子文件夹被递归到其中, 这样包含在其中的文件和文件夹如果匹配 <em>FilePattern</em>, 则对它们进行操作. 所有子文件夹都将被递归到其中, 而不仅仅是那些名称匹配 <em>FilePattern</em> 的子文件夹. 如果省略 R, 则不包含子目录中的文件和目录.</p>
-    <p class="note"><strong>注意</strong>: 如果 <em>FilePattern</em> 是单个文件夹, 而不是通配符模式, 则无论该设置如何, 它都将始终被操作.</p>
+    <p>如果为空或省略, 则默认仅对文件进行操作, 子目录不被递归. 否则, 请指定零个或更多的下列字母:</p>
+    <ul>
+      <li>D = 包含目录(文件夹).</li>
+      <li>F = 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录.</li>
+      <li>R = 子文件夹被递归到其中, 这样包含在其中的文件和文件夹如果匹配 <em>FilePattern</em>, 则对它们进行操作. 所有子文件夹都将被递归到其中, 而不仅仅是那些名称匹配 <em>FilePattern</em> 的子文件夹. 如果省略 R, 则不包含子目录中的文件和目录.</li>
+    </ul>
   </dd>
 
 </dl>
@@ -48,46 +60,27 @@
 <p>如果有文件更改失败, 则抛出异常, 并且将 <a href="Throw.htm#Exception">Exception.Extra</a> 设置为失败次数.</p>
 <p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0, 或上次失败后立即获得操作系统的 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
 
-<h2 id="Remarks">备注</h2>
-<p><em>Attributes</em> 参数由运算符和属性字母的集合组成.</p>
-<p><em>运算符</em>:</p>
-<table class="info">
-  <tr>
-    <td>+</td>
-    <td>启用属性</td>
-  </tr>
-  <tr>
-    <td>-</td>
-    <td>取消属性</td>
-  </tr>
-  <tr>
-    <td>^</td>
-    <td>切换属性(设置为与现在相反的值)</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td>如果在属性字母之前没有运算符, 则文件的属性将替换为给定的属性. 要删除所有属性, 请单独使用 "N".</td>
-  </tr>
-</table>
-<p><br>
-  <em>属性字母</em>:<br>
-  R = 只读<br>
-  A = 存档<br>
-  S = 系统<br>
-  H = 隐藏<br>
-  N = 普通(仅在单独使用此属性时才有效)<br>
-  O = 离线<br>
-  T = 临时</p>
-<p class="note"><strong>注意</strong>: 当前, 此函数无法改变文件的压缩状态.</p>
 <h2 id="Related">相关</h2>
 <p><a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="FileGetTime.htm">FileGetTime</a>, <a href="FileSetTime.htm">FileSetTime</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileGetVersion.htm">FileGetVersion</a>, <a href="LoopFiles.htm">File-loop</a></p>
 <h2 id="Examples">示例</h2>
-<div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>FileSetAttrib "+RH", "C:\MyFiles\*.*", "DF"  <em>; +RH 等同于 +R+H</em>
-FileSetAttrib "^H", "C:\MyFiles"  <em>; 切换文件夹的 &quot;隐藏&quot; 属性.</em>
-FileSetAttrib "-R+A", "C:\New Text File.txt"
-FileSetAttrib "+A", "C:\*.ini", "R"  <em>; 递归 C 驱动器上的所有 .ini 文件.</em></pre>
+<div class="ex" id="ExTurnOnMultiple">
+<p><a href="#ExTurnOnMultiple">#1</a>: 打开所有文件和目录的 "只读" 和 "隐藏" 属性(子目录不会被递归到).</p>
+<pre>FileSetAttrib "+RH", "C:\MyFiles\*.*", "DF"  <em>; +RH 等同于 +R+H</em></pre>
+</div>
+
+<div class="ex" id="ExToggle">
+<p><a href="#ExToggle">#2</a>: 切换单个文件夹的 "隐藏" 属性.</p>
+<pre>FileSetAttrib "^H", "C:\MyFiles"</pre>
+</div>
+
+<div class="ex" id="ExMixed">
+<p><a href="#ExMixed">#3</a>: 关闭单个文件的 "只读" 属性并打开 "存档" 属性.</p>
+<pre>FileSetAttrib "-R+A", "C:\New Text File.txt"</pre>
+</div>
+
+<div class="ex" id="ExRecurse">
+<p><a href="#ExRecurse">#4</a>: 递归 C 驱动器上的所有 .ini 文件并打开它们的 "存档" 属性.</p>
+<pre>FileSetAttrib "+A", "C:\*.ini", "R"</pre>
 </div>
 
 </body>

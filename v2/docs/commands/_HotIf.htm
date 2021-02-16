@@ -42,7 +42,7 @@
 <p>当通过 #HotIf 禁用鼠标或键盘热键时, 它会执行其原来的功能; 也就是说, 它传递到活动窗口, 就好像不存在热键一样. 但有一个例外: 操纵杆热键: 尽管 #HotIf 有效, 它始终不会阻止其他程序看到操纵杆按钮按下.</p>
 <p>#HotIf 也可以用来改变普通按键(例如 <kbd>Enter</kbd> 或 <kbd>Space</kbd>) 的行为. 当某个特定窗口忽略该键或执行某些您认为不需要的操作时, 这是非常有用的. 例如:</p>
 <pre>#HotIf WinActive("Reminders ahk_class #32770")  <em>; Outlook 中的 "reminders" 窗口.</em>
-Enter::Send "!o"  <em>; 按下 &quot;Enter&quot; 打开 reminder, 而不是 snoozing.</em>
+Enter::Send "!o"  <em>; 按下 "Enter" 打开 reminder, 而不是 snoozing.</em>
 #HotIf</pre>
 
 <h2 id="variant">变体(副本) 热键</h2>
@@ -121,18 +121,19 @@ Hotkey "#n", "On"   <em>; 打开同一个热键.</em>
 <p><a href="Hotkey.htm">Hotkey 函数</a>, <a href="../Hotkeys.htm">热键</a>, <a href="../Hotstrings.htm">热字串</a>, <a href="Suspend.htm">Suspend</a>, <a href="WinActive.htm">WinActive</a>, <a href="WinExist.htm">WinExist</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a></p>
 
 <h2 id="Examples">示例</h2>
-
-<div class="ex" id="ExVolume">
-<p><a href="#ExVolume">#1</a>: 在任务栏上滚动鼠标滚轮来调节音量:</p>
-<pre>
-<em>; 示例 0: WinActive.</em>
-#HotIf WinActive("ahk_class Notepad")
+<div class="ex" id="ExBasic">
+<p><a href="#ExBasic">#1</a>: 创建只有在记事本处于活动状态时才生效的两个热键和一个热字符串, 而一个热键则适用于除记事本以外的任何窗口.</p>
+<pre>#HotIf WinActive("ahk_class Notepad")
 ^!a::MsgBox "You pressed Ctrl-Alt-A while Notepad is active."
 #c::MsgBox "You pressed Win-C while Notepad is active."
 ::btw::This replacement text for "btw" will occur only in Notepad.
 #HotIf
-#c::MsgBox "You pressed Win-C in a window other than Notepad."
+#c::MsgBox "You pressed Win-C in a window other than Notepad."</pre>
+</div>
 
+<div class="ex" id="ExVolume">
+<p><a href="#ExVolume">#2</a>: 在任务栏上滚动鼠标滚轮来调节音量.</p>
+<pre>
 #HotIf MouseIsOver("ahk_class Shell_TrayWnd")
 WheelUp::Send "{Volume_Up}"
 WheelDown::Send "{Volume_Down}"
@@ -145,7 +146,7 @@ MouseIsOver(WinTitle) {
 </div>
 
 <div class="ex" id="ExWordDelete">
-<p><a href="#ExWordDelete">#2</a>: 在所有的编辑控件中的轻松删除单词的快捷键:</p>
+<p><a href="#ExWordDelete">#3</a>: 在所有的编辑控件中的轻松删除单词的快捷键.</p>
 <pre>
 #HotIf ActiveControlIsOfClass("Edit")
 ^BS::Send "^+{Left}{Del}"
@@ -162,7 +163,7 @@ ActiveControlIsOfClass(Class) {
 </div>
 
 <div class="ex" id="ExContextInsens">
-<p><a href="#ExContextInsens">#3</a>: 与上下文不相关的热键.</p>
+<p><a href="#ExContextInsens">#4</a>: 与上下文不相关的热键.</p>
 <pre>
 #HotIf
 Esc::ExitApp
@@ -170,7 +171,7 @@ Esc::ExitApp
 </div>
 
 <div class="ex" id="ExDynamic">
-<p><a href="#ExDynamic">#4</a>: 动态热键. 这个例子需要<a href="#ExVolume">示例 #1</a> 中的 MousIsOver 函数:</p>
+<p><a href="#ExDynamic">#5</a>: 动态热键. 这个例子需要<a href="#ExVolume">示例 #2</a> 中的 MousIsOver 函数.</p>
 <pre>
 NumpadAdd::
 {

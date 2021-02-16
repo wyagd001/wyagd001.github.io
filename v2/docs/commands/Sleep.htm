@@ -37,27 +37,27 @@
 <p><a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetMouseDelay.htm">SetMouseDelay</a>, <a href="SetControlDelay.htm">SetControlDelay</a>, <a href="SetWinDelay.htm">SetWinDelay</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>Sleep 1000  <em>; 1 秒</em></pre>
+<p><a href="#ExBasic">#1</a>: 在继续执行前等待 1 秒.</p>
+<pre>Sleep 1000</pre>
 </div>
 
 <div class="ex" id="ExShorterSleep">
-<p><a href="#ExShorterSleep">#2</a>: 下面是个可运行示例, 它演示了如何休眠比普通的 10 或 15.6 毫秒更短的时间. 注意: 像这样的脚本运行时, 整个操作系统和所有的应用程序都会受到下面的 timeBeginPeriod 的影响.</p>
+<p><a href="#ExShorterSleep">#2</a>: 演示如何休眠比普通的 10 或 15.6 毫秒更短的时间. 注意: 像这样的脚本运行时, 整个操作系统和所有的应用程序都会受到下面的 timeBeginPeriod 的影响.</p>
 <pre>
 SleepDuration := 1  <em>; 这里有时可以根据下面的值进行细微调整(例如 2 与 3 的区别).</em>
 TimePeriod := 3 <em>; 尝试 7 或 3. 请参阅下面的注释.
 ; 在 PC 中休眠持续时间一般向上取整到 15.6 ms, 尝试 TimePeriod=7 来允许
 ; 稍短一点的休眠, 而尝试 TimePeriod=3 或更小的值来允许最小可能的休眠.</em>
 
-DllCall(&quot;Winmm\timeBeginPeriod&quot;, &quot;UInt&quot;, TimePeriod)  <em>; 作用于所有的应用程序, 而不只是脚本的 DllCall(&quot;Sleep&quot;...), 但不影响 SetTimer.</em>
+DllCall("Winmm\timeBeginPeriod", "UInt", TimePeriod)  <em>; 作用于所有的应用程序, 而不只是脚本的 DllCall("Sleep"...), 但不影响 SetTimer.</em>
 Iterations := 50
 StartTime := A_TickCount
 
 Loop Iterations
-    DllCall(&quot;Sleep&quot;, &quot;UInt&quot;, SleepDuration)  <em>; 必须使用 DllCall 而不是 Sleep 函数.</em>
+    DllCall("Sleep", "UInt", SleepDuration)  <em>; 必须使用 DllCall 而不是 Sleep 函数.</em>
 
-DllCall(&quot;Winmm\timeEndPeriod&quot;, &quot;UInt&quot;, TimePeriod)  <em>; 应该进行调用来让系统恢复正常.</em>
-MsgBox &quot;Sleep duration = &quot; . (A_TickCount - StartTime) / Iterations</pre>
+DllCall("Winmm\timeEndPeriod", "UInt", TimePeriod)  <em>; 应该进行调用来让系统恢复正常.</em>
+MsgBox "Sleep duration = " . (A_TickCount - StartTime) / Iterations</pre>
 </div>
 
 </body>

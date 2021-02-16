@@ -34,12 +34,13 @@ td.nowrap {
   <dt>Mode</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>零个或多个以下字母:</p>
-    <p><code>K</code>: 包含键名.<br>
-    <code>V</code>: 包含键值. K 和 V 都被省略时, 默认也包含键值.<br>
-    <code>R</code>: 递归子键. 若省略 R, <em>Key</em> 下的子键中的键名和键值都不会被包含.</p>
+    <p>如果为空或省略, 则只包含值且不递归子键. 否则, 指定一个或多个下列字母:</p>
+    <ul>
+      <li>K = 包含键名.</li>
+      <li>V = 包含键值. K 和 V 都被省略时, 默认也包含键值.</li>
+      <li>R = 递归子键. 若省略 R, <em>KeyName</em> 下的子键中的键名和键值都不会被包含.</li>
+    </ul>
   </dd>
-
 
 </dl>
 
@@ -49,7 +50,7 @@ td.nowrap {
 <table class="info">
   <tr>
     <td>A_LoopRegName</td>
-    <td>当前获取项的名称, 可以是值名或子键名. 在 Windows 注册表编辑器中, 值名为 &quot;(Default)&quot; 的项如果分配了值, 那么也会获取它的值, 不过此时相应的 A_LoopRegName 将是空的.</td>
+    <td>当前获取项的名称, 可以是值名或子键名. 在 Windows 注册表编辑器中, 值名为 "(Default)" 的项如果分配了值, 那么也会获取它的值, 不过此时相应的 A_LoopRegName 将是空的.</td>
   </tr>
   <tr>
     <td>A_LoopRegType</td>
@@ -96,23 +97,23 @@ td.nowrap {
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExRegDelete">
-<p><a href="#ExRegDelete">#1</a>: 删除用户输入的 Internet Explorer 的 URL 历史:</p>
+<p><a href="#ExRegDelete">#1</a>: 删除用户输入的 Internet Explorer 的 URL 历史.</p>
 <pre>Loop Reg, "HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\TypedURLs"
     RegDelete</pre>
 </div>
 
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#2</a>: 有效的测试脚本:</p>
+<p><a href="#ExBasic">#2</a>: 有效的测试脚本.</p>
 <pre>Loop Reg, "HKCU\Software\Microsoft\Windows", "R KV"  <em>; 递归检索键和值.</em>
 {
-    if A_LoopRegType = &quot;key&quot;
-        value := &quot;&quot;
+    if A_LoopRegType = "key"
+        value := ""
     else
     {
         try
             value := RegRead()
         catch
-            value := &quot;*error*&quot;
+            value := "*error*"
     }
     Result := MsgBox(A_LoopRegName " = " value " (" A_LoopRegType ")`n`nContinue?",, "y/n")
 }
@@ -120,7 +121,7 @@ Until Result = "No"</pre>
 </div>
 
 <div class="ex" id="ExRegSearch">
-<p><a href="#ExRegSearch">#3</a>: 用于在整个注册表中递归搜索特定值的可运行示例.</p>
+<p><a href="#ExRegSearch">#3</a>: 用于在整个注册表中递归搜索特定值.</p>
 <pre>
 RegSearch("Notepad")
 

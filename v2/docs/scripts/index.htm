@@ -15,7 +15,7 @@
 <h1>AutoHotkey 脚本展示</h1>
 <p>本展示列出了一些由不同作者创建的脚本, 展示了 AutoHotkey 可能具备的能力. 获取更多可运行的脚本和函数, 请访问 <a href="https://www.autohotkey.com/boards/viewforum.php?f=83">AutoHotkey v2 Scripts and Functions Forum</a>.</p>
 
-<h2 id="Table_of_Contents">目录</h2>
+<h2 id="toc">目录</h2>
 <ul>
   <li><a href="#ContextSensitiveHelp">Context Sensitive Help in Any Editor</a></li>
   <li><a href="#EasyWindowDrag">Easy Window Dragging</a></li>
@@ -34,6 +34,7 @@
   <li><a href="#VolumeOSD">Volume On-Screen-Display (OSD)</a></li>
   <li><a href="#WindowShading">Window Shading</a></li>
   <li><a href="#WinLIRC">WinLIRC Client</a></li>
+  <li><a href="#HTML_Entities_Encoding">HTML Entities Encoding</a></li>  
   <li><a href="#Scripts_and_Functions_Forum">AutoHotkey v1 Scripts and Functions Forum</a></li>
 </ul>
 
@@ -59,7 +60,7 @@
 
 <h2 id="IntelliSense">IntelliSense(智能感应)</h2>
 <p>基于 Rajat 编写的 v1 脚本</p>
-<p>此脚本会在您编辑 AutoHotkey 脚本时进行监视. 当它看到您输入命令后跟着逗号或空格后, 会显示此命令的参数列表以给您提示. 此外, 您可以按下 <kbd>Ctrl</kbd>+<kbd>F1</kbd>(或您选择的其他热键) 来显示帮助文件中此命令的页面. 要取消参数列表, 请按 <kbd>Escape</kbd> 或 <kbd>Enter</kbd>.</p>
+<p>此脚本会在您编辑 AutoHotkey 脚本时进行监视. 当它看到您输入命令后跟着逗号或空格后, 会显示此命令的参数列表以给您提示. 此外, 您可以按下 <kbd>Ctrl</kbd>+<kbd>F1</kbd>(或您选择的其他热键) 来显示帮助文件中此命令的页面. 要取消参数列表, 请按 <kbd>Esc</kbd> 或 <kbd>Enter</kbd>.</p>
 <p class="show_code"><a href="IntelliSense.ahk">显示代码</a></p>
 
 <h2 id="JoystickMouse">Using a Joystick as a Mouse(把操纵杆当作鼠标)</h2>
@@ -80,7 +81,7 @@
 <p class="show_code"><a href="MinimizeToTrayMenu.ahk">显示代码</a></p>
 
 <h2 id="MsgBoxButtonNames">Changing MsgBox's Button Names(改变 MsgBox 的按钮名称)</h2>
-<p>这是个可运行示例脚本, 它使用计时器来改变 MsgBox 对话框中按钮的名称. 尽管改变了按钮名称, 但 IfMsgBox 的返回值仍需要引用它们原始的按钮名称表示的按钮.</p>
+<p>这是个可运行示例脚本, 它使用计时器来改变消息框中按钮的名称. 尽管改变了按钮名称, 但 IfMsgBox 的返回值仍需要引用它们原始的按钮名称表示的按钮.</p>
 <p class="show_code"><a href="MsgBoxButtonNames.ahk">显示代码</a></p>
 
 <h2 id="Numpad000">Numpad 000 Key</h2>
@@ -116,6 +117,10 @@
 <p>每当您在遥控器上按下按钮时此脚本会接收到来自 <a href="http://winlirc.sourceforge.net">WinLIRC</a> 的通知. 它可以用来自动操作 Winamp, Windows Media Player, 等等. 它配置起来很简单. 例如, 如果 WinLIRC 能识别您遥控器上名称为"VolUp"的按钮,那么创建名为 VolUp 的标签并在它后面使用函数 <code>SoundSetVolume "+5"</code> 来增加声卡 5% 的音量.</p>
 <p class="show_code"><a href="WinLIRC.ahk">显示代码</a></p>
 
+<h2 id="HTML_Entities_Encoding">HTML Entities Encoding</h2>
+<p>类似于 AutoHotkey v1 的 Transform HTML, 该函数通过将 ASCII 值高于 127 的字符转换成其 HTML 名称, 来将字符串转换为 HTML 等价物(例如 <code>&pound;</code> 变成 <code>&amp;pound;</code>). 此外, 这四个字符 <code>"&amp;&lt;&gt;</code> 被转换为 <code>&amp;quot;&amp;amp;&amp;lt;&amp;gt;</code>. 最后, 每个换行符(<code>`n</code>) 被转换为 <code>&lt;br&gt;`n</code>(即 <code>&lt;br&gt;</code> 后面跟着一个换行符).</p>
+<p class="show_code"><a href="EncodeHTML.ahk">显示代码</a></p>
+
 <h2 id="Scripts_and_Functions_Forum">AutoHotkey v1 Scripts and Functions Forum(AutoHotkey v1 脚本与函数论坛)</h2>
 <p>这个论坛包含了更多的脚本, 但大多数脚本在 AutoHotkey v2.0 上都无法正常运行.</p>
 <p><a href="https://www.autohotkey.com/boards/viewforum.php?f=6">AutoHotkey v1 Scripts and Functions Forum</a></p>
@@ -148,7 +153,7 @@ function addOnClickEvent() {
             pre.innerHTML = text_loading_code;
             this.parentNode.insertBefore(pre, this.nextSibling);
             $.get(this.href, function(data) {
-              $(pre).text(data);
+              $(pre).text(data.replace(/\r\n/g, '\n'));
               features.addCodeBoxButtons([pre]);
               features.addSyntaxColors([pre]);
             }, 'text');

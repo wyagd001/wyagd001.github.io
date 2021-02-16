@@ -113,14 +113,14 @@ MsgBox "这行没有被注释."
 <p class="note">有关变量的基本解释和常规细节, 请参阅<a href="Concepts.htm#variables">变量</a>.</p>
 <p><em>变量</em> 可以简单地通过写变量的名称来用于表达式. 例如, <code>A_ScreenWidth/2</code>. 但是, 变量不能在加引号的字符串中使用. 作为替代, 变量和其他值可以通过名为 <a href="Variables.htm#concat"><em>连接</em></a> 的过程与文本组合起来. 有两种方法能用于 <em>连接</em> 表达式中的值:</p>
 <ul>
-  <li>隐式连接: <code>&quot;The value is &quot; MyVar</code></li>
-  <li>显式连接: <code>&quot;The value is &quot; . MyVar</code></li>
+  <li>隐式连接: <code>"The value is " MyVar</code></li>
+  <li>显式连接: <code>"The value is " . MyVar</code></li>
 </ul>
 <p>隐式连接也被称为 <em>自动连接</em>. 在这两种情况下, 变量和点之前的空格都是必需的.</p>
 <p><a href="commands/Format.htm">Format</a> 函数也可以用于此目的. 例如:</p>
 <pre>MsgBox Format("You are using AutoHotkey v{1} {2}-bit.", A_AhkVersion, A_PtrSize*8)
 </pre>
-<p>要为变量赋值, 请使用 <code>:=</code> <a href="Variables.htm#AssignOp">赋值运算符</a>, 如 <code>MyVar := &quot;Some text&quot;</code>.</p>
+<p>要为变量赋值, 请使用 <code>:=</code> <a href="Variables.htm#AssignOp">赋值运算符</a>, 如 <code>MyVar := "Some text"</code>.</p>
 <p>表达式中的 <em>百分号</em> 用于创建<a href="#dynamic-variables">动态变量引用</a>和<a href="Functions.htm#DynCall">动态函数调用</a>, 但这些很不常见.</p>
 
 <h3 id="constants">常量关键字</h3>
@@ -144,10 +144,10 @@ MsgBox "这行没有被注释."
 
 <h3 id="function-calls">函数调用</h3>
 <p class="note">有关函数和相关术语的一般解释, 请参阅<a href="Concepts.htm#functions">函数</a>.</p>
-<p><em>函数</em> 接受可变数量的输入, 去执行一些动作或计算, 然后 <a href="Concepts.htm#return-a-value"><em>return</em>(返回)</a> 一个结果. 函数的输入被称为<a href="Concepts.htm#parameters">参数</a>(<em>parameters</em> 或 <em>arguments</em>). 一个函数被简单地通过写它的名字, 后跟着用括号括起来的参数来 <a href="Concepts.htm#call"><em>called</em>(调用)</a>. 例如, 如果 <kbd>Shift</kbd> 键被按下, 则 <code>GetKeyState(&quot;Shift&quot;)</code> 返回(计算为) 1, 否则返回 0.</p>
+<p><em>函数</em> 接受可变数量的输入, 去执行一些动作或计算, 然后 <a href="Concepts.htm#return-a-value"><em>return</em>(返回)</a> 一个结果. 函数的输入被称为<a href="Concepts.htm#parameters">参数</a>(<em>parameters</em> 或 <em>arguments</em>). 一个函数被简单地通过写它的名字, 后跟着用括号括起来的参数来 <a href="Concepts.htm#call"><em>called</em>(调用)</a>. 例如, 如果 <kbd>Shift</kbd> 键被按下, 则 <code>GetKeyState("Shift")</code> 返回(计算为) 1, 否则返回 0.</p>
 <p class="warning"><strong>注意:</strong> 函数名和左括号之间不能有任何空格.
 </p>
-<p>对于刚接触编程的人来说, 括号的要求起初可能看起来很神秘或冗长, 但它们允许将函数调用与其他操作结合起来. 例如, 只有当两个键被物理按下时, 表达式 <code>GetKeyState(&quot;Shift&quot;, &quot;P&quot;) and GetKeyState(&quot;Ctrl&quot;, &quot;P&quot;)</code> 才会返回 1.</p>
+<p>对于刚接触编程的人来说, 括号的要求起初可能看起来很神秘或冗长, 但它们允许将函数调用与其他操作结合起来. 例如, 只有当两个键被物理按下时, 表达式 <code>GetKeyState("Shift", "P") and GetKeyState("Ctrl", "P")</code> 才会返回 1.</p>
 <p>函数名与变量名是分开的. 例如, <code>Round</code> 可以同时是变量名和函数名, 而 <code>Round := 1</code> 不会以任何方式影响 <code>Round(n)</code>.</p>
 <p>与普通<a href="Functions.htm#Global">全局变量</a>不同, 默认情况下函数可以在其他函数的内部调用. 但是, <a href="Functions.htm#nested">嵌套函数</a>(即, 在另一个函数中 <em>定义的</em> 任何函数) 只能在包含它们的函数内通过名称来访问.</p>
 
@@ -167,7 +167,7 @@ Run("notepad.exe", , , notepadPID)
 
 <h3 id="operators-for-objects">对象的运算符</h3>
 <p>这里表达式中使用的其他符号不完全符合上面定义的任何类别, 或影响表达式其他部分的含义, 如下所述. 这些都以某种方式与 <em>对象</em> 有关. 对于每个构造所做的事情提供一个完整的解释, 需要引入更多的概念, 而这不属于本节的范围.</p>
-<p><code>Alpha.Beta</code> 通常称为 <em>成员访问</em>. <em>Alpha</em> 是一个普通变量, 可以用函数调用或其他一些返回对象的子表达式替换. 当计算时, 对象发送一个请求 &quot;给我属性 <em>Beta</em> 的值&quot;, &quot;在属性 <em>Beta</em> 中存储这个值&quot; 或 &quot;调用名为 <em>Beta</em> 的方法&quot;. 换句话说, <em>Beta</em> 是一个对对象有意义的名字; 它不是一个局部或全局变量.</p>
+<p><code>Alpha.Beta</code> 通常称为 <em>成员访问</em>. <em>Alpha</em> 是一个普通变量, 可以用函数调用或其他一些返回对象的子表达式替换. 当计算时, 对象发送一个请求 "给我属性 <em>Beta</em> 的值", "在属性 <em>Beta</em> 中存储这个值" 或 "调用名为 <em>Beta</em> 的方法". 换句话说, <em>Beta</em> 是一个对对象有意义的名字; 它不是一个局部或全局变量.</p>
 <p><code>Alpha.Beta()</code> 是一个 <em>方法调用</em>, 如上所述. 括号可在特定情况下省略; 请参阅<a href="#function-call-statements">函数调用语句</a>.</p>
 <p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同). 允许<a href="Functions.htm#VariadicCall">可变参数调用</a>.</p>
 <p><code>Alpha.%vBeta%</code>, <code>Alpha.%vBeta%[Param]</code> 和 <code>Alpha.%vBeta%()</code> 也是成员访问, 但 <em>vBeta</em> 是一个变量或子表达式. 这允许在脚本运行时确定属性或方法的名称. 以这种方式调用方法时需要括号.</p>
@@ -177,7 +177,7 @@ Run("notepad.exe", , , notepadPID)
 <p><code>MyFunc(Params*)</code> 是一个<a href="Functions.htm#VariadicCall">可变函数调用</a>. 星号必须紧接在函数参数列表末尾的右括号之前. <em>Params</em> 必须是返回<a href="objects/Array.htm">数组</a>或其他可枚举对象的变量或子表达式. 虽然在任何地方使用 <code>Params*</code> 都是无效的, 但它可以用在数组标识符(<code>[A, B, C, ArrayToAppend*]</code>) 或属性参数列表(<code>Alpha.Beta[Params*]</code> 或 <code>Alpha[Params*]</code>) 中.</p>
 
 <h3 id="expression-statements">表达式语句</h3>
-<p>并不是所有的表达式都可以单独在一行上使用. 例如, 只包含 <code>21*2</code> 或 <code>&quot;Some text&quot;</code> 的行就没有任何意义. 表达式 <em>语句</em> 是一个单独使用的表达式, 通常利用它的附加作用. 大多数带有附加作用的表达式都可以这样使用, 所以一般不需要记住本节的细节.</p>
+<p>并不是所有的表达式都可以单独在一行上使用. 例如, 只包含 <code>21*2</code> 或 <code>"Some text"</code> 的行就没有任何意义. 表达式 <em>语句</em> 是一个单独使用的表达式, 通常利用它的附加作用. 大多数带有附加作用的表达式都可以这样使用, 所以一般不需要记住本节的细节.</p>
 <p>以下类型的表达式可以用作语句:</p>
 <p>赋值(如 <code>x := y</code>), 复合赋值(如 <code>x += y</code>) 和增量/减量运算符(如 <code>++x</code> 和 <code>x--</code>).</p>
 <p class="warning"><strong>已知限制:</strong> 对于 <code>x++</code> 和 <code>x--</code>, 目前变量名和运算符之间不能有空格.</p>
@@ -242,10 +242,10 @@ Run("notepad.exe", , , notepadPID)
 <p><a href="commands/Break.htm">Break</a> 退出(终止) 一个循环, 有效地跳到循环主体后面的下一行.</p>
 <p><a href="commands/Continue.htm">Continue</a> 跳过当前循环迭代的其余部分, 并开始一个新的循环.</p>
 <p><a href="commands/Until.htm">Until</a> 表达式计算结果为 true 时, 循环终止. 表达式在每次迭代之后被重新计算.</p>
-<p id="named-loops"><a href="#labels">标签</a>可以用来 &quot;命名&quot; <a href="commands/Continue.htm">Continue</a> 和 <a href="commands/Break.htm">Break</a> 的循环. 这允许脚本轻松地继续或跳出任何数量的嵌套循环而不使用 <a href="commands/Goto.htm">Goto</a>.</p>
+<p id="named-loops"><a href="#labels">标签</a>可以用来 "命名" <a href="commands/Continue.htm">Continue</a> 和 <a href="commands/Break.htm">Break</a> 的循环. 这允许脚本轻松地继续或跳出任何数量的嵌套循环而不使用 <a href="commands/Goto.htm">Goto</a>.</p>
 <p>内置变量 <strong>A_Index</strong> 包含当前循环迭代的编号. 它在第一次执行循环主体时为 1. 第二次时为 2; 依次类推. 如果一个内部循环被外部循环包围, 则内部循环优先. A_Index 适用于所有类型的循环, 但在循环之外为 0.</p>
 <p>对于某些循环类型, 其他内置变量返回有关当前循环项 (注册表键/值, 文件, 子字符串或文本行) 的信息. 这些变量的名称以 <strong>A_Loop</strong> 开头, 如 A_LoopFileName 和 A_LoopReadLine. 它们的值总是对应于最近开始的(但还没有停止) 循环的适应类型. 例如, A_LoopField 返回最里层解析循环中的当前子字符串, 即使它在文件或注册表循环中使用.</p>
-<pre>t := &quot;column 1`tcolumn 2`nvalue 1`tvalue 2&quot;
+<pre>t := "column 1`tcolumn 2`nvalue 1`tvalue 2"
 Loop Parse t, "`n"
 {
     rowtext := A_LoopField
@@ -305,10 +305,10 @@ SayHello  <em>; 调用 SayHello 函数.</em></pre>
 </ul>
 <p>函数中的变量默认为函数的<a href="Functions.htm#Local">局部变量</a>, 除非是在<a href="Functions.htm#nested">嵌套函数</a>中引用外部函数的局部变量, 或者是在全局范围内使用 <code>=&gt;</code> 时的任何变量(不是在类或其他函数中).</p>
 <p>函数可以选择<a href="Concepts.htm#parameters">接受参数</a>. 参数是通过在括号内列出它们来定义的. 例如:</p>
-<pre>MyFunction(FirstParameter, Second, ByRef Third, Fourth:=&quot;&quot;)
+<pre>MyFunction(FirstParameter, Second, ByRef Third, Fourth:="")
 {
     <em>;...</em>
-    return &quot;a value&quot;
+    return "a value"
 }
 </pre>
 <p>和函数调用一样, 函数名和左括号之间不能有空格.</p>
@@ -331,7 +331,7 @@ SayHello  <em>; 调用 SayHello 函数.</em></pre>
 <p><em>动态变量引用</em> 接受一个文本值, 并将其解释为变量的名称.</p>
 <p>动态变量引用的最常见形式称为 <em>双重引用</em> 或 <em>双重解引</em>. 在执行双重引用之前, 目标变量的名称存储在第二个变量中. 然后可以通过使用双重引用将第二个变量间接地将值赋给目标变量. 例如:</p>
 <pre>target := 42
-second := &quot;target&quot;
+second := "target"
 MsgBox  second   <em>; 普通(单重) 变量引用 =&gt; target</em>
 MsgBox %second%  <em>; 双重解引 =&gt; 42</em>
 </pre>
@@ -355,7 +355,7 @@ Loop 3
 <p>由于单个元素只是普通变量, 所以可以赋值或获取一个值, 但不能 <em>删除</em> 或 <em>插入</em> 元素. 因为伪数组本身并不存在, 所以不能将它传递给函数或从函数返回, 或者作为一个整体进行复制. 由于这些原因, 通常建议在可能的情况下使用<a href="Objects.htm#Usage_Simple_Arrays">普通数组</a>.</p>
 
 <h4 id="associative-pseudo-arrays">关联伪数组</h4>
-<p>用于形成最终变量名称的 &quot;index(索引)&quot; 不一定是数字; 它可以是一个字母或关键字, 使伪数组类似于<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>或<a href="Objects.htm">对象</a>.</p>
+<p>用于形成最终变量名称的 "index(索引)" 不一定是数字; 它可以是一个字母或关键字, 使伪数组类似于<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>或<a href="Objects.htm">对象</a>.</p>
 
 <h3 id="labels">标签</h3>
 <p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 的目标, 或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由一个名称后跟一个冒号组成:</p>

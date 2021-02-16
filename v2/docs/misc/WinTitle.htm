@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>WinTitle &amp; Last Found Window | AutoHotkey v2</title>
-<meta name="description" content="This page describes criteria such as ahk_class for the WinTitle parameter used by some built-in functions to identify which window(s) to operate on." />
+<meta name="description" content="This page lists criteria that can be used in the WinTitle parameter of built-in functions to determine the target window(s)." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -21,14 +21,14 @@
   padding: .2em .5em;
 }
 #QuickRef tr:nth-child(even) {
-  background-color: #f4f4f4;
+  background: rgba(150, 150, 150, 0.1);
 }
 </style>
 </head>
 <body>
-<h1><em>WinTitle</em> 参数 &amp; 最近找到的窗口</h1>
+<h1><var>WinTitle</var> 参数 &amp; 最近找到的窗口</h1>
 
-<p>许多内置函数都有 <em>WinTitle</em> 参数, 用于识别要操作的窗口. 此参数可以是窗口的标题或部分标题, 和/或本页上描述的任何其他条件.</p>
+<p>许多内置函数都有 <var>WinTitle</var> 参数, 用于识别要操作的窗口. 此参数可以是窗口的标题或部分标题, 和/或本页上描述的任何其他条件.</p>
 
 <strong>快速参考:</strong>
 <table id="QuickRef">
@@ -46,82 +46,79 @@
 </table>
 
 <h2 id="Matching">匹配行为</h2>
-<p><a href="../commands/SetTitleMatchMode.htm">SetTitleMatchMode</a> 控制如何将部分或完整标题与每个窗口的标题进行比较. 根据这个设置, <em>WinTitle</em> 可以是完全匹配的标题, 也可以包含前面部分, 标题中任何位置出现的子字符串或 <a href="RegEx-QuickRef.htm">RegEx 模式</a>. 该设置还控制 <a href="#ahk_class">ahk_class</a> 和 <a href="#ahk_exe">ahk_exe</a> 是否解释为 RegEx 模式.</p>
-<p>窗口标题是区分大小写的, 除非在 RegEx 模式中使用 <a href="RegEx-QuickRef.htm#opt_i"> i) 修饰符</a>.</p>
-<p>仅当 <a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 为 On 时, 才会检测隐藏窗口, 但 <a href="../commands/WinShow.htm">WinShow</a> 除外, 它总是检测隐藏窗口.</p>
-<p>如果多个窗口与 <em>WinTitle</em> 和其他任何条件匹配, 则使用最顶层的匹配窗口. 如果活动窗口匹配条件, 则它通常优先, 因为它一般在其他所有窗口的上面. 然而, 如果某个<a href="../commands/WinSetAlwaysOnTop.htm">置顶</a>窗口也匹配条件(且匹配的活动窗口没有置顶), 则使用这个置顶窗口.</p>
+<p><a href="../commands/SetTitleMatchMode.htm">SetTitleMatchMode</a> 控制如何将部分或完整标题与每个窗口的标题进行比较. 根据这个设置, <var>WinTitle</var> 可以是完全匹配的标题, 也可以包含前面部分, 标题中任何位置出现的子字符串或 <a href="RegEx-QuickRef.htm">RegEx 模式</a>. 该设置还控制 <a href="#ahk_class">ahk_class</a> 和 <a href="#ahk_exe">ahk_exe</a> 是否解释为 RegEx 模式.</p>
+<p>窗口标题是区分大小写的, 除非在 RegEx 模式中使用 <a href="RegEx-QuickRef.htm#opt_i">i) 修饰符</a>.</p>
+<p>仅当 <a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 被的打开时, 才会检测隐藏窗口, 但 <a href="../commands/WinShow.htm">WinShow</a> 除外, 它总是检测隐藏窗口.</p>
+<p>如果多个窗口与 <var>WinTitle</var> 和其他任何条件匹配, 则使用最顶层的匹配窗口. 如果活动窗口匹配条件, 则它通常优先, 因为它一般在其他所有窗口的上面. 然而, 如果某个<a href="../commands/WinSetAlwaysOnTop.htm">置顶</a>的窗口也匹配条件(且活动窗口没有置顶), 则使用这个置顶窗口.</p>
 
-<h2 id="ActiveWindow">活动窗口(A)</h2>
-<p>如果 <em>WinTitle</em> 为字母 <code>A</code> 且其他三个窗口参数(<em>WinText</em>, <em>ExcludeTitle</em> 和 <em>ExcludeText</em>) 都为空或省略, 则使用活动窗口.</p>
-<pre>
-<em>; 取活动窗口的 ID/HWND</em>
-MsgBox WinExist("A")
+<h2 id="ActiveWindow">A(活动窗口)</h2>
+<p>使用字母 <code>A</code> 表示 <var>WinTitle</var>, 并省略其他三个窗口参数(<em>WinText</em>, <em>ExcludeTitle</em> 和 <em>ExcludeText</em>), 对活动窗口进行操作.</p>
+<p>以下示例检索并报告活动窗口的唯一 ID(HWND):</p>
+<pre>MsgBox WinExist("A")</pre>
+<p>下面的例子创建了一个热键, 按下它可以使活动窗口最大化:</p>
+<pre>#Up::WinMaximize "A"  <em>; Win+Up</em></pre>
 
-<em>; 按下 Win+&uarr; 来最大化活动窗口</em>
-#Up::WinMaximize "A"</pre>
+<h2 id="ahk_">ahk_ 条件</h2>
+<p>指定一个或多个下面的 ahk_ 条件(可选, 除了窗口标题). 一个 ahk_ 条件总是由一个 _ahk 关键字和它的条件值组成, 两者之间用零或多个空格或制表符分隔. 例如, <code>ahk_class Notepad</code> 代表一个记事本窗口.</p>
+<p>ahk_ 关键字和它的条件值不需要用空格或制表符来分隔. 这主要是在指定 ahk_ 条件值为表达式并与变量结合时有用. 例如, 可以指定 <code>"ahk_pid" PID</code> 而不是 <code>"ahk_pid " PID</code>. 然而, 在所有其他情况下, 建议使用至少一个空格或制表符作为分隔, 以提高可读性.</p>
 
-<h2 id="ahk_class">ahk_class 窗口类</h2>
-<p>窗口类是一个属性集, 是系统用于创建窗口的模板. 换句话说, 窗口类的名称标识了窗口的 <em>类型</em>. 若要使用窗口类, 指定 <code>ahk_class ExactClassName</code>, 如 Window Spy 所示. <em>ExactClassName</em> 可以由 <a href="../commands/WinGetClass.htm">WinGetClass</a> 获取.</p>
-<p>如果启用了 RegEx 的<a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>, ahk_class 接受<a href="RegEx-QuickRef.htm">正则表达式</a>.</p>
-<pre>
-<em>; 激活命令行窗口(例如 cmd.exe)</em>
-WinActivate "ahk_class ConsoleWindowClass"
-</pre>
+<h3 id="ahk_class">ahk_class(窗口类)</h3>
+<p>在 <var>WinTitle</var> 中使用 <code>ahk_class <var>ClassName</var></code> 通过其窗口类来识别窗口.</p>
+<p>窗口类是系统用来创建窗口的模板的属性集. 换句话说, 窗口类表示窗口的 <em>类型</em>. 窗口类可以通过 Window Spy 来显示或通过 <a href="../commands/WinGetClass.htm">WinGetClass</a> 获取. 如果 RegEx <a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>被激活, <var>ClassName</var> 接受<a href="RegEx-QuickRef.htm">正则表达式</a>.</p>
+<p>下面的例子激活了一个控制台窗口(例如 cmd.exe):</p>
+<pre>WinActivate "ahk_class ConsoleWindowClass"</pre>
+<p>下面的示例与上面的相同, 但使用了<a href="RegEx-QuickRef.htm">正则表达式</a>(注意必须事先打开 RegEx <a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>才行):</p>
+<pre>WinActivate "ahk_class i)^ConsoleWindowClass$"</pre>
 
-<h2 id="ahk_id">ahk_id 唯一 ID / HWND</h2>
-<p>每个窗口或控件都有一个唯一的 ID, 也称为 HWND(窗口句柄的缩写). 此 ID 可用于标识窗口或控件, 即使其标题更改. 有三种方法可以在 <em>WinTitle</em> 参数中指定 ID, 如下例所示:</p>
+<h3 id="ahk_id">ahk_id(唯一 ID / HWND)</h3>
+<p>在 <var>WinTitle</var> 中使用 <code>ahk_id <var>HWND</var></code>, 通过其唯一的 ID 来识别窗口或控件.</p>
+<p>每个窗口或控件都有一个唯一 ID, 也称为 HWND(即窗口句柄的缩写). 即使在窗口或控件的标题改变时也可用这个 ID 来识别它.</p>
+<p><a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 会影响 ahk_id 条件是否检测隐藏的顶层窗口, 但隐藏的控件总是会被检测到. 如果传递了一个有效的<a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a>, 则隐藏的窗口总是能被检测到.</p>
+<p>ahk_id 条件也可以和给定窗口必须匹配的其他条件相结合. 例如, <code>WinExist("ahk_id " ahwnd " ahk_class " aclass)</code> 在窗口被 "检测到"(根据 DetectHiddenWindows) 且其窗口类别与 <var>aclass</var> 所包含的字符串相匹配时, 返回 <var>ahwnd</var>.</p>
+<p>窗口的 ID 通常通过 <a href="../commands/WinExist.htm">WinExist</a> 或 <a href="../commands/WinGetID.htm">WinGetID</a> 来检索. 控件的 ID 通常通过 <a href="../commands/ControlGetHwnd.htm">ControlGetHwnd</a>, <a href="../commands/MouseGetPos.htm">MouseGetPos</a> 或 <a href="../commands/DllCall.htm">DllCall</a> 来检索. <a href="../objects/Gui.htm">Gui</a> 和 <a href="../objects/GuiControl.htm">GuiControl</a> 对象具有 <code>Hwnd</code> 属性, 因此可以直接在 <var>WinTitle</var> 中使用.</p>
+<p>下面的示例通过存储在 <var>VarContainingID</var> 中的唯一 ID 对窗口进行操作:</p>
 <pre><em>; 传递一个<a href="../Concepts.htm#numbers">整数</a>.</em>
 WinActivate Integer(VarContainingID)
 WinShow A_ScriptHwnd
 WinWaitNotActive WinExist("A")
 
-<em>; 传递一个具有 HWND 属性的<a href="../Objects.htm">对象</a>.</em>
-WinActivate {Hwnd: VarContainingID}
+<em>; 传递一个具有 HWND 属性的 <a href="../Objects.htm">对象</a>.</em>
 WinWaitClose myGuiObject
 
 <em>; 使用 ahk_id 前缀.</em>
-WinActivate "ahk_id " VarContainingID
-</pre>
-<p><a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 将影响 <em>ahk_id</em> 是否检测被隐藏的顶级窗口, 但是始终检测隐藏控件. 如果传递了有效的整数或对象, 则始终检测隐藏窗口.</p>
-<p><em>ahk_id</em> 也可以和其他条件组合使用, 给定窗口必须都要匹配. 例如, <code>WinExist("ahk_id " ahwnd " ahk_class " aclass)</code>, 如果"检测到"该窗口(根据 DetectHiddenWindows) 并且其窗口类与 <code>aclass</code> 包含的字符串匹配, 则返回 <code>ahwnd</code>.</p>
-<p>窗口的 ID 通常使用 <a href="../commands/WinExist.htm">WinExist</a> 或 <a href="../commands/WinGetID.htm">WinGetID</a> 来获取. 控件的 ID 通常使用 <a href="../commands/ControlGetHwnd.htm">ControlGetHwnd</a>, <a href="../commands/MouseGetPos.htm">MouseGetPos</a> 或 <a href="../commands/DllCall.htm">DllCall</a> 来获取. <a href="../objects/Gui.htm">Gui</a> 和 <a href="../objects/GuiControl.htm">GuiControl</a> 对象具有 <code>Hwnd</code> 属性, 因此可以直接在 <em>WinTitle</em> 参数中使用.</p>
-<h2 id="ahk_pid">ahk_pid 进程 ID</h2>
-<p>使用 ahk_pid 以标识属于指定进程的窗口. 进程标识符(PID) 通常使用 <a href="../commands/WinGetPID.htm">WinGetPID</a>, <a href="../commands/Run.htm">Run</a> 或 <a href="../commands/Process.htm">Process 函数</a>获取.</p>
-<pre>
-WinActivate "ahk_pid " VarContainingPID
+WinActivate "ahk_id " VarContainingID	WinActivate "ahk_id " VarContainingID
 </pre>
 
-<h2 id="ahk_exe">ahk_exe 进程名称/路径</h2>
-<p>使用 ahk_exe 以标识含有指定名称或路径的进程所拥有的窗口.</p>
-<p><a href="#ahk_pid">ahk_pid</a> 仅限于某个指定进程, 但 ahk_exe 会考虑所有在进程名称或路径中含有指定字符串的进程. 如果启用了正则表达式的<a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>, 则 ahk_exe 接受<a href="RegEx-QuickRef.htm">正则表达式</a>, 但必须匹配进程的完整路径. 其他情况下, ahk_exe 接受不区分大小写的名称或完整路径; 例如, <code>ahk_exe notepad.exe</code> 覆盖 <code>ahk_exe C:\Windows\Notepad.exe</code>, <code>ahk_exe C:\Windows\System32\Notepad.exe</code> 及其他变化.</p>
-<pre>
-<em>; 激活现有的 notepad.exe 窗口或打开一个新的</em>
-if WinExist("ahk_exe notepad.exe")
-    WinActivate "ahk_exe notepad.exe"
-else
-    Run "notepad.exe"
-</pre>
-<pre>SetTitleMatchMode "RegEx"
-WinActivate "ahk_exe i)\\notepad\.exe$"  <em>; 匹配完整路径的名称部分.</em></pre>
+<h3 id="ahk_pid">ahk_pid(进程 ID)</h3>
+<p>在 <var>WinTitle</var> 中使用 <code>ahk_pid <var>PID</var></code> 来识别属于特定进程的窗口. 进程标识符(PID) 通常由 <a href="../commands/WinGetPID.htm">WinGetPID</a>, <a href="../commands/Run.htm">Run</a> 或 <a href="../commands/Process.htm">Process 函数</a>检索. 窗口的进程 ID 可以通过 Window Spy 来显示.</p>
+<p>下面的例子是通过存储在 <var>VarContainingPID</var> 中的进程 ID 来激活一个窗口:</p>
+<pre>WinActivate "ahk_pid " VarContainingPID</pre>
 
-<h2 id="ahk_group">ahk_group 窗口组</h2>
-<p>使用 ahk_group 可以标识一个或多个窗口, 这些窗口匹配先前定义的<a href="../commands/GroupAdd.htm">窗口组</a>所包含的规则.</p>
-<p>函数 <a href="../commands/WinMinimize.htm">WinMinimize</a>, <a href="../commands/WinMaximize.htm">WinMaximize</a>, <a href="../commands/WinRestore.htm">WinRestore</a>, <a href="../commands/WinHide.htm">WinHide</a>, <a href="../commands/WinShow.htm">WinShow</a>, <a href="../commands/WinClose.htm">WinClose</a> 和 <a href="../commands/WinKill.htm">WinKill</a> 将对组中的 <strong>所有</strong> 窗口进行操作. 相比之下, 其他窗口函数(如 <a href="../commands/WinActivate.htm">WinActivate</a> 和 <a href="../commands/WinExist.htm">WinExist</a>) 仅对组中最顶层的窗口进行操作.</p>
-<pre>
-<em>; 定义组: Windows Explorer 窗口</em>
+<h3 id="ahk_exe">ahk_exe(进程名称/路径)</h3>
+<p>在 <var>WinTitle</var> 中使用 <code>ahk_exe <var>ProcessNameOrPath</var></code> 来识别属于任何具有给定名称或路径的进程的窗口.</p>
+<p><a href="#ahk_pid">ahk_pid 条件</a>仅限于一个特定的进程, 而 ahk_exe 条件则考虑所有名称或完整路径与给定字符串相匹配的进程. 如果 RegEx <a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>处于活动状态, <var>ProcessNameOrPath</var> 接受<a href="RegEx-QuickRef.htm">正则表达式</a>, 该表达式必须匹配进程的完整路径. 否则, 它接受不区分大小写的名称或完整路径; 例如, <code>ahk_exe notepad.exe</code> 涵盖了 <code>ahk_exe C:\Windows\Notepad.exe</code>, <code>ahk_exe C:\Windows\System32\Notepad.exe</code> 和其他变体. 窗口的进程名称可以通过 Window Spy 显示出来.</p>
+<p>下面的例子是通过进程名称来激活一个记事本窗口:</p>
+<pre>WinActivate "ahk_exe notepad.exe"</pre>
+<p>下面的示例与上面的相同, 但使用了<a href="RegEx-QuickRef.htm">正则表达式</a>(注意必须事先打开 RegEx <a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>才行):</p>
+<pre>WinActivate "ahk_exe i)\\notepad\.exe$"  <em>; 匹配完整路径的名称部分.</em></pre>
+
+<h3 id="ahk_group">ahk_group(窗口组)</h3>
+<p>在 <var>WinTitle</var> 中使用 <code>ahk_group <var>GroupName</var></code> 来识别与先前定义的<a href="../commands/GroupAdd.htm">窗口组</a>
+<p><a href="../commands/WinMinimize.htm">WinMinimize</a>, <a href="../commands/WinMaximize.htm">WinMaximize</a>, <a href="../commands/WinRestore.htm">WinRestore</a>, <a href="../commands/WinHide.htm">WinHide</a>, <a href="../commands/WinShow.htm">WinShow</a>, <a href="../commands/WinClose.htm">WinClose</a> 和 <a href="../commands/WinKill.htm">WinKill</a> 将对组中的 <strong>所有</strong> 窗口进行操作. 相比之下, 其他窗口函数(如 <a href="../commands/WinActivate.htm">WinActivate</a> 和 <a href="../commands/WinExist.htm">WinExist</a>) 仅对组中最顶层的窗口进行操作.</p>
+<p>以下示例将激活任何符合窗口组定义标准的任何窗口:</p>
+<pre><em>; 定义组: Windows 资源管理器窗口</em>
 GroupAdd "Explorer", "ahk_class ExploreWClass" <em>; 在 Vista 及更高版本中不使用</em>
 GroupAdd "Explorer", "ahk_class CabinetWClass"
 
-<em>; 激活匹配上面条件的任意窗口</em>
-WinActivate "ahk_group Explorer"
-</pre>
+<em>; 激活匹配上面标准的任意窗口</em>
+WinActivate "ahk_group Explorer"</pre>
 
 <h2 id="multi">多重条件</h2>
-<p>与 <a href="#ahk_group">ahk_group</a>(它扩大了搜索范围) 相比, 在 WinTitle 参数中指定多个条件可以缩小搜索范围. 在下面的例子中, 脚本等待标题中包含 <em>My File.txt</em> <strong>且</strong> 类名为 <em>Notepad</em> 的窗口出现:</p>
+<p>与 <a href="#ahk_group">ahk_group 条件</a>(它扩大了搜索范围) 相比, 在 <var>WinTitle</var> 参数中指定多个条件可以缩小搜索范围. 在下面的例子中, 脚本等待标题中包含 <em>My File.txt</em> <strong>且</strong> 类名为 <em>Notepad</em> 的窗口出现:</p>
 <pre>WinWait "<strong>My File.txt</strong> ahk_class <strong>Notepad</strong>"
 WinActivate  <em>; 激活它找到的窗口.</em></pre>
 <p>使用这种方法时, 应该首先列出标题的文本(如果希望使用), 后面跟着一个或多个附加条件. 超过一个条件时条件之间必须准确地用一个空格或 tab 分隔(其他任何空格或 tab 会被视为前面一个条件的文字部分).</p>
-<p><a href="#ahk_id">ahk_id</a> 可以和其他条件组合来测试窗口标题, 类名或其他属性:</p>
+<p><a href="#ahk_id">ahk_id 条件</a> 可以和其他条件组合来测试窗口标题, 类名或其他属性:</p>
 <pre>
 MouseGetPos ,, id
 if WinExist("ahk_class Notepad ahk_id " id)
@@ -131,30 +128,33 @@ if WinExist("ahk_class Notepad ahk_id " id)
 
 <h2 id="LastFoundWindow">"上次找到的" 窗口</h2>
 
-<p>"上次找到的" 窗口是由最近的 <a href="../commands/WinExist.htm">IfWin[Not]Exist</a>, <a href="../commands/WinExist.htm">WinExist</a>, <a href="../commands/WinActive.htm">IfWin[Not]Active</a>, <a href="../commands/WinActive.htm">WinActive</a>, <a href="../commands/WinWaitActive.htm">WinWait[Not]Active</a> 或 <a href="../commands/WinWait.htm">WinWait</a> 发现的窗口. 这样可以让脚本更容易创建和维护, 因为目标窗口的 WinTitle 和 WinText 不需要在每个窗口函数中重复. 此外, 脚本会执行的更好, 因为在首次找到目标窗口后这些函数不需要再次搜索目标窗口.</p>
-<p>"上次找到的" 窗口可以用于除 <a href="../commands/WinWait.htm">WinWait</a>, <a href="../commands/WinActivateBottom.htm">WinActivateBottom</a>, <a href="../commands/GroupAdd.htm">GroupAdd</a>, <a href="../commands/WinGetCount.htm">WinGetCount</a> 和 <a href="../commands/WinGetList.htm">WinGetList</a> 以外的所有窗口函数. 要使用它, 只需简单地省略所有的四个窗口参数(WinTitle, WinText, ExcludeTitle 和 ExcludeText).</p>
-<p>每个<a href="Threads.htm">线程</a>保留自己的 &quot;上次找到的&quot; 窗口值, 这意味着如果<a href="Threads.htm">当前线程</a>被其他线程中断, 当原始线程恢复时它仍会拥有它原来的 &quot;上次找到的&quot; 窗口值, 而不是中断线程的值.</p>
-<p>如果上次找到的窗口是一个隐藏的 <a href="../objects/Gui.htm">Gui 窗口</a>, 那么即使 <a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 为 Off, 也可以使用它. 这通常与 GUI 的 <a href="../objects/Gui.htm#LastFound">+LastFound</a> 选项一起使用.</p>
-<pre class="NoIndent">Run "notepad"
+<p>"上次找到的" 窗口是由最近的 <a href="../commands/WinExist.htm">WinExist</a>, <a href="../commands/WinActive.htm">WinActive</a>, <a href="../commands/WinWaitActive.htm">WinWait[Not]Active</a> 或 <a href="../commands/WinWait.htm">WinWait</a> 发现的窗口. 这样可以让脚本更容易创建和维护, 因为目标窗口的 <var>WinTitle</var> 和 <var>WinText</var> 不需要在每个窗口函数中重复. 此外, 脚本会执行的更好, 因为在首次找到目标窗口后这些函数不需要再次搜索目标窗口.</p>
+<p>"上次找到的" 窗口可以用于除 <a href="../commands/WinWait.htm">WinWait</a>, <a href="../commands/WinActivateBottom.htm">WinActivateBottom</a>, <a href="../commands/GroupAdd.htm">GroupAdd</a>, <a href="../commands/WinGetCount.htm">WinGetCount</a> 和 <a href="../commands/WinGetList.htm">WinGetList</a> 以外的所有窗口函数. 要使用它, 只需简单地省略所有的四个窗口参数(<var>WinTitle</var>, <var>WinText</var>, <var>ExcludeTitle</var>, and <var>ExcludeText</var>).</p>
+<p>每个<a href="Threads.htm">线程</a>保留自己的 "上次找到的" 窗口值, 这意味着如果<a href="Threads.htm">当前线程</a>被其他线程中断, 当原始线程恢复时它仍会拥有它原来的 "上次找到的" 窗口值, 而不是中断线程的值.</p>
+<p>如果上次找到的窗口是一个隐藏的 <a href="../objects/Gui.htm">Gui 窗口</a>, 那么即使 <a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 被关闭, 也可以使用它. 这通常与 GUI 的 <a href="../objects/Gui.htm#LastFound">+LastFound</a> 选项一起使用.</p>
+<p>下面的例子打开记事本, 等待直到它存在并激活:</p>
+<pre>Run "Notepad"
 WinWait "Untitled - Notepad"
 <em>; WinWait "无标题 - 记事本"</em>
-WinActivate  <em>; 使用上次找到的窗口.</em>
+WinActivate  <em>; 使用由 WinWait 找到的窗口.</em></pre>
 
-if WinExist("Untitled - Notepad")
+<p>下面的例子是激活并最大化由上面的 WinExist 函数找到的记事本窗口:</p>
+<pre>if WinExist("Untitled - Notepad")
 <em>; if WinExist("无标题 - 记事本")</em>
 {
-    WinActivate  <em>; 自动使用上面找到的窗口.</em>
+    WinActivate  <em>; 使用由 WinExist 找到的窗口.</em>
     WinMaximize  <em>; 同上</em>
     Send "Some text.{Enter}"
     return
-}
+}</pre>
 
-if not WinExist("Calculator")
+<p>如果计算器不存在, 下面的例子将返回, 否则计算器将被激活并移动到一个新的位置:</p>
+<pre>if not WinExist("Calculator")
     return
 else
 {
-    WinActivate  <em>; 上面的 &quot;WinExist&quot; 也为我们设置了 &quot;上次找到的&quot; 窗口.</em>
-    WinMove 40, 40  <em>; 把它移动到新位置.</em>
+    WinActivate  <em>; 使用由 WinExist 找到的窗口.</em>
+    WinMove 40, 40  <em>; 同上.</em>
     return
 }</pre>
 

@@ -31,14 +31,14 @@
 <p>尽管热字串主要用于在您输入缩写时进行扩展(自动替换), 但是它们也可以用来启动任何脚本动作. 从这个角度看, 它们类似于<a href="Hotkeys.htm">热键</a>, 除了它们通常由多个字符组成(即字符串).</p>
 <p>要定义热字串, 请用两个双冒号包围用来触发的缩写, 例如:</p>
 <pre>::btw::by the way</pre>
-<p>在上面的例子中, 每当您输入 btw 时, 缩写 btw  会被自动替换为 &quot;by the way&quot;(不过, 默认情况下, 您必须在输入 btw 后输入<a href="#EndChars">终止符</a>, 如 <kbd>Space</kbd>, <kbd>.</kbd> 或 <kbd>Enter</kbd>).</p>
-<p id="auto">上面的 &quot;by the way&quot; 示例被称为自动替换热字串, 因为输入的文本被自动删除并替换为第二个双冒号后指定的字符串. 与之相比, 热字串还可以定义用来执行任何自定义动作, 如下例所示. 注意函数必须出现在热字串的 <u>下面</u>:</p>
+<p>在上面的例子中, 每当您输入 btw 时, 缩写 btw  会被自动替换为 "by the way"(不过, 默认情况下, 您必须在输入 btw 后输入<a href="#EndChars">终止符</a>, 如 <kbd>Space</kbd>, <kbd>.</kbd> 或 <kbd>Enter</kbd>).</p>
+<p id="auto">上面的 "by the way" 示例被称为自动替换热字串, 因为输入的文本被自动删除并替换为第二个双冒号后指定的字符串. 与之相比, 热字串还可以定义用来执行任何自定义动作, 如下例所示. 注意函数必须出现在热字串的 <u>下面</u>:</p>
 <pre>::btw::
 {
-    MsgBox 'You typed &quot;btw&quot;.'
+    MsgBox 'You typed "btw".'
 }
 
-:*:]d::  <em>; 此热串通过下面的函数用当前日期和时间替换 &quot;]d&quot;.</em>
+:*:]d::  <em>; 此热串通过下面的函数用当前日期和时间替换 "]d".</em>
 {
 SendInput <a href="commands/FormatTime.htm">FormatTime</a>(, "M/d/yyyy h:mm tt")  <em>;  看起来会像 9/1/2005 3:53 PM 这样</em>
 }</pre>
@@ -46,8 +46,8 @@ SendInput <a href="commands/FormatTime.htm">FormatTime</a>(, "M/d/yyyy h:mm tt")
 <p>尽管上面的两个例子不是自动替换热字串, 但默认情况下您输入的缩写也会被删除. 这是通过自动退格来实现的, 此特性可以通过 <a href="#b0">b0 选项</a>来禁用.</p>
 
 <h2 id="EndChars">终止符</h2>
-<p>除非使用了<a href="#Asterisk">星号选项</a>, 否则您必须在热字串的缩写后输入一个 <em>终止符</em> 才能触发它. 终止符最初由以下字符组成: <strong>-()[]{}':;&quot;/\,.?!`n `t</strong>(注意 `n 是 <kbd>Enter</kbd>, `t 是 <kbd>Tab</kbd>, 且在它们之间还有一个普通的空格). 这个字符集可以通过编辑下列的示例进行更改, 该示例为 <u>所有</u> 热字串设置新的终止符, 而不仅是在它下面的那些:</p>
-<pre>#Hotstring EndChars -()[]{}:;'&quot;/\,.?!`n `t</pre>
+<p>除非使用了<a href="#Asterisk">星号选项</a>, 否则您必须在热字串的缩写后输入一个 <em>终止符</em> 才能触发它. 终止符最初由以下字符组成: <strong>-()[]{}':;"/\,.?!`n `t</strong>(注意 `n 是 <kbd>Enter</kbd>, `t 是 <kbd>Tab</kbd>, 且在它们之间还有一个普通的空格). 这个字符集可以通过编辑下列的示例进行更改, 该示例为 <u>所有</u> 热字串设置新的终止符, 而不仅是在它下面的那些:</p>
+<pre>#Hotstring EndChars -()[]{}:;'"/\,.?!`n `t</pre>
 <p>终止符也可以在脚本运行时通过调用 <a href="commands/Hotstring.htm">Hotstring</a> 函数来进行更改, 如下例所示:</p>
 <pre>Hotstring("EndChars", "-()[]{}:;")</pre>
 
@@ -55,15 +55,15 @@ SendInput <a href="commands/FormatTime.htm">FormatTime</a>(, "M/d/yyyy h:mm tt")
 <p>热字串的默认行为可以使用下面的两种方式来改变:</p>
 <ol>
   <li><a href="commands/_Hotstring.htm">#Hotstring</a> 指令, 它会影响脚本中在它后面的所有热字串. 下列示例会让 C 和 R 选项生效: <code>#Hotstring <strong>c r</strong></code>.</li>
-  <li>把选项放在热字串的第一个双冒号之间. 下列示例会让 C 和 * 选项(区分大小写且&quot;不需要终止符&quot;) 对当前热字串生效:
+  <li>把选项放在热字串的第一个双冒号之间. 下列示例会让 C 和 * 选项(区分大小写且"不需要终止符") 对当前热字串生效:
   <code>:<strong>c*</strong>:j@::john@somedomain.com</code>.</li>
 </ol>
 <p>下面列表对每个选项进行说明. 当使用上面的方法指定多个选项时, 可以在选项间包含空格.</p>
 <p id="Asterisk"><strong>*</strong> (星号): 不需要终止符(例如 <kbd>Space</kbd>, <kbd>.</kbd> 或 <kbd>Enter</kbd>) 来触发热字串. 例如:</p>
 <pre>:*:j@::jsmith@somedomain.com</pre>
 <p>上面的示例会在您输入 @ 字符时立即进行替换. 当使用 <a href="commands/_Hotstring.htm">#Hotstring 指令</a>时, 可以使用 <strong>*0</strong> 来关闭此选项.</p>
-<p id="Question"><strong>?</strong> (问号): 即使热字串在另一个单词中也会被触发; 也就是说, 在它之前输入的字符是字母数字时. 例如, 如果 <code>:?:al::airline</code> 是热字串, 输入 &quot;practical &quot; 会产生 &quot;practicairline &quot;. 使用 <strong>?0</strong> 来关闭此选项.</p>
-<p id="b0"><strong>B0</strong> (B 后跟着零): <u>不</u> 自动退格来删除您输入的缩写. 关闭此选项后可以使用 <strong>B</strong> 来启用. 脚本还可以通过 {bs 5} 实现自己的退格, 这里发送 5 次 <kbd>Backspace</kbd> 键击. 类似的, 可以通过 {left 5} 发送 <kbd>&larr;</kbd> 键击. 例如, 下面的热字串产生 &quot;&lt;em&gt;&lt;/em&gt;&quot; 并把光标向左移动 5 个位置(这样光标就在标签之间了):</p>
+<p id="Question"><strong>?</strong> (问号): 即使热字串在另一个单词中也会被触发; 也就是说, 在它之前输入的字符是字母数字时. 例如, 如果 <code>:?:al::airline</code> 是热字串, 输入 "practical " 会产生 "practicairline ". 使用 <strong>?0</strong> 来关闭此选项.</p>
+<p id="b0"><strong>B0</strong> (B 后跟着零): <u>不</u> 自动退格来删除您输入的缩写. 关闭此选项后可以使用 <strong>B</strong> 来启用. 脚本还可以通过 {bs 5} 实现自己的退格, 这里发送 5 次 <kbd>Backspace</kbd>. 类似的, 可以通过 {left 5} 发送 <kbd>&larr;</kbd> 键击. 例如, 下面的热字串产生 "&lt;em&gt;&lt;/em&gt;" 并把光标向左移动 5 个位置(这样光标就在标签之间了):</p>
 <pre>:*b0:&lt;em&gt;::&lt;/em&gt;{left 5}</pre>
 <p id="C"><strong>C</strong>: 区分大小写: 当您输入缩写时, 它必须准确匹配脚本中定义的大小写形式. 使用 <strong>C0</strong> 可以关闭区分大小写的特性.</p>
 <p id="C1"><strong>C1</strong>: 不遵循输入的大小写形式. 使用此选项可以让<a href="#auto">自动替换热字串</a>不区分大小写且阻止它们遵循您实际输入字符的大小写形式. 遵循大小写形式的热字串(这是默认状态) 会在您输入的缩写都为大写时产生大写形式的的替换文本. 如果您的输入的首字母为大写, 那么替换的首字母也会为标题格式(大写, 如果首个字符是字母). 您按其他任何大小写形式输入时, 替换会准确按照定义进行发送. 如果在 <a href="commands/_Hotstring.htm">#Hotstring 指令</a>中含有此选项, 那么可以使用 <strong>C0</strong> 来关闭它, 这样可以让热字串重新遵循大小写.</p>
@@ -73,9 +73,9 @@ SendInput <a href="commands/FormatTime.htm">FormatTime</a>(, "M/d/yyyy h:mm tt")
   <li>SP (SendPlay): 默认延迟为零, 这对于 SendPlay 相当于 -1(没有延迟). 此模式中, 这个延迟实际是<a href="commands/SetKeyDelay.htm#dur">按住时长</a>, 而不是键击之间的延迟.</li>
   <li>SE (SendEvent): 默认延迟为零. 在大多情况下建议使用零的延迟, 因为这样快速且与其他进程配合比较好(由于会内部执行 <a href="commands/Sleep.htm">Sleep 0</a>). 指定 k-1 则不使用延迟, 这样可以在您 CPU 经常高负荷运行时让自动替换更快速地进行. 设置为 -1 时, 脚本的进程优先级会成为键击发送速度的重要因素. 要提升脚本的优先级, 请使用 <code><a href="commands/ProcessSetPriority.htm">ProcessSetPriority</a> "High"</code>.</li>
 </ul>
-<p id="O"><strong>O</strong>: 进行替换时忽略<a href="#auto">自动替换热字串</a>的终止符. 它可以用于当您希望使用终止符让热字串保持清晰, 却不希望终止符显示在屏幕上的时候. 例如, 如果 <code>:o:ar::aristocrat</code> 为热字串, 那么输入 &quot;ar&quot; 后跟着空格键会产生不含尾随空格的 &quot;aristocrat&quot;, 这样可以让您不需要按住 <kbd>Backspace</kbd> 的情况下补上单词的复数或所有格形式. 使用 <strong>O0</strong>(字母 O 后跟着零)) 来关闭此选项.</p>
+<p id="O"><strong>O</strong>: 进行替换时忽略<a href="#auto">自动替换热字串</a>的终止符. 它可以用于当您希望使用终止符让热字串保持清晰, 却不希望终止符显示在屏幕上的时候. 例如, 如果 <code>:o:ar::aristocrat</code> 为热字串, 那么输入 "ar" 后跟着空格键会产生不含尾随空格的 "aristocrat", 这样可以让您不需要按住 <kbd>Backspace</kbd> 的情况下补上单词的复数或所有格形式. 使用 <strong>O0</strong>(字母 O 后跟着零)) 来关闭此选项.</p>
 <p id="Pn"><strong>Pn</strong>: 字符串的<a href="misc/Threads.htm">优先级</a>(例如 P1). 这个较少使用的选项对<a href="#auto">自动替换热字串</a>没有效果.</p>
-<p id="raw"><strong>R</strong>: 发送替换文本的<a href="commands/Send.htm#SendRaw">原始文本</a>; 即, 不把 {Enter} 转换成 <kbd>Enter</kbd>, ^c 转换成 <kbd>Control</kbd>+<kbd>C</kbd>, 等等. 使用 <strong>R0</strong> 来关闭此选项, 或用 <strong>T</strong> 来覆盖.</p>
+<p id="raw"><strong>R</strong>: 发送替换文本的<a href="commands/Send.htm#SendRaw">原始文本</a>; 即, 不把 {Enter} 转换成 <kbd>Enter</kbd>, ^c 转换成 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 使用 <strong>R0</strong> 来关闭此选项, 或用 <strong>T</strong> 来覆盖.</p>
 <p class="note"><strong>注意:</strong> <a href="#T">Text 文本模式</a>可能更可靠. R 选项和 T 选项是互相排斥的.</p>
 <p id="SendMode"><strong>SI</strong>, <strong>SP</strong> 或 <strong>SE</strong>: 设置<a href="#auto">自动替换热字串</a>发送键击的方法. 这些选项是互相排斥的: 每次只有一个生效. 下面对每个选项进行说明:</p>
 <ul>
@@ -84,7 +84,7 @@ SendInput <a href="commands/FormatTime.htm">FormatTime</a>(, "M/d/yyyy h:mm tt")
   <li>SE 代表 <a href="commands/Send.htm#SendEvent">SendEvent</a>.</li>
 </ul>
 <p>如果未使用上面的任何一个选项, 则默认为 SendInput. 然而, 与 SI 选项不同的是, 在 SendInput 不可用时会使用 SendEvent 而不是 SendPlay.</p>
-<p id="T"><strong>T</strong>: 使用<a href="commands/Send.htm#SendText">文本模式</a> 发送替换文本. 也就是说, 按字符代码发送每个字符, 不转换 {Enter} 为 <kbd>Enter</kbd>, ^c 为 <kbd>Control</kbd>+<kbd>C</kbd>, 等等. 不需要将每个字符转换为击键. 对于具有<a href="#continuation">延续片段</a>的热字符串, 此选项将自动生效. 使用 <strong>T0</strong> 或 <strong>R0</strong> 来关闭此选项, 或使用 <strong>R</strong> 来覆盖.</p>
+<p id="T"><strong>T</strong>: 使用<a href="commands/Send.htm#SendText">文本模式</a> 发送替换文本. 也就是说, 按字符代码发送每个字符, 不转换 {Enter} 为 <kbd>Enter</kbd>, ^c 为 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 不需要将每个字符转换为击键. 对于具有<a href="#continuation">延续片段</a>的热字符串, 此选项将自动生效. 使用 <strong>T0</strong> 或 <strong>R0</strong> 来关闭此选项, 或使用 <strong>R</strong> 来覆盖.</p>
 <p id="X"><strong>X</strong>: 执行. 取代替换文本, 热字串接受一个函数调用或表达式来执行. 例如, <code>:X:~mb::MsgBox</code> 会在用户输入 "~mb"时显示一个消息框, 而不是用 "MsgBox" 自动替换. 这在定义大量调用函数的热字符串时最有用, 否则每个热字串都需要三行.</p>
 <p>当与<a href="commands/Hotstring.htm">热字串</a>函数一起使用时, X 选项会把 <em>Replacement</em> 参数解释为函数名, 而不是替换文本. 但是, 只有在每次调用函数时指定 X 选项时才会有这种效果.</p>
 <p id="z"><strong>Z</strong>: 这个较少使用的选项会在每次热字串触发后重置热字串识别器. 换句话说, 脚本将开始等待一个全新的热字符串, 从而不考虑您之前键入的任何内容. 这可以防止触发不必要的热字串. 要说明这一点, 请参考以下热字串:</p>
@@ -123,17 +123,17 @@ By default, the hard carriage return (Enter) between the previous line and this 
 <p id="focus-reset">每次输入字符时, 热字串识别器会检查当前活动窗口, 并且如果活动窗口不同于之前, 则会重置. 如果活动窗口发生变化, 但在键入任何字符之前返回, 则不会检测到更改(但可能会由于其他原因重置热字串识别器). 热字串识别器也可以通过调用 <code><a href="commands/Hotstring.htm#Reset">Hotstring "Reset"</a></code> 来重置.</p>
 <p>内置变量 <strong>A_EndChar</strong> 包含了触发最近的非自动替换热字串时的终止符. 如果不需要终止符(使用了 <a href="#Asterisk">* 选项</a>), 那么它会被置空.  可以用于使用 Send 命令的热字串或根据您输入的不同终止符改变行为的那些热字串. 要发送终止符自身, 请使用 <code>SendText A_EndChar</code>(使用 <a href="commands/Send.htm">SendText</a> 是因为普通的 Send 函数无法正确发送类似 !{} 这样的字符).</p>
 <p>虽然热字符串定义中的单冒号不需要<a href="misc/EscapeChar.htm">转义</a>, 除非它们位于双冒号分隔符之前, 但那些左边有空格或制表符的反引号和分号必须始终被转义. 有关完整列表, 请参阅<a href="misc/EscapeChar.htm">转义序列</a>.</p>
-<p>尽管 <a href="commands/Send.htm">Send 函数</a>的特殊字符(如 {Enter}) 在<a href="#auto">自动替换文本</a>中受到支持(除非使用 <a href="#raw">raw 选项</a>), 但是热字串缩写本身并不使用此功能. 相反, 指定 `n 表示 <kbd>Enter</kbd> 键和 `t(或原义制表符) 表示 <kbd>Tab</kbd>(有关完整列表, 请参阅<a href="misc/EscapeChar.htm">转义序列</a>). 例如, 当您输入 &quot;ab&quot; 后跟着 tab 时, 会触发热字串 <code>:*:ab`t::</code>.</p>
+<p>尽管 <a href="commands/Send.htm">Send 函数</a>的特殊字符(如 {Enter}) 在<a href="#auto">自动替换文本</a>中受到支持(除非使用 <a href="#raw">raw 选项</a>), 但是热字串缩写本身并不使用此功能. 相反, 指定 `n 表示 <kbd>Enter</kbd> 键和 `t(或原义制表符) 表示 <kbd>Tab</kbd>(有关完整列表, 请参阅<a href="misc/EscapeChar.htm">转义序列</a>). 例如, 当您输入 "ab" 后跟着 tab 时, 会触发热字串 <code>:*:ab`t::</code>.</p>
 <p>热字串会原义地处理在它的定义中的空格和 tab. 例如, 后面的热字串会产生两种不同的效果: <code>::btw::by the way</code> 和 <code>::btw:: by the way</code>.</p>
 <p>每个热字串缩写的长度不能超过 40 个字符. 超出此长度后程序会向您发出警告. 相比之下, 当<a href="#SendMode">发送模式</a>默认为 SendInput 时, 热字串的替换文本的长度限制在 5000 个字符左右. 通过切换到其他<a href="#SendMode">发送模式</a>可以把此限制增加到 16,383 个字符. 此外, 在热字串的主体使用 <code><a href="commands/Send.htm#SendPlayDetail">SendPlay</a> MyVariable</code>, 可以发送不限数量的文本.</p>
 <p>热字串的定义顺序决定了它们之间的优先级. 换句话说, 如果多个热字串匹配您输入的内容, 那么只有脚本中首先列出的那个会生效. 相关主题: <a href="#variant">上下文相关的热字串</a>.</p>
-<p>为了识别热字串, 您输入的所有退格都会被考虑在内. 但是, 使用 <kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PageUp</kbd>, <kbd>PageDown</kbd>, <kbd>Home</kbd> 和 <kbd>End</kbd> 在编辑器中导航会重置热字串识别进程. 换句话说, 它将开始等待一个全新的热字串.</p>
+<p>为了识别热字串, 您输入的所有退格都会被考虑在内. 但是, 使用 <kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PgUp</kbd>, <kbd>PgDn</kbd>, <kbd>Home</kbd> 和 <kbd>End</kbd> 在编辑器中导航会重置热字串识别进程. 换句话说, 它将开始等待一个全新的热字串.</p>
 <p>即使当前活动窗口忽略您的键击时也可以输入热字串. 换句话说, 即使触发的缩略词不可见时热字串仍会被触发. 此外, 您还可以使用 <kbd>Backspace</kbd> 键撤销最近输入的键击(尽管您无法看到效果).</p>
 <p>只有在函数被命名的情况下, 脚本才能显式调用热字串的函数. 请参阅<a href="#Function">命名的热字串函数</a>.</p>
 <p>当输入被一个不可见的<a href="commands/InputHook.htm">Input 钩子</a>阻塞时, 热字串不受监控, 也不会被触发.</p>
 <p id="InputLevel">默认情况下, 由任何 AutoHotkey 脚本生成的键击永远不会触发热字串. 这避免了热字串彼此反复地触发而形成的无限循环的可能性. 此行为可以使用 <a href="commands/_InputLevel.htm">#InputLevel</a> 和 <a href="commands/SendLevel.htm">SendLevel</a>. 进行控制. 然而, 自动替换型热字串的发送级别总为 0, 因此永远不会触发<a href="commands/_UseHook.htm">钩子热键</a>或热字串.</p>
 <p>热字串可以通过 <a href="commands/Hotstring.htm">Hotstring</a> 函数动态创建, 它还可以单独修改, 禁用, 或启用脚本的现有的热字串.</p>
-<p>在某些时候 <a href="commands/InputHook.htm">InputHook</a> 函数比热字串更灵活. 例如, 它可以对活动窗口(例如游戏) 隐藏您的键击. 它还支持非字符型的终止键, 如 <kbd>Escape</kbd>.</p>
+<p>在某些时候 <a href="commands/InputHook.htm">InputHook</a> 函数比热字串更灵活. 例如, 它可以对活动窗口(例如游戏) 隐藏您的键击. 它还支持非字符型的终止键, 如 <kbd>Esc</kbd>.</p>
 <p>任何包含热字串的脚本会自动使用<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
 <p>在下列的情况中热字串与热键具有相同的特性:</p>
 <ul>
@@ -165,6 +165,6 @@ By default, the hard carriage return (Enter) between the previous line and this 
 <p><a href="commands/Hotstring.htm">Hotstring</a> 函数也可以关联函数或函数对象到一个热字串.</p>
 
 <h2 id="Helper">热字串助手</h2>
-<p>看看 <a href="commands/Hotstring.htm">Hotstring</a> 函数页面的示例部分中的<a href="commands/Hotstring.htm#ExHelper">第一个示例</a>, 如果您是深度的热字串用户, 那么它会很有用. 通过按下 <kbd>Win</kbd>+<kbd>H</kbd>(或您选择的其他热键), 可以把当前选择的文本转变成热字串. 例如, 如果您在文字处理软件中选择了 &quot;by the way&quot;, 按下 <kbd>Win</kbd>+<kbd>H</kbd> 会提示您输入其缩写(例如 btw), 添加新热字串到脚本中并激活它.</p>
+<p>看看 <a href="commands/Hotstring.htm">Hotstring</a> 函数页面的示例部分中的<a href="commands/Hotstring.htm#ExHelper">第一个示例</a>, 如果您是深度的热字串用户, 那么它会很有用. 通过按下 <kbd>Win</kbd>+<kbd>H</kbd>(或您选择的其他热键), 可以把当前选择的文本转变成热字串. 例如, 如果您在文字处理软件中选择了 "by the way", 按下 <kbd>Win</kbd>+<kbd>H</kbd> 会提示您输入其缩写(例如 btw), 添加新热字串到脚本中并激活它.</p>
 </body>
 </html>

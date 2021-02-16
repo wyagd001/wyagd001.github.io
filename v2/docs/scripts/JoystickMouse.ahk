@@ -62,7 +62,7 @@ if InStr(JoyInfo, "P")  ; Joystick has POV control, so use it as a mouse wheel.
 ; WatchJoystick quasi-thread beneath the wait-for-button-up thread, which would
 ; effectively prevent mouse-dragging with the joystick.
 
-ButtonLeft()
+ButtonLeft(*)
 {
     SetMouseDelay -1  ; Makes movement smoother.
     MouseClick "Left",,, 1, 0, "D"  ; Hold down the left mouse button.
@@ -73,13 +73,13 @@ ButtonLeft()
         if GetKeyState(A_ThisHotkey)
             return  ; The button is still, down, so keep waiting.
         ; Otherwise, the button has been released.
-        SetTimer, 0
+        SetTimer , 0
         SetMouseDelay -1  ; Makes movement smoother.
         MouseClick "Left",,, 1, 0, "U"  ; Release the mouse button.
     }
 }
 
-ButtonRight()
+ButtonRight(*)
 {
     SetMouseDelay -1  ; Makes movement smoother.
     MouseClick "Right",,, 1, 0, "D"  ; Hold down the right mouse button.
@@ -90,12 +90,12 @@ ButtonRight()
         if GetKeyState(A_ThisHotkey)
             return  ; The button is still, down, so keep waiting.
         ; Otherwise, the button has been released.
-        SetTimer, 0
+        SetTimer , 0
         MouseClick "Right",,, 1, 0, "U"  ; Release the mouse button.
     }
 }
 
-ButtonMiddle()
+ButtonMiddle(*)
 {
     SetMouseDelay -1  ; Makes movement smoother.
     MouseClick "Middle",,, 1, 0, "D"  ; Hold down the right mouse button.
@@ -106,7 +106,7 @@ ButtonMiddle()
         if GetKeyState(A_ThisHotkey)
             return  ; The button is still, down, so keep waiting.
         ; Otherwise, the button has been released.
-        SetTimer, 0
+        SetTimer , 0
         MouseClick "Middle",,, 1, 0, "U"  ; Release the mouse button.
     }
 

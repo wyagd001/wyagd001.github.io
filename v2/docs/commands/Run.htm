@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<h1>Run[Wait]</h1>
+<h1>Run / RunWait</h1>
 
 <p>运行外部程序. 与 Run 不同, RunWait 将等到程序完成后才继续.</p>
 
@@ -28,7 +28,7 @@ ExitCode := <span class="func">RunWait</span>(Target <span class="optional">, Wo
   <dt>Target</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk) 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是一个本地文件, 并且没有指定路径, 则首先搜索 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 在没有找到匹配的文件时, 如果该文件被集成在系统中(&quot;已知的&quot;), 例如包含在 PATH 文件夹中的一个文件夹中, 系统将搜索并启动该文件.</p>
+      <p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk) 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是一个本地文件, 并且没有指定路径, 则首先搜索 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 在没有找到匹配的文件时, 如果该文件被集成在系统中("已知的"), 例如包含在 PATH 文件夹中的一个文件夹中, 系统将搜索并启动该文件.</p>
       <p>若要传递参数, 请在程序或文档名称之后立即添加它们. 如果参数包含空格, 那么最安全的做法是用双引号括起来(即使在某些情况下可以不加空格).</p>
   </dd>
 
@@ -71,16 +71,16 @@ catch
 <p>内置变量 <a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统的 GetLastError() 函数的结果.</p>
 <h2 id="Remarks">备注</h2>
 <p>当通过 <a href="../Variables.htm#ComSpec">Comspec</a>(cmd.exe) 运行程序时 -- 也许是因为你需要重定向程序的输入或输出 -- 如果可执行文件的路径或名称中包含空格, 那么整个字符串应该用一对外置单引号来括起. 在下面的例子中, 外部的单引号用红色显示, 而内部的双引号用黑色显示:</p>
-<pre>Run A_ComSpec <span class="style3">'</span> /c &quot;C:\My Utility.exe&quot; &quot;param 1&quot; &quot;second param&quot; &gt;&quot;C:\My File.txt&quot;<span class="style3">'</span></pre>
-<p>如果 <em>Target</em> 为准确路径时可轻微提升性能, 例如使用 <code>Run 'C:\Windows\Notepad.exe &quot;C:\My Documents\Test.txt&quot;'</code> 代替 <code>Run "C:\My Documents\Test.txt"</code>.</p>
+<pre>Run A_ComSpec <span class="style3">'</span> /c "C:\My Utility.exe" "param 1" "second param" &gt;"C:\My File.txt"<span class="style3">'</span></pre>
+<p>如果 <em>Target</em> 为准确路径时可轻微提升性能, 例如使用 <code>Run 'C:\Windows\Notepad.exe "C:\My Documents\Test.txt"'</code> 代替 <code>Run "C:\My Documents\Test.txt"</code>.</p>
 <p>Run 还可以打开指定的 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>. 例如:</p>
-<pre>Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; 打开 &quot;我的电脑&quot; 文件夹.</em>
+<pre>Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; 打开 "我的电脑" 文件夹.</em>
 Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; 打开回收站.</em></pre>
 <p id="verbs">系统动词对应于资源管理器中文件的右键菜单中可用的操作. 如果启动文件时没有指定动词, 则使用该文件类型的默认动词(通常为 "打开"). 如果指定了, 则动词后应该跟着目标文件的名称. 目前支持下列动词:</p>
 <table class="info">
   <tr>
     <td style="width:8%">*<i>verb</i>(动词)</td>
-    <td>任何系统定义或自定义的动词. 例如: <code>Run "*Compile " A_ScriptFullPath</code><br> <a href="#RunAs">*RunAs</a> 动词将代替 <i>以管理员身份运行</i> 右键菜单.</td>
+    <td>任何系统定义或自定义的动词. 例如: <code>Run "*Compile " A_ScriptFullPath</code>. <a href="#RunAs">*RunAs</a> 动词将代替 <i>以管理员身份运行</i> 右键菜单.</td>
   </tr>
   <tr>
     <td>properties</td>
@@ -99,15 +99,15 @@ Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; 打开回收站.</em></pre
   </tr>
   <tr>
     <td>edit</td>
-    <td>打开指定的文件进行编辑. 如果指定的文件类型没有关联 "edit" 动作时, 它不起作用. 例如: <code>Run 'edit &quot;C:\My File.txt&quot;'</code></td>
+    <td>打开指定的文件进行编辑. 如果指定的文件类型没有关联 "edit" 动作时, 它不起作用. 例如: <code>Run 'edit "C:\My File.txt"'</code></td>
   </tr>
   <tr>
     <td>open</td>
-    <td>打开指定的文件(一般不需要, 因为这对于大多数文件类型这是默认的动作). 例如: <code>Run 'open &quot;My File.txt&quot;'</code>.</td>
+    <td>打开指定的文件(一般不需要, 因为这对于大多数文件类型这是默认的动作). 例如: <code>Run 'open "My File.txt"'</code>.</td>
   </tr>
   <tr>
     <td>print</td>
-    <td>使用关联的应用程序打印指定的文件, 如果有. 例如: <code>Run 'print &quot;My File.txt&quot;'</code></td>
+    <td>使用关联的应用程序打印指定的文件, 如果有. 例如: <code>Run 'print "My File.txt"'</code></td>
   </tr>
 </table>
 <p>当 RunWait 处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
@@ -145,38 +145,52 @@ MsgBox "A_IsAdmin: " A_IsAdmin "`nCommand line: " full_command_line</pre>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>Run "Notepad.exe", "C:\My Documents", "max"
+<p><a href="#ExBasic">#1</a>: Run 能够从任何目录下启动 Windows 系统程序. 注意, 可执行文件的扩展名如 .exe 可以省略.</p>
+<pre>Run "notepad"</pre>
+</div>
 
-Run "mailto:someone@domain.com?subject=This is the subject line&amp;body=This is the message body's text."
+<div class="ex" id="ExURL">
+<p><a href="#ExURL">#2</a>: Run 能够启动 URLs:</p>
+<p>以下是在用户的默认网页浏览器中打开一个互联网地址.</p>
+<pre>Run "https://www.google.com"</pre>
+<p>以下打开默认的电子邮件应用程序并填写收件人.</p>
+<pre>Run "mailto:someone@somedomain.com"</pre>
+<p>下面的操作和上面一样, 加上主题和正文.</p>
+<pre>Run "mailto:someone@somedomain.com?subject=This is the subject line&amp;body=This is the message body's text."</pre>
+</div>
 
-try Run("ReadMe.doc", , "Max")  <em>; 最大化运行, 且在失败时不显示对话框.</em>
+<div class="ex" id="ExErrorLevel">
+<p><a href="#ExErrorLevel">#3</a>: 在最大化应用程序中打开文档, 并在失败时显示一个自定义的错误信息.</p>
+<pre>try Run("ReadMe.doc", , "Max")
 if A_LastError
-    MsgBox "The document could not be launched."
+    MsgBox "The document could not be launched."</pre>
+</div>
 
-RunWait A_ComSpec " /c dir c:\ &gt;&gt;c:\DirTest.txt", , "min"
-Run "c:\DirTest.txt"
-Run "properties c:\DirTest.txt"
+<div class="ex" id="ExVerb">
+<p><a href="#ExVerb">#4</a>: 在最小化状态下运行 dir 命令, 并将输出结果存储在文本文件中. 之后, 文本文件及其属性对话框将被打开.</p>
+<pre>#Persistent
+RunWait ComSpec " /c dir C:\ &gt;&gt;C:\DirTest.txt", , "Min"
+Run "C:\DirTest.txt"
+Run "properties C:\DirTest.txt"</pre>
+</div>
 
-Run "https://www.google.com" <em>; 即可以运行任意网址.</em>
-Run "mailto:someone@somedomain.com"  <em>; 这样应该会打开默认的电子邮件程序.</em>
+<div class="ex" id="ExCLSID">
+<p><a href="#ExCLSID">#5</a>: Run 能够启动 <a href="../misc/CLSID-List.htm">CLSIDs</a>:</p>
+<p>下面打开回收站.</p>
+<pre>Run "::{645ff040-5081-101b-9f08-00aa002f954e}"</pre>
+<p>下面打开 "我的电脑" 目录.</p>
+<pre>Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"</pre>
+</div>
 
-Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; 打开"我的电脑"文件夹.</em>
-Run "::{645ff040-5081-101b-9f08-00aa002f954e}"  <em>; 打开回收站.</em>
-
-<em>; 要连续执行多个命令, 请在命令间使用"&&"分隔:</em>
-Run A_ComSpec " /c dir /b &gt; C:\list.txt &amp;&amp; type C:\list.txt &amp;&amp; pause"
-
-<em>; 以下代码打开 控制面板 &gt; 显示属性 &gt; 设置:</em>
-Run "rundll32.exe shell32.dll,Control_RunDLL desk.cpl,, 3"
-</pre>
+<div class="ex" id="ExMultipleCmds">
+<p><a href="#ExMultipleCmds">#6</a>: 要连续运行多个命令, 请每个命令之间使用 "&amp;&amp;".</p>
+<pre>Run ComSpec "/c dir /b &gt; C:\list.txt &amp;&amp; type C:\list.txt &amp;&amp; pause"</pre>
 </div>
 
 <div class="ex" id="ExStdOut">
-<p><a href="#ExStdOut">#2</a>: 以下可用于运行命令并获取其的输出:</p>
+<p><a href="#ExStdOut">#7</a>: 以下自定义函数可以用来运行一个命令并检索其输出, 或者一次性运行多个命令并检索其输出.</p>
 <pre>MsgBox RunWaitOne("dir " A_ScriptDir)
 
-<em>; ...或一次执行多条命令并获取其输出:</em>
 MsgBox RunWaitMany("
 (
 echo Put your commands here,
@@ -187,7 +201,7 @@ echo and you'll get the output.
 RunWaitOne(command) {
     <em>; WshShell object: <a href="http://msdn.microsoft.com/en-us/library/aew9yb99">http://msdn.microsoft.com/en-us/library/aew9yb99</a></em>
     shell := ComObjCreate("WScript.Shell")
-    <em>;  通过 cmd.exe 执行单条命令</em>
+    <em>; 通过 cmd.exe 执行单条命令</em>
     exec := shell.Exec(A_ComSpec " /C " command)
     <em>; 读取并返回命令的输出</em>
     return exec.StdOut.ReadAll()
@@ -195,10 +209,10 @@ RunWaitOne(command) {
 
 RunWaitMany(commands) {
     shell := ComObjCreate("WScript.Shell")
-    <em>; 打开 cmd.exe 禁用命令显示</em>
+    <em>; 打开 cmd.exe 禁用命令回显</em>
     exec := shell.Exec(A_ComSpec " /Q /K echo off")
     <em>; 发送并执行命令, 使用新行分隔</em>
-    exec.StdIn.WriteLine(commands "`nexit")  <em>; 保证执行完毕后退出!</em>
+    exec.StdIn.WriteLine(commands "`nexit")  <em>; 总是在最后退出!</em>
     <em>; 读取并返回所有命令的输出</em>
     return exec.StdOut.ReadAll()
 }
@@ -206,7 +220,7 @@ RunWaitMany(commands) {
 </div>
 
 <div class="ex" id="ExecScript">
-<p><a href="#ExecScript">#3</a>: ExecScript: 在新的 AutoHotkey 进程中执行给定的代码.</p>
+<p><a href="#ExecScript">#8</a>: 在新的 AutoHotkey 进程中执行给定的代码.</p>
 <pre>ExecScript(Script, Wait:=true)
 {
     shell := ComObjCreate("WScript.Shell")
@@ -218,8 +232,8 @@ RunWaitMany(commands) {
 }
 
 <em>; 示例:</em>
-IB := InputBox(&quot;Enter an expression to evaluate as a new script.&quot;,,, 'Ord("*")')
-if IB.result = "Cancel"
+ib := InputBox("Enter an expression to evaluate as a new script.",,, 'Ord("*")')
+if ib.result = "Cancel"
     return
 result := ExecScript('FileAppend ' ib.value ', "*"')
 MsgBox "Result: " result

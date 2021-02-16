@@ -78,7 +78,7 @@
 <p>在学习使用 AutoHotkey(AHK) 之前, 你需要下载它. 下载后, 你可能会需要安装它. 但这取决于你下载的版本. 对于本指南, 我们将使用安装版, 因为对于新手来说, 它最容易设置.</p>
 <p class="warning">目前还没有 AutoHotkey v2 的安装程序. 让它工作的最简单的方法是<a href="https://www.autohotkey.com/v2/">下载二进制文件</a>, 按照下面的安装步骤, 并用下载解压的安装文件夹中的二进制文件替换 AutoHotkey.exe.</p>
 
-<h4>文字指导:</h4>
+<p>文字指导:</p>
 <ol>
     <li>访问 AutoHotkey 主页: <a href="https://www.autohotkey.com/">https://www.autohotkey.com/</a></li>
     <li>点击下载: <a href="https://www.autohotkey.com/download/ahk-install.exe">https://www.autohotkey.com/download/ahk-install.exe</a></li>
@@ -91,7 +91,7 @@
 <h3 id="s12">b. 如何创建一个脚本</h3>
 <p>Autohotkey 安装完成后, 你也许会想它能做些什么. AutoHotkey 不是魔法, 虽然我们都希望它是, 但它的确不是. 所以需要我们告诉它要去干什么. 而这个过程叫做 "写脚本".</p>
 
-<h4>文字指导:</h4>
+<p>文字指导:</p>
 <ol>
     <li>右键点桌面空白处.</li>
     <li>点击"新建"菜单.</li>
@@ -190,7 +190,7 @@
     </tr>
     <tr>
         <td><strong>^</strong></td>
-        <td><kbd>Control</kbd></td>
+        <td><kbd>Ctrl</kbd></td>
     </tr>
     <tr>
         <td><strong>+</strong></td>
@@ -221,16 +221,16 @@ Numpad0 &amp; Numpad2::
 <p class="note">想要查看更多关于热键和热字串修饰符的信息和实例, 请参阅: <a href="Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>.</p>
 <h3 id="s22">b. 窗口特定的热键/热字串</h3>
 
-<p>有时候你也许想要热键或热字串只在某些特定窗口上工作(或禁用). 要做到这一点, 您需要使用其中的任意一个"高级"命令, 在它们前面带有一个 #:, namely <a href="commands/_HotIf.htm">#HotIf</a>, combined with the built-in function <a href="commands/WinActive.htm">WinActive</a> or <a href="commands/WinExist.htm">WinExist</a>:</p>
+<p>有时候你也许想要热键或热字串只在某些特定窗口上工作(或禁用). 要做到这一点, 您需要使用其中的任意一个"高级"命令, 在它们前面带有一个 #, 即 <a href="commands/_HotIf.htm">#HotIf</a>, 结合内置函数 <a href="commands/WinActive.htm">WinActive</a> 或 <a href="commands/WinExist.htm">WinExist</a>:</p>
 <pre>#HotIf WinActivate(WinTitle)
 #HotIf WinExist(WinTitle)</pre>
-<p>This special command (technically called "directive") creates context-sensitive hotkeys and hotstrings. Simply specify a window title for <var>WinTitle</var>. But in some cases you might want to specify criteria such as HWND, group or class. Those are a bit advanced and are covered more in-depth here: <a href="misc/WinTitle.htm">The WinTitle Parameter &amp; the Last Found Window</a>.</p>
+<p>这些特殊的命令(技术上称为"指令") 可以创建对上下文敏感的热键和热字串. 只需为 <var>WinTitle</var> 指定窗口标题. 但在某些情况下, 你可能需要指定诸如 HWND, 组或类的条件. 如果想深入了解这些高级内容, 点这里: <a href="misc/WinTitle.htm">WinTitle 参数 &amp; 上次找到的窗口</a>.</p>
 <pre>#HotIf WinActive("Untitled - Notepad")
 #Space::
 {
     MsgBox "You pressed WIN+SPACE in Notepad."
 }</pre>
-<p>To turn off context sensitivity for subsequent hotkeys or hotstrings, specify #HotIf without its parameter. For example:</p><pre><em>; Untitled - Notepad</em>
+<p>要关闭后续热键或热字串的上下文敏感性, 请指定 #HotIf 指令, 但不带参数. 例如:</p><pre><em>; Untitled - Notepad</em>
 #HotIf WinActive("Untitled - Notepad")
 !q::
 {
@@ -300,7 +300,7 @@ Numpad0 &amp; Numpad2::
 {
     Send "{Ctrl down}c{Ctrl up}"  <em>; 复制选定的文本. 也可以使用 ^c, 但这种方法更加可靠.</em>
     SendInput "[b]{Ctrl down}v{Ctrl up}[/b]" <em>; 将选定的文本包装在 BBCode 标签中, 以便在论坛中以粗体显示.</em>
-}  <em>; 热键内容结束, 这之后的内容将不会触发.</em></pre>
+}  <em>; 热键内容结束, 当按下热键时, 下面的代码将不会被执行.</em></pre>
 
 <h2 id="s3">3 - 发送按键</h2>
 <p>现在你决定发送(输入) 一些按键到一个程序中. 你可以使用 <a href="commands/Send.htm">Send</a> 函数. 该函数表示发送按键, 模拟打字或按键操作.</p>
@@ -321,12 +321,11 @@ Numpad0 &amp; Numpad2::
     </tr>
     <tr>
         <td>^</td>
-        <td>发送 <kbd>Control</kbd>(<kbd>Ctrl</kbd>) 键. 例如, <code>Send "^!a"</code> 会按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd>, 而 <code>Send "^{Home}"</code> 则发送 <kbd>Ctrl</kbd>+<kbd>Home</kbd>. <strong>注意</strong>: <code>^A</code> 在某些程序中产生与 <code>^a</code> 不同的效果. 这是因为 <code>^A</code> 表示按下 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> 而 <code>^a</code> 表示按下 <kbd>Ctrl</kbd>+<kbd>A</kbd>. 如果不确定, 请使用小写字母.</td>
+        <td>发送 <kbd>Ctrl</kbd>(<kbd>Ctrl</kbd>) 键. 例如, <code>Send "^!a"</code> 会按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd>, 而 <code>Send "^{Home}"</code> 则发送 <kbd>Ctrl</kbd>+<kbd>Home</kbd>. <strong>注意</strong>: <code>^A</code> 在某些程序中产生与 <code>^a</code> 不同的效果. 这是因为 <code>^A</code> 表示按下 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> 而 <code>^a</code> 表示按下 <kbd>Ctrl</kbd>+<kbd>A</kbd>. 如果不确定, 请使用小写字母.</td>
     </tr>
     <tr>
         <td>#</td>
-        <td>发送 <kbd>Win</kbd> 键(带有 Windows logo 的按键), 因此
-        <code>Send "#e"</code> 会在按住 <kbd>Win</kbd> 键时按下字母 "e".</td>
+        <td>发送 <kbd>Win</kbd> 键(带有 Windows logo 的按键), 因此 <code>Send "#e"</code> 会在按住 <kbd>Win</kbd> 键时按下字母 "e".</td>
     </tr>
 </table>
 <p><a href="commands/Send.htm#keynames">Send 页面中有个很大的表格</a>展示了 AHK 内置的几乎所有特殊键. 请点击查看. 例如: <code>{Enter}</code> 和 <code>{Space}</code>.</p>
@@ -470,7 +469,7 @@ MsgBox "我们在 if-语句的 '外部'. 我们不需要大括号, 因为 if-语
         <pre class="NoIndent">MyVar := "Text"</pre>
         <p>这是给变量赋值最简单的方法. 只需输入文本并完成. 任何文本都需要加引号.</p>
     </dd>
-    <dt>变量赋值t</dt>
+    <dt>变量赋值</dt>
     <dd>
         <pre class="NoIndent">MyVar := MyVar2</pre>
         <p>和上面的方法类似, 只是你将一个变量所对应的值赋给了另一个变量.</p>
@@ -562,7 +561,7 @@ if Var1 &lt; Var2  <em>; 检查一个变量是否小于另一个变量.</em></pr
 <h3 id="s72">b. 使用对象</h3>
 <p>使用对象有很多方式, 包括检索值, 设置值, 添加更多的值等等.</p>
 
-<h4>设置值:</h4>
+<h4 id="To_set_values">设置值:</h4>
 <dl>
     <dt>方括号表示法</dt>
     <dd>
@@ -576,7 +575,7 @@ if Var1 &lt; Var2  <em>; 检查一个变量是否小于另一个变量.</em></pr
     </dd>
 </dl>
 
-<h4>检索值:</h4>
+<h4 id="To_retrieve_values">检索值:</h4>
 <dl>
     <dt>方括号表示法</dt>
     <dd>
@@ -590,7 +589,7 @@ if Var1 &lt; Var2  <em>; 检查一个变量是否小于另一个变量.</em></pr
     </dd>
 </dl>
 
-<h4>增加新的键和值:</h4>
+<h4 id="To_add_new_keys_and_values">增加新的键和值:</h4>
 <dl>
     <dt>方括号表示法</dt>
     <dd>
@@ -614,7 +613,7 @@ if Var1 &lt; Var2  <em>; 检查一个变量是否小于另一个变量.</em></pr
     </dd>
 </dl>
 
-<h4>移除键和值:</h4>
+<h4 id="To_remove_keys_and_values">移除键和值:</h4>
 <dl>
     <dt>用空白填充值</dt>
     <dd>

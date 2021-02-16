@@ -35,19 +35,23 @@
   <dt>WhichTime</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>要设置的时间戳:<br>
-        M = 修改时间(如果此参数为空或省略, 这是默认的)<br>
-        C = 创建时间<br>
-        A = 上次访问时间</p>
+    <p>如果为空或省略, 则默认为 M(修改时间). 否则, 指定以下字母之一来设置应该更改的时间戳:</p>
+    <ul>
+      <li>M = 修改时间</li>
+      <li>C = 创建时间</li>
+      <li>A = 上次访问时间</li>
+    </ul>
   </dd>
 
   <dt>Mode</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>零个或多个以下字母:</p>
-    <p><code>D</code>: 包含目录(文件夹).<br>
-    <code>F</code>: 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录.<br>
-    <code>R</code>: 子文件夹被递归到其中, 这样包含在其中的文件和文件夹如果匹配 <em>FilePattern</em>, 则对它们进行操作. 所有子文件夹都将被递归到其中, 而不仅仅是那些名称匹配 <em>FilePattern</em> 的子文件夹. 如果省略 R, 则不包含子目录中的文件和目录.</p>
+    <p>如果为空或省略, 则仅对文件进行操作, 子目录不被递归. 否则, 请指定零个或更多的下列字母:</p>
+    <ul>
+      <li>D = 包含目录(文件夹).</li>
+      <li>F = 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录.</li>
+      <li>R = 子文件夹被递归到其中, 这样包含在其中的文件和文件夹如果匹配 <em>FilePattern</em>, 则对它们进行操作. 所有子文件夹都将被递归到其中, 而不仅仅是那些名称匹配 <em>FilePattern</em> 的子文件夹. 如果省略 R, 则不包含子目录中的文件和目录.</li>
+    </ul>
     <p class="note"><strong>注意</strong>: 如果 <em>FilePattern</em> 是单个文件夹, 而不是通配符模式, 则无论该设置如何, 它都将始终被操作.</p>
   </dd>
 
@@ -87,33 +91,35 @@
   </tr>
 </table>
 <p>如果只给出了 YYYYMMDDHH24MISS 中的部分字符串(例如 200403), 则任何省略的元素将使用下面的默认值:</p>
-<p>MM: 月份 01<br>
-  DD: 日 01<br>
-  HH24: 小时 00<br>
-  MI: 分钟 00<br>
-SS: 秒 00</p>
+<ul>
+  <li>MM = 月份 01</li>
+  <li>DD = 日 01</li>
+  <li>HH24 = 小时 00</li>
+  <li>MI = 分 00</li>
+  <li>SS = 秒 00</li>
+</ul>
 <p>内置变量 <a href="../Variables.htm#Now">A_Now</a> 包含了上述格式的当前本地时间. 同样地, <a href="../Variables.htm#NowUTC">A_NowUTC</a> 包含了当前的协调世界时.</p>
 <p class="note"><strong>注意</strong>: 可以通过 <a href="DateAdd.htm">DateAdd</a> 和 <a href="DateDiff.htm">DateDiff</a> 对日期-时间值进行比较和加减. 此外, 最后不要使用大于或小于来比较时间, 除非它们的字符串长度相同. 这是因为此时它们被视为数字进行比较; 例如, 20040201 数值上总是小于(但时间顺序上较后) 200401010533. 所以应该使用 <a href="DateDiff.htm">DateDiff</a> 来计算出它们之间的时间差是正数还是负数.</p>
 <h2 id="Related">相关</h2>
 <p><a href="FileGetTime.htm">FileGetTime</a>, <a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileGetVersion.htm">FileGetVersion</a>, <a href="FormatTime.htm">FormatTime</a>, <a href="LoopFiles.htm">File-loop</a>, <a href="DateAdd.htm">DateAdd</a>, <a href="DateDiff.htm">DateDiff</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExOmitted">
-<p><a href="#ExOmitted">#1</a>: 设置所有匹配文件的修改时间为当前时间:</p>
+<p><a href="#ExOmitted">#1</a>: 设置所有匹配文件的修改时间为当前时间.</p>
 <pre>FileSetTime "", "C:\temp\*.txt"</pre>
 </div>
 
 <div class="ex" id="ExModTime">
-<p><a href="#ExModTime">#2</a>: 设置修改日期(时间将为午夜):</p>
+<p><a href="#ExModTime">#2</a>: 设置修改日期(时间将为午夜).</p>
 <pre>FileSetTime 20040122, "C:\My Documents\test.doc"</pre>
 </div>
 
 <div class="ex" id="ExCreateTime">
-<p><a href="#ExCreateTime">#3</a>: 设置创建日期. 把时间设置为 4:55pm:</p>
+<p><a href="#ExCreateTime">#3</a>: 设置创建日期. 把时间设置为 4:55pm.</p>
 <pre>FileSetTime 200401221655, "C:\My Documents\test.doc", "C"</pre>
 </div>
 
 <div class="ex" id="ExPattern">
-<p><a href="#ExPattern">#4</a>: 更改匹配文件的修改日期和时间. 由于最后一个参数的作用, 所以也会改变所有匹配的文件夹:</p>
+<p><a href="#ExPattern">#4</a>: 更改匹配文件的修改日期和时间. 由于最后一个参数的作用, 所以也会改变所有匹配的文件夹.</p>
 <pre>FileSetTime 20040122165500, "C:\Temp\*.*", "M", "DF"</pre>
 </div>
 

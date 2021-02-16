@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>WinActive - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The WinActive function checks if the specified window exists and is currently active (foremost)." />
+<meta name="description" content="The WinActive function checks if the specified window is active and returns its unique ID (HWND)." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,10 +12,9 @@
 <body>
 
 <h1>WinActive</h1>
-
-<p>检查指定的窗口是否存在且当前是否活动(在最前面).</p>
-
+<p>检查指定的窗口是否激活且返回其唯一 ID(HWND).</p>
 <pre class="Syntax">UniqueID := <span class="func">WinActive</span>(<span class="optional">WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
+
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -48,34 +47,22 @@
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>函数返回匹配指定的条件的活动窗口的<a href="../misc/WinTitle.htm#ahk_id">唯一 ID(HWND)</a>, 如果不匹配, 则函数返回 0.</p>
-<p>因为所有非零数字被视为 &quot;true&quot;, 当 <em>WinTitle</em> 为活动窗口时, 语句 <code>if WinActive(WinTitle)</code> 为 true .</p>
+<p>因为所有非零数字被视为 "true", 当 <em>WinTitle</em> 为活动窗口时, 语句 <code>if WinActive(WinTitle)</code> 为 true .</p>
 
 <h2 id="Remarks">备注</h2>
 <p>如果省略所有参数, 那么将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</p>
 <p>如果符合条件的窗口存在, 那么<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>将更新为此窗口.</p>
-<p>获取活动窗口的唯一 ID 的简便方法是使用 <code>ActiveHwnd := WinExist(&quot;A&quot;)</code>.</p>
+<p>获取活动窗口的唯一 ID 的简便方法是使用 <code>ActiveHwnd := WinExist("A")</code>.</p>
+<p><a href="SetWinDelay.htm">SetWinDelay</a> does not apply to this function.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
 <h2 id="Related">相关</h2>
 <p><a href="WinExist.htm">WinExist</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="_HotIf.htm">#HotIf</a></p>
-<h2 id="Examples">示例</h2>
-<div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>
-if WinActive(&quot;Untitled - Notepad&quot;)
-{
-    WinMaximize  <em>; 最大化前面 IfWinActive 找到的记事本窗口.</em>
-    Send "Some text.{Enter}"
-    return
-}
-</pre>
-</div>
 
-<div class="ex" id="ExClass">
-<p><a href="#ExClass">#2</a></p>
-<pre>
-if WinActive(&quot;ahk_class Notepad&quot;) or WinActive(&quot;ahk_class&quot; . ClassName)  <em>; &quot;ahk_class&quot; 中不需要空格.</em>
-    WinClose  <em>; 使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</em>
-</pre>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExLastFound">
+<p><a href="#ExLastFound">#1</a>: 关闭记事本或另一个窗口, 这取决于 WinActive 函数找到的是哪个窗口. 注意, "ahk_" 关键字和它的标准值之间的空格可以省略; 这在使用变量时特别有用, 如第二个 WinActive 所示.</p>
+<pre>if WinActive("ahk_class Notepad") or WinActive("ahk_class" ClassName)
+    WinClose <em>; Use the window found by WinActive.</em></pre>
 </div>
 
 </body>

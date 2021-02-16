@@ -29,10 +29,12 @@
   <dt>AddRemove</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>下列值之一:<br>
-  <strong>1</strong>(默认): 在所有之前注册的函数之后调用该函数.<br>
-  <strong>-1</strong>: 在所有之前注册的函数之前调用该函数.<br>
-  <strong>0</strong>: 不调用该函数.</p>
+    <p>如果为空或省略, 则默认为 1(在所有之前注册的函数之后调用该函数). 否则, 请指定以下数字之一:</p>
+    <ul>
+      <li>1 = 在所有之前注册的函数之后调用该函数.</li>
+      <li>-1 = 在所有之前注册的函数之前调用该函数.</li>
+      <li>0 = 不调用该函数.</li>
+    </ul>
   </dd>
 
 </dl>
@@ -40,7 +42,7 @@
 <h2 id="Remarks">备注</h2>
 <p>OnExit 函数可以注册任意多个. OnExit 函数通常不应该调用 ExitApp; 如果调用了, 脚本将会立即退出.</p>
 <p>当脚本以任何方式退出时, 将调用 OnExit 函数(除非被类似 "结束任务" 的方式强行终止). 每当 <a href="_SingleInstance.htm">#SingleInstance</a> 和 <a href="Reload.htm">Reload</a> 请求前一个实例终止时, 也会调用它.</p>
-<p>脚本可以通过 <code>OnMessage(0x11, &quot;WM_QUERYENDSESSION&quot;)</code>(有关工作脚本, 请参阅 <a href="OnMessage.htm#ExShutdown">OnMessage 示例 #2</a>) 来检测和是否选择中止系统关闭或注销.</p>
+<p>脚本可以通过 <code>OnMessage(0x11, "WM_QUERYENDSESSION")</code>(有关工作脚本, 请参阅 <a href="OnMessage.htm#ExShutdown">OnMessage 示例 #2</a>) 来检测和是否选择中止系统关闭或注销.</p>
 <p>OnExit <a href="../misc/Threads.htm">线程</a>不遵守 <a href="_MaxThreads.htm">#MaxThreads</a>(它总是在需要的时候启动). 此外, 当它运行时, 它不会被任何<a href="../misc/Threads.htm">线程</a>中断, 包括<a href="../Hotkeys.htm">热键</a>, <a href="../objects/Menu.htm">自定义菜单项</a>和<a href="SetTimer.htm">计时器子程序</a>. 不过, 它会在这些情况下被中断(终止)(且脚本也同时被终止了), 用户从托盘菜单或主菜单栏中选择 Exit, 或由于 <a href="Reload.htm">Reload</a> 或 <a href="_SingleInstance.htm">#SingleInstance</a> 而要求脚本终止. 由于这些原因, OnExit 函数应该被设计为尽快结束, 除非用户知道该怎么做.</p>
 <p>如果 OnExit <a href="../misc/Threads.htm">线程</a>遇到失败条件, 比如运行错误时, 脚本将会终止.</p>
 <p>如果 OnExit <a href="../misc/Threads.htm">线程</a>是由 <a href="Exit.htm">Exit</a> 或 <a href="ExitApp.htm">ExitApp</a> 函数启动并指定了退出码, 则将使用该退出码, 除非 OnExit 函数返回 true(阻止退出) 或调用了 ExitApp.</p>
@@ -86,14 +88,9 @@
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExAdvanced">
-<p><a href="#ExAdvanced">#1</a>: 下面的示例使用 <a href="_Persistent.htm">#Persistent</a> 来防止脚本自动退出. 运行脚本后, 右键单击托盘图标并单击 <em>Exit</em> 以测试 OnExit 函数. 然后单击 "Yes" 终止脚本, 或单击 "No" 使脚本继续运行.</p>
-<pre>#Persistent
-
-<em>; 注册一个在退出时被调用的函数:</em>
+<p><a href="#ExBasic">#1</a>: 在退出脚本之前询问用户. 要测试它们, 右击托盘图标然后单击 Exit(退出).</p>
+<pre class="NoIndent"><a href="_Persistent.htm">#Persistent</a>  <em>; 阻止脚本自动退出.</em>
 OnExit("ExitFunc")
-
-<em>; 注册一个在退出时被调用的对象:</em>
-OnExit(<a href="ObjBindMethod.htm">ObjBindMethod</a>(MyObject, "Exiting"))
 
 ExitFunc(ExitReason, ExitCode)
 {
@@ -104,7 +101,13 @@ ExitFunc(ExitReason, ExitCode)
             return 1  <em>; OnExit 函数必须返回非零值来阻止退出.</em>
     }
     <em>; 不要调用 ExitApp -- 这会阻止其他 OnExit 函数的调用.</em>
-}
+}</pre>
+</div>
+
+<div class="ex" id="ExFnObj">
+<p><a href="#ExFnObj">#2</a>: 注册一个在退出时调用的对象.</p>
+<pre><a href="_Persistent.htm">#Persistent</a>  <em>; 阻止脚本自动退出.</em>
+OnExit(<a href="ObjBindMethod.htm">ObjBindMethod</a>(MyObject, "Exiting"))
 
 class MyObject
 {

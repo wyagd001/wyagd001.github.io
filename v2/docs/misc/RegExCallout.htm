@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Regular Expression Callouts | AutoHotkey v2</title>
-<meta name="description" content="Callouts provide a means of temporarily passing control to the script in the middle of regular expression pattern matching." />
+<meta name="description" content="RegEx callouts provide a means of temporarily passing control to the script in the middle of regular expression pattern matching." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,14 +13,14 @@
 
 <h1>正则表达式调出</h1>
 
-<p>调出提供了一种在正则表达式模式匹配过程中临时将控制权传递给脚本的方法. 关于 PCRE 标准调出功能的详细信息, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>.</p>
+<p>正则调出提供了一种在正则表达式模式匹配过程中临时将控制权传递给脚本的方法. 关于 PCRE 标准调出功能的详细信息, 请参阅 <a href="http://www.pcre.org/pcre.txt">pcre.txt</a>.</p>
 
-<p>目前只有 <a href="../commands/RegExMatch.htm">RegExMatch</a> 和 <a href="../commands/RegExReplace.htm">RegExReplace</a> 支持调出.</p>
+<p>目前只有 <a href="../commands/RegExMatch.htm">RegExMatch</a> 和 <a href="../commands/RegExReplace.htm">RegExReplace</a> 支持正则调出.</p>
 
 <h2 id="toc">目录</h2>
 <ul>
     <li><a href="#syntax">语法</a></li>
-    <li><a href="#callout-functions">调出函数</a></li>
+    <li><a href="#callout-functions">正则调出函数</a></li>
     <li><a href="#EventInfo">EventInfo</a></li>
     <li><a href="#auto">自动调出</a></li>
     <li><a href="#remarks">备注</a></li>
@@ -28,27 +28,27 @@
 
 <h2 id="syntax">语法</h2>
 
-<p>在 AutoHotkey 中调出的语法为 <span class="Syntax">(?C<em>Number</em>:<em>Function</em>)</span>, 其中 <em>Number</em> 和 <em>Function</em> 都是可选的. 只有在指定了 <em>Function</em>才允许使用冒号 ':', 而如果省略 <em>Number</em> 则冒号也可以省略. 如果指定的 <em>Function</em> 不是自定义的函数名称, 则会出现编译错误且不会开始模式匹配.</p>
+<p>在 AutoHotkey 中正则调出的语法为 <span class="regex">(?C<em>Number</em>:<em>Function</em>)</span>, 其中 <em>Number</em> 和 <em>Function</em> 都是可选的. 只有在指定了 <em>Function</em>才允许使用冒号 ':', 而如果省略 <em>Number</em> 则冒号也可以省略. 如果指定的 <em>Function</em> 不是自定义的函数名称, 则会出现编译错误且不会开始模式匹配.</p>
 
-<p>如果省略 <em>Function</em>, 则必须在名为 <b>pcre_callout</b> 的变量中指定函数名称. 如果全局变量和局部变量都以这个名称存在, 则以局部变量为准. 如果 <em>pcre_callout</em> 不包含用户定义的函数名, 那么省略 <em>Function</em> 的调出将被忽略.</p>
+<p>如果省略 <em>Function</em>, 则必须在名为 <b>pcre_callout</b> 的变量中指定函数名称. 如果全局变量和局部变量都以这个名称存在, 则以局部变量为准. 如果 <em>pcre_callout</em> 不包含用户定义的函数名, 那么省略 <em>Function</em> 的正则调出将被忽略.</p>
 
-<h2 id="callout-functions">Callout 函数</h2>
+<h2 id="callout-functions">正则调出函数</h2>
 
 <pre class="Syntax"><i>MyFunction</i>(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
 {
     ...
 }</pre>
-<p>调出函数最多可以定义 5 个参数:</p>
+<p>正则调出函数最多可以定义 5 个参数:</p>
 <ul>
   <li><b>Match</b>: 相当于 RegExMatch 中的 <em>OutputVar</em>, 包括在适当情况下创建数组变量.</li>
-  <li><b>CalloutNumber</b>: 接收调出的 <em>Number</em>.</li>
+  <li><b>CalloutNumber</b>: 接收正则调出的 <em>Number</em>.</li>
   <li><b>FoundPos</b>: 接收当前潜在匹配的位置.</li>
   <li><b>Haystack</b>: 接收传递给 RegExMatch 或 RegExReplace 的 <em>Haystack</em>.</li>
   <li><b>NeedleRegEx</b>: 接收传递给 RegExMatch 或 RegExReplace 的 <em>NeedleRegEx</em>.</li>
 </ul>
 <p>这些名称只是提示性的. 实际中可以使用其他的名称.</p>
 
-<p>模式匹配是继续进行或失败, 取决于调出函数的返回值:</p>
+<p>模式匹配是继续进行或失败, 取决于正则调出函数的返回值:</p>
 <ul>
   <li>如果函数返回 <b>0</b> 或没有返回数值, 则匹配操作如常进行.</li>
   <li>如果函数返回 <b>1</b> 或更大的数字, 则在当前位置匹配失败, 但继续进行剩余部分的匹配测试.</li>
@@ -63,7 +63,7 @@ Callout(m,*) {
     MsgBox "m[0]=" m[0] "`nm[1]=" m[1] "`nm[2]=" m[2]
     return 1
 }</pre>
-<p>在上面的例子中, 对于匹配调出之前的那部分模式的每个子字符串都会调用一次 <em>Func</em>. 使用 <span class="Syntax">\b</span> 排除匹配到不完整的单词, 例如 <em>The quic</em>, <em>The qui</em>, <em>The qu</em>, 等等.</p>
+<p>在上面的例子中, 对于匹配正则调出之前的那部分模式的每个子字符串都会调用一次 <em>Callout</em>. 使用 <span class="regex">\b</span> 排除匹配到不完整的单词, 例如 <em>The quic</em>, <em>The qui</em>, <em>The qu</em>, 等等.</p>
 
 <h2 id="EventInfo">EventInfo</h2>
 
@@ -88,8 +88,8 @@ if (version &gt;= 2)
 
 <h2 id="auto">自动调出</h2>
 
-<p>在模式的选项中包含 <span class="Syntax">C</span> 来启用自动调出模式. 在这种情况下的调出相当于在模式里的每项前插入了 <span class="Syntax">(?C255)</span>. 例如, 下面的模板可以用来调试正则表达式:</p>
-<pre><em>; 设置默认的调出函数.</em>
+<p>在模式的选项中包含 <strong>C</strong> 来启用自动调出模式. 在这种情况下的正则调出相当于在模式里的每项前插入了 <span class="regex">(?C255)</span>. 例如, 下面的模板可以用来调试正则表达式:</p>
+<pre><em>; 设置默认的正则调出函数.</em>
 pcre_callout := "DebugRegEx"
 
 <em>; 使用自动调出选项 C 来调用 RegExMatch.</em>
@@ -121,8 +121,8 @@ DebugRegEx(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
 
 <h2 id="remarks">备注</h2>
 
-<p>调出在当前的半线程中执行, 但在调出函数返回后将恢复 A_EventInfo 原来的值.</p>
-<p>在一些可以确定不会发生匹配的情况下, 则会对 PCRE 进行优化来提早中止. 对于在这些情况中的所有调出, 可能需要在模式的开始处指定 <code>(*NO_START_OPT)</code> 来禁用这种优化.</p>
+<p>正则调出在当前的半线程中执行, 但在正则调出函数返回后将恢复 A_EventInfo 原来的值.</p>
+<p>在一些可以确定不会发生匹配的情况下, 则会对 PCRE 进行优化来提早中止. 对于在这些情况中的所有正则调出, 可能需要在模式的开始处指定 <span class="regex">(*NO_START_OPT)</span> 来禁用这种优化.</p>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>WinExist - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The WinExist function checks if a matching window exists." />
+<meta name="description" content="The WinExist function checks if the specified window exists and returns the unique ID (HWND) of the first matching window." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,10 +12,10 @@
 <body>
 
 <h1>WinExist</h1>
-
-<p>检查指定的窗口是否存在.</p>
+<p>检查指定的窗口是否存在并返回其唯一 ID(HWND).</p>
 
 <pre class="Syntax">UniqueID := <span class="func">WinExist</span>(<span class="optional">WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
+
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -48,7 +48,7 @@
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>函数返回首个匹配窗口的<a href="../misc/WinTitle.htm#ahk_id">唯一 ID(HWND)</a>(没有找到匹配时则为 0).</p>
-<p>因为所有非零数字被视为 &quot;true&quot;, 当 <em>WinTitle</em> 存在时, 语句 <code>if WinExist(WinTitle)</code> 为 true.</p>
+<p>因为所有非零数字被视为 "true", 当 <em>WinTitle</em> 存在时, 语句 <code>if WinExist(WinTitle)</code> 为 true.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>如果省略所有参数, 将检查<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>, 看它是否仍然存在.</p>
@@ -59,35 +59,21 @@
 <h2 id="Related">相关</h2>
 <p><a href="WinActive.htm">WinActive</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a>, <a href="ProcessExist.htm">ProcessExist</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="_HotIf.htm">#HotIf</a></p>
 <h2 id="Examples">示例</h2>
-<div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
-<pre>if WinExist(&quot;Untitled - Notepad&quot;) or WinExist(&quot;无标题 - 记事本&quot;)
-{
-    WinActivate  <em>; 自动使用上面找到的窗口.</em>
-    WinMaximize  <em>; 同上</em>
-    Send "Some text.{Enter}"
-    return
-}</pre>
+<div class="ex" id="ExLastFound">
+<p><a href="#ExLastFound">#1</a>: 激活记事本或另一个窗口, 这取决于 WinExist 函数找到的是哪个窗口. 注意, "ahk_" 关键字和它的标准值之间的空格可以省略; 这在使用变量时特别有用, 如第二个 WinExist 所示.</p>
+<pre>if WinExist("ahk_class Notepad") or WinExist("ahk_class" ClassName)
+    WinActivate <em>; 使用由 WinExist 找到的窗口.</em></pre>
+</div>
+
+<div class="ex" id="ExA">
+<p><a href="#ExA">#2</a>: 获取和报告活动窗口的唯一 ID(HWND).</p>
+<pre>MsgBox "The active window's ID is " WinExist("A")</pre>
 </div>
 
 <div class="ex" id="ExNot">
-<p><a href="#ExNot">#2</a></p>
-<pre>if not WinExist(&quot;Calculator&quot;)
-    return
-else
-{
-    WinActivate  <em>; 前面的 &quot;WinExist&quot; 也会设置 &quot;上次找到的&quot; 窗口.</em>
-    WinMove 40, 40  <em>; 把它移动到新位置.</em>
-    return
-}</pre>
-</div>
-
-<div class="ex" id="ExClass">
-<p><a href="#ExClass">#3</a></p>
-<pre>if WinExist(&quot;ahk_class Notepad&quot;) or WinExist(&quot;ahk_class&quot; . ClassName)
-    WinActivate  <em>; 使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>.</em>
-
-MsgBox &quot;The active window's ID is &quot; . WinExist(&quot;A&quot;)</pre>
+<p><a href="#ExNot">#3</a>: 如果计算器不存在则返回.</p>
+<pre>if not WinExist("Calculator")
+    return</pre>
 </div>
 
 </body>

@@ -54,7 +54,7 @@ TV := MyGui.Add("TreeView", "ImageList" . ImageListID)
 <a href="#Add">TV.Add</a>("Name of Item", 0, "Icon4")  <em>; 添加项目到 TreeView 并给它分配文件夹图标.</em>
 MyGui.Show</pre>
 <p><strong>Lines</strong>: 指定 <code>-Lines</code>(负 Lines) 来避免显示连接父项目和它们的子项目之间的网状线. 但是, 移除这些线也阻止了顶级项目坐标加号/减号按钮的显示.</p>
-<p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每项的文本/名称. 要编辑某项, 请选择它接着按下 <kbd>F2</kbd> 键(请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对某个项目点击一次来选择它, 至少等半秒, 然后再次点击同一项目进行编辑. 编辑后, 可以对一个项目在其同级项目之间按字母顺序进行重新定位, 请参考下面的例子:</p>
+<p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每项的文本/名称. 要编辑某项, 请选择它接着按下 <kbd>F2</kbd>(请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对某个项目点击一次来选择它, 至少等半秒, 然后再次点击同一项目进行编辑. 编辑后, 可以对一个项目在其同级项目之间按字母顺序进行重新定位, 请参考下面的例子:</p>
 <pre>TV := MyGui.Add("TreeView", "-ReadOnly")
 TV.OnEvent("ItemEdit", "MyTree_Edit")  <em>; 每当用户完成一个项目的编辑后, 调用 MyTree_Edit.</em>
 <em>; ...</em>
@@ -63,7 +63,7 @@ MyTree_Edit(TV, Item)
     TV.Modify(TV.GetParent(Item), "Sort")  <em>; 即使该项目没有父项目, 该功能也可以使用.</em>
 }</pre>
 <p><strong>R</strong>: 行高(创建时). 指定字母 R 后面紧跟着要在控件中留出空间的行数. 例如, <code>R10</code> 会设置控件为 10 个项目的高度.</p>
-<p id="WantF2"><strong>WantF2</strong>: 指定 <code>-WantF2</code>(负 WantF2) 来禁止使用 <kbd>F2</kbd> 键击来<a href="#ReadOnly">编辑</a>当前选择的项目. 仅当 <a href="#ReadOnly">-ReadOnly</a> 也有效时, 此设置才不会被忽略.</p>
+<p id="WantF2"><strong>WantF2</strong>: 指定 <code>-WantF2</code>(负 WantF2) 来禁止使用 <kbd>F2</kbd> 来<a href="#ReadOnly">编辑</a>当前选择的项目. 仅当 <a href="#ReadOnly">-ReadOnly</a> 也有效时, 此设置才不会被忽略.</p>
 <p><strong>(未命名的数值样式):</strong> 由于上述以外的其他样式很少使用, 所以没有为它们命名. 请参阅 <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a>了解这些样式.</p>
 <h2 id="BuiltIn">TreeViews 的内置方法</h2>
 <p>除了<a href="../objects/GuiControl.htm">GUI 控件的默认方法/属性</a>外, 还可以为 TreeView 指定以下方法. 如果关联的 <a href="../objects/GuiControl.htm">GuiControl 对象</a>不存在或不属于 TreeView, TreeView 方法会抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
@@ -107,18 +107,18 @@ MyTree_Edit(TV, Item)
     <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>包含下表中零个或多个单词的字符串(不区分大小写). 在单词间使用空格或 tab 分隔. 要移除某个选项, 请在该选项前加上负号. 要添加选项, 选项前允许使用正号, 但不是必须的(可以省略).</p>
-      <p id="Bold"><strong>Bold</strong>: 用粗体显示项目的名称. 以后要取消项目名称的粗体显示, 请使用 <code>TV.Modify(ItemID, &quot;-Bold&quot;)</code>. 单词 <em>Bold</em> 后可以可选地紧跟着 0 或 1 以指示起始状态.</p>
-      <p id="Check"><strong>Check</strong>: 在项目的坐标显示一个复选标记(需要 TreeView 含有<a href="#Checked">复选框</a>). 以后要取消选中, 请使用 <code>TV.Modify(ItemID, &quot;-Check&quot;)</code>. 在单词 <em>Check</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>&quot;Check&quot;</code> 和 <code>&quot;Check&quot; <strong>.</strong> VarContainingOne</code> 是等同的(这里中间使用的是<a href="../Variables.htm#concat">连接运算符</a>).</p>
-      <p id="Expand"><strong>Expand</strong>: 展开此项以让其子项目显示出来(如果有). 以后要折叠项目, 请使用 <code>TV.Modify(ItemID, &quot;-Expand&quot;)</code>. 如果没有子项目, 那么 <a href="#Modify">Modify 方法</a>返回 0 而不是它的项目 ID. 与之相比, <a href="#Add">Add 方法</a>标记项目为展开, 以备以后添加子项目时使用. 与下面的 &quot;Select&quot; 不同, 展开一个项目不会自动展开其父项目. 最后, 在单词 <em>Expand</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>&quot;Expand&quot;</code> 和 <code>&quot;Expand&quot; <strong>.</strong> VarContainingOne</code> 是等同的.</p>
+      <p id="Bold"><strong>Bold</strong>: 用粗体显示项目的名称. 以后要取消项目名称的粗体显示, 请使用 <code>TV.Modify(ItemID, "-Bold")</code>. 单词 <em>Bold</em> 后可以可选地紧跟着 0 或 1 以指示起始状态.</p>
+      <p id="Check"><strong>Check</strong>: 在项目的坐标显示一个复选标记(需要 TreeView 含有<a href="#Checked">复选框</a>). 以后要取消选中, 请使用 <code>TV.Modify(ItemID, "-Check")</code>. 在单词 <em>Check</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Check"</code> 和 <code>"Check" <strong>.</strong> VarContainingOne</code> 是等同的(这里中间使用的是<a href="../Variables.htm#concat">连接运算符</a>).</p>
+      <p id="Expand"><strong>Expand</strong>: 展开此项以让其子项目显示出来(如果有). 以后要折叠项目, 请使用 <code>TV.Modify(ItemID, "-Expand")</code>. 如果没有子项目, 那么 <a href="#Modify">Modify 方法</a>返回 0 而不是它的项目 ID. 与之相比, <a href="#Add">Add 方法</a>标记项目为展开, 以备以后添加子项目时使用. 与下面的 "Select" 不同, 展开一个项目不会自动展开其父项目. 最后, 在单词 <em>Expand</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Expand"</code> 和 <code>"Expand" <strong>.</strong> VarContainingOne</code> 是等同的.</p>
       <p><strong>First | Sort | N</strong>: 这些选项仅适用于 <a href="#Add">Add 方法</a>. 它们指定新项目相对于 其同级项目的位置(<em>同级项目</em> 是同一级别的其他任何项目). 如果这些选项都不存在, 则新项目被添加到同级项目的最后/底部. 否则, 请指定 <em>First</em> 来添加项目到同级项目的第一个/顶部, 或指定 <em>Sort</em> 来按字母顺序插入新项目到同级项目中间. 如果指定一个纯整数(<strong>N</strong>), 则假定它为同级项目的 ID 号, 新项目会被插入到它的后面(如果整数 N 是唯一使用的选项, 则它不需要括在引号中).</p>
       <p><strong>Icon</strong>: 指定单词 <em>Icon</em> 后紧跟着此项目图标的编号, 项目图标显示在项目名称的左边. 如果此选项不存在, 则使用<a href="#ImageList">图像列表</a>中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有图像列表, 则既不显示图标也不为图标保留空间.</p>
       <p id="Select"><strong>Select</strong>: 选择项目. 因为一次只能选择一个项目, 此时任何原来选择的项目会自动取消选择. 此外, 如果有必要此选项会展开其父项目以显示新选择的项目. 要找出当前选择的项目, 请调用 <a href="#GetSelection">GetSelection 方法</a>.</p>
-      <p><strong>Sort</strong>: 对于 <a href="#Modify">Modify 方法</a>, 此选项按字母顺序排列指定项目的子项目. 要对所有顶级项目进行排序, 请使用 <code>TV.Modify(0, &quot;Sort&quot;)</code>. 如果不含子项目, 则返回 0 而不是所修改项目的 ID.</p>
+      <p><strong>Sort</strong>: 对于 <a href="#Modify">Modify 方法</a>, 此选项按字母顺序排列指定项目的子项目. 要对所有顶级项目进行排序, 请使用 <code>TV.Modify(0, "Sort")</code>. 如果不含子项目, 则返回 0 而不是所修改项目的 ID.</p>
       <p><strong>Vis</strong>: 在需要时, 通过滚动 TreeView 和/或展开其父项目来确保此项目完全可见.</p>
       <p><strong>VisFirst</strong>: 和上面一样, 不过在可行时它还会滚动 TreeView 使得此项显示在顶部. 此选项与 <a href="#Modify">Modify 方法</a>比与 <a href="#Add">Add 方法</a>一起使用通常更有效.</p>
     </dd>
   </dl>
-  <p>&nbsp;注意: 当添加大量项目时, 可以在添加项目之前使用 <code>TV.Opt(&quot;-Redraw&quot;)</code>, 之后使用 <code>TV.Opt(&quot;+Redraw&quot;)</code> 来提高性能.</p>
+  <p>&nbsp;注意: 当添加大量项目时, 可以在添加项目之前使用 <code>TV.Opt("-Redraw")</code>, 之后使用 <code>TV.Opt("+Redraw")</code> 来提高性能.</p>
 </div>
 <div class="methodShort" id="Modify">
   <h3>Modify</h3>
@@ -215,17 +215,17 @@ MyTree_Edit(TV, Item)
     <dt>ItemType</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>如果省略, 则检索指定项目下面的伙伴控件的 ID 号. 否则指定 &quot;Full&quot; 或 &quot;F&quot; 检索下一个项目, 而不考虑其与指定项目的关系; 或指定 &quot;Check&quot;, &quot;Checked&quot;, 或 &quot;C&quot; 只检索下一个带有复选标记的项目.</p>
+      <p>如果省略, 则检索指定项目下面的伙伴控件的 ID 号. 否则指定 "Full" 或 "F" 检索下一个项目, 而不考虑其与指定项目的关系; 或指定 "Check", "Checked", 或 "C" 只检索下一个带有复选标记的项目.</p>
     </dd>
   </dl>
   &nbsp;下面的例子逐项遍历整个树:<pre>ItemID := 0  <em>; 这样使得首次循环从树的顶部开始搜索.</em>
 Loop
 {
-    ItemID := TV.GetNext(ItemID, &quot;Full&quot;)  <em>; 把 &quot;Full&quot; 替换为 &quot;Checked&quot; 来找出所有含复选标记的项目.</em>
+    ItemID := TV.GetNext(ItemID, "Full")  <em>; 把 "Full" 替换为 "Checked" 来找出所有含复选标记的项目.</em>
     if not ItemID  <em>; 没有更多项目了.</em>
         break
     ItemText := TV.GetText(ItemID)
-    MsgBox('The next Item is ' ItemID ', whose text is &quot;' ItemText '&quot;.')
+    MsgBox('The next Item is ' ItemID ', whose text is "' ItemText '".')
 }</pre>
 </div>
 <div class="methodShort" id="GetText">
@@ -253,10 +253,10 @@ Loop
     <dt>Attribute</dt>
     <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>指定 &quot;E&quot;, &quot;Expand&quot; 或 &quot;Expanded&quot; 来判断此项当前是否是<a href="#Expand">展开的</a>(即它的子项目是显示的); 指定 &quot;C&quot;, &quot;Check&quot; 或 &quot;Checked&quot; 来判断此项是否含有<a href="#Check">复选标记</a>; 或指定 &quot;B&quot; 或 &quot;Bold&quot; 来判断此项当前是否为<a href="#Bold">粗体</a>.</p>
+      <p>指定 "E", "Expand" 或 "Expanded" 来判断此项当前是否是<a href="#Expand">展开的</a>(即它的子项目是显示的); 指定 "C", "Check" 或 "Checked" 来判断此项是否含有<a href="#Check">复选标记</a>; 或指定 "B" 或 "Bold" 来判断此项当前是否为<a href="#Bold">粗体</a>.</p>
     </dd>
   </dl>
-  <p><strong>提示</strong>: 因为在 IF 语句中把任何非零值视为 &quot;true&quot;, <code>if TV.Get(ItemID, &quot;Checked&quot;) = ItemID</code> 和 <code>if TV.Get(ItemID, &quot;Checked&quot;)</code> 在功能上是相同的.</p>
+  <p><strong>提示</strong>: 因为在 IF 语句中把任何非零值视为 "true", <code>if TV.Get(ItemID, "Checked") = ItemID</code> 和 <code>if TV.Get(ItemID, "Checked")</code> 在功能上是相同的.</p>
 </div>
 <div class="methodShort" id="SetImageList">
   <h3>SetImageList</h3>
@@ -283,7 +283,7 @@ Loop
   <tr><th>事件</th><th>当...触发</th></tr>
   <tr><td><a href="../objects/GuiOnEvent.htm#Click">Click</a></td><td>控件被点击.</td></tr>
   <tr><td><a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a></td><td>控件被双击.</td></tr>
-  <tr><td><a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a></td><td>当控件拥有键盘焦点时, 用户右键单击控件或按下 <kbd>Menu</kbd> 键或 <kbd>Shift</kbd>+<kbd>F10</kbd>.</td></tr>
+  <tr><td><a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a></td><td>当控件拥有键盘焦点时, 用户右键单击控件或按下 <kbd>Menu</kbd> 或 <kbd>Shift</kbd>+<kbd>F10</kbd>.</td></tr>
   <tr><td><a href="../objects/GuiOnEvent.htm#Focus">Focus</a></td><td>控件获得键盘焦点.</td></tr>
   <tr><td><a href="../objects/GuiOnEvent.htm#LoseFocus">LoseFocus</a></td><td>控件失去键盘焦点.</td></tr>
   <tr><td><a href="../objects/GuiOnEvent.htm#ItemCheck">ItemCheck</a></td><td>一个项目被选中或取消选中.</td></tr>
@@ -316,7 +316,7 @@ ButtonOK(*) {
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExAdvanced">
-<p><a href="#ExAdvanced">#1</a>: 下面是一个比页面顶部的脚本更复杂的可工作的脚本. 它创建并显示一个 TreeView, 其中包含所有用户开始菜单中的所有文件夹. 当用户选择一个文件夹时, 它的内容会显示在右边的 ListView 中(类似于 Windows 资源管理器). 此外, <a href="GuiControls.htm#StatusBar">StatusBar</a> 控件会显示当前选择文件夹的信息:</p>
+<p><a href="#ExAdvanced">#1</a>: 下面是一个比页面顶部的脚本更复杂的可工作的脚本. 它创建并显示一个 TreeView, 其中包含所有用户开始菜单中的所有文件夹. 当用户选择一个文件夹时, 它的内容会显示在右边的 ListView 中(类似于 Windows 资源管理器). 此外, <a href="GuiControls.htm#StatusBar">StatusBar</a> 控件会显示当前选择文件夹的信息.</p>
 <pre><em>; 下面的文件夹为 TreeView 的根文件夹. 请注意, 如果指定整个驱动器例如 C:\
 ; 那么可能需要很长加载时间:</em>
 TreeRoot := A_MyDocuments

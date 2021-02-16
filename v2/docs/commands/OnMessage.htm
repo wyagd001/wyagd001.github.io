@@ -63,13 +63,15 @@
 <p><a href="../Functions.htm">函数</a>可以监视一个或多个消息并接受最多四个参数:</p>
 <pre>MyMessageMonitor(wParam, lParam, msg, hwnd)
 {
-    ... body of function...
+    ...函数主体...
 }</pre>
 <p>尽管您赋予参数的名称并不重要, 但以下信息将按顺序分配给它们:</p>
-<p>参数 #1: 消息的 WPARAM 值.<br>
-参数 #2: 消息的 LPARAM 值.<br>
-参数 #3: 消息号, 这在一个函数监视多个消息的情况下很有用.<br>
-参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). HWND 可以直接用于 <a href="../misc/WinTitle.htm#ahk_id">WinTitle 参数</a>.</p>
+<ul>
+  <li>参数 #1: 消息的 WPARAM 值.</li>
+  <li>参数 #2: 消息的 LPARAM 值.</li>
+  <li>参数 #3: 消息号, 这在一个函数监视多个消息的情况下很有用.</li>
+  <li>参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). HWND 可以直接用于 <a href="../misc/WinTitle.htm#ahk_id">WinTitle 参数</a>.</li>
+</ul>
 <p>WPARAM 和 LPARAM 是无符号的 32 位整数(从 0 到 2<sup>32</sup>-1) 或有符号的 64 位整数(从 -2<sup>63</sup> 到 2<sup>63</sup>-1), 这取决于运行脚本的 exe 程序是 32 位还是 64 位. 对于 32 位的脚本, 如果传入参数预期为有符号整数, 则可以参照这个例子得到负数:</p>
 <pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; 检查 <a href="../Variables.htm#PtrSize">A_PtrSize</a> 以确保脚本为 32 位.</em>
     wParam := -(~wParam) - 1</pre>
@@ -82,7 +84,7 @@
 MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口的唯一 ID.</em></pre>
 
 <h2 id="What_the_Function_Should_Return">函数应该 <em>Return</em>(返回) 什么</h2>
-<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 &quot;&quot;(甚至没有使用 Return), 则当此函数结束时, 传入的消息将继续被正常处理. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exits</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与此相反, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 返回哪个整数并不重要; 不过如果不确定, 0 通常是最安全的.</p>
+<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至没有使用 Return), 则当此函数结束时, 传入的消息将继续被正常处理. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exits</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与此相反, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 返回哪个整数并不重要; 不过如果不确定, 0 通常是最安全的.</p>
 <p>有效返回值的范围取决于运行脚本的 exe 文件是 32 位还是 64 位. 对于 32 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>) 脚本, 非空的返回值必须在 -2<sup>31</sup> 和 2<sup>32</sup>-1 之间, 对于 64 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code>) 脚本, 必须在 -2<sup>63</sup> 和 2<sup>63</sup>-1 之间.</p>
 <p>如果有多个函数监听一个给定的消息号, 它们会被逐一调用, 直到其中一个函数返回一个非空值.</p>
 
@@ -95,13 +97,13 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>如果消息号小于 0x312 的受监听消息在脚本仅由于 <a href="Thread.htm">Thread Interrupt</a> 或 <a href="Critical.htm">Critical</a> 的设置而不可中断时到达, 则会中断当前线程而调用消息处理函数. 相反, 等于或大于 0x312  的受监听消息则会被缓冲到线程结束或变成可中断之后.</p>
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
 <p>监听系统消息(小于 0x400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果监听函数返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>
-<p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递(Post) 到控件的消息. 例如, 如果脚本正显示 MsgBox 而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
-<p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递(Post) 消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">MsgBox</a>) . 则消息会丢失. 相反, 通常最好投递或发送(Send) 消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
+<p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递(Post) 到控件的消息. 例如, 如果脚本正显示消息框而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
+<p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递(Post) 消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">消息框</a>) . 则消息会丢失. 相反, 通常最好投递或发送(Send) 消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
 <h2 id="Related">相关</h2>
 <p><a href="CallbackCreate.htm">CallbackCreate</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">窗口消息列表</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExLButtonDown">
-<p><a href="#ExLButtonDown">#1</a>: 下面是个可运行脚本, 它监听在 GUI 窗口中的鼠标点击. 相关主题: <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu</a> 事件</p>
+<p><a href="#ExLButtonDown">#1</a>: 监听在 GUI 窗口中的鼠标点击. 相关主题: <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu</a> 事件</p>
 <pre>MyGui := Gui.New(, "Example Window")
 MyGui.Add("Text",, "Click anywhere in this window.")
 MyGui.Add("Edit", "w200")
@@ -126,7 +128,7 @@ WM_LBUTTONDOWN(wParam, lParam, msg, hwnd)
 </div>
 
 <div class="ex" id="ExShutdown">
-<p><a href="#ExShutdown">#2</a>: 下面的脚本检测系统的关机/注销动作并允许您中止它. 在 Windows Vista 及更高的版本中, 系统会显示一个用户界面, 显示哪个程序正在阻止关机/注销, 并允许用户强制关机/注销. 在较旧的操作系统上, 脚本显示一个确认提示. 相关主题: <a href="OnExit.htm">OnExit</a></p>
+<p><a href="#ExShutdown">#2</a>: 检测系统的关机/注销动作并允许您中止它. 在 Windows Vista 及更高的版本中, 系统会显示一个用户界面, 显示哪个程序正在阻止关机/注销, 并允许用户强制关机/注销. 在较旧的操作系统上, 脚本显示一个确认提示. 相关主题: <a href="OnExit.htm">OnExit</a></p>
 <pre><em>; 下面的 DllCall 是可选的: 它告诉操作系统首先要关闭此脚本(在其他所有程序之前).</em>
 DllCall("kernel32.dll\SetProcessShutdownParameters", "UInt", 0x4FF, "UInt", 0)
 OnMessage(0x11, "WM_QUERYENDSESSION")
@@ -174,9 +176,9 @@ StopBlockingShutdown(*)
 </div>
 
 <div class="ex" id="ExCustom">
-<p><a href="#ExCustom">#3</a>: 让脚本接收其他脚本或程序的自定义消息和最多两个数字(要发送字符串而不是数字, 请参阅下一个示例).</p>
-<pre>OnMessage 0x5555, &quot;MsgMonitor&quot;
-OnMessage 0x5556, &quot;MsgMonitor&quot;
+<p><a href="#ExCustom">#3</a>: 接收其他脚本或程序的自定义消息和最多两个数字(要发送字符串而不是数字, 请参阅下一个示例).</p>
+<pre>OnMessage 0x5555, "MsgMonitor"
+OnMessage 0x5556, "MsgMonitor"
 
 MsgMonitor(wParam, lParam, msg, *)
 {
@@ -188,16 +190,16 @@ MsgMonitor(wParam, lParam, msg, *)
 <em>; 下面的代码可用于其他脚本内来激发运行上面脚本中的函数:</em>
 SetTitleMatchMode 2
 DetectHiddenWindows True
-if WinExist(&quot;Name of Receiving Script.ahk ahk_class AutoHotkey&quot;)
-    PostMessage 0x5555, 11, 22  <em>; 因为上面的 WinExist, 所以消息被发送到 &quot;<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>&quot;.</em>
+if WinExist("Name of Receiving Script.ahk ahk_class AutoHotkey")
+    PostMessage 0x5555, 11, 22  <em>; 因为上面的 WinExist, 所以消息被发送到 "<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>".</em>
 DetectHiddenWindows False  <em>; 必须在 PostMessage 之后才能关闭.</em></pre>
 </div>
 
 <div class="ex" id="ExSendString">
-<p><a href="#ExSendString">#4</a>: 从一个脚本发送任意长度的字符串到另一个脚本. 这是个可运行的示例. 两个脚本必须使用相同的<a href="../Concepts.htm#native-encoding">原生编码</a>. 要使用它, 请保存并运行下面的两个脚本, 然后按下 <kbd>Win</kbd>+<kbd>Space</kbd> 来显示 InputBox 来让您输入字符串.</p>
+<p><a href="#ExSendString">#4</a>: 从一个脚本发送任意长度的字符串到另一个脚本. 要使用它, 请保存并运行下面的两个脚本, 然后按下 <kbd>Win</kbd>+<kbd>Space</kbd> 来显示输入框来让您输入字符串. 两个脚本必须使用相同的<a href="../Concepts.htm#native-encoding">原生编码</a>.
 <p>保存下面的脚本为 <strong>Receiver.ahk</strong>, 然后运行它:</p>
 <pre filename="Receiver.ahk">#SingleInstance
-OnMessage 0x4a, &quot;Receive_WM_COPYDATA&quot;  <em>; 0x4a is WM_COPYDATA</em>
+OnMessage 0x4a, "Receive_WM_COPYDATA"  <em>; 0x4a is WM_COPYDATA</em>
 return
 
 Receive_WM_COPYDATA(wParam, lParam, msg, hwnd)
@@ -211,7 +213,7 @@ Receive_WM_COPYDATA(wParam, lParam, msg, hwnd)
 <p>保存下面的脚本为 <strong>Sender.ahk</strong>, 接着运行它. 然后, 按下 <kbd>Win</kbd>+<kbd>Space</kbd> 热键.</p>
 <pre filename="Sender.ahk">TargetScriptTitle := "Receiver.ahk ahk_class AutoHotkey"
 
-#space::  <em>; Win+Space 热键. 按下此热键会显示 InputBox 用于输入消息字符串.</em>
+#space::  <em>; Win+Space 热键. 按下此热键会显示输入框用于输入消息字符串.</em>
 {
     global TargetScriptTitle
     ib := InputBox("Enter some text to Send:", "Send text via WM_COPYDATA")

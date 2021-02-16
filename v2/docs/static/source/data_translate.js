@@ -2,7 +2,9 @@
   // sidebar
   "C̲ontent":"目录(C)",
   "Shortcut: ALT+C":"快捷键: ALT+C",
+  "Content tab":true,
   "In̲dex":"索引(N)",
+  "Index tab":true,
   "Shortcut: ALT+N":"快捷键: ALT+N",
   "Filter":"过滤筛选",
   "Directives":"指令",
@@ -12,11 +14,13 @@
   "Declarations":"声明",
   "Operators":"运算符",
   "S̲earch":"搜索(S)",
+  "Search tab":true,
   "Shortcut: ALT+S":"快捷键: ALT+S",
   "Highlight keywords":"高亮关键词",
   "Search":"搜索",
   "Go to previous/next occurrence":"前往关键词上一/下一个出现的位置",
   // header
+  "Skip navigation":true,
   "Hide or show the sidebar":"显示或隐藏侧边栏",
   "Go to the homepage":"主页",
   "en":"zh",
@@ -41,5 +45,6 @@
   "Download code":"下载代码",
   "Back to top":"返回顶部",
   "Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later":"适用于:\nAutoHotkey_L Revision {0} 及以后版本 \nAutoHotkey v1.0.90.00 及以后版本",
-  "Applies to AutoHotkey {0} and later":"适用于 AutoHotkey {0} 及以后版本"
+  "Applies to AutoHotkey {0} and later":"适用于 AutoHotkey {0} 及以后版本",
+  "Deprecated. New scripts should use {0} instead.":true
 };

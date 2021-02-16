@@ -43,7 +43,7 @@
 <p>如果 <em>YYYYMMDDHH24MISS</em> 包含无效的日期和/或时间部分 -- 例如非闰年的 2 月 29 日 -- 那么日期和/或时间将从返回值中省略. 虽然只支持 1601 年到 9999 年之间的年份, 但只要时间部分有效, 仍然可以为更早的年份生成格式化的时间.</p>
 <p>如果 <em>Format</em> 包含超过 2000 个字符, 则返回一个空字符串.</p>
 
-<h2 id="Date_Formats_case_sensitive">日期格式(区分大小写)</h2>
+<h2 id="Date_Formats">日期格式(区分大小写)</h2>
 <table class="info">
   <tr>
     <td style="width:15%">d</td>
@@ -94,7 +94,7 @@
     <td>当前用户区域设置的时代/纪元字符串(如果没有则为空)</td>
   </tr>
 </table>
-<h2>时间格式(区分大小写)</h2>
+<h2 id="Time_Formats">时间格式(区分大小写)</h2>
 <table class="info">
   <tr>
     <td style="width:15%">h</td>
@@ -137,7 +137,7 @@
     <td>多字符时间标记, 例如 AM 或 PM(取决于区域设置)</td>
   </tr>
 </table>
-<h2>独立格式</h2>
+<h2 id="Standalone_Formats">独立格式</h2>
   <p>下面的格式必须 <strong>单独</strong> 使用; 即在 <em>Format</em> 参数中不能含有其他格式或文本. 这些格式不区分大小写.</p>
 <table class="info">
   <tr>
@@ -177,43 +177,48 @@
     <td>ISO 8601 中规定的完全年份和周数. 例如: 200453. 如果含有 1 月 1 日的星期有四天以上在新年里, 则它被认为是新年的第一星期. 否则, 它为前一年的最后一个星期, 而下一星期为新年的第一星期. 因此, 1 月 4 日和首个星期四总是在第一周.</td>
   </tr>
 </table>
-<h2>附加选项</h2>
+<h2 id="Additional_Options">附加选项</h2>
 <p>下列选项可以紧跟在 <em>YYYYMMDDHH24MISS</em> 时间戳后(如果没有时间戳, 它们也可以单独使用). 在下面的例子中, 请注意最后的四项间没有逗号:</p>
 <pre>OutputVar := FormatTime("20040228 LSys D1 D4")</pre>
 <p><strong>R</strong>: 反转. 让日期在时间之前(仅当 <em>Format</em> 为空时才有意义).</p>
 <p><strong>Ln</strong>: 如果此选项 <em>不</em> 存在, 则使用当前用户区域设置来格式化字符串. 要使用系统的区域设置, 请指定 LSys. 要使用特殊的区域设置, 请指定字母 L 后面跟着十六进制或十进制的区域设置标识符(LCID). 关于如何构建 LCID 的信息, 请在  <a href="https://www.microsoft.com">www.microsoft.com</a> 上搜索下列短语: Locale Identifiers</p>
-<p><strong>Dn</strong>: 日期选项. 请指定 <strong>n</strong> 为下列数字的其中一个:<br>
-  0: 强制使用默认选项. 这也会让短日期生效. <br>
-  1: 使用短日期(仅当 <em>Format</em> 为空时才有意义; 与 2 和 8 不兼容).<br>
-  2: 使用长日期(仅当 <em>Format</em> 为空时才有意义; 与 1 和 8 不兼容).<br>
-  4: 使用备用日历(如果有).<br>
-  8: 使用年份-月份格式(仅当 <em>Format</em> 为空时才有意义; 与 1 和 2 不兼容).<br>
-  0x10: 为从左到右的阅读顺序布局添加标记.<br>
-  0x20: 为从右到左的阅读顺序布局添加标记.<br>
-  0x80000000: 不遵循任何用户对系统默认日期格式的覆盖.<br>
-  0x40000000: 使用系统 ANSI 代码页而不是区域设置代码页进行字符串转换.</p>
-<p><strong>Tn</strong>: 时间选项. 请指定 <strong>n</strong> 为下列数字的其中一个:<br>
-  0: 强制使用默认选项. 这也使得会显示分钟数和秒数.<br>
-  1: 省略分钟数和秒数.<br>
-  2: 省略秒数. <br>
-  4: 省略时间标记(例如 AM/PM).<br>
-  8: 始终使用二十四小时制而不是十二小时制.<br>
-  12: 上面两个参数的组合.<br>
-  0x80000000: 不遵循任何用户对系统默认时间格式的覆盖. <br>
-  0x40000000: 使用系统 ANSI 代码页而不是区域设置代码页进行字符串转换.</p>
+<p><strong>Dn</strong>: 日期选项. 请指定 <strong>n</strong> 为下列数字的其中一个:</p>
+<ul>
+  <li>0 = 强制使用默认选项. 这也会让短日期生效.</li>
+  <li>1 = 使用短日期(仅当 <em>Format</em> 为空时才有意义; 与 2 和 8 不兼容).</li>
+  <li>2 = 使用长日期(仅当 <em>Format</em> 为空时才有意义; 与 1 和 8 不兼容).</li>
+  <li>4 = 使用备用日历(如果有).</li>
+  <li>8 = 使用年份-月份格式(仅当 <em>Format</em> 为空时才有意义; 与 1 和 2 不兼容).</li>
+  <li>0x10 = 为从左到右的阅读顺序布局添加标记.</li>
+  <li>0x20 = 为从右到左的阅读顺序布局添加标记.</li>
+  <li>0x80000000 = 不遵循任何用户对系统默认日期格式的覆盖.</li>
+  <li>0x40000000 = 使用系统 ANSI 代码页而不是区域设置代码页进行字符串转换.</li>
+</ul>
+<p><strong>Tn</strong>: 时间选项. 请指定 <strong>n</strong> 为下列数字的其中一个:</p>
+<ul>
+  <li>0 = 强制使用默认选项. 这也使得会显示分钟数和秒数.</li>
+  <li>1 = 省略分钟数和秒数.</li>
+  <li>2 = 省略秒数.</li>
+  <li>4 = 省略时间标记(例如 AM/PM).</li>
+  <li>8 = 始终使用二十四小时制而不是十二小时制.</li>
+  <li>12 = 上面两个参数的组合.</li>
+  <li>0x80000000 = 不遵循任何用户对系统默认日期格式的覆盖.</li>
+  <li>0x40000000 = 使用系统 ANSI 代码页而不是区域设置代码页进行字符串转换.</li>
+</ul>
+
 <p class="note"><strong>注意</strong>: Dn 和 Tn 可以使用多次以使多个选项生效, 例如: <code>FormatTime("20040228 D2 D4 T1 T8")</code></p>
 <h2 id="Remarks">备注</h2>
 <p>您希望从 <em>Format</em>原义转换到最终字符串中的字母和数字应该用单引号括起来, 如此例所示: <code>"'Date:' MM/dd/yy 'Time:' hh:mm:ss tt"</code>.</p>
 <p>相反, 非字母数字字符(例如空格, tab, 换行符(`n), 斜杠, 冒号, 逗号和其他标点) 不需要包围在单引号中. 例外情况是单引号字符本身: 要产生原义的单引号, 请使用四个连续的单引号(''''), 不过如果它们已经包含在一对外部引号中则仅使用连续的两个就行了.</p>
-<p>如果 <em>Format</em> 同时包含日期和时间元素, 则它们不能混用. 换句话说, 这个字符串应该分成两半: 一半时间, 一半日期. 例如, 包含 &quot;hh yyyy mm&quot; 的格式字符串不会产生期望的结果, 因为它在两个时间元素间包含日期元素.</p>
+<p>如果 <em>Format</em> 同时包含日期和时间元素, 则它们不能混用. 换句话说, 这个字符串应该分成两半: 一半时间, 一半日期. 例如, 包含 "hh yyyy mm" 的格式字符串不会产生期望的结果, 因为它在两个时间元素间包含日期元素.</p>
 <p>当 <em>Format</em> 包含数值的天数(d 或 dd) 后跟着月份的全称(MMMM), 则使用月份名称的所有格形式(如果当前语言有所有格形式).</p>
 <p>相关提示, 可以使用 <a href="DateAdd.htm">DateAdd</a> 和 <a href="DateDiff.htm">DateDiff</a> 对日期和时间进行加减和比较.</p>
 <h2 id="Related">相关</h2>
 <p>要进行反向的转换 -- 即, <em>从</em> 格式化的日期/时间 <em>转换到</em> <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式 -- 请参阅 <a href="https://www.autohotkey.com/forum/topic20405.html">www.autohotkey.com/forum/topic20405.html</a></p>
-<p>另请参阅: <a href="GuiControls.htm#DateTime">Gui DateTime 控件</a>, <a href="../Variables.htm#date">内置的日期和时间变量</a>, <a href="FileGetTime.htm">FileGetTime</a></p>
+<p>另请参阅: <a href="GuiControls.htm#DateTime">Gui DateTime 控件</a>, <a href="Format.htm">Format</a>, <a href="../Variables.htm#date">内置的日期和时间变量</a>, <a href="FileGetTime.htm">FileGetTime</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a></p>
+<p><a href="#ExBasic">#1</a>: 演示不同的用法.</p>
 <pre>TimeString := FormatTime()
 MsgBox "The current time and date (time first) is " TimeString
 
@@ -239,7 +244,7 @@ MsgBox "January 1st of 2005 is in the following ISO year and week number: " Year
 </div>
 
 <div class="ex" id="ExFileTime">
-<p><a href="#ExFileTime">#2</a>: 改变文件的日期-时间戳:</p>
+<p><a href="#ExFileTime">#2</a>: 改变文件的日期-时间戳.</p>
 <pre>FileName := FileSelect(3,, "Pick a file")
 if FileName = "" <em>; 用户没有选取文件.</em>
     return
@@ -249,14 +254,14 @@ MsgBox "The selected file was last modified at " FileTime</pre>
 </div>
 
 <div class="ex" id="ExFormatSec">
-<p><a href="#ExFormatSec">#3</a>: 下面的函数把指定的秒数转换成相应的小时数, 分钟数和秒数(hh:mm:ss 格式).</p>
+<p><a href="#ExFormatSec">#3</a>: 把指定的秒数转换成相应的小时数, 分钟数和秒数(hh:mm:ss 格式).</p>
 <pre>MsgBox FormatSeconds(7384)  <em>; 7384 = 2 小时 + 3 分钟 + 4 秒. 它的结果: 2:03:04</em>
 
 FormatSeconds(NumberOfSeconds)  <em>; 把指定的秒数转换成 hh:mm:ss 格式.</em>
 {
     time := 19990101  <em>; 任意日期的 *午夜*.</em>
     time := DateAdd(time, NumberOfSeconds, "Seconds")
-    return NumberOfSeconds//3600 &quot;:&quot; FormatTime(time, "mm:ss")
+    return NumberOfSeconds//3600 ":" FormatTime(time, "mm:ss")
     <em>/*
     ; 和上面方法不同的是, 这里不支持超过 24 小时的秒数:
     return FormatTime(time, "h:mm:ss")
