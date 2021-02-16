@@ -68,14 +68,14 @@
 <p>PostMessage 把消息放置到和目标窗口关联的消息队列中. 它不会等待确认或回应. 与之相比, SendMessage 在到达超时时间前会等待目标窗口处理消息.</p>
 <p><em>wParam</em> 和 <em>lParam</em> 必须为整数. 如果 AutoHotkey 或目标窗体为 32 位, 那么只有低 32 位被使用; 也就是说, 值将是 -2147483648 到 4294967295(0xFFFFFFFF) 之间. 如果 AutoHotkey 和目标窗体都是 64 位, 那么 <a href="../Variables.htm#cap">AutoHotkey 支持的</a>任何整数值都可以使用. 与 AutoHotkey 支持的所有整数值一样, 前缀 0x 表示一个十六进制值. 例如, 0xFF 等同于 255.</p>
 <p>字符串可以通过 <em>wParam</em> 或 <em>lParam</em> 来传递变量地址(实现传递字符串的效果). 下面的例子演示了通过<a href="../Variables.htm#amp">地址操作符(&amp;)</a> 实现这一效果:</p>
-<pre>SendMessage, 0xC, 0, <strong>&amp;MyVar</strong>, ClassNN, WinTitle  <em>; 0XC 为 WM_SETTEXT</em></pre>
+<pre>SendMessage, 0x000C, 0, <strong>&amp;MyVar</strong>, ClassNN, WinTitle  <em>; 0X000C 为 WM_SETTEXT</em></pre>
 <p><span class="ver">[v1.0.43.06+]</span>: 由消息的接收者放入 MyVar 的字符串可以正确识别而不需要额外的步骤. 不过, 只有在参数的首个字符为和符号(&amp;) 时才可以; 例如, <code>5+&amp;MyVar</code> 不行, 但 <code>&amp;MyVar</code> 或 <code>&amp;MyVar+5</code> 可以.</p>
 <p>引号包围的(原义) 字符串也可以发送, 例如下面这个可运行示例(此时不应该使用 &amp; 运算符):</p>
 <pre>Run Notepad
 WinWait Untitled - Notepad
-SendMessage, 0xC, 0, <strong>"New Notepad Title"</strong>  <em>; 0XC 为 WM_SETTEXT</em></pre>
+SendMessage, 0x000C, 0, <strong>"New Notepad Title"</strong>  <em>; 0x000C 为 WM_SETTEXT</em></pre>
 <p>要发送消息到系统中的所有窗口, 包括隐藏或禁用的那些, 请在 <em>WinTitle</em> 中指定 <code>ahk_id 0xFFFF</code>(0xFFFF 为 HWND_BROADCAST). 这种技术应该只用于目标为广播的消息, 例如:</p>
-<pre>SendMessage, 0x1A,,,, ahk_id 0xFFFF  <em>; 0x1A 为 WM_SETTINGCHANGE</em></pre>
+<pre>SendMessage, 0x001A,,,, ahk_id 0xFFFF  <em>; 0x001A 为 WM_SETTINGCHANGE</em></pre>
 <p>要让脚本接收消息, 请使用 <a href="OnMessage.htm">OnMessage()</a>.</p>
 <p>请参阅<a href="../misc/SendMessage.htm">消息指南</a>来查看使用这些命令的介绍.</p>
 <p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时,才能检测到隐藏窗口.</p>
@@ -88,7 +88,7 @@ SendMessage, 0xC, 0, <strong>"New Notepad Title"</strong>  <em>; 0XC 为 WM_SETT
 <pre>#o:: <em>; Win+O</em>
 Sleep 1000  <em>; 让用户有机会释放按键(以防释放它们时再次唤醒显视器).
 ; 关闭显示器:</em>
-SendMessage, 0x112, 0xF170, 2,, Program Manager  <em>; 0x112 是 WM_SYSCOMMAND, 0xF170 是 SC_MONITORPOWER.
+SendMessage, 0x0112, 0xF170, 2,, Program Manager  <em>; 0x0112 是 WM_SYSCOMMAND, 0xF170 是 SC_MONITORPOWER.
 ; 对上面命令的注释: 使用 -1 代替 2 来打开显示器.
 ; 使用 1 代替 2 来激活显示器的节能模式.</em>
 return</pre>
@@ -96,24 +96,24 @@ return</pre>
 
 <div class="ex" id="ExScreenSave">
 <p><a href="#ExScreenSave">#2</a>: 启动用户选择的屏幕保护程序.</p>
-<pre>SendMessage, 0x112, 0xF140, 0,, Program Manager  <em>; 0x112 是 WM_SYSCOMMAND, 而 0xF140 是 SC_SCREENSAVE.</em></pre>
+<pre>SendMessage, 0x0112, 0xF140, 0,, Program Manager  <em>; 0x0112 是 WM_SYSCOMMAND, 而 0xF140 是 SC_SCREENSAVE.</em></pre>
 </div>
 
 <div class="ex" id="ExVScrollUp">
 <p><a href="#ExVScrollUp">#3</a>: 向上滚动一行(用于含垂直滚动条的控件).</p>
 <pre>ControlGetFocus, control, A
-SendMessage, 0x115, 0, 0, %control%, A</pre>
+SendMessage, 0x0115, 0, 0, %control%, A</pre>
 </div>
 
 <div class="ex" id="ExVScrollDown">
-<p><a href="#ExVScrollDown">#4</a>: 向下滚动一行 (for a control that has a vertical scroll bar).</p>
+<p><a href="#ExVScrollDown">#4</a>: 向下滚动一行(用于含垂直滚动条的控件).</p>
 <pre>ControlGetFocus, control, A
-SendMessage, 0x115, 1, 0, %control%, A</pre>
+SendMessage, 0x0115, 1, 0, %control%, A</pre>
 </div>
 
 <div class="ex" id="ExSwitchKeybLang">
 <p><a href="#ExSwitchKeybLang">#5</a>: 切换活动窗口的键盘布局/语言为英语.</p>
-<pre>PostMessage, 0x50, 0, 0x4090409,, A  <em>; 0x50 是 WM_INPUTLANGCHANGEREQUEST.</em></pre>
+<pre>PostMessage, 0x0050, 0, 0x4090409,, A  <em>; 0x0050 是 WM_INPUTLANGCHANGEREQUEST.</em></pre>
 </div>
 
 <div class="ex" id="ExWinamp">
@@ -131,7 +131,7 @@ if (ErrorLevel != "FAIL")
 <p><a href="#ExPID">#7</a>: 找出 AHK 脚本的进程 ID(另一种方法是 <a href="WinGet.htm">WinGet PID</a>).</p>
 <pre>SetTitleMatchMode, 2
 DetectHiddenWindows, On
-SendMessage, 0x44, 0x405, 0, , SomeOtherScript.ahk - AutoHotkey v
+SendMessage, 0x0044, 0x0405, 0, , SomeOtherScript.ahk - AutoHotkey v
 MsgBox %ErrorLevel% is the process id.</pre>
 </div>
 

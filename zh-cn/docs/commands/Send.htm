@@ -71,11 +71,11 @@
         <td>{LWin}<br>{RWin}</td>
         <td>{LWin down}<br>{RWin down}</td>
         <td>{LWin up}<br>{RWin up}</td>
-        <td><code>Send #e</code> 按住 <kbd>Win</kbd> 键时按下字母 <kbd>E</kbd> 键</td>
+        <td><code>Send #e</code> 按住 <kbd>Win</kbd> 时按下字母 <kbd>E</kbd></td>
       </tr>
     </table>
-    <p class="note"><strong>注意</strong>: 由于大写字母是通过发送 <kbd>Shift</kbd> 键产生的, 因此在某些程序中 <code>A</code> 和 <code>a</code> 会产生不同的效果. 例如, <code>!A</code> 按下 <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd>, 而 <code>!a</code> 按下 <kbd>Alt</kbd>+<kbd>A</kbd>. 如果不确定, 请使用小写字母.</p>
-    <p>字符 <code>{}</code> 用于括起<a href="#keynames">键名和其他选项</a>, 并发送特殊的原义字符. 例如, <code>{Tab}</code> 是 <kbd>Tab</kbd> 键, 而 <code>{!}</code> 是原义的感叹号.</p>
+    <p class="note"><strong>注意</strong>: 由于大写字母是通过发送 <kbd>Shift</kbd> 产生的, 因此在某些程序中 <code>A</code> 和 <code>a</code> 会产生不同的效果. 例如, <code>!A</code> 按下 <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd>, 而 <code>!a</code> 按下 <kbd>Alt</kbd>+<kbd>A</kbd>. 如果不确定, 请使用小写字母.</p>
+    <p>字符 <code>{}</code> 用于括起<a href="#keynames">键名和其他选项</a>, 并发送特殊的原义字符. 例如, <code>{Tab}</code> 是 <kbd>Tab</kbd>, 而 <code>{!}</code> 是原义的感叹号.</p>
     <p><span class="ver">[v1.1.27+]:</span> 将一个纯 ASCII 字母(a-z 或 A-Z) 括在大括号中强制它作为相应的虚拟键码发送, 即使该字符在当前键盘布局上不存在. 换句话说, <code>Send a</code> 产生字母 "a", 而 <code>Send {a}</code> 根据键盘布局, 可能产生也可能不产生 "a". 有关详情, 请参阅<a href="#AZ">下面的注释</a>.</p>
   </dd>
 
@@ -91,22 +91,22 @@
 <p>以下模式影响 <em>Keys</em> 中字符的解释或键发送命令(如 Send, SendInput, SendPlay, SendEvent 和 <a href="ControlSend.htm">ControlSend</a>) 的行为. 这些模式必须在 <em>Keys</em> 中指定为 <code>{x}</code>, 其中 x 是 Raw, Text 或 Blind. 例如, <code>{Raw}</code>.</p>
 
 <h3 id="Raw">原始模式</h3>
-<p id="SendRaw">可以使用 <code>{Raw}</code>, SendRaw 或 <a href="ControlSend.htm">ControlSendRaw</a> 启用原始模式, 这会导致所有后续字符, 包括特殊字符 <code>^+!#{}</code>, 都按原义进行解释, 如 <code>{Enter}</code> 不会转换为 <kbd>Enter</kbd> 键击, <code>^c</code> 不会转换为 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 例如, 发送 <code>Send {Raw}{Tab}</code> 和 <code>SendRaw {Tab}</code> 都发送 <code>{Tab}</code>, 而不是 <kbd>Tab</kbd> 键.</p>
+<p id="SendRaw">可以使用 <code>{Raw}</code>, SendRaw 或 <a href="ControlSend.htm">ControlSendRaw</a> 启用原始模式, 这会导致所有后续字符, 包括特殊字符 <code>^+!#{}</code>, 都按原义进行解释, 如 <code>{Enter}</code> 不会转换为 <kbd>Enter</kbd>, <code>^c</code> 不会转换为 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 例如, 发送 <code>Send {Raw}{Tab}</code> 和 <code>SendRaw {Tab}</code> 都发送 <code>{Tab}</code>, 而不是 <kbd>Tab</kbd>.</p>
 <p>原始模式不影响<a href="../misc/EscapeChar.htm">转义序列</a>, <a href="../Variables.htm#retrieving">变量引用</a>和<a href="../Variables.htm#Expressions">表达式</a>的解释. 例如, <code>SendRaw, ``100`%</code> 为发送字符 <code>`100%</code>. 当使用 <a href="ControlSend.htm">ControlSend</a> 时, 也需要转义原义的逗号(<code>`,</code>).</p>
 
 <h3 id="Text">文本模式<span class="ver">[v1.1.27+]</span></h3>
 <p id="SendText">可以使用 <code>{Text}</code> 来启用文本模式, 与原始模式类似, 不同之处在于不会尝试将字符(<code>`r</code>, <code>`n</code>, <code>`t</code> 和 <code>`b</code> 除外) 转换为键码; 作为代替, <a href="#fallback">后备方法</a>适用于所有剩余的字符. 对于 SendEvent, SendInput 和 <a href="ControlSend.htm">ControlSend</a>, 这提高了可靠性, 因为字符对正确的修饰符状态的依赖性要小得多. 文本模式可以与盲从模式结合使用, 以避免释放任何修饰键: <code>Send {Blind}{Text}your text</code>. 但是, 一些应用程序要求修饰键被释放.</p>
-<p><code>`n</code>, <code>`r</code> 和 <code>`r`n</code> 都被转换为单独一次 <kbd>Enter</kbd> 键击, 不像普通模式和原始模式, 转换 <code>`r`n</code> 为两次 <kbd>Enter</kbd> 键击. <code>`t</code> 转换为 <kbd>Tab</kbd> 而 <code>`b</code> 转换为 <kbd>Backspace</kbd>, 但所有其他字符都是不经转换直接发送的.</p>
-<p><span class="ver">[v1.1.29+]:</span> 与盲从模式类似, 文本模式忽略 <a href="SetStoreCapslockMode.htm">SetStoreCapsLockMode</a>(也就是说, <kbd>CapsLock</kbd> 的状态不会改变), 并且不<a href="../Hotkeys.htm#win-l">等待 <kbd>Win</kbd> 键被释放</a>. 这是因为文本模式通常不依赖于 <kbd>CapsLock</kbd> 的状态, 并且不能触发系统 <kbd>Win</kbd>+<kbd>L</kbd> 热键. 但是, 这仅适用于当 <em>Keys</em> 以 <code>{Text}</code> 或 <code>{Blind}{Text}</code> 开头时.</p>
+<p><code>`n</code>, <code>`r</code> 和 <code>`r`n</code> 都被转换为单独一次 <kbd>Enter</kbd>, 不像普通模式和原始模式, 转换 <code>`r`n</code> 为两次 <kbd>Enter</kbd>. <code>`t</code> 转换为 <kbd>Tab</kbd> 而 <code>`b</code> 转换为 <kbd>Backspace</kbd>, 但所有其他字符都是不经转换直接发送的.</p>
+<p><span class="ver">[v1.1.29+]:</span> 与盲从模式类似, 文本模式忽略 <a href="SetStoreCapslockMode.htm">SetStoreCapsLockMode</a>(也就是说, <kbd>CapsLock</kbd> 的状态不会改变), 并且不<a href="../Hotkeys.htm#win-l">等待 <kbd>Win</kbd> 被释放</a>. 这是因为文本模式通常不依赖于 <kbd>CapsLock</kbd> 的状态, 并且不能触发系统 <kbd>Win</kbd>+<kbd>L</kbd> 热键. 但是, 这仅适用于当 <em>Keys</em> 以 <code>{Text}</code> 或 <code>{Blind}{Text}</code> 开头时.</p>
 
 <h3 id="Blind">盲从模式</h3>
 <p id="blind">可以使用 <code>{Blind}</code> 启用盲从模式, 该模式通过禁用通常自动执行的许多操作来使脚本按预期运行, 从而赋予脚本更多控制权. 要启用盲从模式, <code>{Blind}</code> 必须是字符串中的第一个项目. 它具有以下效果:</p>
 <ul>
-  <li>如果修饰符(Alt, Ctrl, Shift 和 Win) 在发送开始时为按下的状态, 则盲从模式不会释放这些按键. 例如, 热键 <code>+s::Send {Blind}abc</code> 将发送 ABC 而不是 abc, 因为用户按住了 <kbd>Shift</kbd> 键.</li>
+  <li>如果修饰符(Alt, Ctrl, Shift 和 Win) 在发送开始时为按下的状态, 则盲从模式不会释放这些按键. 例如, 热键 <code>+s::Send {Blind}abc</code> 将发送 ABC 而不是 abc, 因为用户按住了 <kbd>Shift</kbd>.</li>
   <li>修饰键有不同的恢复方式, 允许 Send 能关闭热键的修饰键, 即使用户在物理上仍然是按下的. 例如, <code>^space::Send {Ctrl up}</code> 如果用户仍然物理按住 <kbd>Ctrl</kbd>, 则自动推送 <kbd>Ctrl</kbd> 按下, 而 <code>^space::Send {Blind}{Ctrl up}</code> 允许 <kbd>Ctrl</kbd> 逻辑松开, 即使它物理上是按下的.</li>
   <li><a href="SetStoreCapslockMode.htm">SetStoreCapsLockMode</a> 会被忽略; 也就是说, <kbd>CapsLock</kbd> 的状态不会改变.</li>
   <li><a href="_MenuMaskKey.htm">菜单掩饰</a>是禁用的. 也就是说, Send 忽略额外的击键, 这些键原本会被发送, 以防止: 1) 在按下 Win 键(LWin/RWin) 时, 出现开始菜单; 2) 在按下 Alt 键时, 菜单栏的激活. 然而, 盲从模式不会阻止在钩子热键激活后由键盘钩子进行的掩饰.</li>
-  <li>即使文本包含一个 <kbd>L</kbd> 按键, Send 也不会等待 <kbd>Win</kbd> 按键被释放. 一般情况下会等待 <kbd>Win</kbd> 键释放, 以防止 Send 触发系统 "锁定工作站" 的热键(<kbd>Win</kbd>+<kbd>L</kbd>). 有关详细信息, 请参阅<a href="../Hotkeys.htm#win-l">热键</a>.</li>
+  <li>即使文本包含一个 <kbd>L</kbd> 按键, Send 也不会等待 <kbd>Win</kbd> 按键被释放. 一般情况下会等待 <kbd>Win</kbd> 释放, 以防止 Send 触发系统 "锁定工作站" 的热键(<kbd>Win</kbd>+<kbd>L</kbd>). 有关详细信息, 请参阅<a href="../Hotkeys.htm#win-l">热键</a>.</li>
 </ul>
 <p>在<a href="../misc/Remap.htm">按键的重映射</a>时, 盲从模式可以在其内部使用. 例如, 重映射 <code>a::b</code> 会发生这样的情况: 1)  输入 "a" 时会映射为 "b"; 2) 输入大写字母 "A" 时映射为大写字母 "B"; 并且 3) 按下 <kbd>Ctrl</kbd>+<kbd>A</kbd> 时映射为按下 <kbd>Ctrl</kbd>+<kbd>B</kbd>.</p>
 <p>SendRaw 或 <a href="ControlSend.htm">ControlSendRaw</a> 不支持 <code>{Blind}</code> ; 请使用 <code>{Blind}{Raw}</code> 代替.</p>
@@ -121,7 +121,7 @@
   </tr>
   <tr>
     <td>{F1} - {F24}</td>
-    <td>功能键. 例如: {F12} 表示 <kbd>F12</kbd> 键.</td>
+    <td>功能键. 例如: {F12} 表示 <kbd>F12</kbd>.</td>
   </tr>
   <tr>
     <td>{!}</td>
@@ -149,7 +149,7 @@
   </tr>
   <tr>
     <td>{Enter}</td>
-    <td>主键盘上的 <kbd>Enter</kbd> 键</td>
+    <td>主键盘上的 <kbd>Enter</kbd></td>
   </tr>
   <tr>
     <td>{Escape} 或 {Esc}</td>
@@ -233,15 +233,15 @@
   </tr>
   <tr>
     <td>{LControl} 或 {LCtrl}</td>
-    <td>左 <kbd>Ctrl</kbd> 键(技术信息: 发送左边键的虚拟键码而不是中性键)(译者注: 左 Ctrl 键 VK A2, SC 01D)</td>
+    <td>左 <kbd>Ctrl</kbd> (技术信息: 发送左边键的虚拟键码而不是中性键)(译者注: 左 Ctrl 键 VK A2, SC 01D)</td>
   </tr>
   <tr>
     <td>{RControl} 或 {RCtrl}</td>
-    <td>右 <kbd>Ctrl</kbd> 键(译者注: 右 Ctrl 键 VK A3, SC 11D)</td>
+    <td>右 <kbd>Ctrl</kbd>(译者注: 右 Ctrl 键 VK A3, SC 11D)</td>
   </tr>
   <tr>
     <td>{Control down} 或 {Ctrl down}</td>
-    <td>按住 <kbd>Ctrl</kbd> 键直到发送 {Ctrl up}. 要按住左边或右边的键, 请使用 {RCtrl down} 和 {RCtrl up}.</td>
+    <td>按住 <kbd>Ctrl</kbd> 直到发送 {Ctrl up}. 要按住左边或右边的键, 请使用 {RCtrl down} 和 {RCtrl up}.</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -253,15 +253,15 @@
   </tr>
   <tr>
     <td>{LAlt}</td>
-    <td>左 <kbd>Alt</kbd> 键(技术信息: 发送左边键的虚拟键码而不是中性键)(译者注: 左 Alt 键 VK A4, SC 038)</td>
+    <td>左 <kbd>Alt</kbd>(技术信息: 发送左边键的虚拟键码而不是中性键)(译者注: 左 Alt 键 VK A4, SC 038)</td>
   </tr>
   <tr>
     <td>{RAlt}</td>
-    <td>右 <kbd>Alt</kbd> 键(或 <kbd>AltGr</kbd>, 取决于键盘布局)</td>
+    <td>右 <kbd>Alt</kbd>(或 <kbd>AltGr</kbd>, 取决于键盘布局)</td>
   </tr>
   <tr>
     <td>{Alt Down}</td>
-    <td>按住 <kbd>Alt</kbd> 键直到发送 {Alt up}. 要按住左边或右边的键, 请使用 {RAlt down} 和 {RAlt up}.</td>
+    <td>按住 <kbd>Alt</kbd> 直到发送 {Alt up}. 要按住左边或右边的键, 请使用 {RAlt down} 和 {RAlt up}.</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -273,15 +273,15 @@
   </tr>
   <tr>
     <td>{LShift}</td>
-    <td>左 <kbd>Shift</kbd> 键(技术信息: 发送左边键的虚拟键码而不是中性键)(译者注: 左 Shift 键 VK A0, SC 02A)</td>
+    <td>左 <kbd>Shift</kbd>(技术信息: 发送左边键的虚拟键码而不是中性键)(译者注: 左 Shift 键 VK A0, SC 02A)</td>
   </tr>
   <tr>
     <td>{RShift}</td>
-    <td>右 <kbd>Shift</kbd> 键</td>
+    <td>右 <kbd>Shift</kbd></td>
   </tr>
   <tr>
     <td>{Shift down}</td>
-    <td>按住 <kbd>Shift</kbd> 键直到发送 {Shift up}. 要按住左边或右边的键, 请使用 {RShift down} 和 {RShift up}.</td>
+    <td>按住 <kbd>Shift</kbd>直到发送 {Shift up}. 要按住左边或右边的键, 请使用 {RShift down} 和 {RShift up}.</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -289,19 +289,19 @@
   </tr>
   <tr>
     <td>{LWin}</td>
-    <td>左 <kbd>Win</kbd> 键</td>
+    <td>左 <kbd>Win</kbd></td>
   </tr>
   <tr>
     <td>{RWin}</td>
-    <td>右 <kbd>Win</kbd> 键</td>
+    <td>右 <kbd>Win</kbd></td>
   </tr>
   <tr>
     <td>{LWin down}</td>
-    <td>按住左 <kbd>Win</kbd> 键直到发送 {LWin up}</td>
+    <td>按住左 <kbd>Win</kbd> 直到发送 {LWin up}</td>
   </tr>
   <tr>
     <td>{RWin down}</td>
-    <td>按住右 <kbd>Win</kbd> 键直到发送 {RWin up}</td>
+    <td>按住右 <kbd>Win</kbd> 直到发送 {RWin up}</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -309,11 +309,11 @@
   </tr>
   <tr>
     <td>{AppsKey}</td>
-    <td><kbd>Menu</kbd> 键(调用右键点击或上下文菜单)</td>
+    <td><kbd>Menu</kbd>(调用右键点击或上下文菜单)</td>
   </tr>
   <tr>
     <td>{Sleep}</td>
-    <td><kbd>Sleep</kbd> 键.</td>
+    <td><kbd>Sleep</kbd>.</td>
   </tr>
   <tr id="asc">
     <td>{ASC nnnnn}</td>
@@ -347,7 +347,7 @@
   </tr>
   <tr>
     <td>{NumpadEnter}</td>
-    <td>小键盘上的 <kbd>Enter</kbd> 键</td>
+    <td>小键盘上的 <kbd>Enter</kbd></td>
   </tr>
   <tr>
     <td>{NumpadMult}</td>
@@ -371,47 +371,47 @@
   </tr>
   <tr>
     <td>{NumpadDel}</td>
-    <td>小键盘上的 <kbd>Del</kbd> 键(此键和后面的小键盘按键是在 <kbd>NumLock</kbd> 关闭时输入的)</td>
+    <td>小键盘上的 <kbd>Del</kbd>(此键和后面的小键盘按键是在 <kbd>NumLock</kbd> 关闭时输入的)</td>
   </tr>
   <tr>
     <td>{NumpadIns}</td>
-    <td>小键盘上的 <kbd>Ins</kbd> 键</td>
+    <td>小键盘上的 <kbd>Ins</kbd></td>
   </tr>
   <tr>
     <td>{NumpadClear}</td>
-    <td>小键盘上的 <kbd>Clear</kbd> 键(通常在 <kbd>Numlock</kbd> 关闭时输入 <kbd>5</kbd> 的键).</td>
+    <td>小键盘上的 <kbd>Clear</kbd>(通常在 <kbd>Numlock</kbd> 关闭时输入 <kbd>5</kbd>).</td>
   </tr>
   <tr>
     <td>{NumpadUp}</td>
-    <td>小键盘上的 <kbd>&uarr;</kbd> (向上键)</td>
+    <td>小键盘上的 <kbd>&uarr;</kbd>(向上键)</td>
   </tr>
   <tr>
     <td>{NumpadDown}</td>
-    <td>小键盘上的 <kbd>&darr;</kbd> 向下键</td>
+    <td>小键盘上的 <kbd>&darr;</kbd>(向下键)</td>
   </tr>
   <tr>
     <td>{NumpadLeft}</td>
-    <td>小键盘上的 <kbd>&larr;</kbd> 向左键</td>
+    <td>小键盘上的 <kbd>&larr;</kbd>(向左键)</td>
   </tr>
   <tr>
     <td>{NumpadRight}</td>
-    <td>小键盘上的 <kbd>&rarr;</kbd> 向右键</td>
+    <td>小键盘上的 <kbd>&rarr;</kbd>(向右键)</td>
   </tr>
   <tr>
     <td>{NumpadHome}</td>
-    <td>小键盘上的 <kbd>Home</kbd> 键</td>
+    <td>小键盘上的 <kbd>Home</kbd></td>
   </tr>
   <tr>
     <td>{NumpadEnd}</td>
-    <td>小键盘上的 <kbd>End</kbd> 键</td>
+    <td>小键盘上的 <kbd>End</kbd></td>
   </tr>
   <tr>
     <td>{NumpadPgUp}</td>
-    <td>小键盘上的 <kbd>PgUp</kbd> 向上翻页键</td>
+    <td>小键盘上的 <kbd>PgUp</kbd>(向上翻页)</td>
   </tr>
   <tr>
     <td>{NumpadPgDn}</td>
-    <td>小键盘上的 <kbd>PgDn</kbd> 向下翻页键</td>
+    <td>小键盘上的 <kbd>PgDn</kbd>(向下翻页)</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
@@ -555,8 +555,8 @@ Send {Up up}  <em>; 释放向上键.</em></pre>
 }
 Send {Tab up}  <em>; 松开按键.</em></pre>
 <p>默认情况下, 如果通过发送修饰键来表示键是按下的, Send 命令不会自动释放修饰键(Control, Shift, Alt 和 Win). 例如, 如果用户物理按下 <kbd>Ctrl</kbd> 时, <code>Send a</code> 类似于 <code>Send <a href="#blind">{Blind}</a>{Ctrl up}a{Ctrl down}</code> 的行为, 但 <code>Send {Ctrl Down}</code> 后面接着 <code>Send a</code> 将产生 <kbd>Ctrl</kbd>+<kbd>A</kbd> 的击键. <em>DownTemp</em> 和 <em>DownR</em> 可以用来覆盖这种行为. 除了修饰键(Control, Shift, Alt 和 Win) <em>DownTemp</em> 和 <em>DownR</em> 与 <em>Down</em> 相同.</p>
-<p id="DownTemp"><strong>DownTemp</strong> 告诉随后的 Send, 按键不是永久按下的, 并且可以在按键调用时被释放. 例如, <code>Send {Control DownTemp}</code> 后面跟着 <code>Send a</code> 会产生一个 <kbd>A</kbd> 键击, 而不是 <kbd>Ctrl</kbd>+<kbd>A</kbd> 键击. 任何 Send 的使用都可能会永久释放修饰符, 所以 <em>DownTemp</em> 对于<a href="../misc/Remap.htm">重映射</a>修饰键是不理想的.</p>
-<p id="DownR"><span class="ver">[v1.1.27+]:</span> <strong>DownR</strong> (其中 "R" 表示<a href="../misc/Remap.htm">重映射</a>, 这是它的主要用途) 告诉后续的 send, 如果按键被自动释放, 当发送完成时应该再次按下. 例如, <code>Send {Control DownR}</code> 后面跟着 <code>Send a</code>会产生一个正常的 <kbd>A</kbd> 键击, 而不是 <kbd>Ctrl</kbd>+<kbd>A</kbd> 键击, 但是会使 <kbd>Ctrl</kbd> 键处于按下状态, 以便与键盘快捷键一起使用. 换句话说, <em>DownR</em> 有类似于物理按键的效果.</p>
+<p id="DownTemp"><strong>DownTemp</strong> 告诉随后的 Send, 按键不是永久按下的, 并且可以在按键调用时被释放. 例如, <code>Send {Control DownTemp}</code> 后面跟着 <code>Send a</code> 会产生一个 <kbd>A</kbd>, 而不是 <kbd>Ctrl</kbd>+<kbd>A</kbd>. 任何 Send 的使用都可能会永久释放修饰符, 所以 <em>DownTemp</em> 对于<a href="../misc/Remap.htm">重映射</a>修饰键是不理想的.</p>
+<p id="DownR"><span class="ver">[v1.1.27+]:</span> <strong>DownR</strong> (其中 "R" 表示<a href="../misc/Remap.htm">重映射</a>, 这是它的主要用途) 告诉后续的 send, 如果按键被自动释放, 当发送完成时应该再次按下. 例如, <code>Send {Control DownR}</code> 后面跟着 <code>Send a</code>会产生一个正常的 <kbd>A</kbd>, 而不是 <kbd>Ctrl</kbd>+<kbd>A</kbd>, 但是会使 <kbd>Ctrl</kbd> 处于按下状态, 以便与键盘快捷键一起使用. 换句话说, <em>DownR</em> 有类似于物理按键的效果.</p>
 <p>如果某个字符与当前键盘布局上的虚拟键不一致, 则不能"按下"或"释放". 例如, <code>Send {μ up}</code> 对大多数键盘布局没有效果, 而 <code>Send {μ down}</code> 等同于 <code>Send μ</code>.</p>
 
 <h2 id="Remarks">一般说明</h2>
@@ -569,7 +569,7 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <p class="warning"><strong>注意:</strong> 使用上述方法发送字符通常不会触发键盘快捷键或热键.</p>
 <p id="AZ"><span class="ver">[v1.1.27+]:</span> 对于 <strong>a-z</strong> 或 <strong>A-Z</strong> (纯 ASCII 字母) 范围内的字符, 每个当前键盘布局中不存在的字符可以作为字符或相应的虚拟键码(vk41-vk5A) 发送:</p>
 <ul>
-  <li>如果只是发送字母(即没有修饰符或大括号), 或如果<a href="#Raw">原始</a>模式生效中, 则将其作为字符发送. 例如, <code>Send {Raw}Regards</code> 发送预期的文本, 即使按住 <kbd>R</kbd> 键(vk52) 产生其他一些字符(例如 <kbd>к</kbd> 在俄语键盘). 在这种情况下, <code>{Raw}</code> 可以省略, 除非一个修饰键被前一个 Send 所实现.</li>
+  <li>如果只是发送字母(即没有修饰符或大括号), 或如果<a href="#Raw">原始</a>模式生效中, 则将其作为字符发送. 例如, <code>Send {Raw}Regards</code> 发送预期的文本, 即使按住 <kbd>R</kbd>(vk52) 产生其他一些字符(例如 <kbd>к</kbd> 在俄语键盘). 在这种情况下, <code>{Raw}</code> 可以省略, 除非一个修饰键被前一个 Send 所实现.</li>
   <li>如果一个或多个修饰键已经通过 Send 命令生效, 或者如果该字母包裹在大括号中, 它将作为键码发送(如果字母为大写则用 <kbd>Shift</kbd> 修饰). 这使脚本可以更容易地激活标准键盘快捷键. 例如, <code>^c</code> 和 <code>{Ctrl down}c{Ctrl up}</code> 激活标准的 <kbd>Ctrl</kbd>+<kbd>C</kbd> 快捷键, 而 <code>{c}</code> 等同于 <code>{vk43}</code>.</li>
 </ul>
 <p>如果字母存在于当前的键盘布局中, 则始终以键盘布局与该字母关联的任何键码(除非使用<a href="#SendText">文本模式</a>, 在这种情况下该字符以其他方式发送) 的形式发送. 换句话说, 上面的部分只适用于非拉丁语的布局, 如俄语.</p>
@@ -592,7 +592,7 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <p>在三种发送模式中, SendPlay 是最不常用的, 因为它本身并不模拟键击和鼠标点击. 作为替代, 它制造一系列事件(消息) 直接流向活动窗口(类似于 <a href="ControlSend.htm">ControlSend</a>, 但在更低的层面). 因此 SendPlay 不会触发热键或热字串.</p>
 <p>和 <a href="#SendInputDetail">SendInput</a> 一样, SendPlay 的键击不会夹杂用户输入的内容. 因此, 如果用户碰巧在 SendPlay 发送期间输入了一些内容, 则它们会被延迟到发送完后.</p>
 <p>尽管 SendPlay 明显比 SendInput 慢, 但它通常比传统的 <a href="#SendEvent">SendEvent</a> 模式更快(即使在 <a href="SetKeyDelay.htm">KeyDelay</a> 为 -1 时).</p>
-<p>如果安装了<a href="_InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 <kbd>Win</kbd> 键(LWin 和 RWin). 这样避免了在发送期间当用户无意按了 <kbd>Win</kbd> 键时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后(通过缓冲).</p>
+<p>如果安装了<a href="_InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 <kbd>Win</kbd>(LWin 和 RWin). 这样避免了在发送期间当用户无意按了 <kbd>Win</kbd> 时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后(通过缓冲).</p>
 <p>SendPlay 不使用 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 的标准设置. 作为替代, 它默认没有延迟, 这可以像下面例子演示的那样改变:</p>
 <pre><a href="SetKeyDelay.htm">SetKeyDelay</a>, 0, 10, <strong>Play</strong>  <em>; 请注意 0 和 -1 在 SendPlay 模式中是一样的.</em>
 <a href="SetMouseDelay.htm">SetMouseDelay</a>, 10, <strong>Play</strong></pre>

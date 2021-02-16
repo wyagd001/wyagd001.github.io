@@ -27,12 +27,12 @@
 <h2 id="intro">简介</h2>
 <p><strong>限制</strong>: 下面描述的 AutoHotkey 重映射功能通常不如直接通过 Windows 注册表进行映射那么直接有效. 对于每种方法的优点和缺点, 请参阅<a href="#registry">注册表重映射</a>.</p>
 <h2 id="Remap">重映射键盘和鼠标</h2>
-<p>内置重映射功能的语法为 <code>OriginKey::DestinationKey</code>. 例如, 只包含下面这行内容的<a href="../Scripts.htm">脚本</a>会将 <kbd>A</kbd> 键重映射成 <kbd>B</kbd> 键:</p>
+<p>内置重映射功能的语法为 <code>OriginKey::DestinationKey</code>. 例如, 只包含下面这行内容的<a href="../Scripts.htm">脚本</a>会将 <kbd>A</kbd> 重映射成 <kbd>B</kbd>:</p>
 <pre>a::b</pre>
-<p>上面的例子没有改变 <kbd>B</kbd> 键自身的功能. <kbd>B</kbd> 键会继续发送 "b" 的键击, 除非把它重映射成其他功能, 就像下面例子中演示的那样:</p>
+<p>上面的例子没有改变 <kbd>B</kbd> 自身的功能. <kbd>B</kbd> 会继续发送 "b" 的键击, 除非把它重映射成其他功能, 就像下面例子中演示的那样:</p>
 <pre>a::b
 b::a</pre>
-<p>上述例子中使用小写字母, 在大多数情况下建议这么做, 因为它也会映射相应的大写字母(即在 <kbd>CapsLock</kbd> 打开或 <kbd>Shift</kbd> 键被按住时会发送大写形式). 与之相比, 在右边使用大写字母会强制发送大写形式. 例如, 下面的代码行在您输入 "a" 或 "A" 时都会产生大写字母 B(只要 <kbd>CapsLock</kbd> 是关闭的):</p>
+<p>上述例子中使用小写字母, 在大多数情况下建议这么做, 因为它也会映射相应的大写字母(即在 <kbd>CapsLock</kbd> 打开或 <kbd>Shift</kbd> 被按住时会发送大写形式). 与之相比, 在右边使用大写字母会强制发送大写形式. 例如, 下面的代码行在您输入 "a" 或 "A" 时都会产生大写字母 B(只要 <kbd>CapsLock</kbd> 是关闭的):</p>
 <pre>a::B</pre>
 <p id="blind-pitfall">然而, 与上面相反的映射将不会像人们所期望的那样工作, 因为一个重新映射从来不会"释放”用来触发它的修饰符键. 例如, <code>A::b</code> 通常相当于 <code>A::B</code> 和 <code>^a::b</code> 相当于 <code>^a::^b</code>. 这是因为每个重映射<a href="#actually">在内部使用 {Blind}</a> 来允许键或键组合与其他修饰符组合在一起.</p>
 
@@ -41,7 +41,7 @@ b::a</pre>
 <table class="info">
   <tr>
     <td style="min-width: 11em;"><code>MButton::Shift</code></td>
-    <td>把鼠标中键映射成 <kbd>Shift</kbd> 键.</td>
+    <td>把鼠标中键映射成 <kbd>Shift</kbd>.</td>
   </tr>
   <tr>
     <td><code>XButton1::LButton</code></td>
@@ -57,7 +57,7 @@ b::a</pre>
 <table class="info">
   <tr>
     <td style="min-width: 11em;"><code>CapsLock::Ctrl</code></td>
-    <td>把 <kbd>CapsLock</kbd> 映射成 <kbd>Ctrl</kbd> 键. 要保留打开及关闭 <kbd>CapsLock</kbd> 的功能, 需先包含重映射 <code>+CapsLock::CapsLock</code>. 这样, 当按住 <kbd>Shift</kbd> 并点击 Capslock 时, 可切换 <kbd>CpasLock</kbd> 的开关状态. 因为两个重映射均允许附加修饰键被按下, 额外指定的 <code>+CapsLock::CapsLock</code> 重映射须优先放置.</td>
+    <td>把 <kbd>CapsLock</kbd> 映射成 <kbd>Ctrl</kbd>. 要保留打开及关闭 <kbd>CapsLock</kbd> 的功能, 需先包含重映射 <code>+CapsLock::CapsLock</code>. 这样, 当按住 <kbd>Shift</kbd> 并点击 Capslock 时, 可切换 <kbd>CpasLock</kbd> 的开关状态. 因为两个重映射均允许附加修饰键被按下, 额外指定的 <code>+CapsLock::CapsLock</code> 重映射须优先放置.</td>
   </tr>
   <tr>
     <td><code>XButton2::^LButton</code></td>
@@ -65,23 +65,23 @@ b::a</pre>
   </tr>
   <tr>
     <td><code>RAlt::AppsKey</code></td>
-    <td>把右 <kbd>Alt</kbd> 键映射成 <kbd>Menu</kbd> 键(这是打开上下文菜单的按键).</td>
+    <td>把右 <kbd>Alt</kbd> 映射成 <kbd>Menu</kbd>(这是打开上下文菜单的按键).</td>
   </tr>
   <tr>
     <td><code>RCtrl::RWin</code></td>
-    <td>把右 <kbd>Ctrl</kbd> 键映射成右 <kbd>Win</kbd> 键.</td>
+    <td>把右 <kbd>Ctrl</kbd> 映射成右 <kbd>Win</kbd>.</td>
   </tr>
   <tr>
     <td><code>Ctrl::Alt</code></td>
-    <td>把左右 <kbd>Ctrl</kbd> 键映射成 <kbd>Alt</kbd> 键. 但是, 请参阅 <a href="#AltTab">alt-tab 的问题</a>.</td>
+    <td>把左右 <kbd>Ctrl</kbd> 映射成 <kbd>Alt</kbd>. 但是, 请参阅 <a href="#AltTab">alt-tab 的问题</a>.</td>
   </tr>
   <tr>
     <td><code>^x::^c</code></td>
     <td>把 <kbd>Ctrl</kbd>+<kbd>X</kbd> 映射成 <kbd>Ctrl</kbd>+<kbd>C</kbd>. 它也会让 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>X</kbd> 产生 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>, 等等.</td>
   </tr>
   <tr>
-    <td></code>RWin::Return<</code></td>
-    <td>禁用右 <kbd>Win</kbd> 键, 通过简单地执行 <a href="../commands/Return.htm">return</a>.</td>
+    <td></code>RWin::Return</code></td>
+    <td>禁用右 <kbd>Win</kbd>, 通过简单地执行 <a href="../commands/Return.htm">return</a>.</td>
   </tr>
 </table>
 <p>您可以尝试执行这里的每个例子: 把它们复制到新文本文件(例如 "Remap.ahk"), 然后运行这个文件.</p>
@@ -125,7 +125,7 @@ Send {Blind}{<strong>b</strong> up}
 return</pre>
 <p>但是, 上面的两个热键在下列环境中会发生变化:</p>
 <ol>
-  <li>当原始键为左 <kbd>Ctrl</kbd> 键而目标键为 <kbd>Alt</kbd> 键时, 会把 <code>Send {Blind}{LAlt DownR}</code> 这行语句替换为 <code>Send {Blind}<strong>{LCtrl up}</strong>{LAlt DownR}</code>. 如果原始键为右 <kbd>Ctrl</kbd> 键也会如此, 除非使用了 <code>{RCtrl up}</code>.</li>
+  <li>当原始键为左 <kbd>Ctrl</kbd> 而目标键为 <kbd>Alt</kbd> 时, 会把 <code>Send {Blind}{LAlt DownR}</code> 这行语句替换为 <code>Send {Blind}<strong>{LCtrl up}</strong>{LAlt DownR}</code>. 如果原始键为右 <kbd>Ctrl</kbd> 也会如此, 除非使用了 <code>{RCtrl up}</code>.</li>
   <li>当键盘按键被重映射为鼠标按钮时(例如 <code>RCtrl::RButton</code>), 在上面的热键中会使用 SetMouseDelay 代替 SetKeyDelay. 而且, 上面的首个热键会被替换为下面的热键, 这样避免了由于键盘的自动重复功能生成的重复的鼠标点击:
     <pre>*RCtrl::
 SetMouseDelay -1
@@ -140,9 +140,9 @@ return</pre>
 <p>由于重映射会被简单翻译为上面描述的热键, 所以 <a href="../commands/Suspend.htm">Suspend</a> 也会影响它们. 同样地, <a href="../commands/Hotkey.htm">Hotkey</a> 命令可以禁用或修改重映射. 例如, 下面的两个命令会禁用重映射 <code>a::b</code>.</p>
 <pre>Hotkey, *a, Off
 Hotkey, *a up, Off</pre>
-<p id="AltTab">Alt-tab 的问题: 如果您把一个按键或鼠标按钮映射为 <kbd>Alt</kbd> 键, 那么这个键很可能无法正确实现 alt-tab 的功能. 一个可能的变通解决方法是添加热键 <code>*Tab::Send {Blind}{Tab}</code>, 但是需要注意这样很可能妨碍使用真正的 <kbd>Alt</kbd> 键实现 alt-tab 的功能. 因此, 这种方法只应当用于在您希望单独使用重映射的按键和/或 <a href="../Hotkeys.htm#alttab">alt-tab 热键</a>实现 alt-tab 功能的时候.</p>
+<p id="AltTab">Alt-tab 的问题: 如果您把一个按键或鼠标按钮映射为 <kbd>Alt</kbd>, 那么这个键很可能无法正确实现 alt-tab 的功能. 一个可能的变通解决方法是添加热键 <code>*Tab::Send {Blind}{Tab}</code>, 但是需要注意这样很可能妨碍使用真正的 <kbd>Alt</kbd> 实现 alt-tab 的功能. 因此, 这种方法只应当用于在您希望单独使用重映射的按键和/或 <a href="../Hotkeys.htm#alttab">alt-tab 热键</a>实现 alt-tab 功能的时候.</p>
 <p>除了<a href="../KeyList.htm">按键列表</a>页面中的按键和鼠标按钮, 原始键还可以是在<a href="../KeyList.htm#SpecialKeys">特殊按键</a>页面描述的虚拟键(VKnn) 或扫描码(SCnnn). 对于目标键同样如此, 不过它还可以在虚拟键后指定扫描码. 例如, 在大多数键盘布局中 <code>sc01e::vk42sc030</code> 相当于 <code>a::b</code>.</p>
-<p>要禁用按键而不进行重映射, 请把它设置为只含有 <a href="../commands/Return.htm">return</a> 的热键. 例如,<code>F1::return</code> 会禁用 <kbd>F1</kbd> 键.</p>
+<p>要禁用按键而不进行重映射, 请把它设置为只含有 <a href="../commands/Return.htm">return</a> 的热键. 例如,<code>F1::return</code> 会禁用 <kbd>F1</kbd>.</p>
 <p>内置的重映射功能不支持下列键:</p>
 <ul>
   <li>鼠标滚轮(WheelUp/Down/Left/Right).</li>

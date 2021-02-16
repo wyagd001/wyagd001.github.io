@@ -45,8 +45,8 @@
 
 <h2 id="Matching">匹配行为</h2>
 <p><a href="../commands/SetTitleMatchMode.htm">SetTitleMatchMode</a> 控制参数中的部分标题或完整标题与每个窗口标题的比较方式. 根据这个设置, <var>WinTitle</var> 可以为准确的标题或包含前面部分或标题任意位置的子字符串或<a href="RegEx-QuickRef.htm">正则模式</a>. 这个设置还控制 <a href="#ahk_class">ahk_class</a> 和 <a href="#ahk_exe">ahk_exe</a> 条件是否解释为正则模式.</p>
-<p>窗口标题是区分大小写的, 除非在 RegEx 模式中使用 <a href="RegEx-QuickRef.htm#opt_i"> i) 修饰符</a>.</p>
-<p>只有在 <a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置打开时才会检测到隐藏窗口, 不过 <a href="../commands/WinShow.htm">WinShow</a> 总是能检测到隐藏窗口.</p>
+<p>窗口标题是区分大小写的, 除非在 RegEx 模式中使用 <a href="RegEx-QuickRef.htm#opt_i">i) 修饰符</a>.</p>
+<p>只有在 <a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置打开时, 才会检测隐藏窗口, 不过 <a href="../commands/WinShow.htm">WinShow</a> 总是检测隐藏窗口.</p>
 <p>如果多个窗口匹配 <var>WinTitle</var> 及其他条件, 则使用最顶层的匹配窗口. 如果活动窗口匹配条件, 则它通常优先, 因为它一般在其他所有窗口的上面. 然而, 如果某个<a href="../commands/WinSet.htm#AlwaysOnTop">置顶</a>窗口也匹配条件(且活动窗口没有置顶), 则使用这个置顶窗口.</p>
 
 <h2 id="ActiveWindow">A(活动窗口)</h2>
@@ -57,10 +57,10 @@
 <pre>#Up::WinMaximize, A  <em>; Win+Up</em></pre>
 
 <h2 id="ahk_">ahk_ 条件</h2>
-<p>指定一个或多个下面的 ahk_ 条件(可选, 除了窗口标题). 一个 ahk_ 条件总是由一个 _ahk 关键字和它的条件值组成, 两者之间用零或多个空格或制表符分隔. 例如, <code>ahk_class Notepad</code> 代表一个记事本窗口.</p>
+<p>指定一个或多个下面的 ahk_ 条件(可选, 除了窗口标题). 一个 ahk_ 条件总是由一个 ahk_ 关键字和它的条件值组成, 两者之间用零或多个空格或制表符分隔. 例如, <code>ahk_class Notepad</code> 代表一个记事本窗口.</p>
 <p>ahk_ 关键字和它的条件值不需要用空格或制表符来分隔. 这主要是在指定 ahk_ 条件值为表达式并与变量结合时有用. 例如, 可以指定 <code>"ahk_pid" PID</code> 而不是 <code>"ahk_pid " PID</code>. 然而, 在所有其他情况下, 建议使用至少一个空格或制表符作为分隔, 以提高可读性.</p>
 
-<h3 id="ahk_class">ahk_class (Window Class)</h3>
+<h3 id="ahk_class">ahk_class(窗口类)</h3>
 <p>在 <var>WinTitle</var> 中使用 <code>ahk_class <var>ClassName</var></code> 通过其窗口类来识别窗口.</p>
 <p>窗口类是系统用来创建窗口的模板的属性集. 换句话说, 窗口类表示窗口的 <em>类型</em>. 窗口类可以通过 Window Spy 来显示或通过 <a href="../commands/WinGetClass.htm">WinGetClass</a> 获取. 如果 RegEx <a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>被激活, <var>ClassName</var> 接受<a href="RegEx-QuickRef.htm">正则表达式</a>.</p>
 <p>下面的例子激活了一个控制台窗口(例如 cmd.exe):</p>
@@ -68,18 +68,18 @@
 <p>下面的示例与上面的相同, 但使用了<a href="RegEx-QuickRef.htm">正则表达式</a>(注意必须事先打开 RegEx <a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>才行):</p>
 <pre>WinActivate, ahk_class i)^ConsoleWindowClass$</pre>
 
-<h3 id="ahk_id">ahk_id (Unique ID / HWND)</h3>
+<h3 id="ahk_id">ahk_id(唯一 ID / HWND)</h3>
 <p>在 <var>WinTitle</var> 中使用 <code>ahk_id <var>HWND</var></code>, 通过其唯一的 ID 来识别窗口或控件.</p>
 <p>每个窗口或控件都有一个唯一 ID, 也称为 HWND(即窗口句柄的缩写). 即使在窗口或控件的标题改变时也可用这个 ID 来识别它. 窗口的 ID 通常使用 <a href="../commands/WinExist.htm">WinExist()</a> 或 <a href="../commands/WinGet.htm">WinGet</a> 来获取. 控件的 ID 通常使用 <a href="../commands/ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="../commands/MouseGetPos.htm">MouseGetPos</a> 或 <a href="../commands/DllCall.htm">DllCall()</a> 来获取. 此外, ahk_id 条件甚至可以操作于隐藏控件; 即, <a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 的设置不影响控件.</p>
 <p>下面的例子通过存储在 <var>VarContainingID</var> 中的唯一 ID 来激活窗口:</p>
 <pre>WinActivate, ahk_id %VarContainingID%</pre>
 
-<h3 id="ahk_pid">ahk_pid (Process ID)</h3>
+<h3 id="ahk_pid">ahk_pid(进程 ID)</h3>
 <p>在 <var>WinTitle</var> 中使用 <code>ahk_pid <var>PID</var></code> 来识别属于特定进程的窗口. 进程标识符(PID) 通常由 <a href="../commands/WinGet.htm">WinGet</a>, <a href="../commands/Run.htm">Run</a> 或 <a href="../commands/Process.htm">Process</a> 检索. 窗口的进程 ID 可以通过 Window Spy 来显示.</p>
 <p>下面的例子是通过存储在 <var>VarContainingPID</var> 中的进程 ID 来激活一个窗口:</p>
 <pre>WinActivate, ahk_pid %VarContainingPID%</pre>
 
-<h3 id="ahk_exe">ahk_exe (Process Name/Path) <span class="ver">[v1.1.01+]</span></h3>
+<h3 id="ahk_exe">ahk_exe(进程名称/路径) <span class="ver">[v1.1.01+]</span></h3>
 <p>在 <var>WinTitle</var> 中使用 <code>ahk_exe <var>ProcessNameOrPath</var></code> 来识别属于任何具有给定名称或路径的进程的窗口.</p>
 <p><a href="#ahk_pid">ahk_pid 条件</a>仅限于一个特定的进程, 而 ahk_exe 条件则考虑所有名称或完整路径与给定字符串相匹配的进程. 如果 RegEx <a href="../commands/SetTitleMatchMode.htm">标题匹配模式</a>处于活动状态, <var>ProcessNameOrPath</var> 接受<a href="RegEx-QuickRef.htm">正则表达式</a>, 该表达式必须匹配进程的完整路径. 否则, 它接受不区分大小写的名称或完整路径; 例如, <code>ahk_exe notepad.exe</code> 涵盖了 <code>ahk_exe C:\Windows\Notepad.exe</code>, <code>ahk_exe C:\Windows\System32\Notepad.exe</code> 和其他变体. 窗口的进程名称可以通过 Window Spy 显示出来.</p>
 <p>下面的例子是通过进程名称来激活一个记事本窗口:</p>

@@ -25,8 +25,8 @@
 <p>像第一个例子那样, 请注意 <a href="../commands/WinMenuSelectItem.htm">WinMenuSelectItem</a> 对 Outlook Express 的 "New Message" 窗口中的菜单栏无效. 换句话说, 这代码不起作用:</p>
 <pre>WinMenuSelectItem, New Message,, &amp;Insert, &amp;Picture...</pre>
 <p>但 <a href="../commands/PostMessage.htm">PostMessage</a> 能实现这个操作:</p>
-<pre>PostMessage, 0x111, 40239, 0, , New Message</pre>
-<p>太神奇了!但那个是什么? 0x111 是 <a href="SendMessageList.htm">wm_command 消息</a>的十六进制代码, 而 40239 是这个特殊窗口理解为选择 'Insert Picture' 菜单项的代码. 现在让我告诉您如何找到类似 40239 这样的值:</p>
+<pre>PostMessage, 0x0111, 40239, 0, , New Message</pre>
+<p>太神奇了!但那个是什么? 0x0111 是 <a href="SendMessageList.htm">wm_command 消息</a>的十六进制代码, 而 40239 是这个特殊窗口理解为选择 'Insert Picture' 菜单项的代码. 现在让我告诉您如何找到类似 40239 这样的值:</p>
 <ol>
   <li>启动 Winspector Spy, 打开 "New Message" 窗口.</li>
   <li>拖动 Winspector Spy 窗口中的十字线到 "New Message" 窗口的标题栏(没有被 Winspector Spy 覆盖的部分).</li>
@@ -41,22 +41,22 @@
 </ol>
 <p>在下一个例子中我会使用画图程序, 因为很可能每个人都会有. 现在假设我们要使用 AutoHotkey 从工具栏中选择一个工具; 假设要选择取色工具.</p>
 <p>您会怎么做? 很可能是使用鼠标点击工具栏, 对吗? 但是按钮可能被移动且隐藏了!这个画图程序的工具栏也可能被移动/隐藏. 所以如果目标用户这么做了, 那么您的脚本在这个点上会失效. 但是下面的命令仍然有效:</p>
-<pre>PostMessage, 0x111, 639,,, Untitled - Paint</pre>
+<pre>PostMessage, 0x0111, 639,,, Untitled - Paint</pre>
 <p><a href="../commands/PostMessage.htm">PostMessage</a> 的另一个好处是窗口可以在后台; 与之相比, 发送鼠标点击要求目标窗口必须是活动的.</p>
 <p>这里有其他的例子. 请注意: 我使用的是 WinXP Pro(SP1) ... 如果您使用不同的操作系统, 那么您的参数可能要改变(仅适用于像写字板和记事本这类 windows 自带的应用程序; 其他的程序应该不用改变):</p>
 <pre><em>; 设置写字板字体为青色</em>
-<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32788, 0, , Document - WordPad</pre>
+<a href="../commands/PostMessage.htm">PostMessage</a>, 0x0111, 32788, 0, , Document - WordPad</pre>
 <pre><em>; 打开记事本的关于对话框</em>
-<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65, 0, , Untitled - Notepad</pre>
+<a href="../commands/PostMessage.htm">PostMessage</a>, 0x0111, 65, 0, , Untitled - Notepad</pre>
 <pre><em>; 切换记事本的自动换行属性</em>
-<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32, 0, , Untitled - Notepad</pre>
+<a href="../commands/PostMessage.htm">PostMessage</a>, 0x0111, 32, 0, , Untitled - Notepad</pre>
 <pre><em>; 在 Windows Media Player 中播放/暂停</em>
-<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 32808, 0, , Windows Media Player</pre>
+<a href="../commands/PostMessage.htm">PostMessage</a>, 0x0111, 32808, 0, , Windows Media Player</pre>
 <pre><em>; 挂起正在运行的 AHK 脚本的热键</em>
 DetectHiddenWindows, On
 SetTitleMatchMode, 2
 <em>; 使用 65306 来 Pause, 而 65303 来 Reload, 从而代替下面的 Suspend. (请参阅 <a href="../FAQ.htm#close">FAQ</a>)</em>
-<a href="../commands/PostMessage.htm">PostMessage</a>, 0x111, 65305,,, MyScript.ahk - AutoHotkey
+<a href="../commands/PostMessage.htm">PostMessage</a>, 0x0111, 65305,,, MyScript.ahk - AutoHotkey
 </pre>
 <pre><em>; 按下 CapsLock 和 Numpad2 重新加载所有 AutoHotkey 脚本</em>
 CapsLock & Numpad2::
@@ -70,7 +70,7 @@ ReloadAllAhkScripts() {
         {
             continue
         }
-        PostMessage, 0x111, 65303,,, % "ahk_id" . hwnd
+        PostMessage, 0x0111, 65303,,, % "ahk_id" . hwnd
     }
     Reload
 }

@@ -56,7 +56,7 @@
 
 <h2 id="Remarks">备注</h2>
 <p>当脚本以任何方式退出时, 将调用 OnExit 回调函数或子程序(除非被类似 "结束任务" 的方式强行终止). 每当 <a href="_SingleInstance.htm">#SingleInstance</a> 和 <a href="Reload.htm">Reload</a> 命令请求前一个实例终止时, 也会调用它.</p>
-<p>脚本可以通过 <code>OnMessage(0x11, "WM_QUERYENDSESSION")</code>(有关工作脚本, 请参阅 <a href="OnMessage.htm#shutdown">OnMessage 示例 #2</a>) 检测并可选择地中止操作系统关闭或注销.</p>
+<p>脚本可以通过 <code>OnMessage(0x0011, "WM_QUERYENDSESSION")</code>(有关工作脚本, 请参阅 <a href="OnMessage.htm#shutdown">OnMessage 示例 #2</a>) 检测并可选择地中止操作系统关闭或注销.</p>
 <p>OnExit <a href="../misc/Threads.htm">线程</a>并不受到 <a href="_MaxThreads.htm">#MaxThreads</a> 的限制(它总是在需要的时候启动). 此外, 当它运行时, 它不会被任何<a href="../misc/Threads.htm">线程</a>中断, 包括<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>和<a href="SetTimer.htm">计时器子程序</a>. 不过, 它会在这些情况下被中断(终止)(且脚本也同时被终止了): 用户从托盘菜单或主菜单栏中选择 exit(退出), 或由于 <a href="Reload.htm">Reload</a> 或 <a href="_SingleInstance.htm">#SingleInstance</a> 而要求脚本终止. 由于这些原因, OnExit 回调函数或子程序应该被设计为尽快结束, 除非用户知道它在做什么.</p>
 <p>如果 OnExit <a href="../misc/Threads.htm">线程</a>遇到失败条件, 比如运行时错误时, 脚本将会终止. 这可以防止有缺陷的 OnExit 回调函数或子程序使脚本无法终止.</p>
 <p>如果 OnExit <a href="../misc/Threads.htm">线程</a>由 <a href="Exit.htm">Exit</a> 或 <a href="ExitApp.htm">ExitApp</a> 启动并指定了退出码, 在 <span class="ver">[v1.1.19]</span> 和之前的版本中将被忽略, 且不再可用. 而从 <span class="ver">[v1.1.20+]</span> 开始, 除非使用 <a href="ExitApp.htm">ExitApp</a> 指定了新的退出码, 否则将使用最初的退出码.</p>

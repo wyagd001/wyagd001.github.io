@@ -55,10 +55,13 @@ if !(pci := ComObjQuery(obj, IID_IProvideClassInfo))
 DllCall(vtable(pci, 3), "ptr", pci, "ptr*", ti)
 
 <em>; 调用 GetDocumentation 来获取对象的完整类型名称.</em>
-DllCall(vtable(ti, 12), "ptr", ti, "int", -1, "ptr*", name, "ptr", 0, "ptr", 0, "ptr", 0)
+DllCall(vtable(ti, 12), "ptr", ti, "int", -1, "ptr*", pname, "ptr", 0, "ptr", 0, "ptr", 0)
 
 <em>; 转换 BSTR 指针为可用的字符串.</em>
-name := StrGet(name, "UTF-16")
+name := StrGet(pname, "UTF-16")
+
+<em>; 通过 pname 释放 BSTR 引用.</em>
+DllCall("OleAut32\SysFreeString", "ptr", pname)
 
 <em>; 释放原始接口指针.</em>
 ObjRelease(ti)

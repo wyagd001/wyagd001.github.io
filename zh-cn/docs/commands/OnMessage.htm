@@ -20,7 +20,7 @@
 <dl>
 
   <dt>MsgNumber</dt>
-  <dd><p>需要监听或查询的消息编号, 应该介于 0 和 4294967295(0xFFFFFFFF) 之间. 如果您不想监听<a href="../misc/SendMessageList.htm">系统消息</a>(即编号小于 0x400 的那些), 那么最好在大于 4096(0x1000) 的范围中选择一个. 这降低了可能对当前及将来版本的 AutoHotkey 内部所使用的消息的冲突.</p></dd>
+  <dd><p>需要监听或查询的消息编号, 应该介于 0 和 4294967295(0xFFFFFFFF) 之间. 如果您不想监听<a href="../misc/SendMessageList.htm">系统消息</a>(即编号小于 0x0400 的那些), 那么最好在大于 4096(0x1000) 的范围中选择一个. 这降低了可能对当前及将来版本的 AutoHotkey 内部所使用的消息的冲突.</p></dd>
 
   <dt>Function</dt>
   <dd><p><a href="../Functions.htm">函数</a>的名称或 <span class="ver">[v1.1.20+]</span> <a href="../objects/Functor.htm">函数对象</a>, 要传递原义的函数名称, 必须用引号("") 括起来. </p>
@@ -81,10 +81,12 @@
     ... 函数体...
 }</pre>
 <p>尽管您所给出的参数名无关紧要, 不过它们和下面的信息是按顺序一一对应的:</p>
-<p>参数 #1: 消息的 WPARAM 值. <br>
-参数 #2: 消息的 LPARAM 值.<br>
-参数 #3: 消息号, 可用在用一个函数监听多个消息时.<br>
-参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). 要使用 HWND 则需要加上 <a href="../misc/WinTitle.htm#ahk_id">ahk_id</a>.</p>
+<ul>
+  <li>参数 #1: 消息的 WPARAM 值.</li>
+  <li>参数 #2: 消息的 LPARAM 值.</li>
+  <li>参数 #3: 消息号, 可用在用一个函数监听多个消息时.</li>
+  <li>参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). 要使用 HWND 则需要加上 <a href="../misc/WinTitle.htm#ahk_id">ahk_id</a>.</li>
+</ul>
 <p>根据运行脚本的 AutoHotkey.exe 是 32 位或 64 位, WPARAM 和 LPARAM 是无符号 32 位整数(从 0 到 2<sup>32</sup>-1) 或有符号 64 位整数(从 -2<sup>63</sup> 到 2<sup>63</sup>-1). 在 32 位脚本中, 如果传入参数应该为有符号整数, 则可以参照这个例子得到负数:</p>
 <pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; 检查 <a href="../Variables.htm#PtrSize">A_PtrSize</a> 以确保脚本为 32 位.</em>
     wParam := -(~wParam) - 1</pre>
@@ -103,7 +105,7 @@
 MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口的唯一 ID.</em></pre>
 
 <h2>函数应该 <em>返回</em> 什么</h2>
-<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至从不使用 Return), 则当此函数结束时将继续正常处理传入的消息. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exit</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与之相比, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 它不关心返回了哪个整数; 不过如果不确定, 0 通常是最安全的.</p>
+<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至从不使用 Return), 则当此函数结束时将继续正常处理传入的消息. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exit</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与之相比, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x0201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 它不关心返回了哪个整数; 不过如果不确定, 0 通常是最安全的.</p>
 <p>有效返回值的范围与运行脚本的 AutoHotkey.exe 是 32 位还是 64 位有关. 对于 32 位脚本(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>), 非空返回值必须介于 -2<sup>31</sup> 和 2<sup>32</sup>-1 之间, 而 64 位脚本 <code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code> 则必须介于 -2<sup>63</sup> 和 2<sup>63</sup>-1 之间.</p>
 <p><span class="ver">[v1.1.20+]:</span> 如果有多个函数监听某一个消息(message number), 它们将会一个接一个按顺序被调用, 直到被调用的函数返回一个非空值.</p>
 
@@ -111,11 +113,11 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>与普通的函数调用不同, 被监听消息的到达会启动新<a href="../misc/Threads.htm">线程</a>来调用函数. 因此, 函数会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这些默认值可以在<a href="../Scripts.htm#auto">自动执行段</a>改变.</p>
 <p>Send(发送)(而不是 Post) 到控件的消息不会被监听, 因为系统直接把它们发送给后台的控件了. 对于系统生成的消息来说, 这很少是一个问题, 因为它们大部分都是被 Post 的.</p>
 <p>任意调用 OnMessage 的脚本会自动成为<a href="_Persistent.htm">持续运行的</a>. 同时也会单实例运行, 不过可以使用 <a href="_SingleInstance.htm">#SingleInstance</a> 覆盖了默认设置.</p>
-<p id="Critical">当一个消息达到时它的监听函数仍由于处理之前同样的消息而在运行, 则不会再次调用函数(除非 <a href="#MaxThreads">MaxThreads</a> 大于 1); 而这个消息会被视为没有监听的那样进行处理. 如果不希望这样, 那么对于大于或等于 0x312 的消息可以通过在函数的首行中使用 <a href="Critical.htm">Critical</a> 来在之前运行的函数完成前把消息缓冲起来. 或者, 使用 <a href="Thread.htm">Thread Interrupt</a> 来实现同样的事情, 只要它持续可以让函数完成的足够长的时间. 与之相比, 无法使用 Critical 或 Thread Interrupt 对小于 0x312 的消息进行缓冲(然而, <span class="ver">[in v1.0.46+]</span> Critical 可能有所帮助, 因为它会以<a href="Critical.htm#Interval">更低的频率</a>检查消息, 这样函数可以有更多的时间来完成). 要确保这类消息不会被丢弃的唯一方法是它的监听函数在 6 毫秒之内结束(不过这个限制的数值可以使用 <a href="Critical.htm#Interval"><em>Critical 30</em></a> 增加). 要实现这点的一个方法是通过<a href="PostMessage.htm">投递</a>一个受监听的大于 0x312 的消息到它所在的脚本来把它放入将来线程的队列中. 那个消息处理函数应该在首行使用 <a href="Critical.htm">Critical</a> 以确保它的消息被缓冲起来.</p>
-<p>如果在小于 0x312 的受监听消息当脚本完全不可中断时到达(例如在<a href="Menu.htm">菜单</a>, 正在进行<a href="SetKeyDelay.htm">按键延时</a>/<a href="SetMouseDelay.htm">鼠标延时</a>或正<a href="_ClipboardTimeout.htm">打开</a>剪贴板), 则不会调用此函数而消息会被视为未监听的. 与之相比, 一个等于或大于 0x312 的受监听消息在这些不可中断期间会被缓冲起来; 即当脚本变成可中断时会调用它的处理函数.</p>
-<p>如果小于 0x312 的受监听的消息在脚本由于 <a href="Thread.htm">Thread Interrupt</a> 或 <a href="Critical.htm">Critical</a> 的设置而不可中断时到达, 则会中断当前线程而调用消息处理函数. 与之相比, 等于或大于 0x312 的受监听消息则会被缓冲到线程结束或变成可中断之后.</p>
+<p id="Critical">当一个消息达到时它的监听函数仍由于处理之前同样的消息而在运行, 则不会再次调用函数(除非 <a href="#MaxThreads">MaxThreads</a> 大于 1); 而这个消息会被视为没有监听的那样进行处理. 如果不希望这样, 那么对于大于或等于 0x0312 的消息可以通过在函数的首行中使用 <a href="Critical.htm">Critical</a> 来在之前运行的函数完成前把消息缓冲起来. 或者, 使用 <a href="Thread.htm">Thread Interrupt</a> 来实现同样的事情, 只要它持续可以让函数完成的足够长的时间. 与之相比, 无法使用 Critical 或 Thread Interrupt 对小于 0x0312 的消息进行缓冲(然而, <span class="ver">[in v1.0.46+]</span> Critical 可能有所帮助, 因为它会以<a href="Critical.htm#Interval">更低的频率</a>检查消息, 这样函数可以有更多的时间来完成). 要确保这类消息不会被丢弃的唯一方法是它的监听函数在 6 毫秒之内结束(不过这个限制的数值可以使用 <a href="Critical.htm#Interval"><em>Critical 30</em></a> 增加). 要实现这点的一个方法是通过<a href="PostMessage.htm">投递</a>一个受监听的大于 0x0312 的消息到它所在的脚本来把它放入将来线程的队列中. 那个消息处理函数应该在首行使用 <a href="Critical.htm">Critical</a> 以确保它的消息被缓冲起来.</p>
+<p>如果在小于 0x0312 的受监听消息当脚本完全不可中断时到达(例如在<a href="Menu.htm">菜单</a>, 正在进行<a href="SetKeyDelay.htm">按键延时</a>/<a href="SetMouseDelay.htm">鼠标延时</a>或正<a href="_ClipboardTimeout.htm">打开</a>剪贴板), 则不会调用此函数而消息会被视为未监听的. 与之相比, 一个等于或大于 0x0312 的受监听消息在这些不可中断期间会被缓冲起来; 即当脚本变成可中断时会调用它的处理函数.</p>
+<p>如果小于 0x0312 的受监听的消息在脚本由于 <a href="Thread.htm">Thread Interrupt</a> 或 <a href="Critical.htm">Critical</a> 的设置而不可中断时到达, 则会中断当前线程而调用消息处理函数. 与之相比, 等于或大于 0x0312 的受监听消息则会被缓冲到线程结束或变成可中断之后.</p>
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
-<p>监听系统消息(小于 0x400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应可能超过系统预期的时间, 这样可能会导致一些副作用. 如果监听函数为了阻止对消息的进一步处理而返回整数而系统期望不同的处理或响应时, 可能会发生不想要的行为.</p>
+<p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应可能超过系统预期的时间, 这样可能会导致一些副作用. 如果监听函数为了阻止对消息的进一步处理而返回整数而系统期望不同的处理或响应时, 可能会发生不想要的行为.</p>
 <p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递到控件的消息. 例如, 如果脚本正显示 MsgBox 而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
 <p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">MsgBox</a>) 则消息会丢失. 相反, 通常最好投递或发送消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
 <h2 id="Related">相关</h2>
@@ -126,7 +128,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <pre>Gui, Add, Text,, Click anywhere in this window.
 Gui, Add, Edit, w200 vMyEdit
 Gui, Show
-OnMessage(0x201, "WM_LBUTTONDOWN")
+OnMessage(0x0201, "WM_LBUTTONDOWN")
 return
 
 WM_LBUTTONDOWN(wParam, lParam)
@@ -145,7 +147,7 @@ ExitApp</pre>
 <div class="ex" id="shutdown">
 <p><a href="#shutdown">#2</a>: 下面的脚本检测系统的关机/注销动作并允许您中止它. 在 Windows Vista 及更高的版本中, 系统会显示一个用户界面, 显示哪个程序正在阻止关机/注销, 并允许用户强制关机/注销. 在较旧的操作系统上, 脚本显示一个确认提示. 相关主题: <a href="OnExit.htm">OnExit</a></p>
 <pre><em>; 下面的 DllCall 是可选的: 它告诉操作系统要首先关闭此脚本(在其他所有程序之前).</em>
-DllCall("kernel32.dll\SetProcessShutdownParameters", "UInt", 0x4FF, "UInt", 0)
+DllCall("kernel32.dll\SetProcessShutdownParameters", "UInt", 0x04FF, "UInt", 0)
 OnMessage(0x11, "WM_QUERYENDSESSION")
 return
 
@@ -211,10 +213,10 @@ DetectHiddenWindows Off  <em>; 在 PostMessage 时不能是关闭的.</em></pre>
 </div>
 
 <div class="ex" id="SendString">
-<p><a href="#SendString">#4</a>: 从一个脚本发送任何长度的字符串到另一个脚本. 这是个可运行的示例. 两个脚本必须使用相同的<a href="../Concepts.htm#native-encoding">原生编码</a>. 要使用它, 请保存并运行下面的两个脚本, 然后按下 <kbd>Win</kbd>+<kbd>Space</kbd> 来显示 InputBox 来让您输入字符串.</p>
+<p><a href="#SendString">#4</a>: 从一个脚本发送任何长度的字符串到另一个脚本. 这是个可运行的示例. 两个脚本必须使用相同的<a href="../Concepts.htm#native-encoding">原生编码</a>. 要使用它, 请保存并运行下面的两个脚本, 然后按下 <kbd>Win</kbd>+<kbd>Space</kbd> 来显示输入框来让您输入字符串.</p>
 <p>保存下面的脚本为 "<strong>Receiver.ahk</strong>", 然后运行它:</p>
 <pre filename="Receiver.ahk">#SingleInstance
-OnMessage(0x4a, "Receive_WM_COPYDATA")  <em>; 0x4a 为 WM_COPYDATA</em>
+OnMessage(0x004A, "Receive_WM_COPYDATA")  <em>; 0x004A 为 WM_COPYDATA</em>
 return
 
 Receive_WM_COPYDATA(wParam, lParam)
@@ -255,7 +257,7 @@ Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; 在这种�
     SetTitleMatchMode 2
     TimeOutTime := 4000  <em>; 可选的. 等待 receiver.ahk 响应的毫秒数. 默认是 5000</em>
     <em>; 必须使用发送 SendMessage 而不是投递 PostMessage.</em>
-    SendMessage, 0x4a, 0, &amp;CopyDataStruct,, %TargetScriptTitle%  <em>; 0x4a 为 WM_COPYDAT</em>
+    SendMessage, 0x004A, 0, &amp;CopyDataStruct,, %TargetScriptTitle%  <em>; 0x004A 为 WM_COPYDAT</em>
     DetectHiddenWindows %Prev_DetectHiddenWindows%  <em>; 恢复调用者原来的设置.</em>
     SetTitleMatchMode %Prev_TitleMatchMode%         <em>; 同样.</em>
     return ErrorLevel  <em>; 返回 SendMessage 的回复给我们的调用者.</em>
