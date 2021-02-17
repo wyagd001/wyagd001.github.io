@@ -448,7 +448,7 @@ class <i>ClassName</i> {
 <p>属性和方法可以在对象本身或其任何<a href="#delegation">基对象</a>中定义. 通常, 要为每个属性调用一个元函数, 必须避免定义任何属性. 可以使用<a href="#Custom_Classes_property">属性定义</a>或 <a href="objects/Object.htm#DefineProp">DefineProp</a> 来覆盖内置属性(如 <a href="objects/Object.htm#Base">Base</a>).</p>
 <p>如果定义了一个元函数, 它必须执行任何所需的默认操作. 例如, 可能会出现以下情况:</p>
 <ul>
-  <li><i>Call</i>: 抛出 "Unknown method(未知方法)" 异常.</li>
+  <li><i>Call</i>: 抛出 <a href="objects/Error.htm#MethodError">MethodError</a>.</li>
   <li>如果给出了参数, 则抛出异常(没有对象可将参数转发到).</li>
   <li><i>Get</i>: 返回一个空字符串(当省略 <code>return</code> 时, 函数默认执行此操作).</li>
   <li><i>Set</i>: 使用给定值定义一个新属性, 例如通过调用 <a href="objects/Object.htm#DefineProp">DefineProp</a>. </li>
@@ -537,7 +537,7 @@ MsgBox "".test  <em>; 1</em>
 <p>虽然当程序退出时, 操作系统会回收对象占用的内存, 但是除非释放了对对象的所有引用, 否则不会调用 <a href="#Custom_NewDelete">__Delete</a>. 如果它释放了操作系统不能自动回收的其他资源, 比如临时文件, 那么这一点很重要.</p>
 
 <h3 id="ObjPtr">对象的指针</h3>
-<p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后检索. 可以通过 <code>address := ObjPtr(myObject)</code> 来检索对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道对象中的一个. 如果对象的最后一个 <em>已知</em> 引用被释放, 该对象将被删除. 因此, 脚本必须设法通知对象它的引用增加了. 可以这样做(the two lines below are equivalent):</p>
+<p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后检索. 可以通过 <code>address := ObjPtr(myObject)</code> 来检索对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道对象中的一个. 如果对象的最后一个 <em>已知</em> 引用被释放, 该对象将被删除. 因此, 脚本必须设法通知对象它的引用增加了. 可以这样做(下面两行是等同的):</p>
 <pre>
 ObjAddRef(address := ObjPtr(myObject))
 address := ObjPtrAddRef(myObject)

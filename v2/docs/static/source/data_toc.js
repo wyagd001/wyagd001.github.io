@@ -289,7 +289,7 @@ tocData = [
     ["ListVars","commands/ListVars.htm"],
     ["OutputDebug","commands/OutputDebug.htm"]
   ]],
-  ["对象类型","",
+  ["对象类型","objects/index.htm",
   [
     ["Any 原型","objects/Any.htm"],
     ["Object","objects/Object.htm"],
@@ -301,7 +301,7 @@ tocData = [
     ["函数对象","objects/Functor.htm"],
     ["Func 对象","objects/Func.htm"],
     ["枚举器对象 ","objects/Enumerator.htm"],
-    ["异常对象","commands/Throw.htm#Exception"],
+    ["Error 对象","objects/Error.htm"],
     ["正则匹配对象","commands/RegExMatch.htm#MatchObject"],
     ["Gui 对象","objects/Gui.htm"],
     ["GuiControl 对象","objects/GuiControl.htm"],

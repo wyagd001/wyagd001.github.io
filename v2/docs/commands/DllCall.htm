@@ -58,7 +58,7 @@
   <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串.</p>
   <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p></p>
-  <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出<a href="Catch.htm#RuntimeErrors">异常</a>.</p>
+  <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出 <a href="../objects/Error.htm#TypeError">TypeError</a>.</p>
   <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量(如果已传递). 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
   <p class="note"><strong>注意</strong>: 在将字符串传递给函数时, 请注意函数所期望的字符串的 <a href="../Compat.htm#DllCall"><i>type</i>(类型).</p></td>
 </tr>
@@ -107,7 +107,7 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 <tr id="ptr">
   <td>Ptr</td>
   <td><p><a href="../Variables.htm#PtrSize">指针大小</a>的整数, 等同于 Int 或 Int64, 具体取决于运行脚本的 exe 是 32 位还是 64 位. <i>Ptr</i> 应该用于指向数组或结构(如 RECT* 或 LPPOINT) 以及几乎所有句柄(如 HWND, HBRUSH 或 HBITMAP) 的指针. 如果参数是指向简单数值的指针( 如 LPDWORD 或 int*), 通常应该使用 * 或 P 后缀代替 "Ptr".</p>
-  <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在此类属性, 则抛出异常. 通常, 该对象是 <a href="BufferAlloc.htm">BufferAlloc</a> 创建的 <a href="../objects/Buffer.htm">Buffer</a> 对象.</p>
+  <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在此类属性, 则抛出 <a href="../objects/Error.htm#PropertyError">PropertyError</a>. 通常, 该对象是 <a href="BufferAlloc.htm">BufferAlloc</a> 创建的 <a href="../objects/Buffer.htm">Buffer</a> 对象.</p>
   <p>如果将对象传递给 Ptr* 参数, 则在调用之前将检索对象的 <code>Ptr</code> 属性值, 并将包含该值的临时变量的地址传递给函数. 函数返回后, 新值将分配回该对象的 <code>Ptr</code> 属性.</p>
   <p><i>Ptr</i> 也可以和 * 或 P 后缀一起使用; 此时它应该用在通过 LPVOID* 或类似类型输出指针的函数中.</p>
   <p><i>UPtr</i> 也是有效的, 但仅适用于 32 位版本中的无符号整数, 因为 AutoHotkey 不支持无符号的 64 位整数.</p>
@@ -132,23 +132,23 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 <tr id="HRESULT">
   <td>HRESULT</td>
   <td>
-    <p>32 位整数. 这通常与 COM 函数一起使用, 并且仅作为返回类型有效, 没有任何前缀或后缀. 错误值(由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义) 永远不会返回; 而是抛出一个异常, 并将 <code>Extra</code> 设置为十六进制错误代码. 因此, 成功时, 返回值范围是 0 到 2147483647.</p>
+    <p>32 位整数. 这通常与 COM 函数一起使用, 并且仅作为返回类型有效, 没有任何前缀或后缀. 错误值(由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义) 永远不会返回; 而是抛出一个 <a href="../objects/Error.htm#OSError">OSError</a>. 因此, 成功时, 返回值范围是 0 到 2147483647.</p>
     <p>HRESULT 是 <a href="ComCall.htm">ComCall</a> 的默认返回类型.</p>
   </td>
 </tr>
 </table>
 
 <h2 id="error">错误</h2>
-<p>DllCall 会在下列任何一种情况下抛出<a href="Catch.htm#RuntimeErrors">异常</a>:</p>
+<p>DllCall 会在下列任何一种情况下抛出 <a href="../objects/Error.htm">Error</a>:</p>
 <ul>
-  <li>使用 <a href="#HRESULT">HRESULT</a> 返回类型, 函数返回一个错误值(由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义). <code>Exception.Extra</code> 包含十六进制错误码.</li>
-  <li><em>[DllFile\]Function</em> 参数是一个浮点数. 需要字符串或正整数.</li>
-  <li><a href="#types">返回的类型</a>或指定的<a href="#types">参数的类型</a>无效.</li>
-  <li>参数传递了一个意外类型的值. 例如, 将计算结果为数字的<a href="../Variables.htm#Expressions">表达式</a>传递给字符串(<a href="#str">str</a>) 参数, 将非数字字符串传递给数值参数, 或者将对象传递给 <em>非</em> <a href="#ptr">Ptr</a> 类型的参数.</li>
-  <li>无法访问或加载指定的 <em>DllFile</em>. 如果没有明确指明 <em>DllFile</em> 的路径, 则该文件必须存在于系统的 PATH 或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 如果用户没有访问文件的权限, 或者 AutoHotkey 是 32 位而 DLL 是 64 位(反之亦然), 也都可能发生此错误.</li>
-  <li>在 DLL 中找不到指定的函数.</li>
-  <li>该函数已被调用, 但由于致命异常而中止. <code>Exception.Extra</code> 包含异常代码. 例如, 0xC0000005 表示 "访问冲突". 在这种情况下, 线程将中止(如果没有使用 <a href="Try.htm">try</a> 的话), 但是仍将更新所有<a href="#asterisk">星号变量</a>. 致命异常的一个例子是取消引用无效指针(如 NULL(0)). 由于 <a href="#cdecl">Cdecl</a> 函数永远不会产生下一段中描述的错误, 因此当传递给它的参数太少时, 它可能会生成异常.</li>
-  <li>该函数已被调用, 但传递了太多或太少的参数. <code>Exception.Extra</code> 包含参数列表不正确的字节数. 如果为正, 则传递了太多的参数(或参数太大), 或者调用需要 <a href="#cdecl">CDecl</a>. 如果为负, 则传递的参数太少. 应该纠正这种情况, 以确保函数的可靠运行. 出现此错误也可能表示抛出了异常. 请注意, 由于使用 x64 调用约定, 因此 64 位版本永远不会引发此错误.</li>
+  <li><a href="../objects/Error.htm#OSError">OSError</a>: 使用 <a href="#HRESULT">HRESULT</a> 返回类型, 函数返回一个错误值(由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义). <code>Exception.Extra</code> 包含十六进制错误码.</li>
+  <li><a href="../objects/Error.htm#TypeError">TypeError</a>: <em>[DllFile\]Function</em> 参数是一个浮点数. 需要字符串或正整数.</li>
+  <li><a href="../objects/Error.htm#ValueError">ValueError</a>: <a href="#types">返回的类型</a>或指定的<a href="#types">参数的类型</a>无效.</li>
+  <li><a href="../objects/Error.htm#TypeError">TypeError</a>: 参数传递了一个意外类型的值. 例如, 将计算结果为数字的<a href="../Variables.htm#Expressions">表达式</a>传递给字符串(<a href="#str">str</a>) 参数, 将非数字字符串传递给数值参数, 或者将对象传递给 <em>非</em> <a href="#ptr">Ptr</a> 类型的参数.</li>
+  <li><a href="../objects/Error.htm">Error</a>: 无法访问或加载指定的 <em>DllFile</em>. 如果没有明确指明 <em>DllFile</em> 的路径, 则该文件必须存在于系统的 PATH 或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 如果用户没有访问文件的权限, 或者 AutoHotkey 是 32 位而 DLL 是 64 位(反之亦然), 也都可能发生此错误.</li>
+  <li><a href="../objects/Error.htm">Error</a>: 在 DLL 中找不到指定的函数.</li>
+  <li><a href="../objects/Error.htm">Error</a>: 该函数已被调用, 但由于致命异常而中止. <code>Exception.Extra</code> 包含异常代码. 例如, 0xC0000005 表示 "访问冲突". 在这种情况下, 线程将中止(如果没有使用 <a href="Try.htm">try</a> 的话), 但是仍将更新所有<a href="#asterisk">星号变量</a>. 致命异常的一个例子是取消引用无效指针(如 NULL(0)). 由于 <a href="#cdecl">Cdecl</a> 函数永远不会产生下一段中描述的错误, 因此当传递给它的参数太少时, 它可能会生成异常.</li>
+  <li><a href="../objects/Error.htm">Error</a>: 该函数已被调用, 但传递了太多或太少的参数. <code>Exception.Extra</code> 包含参数列表不正确的字节数. 如果为正, 则传递了太多的参数(或参数太大), 或者调用需要 <a href="#cdecl">CDecl</a>. 如果为负, 则传递的参数太少. 应该纠正这种情况, 以确保函数的可靠运行. 出现此错误也可能表示抛出了异常. 请注意, 由于使用 x64 调用约定, 因此 64 位版本永远不会引发此错误.</li>
 </ul>
 
 <h2 id="except">原生异常和 A_LastError</h2>
@@ -229,7 +229,7 @@ MsgBox Format("{:010}", 432)
 </div>
 
 <div class="ex" id="ExQPC">
-<p><a href="#ExQPC">#5</a>: 演示 QueryPerformanceCounter(), 它提供了比 <a href="../Variables.htm#TickCount">A_TickCount</a> 的 10ms 更高的精确度.</p>
+<p><a href="#ExQPC">#5</a>: 演示 QueryPerformanceCounter(), 它提供了比 <a href="../Variables.htm#TickCount">A_TickCount</a> 的 10 ms 更高的精确度.</p>
 <pre>DllCall("QueryPerformanceFrequency", "Int64*", freq := 0)
 DllCall("QueryPerformanceCounter", "Int64*", CounterBefore := 0)
 Sleep 1000
