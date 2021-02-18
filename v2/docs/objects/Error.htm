@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="en">
 <head>
-<title>Error Object | AutoHotkey v2</title>
+<title>Error 对象 | AutoHotkey v2</title>
 <meta name="description" content="Error objects thrown by built-in code when an error occurs." />
 <meta name="ahk:equiv-v1" content="AutoHotkey.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -11,27 +11,27 @@
 </head>
 <body>
 
-<h1>Error Object</h1>
+<h1>Error 对象</h1>
 
-<p>Error objects are <a href="../commands/Throw.htm">thrown</a> by built-in code when a runtime error occurs, and may also be thrown explicitly by the script.</p>
+<p>Error(错误) 对象是由内置代码在运行时发生错误时<a href="../commands/Throw.htm">抛出的</a>, 也可由脚本显式抛出.</p>
 
-<p id="Message"><strong>Message:</strong> An error message.</p>
-<p id="What"><strong>What:</strong> What threw the exception. This is usually the name of a function, but is blank for exceptions thrown due to an error in an expression (such as using a math operator on a non-numeric value).</p>
-<p id="Extra"><strong>Extra:</strong> A string value relating to the error, if available. If this value can be converted to a non-empty string, the standard error dialog displays a line with "Specifically:" followed by this string.</p>
-<p id="File"><strong>File:</strong> The full path of the script file which contains the line at which the error occurred, or at which the Error object was constructed.</p>
-<p id="Line"><strong>Line:</strong> The line number at which the error occurred, or at which the Error object was constructed.</p>
+<p id="Message"><strong>Message:</strong> 错误消息.</p>
+<p id="What"><strong>What:</strong> 引起异常的原因. 这通常是一个函数的名称, 但对于由表达式中的错误而抛出的异常(例如在非数字值上使用数学运算符), 则为空白.</p>
+<p id="Extra"><strong>Extra:</strong> 与错误有关的字符串值(如果有). 如果这个值可以转换为非空字符串, 标准错误对话框会显示一行 "Specifically:" 后面跟着这个字符串.</p>
+<p id="File"><strong>File:</strong> 包含发生错误的行或构造错误对象的脚本文件的完整路径.</p>
+<p id="Line"><strong>Line:</strong> 错误发生的行号, 或者错误对象被构造的行号.</p>
 
-<p>The standard error dialog requires these to be value properties, and not inherited from a base object.</p>
+<p>标准错误对话框要求这些都是值属性, 不能从基对象继承.</p>
 
 <h2 id="new">Error.New() / Exception()</h2>
-<p>Creates an <a href="../objects/Error.htm">Error</a> object.</p>
+<p>创建 <a href="../objects/Error.htm">Error</a> 对象.</p>
 <pre class="Syntax">NewError := <span class="func"><i>Error</i>.New</span>(Message <span class="optional">, What, Extra</span>)
 NewError := <span class="func">Exception</span>(Message <span class="optional">, What, Extra</span>)</pre>
-<p><em><strong>Error</strong></em> may be replaced with one of the subclasses listed under <a href="#error-types">Error Types</a>.</p>
-<p>The parameters directly correspond to properties described above, but may differ for Error subclasses which override the __New method.</p>
-<p>If <em>What</em> is omitted, it defaults to the name of the current function. Otherwise it can be a string or a negative offset from the top of the call stack. For example, a value of -1 sets <code>NewError.What</code> to the current function, and <code>NewError.Line</code> and <code>NewError.File</code> to the line and file which called it. However, if the script is <a href="../Scripts.htm#ahk2exe">compiled</a> or the offset is invalid, <em>What</em> is simply converted to a string.</p>
-<p>If an exception is thrown automatically due to an error in the script (and not by a named built-in function), <em>What</em> is usually blank.</p>
-<p><em>Message</em> and <em>Extra</em> are converted to strings. These are displayed by an error dialog if the exception is thrown and not caught.</p>
+<p><em><strong>Error</strong></em> 可以用 <a href="#error-types">Error 类型</a>中列出的某个子类替换.</p>
+<p>这些参数直接对应于上面描述的属性, 但对于覆盖 __New 方法的 Error 子类来说, 参数可能有所不同.</p>
+<p>如果省略 <em>What</em>, 则它默认为当前函数的名称. 否则它可以是字符串或调用堆栈顶部的负偏移量. 例如, 值 -1 设置 <code>NewError.What</code> 为当前函数, 并设置 <code>NewError.Line</code> 和 <code>NewError.File</code> 为调用它的行号和文件. 然而, 如果这个脚本已经被<a href="../Scripts.htm#ahk2exe">编译</a>或者偏移是无效的, <em>What</em> 被简单地转换为字符串.</p>
+<p>如果由于脚本中的错误(而不是由一个命名的内置函数) 而自动抛出异常, <em>What</em> 通常为空.</p>
+<p><em>Message</em> 和 <em>Extra</em>被转换为字符串. 如果一个异常抛出而且没有被捕获, 则会通过一个错误对话框来显示它们.</p>
 <pre>try
     SomeFunction()
 catch e
@@ -41,28 +41,28 @@ SomeFunction() {
     throw Error.new("Fail", -1)
 }</pre>
 
-<h2 id="error-types">Error Types</h2>
+<h2 id="error-types">Error 类型</h2>
 
-<p>The following subclasses of <strong>Error</strong> are predefined:</p>
+<p><strong>Error</strong> 的以下子类是预定义的:</p>
 <ul>
-  <li id="IndexError"><strong>IndexError</strong>: An attempt was made to assign or retrieve an item at an invalid index using the object's <a href="../Objects.htm#__Item">__Item property</a>, which is usually accessed via the <a href="../Variables.htm#square-brackets">item access operator</a> (also known as the indexing operator).<ul>
-    <li id="KeyError"><strong>KeyError</strong>: Subclass of IndexError used by Map.</li>
+  <li id="IndexError"><strong>IndexError(索引错误)</strong>: 试图使用对象的 <a href="../Objects.htm#__Item">__Item 属性</a>在无效索引处赋值或检索项, 该属性通常通过<a href="../Variables.htm#square-brackets">项访问操作符</a>(也称为索引操作符) 访问.<ul>
+    <li id="KeyError"><strong>KeyError</strong>: Map 使用的 IndexError 的子类.</li>
   </ul></li>
-  <li id="MemberError"><strong>MemberError</strong>: An attempt was made to access an undefined property or method. <strong>Message</strong> indicates the type of value being invoked and the name of the property or method. This error type is not used directly; instead, one of the following subclasses is used.<ul>
-    <li id="PropertyError"><strong>PropertyError</strong></li>
-    <li id="MethodError"><strong>MethodError</strong></li>
+  <li id="MemberError"><strong>MemberError(成员错误)</strong>: 试图访问未定义的属性或方法. <strong>Message</strong> 指示要调用的值的类型和属性或方法的名称. 此错误类型不直接使用; 而是使用下面的一个子类.<ul>
+    <li id="PropertyError"><strong>PropertyError(属性错误)</strong></li>
+    <li id="MethodError"><strong>MethodError(方法错误)</strong></li>
   </ul></li>
-  <li id="MemoryError"><strong>MemoryError</strong>: A memory allocation failed.</li>
-  <li id="OSError"><strong>OSError</strong>: An internal function call to a Win32 function failed. <strong>Message</strong> includes an error code and description generated by the operating system.</li>
-  <li id="TargetError"><strong>TargetError</strong>: A function failed because its target could not be found. <strong>Message</strong> indicates what kind of target, such as a window, control, menu or status bar.</li>
-  <li id="TimeoutError"><strong>TimeoutError</strong>: <a href="../commands/SendMessage.htm">SendMessage</a> timed out.</li>
-  <li id="TypeError"><strong>TypeError</strong>: An unexpected type of value was used as input for a function, property assignment, or some other operation. Usually <strong>Message</strong> indicates the expected and actual type, and <strong>Extra</strong> contains a string representing the errant value.</li>
-  <li id="ValueError"><strong>ValueError</strong>: An unexpected value was used as input for a function, property assignment, or some other operation. Usually <strong>Message</strong> indicates which expectation was broken, and <strong>Extra</strong> contains a string representing the errant value.</li>
-  <li id="ZeroDivisionError"><strong>ZeroDivisionError</strong>: Division by zero was attempted in an expression or with the Mod function.</li>
+  <li id="MemoryError"><strong>MemoryError(内存错误)</strong>: 内存分配失败.</li>
+  <li id="OSError"><strong>OSError(系统错误)</strong>: 对 Win32 函数的内部函数调用失败. <strong>Message</strong> 包括操作系统生成的错误码和描述.</li>
+  <li id="TargetError"><strong>TargetError(目标错误)</strong>: 函数由于找不到目标而失败. <strong>Message</strong> 指示目标的类型, 例如窗口, 控件, 菜单或状态栏.</li>
+  <li id="TimeoutError"><strong>TimeoutError(超时错误)</strong>: <a href="../commands/SendMessage.htm">SendMessage</a> 超时.</li>
+  <li id="TypeError"><strong>TypeError(类型错误)</strong>: 意外的值类型被用作函数, 属性赋值或其他操作的输入. 通常 <strong>Message</strong> 指示预期的和实际的类型, 而 <strong>Extra</strong> 包含一个表示错误值的字符串.</li>
+  <li id="ValueError"><strong>ValueError(值错误)</strong>: 意外的值被用作函数, 属性赋值或其他操作的输入. 通常 <strong>Message</strong> 指示哪个期望值被打破, 而 <strong>Extra</strong> 包含一个表示错误值的字符串.</li>
+  <li id="ZeroDivisionError"><strong>ZeroDivisionError(零除错误)</strong>: 在表达式或 Mod 函数中试图除以零.</li>
 </ul>
-<p>Errors are also thrown using the base Error class.</p>
+<p>也可以使用基 Error 类来抛出 Error.</p>
 
-<h2 id="Related">Related</h2>
+<h2 id="Related">相关</h2>
 <p><a href="../commands/Throw.htm">Throw</a>, <a href="../commands/Try.htm">Try</a>, <a href="../commands/Catch.htm">Catch</a>, <a href="../commands/Finally.htm">Finally</a>, <a href="../commands/OnError.htm">OnError</a></p>
 
 </body>
