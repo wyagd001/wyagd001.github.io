@@ -356,7 +356,7 @@ Method()
 <p>如果属性不能接受参数(方括号被省略或为空), 参数将自动转发给 <em>get</em> 返回的对象的 <a href="#__Item">__Item</a> 属性. 例如, <code>this.Property[x]</code> 与 <code>(this.Property)[x]</code> 或 <code>y := this.Property, y[x]</code> 具有相同的效果.</p>
 <p>静态属性可以在属性名之前加上独立的关键字 <code>static</code> 来定义. 在这种情况下, <code>this</code> 指的是类本身或子类.</p>
 <p><em>set</em> 的返回值会被忽略. 例如, <code>val := obj.Property := 42</code> 总是赋值 <code>val := 42</code> 不管该属性做什么, 除非它抛出异常或退出线程.</p>
-<p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_super">super.Property</a></code> 访问其基类中定义的属性. 如果没有定义 <em>Get</em> 或 <em>Set</em>, 则可以从基对象继承它. 如果没有定义 <em>Get</em>, 则属性可以返回从基继承的值. 如果在该类和所有基对象(or is obscured by an inherited value property) 中没有定义 <em>Set</em>, 尝试设置该属性会导致抛出异常.</p>
+<p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_super">super.Property</a></code> 访问其基类中定义的属性. 如果没有定义 <em>Get</em> 或 <em>Set</em>, 则可以从基对象继承它. 如果没有定义 <em>Get</em>, 则属性可以返回从基继承的值. 如果在该类和所有基对象中没有定义 <em>Set</em>(或被继承的值属性所掩盖), 尝试设置该属性会导致抛出异常.</p>
 <p>内部 <em>get</em> 与 <em>set</em> 是独立的两方法, 故不可共享变量(除非存储于 <code>this</code> 中).</p>
 <p>另请参阅: <a href="objects/Object.htm#DefineProp">DefineProp</a></p>
 <p><a href="#Meta_Functions">元函数</a>提供了广泛的控制属性访问, 方法调用的机制, 但更复杂及易错.</p>
@@ -373,7 +373,7 @@ Method()
 
 <h3 id="__Enum">__Enum 方法</h3>
 <pre class="Syntax">__Enum(NumberOfVars)</pre>
-<p>当对象被传递给 <a href="commands/For.htm">for-loop</a> 时, 将调用 __Enum 方法. 此方法应返回一个<a href="objects/Enumerator.htm">枚举器</a>, 该枚举器将返回对象包含的项, 如数组元素. 如果未定义, 则不能将对象直接传递给 for-loop unless it has an <a href="objects/Enumerator.htm#Call">enumerator-compatible Call method</a>.</p>
+<p>当对象被传递给 <a href="commands/For.htm">for-loop</a> 时, 将调用 __Enum 方法. 此方法应返回一个<a href="objects/Enumerator.htm">枚举器</a>, 该枚举器将返回对象包含的项, 如数组元素. 如果未定义, 则不能将对象直接传递给 for-loop, 除非它具有<a href="objects/Enumerator.htm#Call">枚举器-兼容的 Call(调用) 方法</a>.</p>
 <p><em>NumberOfVars</em> 包含传递给 for-loop 的变量数量. 如果 <em>NumberOfVars</em> 为 2, 则期望枚举器将项的键或索引分配给第一个参数, 将值分配给第二个参数. 每个键或索引都应该作为 <a href="#__Item">__Item</a> 属性的参数而被接受. 这使<a href="AHKL_DBGPClients.htm">基于 DBGp 的调试器</a>能够通过调用枚举器列出它们之后可以获取或设置特定项.</p>
 
 <h3 id="__Item">__Item 属性</h3>
