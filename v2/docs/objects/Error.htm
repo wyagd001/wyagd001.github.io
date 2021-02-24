@@ -12,26 +12,56 @@
 <body>
 
 <h1>Error 对象</h1>
+<pre class="NoIndent">类 Error 继承 Object.</pre>
 
-<p>Error(错误) 对象是由内置代码在运行时发生错误时<a href="../commands/Throw.htm">抛出的</a>, 也可由脚本显式抛出.</p>
+<p>Error(错误) 对象是由内置代码在运行时发生错误时<a href="../commands/Throw.htm">抛出的</a>, 也可由脚本显式抛出. 以下是标准属性:</p>
 
 <p id="Message"><strong>Message:</strong> 错误消息.</p>
 <p id="What"><strong>What:</strong> 引起异常的原因. 这通常是一个函数的名称, 但对于由表达式中的错误而抛出的异常(例如在非数字值上使用数学运算符), 则为空白.</p>
 <p id="Extra"><strong>Extra:</strong> 与错误有关的字符串值(如果有). 如果这个值可以转换为非空字符串, 标准错误对话框会显示一行 "Specifically:" 后面跟着这个字符串.</p>
 <p id="File"><strong>File:</strong> 包含发生错误的行或构造错误对象的脚本文件的完整路径.</p>
 <p id="Line"><strong>Line:</strong> 错误发生的行号, 或者错误对象被构造的行号.</p>
+<p id="Stack"><strong>Stack:</strong> 代表 Error 对象被构造时的调用栈的字符串. 每一行的格式如下:</p>
+<dl>
+  <dt><code><i>File</i> (<i>Line</i>) : [<i>What</i>] <i>SourceCode</i>`r`n</code></dt>
+  <dd>代表对函数 <em>What</em> 的调用. <em>File</em> 和 <em>Line</em> 表示该堆栈深度下的当前脚本行. <em>SourceCode</em> 是该行源代码的近似值, 就像 <a href="../commands/ListLines.htm">ListLines</a> 中显示的那样.</dd>
+  <dt><code>&gt; <i>What</i>`r`n</code></dt>
+  <dd>表示线程的启动, 通常是它上面的函数调用的直接原因.</dd>
+  <dt><code>... <i>N</i> more</code></dt>
+  <dd>表示堆栈跟踪被截断, 还有 <em>N</em> 个堆栈条目没有显示. 目前 <code>Stack</code> 属性不能超过 2047 个字符.</dd>
+</dl>
 
-<p>标准错误对话框要求这些都是值属性, 不能从基对象继承.</p>
+<p class="warning"><strong>注意:</strong>标准错误对话框要求 <em>Message</em>, <em>Extra</em>, <em>File</em> 和 <em>Line</em> 都是<a href="Object.htm">自有值属性</a>.</p>
 
 <h2 id="new">Error.New() / Exception()</h2>
-<p>创建 <a href="../objects/Error.htm">Error</a> 对象.</p>
+<p>创建 Error 对象.</p>
 <pre class="Syntax">NewError := <span class="func"><i>Error</i>.New</span>(Message <span class="optional">, What, Extra</span>)
 NewError := <span class="func">Exception</span>(Message <span class="optional">, What, Extra</span>)</pre>
 <p><em><strong>Error</strong></em> 可以用 <a href="#error-types">Error 类型</a>中列出的某个子类替换.</p>
 <p>这些参数直接对应于上面描述的属性, 但对于覆盖 __New 方法的 Error 子类来说, 参数可能有所不同.</p>
-<p>如果省略 <em>What</em>, 则它默认为当前函数的名称. 否则它可以是字符串或调用堆栈顶部的负偏移量. 例如, 值 -1 设置 <code>NewError.What</code> 为当前函数, 并设置 <code>NewError.Line</code> 和 <code>NewError.File</code> 为调用它的行号和文件. 然而, 如果这个脚本已经被<a href="../Scripts.htm#ahk2exe">编译</a>或者偏移是无效的, <em>What</em> 被简单地转换为字符串.</p>
-<p>如果由于脚本中的错误(而不是由一个命名的内置函数) 而自动抛出异常, <em>What</em> 通常为空.</p>
-<p><em>Message</em> 和 <em>Extra</em>被转换为字符串. 如果一个异常抛出而且没有被捕获, 则会通过一个错误对话框来显示它们.</p>
+<p><em>Message</em> 和 <em>Extra</em> 被转换为字符串. 如果一个异常抛出而且没有被捕获, 则会通过一个错误对话框来显示它们.</p>
+<p><em>What</em> 指示错误的来源. 它可以是任意字符串, 但应该是负整数或正在运行的函数的名称. 指定 -1 表示当前函数, -2 表示调用它的函数, 依此类推. 如果脚本被<a href="../Scripts.htm#ahk2exe">编译</a>或者该值不能识别有效的堆栈帧, 那么该值将被转换为字符串并赋值给 <code>NewError.What</code>. 否则, 将使用标识的堆栈帧来确定其他属性:</p>
+<ul>
+  <li><code>NewError.What</code> 包含函数的名称.</li>
+  <li><code>NewError.Line</code> 和 <code>NewError.File</code> 表示 <em>调用</em> 函数的行.</li>
+  <li><code>NewError.Stack</code> 包含部分堆栈跟踪, 在顶部指示堆栈帧.</li>
+</ul>
+<p>使用 <em>What</em> 参数可以允许复杂函数使用帮助函数来执行其工作或参数验证, 同时从任何报告的错误信息中忽略这些内部细节. 例如:</p>
+<pre>MyFunction(a, b) {
+    CheckArg "a", a
+    CheckArg "b", b
+    <em>;...</em>
+    CheckArg(name, value) {
+        if value &lt; 0
+            throw ValueError.new(name " is negative", "myfunction", value)
+    }
+}
+
+try
+    MyFunction(1, -1)  <em>; err.Line indicates this line.</em>
+catch err
+    MsgBox Format("{1}: {2}.`n`nFile:`t{3}`nLine:`t{4}`nWhat:`t{5}`nStack:`n{6}"
+        , type(err), err.Message, err.File, err.Line, err.What, err.Stack)</pre>
 <pre>try
     SomeFunction()
 catch e

@@ -12,6 +12,7 @@
 <body>
 
 <h1>Func 对象</h1>
+<pre class="NoIndent">类 Func 继承 Object.</pre>
 
 <p>表示可以被脚本调用的自定义或内置的函数. <a href="../commands/Func.htm">Func</a> 返回这种类型的对象(或 <a href="../Functions.htm#closures">Closure</a>(闭包) 对象具有与其相同的属性).</p>
 
@@ -23,8 +24,9 @@ fn := Func("StrLen")
 
 <em>; 显示函数的信息.</em>
 MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
+<p>下面使用 "FuncObj" 作为任何 Func 对象的占位符, 因为 "Func" 就是类本身.</p>
+<p>除了从 <a href="Object.htm">Object</a> 继承的方法和属性外, File 对象还具有以下预定义的方法和属性:</p>
 
-<h2 id="Members">对象成员</h2>
 <p><strong>属性:</strong></p>
 <ul>
   <li><a href="#Name">Name</a>: 返回函数的名称.</li>
@@ -41,10 +43,38 @@ MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
   <li><a href="#IsOptional">IsOptional</a>: 确定参数是否是可选的.</li>
 </ul>
 
+<h2 id="Properties">属性</h2>
+<div class="methodShort" id="Name"><h2>Name</h2>
+<p>返回函数的名称.</p>
+<pre class="Syntax">FunctionName := FuncObj.Name</pre>
+</div>
+
+<div class="methodShort" id="IsBuiltIn"><h2>IsBuiltIn</h2>
+<p><a href="../Functions.htm#BuiltIn">内置函数</a>返回 <i>true</i>, 否则返回 <i>false</i>.</p>
+<pre class="Syntax">Boolean := FuncObj.IsBuiltIn</pre>
+</div>
+
+<div class="methodShort" id="IsVariadic"><h2>IsVariadic</h2>
+<p>当函数为<a href="../Functions.htm#Variadic">可变参数</a>时返回 <i>true</i>, 否则返回 <i>false</i>.</p>
+<pre class="Syntax">Boolean := FuncObj.IsVariadic</pre>
+</div>
+
+<div class="methodShort" id="MinParams"><h2>MinParams</h2>
+<p>返回函数必要参数的数目.</p>
+<pre class="Syntax">ParamCount := FuncObj.MinParams</pre>
+</div>
+
+<div class="methodShort" id="MaxParams"><h2>MaxParams</h2>
+<p>对于用户定义函数返回正式声明的参数数目, 对于内置函数返回最大的参数数目.</p>
+<pre class="Syntax">ParamCount := FuncObj.MaxParams</pre>
+<p>如果函数是<a href="../Functions.htm#Variadic">可变参数</a>的, <em>ParamCount</em> 表示函数在不考虑 "variadic*" 可变参数的情况下可接受的最大参数数目.</p></div>
+
+<h2 id="Methods">方法</h2>
+
 <div class="methodShort" id="Call"><h2>Call</h2>
 <p>调用函数.</p>
-<pre class="Syntax">Func.<span class="func">Call</span>(Param1, Param2, ...)
-%Func%(Param1, Param2, ...)</pre>
+<pre class="Syntax">FuncObj.<span class="func">Call</span>(Param1, Param2, ...)
+%FuncObj%(Param1, Param2, ...)</pre>
 <dl>
   <dt>Param1, Param2, ...</dt>
   <dd>参数和返回值由函数定义.</dd>
@@ -53,7 +83,7 @@ MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
 
 <div class="methodShort" id="Bind"><h2>Bind</h2>
 <p>为函数绑定参数并返回<a href="Functor.htm#BoundFunc">绑定函数对象</a>.</p>
-<pre class="Syntax">BoundFunc := Func.<span class="func">Bind</span>(Param1, Param2, ...)</pre>
+<pre class="Syntax">BoundFunc := FuncObj.<span class="func">Bind</span>(Param1, Param2, ...)</pre>
 <dl>
   <dt>Param1, Param2, ...</dt>
   <dd>任意数量的参数.</dd>
@@ -61,34 +91,10 @@ MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
 <p>有关详情和示例, 请参阅<a href="Functor.htm#BoundFunc">绑定函数对象</a>.</p>
 </div>
 
-<div class="methodShort" id="Name"><h2>Name</h2>
-<p>返回函数的名称.</p>
-<pre class="Syntax">FunctionName := Func.Name</pre>
-</div>
-
-<div class="methodShort" id="IsBuiltIn"><h2>IsBuiltIn</h2>
-<p><a href="../Functions.htm#BuiltIn">内置函数</a>返回 <i>true</i>, 否则返回 <i>false</i>.</p>
-<pre class="Syntax">Boolean := Func.IsBuiltIn</pre>
-</div>
-
-<div class="methodShort" id="IsVariadic"><h2>IsVariadic</h2>
-<p>当函数为<a href="../Functions.htm#Variadic">可变参数</a>时返回 <i>true</i>, 否则返回 <i>false</i>.</p>
-<pre class="Syntax">Boolean := Func.IsVariadic</pre>
-</div>
-
-<div class="methodShort" id="MinParams"><h2>MinParams</h2>
-<p>返回函数必要参数的数目.</p>
-<pre class="Syntax">ParamCount := Func.MinParams</pre>
-</div>
-
-<div class="methodShort" id="MaxParams"><h2>MaxParams</h2>
-<p>对于用户定义函数返回正式声明的参数数目, 对于内置函数返回最大的参数数目.</p>
-<pre class="Syntax">ParamCount := Func.MaxParams</pre>
-<p>如果函数是<a href="../Functions.htm#Variadic">可变参数</a>的, <em>ParamCount</em> 表示函数在不考虑 "variadic*" 可变参数的情况下可接受的最大参数数目.</p></div>
 
 <div class="methodShort" id="IsByRef"><h2>IsByRef</h2>
 <p>确定一个参数是否为 ByRef(按地址传递) 类型.</p>
-<pre class="Syntax">Boolean := Func.<span class="func">IsByRef</span>(<span class="optional">ParamIndex</span>)</pre>
+<pre class="Syntax">Boolean := FuncObj.<span class="func">IsByRef</span>(<span class="optional">ParamIndex</span>)</pre>
 <dl>
   <dt>ParamIndex</dt>
   <dd>
@@ -101,7 +107,7 @@ MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
 
 <div class="methodShort" id="IsOptional"><h2>IsOptional</h2>
 <p>确定一个参数是否是可选的.</p>
-<pre class="Syntax">Boolean := Func.<span class="func">IsOptional</span>(<span class="optional">ParamIndex</span>)</pre>
+<pre class="Syntax">Boolean := FuncObj.<span class="func">IsOptional</span>(<span class="optional">ParamIndex</span>)</pre>
 <dl>
   <dt>ParamIndex</dt>
   <dd>

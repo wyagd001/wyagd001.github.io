@@ -53,7 +53,7 @@ ul.list_of_p li { margin: 1em 0; }
 MyArray := Array(Item1, Item2, ..., ItemN)</pre>
 <p>检索项目(或 <em>数组元素</em>):</p>
 <pre>Value := MyArray[Index]</pre>
-<p>更改项目的值(必须已经存在于数组中):</p>
+<p>更改项目的值(<code>Index</code>(索引) 必须介于 1 和 Length(长度) 之间, 或等效的反向索引):</p>
 <pre>MyArray[Index] := Value</pre>
 <p>使用 <a href="objects/Array.htm#InsertAt">InsertAt</a> 方法在指定索引处插入一个或多个项目:</p>
 <pre>MyArray.InsertAt</a>(Index, Value, Value2, ...)</pre>
@@ -214,7 +214,7 @@ thing_test(this) {
 <p>虽然基对象通常也称为原型, 但我们使用 "类的<a href="objects/Class.htm#Prototype">原型</a>" 来表示该类的每个实例所基于的对象, 而使用 "基" 来表示一个实例所基于的对象.</p>
 <p class="note">AutoHotkey 的对象设计主要受 JavaScript 和 Lua, 略带 C# 的影响. 我们使用 <code><i>obj</i>.base</code> 代替 JavaScript 的 <code><i>obj</i>.__proto__</code> 和 <code><i>cls</i>.Prototype</code> 代替 JavaScript 的 <code><i>func</i>.prototype</code>. (使用类对象代替构造函数.)</p>
 
- <p>对象的基也用于标识其类型或类. 例如, <code>x := []</code> 创建 <em>基于</em> <code>Array.Prototype</code> 的对象, 这意味着表达式 <code>x 是 Array</code> 并且 <code>x.HasBase(Array.Prototype)</code> 为 true, 而 <code>type(x)</code> 返回 "Array".</p>
+ <p>对象的基也用于标识其类型或类. 例如, <code>x := []</code> 创建 <em>基于</em> <code>Array.Prototype</code> 的对象, 这意味着表达式 <code>x is Array</code> 并且 <code>x.HasBase(Array.Prototype)</code> 为 true, 而 <code>type(x)</code> 返回 "Array". 每个类的 Prototype 都是基于其基类的 Prototype, 所以 <code>x.HasBase(Object.Prototype)</code> 也为 true.</p>
 <p>对象或派生类的任何实例都可以是基对象, 但只能将对象赋值为具有相同原生类型的对象的<a href="objects/Object.htm#Base">基</a>. 这是为了确保内置方法始终能够识别对象的原生类型, 并且仅对具有正确二进制结构的对象进行操作.</p>
 <p>基对象可以用两种不同的方式定义:</p>
 <ul>
@@ -356,7 +356,7 @@ Method()
 <p>如果属性不能接受参数(方括号被省略或为空), 参数将自动转发给 <em>get</em> 返回的对象的 <a href="#__Item">__Item</a> 属性. 例如, <code>this.Property[x]</code> 与 <code>(this.Property)[x]</code> 或 <code>y := this.Property, y[x]</code> 具有相同的效果.</p>
 <p>静态属性可以在属性名之前加上独立的关键字 <code>static</code> 来定义. 在这种情况下, <code>this</code> 指的是类本身或子类.</p>
 <p><em>set</em> 的返回值会被忽略. 例如, <code>val := obj.Property := 42</code> 总是赋值 <code>val := 42</code> 不管该属性做什么, 除非它抛出异常或退出线程.</p>
-<p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_super">super.Property</a></code> 访问其基类中定义的属性. 如果没有定义 <em>Get</em> 或 <em>Set</em>, 则可以从基对象继承它. 如果没有定义 <em>Get</em>, 则属性可以返回从基继承的值. 如果在该类和所有基对象中没有定义 <em>Set</em>, 则该属性为只读(尝试设置该属性会抛出异常).</p>
+<p>每个类可定义部分或完整的属性. 如果一个类覆盖了属性, 可用 <code><a href="#Custom_Classes_super">super.Property</a></code> 访问其基类中定义的属性. 如果没有定义 <em>Get</em> 或 <em>Set</em>, 则可以从基对象继承它. 如果没有定义 <em>Get</em>, 则属性可以返回从基继承的值. 如果在该类和所有基对象(or is obscured by an inherited value property) 中没有定义 <em>Set</em>, 尝试设置该属性会导致抛出异常.</p>
 <p>内部 <em>get</em> 与 <em>set</em> 是独立的两方法, 故不可共享变量(除非存储于 <code>this</code> 中).</p>
 <p>另请参阅: <a href="objects/Object.htm#DefineProp">DefineProp</a></p>
 <p><a href="#Meta_Functions">元函数</a>提供了广泛的控制属性访问, 方法调用的机制, 但更复杂及易错.</p>
@@ -373,7 +373,7 @@ Method()
 
 <h3 id="__Enum">__Enum 方法</h3>
 <pre class="Syntax">__Enum(NumberOfVars)</pre>
-<p>当对象被传递给 <a href="commands/For.htm">for-loop</a> 时, 将调用 __Enum 方法. 此方法应返回一个<a href="objects/Enumerator.htm">枚举器</a>, 该枚举器将返回对象包含的项, 如数组元素. 如果未定义, 则不能将对象直接传递给 for-loop.</p>
+<p>当对象被传递给 <a href="commands/For.htm">for-loop</a> 时, 将调用 __Enum 方法. 此方法应返回一个<a href="objects/Enumerator.htm">枚举器</a>, 该枚举器将返回对象包含的项, 如数组元素. 如果未定义, 则不能将对象直接传递给 for-loop unless it has an <a href="objects/Enumerator.htm#Call">enumerator-compatible Call method</a>.</p>
 <p><em>NumberOfVars</em> 包含传递给 for-loop 的变量数量. 如果 <em>NumberOfVars</em> 为 2, 则期望枚举器将项的键或索引分配给第一个参数, 将值分配给第二个参数. 每个键或索引都应该作为 <a href="#__Item">__Item</a> 属性的参数而被接受. 这使<a href="AHKL_DBGPClients.htm">基于 DBGp 的调试器</a>能够通过调用枚举器列出它们之后可以获取或设置特定项.</p>
 
 <h3 id="__Item">__Item 属性</h3>
@@ -450,7 +450,7 @@ class <i>ClassName</i> {
 <ul>
   <li><i>Call</i>: 抛出 <a href="objects/Error.htm#MethodError">MethodError</a>.</li>
   <li>如果给出了参数, 则抛出异常(没有对象可将参数转发到).</li>
-  <li><i>Get</i>: 返回一个空字符串(当省略 <code>return</code> 时, 函数默认执行此操作).</li>
+  <li><i>Get</i>: Throw a <a href="objects/Error.htm#PropertyError">PropertyError</a>.</li>
   <li><i>Set</i>: 使用给定值定义一个新属性, 例如通过调用 <a href="objects/Object.htm#DefineProp">DefineProp</a>. </li>
 </ul>
 <p>任意<a href="objects/Functor.htm">可调用对象</a>可用作元函数, 通过将其传递给 <a href="objects/Object.htm#DefineMethod">DefineMethod</a>.</p>
@@ -466,48 +466,20 @@ class <i>ClassName</i> {
 <p>例如, 可以创建"代理"对象, 该对象通过网络(或者是其他通道) 发送对属性的请求. 远程服务器将返回一个包含属性值的响应, 然后代理将把该值返回给调用者. 虽然每个属性名称都是提前知道的, 但也不必单独定义每个属性, 因为每个属性所做的事都一样(发送一个网络请求). 元函数接受属性名称作为参数, 所以是这种情况的最佳解决方案.</p>
 
 <h2 id="primitive">原始值</h2>
-<p>原始值, 如字符串和数字, 不能有自己的属性和方法. 然而, 原始值支持与对象相同类型的<a href="#delegation">委托</a>. 也就是说, 对原始值的任何属性或方法调用都被委托给与该值的类型对应的 <em>原型对象</em>, 换句话说, 就是该值的 <em>基对象</em>. 存在以下原型对象:</p>
+<p>原始值, 如字符串和数字, 不能有自己的属性和方法. 然而, 原始值支持与对象相同类型的<a href="#delegation">委托</a>. 也就是说, 对原始值的任何属性或方法调用都被委托给预定义的原型对象, 也可以通过相应类的 <a href="objects/Class.htm#Prototype">Prototype</a> 属性访问. 以下类与原始值相关:</p>
 <ul style="line-height: 1.5">
-  <li>Any <ul style="padding-left: 1.7em">
-    <li>原始值 <ul style="padding-left: 1.7em">
+  <li>原始值 (继承 <a href="objects/Any.htm">Any</a>) <ul style="padding-left: 1.7em">
       <li>数字 <ul style="padding-left: 1.7em">
-        <li>浮点数</li>
-        <li>整数</li>
+      <li>浮点数</li>
+      <li>整数</li>
       </ul></li>
       <li>字符串</li>
     </ul></li>
   </ul></li>
 </ul>
-<p>但是, 目前只能通过原始值的 <code>base</code> 属性(或派生原型对象) 访问这些对象. <a href="objects/Object.htm">Object.Prototype</a> 也是基于 Any 原型的, 因此在该原型上定义的任何方法或属性都将被除 ComObject 之外的所有类型的值继承. 类似地, 所有原始值从原始值继承, 所有数字从数字继承.</p>
-<p>虽然检查字符串的<a href="commands/Type.htm">类型</a>通常更快, 但是可以通过检查值是否具有给定的基来测试值的类型. 例如, 如果 <em>n</em> 是一个纯整数或浮点数, 则 <code>n.HasBase(0.base.base)</code> 为真, 但如果 <em>n</em> 是一个数字字符串, 则不为真, 因为字符串原型不是从数字原型派生而来的. 相比之下, 如果 <em>n</em> 是数字或数字字符串<code>IsNumber(n)</code> 为真.</p>
-<p>不是通过数字和字符串引用原型对象, 下面的代码可以用来创建缺少的类:</p>
-<pre><em>; 定义原始类.</em>
-global Any := Class.new()
-     , Primitive := Class.new()
-     , String := Class.new()
-     , Number := Class.new()
-     , Integer := Class.new()
-     , Float := Class.new()
-
-<em>; 为原始类定义层次结构.</em>
-Primitive.base := Any
-  , Number.base := Primitive
-    , Integer.base := Number
-    , Float.base := Number
-  , String.base := Primitive
-
-<em>; 附加现有的原型对象.</em>
-Any.Prototype := (
-    Primitive.Prototype := (
-      Number.Prototype := (
-        Integer.Prototype := 0.base,
-        Float.Prototype := 0.0.base
-      ).base,
-      String.Prototype := "".base
-    ).base
-  ).base
-</pre>
-<p><a href="Variables.htm#is"><code>is</code></a> 运算符可以与这些类一起使用. 例如, <code>n is Number</code> 等同于 <code>n.HasBase(Number.Prototype)</code>, 除非 HasBase 方法已经被 <em>n</em> 覆盖. 注意, 对于 AutoHotkey 的类型层次结构中的任何值, <code>x is Any</code> 通常为真, 而对于 COM 对象则为假.</p>
+<p>虽然检查字符串的<a href="commands/Type.htm">类型</a>通常更快, 但是可以通过检查值是否具有给定的基来测试值的类型. 例如, 如果 <em>n</em> 是一个纯整数或浮点数, 则 <code>n.HasBase(Number.Prototype)</code> 或 <code>n is Number</code> 为真, 但如果 <em>n</em> 是一个数字字符串, 则不为真, 因为字符串不是从数字派生而来的. 相比之下, 如果 <em>n</em> 是数字或数字字符串, <code>IsNumber(n)</code> 为真.</p>
+<p><a href="objects/Any.htm#GetBase">ObjGetBase</a> 和 <a href="objects/Any.htm#Base">Base</a> 属性在适当的时候返回预定义的原型对象之一.</p>
+<p>注意, 对于 AutoHotkey 的类型层次结构中的任何值, <code>x is Any</code> 通常为真, 而对于 COM 对象则为假.</p>
 
 <h3 id="primitive-extension">添加属性和方法</h3>
 <p>通过修改该类型的原型对象, 可以为该类型的所有值添加属性和方法. 但是, 由于原始值不是对象并且不能具有自己的属性或方法, 因此原始原型对象不会从 <code>Object.Prototype</code> 派生. 换句话说, 默认情况下无法访问诸如 <a href="objects/Object.htm#DefineProp">DefineProp</a> 和 <a href="objects/Object.htm#DefineMethod">DefineMethod</a> 之类的方法. 可以间接调用它们. 例如:</p>
@@ -517,7 +489,7 @@ DefProp := {}.GetMethod("DefineProp")
 MsgBox A_AhkPath.length " == " StrLen(A_AhkPath)
 </pre>
 <p>尽管原始值可以从其原型继承值属性, 但是如果脚本尝试在原始值上设置值属性, 则会引发异常. 例如:</p>
-<pre>"".base.test := 1  <em>; Don't try this at home.</em>
+<pre>"".base.test := 1  <em>; 不要轻易尝试.</em>
 MsgBox "".test  <em>; 1</em>
 "".test := 2  <em>; 错误: 属性是只读的.</em></pre>
 <p>尽管可以使用 __Set 和属性设置器, 但它们没有用, 因为应将原始值视为不可变的.</p>
