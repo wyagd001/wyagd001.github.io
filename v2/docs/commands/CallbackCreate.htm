@@ -71,7 +71,7 @@ if (wParam &gt; 0x7FFFFFFF)
 <em>; 方法 #2: 依赖于 AutoHotkey 原生使用带符号的 64 位整数这一事实.</em>
 wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
 
-<p><strong>AutoHotkey 64-bit:</strong> 所有传入的参数都是有符号的 64 位整数. AutoHotkey 本身不支持无符号 64 位整数. 较小的类型被填充为 64 位，而较大的类型总是通过地址传递.</p>
+<p><strong>AutoHotkey 64-bit:</strong> 所有传入的参数都是有符号的 64 位整数. AutoHotkey 本身不支持无符号 64 位整数. 较小的类型被填充为 64 位, 而较大的类型总是通过地址传递.</p>
 
 <p><strong>AutoHotkey 32-bit/64-bit:</strong> 如果传入的参数是 8 位或 16 位(或 x64 上的 32 位), 则值的上位可能包含 "garbage" 可以使用 bitwise-and 进行过滤, 如下例所示:</p>
 <pre>Callback(UCharParam, UShortParam, UIntParam) {
@@ -99,7 +99,7 @@ TheFunc(params) {
 <h2 id="Threads">Fast vs. Slow</h2>
 <p>默认/慢速模式使该函数以默认值(如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>) 重新启动. 这些默认值可以在<a href="../Scripts.htm#auto">脚本启动</a>中更改.</p>
 <p>与之相比, <a href="#Fast">快速模式</a>会继承在调用函数时正在运行的<a href="../misc/Threads.htm">线程</a>的全局设置. 而且, 函数对全局设置的任何修改(包括<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在<a href="../misc/Threads.htm">当前线程</a>生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
-<p>要避免被自己(或其他任何线程) 中断, 回调可以在它的首行使用 <a href="Critical.htm">Critical</a>. 但是, 通过小于 0x312 消息达到的间接调用函数时, 这并不是完全有效的(增加 Critical 的 <a href="Critical.htm#Interval">interval</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="SendMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
+<p>要避免被自己(或其他任何线程) 中断, 回调可以在它的首行使用 <a href="Critical.htm">Critical</a>. 但是, 通过小于 0x0312 消息达到的间接调用函数时, 这并不是完全有效的(增加 Critical 的 <a href="Critical.htm#Interval">interval</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="SendMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
 
 <h2 id="CallbackFree">内存</h2>
 <p>每次使用 CallbackCreate 都会分配少量内存(32 字节加上系统开销). 由于操作系统会在脚本退出时自动释放该内存, 因此分配了少量, <em>固定</em> 数量的回调的任何脚本都不必显式释放内存. 相比之下, 不确定/无限制次数调用 CallbackCreate 的脚本应在任何未使用的回调中显式调用以下代码:</p>
@@ -111,7 +111,7 @@ TheFunc(params) {
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExWinList">
-<p><a href="#ExWinList">#1</a>: 显示所有顶层窗口的摘要.</p>
+<p><a class="ex_number" href="#ExWinList"></a> 显示所有顶层窗口的摘要.</p>
 <pre>EnumAddress := <strong>CallbackCreate</strong>("EnumWindowsProc", "Fast")  <em>; 快速模式是可以的, 因为它只会在这个线程中被调用.</em>
 
 DetectHiddenWindows True  <em>; 由于是快速模式, 所以此设置也会在回调中生效.</em>
@@ -132,7 +132,7 @@ EnumWindowsProc(hwnd, lParam)
 </div>
 
 <div class="ex" id="ExSubclassGUI">
-<p><a href="#ExSubclassGUI">#2</a>: 演示如何在脚本中通过把 GUI 窗口的 WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的背景颜色被改变为自定义颜色.</p>
+<p><a class="ex_number" href="#ExSubclassGUI"></a> 演示如何在脚本中通过把 GUI 窗口的 WindowProc 重定向到新的 WindowProc 来子类化窗口. 此时, 文本控件的背景颜色被改变为自定义颜色.</p>
 <pre>TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
 TextBackgroundBrush := DllCall("CreateSolidBrush", "UInt", TextBackgroundColor)
 
@@ -152,7 +152,7 @@ WindowProc(hwnd, uMsg, wParam, lParam)
 {
     Critical
     global Text, TextBackgroundColor, TextBackgroundBrush, WindowProcOld
-    if (uMsg = 0x138 &amp;&amp; lParam = Text.Hwnd)  <em>; 0x138 为 WM_CTLCOLORSTATIC.</em>
+    if (uMsg = 0x0138 &amp;&amp; lParam = Text.Hwnd)  <em>; 0x0138 为 WM_CTLCOLORSTATIC.</em>
     {
         DllCall("SetBkColor", "Ptr", wParam, "UInt", TextBackgroundColor)
         return TextBackgroundBrush  <em>; 返回 HBRUSH 来通知操作系统我们改变了 HDC.</em>

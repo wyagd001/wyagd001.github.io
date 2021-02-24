@@ -49,7 +49,7 @@
 <p>当非活动窗口变为活动状态时, 操作系统也会使其处于最前面(将其带到堆栈的顶部). 如果窗口已经处于活动状态, 则不会发生这种情况.</p>
 <p>如果窗口处于最小化和非活动状态, 那么会对其还原后再进行激活. 如果 <em>WinTitle</em> 是字母 "A", 并且省略了其他参数, 则活动窗口将会还原. 窗口即使已经是活动窗口, 也会被还原.</p>
 <p>在 60ms 的时间中, 会对目标窗口进行六次激活的尝试. 如果六次尝试都失败了, WinActivate 会自动发送 <code>{Alt 2}</code> 作为操作系统可能实施的限制的变通方法, 然后进行第七次尝试. 因此, 通常不需要在此函数后使用 <a href="WinWaitActive.htm">WinWaitActive</a> 或 <code>if not <a href="WinActive.htm">WinActive</a>(...)</code>.</p>
-<p>WinActivate 第一次尝试失败后, 会自动发送 <code>{Alt up}</code>. 测试表明, 这可能会提高所有后续尝试的可靠性, 减少第一次尝试失败并导致任务栏按钮闪烁的情况. 在每个脚本的生命周期中, 为此目的发送的 <code>{Alt up}</code> 不超过一个. 如果这个或任何其他 (AutoHotkey v1.1.27+) 脚本安装了键盘钩子, <code>{Alt up}</code> 就会被阻挡在活动窗口之外, 从而将已经很小的副作用风险降到最低.</p>
+<p>WinActivate 第一次尝试失败后, 会自动发送 <code>{Alt up}</code>. 测试表明, 这可能会提高所有后续尝试的可靠性, 减少第一次尝试失败并导致任务栏按钮闪烁的情况. 在每个脚本的生命周期中, 为此目的发送的 <code>{Alt up}</code> 不超过一个. 如果这个或任何其他脚本安装了键盘钩子, <code>{Alt up}</code> 就会被阻挡在活动窗口之外, 从而将已经很小的副作用风险降到最低.</p>
 <p>通常, 如果有多个窗口匹配, 则会激活最上面的匹配窗口(通常是最近使用的窗口). 如果窗口已经激活, 则它将保持激活状态, 而不是激活它下面的任何其他匹配窗口. 但是, 如果使用 <a href="WinMoveBottom.htm">WinMoveBottom</a>, 将活动窗口移动到堆栈底部, 则可能会激活其他窗口, 即使活动窗口是匹配的.</p>
 <p><a href="WinActivateBottom.htm">WinActivateBottom</a> 激活最底层的匹配窗口(通常是最近最早使用的那个).</p>
 <p><a href="GroupActivate.htm">GroupActivate</a> 激活与窗口组指定的条件匹配的下一个窗口.</p>
@@ -62,10 +62,10 @@ RegWrite "REG_DWORD", "HKCU\Software\Microsoft\Terminal Server Client"
     , "RemoteDesktop_SuppressWhenMinimized", 2</pre>
 
 <h2 id="Related">相关</h2>
-<p><a href="WinActivateBottom.htm">WinActivateBottom</a>, <a href="_WinActivateForce.htm">#WinActivateForce</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">Last Found Window</a>, <a href="WinExist.htm">WinExist</a>, <a href="WinActive.htm">WinActive</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="WinClose.htm">WinClose</a>, <a href="GroupActivate.htm">GroupActivate</a>, <a href="Win.htm">Win 函数</a></p>
+<p><a href="WinActivateBottom.htm">WinActivateBottom</a>, <a href="_WinActivateForce.htm">#WinActivateForce</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>, <a href="WinExist.htm">WinExist</a>, <a href="WinActive.htm">WinActive</a>, <a href="WinWaitActive.htm">WinWaitActive</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="WinClose.htm">WinClose</a>, <a href="GroupActivate.htm">GroupActivate</a>, <a href="Win.htm">Win 函数</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExBasic">#1</a>: 如果记事本确实存在, 激活它, 否则激活计算器.</p>
+<p><a class="ex_number" href="#ExBasic"></a> 如果记事本确实存在, 激活它, 否则激活计算器.</p>
 <pre>if WinExist("Untitled - Notepad")
     WinActivate <em>; 使用由 WinExist 找到的窗口</em>
 else

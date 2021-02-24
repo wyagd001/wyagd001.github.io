@@ -24,10 +24,10 @@
   <dt>FileOrDirName</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>文件或目录的路径, 如下所述. <strong>不能</strong> 包含双引号, 通配符或<a href="../misc/EscapeChar.htm">转义序列</a>(分号 <strong>`;</strong> 除外).</p>
+    <p>文件或目录的路径, 如下所述. <strong>不能</strong> 包含双引号(除了参数周围的一对可选的双引号之外), 通配符或<a href="../misc/EscapeChar.htm">转义序列</a>(分号 <strong>`;</strong> 除外).</p>
     <p>内置变量以通过将其括在百分号中来使用(例如, <code>#Include "%A_ScriptDir%"</code>). 不属于有效变量引用的百分号按原义解释. 所有内置变量都是有效的, 除了 <a href="../Variables.htm#Args">A_Args</a> 和内置类.</p>
     <p>已知限制: 编译脚本时, 变量由编译器计算, 并且可能与脚本最终执行时返回的值不同. 编译器支持以下变量: <a href="../Variables.htm#AhkPath">A_AhkPath</a>, <a href="../Variables.htm#AppData">A_AppData</a>, <a href="../Variables.htm#AppDataCommon">A_AppDataCommon</a>, <a href="../Variables.htm#ComputerName">A_ComputerName</a>, <a href="../Variables.htm#ComSpec">A_ComSpec</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#DesktopCommon">A_DesktopCommon</a>, <a href="../Variables.htm#IsCompiled">A_IsCompiled</a>, <a href="../Variables.htm#LineFile">A_LineFile</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#ProgramsCommon">A_ProgramsCommon</a>, <a href="../Variables.htm#ScriptDir">A_ScriptDir</a>, <a href="../Variables.htm#ScriptFullPath">A_ScriptFullPath</a>, <a href="../Variables.htm#ScriptName">A_ScriptName</a>, <a href="../Variables.htm#Space">A_Space</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#StartMenuCommon">A_StartMenuCommon</a>, <a href="../Variables.htm#Startup">A_Startup</a>, <a href="../Variables.htm#StartupCommon">A_StartupCommon</a>, <a href="../Variables.htm#Tab">A_Tab</a>, <a href="../Variables.htm#Temp">A_Temp</a>, <a href="../Variables.htm#UserName">A_UserName</a>, <a href="../Variables.htm#WinDir">A_WinDir</a>.</p>
-    <p><strong>File:</strong> 要包含的文件的名称, 如果未指定绝对路径, 则假定在启动/工作目录(除了 <a href="../Scripts.htm#ahk2exe">Ahk2Exe</a>, 它假定文件是在脚本自己的目录下的). 注意: <a href="SetWorkingDir.htm">SetWorkingDir</a> 对 #Include 没有效果, 因为 #Include 是在脚本开始执行之前处理的.</p>
+    <p><strong>File:</strong> 要包含的文件的名称. 默认情况下, 相对路径是相对于包含 #Include 指令的文件目录的. 这个默认值可以通过使用下面描述的 <code>#Include Dir</code> 来覆盖. 注意: <a href="SetWorkingDir.htm">SetWorkingDir</a> 对 #Include 没有效果, 因为 #Include 是在脚本开始执行之前处理的.</p>
     <p><strong>Directory:</strong> 指定目录而不是文件, 以更改当前文件中所有后续出现的 #Include 和 <a href="FileInstall.htm">FileInstall</a> 所使用的工作目录. 注意: 以这种方式更改工作目录不会影响脚本开始运行时的初始工作目录(<a href="../Variables.htm#WorkingDir">A_WorkingDir</a>). 要改变这一点, 请在脚本的顶部使用 <a href="SetWorkingDir.htm">SetWorkingDir</a>.</p>
     <p class="note"><strong>注意:</strong> 这个参数不是一个表达式, 但可以用引号括起来(可以是 '单引号' 或 "双引号").</p>
   </dd>
@@ -45,27 +45,26 @@
 <p>可以在 <em>FileName</em> 参数前加上 <code>*i</code> 和单个空格, 这会使程序忽略读取包含文件的任何失败. 例如: <code>#Include "*i SpecialOptions.ahk"</code>. 此选项应该仅在包含的文件的内容对主脚本的操作可有可无的情况下才使用.</p>
 <p>通过 <a href="ListLines.htm">ListLines</a> 或菜单 View-&gt;Lines 在主窗口显示的行总是按照它们在自己的文件中的物理顺序进行编号的. 换句话说, 包含一个新文件将只改变主脚本文件那一行的编号, 即 #Include 行本身的行号(<a href="../Scripts.htm#ahk2exe">编译后的脚本</a>除外, 它会在编译时把它们包含的文件合并成一个大的脚本).</p>
 <p>#Include 常用来加载在外部文件中定义的<a href="../Functions.htm">函数</a>.</p>
-<p>与其他 # 指令类似, 不能根据条件执行 #Include. 换句话说, 这个例子不会像预期的那样工作:</p>
+<p>和其他指令一样, 不能根据条件执行 #Include. 换句话说, 这个例子不会像预期的那样工作:</p>
 <pre>if (x = 1)
-    #Include "SomeFile.ahk"  <em>; 不管 x 的值是什么此行都会执行.</em>
-    y := 2  <em>; 而此行属于上面的 IF, 因为 # 指令不属于 IF.</em></pre>
+    #Include "SomeFile.ahk"  <em>; 不管 x 的值是什么此行都会执行.</em></pre>
 <p>通过名称来调用<a href="../Functions.htm#lib">库函数</a>, 可以自动包含文件(即不需要使用 #Include).</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../Functions.htm#lib">函数库</a>, <a href="../Functions.htm">函数</a>, <a href="FileInstall.htm">FileInstall</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a href="#ExFile">#1</a>: 将指定文件的内容包含到当前脚本中.</p>
+<p><a class="ex_number" href="#ExFile"></a> 将指定文件的内容包含到当前脚本中.</p>
 <pre>#Include "C:\My Documents\Scripts\Utility Subroutines.ahk"</pre>
 </div>
 
 <div class="ex" id="ExDir">
-<p><a href="#ExDir">#2</a>: 改变后续 #Includes 和 FileInstalls 的工作目录.</p>
+<p><a class="ex_number" href="#ExDir"></a> 改变后续 #Includes 和 FileInstalls 的工作目录.</p>
 <pre>#Include "%A_ScriptDir%"</pre>
 </div>
 
 <div class="ex" id="ExDir2">
-<p><a href="#ExDir2">#3</a>: 和上面一样, 但是使用显示命名的目录.</p>
+<p><a class="ex_number" href="#ExDir2"></a> 和上面一样, 但是使用显示命名的目录.</p>
 <pre>#Include "C:\My Scripts"</pre>
 </div>
 

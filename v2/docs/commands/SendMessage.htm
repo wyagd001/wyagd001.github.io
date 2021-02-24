@@ -92,9 +92,9 @@
 <p>字符串参数必须按<a href="StrPtr.htm">地址</a>传递. 例如:</p>
 <pre>Run "Notepad"
 WinWait "Untitled - Notepad"
-SendMessage 0xC, 0, StrPtr("New Notepad Title")  <em>; 0XC is WM_SETTEXT</em></pre>
+SendMessage 0x000C, 0, StrPtr("New Notepad Title")  <em>; 0X000C is WM_SETTEXT</em></pre>
 <p>要发送消息到系统中的所有窗口, 包括隐藏或禁用的那些, 请在 <em>WinTitle</em> 中指定 <code>0xFFFF</code>(0xFFFF 是 HWND_BROADCAST). 这种技术应该只用于目标为广播的消息, 例如:</p>
-<pre>SendMessage 0x1A,,,, 0xFFFF  <em>; 0x1A is WM_SETTINGCHANGE</em></pre>
+<pre>SendMessage 0x001A,,,, 0xFFFF  <em>; 0x001A is WM_SETTINGCHANGE</em></pre>
 <p>要让脚本接收消息, 请使用 <a href="OnMessage.htm">OnMessage</a>.</p>
 <p>请参阅<a href="../misc/SendMessage.htm">消息指南</a>来查看使用这些命令的介绍.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
@@ -105,44 +105,44 @@ SendMessage 0xC, 0, StrPtr("New Notepad Title")  <em>; 0XC is WM_SETTEXT</em></p
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExMonitorPower">
-<p><a href="#ExMonitorPower">#1</a>: 通过热键关闭显示器. 在 SendMessage 行中, 将数字 2 替换为 -1 以打开显示器, 或将其替换为 1 以激活显示器的低功耗模式.</p>
+<p><a class="ex_number" href="#ExMonitorPower"></a> 通过热键关闭显示器. 在 SendMessage 行中, 将数字 2 替换为 -1 以打开显示器, 或将其替换为 1 以激活显示器的低功耗模式.</p>
 <pre>#o::  <em>; Win+O 热键</em>
 {
     Sleep 1000  <em>; 让用户有机会释放按键(以防释放它们时再次唤醒显视器).
     ; 关闭显示器:</em>
-    SendMessage 0x112, 0xF170, 2,, "Program Manager"  <em>; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.</em>
+    SendMessage 0x0112, 0xF170, 2,, "Program Manager"  <em>; 0x0112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.</em>
 }</pre>
 </div>
 
 <div class="ex" id="ExScreenSave">
-<p><a href="#ExScreenSave">#2</a>: 启动用户选择的屏幕保护程序:</p>
-<pre>SendMessage 0x112, 0xF140, 0,, "Program Manager"  <em>; 0x112 is WM_SYSCOMMAND, and 0xF140 is SC_SCREENSAVE.</em></pre>
+<p><a class="ex_number" href="#ExScreenSave"></a> 启动用户选择的屏幕保护程序.</p>
+<pre>SendMessage 0x0112, 0xF140, 0,, "Program Manager"  <em>; 0x0112 is WM_SYSCOMMAND, and 0xF140 is SC_SCREENSAVE.</em></pre>
 </div>
 
 <div class="ex" id="ExVScrollUp">
-<p><a href="#ExVScrollUp">#3</a>: 向上滚动一行(用于含垂直滚动条的控件):</p>
-<pre>SendMessage 0x115, 0, 0, ControlGetFocus("A")</pre>
+<p><a class="ex_number" href="#ExVScrollUp"></a> 向上滚动一行(用于含垂直滚动条的控件).</p>
+<pre>SendMessage 0x0115, 0, 0, ControlGetFocus("A")</pre>
 </div>
 
 <div class="ex" id="ExVScrollDown">
-<p><a href="#ExVScrollDown">#4</a>: 向下滚动一行:</p>
-<pre>SendMessage 0x115, 1, 0, ControlGetFocus("A")</pre>
+<p><a class="ex_number" href="#ExVScrollDown"></a> 向下滚动一行(具有竖直滚动栏的控件).</p>
+<pre>SendMessage 0x0115, 1, 0, ControlGetFocus("A")</pre>
 </div>
 
 <div class="ex" id="ExWinamp">
-<p><a href="#ExWinamp">#5</a>: 这个例子请求 Winamp 的当前活动的轨道编号(有关详情, 请参阅 <a href="../misc/Winamp.htm">Automating Winamp</a>.</p>
+<p><a class="ex_number" href="#ExWinamp"></a> 这个例子请求 Winamp 的当前活动的轨道编号(有关详情, 请参阅 <a href="../misc/Winamp.htm">Automating Winamp</a>.</p>
 <pre>SetTitleMatchMode 2
-track := SendMessage(1024, 0, 120,, "- Winamp")
+track := SendMessage(0x0400, 0, 120,, "- Winamp")
 track++  <em>; Winamp 的计数从 "0" 开始, 所以加 1 进行调整.</em>
 MsgBox "Track #" track " is active or playing."
 </pre>
 </div>
 
 <div class="ex" id="ExPID">
-<p><a href="#ExPID">#6</a>: 找出 AHK 脚本的进程 ID(另一种方法是 <a href="WinGetPID.htm">WinGetPID</a>):</p>
+<p><a class="ex_number" href="#ExPID"></a> 找出 AHK 脚本的进程 ID(另一种方法是 <a href="WinGetPID.htm">WinGetPID</a>).</p>
 <pre class="NoIndent">SetTitleMatchMode 2
 DetectHiddenWindows true
-pid := SendMessage(0x44, 0x405, 0, , "SomeOtherScript.ahk - AutoHotkey v")
+pid := SendMessage(0x0044, 0x405, 0, , "SomeOtherScript.ahk - AutoHotkey v")
 MsgBox pid " is the process id."</pre>
 </div>
 
