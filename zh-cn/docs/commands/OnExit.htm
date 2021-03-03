@@ -21,7 +21,7 @@
 <dl>
 
   <dt>Func</dt>
-  <dd><p>脚本退出时调用的函数名称或<a href="../objects/Functor.htm">函数对象</a>. 该函数还可以有选择的定义参数, 请参考下面的例子. 如果 OnExit 调用的函数返回一个非零整数, 脚本将不会继续退出. 否则, 脚本将在所有注册函数运行完成之后退出.</p>
+  <dd><p>脚本退出时调用的函数名称或<a href="../objects/Functor.htm">函数对象</a>. 该函数还可以有选择的定义参数, 请参考下面的例子. 如果 OnExit 调用的函数返回一个非零整数, 脚本不会退出(除了一些<a href="#close">罕见的例外</a>) 也不会再调用其他函数. 否则, 脚本将在所有注册函数运行完成之后退出.</p>
   <pre class="Syntax"><span class="func">ExitFunc</span>(<a href="#ExitReason">ExitReason</a>, <a href="ExitApp.htm">ExitCode</a>)</pre></dd>
   
   <dt>AddRemove</dt>
@@ -35,7 +35,7 @@
 </dl>
 
 <h3 id="Function_Remarks">备注</h3>
-<p>新脚本使用函数替代原来的子程序 --  这样可以降低脚本无法退出的风险, 并确保传递给 Exit 或 ExitApp 的退出码被保存.</p>
+<p>新脚本应使用函数来替代子程序 --  这样可以降低脚本无法退出的风险, 并确保传递给 Exit 或 ExitApp 的退出码被保存.</p>
 <p>OnExit 函数可以注册任意多个. 如果同时还注册了 label(子程序), 注册的这些函数会在子程序执行 <a href="ExitApp.htm">ExitApp</a> 命令之后被调用. 通常 OnExit 函数不需要调用 ExitApp 命令; 如果调用了, 脚本将会立即退出.</p>
 
 <h2 id="command">OnExit</h2>
@@ -64,6 +64,10 @@
 
 <h2 id="ExitReason">ExitReason(退出原因)</h2>
 <table class="info">
+  <tr>
+    <th>原因</th>
+    <th abbr="Descr">描述</th>
+  </tr>
   <tr id="logoff">
     <td>logoff</td>
     <td>用户正在注销.</td>
@@ -72,9 +76,13 @@
     <td>Shutdown</td>
     <td>正在关闭或重启系统, 例如使用 <a href="Shutdown.htm">Shutdown</a> 命令.</td>
   </tr>
-  <tr>
+  <tr id="close">
     <td>Close</td>
-    <td>脚本发送 WM_CLOSE 或 WM_QUIT 消息, 出现致命错误, 或者正在被其他方式关闭. 尽管这些情况都是很少见的, 然而 WM_CLOSE 可能是由于在脚本主窗口中使用 <a href="WinClose.htm">WinClose</a> 命令而引起的. 要关闭(隐藏) 窗口而不终止脚本, 请使用 <a href="WinHide.htm">WinHide</a>.</td>
+    <td>
+      <p>脚本发送 WM_CLOSE 或 WM_QUIT 消息, 出现致命错误, 或者正在被其他方式关闭. 尽管这些情况都是很少见的, 然而 WM_CLOSE 可能是由于在脚本主窗口中使用 <a href="WinClose.htm">WinClose</a> 命令而引起的. 要关闭(隐藏) 窗口而不终止脚本, 请使用 <a href="WinHide.htm">WinHide</a>.</p>
+      <p>如果脚本因严重错误或其<a href="../Program.htm#main-window">主窗口</a>被被销毁而退出, 它将在 OnExit 线程完成后无条件终止.</p>
+      <p>如果主窗口正在被销毁, 它可能仍然存在, 但不能显示. 这个条件可以通过使用 <a href="OnMessage.htm">OnMessage</a> 监听 WM_DESTROY 消息来检测.</p>
+    </td>
   </tr>
   <tr>
     <td>Error</td>
@@ -86,7 +94,7 @@
   </tr>
   <tr>
     <td>Exit</td>
-    <td>使用了 <a href="Exit.htm">Exit</a> 或 <a href="ExitApp.htm">ExitApp</a> 命令(包括 <a href="Menu.htm">自定义菜单项</a>).</td>
+    <td>使用了 <a href="Exit.htm">Exit</a> 或 <a href="ExitApp.htm">ExitApp</a> 命令(包括<a href="Menu.htm">自定义菜单项</a>).</td>
   </tr>
   <tr>
     <td>Reload</td>

@@ -114,6 +114,10 @@ Gui, Add, UpDown, vMyUpDown Range1-10, 5</pre>
 <p><strong>-16</strong>(负 16): 让垂直的 UpDown 成为孤立的; 即让它没有伙伴控件. 这还可以让控件符合任何指定的宽度, 高度和位置而不是适应于其伙伴控件的大小. 此外, 孤立的 UpDown 会内部跟踪它自己的位置. 使用 <a href="Gui.htm#Submit">Gui Submit</a> 可以正常获取此位置.</p>
 <p id="UpDownSep"><strong>0x80</strong>: 在 <em>选项</em> 中包含 <code>0x80</code> 来省略伙伴控件中正常出现在每三位十进制数间的千位分隔符. 然而, 通常不使用此样式, 因为当脚本从 UpDown 控件(而不是其伙伴控件) 获取的数字中不包含分隔符.</p>
 <p><strong>使用 1 以外的其他增量</strong>: 在<a href="http://numeric.nerim.net/AutoHotkey/Scripts/UpDown%20-%20Non-unitary%20increments.ahk">此脚本</a>中, NumEric 演示了如何改变 UpDown 增量为 1 以外的其他值(例如 5 或 0.1).</p>
+<p><strong>Hexadecimal number format</strong>: The number format displayed inside the buddy control may be changed from decimal to hexadecimal by following this example:</p>
+<pre>Gui +LastFound
+SendMessage, 0x046D, 16, 0, msctls_updown321 <em>; 0x046D is UDM_SETBASE</em></pre>
+<p>However, this affects only the buddy control, not the UpDown's reported position.</p>
 <p>另请参阅: <a href="Gui.htm#PosSize">控件的位置和大小</a>.</p>
 
 <h2 id="Picture">Picture(或 Pic)</h2>
@@ -297,6 +301,9 @@ Gui, Add, Link,, Links may be used anywhere in the text like &lt;a id="A"&gt;thi
 <p><strong>Right</strong>: 让下拉日历在控件的右边而不是左边拉下.</p>
 <p><strong>1</strong>: 在 <em>选项</em> 中指定数字 1 会在此控件的右边提供一个增减控件来修改日期和时间的值, 这会取代其他地方可用的下拉月历的修改按钮. 这不能和上面所述的 LongDate 格式选项联用.</p>
 <p id="ChooseNone"><strong>2</strong>: 在 <em>选项</em> 中指定数字 2 在控件中提供复选框, 用户可以取消此复选框选择来表示没有选择日期/时间. 控件创建后无法改变此选项.</p>
+<p><strong>Colors inside the drop-down calendar</strong>: The colors of the day numbers inside the drop-down calendar obey that set by the <a href="../commands/Gui.htm#Font">Gui Font</a> command or the <a href="../commands/Gui.htm#OtherOptions">c (Color)</a> option. To change the colors of other parts of the calendar, follow this example:</p>
+<pre>Gui +LastFound
+<a href="PostMessage.htm">SendMessage</a>, 0x1006, 4, 0xFFAA99, SysDateTimePick321 <em>; 0x1006 is DTM_SETMCCOLOR. 4 is MCSC_MONTHBK (background color). The color must be specified in BGR vs. RGB format (red and blue components swapped).</em></pre>
 
 <h2 id="MonthCal">MonthCal</h2>
 <p>描述: 一个又高又宽的控件, 其中以日历的格式显示一个月中的所有日子. 用户可以选择单个日期或日期范围.</p>
@@ -318,6 +325,9 @@ Gui, Add, Link,, Links may be used anywhere in the text like &lt;a id="A"&gt;thi
 <p><strong>4</strong>: 在 <em>选项</em> 中指定数字 4 来在每行日期的左边显示周数(1-52). Week 1 被定义为至少包含四天的第一周.</p>
 <p><strong>8</strong>: 在 <em>选项</em> 中指定数字 8 来禁止控件中当前日期往复循环.</p>
 <p><strong>16</strong>: 在 <em>选项</em> 中指定数字 16 来禁止在控件的底部显示今天的日期.</p>
+<p><strong>Colors</strong>: The colors of the day numbers inside the calendar obey that set by the <a href="../commands/Gui.htm#Font">Gui Font</a> command or the <a href="../commands/Gui.htm#OtherOptions">c (Color)</a> option. To change the colors of other parts of the calendar, follow this example:</p>
+<pre>Gui +LastFound
+<a href="PostMessage.htm">SendMessage</a>, 0x100A, 5, 0xFFAA99, SysMonthCal321 <em>; 0x100A is MCM_SETCOLOR. 5 is MCSC_TITLETEXT (color of title text). The color must be specified in BGR vs. RGB format (red and blue components swapped).</em></pre>
 
 <h2 id="Slider">Slider</h2>
 <p>描述: 一个滑动栏, 用户可以让它沿着垂直或水平轨道移动. 滑动栏的一个常见的例子是在任务栏托盘中的标准音量控件.</p>
