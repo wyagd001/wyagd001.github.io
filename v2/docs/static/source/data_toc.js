@@ -1,4 +1,4 @@
-tocData = [
+﻿tocData = [
   ["快速参考","AutoHotkey.htm"],
   ["常见问题(FAQ)","FAQ.htm"],
   ["初学者向导(快速入门)","Tutorial.htm"],
@@ -305,7 +305,7 @@ tocData = [
     ["正则匹配对象","commands/RegExMatch.htm#MatchObject"],
     ["Gui 对象","objects/Gui.htm"],
     ["GuiControl 对象","objects/GuiControl.htm"],
-    ["Menu/MenuBar 对象","objects/Menu.htm"],
+    ["Menu/MenuBar 对象","objects/Menu.htm"]
   ]],
   ["进程","commands/Process.htm",
   [

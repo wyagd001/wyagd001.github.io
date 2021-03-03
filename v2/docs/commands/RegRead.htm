@@ -15,7 +15,7 @@
 
 <p>从注册表读取值.</p>
 
-<pre class="Syntax">Value := <span class="func">RegRead</span>(<span class="optional">KeyName, ValueName</span>)
+<pre class="Syntax">Value := <span class="func">RegRead</span>(<span class="optional">KeyName, ValueName, Default</span>)
 </pre>
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -34,6 +34,12 @@
     <p>要检索的值的名称. 如果为空或省略, 将删除键的默认值(除了上面提到的). 默认值在  RegEdit 中显示为 "(默认)". 如果没有默认值(即注册表中显示 "数值未设置"), 则抛出一个 <a href="../objects/Error.htm#OSError">OSError</a>.</p>
   </dd>
 
+  <dt>Default</dt>
+  <dd>
+    <p>类型: Any</p>
+    <p>如果指定的键或值不存在, 返回的值. 如果省略, 抛出 <a href="../objects/Error.htm#OSError">OSError</a>, 而不是返回一个默认值.</p>
+  </dd>
+
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
@@ -41,11 +47,11 @@
 <p>函数返回指定注册表键的值.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>如果遇到问题(如不存在的键或值), 则抛出 <a href="../objects/Error.htm#OSError">OSError</a>.</p>
+<p>如果遇到问题(如不存在的键或值且省略 <em>Default</em>, 或权限错误), 则抛出 <a href="../objects/Error.htm#OSError">OSError</a>.</p>
 <p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>目前只支持以下值类型: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD, and REG_BINARY.</p>
+<p>目前只支持以下值类型: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD 和 REG_BINARY.</p>
 <p>REG_DWORD 值总是被转换为正十进制数. 如果数字是负数, 则使用 <code>OutputVar := OutputVar &lt;&lt; 32 &gt;&gt; 32</code> 或类似的方法将其转换为有符号的 32 位整数.</p>
 <p>读取 REG_BINARY 键时, 结果是一串十六进制字符. 例如, REG_BINARY 值 01,a9,ff,77 的读取结果为字符串 01A9FF77.</p>
 <p>读取 REG_MULTI_SZ 值的每个部分会以换行符结束(`n). 如果值为空, 则返回空字符串. 请参阅 <a href="FileSelect.htm">FileSelect</a> 中的示例了解如何从返回值中逐个提取单独的部分.</p>
@@ -62,7 +68,7 @@
 </div>
 
 <div class="ex" id="ExProgramFiles">
-<p><a class="ex_number" href="#ExProgramFiles"></a> 检索并报告 "Program Files"(程序文件) 目录的路径. See <a href="EnvGet.htm#ExProgramFiles">EnvGet example #2</a> for an alternative method.</p>
+<p><a class="ex_number" href="#ExProgramFiles"></a> 检索并报告 "Program Files"(程序文件) 目录的路径. 有关另一种方法, 请参阅 <a href="EnvGet.htm#ExProgramFiles">EnvGet 示例 #2</a>.</p>
 <pre><em>; 此行确保在 64 位系统上运行非 64 位脚本时
 ; 也能正常返回 64 位的 Program Files 目录路径.</em>
 <a href="SetRegView.htm">SetRegView</a> 64

@@ -1,4 +1,4 @@
-indexData = [
+﻿indexData = [
   ["-","Variables.htm#AddSub",4],
   ["- (sign)","Variables.htm#unary",4],
   ["--","Variables.htm#IncDec",4],
