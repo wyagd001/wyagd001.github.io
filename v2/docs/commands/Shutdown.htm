@@ -15,56 +15,36 @@
 
 <p>关机, 重启或注销系统.</p>
 
-<pre class="Syntax"><span class="func">Shutdown</span> Code</pre>
+<pre class="Syntax"><span class="func">Shutdown</span> Flag</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>Code</dt>
+  <dt>Flag</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>下面列出了关闭代码的组合.</p>
+    <p>以下数字的组合(和):</p>
+    <ul>
+      <li>0 = 注销</li>
+      <li>1 = 关机</li>
+      <li>2 = 重启</li>
+      <li>4 = 强制</li>
+      <li>8 = 关闭电源</li>
+    </ul>
+    <p>把需要的值加在一起. 例如, 要关机并关闭电源, 标志为 9(关机 + 关闭电源 = 1 + 8 = 9).</p>
+    <p>使用 "强制" 值(4) 来强制关闭所有打开的应用程序. 它应该仅用于紧急的情况中, 因为这样可能导致打开的应用程序数据丢失.</p>
+    <p>"关闭电源" 值(8) 表示关闭系统并关闭电源.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>关闭代码是下列值的组合:</p>
-<table class="info" style="width:80%">
-  <tr>
-    <td style="width:25%">注销</td>
-    <td>0</td>
-  </tr>
-  <tr>
-    <td>关机</td>
-    <td>1</td>
-  </tr>
-  <tr>
-    <td>重启</td>
-    <td>2</td>
-  </tr>
-  <tr>
-    <td>强制</td>
-    <td>4</td>
-  </tr>
-  <tr>
-    <td>断电</td>
-    <td>8</td>
-  </tr>
-  <tr>
-    <td>挂起/休眠</td>
-    <td>请参阅本页底部的 <a href="#ExSuspend">DllCall 示例</a>.</td>
-  </tr>
-  <tr>
-    <td>关闭显示器</td>
-    <td>请参阅 <a href="SendMessage.htm#ExMonitorPower">SendMessage 的示例 #1</a>.</td>
-  </tr>
-</table>
-<p>把需要的值加在一起. 例如, 要关闭并切断电源的代码为 <strong>9</strong>(关机 + 断电 = 1 + 8 = 9).</p>
-<p>"强制" 值(4) 强制关闭所有打开的应用程序. 它应该仅在紧急情况下使用, 因为这样可能导致任何打开的应用程序丢失数据.</p>
-<p>"断电" 值关闭系统并切断电源.</p>
+<p>要让系统暂停或休眠, 请参阅页面底部的<a href="#Suspend">示例 #2</a>.</p>
+<p>要关闭显示器, 请参阅 <a href="PostMessage.htm#ExMonitorPower">PostMessage 示例 #1</a>.</p>
 <p>相关说明, 脚本通过 <a href="OnExit.htm">OnExit</a> 可以检测到系统正在关闭或用户正在注销.</p>
+
 <h2 id="Related">相关</h2>
 <p><a href="Run.htm">Run</a>, <a href="ExitApp.htm">ExitApp</a>, <a href="OnExit.htm">OnExit</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 强制重新启动(重启 + 强制 = 2 + 4 = 6).</p>
@@ -72,7 +52,7 @@
 </div>
 
 <div class="ex" id="ExSuspend">
-<p><a class="ex_number" href="#ExSuspend"></a> 调用 Windows API 函数 "SetSuspendState" 来让系统挂起或休眠.</p>
+<p><a class="ex_number" href="#ExSuspend"></a> 调用 Windows API 函数 "SetSuspendState" 来让系统挂起或休眠. 注意, 第二个参数对较新的系统可能没有任何影响.</p>
 <pre><em>; 参数 #1: 使用 1 代替 0 来进行休眠而不是挂起.
 ; 参数 #2: 使用 1 代替 0 来立即挂起而不询问每个应用程序以获得许可.
 ; 参数 #3: 使用 1 而不是 0 来禁止所有的唤醒事件.</em>

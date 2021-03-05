@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-  <title>Styles for windows and controls | AutoHotkey v2</title>
+  <title>Window and Control Styles | AutoHotkey v2</title>
 <meta name="description" content="This page lists some styles and extended styles which can be set or retrieved with Gui or GuiControl object's Opt method, WinSetStyle, WinGetStyle, ControlSetStyle and ControlGetStyle." />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +11,9 @@
 </head>
 
 <body>
-<h1>可用于 <a href="../objects/Gui.htm#New">Gui.New</a>, <a href="../objects/Gui.htm">Gui 对象</a>和 <a href="../objects/GuiControl.htm">GuiControl 对象</a>的样式</h1>
+<h1>窗口和控件的样式</h1>
+<p>本页列出了一些样式和扩展样式, 可以通过方法 <a href="../objects/Gui.htm#Opt">Gui.Opt</a> 和 <a href="../objects/GuiControl.htm#Opt">GuiControl.Opt</a>, 和内置函数 <a href="../commands/WinSetStyle.htm">WinSetStyle</a>, <a href="../commands/WinSetStyle.htm">WinSetExStyle</a>, <a href="../commands/WinGetStyle.htm">WinGetStyle</a>, <a href="../commands/WinGetStyle.htm">WinGetExStyle</a>, <a href="../commands/ControlSetStyle.htm">ControlSetStyle</a>, <a href="../commands/ControlSetStyle.htm">ControlSetExStyle</a>, <a href="../commands/ControlGetStyle.htm">ControlGetStyle</a> 和 <a href="../commands/ControlGetStyle.htm">ControlGetExStyle</a> 来设置或检索.</p>
+
 <h2 style="margin-top: 1.5em;">目录</h2>
 <ul>
   <li><a href="#Common">用于 Gui/父窗口和大多数控件类型的通用样式</a></li>
@@ -22,17 +24,14 @@
   <li><a href="#DateTime">DateTime</a> | <a href="#MonthCal">MonthCal</a></li>
   <li><a href="#Slider">Slider</a> | <a href="#Progress">Progress</a> | <a href="#Tab">Tab</a> | <a href="#StatusBar">StatusBar</a></li>
 </ul>
+
 <h2 id="Common">通用样式</h2>
+<p>默认情况下, GUI 窗口使用 <a href="#WS_POPUP">WS_POPUP</a>, <a href="#WS_CAPTION">WS_CAPTION</a>, <a href="#WS_SYSMENU">WS_SYSMENU</a> 和 <a href="#WS_MINIMIZEBOX">WS_MINIMIZEBOX</a>. 对于一个 GUI 窗口, <a href="#WS_CLIPSIBLINGS">WS_CLIPSIBLINGS</a> 总是被启用而不能被禁用.</p>
 <table class="info">
 <tr>
-  <td>默认的 GUI 窗口样式</td>
-  <td>&nbsp;</td>
-  <td><a href="#WS_POPUP">WS_POPUP</a>, <a href="#WS_CAPTION">WS_CAPTION</a>, <a href="#WS_SYSMENU">WS_SYSMENU</a>, <a href="#WS_MINIMIZEBOX">WS_MINIMIZEBOX</a></td>
-</tr>
-<tr>
-  <td>强制 GUI 窗口样式</td>
-  <td>&nbsp;</td>
-  <td>WS_CLIPSIBLINGS</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="WS_BORDER">
   <td>WS_BORDER</td>
@@ -48,6 +47,11 @@
   <td>WS_CAPTION</td>
   <td>0xC00000</td>
   <td>+/-Caption. 创建含有标题栏的窗口. 此样式是 <a href="#WS_BORDER">WS_BORDER</a> 和 <a href="#WS_DLGFRAME">WS_DLGFRAME</a> 数值的和.</td>
+</tr>
+<tr id="WS_CLIPSIBLINGS">
+  <td>WS_CLIPSIBLINGS</td>
+  <td>0x4000000</td>
+  <td>相对地剪裁子窗口; 也就是说, 当某个特定子窗口接收到 WM_PAINT 消息时, WS_CLIPSIBLINGS 样式会将所有其他重叠的子窗口从要更新的子窗口区域中剪裁出来. 如果未指定 WS_CLIPSIBLINGS 并且子窗口重叠, 则在子窗口的工作区内绘制时, 可以在相邻子窗口的工作区内绘制.</td>
 </tr>
 <tr id="WS_DISABLED">
   <td>WS_DISABLED</td>
@@ -91,7 +95,7 @@
 </tr>
 <tr id="WS_OVERLAPPED">
   <td>WS_OVERLAPPED</td>
-  <td>0</td>
+  <td>0x0</td>
   <td>创建重叠的窗口. 重叠的窗口含有标题栏和边框. 等同于 WS_TILED 样式.</td>
 </tr>
 <tr id="WS_OVERLAPPEDWINDOW">
@@ -117,7 +121,7 @@
 <tr id="WS_TABSTOP">
   <td>WS_TABSTOP</td>
   <td>0x10000</td>
-  <td>+/-Tabstop. 指定当用户按下 <kbd>Tab</kbd> 时可以接收键盘焦点的控件. 按 <kbd>Tab</kbd> 可以把键盘焦点切换到下一个拥有 <a href="#WS_TABSTOP">WS_TABSTOP</a> 样式的控件.</td>
+  <td>+/-Tabstop. 指定当用户按下 <kbd>Tab</kbd> 时可以接收键盘焦点的控件. 按 <kbd>Tab</kbd> 可以把键盘焦点切换到下一个拥有 WS_TABSTOP 样式的控件.</td>
 </tr>
 <tr id="WS_THICKFRAME">
   <td>WS_THICKFRAME</td>
@@ -140,17 +144,13 @@
   <td>创建子窗口. 拥有此样式的窗口不能含有菜单栏. 此样式不能和 <a href="#WS_POPUP">WS_POPUP</a> 样式一起使用.</td>
 </tr>
 </table>
-<h2 id="Text"><a href="../commands/GuiControls.htm#Text">Text</a> 样式</h2>
+<h2 id="Text">Text 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#Text">Text</a> 控件. 它既没有默认样式也没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td>无</td>
-  </tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="SS_BLACKFRAME">
   <td>SS_BLACKFRAME</td>
@@ -195,7 +195,7 @@
 </tr>
 <tr id="SS_LEFT">
   <td>SS_LEFT</td>
-  <td>0</td>
+  <td>0x0</td>
   <td>+/-Left. 这是默认的. 它指定简单的矩形并在其中左对齐显示文本. 显示前会格式化文本. 一行末尾多出的文本自动显示到下一个左对齐行的开始处. 超出控件宽度的文本被截去.</td>
 </tr>
 <tr id="SS_LEFTNOWORDWRAP">
@@ -234,22 +234,17 @@
   <td>指定使用当前窗口背景颜色填充的矩形. 在默认配色方案中此颜色为白色.</td>
 </tr>
 </table>
-<h2 id="Edit"><a href="../commands/GuiControls.htm#Edit">Edit</a> 样式</h2>
+
+<h2 id="Edit">Edit 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#Edit">Edit</a> 控件. 默认情况下, 它使用 <a href="#WS_TABSTOP">WS_TABSTOP</a> 和 WS_EX_CLIENTEDGE(扩展样式 E0x200). 它没有强制样式.</p>
+<p>如果一个编辑控件由于初始内容包含多行, 高度大于 1 行或明确指定大于 1 的行数而自动检测为多行控件时, 默认将自动应用下列样式: <a href="#WS_VSCROLL">WS_VSCROLL</a>, <a href="#ES_WANTRETURN">ES_WANTRETURN</a> 和 <a href="#ES_AUTOVSCROLL">ES_AUTOVSCROLL</a>.</p>
+<p>如果一个编辑控件被自动检测为单行, 那么它默认含有 <a href="#ES_AUTOHSCROLL">ES_AUTOHSCROLL</a>.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td>
-    <p><a href="#WS_TABSTOP">WS_TABSTOP</a> 和 WS_EX_CLIENTEDGE(扩展样式 E0x200)</p>
-    <p>如果一个编辑控件由于初始内容包含多行, 高度大于 1 行或明确指定大于 1 的行数而自动检测为多行控件时, 默认将自动应用下列样式: <a href="#WS_VSCROLL">WS_VSCROLL</a>, <a href="#ES_WANTRETURN">ES_WANTRETURN</a> 和 <a href="#ES_AUTOVSCROLL">ES_AUTOVSCROLL</a></p>
-    <p>如果一个编辑控件被自动检测为单行, 那么它默认含有 <a href="#ES_AUTOHSCROLL">ES_AUTOHSCROLL</a>.</p>
-  </td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
-  </tr>
 <tr id="ES_AUTOHSCROLL">
   <td>ES_AUTOHSCROLL</td>
   <td>0x80</td>
@@ -316,18 +311,15 @@
   <td>+/-WantReturn. 在对话框的多行编辑控件中输入文本时, 指定当用户按下 <kbd>Enter</kbd> 时则插入回车符. 如果不指定此样式, 那么按下 <kbd>Enter</kbd> 相当于点击了对话框的默认按钮. 此样式对于单行编辑控件没有效果.</td>
 </tr>
 </table>
-<h2 id="UpDown"><a href="../commands/GuiControls.htm#UpDown">UpDown</a> 样式</h2>
+
+<h2 id="UpDown">UpDown 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#UpDown">UpDown</a> 控件. 默认情况下, 它使用 <a href="#UDS_ARROWKEYS">UDS_ARROWKEYS</a>, <a href="#UDS_ALIGNRIGHT">UDS_ALIGNRIGHT</a>, <a href="#UDS_SETBUDDYINT">UDS_SETBUDDYINT</a> 和 <a href="#UDS_AUTOBUDDY">UDS_AUTOBUDDY</a>. 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#UDS_ARROWKEYS">UDS_ARROWKEYS</a>, <a href="#UDS_ALIGNRIGHT">UDS_ALIGNRIGHT</a>, <a href="#UDS_SETBUDDYINT">UDS_SETBUDDYINT</a> 和 <a href="#UDS_AUTOBUDDY">UDS_AUTOBUDDY</a>.</td>
-  </tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
-  </tr>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
+</tr>
 <tr id="UDS_WRAP">
   <td>UDS_WRAP</td>
   <td>0x1</td>
@@ -373,27 +365,15 @@
   <td>0x100</td>
   <td>让控件展示 "热跟踪" 行为. 即鼠标从控件按钮上经过时高亮控件按钮. 如果桌面主题覆盖了这个标志, 那么这个标志可能会被忽略.</td>
 </tr>
-<tr>
-  <td>(十六进制)</td>
-  <td>&nbsp;</td>
-  <td><p>把伙伴控件中显示的数字格式从十进制改变为十六进制, 请参照此例:</p>
-  <pre>SendMessage 0x046D, 16, 0, "msctls_updown321", MyGui <em>; 0x046D 为 UDM_SETBASE</em></pre>
-    <p>然而, 这种方法只影响伙伴控件, 而不影响 UpDown 报告的位置.</p>
-  </td>
-</tr>
 </table>
-<h2 id="Pic"><a href="../commands/GuiControls.htm#Picture">Picture</a> 样式</h2>
+
+<h2 id="Pic">Picture 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#Picture">Picture</a> 控件. 他没有默认样式. 样式 SS_ICON(图标和光标) 或 SS_BITMAP(其他图片类型) 总是被启用而不能被禁用.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td>无</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>对于图标和光标为 SS_ICON.<br>
-  对于其他图像类型为 SS_BITMAP.</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="SS_REALSIZECONTROL">
   <td>SS_REALSIZECONTROL</td>
@@ -408,34 +388,47 @@
   </td>
 </tr>
 </table>
-<h2 id="Button"><a href="../commands/GuiControls.htm#Button">Button</a>, <a href="../commands/GuiControls.htm#Checkbox">Checkbox</a>, <a href="../commands/GuiControls.htm#Radio">Radio</a> 和 <a href="../commands/GuiControls.htm#GroupBox">GroupBox</a> 样式</h2>
+
+<h2 id="Button">Button, CheckBox, Radio 和 GroupBox 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#Button">Button</a>, <a href="../commands/GuiControls.htm#Checkbox">CheckBox</a>, <a href="../commands/GuiControls.htm#Radio">Radio</a> 或 <a href="../commands/GuiControls.htm#GroupBox">GroupBox</a> 控件.</p>
+<p>默认情况下, 除了 GroupBox 之外, 这些控件都使用 <a href="#BS_MULTILINE">BS_MULTILINE</a>(除非它没有显式设置宽度或高度, 或在其文本中没有任何 CR/LF 字符) 和 <a href="#WS_TABSTOP">WS_TABSTOP</a>(然而, 对于 Radio 控件, 每个单选按钮组中除首个外的其他单选按钮没有 WS_TABSTOP). 此外, Radio 控件具有 <a href="#BS_NOTIFY">BS_NOTIFY</a>, 这样可以检测到双击.</p>
+<p>以下样式总是被启用, 不能被禁用:</p>
+<ul>
+  <li>Button: <a href="#BS_PUSHBUTTON">BS_PUSHBUTTON</a> 或 <a href="#BS_DEFPUSHBUTTON">BS_DEFPUSHBUTTON</a></li>
+  <li>CheckBox: <a href="#BS_AUTOCHECKBOX">BS_AUTOCHECKBOX</a> 或 <a href="#BS_AUTO3STATE">BS_AUTO3STATE</a></li>
+  <li>Radio: <a href="#BS_AUTORADIOBUTTON">BS_AUTORADIOBUTTON</a></li>
+  <li>GroupBox: <a href="#BS_GROUPBOX">BS_GROUPBOX</a></li>
+</ul>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td>
-    <p><a href="#BS_MULTILINE">BS_MULTILINE</a>(不包括 GroupBox 和既没有明确设置高度或宽度也没有在它们的文本中使用任何的 CR/LF 字符的按钮, 复选框以及单选按钮)</p>
-    <p><a href="#WS_TABSTOP">WS_TABSTOP</a>(不包括 GroupBox), 但是每个单选按钮组中除首个外的其他单选按钮默认不含有 WS_TABSTOP.</p>
-  </td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>Button(按钮): BS_PUSHBUTTON 或 <a href="#BS_DEFPUSHBUTTON">BS_DEFPUSHBUTTON</a><br>
-  Radio(单选按钮): BS_AUTORADIOBUTTON<br>
-  Checkbox(勾选框): BS_AUTOCHECKBOX 或 BS_AUTO3STATE<br>
-  GroupBox: BS_GROUPBOX</td>
+<tr id="BS_AUTO3STATE">
+  <td>BS_AUTO3STATE</td>
+  <td>0x6</td>
+  <td>创建一个与三态复选框相同的按钮, 但该框在用户选择时更改其状态. 状态在选中, 不确定和清除之间循环.</td>
 </tr>
-<tr id="BS_NOTIFY">
-  <td>BS_NOTIFY</td>
-  <td>0x4000</td>
-  <td><p>启用 DoubleClick, Focus 和 LoseFocus 事件. 当任何这些事件被注册时, <a href="../objects/GuiOnEvent.htm">OnEvent</a> 会自动添加该样式, 但不会自动删除.</p>
-    <p>如果设置, 双击中的第二次点击除了触发事件外, 没有其他效果. 如果不设置, 双击的作用就像两次单击一样, 目的是循环检查标记值或造成被点击按钮的视觉效果.</p></td>
+<tr id="BS_AUTOCHECKBOX">
+  <td>BS_AUTOCHECKBOX</td>
+  <td>0x3</td>
+  <td>创建一个与复选框相同的按钮, 但每次用户选择复选框时, 复选框状态在选中和清除之间自动切换.</td>
+</tr>
+<tr id="BS_AUTORADIOBUTTON">
+  <td>BS_AUTORADIOBUTTON</td>
+  <td>0x9</td>
+  <td>创建一个与单选按钮相同的按钮, 但每次用户选中它时, 系统自动将按钮的选中状态设置为选中, 并自动将同一组中所有其他按钮的选中状态设置为清除.</td>
 </tr>
 <tr id="BS_LEFT">
   <td>BS_LEFT</td>
   <td>0x100</td>
   <td>+/-Left. 左对齐文本.</td>
+</tr>
+<tr id="BS_PUSHBUTTON">
+  <td>BS_PUSHBUTTON</td>
+  <td>0x0</td>
+  <td>创建一个按钮, 当用户选择该按钮时, 将 WM_COMMAND 消息发布到所有者窗口.</td>
 </tr>
 <tr id="BS_PUSHLIKE">
   <td>BS_PUSHLIKE</td>
@@ -470,8 +463,13 @@
 <tr id="BS_MULTILINE">
   <td>BS_MULTILINE</td>
   <td>0x2000</td>
-  <td>+/-Wrap. 如果文本过长而无法容纳在控件可用宽度的单行中时, 则对文本进行换行操作而变成多行.
-  此样式还允许使用换行符(`n) 在文本中开始新行.</td>
+  <td>+/-Wrap. 如果文本过长而无法容纳在控件可用宽度的单行中时, 则对文本进行换行操作而变成多行. 此样式还允许使用换行符(`n) 在文本中开始新行.</td>
+</tr>
+<tr id="BS_NOTIFY">
+  <td>BS_NOTIFY</td>
+  <td>0x4000</td>
+  <td>启用按钮以将 BN_KILLFOCUS 和 BN_SETFOCUS 通知代码发送到其父窗口.
+  请注意, 无论是否具有此样式, 按钮都会发送 BN_CLICKED 通知代码. 要获取 BN_DBLCLK 通知代码, 该按钮必须具有 BS_RADIOBUTTON 或 BS_OWNERDRAW 样式.</td>
 </tr>
 <tr id="BS_TOP">
   <td>BS_TOP</td>
@@ -488,21 +486,26 @@
   <td>0x8000</td>
   <td>指定按钮为二维的; 它不使用默认的底纹来创建三维效果.</td>
 </tr>
+<tr id="BS_GROUPBOX">
+  <td>BS_GROUPBOX</td>
+  <td>0x7</td>
+  <td>创建一个矩形, 其中可以对其他控件进行分组. 与此样式关联的任何文本都显示在矩形的左上角.</td>
+</tr>
 </table>
-<h2 id="DDL"><a href="../commands/GuiControls.htm#DropDownList">DropDownList</a> 和 <a href="../commands/GuiControls.htm#ComboBox">ComboBox</a> 样式</h2>
+
+<h2 id="DDL">DropDownList 和 ComboBox 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#DropDownList">DropDownList</a> 和 <a href="../commands/GuiControls.htm#ComboBox">ComboBox</a> 控件.</p>
+<p>默认情况下, 这些控件都使用 <a href="#WS_TABSTOP">WS_TABSTOP</a>. 此外, DropDownList 控件使用 <a href="#WS_VSCROLL">WS_VSCROLL</a>, 而 ComboBox 控件使用 <a href="#WS_VSCROLL">WS_VSCROLL</a> 和 <a href="#CBS_AUTOHSCROLL">CBS_AUTOHSCROLL</a>.</p>
+<p>以下样式总是被启用, 不能被禁用:</p>
+<ul>
+  <li>DropDownList: <a href="#CBS_DROPDOWNLIST">CBS_DROPDOWNLIST</a></li>
+  <li>ComboBox: <a href="#CBS_DROPDOWN">CBS_DROPDOWN</a> 或 <a href="#CBS_SIMPLE">CBS_SIMPLE</a></li>
+</ul>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#WS_TABSTOP">WS_TABSTOP</a>(+/-Tabstop)<br>
-  DropDownList(下拉列表): <a href="#WS_VSCROLL">WS_VSCROLL</a><br>
-  ComboBox(组合框): <a href="#WS_VSCROLL">WS_VSCROLL</a>, <a href="#CBS_AUTOHSCROLL">CBS_AUTOHSCROLL</a></td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>DropDownList: CBS_DROPDOWNLIST<br>
-  ComboBox: CBS_DROPDOWN 或 <a href="#CBS_SIMPLE">CBS_SIMPLE</a></td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="CBS_AUTOHSCROLL">
   <td>CBS_AUTOHSCROLL</td>
@@ -513,6 +516,16 @@
   <td>CBS_DISABLENOSCROLL</td>
   <td>0x800</td>
   <td>当列表框中不包含需要滚动的足够项目时, 在其中显示被禁用的垂直滚动条. 不含有此样式时, 当列表框中没有包含足够的项目时隐藏滚动条.</td>
+</tr>
+<tr id="CBS_DROPDOWN">
+  <td>CBS_DROPDOWN</td>
+  <td>0x2</td>
+  <td>与 <a href="#CBS_SIMPLE">CBS_SIMPLE</a> 类似, 只是除非用户选择编辑控件旁边的图标, 否则不会显示列表框.</td>
+</tr>
+<tr id="CBS_DROPDOWNLIST">
+  <td>CBS_DROPDOWNLIST</td>
+  <td>0x3</td>
+  <td>与 <a href="#CBS_DROPDOWN">CBS_DROPDOWN</a> 类似, 不同之处在于编辑控件被静态文本项替换, 该文本项在列表框中显示当前选择.</td>
 </tr>
 <tr id="CBS_LOWERCASE">
   <td>CBS_LOWERCASE</td>
@@ -527,7 +540,7 @@
 <tr id="CBS_OEMCONVERT">
   <td>CBS_OEMCONVERT</td>
   <td>0x80</td>
-  <td>把输入到组合框编辑控件中的文本从 Windows CE 字符集转到 OEM 字符集, 然后转回 Windows CE 字符集. 此样式最常用于包含文件名的组合框. 它仅适用于使用 CBS_DROPDOWN 样式创建的组合框.</td>
+  <td>把输入到组合框编辑控件中的文本从 Windows CE 字符集转到 OEM 字符集, 然后转回 Windows CE 字符集. 此样式最常用于包含文件名的组合框. 它仅适用于使用 <a href="#CBS_DROPDOWN">CBS_DROPDOWN</a> 样式创建的组合框.</td>
 </tr>
 <tr id="CBS_SIMPLE">
   <td>CBS_SIMPLE</td>
@@ -545,17 +558,14 @@
   <td>+/-Uppercase. 把输入到组合框编辑控件中的所有小写字符转换成大写.</td>
 </tr>
 </table>
-<h2 id="ListBox"><a href="../commands/GuiControls.htm#ListBox">ListBox</a> 样式</h2>
+
+<h2 id="ListBox">ListBox 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#ListBox">ListBox</a> 控件. 默认情况下, 它使用 <a href="#WS_TABSTOP">WS_TABSTOP</a>, <a href="#LBS_USETABSTOPS">LBS_USETABSTOPS</a>, <a href="#WS_VSCROLL">WS_VSCROLL</a> 和 WS_EX_CLIENTEDGE(扩展样式 E0x200). 样式 <a href="#LBS_NOTIFY">LBS_NOTIFY</a>(支持检测双击) 总是被启用, 不能被禁用.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#WS_TABSTOP">WS_TABSTOP</a>, <a href="#LBS_USETABSTOPS">LBS_USETABSTOPS</a>, <a href="#WS_VSCROLL">WS_VSCROLL</a> 和 WS_EX_CLIENTEDGE(扩展样式 E0x200).</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>LBS_NOTIFY(支持对双击的检测)</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="LBS_DISABLENOSCROLL">
   <td>LBS_DISABLENOSCROLL</td>
@@ -582,6 +592,11 @@
   <td>0x4000</td>
   <td>+/-ReadOnly. 让用户可以查看列表框中的字符串但不能进行选择.</td>
 </tr>
+<tr id="LBS_NOTIFY">
+  <td>LBS_NOTIFY</td>
+  <td>0x1</td>
+  <td>每当用户单击列表框项目(LBN_SELCHANGE), 双击项目(LBN_DBLCLK), 或取消选择(LBN_SELCANCEL)时, 列表框就会向父窗口发送通知代码.</td>
+</tr>
 <tr id="LBS_SORT">
   <td>LBS_SORT</td>
   <td>0x2</td>
@@ -593,17 +608,14 @@
   <td>启用在描绘列表框的字符串时识别并扩展 tab 字符. 默认制表符位置为 32 个对话框单位. 一个对话框单位等于当前对话框基础宽度单位的四分之一.</td>
 </tr>
 </table>
-<h2 id="ListView"><a href="../commands/ListView.htm">ListView</a> 样式</h2>
+
+<h2 id="ListView">ListView 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/ListView.htm">ListView</a> 控件. 默认情况下, 它使用 <a href="#WS_TABSTOP">WS_TABSTOP</a>, <a href="#LVS_REPORT">LVS_REPORT</a>, <a href="#LVS_SHOWSELALWAYS">LVS_SHOWSELALWAYS</a>, <a href="#LVS_EX_FULLROWSELECT">LVS_EX_FULLROWSELECT</a>, <a href="#LVS_EX_HEADERDRAGDROP">LVS_EX_HEADERDRAGDROP</a> 和 WS_EX_CLIENTEDGE(扩展样式 E0x200). 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#WS_TABSTOP">WS_TABSTOP</a>, <a href="#LVS_REPORT">LVS_REPORT</a>, <a href="#LVS_SHOWSELALWAYS">LVS_SHOWSELALWAYS</a>, <a href="#LVS_EX_FULLROWSELECT">LVS_EX_FULLROWSELECT</a>, <a href="#LVS_EX_HEADERDRAGDROP">LVS_EX_HEADERDRAGDROP</a>, WS_EX_CLIENTEDGE(E0x200)</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="LVS_ALIGNLEFT">
   <td>LVS_ALIGNLEFT</td>
@@ -612,7 +624,7 @@
 </tr>
 <tr id="LVS_ALIGNTOP">
   <td>LVS_ALIGNTOP</td>
-  <td>0</td>
+  <td>0x0</td>
   <td>在图标和小图标视图中把项目和列表视图控件的顶部对齐. 这是默认的.</td>
 </tr>
 <tr id="LVS_AUTOARRANGE">
@@ -627,7 +639,7 @@
 </tr>
 <tr id="LVS_ICON">
   <td>LVS_ICON</td>
-  <td>0</td>
+  <td>0x0</td>
   <td>+Icon. 指定大图标视图.</td>
 </tr>
 <tr id="LVS_LIST">
@@ -701,8 +713,14 @@
   <td>+/-SortDesc. 与上面相同, 不过这里是降序排列.</td>
 </tr>
 </table>
+
 <p id="LVS_EX" class="note"><strong>扩展 ListView 样式</strong> 与 Gui 方法/属性一起使用时, 需要 <a href="../commands/ListView.htm#LVS_EX">LV 前缀</a>. 某些在 Windows XP 或更高版本中引入的扩展样式未在此列出. 有关完整列表, 请参阅 <a href="https://msdn.microsoft.com/en-us/library/bb774732">MSDN: Extended List-View Styles</a>.</p>
 <table class="info">
+<tr>
+  <th abbr="ExStyle">扩展样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
+</tr>
 <tr id="LVS_EX_BORDERSELECT">
   <td>LVS_EX_BORDERSELECT</td>
   <td>LV0x8000</td>
@@ -799,17 +817,14 @@
   <td>让那些可以被激活的热项目带有下划线文本显示. 此样式要求同时设置 <a href="#LVS_EX_ONECLICKACTIVATE">LVS_EX_ONECLICKACTIVATE</a> 或 <a href="#LVS_EX_TWOCLICKACTIVATE">LVS_EX_TWOCLICKACTIVATE</a> 样式.</td>
 </tr>
 </table>
-<h2 id="TreeView"><a href="../commands/TreeView.htm">TreeView</a> 样式</h2>
+
+<h2 id="TreeView">TreeView 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/TreeView.htm">TreeView</a> 控件. 默认情况下, 它使用 <a href="#WS_TABSTOP">WS_TABSTOP</a>, <a href="#TVS_SHOWSELALWAYS">TVS_SHOWSELALWAYS</a>, <a href="#TVS_HASLINES">TVS_HASLINES</a>, <a href="#TVS_LINESATROOT">TVS_LINESATROOT</a>, <a href="#TVS_HASBUTTONS">TVS_HASBUTTONS</a> 和 WS_EX_CLIENTEDGE(扩展样式 E0x200). 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#WS_TABSTOP">WS_TABSTOP</a>, <a href="#TVS_SHOWSELALWAYS">TVS_SHOWSELALWAYS</a>, <a href="#TVS_HASLINES">TVS_HASLINES</a>, <a href="#TVS_LINESATROOT">TVS_LINESATROOT</a>, <a href="#TVS_HASBUTTONS">TVS_HASBUTTONS</a>, WS_EX_CLIENTEDGE(E0x200)</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="TVS_CHECKBOXES">
   <td>TVS_CHECKBOXES</td>
@@ -892,18 +907,15 @@
   <td>在树形视图控件中启用鼠标的热跟踪功能.</td>
 </tr>
 </table>
-<h2 id="DateTime"><a href="../commands/GuiControls.htm#DateTime">DateTime</a> 样式</h2>
+
+<h2 id="DateTime">DateTime 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#DateTime">DateTime</a> 控件. 默认情况下, 它使用 <a href="#DTS_SHORTDATECENTURYFORMAT">DTS_SHORTDATECENTURYFORMAT</a> 和 <a href="#WS_TABSTOP">WS_TABSTOP</a>. 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#DTS_SHORTDATECENTURYFORMAT">DTS_SHORTDATECENTURYFORMAT</a> 和 <a href="#WS_TABSTOP">WS_TABSTOP</a>(+/-Tabstop)</td>
-  </tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
-  </tr>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
+</tr>
 <tr id="DTS_UPDOWN">
   <td>DTS_UPDOWN</td>
   <td>0x1</td>
@@ -944,26 +956,15 @@
   <td>0x20</td>
   <td>+/-Right. 让日历在控件的右边拉下而不是左边.</td>
 </tr>
-<tr>
-  <td>(下拉日历内的颜色设置)</td>
-  <td>&nbsp;</td>
-  <td>
-    <p>下拉日历中天数的颜色遵循 <a href="../objects/Gui.htm#SetFont">Gui.SetFont</a> 或 <a href="../objects/Gui.htm#OtherOptions">c(Color)</a> 选项的设置. 要改变日历其他部分的颜色, 请参照此例:</p>
-    <pre>SendMessage 0x1006, 4, 0xFFAA99, "SysDateTimePick321", MyGui <em>; 0x1006 为 DTM_SETMCCOLOR. 4 为 MCSC_MONTHBK(背景颜色). 颜色必须使用 BGR 与 RGB 格式(交换了红色和蓝色成分).</em></pre>
-  </td>
-</tr>
 </table>
-<h2 id="MonthCal"><a href="../commands/GuiControls.htm#MonthCal">MonthCal</a> 样式</h2>
+
+<h2 id="MonthCal">MonthCal 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#MonthCal">MonthCal</a> 控件. 默认情况下, 它使用 <a href="#WS_TABSTOP">WS_TABSTOP</a>(仅在 <span class="ver">[v1.1.22+]</span>, 并仅在 Windows Vista 及以后的版本中). 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td>WS_TABSTOP</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="MCS_DAYSTATE">
   <td>MCS_DAYSTATE</td>
@@ -993,26 +994,15 @@
   <td>0x10</td>
   <td>禁止在控件的底部显示今天的日期.</td>
 </tr>
-<tr>
-  <td>(颜色)</td>
-  <td>&nbsp;</td>
-  <td>
-    <p>日历中天数的颜色遵循 <a href="../objects/Gui.htm#SetFont">Gui.SetFont</a> 或 <a href="../objects/Gui.htm#OtherOptions">c(Color)</a> 选项的设置. 要改变日历其他部分的颜色, 请参照此例:</p>
-    <pre>SendMessage 0x100A, 5, 0xFFAA99, "SysMonthCal321", MyGui <em>; 0x100A 为 MCM_SETCOLOR. 5 为 MCSC_TITLETEXT(标题文本的颜色). 颜色必须使用 BGR 与 RGB 格式(交换了红色和蓝色成分).</em></pre>
-  </td>
-</tr>
 </table>
-<h2 id="Slider"><a href="../commands/GuiControls.htm#Slider">Slider</a> 样式</h2>
+
+<h2 id="Slider">Slider 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#Slider">Slider</a> 控件. 默认情况下, 它使用 <a href="#WS_TABSTOP">WS_TABSTOP</a>. 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#WS_TABSTOP">WS_TABSTOP</a>(+/-Tabstop)</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="TBS_VERT">
   <td>TBS_VERT</td>
@@ -1045,8 +1035,8 @@
   <td>
     <p>让控件仅显示选择范围. 在选择范围起始位置和结束位置的刻度线显示为三角形(而不是垂直的短划线), 且高亮选择范围(可能需要使用 <code>GuiObj.Opt("-Theme")</code> 移除主题才能高亮).</p>
     <p>要设置选择范围, 请参照此例, 这里设置起始位置为 55 而结束位置为 66:</p>
-    <pre>SendMessage 1035, 1, 55, "msctls_trackbar321", <i>WinTitle</i>
-SendMessage 1036, 1, 66, "msctls_trackbar321", <i>WinTitle</i></pre>
+    <pre>SendMessage 0x040B, 1, 55, "msctls_trackbar321", <i>WinTitle</i>
+SendMessage 0x040C, 1, 66, "msctls_trackbar321", <i>WinTitle</i></pre>
   </td>
 </tr>
 <tr id="TBS_FIXEDLENGTH">
@@ -1080,17 +1070,14 @@ SendMessage 1036, 1, 66, "msctls_trackbar321", <i>WinTitle</i></pre>
   <td>很遗憾, 此样式不会影响控件的实际行为, 所以使用它是毫无意义的. 根据操作系统版本, 此样式可能需要 Internet Explorer 5.01 或更高版本.</td>
 </tr>
 </table>
-<h2 id="Progress"><a href="../commands/GuiControls.htm#Progress">Progress</a> 样式</h2>
+
+<h2 id="Progress">Progress 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#Progress">Progress</a> 控件. 默认情况下, 它使用 <a href="#PBS_SMOOTH">PBS_SMOOTH</a>. 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td>无</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="PBS_SMOOTH">
   <td>PBS_SMOOTH</td>
@@ -1111,18 +1098,15 @@ SendMessage 1036, 1, 66, "msctls_trackbar321", <i>WinTitle</i></pre>
   </td>
 </tr>
 </table>
-<h2 id="Tab"><a href="../commands/GuiControls.htm#Tab">Tab</a> 样式</h2>
+
+<h2 id="Tab">Tab 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#Tab">Tab</a> 控件. 默认情况下, 它使用 <a href="#WS_TABSTOP">WS_TABSTOP</a> 和 <a href="#TCS_MULTILINE">TCS_MULTILINE</a>. 样式 <a href="#WS_CLIPSIBLINGS">WS_CLIPSIBLINGS</a> 总是被启用而不能被禁用, 而 <a href="#TCS_OWNERDRAWFIXED">TCS_OWNERDRAWFIXED</a> 则根据控件的背景颜色和/或文本颜色的要求强制开启或关闭.</p>
+</tr>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#WS_TABSTOP">WS_TABSTOP</a> 和 <a href="#TCS_MULTILINE">TCS_MULTILINE</a></td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>WS_CLIPSIBLINGS<br>
-    <a href="#TCS_OWNERDRAWFIXED">TCS_OWNERDRAWFIXED</a>: 根据控件的背景颜色和/或文本颜色的需要强制打开或关闭.</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="TCS_SCROLLOPPOSITE">
   <td>TCS_SCROLLOPPOSITE</td>
@@ -1182,7 +1166,7 @@ SendMessage 1036, 1, 66, "msctls_trackbar321", <i>WinTitle</i></pre>
 </tr>
 <tr id="TCS_SINGLELINE">
   <td>TCS_SINGLELINE</td>
-  <td>0</td>
+  <td>0x0</td>
   <td>+/-Wrap. 让所有选项卡显示在一行中. 必要时用户可以滚动来查看到更多的选项卡. 此样式是默认的.</td>
 </tr>
 <tr id="TCS_MULTILINE">
@@ -1192,7 +1176,7 @@ SendMessage 1036, 1, 66, "msctls_trackbar321", <i>WinTitle</i></pre>
 </tr>
 <tr id="TCS_RIGHTJUSTIFY">
   <td>TCS_RIGHTJUSTIFY</td>
-  <td>0</td>
+  <td>0x0</td>
   <td>
     <p>这是默认的. 必要时增加每个选项卡的宽度, 这样每行的选项卡会充满选项卡控件的全部宽度.</p>
     <p>只有同时使用 <a href="#TCS_MULTILINE">TCS_MULTILINE</a> 样式时此窗口样式才有效.</p>
@@ -1229,17 +1213,14 @@ SendMessage 1036, 1, 66, "msctls_trackbar321", <i>WinTitle</i></pre>
   <td>点击时选项卡控件不获取输入焦点.</td>
 </tr>
 </table>
-<h2 id="StatusBar"><a href="../commands/GuiControls.htm#StatusBar">StatusBar</a> 样式</h2>
+
+<h2 id="StatusBar">StatusBar 控件样式</h2>
+<p>这些样式会影响到 <a href="../commands/GuiControls.htm#StatusBar">StatusBar</a> 控件. 默认情况下, 它使用 <a href="#SBARS_TOOLTIPS">SBARS_TOOLTIPS</a> 和 <a href="#SBARS_SIZEGRIP">SBARS_SIZEGRIP</a>(后者只有在窗口可调整大小的情况下才会出现). 它没有强制样式.</p>
 <table class="info">
 <tr>
-  <td>默认</td>
-  <td>&nbsp;</td>
-  <td><a href="#SBARS_TOOLTIPS">SBARS_TOOLTIPS</a> 和 <a href="#SBARS_SIZEGRIP">SBARS_SIZEGRIP</a>(当窗口大小可调整时, 则仅后者).</td>
-</tr>
-<tr>
-  <td>强制</td>
-  <td>&nbsp;</td>
-  <td>无</td>
+  <th>样式</th>
+  <th>Hex</th>
+  <th abbr="Descr">描述</th>
 </tr>
 <tr id="SBARS_TOOLTIPS">
   <td>SBARS_TOOLTIPS</td>
