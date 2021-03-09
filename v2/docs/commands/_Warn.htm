@@ -36,19 +36,19 @@ x := y    <em>; y 还没有被赋值.</em></pre>
     <p id="VarUnset"><strong>VarUnset</strong>: 在脚本开始运行之前, 为每个从未以下列任何方式使用的变量的第一个引用显示一个警告:</p>
     <ul>
       <li>作为一个直接的, 非动态赋值的目标, 如 <code>MyVar := ""</code>.</li>
-      <li>在非动态函数调用中传递给输出或 ByRef 参数.</li>
-      <li>在一个非动态函数调用中传递给 IsSet. 例如, 一个包含 <code>IsSet(MyLib_Global)</code> 的脚本不会警告任何其他对同一变量的引用, 但可能会警告其他名为 <code>MyLib_Global</code> 的变量.</li>
-      <li>传递给动态函数调用或方法调用的参数(不管它是否是 ByRef, 因为在加载时无法确定).</li>
+      <li>Used with the <a href="../Variables.htm#ref">reference operator</a> (e.g. <code>&amp;MyVar</code>).</li>
     </ul>
-    <p class="warning"><strong>已知限制:</strong> 虽然具有短路能力的运算符(如 <code>&amp;&amp;</code>, <code>||</code> 和三元运算符) 可以为赋值或 ByRef 参数产生一个变量引用, 但目前只有右边的分支被识别为赋值. 例如, <code>MouseGetPos(b ? x1 : x2)</code> 可能只将 <code>x2</code> 标记为赋值.</p>
-    <p id="LocalSameAsGlobal"><strong>LocalSameAsGlobal</strong>: 在脚本开始运行之前, 为每个 <em>未声明</em> 的局部变量显示一个警告, 该变量的名称与全局变量相同. 这是为了防止在试图访问全局变量之前, 忘记在函数中声明全局变量而导致的错误. 如果该变量确实是局部变量, 那么可以使用诸如 <code>local x</code> 或 <code>static y</code> 这样的声明来抑制该警告. 对于<a href="../Functions.htm#ForceLocal">强制-局部</a>函数中的变量, 不会显示这个警告.</p>
+    <p id="LocalSameAsGlobal"><strong>LocalSameAsGlobal</strong>: 在脚本开始运行之前, 为每个名称与全局变量相同但 <em>未声明</em> 的局部变量显示一个警告. 这是为了防止在试图访问全局变量之前, 忘记在函数中声明全局变量而导致的错误. 如果该变量确实是计划作为局部变量来使用, 那么可以使用诸如 <code>local x</code> 或 <code>static y</code> 这样的声明来抑制该警告.</p>
     <p>默认情况下, 这个警告是禁用的.</p>
     <pre>#Warn
 g := 1
 ShowG() {       <em>; 即使从未调用这个函数也会显示警告.</em>
     <em>;global g   ; &lt;-- 访问全局变量时需要这行.</em>
-    MsgBox g  <em>; 没有声明, 所以 "g" 是个空的局部变量.</em>
-}</pre>
+    g := 2
+}
+ShowG
+MsgBox g  <em>; 没有声明, 上面赋值的是局部变量 "g".</em>
+</pre>
     <p id="Unreachable"><strong>Unreachable</strong>: 在脚本开始运行之前, 对紧跟在同一嵌套层的 <code>Return</code>, <code>Break</code>, <code>Continue</code>, <code>Throw</code> 或 <code>Goto</code> 之后的每一行发出警告, 除非该行是一个标签的目标. 任何这样的行都不会被执行.</p>
     <p>如果代码的目的是不可到达的 - 例如, 如果使用 <code>return</code> 暂时禁用一个代码块, 或者通过注释的方式暂时禁用热键或热字符串 - 可以考虑把不可到达的代码也注释掉. 另外, 也可以通过在第一行不可到达的代码上方定义一个<a href="../misc/Labels.htm">标签</a>来抑制警告.</p>
     <p><strong>All</strong>: 将给定的 <em>WarningMode</em> 应用于所有支持的警告类型.</p>

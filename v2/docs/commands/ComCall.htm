@@ -113,7 +113,7 @@ tbl := ""
 <div class="ex" id="ExTaskbarClass">
 <p><a class="ex_number" href="#ExTaskbarClass"></a> 演示一些包装 COM 接口的技术. 等同于上一个示例.</p>
 <pre>
-tbl := TaskbarList.new()
+tbl := TaskbarList()
 
 activeHwnd := WinExist("A")
 
@@ -137,22 +137,22 @@ class TaskbarList {
        ; 这些方法在不需要包装器函数的情况下更容易使用.
        ; HrInit 本身没有参数, 所以只绑定索引,
        ; 而调用者将隐式地提供 'this'.</em>
-       proto.DefineMethod "HrInit", Func("ComCall").Bind(3)
+       proto.HrInit := ComCall.Bind(3)
 
        <em>; 将参数留空, 让调用者提供一个值.
        ; 在本例中, 空白参数是 'this'(通常是隐藏的).</em>
-       proto.DefineMethod "AddTab", Func("ComCall").Bind(4,, "ptr")
+       proto.AddTab := ComCall.Bind(4,, "ptr")
 
        <em>; 可以使用对象或映射来减少重复.</em>
        for name, args in Map(
            "DeleteTab", [5,,"ptr"],
            "ActivateTab", [6,,"ptr"],
            "SetActiveAlt", [7,,"ptr"]) {
-           proto.DefineMethod name, Func("ComCall").Bind(args*)
+           proto.%name% := ComCall.Bind(args*)
        }
    }
 
-   <em>; 在新实例上由 TaskbarList.new() 调用.</em>
+   <em>; 在新实例上由 TaskbarList() 调用.</em>
    __new() {
         this.comobj := ComObjCreate(TaskbarList.CLSID, TaskbarList.IID)
         this.ptr := this.comobj.ptr

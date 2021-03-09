@@ -83,7 +83,7 @@
   </tr>
   <tr>
     <td>This AltTab hotkey must have exactly one modifier/prefix.</td>
-    <td rowspan="2"><em>KeyName</em> 参数不适合与 <a href="../Hotkeys.htm#alttab">AltTab 或 ShiftAltTab</a> 动作一起使用. 需要两个键的组合. 例如: <code>RControl &amp; RShift::AltTab</code>. <a href="../objects/Error.htm#Extra">Exception.Extra</a> 包含 <em>KeyName</em>.</td>
+    <td rowspan="2"><em>KeyName</em> 参数不适合与 <a href="../Hotkeys.htm#alttab">AltTab 或 ShiftAltTab</a> 动作一起使用. 需要两个键(至多) 的组合. 例如: <code>RControl &amp; RShift::AltTab</code>. <a href="../objects/Error.htm#Extra">Exception.Extra</a> 包含 <em>KeyName</em>.</td>
   </tr>
   <tr>
     <td>This AltTab hotkey must specify which key (L or R).</td>
@@ -123,22 +123,22 @@ catch
 <h2 id="variant">变体(副本) 热键</h2>
 <p>一个特定的热键可以被创建多次, 如果每个定义有不同的 If 条件. 这被称为 <em>热键变体</em>. 例如:</p>
 <pre>HotIfWinActive "ahk_class Notepad"
-Hotkey "^!c", "MyFuncForNotepad"
+Hotkey "^!c", MyFuncForNotepad
 HotIfWinActive  "ahk_class WordPadClass"
-Hotkey "^!c", "MyFuncForWordPad"
+Hotkey "^!c", MyFuncForWordPad
 HotIfWinActive 
-Hotkey "^!c", "MyFuncForAllOtherWindows"</pre>
+Hotkey "^!c", MyFuncForAllOtherWindows</pre>
 <p>如果有多个变体符合触发条件, 那么仅触发最早创建的那个. 这种情况的例外是全局变体(不带 If 条件的那个): 它的优先级总是最低的, 仅当其他变体都不触发时它才会被触发.</p>
 <p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序(如 ^!+#) 没有关系. 例如, <code>"^!c"</code> 等同于 <code>"!^c"</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时, <em>Esc</em> 不同于 <em>Escape</em>(尽管大小写无关). 最后, 任何带有<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不带通配符的热键是完全独立的; 例如, <code>"*F1"</code> 和 <code>"F1"</code> 都有他们各自的变体.</p>
 <p>有关上下文相关的热键的更多信息, 请参阅 <a href="_HotIf.htm#general-remarks">#HotIf 的备注</a>.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="../Hotkeys.htm#Symbols">Hotkey Symbols</a>, <a href="HotIf.htm">HotIf</a>, <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a>, <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a>, <a href="Suspend.htm">Suspend</a>, <a href="IsFunc.htm">IsFunc</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread</a>, <a href="Critical.htm">Critical</a>, <a href="Return.htm">Return</a>, <a href="../objects/Menu.htm">Menu 对象</a>, <a href="SetTimer.htm">SetTimer</a></p>
+<p><a href="../Hotkeys.htm#Symbols">Hotkey Symbols</a>, <a href="HotIf.htm">HotIf</a>, <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a>, <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a>, <a href="Suspend.htm">Suspend</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread</a>, <a href="Critical.htm">Critical</a>, <a href="Return.htm">Return</a>, <a href="../objects/Menu.htm">Menu 对象</a>, <a href="SetTimer.htm">SetTimer</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 创建 Ctrl-Alt-Z 热键.</p>
-<pre>Hotkey "^!z", "MyFunc"
+<pre>Hotkey "^!z", MyFunc
 
 MyFunc(ThisHotkey)
 {
@@ -164,7 +164,7 @@ MyFunc(ThisHotkey)
 <div class="ex" id="ExIfWin">
 <p><a class="ex_number" href="#ExIfWin"></a> 创建仅在记事本中有效的热键 <kbd>Alt</kbd>+<kbd>W</kbd>.</p>
 <pre>HotIfWinActive "ahk_class Notepad"
-Hotkey "!w", "ToggleWordWrap"  <em>; !w = Alt+W</em>
+Hotkey "!w", ToggleWordWrap  <em>; !w = Alt+W</em>
 
 ToggleWordWrap(ThisHotkey)
 {
@@ -176,12 +176,12 @@ ToggleWordWrap(ThisHotkey)
 <div class="ex" id="ExampleIfFn">
 <p><a class="ex_number" href="#ExampleIfFn"></a> 创建一个界面允许你注册简单的三键组合热键.</p>
 <pre>
-HkGui := Gui.New()
+HkGui := Gui()
 HkGui.Add("Text", "xm", "Prefix key:")
 HkGui.Add("Edit", "yp x100 w100 vPrefix", "Space")
 HkGui.Add("Text", "xm", "Suffix hotkey:")
 HkGui.Add("Edit", "yp x100 w100 vSuffix", "f &amp; j")
-HkGui.Add("Button", "Default", "Register").OnEvent("Click", "RegisterHotkey")
+HkGui.Add("Button", "Default", "Register").OnEvent("Click", RegisterHotkey)
 HkGui.OnEvent("Close", (*) =&gt; ExitApp())
 HkGui.OnEvent("Escape", (*) =&gt; ExitApp())
 HkGui.Show()

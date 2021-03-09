@@ -29,7 +29,7 @@
 <p>创建 TreeView 的语法为:</p>
 <pre class="Syntax" id="GuiAdd">TV := GuiObj.<span class="func">Add</span>("TreeView", Options)</pre>
 <p>这是一个创建和显示简单项目层次结构的可运行脚本:</p>
-<pre>MyGui := Gui.New()
+<pre>MyGui := Gui()
 TV := MyGui.Add("TreeView")
 <span class="red">P1</span> := <a href="#Add">TV.Add</a>("First parent")
 P1C1 := TV.Add("Parent 1's first child", <span class="red">P1</span>)  <em>; 指定 P1 为此项目的父项目.</em>
@@ -46,7 +46,7 @@ MyGui.Show  <em>; 显示窗口和 TreeView.</em></pre>
 <p id="Checked"><strong>Checked:</strong> 在每项的左边提供一个复选框. 当<a href="#Add">添加</a>项目时, 在其选项中指定单词 <em>Check</em> 来让复选框初始为选中而不是未选中状态. 用户可以点击复选框或按下空格键来选中或取消选中项目. 要找出 TreeView 中当前选中了哪些项目, 请调用 <a href="#GetNext">GetNext 方法</a>或 <a href="#Get">Get 方法</a>.</p>
 <p><strong>HScroll</strong>: 指定 <code>-HScroll</code>(负 HScroll) 来禁用控件中的水平滚动(而且控件将不显示任何水平滚动条).</p>
 <p id="ImageList"><strong>ImageList</strong>: 这是把图标添加到 TreeView 的方法. 指定单词 <em>ImageList</em> 后紧跟着由之前调用 <a href="ListView.htm#IL_Create">IL_Create</a>. 返回的 ImageListID. 此选项仅在创建 TreeView 时才有效果(但是, <a href="#SetImageList">SetImageList 方法</a>没有此限制). 这里是一个可运行示例:</p>
-<pre>MyGui := Gui.New()
+<pre>MyGui := Gui()
 ImageListID := <a href="ListView.htm#IL_Create">IL_Create</a>(10)  <em>; 创建初始容量为 10 个图标的图像列表.</em>
 Loop 10  <em>; 加载一些标准系统图标到图像列表中.</em>
     <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, "shell32.dll", A_Index)
@@ -311,7 +311,7 @@ ButtonOK(*) {
 <p>要执行一些操作, 例如调整大小, 隐藏或改变 TreeView 的字体, 请参阅 <a href="../objects/GuiControl.htm">GuiControl 对象</a>.</p>
 <p>Tree View eXtension(TVX) 扩展了 TreeView 的功能, 增加对移动, 插入和删除的支持. 演示的例子请参阅 <a href="https://www.autohotkey.com/forum/topic19021.html">www.autohotkey.com/forum/topic19021.html</a></p>
 <h2 id="Related">相关</h2>
-<p><a href="ListView.htm">ListView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="../objects/Gui.htm#New">Gui.New</a>, <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu 事件</a>, <a href="../objects/GuiControl.htm">Gui 对象</a>, <a href="../objects/GuiControl.htm">GuiControl 对象</a>, <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a></p>
+<p><a href="ListView.htm">ListView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="../objects/Gui.htm#Call">Gui()</a>, <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu 事件</a>, <a href="../objects/GuiControl.htm">Gui 对象</a>, <a href="../objects/GuiControl.htm">GuiControl 对象</a>, <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a></p>
 
 <h2 id="Examples">示例</h2>
 
@@ -324,7 +324,7 @@ TreeViewWidth := 280
 ListViewWidth := A_ScreenWidth/2 - TreeViewWidth - 30
 
 <em>;  创建 Gui 窗口并在标题栏中显示源目录(TreeRoot):</em>
-MyGui := Gui.New("+Resize", TreeRoot)  <em>; 让用户可以最大化或拖动调整窗口大小.</em>
+MyGui := Gui("+Resize", TreeRoot)  <em>; 让用户可以最大化或拖动调整窗口大小.</em>
 
 <em>; 创建图像列表并在其中放入一些标准的系统图标:</em>
 ImageListID := <a href="ListView.htm#IL_Create">IL_Create</a>(5)
@@ -339,12 +339,12 @@ SB := MyGui.Add("StatusBar", "vSB")
 <a href="GuiControls.htm#SB_SetParts">SB.SetParts</a>(60, 85)  <em>; 在状态栏中创建三个部分(第三部分占用所有剩余宽度).</em>
 
 <em>; 添加文件夹及其子文件夹到树中. 如果加载需要很长时间, 则显示提示信息:</em>
-M := Gui.New("ToolWindow -SysMenu", "Loading the tree..."), M.Show()
-DirList := AddSubFoldersToTree(TV, TreeRoot, Map.New())
+M := Gui("ToolWindow -SysMenu", "Loading the tree..."), M.Show()
+DirList := AddSubFoldersToTree(TV, TreeRoot, Map())
 M.Hide()
 
 <em>; 每当有新的项目被选中时, 调用 TV_ItemSelect:</em>
-TV.OnEvent("ItemSelect", Func("TV_ItemSelect").bind(DirList))
+TV.OnEvent("ItemSelect", TV_ItemSelect.bind(DirList))
 
 <em>; 每当窗口被调整大小时, 调用 Gui_Size:</em>
 MyGui.OnEvent("Size", "Gui_Size")

@@ -16,14 +16,15 @@
 
  <p>如果指定变量已经被赋值, 则返回一个非零数字.</p>
 
- <pre class="Syntax">IsSet := <span class="func">IsSet</span>(Var)</pre>
+<pre class="Syntax">VarIsSet := <span class="func">IsSet</span>(&amp;Var)</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-   <dt>Var</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
-    <p>变量的引用. 例如: <code>IsSet(MyVar)</code>.</p>
+   <dt>&amp;Var</dt>
+   <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>变量的引用. 例如: <code>IsSet(&amp;MyVar)</code>.</p>
+    <p class="note"><strong>Note:</strong> Use the <a href="../Variables.htm#ref">reference operator (&amp;)</a> when checking a variable directly, but not when passing a variable which <em>contains</em> a VarRef.</p>
   </dd>
 
  </dl>
@@ -33,9 +34,9 @@
 <p>如果 <em>Var</em> 已经被赋值, 函数返回 1(true), 否则返回 0(false).</p>
 
  <h2 id="Remarks">备注</h2>
-<p>未赋值的变量也称为<a href="../Concepts.htm#uninitialized-variables">未初始化变量</a>. 默认情况下, 试图访问一个未初始化的变量(除了这个函数之外的任何方式) 会导致显示<a href="_Warn.htm#UseUnset">警告</a>, 但是未来的版本会以错误代替这个警告</p>
-<p>IsSet 可用于确定一个变量是否需要初始化, 例如在首次使用时初始化一个全局或静态变量.</p>
-<p class="note"><strong>注意:</strong> <a href="../Functions.htm#InitStatic">静态初始化</a> 如 <code>static my_static_array := []</code> 只被\计算一次, 即在执行过程中第一次到达时, 因此通常不需要使用 IsSet.</p>
+<p>未赋值的变量也称为<a href="../Concepts.htm#uninitialized-variables">未初始化变量</a>. 默认情况下, 试图读取一个未初始化的变量 causes an exception to be thrown. IsSet can be used to avoid this, such as for initializing a global or static variable on first use.</p>
+<p>When checking a global variable inside a function, it is generally necessary to <a href="../Functions.htm#Global">declare</a> the variable. Otherwise, the use of the <a href="../Variables.htm#ref">reference operator (&amp;)</a> would cause a local variable to be created. This declaration would already be necessary if the global variable is to be assigned a value inside the function.</p>
+<p class="note"><strong>注意:</strong> <a href="../Functions.htm#InitStatic">静态初始化</a> 如 <code>static my_static_array := []</code> 只被计算一次, 即在执行过程中第一次到达时, 因此通常不需要使用 IsSet.</p>
 <p><strong>已知限制:</strong> 如果 MsgBox 警告模式生效, 触发给定变量的警告消息的副作用是初始化该变量以防止进一步的警告. 这将导致 IsSet 为后续调用返回 true.</p>
 
  <h2 id="Related">相关</h2>
@@ -43,11 +44,26 @@
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 如果 <var>MyVar</var> 已经被赋值, 则报告一个非零的数字.</p>
-<pre>MsgBox Function(MyVar)
+<pre>
+Loop 2
+    if !IsSet(&amp;MyVar)  <em>; Is this the first "use" of MyVar?</em>
+        MyVar := A_Index  <em>; Initialize on first "use".</em>
+MsgBox Function1(&amp;MyVar)
+MsgBox Function2(&amp;MyVar)
 
- Function(ByRef Param)
+Function1(&amp;Param)  <em>; ByRef parameter.</em>
 {
-    return IsSet(Param)
+    if IsSet(&amp;Param)  <em>; Pass a reference to the target of Param.</em>
+        return Param  <em>; ByRef parameters are automatically dereferenced.</em>
+    else
+        return "unset"
+}
+Function2(Param)
+{
+    if IsSet(Param)  <em>; Pass the VarRef contained by Param.</em>
+        return %Param%  <em>; Explicitly dereference Param.</em>
+    else
+        return "unset"
 }</pre>
 </div>
 

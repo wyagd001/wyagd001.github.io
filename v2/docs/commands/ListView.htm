@@ -32,7 +32,7 @@
 <pre class="Syntax" id="GuiAdd">LV := GuiObj.<span class="func">Add</span>("ListView", Options, ["ColumnTitle1","ColumnTitle2","..."])</pre>
 <p>这是一个可运行脚本, 它创建并显示一个 ListView 其中包含用户的 "我的文档" 目录中的文件列表:</p>
 <pre><em>; 创建窗口:</em>
-MyGui := Gui.New()
+MyGui := Gui()
 
 <em>; 创建含名称和大小两列的 ListView:</em>
 LV := MyGui.Add("ListView", "r20 w700", ["Name","Size (KB)"])
@@ -389,7 +389,7 @@ IsChecked := (ItemState &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选�
 
 <h2 id="IL">ImageList(图像列表)</h2>
 <p>图像列表是存储在内存中的一组相同大小的图标. 在创建时, 每个图像列表是空的. 脚本重复调用 IL_Add 来添加图标到列表中, 且给每个图标分配一个序号, 序号从 1 开始. 脚本引用此编号在一行中或列标题中显示一个特定的图标. 这是个可运行示例, 其中演示了如何在 ListView 的行中显示图标:</p>
-<pre>MyGui := Gui.New()  <em>; 创建 MyGui 窗口.</em>
+<pre>MyGui := Gui()  <em>; 创建 MyGui 窗口.</em>
 LV := MyGui.Add("ListView", "h200 w180", ["Icon &amp; Number","Description"])  <em>; 创建 ListView.</em>
 ImageListID := <a href="#IL_Create">IL_Create</a>(10)  <em>; 创建加载 10 个小图标的图像列表.</em>
 LV.<a href="#SetImageList">SetImageList</a>(ImageListID)  <em>; 把上面的图像列表指定给当前的 ListView.</em>
@@ -479,7 +479,7 @@ LV_Enter(*) {
 <p>要对 ListView 执行一些操作(例如调整大小, 隐藏或改变字体), 请参阅 <a href="../objects/GuiControl.htm">GuiControl 对象</a>.</p>
 <p>要从外部 ListView(那些不属于脚本自身的) 中提取文本, 请使用 <a href="ListViewGetContent.htm">ListViewGetContent</a>.</p>
 <h2 id="Related">相关</h2>
-<p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="../objects/Gui.htm#New">Gui.New</a>, <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu 事件</a>, <a href="../objects/Gui.htm">Gui 对象</a>, <a href="../objects/GuiControl.htm">GuiControl 对象</a>, <a href="../misc/Styles.htm#ListView">ListView 样式列表</a></p>
+<p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="../objects/Gui.htm#Call">Gui</a>, <a href="../objects/GuiOnEvent.htm#ContextMenu">ContextMenu 事件</a>, <a href="../objects/Gui.htm">Gui 对象</a>, <a href="../objects/GuiControl.htm">GuiControl 对象</a>, <a href="../misc/Styles.htm#ListView">ListView 样式列表</a></p>
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExAllRows">
@@ -497,7 +497,7 @@ LV.Modify(0, "-Check")  <em>;取消选中所有<a href="#Checked">复选框</a>.
 <div class="ex" id="ExAdvanced">
 <p><a class="ex_number" href="#ExAdvanced"></a> 下面是一个比页面顶部的脚本更复杂的可工作的脚本. 它显示用户选择的文件夹中的文件, 且每个文件分配一个与其类型关联的图标. 用户在一个文件上双击或在一个或多个文件上右击后, 会显示上下文菜单.</p>
 <pre><em>; 创建 GUI 窗口:</em>
-MyGui := Gui.New("+Resize")  <em>; 允许用户最大化窗口或拖动来改变窗口的大小.</em>
+MyGui := Gui("+Resize")  <em>; 允许用户最大化窗口或拖动来改变窗口的大小.</em>
 
 <em>; 创建一些按钮:</em>
 B1 := MyGui.Add("Button", "Default", "Load a folder")
@@ -519,7 +519,7 @@ LV.SetImageList(ImageListID2)
 <em>; 应用控件事件:</em>
 LV.OnEvent("<a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>", "RunFile")
 LV.OnEvent("<a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a>", "ShowContextMenu")
-B1.OnEvent("Click", Func("LoadFolder").bind(ImageListID1, ImageListID2))
+B1.OnEvent("Click", LoadFolder.bind(ImageListID1, ImageListID2))
 B2.OnEvent("Click", (*) =&gt; <a href="#Delete">LV.Delete</a>())
 B3.OnEvent("Click", "SwitchView")
 
@@ -630,7 +630,7 @@ RunFile(LV, RowNumber)
 ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; 响应右键或 Apps 键.</em>
 {
     <em>; 创建弹出式菜单, 作为上下文菜单使用:</em>
-    static ContextMenu := <a href="../objects/Menu.htm#New">Menu.New</a>()
+    static ContextMenu := <a href="../objects/Menu.htm#Call">Menu</a>()
     <a href="../objects/Menu.htm#Add">ContextMenu.Add</a>("Open", "OpenOrProperties")
     ContextMenu.Add("Properties", "OpenOrProperties")
     ContextMenu.Add("Clear from ListView", "ClearRows")

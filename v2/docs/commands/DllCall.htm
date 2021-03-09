@@ -57,12 +57,12 @@
 </tr>
 <tr id="str">
 <td>Str</td>
-<td><p>例如 "Blue" 或 MyVar 这样的字符串. 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
+<td>
+<p>A string such as <code>"Blue"</code> or <code>MyVar</code>, or a <a href="../Concepts.htm#variable-references">VarRef</a> such as <code>&amp;MyVar</code>. If the called function modifies the string and the argument is a naked variable or VarRef, its contents will be updated. For example, the following call would convert the contents of <em>MyVar</em> to uppercase: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
   <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串.</p>
   <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
-  <p></p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出 <a href="../objects/Error.htm#TypeError">TypeError</a>.</p>
-  <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量(如果已传递). 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
+  <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量, if a <a href="../Concepts.htm#variable-references">VarRef</a> was passed. 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
   <p class="note"><strong>注意</strong>: 在将字符串传递给函数时, 请注意函数所期望的字符串的 <a href="../Compat.htm#DllCall"><i>type</i>(类型).</p></td>
 </tr>
 <tr>
@@ -119,10 +119,10 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 <tr id="asterisk">
   <td>* 或 P<br>
     (后缀)</td>
-  <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, 因此每当将裸变量作为参数传递时, 该变量的内容就会被更新. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall("MyDll\MyFunction", "Int*", MyVar)</code>.</p>
-    <p>通常, 星号可用于参数类型或返回类型以 "LP" 开头的函数. 最常见的示例是 LPDWORD, 它是指向 DWORD 的指针. 由于 DWORD 是 32 位无符号整数, 因此请使用 "UInt*" 或 "UIntP" 表示 LPDWORD. 星号不能用于字符串类型(如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 应使用 <a href="#str">"Str"</a> 或 "Ptr", 具体取决于您传递变量还是变量地址.</p>
+  <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, whenever a <a href="../Concepts.htm#variable-references">VarRef</a> is passed as the argument, the variable's contents will be updated after the function returns. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall("MyDll\MyFunction", "Int*", &amp;MyVar)</code>.</p>
+    <p>通常, 星号可用于参数类型或返回类型以 "LP" 开头的函数. 最常见的示例是 LPDWORD, 它是指向 DWORD 的指针. 由于 DWORD 是 32 位无符号整数, 因此请使用 "UInt*" 或 "UIntP" 表示 LPDWORD. 星号不能用于字符串类型(如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 应使用 <a href="#str">"Str"</a> 或 <a href="#ptr">"Ptr"</a>, 具体取决于您传递的是字符串, 地址或 <a href="../objects/Buffer.htm">Buffer</a>.</p>
     <p class="note"><strong>注意</strong>: "Char*" 与 <a href="#str">"Str"</a> 不同, 因为 "Char*" 传递一个 8 位数字的地址, 而 <a href="#str">"Str"</a> 传递一系列字符的地址, 该字符可以是 16 位(Unicode) 或 8 位("AStr"), 具体取决于 AutoHotkey 的版本. 同样, "UInt*" 传递的是 32 位数字的地址, 因此如果函数期望值的数组或大于 32 位的结构, 则不应使用 "UInt*".</p>
-    <p>由于 AutoHotkey 中的变量没有固定类型, 因此传递给函数的地址指向临时内存, 而不是变量本身. 不必在变量上调用 <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, 因为 DllCall 将在函数返回后正确更新它.</p>
+    <p>由于 AutoHotkey 中的变量没有固定类型, 因此传递给函数的地址指向临时内存, 而不是调用者的变量.</p>
     </td>
 </tr>
 <tr id="unsigned">
@@ -267,7 +267,7 @@ F1 up::
 
 <div class="ex" id="ExWatchScrollBar">
 <p><a class="ex_number" href="#ExWatchScrollBar"></a> 监视活动窗口并显示其焦点控件中的垂直滚动条的位置(实时更新).</p>
-<pre>SetTimer "WatchScrollBar", 100
+<pre>SetTimer WatchScrollBar, 100
 
 WatchScrollBar()
 {

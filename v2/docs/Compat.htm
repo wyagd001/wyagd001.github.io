@@ -205,7 +205,7 @@ VarSetCapacity(native_var,  t_size(capacity_in_chars))  <em>; 请参阅<a href="
 <p>一般而言, 如果脚本通过 DllCall 调用接受字符串参数的函数, 那么必须采取以下其中一种方式:</p>
 <ol>
   <li>如果函数的 Unicode(W) 和 ANSI(A) 都可用, 那么为当前版本调用匹配的那个. 在下面的例子中, "DeleteFile" 在内部被称为 "DeleteFileA" 或 "DeleteFileW". 由于 "DeleteFile" 自身实际并不存在, DllCall 自动根据当前版本尝试适合的 "A" 或 "W".
-  <pre>DllCall("DeleteFile", "Ptr", &amp;filename)
+  <pre>DllCall("DeleteFile", "Ptr", StrPtr(filename))
 DllCall("DeleteFile", "Str", filename)</pre>
   <p>在这个例子中, <code>&amp;filename</code> 准确按原样传递字符串地址, 所以函数必须期望接受和 "Str" 类型相同编码格式的字符串. 注意在 AutoHotkey Basic 中 "UInt" 必须使用 "Ptr" 代替, 但得到的代码可能不兼容 64 位.</p>
   <p class="note"><b>注意:</b> 如果无法根据名称准确找到指定的函数, 在 AutoHotkey_L 中不管指定哪个 DLL 都会在函数名称后添加 "A" 或 "W" 后缀查找. 然而, AutoHotkey Basic 则仅为 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数添加 "A" 后缀.</p></li>

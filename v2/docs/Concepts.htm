@@ -30,6 +30,7 @@
   <ul>
     <li><a href="#uninitialized-variables">未初始化变量</a></li>
     <li><a href="#built-in-variables">内置变量</a></li>
+    <li><a href="#variable-references">变量引用(VarRef)</a></li>
     <li><a href="#environment-variables">环境变量</a></li>
     <li><a href="#caching">缓存</a></li>
   </ul></li>
@@ -43,7 +44,6 @@
     <li><a href="#string-encoding">字符编码</a></li>
     <li><a href="#pure-numbers">纯数字</a></li>
     <li><a href="#names">名称</a></li>
-    <li><a href="#variable-references">变量引用与值</a></li>
     <li><a href="#references-to-objects">对象引用</a></li>
   </ul></li>
 </ul>
@@ -146,7 +146,7 @@ myObj[arg1, arg2, ..., argN] := value
 
 <h2 id="variables">变量</h2>
 <p>一个变量允许您使用一个名称作为一个值的占位符. 在脚本运行期间, 这个值可能会重复更改. 例如, 一个热键可以使用一个变量 <code>press_count</code> 来计算它被按下的次数, 并且当 <code>press_count</code> 是 3 的倍数(每第三次按下) 时, 发送一个不同的键. 即使只有一次赋值的变量也是有用的. 例如, <code>WebBrowserTitle</code> 变量可用于在更改首选 Web 浏览器时, 或者由于软件更新而导致 <a href="misc/WinTitle.htm">title</a> 或 <a href="misc/WinTitle.htm#ahk_class">window class</a> 发生更改时, 更容易更新代码.</p>
-<p>在 AutoHotkey 中, 需要使用它们时就可以创建变量. 每个变量都 <em>不是</em> 永久性地限制在一个<a href="#values">数据类型</a>中, 而是可以保存任何类型的值: 字符串, 数字或对象. 每个变量从空/空白开始; 换句话说, 每个新创建的变量都包含一个空字符串, 直到它被赋予其他值.</p>
+<p>在 AutoHotkey 中, 创建变量仅需要使用它们即可. 每个变量都 <em>不是</em> 永久性地限制在一个<a href="#values">数据类型</a>中, 而是可以保存任何类型的值: 字符串, 数字或对象. 试图读取一个没有分配值的变量会被视为一个错误, 所以<a href="#uninitialized-variables">初始化变量</a>是很重要的.</p>
 <p>一个变量有三个主要方面:</p>
 <ul>
   <li>变量的 <em>名称</em>.</li>
@@ -154,15 +154,13 @@ myObj[arg1, arg2, ..., argN] := value
   <li>变量的 <em>值</em>.</li>
 </ul>
 <p>某些适用于变量名称的限制 - 请参阅<a href="#names">名称</a>了解详细信息. 简而言之, 坚持使用由 ASCII 字母(不区分大小写), 数字和下划线组成的名称是最安全的, 并避免使用以数字开头的名称.</p>
-<p id="scope">变量名称具有 <strong><em>作用域(范围)</em></strong>, 该范围定义了代码中的哪些位置可使用变量名称来引用该特定变量; 换句话说, 变量在哪些位置是 <em>可见的</em>. 如果一个变量在一个给定的范围内是不可见的, 那么在该给定的范围内相同的名称可以引用不同的变量. 两个变量可能同时存在, 但只有一个对脚本的每个部分是可见的. <a href="Functions.htm#Global">全局变量</a>在 "全局范围"(即函数之外) 中是可见的, 但在函数内可见通常必须<a href="Functions.htm#Global">声明</a>. <a href="Functions.htm#Local">局部变量</a>只在创建它们的函数内部可见.</p>
+<p id="scope">变量名称具有 <strong><em>作用域(范围)</em></strong>, 该范围定义了代码中的哪些位置可使用变量名称来引用该特定变量; 换句话说, 变量在哪些位置是 <em>可见的</em>. 如果一个变量在一个给定的范围内是不可见的, 那么在该给定的范围内相同的名称可以引用不同的变量. 两个变量可能同时存在, 但只有一个对脚本的每个部分是可见的. <a href="Functions.htm#Global">全局变量</a>在 "全局范围"(即函数之外) 中是可见的, 并可被函数默认读取, 但如果要在函数中给它们赋值, 则必须<a href="Functions.htm#Global">声明</a>. <a href="Functions.htm#Local">局部变量</a>只在创建它们的函数内部可见.</p>
 <p>一个变量可以被认为是一个值的容器或存储位置, 所以你会经常发现文档引用变量的值作为 <em>变量的内容</em>. 对于变量 <code>x := 42</code>, 我们也可以说变量 x 的值是 42, 或者 x 的值是 42.</p>
 <p>值得注意的是, 一个变量和它的值是不一样的. 例如, 我们可以说 "<code>myArray</code> 是一个数组", 但是我们真正的意思是 myArray 是一个包含对数组的引用的变量. 我们通过使用变量的名称来引用其值, 但是 "myArray" 实际上只是变量的名称; 数组对象不知道它有一个名称, 并且可以被许多不同的变量引用(因此有很多的名称).</p>
 
 <h3 id="uninitialized-variables">未初始化变量</h3>
-<p><em>初始化</em> 变量就是给它分配一个起始值. 虽然程序会自动为所有变量提供一个默认值(空字符串), 但通常认为脚本在使用每个变量之前, 总是显式地给它赋值是一个好习惯. 这有助于作者发现错误, 例如拼写错误的名称和忘记赋值, 并可能帮助阅读脚本的人了解它使用了哪些变量以及如何使用.</p>
-<p>默认情况下, 每当访问一个没有先赋值的变量时, 就会显示一个警告. 目前, 可以使用 <a href="commands/_Warn.htm">#Warn UseUnset</a> 指令禁用此功能, 但未来的更新可能会用错误来代替此警告.</p>
-<p>通常情况下, 脚本有必要初始化任何一个预计将容纳一个数字的变量. 例如, 如果 x 从来没有被赋值过, <code>x := x + 1</code> 将无法工作, 因为 <em>空字符串</em> 被认为是非数字的. 脚本应该分配一个起始值, 如 <code>x := 0</code>. 在某些情况下, 空值被假定为 0(例如某些内置函数的参数), 但最好不要依赖这一点, 因为对这些错误的检测将在未来的版本中得到改进.</p>
-<p><a href="commands/IsSet.htm">IsSet</a> 可以用来确定一个变量是否已经初始化.</p>
+<p><em>初始化</em> 变量就是给它分配一个起始值. 一个尚未分配值的变量是 <em>未初始化变量</em>. 试图读取一个未初始化的变量被视为一个错误. 这有助于检测错误, 例如拼写错误的名称和忘记的赋值.</p>
+<p><a href="commands/IsSet.htm">IsSet</a> 可用于确定一个变量是否已经初始化, 例如在首次使用时初始化一个全局或静态变量.</p>
 
 <h3 id="built-in-variables">内置变量</h3>
 <p>程序中内置了许多有用的变量, 可以通过任何脚本来引用. 除特殊说明外, 这些变量是只读的; 也就是说, 他们的内容不能被脚本直接改变. 按照惯例, 这些变量中的大部分以前缀 <code>A_</code> 开头, 所以最好避免使用这个前缀作为你自己的变量.</p>
@@ -175,6 +173,14 @@ myObj[arg1, arg2, ..., argN] := value
 <p>脚本中可以使用 <a href="commands/EnvSet.htm">EnvSet</a> 创建新的环境变量或改变现有环境变量的内容. 系统的其他部分不会看到这种添加和改变. 但是, 通过调用 <a href="commands/Run.htm">Run</a> 或 <a href="commands/Run.htm">RunWait</a> 启动的任何程序或脚本会继承其父脚本的环境变量的副本.</p>
 <p>要检索环境变量, 请使用 <a href="commands/EnvGet.htm">EnvGet</a>. 例如:</p>
 <pre>Path := EnvGet("PATH")</pre>
+
+<h3 id="variable-references">变量引用(VarRef)</h3>
+<p>在一个表达式中, 每个变量引用都会自动解析为它的内容, unless it is the target of an <a href="Variables.htm#AssignOp">assignment</a> or the <a href="Variables.htm#ref">reference operator (&amp;)</a>. 换句话说, 调用 <code>myFunction(myVar)</code> 将把 <em>myVar</em> 的值传递给 <em>myFunction</em>, 而不是变量本身. 然后, 函数将拥有自己的局部变量(参数), 其值与 <em>myVar</em> 相同, 但不能给 <em>myVar</em> 赋新值. 简而言之, 参数是通过 <em>按值</em> 来传递的.</p>
+<p><a href="Variables.htm#ref">引用操作符(&amp;)</a> allows a variable to be handled like a value. <code>&amp;myVar</code> produces a VarRef, which can be used like any other value: assigned to another variable or property, inserted into an array, passed to or returned from a function, etc. A VarRef can be used to assign to the original target variable or retrieve its value by <a href="Variables.htm#deref">dereferencing</a> it.</p>
+<p>为了方便起见, 函数参数可以通过在参数名前加上引用符(&amp;) 来声明为 <a href="Functions.htm#ByRef">ByRef</a>(按引用, 按址). 这需要调用者传递一个 VarRef, 并允许函数本身通过仅引用参数(不带百分号) 来 "解引用" VarRef.</p>
+<pre>class VarRef extends Any</pre>
+<p>VarRef 类目前还没有预定义的方法或属性, 但 <code>value is VarRef</code> 可以用来测试一个值是否是 VarRef.</p>
+<p>当一个 VarRef 被用作 COM 方法的参数时, 对象本身不会被传递. 取而代之的是, 它的值被复制到一个临时的 VARIANT, 它使用<a href="commands/ComObjType.htm#vt">变体类型</a> <code>VT_BYREF|VT_VARIANT</code> 来传递. 当方法返回时, 新的值被分配给 VarRef.</p>
 
 <h3 id="caching">缓存</h3>
 <p>尽管变量通常被认为是持有单个值, 而该值具有不同的类型(字符串, 数字或对象), 但在 <code>"Value is " myNumber</code> 和 <code>MsgBox myNumber</code> 等情况下, AutoHotkey 会自动在数字和字符串之间进行转换. 由于这些转换非常频繁, 所以每当将包含数字的变量转换为字符串时, 结果都会 <em>缓存</em> 在该变量中.</p>
@@ -324,12 +330,6 @@ MsgBox 0.1 + 0.2 = 0.3   <em>; 0(不相等)</em>
 <p id="reserved-words"><strong>保留单词:</strong> <code>and</code>, <code>contains</code>, <code>in</code>, <code>is</code>, <code>not</code>, <code>or</code>, <code>true</code>, <code>false</code>, <code>super</code>. 由于这些单词在表达方式上有其他用途, 因此予以保留.</p>
 <p>声明关键字和控制流语句的名称也是保留的, 主要用于检测错误. 这包括: <code>Break</code>, <code>Catch</code>, <code>Continue</code>, <code>Else</code>, <code>Finally</code>, <code>For</code>, <code>Global</code>, <code>Goto</code>, <code>If</code>, <code>Local</code>, <code>Loop</code>, <code>Return</code>, <code>Static</code>, <code>Throw</code>, <code>Try</code>, <code>Until</code>, <code>While</code>.</p>
 <p>允许将属性, 方法和窗口组的名称作为保留字.</p>
-
-<h3 id="variable-references">变量引用与值</h3>
-<p>变量的某些属性模糊了变量与其值之间的界限, 但区分它们是很重要的. 特别是, 在考虑<a href="#objects">对象</a>和 ByRef 参数的时候.</p>
-<p>虽然我们可以说变量 <code>myArray</code> <em>包含</em> 一个数组(这是一个对象类型), 但变量包含的不是数组本身, 而是对数组的 <em>引用或指针</em>. 任意数量的变量都可以包含对同一对象的引用. 在这种情况下, 将变量看作只是一个名称可能会有所帮助. 例如, 给一个人一个昵称并不会导致克隆人的存在.</p>
-<p>默认情况下, 变量 <em>按值</em> 传递给用户定义的函数. 换句话说, 变量所包含的值被复制到与该函数的参数对应的变量中. <strong>ByRef</strong> 参数允许您 <em>通过引用</em> 传递一个变量, 或换句话说, 使函数的一个参数成为变量的 <em>别名</em>, 从而允许函数为变量赋一个新值.</p>
-<p>因为变量只包含对对象的 <em>引用</em>, 而不是对象本身, 所以当您将这样的变量传递给非 ByRef 参数时, 函数接收到的是对同一对象的引用. 这允许函数修改对象, 但它不允许函数修改函数调用者使用的 <em>变量</em>, 因为该函数只具有对对象的引用, 而不是变量.</p>
 
 <h3 id="references-to-objects">对象的引用</h3>
 <p>脚本仅能通过对象的 <em>引用</em> 间接与对象进行交互. 创建对象时, 对象是在您不能控制的地方创建的, 并给您一个引用. 将此引用传递给函数或将其存储在变量或其他对象中会创建对 <em>同一</em> 对象的新引用.</p>

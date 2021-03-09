@@ -10,7 +10,6 @@
 <script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
 </head>
 <body>
-
 <h1>脚本语言</h1>
 <p>一个 AutoHotkey 脚本从根本上说是使用 AutoHotkey 独有的自定义语言编写的程序要遵循的指令集合. 这种语言与其他几种脚本语言有一些相似之处, 但也有其独特的优势和缺陷. 本文档描述了该语言, 并试图指出常见的缺陷.</p>
 <p class="note">有关 AutoHotkey 所使用的各种概念的更一般的解释, 请参阅<a href="Concepts.htm">概念和约定</a>.</p>
@@ -50,7 +49,6 @@
     <li><a href="#dynamic-variables">动态变量</a>
     <ul>
       <li><a href="#pseudo-arrays">伪数组</a></li>
-      <li><a href="#associative-pseudo-arrays">关联伪数组</a></li>
     </ul></li>
     <li><a href="#labels">标签</a></li>
   </ul></li>
@@ -64,8 +62,8 @@ Methods?
 
 <h2 id="general-conventions">常规约定</h2>
 <p><strong>名称:</strong> 变量和函数名称不区分大小写(例如, <code>CurrentDate</code> 等同于 <code>currentdate</code>). 有关详细信息(如最大长度和可用字符), 请参阅<a href="Concepts.htm#names">名称</a>.</p>
-<p><strong>无类型变量:</strong> 变量没有明确定义的类型; 相反, 任何类型的值都可以存储在任何变量中(不包括内置变量). 数字可能会自动转换为字符串(文本), 反之亦然, 这取决于实际情况.</p>
-<p><strong>声明是可选的:</strong> 除了在<a href="Functions.htm">函数页面</a>上注明的地方外, 变量不需要声明; 它们的存在仅仅是通过使用它们(每个变量都是从空/空白开始的).</p>
+<p><strong>无类型变量:</strong> 变量没有显式定义的类型; 相反, 任何类型的值都可以存储在任何变量中(不包括常量和内置变量). 数字可能会自动转换为字符串(文本), 反之亦然, 这取决于实际情况.</p>
+<p><strong>声明是可选的:</strong> 除了在<a href="Functions.htm">函数页面</a>上注明的地方外, 变量不需要声明. However, attempting to read a variable before it is given a value is considered an error.</p>
 <p><strong>空格通常被忽略:</strong> 缩进(前导空格) 对于编写可读代码非常重要, 但是程序不需要, 通常会被忽略. <em>通常</em> 在行尾的, 表达式内的(引号之间的除外), 以及命令参数之前和之后的空格和制表符会被忽略. 然而, 在一些情况下, 空格是重要的, 包括:</p>
 <ul>
   <li><a href="#function-calls">函数</a>和方法调用要求在函数/方法名称和 <code>(</code> 之间没有空格.</li>
@@ -81,6 +79,7 @@ Methods?
   <li><a href="Scripts.htm#continuation-section">延续片段</a>: 片段中的多行与片段上面那一行合并, 延续片段以 <code>(</code> 开始, 以 <code>)</code> 结束(两个符号必须出现在行的开头, 不计空格).</li>
 </ul>
 
+
 <h2 id="comments">注释</h2>
 <p><em>注释</em> 是脚本中被程序忽略的那部分文本. 它们通常用于添加解释或禁用部分代码.</p>
 <p>可以通过在行的开头使用分号来注释脚本. 例如:</p>
@@ -95,7 +94,9 @@ MsgBox "这行被注释掉了."
 */</em>
 MsgBox "这行没有被注释."
 <em>/* 这也是有效注释, 但是这一行不能有其他代码. */</em>
+MsgBox "这行没有被注释."
 </pre>
+<p>Excluding tabs and spaces, <code><em>/*</em></code> must appear at the start of the line, while <code><em>*/</em></code> can appear only at the start or end of a line. It is also valid to omit <code><em>*/</em></code>, in which case the remainder of the file is commented out.</p>
 <p>由于脚本运行时会忽略注释, 所以它们不会影响脚本性能或占用内存.</p>
 
 <h2 id="expressions">表达式</h2>
@@ -121,7 +122,7 @@ MsgBox "这行没有被注释."
 <pre>MsgBox Format("You are using AutoHotkey v{1} {2}-bit.", A_AhkVersion, A_PtrSize*8)
 </pre>
 <p>要为变量赋值, 请使用 <code>:=</code> <a href="Variables.htm#AssignOp">赋值运算符</a>, 如 <code>MyVar := "Some text"</code>.</p>
-<p>表达式中的 <em>百分号</em> 用于创建<a href="#dynamic-variables">动态变量引用</a>和<a href="Functions.htm#DynCall">动态函数调用</a>, 但这些很不常见.</p>
+<p>表达式中的 <em>百分号</em> 用于创建<a href="#dynamic-variables">动态变量引用</a>, 但这些都是很少需要的.</p>
 
 <h3 id="constants">常量关键字</h3>
 <p>常量就是一个不可改变的值, 给定一个符号名称. AutoHotkey 目前有以下常量:</p>
@@ -144,25 +145,25 @@ MsgBox "这行没有被注释."
 
 <h3 id="function-calls">函数调用</h3>
 <p class="note">有关函数和相关术语的一般解释, 请参阅<a href="Concepts.htm#functions">函数</a>.</p>
-<p><em>函数</em> 接受可变数量的输入, 去执行一些动作或计算, 然后 <a href="Concepts.htm#return-a-value"><em>return</em>(返回)</a> 一个结果. 函数的输入被称为<a href="Concepts.htm#parameters">参数</a>(<em>parameters</em> 或 <em>arguments</em>). 一个函数被简单地通过写它的名字, 后跟着用括号括起来的参数来 <a href="Concepts.htm#call"><em>called</em>(调用)</a>. 例如, 如果 <kbd>Shift</kbd> 键被按下, 则 <code>GetKeyState("Shift")</code> 返回(计算为) 1, 否则返回 0.</p>
-<p class="warning"><strong>注意:</strong> 函数名和左括号之间不能有任何空格.
+<p><em>函数</em> 接受可变数量的输入, 去执行一些动作或计算, 然后 <a href="Concepts.htm#return-a-value"><em>return</em>(返回)</a> 一个结果. 函数的输入被称为<a href="Concepts.htm#parameters">参数</a>(<em>parameters</em> 或 <em>arguments</em>). 一个函数被 <a href="Concepts.htm#call"><em>called</em>(调用)</a>, 只需写下目标函数, 后面的参数用括号括起来即可. 例如, 如果 <kbd>Shift</kbd> 键被按下, 则 <code>GetKeyState("Shift")</code> 返回(计算为) 1, 否则返回 0.</p>
+<p class="warning"><strong>注意:</strong> 函数和左括号之间不能有任何空格.
 </p>
 <p>对于刚接触编程的人来说, 括号的要求起初可能看起来很神秘或冗长, 但它们允许将函数调用与其他操作结合起来. 例如, 只有当两个键被物理按下时, 表达式 <code>GetKeyState("Shift", "P") and GetKeyState("Ctrl", "P")</code> 才会返回 1.</p>
-<p>函数名与变量名是分开的. 例如, <code>Round</code> 可以同时是变量名和函数名, 而 <code>Round := 1</code> 不会以任何方式影响 <code>Round(n)</code>.</p>
-<p>与普通<a href="Functions.htm#Global">全局变量</a>不同, 默认情况下函数可以在其他函数的内部调用. 但是, <a href="Functions.htm#nested">嵌套函数</a>(即, 在另一个函数中 <em>定义的</em> 任何函数) 只能在包含它们的函数内通过名称来访问.</p>
+<p>Although a function call expression usually begins with a literal function name, the target of the call can be any expression which produces a <a href="objects/Functor.htm">function object</a>. In the expression <code>GetKeyState("Shift")</code>, <em>GetKeyState</em> is actually a variable reference, although it usually refers to a read-only variable containing a built-in function.</p>
 
 <h4 id="function-call-statements">函数调用语句</h4>
 <p>如果不需要函数的返回值, 并且函数名写在行首(或者在其他允许<a href="Concepts.htm#statement">语句</a>的上下文中, 如下面的 <code>else</code> 或 <a href="Hotkeys.htm">hotkey</a>), 则可以省略括号. 在这种情况下, 行的其余部分作为函数的参数列表. 例如:</p>
 <pre>result := MsgBox("This one requires parentheses.",, "OKCancel")
 MsgBox "This one doesn't. The result was " result "."</pre>
 <p>在同一上下文中调用<a href="Concepts.htm#methods">方法</a>时, 也可以省略圆括号, 但仅当目标对象是变量或直接命名的属性时才可以省略圆括号, 如 <code>myVar.myMethod</code> 或 <code>myVar.myProp.myMethod</code>.</p>
+<p>As with function call expressions, the target of a function call statement does not have to be a predefined function; it can instead be a variable containing a <a href="objects/Functor.htm">function object</a>.</p>
 
 <h4 id="optional-parameters">可选参数</h4>
 <p>可选参数可以简单地留空, 但是分隔逗号仍然是必需的, 除非所有后续参数也被省略. 例如, <a href="commands/Run.htm">Run</a> 函数可接受一至四个参数. 下列各项均有效:</p>
 <pre>
 Run "notepad.exe", "C:\"
 Run "notepad.exe",, "Min"
-Run("notepad.exe", , , notepadPID)
+Run("notepad.exe", , , &amp;notepadPID)
 </pre>
 
 <h3 id="operators-for-objects">对象的运算符</h3>
@@ -303,9 +304,14 @@ SayHello  <em>; 调用 SayHello 函数.</em></pre>
     <pre>SayHello() => MsgBox("Hello!")</pre>
   </li>
 </ul>
-<p>函数中的变量默认为函数的<a href="Functions.htm#Local">局部变量</a>, 除非是在<a href="Functions.htm#nested">嵌套函数</a>中引用外部函数的局部变量, 或者是在全局范围内使用 <code>=&gt;</code> 时的任何变量(不是在类或其他函数中).</p>
+<p>函数中的变量默认为函数的<a href="Functions.htm#Local">局部变量</a>, except in the following cases:</p>
+<ul>
+  <li>When the function is <a href="Functions.htm#AssumeGlobal">assume-global</a>.</li>
+  <li>When a variable is referenced but not used as the target of an <a href="Variables.htm#AssignOp">assignment</a> or the reference operator (<code>&amp;var</code>).</li>
+  <li>When referring to a local variable of an outer function inside a <a href="Functions.htm#nested">nested function</a>.</li>
+</ul>
 <p>函数可以选择<a href="Concepts.htm#parameters">接受参数</a>. 参数是通过在括号内列出它们来定义的. 例如:</p>
-<pre>MyFunction(FirstParameter, Second, ByRef Third, Fourth:="")
+<pre>MyFunction(FirstParameter, Second, &amp;Third, Fourth:="")
 {
     <em>;...</em>
     return "a value"
@@ -313,7 +319,7 @@ SayHello  <em>; 调用 SayHello 函数.</em></pre>
 </pre>
 <p>和函数调用一样, 函数名和左括号之间不能有空格.</p>
 <p>右括号和左大括号之间的换行符是可选的. 两者之间可以有任意数量的空格或注释.</p>
-<p><a href="Functions.htm#ByRef">ByRef</a> 表示该参数接受变量引用, 使该参数成为调用者传递的变量的别名. 如果调用者没有传递一个变量, 那么这个参数就像一个普通的局部变量. ByRef 参数也可以是可选的.</p>
+<p>The <a href="Functions.htm#ByRef">ByRef marker (&amp;)</a> indicates that the caller must pass a variable reference. Inside the function, any reference to the parameter will actually access the caller's variable. This is similar to omitting <code>&amp;</code> and explicitly <a href="Variables.htm#deref">dereferencing</a> the parameter inside the function (e.g. <code>%Third%</code>), but in this case the percent signs are omitted. If the parameter is optional and the caller omits it, the parameter acts as a normal local variable.</p>
 <p><a href="Functions.htm#optional">可选</a>参数通过在参数名称后面指定 <code>:=</code> 和一个默认值, 该值必须是加引号的原义字符串, 数字, <code>true</code>, <code>false</code> 或 <code>unset</code>.</p>
 <p>函数可以<a href="Functions.htm#return">返回一个值</a>. 如果不是, 则默认返回一个空字符串.</p>
 <p>函数定义不需要在调用该函数之前.</p>
@@ -323,12 +329,13 @@ SayHello  <em>; 调用 SayHello 函数.</em></pre>
 <p><a href="commands/_Include.htm">#Include</a> 指令使脚本的行为就像指定文件的内容出现在这个确切位置一样. 这通常用于将代码组织到单独的文件中, 或者使用其他用户编写的脚本库.</p>
 <p>#Include 文件可以包含在<a href="Scripts.htm#auto">脚本启动</a>时要执行的<a href="#global-code">全局代码</a>, 但是和主脚本文件中的代码一样, 只有当自动执行线程在 #Include 指令之前没有被终止(比如用一个无条件的 <code>Return</code>) 才会执行这些代码. 如果任何代码由于之前的 <code>Return</code> 而无法执行, 默认会显示一个<a href="commands/_Warn.htm#Unreachable">警告</a>.</p>
 <p>与 C/C++ 不同, 如果以前的指令已包含该文件, #Include 不做任何事情. 要多次包含同一文件的内容, 请使用 <a href="commands/_Include.htm">#IncludeAgain</a>.</p>
-<p>如果包含函数的脚本文件被保存在一个标准的位置并进行适当的命名, 则它们可以 <em>自动包含</em>, 而不必使用 #Include. 其效果与在主脚本文件末尾使用 #Include 相似. 有关详情, 请参阅<a href="Functions.htm#lib">函数库</a>.</p>
+<p>To facilitate sharing scripts, #Include can search a few standard locations for a library script. For details, see <a href="Scripts.htm#lib">Script Library Folders</a>.</p>
 
 <h2 id="misc">杂项</h2>
 
 <h3 id="dynamic-variables">动态变量</h3>
 <p><em>动态变量引用</em> 接受一个文本值, 并将其解释为变量的名称.</p>
+<p class="note"><strong>注意:</strong> A variable cannot be <em>created</em> by a dynamic reference, but existing variables can be assigned.</p>
 <p>动态变量引用的最常见形式称为 <em>双重引用</em> 或 <em>双重解引</em>. 在执行双重引用之前, 目标变量的名称存储在第二个变量中. 然后可以通过使用双重引用将第二个变量间接地将值赋给目标变量. 例如:</p>
 <pre>target := 42
 second := "target"
@@ -336,7 +343,7 @@ MsgBox  second   <em>; 普通(单重) 变量引用 =&gt; target</em>
 MsgBox %second%  <em>; 双重解引 =&gt; 42</em>
 </pre>
 <p>目前, 第二种情况下, <code>second</code> 必须总是包含一个变量名; 任意表达式不被支持.</p>
-<p>动态变量引用也可以采用一个或多个文本文本和一个或多个变量的内容, 并将它们组合在一起组成一个单一变量名. 在没有空格的情况下, 这只需简单地按顺序写入名称和百分号括起来的变量. 例如, <code>MyArray%A_Index%</code> 或 <code>MyGrid%X%_%Y%</code>. 这用于访问 <em>伪数组</em>, 如下所示.</p>
+<p>动态变量引用也可以采用一个或多个原义文本和一个或多个变量的内容, 并将它们组合在一起组成一个单一变量名. 在没有空格的情况下, 这只需简单地按顺序写入名称和百分号括起来的变量. 例如, <code>MyArray%A_Index%</code> 或 <code>MyGrid%X%_%Y%</code>. 这用于访问 <em>伪数组</em>, 如下所示.</p>
 <p>这些技术也可以应用于对象的属性和方法. 例如:</p>
 <pre>clr := {}
 for n, component in ["red", "green", "blue"]
@@ -352,16 +359,20 @@ MyArray3 := "C"
 Loop 3
     MsgBox MyArray%A_Index%  <em>; 显示 A, 然后 B, 最后 C.</em>
 </pre>
-<p>由于单个元素只是普通变量, 所以可以赋值或获取一个值, 但不能 <em>删除</em> 或 <em>插入</em> 元素. 因为伪数组本身并不存在, 所以不能将它传递给函数或从函数返回, 或者作为一个整体进行复制. 由于这些原因, 通常建议在可能的情况下使用<a href="Objects.htm#Usage_Simple_Arrays">普通数组</a>.</p>
-
-<h4 id="associative-pseudo-arrays">关联伪数组</h4>
-<p>用于形成最终变量名称的 "index(索引)" 不一定是数字; 它可以是一个字母或关键字, 使伪数组类似于<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>或<a href="Objects.htm">对象</a>.</p>
+<p>The "index" used to form the final variable name does not have to be numeric; it could instead be a letter or keyword.</p>
+<p>For these reasons, it is generally recommended to use an <a href="Objects.htm#Usage_Simple_Arrays">Array</a> or <a href="Objects.htm#Usage_Associative_Arrays">Map</a> instead of a pseudo-array:</p>
+<ul>
+  <li>As the individual elements are just normal variables, one can assign or retrieve a value, but cannot <em>remove</em> or <em>insert</em> elements.</li>
+  <li>Because the pseudo-array is only conceptual and not a single value, it can't be passed to or returned from a function, or copied as a whole.</li>
+  <li>A pseudo-array cannot be declared as a whole, so some "elements" may resolve to <a href="Functions.htm#Global">global</a> (or <a href="Functions.htm#capture-var">captured</a>) variables while others do not.</li>
+  <li>If a variable is referenced non-dynamically but only assigned dynamically, a <a href="commands/_Warn.htm#VarUnset">load-time warning</a> may be displayed. Such warnings are a very effective way to detect errors, so disabling them is not recommended.</li>
+  <li>Current versions of the language do not permit creating new variables dynamically. This is partly to encourage best practices, and partly to avoid inconsistency between dynamic and non-dynamic variable references in functions.</li>
+</ul>
 
 <h3 id="labels">标签</h3>
 <p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 的目标, 或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由一个名称后跟一个冒号组成:</p>
 <pre>this_is_a_label:
 </pre>
 <p>除了空格和注释外, 其他代码不能和标签写在同一行. 有关详情, 请参阅<a href="misc/Labels.htm">标签</a>.</p>
-
 </body>
 </html>

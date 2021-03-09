@@ -23,7 +23,7 @@
   <li><a href="#Features">其他特性</a></li>
   <li><a href="#Wheel">鼠标滚轮热键</a></li>
   <li><a href="#Remarks">热键技巧和备注</a></li>
-  <li><a href="#AltTabDetail">Alt-Tab 热键</a></li>
+  <li><a href="#AltTab">Alt-Tab 热键</a></li>
   <li><a href="#Function">命名的函数热键</a></li>
 </ul>
 
@@ -190,10 +190,10 @@ AppsKey &amp; /::MsgBox "Hotkey activated."
 <h2 id="Features">其他特性</h2>
 <p><strong>NumLock, CapsLock 和 ScrollLock:</strong> 这些键可以被强制设置为 "AlwaysOn" 或 "AlwaysOff". 例如: <code><a href="commands/SetNumScrollCapsLockState.htm">SetNumLockState</a> "AlwaysOn"</code>.</p>
 <p><strong>覆盖资源管理器热键:</strong> 系统的内置热键(如 <kbd>Win</kbd>+<kbd>E</kbd>(#e) 和 <kbd>Win</kbd>+<kbd>R</kbd>(#r)) 可以通过将它们指定给脚本中的一个操作单独替换. 有关详情, 请参阅<a href="misc/Override.htm">覆盖页面</a>.</p>
-<p id="alttab"><strong>替换 Alt-Tab:</strong> 热键可以提供 Alt-Tab 的可选方法. 例如, 下面的两个热键可以让您用右手进行 alt-tab:</p>
+<p><strong>替换 Alt-Tab:</strong> 热键可以提供 Alt-Tab 的可选方法. 例如, 下面的两个热键可以让您用右手进行 alt-tab:</p>
 <pre>RControl &amp; RShift::AltTab  <em>; 按住右 control 后接着反复下右 shift 来向前移动.</em>
 RControl &amp; Enter::ShiftAltTab  <em>; 甚至不需要释放右 control, 直接按 Enter 来反向移动.</em></pre>
-<p>有关详情, 请参阅 <a href="#AltTabDetail">Alt-Tab</a>.</p>
+<p>有关详情, 请参阅 <a href="#alttab">Alt-Tab</a>.</p>
 
 <h2 id="Wheel">鼠标滚轮热键</h2>
 <p>通过键名 WheelDown 和 WheelUp 可以支持转动滚轮来激发热键. 这里是一些鼠标滚轮热键的例子:</p>
@@ -255,11 +255,12 @@ RButton &amp; WheelUp::MsgBox "You turned the mouse wheel up while holding down 
 <p>最后, 每个脚本都是<a href="misc/Threads.htm">准多线程的</a>, 这样可以在之前的热键子程序还在运行时启动新的热键. 例如, 即使在当前热键显示<a href="commands/MsgBox.htm">消息框</a>时也能启动新的热键.</p>
 
 <h2 id="AltTabDetail">Alt-Tab 热键</h2>
-<p>每个 Alt-Tab 热键必须是两个键的组合, 通常通过 &amp; 符号实现. 在以下示例中, 您将按住右 <kbd>Alt</kbd> 键并按下 <kbd>J</kbd> 或 <kbd>K</kbd> 以导航 alt-tab 菜单:</p>
+<p>Alt-Tab 热键简化了新组合键到系统 Alt-Tab 热键的映射, 它被用来调用切换任务(激活窗口) 的菜单.</p>
+<p>每个 Alt-Tab 热键必须是一个键或两个键的组合, 通常通过和符号(&amp;) 实现. 在下面的例子中, 按住右 <kbd>Alt</kbd> 然后按下 <kbd>J</kbd> 或 <kbd>K</kbd> 来浏览 alt-tab 菜单:</p>
 <pre>RAlt &amp; j::AltTab
 RAlt &amp; k::ShiftAltTab</pre>
 <p><em>AltTab</em> 和 <em>ShiftAltTab</em> 是两个特殊的命令, 只有在与热键在同一行上时才能被识别. 这里是完整的列表:</p>
-<p><strong>AltTab</strong>: 如果 alt-tab 菜单可见, 那么在菜单中前移. 否则, 显示菜单(仅当热键是 "&amp;" 连接的两个按键时; 否则, 它什么都不做).</p>
+<p><strong>AltTab</strong>: 如果 alt-tab 菜单可见, 那么在菜单中前移. 否则, 显示菜单(仅当热键为两个按键的组合键时; 否则, 它什么都不做).</p>
 <p><strong>ShiftAltTab</strong>: 与上面相同, 只是在菜单中向后移动.</p>
 <p><strong>AltTabAndMenu</strong>: 如果 alt-tab 菜单可见, 则向前移动. 否则, 显示菜单.</p>
 <p><strong>AltTabMenu</strong>: 显示或隐藏 alt-tab 菜单.</p>
@@ -268,22 +269,26 @@ RAlt &amp; k::ShiftAltTab</pre>
 <pre>MButton::AltTabMenu
 WheelDown::AltTab
 WheelUp::ShiftAltTab</pre>
-<p>要取消热键调用的Alt-tab菜单而不激活所选窗口, 请使用如下所示的热键. 可能需要进行调整, 具体取决于: 1) 最初显示 alt-tab 菜单的方式; 和 2) 脚本是否安装了<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>.</p>
+<p>要取消 Alt-Tab 菜单而不激活选择的窗口, 按下或发送 <kbd>Esc</kbd>. 在下面的例子中, 按住 <kbd>LCtrl</kbd> 并按下 <kbd>CapsLock</kbd> 来显示菜单并在其中向前移动. 然后释放 <kbd>LCtrl</kbd> 激活所选窗口, 或按下 <kbd>MButton</kbd> 取消. 在运行这个例子之前, 定义 <a href="#AltTabWindow">AltTabWindow</a> 窗口组, 如下所示.</p>
 <pre>LCtrl &amp; CapsLock::AltTab
-<strong>!</strong>MButton::  <em>; 鼠标中键. <strong>!</strong> 前缀让它在按住 Alt 键时激发(当 alt-tab 菜单可见时, alt 键是按住的).</em>
-{
-    if WinExist("ahk_class #32771")  <em>; 表示 alt-tab 菜单出现在屏幕上.</em>
-        Send "<strong>!</strong>{Escape}{Alt up}"
-}</pre>
+#HotIf WinExist("ahk_group AltTabWindow")  <em>; 表示 alt-tab 菜单出现在屏幕上.</em>
+*MButton::Send "{Blind}{Escape}"  <em>; * 前缀允许它被触发, 无论 Alt 是否被按住.</em>
+#HotIf</pre>
+<p>If the script sent <code>{Alt Down}</code> (such as to invoke the Alt-Tab menu), it might also be necessary to send <code>{Alt Up}</code> as shown in the example further below.</p>
+
+<h3 id="AltTabRemarks">General Remarks</h3>
 <p>当前, 所有特殊的 Alt-tab 动作必须像上面的例子那样直接指定到热键上(即它们无法像函数那样使用). 它们<span class="red">不受 <a href="commands/_HotIf.htm">#HotIf</a> 的影响</span>.</p>
-<p>也可以通过热键创建自定义 alt-tab 的动作. 在下面的示例中, 您可以按下 <kbd>F1</kbd> 显示菜单并在其中向前移动. 然后可以按下 <kbd>F2</kbd> 来激活选择的窗口(或按下 <kbd>Esc</kbd> 来取消):</p>
+<p id="AltTabWindow">Custom alt-tab actions can also be created via hotkeys. As the identity of the alt-tab menu differs between OS versions, it may be helpful to use a window group as shown below. For the examples above and below which use <code>ahk_group AltTabWindow</code>, this window group is expected to be defined in the <a href="Scripts.htm#auto">auto-execute thread</a>. Alternatively, <code>ahk_group AltTabWindow</code> can be replaced with the appropriate <code>ahk_class</code> for your system.</p>
+<pre>GroupAdd "AltTabWindow", "ahk_class MultitaskingViewFrame"  <em>; Windows 10</em>
+GroupAdd "AltTabWindow", "ahk_class TaskSwitcherWnd"  <em>; Windows Vista, 7, 8.1</em>
+GroupAdd "AltTabWindow", "ahk_class #32771"  <em>; Older, or with classic alt-tab enabled</em></pre>
+<p>In the following example, you would press <kbd>F1</kbd> to display the menu and advance forward in it. Then you would press <kbd>F2</kbd> to activate the selected window, or press <kbd>Esc</kbd> to cancel:</p>
 <pre>*F1::Send "{Alt down}{tab}" <em>; 在这种情况下需要星号.</em>
 !F2::Send "{Alt up}"  <em>; 释放 Alt 键, 激活选择的窗口.</em>
-~*Escape::
-{
-    if WinExist("ahk_class #32771")
-        Send "{Escape}{Alt up}"  <em>; 取消菜单而不激活选择的窗口.</em>
-}</pre>
+#HotIf WinExist("ahk_group AltTabWindow")
+~*Esc::Send "{Alt up}"  <em>; When the menu is cancelled, release the Alt key automatically.
+;*Esc::Send "{Esc}{Alt up}"  ; Without tilde (~), Escape would need to be sent.</em>
+#HotIf</pre>
 
 <h2 id="Function">命名的函数热键</h2>
 <p>如果需要在不触发热键本身的情况下调用热键的函数, 则可以为一个或多个热键分配一个命名的<a href="Functions.htm">函数</a>, 只需在热键的双冒号之后简单地定义该函数即可, 例如:</p>
@@ -295,7 +300,7 @@ WheelUp::ShiftAltTab</pre>
     editor_open_folder()
     {
         path := WinGetTitle("A")
-        if RegExMatch(path, "\*?\K(.*)\\[^\\]+(?= [-*] )", path)
+        if RegExMatch(path, "\*?\K(.*)\\[^\\]+(?= [-*] )", &amp;path)
             if (FileExist(path[0]) &amp;&amp; ThisHotkey = "^+e")
                 Run Format('explorer.exe /select,"{1}"', path[0])
             else

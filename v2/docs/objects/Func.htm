@@ -12,20 +12,22 @@
 <body>
 
 <h1>Func 对象</h1>
-<pre class="NoIndent">类 Func 继承 Object.</pre>
+<pre class="NoIndent">extends Func extends Object</pre>
 
-<p>表示可以被脚本调用的自定义或内置的函数. <a href="../commands/Func.htm">Func</a> 返回这种类型的对象(或 <a href="../Functions.htm#closures">Closure</a>(闭包) 对象具有与其相同的属性).</p>
-
+<p>表示可自定义或内置的函数.</p>
 <p>有关其他可以像函数一样调用的对象的信息, 请参阅<a href="Functor.htm">函数对象</a>.</p>
+<p>The <code>Closure</code> class extends <code>Func</code> but does not define any new properties.</p>
 
-<p>对 Func 对象的引用也被称为 <em>函数引用</em>. 要获取函数引用, 请使用 <a href="../commands/Func.htm">Func</a> 函数, 如下面的例子所示:</p>
-<pre><em>; 检索对名为 "StrLen" 的函数引用.</em>
-fn := Func("StrLen")
+<p>For each built-in function or function definition within the script, there is a corresponding read-only variable containing a Func object. This variable is directly used to call the function, but its value can also be read to retrieve the function itself, as a value. For example:</p>
+<pre>InspectFn StrLen
+InspectFn InspectFn
 
-<em>; 显示函数的信息.</em>
-MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
-<p>下面使用 "FuncObj" 作为任何 Func 对象的占位符, 因为 "Func" 就是类本身.</p>
-<p>除了从 <a href="Object.htm">Object</a> 继承的方法和属性外, File 对象还具有以下预定义的方法和属性:</p>
+InspectFn(fn)
+{
+    <em>; Display information about the passed function.</em>
+    MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")
+}
+</pre>
 
 <p><strong>属性:</strong></p>
 <ul>
@@ -73,12 +75,13 @@ MsgBox fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
 
 <div class="methodShort" id="Call"><h2>Call</h2>
 <p>调用函数.</p>
-<pre class="Syntax">FuncObj.<span class="func">Call</span>(Param1, Param2, ...)
-%FuncObj%(Param1, Param2, ...)</pre>
+<pre class="Syntax">FuncObj(Param1, Param2, ...)
+FuncObj.<span class="func">Call</span>(Param1, Param2, ...)</pre>
 <dl>
   <dt>Param1, Param2, ...</dt>
   <dd>参数和返回值由函数定义.</dd>
 </dl>
+<p>The "Call" method is implied when calling a value, so need not be explicitly specified.</p>
 </div>
 
 <div class="methodShort" id="Bind"><h2>Bind</h2>

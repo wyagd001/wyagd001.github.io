@@ -87,7 +87,7 @@ LogError(exception, mode) {
 <pre>
 AccumulateErrors()
 {
-    local ea := ErrorAccumulator.new()
+    local ea := ErrorAccumulator()
     ea.Start()
     return ea
 }
@@ -95,7 +95,7 @@ AccumulateErrors()
 class ErrorAccumulator
 {
     Errors := []                        <em>; 累计错误数组.</em>
-    _cb := Func("AccumulateError").Bind(this.Errors)
+    _cb := AccumulateError.Bind(this.Errors)
     Start() => OnError(this._cb, -1)    <em>; 先注册 cb.</em>
     Stop() => OnError(this._cb, 0)      <em>; 取消注册 cb.</em>
     Last => this.Errors[-1]             <em>; 最近的错误.</em>

@@ -86,7 +86,7 @@ wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
 
 <p id="Indirect"><strong>按址接收参数:</strong> 如果使用 <code>&amp;</code> 选项, 函数接收第一个回调参数的 <i>地址</i>. 例如:</p>
 <pre>
-callback := CallbackCreate("TheFunc", "F&amp;", 3)  <em>; 32 位中必须指定参数列表的大小.</em>
+callback := CallbackCreate(TheFunc, "F&amp;", 3)  <em>; 32 位中必须指定参数列表的大小.</em>
 DllCall(callback, "float", 10.5, "int64", 42)
 TheFunc(params) {
     MsgBox <a href="NumGet.htm">NumGet</a>(params, 0, "float") ", " NumGet(params, A_PtrSize, "int64")
@@ -112,7 +112,7 @@ TheFunc(params) {
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExWinList">
 <p><a class="ex_number" href="#ExWinList"></a> 显示所有顶层窗口的摘要.</p>
-<pre>EnumAddress := <strong>CallbackCreate</strong>("EnumWindowsProc", "Fast")  <em>; 快速模式是可以的, 因为它只会在这个线程中被调用.</em>
+<pre>EnumAddress := <strong>CallbackCreate</strong>(EnumWindowsProc, "Fast")  <em>; 快速模式是可以的, 因为它只会在这个线程中被调用.</em>
 
 DetectHiddenWindows True  <em>; 由于是快速模式, 所以此设置也会在回调中生效.</em>
 
@@ -136,13 +136,13 @@ EnumWindowsProc(hwnd, lParam)
 <pre>TextBackgroundColor := 0xFFBBBB  <em>; BGR 格式的自定义颜色.</em>
 TextBackgroundBrush := DllCall("CreateSolidBrush", "UInt", TextBackgroundColor)
 
-MyGui := Gui.New()
+MyGui := Gui()
 Text := MyGui.Add("Text",, "Here is some text that is given`na custom background color.")
 
 <em>; 64 位脚本必须调用 SetWindowLongPtr 代替 SetWindowLong:</em>
 SetWindowLong := A_PtrSize=8 ? "SetWindowLongPtr" : "SetWindowLong"
 
-WindowProcNew := <strong>CallbackCreate</strong>("WindowProc")  <em>; 避免子类化中使用快速模式.</em>
+WindowProcNew := <strong>CallbackCreate</strong>(WindowProc)  <em>; 避免子类化中使用快速模式.</em>
 WindowProcOld := DllCall(SetWindowLong, "Ptr", MyGui.Hwnd, "Int", -4  <em>; -4 为 GWL_WNDPROC</em>
     , "Ptr", WindowProcNew, "Ptr") <em>; 返回值必须设置为 "Ptr" 或 "UPtr" 而不是 "Int".</em>
 
@@ -151,7 +151,6 @@ MyGui.Show
 WindowProc(hwnd, uMsg, wParam, lParam)
 {
     Critical
-    global Text, TextBackgroundColor, TextBackgroundBrush, WindowProcOld
     if (uMsg = 0x0138 &amp;&amp; lParam = Text.Hwnd)  <em>; 0x0138 为 WM_CTLCOLORSTATIC.</em>
     {
         DllCall("SetBkColor", "Ptr", wParam, "UInt", TextBackgroundColor)

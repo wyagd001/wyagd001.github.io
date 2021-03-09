@@ -71,6 +71,11 @@ vref := ComObject(0x400C, vbuf.ptr)  <em>; 0x400C 是 VT_BYREF 与 VT_VARIANT �
 vref[] := "in value"
 sc.Run("Example", vref)  <em>; sc 应像<a href="#ExByRef">下面例子</a>一样进行初始化.</em>
 MsgBox vref[]</pre>
+<p>If the method accepts a combination of VT_BYREF and VT_VARIANT as shown above, a <a href="../Concepts.htm#variable-references">VarRef</a> can be used instead. For example:</p>
+<pre>some_var := "in value"
+sc.Run("Example", &amp;some_var)
+MsgBox some_var</pre>
+<p>However, some methods require a more specific variant type, such as <code>VT_BYREF | VT_I4</code>. In such cases, the first approach shown above must be used, replacing 0x400C with the appropriate variant type.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>当使用此函数包装 <a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a> 或 IUnknown 接口指针时, 包装器对象负责在适当的时候自动释放指针. 如果省略 <em>VarType</em>, 则<a href="ComObjQuery.htm">查询</a>对象的 IDispatch 接口; 如果返回一个, 则立即释放 <em>DispPtr</em>. 因此, 如果脚本打算在调用这个函数后使用指针, 它必须首先调用 <code><a href="ObjAddRef.htm">ObjAddRef</a>(DispPtr)</code>.</p>
@@ -97,10 +102,15 @@ sc := <a href="ComObjCreate.htm">ComObjCreate</a>("ScriptControl"), sc.Language 
 
 
 <em>; 示例: 传递 VARIANT ByRef 至 COM 函数.</em>
-var := ComVar.new()
+var := ComVar()
 var[] := "in value"
 sc.Run("Example", var.ref)
 MsgBox var[]
+
+<em>; Above and below are equivalent in this case:</em>
+var := "in value"
+sc.Run("Example", &amp;var)
+MsgBox var
 
 <em>; ComVar: 创建可用于按引用(ByRef) 传值的对象.
 ;   this[] 检索值.

@@ -10,27 +10,36 @@ searching and traversing the Start Menu.
 */
 /*
 Options:
+
 -cache Use the cached directory-listing if available (this is the default mode
        when no option is specified)
 -scan  Force a directory scan to retrieve the latest directory listing
 -scex  Scan & exit (this is useful for scheduling the potentially
        time-consuming directory-scanning as a background job)
 -help  Show this help
+
 Important notes:
+
 Check AutoHotkey's Tutorial how to run this script, or to compile it if
 necessary.
+
 The only file 'Seek' creates is placed in your TMP directory:
+
   a. _Seek.ini  (cache file for last query string and directory listing)
+
 When you run 'Seek' for the first time, it'll scan your Start Menu,
 and save the directory listing into a cache file.
+
 The following directories are included in the scanning:
 - A_StartMenu
 - A_StartMenuCommon
+
 By default, subsequent runs will read from the cache file so as to reduce the
 loading time. For more info on options, run 'Seek.exe -help'. If you think your
 Start Menu doesn't contain too many programs, you can choose not to use the
 cache and instruct 'Seek' to always do a directory scan (via option -scan).
 That way, you will always get the latest listing.
+
 When you run 'Seek', a window will appear, waiting for you to enter a
 key word/phrase. After you have entered a query string, a list of
 matching records will be displayed. Next, you need to highlight an entry and
@@ -126,10 +135,10 @@ if (A_Args.Length && A_Args[1] = "-scex")
 }
 
 ; Create the GUI window:
-G := Gui.New(, g_ScriptTitle)
+G := Gui(, g_ScriptTitle)
 
 ; Add the text box for user to enter the query string:
-G.Add("Edit", "W600 vE_Search").OnEvent("Change", "FindMatches")
+G.Add("Edit", "W600 vE_Search").OnEvent("Change", FindMatches)
 if g_TrackKeyPhrase
     try G["E_Search"].Value := IniRead(g_saveFile, "LastSession", "SearchText")
 
@@ -140,19 +149,19 @@ G.Add("Text", "X625 Y10", "What do you seek, my friend?")
 G.Add("Text", "X10 Y31 R1 W764 vT_Info")
 
 ; Add the selection listbox for displaying search results:
-G.Add("ListBox", "X10 Y53 R28 W764 HScroll Disabled vLB").OnEvent("DoubleClick", "OpenTarget")
+G.Add("ListBox", "X10 Y53 R28 W764 HScroll Disabled vLB").OnEvent("DoubleClick", OpenTarget)
 
 ; Add these buttons, but disable them for now:
-G.Add("Button", "Default X10 Y446 Disabled vB1", "Open").OnEvent("Click", "OpenTarget")
-G.Add("Button", "X59 Y446 Disabled vB2", "Open Directory").OnEvent("Click", "OpenFolder")
-G.Add("Button", "X340 Y446 vB3", "Scan Start-Menu").OnEvent("Click", "ScanStartMenu")
+G.Add("Button", "Default X10 Y446 Disabled vB1", "Open").OnEvent("Click", OpenTarget)
+G.Add("Button", "X59 Y446 Disabled vB2", "Open Directory").OnEvent("Click", OpenFolder)
+G.Add("Button", "X340 Y446 vB3", "Scan Start-Menu").OnEvent("Click", ScanStartMenu)
 
 ; Add the Exit button:
 G.Add("Button", "X743 Y446", "Exit").OnEvent("Click", (*) => Gui_Close(G))
 
 ; Add window events:
-G.OnEvent("Close", "Gui_Close")
-G.OnEvent("Escape", "Gui_Close")
+G.OnEvent("Close", Gui_Close)
+G.OnEvent("Escape", Gui_Close)
 
 ; Pop-up the query window:
 G.Show("Center")
@@ -269,7 +278,7 @@ FindMatches(thisCtrl, *)
         Loop Parse, IniRead(g_saveFile, "FileList"), "`n"
         {
             Line := A_LoopField
-            if RegExMatch(Line, "%(L\d+)%", m) ; Replace %L_n% with location paths.
+            if RegExMatch(Line, "%(L\d+)%", &m) ; Replace %L_n% with location paths.
                 Line := StrReplace(Line, "%" m[1] "%", %m[1]%)
             if (SearchText != E_Search.Value)
             {

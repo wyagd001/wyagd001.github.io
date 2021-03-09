@@ -2,7 +2,7 @@
 ; https://www.autohotkey.com
 ; Similar to the Transform's HTML sub-command, this function converts a
 ; string into its HTML equivalent by translating characters whose ASCII
-; values are above 127 to their HTML names (e.g. ￡ becomes &pound;). In
+; values are above 127 to their HTML names (e.g. £ becomes &pound;). In
 ; addition, the four characters "&<> are translated to &quot;&amp;&lt;&gt;.
 ; Finally, each linefeed (`n) is translated to <br>`n (i.e. <br> followed
 ; by a linefeed).

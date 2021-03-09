@@ -39,7 +39,7 @@ ul.list_of_p li { margin: 1em 0; }
 <h2 id="toc">目录</h2>
 <ul>
   <li><a href="#Usage">基本用法</a> - <a href="#Usage_Simple_Arrays">数组</a>, <a href="#Usage_Associative_Arrays">映射(关联数组)</a>, <a href="#Usage_Objects">对象</a>, <a href="#Usage_Freeing_Objects">释放对象</a></li>
-  <li><a href="#Extended_Usage">扩展用法</a> - <a href="#Function_References">函数引用</a>, <a href="#Usage_Arrays_of_Arrays">数组嵌套</a></li>
+  <li><a href="#Extended_Usage">扩展用法</a> - <a href="#Usage_Arrays_of_Arrays">数组嵌套</a></li>
   <li><a href="#Custom_Objects">自定义对象</a> - <a href="#creating-a-base-object">创建基对象</a>, <a href="#Custom_Classes">类</a>, <a href="#Custom_NewDelete">创建和销毁</a>, <a href="#Meta_Functions">元函数</a></li>
   <li><a href="#primitive">原始值</a></li>
   <li><a href="#Implementation">实现</a> - <a href="#Reference_Counting">引用计数</a>, <a href="#ObjPtr">对象的指针</a></li>
@@ -131,17 +131,6 @@ x := "", y := ""             <em>; 如果没有上一行, 则此行无法释放�
 <p>想了解更多高级用法和细节, 请参阅<a href="#Reference_Counting">引用计数</a>.</p>
 
 <h2 id="Extended_Usage">扩展用法</h2>
-<h3 id="Function_References">函数引用</h3>
-<p>如果变量 <i>func</i> 包含一个函数名, 此函数可以通过表达式 <code><a href="Functions.htm#DynCall">%func%()</a></code> 调用.  然而, 由于每次都需要解析函数名, 所以多次调用时效率低下. 为了改善性能, 脚本可以获取到函数的引用并保存以供后面使用:</p>
-<pre>MyFuncRef := Func("MyFunc")</pre>
-<p>可使用如下语法通过引用来调用函数:</p>
-<pre>
-RetVal := <a href="Functions.htm#DynCall">%MyFuncRef%</a>(<i>Params</i>)
-RetVal := MyFuncRef.<a href="objects/Func.htm#Call">Call</a>(<i>Params</i>)
-</pre>
-<p>有关函数引用的其他属性的详细信息, 请参阅 <a href="objects/Func.htm">Func 对象</a>.</p>
-<p>在大多数情况下, 任何<a href="objects/Functor.htm">可调用对象</a>都可以用来代替函数引用.</p>
-
 <h3 id="Usage_Arrays_of_Arrays">数组嵌套</h3>
 <p>尽管不支持 "多维" 数组, 但是脚本可以组合多个数组或映射. 例如:</p>
 <pre>
@@ -165,7 +154,7 @@ class Array2D extends Array {
     }
 }
 
-grid := Array2D.new(4, 3)
+grid := Array2D(4, 3)
 grid[4, 1] := "#"
 grid[3, 2] := "#"
 grid[2, 2] := "#"
@@ -199,7 +188,7 @@ thing := {}
 <em>; 存储值.</em>
 thing.foo := "bar"
 <em>; 定义一个方法.</em>
-thing.DefineMethod "test", Func("thing_test")
+thing.test := thing_test
 <em>; 调用方法.</em>
 thing.test()
 
@@ -207,7 +196,7 @@ thing_test(this) {
    MsgBox this.foo
 }</pre>
 <p>调用 <code>thing.test()</code> 时, <i>thing</i> 会自动被插入到参数列表的开始处. 按照约定, 函数是通过结合对象的 "类型" 和方法名来命名的, 但这不是必要条件.</p>
-<p>另请参阅: <a href="objects/Object.htm#DefineMethod">DefineMethod</a>, <a href="objects/Object.htm#DefineProp">DefineProp</a></p>
+<p>另请参阅: <a href="objects/Object.htm#DefineProp">DefineProp</a></p>
 
 <h3 id="delegation">委托</h3>
 <p>对象是 <em>基于原型的</em>. 也就是说, 没有在对象本身中定义的任何属性或方法都可以在对象的<a href="objects/Object.htm#Base">基</a>中定义. 这被称为 <em>委托继承</em> 或 <em>差异继承</em>, 因为对象只能实现使其不同的部分, 而将其余部分委派给其基.</p>
@@ -234,7 +223,7 @@ other.test()</pre>
 <h3 id="Custom_Classes">类</h3>
 <blockquote>在面向对象编程中, 类是一个可扩展的程序代码模板, 为状态(成员变量) 和行为实现(成员函数或方法) 提供初始值.
 <a href="https://en.wikipedia.org/wiki/Class_(computer_programming)" class="source">Wikipedia</a></blockquote>
-<p>从根本上讲, <em>类</em> 是具有某些共同属性或属性的一组或一类事物. 在 AutoHotkey 中, <code>class</code> 定义了属性和方法共享的类的实例. 一个 <em>实例</em> 只是一个继承了类的属性和方法的对象, 并且通常也可以被标识为属于该类(例如使用表达式 <code><i>instance</i> is <i>ClassName</i></code>). 实例通常通过调用 <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a> 创建.</p>
+<p>从根本上讲, <em>类</em> 是具有某些共同属性或属性的一组或一类事物. 在 AutoHotkey 中, <code>class</code> 定义了属性和方法共享的类的实例. 一个 <em>实例</em> 只是一个继承了类的属性和方法的对象, 并且通常也可以被标识为属于该类(例如使用表达式 <code><i>instance</i> is <i>ClassName</i></code>). 实例通常通过调用 <a href="objects/Class.htm#Call"><em>ClassName</em>()</a> 创建.</p>
 <p>由于<a href="objects/Object.htm">对象</a>是<a href="#ad-hoc">动态的</a>且<a href="#delegation">基于原型</a>, 因此每个类都包含两部分:</p>
 <ul>
   <li>类具有<a href="objects/Class.htm#Prototype">原型</a>对象, 该类的所有实例都基于该对象. 原型对象包含适用于特定实例的所有方法和属性. 这包括所有没有 <code>static</code> 关键字的的所有属性和方法.</li>
@@ -281,16 +270,16 @@ other.test()</pre>
      ShorterProperty[] =&gt; <i>计算属性值的表达式</i>
 }
 </pre>
-<p>加载脚本时, 它构造一个<a href="objects/Class.htm">类</a>对象并将其存储在<a href="Functions.htm#SuperGlobal">超级-全局</a>常量(只读变量) <i>ClassName</i> 中. 要在<a href="Functions.htm#ForceLocal">强制-局部</a>函数中引用该类, 需要一个声明, 如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的全名. 每个类的全名存储在 <code><i>ClassName</i>.Prototype.__Class</code>.</p>
-<p>由于类名和变量之间的歧义, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := Box.new()</code> 将无法工作, 因为 <code>box</code> 和 <code>Box</code> 都解析为同一事物. 试图以这种方式重新分配一个顶层(非嵌套) 类会导致加载时错误.</p>
+<p>加载脚本时, 它构造一个<a href="objects/Class.htm">类</a>对象并将其存储在<a href="Functions.htm#Global">全局</a>常量(只读变量) <i>ClassName</i> 中. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的全名. 每个类的全名存储在 <code><i>ClassName</i>.Prototype.__Class</code>.</p>
+<p>由于类名和变量之间的歧义, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := Box()</code> 将无法工作, 因为 <code>box</code> 和 <code>Box</code> 都解析为同一事物. 试图以这种方式重新分配一个顶层(非嵌套) 类会导致加载时错误.</p>
 <p>在本文档中, 单词 "class" 本身通常表示用 <code>class</code> 关键字构造的类对象.</p>
 <p>类定义可以包含变量声明, 方法定义和嵌套的类定义.</p>
 
 <h4 id="Custom_Classes_var">实例变量</h4>
 <p><em>实例变量</em> 是类的每个实例都拥有独立的副本. 他们如同普通赋值一样被声明, 但 <code>this.</code> 前缀被忽略(仅限于类主体内时):</p>
 <pre>InstanceVar := Expression</pre>
-<p>每次使用 <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a> 创建类的新实例时, 都会计算这些声明, 在所有基类声明被求值之后, 但在调用 <a href="#Custom_NewDelete">__New</a> 之前. 这是通过自动创建一个名为 <em>__Init</em> 的方法来实现的, 该方法包含对 <code>super.__Init()</code> 的调用, 并将每个声明插入其中. 因此, 单个类定义不能同时包含 __Init 方法和实例变量声明.</p>
-<p><em>Expression</em> 可以通过 <code>this</code> 访问其他实例变量和方法, 但是所有其他变量引用都假定是全局的.</p>
+<p>每次使用 <a href="objects/Class.htm#Call"><em>ClassName</em>()</a> 创建类的新实例时, 都会计算这些声明, 在所有基类声明被求值之后, 但在调用 <a href="#Custom_NewDelete">__New</a> 之前. 这是通过自动创建一个名为 <em>__Init</em> 的方法来实现的, 该方法包含对 <code>super.__Init()</code> 的调用, 并将每个声明插入其中. 因此, 单个类定义不能同时包含 __Init 方法和实例变量声明.</p>
+<p><em>Expression</em> 可以通过 <code>this</code> 访问其他实例变量和方法. Global variables may be read, but not assigned. An additional assignment (or use of the <a href="Variables.htm#ref">reference operator</a>) within the expression will generally create a variable local to the __Init method. For example, <code>x := y := 1</code> would set <code>this.x</code> and a local variable <code>y</code> (which would be freed once all initializers have been evaluated).</p>
 <p>要访问实例变量, 总是要指定目标对象; 例如, <code><b>this</b>.InstanceVar</code>.</p>
 <p>支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 例如, <code>x := {}, x.y := 42</code> 声明了 <code>x</code> 并初始化了 <code>this.x.y</code>.</p>
 
@@ -298,12 +287,12 @@ other.test()</pre>
 <p>静态/类变量属于类, 但是它们的值可以被子类继承. 和实例变量一样声明, 但使用 static 关键字:</p>
 <pre>static ClassVar := Expression</pre>
 <p>这些声明只在初始化类时被计算一次. 在当前版本中, 类是按照它们在脚本中出现的顺序初始化的, 在脚本顶部的<a href="Scripts.htm#auto">启动执行</a>之前. 为此, 会自动定义一个名为 <em>__Init</em> 的静态方法.</p>
-<p>每个声明在类对象中存储一个值. <i>Expression</i> 中的任何变量引用都被认为是全局的.</p>
+<p>每个声明在类对象中存储一个值. <em>Expression</em> has the same interpretation as for instance variables, except that <code>this</code> refers to the class itself.</p>
 <p>若要给类变量赋值, 始终指定类对象; 例如, <code><b>ClassName</b>.ClassVar := Value</code>. 如果一个子类不拥有该名称的属性, <code><i>Subclass</i>.ClassVar</code> 也可以用来检索值; 因此, 如果该值是对象的引用, 则默认情况下子类将共享该对象. 然而, <code><i>Subclass</i>.ClassVar := y</code> 将值存储在 <em>Subclass</em>, 而不是 <em>ClassName</em> 中.</p>
 <p>支持形如 <code>x.y := z</code> 的声明, 假设 <code>x</code> 已在类中声明. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>.</p>
 
 <h4 id="Custom_Classes_class">嵌套类</h4>
-<p>嵌套类定义允许类对象与外部类的静态/类变量关联, 而不是与单独的全局变量关联. 在上面的例子中, <code>class NestedClass</code> 构造了一个<a href="objects/Class.htm">类</a>对象并将其存储在 <code>ClassName.NestedClass</code>. 子类可以继承 <em>NestedClass</em> 也可以用自己的嵌套类覆盖它(在这种情况下, 可以使用 <code><i>WhichClass</i>.NestedClass.new()</code> 实例化任何合适的类).</p>
+<p>嵌套类定义允许类对象与外部类的静态/类变量关联, 而不是与单独的全局变量关联. 在上面的例子中, <code>class NestedClass</code> 构造了一个<a href="objects/Class.htm">类</a>对象并将其存储在 <code>ClassName.NestedClass</code>. 子类可以继承 <em>NestedClass</em> 也可以用自己的嵌套类覆盖它(在这种情况下, 可以使用 <code>(<i>WhichClass</i>.NestedClass)()</code> 实例化任何合适的类).</p>
 <pre>
 class NestedClass
 {
@@ -311,6 +300,7 @@ class NestedClass
 }
 </pre>
 <p>嵌套一个类并不意味着与外部类有任何特殊的关系. 嵌套类不会自动实例化, 嵌套类的实例也不会与外部类的实例有任何连接, 除非脚本显式地建立连接.</p>
+<p>However, due to the way methods work for <a href="objects/Object.htm">Objects</a>, <code><i>WhichClass</i>.NestedClass()</code> implicitly passes <em>WhichClass</em> as the first parameter, equivalent to <code><i>WhichClass</i>.NestedClass.Call(<i>WhichClass</i>)</code>. Unless <code>static Call()</code> is overridden, this parameter is automatically passed to <a href="#Custom_NewDelete">__New</a>.</p>
 
 <h4 id="Custom_Classes_method">方法</h4>
 <p>方法定义看起来和函数定义相同. 每个方法都有一个名为 <code>this</code> 的隐藏参数, 其中包含对调用该方法的对象的引用. 有两种类型的方法:</p>
@@ -327,7 +317,6 @@ Method()
 
 <p><a href="Variables.htm#fat-arrow">胖箭头语法</a>可以用来定义一个单行方法, 返回一个表达式:</p>
 <pre>Method() =&gt; <i>Expression</i></pre>
-<p>另请参阅: <a href="objects/Object.htm#DefineMethod">DefineMethod</a></p>
 
 <h4 id="Custom_Classes_super">Super</h4>
 <p>在方法或属性的 getter/setter 中, 关键字 <code>super</code> 可以代替 <code>this</code> 来访问在派生类中被重写的方法或属性的超类版本. 例如, 上面定义的类中的 <code>super.Method()</code> 通常会调用 
@@ -335,9 +324,10 @@ Method()
 <ul>
   <li><code>super.Method()</code> 总是调用与当前方法的原始定义相关联的类或原型对象的基, 即使 <code>this</code> 是从该类的 <em>subclass</em> 或其他一些完全的类派生出来的.</li>
   <li><code>super.Method()</code> 隐式地将 <code>this</code> 作为第一个(隐藏的) 参数.</li>
-  <li>由于不知道 <em>ClassName</em> 在基对象链中的位置(或是否存), <em>ClassName</em> 本身被用作起点. 因此, <code>super.Method()</code> 主要等同于 <code><i>ClassName</i>.Prototype.base.GetMethod("Method").Call(this)</code>(但当 <em>Method</em> 是静态时, 没有 <em>Prototype</em>). 然而, <code><i>ClassName</i>.Prototype</code> 在加载时被解析.</li>
+  <li>由于不知道 <em>ClassName</em> 在基对象链中的位置(或是否存), <em>ClassName</em> 本身被用作起点. 因此, <code>super.Method()</code> 主要等同于 <code>(<i>ClassName</i>.Prototype.base.Method)(this)</code>(但当 <em>Method</em> 是静态时, 没有 <em>Prototype</em>). 然而, <code><i>ClassName</i>.Prototype</code> 在加载时被解析.</li>
 </ul>
-<p>关键字 <code>super</code> 后面必须有一个点 <code>.</code> 或方括号 <code>[]</code>.</p>
+<p>关键字 <code>super</code> 后面必须下列符号之一: <code>.[(</code>.</p>
+<p><code>super()</code> 等同于 <code>super.call()</code>.</p>
 
 <h4 id="Custom_Classes_property">属性</h4>
 <p>属性定义创建一个<a href="objects/Object.htm#DefineProp">动态属性</a>, 它会调用一个方法, 而不是简单地存储或返回一个值.</p>
@@ -403,8 +393,8 @@ MsgBox obj["base"]                  <em>; 10</em>
 <p class="note"><strong>注意:</strong> 当显式属性名与空括号组合时, 如 <code>obj.prop[]</code>, 它是作为两个独立的操作来处理的: 首先检索 <code>obj.prop</code>, 然后调用结果的默认属性. 这是语言语法的一部分, 所以不依赖于对象.</p>
 
 <h3 id="Custom_NewDelete">创建和销毁</h3>
-<p>每当使用 <a href="objects/Class.htm#New"><em>ClassName</em>.new()</a> 的默认实现创建对象时, 都会调用新对象的 <code>__New</code> 方法, 以便允许自定义初始化. 传递给 <code>new</code> 的任何参数都会被转发到 <code>__New</code>, 因此可能会影响对象的初始内容或如何构造它.销毁对象时, 则调用 <code>__Delete</code>. 例如:</p>
-<pre>m1 := GMem.new(0, 10)
+<p>每当使用 <a href="objects/Class.htm#Call"><em>ClassName</em>()</a> 的默认实现创建对象时, 都会调用新对象的 <code>__New</code> 方法, 以便允许自定义初始化. 传递给 <code><i>ClassName</i>()</code> 的任何参数都会被转发到 <code>__New</code>, 因此可能会影响对象的初始内容或如何构造它. 销毁对象时, 则调用 <code>__Delete</code>. 例如:</p>
+<pre>m1 := GMem(0, 10)
 m2 := {base: GMem.Prototype}, m2.__New(0, 30)
 
 <em>; 注意: 对于一般的内存分配, 请使用 <a href="commands/BufferAlloc.htm">BufferAlloc</a>().</em>
@@ -453,11 +443,11 @@ class <i>ClassName</i> {
   <li><i>Get</i>: Throw a <a href="objects/Error.htm#PropertyError">PropertyError</a>.</li>
   <li><i>Set</i>: 使用给定值定义一个新属性, 例如通过调用 <a href="objects/Object.htm#DefineProp">DefineProp</a>. </li>
 </ul>
-<p>任意<a href="objects/Functor.htm">可调用对象</a>可用作元函数, 通过将其传递给 <a href="objects/Object.htm#DefineMethod">DefineMethod</a>.</p>
+<p>任意<a href="objects/Functor.htm">可调用对象</a>可用作元函数, 通过将其赋值给相关属性.</p>
 <p>在以下情况下, 不调用元函数:</p>
 <ul>
   <li><code>x[y]</code>: 使用不带属性名称的方括号仅会调用 <a href="#__Item">__Item</a> 属性.</li>
-  <li><code>%x%()</code>:调用对象本身仅会调用 <code>Call</code> 方法. 这包括内置函数(如 <a href="commands/SetTimer.htm">SetTimer</a> 和 <a href="commands/Hotkey.htm">Hotkey</a>) 进行的内部调用.</li>
+  <li><code>x()</code>: 调用对象本身仅会调用 <code>Call</code> 方法. 这包括内置函数(如 <a href="commands/SetTimer.htm">SetTimer</a> 和 <a href="commands/Hotkey.htm">Hotkey</a>) 进行的内部调用.</li>
   <li>对其他元函数或双下划线方法的内部调用不会触发 <code>__Call</code>.</li>
 </ul>
 
@@ -482,10 +472,10 @@ class <i>ClassName</i> {
 <p>注意, 对于 AutoHotkey 的类型层次结构中的任何值, <code>x is Any</code> 通常为真, 而对于 COM 对象则为假.</p>
 
 <h3 id="primitive-extension">添加属性和方法</h3>
-<p>通过修改该类型的原型对象, 可以为该类型的所有值添加属性和方法. 但是, 由于原始值不是对象并且不能具有自己的属性或方法, 因此原始原型对象不会从 <code>Object.Prototype</code> 派生. 换句话说, 默认情况下无法访问诸如 <a href="objects/Object.htm#DefineProp">DefineProp</a> 和 <a href="objects/Object.htm#DefineMethod">DefineMethod</a> 之类的方法. 可以间接调用它们. 例如:</p>
+<p>通过修改该类型的原型对象, 可以为该类型的所有值添加属性和方法. 但是, 由于原始值不是对象并且不能具有自己的属性或方法, 因此原始原型对象不会从 <code>Object.Prototype</code> 派生. 换句话说, 默认情况下无法访问诸如 <a href="objects/Object.htm#DefineProp">DefineProp</a> 和 <a href="objects/Object.htm#HasOwnProp">HasOwnProp</a> 之类的方法. 可以间接调用它们. 例如:</p>
 <pre>
-DefProp := {}.GetMethod("DefineProp")
-%DefProp%( "".base, "Length", { get: Func("StrLen") } )
+DefProp := {}.DefineProp
+DefProp( "".base, "Length", { get: StrLen } )
 MsgBox A_AhkPath.length " == " StrLen(A_AhkPath)
 </pre>
 <p>尽管原始值可以从其原型继承值属性, 但是如果脚本尝试在原始值上设置值属性, 则会引发异常. 例如:</p>
@@ -498,7 +488,7 @@ MsgBox "".test  <em>; 1</em>
 <span id="Refs"></span><h3 id="Reference_Counting">引用计数</h3>
 <p>当脚本不再引用对象时, AutoHotkey 使用基本引用计数机制来自动释放对象使用的资源. 脚本作者不应该显式地调用这种机制, 除非打算直接处理未托管的<a href="#ObjPtr">对象的指针</a>.</p>
 <p>表达式中的函数, 方法或运算符返回的临时引用在表达式的计算完成或中止后释放. 在下面的例子中, 新的 GMem 对象只有在 MsgBox 返回后才被释放.</p>
-<pre>MsgBox <a href="commands/DllCall.htm">DllCall</a>("GlobalSize", "ptr", GMem.new(0, 20).ptr, "ptr")  <em>; 20</em></pre>
+<pre>MsgBox <a href="commands/DllCall.htm">DllCall</a>("GlobalSize", "ptr", GMem(0, 20).ptr, "ptr")  <em>; 20</em></pre>
 <p class="note"><strong>注意:</strong> 在本例中, <code>.ptr</code> 可以省略, 因为 <a href="commands/DllCall.htm#ptr">Ptr</a> 参数类型允许对象具有 <code>Ptr</code> 属性. 但是, 上面显示的模式甚至可以用于其他属性名.</p>
 <p>如果希望在对象的最后一个引用被释放后运行一段代码, 可通过 <a href="#Custom_NewDelete">__Delete</a> 元函数实现.</p>
 <p><b>已知限制:</b></p>

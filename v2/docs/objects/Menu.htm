@@ -14,17 +14,13 @@
 
 <h1>Menu/MenuBar 对象</h1>
 <p>用于修改和显示菜单或菜单栏.</p>
-<pre class="NoIndent">类 Menu 继承 Object.</pre>
-<p>菜单对象用于定义, 修改和显示弹出菜单. <a href="Menu.htm#New">Menu.New</a>, <a href="MenuFromHandle.htm">MenuFromHandle</a> 和 <a href="../Variables.htm#TrayMenu">A_TrayMenu</a> 返回此类对象.</p>
-<pre class="NoIndent">类 MenuBar 继承 Menu.</pre>
-<p>MenuBar 对象用于定义和修改与 <a href="Gui.htm#MenuBar">Gui.MenuBar</a> 一起使用的菜单栏. 它们是使用 <a href="Menu.htm#New">MenuBar.New</a> 创建的. 如果给定菜单栏句柄, 则 <a href="../commands/MenuFromHandle.htm">MenuFromHandle</a> 返回此类型的对象.</p>
+<pre class="NoIndent">class Menu extends Object</pre>
+<p>菜单对象用于定义, 修改和显示弹出菜单. <a href="Menu.htm#Call">Menu()</a>, <a href="MenuFromHandle.htm">MenuFromHandle</a> 和 <a href="../Variables.htm#TrayMenu">A_TrayMenu</a> 返回此类对象.</p>
+<pre class="NoIndent">class MenuBar extends Menu</pre>
+<p>MenuBar 对象用于定义和修改与 <a href="Gui.htm#MenuBar">Gui.MenuBar</a> 一起使用的菜单栏. 它们是使用 <a href="Menu.htm#Call">MenuBar()</a> 创建的. 如果给定菜单栏句柄, 则 <a href="../commands/MenuFromHandle.htm">MenuFromHandle</a> 返回此类型的对象.</p>
 <p>下面使用 "MyMenu" 作为任何 Menu 对象的占位符, 因为 "Menu" 就是类本身.</p>
 <p>除了从 <a href="Object.htm">Object</a> 继承的方法和属性外, Menu 对象还具有以下预定义的方法和属性:</p>
 
-<p><strong>静态方法:</strong></p>
-<ul>
-  <li><a href="#New">New</a>: 创建新的 Menu 或 MenuBar 对象.</li>
-</ul>
 <p><strong>属性:</strong></p>
 <ul>
   <li><a href="#ClickCount">ClickCount</a>: 检索或设置激活托盘菜单的默认项所需的单击次数.</li>
@@ -48,6 +44,10 @@
   <li><a href="#Uncheck">Uncheck</a>: 移除菜单项上的复选标记(如果有的话).</li>
   <li><a href="#AddStandard">AddStandard</a>: 添加标准<a href="../Program.htm#tray-icon">托盘菜单项</a>.</li>
 </ul>
+<p><strong>Static Methods:</strong></p>
+<ul>
+  <li><a href="#Call">Call</a>: Creates a new Menu or MenuBar object.</li>
+</ul>
 <p><strong>常规:</strong></p>
 <ul>
   <li><a href="#MenuItemName">MenuItemName</a></li>
@@ -57,12 +57,12 @@
   <li><a href="#Examples">示例</a></li>
 </ul>
 
-<div class="methodShort" id="New">
-<h2>New</h2>
+<div class="methodShort" id="Call">
+<h2>Call</h2>
 <p>创建新的 Menu 或 MenuBar 对象.</p>
 <pre class="Syntax">
-MyMenu := <span class="func">Menu.New</span>()
-MyMenuBar := <span class="func">MenuBar.New</span>()
+MyMenu := <span class="func">Menu</span>()
+MyMenuBar := <span class="func">MenuBar</span>()
 </pre>
 </div>
 
@@ -390,13 +390,13 @@ MenuHandler(ItemName, ItemPos, Menu) {
 <div class="ex" id="ExPopup">
 <p><a class="ex_number" href="#ExPopup"></a> 创建一个弹出菜单, 当用户按下热键时显示.</p>
 <pre><em>; 添加一些菜单项来创建弹出菜单.</em>
-global MyMenu := Menu.New()
+global MyMenu := Menu()
 MyMenu.Add "Item 1", "MenuHandler"
 MyMenu.Add "Item 2", "MenuHandler"
 MyMenu.Add  <em>; Add a separator line.</em>
 
 <em>; 添加子菜单到上面的菜单中.</em>
-Submenu1 := Menu.New()
+Submenu1 := Menu()
 Submenu1.Add "Item A", "MenuHandler"
 Submenu1.Add "Item B", "MenuHandler"
 
@@ -491,16 +491,16 @@ Test(Item, *)
 
 <div class="ex" id="ExIcon">
 <p><a class="ex_number" href="#ExIcon"></a> 添加图标到其菜单项.</p>
-<pre>FileMenu := Menu.New()
+<pre>FileMenu := Menu()
 FileMenu.Add("Script Icon", "MenuHandler")
 FileMenu.Add("Suspend Icon", "MenuHandler")
 FileMenu.Add("Pause Icon", "MenuHandler")
 FileMenu.SetIcon("Script Icon", A_AhkPath, 2) <em>; 使用文件中的第二个图标组</em>
 FileMenu.SetIcon("Suspend Icon", A_AhkPath, -206) <em>; 使用资源标识符 206 表示的图标</em>
 FileMenu.SetIcon("Pause Icon", A_AhkPath, -207) <em>; 使用资源标识符 207 表示的图标</em>
-MyMenuBar := MenuBar.New()
+MyMenuBar := MenuBar()
 MyMenuBar.Add("&amp;File", FileMenu)
-MyGui := Gui.New()
+MyGui := Gui()
 MyGui.MenuBar := MyMenuBar
 MyGui.Add("Button",, "Exit This Example").OnEvent("Click", (*) =&gt; WinClose())
 MyGui.Show
@@ -513,7 +513,7 @@ MenuHandler(*) {
 <div class="ex" id="ExDllCall">
 <p><a class="ex_number" href="#ExDllCall"></a> 报告菜单中的项目数量和最后一项的 ID.</p>
 <pre>
-MyMenu := Menu.New()
+MyMenu := Menu()
 MyMenu.Add "Item 1", "no"
 MyMenu.Add "Item 2", "no"
 MyMenu.Add "Item B", "no"

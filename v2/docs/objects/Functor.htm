@@ -29,6 +29,11 @@
   <li><a href="../commands/OnMessage.htm">OnMessage</a></li>
   <li><a href="../commands/SetTimer.htm">SetTimer</a></li>
 </ul>
+<p id="HasCall">To determine whether an object appears to be callable, use one of the following:</p>
+<ul>
+  <li><code>Value.HasMethod("Call")</code> works with all AutoHotkey values and objects by default, but allows HasMethod to be overridden for some objects or classes. For COM objects, this will typically fail (throw an exception or produce the wrong result) unless the COM object is actually an AutoHotkey object from another process.</li>
+  <li><code>HasMethod(Value, "Call")</code> works with all AutoHotkey values and objects and cannot be overridden, but will return false if the presence of a <em>Call</em> method cannot be determined (e.g. because <em>Value</em> is a COM object).</li>
+</ul>
 
 <h2 id="User-Defined">用户自定义</h2>
 <!-- TODO: Explain how a user-defined object could be useful -->
@@ -46,21 +51,22 @@
 <pre>class FuncArrayType extends Array {
     Call(params*) {
         <em>; 调用函数列表.</em>
-        Loop this.Length
-            %this[A_Index]%(params*)
+        for fn in this
+            fn(params*)
     }
 }
 
 <em>; 创建一个函数数组.</em>
-funcArray := FuncArrayType.new()
+funcArray := FuncArrayType()
 <em>; 向数组中添加函数(可以在任何位置完成).</em>
-funcArray.Push(Func("One"))
-funcArray.Push(Func("Two"))
+funcArray.Push(One)
+funcArray.Push(Two)
 <em>; 创建一个使用数组作为方法的对象.</em>
-obj := {}
-obj.DefineMethod("method", funcArray)
-<em>; 调用方法.</em>
-%obj.method%("foo", "bar")
+obj := {method: funcArray}
+<em>; Call the method (and consequently both One and Two).</em>
+obj.method("2nd")
+<em>; Call it as a function.</em>
+(obj.method)("1st", "2nd")
 
 One(param1, param2) {
     ListVars
@@ -79,11 +85,11 @@ Two(param1, param2) {
   <li>通过调用 <a href="../commands/ObjBindMethod.htm">ObjBindMethod</a> 函数, 其绑定参数值和方法名至目标对象.</li>
 </ul>
 <p>可以调用绑定函数对象, 如下例所示. 当绑定函数对象被调用时, 它调用绑定的函数或方法, 传递绑定的参数和后面跟着的调用者传递的任何参数. 未绑定的参数位置是从调用者的参数列表中指定的位置(从左到右). 例如:</p>
-<pre>fn := Func("RealFn").Bind(1)  <em>; 只绑定第一个参数</em>
+<pre>fn := RealFn.Bind(1)  <em>; 只绑定第一个参数</em>
 %fn%(2)    <em>; 显示 "1, 2"</em>
 fn.Call(3) <em>; 显示 "1, 3"</em>
 
-fn := Func("RealFn").Bind( , 1)  <em>; 只绑定第二个参数</em>
+fn := RealFn.Bind( , 1)  <em>; 只绑定第二个参数</em>
 %fn%(2)    <em>; 显示 "2, 1"</em>
 fn.Call(3) <em>; 显示 "3, 1"</em>
 %fn%(, 4)  <em>; 错误: 'a' 被省略了</em>
