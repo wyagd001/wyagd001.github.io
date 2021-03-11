@@ -505,7 +505,7 @@ B2 := MyGui.Add("Button", "x+20", "Clear List")
 B3 := MyGui.Add("Button", "x+20", "Switch View")
 
 <em>; 通过 <a href="#GuiAdd">MyGui.Add</a> 创建 ListView 及其列:</em>
-LV := MyGui.Add("ListView", "xm r20 w700 vLV", ["Name","In Folder","Size (KB)","Type"])
+LV := MyGui.Add("ListView", "xm r20 w700", ["Name","In Folder","Size (KB)","Type"])
 <a href="#ModifyCol">LV.ModifyCol</a>(3, "Integer")  <em>; 为了排序, 表示 Size 列中的内容是整数.</em>
 
 <em>; 创建图像列表, 这样 ListView 才可以显示图标:</em>
@@ -519,7 +519,7 @@ LV.SetImageList(ImageListID2)
 <em>; 应用控件事件:</em>
 LV.OnEvent("<a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>", RunFile)
 LV.OnEvent("<a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a>", ShowContextMenu)
-B1.OnEvent("Click", LoadFolder.bind(ImageListID1, ImageListID2))
+B1.OnEvent("Click", LoadFolder)
 B2.OnEvent("Click", (*) =&gt; <a href="#Delete">LV.Delete</a>())
 B3.OnEvent("Click", SwitchView)
 
@@ -529,11 +529,10 @@ MyGui.OnEvent("Size", Gui_Size)
 <em>; 显示窗口:</em>
 MyGui.Show()
 
-LoadFolder(ImageListID1, ImageListID2, this, *)
+LoadFolder(*)
 {
     static IconMap := Map()
-    local LV := this.Gui["LV"]  <em>; Not strictly necessary in this case since the global LV is available.</em>
-    this.Gui.Opt("+OwnDialogs")  <em>; 强制用户在使用主窗口前解除以下对话框.</em>
+    MyGui.Opt("+OwnDialogs") <em>; Forces user to dismiss the following dialog before using main window.</em>
     Folder := DirSelect(, 3, "Select a folder to read:")
     if not Folder  <em>; 用户取消对话框.</em>
         return
@@ -607,10 +606,9 @@ LoadFolder(ImageListID1, ImageListID2, this, *)
     LV.ModifyCol(3, 60)  <em>; 把 Size 列加宽一些以便显示出它的标题.</em>
 }
 
-SwitchView(this, *)
+SwitchView(*)
 {
     static IconView := false
-    local LV := this.Gui["LV"]
     if not IconView
         LV.Opt("+Icon")        <em>; 切换到图标视图.</em>
     else
@@ -667,12 +665,12 @@ ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; 响应右键或 Apps 键.</
     }
 }
 
-Gui_Size(this, MinMax, Width, Height)  <em>; 扩大或缩小 ListView 来响应用户对窗口大小的改变.</em>
+Gui_Size(thisGui, MinMax, Width, Height)  <em>; 扩大或缩小 ListView 来响应用户对窗口大小的改变.</em>
 {
     if MinMax = -1  <em>; 窗口被最小化了. 无需进行操作.</em>
         return
     <em>; 否则, 窗口的大小被调整过或被最大化了. 调整 ListView 的大小来适应.</em>
-    this["LV"].Move(,, Width - 20, Height - 40)
+    LV.Move(,, Width - 20, Height - 40)
 }</pre>
 </div>
 

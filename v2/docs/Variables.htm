@@ -27,11 +27,11 @@
 <pre>MyNumber := 123
 MyString := "这是原义字符串."
 CopyOfVar := Var</pre>
-<p>A variable cannot be explicitly deleted, but its previous value can be released by assigning a new value, such as an empty string:</p>
+<p>变量不能被显式删除, 但是它的前一个值可以通过赋值一个新的值来释放, 比如一个空字符串:</p>
 <pre>MyVar := ""</pre>
-<p>A variable can also be assigned a value indirectly, by <a href="#ref">taking its reference</a> and using a <a href="#deref">double-deref</a> or passing it to a function. For example:</p>
+<p>变量也可以间接赋值, 通过<a href="#ref">获取它的引用</a>并使用<a href="#deref">双重解引</a>或将其传递给一个函数. 例如:</p>
 <pre><a href="commands/MouseGetPos.htm">MouseGetPos</a> &amp;x, &amp;y</pre>
-<p>Accessing a variable which has not been assigned a value is considered an error. <a href="commands/IsSet.htm">IsSet</a> can be used to detect this condition.</p>
+<p>访问一个没有赋值的变量被视为一个错误. <a href="commands/IsSet.htm">IsSet</a> 可以用来检测这种情况.</p>
 <p id="retrieving"><strong>检索变量的内容</strong>: 若要将变量的内容包含在字符串中, 请使用<a href="#concat">连接</a>或 <a href="commands/Format.htm">Format</a>. 例如:</p>
 <pre><a href="commands/MsgBox.htm">MsgBox</a> "变量的值是 " . Var . "."
 MsgBox "变量 Var 中的值为 " Var "."
@@ -51,7 +51,7 @@ MsgBox Format("Var has the value {1}.", Var)
 <pre>MsgBox "她说, <span class="red">`"</span>一天一个苹果.<span class="red">`"</span>"
 MsgBox <span class="red">&apos;</span>她说, "一天一个苹果."<span class="red">&apos;</span></pre>
 <p><strong>空字符串</strong>: 若要在表达式中指定空字符串, 请使用一对空的双引号. 例如, 当 <em>MyVar</em> 非空时, 语句 <code>if (MyVar != "")</code> 的结果为真.</p>
-<p><strong>保存表达式的结果</strong>: 要把结果赋值给变量, 请使用 <a href="Variables.htm#AssignOp">:= 运算符</a>. 例如:</p>
+<p><strong>保存表达式的结果</strong>: 要把结果赋值给变量, 请使用 <a href="#AssignOp">:= 运算符</a>. 例如:</p>
 <pre>NetPrice := Price * (1 - Discount/100)</pre>
 <p id="Boolean"><strong>布尔值</strong>: 若要计算表达式结果为真还是假时(如 IF-语句), 结果为空或零被视为假(false), 而其他所有结果都视为真(true). 例如, 仅当 ItemCount 为空或 0 时, 语句 <code>if ItemCount</code> 的结果才为假. 类似的, 表达式 <code>if not ItemCount</code> 将产生相反的结果.</p>
 <p>诸如 <b>NOT</b>/<b>&gt;</b>/<b>=</b>/<b>&lt;</b> 之类的运算符自动生成一个真值或假值: 真值时结果为 1, 而假值时为 0. 然而, <b>AND</b>/<b>OR</b> 运算符总是生成一个输入值. 例如, 在以下表达式, 如果 A_Index 大于 5, 变量 <em>Done</em> 赋值为 1, 其他情况下为 <em>FoundIt</em> 的值:</p>
@@ -73,36 +73,36 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
 <h3 id="operators">表达式运算符(按优先级降序排列)</h3>
 <table class="info">
   <tr>
-    <th>运算符</th>
+    <th class="center">运算符</th>
     <th abbr="Descr">描述</th>
   </tr>
   <tr id="deref">
-    <td style="text-align:center; white-space:nowrap"><strong>%Expr%</strong></td>
+    <td class="center bold">%Expr%</td>
     <td>
       <p><strong>解引用</strong>或<strong>名称替换</strong>.</p>
       <p>当 <em>Expr</em> 计算为 <a href="Concepts.htm#variable-references">VarRef</a> 时, <code>%Expr%</code> 访问相应的变量. 例如, <code>x := &amp;y</code> 取 <em>y</em> 的引用并将其赋值给 <em>x</em>, 那么 <code>%x% := 1</code> 赋值给变量 <em>y</em>, 而 <code>%x%</code> 读取其值.</p>
       <p>否则, 子表达式 <em>Expr</em> 的值被用作变量或属性的名称或部分名称. 这使得脚本可以引用一个变量或属性, 其名称是由计算 <em>Expr</em> 确定的, 它通常是另一个变量. 变量不能被动态创建, 但是如果一个变量已经在脚本中的某个地方被声明或被非动态引用, 那么它可以被动态赋值.</p>
       <p class="note"><strong>注意:</strong> 子表达式 <em>Expr</em> 的 <u>结果</u> 必须是要访问的变量或属性的名称或部分名称.</p>
       <p>由于存在歧义, 百分号不能直接在 <em>Expr</em> 中使用, 但可以在括号中嵌套. 否则, <em>Expr</em> 可以是任何表达式.</p>
-      <p>If there are any adjoining <em>%Expr%</em> sequences and partial <a href="Concepts.htm#names">names</a>(without any spaces or other characters between them), they are combined to form a single name.</p>
+      <p>如果有任何相邻的 <em>%Expr%</em> 序列和部分<a href="Concepts.htm#names">名称</a>(它们之间没有任何空格或其他字符), 则将它们组合成一个单一的名称.</p>
       <p>如果变量并不存在, 或者它未初始化并且它的值正在被读取, 则抛出一个 <a href="objects/Error.htm">Error</a>.</p>
       <p>虽然这在历史上被称为 "双重解引", 但当 <em>Expr</em> 不包含一个变量(第一重解引), 以及当产生的变量是赋值的目标, 而不是解引用(第二重解引), 这个术语是不准确的.</p>
     </td>
   </tr>
   <tr id="objdot">
-    <td style="text-align:center"><strong>x.y<br>x.%z%</strong></td>
-    <td><strong>成员访问</strong>. 获取或设置一个值或调用对象 <i>x</i> 的方法, 此处 <i>y</i> 是个原义名称 and <em>z</em> is an expression which evaluates to a name. 请参阅<a href="Objects.htm#Usage_Objects">对象语法</a>.</td>
+    <td class="center bold">x.y<br>x.%z%</td>
+    <td><strong>成员访问</strong>. 获取或设置一个值或调用对象 <i>x</i> 的方法, 此处 <i>y</i> 是个原义名称, 而 <em>z</em> 是一个表达式, 它的值是一个名称. 请参阅<a href="Objects.htm#Usage_Objects">对象语法</a>.</td>
   </tr>
   <tr id="IncDec">
-    <td style="text-align:center"><strong>++<br>
-    --</strong></td>
+    <td class="center bold">++<br>
+    --</td>
     <td>
       <p><strong>前置和后置的自增/自减</strong>. 从变量中增加或减去 1. 运算符可以放在变量名的前面或后面. 如果放在变量名的 <em>前面</em>, 则执行自增/减运算并把结果用于下一运算(在这种情况下结果是一个变量引用). 例如, <code>Var := ++X</code> 递增 X 然后将其值赋给 <em>Var</em>. 相反, 如果运算符放在变量名的 <em>后面</em>, 结果是在执行运算之前的 X 值. 例如, <code>Var := X++</code> 递增 X, 但 <em>Var</em> 接收 X 在递增之前的值.</p>
       <p>这些运算符还可以与对象的属性一起使用, 如 <code>myArray.Length++</code> 或 <code>--myArray[i]</code>. 在这些情况下, 子表达式的结果总是一个数字, 而不是一个变量引用.</p>
     </td>
   </tr>
   <tr id="pow">
-    <td style="text-align:center"><strong>**</strong></td>
+    <td class="center bold">**</td>
     <td>
       <p><strong>幂</strong>. 示例用法: <code>base**exponent</code>. 底数(<em>base</em>) 和指数(<em>exponent</em>) 都可以为小数. 如果 <em>指数</em> 为负数, 即使 <em>底数</em> 和 <em>指数</em> 都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以, <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样, 且得到结果 -4. 因此, 要计算原义负数的幂, 需要把它们包围在括号中, 如 <code>(-2)**2</code>.</p>
       <p>幂运算符是右结合的. 例如, <code>x ** y ** z</code> 计算为 <code>x ** (y ** z)</code>.</p>
@@ -110,24 +110,24 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     </td>
   </tr>
   <tr id="unary">
-    <td style="text-align:center"><strong>-<br>
+    <td class="center bold">-<br>
     !<br>
     ~<br>
-    &amp;</strong></td>
+    &amp;</td>
     <td>
       <p><strong>一元负号(-)</strong>: 反转其运算元的符号.</p>
       <p><strong>一元正号(+)</strong>: <code>+N</code> 等同于 <code>-(-N)</code>. 应用于纯数字时无效, 但可用于将数字字符串转换为纯数字.</p>
       <p><strong>逻辑非(!)</strong>: 如果运算元为空或 0, 那么逻辑非的结果为 1, 这表示 "true". 否则, 结果为 0(false). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~)</strong>: 此运算符对运算元按位取反. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果. 如果操作数是一个浮点值, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</p>
-      <p id="ref"><strong>Reference (&amp;)</strong>: Creates a VarRef, which is a value representing a reference to a variable. A VarRef can then be used to indirectly access the target variable. For example, <code>ref := &amp;target</code> followed by <code>%ref% := 1</code> would assign the value 1 to <em>target</em>. The VarRef would typically be passed to a function, but could be stored in an array or property. See also: <a href="#deref">Dereference</a>, <a href="Functions.htm#ByRef">ByRef</a>.</p>
-      <p>Taking a reference to a built-in variable such as <a href="misc/A_Clipboard.htm">A_Clipboard</a> is currently not supported, except when being passed directly to an <em>OutputVar</em> parameter of a built-in function.</p>
+      <p id="ref"><strong>引用(&amp;)</strong>: 创建一个 VarRef, 它是一个代表变量引用的值. VarRef 可以用来间接访问目标变量. 例如, <code>ref := &amp;target</code> 接着的 <code>%ref% := 1</code> 将把值 1 赋值给 <em>target</em>. VarRef 通常会被传递给一个函数, 但也可以存储在一个数组或属性中. 另请参阅: <a href="#deref">Dereference</a>, <a href="Functions.htm#ByRef">ByRef</a>.</p>
+      <p>目前不支持对内置变量(如 <a href="misc/A_Clipboard.htm">A_Clipboard</a>) 的引用, 除非是直接传递给内置函数的 <em>OutputVar</em> 参数.</p>
     </td>
   </tr>
   <tr id="MulDiv">
-    <td style="text-align:center"><strong>*<br>
+    <td class="center bold">*<br>
     /<br>
     //
-    </strong></td>
+    </td>
     <td><p><strong>乘(*)</strong>: 如果两个输入都为整数, 则结果为整数; 否则结果为浮点数.</p>
       <p><strong>其他用途</strong>: 星号(*) 运算符也用于<a href="Functions.htm#VariadicCall">可变参数函数调用</a>.</p>
       <p id="divide"><strong>真除(/)</strong>: 即使两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
@@ -136,25 +136,25 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     <p>除数为零, 则导致抛出 <a href="objects/Error.htm#ZeroDivisionError">ZeroDivisionError</a>.</p></td>
   </tr>
   <tr id="AddSub">
-    <td style="text-align:center"><strong>+<br>
-    -</strong></td>
+    <td class="center bold">+<br>
+    -</td>
     <td><p><strong>加(+)</strong> 和 <strong>减(-)</strong>. 在相关的注释中, <a href="#AssignOp"><strong>+=</strong> 和 <strong>-=</strong> 运算符</a>是变量增加或减少的一种简写形式. 例如, <code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 类似地, 变量可以通过使用 <a href="#IncDec">Var++, Var--, ++Var 或 --Var</a> 来增加或减少 1.</p>
       <p><strong>其他用途</strong>: 如果 + 或 - 符号前面没有一个值(或生成值的子表达式), 则将其解释为<a href="#unary">一元运算符</a>.</p>
     </td>
   </tr>
   <tr id="bitshift">
-    <td style="text-align:center"><strong>&lt;&lt;<br>
-    &gt;&gt;</strong></td>
+    <td class="center bold">&lt;&lt;<br>
+    &gt;&gt;</td>
     <td>
       <p><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 左移(<strong>&lt;&lt;</strong>) 相当于 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂". 右移(<strong>&gt;&gt;</strong>) 相当于 <em>Value1</em> 除以 "2 的 <em>Value2</em> 次幂" 并将结果四舍五入到数轴左侧最接近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2. 如果 <em>Value2</em> 小于 0 或大于 63(截断后), 则抛出异常.</p>
       <p>如果任何一个输入是浮点数, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</p>
     </td>
   </tr>
   <tr id="bitwise">
-    <td style="text-align:center"><strong>&amp;<br>
-      ^<br>
-      |
-    </strong></td>
+    <td class="center bold">&amp;<br>
+    ^<br>
+    |
+    </td>
     <td>
       <p><strong>按位与(&amp;)</strong>, <strong>按位异或(^)</strong> 和 <strong>按位或(|)</strong>. 这三个运算符中, <strong>&amp;</strong> 优先级最高, 而 <strong>|</strong> 优先级最低.</p>
       <p>如果其中一个输入是浮点数, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</p>
@@ -162,7 +162,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     </td>
   </tr>
   <tr id="concat">
-    <td style="text-align:center"><strong>.</strong></td>
+    <td class="center bold">.</td>
     <td>
       <p><strong>连接</strong>. 每边至少有一个空格或制表符的句点(点) 用于将两个项组合成单个字符串. 您还可以省略句点以获得相同的结果(除非有歧义, 如 <code>x <strong>-</strong>y</code>, 或者右边的项有一个前导的 ++ 或 --). 当省略点时, 要合并的项之间必须至少有一个空格或制表符.</p>
       <pre>Var := "The color is " <strong>.</strong> FoundColor  <em>; 显式连接</em>
@@ -175,21 +175,21 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
     </td>
   </tr>
   <tr id="regex">
-    <td style="text-align:center"><strong>~=</strong></td>
+    <td class="center bold">~=</td>
     <td><a href="commands/RegExMatch.htm">RegExMatch</a> 的简写形式. 例如, <code>"abc123" ~= "\d"</code> 结果为 4(首个数字字符串的位置).</td>
   </tr>
   <tr id="compare">
-    <td style="text-align:center"><strong>&gt;&nbsp;&nbsp;&nbsp;&lt;<br>
-    &gt;= &lt;=</strong></td>
+    <td class="center bold">&gt;&nbsp;&nbsp;&nbsp;&lt;<br>
+    &gt;= &lt;=</td>
     <td>
       <p><strong>大于(&gt;)</strong>, <strong>小于(&lt;)</strong>, <strong>大于或等于(&gt;=)</strong> 和 <strong>小于或等于(&lt;=)</strong>. 输入的数据是以数字方式进行比较的. 如果其中一个输入不是数字或数字字符串, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</p>
     </td>
   </tr>
   <tr id="equal">
-    <td style="text-align:center"><strong>=<br>
+    <td class="center bold">=<br>
       ==<br>
       !=<br>
-      !==</strong></td>
+      !==</td>
     <td>
       <p><strong>不区分大小写的等号(=) / 不等号(!=)</strong> 和 <strong>区分大小写的等号(==) / 不等号(!==)</strong>. 运算符 <strong>==</strong> 的行为和 <strong>=</strong> 是一样的, 除非其中一个输入不是数字(或都是字符串), 在这种情况下 <strong>==</strong> 总是区分大小写的, 而 <strong>=</strong> 总是不区分大小写的. <strong>!=</strong> 和 <strong>!==</strong> 与其对应的没有 <strong>!</strong> 的运算符是一样的, 只是其结果取反.</p>
       <p><strong>==</strong> 和 <strong>!==</strong> 运算符可用于比较包含二进制零的字符串. 除了 <strong>~=</strong> 之外的所有其他比较运算符仅比较到第一个二进制零.</p>
@@ -197,19 +197,19 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
     </td>
   </tr>
   <tr>
-    <td align="center"><strong>IS</strong><br><strong>IN</strong><br><strong>CONTAINS</strong></td>
+    <td class="center bold">IS<br>IN<br>CONTAINS</td>
     <td id="is">
       <p>如果 <em>Value</em> 是 <em>Class</em> 的实例, 那么 <code><i>Value</i> <strong>is</strong> <i>Class</i></code> 结果为 true(1),  否则为 false(0). <em>Class</em> 必须是一个<a href="objects/Object.htm">对象</a>, 并具有 <a href="objects/Class.htm#Prototype">Prototype</a> 自有属性, 但通常该属性是由类定义隐式定义的. 这个操作一般等同于 <code>HasBase(<i>Value</i>, <i>Class</i>.Prototype)</code>.</p>
       <p><code id="in"><strong>in</strong></code> 和 <code id="contains"><strong>contains</strong></code> 保留给将来使用.</p>
     </td>
   </tr>
   <tr id="not">
-    <td style="text-align:center"><strong>NOT</strong></td>
+    <td class="center bold">NOT</td>
     <td><strong>逻辑非</strong>. 除了优先级较低外, 其他的与 <strong>!</strong> 运算符相同. 例如, <code>not (x = 3 or y = 3)</code> 等同于 <code><strong>!</strong>(x = 3 or y = 3)</code>.</td>
   </tr>
     <tr id="and">
-      <td style="text-align:center"><strong>AND<br>
-      &amp;&amp;</strong></td>
+      <td class="center bold">AND<br>
+      &amp;&amp;</td>
       <td><p>这两个运算符都是<strong>逻辑与</strong>. 例如: <code>x &gt; 3 and x &lt; 10</code>.</p>
         <p>在表达式中, <strong>所有</strong> 运算元都解析为 <em>True</em>, 则返回 <strong>最后</strong >解析为 <em>True</em> 的运算元. 否则, 返回 <strong>第一个</strong> 解析为 <em>False</em> 的运算元. 实际上, 只有当所有运算元都为 true 时, 结果才为 true. 布尔表达式需要进行<a href="Functions.htm#ShortCircuit">求值优化</a>(从左到右) 以提高性能.</p>
         <pre>A := 1, B := {}, C := 20, D := True, E := "String" <em>; <strong>所有</strong> 运算元都是真的并都要进行计算</em>
@@ -219,8 +219,8 @@ MsgBox(A &amp;&amp; B &amp;&amp; ++C &amp;&amp; D &amp;&amp; E) <em>; 返回 <st
         <p>以 <code>AND</code> 或 <code>&amp;&amp;</code>(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾.</p></td>
     </tr>
     <tr id="or">
-      <td style="text-align:center"><strong>OR<br>
-      ||</strong></td>
+      <td class="center bold">OR<br>
+      ||</td>
       <td><p>这两个运算符都是<strong>逻辑或</strong>. 例如: <code>x &lt;= 3 or x &gt;= 10</code>.</p>
         <p>在表达式中 <strong>至少</strong> 有一个运算元为 <em>True</em>, 则返回 <strong>第一个</strong> 解析为 <em>True</em> 的运算元. 否则, 则返回 <strong>最后</strong> 解析为 <em>False</em> 的运算元. 实际上, 只要有一个运算元为真, 结果就为真. 布尔表达式需要进行<a href="Functions.htm#ShortCircuit">求值优化</a>(从左到右) 以提高性能.</p>
         <pre>A := "", B := False, C := 0, D := "String", E := 20 <em>; <strong>至少</strong> 有一个运算元是真的. 直到 D(包括) 的所有运算元都要进行计算</em>
@@ -230,14 +230,14 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
         <p>以 <code>OR</code> 或 <code>||</code>(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾.</p></td>
     </tr>
   <tr id="ternary">
-    <td style="text-align:center"><strong>?:</strong></td>
+    <td class="center bold">?:</td>
     <td>
       <p><strong>三元运算符</strong>. 此运算符是 <a href="commands/If.htm">if-else 语句</a>的简写形式. 它计算左侧的条件来决定两个分支中哪个作为最终结果. 例如, <code>var := x&gt;y ? 2 : 3</code>, 当 x 大于 y 时保存 2 到 <em>Var</em>; 否则保存 3. 为了提高性能, 只计算决定性的分支(请参阅<a href="Functions.htm#ShortCircuit">求值优化</a>).</p>
       <p class="warning"><strong>注意:</strong> 当在行的开头使用时, 三元条件通常应该用括号括起来, 以减少与其他类型语句的歧义. 有关详情, 请参阅<a href="Language.htm#expression-statements">表达式语句</a>.</p>
     </td>
   </tr>
   <tr id="AssignOp">
-    <td style="text-align:center"><strong>:=<br>
+    <td class="center bold">:=<br>
         +=<br>
         -=<br>
         *=<br>
@@ -248,17 +248,17 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
         &amp;=<br>
         ^=<br>
         &gt;&gt;=<br>
-        &lt;&lt;=</strong>
+        &lt;&lt;=
     </td>
     <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中. 最简单的赋值运算符为冒号等号(:=), 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#IntegerDivide">整数除法</a>把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 类似的, <code>Var <strong>.=</strong> "abc"</code> 为 <code>Var := Var <strong>.</strong> "abc"</code> 的一种简写形式.</p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>.</p>
-    <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. It is also valid to combine an assignment with the <a href="#ref">reference operator</a>, as in <code>&amp;(Var := "initial value")</code>.</p>
+    <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 将赋值与<a href="#ref">引用操作符</a>结合起来也是有效的, 如 <code>&amp;(Var := "initial value")</code>.</p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
     <p>赋值还可以针对对象的属性, 如 <code>myArray.Length += n</code> 或 <code>myArray[i] .= t</code>. 当赋值给一个属性时, 子表达式的结果是赋值的值, 而不是变量引用.</p>
     </td>
   </tr>
   <tr id="fat-arrow">
-    <td><strong>() =&gt;</strong> <em>expr</em></td>
+    <td class="center"><strong>() =&gt;</strong> <em>expr</em></td>
     <td>
       <p><strong>胖箭头函数</strong>. 定义一个简单的<a href="Functions.htm">函数</a>并返回一个 <a href="objects/Func.htm">Func</a> 或<a href="Functions.htm#closures">闭包</a>对象. 将函数的<a href="Functions.htm#param">参数列表</a>(可以在前面加上函数名) 写在操作符的左边. 当函数被调用时(通过返回的引用), 它计算子表达式 <em>expr</em> 并返回结果.</p>
       <p>下面两个例子是等价的:</p>
@@ -270,14 +270,14 @@ sumfn := Sum</pre>
       <p>在这两种情况下, 函数都是在脚本启动时<strong>无条件</strong>定义的, 但是函数引用只有在赋值时才存储在 <em>sumfn</em> 中.</p>
       <p>如果函数名被省略, 而参数列表只包含一个参数名, 则可以省略圆括号. 下面的例子定义了一个带有一个参数 <code>a</code> 的匿名函数, 并将其引用存储在变量 <code>double</code> 中:</p>
       <pre>double := a =&gt; a * 2</pre>
-      <p><em>expr</em> 中的变量引用的解析方法与完整函数定义中的方法相同. 例如, <em>expr</em> 可以引用 outer 函数的局部变量(就像在任何<a href="Functions.htm#nested">嵌套函数</a>中一样), 在这种情况下, 每当计算胖箭头表达式时, 都会创建一个新的<a href="Functions.htm#closures">闭包</a>并返回它. The function is always <a href="Functions.htm#AssumeLocal">assume-local</a>, since declarations cannot be used.</p>
+      <p><em>expr</em> 中的变量引用的解析方法与完整函数定义中的方法相同. 例如, <em>expr</em> 可以引用 outer 函数的局部变量(就像在任何<a href="Functions.htm#nested">嵌套函数</a>中一样), 在这种情况下, 每当计算胖箭头表达式时, 都会创建一个新的<a href="Functions.htm#closures">闭包</a>并返回它. 因为不能使用声明, 所以该函数总是<a href="Functions.htm#AssumeLocal">假定-局部的</a>.</p>
       <p>为函数指定名称允许递归地调用它或由其他嵌套函数调用它, 而无需在其内部存储对<a href="Functions.htm#closures">闭包</a>的引用(从而创建有问题的<a href="Objects.htm#Circular_References">循环引用</a>). 它还有助于调试, 比如 <a href="objects/Func.htm#Name">Func.Name</a> 或显示在调试器的调用堆栈上.</p>
       <p>胖箭头语法也可以用来定义简写的<a href="Objects.htm#Custom_Classes_property_short">属性</a>和<a href="Objects.htm#Custom_Classes_method">方法</a>.</p>
     </td>
 
   </tr>
   <tr id="comma">
-    <td style="text-align:center"><strong>,</strong></td>
+    <td class="center bold">,</td>
     <td><p><strong>逗号(多语句)</strong>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.</p>
       <p class="note"><strong>注意</strong>: 以逗号(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾. 另请参阅: <a href="#CommaPerf">逗号的性能</a>.</p>
       <p>逗号还用于分隔函数调用的或控制流语句的参数. 若要在参数列表中包含多语句表达式, 请用一组额外的圆括号将其括起来. 例如, <code>MyFn((x, y))</code> 计算 x 和 y, 但传递 y 作为 MyFn 的第一个也是唯一一个参数.</p>
@@ -287,30 +287,30 @@ sumfn := Sum</pre>
 <p>下面列出的子表达式类型覆盖计算的优先级/顺序:</p>
 <table class="info">
   <tr>
-    <th>表达式</th>
+    <th class="center">表达式</th>
     <th abbr="Descr">描述</th>
   </tr>
   <tr>
-    <td style="text-align:center"><strong>(</strong><em>表达式</em><strong>)</strong></td>
+    <td class="center"><strong>(</strong><em>表达式</em><strong>)</strong></td>
     <td><p>括号中包含的任何子表达式. 例如, <code>(3 + 2) * 2</code> 强制首先计算 <code>3 + 2</code>.</p></td>
   </tr>
   <tr>
-     <td style="text-align:center; white-space:nowrap"><p>Mod<strong>()</strong><br>
+     <td class="center"><p>Mod<strong>()</strong><br>
         Round<strong>()</strong><br>
     Abs<strong>()</strong></p></td>
-    <td rowspan="2"><p><strong>Function call</strong>. There must be no space between the function name or expression and the open parenthesis which begins the parameter list. For details, see <a href="Language.htm#function-calls">Function Calls</a>.</p>
-    <p><em>(expression)</em> is not necessarily required to be enclosed in parentheses, but doing so may eliminate ambiguity. For example, <code>(x.y)()</code> retrieves a function from a property and then calls it with no parameters, whereas <code>x.y()</code> would implicitly pass <code>x</code> as the first parameter.</p>
+    <td rowspan="2"><p><strong>函数调用</strong>. 在函数名称或表达式与参数列表开头的左圆括号之间不能有空格. 有关详情, 请参阅<a href="Language.htm#function-calls">函数调用</a>.</p>
+    <p><em>(表达式)</em> 不一定要用括号括起来, 但这样做可以消除歧义. 例如, <code>(x.y)()</code> retrieves a function from a property and then calls it with no parameters, 而 <code>x.y()</code> would implicitly pass <code>x</code> as the first parameter.</p>
       </td>
   </tr>
   <tr>
-    <td style="text-align:center; white-space:nowrap"><p><em>(expression)</em><strong>()</strong></p></td>
+    <td class="center" style="white-space: nowrap;"><p><em>(expression)</em><strong>()</strong></p></td>
   </tr>
   <tr>
-    <td style="text-align:center">Fn(<strong><em>Params</em>*</strong>)</td>
+    <td class="center">Fn(<strong><em>Params</em>*</strong>)</td>
     <td><p><a href="Functions.htm#VariadicCall">可变参数函数调用</a>. <em>Params</em> 是一个可枚举的对象(具有 <a href="Objects.htm#__Enum">__Enum</a> 方法的对象), 例如包含参数值的<a href="objects/Array.htm">数组</a>.</p></td>
   </tr>
   <tr id="square-brackets">
-    <td style="text-align:center"><strong>x[y]<br>[a, b, c]</strong></td>
+    <td class="center"><strong>x[y]<br>[a, b, c]</strong></td>
     <td>
       <p><strong>项目访问</strong>. 使用参数 <em>y</em>(或代替 <em>y</em> 的多个参数) 获取或设置对象 <em>x</em> 的 <a href="Objects.htm#__Item">__Item</a> 属性(或默认属性). 这通常对应于集合中的数组元素或项目, 其中 <em>y</em> 是项目的索引或键. 项目可以在右方括号后使用任何<a href="#AssignOp">赋值运算符</a>来赋值. 例如, <code>x[y] := z</code>.</p>
       <p><strong>数组标识符</strong>. 如果左方括号前面没有值(或者一个产生值的子表达式), 它被解释为一个数组的开始. 例如, <code>[a, b, c]</code> 等同于 <code>Array(a, b, c)</code>(a, b 和 c 都是变量).</p>
@@ -318,7 +318,7 @@ sumfn := Sum</pre>
     </td>
   </tr>
   <tr id="curly-braces">
-    <td style="text-align:center"><strong>{a: b, c: d}</strong></td>
+    <td class="center"><strong>{a: b, c: d}</strong></td>
     <td>
       <p><strong>对象标识符</strong>. 创建一个<a href="objects/Object.htm">对象</a>. 其中的每一对项目由一个原义的属性名称 <code>a</code> 和一个属性值表达式 <code>b</code> 组成. 例如, <code>x := {a: b}</code> 等同于 <code>x := Object(), x.a := b</code>. 可以在对象文本中设置 <a href="objects/Object.htm#Base">Base</a>, 但是所有其他属性都设置为 <em>自有的属性</em>, 可能会覆盖从基对象继承的属性.</p>
       <p>要使用动态属性名, 请将子表达式用百分号括起来. 例如: <code>{%nameVar%: valueVar}</code>.</p>

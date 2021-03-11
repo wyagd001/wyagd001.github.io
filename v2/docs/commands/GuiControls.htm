@@ -578,13 +578,11 @@ MyGui.Show()
 ButtonGo()
 
 ButtonGo(*) {
-    global
     WB.Navigate(URL.Value)
 }
 
 class WB_events {
     NavigateComplete2(wb, NewURL) {
-        global    
         URL.Value := NewURL  <em>; 更新 URL 编辑控件.</em>
     }
 }</pre>
@@ -598,37 +596,37 @@ MyGui.Add("Custom", "ClassScintilla")  <em>; 添加 <a href="https://scintilla.o
 <p><strong>Events</strong>: 由于每个通知代码的含义取决于发送它的控件, 因此 <a href="../objects/GuiOnEvent.htm">OnEvent</a>不支持自定义控件. 然而, 如果控件以 WM_NOTIFY 或 WM_COMMAND 消息的形式发送通知, 脚本可以使用 <a href="../objects/GuiOnNotify.htm">OnNotify</a> 或 <a href="../objects/GuiOnCommand.htm">OnCommand</a> 来检测它们.</p>
 <p>下面这个例子演示了如何添加和使用 <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/bb761374.aspx">IP 地址控件</a>:</p>
 <pre>MyGui := Gui()
-IP := MyGui.Add("Custom", "ClassSysIPAddress32 r1 w150 vIP")
+IP := MyGui.Add("Custom", "ClassSysIPAddress32 r1 w150")
 IP.OnCommand(0x300, IP_EditChange)  <em>; 0x300 = EN_CHANGE</em>
 IP.OnNotify(-860, IP_FieldChange)  <em>; -860 = IPN_FIELDCHANGED</em> 
-MyGui.Add("Text", "wp vIPText")
-MyGui.Add("Text", "wp y+m vIPField")
+IPText := MyGui.Add("Text", "wp")
+IPField := MyGui.Add("Text", "wp y+m")
 MyGui.Add("Button", "Default", "OK").OnEvent("Click", OK_Click)
 MyGui.Show()
 
 IPCtrlSetAddress(IP, SysGetIPAddresses()[1])
 
-OK_Click(this, *)
+OK_Click(*)
 {
-    this.Gui.Hide()
-    MsgBox("You chose " IPCtrlGetAddress(this.Gui["IP"]))
+    MyGui.Hide()
+    MsgBox("You chose " IPCtrlGetAddress(IP))
     ExitApp()
 }
 
-IP_EditChange(this)
+IP_EditChange(*)
 {
-    this.Gui["IPText"].Text := "New text: " this.Gui["IP"].Text
+    IPText.Text := "New text: " IP.Text
 }
 
-IP_FieldChange(this, NMIPAddress)
+IP_FieldChange(thisCtrl, NMIPAddress)
 {
     <em>; 从 NMIPADDRESS 结构体中提取信息.</em>
     iField := NumGet(NMIPAddress, 3*A_PtrSize + 0, "int")
     iValue := NumGet(NMIPAddress, 3*A_PtrSize + 4, "int")
     if (iValue &gt;= 0)
-        this.Gui["IPField"].Text := "Field #" iField " modified: " iValue
+        IPField.Text := "Field #" iField " modified: " iValue
     else
-        this.Gui["IPField"].Text := "Field #" iField " left empty"
+        IPField.Text := "Field #" iField " left empty"
 }
 
 IPCtrlSetAddress(GuiCtrl, IPAddress)
@@ -651,8 +649,8 @@ IPCtrlGetAddress(GuiCtrl)
     AddrWord := BufferAlloc(4)
     SendMessage(IPM_GETADDRESS, 0, AddrWord, GuiCtrl)
     Loop 4
-        IPPart%A_Index% := NumGet(AddrWord, 4 - A_Index, "UChar")
-    return IPPart1 "." IPPart2 "." IPPart3 "." IPPart4
+        IPPart.Push(NumGet(AddrWord, 4 - A_Index, "UChar"))
+    return IPPart[1] "." IPPart[2] "." IPPart[3] "." IPPart[4]
 }</pre>
 
 <h2 id="Related_Pages">相关页面</h2>

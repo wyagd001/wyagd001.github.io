@@ -331,20 +331,20 @@ ImageListID := <a href="ListView.htm#IL_Create">IL_Create</a>(5)
 Loop 5 
     <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, "shell32.dll", A_Index)
 <em>; 创建 <a href="#GuiAdd">TreeView</a> 和 ListView, 让它们像在 Windows 资源管理器中那样靠在一起:</em>
-TV := <a href="#GuiAdd">MyGui.Add</a>("TreeView", "r20 w" TreeViewWidth " <a href="#ImageList">ImageList</a>" ImageListID " vTV")
-LV := MyGui.Add("ListView", "r20 w" ListViewWidth " x+10 vLV", ["Name","Modified"])
+TV := <a href="#GuiAdd">MyGui.Add</a>("TreeView", "r20 w" TreeViewWidth " <a href="#ImageList">ImageList</a>" ImageListID)
+LV := MyGui.Add("ListView", "r20 w" ListViewWidth " x+10", ["Name","Modified"])
 
 <em>; 创建<a href="GuiControls.htm#StatusBar">状态栏</a>/, 显示文件夹数及其总大小的信息:</em>
-SB := MyGui.Add("StatusBar", "vSB")
+SB := MyGui.Add("StatusBar")
 <a href="GuiControls.htm#SB_SetParts">SB.SetParts</a>(60, 85)  <em>; 在状态栏中创建三个部分(第三部分占用所有剩余宽度).</em>
 
 <em>; 添加文件夹及其子文件夹到树中. 如果加载需要很长时间, 则显示提示信息:</em>
-M := Gui("ToolWindow -SysMenu", "Loading the tree..."), M.Show()
-DirList := AddSubFoldersToTree(TV, TreeRoot, Map())
+M := Gui("ToolWindow -SysMenu Disabled AlwaysOnTop", "Loading the tree..."), M.Show("w200 h0")
+DirList := AddSubFoldersToTree(TreeRoot, Map())
 M.Hide()
 
 <em>; 每当有新的项目被选中时, 调用 TV_ItemSelect:</em>
-TV.OnEvent("ItemSelect", TV_ItemSelect.bind(DirList))
+TV.OnEvent("ItemSelect", TV_ItemSelect)
 
 <em>; 每当窗口被调整大小时, 调用 Gui_Size:</em>
 MyGui.OnEvent("Size", Gui_Size)
@@ -357,7 +357,7 @@ LV.ModifyCol(2, Col2Width)
 <em>; 显示窗口并返回. 每当用户执行符合条件的动作时, 操作系统会通知脚本:</em>
 MyGui.Show
 
-AddSubFoldersToTree(TV, Folder, DirList, ParentItemID := 0)
+AddSubFoldersToTree(Folder, DirList, ParentItemID := 0)
 {
     <em>; 该函数将指定文件夹中的所有子文件夹添加到 TreeView 中,
     ; 并将它们与 ID 相关联的路径保存到一个对象中, 供以后使用.
@@ -366,17 +366,14 @@ AddSubFoldersToTree(TV, Folder, DirList, ParentItemID := 0)
     {
         ItemID := <a href="#Add">TV.Add</a>(A_LoopFileName, ParentItemID, "Icon4")
         DirList[ItemID] := A_LoopFilePath
-        DirList := AddSubFoldersToTree(TV, A_LoopFilePath, DirList, ItemID)
+        DirList := AddSubFoldersToTree(A_LoopFilePath, DirList, ItemID)
     }
     return DirList
 }
 
-TV_ItemSelect(DirList, TV, Item)  <em>; 当选择一个新的项目时, 该函数被调用.</em>
+TV_ItemSelect(thisCtrl, Item)  <em>; 当选择一个新的项目时, 该函数被调用.</em>
 {
-    local
-
     <em>; 将文件放入 ListView 中:</em>
-    LV := TV.Gui["LV"]
     LV.Delete  <em>; 清除所有行.</em>
     LV.Opt("-Redraw")  <em>; 通过在加载过程中禁止重绘来提高性能.</em>
     TotalSize := 0  <em>; 在下面循环之前初始化.</em>
@@ -388,7 +385,6 @@ TV_ItemSelect(DirList, TV, Item)  <em>; 当选择一个新的项目时, 该函�
     LV.Opt("+Redraw")
 
     <em>; 更新状态栏的三个部分, 让它们显示当前选择的文件夹的信息:</em>
-    SB := TV.Gui["SB"]
     <a href="GuiControls.htm#SB_SetText">SB.SetText</a>(LV.GetCount() " files", 1)
     SB.SetText(Round(TotalSize / 1024, 1) " KB", 2)
     SB.SetText(DirList[Item], 3)
@@ -399,9 +395,9 @@ Gui_Size(thisGui, MinMax, Width, Height)  <em>; 当用户改变窗口大小时�
     if MinMax = -1  <em>; 窗口被最小化了. 无需进行操作.</em>
         return
     <em>; 否则, 窗口的大小被调整过或被最大化了. 调整控件大小以适应.</em>
-    thisGui["TV"].GetPos(,, TV_W)
-    thisGui["TV"].Move(,,, Height - 30)  <em>; -30 用于状态栏和边距.</em>
-    thisGui["LV"].Move(,, Width - TV_W - 30, Height - 30)
+    TV.GetPos(,, &amp;TV_W)
+    TV.Move(,,, Height - 30)  <em>; -30 用于状态栏和边距.</em>
+    TV.Move(,, Width - TV_W - 30, Height - 30)
 }</pre>
 </div>
 
