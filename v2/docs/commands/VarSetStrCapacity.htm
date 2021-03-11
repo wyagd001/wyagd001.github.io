@@ -23,7 +23,7 @@
   <dt>TargetVar</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
-    <p>变量的引用. 例如: <code>VarSetStrCapacity(MyVar, 1000)</code>. 这也可以是动态变量, 例如 <code>Array%i%</code> 或是<a href="../Functions.htm#ByRef">函数的 ByRef 参数</a>.</p>
+    <p>变量的引用. 例如: <code>VarSetStrCapacity(&amp;MyVar, 1000)</code>. 这也可以是动态变量, 例如 <code>Array%i%</code> 或是<a href="../Functions.htm#ByRef">函数的 ByRef 参数</a>.</p>
   </dd>
 
   <dt>RequestedCapacity</dt>
@@ -32,9 +32,9 @@
     <p>如果省略, 则函数将返回变量当前的容量且不会改变其的内容. 否则, 变量中的所有内容将会丢弃(变量被置空).</p>
     <p>指定 <em>RequestedCapacity</em> 为调整后变量所能容纳的字节数. <em>RequestedCapacity</em> 不包括内部零终止符. 例如, 指定 1 将允许变量在其内部结束符之外最多容纳一个字符. 注意: 如果脚本稍后给它分配一个更大的值, 变量将自动展开.</p>
     <p>因此可以经常简单地调用此函数来确保变量占用最小的空间, 出于性能的考虑, 它只在 <em>RequestedCapacity</em> 为 0 的时候才会缩小变量. 换句话说, 如果变量的容量已经大于 <em>RequestedCapacity</em>, 它就不会被缩小(但为了保持一致性, 变量会被置空).</p>
-    <p>因此, 要显式地缩小变量, 首先请使用 <code>VarSetStrCapacity(Var, 0)</code> 释放它占用的内存, 然后使用 <code>VarSetStrCapacity(Var, NewCapacity)</code> -- 或者简单地让它自动按需从零扩展.</p>
+    <p>因此, 要显式地缩小变量, 首先请使用 <code>VarSetStrCapacity(&amp;Var, 0)</code> 释放它占用的内存, 然后使用 <code>VarSetStrCapacity(&amp;Var, NewCapacity)</code> -- 或者简单地让它自动按需从零扩展.</p>
     <p>出于性能考虑, 要释放一个原来容量小于 64 字符的变量可能会没有效果, 因为它的内存是永久类型的. 在这种情况下, 会返回当前容量, 而不是 0.</p>
-    <p>出于性能考虑, 容量小于 4096 字节的变量的内存不能通过赋值空字符串的方法来释放(例如 <code>Var := ""</code>). 然而, <code>VarSetStrCapacity(Var, 0)</code> 可释放它.</p>
+    <p>出于性能考虑, 容量小于 4096 字节的变量的内存不能通过赋值空字符串的方法来释放(例如 <code>Var := ""</code>). 然而, <code>VarSetStrCapacity(&amp;Var, 0)</code> 可释放它.</p>
     <p id="neg1">为 <em>RequestedCapacity</em> 指定 -1, 将变量内部存储的字符串长度更新为其当前内容的长度. 这在字符串被间接改变的情况下很有用, 比如通过 <a href="DllCall.htm">DllCall</a> 或 <a href="SendMessage.htm">SendMessage</a> 传递其<a href="StrPtr.htm">地址</a>. 在这种模式下, VarSetStrCapacity 返回的是长度而不是容量.</p>
   </dd>
 
@@ -54,14 +54,14 @@
 
 <h2 id="Remarks">备注</h2>
 <p><a href="../objects/Buffer.htm">Buffer</a> 对象在处理二进制数据, 结构体, DllCall 和类似的东西时, 提供了卓越的清晰度和灵活性. 例如, Buffer 对象可以分配给一个属性或数组元素, 或者传递给一个函数或从一个函数返回, 而不需要复制其内容.</p>
-<p>在通过渐进式连接的方式构建一个字符串时, 可以使用这个函数来提高性能. 这是因为当你对字符串的最终长度有一定了解时, 可以避免多次自动调整大小. 在这种情况下, <em>RequestedCapacity</em> 不需要太准确: 如果容量太小, 性能仍然会得到提高, 当容量用完后, 变量将开始自动扩展. 如果容量过大, 则会浪费部分内存, 但只是暂时的, 因为所有的内存都可以在操作后通过 <code>VarSetStrCapacity(Var, 0)</code> 或 <code>Var := ""</code> 来释放.</p>
+<p>在通过渐进式连接的方式构建一个字符串时, 可以使用这个函数来提高性能. 这是因为当你对字符串的最终长度有一定了解时, 可以避免多次自动调整大小. 在这种情况下, <em>RequestedCapacity</em> 不需要太准确: 如果容量太小, 性能仍然会得到提高, 当容量用完后, 变量将开始自动扩展. 如果容量过大, 则会浪费部分内存, 但只是暂时的, 因为所有的内存都可以在操作后通过 <code>VarSetStrCapacity(&amp;Var, 0)</code> 或 <code>Var := ""</code> 来释放.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer 对象</a>, <a href="DllCall.htm">DllCall</a>, <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExConcat">
 <p><a class="ex_number" href="#ExConcat"></a> 通过确保 <em>MyVar</em> 有足够的工作空间来优化.</p>
-<pre>VarSetStrCapacity(MyVar, 5120000)  <em>; ~10 MB</em>
+<pre>VarSetStrCapacity(&amp;MyVar, 5120000)  <em>; ~10 MB</em>
 Loop
 {
     <em>; ...</em>
@@ -77,7 +77,7 @@ Loop
 Loop 2
 {
     <em>; 分配用于 DllCall 的空间.</em>
-    VarSetStrCapacity(buf, max_chars)
+    VarSetStrCapacity(&amp;buf, max_chars)
 
     if (A_Index = 1)
         <em>; 通过 DllCall 间接修改变量.</em>
@@ -91,7 +91,7 @@ Loop 2
     wrong_len := StrLen(buf)
 
     <em>; 更新变量的长度.</em>
-    VarSetStrCapacity(buf, -1)
+    VarSetStrCapacity(&amp;buf, -1)
 
     right_str := buf . "&lt;end&gt;"
     right_len := StrLen(buf)

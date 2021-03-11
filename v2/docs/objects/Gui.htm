@@ -526,7 +526,7 @@ MyGui.Move(x-10,, w+20)</pre>
 <h2 id="Appear">窗口外观</h2>
 <p>对于其图标, GUI 窗口使用创建窗口时有效的托盘图标. 因此, 要想拥有不同的图标, 请在创建窗口前更改托盘图标. 例如: <code><a href="../commands/TraySetIcon.htm">TraySetIcon</a>("MyIcon.ico")</code>. 也可以为一个窗口拥有一个不同于其小图标的大图标(大图标显示在 alt-tab 任务切换器中). 这可以通过 <a href="../commands/LoadPicture.htm">LoadPicture</a> 和 <a href="../commands/SendMessage.htm">SendMessage</a> 来实现; 例如:</p>
 <pre>iconsize := 32  <em>; alt-tab 任务切换器中图标的理想尺寸在不同版本的系统中有所不同.</em>
-hIcon := LoadPicture("My Icon.ico", "Icon1 w" iconsize " h" iconsize, imgtype)
+hIcon := LoadPicture("My Icon.ico", "Icon1 w" iconsize " h" iconsize, &amp;imgtype)
 MyGui := Gui()
 SendMessage(0x80, 1, hIcon, MyGui)  <em>; 0x80 是 WM_SETICON; 1 表示 ICON_BIG(vs. 0 表示 ICON_SMALL).</em>
 MyGui.Show()</pre>
@@ -560,7 +560,7 @@ MyGui.Add("Text",, "Last name:")
 MyGui.Add("Edit", "vFirstName ym")  <em>; ym 选项开始一个新的控件列.</em>
 MyGui.Add("Edit", "vLastName")
 MyGui.Add("Button", "default", "OK").OnEvent("Click", (*) =&gt; ProcessUserInput(MyGui))
-MyGui.OnEvent("Close", "ProcessUserInput")
+MyGui.OnEvent("Close", ProcessUserInput)
 MyGui.Show()
 
 ProcessUserInput(thisGui, *)
@@ -583,8 +583,8 @@ MyGui.Add("Edit", "vMyEdit r5")  <em>; r5 表示 5 行的高度.</em>
 Tab.UseTab()  <em>; 即后续添加的控件将不属于前面那个选项卡控件.</em>
 Btn := MyGui.Add("Button", "default xm", "OK")  <em>; xm 把它放置在左下角.</em>
 Btn.OnEvent("Click", (*) =&gt; ProcessUserInput(MyGui))
-MyGui.OnEvent("Close", "ProcessUserInput")
-MyGui.OnEvent("Escape", "ProcessUserInput")
+MyGui.OnEvent("Close", ProcessUserInput)
+MyGui.OnEvent("Escape", ProcessUserInput)
 MyGui.Show()
 
 ProcessUserInput(thisGui, *)
@@ -599,10 +599,10 @@ ProcessUserInput(thisGui, *)
 <pre>MyGui := Gui()
 MyGui.Add("Text",, "Pick a file to launch from the list below.")
 LB := MyGui.Add("ListBox", "w640 r10 vFile")
-LB.OnEvent("DoubleClick", "LaunchFile")
+LB.OnEvent("DoubleClick", LaunchFile)
 Loop Files, "C:\*.*"  <em>; 根据您的需要改变此文件夹和通配符模式.</em>
     LB.Add([A_LoopFilePath])
-MyGui.Add("Button", "Default", "OK").OnEvent("Click", "LaunchFile")
+MyGui.Add("Button", "Default", "OK").OnEvent("Click", LaunchFile)
 MyGui.Show()
 
 LaunchFile(thisCtrl, *)
@@ -629,9 +629,9 @@ MyDDL.ToolTip := "Choose a color from the drop-down list."
 MyGui.Add("Checkbox",, "This control has no tooltip.")
 MyGui.OnEvent("Close", (*) => ExitApp())
 MyGui.Show()
-OnMessage(0x200, "WM_MOUSEMOVE")
+OnMessage(0x200, On_WM_MOUSEMOVE)
 
-WM_MOUSEMOVE(wParam, lParam, msg, Hwnd)
+On_WM_MOUSEMOVE(wParam, lParam, msg, Hwnd)
 {
     static PrevHwnd := 0
     if (Hwnd != PrevHwnd)
@@ -666,7 +666,7 @@ MyGui.Show("x0 y400 NoActivate")  <em>; NoActivate 让当前活动窗口继续�
 
 UpdateOSD(GuiCtrl)
 {
-    MouseGetPos(MouseX, MouseY)
+    MouseGetPos &amp;MouseX, &amp;MouseY
     GuiCtrl.Value := "X" MouseX ", Y" MouseY
 }</pre>
 </div>
@@ -677,7 +677,7 @@ UpdateOSD(GuiCtrl)
 MyGui.BackColor := "White"
 MyGui.Add("Picture", "x0 y0 h350 w450", A_WinDir "\Web\Wallpaper\Windows\img0.jpg")
 MyBtn := MyGui.Add("Button", "Default xp+20 yp+250", "Start the Bar Moving")
-MyBtn.OnEvent("Click", "MoveBar")
+MyBtn.OnEvent("Click", MoveBar)
 MyGui.Add("Progress", "w416 vMyProgress")
 MyGui.Add("Text", "wp vMyText")  <em>; wp 表示 "使用之前的宽度".</em>
 MyGui.Show()
@@ -702,7 +702,7 @@ MoveBar(thisCtrl, *)
 <p><a class="ex_number" href="#ExImageViewer"></a> 创建简单的图像查看器.</p>
 <pre>MyGui := Gui("+Resize")
 MyBtn := MyGui.Add("Button", "default", "&amp;Load New Image")
-MyBtn.OnEvent("Click", "LoadNewImage")
+MyBtn.OnEvent("Click", LoadNewImage)
 MyGui.Add("Radio", "ym+5 x+10 checked vMyRadio", "Load &amp;actual size")
 MyGui.Add("Radio", "ym+5 x+10", "Load to &amp;fit screen")
 MyGui.Add("Pic", "xm vMyPic")
@@ -733,22 +733,21 @@ LoadNewImage(thisCtrl, *)
 
 <div class="ex" id="ExEditor">
 <p><a class="ex_number" href="#ExEditor"></a> 创建带有菜单栏的简单文本编辑器.</p>
-<pre><em>; 让下面的所有函数都能访问这些变量:</em>
-global MyGui, FileMenu, MainEdit, CurrentFileName, About
+<pre>
 
 <em>; 创建 MyGui 窗口:</em>
 MyGui := Gui("+Resize", "Untitled")  <em>; 使窗口可以调整大小.</em>
 
 <em>; 为菜单栏创建子菜单:</em>
 FileMenu := Menu()
-FileMenu.Add("&amp;New", "MenuFileNew")
-FileMenu.Add("&amp;Open", "MenuFileOpen")
-FileMenu.Add("&amp;Save", "MenuFileSave")
-FileMenu.Add("Save &amp;As", "MenuFileSaveAs")
+FileMenu.Add("&amp;New", MenuFileNew)
+FileMenu.Add("&amp;Open", MenuFileOpen)
+FileMenu.Add("&amp;Save", MenuFileSave)
+FileMenu.Add("Save &amp;As", MenuFileSaveAs)
 FileMenu.Add() <em>; 分隔线.</em>
-FileMenu.Add("E&amp;xit", "MenuFileExit")
+FileMenu.Add("E&amp;xit", MenuFileExit)
 HelpMenu := Menu()
-HelpMenu.Add("&amp;About", "MenuHelpAbout")
+HelpMenu.Add("&amp;About", MenuHelpAbout)
 
 <em>; 通过附加子菜单来创建菜单栏:</em>
 MyMenuBar := MenuBar()
@@ -762,8 +761,8 @@ MyGui.MenuBar := MyMenuBar
 MainEdit := MyGui.Add("Edit", "WantTab W600 R20")
 
 <em>; 应用事件:</em>
-MyGui.OnEvent("DropFiles", "Gui_DropFiles")
-MyGui.OnEvent("Size", "Gui_Size")
+MyGui.OnEvent("DropFiles", Gui_DropFiles)
+MyGui.OnEvent("Size", Gui_Size)
 
 MenuFileNew()  <em>; 应用默认设置.</em>
 MyGui.Show()  <em>; 显示窗口.</em>
@@ -781,7 +780,7 @@ MenuFileOpen(*)
     SelectedFileName := FileSelect(3,, "Open File", "Text Documents (*.txt)")
     if SelectedFileName = "" <em>; 没有选择文件.</em>
         return
-    CurrentFileName := readContent(SelectedFileName)
+    global CurrentFileName := readContent(SelectedFileName)
 }
 
 MenuFileSave(*)
@@ -795,7 +794,7 @@ MenuFileSaveAs(*)
     SelectedFileName := FileSelect("S16",, "Save File", "Text Documents (*.txt)")
     if SelectedFileName = "" <em>; 没有选择文件.</em>
         return
-    CurrentFileName := saveContent(SelectedFileName)
+    global CurrentFileName := saveContent(SelectedFileName)
 }
 
 MenuFileExit(*)  <em>; 用户从 File 菜单中选择 "Exit".</em>
@@ -805,12 +804,13 @@ MenuFileExit(*)  <em>; 用户从 File 菜单中选择 "Exit".</em>
 
 MenuHelpAbout(*)
 {
+    global About
     About := Gui("+owner" MyGui.Hwnd)  <em>; 让主窗口成为 "about box" 的父窗口.</em>
     MyGui.Opt("+Disabled")  <em>; 禁用主窗口.</em>
     About.Add("Text",, "Text for about box.")
-    About.Add("Button", "Default", "OK").OnEvent("Click", "About_Close")
-    About.OnEvent("Close", "About_Close")
-    About.OnEvent("Escape", "About_Close")
+    About.Add("Button", "Default", "OK").OnEvent("Click", About_Close)
+    About.OnEvent("Close", About_Close)
+    About.OnEvent("Escape", About_Close)
     About.Show()
 }
 

@@ -38,7 +38,7 @@ MyGui := Gui()
 LV := MyGui.Add("ListView", "r20 w700", ["Name","Size (KB)"])
 
 <em>; 每当用户双击某行时, 通知脚本:</em>
-LV.OnEvent("DoubleClick", "LV_DoubleClick")
+LV.OnEvent("DoubleClick", LV_DoubleClick)
 
 <em>; 从文件夹中获取文件名列表并把它们放入 ListView:</em>
 Loop Files, A_MyDocuments "\*.*"
@@ -462,7 +462,7 @@ MyGui.Show</pre>
 <p><a href="../objects/Gui.htm#Submit">Gui.Submit</a> 对 ListView 控件没有效果.</p>
 <p>在对某个列进行排序后 -- 通过用户点击其标题或脚本调用 <code>LV.<a href="#ModifyCol">ModifyCol</a>(1, "Sort")</code> -- 任何随后添加的行将出现在列表的底部而不会遵循排序顺序. 例外情况是 <a href="#Sort">Sort</a> 和 <a href="#SortDesc">SortDesc</a> 样式, 它们会把新添加的行移动正确的位置.</p>
 <p id="Enter">当 ListView 拥有焦点时如果要检测到用户是否按下 <kbd>Enter</kbd> 键, 请使用<a href="GuiControls.htm#DefaultButton">默认按钮</a>(如果需要则可以隐藏它). 例如:</p>
-<pre>MyGui.Add("Button", "Hidden Default", "OK").OnEvent("Click", "LV_Enter")
+<pre>MyGui.Add("Button", "Hidden Default", "OK").OnEvent("Click", LV_Enter)
 ...
 LV_Enter(*) {
     global
@@ -517,14 +517,14 @@ ImageListID2 := IL_Create(10, 10, true)  <em>; 搭配小图标列表的大图标
 LV.SetImageList(ImageListID2)
 
 <em>; 应用控件事件:</em>
-LV.OnEvent("<a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>", "RunFile")
-LV.OnEvent("<a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a>", "ShowContextMenu")
+LV.OnEvent("<a href="../objects/GuiOnEvent.htm#DoubleClick">DoubleClick</a>", RunFile)
+LV.OnEvent("<a href="../objects/GuiOnEvent.htm#Ctrl-ContextMenu">ContextMenu</a>", ShowContextMenu)
 B1.OnEvent("Click", LoadFolder.bind(ImageListID1, ImageListID2))
 B2.OnEvent("Click", (*) =&gt; <a href="#Delete">LV.Delete</a>())
-B3.OnEvent("Click", "SwitchView")
+B3.OnEvent("Click", SwitchView)
 
 <em>; 应用窗口事件:</em>
-MyGui.OnEvent("Size", "Gui_Size")
+MyGui.OnEvent("Size", Gui_Size)
 
 <em>; 显示窗口:</em>
 MyGui.Show()
@@ -532,7 +532,7 @@ MyGui.Show()
 LoadFolder(ImageListID1, ImageListID2, this, *)
 {
     static IconMap := Map()
-    LV := this.Gui["LV"]
+    local LV := this.Gui["LV"]  <em>; Not strictly necessary in this case since the global LV is available.</em>
     this.Gui.Opt("+OwnDialogs")  <em>; 强制用户在使用主窗口前解除以下对话框.</em>
     Folder := DirSelect(, 3, "Select a folder to read:")
     if not Folder  <em>; 用户取消对话框.</em>
@@ -556,7 +556,7 @@ LoadFolder(ImageListID1, ImageListID2, this, *)
         <em>; 建立唯一的扩展 ID 以避免变量名中的非法字符,
         ; 例如破折号. 这种使用唯一 ID 的方法也会执行地更好,
         ; 因为在数组中查找项目不需要进行搜索循环.</em>
-        SplitPath(FileName,,, FileExt)  <em>; 获取文件扩展名.</em>
+        SplitPath(FileName,,, &amp;FileExt)  <em>; 获取文件扩展名.</em>
         if FileExt ~= "^(EXE|ICO|ANI|CUR)$"
         {
             ExtID := FileExt  <em>; 特殊 ID 作为占位符.</em>
@@ -610,7 +610,7 @@ LoadFolder(ImageListID1, ImageListID2, this, *)
 SwitchView(this, *)
 {
     static IconView := false
-    LV := this.Gui["LV"]
+    local LV := this.Gui["LV"]
     if not IconView
         LV.Opt("+Icon")        <em>; 切换到图标视图.</em>
     else
@@ -620,7 +620,7 @@ SwitchView(this, *)
 
 RunFile(LV, RowNumber)
 {
-    FileName := <a href="#GetText">LV.GetText</a>(RowNumber, 1) <em>; 获取首个字段的文本.</em>
+    FileName := LV.GetText(RowNumber, 1) <em>; 获取首个字段的文本.</em>
     FileDir := LV.GetText(RowNumber, 2)  <em>; 获取第二个字段的文本.</em>
     try Run(FileDir "\" FileName)
     if A_LastError
@@ -630,14 +630,14 @@ RunFile(LV, RowNumber)
 ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; 响应右键或 Apps 键.</em>
 {
     <em>; 创建弹出式菜单, 作为上下文菜单使用:</em>
-    static ContextMenu := <a href="../objects/Menu.htm#Call">Menu</a>()
-    <a href="../objects/Menu.htm#Add">ContextMenu.Add</a>("Open", "OpenOrProperties")
-    ContextMenu.Add("Properties", "OpenOrProperties")
-    ContextMenu.Add("Clear from ListView", "ClearRows")
-    <a href="../objects/Menu.htm#Default">ContextMenu.Default</a> := "Open"  <em>; 将 "Open(打开)" 改为粗体字, 以表明这是双击的默认动作.
+    static ContextMenu := Menu()
+    ContextMenu.Add("Open", OpenOrProperties)
+    ContextMenu.Add("Properties", OpenOrProperties)
+    ContextMenu.Add("Clear from ListView", ClearRows)
+    ContextMenu.Default := "Open"  <em>; 将 "Open(打开)" 改为粗体字, 以表明这是双击的默认动作.
     ; 在所提供的 X 和 Y 坐标处显示菜单.
     ; 这些应该被使用, 因为即使用户按了 Apps 键, 它们也能提供正确的坐标:</em>
-    <a href="../objects/Menu.htm#Show">ContextMenu.Show</a>(X, Y)
+    ContextMenu.Show(X, Y)
 
     OpenOrProperties(ItemName, *)  <em>; 用户在上下文菜单中选择了 "Open" 或 "Properties".</em>
     {

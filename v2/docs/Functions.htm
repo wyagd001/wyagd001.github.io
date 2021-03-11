@@ -178,29 +178,29 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 <h2 id="Locals">局部和全局变量</h2>
 <h3 id="Local">局部变量</h3>
 <p>局部变量是特定于单个函数的, 只在该函数内可见. 因此, 局部变量可能与全局变量具有相同的名称, 但有不同的内容. 不同的函数也可以安全地使用相同的变量名.</p>
-<p>当函数返回值时, 所有非<a href="#static">静态</a>的局部变量都自动释放(变为空), 除了绑定到<a href="#closures">闭包</a>或 <a href="Concepts.htm#variable-references">VarRef</a>(such variables are freed at the same time as the closure or VarRef) 变量.</p>
+<p>当函数返回值时, 所有非<a href="#static">静态</a>的局部变量都自动释放(变为空), 除了绑定到<a href="#closures">闭包</a>或 <a href="Concepts.htm#variable-references">VarRef</a>(这样的变量在闭包或 VarRef 释放时被释放) 的变量.</p>
 <p>像 <a href="misc/A_Clipboard.htm">A_Clipboard</a> 和 <a href="Variables.htm#TimeIdle">A_TimeIdle</a> 这样的内置变量永远不会是局部的(它们可以从任何地方访问), 并且不能被重新声明. (这不适用于内置类, 如 <a href="objects/Object.htm">Object</a>; 它们被预定义为<a href="#Global">全局</a>变量.)</p>
 <p id="AssumeLocal">默认情况下, 函数是<strong>假定-局部</strong>的. 在假定-局部函数内访问或创建的变量默认为局部的, 但以下情况除外:</p>
 <ul>
-<li><a href="#Global">Global</a> variables which are only read by the function, not assigned or used with the <a href="Variables.htm#ref">reference operator (&amp;)</a>.</li>
+<li><a href="#Global">全局</a>变量只能被函数读取, 不能被赋值或使用<a href="Variables.htm#ref">引用运算符(&amp;)</a>.</li>
   <li><a href="#nested">嵌套函数</a>可以引用由闭合它的函数创建的局部或静态变量.</li>
 </ul>
 <p>如下所示, 也可以重写默认模式(通过声明变量或改变函数的模式).</p>
 
 <h3 id="Global">全局变量</h3>
-<p id="AssignLocal">Any variable reference in an <a href="#AssumeLocal">assume-local</a> function may resolve to a global variable if it is only read. However, if a variable is used in an assignment or with the <a href="Variables.htm#ref">reference operator (&amp;)</a>, it is automatically local by default. This allows functions to read global variables or call global or built-in functions without declaring them inside the function, while protecting the script from unintended side-effects when the name of a local variable being assigned coincides with a global variable. For example:</p>
+<p id="AssignLocal"><a href="#AssumeLocal">假定-局部</a>函数中的任何变量引用, 如果只是读取的话, 可以解析为全局变量. 然而, 如果一个变量在赋值中使用或使用<a href="Variables.htm#ref">引用操作符(&amp;)</a>, 它默认是自动局部的. 这就允许函数读取全局变量或调用全局或内置函数, 而无需在函数内部声明, 同时当被赋值的局部变量的名称与全局变量的名称重合时, 可以保护脚本免受意外的副作用. 例如:</p>
 <pre>LogToFile(TextToLog)
 {
-    <em>; LogFileName was previously given a value somewhere outside this function.
-    ; FileAppend is a predefined global variable containing a built-in function.</em>
+    <em>; LogFileName 是之前在这个函数之外的某个地方被赋予的值.
+    ; FileAppend 是一个包含内置函数的预定义全局变量.</em>
     FileAppend TextToLog "`n", LogFileName
 }</pre>
-<p>Otherwise, to refer to an existing global variable inside a function (or create a new one), declare the variable as global prior to using it. For example:</p>
+<p>否则, 如果要在函数中引用一个现有的全局变量(或者创建一个新的变量), 在使用它之前先声明这个变量为全局变量. 例如:</p>
 <pre>SetDataDir(Dir)
 {
     <strong>global</strong> LogFileName
     LogFileName := Dir . "\My.log"
-    <strong>global</strong> DataDir := Dir  <em>; Declaration combined with assignment, described <a href="#DeclareInit">below</a>.</em>
+    <strong>global</strong> DataDir := Dir  <em>; 声明与赋值相结合, 如<a href="#DeclareInit">下</a>所述.</em>
 }
 </pre>
 <p id="AssumeGlobal"><strong>假定-全局模式</strong>: 如果函数需要访问或创建大量的全局变量, 通过在函数的首行使用单词 "global", 从而假定其所有变量都是全局的(参数除外). 例如:</p>
@@ -244,13 +244,13 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>因为单词 <em>local</em>, <em>global</em> 和 <em>static</em> 都是在脚本运行时立即处理的, 所以不能使用 <a href="commands/If.htm">If 语句</a>有条件地声明变量. 换句话说, If 或 Else 的<a href="commands/Block.htm">区块</a>内的声明无条件对声明和函数的闭括号之间的所有行生效(但声明中包含的任何初始化仍然是有条件的). 像 <code>global Array%i%</code> 这样的动态声明是不可能的, 因为所有对 <code>Array1</code> 或 <code>Array99</code> 这样的变量的非动态引用都已经被解析为地址了.</p>
 
 <h2 id="DynCall">动态调用函数</h2>
-<p>Although a function call expression usually begins with a literal function name, the target of the call can be any expression which produces a <a href="objects/Functor.htm">function object</a>. In the expression <code>GetKeyState("Shift")</code>, <em>GetKeyState</em> is actually a variable reference, although it usually refers to a read-only variable containing a built-in function.</p>
-<p>A function call is said to be <em>dynamic</em> if the target of the call is determined while the script is running, instead of before the script starts. The same syntax is used as for normal function calls; the only apparent difference is that certain error-checking is performed at load time for non-dynamic calls but only at run time for dynamic calls.</p>
-<p>For example, <code>MyFunc()</code> would call the <a href="objects/Functor.htm">function object</a> contained by <em>MyFunc</em>, which could be either the actual name of a function, or just a variable which has been assigned a function.</p>
-<p>Other expressions can be used as the target of a function call, including <a href="Variables.htm#deref">double-derefs</a>. For example, <code>MyArray[1]()</code> would call the function contained by the first element of MyArray, while <code>%MyVar%()</code> would call the function contained by the <em>variable</em> whose <em>name</em> is contained by MyVar. In other words, the expression preceding the parameter list is first evaluated to get a <a href="objects/Functor.htm">function object</a>, then that object is called.</p>
+<p>虽然函数调用表达式通常以原义的函数名称开头, 但调用的目标可以是任何产生<a href="objects/Functor.htm">函数对象</a>的表达式. 在表达式 <code>GetKeyState("Shift")</code> 中, <em>GetKeyState</em> 实际上是一个变量引用, 尽管它通常指的是一个包含内置函数的只读变量.</p>
+<p>如果一个函数调用的目标是在脚本运行时确定的, 而不是在脚本启动前确定的, 那么这个函数调用就被称为是 <em>动态的</em>. 与普通函数调用的语法相同; 唯一明显的区别是, 对于非动态调用, 某些错误检查在加载时进行, 而对于动态调用, 只有在运行时才进行.</p>
+<p>例如, <code>MyFunc()</code> 将调用 <em>MyFunc</em> 包含的<a href="objects/Functor.htm">函数对象</a> , 它可以是一个函数的实际名称, 也可以只是一个被赋值到函数的变量.</p>
+<p>其他表达式也可以作为函数调用的目标, 包括<a href="Variables.htm#deref">双重解引</a>. 例如, <code>MyArray[1]()</code> 将调用 MyArray 的第一个元素所包含的函数, 而 <code>%MyVar%()</code> 将调用 <em>variable</em> whose <em>name</em> is contained by MyVar. 换句话说, the expression preceding the parameter list is first evaluated to get a <a href="objects/Functor.htm">function object</a>, then that object is called.</p>
 <p>If the target value cannot be called due to one of the reasons below, an <a href="objects/Error.htm">Error</a> is thrown:</p>
 <ul>
-  <li>If the target value is not of a type that can be called, a <a href="objects/Error.htm#MethodError">MethodError</a> is thrown. Any value with a Call method can be called, so <code>HasMethod(value, "Call")</code> can be used to avoid this error.</li>
+  <li>如果目标值不是可以被调用的类型, 则抛出 <a href="objects/Error.htm#MethodError">MethodError</a>. Any value with a Call method can be called, so <code>HasMethod(value, "Call")</code> can be used to avoid this error.</li>
   <li>传递过少或太多的参数, 这通常可以通过检查函数的 <a href="objects/Func.htm#MinParams">MinParams</a>, <a href="objects/Func.htm#MaxParams">MaxParams</a> 和 <a href="objects/Func.htm#IsVariadic">IsVariadic</a> 属性来避免.</li>
   <li>Passing something other than a <a href="Concepts.htm#variable-references">variable reference (VarRef)</a> to a <a href="#ByRef">ByRef</a> or OutputVar parameter, which could be avoided through the use of the <a href="objects/Func.htm#IsByRef">IsByRef method</a>.</li>
 </ul>
