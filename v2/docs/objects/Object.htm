@@ -14,8 +14,8 @@
 <h1>Object</h1>
 <pre class="NoIndent">class Object extends Any</pre>
 
-<p><strong>Object(对象)</strong> 是派生其他 AutoHotkey 对象类的基本类. Each instance of Object consists of a set of "own properties" and a base object, from which more properties are inherited. Objects also have methods, but these are just properties which can be called.</p>
-<p>There are value properties and dynamic properties. Value properties simply contain a value. Dynamic properties do not contain a value, but instead call an <em>accessor function</em> depending on how they are accessed (get, set or call).</p>
+<p><strong>Object(对象)</strong> 是派生其他 AutoHotkey 对象类的基本类. Object 的每个实例都由一组 "自有属性" 和一个基对象组成, 可以从基对象中继承更多的属性. Objects 也有方法, 但这些只是可以调用的属性.</p>
+<p>有值属性和动态属性. 值属性只是包含一个值. 动态属性不包含一个值, 而是根据访问方式(get, set 或 call) 调用一个 <em>访问函数</em>.</p>
 <p>下面使用 "Obj" 作为 Object 类的任何实例的占位符.</p>
 <p>所有 Object 的实例都基于 <code>Object.Prototype</code>, 而其又基于 <code>Any.Prototype</code>. 除了从 <a href="Any.htm">Any</a> 继承的方法和属性外, Object 还具有以下预定义的方法和属性:</p>
 <p><strong>方法:</strong></p>
@@ -31,7 +31,7 @@
 <ul>
   <li><a href="#Base">Base</a></li>
 </ul>
-<p><strong>Static Methods:</strong></p>
+<p><strong>静态方法:</strong></p>
 <ul>
   <li><a href="#Call">Call</a></li>
 </ul>
@@ -43,10 +43,10 @@
   <li>ObjHasOwnProp, ObjOwnProps: 等同于相应的预定义方法, 但不能被覆盖.</li>
 </ul>
 
-<h2 id="StaticMethods">Static Methods</h2>
+<h2 id="StaticMethods">静态方法</h2>
 
 <div class="methodShort" id="Call"><h2>Call</h2>
-<p>Creates a new Object.</p>
+<p>创建一个新对象.</p>
 <pre class="Syntax">Obj := <span class="func">Object</span>()</pre>
 </div>
 
@@ -72,25 +72,25 @@
   <dt>Desc</dt>
   <dd>
     <p>类型: 对象</p>
-    <p>具有以下自身属性之一对象, 或同时具有 <em>Get</em> 和 <em>Set</em>:</p>
+    <p>具有以下自有属性之一的对象, 或同时具有 <em>Get</em> 和 <em>Set</em>:</p>
     <p><code>Get</code>: 获取属性值时调用的<a href="Functor.htm">函数对象</a>.</p>
     <p><code>Set</code>: 属性被赋值时调用的<a href="Functor.htm">函数对象</a>. 第二个参数是要分配的值.</p>
-    <p><code>Call</code>: The <a href="Functor.htm">function object</a> to call when the property is called.</p>
+    <p><code>Call</code>: 调用该属性时要调用的<a href="Functor.htm">函数对象</a>.</p>
     <p><code>Value</code>: 要赋值该属性的任何值.</p>
   </dd>
-  <dt>Return Value</dt>
+  <dt>返回值</dt>
   <dd>
     <p>目标对象(<em>Obj</em>).</p>
   </dd>
 </dl>
-<p>该方法可用于将值属性转换为动态属性, 反之亦然, but it is not possible to specify both a value and accessor functions.</p>
-<p>If any one of the accessor functions is omitted, behavior is inherited from a base object.</p>
+<p>该方法可用于将值属性转换为动态属性, 反之亦然, 但不可能同时指定一个值和访问函数.</p>
+<p>如果省略任何一个访问函数, 行为就会从基对象中继承.</p>
 <ul>
-  <li>An inherited value property is equivalent to a set of accessor functions which return or call the value, or store a new value in <code>this</code>. Note that a new value would overwrite any dynamic property in <code>this</code> itself, and override any inherited accessor functions.</li>
-  <li>If no <em>Set</em> or value is defined or inherited, attempting to set the property will throw an exception.</li>
-  <li>If no <em>Call</em> is defined or inherited, <em>Get</em> may be called to retrieve a function object, which is then called.</li>
+  <li>一个继承的值属性相当于一组访问函数, 它们返回或调用该值, 或在 <code>this</code> 中存储一个新的值. 注意, 一个新的值将覆盖其在 <code>this</code> 本身中的任何动态属性, 并覆盖任何继承的访问函数.</li>
+  <li>如果没有定义或继承 <em>Set</em> 或值, 那么试图设置该属性将抛出一个异常.</li>
+  <li>如果没有定义或继承 <em>Call</em>, 可以调用 <em>Get</em> 来检索一个函数对象, 然后再调用它.</li>
 </ul>
-<p>As with methods, the first parameter of <em>Get</em>, <em>Set</em> or <em>Call</em> is <code>this</code> (the target object). For <em>Set</em>, the second parameter is <code>value</code> (the value being assigned). These parameters are defined automatically by method and property definitions within a class, but must be defined explicitly if using normal functions. Any other parameters passed by the caller are appended to the parameter list.</p>
+<p>与方法一样, <em>Get</em>, <em>Set</em> 或 <em>Call</em> 的第一个参数是 <code>this</code>(目标对象). 对于 <em>Set</em>, 第二个参数是 <code>value</code>(被分配的值). 这些参数由类中的方法和属性定义自动定义, 但如果使用普通函数, 则必须显式定义. 调用者传递的任何其他参数都会附加到参数列表中.</p>
 <p>计算函数对象的 <code>MaxParams</code> 和 <code>IsVariadic</code> 属性, 以确定该属性是否可以接受参数. 如果 <em>get</em> 的 <code>MaxParams</code> 为 1, 或 <em>set</em> 的 <code>MaxParams</code> 为 2, 并且 <code>IsVariadic</code> 为 false 或未定义, 则属性不能接受参数; 它们被转发到由 <em>get</em> 返回的对象的 <a href="../Objects.htm#__Item">__Item</a> 属性.</p>
 </div>
 
@@ -120,7 +120,7 @@
   <dt>返回值</dt>
   <dd>
     <p>类型: Object</p>
-    <p>For a dynamic property, the return value is a new object with an own property for each accessor function: <code>Get</code>, <code>Set</code>, <code>Call</code>. Each property is present only if the corresponding accessor function is defined in <em>Obj</em> itself.</p>
+    <p>对于动态属性, 返回值是一个新对象, 其中每个访问函数都有自己的属性: <code>Get</code>, <code>Set</code>, <code>Call</code>. 只有在 <em>Obj</em> 本身定义了相应的访问函数, 每个属性才会存在.</p>
     <p>对于值属性, 返回值是一个新对象, 其属性名为 <code>Value</code>. 在这种情况下, <code>Obj.GetOwnPropDesc(Name).Value == Obj.%Name%</code>.</p>
   </dd>
 </dl>

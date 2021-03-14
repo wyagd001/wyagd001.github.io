@@ -24,7 +24,7 @@
    <dd>
     <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
     <p>变量的引用. 例如: <code>IsSet(&amp;MyVar)</code>.</p>
-    <p class="note"><strong>Note:</strong> Use the <a href="../Variables.htm#ref">reference operator (&amp;)</a> when checking a variable directly, but not when passing a variable which <em>contains</em> a VarRef.</p>
+    <p class="note"><strong>注意:</strong> 在直接检查变量时, 需要使用<a href="../Variables.htm#ref">引用操作符(&amp;)</a>, 但在传递 <em>包含</em> VarRef 的变量时不需要使用.</p>
   </dd>
 
  </dl>
@@ -34,8 +34,8 @@
 <p>如果 <em>Var</em> 已经被赋值, 函数返回 1(true), 否则返回 0(false).</p>
 
  <h2 id="Remarks">备注</h2>
-<p>未赋值的变量也称为<a href="../Concepts.htm#uninitialized-variables">未初始化变量</a>. 默认情况下, 试图读取一个未初始化的变量 causes an exception to be thrown. IsSet can be used to avoid this, such as for initializing a global or static variable on first use.</p>
-<p>When checking a global variable inside a function, it is generally necessary to <a href="../Functions.htm#Global">declare</a> the variable. Otherwise, the use of the <a href="../Variables.htm#ref">reference operator (&amp;)</a> would cause a local variable to be created. This declaration would already be necessary if the global variable is to be assigned a value inside the function.</p>
+<p>未赋值的变量也称为<a href="../Concepts.htm#uninitialized-variables">未初始化变量</a>. 默认情况下, 试图读取一个未初始化的变量会导致异常抛出. IsSet 可以用来避免这种情况, 例如在第一次使用全局变量或静态变量时是否需要初始化.</p>
+<p>在函数内部检查全局变量时, 一般需要<a href="../Functions.htm#Global">声明</a>该变量. 否则, 使用<a href="../Variables.htm#ref">引用操作符(&amp;)</a> 会创建一个局部变量. 如果要在函数内部给全局变量赋值, 这种声明是必须的.</p>
 <p class="note"><strong>注意:</strong> <a href="../Functions.htm#InitStatic">静态初始化</a> 如 <code>static my_static_array := []</code> 只被计算一次, 即在执行过程中第一次到达时, 因此通常不需要使用 IsSet.</p>
 <p><strong>已知限制:</strong> 如果 MsgBox 警告模式生效, 触发给定变量的警告消息的副作用是初始化该变量以防止进一步的警告. 这将导致 IsSet 为后续调用返回 true.</p>
 
@@ -46,22 +46,22 @@
 <p><a class="ex_number" href="#ExBasic"></a> 如果 <var>MyVar</var> 已经被赋值, 则报告一个非零的数字.</p>
 <pre>
 Loop 2
-    if !IsSet(&amp;MyVar)  <em>; Is this the first "use" of MyVar?</em>
-        MyVar := A_Index  <em>; Initialize on first "use".</em>
+    if !IsSet(&amp;MyVar)  <em>; 是否是第一次 "使用" MyVar?</em>
+        MyVar := A_Index  <em>; 第一次 "使用" 时进行初始化.</em>
 MsgBox Function1(&amp;MyVar)
 MsgBox Function2(&amp;MyVar)
 
-Function1(&amp;Param)  <em>; ByRef parameter.</em>
+Function1(&amp;Param)  <em>; ByRef 参数.</em>
 {
-    if IsSet(&amp;Param)  <em>; Pass a reference to the target of Param.</em>
-        return Param  <em>; ByRef parameters are automatically dereferenced.</em>
+    if IsSet(&amp;Param)  <em>; 传递引用给目标 Param.</em>
+        return Param  <em>; ByRef 参数会自动解引用.</em>
     else
         return "unset"
 }
 Function2(Param)
 {
-    if IsSet(Param)  <em>; Pass the VarRef contained by Param.</em>
-        return %Param%  <em>; Explicitly dereference Param.</em>
+    if IsSet(Param)  <em>; 传递包含 VarRef 的 Param.</em>
+        return %Param%  <em>; 显式解引用 Param.</em>
     else
         return "unset"
 }</pre>

@@ -92,7 +92,6 @@ For value in MyArray
 <pre>MyMap := Map("ten", 10, "twenty", 20, "thirty", 30)
 <a href="commands/For.htm">For</a> key, value in MyMap
     MsgBox key ' = ' value</pre>
-<p>关联数组可以是稀疏分布的 - 即 <code>{1:"a",1000:"b"}</code> 仅包含两个键值对, 而不是 1000 个.</p>
 
 <h3 id="Usage_Objects">对象</h3>
 <p>对象可以有 <em>属性</em>, <em>方法</em> 和 <em>项目</em>(如 数组元素). 项目可以使用 <code>[]</code> 来访问, 如前面几节所示. 属性和方法通常通过在一个点后面加上一个标识符(只是一个<a href="Concepts.htm#names">名称</a>) 来访问.</p>
@@ -131,6 +130,7 @@ x := "", y := ""             <em>; 如果没有上一行, 则此行无法释放�
 <p>想了解更多高级用法和细节, 请参阅<a href="#Reference_Counting">引用计数</a>.</p>
 
 <h2 id="Extended_Usage">扩展用法</h2>
+
 <h3 id="Usage_Arrays_of_Arrays">数组嵌套</h3>
 <p>尽管不支持 "多维" 数组, 但是脚本可以组合多个数组或映射. 例如:</p>
 <pre>
@@ -279,7 +279,7 @@ other.test()</pre>
 <p><em>实例变量</em> 是类的每个实例都拥有独立的副本. 他们如同普通赋值一样被声明, 但 <code>this.</code> 前缀被忽略(仅限于类主体内时):</p>
 <pre>InstanceVar := Expression</pre>
 <p>每次使用 <a href="objects/Class.htm#Call"><em>ClassName</em>()</a> 创建类的新实例时, 都会计算这些声明, 在所有基类声明被求值之后, 但在调用 <a href="#Custom_NewDelete">__New</a> 之前. 这是通过自动创建一个名为 <em>__Init</em> 的方法来实现的, 该方法包含对 <code>super.__Init()</code> 的调用, 并将每个声明插入其中. 因此, 单个类定义不能同时包含 __Init 方法和实例变量声明.</p>
-<p><em>Expression</em> 可以通过 <code>this</code> 访问其他实例变量和方法. Global variables may be read, but not assigned. An additional assignment (or use of the <a href="Variables.htm#ref">reference operator</a>) within the expression will generally create a variable local to the __Init method. For example, <code>x := y := 1</code> would set <code>this.x</code> and a local variable <code>y</code> (which would be freed once all initializers have been evaluated).</p>
+<p><em>Expression</em> 可以通过 <code>this</code> 访问其他实例变量和方法. 全局变量可以被读取, 但不能被赋值. 在表达式中的额外赋值(或使用<a href="Variables.htm#ref">引用操作符</a>) 通常会在 __Init 方法中创建一个局部变量. 例如, <code>x := y := 1</code> 将会设置 <code>this.x</code> 和一个局部变量 <code>y</code>(一旦所有初始化器被计算, 这个变量就会被释放).</p>
 <p>要访问实例变量, 总是要指定目标对象; 例如, <code><b>this</b>.InstanceVar</code>.</p>
 <p>支持形如 <code>x.y := z</code> 的声明语法, 假设 <code>x</code> 已在类中声明. 例如, <code>x := {}, x.y := 42</code> 声明了 <code>x</code> 并初始化了 <code>this.x.y</code>.</p>
 
@@ -287,7 +287,7 @@ other.test()</pre>
 <p>静态/类变量属于类, 但是它们的值可以被子类继承. 和实例变量一样声明, 但使用 static 关键字:</p>
 <pre>static ClassVar := Expression</pre>
 <p>这些声明只在初始化类时被计算一次. 在当前版本中, 类是按照它们在脚本中出现的顺序初始化的, 在脚本顶部的<a href="Scripts.htm#auto">启动执行</a>之前. 为此, 会自动定义一个名为 <em>__Init</em> 的静态方法.</p>
-<p>每个声明在类对象中存储一个值. <em>Expression</em> has the same interpretation as for instance variables, except that <code>this</code> refers to the class itself.</p>
+<p>每个声明在类对象中存储一个值. <em>Expression</em> 与实例变量的解释相同, 除了 <code>this</code> 引用类本身.</p>
 <p>若要给类变量赋值, 始终指定类对象; 例如, <code><b>ClassName</b>.ClassVar := Value</code>. 如果一个子类不拥有该名称的属性, <code><i>Subclass</i>.ClassVar</code> 也可以用来检索值; 因此, 如果该值是对象的引用, 则默认情况下子类将共享该对象. 然而, <code><i>Subclass</i>.ClassVar := y</code> 将值存储在 <em>Subclass</em>, 而不是 <em>ClassName</em> 中.</p>
 <p>支持形如 <code>x.y := z</code> 的声明, 假设 <code>x</code> 已在类中声明. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>.</p>
 
@@ -300,7 +300,7 @@ class NestedClass
 }
 </pre>
 <p>嵌套一个类并不意味着与外部类有任何特殊的关系. 嵌套类不会自动实例化, 嵌套类的实例也不会与外部类的实例有任何连接, 除非脚本显式地建立连接.</p>
-<p>However, due to the way methods work for <a href="objects/Object.htm">Objects</a>, <code><i>WhichClass</i>.NestedClass()</code> implicitly passes <em>WhichClass</em> as the first parameter, equivalent to <code><i>WhichClass</i>.NestedClass.Call(<i>WhichClass</i>)</code>. Unless <code>static Call()</code> is overridden, this parameter is automatically passed to <a href="#Custom_NewDelete">__New</a>.</p>
+<p>然而, 由于 <a href="objects/Object.htm">Objects</a> 方法的工作方式, <code><i>WhichClass</i>.NestedClass()</code> 隐式传递 <em>WhichClass</em> 为第一个参数, 等同于 <code><i>WhichClass</i>.NestedClass.Call(<i>WhichClass</i>)</code>. 除非 <code>static Call()</code> 被重写, 否则此参数会自动传递给 <a href="#Custom_NewDelete">__New</a>.</p>
 
 <h4 id="Custom_Classes_method">方法</h4>
 <p>方法定义看起来和函数定义相同. 每个方法都有一个名为 <code>this</code> 的隐藏参数, 其中包含对调用该方法的对象的引用. 有两种类型的方法:</p>
@@ -319,8 +319,7 @@ Method()
 <pre>Method() =&gt; <i>Expression</i></pre>
 
 <h4 id="Custom_Classes_super">Super</h4>
-<p>在方法或属性的 getter/setter 中, 关键字 <code>super</code> 可以代替 <code>this</code> 来访问在派生类中被重写的方法或属性的超类版本. 例如, 上面定义的类中的 <code>super.Method()</code> 通常会调用 
-<em>BaseClassName</em> 中定义的 <em>Method</em> 的版本. 注意:</p>
+<p>在方法或属性的 getter/setter 中, 关键字 <code>super</code> 可以代替 <code>this</code> 来访问在派生类中被重写的方法或属性的超类版本. 例如, 上面定义的类中的 <code>super.Method()</code> 通常会调用 <em>BaseClassName</em> 中定义的 <em>Method</em> 的版本. 注意:</p>
 <ul>
   <li><code>super.Method()</code> 总是调用与当前方法的原始定义相关联的类或原型对象的基, 即使 <code>this</code> 是从该类的 <em>subclass</em> 或其他一些完全的类派生出来的.</li>
   <li><code>super.Method()</code> 隐式地将 <code>this</code> 作为第一个(隐藏的) 参数.</li>
@@ -440,7 +439,7 @@ class <i>ClassName</i> {
 <ul>
   <li><i>Call</i>: 抛出 <a href="objects/Error.htm#MethodError">MethodError</a>.</li>
   <li>如果给出了参数, 则抛出异常(没有对象可将参数转发到).</li>
-  <li><i>Get</i>: Throw a <a href="objects/Error.htm#PropertyError">PropertyError</a>.</li>
+  <li><i>Get</i>: 抛出 <a href="objects/Error.htm#PropertyError">PropertyError</a>.</li>
   <li><i>Set</i>: 使用给定值定义一个新属性, 例如通过调用 <a href="objects/Object.htm#DefineProp">DefineProp</a>. </li>
 </ul>
 <p>任意<a href="objects/Functor.htm">可调用对象</a>可用作元函数, 通过将其赋值给相关属性.</p>
@@ -464,7 +463,6 @@ class <i>ClassName</i> {
       <li>整数</li>
       </ul></li>
       <li>字符串</li>
-    </ul></li>
   </ul></li>
 </ul>
 <p>虽然检查字符串的<a href="commands/Type.htm">类型</a>通常更快, 但是可以通过检查值是否具有给定的基来测试值的类型. 例如, 如果 <em>n</em> 是一个纯整数或浮点数, 则 <code>n.HasBase(Number.Prototype)</code> 或 <code>n is Number</code> 为真, 但如果 <em>n</em> 是一个数字字符串, 则不为真, 因为字符串不是从数字派生而来的. 相比之下, 如果 <em>n</em> 是数字或数字字符串, <code>IsNumber(n)</code> 为真.</p>

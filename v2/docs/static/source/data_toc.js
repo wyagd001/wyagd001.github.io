@@ -1,5 +1,5 @@
 ﻿tocData = [
-  ["快速参考","AutoHotkey.htm"],
+  ["AutoHotkey","AutoHotkey.htm"],
   ["常见问题(FAQ)","FAQ.htm"],
   ["初学者向导(快速入门)","Tutorial.htm"],
   ["更新历史","ChangeLog.htm"],

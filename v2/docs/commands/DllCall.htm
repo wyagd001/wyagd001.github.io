@@ -58,7 +58,7 @@
 <tr id="str">
 <td>Str</td>
 <td>
-<p>A string such as <code>"Blue"</code> or <code>MyVar</code>, or a <a href="../Concepts.htm#variable-references">VarRef</a> such as <code>&amp;MyVar</code>. If the called function modifies the string and the argument is a naked variable or VarRef, its contents will be updated. For example, the following call would convert the contents of <em>MyVar</em> to uppercase: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
+<p>一个字符串, 如 <code>"Blue"</code> 或 <code>MyVar</code>, 或 <a href="../Concepts.htm#variable-references">VarRef</a>(如 <code>&amp;MyVar</code>). 如果被调用的函数修改了字符串, 并且参数是裸变量或 VarRef, 那么它的内容将被更新. 例如, 下面的调用将把 <em>MyVar</em> 的内容转换为大写字母: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
   <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串.</p>
   <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出 <a href="../objects/Error.htm#TypeError">TypeError</a>.</p>
@@ -119,7 +119,7 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 <tr id="asterisk">
   <td>* 或 P<br>
     (后缀)</td>
-  <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, whenever a <a href="../Concepts.htm#variable-references">VarRef</a> is passed as the argument, the variable's contents will be updated after the function returns. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall("MyDll\MyFunction", "Int*", &amp;MyVar)</code>.</p>
+  <td><p>在上述任何类型上附加一个星号(星号前可选的空格), 以表示传递参数的地址而不是值本身(必须将被调用的函数设计为接受该参数). 由于此类参数的值可能会被函数修改, 每当传递一个 <a href="../Concepts.htm#variable-references">VarRef</a> 作为参数时, 变量的内容将在函数返回后被更新. 例如, 以下调用将通过地址将 MyVar 的内容传递给 MyFunction, 但还将更新 MyVar 以反映 MyFunction 对它所做的任何更改: <code>DllCall("MyDll\MyFunction", "Int*", &amp;MyVar)</code>.</p>
     <p>通常, 星号可用于参数类型或返回类型以 "LP" 开头的函数. 最常见的示例是 LPDWORD, 它是指向 DWORD 的指针. 由于 DWORD 是 32 位无符号整数, 因此请使用 "UInt*" 或 "UIntP" 表示 LPDWORD. 星号不能用于字符串类型(如 LPTSTR), 指向结构的指针(如 LPRECT) 或数组; 对于这些, 应使用 <a href="#str">"Str"</a> 或 <a href="#ptr">"Ptr"</a>, 具体取决于您传递的是字符串, 地址或 <a href="../objects/Buffer.htm">Buffer</a>.</p>
     <p class="note"><strong>注意</strong>: "Char*" 与 <a href="#str">"Str"</a> 不同, 因为 "Char*" 传递一个 8 位数字的地址, 而 <a href="#str">"Str"</a> 传递一系列字符的地址, 该字符可以是 16 位(Unicode) 或 8 位("AStr"), 具体取决于 AutoHotkey 的版本. 同样, "UInt*" 传递的是 32 位数字的地址, 因此如果函数期望值的数组或大于 32 位的结构, 则不应使用 "UInt*".</p>
     <p>由于 AutoHotkey 中的变量没有固定类型, 因此传递给函数的地址指向临时内存, 而不是调用者的变量.</p>

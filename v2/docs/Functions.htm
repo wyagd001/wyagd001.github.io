@@ -247,14 +247,14 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>虽然函数调用表达式通常以原义的函数名称开头, 但调用的目标可以是任何产生<a href="objects/Functor.htm">函数对象</a>的表达式. 在表达式 <code>GetKeyState("Shift")</code> 中, <em>GetKeyState</em> 实际上是一个变量引用, 尽管它通常指的是一个包含内置函数的只读变量.</p>
 <p>如果一个函数调用的目标是在脚本运行时确定的, 而不是在脚本启动前确定的, 那么这个函数调用就被称为是 <em>动态的</em>. 与普通函数调用的语法相同; 唯一明显的区别是, 对于非动态调用, 某些错误检查在加载时进行, 而对于动态调用, 只有在运行时才进行.</p>
 <p>例如, <code>MyFunc()</code> 将调用 <em>MyFunc</em> 包含的<a href="objects/Functor.htm">函数对象</a> , 它可以是一个函数的实际名称, 也可以只是一个被赋值到函数的变量.</p>
-<p>其他表达式也可以作为函数调用的目标, 包括<a href="Variables.htm#deref">双重解引</a>. 例如, <code>MyArray[1]()</code> 将调用 MyArray 的第一个元素所包含的函数, 而 <code>%MyVar%()</code> 将调用 <em>variable</em> whose <em>name</em> is contained by MyVar. 换句话说, the expression preceding the parameter list is first evaluated to get a <a href="objects/Functor.htm">function object</a>, then that object is called.</p>
-<p>If the target value cannot be called due to one of the reasons below, an <a href="objects/Error.htm">Error</a> is thrown:</p>
+<p>其他表达式也可以作为函数调用的目标, 包括<a href="Variables.htm#deref">双重解引</a>. 例如, <code>MyArray[1]()</code> 将调用 MyArray 的第一个元素所包含的函数, 而 <code>%MyVar%()</code> 将调用变量, 其 <em>名称</em> 包含在 MyVar 中. 换句话说, 首先对参数列表前面的表达式进行计算, 得到<a href="objects/Functor.htm">函数对象</a>, 然后调用该对象.</p>
+<p>如果目标值不是可以被调用的类型, 则抛出 <a href="objects/Error.htm">Error</a>:</p>
 <ul>
-  <li>如果目标值不是可以被调用的类型, 则抛出 <a href="objects/Error.htm#MethodError">MethodError</a>. Any value with a Call method can be called, so <code>HasMethod(value, "Call")</code> can be used to avoid this error.</li>
+  <li>如果目标值不是可以被调用的类型, 则抛出 <a href="objects/Error.htm#MethodError">MethodError</a>. 任何带有 Call 方法的值都可以被调用, 所以可以使用 <code>HasMethod(value, "Call")</code> 来避免这个错误.</li>
   <li>传递过少或太多的参数, 这通常可以通过检查函数的 <a href="objects/Func.htm#MinParams">MinParams</a>, <a href="objects/Func.htm#MaxParams">MaxParams</a> 和 <a href="objects/Func.htm#IsVariadic">IsVariadic</a> 属性来避免.</li>
-  <li>Passing something other than a <a href="Concepts.htm#variable-references">variable reference (VarRef)</a> to a <a href="#ByRef">ByRef</a> or OutputVar parameter, which could be avoided through the use of the <a href="objects/Func.htm#IsByRef">IsByRef method</a>.</li>
+  <li>传递<a href="Concepts.htm#variable-references">变量引用(VarRef)</a> 以外的东西给 <a href="#ByRef">ByRef</a> 或 OutputVar 参数, 这可以通过使用 <a href="objects/Func.htm#IsByRef">IsByRef 方法</a>来避免.</li>
 </ul>
-<p>The caller of a function should generally know what each parameter means and how many there are before calling the function. However, for dynamic calls, the function is often written to suit the function call, and in such cases failure might be caused by a mistake in the function definition rather than incorrect parameter values.</p>
+<p>在调用函数之前, 函数的调用者一般应该知道每个参数的含义以及有多少个参数. 但是, 对于动态调用来说, 函数通常是为了适应函数调用而编写的, 在这种情况下, 失败的原因可能是函数定义的错误而不是参数值的错误.</p>
 
 <h2 id="ShortCircuit">短路型布尔值的计算</h2>
 <p>当在<a href="Variables.htm#Expressions">表达式</a>中使用 <em>AND, OR</em> 和<a href="Variables.htm#ternary">三元运算符</a>时, 它们会短路以提高性能(无论当前是否存在函数调用). 短路操作是通过不计算表达式中那些不影响最终结果的部分来进行优化运算. (译者注: 只要碰到了 true 或者等价于 true 的就短路, 只要短路了就不会继续往后执行了, 碰到 false 就短路的情况也是同样.) 为了说明这个概念, 请看这个例子:</p>
@@ -280,30 +280,29 @@ outer(x) {
 }
 outer("title")
 </pre>
-<p>嵌套函数不能在紧接着包含它的函数外部访问, 但是可以在该函数内部的任何地方访问, 包括在其他嵌套函数内部.</p>
-<p>By default, a nested function may access any <a href="#static">static</a> variable of any function which encloses it, even dynamically.</p>
-<p id="capture-var">By default, a nested function automatically "captures" a non-static local variable of an outer function when the following requirements are met:</p>
+<p>嵌套函数不能在紧邻着包含它的函数外部通过名称访问, 但是可以在该函数内部的任何地方访问, 包括在其他嵌套函数内部.</p>
+<p>默认情况下, 嵌套函数可以访问包围它的函数中的任何<a href="#static">静态</a>变量, 甚至是动态变量.</p>
+<p id="capture-var">默认情况下, 当满足以下要求时, 嵌套函数会自动 "捕获" 外部函数的非静态局部变量:</p>
 <ol>
-  <li>The outer function must refer to the variable in at least one of the following ways:
+  <li>外部(outer) 函数必须以下列至少一种方式引用这个变量:
     <ol type="a">
-      <li>By declaring it with <code>local</code>.</li>
-      <li>By declaring it in the parameter list.</li>
-      <li>As the non-dynamic target of an assignment or the <a href="Variables.htm#ref">reference operator (&amp;)</a>.</li>
+      <li>通过用 <code>local</code> 声明它.</li>
+      <li>通过在参数列表中声明它.</li>
+      <li>作为赋值或<a href="Variables.htm#ref">引用操作符(&amp;)</a> 的非动态目标.</li>
     </ol>
   </li>
-  <li>The inner function (or a function nested inside it) must refer to the variable non-dynamically.</li>
+  <li>内部(inner) 函数(或嵌套在其内部的函数) 必须非动态地引用变量.</li>
 </ol>
-<p>A nested function which has captured variables is known as a <a href="#closures">closure</a>.</p>
-<p>Non-static local variables of the outer function cannot be <a href="Language.htm#dynamic-variables">accessed dynamically</a> unless they have been captured.</p>
-<p>Explicit declarations always take precedence over local variables of the function which encloses them. For example, <code>local x</code> declares a variable local to the current function, independent of any <code>x</code> in the outer function. <a href="#Global">Global</a> declarations in the outer function also affect nested functions, except where overridden by an explicit declaration.</p>
-<p>If a function is declared <a href="#AssumeGlobal">assume-global</a>, any local or static variables created <em>outside</em> that function are not directly accessible to the function itself or any of its nested functions. By contrast, a nested function which is assume-static can still refer to variables from the outer function.</p>
-<p>Functions are <a href="#AssumeLocal">assume-local</a> by default, and this is true even for nested functions, even those inside an <a href="#AssumeStatic">assume-static</a> function. However, if the outer function is <a href="#AssumeGlobal">assume-global</a>, nested functions behave as though assume-global by default, except that they can refer to local and static variables of the outer function.</p>
-<p>Each function definition creates a read-only variable containing the function itself; that is, a <a href="objects/Func.htm">Func</a> or <a href="#closures">Closure</a> object. See below for examples of how this might be used.</p>
+<p>捕获了变量的嵌套函数称为 <a href="#closures">closure(闭包)</a>.</p>
+<p>外部函数的非静态局部变量不能被<a href="Language.htm#dynamic-variables">动态访问</a>, 除非它们已经被捕获.</p>
+<p>显式声明总是优先于包围它们的函数中的局部变量. 例如, <code>local x</code> 声明了一个当前函数的局部变量, 与外部函数中的任何 <code>x</code> 无关. 外部函数中的<a href="#Global">全局</a>声明也会影响嵌套函数, 除非被显式声明覆盖.</p>
+<p>如果函数声明为<a href="#AssumeGlobal">假定-全局</a>, 那么在该函数 <em>之外</em> 创建的任何局部或静态变量都不能被该函数本身或其任何嵌套函数直接访问. 相比之下, 假定静态的嵌套函数仍然可以引用外部函数中的变量.</p>
+<p>默认情况下, 函数是<a href="#AssumeLocal">假定-局部的</a>, 其嵌套函数也是如此, 即使是<a href="#AssumeStatic">假定-静态</a>函数中的函数也是如此. 但是, 如果外部函数是<a href="#AssumeGlobal">假定-全局</a>, 那么嵌套函数默认情况下表现为假定-全局, 除非它们可以引用外部函数的局部和静态变量.</p>
+<p>每个函数定义都创建一个包含函数本身的只读变量; 也就是说, 创建一个 <a href="objects/Func.htm">Func</a> 或 <a href="#closures">Closure</a> 对象. 请参阅下面的例子来了解如何使用这个方法.</p>
 
 <h3 id="closures">闭包</h3>
 <p><em>闭包</em> 是与 <em>自由变量</em> 集绑定的嵌套函数. 自由变量是 outer 函数的局部变量, 嵌套函数也使用这些局部变量. 闭包允许一个或多个嵌套函数与 outer 函数共享变量, 即使 outer 函数返回后也是如此.</p>
-<p>To create a closure, simply define a nested function which refers to variables of the outer function. For example:</p>
-<pre>
+<p>要创建一个闭包, 只需定义一个引用外部函数变量的嵌套函数. 例如:</p>
 <pre>
 make_greeter(f)
 {
@@ -311,14 +310,15 @@ make_greeter(f)
     {
         MsgBox Format(f, subject)
     }
-    return Func("greet")  <em>; 返回闭包.</em>
+    return greet  <em>; 返回闭包.</em>
 }
 
-g := make_greeter("Hello, {}!")  <em>; g 为闭包对象, f 为 Hello, {}!.</em>
-g.call(A_UserName)
-g.call("World")
+g := make_greeter("Hello, {}!")
+g(A_UserName)
+g("World")
 </pre>
-<p>Closures may also be used with built-in functions, such as <a href="commands/SetTimer.htm">SetTimer</a> or <a href="commands/Hotkey.htm">Hotkey</a>. For example:</p>
+<p>闭包也可以与内置函数一起使用, 如 <a href="commands/SetTimer.htm">SetTimer</a> 或 <a href="commands/Hotkey.htm">Hotkey</a>. 例如:</p>
+<pre>
 app_hotkey(keyname, app_title, app_path)
 {
     activate(keyname)  <em>; 这是 app_title 和 app_path 的闭包.</em>
@@ -335,18 +335,18 @@ app_hotkey "#n", "ahk_class Notepad", "notepad.exe"
 <em>; Win+W 激活或启动 WordPad.</em>
 app_hotkey "#w", "ahk_class WordPadClass", "wordpad.exe"
 </pre>
-<p>A nested function is automatically a closure if it captures any non-static local variables of the outer function. The variable corresponding to the closure itself (such as <code>activate</code>) is also a non-static local variable, so any nested functions which refer to a closure are automatically closures.</p>
-<p>Each call to the outer function creates new closures, distinct from any previous calls. Named closures are created only once each time the outer function is called, while fat arrow expressions create a new closure each time they are evaluated.</p>
-<p id="circular-closure">It is best not to store a reference to a closure in any of the closure's own free variables, since that creates a <a href="Objects.htm#Circular_References">circular reference</a> which must be broken (such as by clearing the variable) before the closure can be freed. However, a closure may safely refer to itself and other closures by their original variables without creating a circular reference. For example:</p>
+<p>如果一个嵌套函数捕获了外部函数的任何非静态局部变量, 那么它就自动成为一个闭包. 对应于闭包本身的变量(如 <code>activate</code>) 也是一个非静态局部变量, 所以任何引用闭包的嵌套函数都是自动闭包.</p>
+<p>对外部函数的每次调用都会创建新的闭包, 与之前的任何调用不同. 命名闭包在每次调用外部函数时只创建一次, 而胖箭表达式在每次计算时都会创建一个新的闭包.</p>
+<p id="circular-closure">最好不要将对闭包的引用存储在闭包自己的任何一个自由变量中, 因为这将创建一个<a href="Objects.htm#Circular_References">循环引用</a>, 而这个循环引用必须在闭包被释放之前被打破(例如通过清除变量). 然而, 一个闭包可以安全地用它们的原始变量来引用自己和其他闭包，而不会产生循环引用. 例如:</p>
 <pre>
 timertest() {
     x := "tock!"
     tick() {
-        MsgBox x           <em>; x causes this to become a closure.</em>
-        SetTimer tick, 0   <em>; Using the closure's original var is safe.</em>
-        ; SetTimer t, 0    <em>; Capturing t would create a circular reference.</em>
+        MsgBox x           <em>; x 使其成为闭包.</em>
+        SetTimer tick, 0   <em>; 使用闭包的原始变量是安全的.</em>
+        ; SetTimer t, 0    <em>; 捕获 t 将创建循环引用.</em>
     }
-    t := tick              <em>; This is okay because t isn't captured above.</em>
+    t := tick              <em>; 这是可行的, 因为上面的代码没有捕获 t.</em>
     SetTimer t, 1000
 }
 timertest()
@@ -354,7 +354,7 @@ timertest()
 
 <h2 id="remarks">Return, Exit 及一般说明</h2>
 <p>如果函数内的执行流在遇到 <a href="commands/Return.htm">Return</a> 前到达了函数的闭括号, 那么函数结束并返回空值(空字符串) 给其调用者. 当函数显式省略 <a href="commands/Return.htm">Return</a> 的参数时, 也返回空值.</p>
-<p>当函数使用 <a href="commands/Exit.htm">Exit</a> 终止<a href="misc/Threads.htm">当前线程</a>时, 其调用者不会接收到返回值. 例如, 这个语句 <code>Var := Add(2, 3)</code> 中, 如果 <code>Add()</code> 退出了那么 <code>Var</code> 会保持不变. The same thing happens if the function is exited because of <a href="commands/Throw.htm">Throw</a> or a runtime error (such as <a href="commands/Run.htm">running</a> a nonexistent file).</p>
+<p>当函数使用 <a href="commands/Exit.htm">Exit</a> 终止<a href="misc/Threads.htm">当前线程</a>时, 其调用者不会接收到返回值. 例如, 这个语句 <code>Var := Add(2, 3)</code> 中, 如果 <code>Add()</code> 退出了那么 <code>Var</code> 会保持不变. 如果因为 <a href="commands/Throw.htm">Throw</a> 或运行时错误(如 <a href="commands/Run.htm">运行</a>一个不存在的文件), 也会发生同样的事情.</p>
 <p>要使用一个或多个空值(空字符串) 调用函数, 可以使用空的引号对, 例如: <code>FindColor(ColorName, "")</code>.</p>
 <p>因为调用函数不会开启新<a href="misc/Threads.htm">线程</a>, 所以函数对设置(如 <a href="commands/SendMode.htm">SendMode</a> 和 <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>) 做出的任何改变对其调用者同样有效.</p>
 <p>在函数中使用 <a href="commands/ListVars.htm">ListVars</a> 时, 它会显示函数的<a href="#Local">局部变量</a>及其内容. 这样可以帮助调试脚本.</p>
