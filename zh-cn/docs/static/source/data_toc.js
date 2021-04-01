@@ -30,7 +30,7 @@
       ["实现","Objects.htm#Implementation"]
     ]]
   ]],
-  ["迁移到 AutoHotkey_L 1.1","", 
+  ["迁移到 AutoHotkey_L 1.1","",
   [
     ["AutoHotkey_L 新特性","AHKL_Features.htm"],
     ["脚本兼容性","Compat.htm"]
