@@ -41,11 +41,18 @@
   <li>脚本的一个菜单正在显示(如托盘图标菜单或菜单栏).</li>
   <li><a href="../commands/Send.htm">Send</a>(最常见的是由于 <a href="../commands/SetKeyDelay.htm">SetKeyDelay</a>), <a href="../commands/WinActivate.htm">WinActivate</a> 或 <a href="A_Clipboard.htm">Clipboard</a> 操作正在执行延迟.</li>
   <li><a href="../commands/OnExit.htm">OnExit</a> 线程正在执行.</li>
-  <li>由于达到了 <a href="../commands/_MaxHotkeysPerInterval.htm">#MaxHotkeysPerInterval</a> 的限制, 或者由于激活键盘或鼠标钩子的问题(非常罕见), 正在显示一个警告对话框.</li>
+  <li>由于达到了 <a href="A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a> 的限制, 或者由于激活键盘或鼠标钩子的问题(非常罕见), 正在显示一个警告对话框.</li>
 </ul>
 <h3 id="Behave">不可中断线程的特性</h3>
 <p>与高优先级线程不同, 线程不可中断时产生的事件不会被丢弃. 例如, 在当前线程不可中断时用户按下了<a href="../Hotkeys.htm">热键</a>热键就会被无限期地缓冲, 直到当前线程结束或变得可中断时, 热键才作为新的线程启动.</p>
-<p>在紧急情况下, 任何线程都可能被中断. 紧急情况包括: 1) <a href="../commands/OnExit.htm">OnExit</a> 回调; 2) 任何监视消息号小于 0x312(或被这些消息触发的<a href="../commands/CallbackCreate.htm">回调</a>) 的 <a href="../commands/OnMessage.htm">OnMessage</a> 函数; 和 3) 紧急线程自身间接触发的任何<a href="../commands/CallbackCreate.htm">回调</a>(例如, 通过 <a href="../commands/PostMessage.htm">SendMessage</a> 或 <a href="../commands/DllCall.htm">DllCall</a>). 要避免被这些事件中断, 可以临时禁用这些函数.</p>
+<p>Any thread may be interrupted in emergencies. Emergencies consist of:</p>
+<ul>
+  <li>An <a href="../commands/OnExit.htm">OnExit</a> callback.</li>
+  <li>Any <a href="../commands/OnMessage.htm">OnMessage</a> function that monitors a message which is not <a href="../commands/OnMessage.htm#buffering">buffered</a>.</li>
+  <li>Any <a href="../commands/CallbackCreate.htm">callback</a> indirectly triggered by the thread itself (e.g. via <a href="../commands/PostMessage.htm">SendMessage</a> or <a href="../commands/DllCall.htm">DllCall</a>).</li>
+</ul>
+<p>To avoid these interruptions, temporarily disable such functions.</p>
+<p>xxxxxxx在紧急情况下, 任何线程都可能被中断. 紧急情况包括: 1) <a href="../commands/OnExit.htm">OnExit</a> 回调; 2) 任何监视消息号小于 0x312(或被这些消息触发的<a href="../commands/CallbackCreate.htm">回调</a>) 的 <a href="../commands/OnMessage.htm">OnMessage</a> 函数; 和 3) 紧急线程自身间接触发的任何<a href="../commands/CallbackCreate.htm">回调</a>(例如, 通过 <a href="../commands/PostMessage.htm">SendMessage</a> 或 <a href="../commands/DllCall.htm">DllCall</a>). 要避免被这些事件中断, 可以临时禁用这些函数.</p>
 <p>当显示 <a href="../commands/MsgBox.htm">MsgBox</a> 或其他对话框时, <a href="../commands/Critical.htm">critical</a> 会变得可中断. 但与 <a href="../commands/Thread.htm">Thread Interrupt</a> 不同的是, 在用户解除对话框后, 线程又变成了 critical(因此不可中断).</p>
 
 </body>

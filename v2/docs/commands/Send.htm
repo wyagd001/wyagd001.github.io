@@ -104,7 +104,7 @@
   <li>如果在发送开始时为按下的状态, 则盲从模式避免释放这些修饰符键(Alt, Ctrl, Shift 和 Win), 除非该修饰键被<a href="#blind-exclude">排除</a>了. 例如, 热键 <code>+s::Send "{Blind}abc"</code> 将发送 ABC 而不是 abc, 因为用户按住了 <kbd>Shift</kbd>.</li>
   <li>修饰键有不同的恢复方式, 以允许 Send 能关闭热键的修饰键, 即使用户在物理上仍然是按下的. 例如, 如果用户仍然物理按住 <kbd>Ctrl</kbd>, 则 <code>^space::Send "{Ctrl up}"</code> 自动推送 <kbd>Ctrl</kbd> 按下, 而 <code>^space::Send "{Blind}{Ctrl up}"</code> 允许 <kbd>Ctrl</kbd> 逻辑松开, 即使它物理上是按下的.</li>
   <li><a href="SetStoreCapsLockMode.htm">SetStoreCapsLockMode</a> 会被忽略; 也就是说, 不会改变 <kbd>CapsLock</kbd> 的状态.</li>
-  <li><a href="_MenuMaskKey.htm">菜单掩饰</a>是禁用的. 也就是说, Send 忽略额外的击键, 这些键原本会被发送, 以防止: 1) 在按下  Win(LWin/RWin) 键时, 出现开始菜单; 2)在按下 Alt 键时, 菜单栏的激活. 然而, 盲从模式不会阻止在钩子热键激活后由键盘钩子进行的掩饰.</li>
+  <li><a href="misc/A_MenuMaskKey.htm">菜单掩饰</a>是禁用的. 也就是说, Send 忽略额外的击键, 这些键原本会被发送, 以防止: 1) 在按下  Win(LWin/RWin) 键时, 出现开始菜单; 2)在按下 Alt 键时, 菜单栏的激活. 然而, 盲从模式不会阻止在钩子热键激活后由键盘钩子进行的掩饰.</li>
   <li>即使文本包含一个 <kbd>L</kbd>, Send 也不会等待 <kbd>Win</kbd> 被释放. 一般情况下会等待, 以防止 Send 触发系统 "锁定工作站" 的热键(<kbd>Win</kbd>+<kbd>L</kbd>). 有关详情, 请参阅<a href="../Hotkeys.htm#win-l">热键</a>.</li>
 </ul>
 <p id="blind-exclude">单词 "Blind" 后面可以用一个或多个修饰符号(<code>!#^+</code>) 以便在需要时自动释放这些修饰符. 例如, <code>*^a::Send "{Blind^}b"</code> 在按下 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> 时, 将发送 <kbd>Shift</kbd>+<kbd>B</kbd> 而不是 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>. <code>{Blind!#^+}</code> 可以在需要的时候释放所有的修饰符, 但是会启用盲从模式的其他效果.</p>
@@ -527,7 +527,7 @@ Send "{Tab up}"  <em>; 松开按键.</em></pre>
   <li>如果一个或多个修饰键已经通过 Send 函数生效, 或者如果该字母包裹在大括号中, 它将作为键码发送(如果是大写字母, 则用 <kbd>Shift</kbd> 修饰). 这使脚本可以更容易地激活标准键盘快捷键. 例如, <code>^c</code> 和 <code>{Ctrl down}c{Ctrl up}</code> 激活标准的 <kbd>Ctrl</kbd>+<kbd>C</kbd> 快捷键, 而 <code>{c}</code> 等同于 <code>{vk43}</code>.</li>
 </ul>
 <p>如果字母存在于当前的键盘布局中, 那么它总是以布局与该字母相关联的键码发送(除非使用了<a href="#SendText">文本模式</a>, 在这种情况下, 该字符将通过其他方式发送). 换句话说, 上面的部分只适用于非拉丁语系的布局, 如俄语.</p>
-<p id="mask"><strong>修饰键状态</strong>: 当 Send 需要改变 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 修饰键的状态时(比如用户按住其中一个键), 它可能会注入额外的按键(默认为 <kbd>Ctrl</kbd>) 来阻止开始菜单或窗口菜单的出现. 有关详情, 请参阅 <a href="_MenuMaskKey.htm">#MenuMaskKey</a>.</p>
+<p id="mask"><strong>修饰键状态</strong>: 当 Send 需要改变 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 修饰键的状态时(比如用户按住其中一个键), 它可能会注入额外的按键(默认为 <kbd>Ctrl</kbd>) 来阻止开始菜单或窗口菜单的出现. 有关详情, 请参阅 <a href="misc/A_MenuMaskKey.htm">A_MenuMaskKey</a>.</p>
 <p><strong>BlockInput 对比 SendInput/SendPlay</strong>: 尽管 <a href="BlockInput.htm">BlockInput</a> 函数可以用来防止用户物理输入的任何按键破坏模拟按键的流, 但通常最好使用 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 这样按键和鼠标点击就不会中断. 这是因为与 BlockInput 不同的是, SendInput/Play 不会在发送过程中丢弃用户输入的内容; 相反, 这样的按键会被缓冲并在之后发送.</p>
 <p>当发送大量的按键时, 可以使用<a href="../Scripts.htm#continuation">延续片段</a>来提高可读性和可维护性.</p>
 <p>由于操作系统不允许模拟 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 组合, 所以类似 <code>Send "^!{Delete}"</code> 这样的操作是没有效果的.</p>
@@ -537,7 +537,7 @@ Send "{Tab up}"  <em>; 松开按键.</em></pre>
 <p>一般情况下, SendInput 是发送按键和鼠标点击的首选方法, 因为它的速度和可靠性都很高. 在大多数情况下, SendInput 几乎是瞬间完成的, 即使是发送长字符串时也是如此. 由于 SendInput 的速度如此之快, 它的可靠性也更高, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断按键. 用户在 SendInput 过程中输入的任何东西都会被推迟到之后再进行, 从而进一步提高了可靠性.</p>
 <p>与其他发送模式不同, 操作系统限制 SendInput 每次只能发送大约 5000 个字符(此限制可能因操作系统版本和性能设置而有所不同). 超过此限制的字符和事件不会被发送.</p>
 <p class="note"><strong>注意:</strong> SendInput 会忽略 SetKeyDelay, 因为在这种发送模式中操作系统不支持延迟. 但是, 在后面描述的情况中, 当 SendInput 恢复到 <a href="#SendEvent">SendEvent</a> 时, 它会使用 <code><a href="SetKeyDelay.htm">SetKeyDelay</a> -1, 0</code>(但如果 SendEvent 的按键延迟为 <code>-1,-1</code> 时, 则使用 <code>-1,-1</code>). 当 SendInput 恢复为 <a href="#SendPlayDetail">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
-<p id="SendInputUnavail">如果执行 SendInput 的脚本 <em>以外的</em> 脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或当 <code><a href="SendMode.htm">SendMode</a> "InputThenPlay"</code> 生效时为 <a href="#SendPlayDetail">SendPlay</a>). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 由于 SendInput 无法检测到除 AutoHotkey v1.0.43+ 以外的程序中的低级钩子, 所以在这些情况下它不会还原, 使得它的可靠性不如 SendPlay/Event.</p>
+<p id="SendInputUnavail">如果执行 SendInput 的脚本 <em>以外的</em> 脚本安装了<a href="InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或当 <code><a href="SendMode.htm">SendMode</a> "InputThenPlay"</code> 生效时为 <a href="#SendPlayDetail">SendPlay</a>). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 由于 SendInput 无法检测到除 AutoHotkey v1.0.43+ 以外的程序中的低级钩子, 所以在这些情况下它不会还原, 使得它的可靠性不如 SendPlay/Event.</p>
 <p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <code><a href="CoordMode.htm">CoordMode</a> "Mouse", "Window"</code> 或 <code>CoordMode "Mouse", "Client"</code> 有效时(默认的), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
 
 <h2 id="SendPlayDetail">SendPlay</h2>
@@ -546,7 +546,7 @@ Send "{Tab up}"  <em>; 松开按键.</em></pre>
 <p>在这三种发送模式中, SendPlay 是最特别的, 因为它本身并不模拟按键和鼠标点击. 相反, 它创建了一系列的事件(消息), 直接流向活动窗口(类似于 <a href="ControlSend.htm">ControlSend</a>, 但级别较低). 因此, 不会触发热键或热字串.</p>
 <p>和 <a href="#SendInputDetail">SendInput</a> 一样, SendPlay 的按键与用户键入的按键互不干扰. 因此, 如果用户在 SendPlay 期间碰巧输入了一些东西, 这些键程会被推迟到之后.</p>
 <p>虽然 SendPlay 比 SendInput 要慢很多, 但它通常比传统的 <a href="#SendEvent">SendEvent</a> 模式要快(即使 <a href="SetKeyDelay.htm">KeyDelay</a> 为 -1 时, 也是如此).</p>
-<p>如果安装了<a href="_InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 <kbd>Win</kbd>(LWin 和 RWin). 这样避免了在发送期间当用户无意按了 <kbd>Win</kbd> 键时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后(通过缓冲).</p>
+<p>如果安装了<a href="InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 <kbd>Win</kbd>(LWin 和 RWin). 这样避免了在发送期间当用户无意按了 <kbd>Win</kbd> 键时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后(通过缓冲).</p>
 <p>SendPlay 不使用 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 的标准设置. 相反, 它默认为无延迟, 可以按照下面的例子来改变:</p>
 <pre><a href="SetKeyDelay.htm">SetKeyDelay</a> 0, 10, <strong>"Play"</strong>  <em>; 注意 0 和 -1 在 SendPlay 模式中是一样的.</em>
 <a href="SetMouseDelay.htm">SetMouseDelay</a> 10, <strong>"Play"</strong></pre>

@@ -16,6 +16,7 @@
 <p>创建用于 COM 的安全数组.</p>
 
 <pre class="Syntax">ArrayObj := <span class="func">ComObjArray</span>(VarType, Count1 <span class="optional">, Count2, ... Count8</span>)</pre>
+<p><code>ComObjArray</code> itself is a <a href="../objects/Class.htm">class</a> derived from <code>ComValue</code>, but is used only to create or identify SafeArray wrapper objects.</p>
 
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -36,27 +37,40 @@
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
-<p>类型: <a href="../Concepts.htm#objects">对象</a></p>
-<p>函数返回一个新的包含安全数组的包装器对象的<a href="../Concepts.htm#references-to-objects">引用</a>, 数组包装器对象支持下列方法:</p>
+<p>类型: ComObjArray</p>
+<p>函数返回一个包含新的安全数组的包装器对象.</p>
+
+<h2 id="Methods">方法</h2>
+<p>ComObjArray objects support the following methods:</p>
 <ul>
     <li><code>.MaxIndex(n)</code>: 返回第 <i>n</i> 维的上界. 如果 <i>n</i> 省略, 默认为 1.</li>
     <li><code>.MinIndex(n)</code>: 返回第 <i>n</i> 维的下界. 如果 <i>n</i> 省略, 默认为 1.</li>
     <li><code>.Clone()</code>: 返回数组的副本.</li>
     <li><code>.__Enum()</code>: 通常不由脚本调用; 允许 <a href="For.htm">for-loops</a> 与安全数组一起使用.</li>
 </ul>
+<p>These are currently hard-coded; they do not exist as properties and are not affected by modifications to <code>ComObjArray.Prototype</code>.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>COM 方法和 <a href="ComObject.htm">ComObject</a> 也可以返回数组包装器对象. 脚本中可以使用如下方法判断一个值是否为数组:</p>
-<pre>if ComObjType(<i>obj</i>) &amp; 0x2000
+<p>ComObjArray objects may also be returned by COM methods and <a href="ComValue.htm">ComValue</a>. Scripts may determine if a value is a ComObjArray as follows:</p>
+<pre><em>; Check class</em>
+if obj is ComObjArray
     MsgBox "Array subtype: " . ComObjType(obj) &amp; 0xfff
 else
-    MsgBox "Not an array."</pre>
+    MsgBox "Not an array."
+
+<em>; Check for VT_ARRAY</em>
+if ComObjType(obj) &amp; 0x2000
+    MsgBox "obj is a ComObjArray"
+
+<em>; Check specific array type</em>
+if ComObjType(obj) = 0x2008
+    MsgBox "obj is a ComObjArray of strings"</pre>
 <p>可以支持多达 8 维的数组.</p>
 <p>由于安全数组未被设计为支持多重引用, 故当一个安全数组被赋值为另一个安全数组的元素时, 会创建一个独立的副本. 不过, 仅当包装器对象含有 F_OWNVALUE 标志时才会发生这种情况, 这个标志表示它负责销毁此数组. 此标志可用 <a href="ComObjFlags.htm">ComObjFlags</a> 移除.</p>
 <p>当被 COM 客户端调用的函数或方法返回一个带有 F_OWNVALUE 标志的安全数组时, 将建立并返回一个副本, 而原安全数组将自动销毁.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="ComObject.htm">ComObject</a>, <a href="ComObjType.htm">ComObjType</a>, <a href="ComObjValue.htm">ComObjValue</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221145.aspx">Array Manipulation Functions (MSDN)</a></p>
+<p><a href="ComValue.htm">ComValue</a>, <a href="ComObjType.htm">ComObjType</a>, <a href="ComObjValue.htm">ComObjValue</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221145.aspx">Array Manipulation Functions (MSDN)</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">

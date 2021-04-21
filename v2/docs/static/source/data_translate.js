@@ -10,6 +10,7 @@
   "Directives":"指令",
   "Built-in Variables":"内置变量",
   "Built-in Functions":"内置函数",
+  "Built-in Classes":"内置类",
   "Control Flow Statements":"控制流语句",
   "Declarations":"声明",
   "Operators":"运算符",

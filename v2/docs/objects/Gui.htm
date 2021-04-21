@@ -500,13 +500,14 @@ MyGui.Move(x-10,, w+20)</pre>
 <div class="methodShort" id="__Enum">
 <h2>__Enum</h2>
 <p>枚举 GUI 的控件.</p>
-<pre class="Syntax">For Hwnd <span class="optional">, Ctrl</span> in Gui</pre>
+<pre class="Syntax">For Ctrl in MyGui
+For Hwnd, Ctrl in MyGui</pre>
 <p>返回一个新的<a href="Enumerator.htm">枚举器</a>. 这个方法通常不被直接调用. 取而代之的是, Gui 对象被直接传递给 <a href="../commands/For.htm">for-loop</a>, 其调用 __Enum 一次, 然后在循环的每次迭代中调用枚举器一次. 每次调用枚举数都会返回下一个控件. For-loop 的变量对应于枚举数的参数, 它们是:</p>
 <dl>
   <dt>Hwnd</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>控件的 HWND.</p>
+    <p>控件的 HWND. 这只存在于双参数模式中.</p>
   </dd>
   <dt>Ctrl</dt>
   <dd>
@@ -626,7 +627,6 @@ MyEdit.ToolTip := "This is a tooltip for the control whose name is MyEdit."
 MyDDL := MyGui.Add("DropDownList",, ["Red","Green","Blue"])
 MyDDL.ToolTip := "Choose a color from the drop-down list."
 MyGui.Add("Checkbox",, "This control has no tooltip.")
-MyGui.OnEvent("Close", (*) => ExitApp())
 MyGui.Show()
 OnMessage(0x200, On_WM_MOUSEMOVE)
 
@@ -707,8 +707,8 @@ MyGui.Show()
 
 LoadNewImage(*)
 {
-    File := FileSelect(,, "Select an image:", "Images (*.gif; *.jpg; *.bmp; *.png; *.tif; *.ico; *.cur; *.ani; *.exe; *.dll)")
-    if File = ""
+    Image := FileSelect(,, "Select an image:", "Images (*.gif; *.jpg; *.bmp; *.png; *.tif; *.ico; *.cur; *.ani; *.exe; *.dll)")
+    if Image = ""
         return
     if (MyRadio.Value)  <em>; 按实际大小显示图像.</em>
     {
@@ -720,8 +720,8 @@ LoadNewImage(*)
         Width := A_ScreenWidth - 28  <em>; 减去的 28 是用来显示边框和内边缘的空间.</em>
         Height := -1  <em>; "保持高宽比" 应该是最好的.</em>
     }
-    MyPic.Value := Format("*w{1} *h{2} {3}", Width, Height, File)  <em>; 载入图像.</em>
-    MyGui.Title := File
+    MyPic.Value := Format("*w{1} *h{2} {3}", Width, Height, Image)  <em>; 载入图像.</em>
+    MyGui.Title := Image
     MyGui.Show("xCenter y0 AutoSize")  <em>; 调整窗口以适应图片尺寸.</em>
 }</pre>
 </div>

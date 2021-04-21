@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Catch - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The Catch statement specifies the code to execute if an exception is raised during execution of a Try statement." />
+<meta name="description" content="The Catch statement specifies the code to execute if a value or error is thrown during execution of a Try statement." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,44 +13,56 @@
 
 <h1>Catch</h1>
 
-<p>指定在 <a href="Try.htm">try</a> 语句执行期间发生异常时要执行的代码.</p>
+<p>指定在 <a href="Try.htm">try</a> 语句执行期间如果抛出值或错误时要执行的代码.</p>
 
-<pre class="Syntax" style="line-height: 120%"><span class="func">Catch</span> <span class="optional">OutputVar</span>
-    <i>Statement</i></pre>
-<pre class="Syntax" style="line-height: 100%"><span class="func">Catch</span> <span class="optional">OutputVar</span>
+<pre class="Syntax" style="line-height: 120%"><span class="func">Catch</span> <span class="optional">ErrorClass</span> <span class="optional"><span class="func">as</span> OutputVar</span>
 {
     <i>语句</i>
 }</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
+ <dt>ErrorClass</dt>
+  <dd>
+    <p>Type: <a href="../objects/Class.htm">Class</a></p>
+    <p>The class of value that should be caught, such as <code>Error</code>, <code>TimeoutError</code> or <code>MyCustomError</code>. This can also be a comma-delimited list of classes. Classes must be specified by their exact full name and not an arbitrary expression, as the <a href="../objects/Class.htm#Prototype">Prototype</a> of each class is resolved at load time. Any <a href="../objects/index.htm">built-in</a> or <a href="../Objects.htm#Custom_Classes">user-defined</a> class can be used, even if it does not derive from <a href="../objects/Error.htm">Error</a>.</p>
+    <p>If no classes are specified, the default is <code>Error</code>.</p>
+    <p>To catch anything at all, use <code>Catch Any</code>.</p>
+    <p>A load-time error is displayed if an invalid class name is used, or if a class is inaccessible due to the presence of a local variable with the same name.</p>
+  </dd>
+
   <dt>OutputVar</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
-    <p><em>(可选)</em> 存储抛出值的变量, 这通常是一个 <a href="../objects/Error.htm">Error 对象</a>. 这不能是一个<a href="../Language.htm#dynamic-variables">动态变量</a>.</p>
+    <p>存储抛出值的变量, 这通常是一个 <a href="../objects/Error.htm">Error 对象</a>. 这不能是一个<a href="../Language.htm#dynamic-variables">动态变量</a>.</p>
+    <p>If omitted, the thrown value cannot be accessed directly, but can still be re-thrown by using <a href="Throw.htm">Throw</a> with no parameter.</p>
   </dd>
 
   <dt><i>Statement(s)</i></dt>
-  <dd><p>发生异常时执行的函数或表达式.</p></dd>
+  <dd>
+    <p>抛出值或错误时执行的<a href="../Concepts.htm#statement">语句</a>.</p>
+    <p>Braces are generally not required if only a single statement is used. For details, see <a href="Block.htm">{...} (block)</a>.</p>
+  </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p><em>OutputVar</em> 可以选择括在括号中, 在这种情况下, <code>Catch</code> 后的空格或制表符是可选的.</p>
+<p>Multiple <em>catch</em> statements can be used one after the other, with each one specifying a different class (or multiple classes). If the value is not an instance of any of the listed classes, it is not caught by this <em>try-catch</em>, but might be caught by one further up the call stack.</p>
 <p><em>catch</em> 的每次使用都必须附属于(与之关联) 它上面的 <a href="Try.htm">try</a> 语句. <em>catch</em> 总是附属于它上面最近的未被认领的 <em>try</em> 语句, 除非使用<a href="Block.htm">区块</a>来改变这种行为.</p>
+<p>The parameter list 可以选择括在括号中, 在这种情况下, <code>Catch</code> 后的空格或制表符是可选的.</p>
+<p><em>Catch</em> may optionally be followed by <a href="Else.htm">else</a>, which is executed if no exception was thrown within the associated try block.</p>
 <p>可选使用 <a href="Block.htm#otb">One True Brace(OTB) 样式</a>. 例如:</p>
 <pre>try {
     ...
-} catch e {
+} catch Error {
     ...
 }</pre>
+<p>Load-time errors cannot be caught, since they occur before the <em>try</em> statement is executed.</p>
 
-<h2 id="RuntimeErrors">运行时错误</h2>
-<p><em>try-catch</em> 语句也可以用来处理脚本计算期间或由内置函数引发的运行时错误. 如果运行时错误或异常没有被处理, 将显示一条错误消息, 当前线程退出. 加载时错误无法处理, 因为它们发生在执行 <em>try</em> 语句之前.</p>
 <p>存储在 <em>OutputVar</em>(如果存在) 中的值是一个 <a href="../objects/Error.htm">Error</a> 对象(Error 类或子类的一个实例).</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="Try.htm">Try</a>, <a href="Throw.htm">Throw</a>, <a href="../objects/Error.htm">Error 对象</a>, <a href="Finally.htm">Finally</a>, <a href="Block.htm">区块</a>, <a href="OnError.htm">OnError</a></p>
+<p><a href="Try.htm">Try</a>, <a href="Throw.htm">Throw</a>, <a href="../objects/Error.htm">Error 对象</a>, <a href="Else.htm">Else</a>, <a href="Finally.htm">Finally</a>, <a href="Block.htm">区块</a>, <a href="OnError.htm">OnError</a></p>
 
 <h2 id="Examples">示例</h2>
 <p>请参阅 <a href="Try.htm#Examples">Try</a>.</p>

@@ -16,7 +16,7 @@
 
 <p>如果指定的值具有指定名称的方法, 则返回非零数字.</p>
 
- <pre class="Syntax">HasMethod := <span class="func">HasMethod</span>(Value, Name)</pre>
+<pre class="Syntax">HasMethod := <span class="func">HasMethod</span>(Value <span class="optional">, Name, ParamCount</span>)</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
   <dt>Value</dt>
@@ -28,16 +28,25 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>要检查的方法名.</p>
+    <p>Omit this parameter to check whether <em>Value</em> itself is callable.</p>
+  </dd>
+  <dt>ParamCount</dt>
+  <dd>
+    <tp>Type: <a href="../Concepts.htm#numbers">Integer</a></tp>
+    <p>The number of parameters that would be passed to the method or function. If specified, the method's MinParams, MaxParams and IsVariadic properties may be queried to verify that it can accept this number of parameters. If those properties are not present, the parameter count is not verified.</p>
+    <p>This count should not include the implicit <code>this</code> parameter.</p>
+    <p>If omitted (or if the parameter count was not verified), a basic check is performed for a Call method to verify that the object is most likely callable.</p>
   </dd>
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-<p>如果值具有使用此名称的方法, 则返回 true, 否则返回 false.</p>
+<p>if a method was found and passed validation (if performed), 则返回 true, 否则返回 false.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>HasMethod 与 <a href="GetMethod.htm">GetMethod</a> 具有同样的<a href="GetMethod.htm#Remarks">限制</a>.</p>
 <p>此函数可用于评估某个值是否支持特定操作. 例如, 没有调用方法的值不能被调用或传递给 <a href="SetTimer.htm">SetTimer</a>, 而没有 __Enum 方法或 Call 方法的值不能传递给 <a href="For.htm">For</a>. 但是, 方法的存在并不保证可以调用它, 因为必须满足一些要求, 比如参数计数.</p>
+<p>When <em>ParamCount</em> is specified, the validation this function performs is equivalent to the validation performed by built-in functions such as <a href="SetTimer.htm">SetTimer</a>.</p>
 <p>返回 false 并不一定表示不能调用该方法, 因为该值可能具有一个 __Call <a href="../Objects.htm#Meta_Functions">元-函数</a>. 但是, __Call 在特定的上下文中, 如 <a href="For.htm">For</a> 调用  __Enum 时, 不会触发调用. 如果 __Call 存在, 则无法检测它可能支持的方法.</p>
 <p>函数支持<a href="../Objects.htm#primitive">原始值</a>.</p>
 

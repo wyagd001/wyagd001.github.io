@@ -33,7 +33,8 @@ for clr in Array("Blue", "Green")
   <li><a href="#Clear">Clear</a></li>
   <li><a href="#Clone">Clone</a></li>
   <li><a href="#Delete">Delete</a></li>
-	<li><a href="#Has">Has</a></li>
+  <li><a href="#Get">Get</a></li>
+  <li><a href="#Has">Has</a></li>
   <li><a href="#Set">Set</a></li>
   <li><a href="#__Enum">__Enum</a></li>
   <li><a href="#__New">__New</a></li>
@@ -41,8 +42,9 @@ for clr in Array("Blue", "Green")
 <p><strong>属性:</strong></p>
 <ul>
   <li><a href="#Count">Count</a></li>
-	<li><a href="#Capacity">Capacity</a></li>
+  <li><a href="#Capacity">Capacity</a></li>
   <li><a href="#CaseSense">CaseSense</a></li>
+  <li><a href="#Default">Default</a></li>
   <li><a href="#__Item">__Item</a></li>
 </ul>
 <p><strong>静态方法:</strong></p>
@@ -85,6 +87,19 @@ for clr in Array("Blue", "Green")
   <dt>返回值</dt>
   <dd><p>删除的值.</p></dd>
 </dl>
+</div>
+
+<div class="methodShort" id="Get"><h2>Get</h2>
+<p>Returns the value associated with a key, or a default value.</p>
+<pre class="Syntax">Value := MapObj.<span class="func">Get</span>(Key <span class="optional">, Default</span>)</pre>
+<p>This method does the following:</p>
+<ul>
+  <li>Return the value associated with <em>Key</em>, if found.</li>
+  <li>Return the value of the <em>Default</em> parameter, if specified.</li>
+  <li>Return the value of <code>MapObj.Default</code>, if defined.</li>
+  <li>Throw a <a href="Error.htm#KeyError">KeyError</a>.</li>
+</ul>
+<p>When <em>Default</em> is omitted, this is equivalent to <code>MapObj[Key]</code>, except that <a href="#__Item">__Item</a> is not called.</p>
 </div>
 
 <div class="methodShort" id="Has"><h2>Has</h2>
@@ -154,6 +169,12 @@ for clr in Array("Blue", "Green")
 <p>如果 Map 不是空的, 尝试为该属性赋值将导致抛出异常.</p>
 </div>
 
+<div class="methodShort" id="Default"><h2>Default</h2>
+<p>Defines the default value returned when a key is not found.</p>
+<pre class="Syntax">MapObj.<span class="func">Default</span> := Value</pre>
+<p>This property actually doesn't exist by default, but can be defined by the script. When the script queries a key which is not found, the map checks for this property before throwing a <a href="Error.htm#KeyError">KeyError</a>. It can be implemented by any of the normal means, including a <a href="Object.htm#DefineProp">dynamic property</a> or <a href="../Objects.htm#Meta_Functions">meta-function</a>, but determining which key was queried would require overriding <a href="#__Item">__Item</a> or <a href="#Get">Get</a> instead.</p>
+</div>
+
 <div class="methodShort" id="__Item"><h2>__Item</h2>
 <p>检索或设置键-值对的值.</p>
 <pre class="Syntax">Value := MapObj[Key]</pre>
@@ -162,7 +183,7 @@ for clr in Array("Blue", "Green")
   <dt>Key</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>, <a href="../Objects.htm">对象</a>或<a href="../Concepts.htm#strings">字符串</a></p>
-    <p>检索值时, <em>Key</em> 必须是先前与另一个值相关联的唯一值. 如果 <em>Key</em> 在映射中没有关联的值, 则抛出 <a href="Error.htm#KeyError">KeyError</a>.</p>
+    <p>检索值时, <em>Key</em> 必须是先前与另一个值相关联的唯一值. 如果 <em>Key</em> 在映射中没有关联的值, 则抛出 <a href="Error.htm#KeyError">KeyError</a>, unless a <a href="#Default">Default</a> property is defined, in which case its value is returned.</p>
     <p>当赋值时, <em>Key</em> 可以是与 <em>Value</em> 相关联的任何值; 换句话说, <em>key</em> 用于以后访问 <em>Value</em>. <a href="../Concepts.htm#numbers">浮点数</a>键被自动转换成字符串.</p>
   </dd>
 </dl>

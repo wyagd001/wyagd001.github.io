@@ -27,6 +27,7 @@
       <p>如果使用指定的名称无法找到函数, 则自动附加 "W"(Unicode) 前缀. 例如, <code>"MessageBox"</code> 等同于 <code>"MessageBoxW"</code>.</p>
       <p>当 <em>重复 </em> 调用 DLL 时, 通过<a href="#load">预先加载此 DLL 文件</a>可以显著改善执行效率.</p>
       <p>此参数也可以仅是一个表示需调用函数的内存地址的整数. 如 <a href="#COM">COM</a> 和 <a href="CallbackCreate.htm">CallbackCreate</a> 提供的地址.</p>
+      <p>如果该参数是一个对象, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在这样的属性, 则抛出 <a href="../objects/Error.htm#PropertyError">PropertyError</a>.</p>
   </dd>
 
   <dt>Type1, Arg1</dt>
@@ -191,7 +192,7 @@ result := DllCall("CharLower", "<strong><u>Str</u></strong>", DllCall("CharUpper
 <p>处理字符串时可能遇到某些限制. 更多详情, 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
 
 <h2 id="COM">组件对象模型(COM)</h2>
-<p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a> 或 <a href="ComObjActive.htm">ComObjActive</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
+<p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObject.htm">ComObject</a>, <a href="ComObjGet.htm">ComObjGet</a> 或 <a href="ComObjActive.htm">ComObjActive</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
 不支持 <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx">IDispatch</a> 的 COM 对象可以通过从对象接口的虚拟函数表中获取函数的地址用于 DllCall 中. 有关详情, 请参阅下面的<a href="#ExTaskbar">示例</a>. 但是, 通常最好使用 <a href="ComCall.htm">ComCall</a> 来简化此过程.</p>
 
 <h2 id="dotnet">.NET 框架</h2>
@@ -233,10 +234,10 @@ MsgBox Format("{:010}", 432)
 
 <div class="ex" id="ExQPC">
 <p><a class="ex_number" href="#ExQPC"></a> 演示 QueryPerformanceCounter(), 它提供了比 <a href="../Variables.htm#TickCount">A_TickCount</a> 的 10 ms 更高的精确度.</p>
-<pre>DllCall("QueryPerformanceFrequency", "Int64*", freq := 0)
-DllCall("QueryPerformanceCounter", "Int64*", CounterBefore := 0)
+<pre>DllCall("QueryPerformanceFrequency", "Int64*", &amp;freq := 0)
+DllCall("QueryPerformanceCounter", "Int64*", &amp;CounterBefore := 0)
 Sleep 1000
-DllCall("QueryPerformanceCounter", "Int64*", CounterAfter := 0)
+DllCall("QueryPerformanceCounter", "Int64*", &amp;CounterAfter := 0)
 MsgBox "Elapsed QPC time is " . (CounterAfter - CounterBefore) / freq * 1000 " ms"</pre>
 </div>
 
@@ -294,7 +295,7 @@ if !hFile
 }
 TestString := "This is a test string.`r`n"  <em>; 通过这种方式写入内容到文件时, 要使用 `r`n 而不是 `n 来开始新行.</em>
 StrSize := StrLen(TestString) * 2
-DllCall("WriteFile", "Ptr", hFile, "Str", TestString, "UInt", StrSize, "UIntP", BytesActuallyWritten := 0, "Ptr", 0)
+DllCall("WriteFile", "Ptr", hFile, "Str", TestString, "UInt", StrSize, "UIntP", &amp;BytesActuallyWritten := 0, "Ptr", 0)
 DllCall("CloseHandle", "Ptr", hFile)  <em>; 关闭文件.</em>
 
 <em>; 现在已经把内容写入文件了, 重新把它们读取回内存中.</em>
@@ -310,7 +311,7 @@ if !hFile
 }
 <em>; 为要读取的字符串分配一块内存:</em>
 Buf := BufferAlloc(StrSize)
-DllCall("ReadFile", "Ptr", hFile, "Ptr", Buf, "UInt", Buf.Size, "UIntP", BytesActuallyRead := 0, "Ptr", 0)
+DllCall("ReadFile", "Ptr", hFile, "Ptr", Buf, "UInt", Buf.Size, "UIntP", &amp;BytesActuallyRead := 0, "Ptr", 0)
 DllCall("CloseHandle", "Ptr", hFile)  <em>; 关闭文件.</em>
 MsgBox "The following string was read from the file: " StrGet(Buf)</pre>
 </div>
@@ -440,7 +441,7 @@ IID_ITaskbarList  := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
 CLSID_TaskbarList := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
 <em>; 创建 TaskbarList 对象.</em>
-tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskbarList)
+tbl := ComObject(CLSID_TaskbarList, IID_ITaskbarList)
 
 activeHwnd := WinExist("A")
 

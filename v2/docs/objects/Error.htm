@@ -33,11 +33,10 @@
 
 <p class="warning"><strong>注意:</strong> 标准错误对话框要求 <em>Message</em>, <em>Extra</em>, <em>File</em> 和 <em>Line</em> 都是<a href="Object.htm">自有值属性</a>.</p>
 
-<h2 id="new">Error() / Exception()</h2>
+<h2 id="new">Error()</h2>
 <p>创建 Error 对象.</p>
-<pre class="Syntax">NewError := <span class="func"><i>Error</i></span>(Message <span class="optional">, What, Extra</span>)
-NewError := <span class="func">Exception</span>(Message <span class="optional">, What, Extra</span>)</pre>
-<p><em><strong>Error</strong></em> 可以用 <a href="#error-types">Error 类型</a>中列出的某个子类替换.</p>
+<pre class="Syntax">NewError := <span class="func"><i>Error</i></span>(Message <span class="optional">, What, Extra</span>)</pre>
+<p><em><strong>Error</strong></em> 可以用 <a href="#error-types">Error 类型</a>中列出的某个子类替换, although some subclasses may take different parameters.</p>
 <p>这些参数直接对应于上面描述的属性, 但对于覆盖 __New 方法的 Error 子类来说, 参数可能有所不同.</p>
 <p><em>Message</em> 和 <em>Extra</em> 被转换为字符串. 如果一个异常抛出而且没有被捕获, 则会通过一个错误对话框来显示它们.</p>
 <p><em>What</em> 指示错误的来源. 它可以是任意字符串, 但应该是负整数或正在运行的函数的名称. 指定 -1 表示当前函数, -2 表示调用它的函数, 依此类推. 如果脚本被<a href="../Scripts.htm#ahk2exe">编译</a>或者该值不能识别有效的堆栈帧, 那么该值将被转换为字符串并赋值给 <code>NewError.What</code>. 否则, 将使用标识的堆栈帧来确定其他属性:</p>
@@ -59,12 +58,12 @@ NewError := <span class="func">Exception</span>(Message <span class="optional">,
 
 try
     MyFunction(1, -1)  <em>; err.Line 显示为这一行.</em>
-catch err
+catch ValueError as err
     MsgBox Format("{1}: {2}.`n`nFile:`t{3}`nLine:`t{4}`nWhat:`t{5}`nStack:`n{6}"
         , type(err), err.Message, err.File, err.Line, err.What, err.Stack)</pre>
 <pre>try
     SomeFunction()
-catch e
+catch as e
     MsgBox(type(e) " in " e.What ", which was called at line " e.Line)
 
 SomeFunction() {
@@ -83,7 +82,7 @@ SomeFunction() {
     <li id="MethodError"><strong>MethodError(方法错误)</strong></li>
   </ul></li>
   <li id="MemoryError"><strong>MemoryError(内存错误)</strong>: 内存分配失败.</li>
-  <li id="OSError"><strong>OSError(系统错误)</strong>: 对 Win32 函数的内部函数调用失败. <strong>Message</strong> 包括操作系统生成的错误码和描述.</li>
+  <li id="OSError"><strong>OSError(系统错误)</strong>: 对 Win32 函数的内部函数调用失败. <strong>Message</strong> 包括操作系统生成的错误码和描述. OSErrors have an additional <strong>Number</strong> property which contains the error code. Calling <code>OSError(code)</code> with a numeric <em>code</em> sets <em>Number</em> and <em>Message</em> based on the given OS-defined error code. If <em>code</em> is omitted it defaults to <code>A_LastError</code>.</li>
   <li id="TargetError"><strong>TargetError(目标错误)</strong>: 函数由于找不到目标而失败. <strong>Message</strong> 指示目标的类型, 例如窗口, 控件, 菜单或状态栏.</li>
   <li id="TimeoutError"><strong>TimeoutError(超时错误)</strong>: <a href="../commands/SendMessage.htm">SendMessage</a> 超时.</li>
   <li id="TypeError"><strong>TypeError(类型错误)</strong>: 意外的值类型被用作函数, 属性赋值或其他操作的输入. 通常 <strong>Message</strong> 指示预期的和实际的类型, 而 <strong>Extra</strong> 包含一个表示错误值的字符串.</li>

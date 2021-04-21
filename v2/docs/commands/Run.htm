@@ -172,10 +172,10 @@ if A_LastError
 
 <div class="ex" id="ExVerb">
 <p><a class="ex_number" href="#ExVerb"></a> 在最小化状态下运行 dir 命令, 并将输出结果存储在文本文件中. 之后, 文本文件及其属性对话框将被打开.</p>
-<pre>#Persistent
-RunWait A_ComSpec " /c dir C:\ &gt;&gt;C:\DirTest.txt", , "Min"
+<pre>RunWait A_ComSpec " /c dir C:\ &gt;&gt;C:\DirTest.txt", , "Min"
 Run "C:\DirTest.txt"
-Run "properties C:\DirTest.txt"</pre>
+Run "properties C:\DirTest.txt"
+Persistent <em>; Keep the script from exiting, otherwise the properties dialog will close.</em></pre>
 </div>
 
 <div class="ex" id="ExCLSID">
@@ -204,7 +204,7 @@ echo and you'll get the output.
 
 RunWaitOne(command) {
     <em>; WshShell object: <a href="http://msdn.microsoft.com/en-us/library/aew9yb99">http://msdn.microsoft.com/en-us/library/aew9yb99</a></em>
-    shell := ComObjCreate("WScript.Shell")
+    shell := ComObject("WScript.Shell")
     <em>; 通过 cmd.exe 执行单条命令</em>
     exec := shell.Exec(A_ComSpec " /C " command)
     <em>; 读取并返回命令的输出</em>
@@ -212,7 +212,7 @@ RunWaitOne(command) {
 }
 
 RunWaitMany(commands) {
-    shell := ComObjCreate("WScript.Shell")
+    shell := ComObject("WScript.Shell")
     <em>; 打开 cmd.exe 禁用命令回显</em>
     exec := shell.Exec(A_ComSpec " /Q /K echo off")
     <em>; 发送并执行命令, 使用新行分隔</em>
@@ -227,7 +227,7 @@ RunWaitMany(commands) {
 <p><a class="ex_number" href="#ExecScript"></a> 在新的 AutoHotkey 进程中执行给定的代码.</p>
 <pre>ExecScript(Script, Wait:=true)
 {
-    shell := ComObjCreate("WScript.Shell")
+    shell := ComObject("WScript.Shell")
     exec := shell.Exec("AutoHotkey.exe /ErrorStdOut *")
     exec.StdIn.Write(script)
     exec.StdIn.Close()

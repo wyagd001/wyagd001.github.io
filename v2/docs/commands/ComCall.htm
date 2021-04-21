@@ -16,7 +16,7 @@
 
  <p>通过索引调用原生 COM 接口方法.</p>
 
- <pre class="Syntax">Result := <span class="func">ComCall</span>(Index, ComObject <span class="optional">, Type1, Arg1, Type2, Arg2, ReturnType</span>)</pre>
+ <pre class="Syntax">Result := <span class="func">ComCall</span>(Index, ComObj <span class="optional">, Type1, Arg1, Type2, Arg2, ReturnType</span>)</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -30,10 +30,10 @@
       <p>传递无效的索引可能会导致不确定的行为, 包括(但不限于) 程序终止.</p>
   </dd>
 
-   <dt>ComObject</dt>
+   <dt>ComObj</dt>
   <dd>
-      <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
-      <p>目标 COM 对象; 也就是说, 一个 COM 接口指针. 指针值可以直接传递, 也可以封装在带有 <code>Ptr</code> 属性的对象中, 如带有 VT_UNKNOWN 变量类型的 <a href="ComObject.htm">ComObj</a>.</p>
+      <p>类型: <a href="../Concepts.htm#numbers">整数</a>, <a href="ComValue.htm">ComValue</a> 或<a href="../objects/Object.htm">对象</a></p>
+      <p>目标 COM 对象; 也就是说, 一个 COM 接口指针. 指针值可以直接传递, 也可以封装在带有 <code>Ptr</code> 属性的对象中, 如带有 VT_UNKNOWN 变量类型的 <a href="ComValue.htm">ComValue</a>.</p>
       <p>接口指针用于定位实现接口方法的虚拟函数的地址, 也作为参数传递. 这个参数通常不会在原生支持接口的语言中显式地出现, 而是在 C 言语风格的 "Vtbl" 定义中显示.</p>
       <p>传递无效指针可能导致未定义的行为, 包括(但不限于) 程序终止.</p>
   </dd>
@@ -72,7 +72,7 @@
 </ul>
 
  <h2 id="Related">相关</h2>
-<p><a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="ComObject.htm">ComObject</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer 对象</a>, <a href="CallbackCreate.htm">CallbackCreate</a></p>
+<p><a href="ComObject.htm">ComObject</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="ComValue.htm">ComValue</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">Buffer 对象</a>, <a href="CallbackCreate.htm">CallbackCreate</a></p>
 
  <h2 id="Examples">示例</h2>
 
@@ -95,7 +95,7 @@ IID_ITaskbarList  := "{56FDF342-FD6D-11d0-958A-006097C9A090}"
 CLSID_TaskbarList := "{56FDF344-FD6D-11d0-958A-006097C9A090}"
 
 <em>; 创建 TaskbarList 对象.</em>
-tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskbarList)
+tbl := ComObject(CLSID_TaskbarList, IID_ITaskbarList)
 
 activeHwnd := WinExist("A")
 
@@ -154,7 +154,7 @@ class TaskbarList {
 
    <em>; 在新实例上由 TaskbarList() 调用.</em>
    __new() {
-        this.comobj := ComObjCreate(TaskbarList.CLSID, TaskbarList.IID)
+        this.comobj := ComObject(TaskbarList.CLSID, TaskbarList.IID)
         this.ptr := this.comobj.ptr
        <em>; 通过 ITaskbarList 请求初始化.</em>
        this.HrInit()

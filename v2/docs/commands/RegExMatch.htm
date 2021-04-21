@@ -60,23 +60,22 @@
 <h2 id="Options">选项</h2>
 <p>请参阅<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>了解修饰符, 例如 <span class="regex"><span class="red">i)</span>abc</span>, 它关闭了模式 "abc" 的区分大小写.</p>
 
-<h2 id="MatchObject">匹配对象</h2>
+<h2 id="MatchObject">匹配对象(RegExMatchInfo)</h2>
 <p>如果找到了匹配, 一个包含匹配信息的对象将被存储在 <em>OutputVar</em>. 这个对象有以下方法和属性:</p>
-<p><strong>Match.Pos(N)</strong>: 返回整个匹配或捕获子模式的位置.</p>
-<p><strong>Match.Len(N)</strong>: 返回整个匹配或捕获子模式的长度.</p>
-<p><strong>Match.Value(N)</strong>: 返回整个匹配或捕获子模式.</p>
-<p><strong>Match.Name(N)</strong>: 返回指定的子模式的名称(如果它含有).</p>
-<p><strong>Match.Count()</strong>: 返回所有子模式的数目.</p>
-<p><strong>Match.Mark()</strong>: 适用时返回上次遇到 <span class="regex">(*MARK:NAME)</span> 的 <em>NAME</em>.</p>
-<p><strong>Match[N]</strong>: 如果 <em>N</em> 为 0 或有效的子模式编号或名称, 那么它相当于 <code>Match.Value(N)</code>.</p>
-<p><strong>Match.N</strong>: 与上面相同, 不过这里 <em>N</em> 为未加引号的名称或编号.</p>
-<p>对于上面的所有方法和属性, <em>N</em> 可以为下列值:</p>
+<p><strong>Match.Pos</strong>, <strong>Match.Pos[N]</strong> or <strong>Match.Pos(N)</strong>: 返回整个匹配或捕获子模式的位置.</p>
+<p><strong>Match.Len</strong>, <strong>Match.Len[N]</strong> or <strong>Match.Len(N)</strong>: 返回整个匹配或捕获子模式的长度.</p>
+<p><strong>Match.Name[N]</strong> or <strong>Match.Name(N)</strong>: 返回指定的子模式的名称(如果它含有).</p>
+<p><strong>Match.Count</strong>: 返回所有子模式的数目(capturing groups), which is also the maximum value for <em>N</em>.</p>
+<p><strong>Match.Mark</strong>: 适用时返回上次遇到 <span class="regex">(*MARK:NAME)</span> 的 <em>NAME</em>.</p>
+<p><strong>Match[]</strong> or <strong>Match[N]</strong>: Returns the overall match or a captured subpattern.</p>
+<p>对于上面的所有, <em>N</em> 可以为下列值:</p>
 <ul>
   <li>0 表示整个匹配.</li>
   <li>子模式的编号, 包括含有名称的子模式.</li>
   <li>子模式的名称.</li>
 </ul>
-<p>该对象还支持枚举; 也就是说, 支持 <a href="For.htm">for-loop</a>. 或者, 可以使用 <code><a href="Loop.htm">Loop</a> Match.Count()</code>.</p>
+<p><strong>Match.N</strong>: Shorthand for <strong>Match["N"]</strong>, where <em>N</em> is any unquoted name or number which does not conflict with a defined property (listed above). For example, <code>match.1</code> or <code>match.Year</code>.</p>
+<p>该对象还支持枚举; 也就是说, 支持 <a href="For.htm">for-loop</a>. 或者, 可以使用 <code><a href="Loop.htm">Loop</a> Match.Count</code>.</p>
 
 <h2 id="Performance">性能</h2>
 <p>要在一个较大的字符串中搜索简单的子字符串, 请使用 <a href="InStr.htm">InStr</a>, 因为它比 RegExMatch 更快.</p>
@@ -125,14 +124,14 @@
 <div class="ex" id="ExObject">
 <p><a class="ex_number" href="#ExObject"></a> 演示匹配对象的用法.</p>
 <pre>FoundPos := RegExMatch("Michiganroad 72", "(.*) (?&lt;nr&gt;\d+)", &amp;SubPat)
-MsgBox SubPat.Count() ": " SubPat.Value(1) " " SubPat.Name(2) "=" SubPat["nr"]  <em>; 显示 "2: Michiganroad nr=72"</em></pre>
+MsgBox SubPat.Count ": " SubPat[1] " " SubPat.Name[2] "=" SubPat.nr  <em>; 显示 "2: Michiganroad nr=72"</em></pre>
 </div>
 
 <div class="ex" id="ExExtension">
 <p><a class="ex_number" href="#ExExtension"></a> 检索文件的扩展名. 注意 <a href="SplitPath.htm">SplitPath</a> 也可以用于此目的, 而且更可靠.</p>
 <pre>Path := "C:\Foo\Bar\Baz.txt"
 RegExMatch(Path, "\w+$", &amp;Extension)
-MsgBox Extension[0]  <em>; 报告 "txt".</em></pre>
+MsgBox Extension[]  <em>; 报告 "txt".</em></pre>
 </div>
 
 <div class="ex" id="ExDeref">
@@ -141,13 +140,13 @@ MsgBox Extension[0]  <em>; 报告 "txt".</em></pre>
 var2 := 123
 MsgBox Deref("%var1%def%var2%")  <em>; 报告 abcdef123.</em>
 
-Deref(String)
+Deref(Str)
 {
-    global
-    local fpo, m, spo := 1, out := ""
-    while (fpo:=RegexMatch(String, "(%(.*?)%)|``(.)", &amp;m, spo))
+    spo := 1
+    out := ""
+    while (fpo:=RegexMatch(Str, "(%(.*?)%)|``(.)", &amp;m, spo))
     {
-        out .= SubStr(String, spo, fpo-spo)
+        out .= SubStr(Str, spo, fpo-spo)
         spo := fpo + StrLen(m[0])
         if (m[1])
             out .= %m[2]%
@@ -163,7 +162,7 @@ Deref(String)
             default: out .= m[3]
         }
     }
-    return out SubStr(String, spo)
+    return out SubStr(Str, spo)
 }</pre>
 </div>	</div>
 </body>

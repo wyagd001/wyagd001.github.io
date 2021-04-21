@@ -15,23 +15,47 @@
 
 <p>显示脚本信息和最近键击和鼠标点击的历史.</p>
 
-<pre class="Syntax"><span class="func">KeyHistory</span></pre>
+<pre class="Syntax"><span class="func">KeyHistory</span> <span class="optional">MaxEvents</span></pre>
+<h2 id="Parameters">Parameters</h2>
+<dl>
+
+  <dt>MaxEvents</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+    <p>Omit this parameter to show the script's <a href="../Program.htm#main-window">main window</a>, equivalent to selecting the "View-&gt;Key history" menu item.</p>
+    <p>Otherwise, this parameter sets the maximum number of keyboard and mouse events that can be recorded for display in the window (default 40, limit 500). The key history is also reset, but the main window is not shown or refreshed. Specify 0 to disable key history entirely.</p>
+  </dd>
+
+</dl>
+
 <h2 id="Remarks">备注</h2>
-<p>此函数等同于在主窗口中选择 "View-&gt;Key history" 菜单项.</p>
-<p>要禁用按键历史, 请在脚本的任何位置指定下面这行:</p>
-  <pre><a href="_KeyHistory.htm">#KeyHistory</a> 0</pre>
-<p><a href="_KeyHistory.htm">#KeyHistory</a> 还可以用来来改变显示的事件的最大数目</p>
+<p>To disable key history, use the following:</p>
+<pre>KeyHistory 0</pre>
 <p>此特性旨在帮助<a href="../Scripts.htm#debug">调试脚本和热键</a>. 通过使用<a href="../KeyList.htm#SpecialKeys">按键列表</a>页面底部描述的步骤, 它还可以用来检测非标准键盘按键的扫描码(知道按键的扫描码就可以把这个按键用在热键中).</p>
 <p>滚轮事件(WheelDown, WheelUp, WheelLeft 和 WheelRight) 的虚拟键(VK) 是一些在 AutoHotkey 外没有任何意义的占位符值. 此外, 滚轮事件的扫描码实际上是滚轮转动的格数(通常为 1).</p>
-<p>如果脚本没有安装<a href="_InstallKeybdHook.htm">键盘钩子</a>, 那么 KeyHistory 窗口将只显示由脚本自己(即不包含用户的) 生成的按键事件. 如果脚本没有安装<a href="_InstallMouseHook.htm">鼠标钩子</a>, 那么将不显示鼠标按钮事件. 可以通过脚本主窗口(通过托盘图标中的 "Open" 来访问) 中的 "View-&gt;Key History" 来确定您的脚本是否使用了任何一种钩子. 通过添加下面两行语句中的任何一行或同时添加两行到脚本中, 您可以强制安装钩子:</p>
-<pre><a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>
-<a href="_InstallMouseHook.htm">#InstallMouseHook</a></pre>
+<p>如果脚本没有安装<a href="InstallKeybdHook.htm">键盘钩子</a>, 那么 KeyHistory 窗口将只显示由脚本自己(即不包含用户的) 生成的按键事件. 如果脚本没有安装<a href="InstallMouseHook.htm">鼠标钩子</a>, 那么将不显示鼠标按钮事件. 可以通过脚本主窗口(通过托盘图标中的 "Open" 来访问) 中的 "View-&gt;Key History" 来确定您的脚本是否使用了任何一种钩子. 通过添加下面两行语句中的任何一行或同时添加两行到脚本中, 可以强制安装钩子:</p>
+<pre><a href="InstallKeybdHook.htm">InstallKeybdHook</a>
+<a href="InstallMouseHook.htm">InstallMouseHook</a></pre>
+<p>Because each keystroke or mouse click consists of a down-event and an up-event, KeyHistory displays only half as many "complete events" as specified by <em>MaxEvents</em>. For example, if the script calls <code>KeyHistory 50</code>, up to 25 keystrokes and mouse clicks will be displayed.</p>
+
 <h2 id="Related">相关</h2>
-<p><a href="_KeyHistory.htm">#KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a>, <a href="ListHotkeys.htm">ListHotkeys</a>, <a href="ListLines.htm">ListLines</a>, <a href="ListVars.htm">ListVars</a>, <a href="GetKeyState.htm">GetKeyState</a>, <a href="KeyWait.htm">KeyWait</a>, <a href="../Variables.htm#PriorKey">A_PriorKey</a></p>
+<p><a href="InstallKeybdHook.htm">InstallKeybdHook</a>, <a href="InstallMouseHook.htm">InstallMouseHook</a>, <a href="ListHotkeys.htm">ListHotkeys</a>, <a href="ListLines.htm">ListLines</a>, <a href="ListVars.htm">ListVars</a>, <a href="GetKeyState.htm">GetKeyState</a>, <a href="KeyWait.htm">KeyWait</a>, <a href="../Variables.htm#PriorKey">A_PriorKey</a></p>
+
 <h2 id="Examples">示例</h2>
+
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 在主窗口中显示历史信息.</p>
 <pre>KeyHistory</pre>
+</div>
+
+<div class="ex" id="ExMaxEvents">
+<p><a class="ex_number" href="#ExMaxEvents"></a> Causes <code>KeyHistory</code> to display the last 100 instead 40 keyboard and mouse events.</p>
+<pre>KeyHistory 100</pre>
+</div>
+
+<div class="ex" id="ExDisable">
+<p><a class="ex_number" href="#ExDisable"></a> Disables key history entirely.</p>
+<pre>KeyHistory 0</pre>
 </div>
 
 </body>

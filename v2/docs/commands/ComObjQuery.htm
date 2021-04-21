@@ -13,14 +13,14 @@
 
 <h1>ComObjQuery</h1>
 <p>查询 COM 对象的接口或服务.</p>
-<pre class="Syntax">InterfacePointer := <span class="func">ComObjQuery</span>(ComObject, <span class="optional">SID,</span> IID)</pre>
+<pre class="Syntax">InterfacePointer := <span class="func">ComObjQuery</span>(ComObj, <span class="optional">SID,</span> IID)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>ComObject</dt>
+  <dt>ComObj</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#numbers">整数</a></p>
+    <p>类型: <a href="../ComValue.htm">ComValue</a>, <a href="../Concepts.htm#objects">对象</a>, 或<a href="../Concepts.htm#numbers">整数</a></p>
     <p>COM 包装器对象, 接口指针或一个具有 <code>Ptr</code> 属性的对象, 该属性返回一个接口指针.</p>
   </dd>
 
@@ -39,21 +39,21 @@
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
-<p>类型: <a href="ComObject.htm#Returns">ComObject</a></p>
-<p>该函数返回一个类型为 VT_UNKNOWN(13) 的 COM 封装对象.</p>
+<p>类型: <a href="ComValue.htm">ComValue</a></p>
+<p>该函数返回一个<a href="ComObjType.htm#vt">variant type</a>为 VT_UNKNOWN(13) 的 COM 封装对象.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>在此函数使用两个参数时, 它相当于 <a href="http://msdn.microsoft.com/en-us/library/ms682521.aspx">IUnknown::QueryInterface</a>. 如果同时指定了 SID 和 IID, 那么它会内部查询 <a href="http://msdn.microsoft.com/en-us/library/cc678965.aspx">IServiceProvider</a> 接口, 然后调用 <a href="http://msdn.microsoft.com/en-us/library/cc678966.aspx">IServiceProvider::QueryService</a>. 在两种形式中, 返回值为零或对被请求接口的指针. 通常, 在脚本结束时必须<a href="ObjAddRef.htm">释放</a>这种指针.</p>
 <p><a href="ComCall.htm">ComCall</a> 可以用来调用原生接口方法.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="ComCall.htm">ComCall</a>, <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a></p>
+<p><a href="ComCall.htm">ComCall</a>, <a href="ComObject.htm">ComObject</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExClassName">
 <p><a class="ex_number" href="#ExClassName"></a> 确定对象的类名.</p>
 <pre>
-obj := ComObjCreate("Scripting.Dictionary")
+obj := ComObject("Scripting.Dictionary")
 
 MsgBox "Interface name: " ComObjType(obj, "name")
 
@@ -69,13 +69,13 @@ catch
 }
 
 <em>; 调用 GetClassInfo 来获取 ITypeInfo 接口的指针.</em>
-ComCall(3, pci, "ptr*", ti := 0)
+ComCall(3, pci, "ptr*", &amp;ti := 0)
 
 <em>; 封装 ti 以确保自动清理.</em>
-ti := ComObject(13, ti)
+ti := ComValue(13, ti)
 
 <em>; 调用 GetDocumentation 来获取对象的完整类型名称.</em>
-ComCall(12, ti, "int", -1, "ptr*", pname := 0, "ptr", 0, "ptr", 0, "ptr", 0)
+ComCall(12, ti, "int", -1, "ptr*", &amp;pname := 0, "ptr", 0, "ptr", 0, "ptr", 0)
 
 <em>; 转换 BSTR 指针为可用的字符串.</em>
 name := StrGet(pname, "UTF-16")
@@ -95,7 +95,6 @@ MsgBox "Class name: " name
 sURL := "https://www.autohotkey.com/boards/"
 if WebBrowser := GetWebBrowser()
     WebBrowser.Navigate(sURL)
-return
 
 GetWebBrowser()
 {
@@ -108,7 +107,7 @@ GetWebBrowser()
     static VT_UNKNOWN := 13
     DllCall("oleacc\ObjectFromLresult", "Ptr", lResult
         , "Ptr", IID_IHTMLDocument2, "Ptr", 0
-        , "Ptr*", pdoc := ComObject(VT_UNKNOWN, 0))
+        , "Ptr*", pdoc := ComValue(VT_UNKNOWN, 0))
     
     <em>; 查询 WebBrowserApp 服务. 在这种特殊情况中,
     ; SID 和 IID 相同, 但不总是如此.</em>
@@ -121,14 +120,14 @@ GetWebBrowser()
     ; pweb 会自动释放它的 ptr, 所以用 AddRef 来计数.</em>
     ObjAddRef(pweb.ptr)
     static VT_DISPATCH := 9
-    return ComObject(VT_DISPATCH, pweb.ptr)
+    return ComValue(VT_DISPATCH, pweb.ptr)
 }
 
 GUID(sGUID) <em>; 转换字符串为二进制的 GUID 并返回其缓冲.</em>
 {
     GUID := BufferAlloc(16, 0)
     if DllCall("ole32\CLSIDFromString", "WStr", sGUID, "Ptr", GUID) &lt; 0
-        throw Exception("Invalid parameter #1", -1, sGUID)
+        throw ValueError("Invalid parameter #1", -1, sGUID)
     return GUID
 }
 </pre>

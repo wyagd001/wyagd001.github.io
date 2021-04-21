@@ -80,9 +80,10 @@ MsgBox users[1]</pre>
     <p>一个有效的数组索引.</p>
   </dd>
   <dt>返回值</dt>
-  <dd><p>删除的值.</p></dd>
+  <dd><p>删除的值(如果没有, 则为空).</p></dd>
 </dl>
 <p>Delete 不影响数组的 <a href="#Length">Length(长度)</a>.</p>
+<p>如果 <em>Index</em> 超出范围, 则抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
 </div>
 
 <div class="methodShort" id="Has"><h2>Has</h2>
@@ -97,7 +98,7 @@ MsgBox users[1]</pre>
   <dt>Index</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>插入 <em>Value1</em> 的位置. 随后的值插入到 Index+1, Index+2, 以此类推.</p>
+    <p>插入 <em>Value1</em> 的位置. 随后的值插入到 Index+1, Index+2, 以此类推. 指定 0 为索引等同于指定 <a href="#Length">Length</a> + 1.</p>
   </dd>
   <dt>Value1 ...</dt>
   <dd>
@@ -117,6 +118,7 @@ x.InsertAt(2, "B")      <em>; =&gt;  ["A", "B",    , "C"]</em>
 
 x := ["C"]
 x.InsertAt(1, , "B")    <em>; =&gt;  [   , "B", "C"]</em></pre>
+<p>如果 <em>Index</em> 小于 <code>-ArrayObj.Length</code> 或大于 <code>ArrayObj.Length + 1</code>, 则抛出 <a href="Error.htm#ValueError">ValueError</a>. 例如, 对于一个包含 3 个项目的数组, <em>Index</em> 必须介于-3 和 4 之间(包含).</p>
 </div>
 
 <div class="methodShort" id="Pop"><h2>Pop</h2>
@@ -126,7 +128,7 @@ x.InsertAt(1, , "B")    <em>; =&gt;  [   , "B", "C"]</em></pre>
 <pre>Value := ArrayObj.Pop()
 Value := ArrayObj.RemoveAt(ArrayObj.Length)
 Value := ArrayObj.RemoveAt(-1)</pre>
-<p>如果数组为空(<a href="#Length">Length</a> 为 0), 则抛出异常.</p>
+<p>如果数组为空(<a href="#Length">Length</a> 为 0), 则抛出 <a href="Error.htm">Error</a>.</p>
 </div>
 
 <div class="methodShort" id="Push"><h2>Push</h2>
@@ -159,7 +161,7 @@ Value := ArrayObj.RemoveAt(-1)</pre>
 </dl>
 <h3 id="RemoveAt_Remarks">备注</h3>
 <p>RemoveAt 对应 <a href="#InsertAt">InsertAt</a>.</p>
-<p>由 <em>Index</em> 和 <em>Length</em> 表示的范围必须是有效的(在数组的范围内), 但是有些元素可以是缺失值.</p>
+<p>如果 <em>Index</em> 和 <em>Length</em> 所表示的范围不完全在数组的当前范围内, 则抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
 <p><em>Pos</em> 侧的其余项将根据 <em>Length</em> 向左移动(如果省略则为 1). 例如:</p>
 <pre>x := ["A", "B"]
 MsgBox x.RemoveAt(1)  <em>; A</em>

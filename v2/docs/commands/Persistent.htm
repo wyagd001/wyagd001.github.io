@@ -1,0 +1,80 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>Persistent - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The Persistent function prevents the script from exiting automatically when its last thread completes, allowing it to stay running in an idle state." />
+<meta name="ahk:equiv-v1" content="commands/_Persistent.htm" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>Persistent</h1>
+
+<p>Prevents the script from exiting automatically when its last thread completes, allowing it to stay running in an idle state.</p>
+<pre class="Syntax"><span class="func">Persistent</span> <span class="optional">Persist</span></pre>
+
+<h2 id="Parameters">Parameters</h2>
+<dl>
+  <dt>Persist</dt>
+  <dd>
+    <p>Type: <a href="../Concepts.htm#boolean">Boolean</a></p>
+    <p>If true or omitted, the script will be kept running after all threads have exited, even if none of the other conditions for keeping the script running are met.</p>
+    <p>If false, the default behaviour is restored.</p>
+  </dd>
+</dl>
+
+<h2 id="Return_Value">Return Value</h2>
+<p>Type: <a href="../Concepts.htm#boolean">Integer (boolean)</a></p>
+<p>This function returns the previous value of the global setting; either 0 (false, the default value) or 1 (true).</p>
+
+<h2 id="Remarks">Remarks</h2>
+<p>If the script is <em>persistent</em>, it will stay running after <a href="../Scripts.htm#auto">startup</a> completes and all other <a href="../misc/Threads.htm">threads</a> have exited. It is usually unnecessary to call this function because the script is <a href="../Scripts.htm#persistent">automatically persistent</a> in most of the common cases where the user would want it to keep running, such as to respond to <a href="../Hotkeys.htm">hotkeys</a>, execute <a href="SetTimer.htm">timers</a> or display a <a href="../objects/Gui.htm">GUI</a>.</p>
+<p>Some cases where this function might be needed (if it is intended to stay running when there are no running threads or hotkeys, timers, etc.) include:</p>
+<ul>
+  <li>Scripts which use <a href="OnMessage.htm">OnMessage</a> or <a href="CallbackCreate.htm">CallbackCreate</a> and <a href="DllCall.htm">DllCall</a> to respond to events, since those functions don't make the script persistent.</li>
+  <li>Scripts that are executed by selecting a custom tray menu item.</li>
+  <li>Scripts which <a href="ComObject.htm">create</a> or <a href="ComObjActive.htm">retrieve</a> COM objects and use <a href="ComObjConnect.htm">ComObjConnect</a> to respond to the object's events.</li>
+</ul>
+<p>If this function is added to an existing script, some or all occurrences of <a href="Exit.htm">Exit</a> might need to be changed to <a href="ExitApp.htm">ExitApp</a>. This is because <a href="Exit.htm">Exit</a> will not terminate a persistent script; it  terminates only the <a href="../misc/Threads.htm">current thread</a>.</p>
+
+<h2 id="Related">Related</h2>
+<p><a href="Exit.htm">Exit</a>, <a href="ExitApp.htm">ExitApp</a></p>
+<h2 id="Examples">Examples</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> Prevent the script from exiting automatically.</p>
+<pre><em>; This script will not exit automatically, even though it has nothing to do.
+; However, you can use its tray icon to open the script in an editor, or to
+; launch Window Spy or the Help file.</em>
+Persistent</pre>
+</div>
+
+<p>让脚本持续运行(即, 直到用户关闭或遇到 <a href="ExitApp.htm">ExitApp</a>).</p>
+
+<pre class="Syntax"><span class="func">#Persistent</span></pre>
+<p>如果在脚本的任意位置使用此指令, 那么脚本会在<a href="../Scripts.htm#auto">启动</a> 完成并且所有其他<a href="../misc/Threads.htm">线程</a>退出之后继续保持运行. 这通常不是必要的, 因为当程序检测到脚本具有某种启动新线程的方式(例如 <a href="../Hotkeys.htm">热键</a>, <a href="SetTimer.htm">计时器</a>或 <a href="../objects/Gui.htm">GUI</a>) 时, 脚本会<a href="../Scripts.htm#persistent">自动持续运行</a>.</p>
+<p>在某些情况下可能需要此指令(如果没有正在运行的线程或热键, 计时器, 等.) 包括:</p>
+<ul>
+  <li>使用 <a href="CallbackCreate.htm">CallbackCreate</a> 和 <a href="DllCall.htm">DllCall</a> 响应事件的脚本, 因为这些函数不会使脚本持续运行.</li>
+  <li><a href="ComObjCreate.htm">创建</a>或<a href="ComObjActive.htm">检索</a> COM 对象并使用 <a href="ComObjConnect.htm">ComObjConnect</a> 响应对象事件的脚本.</li>
+</ul>
+<p>如果将此指令添加到现有脚本中, 则可能需要将部分或全部出现的 <a href="Exit.htm">Exit</a> 更改为 <a href="ExitApp.htm">ExitApp</a>. 这是因为 <a href="Exit.htm">Exit</a> 不会终止持续运行的脚本; 它仅终止<a href="../misc/Threads.htm">当前线程</a>.</p>
+<p>和其他指令一样, #Persistent 不能有条件地执行.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="Exit.htm">Exit</a>, <a href="ExitApp.htm">ExitApp</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 使脚本永久运行; 也就是说, 如果可以的话, 它不会自动退出.</p>
+<pre><em>; 这个脚本不会自动退出, 即使它没有任何事情要做.
+; 但是, 你可以使用它的托盘图标在编辑器中打开脚本
+; 或启动 Window Spy 或帮助文件.</em>
+#Persistent</pre>
+</div>
+
+</body>
+</html>

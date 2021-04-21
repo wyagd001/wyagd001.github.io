@@ -12,7 +12,7 @@
 <body>
 
 <h1>Else</h1>
-<p>如果 <a href="If.htm">If 语句</a>的计算结果为 false, 指定一个或多个<a href="../Concepts.htm#statement">语句</a>去执行.</p>
+<p>if the associated statement's body did not execute, 指定一个或多个<a href="../Concepts.htm#statement">语句</a>去执行.</p>
 <pre class="Syntax"><span class="func">Else</span> <i>语句</i></pre>
 <pre class="Syntax"><span class="func">Else</span>
 {
@@ -20,7 +20,13 @@
 }</pre>
 
 <h2 id="Remarks">备注</h2>
-<p><em>Else</em> 的每次使用都必须附属于(与之关联的) 其上方的 <a href="If.htm">If 语句</a>. <em>Else</em> 始终附属于其上方最近的且无主的 If 语句, 除非使用<a href="Block.htm">区块</a>来改变该行为.</p>
+<p><em>Else</em> 的每次使用都必须附属于(与之关联的) 其上方的 <a href="If.htm">If 语句</a>>, <a href="Catch.htm">Catch</a>, <a href="For.htm">For</a>, <a href="Loop.htm">Loop</a> or <a href="While.htm">While</a> 语句. <em>Else</em> 始终附属于其上方最近的且无主的语句, 除非使用<a href="Block.htm">区块</a>来改变该行为. The condition for an <em>Else</em> statement executing depends on the associated statement:</p>
+<ul>
+  <li><a href="If.htm">If expression</a>: The expression evaluated to false.</li>
+  <li><a href="For.htm">For</a>, <a href="Loop.htm">Loop</a> (any kind), <a href="While.htm">While</a>: The loop had zero iterations.</li>
+  <li><a href="LoopRead.htm">Loop Read</a>: As above, but the presence of <em>Else</em> also prevents an error from being thrown if the file or path is not found. Therefore, <em>Else</em> executes if the file is empty or does not exist.</li>
+  <li><a href="Try.htm">Try</a>...<a href="Catch.htm">Catch</a>: No exception was thrown within the try block.</li>
+</ul>
 <p><em>Else</em> 可以在同一行上紧跟着任何其他的单个<a href="../Concepts.htm#statement">语句</a>. 这通常用于 "else if" 梯形结构(请参阅底部的例子).</p>
 <p>如果 <em>Else</em> 拥有多行, 那么这些行必须用大括号括起来(创建一个<a href="Block.htm">区块</a>). 但是, 如果只有一行属于 <em>Else</em>, 则大括号是可选的. 例如:</p>
 <pre>if (count &gt; 0)  <em>; 下一行可以不需要使用大括号括住, 因为它只有单独一行.</em>
@@ -83,6 +89,17 @@ else if x = 3
     Sleep 1
 }
 else defaultFunction()  <em>; 即任何单个语句都可以和 Else 放在同一行.</em></pre>
+</div>
+
+<div class="ex" id="ExLoop">
+<p><a class="ex_number" href="#ExLoop"></a> Executes some code if a loop had zero iterations.</p>
+<pre>
+<em>; Show File/Internet Explorer windows/tabs.</em>
+for window in ComObject("Shell.Application").Windows
+    MsgBox "Window #" A_Index ": " window.LocationName
+else
+    MsgBox "No shell windows found."
+</pre>
 </div>
 
 </body>

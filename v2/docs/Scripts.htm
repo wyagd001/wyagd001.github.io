@@ -36,7 +36,8 @@
 
 <h2 id="auto">脚本启动(自动执行线程)</h2>
 <p>脚本加载完成后, <em>自动执行线程</em>在脚本的顶行开始执行, 直到被指示停止为止, 例如 <a href="commands/Return.htm">Return</a>, <a href="commands/ExitApp.htm">ExitApp</a> 或 <a href="commands/Exit.htm">Exit</a>. 脚本的物理结束也作为 <a href="commands/Exit.htm">Exit</a>.</p>
-<p id="persistent">没有<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, 可见的 <a href="objects/Gui.htm">GUI</a>, 活动的<a href="commands/OnMessage.htm">消息监视</a>, 活动的<a href="commands/SetTimer.htm">计时器</a>, 活动的<a href="commands/OnClipboardChange.htm">剪贴板监视器</a>, 自定义托盘<a href="objects/Menu.htm">菜单项目</a>和 <a href="commands/_Persistent.htm">#Persistent</a> 指令的脚本, 将在完成启动后终止. 否则, 它会以空闲状态继续运行, 从而对热键, 热字串, <a href="objects/GuiOnEvent.htm">GUI 事件</a>, <a href="objects/Menu.htm">自定义菜单项目</a>和<a href="commands/SetTimer.htm">计时器</a>这些事件做出响应. 如果这些条件在启动完成后发生变化(例如, 禁用了最后一个计时器), 脚本可能会在最后一个正在运行的线程完成后或最后一个 GUI 关闭后退出.</p>
+<p id="persistent">The script will terminate after completing startup if it lacks <a href="Hotkeys.htm">hotkeys</a>, <a href="Hotstrings.htm">hotstrings</a>, visible <a href="objects/Gui.htm">GUIs</a>, active <a href="commands/SetTimer.htm">timers</a>, <a href="commands/OnClipboardChange.htm">clipboard monitors</a> and <a href="commands/InputHook.htm">InputHooks</a>, and has not called the <a href="commands/Persistent.htm">Persistent</a> function. Otherwise, it will stay running in an idle state, responding to events such as hotkeys, hotstrings, <a href="objects/GuiOnEvent.htm">GUI events</a>, <a href="objects/Menu.htm">custom menu items</a>, and <a href="commands/SetTimer.htm">timers</a>. If these conditions change after startup completes (for example, the last timer is disabled), the script may exit when the last running thread completes or the last GUI closes.</p>
+<p id="persistent">xxxxxxx没有<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, 可见的 <a href="objects/Gui.htm">GUI</a>, 活动的<a href="commands/OnMessage.htm">消息监视</a>, 活动的<a href="commands/SetTimer.htm">计时器</a>, 活动的<a href="commands/OnClipboardChange.htm">剪贴板监视器</a>, 自定义托盘<a href="objects/Menu.htm">菜单项目</a>和 <a href="commands/_Persistent.htm">#Persistent</a> 指令的脚本, 将在完成启动后终止. 否则, 它会以空闲状态继续运行, 从而对热键, 热字串, <a href="objects/GuiOnEvent.htm">GUI 事件</a>, <a href="objects/Menu.htm">自定义菜单项目</a>和<a href="commands/SetTimer.htm">计时器</a>这些事件做出响应. 如果这些条件在启动完成后发生变化(例如, 禁用了最后一个计时器), 脚本可能会在最后一个正在运行的线程完成后或最后一个 GUI 关闭后退出.</p>
 <p>每当任何新的<a href="misc/Threads.htm">线程</a>被启动时(不管是由<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="commands/SetTimer.htm">计时器</a>还是其他事件启动的) 以下设置都会从自动执行线程中复制. 如果自动执行线程中没有设置, 则使用标准的默认值(与下面每个页面中注明的一样): <a href="commands/CoordMode.htm">CoordMode</a>, <a href="commands/Critical.htm">Critical</a>, <a href="commands/DetectHiddenText.htm">DetectHiddenText</a>, <a href="commands/DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="commands/FileEncoding.htm">FileEncoding</a>, <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/SendLevel.htm">SendLevel</a>, <a href="commands/SendMode.htm">SendMode</a>, <a href="commands/SetControlDelay.htm">SetControlDelay</a>, <a href="commands/SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>, <a href="commands/SetKeyDelay.htm">SetKeyDelay</a>, <a href="commands/SetMouseDelay.htm">SetMouseDelay</a>, <a href="commands/SetRegView.htm">SetRegView</a>, <a href="commands/SetStoreCapsLockMode.htm">SetStoreCapsLockMode</a>, <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="commands/SetWinDelay.htm">SetWinDelay</a> 和 <a href="commands/Thread.htm">Thread</a>.</p>
 <p>每个<a href="misc/Threads.htm">线程</a>都会保留其自身的上述设置的集合, 此对这些设置所做的更改不会影响其他线程.</p>
 <p>上述某个函数的 "默认设置" 通常指的是自动执行线程的当前设置, 该线程的起始值与程序定义的默认设置相同.</p>
@@ -265,7 +266,6 @@ FileAppend "
     <td>/CP<i>n</i></td>
     <td>
       <p>覆盖用于读取脚本文件的默认代码页. 有关详情, 请参阅<a href="#cp">脚本文件代码页</a>.</p>
-      <p>如果在安装程序中启用了 "Default to UTF-8" 选项, 那么 ".ahk" 文件类型就会注册带有 <code>/CP65001</code> 的命令行. 这将导致所有通过 shell(资源管理器) 启动的脚本在没有 UTF-16 字节顺序标记的情况下默认为 UTF-8. 通过直接运行 AutoHotkey.exe 启动的脚本仍然默认为 <code>CP0</code>, 因为没有 <code>/CP65001</code> 开关.</p>
     </td>
     <td>不支持</td>
   </tr>
@@ -329,7 +329,7 @@ FileAppend "
 <ul>
   <li>如果文件以 UTF-8 或 UTF-16(LE) 字节顺序标记开头, 则使用相应的代码页并且忽略 <a href="#CPn">/CP<i>n</i></a> 开关.</li>
   <li>如果在命令行中传递了 <a href="#CPn">/CP<i>n</i></a> 开关, 则使用代码页 <i>n</i>. 有关可能值的列表, 请参阅 <a href="https://docs.microsoft.com/en-au/windows/win32/intl/code-page-identifiers">Code Page Identifiers</a>.
-  <li>在其他所有情况下, 使用使用 UTF-8(此默认值不同于 AutoHotkey v1).</li>
+  <li>在其他所有情况下, 使用 UTF-8(此默认值不同于 AutoHotkey v1).</li>
 </ul>
 <p>注意这仅适用于 AutoHotkey 加载脚本的时候, 而不包括脚本自身的文件 I/O. <a href="commands/FileEncoding.htm">FileEncoding</a> 决定了脚本读取或写入文件时使用的默认编码, 然而 <a href="commands/IniRead.htm">IniRead</a> 和 <a href="commands/IniWrite.htm">IniWrite</a> 总是使用 UTF-16 或 ANSI.</p>
 <p>由于所有的文本都被转换(必要时) 为<a href="Compat.htm#Format">原生的字符串格式</a>, 所以无效的或不存在于原生代码页中的字符会被替换为占位符: '&#65533;'. 这种情况只可能在脚本文件编码错误或用于保存和读取脚本的代码页不匹配时发生.</p>

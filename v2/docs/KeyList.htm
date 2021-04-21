@@ -430,12 +430,12 @@
   </tr>
   <tr id="vk">
     <td>VK<b>nn</b></td>
-    <td><p>请在 <b>nn</b> 中指定十六进制的虚拟按键码. 这种极少用的方法还可以避免某些类型的<a href="Hotkeys.htm">热键</a>需要安装<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>. 例如, 后面的热键不使用键盘钩子, 但副作用是它会在按下 <kbd>Home</kbd> 或 NumpadHome 的<em>其中一个</em>时触发:</p>
+    <td><p>请在 <b>nn</b> 中指定十六进制的虚拟按键码. 这种极少用的方法还可以避免某些类型的<a href="Hotkeys.htm">热键</a>需要安装<a href="commands/InstallKeybdHook.htm">键盘钩子</a>. 例如, 后面的热键不使用键盘钩子, 但副作用是它会在按下 <kbd>Home</kbd> 或 NumpadHome 的<em>其中一个</em>时触发:</p>
       <pre>^VK24::MsgBox "You pressed Home or NumpadHome while holding down Control."
 </pre>
-      <p><strong>已知限制</strong>: 强制使用<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>的 VK 热键, 例如 <code>*VK24</code> 或 <code>~VK24</code>, 只会触发其中一个热键, 而不会触发两者(例如触发 NumpadHome 但不触发 <kbd>Home</kbd>).
+      <p><strong>已知限制</strong>: 强制使用<a href="commands/InstallKeybdHook.htm">键盘钩子</a>的 VK 热键, 例如 <code>*VK24</code> 或 <code>~VK24</code>, 只会触发其中一个热键, 而不会触发两者(例如触发 NumpadHome 但不触发 <kbd>Home</kbd>).
       关于 VKnn 方法的更多信息, 请参阅<a href="#SpecialKeys">特殊按键</a>.</p>
-      <p class="warning"><strong>警告:</strong> 只有 <a href="commands/Send.htm">Send</a>, <a href="commands/GetKeyName.htm">GetKeyName</a>, <a href="commands/GetKeyVK.htm">GetKeyVK</a>, <a href="commands/GetKeySC.htm">GetKeySC</a> 和 <a href="commands/_MenuMaskKey.htm">#MenuMaskKey</a> 支持 VKnn 和 SCnnn 组合使用. 如果在任何其他情况下组合使用(或存在任何其他无效后缀), 则不能识别按键. 例如, <code>vk1Bsc001::</code> 引发一个错误.</p>
+      <p class="warning"><strong>警告:</strong> 只有 <a href="commands/Send.htm">Send</a>, <a href="commands/GetKeyName.htm">GetKeyName</a>, <a href="commands/GetKeyVK.htm">GetKeyVK</a>, <a href="commands/GetKeySC.htm">GetKeySC</a> 和 <a href="misc/A_MenuMaskKey.htm">A_MenuMaskKey</a> 支持 VKnn 和 SCnnn 组合使用. 如果在任何其他情况下组合使用(或存在任何其他无效后缀), 则不能识别按键. 例如, <code>vk1Bsc001::</code> 引发一个错误.</p>
       </td>
   </tr>
 </table>
@@ -465,7 +465,7 @@
 <h2 id="SpecialKeys">特殊按键</h2>
 <p>如果您的键盘或鼠标含有前面没有列出的按键, 那么使用下列步骤后您仍可能把它设为热键.</p>
 <ol>
-  <li>确保至少有一个使用<a href="commands/_InstallKeybdHook.htm">键盘钩子</a>的脚本正在运行. 打开脚本的主窗口并在菜单栏中选择 "View-&gt;<a href="commands/KeyHistory.htm">Key history</a>" 后您可以判断脚本是否使用了键盘钩子.</li>
+  <li>确保至少有一个使用<a href="commands/InstallKeybdHook.htm">键盘钩子</a>的脚本正在运行. 打开脚本的主窗口并在菜单栏中选择 "View-&gt;<a href="commands/KeyHistory.htm">Key history</a>" 后您可以判断脚本是否使用了键盘钩子.</li>
   <li>双击脚本的托盘图标来打开其主窗口.</li>
   <li>按下您键盘上的其中一个 "神秘按键".</li>
   <li>选择菜单项 "View-&gt;<a href="commands/KeyHistory.htm">Key history</a>"</li>
@@ -498,7 +498,7 @@
 <p>Windows IME 的某些配置(如, 日文输入与英文键盘) 使用 CapsLock 来切换模式. 在这种情况下, CapsLock 被 IME 压制, 并且无法被 AutoHotkey 检测到. 不过 <kbd>Alt</kbd>+<kbd>CapsLock</kbd>, <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd> 和 <kbd>Shift</kbd>+<kbd>CapsLock</kbd> 等快捷键可以通过变通的方法禁用. 具体来说, 发送松开按键来修改 IME 的状态, 但通过给键盘钩子发送信号来抑制该事件, 从而防止任何其他影响. 可以使用以下函数来实现这一目的:</p>
 <pre filename="SendSuppressedKeyUp.ahk">
 <em>; 必须安装键盘钩子.</em>
-#InstallKeybdHook
+InstallKeybdHook
 SendSuppressedKeyUp(key) {
     DllCall("keybd_event"
         , "char", GetKeyVK(key)

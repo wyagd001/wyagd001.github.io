@@ -84,10 +84,13 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <h2 id="Remarks">备注</h2>
 <p>与普通的函数调用不同, 当一个被监听的消息到达时, 函数会作为一个新的<a href="../misc/Threads.htm">线程</a>被调用. 因此, 函数会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
 <p>Send(发送)(而不是 Post) 到控件的消息不会被监听, 因为系统直接把它们发送给后台的控件了. 对于系统生成的消息来说, 这很少是一个问题, 因为大多数信息都是 Post 的.</p>
-<p>任何具有活动消息监控器的脚本都会自动<a href="../Scripts.htm#persistent">持续运行</a>, 这意味着它不会退出, 直到使用 <a href="ExitApp.htm">ExitApp</a>.</p>
+<p>If the script is intended to stay running in an idle state to monitor for incoming messages, it may be necessary to call the <a href="Persistent.htm">Persistent</a> function to prevent the script from exiting. OnMessage does not automatically make the script persistent, as it is sometimes unnecessary or undesired. For instance, when OnMessage is used to monitor input to a GUI window (such as in the <a href="#ExLButtonDown">WM_LBUTTONDOWN example</a>), it is often more appropriate to allow the script to exit automatically when the last GUI window is closed.</p>
+<p>xxxxxxx任何具有活动消息监控器的脚本都会自动<a href="../Scripts.htm#persistent">持续运行</a>, 这意味着它不会退出, 直到使用 <a href="ExitApp.htm">ExitApp</a>.</p>
 <p id="Critical">如果由于之前有相同的消息到达, 而消息的函数仍在运行, 则不会再次调用函数(除非 <a href="#MaxThreads">MaxThreads</a> 大于 1); 相反, 消息将被视为未被监控. 如果不希望出现这种情况, 可以通过在函数的第一行指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲大于或等于 0x0312 的消息, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的目的, 只要它持续的时间足够函数完成. 相反, 小于 0x0312 的消息不能被 Critical 或 Thread Interrupt 缓冲 (然而, Critical 可能会有帮助, 因为它检查消息的<a href="Critical.htm#Interval">频率较低</a>, 这给了函数更多的时间来完成). 保证不漏掉此类消息的唯一方法是确保函数在 6 毫秒内完成(尽管这个限制可以通过 <a href="Critical.htm#Interval"><em>Critical 30</em></a> 来提高). 一种方法是通过向自己的脚本<a href="PostMessage.htm">发布(Post)</a> 一个高于 0x0312 的监控消息号, 让它为未来的线程排队. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲.</p>
-<p>如果在小于 0x0312 的受监听消息当脚本完全不可中断时到达(例如在显示<a href="../objects/Menu.htm#Show">菜单</a>, 正在进行 <a href="SetKeyDelay.htm">KeyDelay</a>/<a href="SetMouseDelay.htm">MouseDelay</a>, 或剪贴板正被<a href="_ClipboardTimeout.htm">打开</a>) -- 则不会调用此函数而消息会被视为未监听的.  相反, 一个等于或大于 0x0312 的受监听消息在这些不可中断期间会被缓冲起来; 即当脚本变成可中断时会调用它的处理函数.</p>
-<p>如果消息号小于 0x0312 的受监听消息在脚本仅由于 <a href="Thread.htm">Thread Interrupt</a> 或 <a href="Critical.htm">Critical</a> 的设置而不可中断时到达, 则会中断当前线程而调用消息处理函数. 相反, 等于或大于 0x0312  的受监听消息则会被缓冲到线程结束或变成可中断之后.</p>
+<p id="buffering">If a monitored message that is numerically greater than 0x0311 is posted while the script is <a href="../misc/Threads.htm#Interrupt">uninterruptible</a>, the message is buffered; that is, its function is not called until the script becomes interruptible. However, messages which are sent rather than posted cannot be buffered as they must provide a return value. Posted messages also might not be buffered when a modal message loop is running, such as for a system dialog, ListView drag-drop operation or menu.</p>
+<p>xxxxxx如果在小于 0x0312 的受监听消息当脚本完全不可中断时到达(例如在显示<a href="../objects/Menu.htm#Show">菜单</a>, 正在进行 <a href="SetKeyDelay.htm">KeyDelay</a>/<a href="SetMouseDelay.htm">MouseDelay</a>, 或剪贴板正被<a href="_ClipboardTimeout.htm">打开</a>) -- 则不会调用此函数而消息会被视为未监听的.  相反, 一个等于或大于 0x0312 的受监听消息在这些不可中断期间会被缓冲起来; 即当脚本变成可中断时会调用它的处理函数.</p>
+<p>If a monitored message arrives and is not buffered, its function is called immediately even if the thread is <a href="../misc/Threads.htm#Interrupt">uninterruptible</a> when the message is received.</p>
+<p>xxxxxxxx如果消息号小于 0x0312 的受监听消息在脚本仅由于 <a href="Thread.htm">Thread Interrupt</a> 或 <a href="Critical.htm">Critical</a> 的设置而不可中断时到达, 则会中断当前线程而调用消息处理函数. 相反, 等于或大于 0x0312  的受监听消息则会被缓冲到线程结束或变成可中断之后.</p>
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
 <p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果监听函数返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>
 <p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递(Post) 到控件的消息. 例如, 如果脚本正显示消息框而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
@@ -100,7 +103,6 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <pre>MyGui := Gui(, "Example Window")
 MyGui.Add("Text",, "Click anywhere in this window.")
 MyGui.Add("Edit", "w200")
-MyGui.OnEvent("Close", (*) =&gt; ExitApp())
 MyGui.Show
 OnMessage 0x0201, WM_LBUTTONDOWN
 
@@ -125,7 +127,7 @@ WM_LBUTTONDOWN(wParam, lParam, msg, hwnd)
 <pre><em>; 下面的 DllCall 是可选的: 它告诉操作系统首先要关闭此脚本(在其他所有程序之前).</em>
 DllCall("kernel32.dll\SetProcessShutdownParameters", "UInt", 0x4FF, "UInt", 0)
 OnMessage(0x0011, On_WM_QUERYENDSESSION)
-return
+Persistent
 
 On_WM_QUERYENDSESSION(wParam, lParam, *)
 {
@@ -170,8 +172,9 @@ StopBlockingShutdown(*)
 
 <div class="ex" id="ExCustom">
 <p><a class="ex_number" href="#ExCustom"></a> 接收其他脚本或程序的自定义消息和最多两个数字(要发送字符串而不是数字, 请参阅下一个示例).</p>
-<pre>OnMessage 0x5555, "MsgMonitor"
-OnMessage 0x5556, "MsgMonitor"
+<pre>OnMessage 0x5555, MsgMonitor
+OnMessage 0x5556, MsgMonitor
+Persistent
 
 MsgMonitor(wParam, lParam, msg, *)
 {
@@ -193,7 +196,7 @@ DetectHiddenWindows False  <em>; 必须在 PostMessage 之后才能关闭.</em><
 <p>保存下面的脚本为 <strong>Receiver.ahk</strong>, 然后运行它:</p>
 <pre filename="Receiver.ahk">#SingleInstance
 OnMessage 0x004A, "Receive_WM_COPYDATA"  <em>; 0x004A is WM_COPYDATA</em>
-return
+Persistent
 
 Receive_WM_COPYDATA(wParam, lParam, msg, hwnd)
 {

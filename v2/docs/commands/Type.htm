@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Type - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The Type function returns the exact type of a value." />
+<meta name="description" content="The Type function returns the class name of a value." />
 <meta name="ahk:equiv-v1" content="AutoHotkey.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -13,56 +13,57 @@
 <body>
 
 <h1>Type</h1>
-<p>返回值的确切类型.</p>
-<pre class="Syntax">Type := <span class="func">Type</span>(Value)</pre>
+<p>返回值的类名.</p>
+<pre class="Syntax">ClassName := <span class="func">Type</span>(Value)</pre>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>函数返回 <em>Value</em> 的类型. 对于原始值, 返回值是以下之一:</p>
+<p>函数返回 <em>Value</em> 的类名. 对于原始值, 返回值是以下之一:</p>
 <ul>
   <li>String(字符串)</li>
   <li>Integer(整数)</li>
   <li>Float(浮点数)</li>
 </ul>
-<p>如果 <em>Value</em> 是一个对象, 那么返回值就是对象的类名.</p>
-<p>对于<a href="../objects/Object.htm">对象</a>类型, 类名是动态的, 使用如下算法确定:</p>
+<p>The algorithm for determining a value's class name can be approximated as shown below:</p>
 <pre>
-Object_Type(Value) {
-    if HasProp(Value, "__Class")  <em>; 确保不会将类报告为基类的实例.</em>
-        return "Class"
-    while Value := Value.base
-        if HasProp(Value, "__Class")
+TypeOf(Value)
+{
+    if (comClass := ComObjType(Value, "Class")) != ""
+        return comClass
+    try <em>; `Value is Object` is not checked because it can be false for prototypes.</em>
+        if ObjHasOwnProp(Value, "__Class")
+            return "Prototype"
+    while Value := ObjGetBase(Value)
+        if ObjHasOwnProp(Value, "__Class")
             return Value.__Class
     return "Object"
 }
 </pre>
-<p>但是, 与此函数不同, Type 函数不会导致调用对象的元函数.</p>
-<p>对于 COM 包装器对象, 返回值类型取决于包装的<a href="ComObjType.htm">变体类型</a>. 使用如下算法确定:</p>
+<p>对于 COM 包装器对象, the class name can also be determined based on the <a href="ComObjType.htm#vt">variant type</a>, as follows:</p>:</p>
 <pre>
 ComObject_Type(obj)
 {
     if ComObjType(obj) &amp; 0x2000 <em>; VT_ARRAY</em>
-        return "<a href="ComObjArray.htm">ComObjArray</a>"
+        return "ComObjArray" <em>; ComObjArray.Prototype.__Class</em>
     if ComObjType(obj) &amp; 0x4000 <em>; VT_BYREF</em>
-        return "<a href="ComObject.htm#ByRef">ComObjRef</a>"
+        return "ComValueRef" <em>; ComValueRef.Prototype.__Class</em>
     if (ComObjType(obj) = 9 || ComObjType(obj) = 13) <em>; VT_DISPATCH || VT_UNKNOWN</em>
         &amp;&amp; ComObjValue(obj) != 0
     {
-        if (classname := <a href="ComObjType.htm">ComObjType</a>(obj, "Class")) != ""
-            return classname
+        if (comClass := ComObjType(obj, "Class")) != ""
+            return comClass
         if ComObjType(obj) = 9 <em>; VT_DISPATCH</em>
-            return "ComObject"
+            return "ComObject" <em>; ComObject.Prototype.__Class</em>
     }
-    return "ComObj"
+    return "ComValue" <em>; ComValue.Prototype.__Class</em>
 }
 </pre>
 
 <h2 id="Remarks">备注</h2>
-<p>通常不应该使用此函数来确定一个值是否是数值, 因为数值 <em>字符串</em> 在数学表达式和大多数内置函数中都是有效的. 但是, 在某些情况下, 值的确切类型更为重要.</p>
+<p>通常不应该使用此函数来确定一个值是否是数值, 因为数值 <em>字符串</em> 在数学表达式和大多数内置函数中都是有效的. 但是, 在某些情况下, 值的确切类型更为重要. In such cases, consider using <code>Value is Number</code> or similar instead of Type.</p>
 <p>要检查一个值是否可以用作数字, 请使用 <a href="Is.htm#number">IsNumber</a>, <a href="Is.htm#integer">IsInteger</a> 或 <a href="Is.htm#float">IsFloat</a> 函数.</p>
-<p>要检查任何类型的对象, 请使用表达式 <a href="IsObject.htm">IsObject</a> 函数.</p>
-<p>要检查对象是否派生自特定的用户定义类, 请使用 <a href="../Variables.htm#is"><code>is</code></a> 运算符.</p>
-<p>对于内置类型, 不能直接引用对象的类.</p>
+<p>要检查任何类型的对象(that is, anything which is not a primitive value), 请使用 <a href="IsObject.htm">IsObject</a> 函数.</p>
+<p>To check if a value is an instance of a specific class, 请使用 <a href="../Variables.htm#is"><code>is</code></a> 运算符. This can be used even with primitive values or to identify <a href="ComValue.htm">COM wrapper objects</a>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../Concepts.htm#values">值</a>, <a href="../Language.htm#expressions">表达式</a>, <a href="Is.htm">Is 函数</a>, <a href="Integer.htm">Integer</a>, <a href="Float.htm">Float</a>, <a href="String.htm">String</a></p>

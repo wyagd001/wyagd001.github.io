@@ -76,7 +76,7 @@ MyMenuBar := <span class="func">MenuBar</span>()
     <p>要显示在菜单项上的文字, 或者要修改的现有项的位置&amp;. 请参阅 <a href="#MenuItemName">MenuItemName</a>.</p></dd>
   <dt>Callback-or-Submenu</dt><dd><p>函数名或对<a href="Functor.htm">函数对象</a>的引用, 当选择菜单项时, 作为新<a href="../misc/Threads.htm">线程</a>调用, 或对 <strong>Menu</strong> 对象的引用, 作为子菜单使用.</p>
   <p id="CallbackParams">该函数可以选择性地定义参数, 如下所示:</p>
-<pre class="Syntax"><i>FunctionName</i>(ItemName, ItemPos, Menu)</pre>
+<pre class="Syntax"><i>FunctionName</i>(ItemName, ItemPos, MyMenu)</pre>
     <p>创建新项目时需要此参数, 但在更新现有项目的 <em>Options</em> 时, 此参数是可选的.</p></dd>
   <dt>Options</dt><dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
@@ -200,7 +200,6 @@ MyMenuBar := <span class="func">MenuBar</span>()
     <p>要在菜单项上显示的文字. 与 <a href="#Add">Add</a> 方法不同, 它不能是一个位置.</p></dd>
 </dl>
 <p>除了 <em>Insert</em> 会创建一个新的项目, 即使 <em>NewItemName</em> 与现有项目的名称相匹配, 其余的参数与 <a href="#Add">Add</a> 方法一样.</p>
-<p>由于 <a href="#AddStandard">Standard</a> 菜单项不计算在内(<code>"1&amp;"</code> 总是指第一个 <em>自定义</em> 项), 所以不能在标准项之前插入一个项目.</p>
 </div>
 
 <div class="methodShort" id="Rename">
@@ -380,9 +379,9 @@ MyMenuBar := <span class="func">MenuBar</span>()
 <p><a class="ex_number" href="#ExBasic"></a> 添加一个新菜单项到托盘图标菜单的底部.</p>
 <pre>A_TrayMenu.Add()  <em>; 创建分隔线.</em>
 A_TrayMenu.Add("Item1", MenuHandler)  <em>; 创建新菜单项.</em>
-return
+Persistent
 
-MenuHandler(ItemName, ItemPos, Menu) {
+MenuHandler(ItemName, ItemPos, MyMenu) {
     MsgBox "You selected " ItemName " (position " ItemPos ")"
 }</pre>
 </div>
@@ -391,20 +390,20 @@ MenuHandler(ItemName, ItemPos, Menu) {
 <p><a class="ex_number" href="#ExPopup"></a> 创建一个弹出菜单, 当用户按下热键时显示.</p>
 <pre><em>; 添加一些菜单项来创建弹出菜单.</em>
 MyMenu := Menu()
-MyMenu.Add "Item 1", "MenuHandler"
-MyMenu.Add "Item 2", "MenuHandler"
-MyMenu.Add  <em>; Add a separator line.</em>
+MyMenu.Add "Item 1", MenuHandler
+MyMenu.Add "Item 2", MenuHandler
+MyMenu.Add  <em>; 添加分隔线.</em>
 
 <em>; 添加子菜单到上面的菜单中.</em>
 Submenu1 := Menu()
-Submenu1.Add "Item A", "MenuHandler"
-Submenu1.Add "Item B", "MenuHandler"
+Submenu1.Add "Item A", MenuHandler
+Submenu1.Add "Item B", MenuHandler
 
 <em>; 创建第一个菜单的子菜单(右箭头指示符). 当用户选择它时会显示第二个菜单.</em>
 MyMenu.Add "My Submenu", Submenu1
 
 MyMenu.Add  <em>; 在子菜单下添加分隔线.</em>
-MyMenu.Add "Item 3", "MenuHandler"  <em>; 在子菜单下添加另一个菜单项.</em>
+MyMenu.Add "Item 3", MenuHandler  <em>; 在子菜单下添加另一个菜单项.</em>
 
 MenuHandler(Item, *) {
     MsgBox "You selected " Item
@@ -416,6 +415,7 @@ MenuHandler(Item, *) {
 <div class="ex" id="ExTray">
 <p><a href="#ExTray"></a> 演示各种菜单对象成员.</p>
 <pre>#SingleInstance
+Persistent
 tray := A_TrayMenu <em>; 为了方便.</em>
 tray.delete <em>; 删除标准项目.</em>
 tray.add <em>; 分隔线</em>
@@ -513,9 +513,9 @@ MenuHandler(*) {
 <p><a class="ex_number" href="#ExDllCall"></a> 报告菜单中的项目数量和最后一项的 ID.</p>
 <pre>
 MyMenu := Menu()
-MyMenu.Add "Item 1", "no"
-MyMenu.Add "Item 2", "no"
-MyMenu.Add "Item B", "no"
+MyMenu.Add "Item 1", NoAction
+MyMenu.Add "Item 2", NoAction
+MyMenu.Add "Item B", NoAction
 
 <em>; 检索菜单中的项目数.</em>
 item_count := DllCall("GetMenuItemCount", "ptr", MyMenu.Handle)
@@ -525,7 +525,7 @@ last_id := DllCall("GetMenuItemID", "ptr", MyMenu.Handle, "int", item_count-1)
 
 MsgBox "MyMenu has " item_count " items, and its last item has ID " last_id
 
-no(*) {
+NoAction(*) {
     <em>; 什么都不做.</em>
 }
 </pre>

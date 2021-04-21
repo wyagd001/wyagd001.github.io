@@ -1,8 +1,9 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>#MenuMaskKey - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The #MenuMaskKey directive changes which key is used to mask WIN or ALT keyup events." />
+<title>A_MenuMaskKey - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The A_MenuMaskKey variable controls directive changes which key is used to mask WIN or ALT keyup events." />
+<meta name="ahk:equiv-v1" content="commands/_MenuMaskKey.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,30 +12,27 @@
 </head>
 <body>
 
-<h1>#MenuMaskKey</h1>
+<h1>A_MenuMaskKey</h1>
 
-<p>更改用来掩饰(屏蔽) Win 或 Alt 键松开事件的按键.</p>
+<p>Controls which key is used to mask Win or Alt keyup events.</p>
+<p>xxxxx更改用来掩饰(屏蔽) Win 或 Alt 键松开事件的按键.</p>
 
-<pre class="Syntax"><span class="func">#MenuMaskKey</span> KeyName</pre>
-<h2 id="Parameters">参数</h2>
 <dl>
-
-  <dt>KeyName</dt>
+  <dt>Value</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p><a href="../KeyList.htm">按键名称</a>, <a href="../KeyList.htm#vk">VKnn</a>, <a href="../KeyList.htm#sc">SCnnn</a> 或 VKnnSCnnn 序列.</p>
+    <p>A vkNNscNNN sequence identifying the virtual key code (NN) and scan code (NNN), in hexadecimal, or an empty string if masking is disabled.</p>
+    <p>The script can also assign a <a href="../KeyList.htm">key name</a>, <a href="../KeyList.htm#vk">vkNN</a> sequence or <a href="../KeyList.htm#sc">scNNN</a> sequence, in which case generally either the VK or SC code is left as zero until the key is sent, then determined automatically. Assigning "vk00sc000" disables masking and is equivalent to assigning "".</p>
+    <p>The returned string is always a vkNNscNNN sequence if enabled or "" if disabled, regardless of how it was assigned. All vkNNscNNN sequences and all non-zero vkNN or scNNN sequences are permitted, but some combinations may fail to suppress the menu. Any other invalid keys cause a <a href="../objects/Error.htm#ValueError">ValueError</a> to be thrown.</p>
   </dd>
-
 </dl>
 
 <h2 id="Remarks">备注</h2>
 <p>掩饰键会自动发送, 以防止开始菜单或活动窗口的菜单栏在未预期的时间激活.</p>
-<p>默认的掩饰键为 <kbd>Ctrl</kbd>. 此指令可用于将掩饰键更改为具有较少副作用的键.</p>
+<p>默认的掩饰键为 <kbd>Ctrl</kbd>. 此变量可用于将掩饰键更改为具有较少副作用的键.</p>
 <p>好的候选者是通常不会有效果的虚拟按键代码, 例如 vkE8, 微软的文档是 "未定义的", 或 vkFF, 它被保留为 "没有映射"(一个没有功能的键). 某些值, 如 0 VK 和非 0 SC, 可能无法抑制开始菜单. 按键码不需要匹配按键的存在.</p>
 <p class="note"><strong>注意</strong>: Microsoft 可以随时为未指定的键码指定一个效果. 例如, vk07 曾经是未定义的并且可以安全使用, 但从 Windows 10 1909 开始, 它就被保留为打开游戏栏.</p>
-<p>指定 <code>vk00sc000</code> 将禁用所有自动掩饰.</p>
-<p>这个设置是全局的, 这意味着只需要指定一次(在脚本的任何位置) 就可以影响整个脚本的行为.</p>
-<p>和其他指令一样, #MenuMaskKey 不能有条件地执行.</p>
+<p>This setting is global, meaning that it needs to be specified only once to affect the behavior of the entire script.</p>
 <p><strong>Hotkeys:</strong> 如果是使用键盘钩子或鼠标钩子实现的热键, 则最终的按键可能对活动窗口和系统是不可见的. 如果系统 <em>仅</em> 检测到 Win 或 Alt 按下和松开, 而期间没有其他键按下, 通常会激活一个菜单. 为防止这种情况发生, 键盘或鼠标钩子可能会自动发送掩饰键.</p>
 <p>如果满足以下所有条件, 则按下钩子热键将导致下一个 Alt 或 Win 的松开被屏蔽(发送掩饰键):</p>
 <ul>
@@ -49,7 +47,7 @@
 <p>带有<a href="../Hotkeys.htm#Tilde">颚化符修饰键</a>的热键并不会阻止按键的原有功能, 因此不会引发掩饰键. 像 <code>~#a::</code> 这样的热键仍然屏蔽开始菜单, 因为系统检测到 <kbd>Win</kbd> 已经与另一个键组合使用. 但是, 鼠标热键和 <kbd>Win</kbd> 本身(<code>~LWin::</code> 和 <code>~RWin::</code>) 不会屏蔽开始菜单.</p>
 <p>开始菜单(或活动窗口的菜单栏) 可以通过发送任何按键来屏蔽. 以下示例禁用左 <kbd>Win</kbd> 激活开始菜单的功能, 同时仍允许将其用于修饰键:</p>
 <pre>~LWin::Send "{Blind}{vkE8}"</pre>
-<p><strong>Send:</strong> <a href="Send.htm">Send</a>, <a href="ControlSend.htm">ControlSend</a> 和相关的经常释放修饰键作为其正常操作的一部分. 例如, 热键 <code>&lt;#a::SendText Address</code> 通常必须在发送 <em>Address</em> 的内容之前释放左 <kbd>Win</kbd>, 之后再按下左 <kbd>Win</kbd> 键(以便其他 <kbd>Win</kbd> 组合继续工作). 在这种情况下, 可以发送掩码键, 以防止 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 松开后激活菜单.</p>
+<p><strong>Send:</strong> <a href="../commands/Send.htm">Send</a>, <a href="../commands/ControlSend.htm">ControlSend</a> 和相关的经常释放修饰键作为其正常操作的一部分. 例如, 热键 <code>&lt;#a::SendText Address</code> 通常必须在发送 <em>Address</em> 的内容之前释放左 <kbd>Win</kbd>, 之后再按下左 <kbd>Win</kbd> 键(以便其他 <kbd>Win</kbd> 组合继续工作). 在这种情况下, 可以发送掩码键, 以防止 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 松开后激活菜单.</p>
 
 <h2 id="Related">相关</h2>
 <p>有关背景信息, 请参阅<a href="https://www.autohotkey.com/board/topic/20619-extraneous-control-key-presses-generated-by-or-hotkeys/">这个帖子</a>.</p>
@@ -57,13 +55,13 @@
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 基础用法.</p>
-<pre>#MenuMaskKey vkE8  <em>; 将掩码键改成未分配的按键, 如 vkE8 等.</em>
+<pre>A_MenuMaskKey := "vkE8"  <em>; 将掩码键改成未分配的按键, 如 vkE8 等.</em>
 #Space::Run A_ScriptDir  <em>; 额外的 Ctrl 键不会被触发.</em></pre>
 </div>
 
 <div class="ex" id="ExAdvanced">
-<p><a class="ex_number" href="#ExAdvanced"></a> 展示该指令如何使 vkFF 代替 LControl 被发送.</p>
-<pre>#MenuMaskKey vkFF  <em>; vkFF 是未映射的.</em>
+<p><a class="ex_number" href="#ExAdvanced"></a> 展示该变量如何使 vkFF 代替 LControl 被发送.</p>
+<pre>A_MenuMaskKey := "vkFF"  <em>; vkFF 是未映射的.</em>
 #UseHook
 #Space::
 !Space::

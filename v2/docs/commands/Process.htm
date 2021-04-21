@@ -58,9 +58,9 @@ ScriptPID := ProcessExist()  <em>; 正在运行脚本的 PID.</em>
 <em>; 使用 PROCESS_QUERY_INFORMATION(0x0400) 获取此脚本的句柄:</em>
 h := DllCall("OpenProcess", "UInt", 0x0400, "Int", false, "UInt", ScriptPID, "Ptr")
 <em>; 打开此进程的可调整的访问令牌(TOKEN_ADJUST_PRIVILEGES = 32):</em>
-DllCall("Advapi32.dll\OpenProcessToken", "Ptr", h, "UInt", 32, "PtrP", t := 0)
+DllCall("Advapi32.dll\OpenProcessToken", "Ptr", h, "UInt", 32, "PtrP", &amp;t := 0)
 <em>; 获取调试特权的本地唯一标识符:</em>
-DllCall("Advapi32.dll\LookupPrivilegeValue", "Ptr", 0, "Str", "SeDebugPrivilege", "Int64P", luid := 0)
+DllCall("Advapi32.dll\LookupPrivilegeValue", "Ptr", 0, "Str", "SeDebugPrivilege", "Int64P", &amp;luid := 0)
 ti := BufferAlloc(16, 0)  <em>; 特权结构</em>
 NumPut( "UInt", 1  <em>; 特权数组中的一个条目...</em>
       , "Int64", luid
@@ -75,7 +75,7 @@ hModule := DllCall("LoadLibrary", "Str", "Psapi.dll")  <em>; 通过预加载来�
 a := BufferAlloc(s)  <em>; 接收进程列表标识符的数组:</em>
 c := 0  <em>; 用于进程标识符的计数器</em>
 l := ""
-DllCall("Psapi.dll\EnumProcesses", "Ptr", a, "UInt", s, "UIntP", r)
+DllCall("Psapi.dll\EnumProcesses", "Ptr", a, "UInt", s, "UIntP", &amp;r)
 Loop r // 4  <em>; 把数组解析为 DWORD(32 位) 的标识符:</em>
 {
     id := NumGet(a, A_Index * 4, "UInt")

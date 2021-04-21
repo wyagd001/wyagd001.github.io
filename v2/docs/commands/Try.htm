@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Try - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The Try statement guards one or more code lines against runtime errors and exceptions thrown by the Throw statement." />
+<meta name="description" content="The Try statement guards one or more statements against runtime errors and values thrown by the Throw statement." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
 
 <h1>Try</h1>
 
-<p>守护一个或多个语句(函数或表达式) 不受由 <a href="Throw.htm">throw</a> 语句抛出的运行时错误和异常的影响.</p>
+<p>守护一个或多个语句不受由 <a href="Throw.htm">throw</a> 语句抛出的运行时错误和值的影响.</p>
 
 <pre class="Syntax"><span class="func">Try</span> <i>Statement</i></pre>
 <pre class="Syntax" style="line-height: 100%"><span class="func">Try</span>
@@ -21,23 +21,29 @@
     <i>Statements</i>
 }</pre>
 <h2 id="Remarks">备注</h2>
-<p><em>try</em> 语句后常跟着<a href="Block.htm">区块</a> - 括在大括号中的一个或多个语句(函数或表达式). 如果仅需执行单个语句, 那么此语句可以和 <em>try</em> 放在同一行, 也可以在下一行, 并且可以省略大括号. 要指定仅在 <em>try</em> 捕获错误时执行的代码, 请使用 <a href="Catch.htm">catch</a> 语句.</p>
-<p><a href="Throw.htm">throw</a> 语句或程序在运行遇到错误时会抛出异常. 当 try 区块或由其调用的函数抛出异常时, 将进行下列操作:</p>
+<p><em>try</em> 语句后常跟着<a href="Block.htm">区块</a> - 括在大括号中的一个或多个语句(统称为函数或表达式). 如果仅需执行单个语句, 那么此语句可以和 <em>try</em> 放在同一行, 也可以在下一行, 并且可以省略大括号. 要指定仅在 <em>try</em> 捕获错误时执行的代码, 请使用一个或多个 <a href="Catch.htm">catch</a> 语句.</p>
+<p>If <em>try</em> is used without <em>catch</em> or <em>finally</em>, it is equivalent to having <code>catch Error</code> with an empty block.</p>
+<p><a href="Throw.htm">throw</a> 语句或程序在运行遇到错误时会抛出值. 当 try 区块或由其调用的函数抛出值时, 将进行下列操作:</p>
 <ul>
   <li>如果该区块有相应的 <a href="Catch.htm">catch</a> 语句, 则继续执行该语句.</li>
-  <li>如果没有 catch 语句但有 <a href="Finally.htm">finally</a> 语句, 则执行该语句并在结束后自动再次抛出异常.</li>
-  <li>如果 catch 语句和 finally 语句都没有, 则继续执行 try 区块外的下一行.</li>
+  <li>如果没有匹配的 catch 语句但有 <a href="Finally.htm">finally</a> 语句, 则执行该语句并在结束后自动再次抛出值.</li>
+  <li>如果没有匹配的 catch 语句或 finally 语句, the value is automatically thrown again.</li>
+<p>If <em>catch</em> is used, it can optionally be followed by <em>else</em>. If present, <em>else</em> is executed if nothing was thrown during execution of the try block. Exceptions thrown by the <em>else</em> statement are not handled by its associated try statement, but may be handled by an enclosing try statement. <em>Finally</em> can also be present, but must be placed after <em>else</em>, and is always executed last.</p>
 </ul>
 <p>如果在没有 try 区块执行的情况下引发异常, 则会显示错误消息, 并且当前线程退出.</p>
 <p>可以选择将 <a href="Block.htm#otb">One True Brace(OTB) 样式</a>与 <em>try</em> 语句一起使用. 例如:</p>
 <pre>try {
     ...
-} catch e {
+} catch Error as err {
+    ...
+} else {
+    ...
+} finally {
     ...
 }</pre>
 
 <h2 id="Related">相关</h2>
-<p><a href="Catch.htm">Catch</a>, <a href="Throw.htm">Throw</a>, <a href="Finally.htm">Finally</a>, <a href="Block.htm">区块</a>, <a href="OnError.htm">OnError</a></p>
+<p><a href="Throw.htm">Throw</a>, <a href="Catch.htm">Catch</a>, <a href="Else.htm">Else</a>, <a href="Finally.htm">Finally</a>, <a href="Block.htm">Blocks</a>, <a href="OnError.htm">OnError</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ex_basic">
@@ -47,10 +53,10 @@
     HelloWorld
     MakeToast
 }
-<a href="Catch.htm">catch</a> e  <em>; 处理由上面区块产生的首个错误/异常.</em>
+catch as e  <em>; 处理由上面区块抛出的首个错误.</em>
 {
-    MsgBox "An exception was thrown!`nSpecifically: " e
-    <a href="Exit.htm">Exit</a>
+    MsgBox "An error was thrown!`nSpecifically: " e.Message
+    Exit
 }
 
 HelloWorld()  <em>; 总是成功.</em>
@@ -61,7 +67,7 @@ HelloWorld()  <em>; 总是成功.</em>
 MakeToast()  <em>; 总是失败.</em>
 {
     <em>; 立即跳到 try 区块的错误处理程序:</em>
-    <a href="Throw.htm">throw</a> A_ThisFunc " is not implemented, sorry"
+    <a href="Throw.htm">throw</a> Error(A_ThisFunc " is not implemented, sorry")
 }
 </pre>
 </div>
@@ -77,8 +83,13 @@ MakeToast()  <em>; 总是失败.</em>
 }
 catch
 {
-    MsgBox("There was a problem while backing the files up!",, 16)
-    ExitApp
+    MsgBox "There was a problem while backing the files up!",, "IconX"
+    ExitApp 1
+}
+else
+{
+    MsgBox "Backup successful."
+    ExitApp 0
 }
 </pre>
 </div>
@@ -87,11 +98,15 @@ catch
 <p><a class="ex_number" href="#ex_com"></a> 演示使用 try/catch 处理 COM 错误. 有关下面使用的 COM 对象的详情, 请参阅 <a href="http://msdn.microsoft.com/en-us/library/aa227633(v=vs.60).aspx">Using the ScriptControl (Microsoft Docs)</a>.</p>
 <pre>try
 {
-    obj := ComObjCreate("ScriptControl")
-    obj.ExecuteStatement('MsgBox "This is embedded VBScript"')
-    obj.InvalidMethod() <em>; 这行会产生一个运行时错误.</em>
+    obj := ComObject("ScriptControl")
+    obj.ExecuteStatement('MsgBox "This is embedded VBScript"')  <em>; This line produces an Error.</em>
+    obj.InvalidMethod() <em>; This line would produce a MethodError.</em>
 }
-catch e
+catch MemberError  <em>; Covers MethodError and PropertyError.</em>
+{
+    MsgBox "We tried to invoke a member that doesn't exist."
+}
+catch as e
 {
     <em>; 关于 e 对象的更多细节, 请参阅 <a href="../objects/Error.htm">Error 对象</a>.</em>
     MsgBox("Exception thrown!`n`nwhat: " e.what "`nfile: " e.file 
@@ -103,16 +118,16 @@ catch e
 <div class="ex" id="ex_nesting">
 <p><a class="ex_number" href="#ex_nesting"></a> 演示嵌套的 try-catch 语句.</p>
 <pre>try Example1 <em>; 单个语句可以和 Try 语句放在同一行.</em>
-catch e
+catch Number as e
     MsgBox "Example1() threw " e
 
 Example1()
 {
     try Example2
-    catch e
+    catch Number as e
     {
         if (e = 1)
-            throw e <em>; 重新抛出这个异常, 这样调用者可以捕获它.</em>
+            throw <em>; Rethrow the caught value to our caller.</em>
         else
             MsgBox "Example2() threw " e
     }

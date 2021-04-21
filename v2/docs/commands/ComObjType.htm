@@ -15,19 +15,19 @@
 
 <p>从 COM 对象检索类型信息.</p>
 
-<pre class="Syntax">VarType := <span class="func">ComObjType</span>(ComObject)
-IName   := <span class="func">ComObjType</span>(ComObject, "Name")
-IID     := <span class="func">ComObjType</span>(ComObject, "IID")
-CName   := <span class="func">ComObjType</span>(ComObject, "Class")
-CLSID   := <span class="func">ComObjType</span>(ComObject, "CLSID")
+<pre class="Syntax">VarType := <span class="func">ComObjType</span>(ComObj)
+IName   := <span class="func">ComObjType</span>(ComObj, "Name")
+IID     := <span class="func">ComObjType</span>(ComObj, "IID")
+CName   := <span class="func">ComObjType</span>(ComObj, "Class")
+CLSID   := <span class="func">ComObjType</span>(ComObj, "CLSID")
 </pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>ComObject</dt>
+  <dt>ComObj</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
+    <p>类型: <a href="../ComValue.htm">ComValue</a></p>
     <p>包含 COM 对象或类型化值的包装器对象.</p>
   </dd>
 
@@ -65,7 +65,7 @@ CLSID   := <span class="func">ComObjType</span>(ComObject, "CLSID")
   <tr>
     <td><code>"Class"</code></td>
     <td><a href="../Concepts.htm#strings">字符串</a></td>
-    <td>对象的类名. 注意, 这不同于 Prog ID(Prog ID 是用于在系统注册表或 ComObjCreate 中标识类的名称).</td>
+    <td>对象的类名. 注意, 这不同于 Prog ID(Prog ID 是用于在系统注册表或 ComObject 中标识类的名称).</td>
   </tr>
   <tr>
     <td><code>"CLSID"</code></td>
@@ -76,6 +76,7 @@ CLSID   := <span class="func">ComObjType</span>(ComObject, "CLSID")
 <p>如果参数无效或无法检索请求的类型信息, 则返回空字符串.</p>
 
 <h2 id="vt">Variant(变体) 类型常量</h2>
+<p>COM uses the following values to identify basic data types:</p>
 <pre>
 VT_EMPTY     :=      0  <em>; 未指定值</em>
 VT_NULL      :=      1  <em>; 类似 SQL 中的空值</em>
@@ -112,17 +113,17 @@ VT_BYREF     := 0x4000  <em>; 指向另一种类型值的指针</em>
 <h2 id="General_Remarks">一般说明</h2>
 <p>在大多数情况下, 来自 COM 对象的方法或属性的返回值会被转换为 AutoHotkey 支持的适当数据类型. 没有特别处理的类型通过 <a href="http://msdn.microsoft.com/en-us/library/ms221258.aspx">VariantChangeType</a> 强制转换为字符串; 如果失败或者如果变量类型包含 VT_ARRAY 或 VT_BYREF 标志, 则返回一个同时包含值和类型的对象.</p>
 <p>对于任意变量 <i>x</i>, 如果 <code>ComObjType(x)</code> 返回一个整数, 则 <i>x</i> 包含一个 COM 对象包装器.</p>
-<p>如果 <em>Param2</em> 是 <code>"Name"</code> 或 <code>"IID"</code>, 则通过 <a href="https://msdn.microsoft.com/en-us/library/ms221571.aspx">IDispatch::GetTypeInfo</a> 接口方法检索类型信息. <em>ComObject</em> 的变体类型必须是 VT_DISPATCH.</p>
-<p>如果 <em>Param2</em> 是 <code>"Class"</code> 或 <code>"CLSID"</code>, 则通过 <a href="https://msdn.microsoft.com/en-us/library/ms690192.aspx">IProvideClassInfo::GetClassInfo</a> 接口方法检索类型信息. <em>ComObject</em> 的变体类型必须是 VT_DISPATCH 或 VT_UNKNOWN, 该对象必须实现 IProvideClassInfo 接口(有些对象没有实现).</p>
+<p>如果 <em>Param2</em> 是 <code>"Name"</code> 或 <code>"IID"</code>, 则通过 <a href="https://msdn.microsoft.com/en-us/library/ms221571.aspx">IDispatch::GetTypeInfo</a> 接口方法检索类型信息. <em>ComObj</em> 的变体类型必须是 VT_DISPATCH.</p>
+<p>如果 <em>Param2</em> 是 <code>"Class"</code> 或 <code>"CLSID"</code>, 则通过 <a href="https://msdn.microsoft.com/en-us/library/ms690192.aspx">IProvideClassInfo::GetClassInfo</a> 接口方法检索类型信息. <em>ComObj</em> 的变体类型必须是 VT_DISPATCH 或 VT_UNKNOWN, 该对象必须实现 IProvideClassInfo 接口(有些对象没有实现).</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="ComObjValue.htm">ComObjValue</a>, <a href="ComObject.htm">ComObject</a>, <a href="ComObjCreate.htm">ComObjCreate</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a></p>
+<p><a href="ComObjValue.htm">ComObjValue</a>, <a href="ComValue.htm">ComValue</a>, <a href="ComObject.htm">ComObject</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 报告 COM 对象的各种类型信息.</p>
 <pre>
-d := <a href="ComObjCreate.htm">ComObjCreate</a>("Scripting.Dictionary")
+d := ComObject("Scripting.Dictionary")
 MsgBox
 (
     "Variant type:`t" ComObjType(d) "
