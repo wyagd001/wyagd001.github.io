@@ -61,7 +61,6 @@
   ["外部库","",
   [
     ["缓冲对象","objects/Buffer.htm"],
-    ["BufferAlloc","commands/BufferAlloc.htm"],
     ["CallbackCreate","commands/CallbackCreate.htm"],
     ["DllCall","commands/DllCall.htm"],
     ["NumGet","commands/NumGet.htm"],
@@ -281,7 +280,7 @@
     ["Is Functions","commands/Is.htm"],
     ["IsLabel","commands/IsLabel.htm"],
     ["IsObject","commands/IsObject.htm"],
-    ["IsSet","commands/IsSet.htm"],
+    ["IsSet / IsSetRef","commands/IsSet.htm"],
     ["ListLines","commands/ListLines.htm"],
     ["ListVars","commands/ListVars.htm"],
     ["OutputDebug","commands/OutputDebug.htm"],

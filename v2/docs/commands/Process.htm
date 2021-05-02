@@ -61,7 +61,7 @@ h := DllCall("OpenProcess", "UInt", 0x0400, "Int", false, "UInt", ScriptPID, "Pt
 DllCall("Advapi32.dll\OpenProcessToken", "Ptr", h, "UInt", 32, "PtrP", &amp;t := 0)
 <em>; 获取调试特权的本地唯一标识符:</em>
 DllCall("Advapi32.dll\LookupPrivilegeValue", "Ptr", 0, "Str", "SeDebugPrivilege", "Int64P", &amp;luid := 0)
-ti := BufferAlloc(16, 0)  <em>; 特权结构</em>
+ti := Buffer(16, 0)  <em>; 特权结构</em>
 NumPut( "UInt", 1  <em>; 特权数组中的一个条目...</em>
       , "Int64", luid
       , "UInt", 2  <em>; 启用这个特权: SE_PRIVILEGE_ENABLED = 2</em>
@@ -72,7 +72,7 @@ DllCall("CloseHandle", "Ptr", t)  <em>; 关闭此访问令牌句柄以节约内�
 DllCall("CloseHandle", "Ptr", h)  <em>; 关闭此进程句柄以节约内存.</em>
 
 hModule := DllCall("LoadLibrary", "Str", "Psapi.dll")  <em>; 通过预加载来提升性能.</em>
-a := BufferAlloc(s)  <em>; 接收进程列表标识符的数组:</em>
+a := Buffer(s)  <em>; 接收进程列表标识符的数组:</em>
 c := 0  <em>; 用于进程标识符的计数器</em>
 l := ""
 DllCall("Psapi.dll\EnumProcesses", "Ptr", a, "UInt", s, "UIntP", &amp;r)
@@ -83,7 +83,7 @@ Loop r // 4  <em>; 把数组解析为 DWORD(32 位) 的标识符:</em>
     h := DllCall("OpenProcess", "UInt", 0x0010 | 0x0400, "Int", false, "UInt", id, "Ptr")
     if !h
         continue
-    n := BufferAlloc(s, 0)  <em>; 接收模块基础名称的缓冲:</em>
+    n := Buffer(s, 0)  <em>; 接收模块基础名称的缓冲:</em>
     e := DllCall("Psapi.dll\GetModuleBaseName", "Ptr", h, "Ptr", 0, "Ptr", n, "UInt", s//2)
     if !e    <em>; 用于 64 位进程在 32 位模式时的回退方法:</em>
         e := DllCall("Psapi.dll\GetProcessImageFileName", "Ptr", h, "Ptr", n, "UInt", s//2)

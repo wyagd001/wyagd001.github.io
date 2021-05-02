@@ -60,7 +60,7 @@
 <td>Str</td>
 <td>
 <p>一个字符串, 如 <code>"Blue"</code> 或 <code>MyVar</code>, 或 <a href="../Concepts.htm#variable-references">VarRef</a>(如 <code>&amp;MyVar</code>). 如果被调用的函数修改了字符串, 并且参数是裸变量或 VarRef, 那么它的内容将被更新. 例如, 下面的调用将把 <em>MyVar</em> 的内容转换为大写字母: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
-  <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议使用 <a href="BufferAlloc.htm">BufferAlloc</a> 分配缓冲, <a href="#ptr">Ptr</a> 类型传递缓冲, <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串.</p>
+  <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议创建一个<a href="../objects/Buffer.htm">缓冲</a>, 使用 <a href="#ptr">Ptr</a> 类型传递, 然后使用 <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串, 如 <a href="#ExWsprintf">wsprintf 示例</a>所示.</p>
   <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出 <a href="../objects/Error.htm#TypeError">TypeError</a>.</p>
   <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量, if a <a href="../Concepts.htm#variable-references">VarRef</a> was passed. 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
@@ -74,7 +74,7 @@
   <td><span id="astr"></span>AStr</td>
   <td>
     <p>AStr 导致输入值自动转换为 ANSI. 由于用于此转换的临时内存仅足够容纳转换后的输入字符串, 因此函数写入其的任何值都将被丢弃. 要接收 ANSI 字符串作为输出参数, 请遵循以下示例:</p>
-<pre>buf := BufferAlloc(<i>length</i>)  <em>; 分配临时缓冲.</em>
+<pre>buf := Buffer(<i>length</i>)  <em>; 分配临时缓冲.</em>
 DllCall("<i>Function</i>", "ptr", buf)  <em>; 传递缓冲给函数.</em>
 str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 </pre>
@@ -111,7 +111,7 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 <tr id="ptr">
   <td>Ptr</td>
   <td><p><a href="../Variables.htm#PtrSize">指针大小</a>的整数, 等同于 Int 或 Int64, 具体取决于运行脚本的 exe 是 32 位还是 64 位. <i>Ptr</i> 应该用于指向数组或结构(如 RECT* 或 LPPOINT) 以及几乎所有句柄(如 HWND, HBRUSH 或 HBITMAP) 的指针. 如果参数是指向简单数值的指针( 如 LPDWORD 或 int*), 通常应该使用 * 或 P 后缀代替 "Ptr".</p>
-  <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在此类属性, 则抛出 <a href="../objects/Error.htm#PropertyError">PropertyError</a>. 通常, 该对象是 <a href="BufferAlloc.htm">BufferAlloc</a> 创建的 <a href="../objects/Buffer.htm">Buffer</a> 对象.</p>
+  <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在此类属性, 则抛出 <a href="../objects/Error.htm#PropertyError">PropertyError</a>. 通常, 该对象是 <a href="../objects/Buffer.htm">Buffer</a> 对象.</p>
   <p>如果将对象传递给 Ptr* 参数, 则在调用之前将检索对象的 <code>Ptr</code> 属性值, 并将包含该值的临时变量的地址传递给函数. 函数返回后, 新值将分配回该对象的 <code>Ptr</code> 属性.</p>
   <p><i>Ptr</i> 也可以和 * 或 P 后缀一起使用; 此时它应该用在通过 LPVOID* 或类似类型输出指针的函数中.</p>
   <p><i>UPtr</i> 也是有效的, 但仅适用于 32 位版本中的无符号整数, 因为 AutoHotkey 不支持无符号的 64 位整数.</p>
@@ -175,8 +175,8 @@ Loop 500
 
 <h2 id="struct">结构和数组</h2>
 <p>结构是内存中连续存储的 <em>成员</em>(空间) 的集合. 大多数成员倾向于是整数.</p>
-<p>接受结构(或内存块数组) 地址的函数可以通过某种方式分配内存并将内存地址传递给函数来调用. <a href="BufferAlloc.htm">BufferAlloc</a> 函数和 <a href="../objects/Buffer.htm">Buffer</a> 对象被推荐用于此目的. 一般使用以下步骤:</p>
-<p>1) 调用 <code>MyStruct := BufferAlloc(123, 0)</code> 来分配一个缓冲来保存结构体的数据. 将 <code>123</code> 替换为至少与结构大小一样大的数字, 以字节为单位. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步中频繁调用 NumPut.</p>
+<p>接受结构(或内存块数组) 地址的函数可以通过某种方式分配内存并将内存地址传递给函数来调用. <a href="../objects/Buffer.htm">Buffer</a> 对象被推荐用于此目的. 一般使用以下步骤:</p>
+<p>1) 调用 <code>MyStruct := Buffer(123, 0)</code> 来分配一个缓冲来保存结构体的数据. 将 <code>123</code> 替换为至少与结构大小一样大的数字, 以字节为单位. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步中频繁调用 NumPut.</p>
 <p>2) 如果目标函数使用结构中的初始值, 请调用 <code><a href="NumPut.htm">NumPut</a>("UInt", 123, MyStruct, 4)</code>初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>StrPtr(Var)</code> 来存储字符串的地址). 将 <code>4</code> 替换为目标成员的偏移量(有关 "offset" 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则如 <code>"Ptr"</code>.</p>
 <p>3) 调用目标函数, 将 <em>MyStruct</em> 作为 Ptr 参数传递. 例如, <code>DllCall("MyDll\MyFunc", "Ptr", MyStruct)</code>. 该函数将检查和/或更改一些成员. DllCall 会自动使用缓冲的地址, 通常使用 <code>MyStruct.Ptr</code> 来检索.</p>
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code>从结构中检索任何所需的整数. 将 <code>4</code> 替换为结构中目标构件的偏移量. 第一个成员的偏移量始终为 0. 第二个成员的偏移量为 0 加第一个成员的大小(通常为 4). 第二个成员之后的成员是前一个成员的偏移量加上前一个成员的大小. 大多数成员 -- 如 DWORD, Int 和<a href="#Int">其他类型的 32 位整数</a> -- 的大小为 4 个字节. 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
@@ -200,7 +200,7 @@ result := DllCall("CharLower", "<strong><u>Str</u></strong>", DllCall("CharUpper
 <p>但是, AutoHotkey 可以通过 <a href="https://docs.microsoft.com/en-us/dotnet/standard/native-interop/com-callable-wrapper">COM 可调用包装器</a>来使用 CLR. 除非该库也已注册为通用 COM 组件, 否则必须先通过 DllCall 手动初始化 CLR 本身. 有关详情, 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>(其当前使用的 DllCall 与 AutoHotkey v2 不兼容).</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="BufferAlloc.htm">BufferAlloc</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, <a href="../Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
+<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, <a href="../Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExMessageBox">
@@ -223,7 +223,7 @@ if not DllCall("IsWindowVisible", "Ptr", WinExist("Untitled - Notepad"))  <em>; 
 
 <div class="ex" id="ExWsprintf">
 <p><a class="ex_number" href="#ExWsprintf"></a> 调用 API 的 wsprintf() 函数来给数字 432 加上前导零以填充到 10 个字符的长度(0000000432).</p>
-<pre>ZeroPaddedNumber := BufferAlloc(20)  <em>; 确保缓冲足够大以便容纳新的字符串.</em>
+<pre>ZeroPaddedNumber := Buffer(20)  <em>; 确保缓冲足够大以便容纳新的字符串.</em>
 DllCall("wsprintf", "Ptr", ZeroPaddedNumber, "Str", "%010d", "Int", 432, "Cdecl")  <em>; 需要 Cdecl 调用约定.</em>
 MsgBox StrGet(ZeroPaddedNumber)
 
@@ -310,7 +310,7 @@ if !hFile
     return
 }
 <em>; 为要读取的字符串分配一块内存:</em>
-Buf := BufferAlloc(StrSize)
+Buf := Buffer(StrSize)
 DllCall("ReadFile", "Ptr", hFile, "Ptr", Buf, "UInt", Buf.Size, "UIntP", &amp;BytesActuallyRead := 0, "Ptr", 0)
 DllCall("CloseHandle", "Ptr", hFile)  <em>; 关闭文件.</em>
 MsgBox "The following string was read from the file: " StrGet(Buf)</pre>
@@ -336,8 +336,8 @@ SystemCursor(cmd)  <em>; cmd = "Show|Hide|Toggle|Reload"</em>
                 , "Int", 0, "Int", 0, "UInt", 0)
             h_blank   := DllCall("CreateCursor", "Ptr", 0, "Int", 0, "Int", 0
                 , "Int", 32, "Int", 32
-                , "Ptr", BufferAlloc(32*4, 0xFF)
-                , "Ptr", BufferAlloc(32*4, 0))
+                , "Ptr", Buffer(32*4, 0xFF)
+                , "Ptr", Buffer(32*4, 0))
             c[id] := {default: h_default, blank: h_blank}
         }
     }
@@ -362,7 +362,7 @@ SystemCursor(cmd)  <em>; cmd = "Show|Hide|Toggle|Reload"</em>
 <p><a class="ex_number" href="#ExStruct"></a> 结构的例子. 把 RECT 结构的地址传递给 GetWindowRect(), 它会把窗口的左, 上, 右和下边的位置(相对于屏幕) 存入结构的成员中.</p>
 <pre>Run "Notepad"
 WinWait "Untitled - Notepad"  <em>; 这里同时设置了 "<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>" 以用于下面的 WinExist.</em>
-Rect := BufferAlloc(16)  <em>; RECT 结构由四个 32 位整数组成(即 4*4=16).</em>
+Rect := Buffer(16)  <em>; RECT 结构由四个 32 位整数组成(即 4*4=16).</em>
 DllCall("GetWindowRect", "Ptr", WinExist(), "Ptr", Rect)  <em>; WinExist 返回 HWND.</em>
 L := NumGet(Rect, 0, "Int"), T := NumGet(Rect, 4, "Int")
 R := NumGet(Rect, 8, "Int"), B := NumGet(Rect, 12, "Int")
@@ -370,7 +370,7 @@ MsgBox Format("Left {1} Top {2} Right {3} Bottom {4}", L, T, R, B)</pre>
 
 <div class="ex" id="ExStructRect">
 <p><a class="ex_number" href="#ExStructRect"></a> 结构的例子. 把 RECT 结构的地址传递给 FillRect(), 这个结构表示需要临时描绘为红色的屏幕区域.</p>
-<pre>Rect := BufferAlloc(16)  <em>; 设置容量为 4 个 4 字节整型.</em>
+<pre>Rect := Buffer(16)  <em>; 设置容量为 4 个 4 字节整型.</em>
 <a href="NumPut.htm">NumPut</a>( "Int", 0                  <em>; 左</em>
       , "Int", 0                  <em>; 上</em>
       , "Int", A_ScreenWidth//2   <em>; 右</em>
@@ -397,7 +397,7 @@ SetSystemTime(YYYYMMDDHHMISS)
     UTC_Delta := Round(-UTC_Delta/60)  <em>; 取整到最近的分钟数以确保精度.</em>
     YYYYMMDDHHMISS := DateAdd(YYYYMMDDHHMISS, UTC_Delta, "Minutes")  <em>; 对本地时间应用偏移来转换到 UTC.</em>
 
-    SystemTime := BufferAlloc(16)  <em>; 此结构由 8 个 UShort 组成(即 8*2=16).</em>
+    SystemTime := Buffer(16)  <em>; 此结构由 8 个 UShort 组成(即 8*2=16).</em>
 
     <a href="NumPut.htm">NumPut</a>( "UShort", SubStr(YYYYMMDDHHMISS, 1, 4)  <em>; YYYY(年)</em>
           , "UShort", SubStr(YYYYMMDDHHMISS, 5, 2)  <em>; MM(月, 01-12)</em>

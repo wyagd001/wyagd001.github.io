@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>SetTimer - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The SetTimer function causes a function to be called automatically and repeatedly at a specified time interval." />
+<meta name="description" content="The SetTimer function causes the specified function to be called automatically and repeatedly at a specified time interval." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,18 +13,18 @@
 
 <h1>SetTimer</h1>
 
-<p>在指定的时间间隔自动重复调用函数.</p>
+<p>在指定的时间间隔内自动重复调用指定的函数.</p>
 
-<pre class="Syntax"><span class="func">SetTimer</span> <span class="optional">Callback, Period, Priority</span></pre>
+<pre class="Syntax"><span class="func">SetTimer</span> <span class="optional">Function, Period, Priority</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt id="Callback">Callback</dt>
+  <dt id="Function">Function</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>要调用的函数. 这可以是函数名称或<a href="../objects/Functor.htm">函数对象</a>. 原义函数名称必须用引号括起来.</p>
+    <p>类型: <a href="../objects/Functor.htm">函数对象</a></p>
+    <p>要调用的函数对象.</p>
     <p>函数对象的<a href="../Concepts.htm#references-to-objects">引用</a>保存在脚本的计时器列表中, 除非删除计时器, 否则不会释放该引用. 对于<a href="#once">只运行一次</a>的计时器, 此操作会自动发生, 但是也可以通过调用 <em>Period(周期)</em> 为 0 的 SetTimer 来完成.</p>
-    <p id="OmitCallback">如果省略 <em>Callback</em>, 如果有的话, SetTimer 将在启动当前线程的定时器上运行. 例如, <code>SetTimer , 0</code> 可以在一个定时器函数中用于标记要删除的定时器, 而 <code>SetTimer , 1000</code> 将更新当前定时器的 <em>Period</em>.</p>
+    <p id="OmitCallback">如果省略 <em>Function</em>, 如果有的话, SetTimer 将在启动当前线程的定时器上运行. 例如, <code>SetTimer , 0</code> 可以在一个定时器函数中用于标记要删除的定时器, 而 <code>SetTimer , 1000</code> 将更新当前定时器的 <em>Period</em>.</p>
     <p class="warning"><strong>注意:</strong> 传递空变量或返回空值的表达式被看做一个错误. 这个参数必须为非空的值或完全忽略.</p>
   </dd>
 
@@ -34,7 +34,7 @@
     <p>参数的绝对值被用作在执行计时器之前必须经过的<a href="#Precision">大约</a>毫秒数. 定时器将被自动<a href="#reset">重置</a>. 可以设置为自动重复或只运行一次:</p>
     <ul>
       <li>如果 <em>Period</em> 大于 0, 定时器将自动重复, 直到脚本明确禁用.</li>
-      <li id="once">如果 <em>Period</em> 小于 0, 定时器将只运行一次. 例如, 指定 -100 将在 100 ms 后调用 <em>回调</em>, 然后删除定时器, 就像使用 <code>SetTimer <i>Callback</i>, 0</code> 一样.</li>
+      <li id="once">如果 <em>Period</em> 小于 0, 定时器将只运行一次. 例如, 指定 -100 将在 100 ms 后调用 <em>Function</em>, 然后删除定时器, 就像使用 <code>SetTimer <i>Function</i>, 0</code> 一样.</li>
       <li>如果 <em>Period</em> 为 0, 定时器被标记为删除. 如果由这个定时器启动的线程还在运行, 那么在线程结束后, 定时器就会被删除(除非它被重新启用); 否则, 它会被立即删除. 在任何情况下, 定时器之前的 <em>Period</em> 和 <em>Priority</em> 都不会被保留.</li>
     </ul>
     <p><em>Period</em> 的绝对值不能大于 4294967295 ms(49.7 天).</p>
@@ -176,7 +176,7 @@ class SecondCounter {
 <ul>
   <li>我们也可使用 <code>this.timer := this.Tick.<a href="../objects/Func.htm#Bind">Bind</a>(this)</code>. 当 <code>this.timer</code> 被调用时, 它实际上是调用 <code><i>tick_function</i>.<a href="../objects/Func.htm#Call">Call</a>(this)</code>, 而 <i>tick_function</i> 是实现该方法的函数对象. 相比之下, <a href="ObjBindMethod.htm">ObjBindMethod</a> 会产生一个调用 <code>this.Tick()</code> 的对象.</li>
   <li>如果我们将 <em>Tick</em> 重命名为 <em>Call</em>, 我们可以直接使用 <code>this</code> 来代替 <code>this.timer</code>. 然而, 当对象有多个方法需要被不同的事件源调用时, ObjBindMethod 是非常有用的, 如热键, 菜单项, GUI 控件, 等等.</li>
-  <li>如果计时器是在计时器调用的函数/方法中修改或删除时, 可能更容易<a href="#OmitCallback">省略 <em>Callback</em> 参数</a>. 在某些情况下, 这样可以避免保留传递给 SetTimer 的原始对象.</li>
+  <li>如果计时器是在计时器调用的函数/方法中修改或删除时, 可能更容易<a href="#OmitCallback">省略 <em>Function</em> 参数</a>. 在某些情况下, 这样可以避免保留传递给 SetTimer 的原始对象.</li>
 </ul>
 </div>
 

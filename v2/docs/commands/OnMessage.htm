@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>OnMessage - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The OnMessage function specifies a function or function object to call automatically when the script receives the specified message." />
+<meta name="description" content="The OnMessage function causes the specified function to be called automatically whenever the script receives the specified message." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
 
 <h1>OnMessage</h1>
 
-<p>指定当脚本接收到指定消息时自动调用的<a href="../Functions.htm">函数</a>或<a href="../objects/Functor.htm">函数对象</a>.</p>
+<p>当脚本接收到指定消息时, 会自动调用指定的函数.</p>
 
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber <span class="optional">, Function, MaxThreads</span></pre>
 <h2 id="Parameters">参数</h2>
@@ -27,8 +27,8 @@
 
   <dt>Function</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p><a href="../Functions.htm">函数</a>或<a href="../objects/Functor.htm">函数对象</a>的名称. 要传递原义的函数名称, 必须用引号("") 括起来. 该函数必须能够接受四个参数, 如<a href="#The_Functions_Parameters">下</a>所述.</p>
+    <p>类型: <a href="../objects/Functor.htm">函数对象</a></p>
+    <p>当接收到消息时要调用的函数对象. 该函数必须能够接受四个参数, 如<a href="#The_Functions_Parameters">下</a>所述.</p>
   </dd>
 
   <dt id="MaxThreads">MaxThreads</dt>
@@ -84,8 +84,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <h2 id="Remarks">备注</h2>
 <p>与普通的函数调用不同, 当一个被监听的消息到达时, 函数会作为一个新的<a href="../misc/Threads.htm">线程</a>被调用. 因此, 函数会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
 <p>Send(发送)(而不是 Post) 到控件的消息不会被监听, 因为系统直接把它们发送给后台的控件了. 对于系统生成的消息来说, 这很少是一个问题, 因为大多数信息都是 Post 的.</p>
-<p>If the script is intended to stay running in an idle state to monitor for incoming messages, it may be necessary to call the <a href="Persistent.htm">Persistent</a> function to prevent the script from exiting. OnMessage does not automatically make the script persistent, as it is sometimes unnecessary or undesired. For instance, when OnMessage is used to monitor input to a GUI window (such as in the <a href="#ExLButtonDown">WM_LBUTTONDOWN example</a>), it is often more appropriate to allow the script to exit automatically when the last GUI window is closed.</p>
-<p>xxxxxxx任何具有活动消息监控器的脚本都会自动<a href="../Scripts.htm#persistent">持续运行</a>, 这意味着它不会退出, 直到使用 <a href="ExitApp.htm">ExitApp</a>.</p>
+<p>如果脚本要在空闲状态下保持运行, 以监测传入的消息, 可能需要调用 <a href="Persistent.htm">Persistent</a> 函数来防止脚本退出. OnMessage 不会自动使脚本持续运行, 因为这有时是不必要的或不需要的. 例如, 当 OnMessage 被用来监视 GUI 窗口的输入时(如在 <a href="#ExLButtonDown">WM_LBUTTONDOWN 的例子</a>), 通常让脚本在最后一个 GUI 窗口关闭时自动退出更为合适.</p>
 <p id="Critical">如果由于之前有相同的消息到达, 而消息的函数仍在运行, 则不会再次调用函数(除非 <a href="#MaxThreads">MaxThreads</a> 大于 1); 相反, 消息将被视为未被监控. 如果不希望出现这种情况, 可以通过在函数的第一行指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲大于或等于 0x0312 的消息, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的目的, 只要它持续的时间足够函数完成. 相反, 小于 0x0312 的消息不能被 Critical 或 Thread Interrupt 缓冲 (然而, Critical 可能会有帮助, 因为它检查消息的<a href="Critical.htm#Interval">频率较低</a>, 这给了函数更多的时间来完成). 保证不漏掉此类消息的唯一方法是确保函数在 6 毫秒内完成(尽管这个限制可以通过 <a href="Critical.htm#Interval"><em>Critical 30</em></a> 来提高). 一种方法是通过向自己的脚本<a href="PostMessage.htm">发布(Post)</a> 一个高于 0x0312 的监控消息号, 让它为未来的线程排队. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲.</p>
 <p id="buffering">If a monitored message that is numerically greater than 0x0311 is posted while the script is <a href="../misc/Threads.htm#Interrupt">uninterruptible</a>, the message is buffered; that is, its function is not called until the script becomes interruptible. However, messages which are sent rather than posted cannot be buffered as they must provide a return value. Posted messages also might not be buffered when a modal message loop is running, such as for a system dialog, ListView drag-drop operation or menu.</p>
 <p>xxxxxx如果在小于 0x0312 的受监听消息当脚本完全不可中断时到达(例如在显示<a href="../objects/Menu.htm#Show">菜单</a>, 正在进行 <a href="SetKeyDelay.htm">KeyDelay</a>/<a href="SetMouseDelay.htm">MouseDelay</a>, 或剪贴板正被<a href="_ClipboardTimeout.htm">打开</a>) -- 则不会调用此函数而消息会被视为未监听的.  相反, 一个等于或大于 0x0312 的受监听消息在这些不可中断期间会被缓冲起来; 即当脚本变成可中断时会调用它的处理函数.</p>
@@ -225,7 +224,7 @@ Send_WM_COPYDATA(StringToSend, TargetScriptTitle)
 <em>; 此函数发送指定的字符串到指定的窗口然后返回收到的回复.
 ; 如果目标窗口处理了消息则回复为 1, 而消息被忽略了则为 0.</em>
 {
-    CopyDataStruct := BufferAlloc(3*A_PtrSize)  <em>; 分配结构的内存区域.</em>
+    CopyDataStruct := Buffer(3*A_PtrSize)  <em>; 分配结构的内存区域.</em>
     <em>; 首先设置结构的 cbData 成员为字符串的大小, 包括它的零终止符:</em>
     SizeInBytes := (StrLen(StringToSend) + 1) * 2
     NumPut( "Ptr", SizeInBytes  <em>; 操作系统要求这个需要完成.</em>

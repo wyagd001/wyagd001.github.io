@@ -25,18 +25,11 @@
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
 
     <p>要启用或禁用的警告类型. 如果省略, 默认为 <i>All</i>.</p>
-    <p class="warning"><strong>注意:</strong> UseUnset 警告是默认启用的. 不建议禁用它们, 因为有计划删除该选项并以错误代替警告.</p>
-    <p id="UseUnset"><strong>UseUnsetLocal</strong> 或 <strong>UseUnsetGlobal</strong>: 在读取之前没有赋值或使用 <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a> 初始化的变量时产生警告. 如果期望这种变量为空, 则可以为它赋值空字符串来屏蔽这样的警告.</p>
-    <p><a href="IsSet.htm">IsSet</a> 可以用来检测一个变量是否被设置而不触发警告, 无论警告是否被启用.</p>
-    <p>对于 MsgBox 模式, 每个全局变量或每次调用函数时每个局部变量只显示一个警告. 这是通过在显示警告时初始化变量来实现的, 因此后续对 <a href="IsSet.htm">IsSet</a> 的调用也会受到影响.</p>
-    <p>之所以将其分为局部和全局的单独警告类型, 是因为由于全局变量的持久性和全脚本范围的特性, 在没有事先初始化的情况下使用全局变量是比较常见的. 出于这个原因, 一些脚本作者可能希望为局部启用这种类型的警告, 而为全局禁用它.</p>
-    <pre>#Warn
-<em>;y := ""  ; 这将屏蔽警告.</em>
-x := y    <em>; y 还没有被赋值.</em></pre>
     <p id="VarUnset"><strong>VarUnset</strong>: 在脚本开始运行之前, 为每个从未以下列任何方式使用的变量的第一个引用显示一个警告:</p>
     <ul>
       <li>作为一个直接的, 非动态赋值的目标, 如 <code>MyVar := ""</code>.</li>
       <li>Used with the <a href="../Variables.htm#ref">reference operator</a> (e.g. <code>&amp;MyVar</code>).</li>
+      <li>Passed directly to <a href="IsSet.htm">IsSet</a>(e.g. <code>IsSet(MyVar)</code>).</li>
     </ul>
     <p id="LocalSameAsGlobal"><strong>LocalSameAsGlobal</strong>: 在脚本开始运行之前, 为每个名称与全局变量相同但 <em>未声明</em> 的局部变量显示一个警告. 这是为了防止在试图访问全局变量之前, 忘记在函数中声明全局变量而导致的错误. 如果该变量确实是计划作为局部变量来使用, 那么可以使用诸如 <code>local x</code> 或 <code>static y</code> 这样的声明来抑制该警告.</p>
     <p>默认情况下, 这个警告是禁用的.</p>
@@ -57,7 +50,6 @@ MsgBox g  <em>; 没有声明, 上面赋值的是局部变量 "g".</em>
   <dt>WarningMode</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-
     <p>表示如何发送警告的值. 如果省略, 则默认为 <em>MsgBox</em>.</p>
     <p><strong>MsgBox</strong>: 显示一个描述警告的消息框. 请注意, 一旦消息框被删除, 脚本将照常继续.</p>
     <p><strong>StdOut</strong>: 将警告的描述发送到 <em>stdout</em>(程序的标准输出流), 以及文件名和行号. 这允许像 SciTE 这样的高级编辑器在不中断脚本的情况下捕获警告 - 用户可以在以后通过编辑器的输出窗格跳转到每个违规行.</p>
@@ -68,10 +60,10 @@ MsgBox g  <em>; 没有声明, 上面赋值的是局部变量 "g".</em>
 </dl>
 <h2 id="Remarks">备注</h2>
 	<p>默认情况下, 所有的警告都是启用的并且使用 MsgBox 模式, 除了 LocalSameAsGlobal, 它是禁用的.</p>
-	<p>警告不能在运行时启用或禁用; 其设置是在脚本加载时确定的. 因此, 在脚本中的位置并不重要(而且, 像其他指令一样, #Warn 不能被有条件地执行).</p>
-	<p>然而, 多个 #Warn 指令的顺序是很重要的: 最后出现的设置给定警告的指令决定了该警告的模式.  因此, 例如, 下面两个语句的综合效果是启用除 UseUnsetGlobal 以外的所有警告:</p>
+	<p>The checks which produce VarUnset, LocalSameAsGlobal and Unreachable warnings are performed after all directives have been parsed, but before the script executes. 因此, 在脚本中的位置并不重要(而且, 像其他指令一样, #Warn 不能被有条件地执行).</p>
+<p>然而, 多个 #Warn 指令的顺序是很重要的: 最后出现的设置给定警告的指令决定了该警告的模式.  因此, 例如, 下面两个语句的综合效果是启用除 LocalSameAsGlobal 以外的所有警告:</p>
 <pre>#Warn All
-#Warn UseUnsetGlobal, Off
+#Warn LocalSameAsGlobal, Off
 </pre>
 <h2 id="Related">相关</h2>
 <p><a href="../Functions.htm#Local">局部和全局变量</a></p>
@@ -86,8 +78,8 @@ MsgBox g  <em>; 没有声明, 上面赋值的是局部变量 "g".</em>
 <pre>#Warn</pre>
 </div>
 
-<div class="ex" id="ExUseUnsetLocalOutputDebug">
-<p><a class="ex_number" href="#ExUseUnsetLocalOutputDebug"></a> 当一个局部变量在被设置之前被使用时发出警告; 发送每个警告到 OutputDebug.</p>
+<div class="ex" id="ExLSAGOutputDebug">
+<p><a class="ex_number" href="#ExLSAGOutputDebug"></a> Sends a warning to OutputDebug for each undeclared local variable which has the same name as a global variable.</p>
 <pre>#Warn UseUnsetLocal, OutputDebug</pre>
 </div>
 

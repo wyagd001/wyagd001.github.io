@@ -1,7 +1,7 @@
-<!DOCTYPE HTML>
-<html lang="en">
+﻿<!DOCTYPE HTML>
+<html lang="zh">
 <head>
-<title>ComValue - Syntax &amp; Usage | AutoHotkey v2</title>
+<title>ComValue - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The ComValue class wraps a value, SafeArray or COM object for use by the script or for passing to a COM method." />
 <meta name="ahk:equiv-v1" content="commands/ComObjActive.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -13,74 +13,75 @@
 
 <h1>ComValue</h1>
 
-<p>Wraps a value, SafeArray or COM object for use by the script or for passing to a COM method.</p>
+<p>包装一个值, 安全数组或 COM 对象, 以供脚本使用或传递给 COM 方法.</p>
 <pre class="Syntax">ComObj := <span class="func">ComValue</span>(VarType, Value <span class="optional">, Flags</span>)</pre>
-<p><code>ComValue</code> itself is a <a href="../objects/Class.htm">class</a> derived from <code>Any</code>, but is used only to create or identify COM wrapper objects.</p>
+<p><code>ComValue</code> 本身是一个派生自 <code>Any</code> 的<a href="../objects/Class.htm">类</a>, 但只用于创建或识别 COM 封装对象.</p>
 
-<h2 id="Parameters">Parameters</h2>
+<h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>VarType</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-    <p>An integer indicating the type of value. See <a href="ComObjType.htm#vt">ComObjType</a> for a list of types.</p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>表示值类型的整数. 类型列表见 <a href="ComObjType.htm#vt">ComObjType</a>.</p>
   </dd>
 
   <dt>Value</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-    <p>The value to wrap. Currently only integer and pointer values are supported.</p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>要包装的值. 当前仅支持整数和指针值.</p>
   </dd>
 
   <dt>Flags</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
-    <p>Flags affecting the behaviour of the wrapper object; see <a href="ComObjFlags.htm">ComObjFlags</a> for details.</p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>影响包装器对象行为的标志; 有关详情, 请参阅 <a href="ComObjFlags.htm">ComObjFlags</a>.</p>
   </dd>
 
 </dl>
 
-<h2 id="Returns">Return Value</h2>
-<p>Type: ComValue, ComValueRef, <a href="ComObjArray.htm">ComObjArray</a> or <a href="ComObject.htm">ComObject</a></p>
-<p>Returns a wrapper object containing a <a href="ComObjType.htm#vt">variant type</a> and value or pointer.</p>
-<p>This object has two uses:</p>
+<h2 id="Returns">返回值</h2>
+<p>类型: ComValue, ComValueRef, <a href="ComObjArray.htm">ComObjArray</a> 或 <a href="ComObject.htm">ComObject</a></p>
+<p>返回包含<a href="ComObjType.htm#vt">变体类型</a>和值或指针的封装对象.</p>
+<p>该对象有两个用途:</p>
 <ol>
-  <li>Some COM methods may require specific types of values which have no direct equivalent within AutoHotkey. This function allows the type of a value to be specified when passing it to a COM method. For example, <code>ComValue(0xB, -1)</code> creates an object which represents the COM boolean value <em>true</em>.</li>
-  <li>Wrapping a COM object or SafeArray enables the script to interact with it more naturally, using <a href="../Objects.htm#Usage_Objects">object syntax</a>. However, the majority of scripts do not need to do this manually since a wrapper object is created automatically by <a href="ComObject.htm">ComObject</a>, <a href="ComObjArray.htm">ComObjArray</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjGet.htm">ComObjGet</a> and any COM method which returns an object.</li>
+  <li>某些 COM 方法可能需要特定类型的值, 这些值在 AutoHotkey 中没有直接等效的值. 此函数允许在将值传递给 COM 方法时指定值的类型. 例如, <code>ComValue(0xB, -1)</code> 创建一个表示 COM 布尔值为 <em>true</em> 的对象.</li>
+  <li>通过封装 COM 对象或 SafeArray, 脚本可以使用<a href="../Objects.htm#Usage_Objects">对象语法</a>更自然地与其交互. 但是, 大多数脚本不需要手动执行此操作, 因为封装对象是由 <a href="ComObject.htm">ComObject</a>, <a href="ComObjArray.htm">ComObjArray</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjGet.htm">ComObjGet</a> 和任何返回对象的 COM 方法自动创建的.</li>
 </ol>
 
 <h2 id="Ptr">Ptr</h2>
-<p>If a wrapper object's <a href="ComObjType.htm#vt"><em>VarType</em></a> is VT_UNKNOWN (13) or includes the VT_BYREF (0x4000) flag or VT_ARRAY (0x2000) flag, the <code>Ptr</code> property can be used to retrieve the address of the object, typed variable or SafeArray. This allows the ComObject itself to be passed to any <a href="DllCall.htm">DllCall</a> or <a href="ComCall.htm">ComCall</a> parameter which has the <code>"Ptr"</code> type, but can also be used explicitly. For example, <code>ComObj.Ptr</code> is equivalent to <code>ComObjValue(ComObj)</code> in these cases.</p>
-<p>If a wrapper object's <a href="ComObjType.htm#vt"><em>VarType</em></a> is VT_UNKNOWN (13) or VT_DISPATCH (9) and the wrapped pointer is null (0), the <code>Ptr</code> property can be used to retrieve the current null value or to assign a pointer to the wrapper object. Once assigned (if non-null), the pointer will be released automatically when the wrapper object is freed. This can be used with <a href="DllCall.htm">DllCall</a> or <a href="ComCall.htm">ComCall</a> output parameters of type <code>"Ptr*"</code> or <code>"PtrP"</code> to ensure the pointer will be released automatically, such as if an error occurs. For an example, see <a href="ComObjQuery.htm#ExIE">ComObjQuery</a>.</p>
+<p>如果一个封装对象的 <a href="ComObjType.htm#vt"><em>VarType</em></a> 是 VT_UNKNOWN(13) 或包含 VT_BYREF(0x4000) 或 VT_ARRAY(0x2000) 标志, 则 <code>Ptr</code> 属性可用于检索对象, 类型化变量或安全数组的地址. 这允许将 ComObject 本身传递给任何具有 <code>"Ptr"</code> 类型的 <a href="DllCall.htm">DllCall</a> 或 <a href="ComCall.htm">ComCall</a> 参数, 但也可以显式地使用. 例如, 在这些情况下, <code>ComObj.Ptr</code> 等同于 <code>ComObjValue(ComObj)</code>.</p>
+<p>如果一个封装对象的 <a href="ComObjType.htm#vt"><em>VarType</em></a> 是 VT_UNKNOWN(13) 或 VT_DISPATCH(9) 并且封装指针为 null(0), 则可以使用 <code>Ptr</code> 属性来检索当前的 null 值, 或者为封装对象赋值一个指针. 一旦被赋值(如果非-null), 当封装对象被释放时, 指针将被自动释放. 这可以与类型为 <code>"Ptr*"</code> 或 <code>"PtrP"</code> 的 <a href="DllCall.htm">DllCall</a> 或 <a href="ComCall.htm">ComCall</a> 输出参数一起使用, 以确保指针会被自动释放, 例如当发生错误时. 有关示例, 请参阅 <a href="ComObjQuery.htm#ExIE">ComObjQuery</a>.</p>
 <p>When a wrapper object with <em>VarType</em> VT_DISPATCH (9) and a null (0) pointer value is assigned a non-null pointer value, its type changes from <code>ComValue</code> to <code>ComObject</code>. The properties and methods of the wrapped object become available and the <code>Ptr</code> property becomes unavailable.</p>
 
 <h2 id="ByRef">ByRef</h2>
 <p>If a wrapper object's <a href="ComObjType.htm#vt"><em>VarType</em></a> includes the VT_BYREF (0x4000) flag, empty brackets <code>[]</code> can be used to read or write the referenced value.</p>
 <p>When creating a reference, <em>Value</em> must be the memory address of a variable or buffer with sufficient capacity to store a value of the given type. For example, the following can be used to create a variable which a VBScript function can write into:</p>
-<pre>vbuf := BufferAlloc(24, 0)
+<pre>vbuf := Buffer(24, 0)
 vref := ComValue(0x400C, vbuf.ptr)  <em>; 0x400C is a combination of VT_BYREF and VT_VARIANT.</em>
 
 vref[] := "in value"
 sc.Run("Example", vref)  <em>; sc should be initialized as in the <a href="#ExByRef">example below</a>.</em>
 MsgBox vref[]</pre>
+<p>Note that although any previous value is freed when a new value is assigned by <code>vref[]</code> or the COM method, the final value is not freed automatically. Freeing the value requires knowing which type it is. Because it is VT_VARIANT in this case, it can be freed by calling <a href="https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear">VariantClear</a> with <a href="DllCall.htm">DllCall</a> or by using a simpler method: assign an integer, such as <code>vref[] := 0</code>.</p>
 <p>If the method accepts a combination of VT_BYREF and VT_VARIANT as shown above, a <a href="../Concepts.htm#variable-references">VarRef</a> can be used instead. For example:</p>
 <pre>some_var := "in value"
 sc.Run("Example", &amp;some_var)
 MsgBox some_var</pre>
 <p>However, some methods require a more specific variant type, such as <code>VT_BYREF | VT_I4</code>. In such cases, the first approach shown above must be used, replacing 0x400C with the appropriate variant type.</p>
 
-<h2 id="Remarks">General Remarks</h2>
+<h2 id="Remarks">一般说明</h2>
 <p>When this function is used to wrap an <a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a> or IUnknown interface pointer, the wrapper object assumes responsibility for automatically releasing the pointer when appropriate. Therefore, if the script intends to use the pointer after calling this function, it must call <code><a href="ObjAddRef.htm">ObjAddRef</a>(DispPtr)</code> first.</p>
 <p>The <em>VarType</em> of a wrapper object can be retrieved using <a href="ComObjType.htm">ComObjType</a>.</p>
 <p>The <em>Value</em> of a wrapper object can be retrieved using <a href="ComObjValue.htm">ComObjValue</a>.</p>
-<p><b>Known limitation:</b> Each time a COM object is wrapped, a new wrapper object is created. Comparisons and assignments such as <code>obj1 == obj2</code> and <code>array[obj1] := value</code> treat the two wrapper objects as unique, even when they contain the same variant type and value.</p>
+<p><b>已知限制:</b> Each time a COM object is wrapped, a new wrapper object is created. Comparisons and assignments such as <code>obj1 == obj2</code> and <code>array[obj1] := value</code> treat the two wrapper objects as unique, even when they contain the same variant type and value.</p>
 
-<h2 id="Related">Related</h2>
+<h2 id="Related">相关</h2>
 <p><a href="ComObjFromPtr.htm">ComObjFromPtr</a>, <a href="ComObject.htm">ComObject</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="ObjAddRef.htm">ObjAddRef/ObjRelease</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221467.aspx">GetActiveObject (MSDN)</a></p>
 
-<h2 id="Examples">Examples</h2>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExByRef">
-<p><a class="ex_number" href="#ExByRef"></a> Passes a VARIANT ByRef to a COM function.</p>
+<p><a class="ex_number" href="#ExByRef"></a> 传递 VARIANT ByRef 给 COM 函数.</p>
 <pre>
 <em>; Preamble - ScriptControl requires a 32-bit version of AutoHotkey.</em>
 code := "
@@ -99,7 +100,17 @@ var[] := "in value"
 sc.Run("Example", var.ref)
 MsgBox var[]
 
-<em>; Above and below are equivalent in this case:</em>
+<em>; The same thing again, but more direct:</em>
+variant_buf := Buffer(24, 0)  <em>; Make a buffer big enough for a VARIANT.</em>
+var := ComValue(0x400C, variant_buf.ptr)  <em>; Make a reference to a VARIANT.</em>
+var[] := "in value"
+sc.Run("Example", var)  <em>; Pass the VT_BYREF ComValue itself, no [] or .ref.</em>
+MsgBox var[]
+<em>; If a VARIANT contains a string or object, it must be explicitly freed
+; by calling VariantClear or assigning a pure numeric value:</em>
+var[] := 0
+
+<em>; The simplest way when the method accepts VT_BYREF|VT_VARIANT:</em>
 var := "in value"
 sc.Run("Example", &amp;var)
 MsgBox var
@@ -110,16 +121,22 @@ MsgBox var
 ;   this[] := Val sets the value.
 ;   this.ref retrieves a ByRef object for passing to a COM method.</em>
 class ComVar {
-    __new(Type := 0xC) {
-        <em>; Allocate memory for the typed variable.
-        ; The largest supported type is VT_VARIANT on x64 (24 bytes).</em>
-        this.var := BufferAlloc(24, 0)
+    __new(vType := 0xC) {
+        <em>; Allocate memory for a VARIANT to hold our value. VARIANT is used even
+        ; when vType != VT_VARIANT so that VariantClear can be used by __delete.</em>
+        this.var := Buffer(24, 0)
         <em>; Create an object which can be used to pass the variable ByRef.</em>
-        this.ref := ComValue(0x4000|Type, this.var.ptr + (Type=0xC ? 0 : 8))
+        this.ref := ComValue(0x4000|vType, this.var.ptr + (vType=0xC ? 0 : 8))
+        <em>; Store the variant type for VariantClear (if not VT_VARIANT).</em>
+        if Type != 0xC
+            NumPut "ushort", vType, this.var
     }
     __item {
         get =&gt; this.ref[]
         set =&gt; this.ref[] := value
+    }
+    __delete() {
+        DllCall("oleaut32\VariantClear", "ptr", this.var)
     }
 }
 </pre>

@@ -59,18 +59,18 @@ DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispP
 <h2 id="Flags">Flags</h2>
 <table class="info">
   <tr>
-    <th>Flag</th>
+    <th class="center">Flag</th>
     <th>作用</th>
   </tr>
   <tr>
-    <td>0</td>
+    <td class="center">0</td>
     <td>
       <p>默认行为. <a href="http://msdn.microsoft.com/en-us/library/ms691379.aspx">AddRef(增加引用)</a> 自动调用 IUnknown 和 IDispatch 的指针, 所以调用者应该适当使用 <a href="ObjAddRef.htm">ObjRelease()</a> 释放指针的副本.</p>
       <p>未来版本中可能改变此默认行为, 因此建议当包装接口指针时总是设置 <em>标志</em> 为 <code>1</code>, 需要时再调用 <a href="ObjAddRef.htm">ObjAddRef()</a>.</p>
     </td>
   </tr>
   <tr>
-    <td>1</td>
+    <td class="center">1</td>
     <td>取得 IUnknown, IDispatch 或 SAFEARRAY(安全数组) 指针的所有权. 不调用 AddRef. 如果包装器对象包含 SAFEARRAY(VT_BYREF 除外), 那么当包装器对象被释放时会自动调用 <a href="https://msdn.microsoft.com/en-us/library/ms221702(v=vs.85).aspx">SafeArrayDestroy</a>.</td>
   </tr>
 </table>
@@ -84,6 +84,7 @@ vref := ComObject(0x400C, &amp;var)  <em>; 0x400C 是 VT_BYREF 与 VT_VARIANT �
 vref[] := "in value"
 sc.Run("Example", vref)  <em>; sc 应像<a href="#ByRefEx">下面例子</a>一样进行初始化.</em>
 MsgBox % vref[]</pre>
+<p>Note that although any previous value is freed when a new value is assigned by <code>vref[]</code> or the COM method, the final value is not freed automatically. Freeing the value requires knowing which type it is. Because it is VT_VARIANT in this case, it can be freed by calling <a href="https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear">VariantClear</a> with <a href="DllCall.htm">DllCall</a> or by using a simpler method: assign an integer, such as <code>vref[] := 0</code>.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>当前版本中, 任何以 "ComObj" 开头的函数调用, 如果不匹配目录列表中的其他 COM 函数, 则实际调用 ComObjActive 函数. 如, <code>ComObjEnwrap(DispPtr)</code> 及 <code>ComObjActive(DispPtr)</code> 均等效于 <code>ComObject(DispPtr)</code>(隐式地, <em>变量类型</em> 为 9). 此行为可能于后续版本不再可用, 故建议仅使用本页所展示的 <code>ComObject()</code> 及 <code>ComObjActive()</code>.</p>
@@ -112,40 +113,60 @@ sc := <a href="ComObjCreate.htm">ComObjCreate</a>("ScriptControl"), sc.Language 
 
 <em>; 示例: 传递 VARIANT ByRef 至 COM 函数.</em>
 var := ComVar()
-var[] := "in value"
-sc.Run("Example", var.ref)
-MsgBox % var[]
+var[] := "in value"  <em>; Use [] to assign a value.</em>
+sc.Run("Example", var.ref)  <em>; Pass the VT_BYREF ComObject (.ref).</em>
+MsgBox % var[]  <em>; Use [] to retrieve a value.</em>
 
+<em>; The same thing again, but more direct:</em>
+VarSetCapacity(variant_buf, 24, 0)  <em>; Make a buffer big enough for a VARIANT.</em>
+var := ComObject(0x400C, &amp;variant_buf)  <em>; Make a reference to a VARIANT.</em>
+var[] := "in value"
+sc.Run("Example", var) <em>; Pass the VT_BYREF ComObject itself, no [] or .ref.</em>
+MsgBox % var[]
+<em>; If a VARIANT contains a string or object, it must be explicitly freed
+; by calling VariantClear or assigning a pure numeric value:</em>
+var[] := 0
 
 <em>; ComVar: 创建可用于按引用(ByRef) 传值的对象.
 ;   ComVar[] 返回值.
 ;   ComVar[] := Val 设置值.
 ;   ComVar.ref 返回用于 COM 函数的按引用传值的对象.</em>
-ComVar(Type=0xC)
+ComVar(Type := 0xC)
 {
-    static base := { __Get: "ComVarGet", __Set: "ComVarSet", __Delete: "ComVarDel" } <em>; 有关 base, 请参阅<a href="../Objects.htm#Custom_Objects">自定义对象</a>.</em>
-    <em>; 创建含 1 个 VARIANT 类型变量的数组. 此方法可以让内部代码处理
-    ; 在 VARIANT 和 AutoHotkey 内部类型之间的所有转换.</em>
-    arr := <a href="ComObjArray.htm">ComObjArray</a>(Type, 1)
-    <em>;锁定数组并检索到 VARIANT 的指针.</em>
-    DllCall("oleaut32\SafeArrayAccessData", "ptr", <a href="ComObjValue.htm">ComObjValue</a>(arr), "ptr*", arr_data)
-    <em>;保存数组及可用于按引用传递 VARIANT 值的对象.</em>
-    return { ref: ComObject(0x4000|Type, arr_data), _: arr, base: base }
+    static base := { __Get: Func("ComVarGet"), __Set: Func("ComVarSet")
+        , __Delete: Func("ComVarDel") } <em>; 有关 base, 请参阅自定义对象.
+    ; Create a new object based on base.</em>
+    cv := {base: base}
+
+    <em>; Allocate memory for a VARIANT to hold our value. VARIANT is used even
+    ; when Type != VT_VARIANT so that VariantClear can be used by __delete.</em>
+    cv.SetCapacity("buf", 24), ptr := cv.GetAddress("buf")
+    NumPut(0, NumPut(0, ptr+0, "int64"), "int64")
+
+    if (Type != 0xC) { <em>; Not VT_VARIANT.</em>
+        NumPut(Type, ptr+0, "ushort") <em>; Set the variant type for __delete.</em>
+        ptr += 8 <em>; Point to the actual value.</em>
+    }
+
+    <em>; Create an object which can be used to pass the variable ByRef.</em>
+    cv.ref := ComObject(0x4000|Type, ptr)
+
+    return cv
 }
 
-ComVarGet(cv, <a href="../Functions.htm#Variadic">p*</a>) { <em>; 当脚本访问未知字段时调用.</em>
+ComVarGet(cv, p*) { <em>; 当脚本访问未知字段时调用.</em>
     if p.MaxIndex() = "" <em>; 没有名称/参数, 如, cv[]</em>
-        return cv._[0]
+        return cv.ref[]
 }
 
 ComVarSet(cv, v, p*) { <em>; 当脚本设置未知字段时调用.</em>
     if p.MaxIndex() = "" <em>; 没有名称/参数, 如, cv[]:=v</em>
-        return cv._[0] := v
+        return cv.ref[] := v
 }
 
 ComVarDel(cv) { <em>; 当对象被释放时调用.
-    ; 必须进行这样的处理才能释放内部数组.</em>
-    DllCall("oleaut32\SafeArrayUnaccessData", "ptr", ComObjValue(cv._))
+    ; Depending on type, this may be needed to free the value, if set.</em>
+    DllCall("oleaut32\VariantClear", "ptr", cv.GetAddress("buf"))
 }
 </pre>
 </div>

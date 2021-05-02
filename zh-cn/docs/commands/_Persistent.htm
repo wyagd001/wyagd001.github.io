@@ -3,6 +3,7 @@
 <head>
 <title>#Persistent | AutoHotkey</title>
 <meta name="description" content="The #Persistent directive keeps a script permanently running (that is, until the user closes it or ExitApp is encountered)." />
+<meta name="ahk:equiv-v2" content="commands/Persistent.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -16,13 +17,23 @@
 <p>让脚本持续运行(即直到用户关闭或遇到 <a href="ExitApp.htm">ExitApp</a>).</p>
 
 <pre class="Syntax"><span class="func">#Persistent</span></pre>
-<p>如果在脚本的任意位置使用此指令, 那么脚本会在自动执行段(脚本的顶部) 结束后保持运行. 它可以用于当脚本包含<a href="SetTimer.htm">计时器</a>和/或<a href="Menu.htm">自定义菜单项</a>, 却不包含<a href="../Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>或使用任何的 <a href="OnMessage.htm">OnMessage()</a> 或 <a href="Gui.htm">Gui</a> 的时候.</p>
+<p>如果以下条件中的任何一个为真, 则脚本持续运行:</p>
+<ul>
+  <li>至少有一个<a href="../Hotkeys.htm">热键</a>或<a href="../Hotstrings.htm">热字串</a>已经在脚本中定义, 或由 <a href="Hotkey.htm">Hotkey</a> 命令或 <a href="Hotstring.htm">Hotstring</a> 函数创建, 即使它没有被启用.</li>
+  <li><a href="_InstallKeybdHook.htm">键盘钩子</a>或<a href="_InstallMouseHook.htm">鼠标钩子</a>已经被安装.</li>
+  <li>脚本中包含任何对 <a href="Gui.htm">Gui</a> 的使用, 即使它没有被调用.</li>
+  <li>脚本包含任何对 <a href="OnMessage.htm">OnMessage</a> 的使用, 或者动态调用了它, 或者用 <a href="Func.htm">Func</a> 检索了一个引用.</li>
+  <li><a href="Input.htm">Input</a> 命令已经被调用.</li>
+  <li>脚本中的任何地方存在 #Persistent 指令.</li>
+</ul>
+<p>使用这个指令可以防止脚本在<a href="../Scripts.htm#auto">自动执行部分</a>(脚本的顶部部分) 完成后退出. 这在脚本包含<a href="SetTimer.htm">定时器</a>和/或<a href="Menu.htm">自定义菜单项</a>但不符合上面列出的任何条件的情况下很有用.</p>
 <p>如果添加此指令到现有的脚本中, 您可能需要把一些或全部的 <a href="Exit.htm">Exit</a> 改为 <a href="ExitApp.htm">ExitApp</a>. 这是由于 <a href="Exit.htm">Exit</a> 不会终止持续运行的脚本; 它只会终止<a href="../misc/Threads.htm">当前线程</a>.</p>
 <p><span class="ver">[v1.0.16+]</span>: 此指令同时也让脚本单实例运行. 要覆盖这种行为或改变单实例的方式, 请参阅 <a href="_SingleInstance.htm">#SingleInstance</a>.</p>
 <p>和其他指令一样, #Persistent 不能有条件地执行.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="_SingleInstance.htm">#SingleInstance</a>, <a href="SetTimer.htm">SetTimer</a>, <a href="Menu.htm">Menu</a>, <a href="Exit.htm">Exit</a>, <a href="ExitApp.htm">ExitApp</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 使脚本永久运行; 也就是说, 如果可以的话, 它不会自动退出.</p>

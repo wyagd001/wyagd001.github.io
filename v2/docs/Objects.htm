@@ -278,7 +278,7 @@ other.test()</pre>
 <p>类定义可以包含变量声明, 方法定义和嵌套的类定义.</p>
 
 <h4 id="Custom_Classes_var">实例变量</h4>
-<p><em>实例变量</em> 是类的每个实例都拥有独立的副本. 他们如同普通赋值一样被声明, 但 <code>this.</code> 前缀被忽略(仅限于类主体内时):</p>
+<p><em>实例变量</em> 是类的每个实例都拥有自己的副本. 它们被声明并且表现得像普通的赋值, 但 <code>this.</code> 前缀被忽略(仅限于类主体内时):</p>
 <pre>InstanceVar := Expression</pre>
 <p>每次使用 <a href="objects/Class.htm#Call"><em>ClassName</em>()</a> 创建类的新实例时, 都会计算这些声明, 在所有基类声明被求值之后, 但在调用 <a href="#Custom_NewDelete">__New</a> 之前. 这是通过自动创建一个名为 <em>__Init</em> 的方法来实现的, 该方法包含对 <code>super.__Init()</code> 的调用, 并将每个声明插入其中. 因此, 单个类定义不能同时包含 __Init 方法和实例变量声明.</p>
 <p><em>Expression</em> 可以通过 <code>this</code> 访问其他实例变量和方法. 全局变量可以被读取, 但不能被赋值. 在表达式中的额外赋值(或使用<a href="Variables.htm#ref">引用操作符</a>) 通常会在 __Init 方法中创建一个局部变量. 例如, <code>x := y := 1</code> 将会设置 <code>this.x</code> 和一个局部变量 <code>y</code>(一旦所有初始化器被计算, 这个变量就会被释放).</p>
@@ -288,9 +288,9 @@ other.test()</pre>
 <h4 id="Custom_Classes_staticvar">Static/Class 变量</h4>
 <p>静态/类变量属于类, 但是它们的值可以被子类继承. 和实例变量一样声明, 但使用 static 关键字:</p>
 <pre>static ClassVar := Expression</pre>
-<p>这些声明只在初始化类时被计算一次. 在当前版本中, 类是按照它们在脚本中出现的顺序初始化的, 在脚本顶部的<a href="Scripts.htm#auto">启动执行</a>之前. 为此, 会自动定义一个名为 <em>__Init</em> 的静态方法.</p>
-<p>每个声明在类对象中存储一个值. <em>Expression</em> 与实例变量的解释相同, 除了 <code>this</code> 引用类本身.</p>
-<p>若要给类变量赋值, 始终指定类对象; 例如, <code><b>ClassName</b>.ClassVar := Value</code>. 如果一个子类不拥有该名称的属性, <code><i>Subclass</i>.ClassVar</code> 也可以用来检索值; 因此, 如果该值是对象的引用, 则默认情况下子类将共享该对象. 然而, <code><i>Subclass</i>.ClassVar := y</code> 将值存储在 <em>Subclass</em>, 而不是 <em>ClassName</em> 中.</p>
+<p>这些声明只在初始化类时被计算一次. 为此, 会自动定义一个名为 <em>__Init</em> 的静态方法.</p>
+<p>每个声明都像普通的属性赋值一样, 以类对象为目标. <em>Expression</em> 与实例变量的解释相同, 除了 <code>this</code> 引用类本身.</p>
+<p>如果要在其他任何地方给类变量赋值, 请始终指定类对象; 例如, <code><b>ClassName</b>.ClassVar := Value</code>. 如果一个子类不拥有该名称的属性, <code><i>Subclass</i>.ClassVar</code> 也可以用来检索值; 因此, 如果该值是对象的引用, 则默认情况下子类将共享该对象. 然而, <code><i>Subclass</i>.ClassVar := y</code> 将值存储在 <em>Subclass</em>, 而不是 <em>ClassName</em> 中.</p>
 <p>支持形如 <code>x.y := z</code> 的声明, 但前提是 <code>x</code> 已在类中定义. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>. 因为 <a href="objects/Class.htm#Prototype">Prototype</a> 是在每个类中隐式定义的, <code>static Prototype.sharedValue := 1</code> 可以用来设置由类的所有实例动态继承的值(直到被实例本身的一个属性所覆盖)</p>
 
 <h4 id="Custom_Classes_class">嵌套类</h4>
@@ -400,7 +400,7 @@ MsgBox obj["base"]                  <em>; 10</em>
 <pre>m1 := GMem(0, 10)
 m2 := {base: GMem.Prototype}, m2.__New(0, 30)
 
-<em>; 注意: 对于一般的内存分配, 请使用 <a href="commands/BufferAlloc.htm">BufferAlloc</a>().</em>
+<em>; 注意: 对于一般的内存分配, 请使用 <a href="objects/Buffer.htm">Buffer</a>().</em>
 class GMem<span id="GMem"></span>
 {
     __New(aFlags, aSize)
@@ -419,7 +419,28 @@ class GMem<span id="GMem"></span>
 }</pre>
 <p>__Delete 不可被任何具有属性名 "__Class" 的对象所调用. <a href="objects/Class.htm#Prototype">原型对象</a>默认包含该属性.</p>
 <p>如果在 __Delete 执行时抛出了异常或运行时错误, 并且未在 __Delete 中处理, 则它就像从一个新<a href="misc/Threads.htm">线程</a>调用 __Delete. 也就是说, 显示一个错误对话框并 __Delete 返回, 但是线程不会退出(除非它已经退出).</p>
-<p>每个类也可能有一个 <code>static __New</code> 方法, 在它的 <a href="#Custom_Classes_staticvar">静态变量</a> 初始化之后立即调用它(这是按照脚本中定义类的顺序发生的). 这个方法可以从基类继承, 因此可以用来初始化子类. 在 <code>static __New</code> 中, <code>this</code> 要么引用定义方法的类, 要么引用子类.</p>
+<p>If the script is directly terminated by any means, including the tray menu, <a href="commands/ExitApp.htm">ExitApp</a>, or <a href="commands/Exit.htm">Exit</a> (when the script is not <a href="Scripts.htm#persistent">persistent</a>), any functions which have yet to return do not get the chance to do so. Therefore, any objects referenced by local variables of those functions are not released, so __Delete is not called.</p>
+<p>When the script exits, objects contained by global and static variables are released automatically in an arbitrary, implementation-defined order. When __Delete is called during this process, some global or static variables may have already been released, but any references contained by the object itself are still valid. It is therefore best for __Delete to be entirely self-contained, and not rely on any global or static variables.</p>
+
+<h4 id="static__New">类初始化</h4>
+<p>当对类的引用第一次计算时, 每个类都会被自动初始化. 例如, 如果 <em>MyClass</em> 还没有初始化, <code>MyClass.MyProp</code> 会导致类在属性被检索之前被初始化. 初始化包括调用两个静态方法: __Init 和 __New.</p>
+<p><code>static __Init</code> 是为每个类自动定义的, 并且如果指定了基类, 则始终以对基类的引用开始,  以确保它被初始化. <a href="#Custom_Classes_staticvar">静态/类变量</a>和<a href="#Custom_Classes_class">嵌套类</a>按照它们被定义的顺序进行初始化, 除非在前一个变量或类初始化期间引用了嵌套类.</p>
+<p>如果类定义或继承了一个 <code>static __New</code> 方法, 则在 __Init 之后立即被调用. 需要注意的是, __New 可以为定义它的类调用一次, <em>而</em> 为每个没有定义它的子类调用一次(或调用 <code>super.__New()</code>). 这可以用来为每个子类执行共同的初始化任务, 或者在使用子类之前以某种方式修改它们.</p>
+<p>如果 <code>static __New</code> 不打算作用于派生类, 这可以通过检查 <code>this</code> 的值来避免. 在某些情况下, 使用方法删除本身就足够了, 比如用 <code>this.DeleteProp('__New')</code>; 然而, 如果一个子类嵌套在基类中, 或者在静态/类变量的初始化过程中被引用, 那么 __New 的第一次执行可能是针对一个子类.</p>
+<p>一个类的定义也有引用类的效果. 换句话说, 当<a href="Scripts.htm#auto">脚本启动</a>期间执行达到类定义时, 除非脚本已经引用了该类, 否则会自动调用 __Init 和 __New. 但是, 如果执行被阻止到达类的定义, 例如通过 <code>return</code> 或无限循环, 那么只有当类被引用时才会被初始化.</p>
+<p>一旦自动初始化开始, 它就不会再发生在同一个类上. 这通常不是一个问题, 除非多个类相互引用. 例如, 考虑下面的两个类. 当 <code>A</code> 先被初始化时, 计算 <code>B.SharedArray</code> (A1) 会导致 <code>B</code> 在检索和返回值之前被初始化, 但是 <code>A.SharedValue</code> (A3) 是未定义的并且不会导致 <code>A</code> 的初始化, 因为它已经在进行了. 换句话说, 如果 <code>A</code> 先被访问或初始化, 顺序是 A1 到 A3; 否则是 B1 到 B4:</p>
+<pre>MsgBox A.SharedArray.Length
+MsgBox B.SharedValue
+
+class A {
+    static SharedArray := B.SharedArray   <em>; A1          ; B3</em>
+    static SharedValue := 42                            <em>; B4</em>
+}
+
+class B {
+    static SharedArray := StrSplit("XYZ") <em>; A2          ; B1</em>
+    static SharedValue := A.SharedValue   <em>; A3 (Error)  ; B2</em>
+}</pre>
 
 <h3 id="Meta_Functions">元函数</h3>
 <pre class="Syntax">

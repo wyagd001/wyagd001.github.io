@@ -82,27 +82,27 @@ ContinueSearch := true</pre>
 <h3 id="operators">表达式运算符(按优先级降序排列)</h3>
 <table class="info">
   <tr>
-    <th>运算符</th>
+    <th class="center">运算符</th>
     <th abbr="Descr">描述</th>
   </tr>
   <tr id="ref">
-    <td style="text-align:center; white-space:nowrap"><strong>%Var%</strong></td>
+    <td class="center bold">%Var%</td>
     <td><p>如果表达式中的变量包围在百分号中(例如 %Var%), 不管此变量 <u>包含</u> 什么内容都会被假定为另一个变量的名称或部分名称(如果不存在这样的变量, 那么 %Var% 会被解析为空字符串). 这种方法常用来引用<a href="misc/Arrays.htm#pseudo">伪数组</a>元素, 例如:</p>
       <pre>Var := MyArray%A_Index% + 100</pre>
       <p>为了向后兼容, 注明了 "可以使用表达式" 的命令参数把百分号中的孤立名称(例如 %Var%, 但不是 Array%i%) 当作其两边的百分号不存在一样. 通过把引用包围在括号中可以避免这种情况; 例如 <code>Sleep (%Var%)</code>.</p>
       <p><span class="ver">[AHK_L 52+]:</span> 除了普通变量, %Var% 还可以解析为<a href="Concepts.htm#environment-variables">环境变量</a>, 剪贴板或任何的<a href="#BuiltIn">保留/只读的变量</a>. 在修订号 52 之前, 在这些情况中 %Var% 会被当成空字符串.</p></td>
   </tr>
   <tr>
-    <td style="text-align:center"><strong>x.y</strong></td>
+    <td class="center bold">x.y</td>
     <td><span class="ver">[AHK_L 31+]:</span> <strong>对象访问</strong>. 从对象 <i>x</i> 中读取或设置值或调用其方法, 此处 <i>y</i> 是个原义值. 请参阅<a href="Objects.htm#Usage_Objects">对象语法</a>.</td>
   </tr>
   <tr id="new">
-    <td style="text-align:center"><strong>new</strong></td>
+    <td class="center bold">new</td>
     <td><span class="ver">[v1.1.00+]:</span> 基于其他对象创建新对象. 例如, <code>x := new y</code> 通常等价于 <code>x := {base: y}</code>.<code>new</code> 后应该跟着变量或 <code>GlobalClass.NestedClass</code> 形式的简单类名, 还可以像 <code>x := new y(z)</code> 那样加上可选参数(其中 <code>y</code> 是变量而非函数名). 更多细节请参阅<a href="Objects.htm#Custom_Objects">自定义对象</a>.</td>
   </tr>
   <tr id="IncDec">
-    <td style="text-align:center"><strong>++<br>
-	--</strong></td>
+    <td class="center bold">++<br>
+    --</td>
     <td><strong>前置和后置的自增/自减</strong>. 从变量中增加或减去 1(但在 1.0.46 之前的版本中, 这些只能在一行上单独使用; 此行中不存在其他运算符). 运算符可以放在变量名的前面或后面. 如果放在变量名的 <em>前面</em>, 则立即执行自增/减运算并把结果用于下一运算. 例如, <code>Var := ++X</code> 让 X 自增后才把它的值赋给 <em>Var</em>. 相反地, 如果运算符放在变量名的 <em>后面</em>, 则在下一运算使用该变量 <em>之后</em> 才对其进行自增/减运算. 例如, <code>Var := X++</code> 把 X 的当前值赋给 <em>Var</em> 后才进行自增. 由于向后兼容性, 仅当空变量在一行中单独使用时, 运算符 ++ 和 -- 才把它们视为零; 例如, <code>y:=1, ++x</code> 和 <code>MsgBox % ++x</code> 当 x 为空时结果都为空. 该运算符用下面的例子来说明,<pre>
 x=1
 y=1
@@ -113,7 +113,7 @@ msgbox % z ; 结果为 z=1
 </pre></td>
   </tr>
   <tr id="pow">
-    <td style="text-align:center"><strong>**</strong></td>
+    <td class="center bold">**</td>
     <td>
       <p><strong>幂</strong>. 底数和指数都可以为小数. 如果指数为负数, 即使底数和指数都为整数, 结果也会被格式化为浮点数. 因为 ** 的优先级高于一元负号, 所以 <code>-2**2</code> 的计算过程和 <code>-(2**2)</code> 一样且得到结果 -4. 因此, 要让负号的优先级高于幂运算, 需要把它们包围在括号中, 例如 <code>(-2)**2</code>.</p>
       <p class="note"><strong>注意</strong>: 不支持底数为负数且指数为小数的情况, 例如 <code>(-2)**0.5</code>; 它会产生空字符串. 但 <code>(-2)**2</code> 和 <code>(-2)**2.0</code> 都是支持的. 该运算符用下面的例子来说明:<pre>
@@ -129,10 +129,10 @@ msgbox % (-2)**0.5 ; 结果为空
     </td>
   </tr>
   <tr id="unary">
-    <td style="text-align:center"><strong>-<br>
+    <td class="center bold">-<br>
 	!<br>
 	~<br>
-	&amp; *</strong></td>
+	&amp; *</td>
     <td><p><strong>一元负号(-)</strong>: 尽管它和减运算符使用相同的符号, 但一元负号仅应用于单项或子表达式, 如此例中的两次演示: <code><strong>-</strong>(3 / <strong>-</strong>x)</code>. 相关提示, 表达式中的任何一元正号(+) 都会被忽略.</p>
       <p><strong>逻辑非(!)</strong>: 如果运算数为空或 0, 那么逻辑非的结果为 1, 这表示 "真". 否则, 结果为 0(假). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. <span class="ver">[v1.0.46+]</span>: 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~)</strong>: 此运算符对运算数按位取反. 如果运算数为浮点数, 则在计算前把它截取成整数. 如果运算数介于 0 和 4294967295(0xffffffff) 之间, 那么它会被视为 <u>无符号的</u> 32 位值. 否则, 它被视为 <u>有符号的</u> 64 位值. 例如, <code>~0xf0f</code> 计算结果为 0xfffff0f0(4294963440).</p>
@@ -140,10 +140,10 @@ msgbox % (-2)**0.5 ; 结果为空
       <p><strong>解除引用(*)</strong>: <code>*Expression</code> 假定 <code>Expression</code> 解析为数值的内存地址; 它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0; 但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="commands/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
   </tr>
   <tr id="MulDiv">
-    <td style="text-align:center"><strong>*<br>
+    <td class="center bold">*<br>
 	/<br>
 	//
-    </strong></td>
+    </td>
     <td><p><strong>乘(*)</strong>: 如果两个输入都为整数, 则结果为整数; 否则结果为浮点数.</p>
       <p id="divide"><strong>真除(/)</strong>: 与 <a href="commands/EnvDiv.htm">EnvDiv</a> 不同, 即使两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
       <p id="FloorDivide"><strong>向下舍除(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点数, 则执行浮点除法并把结果往下取整到最近的整数. 例如, <code>5//3.0</code> 结果为 1.0 而 <code>5.0//-3</code> 结果为 -2.0. 尽管浮点除法的结果为整数, 但它被保存为浮点格式, 以便其他使用者能使用浮点格式. 关于求模运算, 请参阅 <a href="commands/Math.htm#Mod">mod()</a>.</p>
@@ -151,21 +151,21 @@ msgbox % (-2)**0.5 ; 结果为空
     <p>除数为零时结果为空(空字符串).</p></td>
   </tr>
   <tr id="AddSub">
-    <td style="text-align:center"><strong>+<br>
-	-</strong></td>
+    <td class="center bold">+<br>
+    -</td>
     <td><p><strong>加(+)</strong> 和 <strong>减(-)</strong>. 相关提示, <a href="#AssignOp"><strong>+=</strong> 和 <strong>-=</strong></a> 运算符</a>是从变量中增加或减少值的一种简写形式. 例如, <code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 同样地, 使用 <a href="#IncDec">Var++, Var--, ++Var 或 --Var</a> 可以让变量增加或减小 1.</p>
     </td>
   </tr>
   <tr id="bitwise">
-    <td style="text-align:center"><strong>&lt;&lt;<br>
-	&gt;&gt;</strong></td>
+    <td class="center bold">&lt;&lt;<br>
+	   &gt;&gt;</td>
     <td><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点数在计算前会被截取成整数. 左移(<strong>&lt;&lt;</strong>) 相当于把 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂". 右移(<strong>&gt;&gt;</strong>)相当于把 <em>Value1</em> 除以 "2 的 <em>Value2</em> 次幂" 并把结果往下取整到最近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2.<br>译者注: 由于左移操作的运算速度比乘法的运算速度高很多, 因此在处理数据的乘法运算的时, 采用位移运算可以获得较快的速度(对 2 的乘法运算转换为位移运算, 可提高程序的运行效率).<br>实例过程演示: 例 5 &lt;&lt; 2(左移 2 位, 空出的位置上填 0, 最高位溢出则舍弃), 0000 0101(十进制 5) → 0001 0100(十进制 20). 右移与之相反, 对应除法(对 2 的整除运算).</td>
   </tr>
   <tr>
-    <td style="text-align:center"><strong>&amp;<br>
-	^<br>
-	|
-    </strong></td>
+    <td class="center bold">&amp;<br>
+	  ^<br>
+	  |
+    </td>
     <td><strong>按位与(&amp;)</strong>, <strong>按位异或(^)</strong> 和 <strong>按位或(|)</strong>. 这三个运算符中, <strong>&amp;</strong> 优先级最高, 而 <strong>|</strong> 优先级最低. 任何浮点数在计算前会被截取成整数.<br>译者注: <strong>按位与(&amp;)</strong> 运算规则(二进制): 0&0=0; 0&1=0; 1&0=0; 1&1=1; 3&5=1(两位同时为 "1", 结果才为 "1", 否则为 0)
 <br>
 典型应用: 1. 清零特定位; 2. 取某数中指定位; 例子, 判断奇偶数 N&1; 只保留低八位 N&0xFF(255 以下的数字 & 0xFF 都得到原值).
@@ -178,7 +178,7 @@ msgbox % (-2)**0.5 ; 结果为空
 典型应用: 1. 设定一个数据指定位的值为 1. 例, 设数据的低八位都为 1, N|0xFF</td>
   </tr>
   <tr id="concat">
-    <td style="text-align:center"><strong>.</strong></td>
+    <td class="center bold">.</td>
     <td><p><strong>连接</strong>. 句点运算符用于把两个项目组合成单个字符串(在句点的两边至少必须有一个空格). 省略句点也可以达到相同的目的(除非表达式中有不明确的关系, 例如 <code>x <strong>-</strong>y</code>, 或在右边的项目含有前导的 ++ 或 -- 运算符). 省略句点时, 合并的两个项目间应该至少有一个空格.<br>
 	  示例(表达式方法): <code>Var := "The color is " <strong>.</strong> FoundColor</code><br>
 	  示例(传统方法): <code>Var = The color is %FoundColor%</code></p>
@@ -186,7 +186,7 @@ msgbox % (-2)**0.5 ; 结果为空
         <p>以句点(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾.</p></td>
   </tr>
   <tr id="regex">
-    <td style="text-align:center"><strong>~=</strong></td>
+    <td class="center bold">~=</td>
     <td><span class="ver">[AHK_L 31+]:</span> 这是 <a href="commands/RegExMatch.htm">RegExMatch()</a> 的简写形式. 例如, <code>"abc123" ~= "\d"</code> 会设置 ErrorLevel 为 0 并返回数字 4(首个数字的位置). 在 <span class="ver">[v1.1.03]</span> 之前, 此运算符和 <em>等号 </em>(=) 或 (:=) 运算符优先级相同, 但并未在文档中说明.<br>译者注, ~= 的优先级低于 not(!), 也就是说会先取反再匹配. 下面是一个很深的坑, 请测试下面这个<span class="red">错误的例子</span>:<br>
     <pre>
 str := "d"
@@ -207,17 +207,17 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
     </td>
   </tr>
   <tr id="compare">
-    <td style="text-align:center"><strong>&gt;&nbsp;&nbsp;&nbsp;&lt;<br>
-	&gt;= &lt;=</strong></td>
+    <td class="center bold">&gt;&nbsp;&nbsp;&nbsp;&lt;<br>
+	  &gt;= &lt;=</td>
     <td>
       <p><strong>大于(&gt;)</strong>, <strong>小于(&lt;)</strong>, <strong>大于或等于(&gt;=)</strong> 和 <strong>小于或等于(&lt;=)</strong>. 如果两个输入都是<a href="Concepts.htm#numbers">数字</a>或<a href="Concepts.htm#numeric-strings">数字字符串</a>, 则将它们进行数字比较; 否则将按字母顺序对它们进行比较. 仅当 <a href="commands/StringCaseSense.htm">StringCaseSense</a> 打开时, 比较才区分大小写. 另请参阅: <a href="commands/Sort.htm">Sort</a></p>
       <p class="note"><strong>注意</strong>: 在 AutoHotkey v1 中, 直接在表达式中使用的带引号字符串(或与带引号的字符串连接的结果) 始终不被认为是数字.</p>
     </td>
   </tr>
   <tr id="equal">
-    <td style="text-align:center"><strong>=<br>
-	==<br>
-	&lt;&gt; !=</strong></td>
+    <td class="center bold">=<br>
+	  ==<br>
+	  &lt;&gt; !=</td>
     <td>
       <p><strong>Equal (=)</strong>, <strong>区分大小写的等于(==)</strong> 和 <strong>不等于(&lt;&gt; 或 !=)</strong>. 如果两个输入都是<a href="Concepts.htm#numbers">数字</a>或<a href="Concepts.htm#numeric-strings">数字字符串</a>时, 则会对其进行数字比较; 否则按字母顺序进行比较. 运算符 <strong>!=</strong> 和 <strong>&lt;&gt;</strong> 在功能上是完全相同的. 运算符 <strong>==</strong> 的行为与 <strong>=</strong> 完全相同, 除了其中一个输入不是数字时, <strong>==</strong> 总是区分大小写, 而 <strong>=</strong> 总是不区分大小写(不区分大小写的方法取决于 <a href="commands/StringCaseSense.htm">StringCaseSense</a>). 与之相比, <strong>&lt;&gt;</strong> 和 <strong>!=</strong> 都遵循 <a href="commands/StringCaseSense.htm">StringCaseSense</a>.</p>
       <p class="note"><strong>注意</strong>: 在 AutoHotkey v1 中, 直接在表达式中使用的带引号字符串(或与带引号的字符串连接的结果) 始终不被认为是数字.</p>
@@ -225,25 +225,25 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
     </td>
   </tr>
   <tr id="not">
-    <td style="text-align:center"><strong>NOT</strong></td>
+    <td class="center bold">NOT</td>
     <td><strong>逻辑非</strong>. 除了优先级较低外, 其他的与 <strong>!</strong> 运算符相同. 例如, <code>not (x = 3 or y = 3)</code> 等同于 <code><strong>!</strong>(x = 3 or y = 3)</code>. </td>
   </tr>
   <tr id="and">
-    <td style="text-align:center"><strong>AND<br>
-	&amp;&amp;</strong></td>
+    <td class="center bold">AND<br>
+	  &amp;&amp;</td>
     <td>这两个运算符都是 <strong>逻辑与</strong>. 例如: <code>x &gt; 3 and x &lt; 10</code>. 要提高性能, 则要应用<a href="Functions.htm#ShortCircuit">求值优化</a>. 此外, 以 AND/OR/&amp;&amp;/||(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾.</td>
   </tr>
   <tr id="or">
-    <td style="text-align:center"><strong>OR<br>
-	||</strong></td>
+    <td class="center bold">OR<br>
+	   ||</td>
     <td>这两个运算符都是 <strong>逻辑或</strong>. 例如: <code>x &lt;= 3 or x &gt;= 10</code>. 要提高性能, 则要应用<a href="Functions.htm#ShortCircuit">求值优化</a>.</td>
   </tr>
   <tr id="ternary">
-    <td style="text-align:center"><strong>?:</strong></td>
+    <td class="center bold">?:</td>
     <td><strong>三元运算符</strong> <span class="ver">[v1.0.46+]</span>. 此运算符是 <a href="commands/IfExpression.htm">if-else 语句</a>的简写形式. 它计算左侧的条件来决定两个分支中哪个作为最终结果. 例如, <code>var := x&gt;y ? 2 : 3</code>, 当 x 大于 y 时保存 2 到 <em>Var</em>; 否则保存 3. 为了提高性能, 只计算决定性的分支(请参阅<a href="Functions.htm#ShortCircuit">求值优化</a>). </td>
   </tr>
   <tr id="AssignOp">
-    <td style="text-align:center"><strong>:=<br>
+    <td class="center bold">:=<br>
         +=<br>
         -=<br>
         *=<br>
@@ -254,7 +254,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
         &amp;=<br>
         ^=<br>
         &gt;&gt;=<br>
-        &lt;&lt;=</strong>
+        &lt;&lt;=
     </td>
     <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中(但在 1.0.46 之前的版本中, 这些运算符只能在一行中最左边使用, 且仅支持前五个运算符). 最简单的赋值运算符为<a href="commands/SetExpression.htm">冒号等号(:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#FloorDivide">向下舍除</a>, 把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 同样地, <code>Var <strong>.=</strong> "abc"</code> 为 <code>Var := Var <strong>.</strong> "abc"</code> 的一种简写形式. </p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>. </p>
@@ -263,7 +263,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
     <p>由向后兼容引起的已知限制(可能会在未来的版本中解决): 1) 当 <strong>/=</strong> 为表达式中最左边的运算符并且它不是<a href="#comma">多语句表达式</a>的一部分时, 而且输入都不是浮点数时, 它会执行<a href="#FloorDivide">向下舍除</a>(在其他所有情况中, <strong>/=</strong> 会执行<a href="#divide">真除</a>); 2) 仅当 <strong>+=</strong> 和 <strong>-=</strong> 为一行中最左边的运算符时, 它们才支持<a href="commands/EnvAdd.htm">日期/时间的计算</a>; 3) 运算符 <strong>+=</strong>, <strong>-=</strong> 和 <strong>*=</strong> 仅在空变量在一行单独使用时才把空变量视为零; 例如, <code>y:=1, x+=1</code> 和 <code>MsgBox % x-=3</code> 当 x 为空时都得到空的结果. </p></td>
   </tr>
   <tr id="comma">
-    <td style="text-align:center"><strong>,</strong></td>
+    <td class="center bold">,</td>
     <td><p><strong>逗号(多语句)</strong> <span class="ver">[v1.0.46+]</span>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.
       <p class="note"><strong>注意</strong>: 以逗号(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾. 另请参阅: <a href="#CommaPerf">逗号的性能</a>.</p>
       <p><span class="ver">[v1.0.46.01+]</span>: 当逗号后紧跟着变量和等号时, 则这个等号会被自动当成<a href="commands/SetExpression.htm">赋值(:=)</a>. 例如, 后面所有的都是赋值: <code>x:=1, y=2, a=b=c</code>. 新脚本不应该依赖于这种行为, 因为它可能会改变. 该规则只适用于无格式的变量而不是<a href="#ref">双重引用</a>, 所以下面的内容只有一个赋值: <code>x:=1, %y%=2</code></p></td>
@@ -272,35 +272,35 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
 <p>下面列出的子表达式改变计算的优先级/顺序:</p>
 <table class="info">
   <tr>
-    <th>表达式</th>
+    <th class="center">表达式</th>
     <th abbr="Descr">描述</th>
   </tr>
 <tr>
-<td style="text-align:center"><strong>(</strong><em>expression</em><strong>)</strong></td>
+<td class="center"><strong>(</strong><em>expression</em><strong>)</strong></td>
 <td><p>括号中包含的任何子表达式. 例如, <code>(3 + 2) * 2</code> 强制 <code>3 + 2</code> 首先计算.</p></td>
 </tr>
   <tr>
-    <td style="text-align:center; white-space:nowrap"><p><strong>mod()<br>
+    <td class="center"><p><strong>mod()<br>
 	round()<br>
 	abs()</strong></p></td>
     <td><strong>函数调用</strong>. 函数名后面必须紧跟一个左圆括号, 没有任何空格或制表符插入其间. 相关详细信息, 查看<a href="Functions.htm">函数</a>.<br>内置数学函数在<a href="commands/Math.htm">这里</a>.</td>
   </tr>
   <tr>
-    <td style="text-align:center; white-space:nowrap"><p><strong>%</strong><em>func</em><strong>%()</strong></p></td>
+    <td class="center"><p><strong>%</strong><em>func</em><strong>%()</strong></p></td>
     <td>请参阅<a href="Functions.htm#DynCall">动态调用函数</a>.</td>
   </tr>
   <tr>
-    <td style="text-align:center"><em>func</em><strong>.()</strong></td>
+    <td class="center"><em>func</em><strong>.()</strong></td>
     <td><p><strong>弃用的:</strong> 不推荐使用这个语法. 而应该用 <code>%func%()</code>(对于函数名称和对象) 或 <code>func.Call()</code>(对于函数对象) 替代.</p>
     <p><span class="ver">[AHK_L 48+]:</span> 试图调用对象 <i>func</i> 的命名的空方法. 按照约定, 这是对象的 "默认" 方法. 如果 <i>func</i> 不是对象, 则调用<a href="Objects.htm#Default_Base_Object">默认基对象</a>.</p>
     <p><span class="ver">[v1.0.95+]:</span> 如果 <i>func</i> 为函数名, 则调用这个命名的函数.</p></td>
   </tr>
   <tr>
-    <td style="text-align:center">Fn(<strong><em>Params</em>*</strong>)</td>
+    <td class="center">Fn(<strong><em>Params</em>*</strong>)</td>
     <td><p><span class="ver">[AHK_L 60+]:</span> <a href="Functions.htm#VariadicCall">可变参数函数</a>. <em>Params(参数)</em> 是一个包含数组(对象)的参数值.</p></td>
 </tr>
 <tr>
-<td style="text-align:center"><strong>x[y]<br>[a, b, c]</strong></td>
+<td class="center"><strong>x[y]<br>[a, b, c]</strong></td>
 <td>
 <p><span class="ver">[AHK_L 31+]:</span> <strong>成员访问</strong>. 得到或设置值或是对象 <i>x</i> 调用方法, 当 <i>y</i> 是一个参数列表时(特别是数组引索或键)或返回方法名的表达式.</p>
 <p><span class="ver">[v1.0.97+]:</span> <strong>数组标识符</strong>. 如果左方括号前面没有值(或者一个产生值的子表达式), 它被理解为一个数组的开始. 例如, <code>[a, b, c]</code> 等同于 <code>Array(a, b, c)</code>(a, b 和 c 是变量).</p>
@@ -308,7 +308,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
 </td>
   </tr>
   <tr>
-    <td style="text-align:center"><strong>{a: b, c: d}</strong></td>
+    <td class="center"><strong>{a: b, c: d}</strong></td>
     <td><p><span class="ver">[v1.0.97+]:</span> <strong>对象标识符</strong>. 创建一个对象或关联数组. 例如, <code>x := {a: b}</code> 等同于 <code>x := Object("a", b)</code> 或者 <code>x := Object(), x.a := b</code>. 查看<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>以获取更多细节.</p></td>
   </tr>
 </table>

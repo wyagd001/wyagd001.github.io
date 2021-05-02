@@ -368,6 +368,8 @@ class GMem
 <p>__Delete 不可被任何含有 "__Class" 键的对象调用. <a href="#Custom_Classes">Class objects(类对象)</a> 默认包含这个键.</p>
 <p>如果类有定义这些方法的父类, 则通常应该调用 <code>base.__New()</code>(带有适当的参数) 和 <code>base.__Delete()</code>. 否则, 只调用方法的最派生的定义, 不包括目标对象本身中的任何定义.</p>
 <p><span class="ver">[v1.1.28+]:</span> 如果在 __Delete 执行时抛出了异常或运行时错误, 并且未在 __Delete 中处理, 则它就像从一个新<a href="misc/Threads.htm">线程</a>调用 __Delete. 也就是说, 显示一个错误对话框并 __Delete 返回, 但是线程不会退出(除非它已经退出). 在 v1.1.28 之前, 未处理的异常会导致不一致的行为.</p>
+<p>如果脚本被任何方式直接终止, 包括托盘菜单, <a href="commands/ExitApp.htm">ExitApp</a>, 或 <a href="commands/Exit.htm">Exit</a>(当脚本不是<a href="commands/_Persistent.htm">持续运行</a>时), 任何尚未返回的函数都没有机会返回. 因此, 这些函数的局部变量所引用的任何对象都不会被释放, 所以 __Delete 也不会被调用.</p>
+<p>当脚本退出时, 全局变量和静态变量所包含的对象会按照任意的, 实现定义的顺序自动释放. 当 __Delete 在这个过程中被调用时, 一些全局变量或静态变量可能已经被释放, 但对象本身包含的任何引用仍然有效. 因此 __Delete 最好是完全自包含的, 而不依赖于任何全局变量或静态变量.</p>
 
 <h3 id="Meta_Functions">元函数(Meta-Functions)</h3>
 <pre class="Syntax">

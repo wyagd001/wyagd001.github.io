@@ -348,9 +348,8 @@ if (ih.Input = CtrlC)
   <li>如果按键是<a href="../KeyList.htm#modifier">标准修饰键</a>或 CapsLock, NumLock 或 ScrollLock, 则不会抑制.</li>
   <li><a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 是否被考虑, 具体取决于按键是否生成文本. 如果该属性为 false, 则抑制按键. 有关将哪些按键计为生成文本的详细信息, 请参阅 <a href="#VisibleText">VisibleText</a>.</li>
 </ul>
-<p>The <a href="InstallKeybdHook.htm">keyboard hook</a> is required while an Input is in progress, but will be uninstalled automatically if it is no longer needed when the Input is terminated.</p>
-<p>The script is <a href="../Scripts.htm#persistent">automatically persistent</a> while an Input is in progress, so it will continue monitoring input even if there are no running <a href="../misc/Threads.htm">threads</a>. The script may exit automatically when input ends (if there are no running threads and the script is not persistent for some other reason).</p>
-<p>xxxxxx输入正在进行时需要<a href="_InstallKeybdHook.htm">键盘钩子</a>, 但如果在输入终止时, 若不再需要键盘挂钩, 则会自动卸载. 键盘钩子的存在导致脚本暂时变为<a href="_Persistent.htm">持续运行的</a>, 这意味着可能需要 <a href="ExitApp.htm">ExitApp</a> 来终止它.</p>
+<p>Input 正在进行时需要<a href="InstallKeybdHook.htm">键盘钩子</a>, 但当 Input 终止时, 如果不再需要键盘钩子, 则会自动卸载.</p>
+<p>Input 正在进行时, 脚本为<a href="../Scripts.htm#persistent">自动持续运行</a>, 所以即使没有正在运行的<a href="../misc/Threads.htm">线程</a>, 它也会继续监视输入. 当输入结束时, 脚本可能会自动退出(如果没有正在运行的线程, 并且该脚本由于其他原因而不会持续运行).</p>
 <p>AutoHotkey 不支持输入法编辑器(IME). 键盘钩子拦截键盘事件, 并通过使用 <a href="https://docs.microsoft.com/windows/desktop/api/winuser/nf-winuser-tounicodeex">ToUnicodeEx</a> 或 ToAsciiEx 将它们转换为文本(<a href="https://docs.microsoft.com/windows/desktop/inputdev/virtual-key-codes#vk_packet">VK_PACKET</a> 事件除外, 它封装了单个字符).</p>
 <p>如果您使用多种语言或键盘布局, 则 Input 会使用活动窗口的键盘布局而不是脚本的(不论 Input 是否<a href="#vis">可见</a>).</p>
 <p>尽管不够灵活, 但<a href="../Hotstrings.htm">热字串</a>更容易使用.</p>
@@ -402,7 +401,9 @@ MsgBox KeyWaitAny("V")
 KeyWaitAny(Options:="")
 {
     ih := InputHook(Options)
-    ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
+    if !InStr(Options, "V")
+        ih.VisibleNonText := false
+    ih.KeyOpt("{All}", "E")  <em>; 结束</em>
     ih.Start()
     ih.Wait()
     return ih.EndKey  <em>; 返回按键名称</em>
@@ -417,9 +418,11 @@ MsgBox KeyWaitCombo()
 KeyWaitCombo(Options:="")
 {
     ih := InputHook(Options)
-    ih.KeyOpt("{All}", "ES")  <em>; 结束和抑制</em>
+    if !InStr(Options, "V")
+        ih.VisibleNonText := false
+    ih.KeyOpt("{All}", "E")  <em>; 结束</em>
     <em>; Exclude the modifiers</em>
-    ih.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-ES")
+    ih.KeyOpt("{LCtrl}{RCtrl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}", "-E")
     ih.Start()
     ih.Wait()
     return ih.EndMods . ih.EndKey  <em>; 返回字符串, 例如 &lt;^&lt;+Esc</em>

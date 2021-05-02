@@ -15,7 +15,7 @@
 
 <p>在脚本运行时创建, 修改, 启用或禁用热键.</p>
 <pre class="Syntax">
-<span class="func">Hotkey</span> KeyName <span class="optional">, Callback, Options</span>
+<span class="func">Hotkey</span> KeyName <span class="optional">, Action, Options</span>
 </pre>
 
 <h2 id="Parameters">参数</h2>
@@ -28,18 +28,18 @@
     <p>如果 <em>KeyName</em> 已经是现有的热键, 那么将使用此函数的其他参数值更新原来的热键.</p>
     <p><em>KeyName</em> 也可以是现有的热键的名称(用双冒号语法创建), 这样会使用此函数的其他参数值更新原来的热键.</p>
     <p>指定 <em>现有的</em> 热键, <em>KeyName</em> 是不区分大小写的. 但是, 按键名称必须和现有的热键拼写相同(例如在这种情况下 Esc 与 Escape 是不同的). 此外, <a href="../Hotkeys.htm#Symbols">修饰符</a>(如 ^!+#) 的顺序是无关紧要的. <a href="GetKeyName.htm">GetKeyName</a> 可用于获取标准的按键名称.</p>
-    <p>热键首次创建时 -- 无论是通过 Hotkey 函数还是脚本中的<a href="../Hotkeys.htm">双冒号语法</a> -- 其键名以及修饰符的顺序成为此热键的固定名称, 正如 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <em>Callback</em> 的参数所反映的那样. 这个名称由热键的所有<a href="_HotIf.htm#variant">变体</a>共享, 并且即使之后 Hotkey  函数使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
+    <p>热键首次创建时 -- 无论是通过 Hotkey 函数还是脚本中的<a href="../Hotkeys.htm">双冒号语法</a> -- 其键名以及修饰符的顺序成为此热键的固定名称, 正如 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 和 <em>Action</em> 的参数所反映的那样. 这个名称由热键的所有<a href="_HotIf.htm#variant">变体</a>共享, 并且即使之后 Hotkey  函数使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
     <p>如果热键变体已经存在, 则根据 <em>KeyName</em> 是否包含<a href="../Hotkeys.htm#Tilde">颚化符前缀(~)</a> 更新它的行为.</p>
     <p>使用<a href="../Hotkeys.htm#prefixdollar">钩子前缀($)</a> 可添加到现有热键上. 这个前缀影响所有热键的变体且不能被删除.</p>
   </dd>
 
-  <dt>Callback</dt>
+  <dt>Action</dt>
   <dd>
-      <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
-      <p>当按下热键时, 要执行的子程序(作为一个新的<a href="../misc/Threads.htm">线程</a>). 它可以是函数名称, <a href="../objects/Functor.htm">函数对象</a>, 或不带冒号的<a href="../Hotkeys.htm">热键</a>名称.</p>
-      <p>如果 <em>Callback</em> 是一个函数, 那么它的调用只有一个参数, 即热键的<a href="../Hotkeys.htm#HotBraces">名称</a>. 用<a href="../Hotkeys.htm">双冒号语法</a>定义的热键自动使用参数名 <code>ThisHotkey</code>. 热键也可以不使用热键函数而<a href="../Hotkeys.htm#Function">指定一个函数名</a>.</p>
-      <p>如果 <em>Callback</em> 是热键名称, 则使用其原始函数; 具体来说, 就是对应当前 <a href="HotIf.htm">HotIf</a> 条件的热键变体的原始函数. 这通常用于恢复热键改变后的原始函数, 但也可以用于分配不同热键的函数, 前提是两个热键使用相同的 HotIf 条件.</p>
-      <p>如果 <em>KeyName</em> 已经作为热键, 那么参数可以为空, 这种情况下回调不会被改变. 这在仅需要改变热键 <em>Options</em> 时很有用.</p>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../objects/Functor.htm">函数对象</a></p>
+      <p>当按下热键时, 要执行的动作名或函数(作为一个新的<a href="../misc/Threads.htm">线程</a>). 它可以是函数名称, <a href="../objects/Functor.htm">函数对象</a>, 或不带冒号的<a href="../Hotkeys.htm">热键</a>名称, or one of the special values listed below.</p>
+      <p>如果 <em>Action</em> 是一个函数, 那么它的调用只有一个参数, 即热键的<a href="../Hotkeys.htm#HotBraces">名称</a>. 用<a href="../Hotkeys.htm">双冒号语法</a>定义的热键自动使用参数名 <code>ThisHotkey</code>. 热键也可以不使用热键函数而<a href="../Hotkeys.htm#Function">指定一个函数名</a>.</p>
+      <p>如果 <em>Action</em> 是热键名称, 则使用其原始函数; 具体来说, 就是对应当前 <a href="HotIf.htm">HotIf</a> 条件的热键变体的原始函数. 这通常用于恢复热键改变后的原始函数, 但也可以用于分配不同热键的函数, 前提是两个热键使用相同的 HotIf 条件.</p>
+      <p>如果 <em>KeyName</em> 已经作为热键, 那么参数可以为空, 这种情况下动作不会被改变. 这在仅需要改变热键 <em>Options</em> 时很有用.</p>
       <p class="note"><strong>注意</strong>: 如果指定了函数, 但热键之前已经使用此命令禁用了, 那么热键会保持禁用状态. 要启用它, 请在 <em>Options</em> 中包含单词 ON.</p>
       <p>此参数还可以是下列特定值的其中一个:</p>
       <p><strong>On</strong>: 启用热键. 如果热键已经处于启用状态, 则不进行操作.</p>

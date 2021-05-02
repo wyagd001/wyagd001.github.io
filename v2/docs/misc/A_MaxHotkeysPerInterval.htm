@@ -14,68 +14,40 @@
 
 <h1>A_MaxHotkeysPerInterval</h1>
 
-<p>The A_MaxHotkeysPerInterval and A_HotkeyInterval variables control the rate of hotkey activations beyond which a warning dialog will be displayed.</p>
+<p>A_MaxHotkeysPerInterval 和 A_HotkeyInterval 变量控制热键激活的速度, 超过这个速度就会显示警告对话框.</p>
 
 <table class="info">
-  <tr><th>Variable</th><th>Meaning</th><th>Default Value</th><th>Type</th></tr>
+  <tr><th>变量</th><th>意义</th><th>默认值</th><th>类型</th></tr>
   <tr>
     <td>A_MaxHotkeysPerInterval</td>
-    <td>The maximum number of hotkeys that can be pressed within the interval without triggering a warning dialog.</td>
+    <td>在不触发警告对话框的情况下, 在间隔时间内可按下的最大热键数量.</td>
     <td>70</td>
-    <td><a href="../Concepts.htm#numbers">Integer</a></td>
+    <td><a href="../Concepts.htm#numbers">整数</a></td>
   </tr>
   <tr>
     <td>A_HotkeyInterval</td>
-    <td>The length of the interval in milliseconds.</td>
+    <td>间隔的长度, 以毫秒为单位.</td>
     <td>2000</td>
-    <td><a href="../Concepts.htm#numbers">Integer</a></td>
+    <td><a href="../Concepts.htm#numbers">整数</a></td>
   </tr>
 </table>
 
-<h2 id="Remarks">Remarks</h2>
-<p>These built-in variables should usually be assigned values when the script starts (if the default values are not suitable), but the script can get or set their values at any time.</p>
-<p>Care should be taken not to make the above too lenient because if you ever inadvertently introduce an infinite loop of keystrokes (via a <a href="../commands/Send.htm">Send</a> function that accidentally triggers other hotkeys), your computer could become unresponsive due to the rapid flood of keyboard events.</p>
-<p>As an oversimplified example, the hotkey <code>^c::Send "^c"</code> would produce an infinite loop of keystrokes. To avoid this, add the <a href="../Hotkeys.htm#prefixdollar">$ prefix</a> to the hotkey definition (e.g. <code>$^c::</code>) so that the hotkey cannot be triggered by the Send function.</p>
-<p>The limit might be reached by means other than an infinite loop, such as:</p>
-<ul>
-  <li>Key-repeat when the limit is too low relative to the key-repeat rate, or the system is under heavy load.</li>
-  <li>Keyboard or mouse hardware which sends input events more rapidly than the typical key-repeat rate. For example, tilting the wheel left or right on some mice sends a rapid flood of events which may reach the limit for hotkeys such as <code>WheelLeft::</code> and <code>WheelRight::</code>.</li>
-</ul>
-<p>To disable the warning dialog entirely, assign <code>A_HotkeyInterval := 0</code>.</p>
-
-<h2 id="Examples">Examples</h2>
-<div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> Allows a maximum of 200 hotkeys to be pressed within 2000 ms without triggering a warning dialog.</p>
-<pre>A_HotkeyInterval := 2000  <em>; This is the default value (milliseconds).</em>
-A_MaxHotkeysPerInterval := 200</pre>
-</div>
-
-
-<p>与 <a href="_HotkeyInterval.htm">#HotkeyInterval</a> 一起使用, 指定<a href="../Hotkeys.htm">热键</a>激活的速率, 超过此速率会显示警告对话框.</p>
-
-<pre class="Syntax"><span class="func">#MaxHotkeysPerInterval</span> Value</pre>
-<h2 id="Parameters">参数</h2>
-<dl>
-
-  <dt>Value</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>在 <a href="_HotkeyInterval.htm">#HotkeyInterval</a> 指定的间隔内, 不触发警告对话框情况下可以按下热键的最大数目.</p>
-  </dd>
-
-</dl>
 <h2 id="Remarks">备注</h2>
-<p>注意不要把上面的数值设置的过于宽松, 因为如果您可能曾经不小心引入了无限循环的键击(通过会意外触发其他热键的 <a href="Send.htm">Send</a> 函数), 那么您的电脑会因快速的键击事件流而无响应.</p>
-<p>举个简单的例子, 热键 <code>^c::Send "^c"</code> 会产生无限循环的键击. 要避免此问题, 添加 <a href="../Hotkeys.htm#prefixdollar">$ 前缀</a>到热键的定义(例如 <code>$^c::</code>), 这样 Send 函数就不会触发热键了.</p>
-<p>如果脚本中未使用此指令, 那么它会表现的就像此设置为 70 那样.</p>
-<p>和其他指令一样, #MaxHotkeysPerInterval 不能有条件地执行.</p>
+<p>这些内置变量通常应该在脚本启动时被赋值(如果默认值不合适的话), 但脚本可以在任何时候获取或设置它们的值.</p>
+<p>注意不要把上面的数值设置的过于宽松, 因为如果您可能曾经不小心引入了无限循环的键击(通过会意外触发其他热键的 <a href="../commands/Send.htm">Send</a> 函数), 那么您的电脑会因快速的键击事件流而无响应.</p>
+<p>举个简单的例子, 热键 <code>^c::Send "^c"</code> 会产生无限循环的键击. 要避免此问题, 添加 <a href="../Hotkeys.htm#prefixdollar">$ 前缀</a>热键的定义(例如 <code>$^c::</code>), 这样 Send 函数就不会触发热键了.</p>
+<p>除了无限循环之外, 还可能通过其他方式达到极限, 例如:</p>
+<ul>
+  <li>当限制相对于重复按键速率来说太低时, 或者系统处于重载状态时, 重复按键.</li>
+  <li>键盘或鼠标硬件发出的输入事件比典型的重复按键速率更快. 例如, 在某些鼠标上向左或向右倾斜滚轮会发出快速的事件, 可能会达到热键的极限, 如 <code>WheelLeft::</code> 和 <code>WheelRight::</code>.</li>
+</ul>
+<p>要完全停用警告对话框, 请指定 <code>A_HotkeyInterval := 0</code>.</p>
 
-<h2 id="Related">相关</h2>
-<p><a href="_HotkeyInterval.htm">#HotkeyInterval</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 每个间隔允许最多按下 200 个, 而不是 70 个热键.</p>
-<pre>#MaxHotkeysPerInterval 200</pre>
+<p><a class="ex_number" href="#ExBasic"></a> 允许在 2000 毫秒内最多按下 200 个热键而不触发警告对话框.</p>
+<pre>A_HotkeyInterval := 2000  <em>; 此为默认值 (毫秒).</em>
+A_MaxHotkeysPerInterval := 200</pre>
 </div>
 
 </body>

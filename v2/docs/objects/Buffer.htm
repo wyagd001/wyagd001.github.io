@@ -16,8 +16,8 @@
 <pre class="NoIndent">class Buffer extends Object</pre>
 
 <p>封装一块内存, 用于高级技术, 如 DllCall, 结构体, StrPut 和原始文件 I/O.</p>
-<p>缓冲对象通常通过调用 <a href="../commands/BufferAlloc.htm">BufferAlloc</a> 创建, 但也可以由 <a href="../commands/FileRead.htm">FileRead</a> 使用 "RAW" 选项返回.</p>
-<pre>Buffer := BufferAlloc(ByteCount)</pre>
+<p>缓冲对象通常通过调用 <a href="#Call">Buffer()</a> 创建, 但也可以由 <a href="../commands/FileRead.htm">FileRead</a> 使用 "RAW" 选项返回.</p>
+<pre>BufferObj := Buffer(ByteCount)</pre>
 <p><a href="../commands/ClipboardAll.htm">ClipboardAll</a> 返回缓冲的子类, 也命名为 ClipboardAll.</p>
 <pre class="NoIndent">class ClipboardAll extends Buffer</pre>
 
@@ -28,6 +28,14 @@
 <ul>
   <li><a href="#Ptr">Ptr</a></li>
   <li><a href="#Size">Size</a></li>
+</ul>
+<p><strong>方法:</strong></p>
+<ul>
+  <li><a href="#__New">__New</a></li>
+</ul>
+<p><strong>静态方法:</strong></p>
+<ul>
+  <li><a href="#Call">Call</a></li>
 </ul>
 
  <h2 id="like">类缓冲对象</h2>
@@ -48,11 +56,67 @@
 <pre class="Syntax">BufferObj.Size := ByteCount</pre>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>缓冲区的地址通常会随着大小的改变而改变. 如果减小大小, 则缓冲区中的数据将被截断, 但保留剩余的字节. 如果增加大小, 则保留所有数据并且任何新字节的值都是任意的(由于性能原因, 它们未初始化).</p>
-<p>该属性始终返回 <a href="../commands/BufferAlloc.htm">BufferAlloc</a> 或先前赋值给出的确切值.</p>
+<p>如果无法分配内存, 例如 <em>ByteCount</em> 意外地大, 或者系统虚拟内存不足, 则抛出 <a href="../objects/Error.htm#MemoryError">MemoryError</a>.</p>
+<p>这个属性总是返回它被赋予的确切值, 无论是由 <a href="#__New">__New</a> 还是由以前的赋值.</p>
+</div>
+
+<h2 id="Methods">方法</h2>
+<div class="methodShort" id="__New"><h2>__New</h2>
+<p>分配或重新分配缓冲, 并可选择将其填充.</p>
+<pre class="Syntax">BufferObj.<span class="func">__New</span>(<span class="optional">ByteCount, FillByte</span>)</pre>
+<p>这个方法的存在是为了支持 <a href="#Call">Call</a>, 并不打算直接调用. 请参阅<a href="../Objects.htm#Custom_NewDelete">创建和销毁</a>.</p>
+</div>
+
+<h2 id="StaticMethods">静态方法</h2>
+<div class="methodShort" id="Call"><h2>Call</h2>
+<p>创建缓冲.</p>
+<pre class="Syntax">BufferObj := <span class="func">Buffer</span>(<span class="optional">ByteCount, FillByte</span>)</pre>
+<dl>
+  <dt>ByteCount</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>要分配的字节数. 对应于 <a href="../objects/Buffer.htm#Size">Buffer.Size</a>.</p>
+    <p>如果省略, 将创建一个 null(零) <a href="#Ptr">Ptr</a> 和零 <a href="#Size">Size</a> 的缓冲.</p>
+  </dd>
+  <dt>FillByte</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>指定一个 0 到 255 之间的数字, 以将缓冲中的每个字节设置为该数字..</p>
+    <p>在不需要先读取缓冲而直接写入的情况下, 通常应将其省略, 因为它的时间开销与字节数成正比. 如果省略, 则不初始化缓冲的内存; 每个字节的值是任意的..</p>
+  </dd>
+</dl>
+<p>如果无法分配内存, 例如 <em>ByteCount</em> 意外地大, 或者系统虚拟内存不足, 则抛出 <a href="../objects/Error.htm#MemoryError">MemoryError</a>.</p>
+<p>参数是由 <a href="#__New">__New</a> 定义的.</p>
 </div>
 
 <h2 id="Related">相关</h2>
-<p><a href="../commands/BufferAlloc.htm">BufferAlloc</a>, <a href="../commands/DllCall.htm">DllCall</a>, <a href="../commands/NumPut.htm">NumPut</a>, <a href="../commands/NumGet.htm">NumGet</a>, <a href="../commands/StrPut.htm">StrPut</a>, <a href="../commands/StrGet.htm">StrGet</a>, <a href="File.htm#RawRead">File.RawRead</a>, <a href="File.htm#RawWrite">File.RawWrite</a>, <a href="../commands/ClipboardAll.htm">ClipboardAll</a></p>
+<p><a href="../commands/DllCall.htm">DllCall</a>, <a href="../commands/NumPut.htm">NumPut</a>, <a href="../commands/NumGet.htm">NumGet</a>, <a href="../commands/StrPut.htm">StrPut</a>, <a href="../commands/StrGet.htm">StrGet</a>, <a href="File.htm#RawRead">File.RawRead</a>, <a href="File.htm#RawWrite">File.RawWrite</a>, <a href="../commands/ClipboardAll.htm">ClipboardAll</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExString">
+<p><a class="ex_number" href="#ExString"></a>通过 <a href="../commands/DllCall.htm">DllCall</a> 使用 Buffer 从外部函数接收字符串.</p>
+<pre>
+max_chars := 11
+
+<em>; 为 wsprintf 的 Unicode 版本分配一个缓冲.</em>
+bufW := Buffer(max_chars*2)
+
+<em>; 使用 wsprintfW() 将一个 UTF-16 字符串打印到缓冲中.</em>
+DllCall("wsprintfW", "Ptr", bufW, "Str", "0x%08x", "UInt", 4919, "CDecl")
+
+<em>; 从 bufW 中检索字符串并显示出来.</em>
+MsgBox StrGet(bufW, "UTF-16")  <em>; 或者直接 StrGet(bufW).</em>
+
+<em>; 分配一个缓冲区供 ANSI 版本的 wsprintf 使用.</em>
+bufA := Buffer(max_chars)
+
+<em>; 使用 wsprintfA() 将一个 ANSI 字符串打印到缓冲中.</em>
+DllCall("wsprintfA", "Ptr", bufA, "AStr", "0x%08x", "UInt", 4919, "CDecl")
+
+<em>; 从 bufA 中获取字符串(转换为本地格式), 并将其显示出来.</em>
+MsgBox StrGet(bufA, "CP0")
+</pre>
+</div>
 
 </body>
 </html>
