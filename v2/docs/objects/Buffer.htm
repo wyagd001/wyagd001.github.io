@@ -24,6 +24,10 @@
 <p>下面使用 "BufferObj" 作为任何缓冲对象的占位符, 因为 "Buffer" 就是类本身.</p>
 <p>除了从 <a href="Object.htm">Object</a>, 继承的方法和属性外, Buffer 对象还具有以下预定义的属性:</p>
 
+<p><strong>静态方法:</strong></p>
+<ul>
+  <li><a href="#Call">Call</a></li>
+</ul>
 <p><strong>属性:</strong></p>
 <ul>
   <li><a href="#Ptr">Ptr</a></li>
@@ -33,14 +37,32 @@
 <ul>
   <li><a href="#__New">__New</a></li>
 </ul>
-<p><strong>静态方法:</strong></p>
-<ul>
-  <li><a href="#Call">Call</a></li>
-</ul>
 
- <h2 id="like">类缓冲对象</h2>
+<h2 id="like">类缓冲对象</h2>
 <p>一些内置函数接受缓冲对象来代替地址 - 请参阅<a href="#Related">相关</a>部分以获取链接. 这些函数也接受具有 <a href="#Ptr">Ptr</a> 和 <a href="#Size">Size</a> 属性的任何其他对象, 但是针对原生的缓冲对象进行了优化.</p>
 <p>在大多数情况下, 传递缓冲对象比传递地址更安全, 因为函数可以读取<a href="#Size">缓冲区大小</a>以确保它不会尝试访问缓冲区之外的任何内存位置. 一个例外是 <a href="../commands/DllCall.htm">DllCall</a> 调用程序之外的函数; 在这些情况下, 可能需要将<a href="#Size">缓冲区大小</a>显式传递给函数.</p>
+
+<h2 id="StaticMethods">静态方法</h2>
+<div class="methodShort" id="Call"><h2>Call</h2>
+<p>创建缓冲.</p>
+<pre class="Syntax">BufferObj := <span class="func">Buffer</span>(<span class="optional">ByteCount, FillByte</span>)</pre>
+<dl>
+  <dt>ByteCount</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>要分配的字节数. 对应于 <a href="../objects/Buffer.htm#Size">Buffer.Size</a>.</p>
+    <p>如果省略, 将创建一个 null(零) <a href="#Ptr">Ptr</a> 和零 <a href="#Size">Size</a> 的缓冲.</p>
+  </dd>
+  <dt>FillByte</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>指定一个 0 到 255 之间的数字, 以将缓冲中的每个字节设置为该数字..</p>
+    <p>在不需要先读取缓冲而直接写入的情况下, 通常应将其省略, 因为它的时间开销与字节数成正比. 如果省略, 则不初始化缓冲的内存; 每个字节的值是任意的..</p>
+  </dd>
+</dl>
+<p>如果无法分配内存, 例如 <em>ByteCount</em> 意外地大, 或者系统虚拟内存不足, 则抛出 <a href="../objects/Error.htm#MemoryError">MemoryError</a>.</p>
+<p>参数是由 <a href="#__New">__New</a> 定义的.</p>
+</div>
 
 <h2 id="Properties">属性</h2>
 <div class="methodShort" id="Ptr"><h2>Ptr</h2>
@@ -67,27 +89,7 @@
 <p>这个方法的存在是为了支持 <a href="#Call">Call</a>, 并不打算直接调用. 请参阅<a href="../Objects.htm#Custom_NewDelete">创建和销毁</a>.</p>
 </div>
 
-<h2 id="StaticMethods">静态方法</h2>
-<div class="methodShort" id="Call"><h2>Call</h2>
-<p>创建缓冲.</p>
-<pre class="Syntax">BufferObj := <span class="func">Buffer</span>(<span class="optional">ByteCount, FillByte</span>)</pre>
-<dl>
-  <dt>ByteCount</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>要分配的字节数. 对应于 <a href="../objects/Buffer.htm#Size">Buffer.Size</a>.</p>
-    <p>如果省略, 将创建一个 null(零) <a href="#Ptr">Ptr</a> 和零 <a href="#Size">Size</a> 的缓冲.</p>
-  </dd>
-  <dt>FillByte</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>指定一个 0 到 255 之间的数字, 以将缓冲中的每个字节设置为该数字..</p>
-    <p>在不需要先读取缓冲而直接写入的情况下, 通常应将其省略, 因为它的时间开销与字节数成正比. 如果省略, 则不初始化缓冲的内存; 每个字节的值是任意的..</p>
-  </dd>
-</dl>
-<p>如果无法分配内存, 例如 <em>ByteCount</em> 意外地大, 或者系统虚拟内存不足, 则抛出 <a href="../objects/Error.htm#MemoryError">MemoryError</a>.</p>
-<p>参数是由 <a href="#__New">__New</a> 定义的.</p>
-</div>
+
 
 <h2 id="Related">相关</h2>
 <p><a href="../commands/DllCall.htm">DllCall</a>, <a href="../commands/NumPut.htm">NumPut</a>, <a href="../commands/NumGet.htm">NumGet</a>, <a href="../commands/StrPut.htm">StrPut</a>, <a href="../commands/StrGet.htm">StrGet</a>, <a href="File.htm#RawRead">File.RawRead</a>, <a href="File.htm#RawWrite">File.RawWrite</a>, <a href="../commands/ClipboardAll.htm">ClipboardAll</a></p>

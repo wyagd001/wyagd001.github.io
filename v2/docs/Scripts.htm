@@ -46,25 +46,38 @@
 <p>长行可以分成一些小行, 以提高可读性和可维护性. 这样不会降低脚本的执行速度, 因为在脚本启动时这些短行会在内存中合并起来.</p>
 <p>有三种方法, 通常可以组合使用:</p>
 <ul>
-  <li><a href="#continuation-line">延续前缀</a>(延续行): 以表达式运算符开始一行, 将其连接到前一行.</li>
+  <li><a href="#continuation-line">延续运算符</a>(延续行): 以表达式运算符开始或结束一行, 将其连接到前或下一行.</li>
   <li><a href="#continuation-expr">延续闭环</a>(延续表达式): 在大多数情况下, 括在 (), [] 或 {} 中的子表达式可以自动跨越多行.</li>
   <li><a href="#continuation-section">延续片段</a>: 标记一组要合并在一起的行, 并添加其他选项, 例如在行之间插入什么文本(或代码).</li>
 </ul>
-<p id="continuation-line"><strong>延续前缀</strong>: 以逗号或任何其他<a href="Variables.htm#Operators">表达式运算符</a>(除了 ++ 和 --) 开头的行会自动与其正上方的行合并. 在以下示例中, 第二行被附加到第一行, 因为它以逗号开头:</p>
+<p id="continuation-line"><strong>延续运算符</strong>: 以逗号或任何其他<a href="Variables.htm#Operators">表达式运算符</a>(除了 ++ 和 --) 开头的行会自动与其正上方的行合并. Similarly, a line that ends with an expression operator is automatically merged with the line below it. 在以下示例中, 第二行被附加到第一行, 因为它以逗号开头:</p>
 <pre>FileAppend "This is the text to append.`n"   <em>; 这里可以使用注释.</em>
     <strong>,</strong> A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; 注释.</em></pre>
 <p>同样地, 下列几行也会合并成单行, 因为最后两行以 "and" 或 "or" 开始:</p>
-<pre>if (Color = "Red" or Color = "Green"  or Color = "Blue"   <em>; 注释.</em>
-    <strong>or</strong> Color = "Black" or Color = "Gray" or Color = "White")   <em>; 注释.</em>
+<pre>if Color = "Red" or Color = "Green"  or Color = "Blue"   <em>; 注释.</em>
+    <strong>or</strong> Color = "Black" or Color = "Gray" or Color = "White"   <em>; 注释.</em>
     <strong>and</strong> ProductIsAvailableInColor(Product, Color)   <em>; 注释.</em></pre>
 <p><a href="Variables.htm#ternary">三元运算符</a>也是个不错的选择::</p>
 <pre>ProductIsAvailable := (Color = "Red")
     <strong>?</strong> false  <em>; 我们没有任何红色产品, 所以不用那么麻烦去调用函数.</em>
     <strong>:</strong> ProductIsAvailableInColor(Product, Color)</pre>
-<p>虽然上面示例中使用的缩进是可选的, 但它可以显示出哪些行属于上一行从而提高代码清晰度. 此外, 以 "AND" 和 "OR" 开头的行没有必要包含额外的空格; 程序会自动处理这些. 最后, 可以在上述示例中的任何行的末尾或行与行之间添加空行或<a href="Language.htm#comments">注释</a>.</p>
+<p>The following examples are equivalent to those above:</p>
+<pre>FileAppend "This is the text to append.`n"<strong>,</strong>   <em>; A comment is allowed here.</em>
+    A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; Comment.</em>
+
+if Color = "Red" or Color = "Green"  or Color = "Blue" <strong>or</strong>   <em>; Comment.</em>
+    Color = "Black" or Color = "Gray" or Color = "White" <strong>and</strong>   <em>; Comment.</em>
+    ProductIsAvailableInColor(Product, Color)   <em>; Comment.</em>
+
+ProductIsAvailable := (Color = "Red") <strong>?</strong>
+    false <strong>:</strong> <em>; We don't have any red products, so don't bother calling the function.</em>
+    ProductIsAvailableInColor(Product, Color)</pre>
+<p>xxxx虽然上面示例中使用的缩进是可选的, 但它可以显示出哪些行属于上一行从而提高代码清晰度. 此外, 可以在上述示例中的任何行的末尾或行与行之间添加空行或<a href="Language.htm#comments">注释</a>.</p>
+<p>Although the indentation used in the examples above is optional, it might improve clarity by indicating which lines belong to ones above them. Also, blank lines or <a href="Language.htm#comments">comments</a> may be added between or at the end of any of the lines in the above examples.</p>
+<p>A continuation operator cannot be used with an auto-replace hotstring or directive other than <a href="commands/_HotIf.htm">#HotIf</a>.</p>
 <p id="continuation-expr"><strong>延续闭环</strong>: 如果一行中包含一个带有未闭合 <code>(</code>/<code>[</code>/<code>{</code>  的表达式或函数/属性定义, 那么它将与后续的行连接, 直到左, 右括号的数量平衡为止. 换句话说, 在大多数情况下, 用小括号(圆括号), 中括号(方括号), 大括号 (花括号) 括起来的子表达式可以自动跨越多行. 例如:</p>
 <pre>
-myarray := [  <em>; 左中括号必须在这行中.</em>
+myarray := [
   "item 1",
   "item 2",
 ]
@@ -77,6 +90,12 @@ MsgBox(
 <p>延续表达式可以包含两种类型的<a href="Language.htm#comments">注释</a>.</p>
 <p>延续表达式可以包含普通的<a href="#continuation-section">延续片段</a>. 因此, 与任何包含表达式的行一样, 如果一行以非转义的左括号(<code>(</code>) 开头, 除非在同一行上有一个右括号(<code>)</code>), 否则它将被视为延续片段的开头.</p>
 <p>引号括起来的字符串不能单独使用此方法跨越多行. 然而, 请参阅上面的内容.</p>
+<p>Continuation by enclosure can be combined with a continuation operator. For example:</p>
+<pre>myarray :=  <em>; The assignment operator causes continuation.</em>
+[  <em>; Brackets enclose the following two lines.</em>
+  "item 1",
+  "item 2",
+]</pre>
 <p>如果程序判定行末尾的大括号(<code>{</code>) 应该被解释为块(<a href="commands/Block.htm#otb">OTB 样式</a>) 的开头而不是<a href="Language.htm#object-literal">对象标识符</a>的开头, 则行末尾的大括号不会导致延续. 具体来说(按优先级降序排列):</p>
 <ul>
   <li>如果一个大括号前面有一个未闭合的 <code>(</code>/<code>[</code>/<code>{</code>, 那么它永远不会被解释为一个块的开始, 因为这会产生一个无效的表达式. 例如, 大括号在 <code>If ({</code> 中是对象标识符的开始.</li>
@@ -110,14 +129,13 @@ FileAppend "
 <p id="continuation_quotes">如果延续片段以引号开始, 引号将自动转义(即它们被解释为原义字符), 如上面的示例所示. 否则, 引号的作用与正常情况相同; 也就是说, 延续片段可以包含带引号字符串的表达式.</p>
 <p id="continuation_defaults">默认情况下, 根据延续片段中第一行的缩进, 省略前导空格或制表符. 如果第一行混合有空格和制表符, 则只将第一种类型的字符视为缩进. 如果任何行缩进小于第一行或使用不同的字符, 则该行上的所有前导空格都保持原样.</p>
 <p>延续片段的默认行为可以通过在该片段的左括号的右侧包含以下一个或多个选项来覆盖改写. 如果存在多个选项, 请使用空格将每个选项与前一个选项分开. 例如: <code>( LTrim Join|</code>.</p>
-<p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 否则, 单词 <em>Join</em> 后面可以紧跟最多 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格("`s" 表示原义的空格 -- 它是一个仅由 <em>Join</em> 识别的特殊转义序列). 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 请在它的右括号上方添加一个空行.</p>
-<p>已知限制: 如果 Join 字符串以冒号结尾, 则它不能是该行的最后一个选项. 例如, <code>(Join:</code> 被视为标签 "(Join", <code>(LTrim Join:</code> 不受支持, 而 <code>(Join: C</code> 这种写法没有问题.</p>
+<p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 否则, 单词 <em>Join</em> 后面可以紧跟最多 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格. 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 请在它的右括号上方添加一个空行.</p>
 <p id="LTrim"><strong>LTrim</strong>: 删除每行开头的所有的空格和制表符. 由于<a href="#continuation_defaults">默认的 "智能" 行为</a>, 这通常是不必要的.</p>
 <p id="LTrim0"><strong>LTrim0</strong> (LTrim 后跟一个 0): 关闭每行开头的空格和制表符的删除.</p>
 <p id="RTrim0"><strong>RTrim0</strong> (RTrim 后跟一个 0): 关闭每行末尾的空格和制表符的删除.</p>
 <p id="CommentOption"><strong>Comments</strong> (或 <strong>Comment</strong> 或 <strong>Com</strong> 或 <strong>C</strong>): 在延续片段中允许<a href="Language.htm#comments">分号注释</a>(但不允许 <code>/*..*/</code>). 这些注释(以及它们左边的任何空格和制表符) 将完全从连接结果中省略, 而不是作为文本处理. 每个注释可以出现在一行的右侧, .也可以单独出现在新行上</p>
 <p id="accent"><strong>`</strong>(重音): 按按原义处理反引号, 而不是作为<a href="misc/EscapeChar.htm">转义字符</a>. 这还可以防止任何显式指定的转义序列(<code>`r</code> 和 <code>`t</code>) 的转换.</p>
-<p id="non-continuation"><strong>)</strong>: 如果延续片段的选项中出现右括号(除了作为 <a href="#Join">Join</a> 选项的参数), 则该行将被重新解释为表达式, 而不是延续片段的开头. 这允许像 <code>(x.y)[z]()</code> 这样的表达式工作, 而不需要转义左括号.</p>
+<p id="non-continuation"><strong>(</strong> 或 <strong>)</strong>: 如果左括号或右括号出现在初始左括号的右侧(作为 <a href="#Join">Join</a> 选项的参数除外), 则该行将被重新解释为表达式, 而不是延续片段的开头. 这允许在行的开头使用 <code>(x.y)[z]()</code> 之类的表达式, 并且还允许<a href="#continuation-expr">多行表达式</a>以 <code>((</code> 或 <code>(MyFunc(</code> 在行的开头.</p>
 <p>除非指定了<a href="#accent">重音(`) 选项</a>, 否则在延续片段内部支持诸如 `n(换行符) 和 `t(制表符) 之类的<a href="misc/EscapeChar.htm">转义序列</a>.</p>
 <p>当 <a href="#CommentOption">comment 选项</a>不存在时, 分号和 /*..*/ 注释在延续片段的内部不受支持, 因为它们被视为原义文本. 但是, 注释可以包含在延续片段的底部和顶部行. 例如:</p>
 <pre>FileAppend "   <em>; 注释.
@@ -214,6 +232,10 @@ FileAppend "
 </ul>
 <p>编译器的源码和新版本可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe">GitHub</a> 找到.</p>
 
+<h3 id="ahk2exe-base">Base Executable File</h3>
+<p>Each compiled script .exe is based on an executable file which implements the interpreter. The base files included in the Compiler directory have the ".bin" extension; these are versions of the interpreter which do not include the capability to load external script files. Instead, the program looks for a Win32 (RCDATA) resource named "&gt;AUTOHOTKEY SCRIPT&lt;" and loads that, or fails if it is not found.</p>
+<p>The standard AutoHotkey executable files can also be used as the base of a compiled script, by embedding a Win32 (RCDATA) resource with ID 1. This allows the compiled script .exe to be used with the <a href="#SlashScript">/script</a> switch to execute scripts other than the main embedded script. For more details, see <a href="Program.htm#embedded-scripts">Embedded Scripts</a>.</p>
+
 <h3 id="CompilerDirectives">脚本编译器指令</h3>
 <p>脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
 <ul>
@@ -237,14 +259,14 @@ FileAppend "
 <pre>CompiledScript.exe [<i>Switches</i>] [<i>Script Parameters</i>]</pre>
 <p><strong>Switches</strong>(开关): 下列零个或多个:</p>
 <table class="info">
-  <tr><th width="10%">开关</th><th>意义</th><th class="wrap" abbr="Compiled?">支持编译脚本?</th></tr>
+  <tr><th width="10%">开关</th><th>意义</th><th class="wrap" abbr="Compiled?" width="8%">支持编译脚本?</th></tr>
   <tr id="SlashF">
-    <td>/f 或 /force</td>
+    <td>/force</td>
     <td>无条件强制启动, 忽略任何警告对话框. 和 <a href="commands/_SingleInstance.htm">#SingleInstance Off</a> 的效果相同.</td>
     <td>支持</td>
   </tr>
   <tr id="SlashR">
-    <td>/r 或 /restart</td>
+    <td>/restart</td>
     <td>指示脚本正在重新启动(这也能在脚本内部通过 <a href="commands/Reload.htm">Reload</a> 函数实现).</td>
     <td>支持</td>
   </tr>
@@ -254,7 +276,7 @@ FileAppend "
       <p>把阻止脚本运行的语法错误发送到标准错误流(stderr) 而不显示在对话框中. 有关详情, 请参阅 <a href="commands/_ErrorStdOut.htm">#ErrorStdOut</a>.</p>
       <p>可以选择指定<a href="commands/FileEncoding.htm">编码</a>. 例如, <code>/ErrorStdOut=UTF-8</code> 在将消息写入 stderr 之前将其编码为 UTF-8.</p>
     </td>
-    <td>支持</td>
+    <td>不支持</td>
   </tr>
   <tr id="SlashDebug">
     <td>/Debug</td>
@@ -286,6 +308,24 @@ FileAppend "
       <p>如果脚本有语法错误, 那么输出文件可能为空. 程序退出代码可以检测这种情况; 如果这里有语法错误, 退出代码为 2. /ErrorStdOut 开关可用于抑制或捕获错误消息.</p>
     </td>
     <td>不支持</td>
+  </tr>
+  <tr id="SlashInclude">
+    <td>/include <em>"IncFile"</em></td>
+    <td>
+      <p><a href="commands/_Include.htm">Includes</a> a file prior to the main script. Only a single file can be included by this method. When the script is <a href="commands/Reload.htm">reloaded</a>, this switch is automatically passed to the new instance.</p>
+    </td>
+    <td>No</td>
+  </tr>
+  <tr id="SlashScript">
+    <td>/script</td>
+    <td>
+      <p>When used with a compiled script based on an .exe file, this switch causes the program to ignore the main embedded script. This allows a compiled script .exe to execute external script files or embedded scripts other than the main one. Other switches not normally supported by compiled scripts can be used but must be listed to the right of this switch. For example:</p>
+      <pre class="no-highlight">CompiledScript.exe /script /ErrorStdOut MyScript.ahk "Script's arg 1"</pre>
+      <p>If the current executable file does not have an embedded script, this switch is permitted but has no effect.</p>
+      <p>This switch is not supported by compiled scripts which are based on a .bin file.</p>
+      <p>See also: <a href="#ahk2exe-details">Compilation Details</a></p>
+    </td>
+    <td>N/A</td>
   </tr>
 </table>
 

@@ -75,6 +75,7 @@
   ["__Enum method (Array)","objects/Array.htm#__Enum"],
   ["__Enum method (Map)","objects/Map.htm#__Enum"],
   ["__Init method","Objects.htm#Custom_Classes_var"],
+  ["__Item property","Objects.htm#__Item"],
   ["__Item property (Array)","objects/Array.htm#__Item"],
   ["__Item property (Map)","objects/Map.htm#__Item"],
   ["__New meta-function","Objects.htm#Custom_NewDelete"],
@@ -1089,7 +1090,7 @@
   ["WriteLine method (File)","objects/File.htm#WriteLine"],
   ["WriteNumType method (File)","objects/File.htm#WriteNum"],
   ["WS_* (GUI styles)","misc/Styles.htm"],
-  ["XButton","commands/Click.htm"],
+  ["XButton","KeyList.htm#mouse-advanced"],
   ["YYYYMMDDHH24MISS","commands/FileSetTime.htm#YYYYMMDD"],
   ["ZeroDivisionError","objects/Error.htm#ZeroDivisionError",6],
   ["{Blind}","commands/Send.htm#blind"]

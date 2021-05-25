@@ -38,18 +38,19 @@
 <p>如果 <em>Var</em> 或由 <em>Ref</em> 表示的变量已经被赋值, 则返回值为 1(true), 否则为 0(false).</p>
 
  <h2 id="Remarks">备注</h2>
-<p>Use IsSet to check a variable directly, as in <code>IsSet(MyGlobalVar)</code>.</p>
-<p>Use IsSetRef to check a <a href="../Concepts.htm#variable-references">VarRef</a>, which would typically be contained by a variable, as in the example below.</p>
+<p>使用 IsSet 来直接检查一个变量, 如 <code>IsSet(MyGlobalVar)</code>.</p>
+<p>使用 IsSetRef 来检查一个 <a href="../Concepts.htm#variable-references">VarRef</a>, 它通常被一个变量所包含, 如下面的示例所示.</p>
 <p>未赋值的变量也称为<a href="../Concepts.htm#uninitialized-variables">未初始化变量</a>. 默认情况下, 试图读取一个未初始化的变量会导致异常抛出. IsSet 可以用来避免这种情况, 例如在第一次使用全局变量或静态变量时是否需要初始化.</p>
 <p class="note"><strong>注意:</strong> <a href="../Functions.htm#InitStatic">静态初始化</a> 如 <code>static my_static_array := []</code> 只被计算一次, 即在执行过程中第一次到达时, 因此通常不需要使用 IsSet.</p>
-<p>Although IsSet uses the same syntax as a function call, it may be considered more of an operator than a function. The keyword <em>IsSet</em> is reserved for the use shown here and cannot be redefined as a variable or function. IsSet cannot be called indirectly because any attempt to pass an uninitialized variable would cause an error to be thrown.</p>
-<p>IsSetRef can also be used to check a specific variable, by using it with the <a href="../Variables.htm#ref">reference operator</a>. When using it this way, be aware of the need to <a href="../Functions.htm#Global">declare the variable</a> first if it is global. For example, the <code>&amp;</code> in <code>IsSetRef(&amp;MyVar)</code> would cause <em>MyVar</em> to resolve to a local variable by default, if used within an assume-local function which lacks the declaration <code>global MyVar</code>.</p>
+<p>尽管 IsSet 使用了与函数调用相同的语法, 但它可以被认为是一个操作符而不是一个函数. 关键字 <em>IsSet</em> 保留用于此处所示的用法, 不能被重新定义为一个变量或函数. IsSet 不能被间接调用, 因为任何试图传递一个未初始化的变量的行为都会导致错误的产生.</p>
+<p>IsSetRef 也可以用来检查一个特定的变量, 通过与<a href="../Variables.htm#ref">引用操作符</a>一起使用. 当以这种方式使用它时, 要注意如果是全局变量需要先<a href="../Functions.htm#Global">声明该变量</a>. 例如, 如果在一个没有声明 <code>global MyVar</code> 的假设-局部函数中使用的话, <code>IsSetRef(&amp;MyVar)</code> 中的 <code>&amp;</code> 会导致 <em>MyVar</em> 默认解析为一个局部变量.</p>
 
  <h2 id="Related">相关</h2>
 <p><a href="../Functions.htm#ByRef">ByRef 参数</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> Shows different uses for IsSet and IsSetRef.</p>
+<p><a class="ex_number" href="#ExBasic"></a> 显示 IsSet 和 IsSetRef 的不同用法.</p>
 <pre>
 Loop 2
     if !IsSet(MyVar)  <em>; 是否是第一次 "使用" MyVar?</em>
@@ -59,7 +60,7 @@ MsgBox Function2(&amp;MyVar)
 
 Function1(&amp;Param)  <em>; ByRef 参数.</em>
 {
-    if IsSet(Param)  <em>; Pass Param itself, which is an alias for MyVar.</em>
+    if IsSet(Param)  <em>; 传递 Param 本身, 它是 MyVar 的别名.</em>
         return Param  <em>; ByRef 参数会自动解引用.</em>
     else
         return "unset"

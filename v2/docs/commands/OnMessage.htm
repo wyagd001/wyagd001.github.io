@@ -28,7 +28,7 @@
   <dt>Function</dt>
   <dd>
     <p>类型: <a href="../objects/Functor.htm">函数对象</a></p>
-    <p>当接收到消息时要调用的函数对象. 该函数必须能够接受四个参数, 如<a href="#The_Functions_Parameters">下</a>所述.</p>
+    <p>当接收到消息时要调用的函数对象. 函数的参数和返回值如<a href="#The_Functions_Parameters">如下</a>所示.</p>
   </dd>
 
   <dt id="MaxThreads">MaxThreads</dt>
@@ -45,19 +45,16 @@
 
 <p>任何数量的函数或<a href="../objects/Functor.htm">函数对象</a>都可以监视一个给定的 <em>MsgNumber</em>.</p>
 <p>这两行中的任何一行都会注册一个函数对象, 以便在任何先前注册的函数 <strong>之后</strong> 被调用:</p>
-<pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function     <em>; 选项 1 - 省略 MaxThreads</em>
-<span class="func">OnMessage</span> MsgNumber, Function, 1  <em>; 选项 2 - 指定 MaxThreads 为 1</em></pre>
+<pre>OnMessage</span> MsgNumber, Function     <em>; 选项 1 - 省略 MaxThreads</em>
+OnMessage MsgNumber, Function, 1  <em>; 选项 2 - 指定 MaxThreads 为 1</em></pre>
 <p>注册一个函数对象, 以便在任何先前注册的函数 <strong>之前</strong> 被调用:</p>
-<pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function, -1</pre>
+<pre>OnMessage</span> MsgNumber, Function, -1</pre>
 <p>要取消注册一个函数对象, 请将 <em>MaxThreads</em> 指定为 0:</p>
 <pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function, 0</pre>
 
 <h2 id="The_Functions_Parameters">函数的参数</h2>
-<p><a href="../Functions.htm">函数</a>可以监视一个或多个消息并接受最多四个参数:</p>
-<pre>MyMessageMonitor(wParam, lParam, msg, hwnd)
-{
-    ...函数主体...
-}</pre>
+<p><a href="../Functions.htm">函数</a>可以监视一个或多个消息并应该接受四个参数:</p>
+<pre class="Syntax"><i>FunctionName</i>(wParam, lParam, msg, hwnd)</pre>
 <p>尽管您赋予参数的名称并不重要, 但以下信息将按顺序分配给它们:</p>
 <ul>
   <li>参数 #1: 消息的 WPARAM 值.</li>
@@ -86,10 +83,8 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>Send(发送)(而不是 Post) 到控件的消息不会被监听, 因为系统直接把它们发送给后台的控件了. 对于系统生成的消息来说, 这很少是一个问题, 因为大多数信息都是 Post 的.</p>
 <p>如果脚本要在空闲状态下保持运行, 以监测传入的消息, 可能需要调用 <a href="Persistent.htm">Persistent</a> 函数来防止脚本退出. OnMessage 不会自动使脚本持续运行, 因为这有时是不必要的或不需要的. 例如, 当 OnMessage 被用来监视 GUI 窗口的输入时(如在 <a href="#ExLButtonDown">WM_LBUTTONDOWN 的例子</a>), 通常让脚本在最后一个 GUI 窗口关闭时自动退出更为合适.</p>
 <p id="Critical">如果由于之前有相同的消息到达, 而消息的函数仍在运行, 则不会再次调用函数(除非 <a href="#MaxThreads">MaxThreads</a> 大于 1); 相反, 消息将被视为未被监控. 如果不希望出现这种情况, 可以通过在函数的第一行指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲大于或等于 0x0312 的消息, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的目的, 只要它持续的时间足够函数完成. 相反, 小于 0x0312 的消息不能被 Critical 或 Thread Interrupt 缓冲 (然而, Critical 可能会有帮助, 因为它检查消息的<a href="Critical.htm#Interval">频率较低</a>, 这给了函数更多的时间来完成). 保证不漏掉此类消息的唯一方法是确保函数在 6 毫秒内完成(尽管这个限制可以通过 <a href="Critical.htm#Interval"><em>Critical 30</em></a> 来提高). 一种方法是通过向自己的脚本<a href="PostMessage.htm">发布(Post)</a> 一个高于 0x0312 的监控消息号, 让它为未来的线程排队. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲.</p>
-<p id="buffering">If a monitored message that is numerically greater than 0x0311 is posted while the script is <a href="../misc/Threads.htm#Interrupt">uninterruptible</a>, the message is buffered; that is, its function is not called until the script becomes interruptible. However, messages which are sent rather than posted cannot be buffered as they must provide a return value. Posted messages also might not be buffered when a modal message loop is running, such as for a system dialog, ListView drag-drop operation or menu.</p>
-<p>xxxxxx如果在小于 0x0312 的受监听消息当脚本完全不可中断时到达(例如在显示<a href="../objects/Menu.htm#Show">菜单</a>, 正在进行 <a href="SetKeyDelay.htm">KeyDelay</a>/<a href="SetMouseDelay.htm">MouseDelay</a>, 或剪贴板正被<a href="_ClipboardTimeout.htm">打开</a>) -- 则不会调用此函数而消息会被视为未监听的.  相反, 一个等于或大于 0x0312 的受监听消息在这些不可中断期间会被缓冲起来; 即当脚本变成可中断时会调用它的处理函数.</p>
-<p>If a monitored message arrives and is not buffered, its function is called immediately even if the thread is <a href="../misc/Threads.htm#Interrupt">uninterruptible</a> when the message is received.</p>
-<p>xxxxxxxx如果消息号小于 0x0312 的受监听消息在脚本仅由于 <a href="Thread.htm">Thread Interrupt</a> 或 <a href="Critical.htm">Critical</a> 的设置而不可中断时到达, 则会中断当前线程而调用消息处理函数. 相反, 等于或大于 0x0312  的受监听消息则会被缓冲到线程结束或变成可中断之后.</p>
+<p id="buffering">如果在脚本<a href="../misc/Threads.htm#Interrupt">不可中断的</a>情况下, Post 一条数值大于 0x0311 的监控信息, 那么这条信息就会被缓冲; 也就是说, 在脚本变得可中断之前, 它的函数不会被调用. 然而, sent 而不是 posted 的消息不能被缓冲, 因为它们必须提供一个返回值. Post 的消息也可能不被缓冲, 当一个模式消息循环在运行时, 如系统对话框, ListView 拖放操作或菜单.</p>
+<p>如果一个被监控的消息到达并且没有被缓冲, 那么它的函数会被立即调用, 即使在收到消息的时候线程是<a href="../misc/Threads.htm#Interrupt">不可中断的</a>.</p>
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
 <p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果监听函数返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>
 <p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递(Post) 到控件的消息. 例如, 如果脚本正显示消息框而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
@@ -194,7 +189,7 @@ DetectHiddenWindows False  <em>; 必须在 PostMessage 之后才能关闭.</em><
 <p><a class="ex_number" href="#ExSendString"></a> 从一个脚本发送任意长度的字符串到另一个脚本. 要使用它, 请保存并运行下面的两个脚本, 然后按下 <kbd>Win</kbd>+<kbd>Space</kbd> 来显示输入框来让您输入字符串. 两个脚本必须使用相同的<a href="../Concepts.htm#native-encoding">原生编码</a>.
 <p>保存下面的脚本为 <strong>Receiver.ahk</strong>, 然后运行它:</p>
 <pre filename="Receiver.ahk">#SingleInstance
-OnMessage 0x004A, "Receive_WM_COPYDATA"  <em>; 0x004A is WM_COPYDATA</em>
+OnMessage 0x004A, Receive_WM_COPYDATA  <em>; 0x004A is WM_COPYDATA</em>
 Persistent
 
 Receive_WM_COPYDATA(wParam, lParam, msg, hwnd)

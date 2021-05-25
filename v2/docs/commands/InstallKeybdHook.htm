@@ -14,7 +14,7 @@
 
 <h1>InstallKeybdHook</h1>
 
-<p>Installs or uninstalls the keyboard hook.</p>
+<p>安装或卸载键盘钩子.</p>
 <pre class="Syntax"><span class="func">InstallKeybdHook</span> <span class="optional">Install, Force</span></pre>
 
 <h2 id="Parameters">参数</h2>
@@ -22,58 +22,40 @@
 
   <dt>Install</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#boolean">Boolean</a></p>
-    <p>Omit this parameter or pass true (any non-zero, non-blank value) to require that the hook be installed. Pass false to remove any requirement previously set by this function and potentially uninstall the hook.</p>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
+    <p>省略此参数或传递 true(任何非零, 非空白值) 来要求钩子被安装. 传递 false 删除此函数之前设置的任何要求, 并可能卸载钩子.</p>
   </dd>
 
   <dt>Force</dt>
   <dd>
-    <p>Type: <a href="../Concepts.htm#boolean">Boolean</a></p>
-    <p>If <em>Force</em> is true and <em>Install</em> is omitted or true, the hook is uninstalled and reinstalled. This has the effect of giving it precedence over any hooks previously installed by other processes. If the system has stopped calling the hook due to an unresponsive program, reinstalling the hook might get it working again.</p>
-    <p>If <em>Force</em> is true and <em>Install</em> is false, the hook is uninstalled even if needed for some other purpose. If a <a href="../Hotkeys.htm">hotkey</a>, <a href="../Hotstrings.htm">hotstring</a> or <a href="InputHook.htm">InputHook</a> requires the hook, it will stop working until the hook is reinstalled. The hook may be reinstalled explicitly by calling this function, or automatically as a side-effect of enabling or disabling a hotkey or calling some other function which requires the hook.</p>
-    <p>If <em>Force</em> is false, an internal variable is updated to indicate whether the hook is required by the script, but there might be no immediate change if the hook is required for some other purpose.</p>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
+    <p>如果 <em>Force</em> 为 true, 并且 <em>Install</em> 省略或为 true, 钩子会被卸载和重新安装. 这具有使其优先于其他进程先前安装的钩子的效果. 如果系统由于一个无响应的程序而停止调用该钩子, 重新安装该钩子可能会使其再次工作.</p>
+    <p>如果 <em>Force</em> 为 true, 并且 <em>Install</em> 为 false, 那么钩子就会被卸载, 即使是其他目的需要. 如果<a href="../Hotkeys.htm">热键</a>, <a href="../Hotstrings.htm">热字串</a>或 <a href="InputHook.htm">InputHook</a> 需要钩子, 它将停止工作, 直到该钩子被重新安装. 钩子可以通过调用这个函数显式地被重新安装, 也可以作为启用或禁用热键或调用其他需要钩子的函数的副作用而自动安装.</p>
+    <p>如果 <em>Force</em> 为 false, 内部变量会被更新, 以表明脚本是否需要钩子, 但是如果钩子是其他目的而需要的, 可能不会有直接的变化.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>The keyboard hook monitors keystrokes for the purpose of activating <a href="../Hotstrings.htm">hotstrings</a> and any keyboard <a href="../Hotkeys.htm">hotkeys</a> not supported by RegisterHotkey (which is a function built into the operating system). It also supports a few other features such as the <a href="InputHook.htm">InputHook</a> function.</p>
-<p>AutoHotkey does not install the keyboard and mouse hooks unconditionally because together they consume at least 500 KB of memory. Therefore, the keyboard hook is normally installed only when the script contains one of the following: 1) <a href="../Hotstrings.htm">hotstrings</a>; 2) one or more <a href="../Hotkeys.htm">hotkeys</a> that require the keyboard hook (most do not); 3) <a href="SetNumScrollCapsLockState.htm">SetCaps/Scroll/NumLock AlwaysOn/AlwaysOff</a>; 4) active <a href="InputHook.htm">Input hooks</a>.</p>
-<p>By contrast, the InstallKeybdHook function can be used to unconditionally install the keyboard hook, which has benefits including:</p>
+<p>键盘钩子监视击键, 以便激活<a href="../Hotstrings.htm">热字串</a>和任何 RegisterHotkey(操作系统内置的函数) 不支持的键盘<a href="../Hotkeys.htm">热键</a>. 它还支持其他一些特性, 如 <a href="InputHook.htm">InputHook</a> 函数.</p>
+<p>AutoHotkey 不会无条件安装键盘和鼠标钩子, 因为它们合起来至少占用 500 KB 的内存. 因此, 通常仅在脚本包含以下内容之一时才会安装键盘钩子: 1) <a href="../Hotstrings.htm">热字串</a>; 2)  一个或多个需要键盘钩子(大多数不需要) 的<a href="../Hotkeys.htm">热键</a>; 3) <a href="SetNumScrollCapsLockState.htm">SetCaps/Scroll/NumLock AlwaysOn/AlwaysOff</a>; 4) 激活 <a href="InputHook.htm">Input 钩子</a>.</p>
+<p>与之相比, InstallKeybdHook 函数可以用来无条件安装键盘钩子, 它的好处包括:</p>
 <ul>
-  <li><a href="KeyHistory.htm">KeyHistory</a> can be used to display the last 20 keystrokes (for debugging purposes).</li>
-  <li>The physical state of the modifier keys can be tracked reliably, which removes the need for <a href="../misc/A_HotkeyModifierTimeout.htm">A_HotkeyModifierTimeout</a> and may improve the reliability with which <a href="Send.htm">Send</a> restores the modifier keys to their proper states after temporarily releasing them.</li>
-  <li><a href="GetKeyState.htm">GetKeyState</a> can retrieve the physical state of a key.</li>
-  <li><a href="../Variables.htm#TimeIdleKeyboard">A_TimeIdleKeyboard</a> and <a href="../Variables.htm#TimeIdlePhysical">A_TimeIdlePhysical</a> can work correctly (ignoring mouse input or artificial input, respectively).</li>
-  <li>Mouse hotkeys which use the Alt modifier (such as <code>!LButton::</code>) can suppress the window menu more efficiently, by sending only one <a href="../misc/A_MenuMaskKey.htm">menu mask key</a> when the Alt key is released, instead of sending one each time the button is clicked.</li>
+  <li><a href="KeyHistory.htm">KeyHistory</a> 可以用来显示最近的 20 次击键(用于调试).</li>
+  <li>可以可靠地跟踪修饰符键的物理状态, 这就消除了 <a href="../misc/A_HotkeyModifierTimeout.htm">A_HotkeyModifierTimeout</a> 的需要, 并且可以提高 <a href="Send.htm">Send</a> 将临时释放的修饰符键恢复到合适状态的可靠性.</li>
+  <li><a href="GetKeyState.htm">GetKeyState</a> 可以检索到一个键的物理状态.</li>
+  <li><a href="../Variables.htm#TimeIdleKeyboard">A_TimeIdleKeyboard</a> 和 <a href="../Variables.htm#TimeIdlePhysical">A_TimeIdlePhysical</a> 可以正确工作(分别忽略鼠标输入和人工输入).</li>
+  <li>使用 Alt 修饰符的鼠标热键(如 <code>!LButton::</code>) 可以更有效地抑制窗口菜单, 当 Alt 键释放时只发送一个<a href="../misc/A_MenuMaskKey.htm">菜单掩饰键</a>, 而不是每次单击按钮时发送一个.</li>
 </ul>
-<p>You can determine whether a script is using the hook via the <a href="KeyHistory.htm">KeyHistory</a> function or menu item. You can determine which hotkeys are using the hook via the <a href="ListHotkeys.htm">ListHotkeys</a> function or menu item.</p>
+<p>你可以通过 <a href="KeyHistory.htm">KeyHistory</a> 函数或菜单项来确定脚本是否在使用钩子. 你可以通过 <a href="ListHotkeys.htm">ListHotkeys</a> 函数或菜单项来确定哪些热键正在使用钩子.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="InstallMouseHook.htm">InstallMouseHook</a>, <a href="_UseHook.htm">#UseHook</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="InputHook.htm">InputHook</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="../Hotstrings.htm">Hotstrings</a>, <a href="GetKeyState.htm">GetKeyState</a>, <a href="KeyWait.htm">KeyWait</a></p>
-<h2 id="Examples">示例</h2>
-<div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> Installs the keyboard hook unconditionally.</p>
-<pre>InstallKeybdHook</pre>
-</div>
 
-
-<p>强制无条件安装键盘钩子.</p>
-
-<pre class="Syntax"><span class="func">#InstallKeybdHook</span></pre>
-<h2 id="Remarks">备注</h2>
-<p>键盘钩子监视击键, 以便激活<a href="../Hotstrings.htm">热字串</a>和任何  RegisterHotkey(操作系统内置的函数) 不支持的键盘<a href="../Hotkeys.htm">热键</a>. 它还支持其他一些特性, 如 <a href="InputHook.htm">InputHook</a> 函数.</p>
-<p>AutoHotkey 不会无条件安装键盘和鼠标钩子, 因为它们合起来至少占用 500 KB 的内存. 因此, 通常仅在脚本包含以下内容之一时才会安装键盘钩子: 1) <a href="../Hotstrings.htm">热字串</a>; 2) 一个或多个需要键盘钩子的<a href="../Hotkeys.htm">热键</a>(大多数不需要); 3) <a href="SetNumScrollCapsLockState.htm">SetCaps/Scroll/NumLock AlwaysOn/AlwaysOff</a>; 4) 激活 <a href="InputHook.htm">Input 钩子</a>.</p>
-<p>与之相比, 使用 #InstallKeybdHook 指令会无条件安装键盘钩子, 这可能有助于允许 <a href="KeyHistory.htm">KeyHistory</a> 显示最近的 20 次键击(用于调试目的), 或者避免使用 <a href="_HotkeyModifierTimeout.htm">#HotkeyModifierTimeout</a>.</p>
-<p>你可以通过 <a href="KeyHistory.htm">KeyHistory</a> 函数或菜单项来判断脚本是否使用了钩子. 你可以通过 <a href="ListHotkeys.htm">ListHotkeys</a> 函数或菜单项来判断哪个热键使用了钩子.</p>
-<p>和其他指令一样, #InstallKeybdHook 不能有条件地执行.</p>
-
-<h2 id="Related">相关</h2>
-<p><a href="_InstallMouseHook.htm">#InstallMouseHook</a>, <a href="_UseHook.htm">#UseHook</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="InputHook.htm">InputHook</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="../Hotstrings.htm">热字串</a>, <a href="GetKeyState.htm">GetKeyState</a>, <a href="KeyWait.htm">KeyWait</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 无条件安装键盘钩子.</p>
-<pre>#InstallKeybdHook</pre>
+<pre>InstallKeybdHook</pre>
 </div>
 
 </body>

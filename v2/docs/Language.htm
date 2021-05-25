@@ -157,6 +157,14 @@ MsgBox "这行没有被注释."
 MsgBox "This one doesn't. The result was " result "."</pre>
 <p>在同一上下文中调用<a href="Concepts.htm#methods">方法</a>时, 也可以省略圆括号, 但仅当目标对象是变量或直接命名的属性时才可以省略圆括号, 如 <code>myVar.myMethod</code> 或 <code>myVar.myProp.myMethod</code>.</p>
 <p>与函数调用表达式一样, 函数调用语句的目标不一定是预定义的函数; 它可以是一个包含<a href="objects/Functor.htm">函数对象</a>的变量.</p>
+<p>函数调用语句可以<a href="Scripts.htm#continuation">跨越多行</a>.</p>
+<p>函数调用语句有以下限制:</p>
+<ul>
+  <li>如果有一个返回值, 它总是被丢弃.</li>
+  <li>与<a href="#control-flow">控制流语句</a>一样, 它们不能在表达式中使用.</li>
+  <li>当可选参数被省略时, 参数列表 <em>末尾的</em> 逗号也必须被省略, 以防止<a href="Scripts.htm#continuation-line">行延续</a>.</li>
+  <li>函数调用语句不能是<a href="Functions.htm#VariadicCall">变量</a>, 尽管它们可以向一个可变函数传递固定数量的参数.</li>
+</ul>
 
 <h4 id="optional-parameters">可选参数</h4>
 <p>可选参数可以简单地留空, 但是分隔逗号仍然是必需的, 除非所有后续参数也被省略. 例如, <a href="commands/Run.htm">Run</a> 函数可接受一至四个参数. 下列各项均有效:</p>
@@ -186,7 +194,7 @@ Run("notepad.exe", , , &amp;notepadPID)
 <p>方法调用(如 <code>MyObj.MyMethod()</code>).</p>
 <p>使用方括号的成员访问(如 <code>MyObj[Index]</code>), 它可能有类似于函数调用的附加作用.</p>
 <p>三元表达式(如 <code>x? CallIfTrue() : CallIfFalse()</code>). 但是, 使用下面的规则更安全; 也就是说, 始终将表达式(或条件) 括在括号中.</p>
-<p class="warning"><strong>已知限制:</strong>  由于<a href="#function-call-statements">函数调用语句</a>的模糊性, 以变量名和空格开头的条件(还包含其他操作符) 应该用圆括号括起来. 例如, <code>(x + 1) ? y : z</code> 和 <code>x+1 ? y : z </code> 是表达式语句, 但是 <code>x + 1 ? y : z</code> 是函数调用语句.</p>
+<p class="warning"><strong>已知限制:</strong> 由于<a href="#function-call-statements">函数调用语句</a>的模糊性, 以变量名和空格开头的条件(还包含其他操作符) 应该用圆括号括起来. 例如, <code>(x + 1) ? y : z</code> 和 <code>x+1 ? y : z </code> 是表达式语句, 但是 <code>x + 1 ? y : z</code> 是函数调用语句.</p>
 <p class="warning"><strong>注意:</strong> 条件不能以 <code>!</code> 或任何其他表达式运算符开头, 因为它将被解释为<a href="Scripts.htm#continuation-line">延续行</a>.</p>
 <p>以 <code>(</code> 开始的表达式. 但是, 通常必须在同一行有一个匹配的 <code>)</code>, 否则该行将被解释为<a href="Scripts.htm#continuation">延续片段</a>的开始.</p>
 <p>以双百分号开始的表达式(如 <code>%varname% := 1</code>). 这主要是由于实现的复杂性.</p>

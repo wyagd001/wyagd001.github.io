@@ -48,7 +48,7 @@
 <p class="note">有关如何编写脚本的详细信息, 请参阅<a href="Language.htm">脚本语言</a>.</p>
 
 <h2 id="edit">编辑脚本</h2>
-<p>要打开脚本进行编辑, 请右键单击脚本文件, 然后选择 <strong>Edit Script(编辑脚本)</strong>. 如果脚本已经在运行, 您可以使用 <a href="commands/Edit.htm">Edit(编辑)</a> 函数或右键单击脚本的<a href="#tray-icon">托盘图标</a>并选择 <strong>Edit This Script(编辑此脚本)</strong>. 默认情况下, 这将打开记事本, 但可以通过写入注册表来更换编辑器, 如<a href="commands/Edit.htm#ExDefaultEditor">此例</a>所示. 当然, 您可以先打开文本编辑器, 然后像打开其他任何文本文件一样打开脚本.</p>
+<p>要打开脚本进行编辑, 请右键单击脚本文件, 然后选择 <strong>Edit Script(编辑脚本)</strong>. 如果脚本已经在运行, 您可以使用 <a href="commands/Edit.htm">Edit(编辑)</a> 函数或右键单击脚本的<a href="#tray-icon">托盘图标</a>并选择 <strong>Edit Script(编辑脚本)</strong>. 默认情况下, 这将打开记事本, 但可以通过写入注册表来更换编辑器, 如<a href="commands/Edit.htm#ExDefaultEditor">此例</a>所示. 当然, 您可以先打开文本编辑器, 然后像打开其他任何文本文件一样打开脚本.</p>
 <p>编辑脚本保存后, 您必须运行或 <a href="commands/Reload.htm">reload(重新加载)</a> 脚本以使更改生效. 正在运行的脚本通常可以通过其<a href="#tray-icon">托盘菜单</a>重新加载.</p>
 
 <h2 id="run">运行脚本</h2>
@@ -70,8 +70,8 @@
 <li>Open - (打开) - 打开脚本的<a href="#main-window">主窗口</a>.</li>
 <li>Help - (帮助) - 打开 AutoHotkey 离线帮助文件.</li>
 <li>Window Spy - (窗口监视器) - 显示关于窗口的各种信息.</li>
-<li>Reload This Script - (重载这个脚本) - 请参阅 <a href="commands/Reload.htm">Reload</a>.</li>
-<li>Edit This Script - (编辑这个脚本) - 请参阅 <a href="commands/Edit.htm">Edit</a>.</li>
+<li>Reload Script - (重载脚本) - 请参阅 <a href="commands/Reload.htm">Reload</a>.</li>
+<li>Edit Script - (编辑脚本) - 请参阅 <a href="commands/Edit.htm">Edit</a>.</li>
 <li>Suspend Hotkeys - (挂起热键) - <a href="commands/Suspend.htm">Suspend</a> 或取消挂起热键.</li>
 <li>Pause Script - (暂停脚本) - <a href="commands/Pause.htm">Pause</a> 或取消暂停脚本.</li>
 <li>Exit - (退出) - 退出脚本.</li>
@@ -95,7 +95,6 @@
 </ul>
 <p><strong>已知问题:</strong> 当脚本显示<a href="commands/MsgBox.htm">消息框</a>或其他对话框时, 菜单项下的键盘快捷键不起作用.</p>
 <p>内置变量 <a href="Variables.htm#ScriptHwnd">A_ScriptHwnd</a> 包含脚本主窗口的唯一 ID(HWND).</p>
-<p id="title"><a href="commands/_SingleInstance.htm">#SingleInstance</a> 和 <a href="commands/Reload.htm">Reload</a> 机制使用此窗口的标题来标识同一脚本的其他实例. <a href="commands/WinSetTitle.htm">更改标题</a>可防止脚本被这样识别. 默认标题等同于表达式 <code>A_ScriptFullPath (A_IsCompiled ? "" : " - AutoHotkey v" A_AhkVersion)</code>.</p>
 <p>用 <a href="commands/WinClose.htm">WinClose</a>(甚至从另一个脚本或其他程序) 关闭这个窗口会导致脚本退出, 但大多数其他方法只是隐藏窗口并保持脚本运行.</p>
 <p>最小化主窗口会使其自动隐藏. 这样做是为了防止将所有拥有的窗口(如 GUI 窗口或某些对话框窗口) 自动最小化, 但也有隐藏主窗口的任务栏按钮的效果. 要让主窗口正常最小化, 可以用 <a href="commands/OnMessage.htm">OnMessage</a> 覆盖默认的处理方式. 例如:</p>
 <pre>; 这样可以防止主窗口在最小化时隐藏:
@@ -115,6 +114,42 @@ PreventAutoMinimize(wParam, lParam, uMsg, hwnd) {
     if (uMsg = 0x0018 &amp;&amp; lParam = 1) <em>; SW_PARENTCLOSING = 1</em>
         return 0 <em>; 防止最小化拥有的窗口.</em>
 }</pre>
+
+<h3 id="title">主窗口标题</h3>
+<p>脚本主窗口的标题会被 <a href="commands/_SingleInstance.htm">#SingleInstance</a> 和 <a href="commands/Reload.htm">Reload</a> 机制用来识别同一脚本的其他实例. <a href="commands/WinSetTitle.htm">更改标题</a>可防止脚本被这样识别. 默认的标题取决于脚本的加载方式:
+<table class="info">
+  <tr><th>Loaded From</th><th>Title Expression</th><th>Example</th></tr>
+  <tr><td>.ahk file</td><td><code>A_ScriptFullPath " - AutoHotkey v" A_AhkVersion</code></td><td>E:\My Script.ahk - AutoHotkey v1.1.33.09</td></tr>
+  <tr><td>Main resource (compiled script)</td><td><code>A_ScriptFullPath</code></td><td>E:\My Script.exe</td></tr>
+  <tr><td>Any other resource</td><td><code>A_ScriptFullPath " - " A_LineFile</code></td><td>E:\My AutoHotkey.exe - *BUILTIN-TOOL.AHK</td></tr>
+</table>
+<p>The following code illustrates how the default title could be determined by the script itself (but the actual title can be retrieved with <a href="commands/WinGetTitle.htm">WinGetTitle</a>):</p>
+<pre>
+title := A_ScriptFullPath
+if !A_IsCompiled
+    title .= " - AutoHotkey v" A_AhkVersion
+<em>; For the correct result, this must be evaluated by the resource being executed,
+; not an #include (unless the #include was merged into the script by Ahk2Exe):</em>
+else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
+    title .= " - " A_LineFile
+</pre>
+
+<h2 id="embedded-scripts">Embedded Scripts</h2>
+<p>Scripts may be embedded into a standard AutoHotkey .exe file by adding them as Win32 (RCDATA) resources. An embedded script can be specified on the command line or with <a href="commands/_Include.htm">#Include</a> by writing an asterisk (*) followed by the resource name. For an integer ID, the resource name must be a hash sign (#) followed by a decimal number.</p>
+<p>The program may automatically load script code from the following resources, if present in the file:</p>
+<table class="info">
+  <tr><th>ID</th><th>Spec</th><th>Usage</th></tr>
+  <tr>
+    <td>1</td><td>*#1</td>
+    <td>This is the means by which a <a href="Scripts.htm#ahk2exe">compiled script</a> is created from an .exe file. This script is executed automatically and most command line switches are passed to the script instead of being interpreted by the program. External scripts and alternative embedded scripts can be executed by using the <a href="Scripts.htm#SlashScript">/script</a> switch.</td>
+  </tr>
+  <tr>
+    <td>2</td><td>*#2</td>
+    <td>If present, this script is automatically "included" before any script that the program loads, and before any file specified with <a href="Scripts.htm#SlashInclude">/include</a>.</td>
+  </tr>
+</table>
+<p>When the source of the main script is an embedded resource, the program acts in "compiled script" mode, with the exception that <a href="Variables.htm#AhkPath">A_AhkPath</a> always contains the path of the current executable file (the same as <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a>). For resources other than *#1, the resource specifier is included in <a href="#title">the main window's title</a> to support <a href="commands/_SingleInstance.htm">#SingleInstance</a> and <a href="commands/Reload.htm">Reload</a>.</p>
+<p>When referenced from code that came from an embedded resource, <a href="Variables.htm#LineFile">A_LineFile</a> contains an asterisk (*) followed by the resource name.</p>
 
 <h2 id="cmd">命令行用法</h2>
 <p>有关命令行用法, 请参阅<a href="Scripts.htm#cmd">向脚本传递命令行参数</a>, 其中包括影响程序行为的命令行开关列表.</p>
