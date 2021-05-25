@@ -90,9 +90,7 @@ return</pre>
 </ul>
 <p><strong>已知问题:</strong> 当脚本显示<a href="commands/MsgBox.htm">消息框</a>或其他对话框时, 菜单项下的键盘快捷键不起作用.</p>
 <p>内置变量 <a href="Variables.htm#ScriptHwnd">A_ScriptHwnd</a> 包含脚本主窗口的唯一 ID(HWND).</p>
-<p id="title"><a href="commands/_SingleInstance.htm">#SingleInstance</a> 和 <a href="commands/Reload.htm">Reload</a> 机制使用此窗口的标题来标识同一脚本的其他实例. <a href="commands/WinSetTitle.htm">更改标题</a>可防止脚本被这样识别. 默认标题等同于表达式 <code>A_ScriptFullPath (A_IsCompiled ? "" : " - AutoHotkey v" A_AhkVersion)</code>.</p>
-<p>用 <a href="commands/WinClose.htm">WinClose</a>(甚至从另一个脚本或其他程序) 关闭这个窗口会导致脚本退出, 但大多数其他方法只是隐藏窗口并保持脚本运行.</p>
-<p>最小化主窗口会使其自动隐藏. 这样做是为了防止将所有拥有的窗口(如 GUI 窗口或某些对话框窗口) 自动最小化, 但也有隐藏主窗口的任务栏按钮的效果. 要让主窗口正常最小化, 可以用 <a href="commands/OnMessage.htm">OnMessage</a> 覆盖默认的处理方式. 例如:</p>
+<p>xxxxx最小化主窗口会使其自动隐藏. 这样做是为了防止将所有拥有的窗口(如 GUI 窗口或某些对话框窗口) 自动最小化, 但也有隐藏主窗口的任务栏按钮的效果. 要让主窗口正常最小化, 可以用 <a href="commands/OnMessage.htm">OnMessage</a> 覆盖默认的处理方式. 例如:</p>
 <pre>; 这样可以防止主窗口在最小化时隐藏:
 OnMessage(0x0112, Func("PreventAutoMinimize")) <em>; WM_SYSCOMMAND = 0x0112</em>
 OnMessage(0x0005, Func("PreventAutoMinimize")) <em>; WM_SIZE = 0x0005
@@ -109,6 +107,42 @@ PreventAutoMinimize(wParam, lParam, uMsg, hwnd) {
     if (uMsg = 0x0018 &amp;&amp; lParam = 1) <em>; SW_PARENTCLOSING = 1</em>
         return 0 <em>; 防止最小化拥有的窗口.</em>
 }</pre>
+
+<h3 id="title">主窗口标题</h3>
+<p>脚本主窗口的标题会被 <a href="commands/_SingleInstance.htm">#SingleInstance</a> 和 <a href="commands/Reload.htm">Reload</a> 机制用来识别同一脚本的其他实例. <a href="commands/WinSetTitle.htm">改变标题</a>可以防止脚本被这样识别出来. 默认的标题取决于脚本的加载方式:
+<table class="info">
+  <tr><th>加载于</th><th>标题表达式</th><th>示例</th></tr>
+  <tr><td>.ahk 文件</td><td><code>A_ScriptFullPath " - AutoHotkey v" A_AhkVersion</code></td><td>E:\My Script.ahk - AutoHotkey v1.1.33.09</td></tr>
+  <tr><td>主要资源(编译的脚本)</td><td><code>A_ScriptFullPath</code></td><td>E:\My Script.exe</td></tr>
+  <tr><td>任何其他资源</td><td><code>A_ScriptFullPath " - " A_LineFile</code></td><td>E:\My AutoHotkey.exe - *BUILTIN-TOOL.AHK</td></tr>
+</table>
+<p>下面的代码说明了如何由脚本本身决定默认的标题(但实际的标题可以用 <a href="commands/WinGetTitle.htm">WinGetTitle</a> 来检索):</p>
+<pre>
+title := A_ScriptFullPath
+if !A_IsCompiled
+    title .= " - AutoHotkey v" A_AhkVersion
+<em>; 为了获得正确的结果, 必须由被执行的资源来计算,
+; 而不是一个 #include(除非这个 #include 是由 Ahk2Exe 合并到脚本中的):</em>
+else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
+    title .= " - " A_LineFile
+</pre>
+
+<h2 id="embedded-scripts">嵌入脚本 <span class="ver">[v1.1.34+]</span></h2>
+<p>脚本可以被嵌入到一个标准的 AutoHotkey .exe 文件中, 方法是将它们作为 Win32(RCDATA) 资源来添加. 嵌入的脚本可以在命令行中指定, 也可以使用 <a href="commands/_Include.htm">#Include</a> 在资源名称后跟一个星号(*). 对于一个整数 ID, 资源名称必须是一个哈希符号(#), 后面是一个十进制数字.</p>
+<p>程序可以自动从以下资源加载脚本代码, 如果存在于文件中:</p>
+<table class="info">
+  <tr><th>ID</th><th>Spec</th><th>Usage</th></tr>
+  <tr>
+    <td>1</td><td>*#1</td>
+    <td>这是一种从 .exe 文件创建<a href="Scripts.htm#ahk2exe">编译脚本</a>的方法. 该脚本是自动执行的, 大多数命令行开关会被传递给脚本, 而不是由程序解释. 外部脚本和可选的嵌入式脚本可以通过使用 <a href="Scripts.htm#SlashScript">/script</a> 开关来执行.</td>
+  </tr>
+  <tr>
+    <td>2</td><td>*#2</td>
+    <td>如果存在, 该脚本会在程序加载的任何脚本之前自动 "included", 以及在 <a href="Scripts.htm#SlashInclude">/include</a> 指定的任何文件之前.</td>
+  </tr>
+</table>
+<p>当主脚本的源是一个嵌入式资源时, 程序以 "编译脚本" 模式运行, 但 <a href="Variables.htm#AhkPath">A_AhkPath</a> 总是包含当前可执行文件的路径(与 <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a> 相同). 对于 *#1 以外的资源, 资源指定符会包含在<a href="#title">主窗口的标题</a>中, 以支持 <a href="commands/_SingleInstance.htm">#SingleInstance</a> 和 <a href="commands/Reload.htm">Reload</a>.</p>
+<p>当从嵌入资源的代码中引用时, <a href="Variables.htm#LineFile">A_LineFile</a> 包含一个星号(*) 后跟资源名称.</p>
 
 <h2 id="cmd">命令行用法</h2>
 <p>有关命令行用法, 请参阅<a href="Scripts.htm#cmd">向脚本传递命令行参数</a>, 其中包括影响程序行为的命令行开关列表.</p>

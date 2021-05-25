@@ -153,8 +153,9 @@ obj.item[x] := y</pre>
 <h4 id="Keys">键</h4>
 <p>使用 <code>[]</code>, <code>{}</code> 或 <code>new</code> 运算符创建的对象中可以将值作为键使用的一些限制:</p>
 <ul>
-  <li>整数键使用本机有符号整数类型存储. AutoHotkey 32 位支持使用从 -2147483648 到 2147483647 范围内的整数作为键. AutoHotkey 支持 64 位整数, 但仅 AutoHotkey 64 位版本才支持完整范围的整数在对象中作为键使用.</li>
-  <li>由上面这点可知, 整数值的字符串格式不会被保留. 例如, <code>x[0x10]</code>, <code>x[16]</code> 和 <code>x[00016]</code> 都是等同的. 这点同样适用于不含小数点的数值型字符串.</li>
+  <li>整数键使用本机有符号整数类型存储. 32 位 AutoHotkey 支持使用从 -2147483648 到 2147483647 范围内的整数作为键, 并截断该范围以外的值. AutoHotkey 支持 64 位整数, 但仅 AutoHotkey 64 位版本才支持完整范围的整数在对象中作为键使用.</li>
+  <li>整数值的字符串格式不会被保留. 例如, 在 AutoHotkey v1 中, <code>0x10</code> 和 <code>16</code> 是两个不同的字符串(这与 <a href="https://www.autohotkey.com/v2/">AutoHotkey v2</a> 不同), 但 <code>x[0x10]</code>, <code>x[16]</code> 和 <code>x[00016]</code> 是等同的, 因为只使用数字值.</li>
+  <li>不含小数点的数值型字符串被转换为纯整数, 所以受到上述的限制. 64 位范围之外的数字字符串可能产生不一致的结果.</li>
   <li>用引号括起来的原义字符串在 v1.x 中被视为纯非数值型, 所以 <code>x[1]</code> 和 <code>x["1"]</code> 是 <i>不</i> 等同的. 同时, 如果原义字符串和另一个值串联在一起(如同在 <code>"0x" x</code>), 结果被视为纯非数值型. 不过, 这不适用于变量, 所以 <code>x[1]</code> 和 <code>x[y:="1"]</code> 是等同的. 此问题将在 <a href="https://autohotkey.com/v2/">AutoHotkey v2</a> 中解决, 所以脚本应避免使用用引号括起来的原义数字作为键.</li>
   <li>不支持使用浮点数作为键 - 而是把它们转换成字符串. 在 v1.x 中, 浮点数文字保留它们原始的格式, 而纯浮点数(例如 <code>0+1.0</code> 或 <code>Sqrt(y)</code> 的结果) 被强制转换成当前的<a href="commands/SetFormat.htm">浮点格式</a>. 考虑到一致和清晰, 脚本中应避免使用浮点文字作为键.</li>
   <li id="base-key">默认情况下, 字符串键 "base" 对应对象的 <a href="objects/Object.htm#Base">base</a> 属性, 因此不能通过正常的赋值来存储普通值. 但是, 任何属性都可以通过其他方式存储值来覆盖, 例如 <code><a href="objects/Object.htm#RawSet">ObjRawSet</a>(Object, "base", "")</code> 或 <code><a href="objects/Object.htm#SetCapacity">Object.SetCapacity</a>("base", 0)</code>. 一旦完成, 键 "base" 就跟其他字符串一样了.</li>

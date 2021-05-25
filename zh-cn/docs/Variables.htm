@@ -370,11 +370,17 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="ScriptName">
     <td>A_ScriptName</td>
-    <td>当前脚本的文件名称, 不含路径, 例如 MyScript.ahk.</td>
+    <td>
+    <p>当前脚本的文件名称, 不含路径, 例如 MyScript.ahk.</p>
+    <p>If the script is <a href="Scripts.htm#ahk2exe">compiled</a> or <a href="Program.htm#embedded-scripts">embedded</a>, this is the name of the current executable file.</p>
   </tr>
+  </td>
   <tr id="ScriptFullPath">
     <td>A_ScriptFullPath</td>
-    <td>当前脚本的完整路径, 例如 C:\My Documents\My Script.ahk</td>
+    <td>
+        <p>当前脚本的完整路径, 例如 C:\My Documents\My Script.ahk</p>
+        <p>If the script is <a href="Scripts.htm#ahk2exe">compiled</a> or <a href="Program.htm#embedded-scripts">embedded</a>, this is the full path of the current executable file.</p>
+    </td>
   </tr>
   <tr id="ScriptHwnd">
     <td>A_ScriptHwnd<br><span class="ver">[v1.1.01+]</span></td>
@@ -387,7 +393,12 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="LineFile">
     <td>A_LineFile</td>
-    <td><a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称, 除非当前行属于未编译脚本的某个 <a href="commands/_Include.htm">#Include 文件</a>, 否则它将和 <a href="#ScriptFullPath">A_ScriptFullPath</a> 相同.</td>
+    <td>
+      <p>xxxxx<a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称, 除非当前行属于未编译脚本的某个 <a href="commands/_Include.htm">#Include 文件</a>, 否则它将和 <a href="#ScriptFullPath">A_ScriptFullPath</a> 相同.</p>
+      <p>The full path and name of the file to which <a href="#LineNumber">A_LineNumber</a> belongs. If the script was loaded from an external file, this is the same as <a href="#ScriptFullPath">A_ScriptFullPath</a> unless the line belongs to one of the script's <a href="commands/_Include.htm">#Include files</a>.</p>
+      <p>If the script was <a href="Scripts.htm#ahk2exe">compiled</a> based on a <a href="Scripts.htm#ahk2exe-base">.bin file</a>, this is the full path and name of the current executable file, the same as <a href="#ScriptFullPath">A_ScriptFullPath</a>.</p>
+      <p><span class="ver">[v1.1.34+]:</span> If the script is <a href="Program.htm#embedded-scripts">embedded</a>, A_LineFile contains an asterisk (*) followed by the resource name; e.g. *#1</p>
+    </td>
   </tr>
   <tr id="ThisFunc">
     <td>A_ThisFunc<br>
@@ -405,8 +416,15 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="AhkPath">
     <td>A_AhkPath</td>
-    <td><p>对于未编译脚本: 实际运行当前脚本的 EXE 文件的完整路径和名称. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
-    <p>对于<a href="Scripts.htm#ahk2exe">已编译脚本</a>: 除了通过注册表条目 <em>HKLM\SOFTWARE\AutoHotkey\InstallDir</em> 获取 AutoHotkey 目录外, 其他的和上面相同. 如果找不到这个注册表条目, 则 A_AhkPath 为空.</p></td>
+    <td>
+        <p>xxxxx对于未编译脚本: 实际运行当前脚本的 EXE 文件的完整路径和名称. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
+        <p>xxxxx对于<a href="Scripts.htm#ahk2exe">已编译脚本</a>: 除了通过注册表条目 <em>HKLM\SOFTWARE\AutoHotkey\InstallDir</em> 获取 AutoHotkey 目录外, 其他的和上面相同. 如果找不到这个注册表条目, 则 A_AhkPath 为空.</p>
+      <p>For non-compiled or <a href="Program.htm#embedded-scripts">embedded</a> scripts: The full path and name of the EXE file that is actually running the current script. For example: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
+      <p>For <a href="Scripts.htm#ahk2exe">compiled scripts</a> based on a <a href="Scripts.htm#ahk2exe-base">.bin file</a>, the value is determined by reading the installation directory from the registry and appending "\AutoHotkey.exe". If AutoHotkey is not installed, the value is blank. The example below is equivalent:</p>
+      <pre>RegRead InstallDir, HKLM\SOFTWARE\AutoHotkey, InstallDir
+AhkPath := ErrorLevel ? "" : InstallDir "\AutoHotkey.exe"</pre>
+      <p><span class="ver">[v1.1.34+]:</span> For compiled scripts based on an .exe file, A_AhkPath contains the full path of the compiled script. This can be used in combination with <a href="Scripts.htm#SlashScript">/script</a> to execute external scripts. To instead locate the installed copy of AutoHotkey, read the registry as shown above.</p>
+     </td>
   </tr>
   <tr id="IsUnicode">
     <td>A_IsUnicode</td>
@@ -506,7 +524,7 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
 Sleep, 1000
 ElapsedTime := A_TickCount - StartTime
 MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
-<p>如果您需要比 A_TickCount 的 10ms 更高的精确度, 请使用 <a href="commands/DllCall.htm#QPC">QueryPerformanceCounter()</a>(高精度计时器).</p>
+<p>如果您需要比 A_TickCount 的 10 ms 更高的精确度, 请使用 <a href="commands/DllCall.htm#QPC">QueryPerformanceCounter()</a>(高精度计时器).</p>
 </td>
   </tr>
 </table>
@@ -532,7 +550,7 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="BatchLines">
     <td>A_BatchLines</td>
-    <td>(同义于 A_NumBatchLines) 由 <a href="commands/SetBatchLines.htm">SetBatchLines</a> 设置的当前值. 例如: 200 或 10ms(取决于格式).</td>
+    <td>(同义于 A_NumBatchLines) 由 <a href="commands/SetBatchLines.htm">SetBatchLines</a> 设置的当前值. 例如: 200 或 10 ms(取决于格式).</td>
   </tr>
   <tr id="ListLines">
     <td>A_ListLines<br><span class="ver">[v1.1.28+]</span></td>
@@ -1034,7 +1052,7 @@ return
   <li>当赋值给变量比当前更长的内容时, 会自动分配额外的系统内存给这个变量.</li>
   <li>通过赋值为空可以释放大变量占用的内存, 例如 <code>Var := ""</code>. </li>
   <li>脚本可以创建的变量数量没有限制. 程序设计用来支持至少几百万的变量而不会出现明显的性能下降.</li>
-  <li>接受数值输入的命令, 函数和表达式通常可以支持 15 位的浮点数精度. 对于整数, 可以支持 64 位有符号整数, 其范围从 -9223372036854775808(-0x8000000000000000) 到 9223372036854775807(0x7FFFFFFFFFFFFFFF). 此范围外的任何整数不受支持, 并可能产生错误的结果. 与之相比, 整数的算数运算结果超出此范围时会产生溢出(例如 0x7FFFFFFFFFFFFFFF + 1 = -0x8000000000000000).</li>
+  <li>接受数值输入的命令, 函数和表达式通常可以支持 15 位的浮点数精度. 对于整数, 可以支持 64 位有符号整数, 其范围从 -9223372036854775808(-0x8000000000000000) 到 9223372036854775807(0x7FFFFFFFFFFFFFFF). 此范围外的任何整数或数字字符串不受支持, 并且当作为数字使用时可能产生错误的结果. 与之相比, 整数的算数运算结果超出此范围时会产生溢出(例如 0x7FFFFFFFFFFFFFFF + 1 = -0x8000000000000000).</li>
 </ul>
 </body>
 </html>

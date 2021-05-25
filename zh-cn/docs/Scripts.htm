@@ -185,6 +185,11 @@ FileAppend, %Var%, C:\My File.txt</pre>
   <li> <span class="ver">[v1.1.22.03+]:</span> 此外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 这些错误代码可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 上找到.</li>
 </ul>
 <p>编译器的源码和新版本可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe">GitHub</a> 找到.</p>
+
+<h3 id="ahk2exe-base">基础可执行文件</h3>
+<p>每个编译的脚本 .exe 都是基于一个实现解释器的可执行文件. 包含在编译器目录中的基础文件的扩展名是 ".bin"; 这些版本的解释器不包含加载外部脚本文件的能力. 相反, 程序会寻找一个名为 &gt;AUTOHOTKEY SCRIPT&lt;" 的 Win32(RCDATA) 资源并加载它, 如果没有找到, 则会失败.</p>
+<p><span class="ver">[v1.1.34+]:</span> 标准的 AutoHotkey 可执行文件也可以作为编译脚本的基础, 通过嵌入一个 ID 为 1 的 Win32(RCDATA) 资源. 这使得编译后的脚本 .exe 可以与 <a href="#SlashScript">/script</a> 开关一起使用, 以执行除主嵌入脚本之外的其他脚本. 有关详情, 请参阅<a href="Program.htm#embedded-scripts">嵌入式脚本</a>.</p>
+
 <h3 id="CompilerDirectives">脚本编译器指令</h3>
 <p><span class="ver">[v1.1.33+]:</span> 脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
 <ul>
@@ -208,7 +213,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <pre>CompiledScript.exe [<i>Switches</i>] [<i>Script Parameters</i>]</pre>
 <p><strong>Switches:</strong> 零个或多个下列开关:</p>
 <table class="info">
-  <tr><th>开关</th><th>释义</th><th class="wrap" abbr="Compiled?" style="width:60px">是否支持编译?</th></tr>
+  <tr><th>开关</th><th>释义</th><th class="wrap" abbr="Compiled?" style="width:60px">编译脚本是否支持?</th></tr>
   <tr id="SlashF">
     <td>/f 或 /force</td>
     <td>无条件强制启动, 忽略任何警告对话框. 和 <a href="commands/_SingleInstance.htm">#SingleInstance Off</a> 的效果相同.</td>
@@ -250,7 +255,25 @@ FileAppend, %Var%, C:\My File.txt</pre>
       <p>如果脚本语法错误, 那么输出文件可能为空. 程序退出代码可以检测这种情况; 如果这里有语法错误, 退出代码就是 2. /ErrorStdOut 开关可用于抑制或捕获错误消息.</p>
     <td>否</td>
     </td>
+    <tr id="SlashInclude">
+    <td>/include <em>"IncFile"</em></td>
+    <td>
+      <p><span class="ver">[v1.1.34+]:</span> 在主脚本之前 <a href="commands/_Include.htm">Includes</a> 一个文件. 这个方法只能包含一个文件. 当脚本被<a href="commands/Reload.htm">重新加载</a>时, 这个开关会自动传递给新的实例.</p>
+    </td>
+    <td>否</td>
   </tr>
+  <tr id="SlashScript">
+    <td>/script</td>
+    <td>
+      <p><span class="ver">[v1.1.34+]:</span> 当与基于 .exe 文件的编译脚本一起使用时, 这个开关会使程序忽略主嵌入脚本. 这允许编译后的脚本 .exe 执行外部脚本文件或除主脚本以外的嵌入式脚本. 其他通常不被编译脚本支持的开关也可以使用, 但必须列在这个开关的右边. 例如:</p>
+      <pre class="no-highlight">CompiledScript.exe /script /ErrorStdOut MyScript.ahk "Script's arg 1"</pre>
+      <p>如果当前的可执行文件没有嵌入脚本, 这个开关是允许的, 但没有效果.</p>
+      <p>基于 .bin 文件的编译脚本不支持这个开关.</p>
+      <p>另请参阅: <a href="#ahk2exe-base">Base Executable File (Ahk2Exe)</a></p>
+    </td>
+    <td>N/A</td>
+  </tr>
+  
 </table>
 
 <p id="defaultfile"><strong>Script Filename:</strong> 如果不含 <em>Script Parameters</em>, 那么此参数可以省略. 省略时, 它会运行(或提示您创建) 下列默认位置的其中一个文件:</p>

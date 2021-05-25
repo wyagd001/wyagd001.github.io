@@ -84,7 +84,7 @@ vref := ComObject(0x400C, &amp;var)  <em>; 0x400C 是 VT_BYREF 与 VT_VARIANT �
 vref[] := "in value"
 sc.Run("Example", vref)  <em>; sc 应像<a href="#ByRefEx">下面例子</a>一样进行初始化.</em>
 MsgBox % vref[]</pre>
-<p>Note that although any previous value is freed when a new value is assigned by <code>vref[]</code> or the COM method, the final value is not freed automatically. Freeing the value requires knowing which type it is. Because it is VT_VARIANT in this case, it can be freed by calling <a href="https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear">VariantClear</a> with <a href="DllCall.htm">DllCall</a> or by using a simpler method: assign an integer, such as <code>vref[] := 0</code>.</p>
+<p>请注意, 尽管在通过 <code>vref[]</code> 或 COM 方法分配新值时, 任何先前的值都会被释放, 但最终的值不会被自动释放. 释放该值需要知道它是哪种类型. 因为如果是 VT_VARIANT, 它可以通过使用 <a href="DllCall.htm">DllCall</a> 调用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear">VariantClear</a>,  或使用一个更简单的方法来释放: 赋值一个整数, 如 <code>vref[] := 0</code>.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>当前版本中, 任何以 "ComObj" 开头的函数调用, 如果不匹配目录列表中的其他 COM 函数, 则实际调用 ComObjActive 函数. 如, <code>ComObjEnwrap(DispPtr)</code> 及 <code>ComObjActive(DispPtr)</code> 均等效于 <code>ComObject(DispPtr)</code>(隐式地, <em>变量类型</em> 为 9). 此行为可能于后续版本不再可用, 故建议仅使用本页所展示的 <code>ComObject()</code> 及 <code>ComObjActive()</code>.</p>
@@ -113,18 +113,18 @@ sc := <a href="ComObjCreate.htm">ComObjCreate</a>("ScriptControl"), sc.Language 
 
 <em>; 示例: 传递 VARIANT ByRef 至 COM 函数.</em>
 var := ComVar()
-var[] := "in value"  <em>; Use [] to assign a value.</em>
-sc.Run("Example", var.ref)  <em>; Pass the VT_BYREF ComObject (.ref).</em>
-MsgBox % var[]  <em>; Use [] to retrieve a value.</em>
+var[] := "in value"  <em>; 使用 [] 来赋值.</em>
+sc.Run("Example", var.ref)  <em>; 传递 VT_BYREF ComObject (.ref).</em>
+MsgBox % var[]  <em>; 使用 [] 来检索值.</em>
 
-<em>; The same thing again, but more direct:</em>
-VarSetCapacity(variant_buf, 24, 0)  <em>; Make a buffer big enough for a VARIANT.</em>
-var := ComObject(0x400C, &amp;variant_buf)  <em>; Make a reference to a VARIANT.</em>
+<em>; 同样的事情, 但更直接:</em>
+VarSetCapacity(variant_buf, 24, 0)  <em>; 使 VARIANT 的缓冲足够大.</em>
+var := ComObject(0x400C, &amp;variant_buf)  <em>; 引用 VARIANT.</em>
 var[] := "in value"
-sc.Run("Example", var) <em>; Pass the VT_BYREF ComObject itself, no [] or .ref.</em>
+sc.Run("Example", var) <em> ; 传递 VT_BYREF ComObject 本身, 没有 [] 或 .ref.</em>
 MsgBox % var[]
-<em>; If a VARIANT contains a string or object, it must be explicitly freed
-; by calling VariantClear or assigning a pure numeric value:</em>
+<em>; 如果 VARIANT 包含一个字符串或对象, 必须显式地释放它
+; 通过调用 VariantClear 或赋值一个纯数字值来释放:</em>
 var[] := 0
 
 <em>; ComVar: 创建可用于按引用(ByRef) 传值的对象.
@@ -135,20 +135,20 @@ ComVar(Type := 0xC)
 {
     static base := { __Get: Func("ComVarGet"), __Set: Func("ComVarSet")
         , __Delete: Func("ComVarDel") } <em>; 有关 base, 请参阅自定义对象.
-    ; Create a new object based on base.</em>
+    ; 基于 base 创建一个新的对象.</em>
     cv := {base: base}
 
-    <em>; Allocate memory for a VARIANT to hold our value. VARIANT is used even
-    ; when Type != VT_VARIANT so that VariantClear can be used by __delete.</em>
+    <em>; 为 VARIANT 分配内存, 以保存我们的值.
+    ; 即使 Type != VT_VARIANT 也会使用 VARIANT, 以便 VariantClear 可以被 __delete 使用.</em>
     cv.SetCapacity("buf", 24), ptr := cv.GetAddress("buf")
     NumPut(0, NumPut(0, ptr+0, "int64"), "int64")
 
-    if (Type != 0xC) { <em>; Not VT_VARIANT.</em>
-        NumPut(Type, ptr+0, "ushort") <em>; Set the variant type for __delete.</em>
-        ptr += 8 <em>; Point to the actual value.</em>
+    if (Type != 0xC) { <em>; 不是 VT_VARIANT.</em>
+        NumPut(Type, ptr+0, "ushort") <em>; 为 __delete 设置变体类型.</em>
+        ptr += 8 <em>; 实际值的指针.</em>
     }
 
-    <em>; Create an object which can be used to pass the variable ByRef.</em>
+    <em>; 创建一个对象, 可以用来传递变量 ByRef.</em>
     cv.ref := ComObject(0x4000|Type, ptr)
 
     return cv
@@ -165,7 +165,7 @@ ComVarSet(cv, v, p*) { <em>; 当脚本设置未知字段时调用.</em>
 }
 
 ComVarDel(cv) { <em>; 当对象被释放时调用.
-    ; Depending on type, this may be needed to free the value, if set.</em>
+    ; 根据类型的不同, 如果设置了, 可能需要释放这个值.</em>
     DllCall("oleaut32\VariantClear", "ptr", cv.GetAddress("buf"))
 }
 </pre>
