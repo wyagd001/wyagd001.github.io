@@ -118,38 +118,39 @@ PreventAutoMinimize(wParam, lParam, uMsg, hwnd) {
 <h3 id="title">主窗口标题</h3>
 <p>脚本主窗口的标题会被 <a href="commands/_SingleInstance.htm">#SingleInstance</a> 和 <a href="commands/Reload.htm">Reload</a> 机制用来识别同一脚本的其他实例. <a href="commands/WinSetTitle.htm">更改标题</a>可防止脚本被这样识别. 默认的标题取决于脚本的加载方式:
 <table class="info">
-  <tr><th>Loaded From</th><th>Title Expression</th><th>Example</th></tr>
-  <tr><td>.ahk file</td><td><code>A_ScriptFullPath " - AutoHotkey v" A_AhkVersion</code></td><td>E:\My Script.ahk - AutoHotkey v1.1.33.09</td></tr>
-  <tr><td>Main resource (compiled script)</td><td><code>A_ScriptFullPath</code></td><td>E:\My Script.exe</td></tr>
-  <tr><td>Any other resource</td><td><code>A_ScriptFullPath " - " A_LineFile</code></td><td>E:\My AutoHotkey.exe - *BUILTIN-TOOL.AHK</td></tr>
+  <tr><th>
+加载于</th><th>标题表达式</th><th>示例</th></tr>
+  <tr><td>.ahk 文件</td><td><code>A_ScriptFullPath " - AutoHotkey v" A_AhkVersion</code></td><td>E:\My Script.ahk - AutoHotkey v1.1.33.09</td></tr>
+  <tr><td>主资源(编译的脚本)</td><td><code>A_ScriptFullPath</code></td><td>E:\My Script.exe</td></tr>
+  <tr><td>任何其他资源</td><td><code>A_ScriptFullPath " - " A_LineFile</code></td><td>E:\My AutoHotkey.exe - *BUILTIN-TOOL.AHK</td></tr>
 </table>
-<p>The following code illustrates how the default title could be determined by the script itself (but the actual title can be retrieved with <a href="commands/WinGetTitle.htm">WinGetTitle</a>):</p>
+<p>下面的代码说明了如何由脚本本身决定默认的标题(但实际的标题可以用 <a href="commands/WinGetTitle.htm">WinGetTitle</a> 来检索):</p>
 <pre>
 title := A_ScriptFullPath
 if !A_IsCompiled
     title .= " - AutoHotkey v" A_AhkVersion
-<em>; For the correct result, this must be evaluated by the resource being executed,
-; not an #include (unless the #include was merged into the script by Ahk2Exe):</em>
+<em>; 为了获得正确的结果, 必须由被执行的资源来计算,
+; 而不是一个 #include(除非这个 #include 是由 Ahk2Exe 合并到脚本中的):</em>
 else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
     title .= " - " A_LineFile
 </pre>
 
-<h2 id="embedded-scripts">Embedded Scripts</h2>
-<p>Scripts may be embedded into a standard AutoHotkey .exe file by adding them as Win32 (RCDATA) resources. An embedded script can be specified on the command line or with <a href="commands/_Include.htm">#Include</a> by writing an asterisk (*) followed by the resource name. For an integer ID, the resource name must be a hash sign (#) followed by a decimal number.</p>
-<p>The program may automatically load script code from the following resources, if present in the file:</p>
+<h2 id="embedded-scripts">嵌入脚本</h2>
+<p>脚本可以被嵌入到一个标准的 AutoHotkey .exe 文件中, 方法是将它们作为 Win32(RCDATA) 资源来添加. 嵌入的脚本可以在命令行中指定, 也可以使用 <a href="commands/_Include.htm">#Include</a> 在资源名称后跟一个星号(*). 对于整数 ID, 资源名称必须是一个哈希符号(#) 后面是一个十进制数字.</p>
+<p>程序可以自动从以下资源加载脚本代码, 如果存在于文件中:</p>
 <table class="info">
   <tr><th>ID</th><th>Spec</th><th>Usage</th></tr>
   <tr>
     <td>1</td><td>*#1</td>
-    <td>This is the means by which a <a href="Scripts.htm#ahk2exe">compiled script</a> is created from an .exe file. This script is executed automatically and most command line switches are passed to the script instead of being interpreted by the program. External scripts and alternative embedded scripts can be executed by using the <a href="Scripts.htm#SlashScript">/script</a> switch.</td>
+    <td>这是一种从 .exe 文件创建<a href="Scripts.htm#ahk2exe">编译脚本</a>的方法. 该脚本是自动执行的, 大多数命令行开关会被传递给脚本, 而不是由程序解释. 外部脚本和可选的嵌入式脚本可以通过使用 <a href="Scripts.htm#SlashScript">/script</a> 开关来执行.</td>
   </tr>
   <tr>
     <td>2</td><td>*#2</td>
-    <td>If present, this script is automatically "included" before any script that the program loads, and before any file specified with <a href="Scripts.htm#SlashInclude">/include</a>.</td>
+    <td>如果存在, 该脚本会在程序加载的任何脚本之前自动 "included", 以及在 <a href="Scripts.htm#SlashInclude">/include</a> 指定的任何文件之前.</td>
   </tr>
 </table>
-<p>When the source of the main script is an embedded resource, the program acts in "compiled script" mode, with the exception that <a href="Variables.htm#AhkPath">A_AhkPath</a> always contains the path of the current executable file (the same as <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a>). For resources other than *#1, the resource specifier is included in <a href="#title">the main window's title</a> to support <a href="commands/_SingleInstance.htm">#SingleInstance</a> and <a href="commands/Reload.htm">Reload</a>.</p>
-<p>When referenced from code that came from an embedded resource, <a href="Variables.htm#LineFile">A_LineFile</a> contains an asterisk (*) followed by the resource name.</p>
+<p>当主脚本的源是一个嵌入式资源时, 程序以 "编译脚本" 模式运行, 但 <a href="Variables.htm#AhkPath">A_AhkPath</a> 总是包含当前可执行文件的路径(与 <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a> 相同). 对于 *#1 以外的资源, 资源指定符会包含在<a href="#title">主窗口的标题</a>中, 以支持 <a href="commands/_SingleInstance.htm">#SingleInstance</a> 和 <a href="commands/Reload.htm">Reload</a>.</p>
+<p>当从嵌入资源的代码中引用时, <a href="Variables.htm#LineFile">A_LineFile</a> 包含一个星号(*) 后跟资源名称.</p>
 
 <h2 id="cmd">命令行用法</h2>
 <p>有关命令行用法, 请参阅<a href="Scripts.htm#cmd">向脚本传递命令行参数</a>, 其中包括影响程序行为的命令行开关列表.</p>

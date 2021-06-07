@@ -389,7 +389,7 @@ sumfn := Sum</pre>
     <td>
       <p>可以用来获取或设置 MsgBox, InputBox, FileSelect, DirSelect 和 Gui 的默认标题. 如果脚本没有设置, 它默认为当前脚本的文件名, 不包括路径, 例如 MyScript.ahk.</p>
       <p>如果脚本文字是从<a href="Scripts.htm#stdin">标准输入中读取的</a>而不是从文件中读取的, 默认值为 "*".</p>
-      <p>If the script is <a href="Scripts.htm#ahk2exe">compiled</a> or <a href="Program.htm#embedded-scripts">embedded</a>, this is the name of the current executable file.</p>
+      <p>如果脚本是<a href="Scripts.htm#ahk2exe">编译的</a>或<a href="Program.htm#embedded-scripts">嵌入的</a>, 这就是当前可执行文件的名称.</p>
     </td>
   </tr>
   <tr id="ScriptFullPath">
@@ -397,7 +397,7 @@ sumfn := Sum</pre>
     <td>
       <p>当前脚本的完整路径, 例如 C:\Scripts\My Script.ahk</p>
       <p>如果脚本文字是从<a href="Scripts.htm#stdin">标准输入中读取的</a>而不是从文件中读取的, 值为 "*".</p>
-      <p>If the script is <a href="Scripts.htm#ahk2exe">compiled</a> or <a href="Program.htm#embedded-scripts">embedded</a>, this is the full path of the current executable file.</p>
+      <p>如果脚本是<a href="Scripts.htm#ahk2exe">编译的</a>或<a href="Program.htm#embedded-scripts">嵌入的</a>, 这就是当前可执行文件的完整路径.</p>
     </td>
   </tr>
   <tr id="ScriptHwnd">
@@ -412,10 +412,9 @@ sumfn := Sum</pre>
   <tr id="LineFile">
     <td>A_LineFile</td>
     <td>
-      <p>xxxxx<a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称, 除非当前行属于未编译脚本的某个 <a href="commands/_Include.htm">#Include 文件</a>,  否则它将和 <a href="#ScriptFullPath">A_ScriptFullPath</a> 相同.</p>
-      <p>The full path and name of the file to which <a href="#LineNumber">A_LineNumber</a> belongs. If the script was loaded from an external file, this is the same as <a href="#ScriptFullPath">A_ScriptFullPath</a> unless the line belongs to one of the script's <a href="commands/_Include.htm">#Include files</a>.</p>
-      <p>If the script was <a href="Scripts.htm#ahk2exe">compiled</a> based on a <a href="Scripts.htm#ahk2exe-base">.bin file</a>, this is the full path and name of the current executable file, the same as <a href="#ScriptFullPath">A_ScriptFullPath</a>.</p>
-      <p>If the script is <a href="Program.htm#embedded-scripts">embedded</a>, A_LineFile contains an asterisk (*) followed by the resource name; e.g. *#1</p>
+      <p><a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称. 如果脚本是从外部文件加载的, 这等同于 <a href="#ScriptFullPath">A_ScriptFullPath</a>, 除非该行属于脚本的 <a href="commands/_Include.htm">#Include 文件</a>之一.</p>
+      <p>如果脚本是基于一个 <a href="Scripts.htm#ahk2exe-base">.bin 文件</a><a href="Scripts.htm#ahk2exe">编译的</a>, 这就是当前可执行文件的完整路径和名称, 等同于 <a href="#ScriptFullPath">A_ScriptFullPath</a>.</p>
+      <p>如果脚本是<a href="Program.htm#embedded-scripts">嵌入的</a>, A_LineFile 包含一个星号(*) 后面是资源名称; 例如 *#1</p>
   </tr>
   <tr id="ThisFunc">
     <td>A_ThisFunc</td>
@@ -428,13 +427,11 @@ sumfn := Sum</pre>
   <tr id="AhkPath">
     <td>A_AhkPath</td>
     <td>
-      <p>xxxxx对于未编译脚本: 实际运行当前脚本的 EXE 文件的完整路径和名称. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
-     <p>xxxxx对于<a href="Scripts.htm#ahk2exe">已编译脚本</a>: 除了通过注册表条目 <em>HKLM\SOFTWARE\AutoHotkey\InstallDir</em> 获取 AutoHotkey 目录外, 其他的和上面相同. 如果找不到这个注册表条目, 则 A_AhkPath 为空.</p>
-      <p>For non-compiled or <a href="Program.htm#embedded-scripts">embedded</a> scripts: The full path and name of the EXE file that is actually running the current script. For example: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
-      <p>For <a href="Scripts.htm#ahk2exe">compiled scripts</a> based on a <a href="Scripts.htm#ahk2exe-base">.bin file</a>, the value is determined by reading the installation directory from the registry and appending "\AutoHotkey.exe". If AutoHotkey is not installed, the value is blank. The example below is equivalent:</p>
+      <p>对于非编译的或<a href="Program.htm#embedded-scripts">嵌入的</a>脚本: 实际运行当前脚本的 EXE 文件的完整路径和名称. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
+      <p>对于基于 <a href="Scripts.htm#ahk2exe-base">.bin 文件</a>的<a href="Scripts.htm#ahk2exe">编译脚本</a>, 该值是通过从注册表中读取安装目录并附加 "\AutoHotkey.exe" 来确定的. 如果没有安装 AutoHotkey, 该值为空. 等同于下面的例子:</p>
       <pre>InstallDir := RegRead("HKLM\SOFTWARE\AutoHotkey", "InstallDir", "")
 AhkPath := InstallDir ? InstallDir "\AutoHotkey.exe" : ""</pre>
-      <p>For compiled scripts based on an .exe file, A_AhkPath contains the full path of the compiled script. This can be used in combination with <a href="Scripts.htm#SlashScript">/script</a> to execute external scripts. To instead locate the installed copy of AutoHotkey, read the registry as shown above.</p>
+      <p>对于基于 .exe 文件的编译脚本, A_AhkPath 包含编译脚本的完整路径. 这可以与 <a href="Scripts.htm#SlashScript">/script</a> 结合使用来执行外部脚本. 如果要找到已安装的 AutoHotkey 副本, 请按上面所示读取注册表.</p>
     </td>
   </tr>
   <tr id="IsCompiled">
@@ -603,7 +600,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="MenuMaskKey">
     <td>A_MenuMaskKey</td>
-    <td>Controls which key is used to mask Win or Alt keyup events. For details, see <a href="misc/A_MenuMaskKey.htm">A_MenuMaskKey</a>.</td>
+    <td>控制哪个键被用来掩饰(屏蔽) Win 或 Alt 键松开事件. 有关详情, 请参阅 <a href="misc/A_MenuMaskKey.htm">A_MenuMaskKey</a>.</td>
   </tr>
   <tr id="MouseDelay">
     <td>A_MouseDelay<br>
@@ -633,14 +630,10 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   <tr id="AllowMainWindow">
     <td>A_AllowMainWindow</td>
     <td>
-<p>xxx可以用来获取或设置是否允许通过托盘图标打开脚本的主窗口. 可能的值是 0(禁止) 和 1(允许).</p>
-    <p>xxxx对于<a href="Scripts.htm#ahk2exe">已编译脚本</a>, 此变量默认为 0, 但可以通过给该变量赋值来覆盖它. 将其设置为 1 会激活主窗口 View 菜单下的项目(如 "Lines most recently executed"), 它允许查看脚本的源代码和其他信息.</p>
-    <p>xxx当运行时在脚本中遇到以下函数时, 它们总是能够显示主窗口: <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/ListVars.htm">ListVars</a>, <a href="commands/ListHotkeys.htm">ListHotkeys</a> 和 <a href="commands/KeyHistory.htm">KeyHistory</a>.</p>
-    <p>xxxx如果脚本没有被编译, 那么这个变量的值始终是 1, 任何对它进行更改的尝试都会被忽略.</p>
-    <p>Can be used to get or set whether the script's <a href="Program.htm#main-window">main window</a> is allowed to be opened via the tray icon. Possible values are 0 (forbidden) and 1 (allowed).</p>
-    <p>If the script is neither <a href="Scripts.htm#ahk2exe">compiled</a> nor <a href="Program.htm#embedded-scripts">embedded</a>, this variable defaults to 1, otherwise this variable defaults to 0 but can be overridden by assigning it a value. Setting it to 1 also restores the "Open" option to the tray menu and enables the items in the main window's View menu such as "Lines most recently executed", which allows viewing of the script's source code and other info.</p>
-    <p>The following functions are always able to show the main window and activate the corresponding View options when they are encountered in the script at runtime: <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/ListVars.htm">ListVars</a>, <a href="commands/ListHotkeys.htm">ListHotkeys</a>, and <a href="commands/KeyHistory.htm">KeyHistory</a>.</p>
-    <p>Setting it to 1 does not prevent the main window from being shown by <a href="commands/WinShow.htm">WinShow</a> or inspected by <a href="commands/ControlGetText.htm">ControlGetText</a> or similar methods, but it does prevent the script's source code and other info from being exposed via the main window, except when one of the functions listed above is called by the script.</p></td>
+    <p>可以用来获取或设置是否允许通过托盘图标打开脚本的<a href="Program.htm#main-window">主窗口</a>. 可能的值是 0(禁止) 和 1(允许).</p>
+    <p>如果脚本既不是<a href="Scripts.htm#ahk2exe">编译的</a>也不是<a href="Program.htm#embedded-scripts">嵌入的</a>, 此变量默认为 1, 否则此变量默认为 0, 但可以通过给该变量赋值来改写它. 将其设置为 1 还可以恢复托盘菜单中的 "Open" 选项, 并启用主窗口的 View 菜单中的项目, 如 "Lines most recently executed", 这允许查看脚本的源代码和其他信息.</p>
+    <p>在脚本运行时遇到下列函数, 总是能够显示主窗口并激活相应的视图选项: <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/ListVars.htm">ListVars</a>, <a href="commands/ListHotkeys.htm">ListHotkeys</a> 和 <a href="commands/KeyHistory.htm">KeyHistory</a>.</p>
+    <p>设置为 1 并不妨碍主窗口被 <a href="commands/WinShow.htm">WinShow</a> 显示, 或者被 <a href="commands/ControlGetText.htm">ControlGetText</a> 或类似的方法检查, 但它确实阻止了脚本的源代码和其他信息通过主窗口暴露出来, 除非脚本调用了上述的某个函数.</p></td>
   </tr>
   <tr id="IconHidden">
     <td>A_IconHidden</td>

@@ -372,14 +372,14 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
     <td>A_ScriptName</td>
     <td>
     <p>当前脚本的文件名称, 不含路径, 例如 MyScript.ahk.</p>
-    <p>If the script is <a href="Scripts.htm#ahk2exe">compiled</a> or <a href="Program.htm#embedded-scripts">embedded</a>, this is the name of the current executable file.</p>
+    <p>如果脚本是<a href="Scripts.htm#ahk2exe">编译的</a>或<a href="Program.htm#embedded-scripts">嵌入的</a>, 这就是当前可执行文件的名称.</p>
   </tr>
   </td>
   <tr id="ScriptFullPath">
     <td>A_ScriptFullPath</td>
     <td>
         <p>当前脚本的完整路径, 例如 C:\My Documents\My Script.ahk</p>
-        <p>If the script is <a href="Scripts.htm#ahk2exe">compiled</a> or <a href="Program.htm#embedded-scripts">embedded</a>, this is the full path of the current executable file.</p>
+        <p>如果脚本是<a href="Scripts.htm#ahk2exe">编译的</a>或<a href="Program.htm#embedded-scripts">嵌入的</a>, 这就是当前可执行文件的完整路径.</p>
     </td>
   </tr>
   <tr id="ScriptHwnd">
@@ -394,10 +394,9 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   <tr id="LineFile">
     <td>A_LineFile</td>
     <td>
-      <p>xxxxx<a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称, 除非当前行属于未编译脚本的某个 <a href="commands/_Include.htm">#Include 文件</a>, 否则它将和 <a href="#ScriptFullPath">A_ScriptFullPath</a> 相同.</p>
-      <p>The full path and name of the file to which <a href="#LineNumber">A_LineNumber</a> belongs. If the script was loaded from an external file, this is the same as <a href="#ScriptFullPath">A_ScriptFullPath</a> unless the line belongs to one of the script's <a href="commands/_Include.htm">#Include files</a>.</p>
-      <p>If the script was <a href="Scripts.htm#ahk2exe">compiled</a> based on a <a href="Scripts.htm#ahk2exe-base">.bin file</a>, this is the full path and name of the current executable file, the same as <a href="#ScriptFullPath">A_ScriptFullPath</a>.</p>
-      <p><span class="ver">[v1.1.34+]:</span> If the script is <a href="Program.htm#embedded-scripts">embedded</a>, A_LineFile contains an asterisk (*) followed by the resource name; e.g. *#1</p>
+      <p><a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称. 如果脚本是从外部文件加载的, 这等同于 <a href="#ScriptFullPath">A_ScriptFullPath</a>, 除非该行属于脚本的 <a href="commands/_Include.htm">#Include 文件</a>之一.</p>
+      <p>如果脚本是基于一个 <a href="Scripts.htm#ahk2exe-base">.bin 文件</a><a href="Scripts.htm#ahk2exe">编译的</a>, 这就是当前可执行文件的完整路径和名称, 等同于 <a href="#ScriptFullPath">A_ScriptFullPath</a>.</p>
+      <p><span class="ver">[v1.1.34+]:</span> 如果脚本是<a href="Program.htm#embedded-scripts">嵌入的</a>, A_LineFile 包含一个星号(*) 后面是资源名称; 例如 *#1</p>
     </td>
   </tr>
   <tr id="ThisFunc">
@@ -417,13 +416,11 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   <tr id="AhkPath">
     <td>A_AhkPath</td>
     <td>
-        <p>xxxxx对于未编译脚本: 实际运行当前脚本的 EXE 文件的完整路径和名称. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
-        <p>xxxxx对于<a href="Scripts.htm#ahk2exe">已编译脚本</a>: 除了通过注册表条目 <em>HKLM\SOFTWARE\AutoHotkey\InstallDir</em> 获取 AutoHotkey 目录外, 其他的和上面相同. 如果找不到这个注册表条目, 则 A_AhkPath 为空.</p>
-      <p>For non-compiled or <a href="Program.htm#embedded-scripts">embedded</a> scripts: The full path and name of the EXE file that is actually running the current script. For example: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
-      <p>For <a href="Scripts.htm#ahk2exe">compiled scripts</a> based on a <a href="Scripts.htm#ahk2exe-base">.bin file</a>, the value is determined by reading the installation directory from the registry and appending "\AutoHotkey.exe". If AutoHotkey is not installed, the value is blank. The example below is equivalent:</p>
+      <p>对于非编译的或<a href="Program.htm#embedded-scripts">嵌入的</a>脚本: 实际运行当前脚本的 EXE 文件的完整路径和名称. 例如: C:\Program Files\AutoHotkey\AutoHotkey.exe</p>
+      <p>对于基于 <a href="Scripts.htm#ahk2exe-base">.bin 文件</a>的<a href="Scripts.htm#ahk2exe">编译脚本</a>, 该值是通过从注册表中读取安装目录并附加 "\AutoHotkey.exe" 来确定的. 如果没有安装 AutoHotkey, 该值为空. 等同于下面的例子:</p>
       <pre>RegRead InstallDir, HKLM\SOFTWARE\AutoHotkey, InstallDir
 AhkPath := ErrorLevel ? "" : InstallDir "\AutoHotkey.exe"</pre>
-      <p><span class="ver">[v1.1.34+]:</span> For compiled scripts based on an .exe file, A_AhkPath contains the full path of the compiled script. This can be used in combination with <a href="Scripts.htm#SlashScript">/script</a> to execute external scripts. To instead locate the installed copy of AutoHotkey, read the registry as shown above.</p>
+      <p><span class="ver">[v1.1.34+]:</span> 对于基于 .exe 文件的编译脚本, A_AhkPath 包含编译脚本的完整路径. 这可以与 <a href="Scripts.htm#SlashScript">/script</a> 结合使用来执行外部脚本. 如果要找到已安装的 AutoHotkey 副本, 请按上面所示读取注册表.</p>
      </td>
   </tr>
   <tr id="IsUnicode">
