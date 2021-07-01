@@ -33,7 +33,7 @@
   ]],
   ["驱动器", "commands/Drive.htm",
   [
-    ["DriveEject", "commands/DriveEject.htm"],
+    ["DriveEject/Retract", "commands/DriveEject.htm"],
     ["DriveGetCapacity", "commands/DriveGetCapacity.htm"],
     ["DriveGetFileSystem", "commands/DriveGetFileSystem.htm"],
     ["DriveGetLabel", "commands/DriveGetLabel.htm"],
@@ -356,7 +356,7 @@
     ["Sort","commands/Sort.htm"],
     ["StrCompare","commands/StrCompare.htm"],
     ["String","commands/String.htm"],
-    ["StrLower/Upper","commands/StrLower.htm"],
+    ["StrLower/Upper/Title","commands/StrLower.htm"],
     ["StrLen","commands/StrLen.htm"],
     ["StrGet","commands/StrGet.htm"],
     ["StrPut","commands/StrPut.htm"],
@@ -364,7 +364,8 @@
     ["StrSplit","commands/StrSplit.htm"],
     ["SubStr","commands/SubStr.htm"],
     ["Trim","commands/Trim.htm"],
-    ["VarSetStrCapacity","commands/VarSetStrCapacity.htm"]
+    ["VarSetStrCapacity","commands/VarSetStrCapacity.htm"],
+    ["VerCompare","commands/VerCompare.htm"]
   ]],
   ["窗口","commands/Win.htm",
   [

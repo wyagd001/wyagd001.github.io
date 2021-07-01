@@ -28,13 +28,14 @@
   <dt>Function</dt>
   <dd>
     <p>类型: <a href="../objects/Functor.htm">函数对象</a></p>
-    <p>当接收到消息时要调用的函数对象. 函数的参数和返回值如<a href="#The_Functions_Parameters">如下</a>所示.</p>
+    <p>当接收到消息时要调用的函数对象. 函数的参数和返回值如<a href="#The_Functions_Parameters">下</a>所示.</p>
   </dd>
 
   <dt id="MaxThreads">MaxThreads</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>这个整数通常被省略, 在这种情况下, 监控函数一次只能处理一个<a href="../misc/Threads.htm">线程</a>. 这通常是最好的, 因为否则每当监控函数中断时, 脚本就会按时间顺序处理消息. 因此, 作为 <em>MaxThreads</em> 的替代方案, 可以考虑使用 <em>Critical</em>, 如<a href="#Critical">下</a>所示.</p>
+    <p>如果监控函数直接或间接导致消息再次被发送, 而该函数仍在运行, 则有必要指定一个大于 1 或小于 -1 的 <em>MaxThreads</em> 值, 以允许监控函数为了新消息而被调用(如果需要). 脚本自己的进程向自己发送(不是发布) 的消息不能被延迟或缓冲.</p>
     <p>指定 0 来取消注册之前由 <em>Function</em> 标识的函数.</p>
     <p>默认情况下, 当为一个 <em>MsgNumber</em> 注册了多个函数时, 会按照注册的顺序调用它们. 要在之前注册的函数之前注册一个函数, 请为 <em>MaxThreads</em> 指定一个负值. 例如, <code>OnMessage Msg, Fn, -2</code> 将 <code>Fn</code> 注册为在之前为 <em>Msg</em> 注册的任何其他函数之前被调用, 并且允许 <em>Fn</em> 最多有 2 个线程. 但是, 如果函数已经被注册了, 除非取消注册然后重新注册, 否则顺序不会改变.</p>
   </dd>
@@ -82,8 +83,15 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>与普通的函数调用不同, 当一个被监听的消息到达时, 函数会作为一个新的<a href="../misc/Threads.htm">线程</a>被调用. 因此, 函数会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
 <p>Send(发送)(而不是 Post) 到控件的消息不会被监听, 因为系统直接把它们发送给后台的控件了. 对于系统生成的消息来说, 这很少是一个问题, 因为大多数信息都是 Post 的.</p>
 <p>如果脚本要在空闲状态下保持运行, 以监测传入的消息, 可能需要调用 <a href="Persistent.htm">Persistent</a> 函数来防止脚本退出. OnMessage 不会自动使脚本持续运行, 因为这有时是不必要的或不需要的. 例如, 当 OnMessage 被用来监视 GUI 窗口的输入时(如在 <a href="#ExLButtonDown">WM_LBUTTONDOWN 的例子</a>), 通常让脚本在最后一个 GUI 窗口关闭时自动退出更为合适.</p>
-<p id="Critical">如果由于之前有相同的消息到达, 而消息的函数仍在运行, 则不会再次调用函数(除非 <a href="#MaxThreads">MaxThreads</a> 大于 1); 相反, 消息将被视为未被监控. 如果不希望出现这种情况, 可以通过在函数的第一行指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲大于或等于 0x0312 的消息, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的目的, 只要它持续的时间足够函数完成. 相反, 小于 0x0312 的消息不能被 Critical 或 Thread Interrupt 缓冲 (然而, Critical 可能会有帮助, 因为它检查消息的<a href="Critical.htm#Interval">频率较低</a>, 这给了函数更多的时间来完成). 保证不漏掉此类消息的唯一方法是确保函数在 6 毫秒内完成(尽管这个限制可以通过 <a href="Critical.htm#Interval"><em>Critical 30</em></a> 来提高). 一种方法是通过向自己的脚本<a href="PostMessage.htm">发布(Post)</a> 一个高于 0x0312 的监控消息号, 让它为未来的线程排队. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲.</p>
+<p><p id="Critical">当一个消息达到时, 如果其函数由于之前到达的相同消息而仍在运行, 默认情况下, 该函数将不会被再次调用; 相反, 该消息将被视为不受监控. 如果不希望这样, 有多种方法可以避免它:</p>
+<ul>
+  <li>如果消息是 post 的, 而不是 sent 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让函数完成.</li>
+  <li>使用 <a href="Critical.htm">Critical</a> 来增加<a href="Critical.htm#Interval">消息检查间隔</a>, 可以让函数在任何消息被派发之前有更多的时间来完成. 为了保证可靠性, 可能需要一个大于 16 的间隔时间. 由于系统定时器的粒度(通常为 15.6 毫秒), 非-Critical 线程默认的间隔(5 毫秒) 可能会在函数启动后的瞬间出现.</li>
+  <li>确保监控函数快速返回, 可以减少因 <em>MaxThreads</em>. 而错过消息的风险. 一种方法是让它通过向自己的脚本 <a href="PostMessage.htm">post</a> 大于 0x0311 的监控消息, 让它在未来的线程中排队. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲. 另外, 也可以用一个<a href="SetTimer.htm">计时器</a>来在未来的线程中排队.</li>
+  <li>为 <a href="#MaxThreads">MaxThreads</a> 参数指定一个较高的值, 可以使函数被中断以处理新收到的消息.</li>
+</ul>
 <p id="buffering">如果在脚本<a href="../misc/Threads.htm#Interrupt">不可中断的</a>情况下, Post 一条数值大于 0x0311 的监控信息, 那么这条信息就会被缓冲; 也就是说, 在脚本变得可中断之前, 它的函数不会被调用. 然而, sent 而不是 posted 的消息不能被缓冲, 因为它们必须提供一个返回值. Post 的消息也可能不被缓冲, 当一个模式消息循环在运行时, 如系统对话框, ListView 拖放操作或菜单.</p>
+<p>xxx如果一个被监控的消息到达并且没有被缓冲, 那么它的函数会被立即调用, 即使在收到消息的时候线程是<a href="../misc/Threads.htm#Interrupt">不可中断的</a>.</p>
 <p>如果一个被监控的消息到达并且没有被缓冲, 那么它的函数会被立即调用, 即使在收到消息的时候线程是<a href="../misc/Threads.htm#Interrupt">不可中断的</a>.</p>
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
 <p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果监听函数返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>

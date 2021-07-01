@@ -15,20 +15,16 @@
 
 <p>生成一个伪随机数字.</p>
 
-<pre class="Syntax">N := <span class="func">Random</span>(<span class="optional">Min, Max</span>)</pre>
+<pre class="Syntax">N := <span class="func">Random</span>(<span class="optional">A, B</span>)</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>Min</dt>
+  <dt>A, B</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
-    <p>可以生成的最小数字, 可以是负数或浮点数. 如果省略, 最小的数字默认为 0. 允许的最小整数值为 -2147483648, 但浮点数没有限制.</p>
-  </dd>
-
-  <dt>Max</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
-    <p>可以生成的最小数字, 可以是负数或浮点数. 如果省略, 最大的数字默认为 2147483647(这也是允许的最大整数值 -- 但浮点数没有限制).</p>
+    <p>要生成的最小和/或最大数字, 以任意顺序指定. 如果只指定一个参数, 另一个参数默认为 0. 如果两个都省略, 默认为 0.0 到 1.0.</p>
+    <p>对于整数, 最小值和最大值都包含在可能返回的数字集合中. 支持全范围的 64 位整数.</p>
+    <p>对于浮点数, 一般不包括最大值.</p>
   </dd>
 
 </dl>
@@ -36,17 +32,11 @@
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
 <p>这个函数返回一个伪随机生成的数字, 这是一个模拟真实随机数的数字, 但实际上是一个基于复杂公式的数字, 使确定/猜测下一个数字变得非常困难.</p>
+<p>如果 <em>A</em> 或 <em>B</em> 中有一个是浮点数, 或者两者都被省略, 结果将是一个浮点数. 否则, 结果将是一个整数.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>在指定范围中所有数字被生成的机率几乎是相同的(然而, 请参阅下面的 "已知限制").</p>
-<p>如果 <em>Min</em> 或 <em>Max</em> 其中一个为小数, 则最终结果将为浮点数. 否则, 结果为整数.</p>
-<p>浮点数的已知限制: 1) 对于任何特定的范围, 只能生成大约 4,294,967,296 个不同的数字, 所以该范围内的所有其他数字将永远不会生成; 2) 偶尔结果可能略大于指定的 <em>Max</em>(这种情况是由浮点数固有的不精确性导致的).</p>
-
-<h2 id="Seed">RandomSeed</h2>
-<p>使用 <em>NewSeed</em> 重新设定随机数生成器的种子.</p>
-<pre class="Syntax"><span class="func">RandomSeed</span> NewSeed</pre>
-<p>这将影响所有后续生成的随机数. <em>NewSeed</em> 应该是 0 到 4294967295(0xFFFFFFFF) 之间的整数. Reseeding 可以提高产生的随机数的质量/安全性, 尤其当 <em>NewSeed</em> 是真正的随机数而不是质量不佳的伪随机数时. 通常, 重新设定种子只需要进行一次.</p>
-<p>如果脚本从未重新设定种子, 则种子使用自 1601 年 1 月 1 日以来 100 纳秒间隔数目的 64 位值的低 32 位来开始. 这个值每 ~7.2 分钟内从 0 变化到 4294967295.</p>
+<p>指定范围内的所有数字产生的概率大致相同.</p>
+<p>虽然在设计中排除了指定的最大值, 但它在理论上可能由于浮点数舍入错误而返回. 这一点还没有被证实, 可能只有当选择的边界大于 2**53 时才可能. 还要注意, 因为可能有多达 2**53 个可能的值(例如在 0.0 到 1.0 的范围内), 所以正好是下限的概率通常非常低.</p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
@@ -54,62 +44,16 @@
 <pre>N := Random(1, 10)</pre>
 </div>
 
-<div class="ex" id="ExFloat">
-<p><a class="ex_number" href="#ExFloat"></a> 生成一个范围为 0.0 到 1.0 的随机浮点数, 并将其存储在 <var>fraction</var>.</p>
-<pre>fraction := Random(0.0, 1.0)</pre>
+<div class="ex" id="ExOne">
+<p><a class="ex_number" href="#ExOne"></a> 在 0 到 9 的范围内生成一个随机整数, 并将其存储在 <var>N</var>.</p>
+<pre>N := Random(9)</pre>
 </div>
 
-<h2 id="Comments_based_on_the_original_source">基于原始来源的注释</h2>
-<p>该函数使用了 Mersenne Twister(马特赛特旋转演算法) 随机数发生器, MT19937, 由 Takuji Nishimura, Makoto Matsumoto, Shawn Cokus, Matthe Bellew 和 Isaku
-  Wada 编写.</p>
-<p>马特赛特旋转演算法是一种生成伪随机数的算法. 它是考虑到其他各种发生器的缺陷而设计的. 周期
-  2<sup>19937</sup>-1, 623 维均匀分布, 足够大, 速度快; 该算法避免了乘除法, 它有益于缓存和管道. 更多信息访问开发者网页 <a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html</a></p>
-<p>Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura, All rights
-  reserved.</p>
-<p>Redistribution and use in source and binary forms, with or without modification,
-  are permitted provided that the following conditions are met:</p>
-<ol>
-  <li>Redistributions of source code must retain the above copyright notice, this
-    list of conditions and the following disclaimer.</li>
-  <li>Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution.</li>
-  <li>The names of its contributors may not be used to endorse or promote products
-    derived from this software without specific prior written permission.</li>
-</ol>
-<p class="J">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
-<p>Do NOT use for CRYPTOGRAPHY without securely hashing several returned values
-  together, otherwise the generator state can be learned after reading 624 consecutive
-  values.</p>
-<p>版权所有(C) 1997 - 2002, Makoto Matsumoto 和 Takuji Nishimura, 保留所有权利.</p>
-<p>在满足以下条件的情况下, 允许以源码和二进制形式进行再分发和使用, 无论是否修改:</p>
-<ol>
-  <li>源代码的再分发必须保留上述版权声明, 本条件清单和以下免责声明.</li>
-  <li>二进制形式的再分发必须在文档和/或其他随发行版提供的材料中复制上述版权声明, 本条件列表和以下免责声明.</li>
-  <li>未经特定的事先书面许可, 不得使用其贡献者的名字来认可或推广本软件的衍生产品.</li>
-</ol>
-<p class="J-2">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
-<p>在不安全地将几个返回值散列在一起的情况下, 不要用于加密, 否则在读取 624 个连续值后, 可以了解生成器的状态.</p>
-<p>当你使用这个功能时, 请发邮件到: m-mat@math.sci.hiroshima-u.ac.jp 并适当注明你的作品.</p>
-<p><i>以上这些在 AutoHotkey 中已经完成, 但如果你在公开发布的应用中使用了 Random 函数, 可以考虑给上面的人发邮件表示感谢.</i></p>
+<div class="ex" id="ExFloat">
+<p><a class="ex_number" href="#ExFloat"></a> 生成一个范围为 0.0 到 1.0 的随机浮点数, 并将其存储在 <var>fraction</var>.</p>
+<pre>fraction := Random(0.0, 1.0)
+fraction := Random() <em>; 等同于上一行.</em></pre>
+</div>
 
 </body>
 </html>

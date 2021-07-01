@@ -43,23 +43,35 @@
   <dt>StartingPos</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>如果省略 <em>StartingPos</em> 将默认从 1(<em>Haystack</em> 字符串中的位置 1) 开始搜索. 否则, 指定 2 从第二个字符开始, 指定 3 从第三个字符开始, 依此类推.</p>
-    <p>如果 <em>StartingPos</em> 是负数, 则执行相反的搜索(从右到左), 从右边的那个位置开始. 例如, -1 从最后一个字符开始. 如果 <em>StartingPos</em> 为 0 或超过 <em>Haystack</em> 的长度, 则返回 0.</p>
-    <p>不管 <em>StartingPos</em> 的值是多少, 返回值总是相对于 <em>Haystack</em> 中的第一个字符. 例如, "abc" 在 "123abc789" 中的位置始终是 4.</p>
+    <p>省略 <em>StartingPos</em> 来搜索整个字符串. 否则, 指定开始搜索的位置, 其中 1 是第一个字符, 2 是第二个字符, 以此类推. 负值从 <em>Haystack</em> 的末尾开始计算, 所以 -1 是最后一个字符, -2 倒数第二个, 以此类推.</p>
+    <p>如果省略 <em>Occurrence</em>, 负的 <em>StartingPos</em> 会导致搜索从右到左进行. 然而, 如果指定了 <em>Occurrence</em>, <em>StartingPos</em> 对搜索的方向没有影响.</p>
+    <p>对于从右到左的搜索, <em>StartingPos</em> 指定了第一个可能出现的 <em>Needle</em> 的 <em>最后</em> 一个字符的位置. 例如, <code>InStr("abc", "bc",, 2, +1)</code> 会找到一个匹配, 但 <code>InStr("abc", "bc",, 2, -1)</code> 则不会.</p>
+    <p>如果 <em>StartingPos</em> 的绝对值大于 <em>Haystack</em> 的长度, 将返回 0.</p>
   </dd>
 
   <dt>Occurrence</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>如果省略了 <em>Occurrence</em>, 它默认为 1, 函数返回 <em>Needle</em> 在 <em>Haystack</em> 中的首次匹配位置. 指定 <em>Occurrence</em> 为 2, 返回第二次匹配的位置, 3 返回第三次匹配位置, 依此类推.</p>
+    <p>如果省略 <em>Occurrence</em>, 它默认为 <em>Haystack</em> 中 <em>Needle</em> 的第一个匹配. 如果 <em>StartingPos</em> 为负数, 搜索将从右向左进行; 否则将从左向右进行.</p>
+    <p>如果 <em>Occurrence</em> 是正数, 搜索总是从左到右进行. 为 <em>Occurrence</em> 指定 2 来返回第二个匹配的位置, 3 来返回第三个匹配的位置, 等等.</p>
+    <p>如果 <em>Occurrence</em> 是负数, 搜索总是从右到左进行. 例如, -2 搜索从右边开始的第二次出现.</p>
   </dd>
 
   </dl>
-  
+
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>该函数返回字符串 <em>Needle</em> 在字符串 <em>Haystack</em> 中的出现位置. 位置 1 表示第一个字符; 因为 0 等同于 "false", 使它能提供直觉上 "没找到" 的意义.</p>
+<p>不管 <em>StartingPos</em> 或 <em>Occurrence</em> 的值是多少, 返回值总是相对于 <em>Haystack</em> 中的第一个字符. 例如, "abc" 在 "123abc789" 中的位置始终是 4.</p>
 <p>传统上, 空字符串(<code>""</code>) 的出现可以在任何位置找到. 然而, 由于空白的 <em>Needle</em> 通常只会被误传, 因此会被视为一个错误(抛出异常).</p>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>在以下任何一种情况下都会抛出 <a href="../objects/Error.htm#ValueError">ValueError</a>:</p>
+<ul>
+  <li><em>Needle</em> 是一个空(零长度) 字符串.</li>
+  <li><em>CaseSense</em> 是无效的.</li>
+  <li><em>Occurrence</em> 或 <em>StartingPos</em> 为 0 或非数字.</li>
+</ul>
 
 <h2 id="Remarks">备注</h2>
 <p><a href="RegExMatch.htm">RegExMatch</a> 可用于搜索字符串中的模式(正则表达式), 这使得它比 InStr 更为灵活. 但是, 在搜索简单的子字符串时, InStr 通常比 RegExMatch 更快.</p>
