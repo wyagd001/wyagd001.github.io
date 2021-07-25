@@ -3,8 +3,9 @@
   ["常见问题(FAQ)","FAQ.htm"],
   ["初学者向导(快速入门)","Tutorial.htm"],
   ["更新历史","ChangeLog.htm"],
+  ["v1.1 到 v2.0 的更改","v2-changes.htm"],
+  ["v1.0 到 v1.1 的更改","v1-changes.htm"],
   ["脚本展示","scripts/index.htm"],
-  ["脚本兼容性(1.*)","Compat.htm"],
   ["函数列表","commands/index.htm"],
   ["使用和语法","",
   [
@@ -60,6 +61,7 @@
   ]],
   ["外部库","",
   [
+    ["二进制兼容性","Compat.htm"],
     ["缓冲对象","objects/Buffer.htm"],
     ["CallbackCreate","commands/CallbackCreate.htm"],
     ["DllCall","commands/DllCall.htm"],

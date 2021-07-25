@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>脚本兼容性 | AutoHotkey v2</title>
+<title>二进制兼容性 | AutoHotkey v2</title>
 <meta name="description" content="Find out what has changed compared to AutoHotkey 1.0 and how much the impact is." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,49 +11,14 @@
 </head>
 <body>
 
-<h1>脚本兼容性</h1>
+<h1>二进制兼容性</h1>
 
-<p class="warning"><strong>警告:</strong> 本页面已过时, 其主要适用于 1.0 到 1.1, 而 2.0 相对于 1.1 又发生了较大变化, 请参阅 <a href="https://www.autohotkey.com/v2/v2-changes.htm">Changes from v1.1 to v2.0</a>.</p>
-<p>尽管为 AutoHotkey 1.0 编写的许多脚本不需要修改就可以运行在 AutoHotkey 1.1 上, 然而由于两种版本的根本区别可能使得某些功能运行不正常. 因为最主要出现问题的差异只影响高级功能(例如 DllCall), 大多数用户不需要担心.</p>
-<p>AutoHotkey 1.1 也称为 "AutoHotkey_L", 而 AutoHotkey 1.0 则表示 "AutoHotkey Basic". AutoHotkey_L 的一些旧版本使用 1.0.* 版本号, 所以为了清晰, 这里的帮助中使用名称而不是版本号来区分 AutoHotkey 的两种分支.</p>
-<p class="note"><strong>注意:</strong> 一些常见的问题是由对 Unicode 文本的支持引起的, 可以通过使用 AutoHotkey_L 的 ANSI 版本来避免.</p>
+<p>本文档包含一些主题, 这些主题在处理外部库或向控件或窗口发送消息时有时很重要.</p>
 
-<h2 id="toc">目录</h2>
-<h3 id="toc_basic">基本</h3>
-<p>高度影响:</p>
 <ul>
-  <li><a href="#Syntax_Errors">不再允许的一些语法错误</a></li>
-  <li><a href="#FileRead">FileRead 可能返回损坏的二进制数据</a></li>
-  <li><a href="#Names">变量和函数名中不允许使用 [, ] 或 ?</a></li>
-  <li><a href="#DPIScale">DPI 比例缩放对于 GUI 是默认开启的</a></li>
-</ul>
-<p>中度影响:</p>
-<ul>
-  <li><a href="#Transform">Transform 的 <em>Unicode</em> 子命令在 Unicode 版本中不再可用</a></li>
-  <li><a href="#Default_Script">运行 AutoHotkey.ahk 来代替 AutoHotkey.ini</a></li>
-  <li><a href="#SetFormat">SetFormat, Integer, <strong>H</strong> 区分大小写</a></li>
-  <li><a href="#LastError">A_LastError 会被更多的命令修改</a></li>
-  <li><a href="#MsgBox">MsgBox 的逗号智能处理更加一致</a></li>
-  <li><a href="#GuiOwner">Gui 的选项覆盖额外的样式</a></li>
-  <li><a href="#Tilde">~颚化符(波浪号) 会影响自定义修饰键的工作方式</a></li>
-  <li><a href="#ComboUpDown"><code>x &amp; y::</code> 会使得 <code>x::</code> 和 <code>x up::</code> 都会在 x 释放时触发.</a></li>
-</ul>
-<p>低度影响:</p>
-<ul>
-  <li><a href="#IfIs">If <em>var</em> is <em>type</em> 默认忽略系统区域设置</a></li>
-  <li><a href="#Window_Groups">GroupActivate 设置 ErrorLevel 和 GroupAdd 的 <em>Label</em> 作用的差异</a></li>
-  <li><a href="#Run">Run 和 RunWait 解释 <em>Target</em> 的差异</a></li>
-  <li><a href="#ControlZ">Control-Z 不会被解释为文件结束</a></li>
-  <li><a href="#Compatibility_Mode">兼容模式可能引起冲突</a></li>
-  <li><a href="#IsCompiled">A_IsCompiled 总是只读的</a></li>
-  <li><a href="#Escaped_Whitespace">前导和尾随的 `t 序列不再被丢弃</a></li>
-</ul>
-
-<h3 id="toc_advanced">高级</h3>
-<ul>
-  <li><a href="#Format">Unicode 和 ANSI 的比较</a>
+  <li><a href="#Format">Unicode vs ANSI</a>
     <ul>
-      <li><a href="#VarSetCapacity">VarSetCapacity</a></li>
+      <li><a href="#Buffer">Buffer</a></li>
       <li><a href="#DllCall">DllCall</a></li>
       <li><a href="#NumPutGet">NumPut / NumGet</a></li>
     </ul>
@@ -61,136 +26,28 @@
   <li><a href="#ptr">指针大小</a></li>
 </ul>
 
-<h2 id="Basic">基本</h2>
-
-<span id="Validation"></span><h3 id="Syntax_Errors">语法错误</h3>
-<p>AutoHotkey_L 中不允许某些在 AutoHotkey Basic 中接受的语法错误. 识别出这些错误后, 其中大多数都很容易改正. 用 AutoHotkey_L 运行脚本时下面的错误会立即被检测出来, 必须改正后才能运行脚本:</p>
-<ul>
-  <li>在每个命令和它的参数之间需要空格, tab 或逗号. 例如, <code>MsgBox&lt; foo</code> 和 <code>If!foo</code> 不会被允许.</li>
-  <li><code>Hotkey, If<i>Something</i></code>, 当 <i>Something</i> 无效时不会被允许.</li>
-</ul>
-<p>其他一些语法错误会在脚本运行时检测出来. 这些情况会导致在退出当前线程前显示错误消息:</p>
-<ul>
-  <li><strong>常见:</strong> 无法识别或不良格式的 <a href="objects/Gui.htm#Options">Gui.Opt</a>, <a href="objects/Gui.htm#Show">Gui.Show</a> 或 <a href="objects/Gui.htm#Add">Gui.Add</a> 选项.</li>
-  <li>带有空的组名称的 GroupAdd. 以前这个问题会让当前线程<em>安静</em>地退出.</li>
-  <li>Gui 选项 <a href="objects/Gui.htm#LastFoundExist">+LastFoundExist</a> 不能和其他选项组合使用, 因为这样会让它的行为与 <a href="objects/Gui.htm#LastFound">+LastFound</a> 一样.</li>
-</ul>
-<p>当前无法检测但会在 AutoHotkey_L 出现问题的其他语法错误:</p>
-<ul>
-  <li>带有 <code>(</code> 的<a href="Variables.htm#concat">自动连结</a>更具选择性, 所以类似 <code>12(34)</code> 这样无效的表达式不再起作用.</li>
-</ul>
-
-<h3 id="FileRead">FileRead</h3>
-<p>在某些情况下 <a href="commands/FileRead.htm#Binary">FileRead</a> 会在代码页之间转换文本, 因此可能输出错误的二进制数据. 要避免此问题, 请添加 <code>*c</code> 选项或使用 <a href="commands/FileOpen.htm">FileOpen</a> 代替.</p>
-
-<h3 id="Names">变量和函数名</h3>
-<p>字符 <code>[</code>, <code>]</code> 和 <code>?</code> 被预留用于<a href="Variables.htm#Expressions">表达式</a>, 所以在变量名中使用时不再合法. 因此, <code>?</code>(用于<a href="Variables.htm#ternary">三元运算</a>) 的两边不再需要空格. 另请参阅<a href="Objects.htm#Syntax">对象语法</a>.</p>
-<p>可能或不能自动检测的错误:</p>
-<ul>
-  <li>当脚本在表达式中的变量名使用这些字符时, 一般脚本会运行而不显示错误, 但这些字符可能被错误解释为运算符而不是变量名的一部分.</li>
-  <li>如果这些字符用在<a href="Variables.htm#ref">双重解引</a>(例如 <code>Array%n%</code>, 其中 <em>n</em> 包含了上面的某个字符), 则当脚本运行到计算双重解引时会显示错误消息.</li>
-  <li>如果这些字符用在其他环境中(例如赋值的左边, 命令的输入, 输出变量的名称或在百分号之间), 则会显示错误消息并阻止脚本运行.</li>
-</ul>
-
-<h3 id="DPIScale">DPI 比例缩放</h3>
-<p><a href="objects/Gui.htm#DPIScale">DPI 比例缩放</a>对于 GUI 是默认开启的, 这是为了匹配<a href="Variables.htm#ScreenDPI">操作系统的 DPI 设置</a>. 如果开启了此选项, 且操作系统的 DPI 设置不是 96(100%), 那么 Gui 方法/属性接受或返回的位置和大小与其他命令不兼容. 您可以通过 <code>MyGui.Opt("-DPIScale")</code> 命令禁用 DPI 比例缩放设置.</p>
-
-<h3 id="Transform">Transform</h3>
-<p>在 AutoHotkey_L 的 Unicode 版本中一些 <i>Transform</i> 子命令被修改或不可用:</p>
-<ul>
-  <li><a href="commands/Transform.htm#Unicode">Transform, Unicode</a> 不可用. 要赋值 Unicode 文本到剪贴板, 使用正常赋值. 另请参阅: <a href="commands/StrPut.htm">StrPut</a>/<a href="commands/StrGet.htm">StrGet</a>.</li>
-  <li><a href="commands/Transform.htm#HTML">Transform, HTML</a> 支持附加功能.</li>
-</ul>
-
-<h3 id="Default_Script">默认脚本</h3>
-<p>未指定脚本运行 AutoHotkey_L 时, 默认加载 .ahk 文件而不是 .ini. 这个文件的名称取决于当前执行程序的文件名. 想了解更多细节, 请参阅<a href="Scripts.htm#cmd">传递命令行参数到脚本</a>.</p>
-
-<h3 id="SetFormat">SetFormat, Integer[Fast], H</h3>
-<p>使用大写字母 H 时, 十六进制数字中 A-F 也将为大写. AutoHotkey Basic 总是使用小写形式的数字. 请参阅 <a href="commands/SetFormat.htm">SetFormat</a>.</p>
-
-<h3 id="LastError">A_LastError</h3>
-<p>现在后面的这些命令会设置 <a href="Variables.htm#LastError">A_LastError</a> 来辅助调试: FileAppend, FileRead, FileReadLine, FileDelete, FileCopy, FileMove, FileGetAttrib/Time/Size/Version, FileSetAttrib/Time, FileCreateDir, RegRead, RegWrite, RegDelete. 使用这些命令的其中任何一个会覆盖 A_LastError 之前的值.</p>
-
-<h3 id="MsgBox">MsgBox</h3>
-<p>对 <a href="commands/MsgBox.htm">MsgBox</a> 的智能逗号处理进行了改变, 提高了灵活性及与其他所有命令的一致性. 在大多数情况中, MsgBox 会按预想的方式执行. 在某些罕见的情况下, 依赖旧式行为的脚本可能观察到行为的变化. 例如:</p>
-<pre><em>; 现在这样会被解释为表达式(选项) 跟着文本(标题)
-; 而不是含多个<a href="Variables.htm#comma">子表达式</a>的单个表达式(文本):</em>
-MsgBox % x, y
-<em>; 添加小括号来强制使用旧式解释:</em>
-MsgBox % (x, y)
-
-<em>; 现在这样会显示空对话框而不是文本 "0, Title":</em>
-MsgBox 0, Title
-<em>; 这两个在 AutoHotkey_L 和 AutoHotkey Basic 的行为和预期一样:</em>
-MsgBox 0, Title, % ""   <em>; 显示空对话框</em>
-MsgBox 0`, Title        <em>; 显示文本 "0, Title"</em>
-
-<em>; 现在这样会显示空对话框而不是文本 ", Title":</em>
-MsgBox,, Title
-</pre>
-
-<h3 id="GuiOwner">Gui 的 Owner 选项</h3>
-<p>对 Gui 应用 <a href="objects/Gui.htm#Owner">+Owner</a> 选项还会移除 WS_CHILD 样式并设置 WS_POPUP 样式. 这样会破坏在设置这些样式<em>之后</em>使用 <code>+Owner</code> 设置 Gui 的父窗口的脚本.</p>
-
-<h3 id="Tilde">~(颚化符) 和自定义组合键</h3>
-<p>从 <span class="ver">[v1.1.14]</span> 起, 当一个按键作为修饰符用于组合键时<a href="Hotkeys.htm#Tilde">颚化符前缀</a>会影响该热键的工作方式.</p>
-
-<h3 id="ComboUpDown">自定义组合键和 Down/Up 热键</h3>
-<p>如果没有使用颚化符前缀, 则对于自定义修饰键会同时定义按键按下和弹起热键, 它们在该按键释放时都会触发. 例如, <code>x &amp; y::</code> 会使得 <code>x::</code> 和 <code>x up::</code> 都会在 x 释放时触发, 而以前 <code>x::</code> 是不会触发.</p>
-
-<h3 id="IfIs">If <em>var</em> is <em>type</em></h3>
-<p><a href="commands/IfIs.htm">If <em>var</em> is <em>type</em></a> 只有在使用 <a href="commands/StringCaseSense.htm">StringCaseSense, Locale</a> 时才不会忽略系统区域设置.</p>
-
-<h3 id="Window_Groups">窗口组</h3>
-<p><a href="commands/GroupActivate.htm">GroupActivate</a> 在没有找到要激活的窗口时设置 ErrorLevel 为 1, 否则为 0. 以前 ErrorLevel 会保持不变.</p>
-<p><a href="commands/GroupAdd.htm">GroupAdd</a> 的 <em>Label</em> 参数应用于作为一个整体的窗口组而不是组中某个特殊的窗口规格. 关于这个变更的讨论可以在<a href="https://www.autohotkey.com/community/viewtopic.php?t=61362">论坛上</a>找到. 然而, <strong>不建议</strong>使用这个参数; 相反地应该在调用 GroupActivate 后检查 ErrorLevel.</p>
-
-<h3 id="Run">Run / RunWait</h3>
-<p>AutoHotkey_L 包含了一些对 <a href="commands/Run.htm">Run</a> 和 <a href="commands/Run.htm">RunWait</a> 命令的 <em>Target</em> 参数的增强解释. 这样能接受一些之前不起作用的情况, 但在罕见的情况下也会影响 AutoHotkey Basic 中能执行的情况. 新的行为如下:</p>
-<ul>
-  <li>如果 <i>Target</i> 以引号开始, 则到下一个引号之间的所有内容被视为要执行的操作, 一般为可执行文件.</li>
-  <li>否则首个以空格结束并且为一个现有文件或以 .exe, .bat, .com, .cmd 或 .hta 结尾的子字符串被视为操作. 这样就允许 .ahk, .vbs 或 .lnk 这样的文件类型接受参数, 同时也允许像以前的版本那样不需要绝对路径运行 "已知" 的可执行文件(例如 wordpad.exe).</li>
-</ul>
-
-<h3 id="ControlZ">Control-Z</h3>
-<p><a href="commands/LoopRead.htm">Loop Read</a> 和 <a href="commands/FileReadLine.htm">FileReadLine</a> 不再把字符 <kbd>Ctrl</kbd>+<kbd>Z</kbd>(0x1A) 解释为文件结束标记. 任何的 <kbd>Ctrl</kbd>+<kbd>Z</kbd>, 即使某一个恰好出现在文件末尾, 都原样加载. <a href="commands/FileRead.htm">FileRead</a> 已经忽略这个字符, 所以不受这个问题的影响.</p>
-
-<h3 id="Compatibility_Mode">兼容模式</h3>
-<p>如果用于运行脚本的 EXE 文件属性中设置<a href="https://support.microsoft.com/en-us/help/15078/windows-make-older-programs-compatible">兼容模式</a>为 Windows 95, 98/ME 或 NT4, 脚本可能无法正常运行. 这是由于兼容模式会把特定的 Windows 版本报告给应用程序, 但 AutoHotkey_L 不支持这些版本. 例如设置兼容模式为 Windows 95 或 98/ME 将使得 <code>MsgBox %A_OSVersion%</code> 报告 <code>WIN_NT4</code>.</p>
-
-<h3 id="IsCompiled">A_IsCompiled</h3>
-<p><a href="Variables.htm#IsCompiled">A_IsCompiled</a> 当脚本未编译时被定义为空字符串. 之前它会被保留为未定义, 这意味着当脚本未编译时对它进行赋值(例如 <code>A_IsCompiled := 1</code>) 是有效的. 现在在所有的情况中它都被视为只读的内置变量.</p>
-
-<h3 id="Escaped_Whitespace">转义的空白符</h3>
-<p>不再从每个参数的开始和末尾移除转义的空白字符(如 <code>`t</code> 和 <code>`</code>). 例如, <code>StringReplace OutputVar, InputVar, `t</code> 现在是有效的, 并会移除 <em>InputVar</em> 中的所有 tab 字符.</p>
-
-<h2 id="Format">Unicode 和 ANSI 的比较</h2>
+<h2 id="Format">Unicode 与 ANSI</h2>
 <p class="note"><strong>注意:</strong> 本节建立在文档其他部分中涉及的主题之上: <a href="Concepts.htm#strings">字符串</a>, <a href="Concepts.htm#string-encoding">字符编码</a>.</p>
-<p>在字符串(文本值) 中, 每个字符的数字字符代码和大小(以字节为单位) 取决于脚本或 AutoHotkey 可执行文件的 <a href="Concepts.htm#native-encoding">原生编码</a>; 例如 <i>Unicode</i> 或 <i>ANSI</i>. 对于执行以下任何操作的脚本, 这些细节通常非常重要:</p>
+<p>在一个字符串(文本值) 中, 每个字符的数字编码和大小(字节) 取决于字符串的<a href="Concepts.htm#string-encoding">编码</a>. 这些细节通常对做以下事情的脚本很重要:</p>
 <ul>
   <li>通过 <a href="#DllCall">DllCall</a> 传递字符串到外部函数.</li>
   <li>通过 <a href="commands/PostMessage.htm">PostMessage</a> 或 <a href="commands/SendMessage.htm">SendMessage</a> 传递字符串.</li>
   <li>通过 <a href="#NumPutGet">NumPut/NumGet</a> 直接操作字符串.</li>
-  <li>使用 <a href="#VarSetCapacity">VarSetCapacity</a> 来确保变量中能存储一定数目的字符.</li>
+  <li>分配 <a href="#Buffer">Buffer</a> 来容纳特定数量的字符.</li>
 </ul>
-<p>使用一种特殊格式设计的脚本在使用错误的 AutoHotkey 版本运行时常常会遇到问题. 例如, 一些为 AutoHotkey Basic 编写的脚本能正常运行在 AutoHotkey_L 的 ANSI 版本中, 但在 Unicode 版本中会失败. 如果您不确定正在使用的版本, 请运行下面的脚本:</p>
-<pre>MsgBox % A_IsUnicode ? "Unicode" : "ANSI"</pre>
-<p><strong>ANSI:</strong> 每个字符占用<strong>一个字节</strong>(8 位). 大于 127 的字符代码取决于系统的语言设置.</p>
-<p><strong>Unicode:</strong> 每个字符占用<strong>两个字节</strong>(16 位). 字符代码在 <a href="https://en.wikipedia.org/wiki/UTF-16">UTF-16</a> 格式中定义.</p>
-<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为<i>两个</i> 16 位代码单元, 一起被称为 "代理项对". 同样地, 一些 <a href="http://msdn.microsoft.com/en-us/library/dd317752.aspx">ANSI 代码页</a>(通常称为<a href="http://msdn.microsoft.com/en-us/library/dd317794.aspx">双字节字符集</a>,  例如 cp936 中的汉字) 含有一些双字节字符. 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为 "字符").</p>
+<p>AutoHotkey v2 原生使用 Unicode(UTF-16), 但一些外部库或窗口信息可能需要 ANSI 字符串.</p>
+<p><strong>ANSI:</strong> 每个字符占用<strong>一个字节</strong>(8 位). 大于 127 的字符编码取决于系统的语言设置(或在对文本进行编码时选择的编码页, 例如, 当它被写入文件时).</p>
+<p><strong>Unicode:</strong> 每个字符占用<strong>两个字节</strong>(16 位). 字符编码是由 <a href="https://en.wikipedia.org/wiki/UTF-16">UTF-16</a> 格式定义的.</p>
+<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为 <i>两个</i> 16 位代码单元, 一起被称为 "代理项对". 同样地, 一些 <a href="http://msdn.microsoft.com/en-us/library/dd317752.aspx">ANSI 代码页</a>(通常称为<a href="http://msdn.microsoft.com/en-us/library/dd317794.aspx">双字节字符集</a>, 例如 cp936 中的汉字) 含有一些双字节字符. 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为 "字符").</p>
 
-<h3 id="VarSetCapacity">VarSetCapacity</h3>
-<p>VarSetCapacity 设置一个变量占用的空间, <i>单位为字节</i>. 要根据字符数设置变量的容量, 必须同时考虑字符的大小. 例如:</p>
-<pre>VarSetCapacity(ansi_var,    capacity_in_chars)
-VarSetCapacity(unicode_var, capacity_in_chars * 2)
-VarSetCapacity(native_var,  capacity_in_chars * (A_IsUnicode ? 2 : 1))
-VarSetCapacity(native_var,  t_size(capacity_in_chars))  <em>; 请参阅<a href="#NumPutGet">下面</a></em>
-</pre>
-<p>VarSetCapacity 的两种主要用途:</p>
-<ol>
-  <li>在通过逐步连接构造字符串时扩展变量以存储估计的字符数和提升性能. 例如, <code>VarSetCapacity(var, 1000)</code> 允许使用 1000 字节, 这样的容量在 AutoHotkey_L 的 Unicode 版本中只能保存 500 个字符. 这样会影响性能, 不过脚本应该能正常执行.</li>
-  <li>重设变量的大小来存储二进制结构. 如果结构直接包含文本, 则必须考虑文本的格式. 这取决于结构自身, 有时即使在 AutoHotkey_L 的 Unicode 版本中也会使用 ANSI 文本. 如果变量太小, 则脚本可能会崩溃或行为异常(取决于使用结构的方式).</li>
-</ol>
+<h3 id="Buffer">Buffer</h3>
+<p>在分配 <a href="objects/Buffer.htm">Buffer</a> 时, 要注意为所需的任何编码计算正确的 <em>字节</em> 数. 例如:</p>
+<pre>ansi_buf  := Buffer(capacity_in_chars)
+utf16_buf := Buffer(capacity_in_chars * 2)</pre>
+<p>如果使用 <a href="commands/StrPut.htm">StrPut</a> 将 ANSI 或 UTF-8 字符串写入缓冲, 不要使用 <a href="commands/StrLen.htm">StrLen</a> 来确定缓冲的大小, 因为 ANSI 或 UTF-8 的长度可能与原生(UTF-16) 长度不同. 相反, 使用 <a href="commands/StrPut.htm#ExEncoding">StrPut</a> 来计算所需的缓冲大小. 例如:</p>
+<pre>required_bytes := StrPut(source_string, "cp0")
+ansi_buf := Buffer(required_bytes)
+StrPut(source_string, ansi_buf)</pre>
 
 <h3 id="DllCall">DllCall</h3>
 <p>使用 "Str" 类型时, 表示字符串使用当前版本原生的编码格式. 由于一些函数可能需要或返回特殊格式的字符串, 所以有时还需要使用下列的字符串格式:</p>
@@ -198,43 +55,33 @@ VarSetCapacity(native_var,  t_size(capacity_in_chars))  <em>; 请参阅<a href="
   <tr><th>&nbsp;</th><th class="center">字符大小</th><th>C / Win32 类型</th><th>Encoding</th></tr>
   <tr><td class="Syntax center" class="center">WStr</td><td class="center">16-位</td><td>wchar_t*, WCHAR*, LPWSTR, LPCWSTR</td><td>UTF-16</td></tr>
   <tr><td class="Syntax center" class="center">AStr</td><td class="center">8-位</td><td>char*, CHAR*, LPSTR, LPCSTR</td><td>ANSI(系统默认 ANSI 代码页)</td></tr>
-  <tr><td class="Syntax" style="text-align:center">Str</td><td style="text-align:center">--</td><td>TCHAR*, LPTSTR, LPCTSTR</td><td>相当于 Unicode 构建中的 <b>WStr</b> 或 ANSI 构建中的 <b>AStr</b>.</td></tr>
+  <tr><td class="Syntax center">Str</td><td class="center">--</td><td>TCHAR*, LPTSTR, LPCTSTR</td><td>等同于 AutoHotkey v2 中的 <b>WStr</b>.</td></tr>
 </table>
-<p>如果 "Str" 或在当前版本中的等价类型用于参数中, 那么字符串或变量的地址被传递给函数, 否则创建一个期望格式的字符串临时副本进行传递. 一般地, "AStr" 和 "WStr" 不应该用于函数会写入值的参数中.</p>
-<p class="note"><b>注意:</b> "AStr" 和 "WStr" 用于参数和函数的返回值同样是有效的.</p>
-<p>一般而言, 如果脚本通过 DllCall 调用接受字符串参数的函数, 那么必须采取以下其中一种方式:</p>
+<p>如果 "Str" 或 "WStr" 被用于一个参数, 字符串的地址被传递给函数. 对于 "AStr", 会创建一个字符串的临时 ANSI 拷贝, 并传递其地址. 一般来说, "AStr" 不应该用于输出参数, 因为缓冲区的大小只够容纳输入的字符串.</p>
+<p class="note"><b>注意:</b> "AStr" 和 "WStr" 对于参数和函数的返回值同样是有效的.</p>
+<p>一般来说, 如果脚本通过 DllCall 调用一个接受字符串参数的函数, 必须采取以下一种或多种方法:</p>
 <ol>
-  <li>如果函数的 Unicode(W) 和 ANSI(A) 都可用, 那么为当前版本调用匹配的那个. 在下面的例子中, "DeleteFile" 在内部被称为 "DeleteFileA" 或 "DeleteFileW". 由于 "DeleteFile" 自身实际并不存在, DllCall 自动根据当前版本尝试适合的 "A" 或 "W".
+  <li>如果函数的 Unicode(W) 和 ANSI(A) 版本都可用, 省略 W 或 A 的后缀, 对输入参数或返回值使用 "Str" 类型. 例如, the DeleteFile 函数从 kernel32.dll 导出为 <code>DeleteFileA</code> 和 <code>DeleteFileW</code>. 由于 <code>DeleteFile</code> 本身并不真正存在, DllCall 自动尝试 <code>DeleteFileW</code>:
   <pre>DllCall("DeleteFile", "Ptr", StrPtr(filename))
 DllCall("DeleteFile", "Str", filename)</pre>
-  <p>在这个例子中, <code>&amp;filename</code> 准确按原样传递字符串地址, 所以函数必须期望接受和 "Str" 类型相同编码格式的字符串. 注意在 AutoHotkey Basic 中 "UInt" 必须使用 "Ptr" 代替, 但得到的代码可能不兼容 64 位.</p>
-  <p class="note"><b>注意:</b> 如果无法根据名称准确找到指定的函数, 在 AutoHotkey_L 中不管指定哪个 DLL 都会在函数名称后添加 "A" 或 "W" 后缀查找. 然而, AutoHotkey Basic 则仅为 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数添加 "A" 后缀.</p></li>
-  <li>如果函数仅接受特殊类型的字符串作为输入, 那么脚本可能必须使用相应的字符串类型:
+  <p>在这两种情况下, 原始的未修改的字符串的地址被传递给函数.</p>
+  <p>在某些情况下, 这种方法可能会适得其反, 因为 DllCall 只有在找不到原名称的函数时才会添加 W 后缀. 例如, shell32.dll 导出的 ExtractIconExW, ExtractIconExA 和 ExtractIconEx 都没有后缀, 最后两个是等价的. 在这种情况下, 省略 W 的后缀会导致 ANSI 版本被调用.</p></li>
+  <li>如果函数仅接受特定类型的字符串作为输入, 那么脚本可能需要使用相应的字符串类型:
   <pre>DllCall("DeleteFileA", "AStr", filename)
 DllCall("DeleteFileW", "WStr", filename)</pre></li>
-  <li>如果函数必须修改字符串(非原生格式), 那么脚本必须如<a href="#VarSetCapacity">上面</a>描述的那样分配缓存并且把缓存的地址传递给函数. 如果参数接受输入, 脚本还必须把输入字符串转换为适当的格式; 这可以用 <a href="commands/StrPut.htm">StrPut</a> 实现.</li>
+  <li>如果函数有一个用于输出的字符串参数, 脚本必须如<a href="#Buffer">上</a> 所述分配一个缓冲并将其传递给函数. 如果该参数接受输入, 脚本还必须将输入的字符串转换为适当的格式; 为此可以使用 <a href="commands/StrPut.htm">StrPut</a>.</li>
 </ol>
 
 <h3 id="NumPutGet">NumPut / NumGet</h3>
 <p>当使用 NumPut 或 NumGet 操作字符串时, 对于给定类型的字符串其偏移和类型都必须正确. 可以参考下面的代码:</p>
-<pre><em>;  8 位/ANSI   字符串:  size_of_char=1  type_of_char="Char"
+<pre><em>;  8 位/ANSI   字符串:  size_of_char=1  type_of_char="UChar"
 ; 16 位/UTF-16 字符串:  size_of_char=2  type_of_char="UShort"</em>
-<i>n</i>th_char := NumGet(var, (<i>n</i>-1)*<i>size_of_char</i>, <i>type_of_char</i>)
-NumPut(<i>n</i>th_char, var, (<i>n</i>-1)*<i>size_of_char</i>, <i>type_of_char</i>)</pre>
-<p>如果 <code>var</code> 含有原生格式的字符串, 那么根据 <code>A_IsUnicode</code> 的值可以确定变量的值.</p>
-<pre><i>n</i>th_char := NumGet(var, t_size(<i>n</i>-1), t_char())
-NumPut(<i>n</i>th_char, var, t_size(<i>n</i>-1), t_char())
-
-<em>; 为了方便和清晰定义的函数:</em>
-t_char() {
-    return A_IsUnicode ? "UShort" : "Char"
-}
-t_size(char_count:=1) {
-    return A_IsUnicode ? char_count*2 : char_count
-}</pre>
+<i>n</i>th_char := NumGet(buffer_or_address, (<i>n</i>-1)*size_of_char, type_of_char)
+NumPut(type_of_char, <i>n</i>th_char, buffer_or_address, (<i>n</i>-1)*size_of_char)</pre>
+<p>对于第一个字符, <em>n</em> 的值应为 1.</p>
 
 <h2 id="ptr">指针大小</h2>
-<p>指针在 32 位版本(包括 AutoHotkey Basic) 中是 4 个字节大小而在 64 位版本中是 8 个字节. 使用结构或 DllCall 的脚本可能需要为在两种平台上正常运行进行考虑. 受影响的特殊地方包括:</p>
+<p>指针在 32 位版本中是 4 个字节大小, 而在 64 位版本中是 8 个字节. 使用结构或 DllCall 的脚本可能需要为在两种平台上正常运行进行考虑. 受影响的特殊地方包括:</p>
 <ul>
   <li>含有一个或多个指针的结构字段的偏移计算.</li>
   <li>含有一个或多个指针的结构大小计算.</li>
@@ -246,17 +93,18 @@ t_size(char_count:=1) {
   typedef struct _PROCESS_INFORMATION {
     HANDLE hProcess;    // Ptr
     HANDLE hThread;
-    DWORD  dwProcessId; // UInt (4 字节)
+    DWORD  dwProcessId; // UInt(4 字节)
     DWORD  dwThreadId;
   } <a href="http://msdn.microsoft.com/en-us/library/ms684873.aspx">PROCESS_INFORMATION</a>, *LPPROCESS_INFORMATION;
 */</em>
-VarSetCapacity(pi, A_PtrSize*2 + 8) <em>; Ptr + Ptr + UInt + UInt</em>
+pi := Buffer(A_PtrSize*2 + 8) <em>; Ptr + Ptr + UInt + UInt</em>
 DllCall("<a href="http://msdn.microsoft.com/en-us/library/ms682425.aspx">CreateProcess</a>", <span class="dull">&lt;为简短而省略&gt;</span>, "Ptr", &amp;pi, <span class="dull">&lt;省略&gt;</span>)
-hProcess    := NumGet(pi, 0)         <em>; 默认为 "Ptr".</em>
+hProcess    := NumGet(pi, 0)         <em>; Defaults to "Ptr".</em>
 hThread     := NumGet(pi, A_PtrSize) <em>;</em>
 dwProcessId := NumGet(pi, A_PtrSize*2,     "UInt")
 dwProcessId := NumGet(pi, A_PtrSize*2 + 4, "UInt")
 </pre>
 
+<br>
 </body>
 </html>

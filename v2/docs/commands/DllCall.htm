@@ -79,7 +79,7 @@ DllCall("<i>Function</i>", "ptr", buf)  <em>; 传递缓冲给函数.</em>
 str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 </pre>
     <p>还支持很少使用的 <a href="#asterisk">AStr*</a> 参数类型, 其行为与 <a href="#strp">Str*</a> 类型类似, 不同之处在于, 所有新字符串都将从 ANSI 转换为原生格式, UTF-16.</p>
-    <p>有关等效的 Win32 类型和其他详细信息, 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
+    <p>有关等效的 Win32 类型和其他详细信息, 请参阅<a href="../Compat.htm#DllCall">二进制兼容性</a>.</p>
   </td>
 </tr>
 <tr>
@@ -177,9 +177,9 @@ Loop 500
 <p>结构是内存中连续存储的 <em>成员</em>(空间) 的集合. 大多数成员倾向于是整数.</p>
 <p>接受结构(或内存块数组) 地址的函数可以通过某种方式分配内存并将内存地址传递给函数来调用. <a href="../objects/Buffer.htm">Buffer</a> 对象被推荐用于此目的. 一般使用以下步骤:</p>
 <p>1) 调用 <code>MyStruct := Buffer(123, 0)</code> 来分配一个缓冲来保存结构体的数据. 将 <code>123</code> 替换为至少与结构大小一样大的数字, 以字节为单位. 指定零作为最后一个参数是可选的; 它将所有成员初始化为二进制零, 这通常用于避免在下一步中频繁调用 NumPut.</p>
-<p>2) 如果目标函数使用结构中的初始值, 请调用 <code><a href="NumPut.htm">NumPut</a>("UInt", 123, MyStruct, 4)</code>初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>StrPtr(Var)</code> 来存储字符串的地址). 将 <code>4</code> 替换为目标成员的偏移量(有关 "offset" 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则如 <code>"Ptr"</code>.</p>
+<p>2) 如果目标函数使用结构中的初始值, 请调用 <code><a href="NumPut.htm">NumPut</a>("UInt", 123, MyStruct, 4)</code> 初始化任何不为零的成员. 将 <code>123</code> 替换为要放入目标成员的整数(或指定 <code>StrPtr(Var)</code> 来存储字符串的地址). 将 <code>4</code> 替换为目标成员的偏移量(有关 "offset" 的说明, 请参阅步骤 #4). 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则如 <code>"Ptr"</code>.</p>
 <p>3) 调用目标函数, 将 <em>MyStruct</em> 作为 Ptr 参数传递. 例如, <code>DllCall("MyDll\MyFunc", "Ptr", MyStruct)</code>. 该函数将检查和/或更改一些成员. DllCall 会自动使用缓冲的地址, 通常使用 <code>MyStruct.Ptr</code> 来检索.</p>
-<p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code>从结构中检索任何所需的整数. 将 <code>4</code> 替换为结构中目标构件的偏移量. 第一个成员的偏移量始终为 0. 第二个成员的偏移量为 0 加第一个成员的大小(通常为 4). 第二个成员之后的成员是前一个成员的偏移量加上前一个成员的大小. 大多数成员 -- 如 DWORD, Int 和<a href="#Int">其他类型的 32 位整数</a> -- 的大小为 4 个字节. 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
+<p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中检索任何所需的整数. 将 <code>4</code> 替换为结构中目标构件的偏移量. 第一个成员的偏移量始终为 0. 第二个成员的偏移量为 0 加第一个成员的大小(通常为 4). 第二个成员之后的成员是前一个成员的偏移量加上前一个成员的大小. 大多数成员 -- 如 DWORD, Int 和<a href="#Int">其他类型的 32 位整数</a> -- 的大小为 4 个字节. 将 <code>"UInt"</code> 替换为适当的类型, 如果成员是指针或句柄, 则将其省略.</p>
 <p>有关实际用法, 请参阅 <a href="#ExStruct">Structure 示例</a>.</p>
 
 <h2 id="limits">已知限制</h2>
@@ -189,7 +189,7 @@ Loop 500
 <pre>MyVar := "ABC"
 result := DllCall("CharLower", "<strong><u>Str</u></strong>", DllCall("CharUpper", "Str", MyVar, "<strong><u>Str</u></strong>"), "Str")</pre>
 <p>要变通解决此问题, 请把上面两个带下划线的 "Str" 值修改成 Ptr. 这种情况说明了 CharUpper 的返回值为纯地址并作为整数传递给 CharLower.</p>
-<p>处理字符串时可能遇到某些限制. 更多详情, 请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
+<p>处理字符串时可能遇到某些限制. 更多详情, 请参阅<a href="../Compat.htm#DllCall">二进制兼容性</a>.</p>
 
 <h2 id="COM">组件对象模型(COM)</h2>
 <p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObject.htm">ComObject</a>, <a href="ComObjGet.htm">ComObjGet</a> 或 <a href="ComObjActive.htm">ComObjActive</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
@@ -200,7 +200,7 @@ result := DllCall("CharLower", "<strong><u>Str</u></strong>", DllCall("CharUpper
 <p>但是, AutoHotkey 可以通过 <a href="https://docs.microsoft.com/en-us/dotnet/standard/native-interop/com-callable-wrapper">COM 可调用包装器</a>来使用 CLR. 除非该库也已注册为通用 COM 组件, 否则必须先通过 DllCall 手动初始化 CLR 本身. 有关详情, 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>(其当前使用的 DllCall 与 AutoHotkey v2 不兼容).</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, <a href="../Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
+<p><a href="../Compat.htm#DllCall">二进制兼容性</a>, <a href="../objects/Buffer.htm">缓冲对象</a>, <a href="ComCall.htm">ComCall</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="CallbackCreate.htm">CallbackCreate</a>, <a href="Run.htm">Run</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>, <a href="../Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="_DllLoad.htm">#DllLoad</a>, <a href="https://docs.microsoft.com/en-au/windows/win32/apiindex/windows-api-list">Windows API Index</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExMessageBox">

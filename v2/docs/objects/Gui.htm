@@ -137,11 +137,15 @@ MyGui.Show</pre>
     <tr><th>指定了 X</th><th>Y 的默认值</th></tr>
     <tr><td>x<em>n</em> 或 xm</td><td>在所有之前控件的下方(最大 Y 范围加边距).</td></tr>
     <tr><td>xs</td><td>在最近一次使用 <a href="#Section">Section</a> 选项后的所有之前控件的下方.</td></tr>
-    <tr><td>x+<em>n</em> 或 xp</td><td>等同于前一个控件的顶部边缘(<a href="#xp">yp</a>).</td></tr>
+    <tr><td>xxxx x+<em>n</em> 或 xp</td><td>等同于前一个控件的顶部边缘(<a href="#xp">yp</a>).</td></tr>
+    <tr><td>x+<em>n</em> or xp+<em>nonzero</em></td><td>Same as the previous control's top edge (<a href="#xp">yp</a>).</td></tr>
+    <tr><td>xp or xp+0</td><td>Below the previous control (bottom edge plus margin).</td></tr>
     <tr><th>指定了 Y</th><th>X 的默认值</th></tr>
     <tr><td>y<em>n</em> 或 ym</td><td>在所有之前控件的右边(最大 X 范围加边距).</td></tr>
     <tr><td>ys</td><td>自最近一次使用 <a href="#Section">Section</a> 选项以来, 所有先前控件的右边.</td></tr>
-    <tr><td>y+<em>n</em> 或 yp</td><td>等同于前一个控件的左边缘(<a href="#xp">xp</a>).</td></tr>
+    <tr><td>xxxxx y+<em>n</em> 或 yp</td><td>等同于前一个控件的左边缘(<a href="#xp">xp</a>).</td></tr>
+    <tr><td>y+<em>n</em> or yp+<em>nonzero</em></td><td>Same as the previous control's left edge (<a href="#xp">xp</a>).</td></tr>
+    <tr><td>yp or yp+0</td><td>To the right of the previous control (right edge plus margin).</td></tr>
   </table>
 
   <p id="Events"><strong>存储和响应用户的输入</strong></p>
@@ -212,7 +216,7 @@ MyGui.Show</pre>
   </dd>
 </dl>
 <p>返回的对象包含每个命名控件的一个自有属性, 如 <code>NamedCtrlContents.%GuiCtrl.<a href="GuiControl.htm#Name">Name</a>% := GuiCtrl.<a href="GuiControl.htm#Value">Value</a></code>, 但有以下例外. 只有支持 <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 并被赋予名称的输入功能控件才会被包含在内. 使用 <code>NamedCtrlContents.NameOfControl</code> 来检索一个单独的值或 <a href="Object.htm#OwnProps">OwnProps</a> 来枚举所有的值.</p>
-<p>对于 <a href="../commands/GuiControls.htm#DropDownList">DropDownList</a>, <a href="../commands/GuiControls.htm#ComboBox">ComboBox</a>, <a href="../commands/GuiControls.htm#ListBox">ListBox</a> 和 <a href="../commands/GuiControls.htm#Tab">Tab</a>, 如果控件 <strong>没有</strong> <a href="#AltSubmit">AltSubmit</a> 选项, 或者如果 ComboBox 的文本与列表项不匹配, 则存储所选项目/Tab的文本而不是其位置编号. 否则, 将存储 <a href="GuiControl.htm#Value">Value</a>(项目的位置编号).</p>
+<p>对于 <a href="../commands/GuiControls.htm#DropDownList">DropDownList</a>, <a href="../commands/GuiControls.htm#ComboBox">ComboBox</a>, <a href="../commands/GuiControls.htm#ListBox">ListBox</a> 和 <a href="../commands/GuiControls.htm#Tab">Tab</a>, 如果控件 <strong>没有</strong> <a href="#AltSubmit">AltSubmit</a> 选项, 或者如果 ComboBox 的文本与列表项不匹配, 则存储所选项目/Tab 的文本而不是其位置编号. 否则, 将存储 <a href="GuiControl.htm#Value">Value</a>(项目的位置编号).</p>
 <p id="submit-radio">如果单选组中只有一个 <a href="../commands/GuiControls.htm#Radio">Radio</a> 按钮有名称, 则 Submit 将存储当前选中的按钮的编号, 而不是控件的 <a href="GuiControl.htm#Value">Value</a>. 1 是第一个单选按钮(根据原来的创建顺序), 2 是第二个, 以此类推. 如果没有选择按钮, 则存储 0.</p>
 <p>因为它们不具备输入功能, 排除以下控件: <a href="../commands/GuiControls.htm#Text">Text</a>, <a href="../commands/GuiControls.htm#Pic">Pic</a>, <a href="../commands/GuiControls.htm#GroupBox">GroupBox</a>, <a href="../commands/GuiControls.htm#Button">Button</a>, <a href="../commands/GuiControls.htm#Progress">Progress</a>, <a href="../commands/GuiControls.htm#Link">Link</a>, <a href="../commands/GuiControls.htm#StatusBar">StatusBar</a>.</p>
 <p>也不包括: <a href="../commands/ListView.htm">ListView</a>, <a href="../commands/TreeView.htm">TreeView</a>, <a href="../commands/GuiControls.htm#ActiveX">ActiveX</a>, <a href="../commands/GuiControls.htm#Custom">Custom</a>.</p>
@@ -345,9 +349,9 @@ WinSetTransColor("EEAA99", MyGui)</pre>
   <p><strong>Caption</strong>(默认具有此选项): 为窗口增加标题栏和粗边框.  当从将使用 <a href="../commands/WinSetTransColor.htm">WinSetTransColor</a> 的窗口中移除标题时, 只有在设置 TransColor 后才能移除.</p>
   <p><strong>Disabled</strong>: 禁用窗口, 阻止用户和窗口中的控件交互. 此选项常用于含有子窗口的窗口(请参阅 <a href="#Owner">Owner</a>).</p>
   <p id="DPIScale"><strong>DPIScale</strong>: 使用 <code>MyGui.Opt("-DPIScale")</code> 禁用 DPI 缩放, 它默认是启用的. 如果在使用非标准 DPI 设置的系统上启用 DPI 缩放, 则 Gui 对象和 <a href="GuiControl.htm">GuiControl 对象</a>会自动调整坐标和尺寸来让控件具有大致相同的外观尺寸(不过分辨率更高). 例如, 对于, 对于 144(150%) 的 DPI, <code>E := MyGui.Add("Edit", "w100")</code> 会让 Gui 宽度为 150 像素, 但 <code>E.GetPos(,,&amp;W)</code> 将保持 <em>W</em> 为 100. <a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 包含了系统当前 DPI.</p>
-  <p>DPI 缩放只适用于 Gui 对象和 <a href="GuiControl.htm">GuiControl 对象</a>,  所以直接来自其他来源的坐标, 如 ControlGetPos 或 WinGetPos 将无法使用. 有很多方法可以处理这个问题:</p>
+  <p>DPI 缩放只适用于 Gui 对象和 <a href="GuiControl.htm">GuiControl 对象</a>, 所以直接来自其他来源的坐标, 如 ControlGetPos 或 WinGetPos 将无法使用. 有很多方法可以处理这个问题:</p>
   <ul>
-    <li>尽可能避免使用硬编码坐标.  例如, 使用 <a href="#xp">xp</a>, <a href="#xs">xs</a>, <a href="#xm">xm</a> 和 <a href="#PosPlusMargin">x+m</a> 选项来定位控件, 并以<a href="#R">文本的行数</a>而不是像素来指定高度.</li>
+    <li>尽可能避免使用硬编码坐标. 例如, 使用 <a href="#xp">xp</a>, <a href="#xs">xs</a>, <a href="#xm">xm</a> 和 <a href="#PosPlusMargin">x+m</a> 选项来定位控件, 并以<a href="#R">文本的行数</a>而不是像素来指定高度.</li>
     <li>根据需要, 启用(<code>Gui.Opt("+DPIScale")</code>) 和禁用(<code>Gui.Opt("-DPIScale")</code>) 缩放. 更改这个设置并不会影响已经设置过的坐标或大小.</li>
     <li>手动缩放坐标. 例如, <code>x*(A_ScreenDPI/96)</code> 将 x 从逻辑/GUI 坐标转换为物理/非 GUI 坐标.</li>
   </ul>
