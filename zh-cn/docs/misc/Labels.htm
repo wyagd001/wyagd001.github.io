@@ -64,7 +64,23 @@ return</pre>
 <p>接受标签名的许多命令也可以接受<a href="../Variables.htm">变量</a>引用(例如 %MyLabel%), 此时变量中保存了目标标签的名称. 然而, 性能会稍微降低, 因为每次都必须 "查找" 目标标签名而不是只在脚本首次加载时查找一次.</p>
 
 <h2 id="hotkeys-and-hotstrings">热键和热字串</h2>
-<p><a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm#label">热字串标签</a>也可以作为 <a href="../commands/Goto.htm">Goto</a>, <a href="../commands/Gosub.htm">Gosub</a> 以及其他命令的目标. 然而, 如果一个热键或热字串含有多个<a href="../commands/_IfWinActive.htm">变体</a>, 则使用最接近脚本顶部的那个变体. 所有的热键修饰键或热字串选项都是标签名的一部分, 但不包括最后的双冒号(::).</p>
+<p>每个<a href="../Hotkeys.htm">双冒号热键</a>也会创建一个标签, 除非它是一个<a href="../Hotkeys.htm#Function">函数热键</a>. 标签的名称和脚本中的名称完全相同, 并且可以和 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 报告的热键名称不同, 比如说修饰符以不同的顺序写. 标签名称包括热键的修饰符, 但不包括最后的双冒号(<code>::</code>).</p>
+<p><a href="../Hotstrings.htm#label">热字串标签</a>的名称包括前面的冒号和选项, 但不包括最后的双冒号(<code>::</code>).</p>
+<p><a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm#label">热字串标签</a>也可以作为<a href="../commands/Goto.htm">Goto</a>, <a href="../commands/Gosub.htm">Gosub</a> 以及其他命令的有效目标. 然而, 一个热键或热串标签只有在它是给定名称的第一个标签时才能以这种方式使用. 例如:</p>
+<pre>gosub ^+a  <em>; 示例热键.</em>
+gosub +^a  <em>; 全局热键.</em>
+gosub Esc  <em>; Esc 标签.</em>
+ExitApp
+
+#IfWinActive Example
+^+a::MsgBox Example hotkey.
+Esc:
+    MsgBox Esc label.
+    return
+#If
++^a::MsgBox Global hotkey.
+Esc::MsgBox Esc hotkey.</pre>
+<p>这个限制也适用于 <a href="../commands/Hotkey.htm">Hotkey</a> 命令的 <em>Label</em> 参数.</p>
 
 <h2 id="named-loops">命名的循环</h2>
 <p>标签还可以用来标识循环, 以便用于 <a href="../commands/Continue.htm">Continue</a> 和 <a href="../commands/Break.htm">Break</a> 命令. 这样脚本可以很方便地继续或退出任意数目的内嵌循环.</p>

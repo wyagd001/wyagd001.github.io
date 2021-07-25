@@ -137,7 +137,7 @@ msgbox % (-2)**0.5 ; 结果为空
       <p><strong>逻辑非(!)</strong>: 如果运算数为空或 0, 那么逻辑非的结果为 1, 这表示 "真". 否则, 结果为 0(假). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. <span class="ver">[v1.0.46+]</span>: 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~)</strong>: 此运算符对运算数按位取反. 如果运算数为浮点数, 则在计算前把它截取成整数. 如果运算数介于 0 和 4294967295(0xffffffff) 之间, 那么它会被视为 <u>无符号的</u> 32 位值. 否则, 它被视为 <u>有符号的</u> 64 位值. 例如, <code>~0xf0f</code> 计算结果为 0xfffff0f0(4294963440).</p>
       <p id="amp"><strong>取址(&amp;)</strong>: <code>&amp;MyVar</code> 获取 <em>MyVar</em> 的内容的内存地址, 此地址一般和 <a href="commands/DllCall.htm#struct">DllCall 结构</a>一起使用. 同时 <code>&amp;MyVar</code> 也禁用了此变量中的二进制数的缓存, 如果它经常用于数学或数值比较, 那么这会拖慢其性能. 每当变量的地址改变时会重新启用它的缓存(例如使用 <a href="commands/VarSetCapacity.htm">VarSetCapacity()</a>).</p>
-      <p><strong>解除引用(*)</strong>: <code>*Expression</code> 假定 <code>Expression</code> 解析为数值的内存地址; 它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0; 但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="commands/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
+      <p><strong>解除引用(*)</strong>: <code>*Expression</code> 假定 <code>Expression</code> 解析为数字的内存地址; 它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0; 但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="commands/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
   </tr>
   <tr id="MulDiv">
     <td class="center bold">*<br>
@@ -159,7 +159,7 @@ msgbox % (-2)**0.5 ; 结果为空
   <tr id="bitwise">
     <td class="center bold">&lt;&lt;<br>
 	   &gt;&gt;</td>
-    <td><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点数在计算前会被截取成整数. 左移(<strong>&lt;&lt;</strong>) 相当于把 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂". 右移(<strong>&gt;&gt;</strong>)相当于把 <em>Value1</em> 除以 "2 的 <em>Value2</em> 次幂" 并把结果往下取整到最近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2.<br>译者注: 由于左移操作的运算速度比乘法的运算速度高很多, 因此在处理数据的乘法运算的时, 采用位移运算可以获得较快的速度(对 2 的乘法运算转换为位移运算, 可提高程序的运行效率).<br>实例过程演示: 例 5 &lt;&lt; 2(左移 2 位, 空出的位置上填 0, 最高位溢出则舍弃), 0000 0101(十进制 5) → 0001 0100(十进制 20). 右移与之相反, 对应除法(对 2 的整除运算).</td>
+    <td><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点数在计算前会被截取成整数. 左移(<strong>&lt;&lt;</strong>) 相当于把 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂". 右移(<strong>&gt;&gt;</strong>) 相当于把 <em>Value1</em> 除以 "2 的 <em>Value2</em> 次幂" 并把结果往下取整到最近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2.<br>译者注: 由于左移操作的运算速度比乘法的运算速度高很多, 因此在处理数据的乘法运算的时, 采用位移运算可以获得较快的速度(对 2 的乘法运算转换为位移运算, 可提高程序的运行效率).<br>实例过程演示: 例 5 &lt;&lt; 2(左移 2 位, 空出的位置上填 0, 最高位溢出则舍弃), 0000 0101(十进制 5) → 0001 0100(十进制 20). 右移与之相反, 对应除法(对 2 的整除运算).</td>
   </tr>
   <tr>
     <td class="center bold">&amp;<br>
@@ -169,7 +169,7 @@ msgbox % (-2)**0.5 ; 结果为空
     <td><strong>按位与(&amp;)</strong>, <strong>按位异或(^)</strong> 和 <strong>按位或(|)</strong>. 这三个运算符中, <strong>&amp;</strong> 优先级最高, 而 <strong>|</strong> 优先级最低. 任何浮点数在计算前会被截取成整数.<br>译者注: <strong>按位与(&amp;)</strong> 运算规则(二进制): 0&0=0; 0&1=0; 1&0=0; 1&1=1; 3&5=1(两位同时为 "1", 结果才为 "1", 否则为 0)
 <br>
 典型应用: 1. 清零特定位; 2. 取某数中指定位; 例子, 判断奇偶数 N&1; 只保留低八位 N&0xFF(255 以下的数字 & 0xFF 都得到原值).
-<br><strong>按位异或(^)</strong> 运算规则(二进制): 0^0=0; 0^1=1; 1^0=1; 1^1=0; 3^5=6(如果两个相应位为"异"(值不同), 则该位结果为 1, 否则为 0)
+<br><strong>按位异或(^)</strong> 运算规则(二进制): 0^0=0; 0^1=1; 1^0=1; 1^1=0; 3^5=6(如果两个相应位为 "异"(值不同), 则该位结果为 1, 否则为 0)
 <br>
 典型应用: 1. 使特定位翻转; 2. 保留原值 N^0;
 <br>
@@ -297,12 +297,12 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr>
     <td class="center">Fn(<strong><em>Params</em>*</strong>)</td>
-    <td><p><span class="ver">[AHK_L 60+]:</span> <a href="Functions.htm#VariadicCall">可变参数函数</a>. <em>Params(参数)</em> 是一个包含数组(对象)的参数值.</p></td>
+    <td><p><span class="ver">[AHK_L 60+]:</span> <a href="Functions.htm#VariadicCall">可变参数函数</a>. <em>Params(参数)</em> 是一个包含数组(对象) 的参数值.</p></td>
 </tr>
 <tr>
 <td class="center"><strong>x[y]<br>[a, b, c]</strong></td>
 <td>
-<p><span class="ver">[AHK_L 31+]:</span> <strong>成员访问</strong>. 得到或设置值或是对象 <i>x</i> 调用方法, 当 <i>y</i> 是一个参数列表时(特别是数组引索或键)或返回方法名的表达式.</p>
+<p><span class="ver">[AHK_L 31+]:</span> <strong>成员访问</strong>. 得到或设置值或是对象 <i>x</i> 调用方法, 当 <i>y</i> 是一个参数列表时(特别是数组引索或键) 或返回方法名的表达式.</p>
 <p><span class="ver">[v1.0.97+]:</span> <strong>数组标识符</strong>. 如果左方括号前面没有值(或者一个产生值的子表达式), 它被理解为一个数组的开始. 例如, <code>[a, b, c]</code> 等同于 <code>Array(a, b, c)</code>(a, b 和 c 是变量).</p>
 <p>查看<a href="Objects.htm#Usage_Simple_Arrays">数组语法</a>和<a href="Objects.htm#Usage_Objects">对象语法</a>以获取更多细节.</p>
 </td>
@@ -665,7 +665,7 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="TimeIdle">
     <td>A_TimeIdle</td>
-    <td>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入(例如 <a href="commands/Send.htm">Send</a> 或 <a href="commands/MouseMove.htm">MouseMove</a> 命令)会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如: <code>IfGreater, A_TimeIdle, 600000, MsgBox, The last keyboard or mouse activity was at least 10 minutes ago</code>. </td>
+    <td>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入(例如 <a href="commands/Send.htm">Send</a> 或 <a href="commands/MouseMove.htm">MouseMove</a> 命令) 会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如: <code>IfGreater, A_TimeIdle, 600000, MsgBox, The last keyboard or mouse activity was at least 10 minutes ago</code>. </td>
   </tr>
   <tr id="TimeIdlePhysical">
     <td>A_TimeIdlePhysical</td>
@@ -952,7 +952,7 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空
 	A_ScreenHeight</p></td>
     <td><p>主监视器的宽度和高度, 单位为像素(例如 1024 和 768).</p>
       <p>要获取多显示器系统中其他显示器的尺寸, 请使用 <a href="commands/SysGet.htm">SysGet</a>.</p>
-      <p>要获取整个桌面(即使它横跨多个显示器)的宽度和高度, 请使用下面的例子:</p>
+      <p>要获取整个桌面(即使它横跨多个显示器) 的宽度和高度, 请使用下面的例子:</p>
 <pre>
 <a href="commands/SysGet.htm">SysGet</a>, VirtualWidth, 78
 <a href="commands/SysGet.htm">SysGet</a>, VirtualHeight, 79
