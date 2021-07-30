@@ -14,6 +14,7 @@
   "Control Flow Statements":"控制流语句",
   "Declarations":"声明",
   "Operators":"运算符",
+  "Ahk2Exe Compiler":"Ahk2Exe 编译器",
   "S̲earch":"搜索(S)",
   "Search tab":true,
   "Shortcut: ALT+S":"快捷键: ALT+S",

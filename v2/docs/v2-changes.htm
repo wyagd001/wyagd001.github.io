@@ -58,20 +58,20 @@
 <p><strong><a href="#gui">Gui</a></strong></p>
 <ul>
   <li><a href="#gui-sub-commands">Gui 子命令</a></li>
-  <li><a href="#events">events</a></li>
-  <li><a href="#removed">removed</a></li>
-  <li><a href="#control-options">control-options</a></li>
-  <li><a href="#guicontrolget">guicontrolget</a></li>
-  <li><a href="#guicontrol">guicontrol</a></li>
-  <li><a href="#other-changes">other-changes</a></li>
+  <li><a href="#events">事件</a></li>
+  <li><a href="#removed">删除的</a></li>
+  <li><a href="#control-options">控件选项</a></li>
+  <li><a href="#guicontrolget">GuiControlGet</a></li>
+  <li><a href="#guicontrol">GuiControl</a></li>
+  <li><a href="#other-changes">其他更改</a></li>
 </ul>
 <p><strong><a href="#error-handling">错误处理</a></strong></p>
 <ul>
-  <li><a href="#continuable-errors">continuable-errors</a></li>
+  <li><a href="#continuable-errors">可继续错误</a></li>
   <li><a href="#errorlevel">ErrorLevel</a></li>
   <li><a href="#expressions-1">表达式</a></li>
   <li><a href="#functions-1">函数</a></li>
-  <li><a href="#catch">catch</a></li>
+  <li><a href="#catch">Catch</a></li>
 </ul>
 <p><strong><a href="#keyboard-mouse-hotkeys-and-hotstrings">键盘, 鼠标, 热键和热字串</a></strong></p>
 <p><strong><a href="#other">其他</a></strong></p>
@@ -579,7 +579,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <ul>
 <li>不计算拥有的窗口. 如果所有者窗口符合条件(与组不匹配), 所有者窗口或其拥有的一个窗口被激活; 以最后激活的为准. 一个由组成员拥有的窗口将不再被激活, 但将拥有的窗口本身添加到组中现在没有任何影响. (以前的行为是循环浏览每个拥有的窗口, 而从不激活其所有者.)</li>
 <li>任何被禁用的窗口都会被跳过, 除非其拥有的一个窗口最近比它更活跃.</li>
-<li>具有 WS_EX_NOACTIVATE 风格的窗口被跳过, 因为它们可能不应该被激活. 它们也会被 <kbd>Alt</kbd>+<kbd>Esc</kbd> and <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> 系统热键跳过.</li>
+<li>具有 WS_EX_NOACTIVATE 风格的窗口被跳过, 因为它们可能不应该被激活. 它们也会被 <kbd>Alt</kbd>+<kbd>Esc</kbd> 和 <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> 系统热键跳过.</li>
 <li>具有 WS_EX_TOOLWINDOW 但不具有 WS_EX_APPWINDOW 的窗口被从任务栏和 Alt-Tab 中省略, 因此被跳过.</li>
 </ul>
 <p><a href="commands/Hotkey.htm">Hotkey</a> 不再默认为脚本中最底层 <a href="commands/_HotIf.htm">#HotIf</a>(以前是 <code>#If</code>). 热键/热字串和 HotIf 线程默认为与热键相同的条件, 因此 <code>Hotkey A_ThisHotkey, "Off"</code> 会关闭当前热键, 即使它是上下文相关的. 所有其他线程默认为自动执行部分使用的最后一个设置, 它本身默认为没有条件(全局热键).</p>
@@ -1003,7 +1003,7 @@ Name    := MonitorGetName(N)
 <p><strong>Gui Destroy</strong> → <a href="objects/Gui.htm#Destroy">GuiObj.Destroy()</a>. 该对象仍然存在(直到脚本释放它), 但不能使用. 必须创建新的 GUI(如果需要). 删除对象时, 窗口也会被销毁, 但当窗口可见时, 该对象将 "保持活动状态".</p>
 <p><strong>Gui Font</strong> → <a href="objects/Gui.htm#SetFont">GuiObj.SetFont()</a>. 也可以使用 GuiCtrl.SetFont() 直接设置控件的字体.</p>
 <p><strong>Gui Color</strong> → <a href="objects/Gui.htm#BackColor">GuiObj.BackColor</a> 设置/返回背景颜色. 不支持 <em>ControlColor</em>(第二个参数), 但所有以前支持它的控件都可以使用 <code>+Background</code> 选项来设置背景. 与 Gui Color 不同, GuiObj.BackColor 不会影响 Progress 控件或禁用的/只读的 Edit, DDL, ComboBox 或 TreeView(带有 -Theme) 控件.</p>
-<p><strong>Gui Margin</strong> → <a href="objects/Gui.htm#MarginX">GuiObj.MarginX</a> and <a href="objects/Gui.htm#MarginY">GuiObj.MarginY</a> 属性.</p>
+<p><strong>Gui Margin</strong> → <a href="objects/Gui.htm#MarginX">GuiObj.MarginX</a> 和 <a href="objects/Gui.htm#MarginY">GuiObj.MarginY</a> 属性.</p>
 <p><strong>Gui Menu</strong> → <a href="objects/Gui.htm#MenuBar">GuiObj.MenuBar</a> 设置/返回使用 <code>MenuBar()</code> 创建的 MenuBar 对象.</p>
 <p><strong>Gui Cancel/Hide/Minimize/Maximize/Restore</strong> → 使用同名的 Gui 方法.</p>
 <p><strong>Gui Flash</strong> → <a href="objects/Gui.htm#Flash">GuiObj.Flash()</a>, 但使用 <code>false</code> 代替 <code>Off</code>.</p>
@@ -1021,66 +1021,66 @@ Name    := MonitorGetName(N)
 <p>ListView 的 Click, DoubleClick 和 ContextMenu(当由右键触发时) 事件现在报告被点击的项目(如果没有则为 0), 而不是焦点项目.</p>
 <p>ListView 的 I 事件被分割成多个事件, 除了 f(取消焦点)事件, 因为它被 F(ItemFocus) 所隐含, 所以被排除.</p>
 <p>ListView 的 e(ItemEdit) 事件在用户取消时被忽略.</p>
-<p>Slider 的 Change 事件比 V1 的 g-label 事件更稳定地被引发; 也就是说, 它不再默认忽略鼠标滚轮的变化. 有关详情, 请参阅 <a href="commands/GuiControls.htm#slider-change">Detecting Changes (Slider)</a>.</p>
+<p>Slider 的 Change 事件比 V1 的 g-label 事件更稳定地被引发; 也就是说, 它不再默认忽略鼠标滚轮的变化. 有关详情, 请参阅<a href="commands/GuiControls.htm#slider-change">检测更改(Slider)</a>.</p>
 <p>BS_NOTIFY 样式现在会根据需要自动添加到 Button, CheckBox 和 Radio 控件. 它不再被默认应用于 Radio 控件.</p>
 <p>Focus(以前的 F) 和 LoseFocus(以前的 f) 支持更多的(但不是全部) 控件类型.</p>
-<p>Setting an Edit control's text with Edit.Value or Edit.Text does not trigger the control's Change event, whereas GuiControl would trigger the control's g-label.</p>
+<p>使用 Edit.Value 或 Edit.Text 设置 Edit 控件的文本不会触发该控件的 Change 事件, 而 GuiControl 会触发该控件的 g-label.</p>
 <p>LV/TV.Add/Modify 现在抑制了项目变更事件, 所以这类事件只能由用户操作或 SendMessage 引发.</p>
 <h3 id="removed">删除的</h3>
 <p>+Delimiter<br>
-+Hwnd<em>OutputVar</em> (use <a href="objects/Gui.htm#Hwnd">GuiObj.Hwnd</a> or <a href="objects/GuiControl.htm#Hwnd">GuiCtrl.Hwnd</a> instead)<br>
++Hwnd<em>OutputVar</em> (使用 <a href="objects/Gui.htm#Hwnd">GuiObj.Hwnd</a> 或 <a href="objects/GuiControl.htm#Hwnd">GuiCtrl.Hwnd</a> 代替)<br>
 +Label<br>
 +LastFoundExist<br>
 Gui GuiName: Default</p>
 <h3 id="control-options">控件选项</h3>
-<p>+/-Background is interpreted and supported more consistently. All controls which supported "Gui Color" now support <code>+Background<i>Color</i></code> and <code>+BackgroundDefault</code> (synonymous with <code>-Background</code>), not just ListView/TreeView/StatusBar/Progress.</p>
-<p><a href="objects/Gui.htm#Add">GuiObj.Add</a> defaults to <code>y+m</code>/<code>x+m</code> instead of <code>yp</code>/<code>xp</code> when <code>xp</code>/<code>yp</code> or <code>xp+0</code>/<code>yp+0</code> is used. In other words, the control is placed below/to the right of the previous control instead of at exactly the same position. If a non-zero offset is used, the behaviour is the same as in v1. To use exactly the same position, specify <code>xp yp</code> together.</p>
-<p><code>x+m</code> and <code>y+m</code> can be followed by an additional offset, such as <code>x+m+10</code> (<code>x+m10</code> is also valid, but less readable).</p>
-<p><code>Choose</code> no longer serves as a redundant (undocumented) way to specify the value for a MonthCal. Just use the <em>Text</em> parameter, as before.</p>
+<p>对 +/-Background 的解释和支持更加一致. 所有支持 "Gui Color" 的控件现在都支持 <code>+Background<i>Color</i></code> 和 <code>+BackgroundDefault</code>(<code>-Background</code> 相同), 而不仅仅是 ListView/TreeView/StatusBar/Progress.</p>
+<p>当使用 <code>xp</code>/<code>yp</code> 或 <code>xp+0</code>/<code>yp+0</code> 时, <a href="objects/Gui.htm#Add">GuiObj.Add</a> 默认为 <code>y+m</code>/<code>x+m</code>, 而不是 <code>yp</code>/<code>xp</code>. 换句话说, 控件被放置在前一个控件的下面/右边, 而不是在完全相同的位置. 如果使用非零偏移, 行为与 v1 相同. 要使用完全相同的位置, 请同时指定 <code>xp yp</code>.</p>
+<p><code>x+m</code> 和 <code>y+m</code> 后面可以跟一个额外的偏移量, 如 <code>x+m+10</code>(<code>x+m10</code> 也是有效的, 但可读性差).</p>
+<p><code>Choose</code> 不再是指定 MonthCal 值的一个多余的(无文档) 方式. 就像以前一样, 使用 <em>Text</em> 参数.</p>
 <h3 id="guicontrolget">GuiControlGet</h3>
-<h4 id="empty-sub-command">Empty sub-command</h4>
-<p>GuiControlGet's empty sub-command had two modes: the default mode, and text mode, where the fourth parameter was the word <code>Text</code>. If a control type had no single "value", GuiControlGet defaulted to returning the result of <a href="https://msdn.microsoft.com/library/ms633520">GetWindowText</a> (which isn't always visible text). Some controls had no visible text, or did not support retrieving it, so completely ignored the fourth parameter. By contrast, <a href="objects/GuiControl.htm#Text">GuiCtrl.Text</a> returns display text, hidden text (the same text returned by ControlGetText) or nothing at all.</p>
-<p>The table below shows the closest equivalent property or function for each mode of GuiControlGet and control type.</p>
+<h4 id="empty-sub-command">空子命令</h4>
+<p>GuiControlGet 的空子命令有两种模式: 默认模式和文本模式, 其中第四个参数是单词 <code>Text</code>. 如果控件类型没有单一的 "value", GuiControlGet 默认为返回 <a href="https://msdn.microsoft.com/library/ms633520">GetWindowText</a> 的结果(不一定是可见文本). 有些控件没有可见文本, 或者不支持检索它, 所以完全忽略了第四个参数. 相比之下, <a href="objects/GuiControl.htm#Text">GuiCtrl.Text</a> 会返回显示文本, 隐藏文本(与 ControlGetText 返回的文本相同) 或者什么都没有.</p>
+<p>下表显示了 GuiControlGet 的每种模式和控件类型的最接近的等价属性或函数.</p>
 <table class="info">
-<tr><th>Control</th><th>Default</th><th>Text</th><th>Notes</th></tr>
-<tr><td>ActiveX</td><td>.Value</td><td>.Text</td><td>Text is hidden. See below.</td></tr>
+<tr><th>控件</th><th>默认</th><th>文本</th><th>注意</th></tr>
+<tr><td>ActiveX</td><td>.Value</td><td>.Text</td><td>文本处于隐藏状态. 见下文.</td></tr>
 <tr><td>Button</td><td colspan="2">.Text</td><td></td></tr>
 <tr><td>CheckBox</td><td>.Value</td><td>.Text</td><td></td></tr>
-<tr><td>ComboBox</td><td>.Text</td><td>ControlGetText()</td><td>Use Value instead of Text if AltSubmit was used (but Value returns 0 if Text does not match a list item). Text performs case-correction, whereas ControlGetText returns the Edit field's content.</td></tr>
+<tr><td>ComboBox</td><td>.Text</td><td>ControlGetText()</td><td>如果使用了 AltSubmit, 请使用 Value 而不是 Text(但如果 Text 与列表项目不匹配,则 Value 返回 0). Text 执行大小写更正, 而 ControlGetText 返回 Edit 区域的内容.</td></tr>
 <tr><td>Custom</td><td colspan="2">.Text</td><td></td></tr>
 <tr><td>DateTime</td><td colspan="2">.Value</td><td></td></tr>
-<tr><td>DDL</td><td colspan="2">.Text</td><td>Use Value instead of Text if AltSubmit was used.</td></tr>
+<tr><td>DDL</td><td colspan="2">.Text</td><td>如果使用了 AltSubmit, 请使用 Value 而不是 Text.</td></tr>
 <tr><td>Edit</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>GroupBox</td><td colspan="2">.Text</td><td></td></tr>
 <tr><td>Hotkey</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>Link</td><td colspan="2">.Text</td><td></td></tr>
-<tr><td>ListBox</td><td>.Text</td><td>ControlGetText()</td><td>Use Value instead of Text if AltSubmit was used. Text returns the selected item's text, whereas ControlGetText returns hidden text. See below.</td></tr>
-<tr><td>ListView</td><td colspan="2">.Text</td><td>Text is hidden.</td></tr>
+<tr><td>ListBox</td><td>.Text</td><td>ControlGetText()</td><td>如果使用了 AltSubmit, 请使用 Value 而不是 Text. Text 返回所选项目的文本, 而 ControlGetText 返回隐藏文本. 见下文.</td></tr>
+<tr><td>ListView</td><td colspan="2">.Text</td><td>文本处于隐藏状态.</td></tr>
 <tr><td>MonthCal</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>Picture</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>Progress</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>Radio</td><td>.Value</td><td>.Text</td><td></td></tr>
 <tr><td>Slider</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>StatusBar</td><td colspan="2">.Text</td><td></td></tr>
-<tr><td>Tab</td><td>.Text</td><td>ControlGetText()</td><td>Use Value instead of Text if AltSubmit was used. Text returns the selected tab's text, whereas ControlGetText returns hidden text.</td></tr>
+<tr><td>Tab</td><td>.Text</td><td>ControlGetText()</td><td>如果使用了 AltSubmit, 请使用 Value 而不是 Text. Text 返回所选选项卡的文本, 而 ControlGetText 返回隐藏文本.</td></tr>
 <tr><td>Text</td><td colspan="2">.Text</td><td></td></tr>
-<tr><td>TreeView</td><td colspan="2">.Text</td><td>Text is hidden.</td></tr>
+<tr><td>TreeView</td><td colspan="2">.Text</td><td>文本处于隐藏状态.</td></tr>
 <tr><td>UpDown</td><td colspan="2">.Value</td><td></td></tr>
 </table>
-<p>ListBox: For multi-select ListBox, Text and Value return an array instead of a pipe-delimited list.</p>
-<p>ActiveX: <a href="objects/GuiControl.htm#Value">GuiCtrl.Value</a> returns the same object each time, whereas GuiControlGet created a new wrapper object each time. Consequently, it is no longer necessary to retain a reference to an ActiveX object for the purpose of keeping a <a href="commands/ComObjConnect.htm">ComObjConnect</a> connection alive.</p>
-<h4 id="other-sub-commands">Other sub-commands</h4>
+<p>ListBox: 对于多选 ListBox, Text 和 Value 返回数组, 而不是管道分隔的列表.</p>
+<p>ActiveX: <a href="objects/GuiControl.htm#Value">GuiCtrl.Value</a> 每次都会返回相同的对象, 而 GuiControlGet 每次都会创建一个新的封装对象. 因此, 为了保持 <a href="commands/ComObjConnect.htm">ComObjConnect</a> 连接处于活动状态, 不再需要保留对 ActiveX 对象的引用.</p>
+<h4 id="other-sub-commands">其他子命令</h4>
 <p><strong>Pos</strong> → <a href="objects/GuiControl.htm#GetPos">GuiCtrl.GetPos()</a></p>
-<p><strong>Focus</strong> → <a href="objects/Gui.htm#FocusedCtrl">GuiObj.FocusedCtrl</a>; returns a GuiControl object instead of the ClassNN.</p>
+<p><strong>Focus</strong> → <a href="objects/Gui.htm#FocusedCtrl">GuiObj.FocusedCtrl</a>; 返回一个 GuiControl 对象而不是 ClassNN.</p>
 <p><strong>FocusV</strong> → <code>GuiObj.FocusedCtrl.Name</code></p>
-<p><strong>Hwnd</strong> → <a href="objects/GuiControl.htm#Hwnd">GuiCtrl.Hwnd</a>; returns a pure integer, not a hexadecimal string.</p>
-<p><strong>Enabled/Visible/Name</strong> → GuiCtrl properties of the same name.</p>
+<p><strong>Hwnd</strong> → <a href="objects/GuiControl.htm#Hwnd">GuiCtrl.Hwnd</a>; 返回一个纯整数, 而不是十六进制的字符串.</p>
+<p><strong>Enabled/Visible/Name</strong> → 同名的 GuiCtrl 属性.</p>
 <h3 id="guicontrol">GuiControl</h3>
-<h4 id="blank-and-text-sub-commands">(Blank) and Text sub-commands</h4>
-<p>The table below shows the closest equivalent property or function for each mode of GuiControl and control type.</p>
+<h4 id="blank-and-text-sub-commands">(空) 和 Text 子命令</h4>
+<p>下表显示了 GuiControl 的每种模式和控件类型的最接近的等效属性或函数.</p>
 <table class="info">
-<tr><th>Control</th><th>(Blank)</th><th>Text</th><th>Notes</th></tr>
-<tr><td>ActiveX</td><td colspan="2">N/A</td><td>Command had no effect.</td></tr>
+<tr><th>控件</th><th>(Blank)</th><th>Text</th><th>注意</th></tr>
+<tr><td>ActiveX</td><td colspan="2">N/A</td><td>命令没有效果.</td></tr>
 <tr><td>Button</td><td colspan="2">.Text</td><td></td></tr>
 <tr><td>CheckBox</td><td>.Value</td><td>.Text</td><td></td></tr>
 <tr><td>ComboBox</td><td>.Delete/Add/Choose</td><td>.Text</td><td></td></tr>
@@ -1092,38 +1092,38 @@ Gui GuiName: Default</p>
 <tr><td>Hotkey</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>Link</td><td colspan="2">.Text</td><td></td></tr>
 <tr><td>ListBox</td><td colspan="2">.Delete/Add/Choose</td><td></td></tr>
-<tr><td>ListView</td><td colspan="2">N/A</td><td>Command had no effect.</td></tr>
+<tr><td>ListView</td><td colspan="2">N/A</td><td>命令没有效果.</td></tr>
 <tr><td>MonthCal</td><td colspan="2">.Value</td><td></td></tr>
 <tr><td>Picture</td><td colspan="2">.Value</td><td></td></tr>
-<tr><td>Progress</td><td colspan="2">.Value</td><td>Use the <code>+=</code> operator instead of the <code>+</code> prefix.</td></tr>
+<tr><td>Progress</td><td colspan="2">.Value</td><td>使用 <code>+=</code> 运算符代替 <code>+</code> 前缀.</td></tr>
 <tr><td>Radio</td><td>.Value</td><td>.Text</td><td></td></tr>
-<tr><td>Slider</td><td colspan="2">.Value</td><td>Use the <code>+=</code> operator instead of the <code>+</code> prefix.</td></tr>
+<tr><td>Slider</td><td colspan="2">.Value</td><td>使用 <code>+=</code> 运算符代替 <code>+</code> 前缀.</td></tr>
 <tr><td>StatusBar</td><td colspan="2">.Text or SB.SetText()</td><td></td></tr>
 <tr><td>Tab</td><td colspan="2">.Delete/Add/Choose</td><td></td></tr>
 <tr><td>Text</td><td colspan="2">.Text</td><td></td></tr>
-<tr><td>TreeView</td><td colspan="2">N/A</td><td>Command had no effect.</td></tr>
-<tr><td>UpDown</td><td colspan="2">.Value</td><td>Use the <code>+=</code> operator instead of the <code>+</code> prefix.</td></tr>
+<tr><td>TreeView</td><td colspan="2">N/A</td><td>命令没有效果.</td></tr>
+<tr><td>UpDown</td><td colspan="2">.Value</td><td>使用 <code>+=</code> 运算符代替 <code>+</code> 前缀.</td></tr>
 </table>
-<h4 id="other-sub-commands-1">Other sub-commands</h4>
+<h4 id="other-sub-commands-1">其他子命令</h4>
 <p><strong>Move</strong> → <a href="objects/GuiControl.htm#Move">GuiCtrl.Move(x, y, w, h)</a></p>
 <p><strong>MoveDraw</strong> → GuiCtrl.Move(x, y, w, h), <a href="objects/GuiControl.htm#Redraw">GuiCtrl.Redraw()</a></p>
-<p><strong>Focus</strong> → <a href="objects/GuiControl.htm">GuiCtrl.Focus()</a>, which now uses WM_NEXTDLGCTL instead of SetFocus, so that focusing a Button temporarily sets it as the default, consistent with tabbing to the control.</p>
+<p><strong>Focus</strong> → <a href="objects/GuiControl.htm">GuiCtrl.Focus()</a>, 现在使用 WM_NEXTDLGCTL 而不是 SetFocus, 因此聚焦 Button 可以暂时将其设置为默认值, 这与制表时的控件一致.</p>
 <p><strong>Enable/Disable</strong> → set <a href="objects/GuiControl.htm#Enabled">GuiCtrl.Enabled</a></p>
 <p><strong>Hide/Show</strong> → set <a href="objects/GuiControl.htm#Visible">GuiCtrl.Visible</a></p>
-<p><strong>Choose</strong> → <a href="objects/GuiControl.htm#Choose">GuiCtrl.Choose(n)</a>, where in is a pure integer. The <code>|n</code> or <code>||n</code> mode is not supported (use ControlChoose instead, if needed).</p>
-<p><strong>ChooseString</strong> → <a href="objects/GuiControl.htm#Choose">GuiCtrl.Choose(s)</a>, where s is not a pure integer. The <code>|n</code> or <code>||n</code> mode is not supported. If the string matches multiple items in a multi-select ListBox, Choose() selects them all, not just the first.</p>
+<p><strong>Choose</strong> → <a href="objects/GuiControl.htm#Choose">GuiCtrl.Choose(n)</a>, 其中 n 为纯整数. 不支持 <code>|n</code> 或 <code>||n</code> 模式(如果需要, 使用 ControlChoose 代替).</p>
+<p><strong>ChooseString</strong> → <a href="objects/GuiControl.htm#Choose">GuiCtrl.Choose(s)</a>, 其中 s 不是一个纯整数. 不支持 <code>|n</code> 或 <code>||n</code> 模式. 如果字符串与多选列表框中的多个项目匹配, Choose() 将全部选择, 而不是只选择第一个.</p>
 <p><strong>Font</strong> → <a href="objects/GuiControl.htm#SetFont">GuiCtrl.SetFont()</a></p>
 <p><strong>+/-Option</strong> → <a href="objects/GuiControl.htm#Opt">GuiCtrl.Opt("+/-Option")</a></p>
 <h3 id="other-changes">其他更改</h3>
-<p>Progress Gui controls no longer have the PBS_SMOOTH style by default, so they are now styled according to the system visual style.</p>
-<p>The default margins and control sizes (particularly for Button controls) may differ slightly from v1 when DPI is greater than 100%.</p>
-<p>Picture controls no longer delete their current image when they fail to set a new image via <code>GuiCtrl.Value := "new image.png"</code>. However, removing the current image with <code>GuiCtrl.Value := ""</code> is permitted.</p>
+<p>Progress Gui 控件不再具有默认的 PBS_SMOOTH 样式, 因此它们现在是根据系统的视觉样式来设计的.</p>
+<p>当 DPI 大于 100% 时, 默认的边距和控件尺寸(尤其是 Button 控件) 可能与 v1 版略有不同.</p>
+<p>当图片控件无法通过 <code>GuiCtrl.Value := "new image.png"</code> 设置新图片时, 不再删除当前图片. 但是, 允许通过 <code>GuiCtrl.Value := ""</code> 删除当前图像.</p>
 <h2 id="error-handling">错误处理</h2>
 <p>在退出脚本之前, <a href="commands/OnError.htm">OnError</a> 现在被调用来处理关键性的错误. 尽管脚本可能不处于安全的执行状态, 但仍会进行尝试, 这与 OnExit 一致.</p>
-<p>运行时错误不再将 <code>Exception.What</code> 设置为当前正在运行的用户定义的函数或子函数(但在调用 <code>Error()</code> 时仍会这样做, 但没有第二个参数). 这给了 <code>What</code> 一个更明确的目的：一个函数名称表示该函数的失败(而不是调用该函数或评估其参数的失败). 对于表达式评估和控制流错误 <code>What</code> 是空白的(其他一些也可能是空白).</p>
+<p>运行时错误不再将 <code>Exception.What</code> 设置为当前正在运行的用户定义的函数或子函数(但在调用 <code>Error()</code> 时仍会这样做, 但没有第二个参数). 这给了 <code>What</code> 一个更明确的目的: 函数名称表示该函数的失败(而不是调用该函数或计算其参数的失败). 对于表达式计算和控制流错误, <code>What</code> 是空白的(其他一些也可能是空白).</p>
 <p>由运行时错误抛出的异常对象现在可以被识别为新的 Error 类或更具体的子类的实例. Error 对象有一个 <code>Stack</code> 属性, 包含一个堆栈跟踪. 如果 <em>What</em> 参数指定了一个正在运行的函数的名称, 那么现在会根据哪一行调用该函数来设置 <em>File</em> 和 <em>Line</em> .</p>
-<p>Try-catch 语法已经改变, 允许脚本捕捉特定的错误类, 而不捕捉其他错误. See <a href="#catch">Catch</a> below for details.</p>
-<h3 id="continuable-errors">Continuable Errors</h3>
+<p>Try-catch 语法已经改变, 允许脚本捕捉特定的错误类, 而不捕捉其他错误. 有关详情, 请参阅下文的 <a href="#catch">Catch</a> 章节.</p>
+<h3 id="continuable-errors">可继续错误(不中断脚本运行)</h3>
 <p>在大多数情况下, 错误对话框现在提供了继续当前线程的选项(而不是退出线程). COM 错误现在在选择不继续时退出线程(而不是退出整个脚本).</p>
 <p>脚本不应依赖于此. 如果错误是由一个内置函数引发的, 继续会导致它返回 "". 如果错误是由表达式计算器引发的(比如无效的动态引用或除以 0), 表达式会被中止, 并返回 ""(如果用作控制流语句的参数).</p>
 <p>在某些情况下, 代码不支持继续, 继续的选项不应该被显示. 对于旨在终止脚本的关键错误, 也不显示该选项.</p>
@@ -1134,60 +1134,60 @@ Gui GuiName: Default</p>
 <li>"ExitApp": 这是一个关键错误. 返回非零值会停止进一步的处理, 但脚本仍然被终止.</li>
 </ul>
 <h3 id="errorlevel">ErrorLevel</h3>
-<p>ErrorLevel 已经被删除. 脚本的编写经常(也许通常) 没有错误检查, 所以为错误设置 ErrorLevel 的政策经常让它们没有被发现. 一个即时的错误信息可能看起来有点对抗性, 但通常更有帮助.</p>
+<p>ErrorLevel 已经被删除. 脚本的编写经常(也许通常) 没有错误检查, 所以为错误设置 ErrorLevel 的策略经常让它们不被检测到. 即时的错误信息可能看起来有点对抗性, 但通常更有帮助.</p>
 <p>在以前设置 ErrorLevel 以指示错误情况的地方, 会抛出一个异常, 并有一个(通常) 更有用的错误信息.</p>
 <p>诸如 "Process Exist" 之类的命令使用它来返回一个值, 现在只是返回这个值(例如 <code>pid := ProcessExist()</code>) 或更有用的东西(例如 <code>hwnd := GroupActivate(group)</code>).</p>
 <p>在某些情况下, ErrorLevel 被用于辅助返回值.</p>
 <ul>
 <li>使用 U 选项的 <a href="commands/Sort.htm">Sort</a> 不再返回删除的重复数.</li>
 <li><code>Input</code> 被删除. 它被 InputHook 所取代. 几行代码可以做一个简单的替换, 返回一个包含结果的 InputHook 对象, 而不是使用 ErrorLevel 和一个 OutputVar.</li>
-<li><a href="commands/InputBox.htm">InputBox</a> 返回一个带有结果 <code>result</code> (OK, Cancel or Timeout) and <code>value</code> 和值属性的对象.</li>
+<li><a href="commands/InputBox.htm">InputBox</a> 返回一个带有 <code>result</code>(OK, Cancel 或 Timeout) 和 <code>value</code> 属性的对象.</li>
 </ul>
 <p>以前在 ErrorLevel 中存储失败次数的文件函数现在在抛出的异常对象的 <code>Extra</code> 属性中抛出它.</p>
-<p><a href="commands/SendMessage.htm">SendMessage</a> 超时通常是一种异常情况, 所以会导致扔出一个 <code>TimeoutError</code> to be thrown. <code>TargetError</code> 和 <code>OSError</code> 可能会在其他条件下被抛出.</p>
-<p>The  modes of the <a href="commands/Run.htm">Run</a> and <a href="commands/Hotkey.htm">Hotkey</a> 函数的 <code>UseErrorLevel</code> 模式被移除. 这种模式之前就加入 <code>Try</code>/<code>Catch</code> to the language. 菜单和 Gui 也有这种模式, 但被替换为对象(不使用 ErrorLevel).</p>
-<h3 id="expressions-1">Expressions</h3>
+<p><a href="commands/SendMessage.htm">SendMessage</a> 超时通常是一种异常情况, 所以会导致抛出 <code>TimeoutError</code>. <code>TargetError</code> 和 <code>OSError</code> 可能会在其他条件下被抛出.</p>
+<p><a href="commands/Run.htm">Run</a> 和 <a href="commands/Hotkey.htm">Hotkey</a> 函数的 <code>UseErrorLevel</code> 模式被移除. 这种模式在语言中加入 <code>Try</code>/<code>Catch</code> 之前就有了. 菜单和 Gui 也有这种模式, 但被替换为对象(不使用 ErrorLevel).</p>
+<h3 id="expressions-1">表达式</h3>
 <p>与 v1 相比, 更多的语法错误会引发加载时错误, 如:</p>
 <ul>
-<li>空括号(与函数名相邻的除外) ; 例如 <code>x ()</code></li>
+<li>空括号(与函数名相邻的除外); 例如 <code>x ()</code></li>
 <li>前缀运算符使用错误或缺少操作数; 例如 <code>x!</code></li>
 <li>少于两个操作数的二元运算符.</li>
-<li>少于三个操作数的三元操作数.</li>
+<li>少于三个操作数的三元运算符.</li>
 <li>赋值的目标不是一个可写的变量或属性.</li>
 </ul>
 <p>当发生以下任何故障时, 会抛出一个异常(而不是忽略该故障或产生一个空字符串):</p>
 <ul>
 <li>试图对一个非数字值进行数学运算. (数字字符串是可以的.)</li>
-<li>除以 0 或其他无效/不支持的输入, 如 <code>(-1)**1.5</code>. 注意, 有些情况会被新检测为无效, 如 <code>0**0</code> and <code>a&lt;&lt;b</code> or <code>a&gt;&gt;b</code> where <code>b</code> is not in the range 0..63.</li>
+<li>除以 0 或其他无效/不支持的输入, 如 <code>(-1)**1.5</code>. 注意, 有些情况会被新检测为无效, 如 <code>0**0</code> 和 <code>a&lt;&lt;b</code> 或 <code>a&gt;&gt;b</code>, 其中 <code>b</code> 的范围不在 0..63.</li>
 <li>未能为内置函数的返回值, 串联或表达式的结果分配内存.</li>
 <li>堆栈下溢(通常由语法错误引起).</li>
 <li>试图向不是变量(或数组元素) 的东西赋值.</li>
 <li>试图向一个只读变量赋值.</li>
-<li>试图用一个空的名字进行双参考, 如 <code>fn(%empty%)</code>.</li>
+<li>试图用一个空的名字进行双重解引, 如 <code>fn(%empty%)</code>.</li>
 <li>未能执行动态函数调用或方法调用.</li>
 <li>一个方法/属性调用失败, 因为该值没有实现该方法/属性. (对于 v1 中的关联数组, 只有方法调用可以导致这种情况).)</li>
 <li>由于内存分配失败而导致对象分配失败.</li>
 </ul>
-<p>上面的一些条件在 v1 中被检测到, 但在表达式中间没有被检测到; 例如, <code>A_AhkPath := x</code> is detected in v1 but <code>y := x, A_AhkPath := x</code> is only detected in v2.</p>
-<p>独立使用运算符 <code>+=</code>, <code>-=</code>, <code>--</code> and <code>++</code> 不再将空变量视为 0. 这与 v1 不同, 在 v1 中, 独立使用运算符时将空变量视为 0, 但在表达式中间或与多语句逗号一起使用时则不会.</p>
-<h3 id="functions-1">Functions</h3>
+<p>上面的一些条件在 v1 中被检测到, 但在表达式中间没有被检测到; 例如, <code>A_AhkPath := x</code> 在 v1 中检测到, 但在 v2 中仅在 <code>y := x, A_AhkPath := x</code> 检测到.</p>
+<p>独立使用运算符 <code>+=</code>, <code>-=</code>, <code>--</code> 和 <code>++</code> 不再将空变量视为 0. 这与 v1 不同, 在 v1 中, 独立使用运算符时将空变量视为 0, 但在表达式中间或与多语句逗号一起使用时则不会.</p>
+<h3 id="functions-1">函数</h3>
 <p>函数在失败时通常会抛出一个异常. 特别是:</p>
 <ul>
 <li>
 <p>由于 <a href="commands/DllCall.htm">DllCall</a>, <a href="commands/RegExMatch.htm">RegExMatch</a> 和 <a href="commands/RegExReplace.htm">RegExReplace</a> 的不正确使用导致的错误相当普遍, 因为它们很复杂, 而且(像许多错误一样) 如果立即显示错误信息, 则更容易发现和调试.</p>
 </li>
 <li>
-<p>如果<a href="commands/Math.htm">数学函数</a>的任何输入不是数字, 或者操作无效(如除以 0), 则抛出一个异常.</p>
+<p>如果<a href="commands/Math.htm">数学函数</a>的任何输入不是数字, 或者操作无效(如除以 0), 则抛出异常.</p>
 </li>
 <li>
 <p>带有 <em>WinTitle</em> 参数的函数(有例外, 如 <a href="commands/WinClose.htm">WinClose</a> 的 ahk_group 模式), 如果没有找到目标窗口或控件就会抛出.</p>
 </li>
 </ul>
 <p>对一些以前没有检测到的错误抛出了异常, 一些被错误地标记为错误的条件(以前是通过设置 ErrorLevel) 被修复.</p>
-<p>Some error messages have been changed.</p>
+<p>某些 error 消息已经发生变化.</p>
 <h3 id="catch">Catch</h3>
 <p><a href="commands/Catch.htm">Catch</a> 的语法已经改变, 以提供一种方法来捕获特定的错误类别, 而不捕获其他的错误(将控制权转移到调用堆栈更上层的另一个 Catch, 或报告错误并退出线程). 以前这需要捕捉所有类型的抛出值, 然后检查类型并重新抛出. 例如:</p>
-<pre><em>; Old (uses obsolete v2.0-a rules for demonstration since v1 had no `is` or Error classes)</em>
+<pre><em>; 旧的(使用废弃的 v2.0-a 规则进行演示, 因为 v1 没有 `is` 或 Error 类)</em>
 try
     SendMessage msg,,, "Control1", "The Window"
 catch err
@@ -1219,7 +1219,7 @@ catch Any
 </pre>
 <p>优先考虑错误类型而不是输出变量名称可能会鼓励更好的代码; 按照预期处理预期的错误, 而不是压制或错误地处理本应报告的意外错误.</p>
 <p>由于所有类型的值都可以被抛出, 任何类对过滤器来说都是有效的(例如 <code>String</code> 或 <code>Map</code>). 然而, 类的原型在加载时被解析, 必须被指定为一个完整的类名, 而不是一个任意的表达式(类似于 <code>y</code> in <code>class x extends y</code>).</p>
-<p>当 <code>catch</code> 语句正在执行时, <code>throw</code> 可以在没有参数的情况下被用来重新抛出异常(避免了为此目的指定一个输出变量的需要). 这甚至在嵌套的 <code>try</code>...<code>finally</code> 中也被支持, 但在嵌套的 <code>try</code>...<code>catch</code> 中不支持. The <code>throw</code> 不需要被 <code>catch</code> 语句的主体所包含; 它可以被一个被调用的函数所使用.</p>
+<p>当 <code>catch</code> 语句正在执行时, <code>throw</code> 可以在没有参数的情况下被用来重新抛出异常(避免了为此目的指定一个输出变量的需要). 这甚至在嵌套的 <code>try</code>...<code>finally</code> 中也被支持, 但在嵌套的 <code>try</code>...<code>catch</code> 中不支持. <code>throw</code> 不需要被 <code>catch</code> 语句的主体所包含; 它可以被一个被调用的函数所使用.</p>
 <p>An <code>else</code> 在最后一个 <code>catch</code> 之后可以有一个; 如果在 <code>try</code> 中没有抛出异常, 就执行这个.</p>
 <h2 id="keyboard-mouse-hotkeys-and-hotstrings">键盘, 鼠标, 热键和热字串</h2>
 <p>更少的 VK 到 SC 和 SC 到 VK 的映射是硬编码的, 在理论上提高了与非常规的自定义键盘布局的兼容性.</p>
@@ -1228,15 +1228,15 @@ catch Any
 <p>鼠标滚轮热键将 <a href="Variables.htm#EventInfo">A_EventInfo</a> 设置为由鼠标驱动程序报告的滚轮延迟, 而不是除以 120. 一般来说, 它是 120 的倍数, 但一些鼠标硬件/驱动程序可能会以更高的分辨率报告滚轮运动.</p>
 <p>热串现在将 <kbd>Shift</kbd>+<kbd>Backspace</kbd> 视为 <kbd>Backspace</kbd>, 而不是在热串缓冲内将其转录为 <code>`b</code>.</p>
 <p>热字串使用第一对冒号(<code class="no-highlight">::</code>) 作为分隔符, 而不是在出现多对冒号时使用最后一对. 换句话说, 在 v2 中, 冒号(与另一个冒号相邻时) 必须在触发文本中转义, 而在 v1 中, 它们必须在替换中转义. 请注意, 对于奇数的连续冒号, 以前的行为不认为最后的冒号是一对冒号的一部分. 例如, 对于 <code class="no-highlight">::1:::2</code>(<code class="no-highlight">1</code> → <code class="no-highlight">:2</code>) 的行为没有变化, 但 <code class="no-highlight">::3::::4</code> 现在是 <code class="no-highlight">3</code> → <code class="no-highlight">::4</code> 而不是 <code class="no-highlight">3::</code> → <code class="no-highlight">4</code>.</p>
-<p>热串不再成对转义冒号, 这意味着现在可以在热串触发器的末尾转义一个冒号. 例如, <code class="no-highlight">::5`:::6</code> 现在是 <code class="no-highlight">5:</code> → <code class="no-highlight">6</code> 而不是一个错误, 而 <code class="no-highlight">::7`::::8</code> 现在是 <code class="no-highlight">7:</code> → <code class="no-highlight">:8</code> 而不是 <code class="no-highlight">7::</code> → <code>8</code>. 在这些情况下, 最好转义每个原义的冒号, 以避免混淆(但单个孤立的冒号不需要转义).</p>
-<p>带有延续片段的热字符串现在默认为文本模式而不是原始模式.</p>
+<p>热字串不再成对转义冒号, 这意味着现在可以在热串触发器的末尾转义一个冒号. 例如, <code class="no-highlight">::5`:::6</code> 现在是 <code class="no-highlight">5:</code> → <code class="no-highlight">6</code> 而不是一个错误, 而 <code class="no-highlight">::7`::::8</code> 现在是 <code class="no-highlight">7:</code> → <code class="no-highlight">:8</code> 而不是 <code class="no-highlight">7::</code> → <code>8</code>. 在这些情况下, 最好转义每个原义的冒号, 以避免混淆(但单个孤立的冒号不需要转义).</p>
+<p>带有延续片段的热字串现在默认为文本模式而不是原始模式.</p>
 <p>热键现在只在 Win/Alt 键在逻辑上是向下的并且热键需要 Win/Alt 键(带 <code>#</code>/<code>!</code> 或自定义前缀) 的情况下才会在释放时屏蔽. 也就是说, 不需要 Win/Alt 键的热键在 Win/Alt 键物理上处于关闭状态时不再掩盖 Win/Alt 向上. 这使得发送 <code>{Blind}{LWin up}</code> 的热键可以激活开始菜单(如果使用 <code>AppsKey::RWin</code> 这样的重映射键, 这已经是可能的).</p>
 
 <h2 id="other">其他</h2>
 <p>已放弃对 Windows 2000 和 Windows XP 的支持.</p>
 <p>AutoHotkey 不再在启动时覆盖系统的 <code>ForegroundLockTimeout</code> 设置.</p>
 <ul>
-<li>这是通过调用 <code>SystemParametersInfo</code> with the <code>SPI_SETFOREGROUNDLOCKTIMEOUT</code> 动作实现的, 它影响到当前用户会话的所有应用程序. 它在注销后不会持续存在, 但对一些用户来说仍是不受欢迎的.</li>
+<li>这是通过调用带有 <code>SPI_SETFOREGROUNDLOCKTIMEOUT</code> 的 <code>SystemParametersInfo</code> 动作实现的, 它影响到当前用户会话的所有应用程序. 它在注销后不会持续存在, 但对一些用户来说仍是不受欢迎的.</li>
 <li>用户的错误报告(和常识) 表明, 如果它起作用, 它允许焦点被那些没有专门设计的程序窃取.</li>
 <li>在 Windows 10 上的一些测试表明, 它对任何事情都没有影响; 对 <code>SetForegroundWindow</code> 的调用总是失败的, 而 WinActivate 采用的其他变通方法是需要的, 并且无论超时与否都是有效的. <code>SPI_GETFOREGROUNDLOCKTIMEOUT</code> 是从一个单独的进程中使用的, 以验证该变化是否生效(它有时并不生效).</li>
 <li>它可以很容易地在脚本中被复制:
@@ -1244,23 +1244,23 @@ catch Any
 </li>
 </ul>
 <p>RegEx 换行匹配默认为 (*ANYCRLF) 和 (*BSR_ANYCRLF); `r 和 `n 被识别, 除了 `r`n 之外. `a 选项隐含地启用了 (*BSR_UNICODE).</p>
-<p>RegEx callout 现在可以是可变的. Callouts specified via a <code>pcre_callout</code> 可以是任何可调用的对象, 或 <code>pcre_callout</code> 本身可以直接定义为一个函数(也许是一个嵌套函数). 随着函数和变量 <a href="#scope">命名空间的合并</a>, 诸如 <code>(?C:fn)</code> 这样的呼出模式也可以指代包含函数对象的局部或全局变量, 而不仅仅是用户定义的函数.</p>
+<p>正则调出现在可以是可变的. 通过 <code>pcre_callout</code> 变量指定的调出可以是任何可调用的对象, 或 <code>pcre_callout</code> 本身可以直接定义为函数(可能是嵌套函数). 随着函数和变量<a href="#scope">命名空间的合并</a>, 诸如 <code>(?C:fn)</code> 这样的调出模式也可以指代包含函数对象的局部或全局变量, 而不仅仅是用户定义的函数.</p>
 <p>从 stdin 读取的脚本(例如用 <code>AutoHotkey.exe *</code>) 不再包括 <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a> 中的初始工作目录或主窗口的标题, 但它被用作 <a href="Variables.htm#ScriptDir">A_ScriptDir</a> 和定位本地 Lib 文件夹.</p>
 <p>由自动执行线程改变的设置现在会立即成为默认设置(对于在此后启动的线程), 而不是在 100ms 后, 当自动执行线程结束时再变成默认设置.</p>
 <p>通过利用动态分配, 以下限制已被取消:</p>
 <ul>
 <li>行或延续片段最大长度为 16383 个字符.</li>
 <li>每个表达式最大 512 个标记(MAX_TOKENS).<br>
-基于 MAX_TOKENS 确定大小的表达式评估器的内部数组现在是基于预先计算的所需大小的估计值, 因此性能应该是相似的, 但在大多数情况下堆栈的使用量会低一些. 这可能会增加用户定义的函数的最大递归深度. 
+基于 MAX_TOKENS 确定大小的表达式计算器的内部数组现在是基于预先计算的所需大小的估计值, 因此性能应该是相似的, 但在大多数情况下堆栈的使用量会低一些. 这可能会增加用户定义的函数的最大递归深度. 
 每个参数最多可引用 512 个 var 或函数(但无论如何, MAX_TOKENS 对表达式的限制更大).</li>
 <li>每个函数调用最大 255 个指定的参数值(但无论如何 MAX_TOKENS 更有限制性).</li>
 <li>每个函数调用最大 255 个指定的参数值(但无论如何 MAX_TOKENS 更有限制性).</li>
 </ul>
 <p><a href="commands/ListVars.htm">ListVars</a> 现在将静态变量与局部变量分开显示. 在函数中声明的全局变量也被列为静态变量(这是新的实现细节的副作用, 但被保留下来, 因为它在有许多全局变量的脚本中可能是有用的).</p>
-<p>为了减少代码大小和维护成本, 删除了 (undocumented?) "lazy var". 这个优化改进了有超过 100,000 个变量的脚本的性能.</p>
+<p>为了减少代码大小和维护成本, 删除了(未记录的) "lazy var". 这个优化改进了有超过 100,000 个变量的脚本的性能.</p>
 <p><a href="Program.htm#tray-icon">Tray menu</a>: 从 "Reload This Script" 和 "Edit This Script" 中删除了 "This", 以便与 "Pause Script" 和主窗口的菜单选项一致.</p>
-<p>YYYYMMDDHH24MISS 时间戳值现在被认为是无效的, 如果其长度不是 4 到 14(包括) 之间的偶数.</p>
-<h3 id="persistence">Persistence</h3>
+<p>如果时间戳长度不是 4 到 14(包括) 之间的偶数, YYYYMMDDHH24MISS 时间戳值现在被认为是无效的.</p>
+<h3 id="persistence">持续运行</h3>
 <p>当至少满足以下条件之一时, 脚本 "<a href="commands/Persistent.htm">持续运行</a>":</p>
 <ul>
 <li>至少有一个热键或热字符串被脚本定义.</li>
@@ -1280,7 +1280,7 @@ catch Any
 <p>为了灵活起见, <a href="commands/OnMessage.htm">OnMessage</a> 并不能使脚本自动持续运行.</p>
 <p>相比之下, 当以下情况中至少有一个为真时, v1 脚本就会 "持续运行":</p>
 <ul>
-<li>至少有一个热键或热字符串被脚本定义.</li>
+<li>至少有一个热键或热字串被脚本定义.</li>
 <li>Gui 或 OnMessage() 出现在脚本的任何地方.</li>
 <li>键盘钩子或鼠标钩子已被安装.</li>
 <li>Input 已经被调用.</li>
