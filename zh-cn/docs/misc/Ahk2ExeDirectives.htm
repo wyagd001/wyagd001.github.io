@@ -24,7 +24,7 @@
   <ul>
     <li><a href="#Intro2">介绍</a></li>
     <li><a href="#AddResource">AddResource</a>: 为 .exe 添加一个资源.</li>
-    <li><a href="#Bin">Bin</a>: 指定 AutoHotkey 的二进制版本.</li>
+    <li><a href="#Bin">Bin / Base</a> <span class="ver">[v1.1.33.10+]</span>: 指定 AutoHotkey 的二进制版本.</li>
     <li><a href="#ConsoleApp">ConsoleApp</a>: 设置 Console 模式.</li>
     <li><a href="#Cont">Cont</a>: 指定指令的延续行.</li>
     <li><a href="#Debug">Debug</a>: 显示指令的调试文本.</li>
@@ -32,6 +32,7 @@
     <li><a href="#Let">Let</a>: 设置一个用户变量.</li>
     <li><a href="#Obey">Obey</a>: 执行一个命令或表达式.</li>
     <li><a href="#PostExec">PostExec</a>: 编译后运行程序.</li>
+    <li><a href="#ResourceID">ResourceID</a> <span class="ver">[v1.1.34+]</span>: 为主脚本指定一个非标准的资源 ID.</li>
     <li><a href="#SetMainIcon">SetMainIcon</a>: 设置主图标.</li>
     <li><a href="#SetProp">Set<i>Prop</i></a>: 设置 .exe 的一个属性.</li>
     <li><a href="#Set">Set</a>: 设置各种属性.</li>
@@ -82,7 +83,7 @@ MsgBox This message appears in both the compiled and uncompiled script
 
 <p>除了可用于指令参数外, 所有的变量都可以从任何 RT_MENU, RT_DIALOG, RT_STRING, RT_ACCELERATORS, RT_HTML 和 RT_MANIFEST 文件中访问, 提供给下面的 <a href="#AddResource">AddResource</a> 指令.</p>
 
-<p>如果需要, 从上述变量返回的值可以通过在内置变量名称结尾, 结束 <code>%</code> 的前面, 包括最多 2 个参数(称为 p2 和 p3) 来进行操作, 所有参数都用波浪号 <code>~</code> 分隔. 在 <a href="../commands/RegExReplace.htm">RegExReplace</a> 函数的第 2 个和第 3 个参数中, p2 和 p3 参数将作为原义使用, 以操作返回的值. (请参阅 <a href="RegEx-QuickRef.htm">RegEx Quick Reference</a>.) 请注意, p3 是可选的.</p>
+<p>如果需要, 从上述变量返回的值可以通过在内置变量名称结尾, 结束 <code>%</code> 的前面, 包括最多 2 个参数(称为 p2 和 p3) 来进行操作, 所有参数都用波浪号 <code>~</code> 分隔. 在 <a href="../commands/RegExReplace.htm">RegExReplace</a> 函数的第 2 个和第 3 个参数中, p2 和 p3 参数将作为原义使用, 以操作返回的值. (请参阅 <a href="RegEx-QuickRef.htm">正则快速参考</a>.) 请注意, p3 是可选的.</p>
 
 <p>要在 p2 或 p3 中包含波浪号作为数据, 在其前面加上重音符, 即 <code>`~</code>. 要在 p2 或 p3 中包含重音符作为数据, 请将其加倍, 即 <code>``</code>.</p>
 
@@ -126,18 +127,22 @@ MsgBox This message appears in both the compiled and uncompiled script
   <li>23 (RT_HTML): <code>.htm</code>, <code>.html</code>, <code>.mht</code></li>
   <li>24 (RT_MANIFEST): <code>.manifest</code>. 如果没有指定资源的名称, 则默认为 <code>1</code></li>
 </ul>
-<p><strong>示例:</strong> 替换标准图标(除<a href="#SetMainIcon">主图标</a>外):</p>
+<p><strong>示例 1:</strong> 替换标准图标(除<a href="#SetMainIcon">主图标</a>外):</p>
 <pre>;@Ahk2Exe-AddResource Icon1.ico, 160  ; 替换为 '蓝色 H'
 ;@Ahk2Exe-AddResource Icon2.ico, 206  ; 替换为 '绿色 S'
 ;@Ahk2Exe-AddResource Icon3.ico, 207  ; 替换为 '红色 H'
 ;@Ahk2Exe-AddResource Icon4.ico, 208  ; 替换为 '红色 S'</pre>
 
-<h3 id="Bin">Bin</h3>
-<p>指定要包含在生成的 .exe 文件中的 AutoHotkey 的二进制版本. (这将覆盖任何在 GUI 或 CLI 中指定的内容.) 如果有必要, 这个指令可以指定很多次, 但只能在顶层脚本文件中指定(即不能在 <a href="../commands/_Include.htm">#Include</a> 的文件中指定). 每找到一个 <em>Bin</em> 指令, 编译器就会至少运行一次. (如果在此指令中附加了实际的注释, 则必须使用  <code>&nbsp;;</code> 标志. 要真正注释这个指令, 请在第一个注释标志后插入一个空格.)</p>
-<pre class="Syntax"><span class="func">;@Ahk2Exe-Bin</span> [Path\]Name <span class="optional">, [Exe_path\][Name], Codepage</span></pre>
+<p><strong>示例 2:</strong> <span class="ver">[v1.1.34+]</span> 要把另一个脚本作为单独的 RCDATA 资源包括在内(请参阅 <a href="../program.htm#embedded-scripts">嵌入式脚本</a>):</p>
+<pre>;@Ahk2Exe-AddResource MyScript.ahk, MYRESOURCE</pre>
+
+<h3 id="Bin">Bin / Base <span class="ver">[v1.1.33.10+]</span></h3>
+<p>指定用于生成 .exe 文件的 AutoHotkey 的基础版本. 这个指令可以被 GUI 或 CLI 中指定的基文件参数所覆盖. 如果有必要, 这个指令可以被多次指定, 但只能在最顶层的脚本文件中指定(也就是说, 不能在 <a href="../commands/_Include.htm">#Include</a> 文件中). 编译器将为每个发现的 Bin/Base 指令至少运行一次. (如果要在这个指令上附加一个实际的注释, 必须使用 <code>&nbsp;;</code> 标志. 要想真正注释这个指令, 请在第一个注释标志后插入一个空格.)</p>
+<pre class="Syntax"><span class="func">;@Ahk2Exe-Bin </span> [Path\]Name <span class="optional">, [Exe_path\][Name], Codepage</span> <em>; Deprecated</em>
+<span class="func">;@Ahk2Exe-Base</span> [Path\]Name <span class="optional">, [Exe_path\][Name], Codepage</span> <em>; <span class="ver">[v1.1.33.10+]</span></em></pre>
 <dl>
   <dt>[Path\]Name</dt>
-  <dd>要使用的 *.bin 文件. 如果没有提供扩展名, 则假定为 <code>.bin</code>. 可以为 <em>Name</em> 指定一个 DOS 掩码, 例如 <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code> 或为这三种掩码指定 <code>*bit</code>. 如果没有指定路径, 则会搜索编译器文件夹中的标准 *.bin 文件. 编译器将为每个匹配的 *.bin 文件运行. 任何内置变量替换的使用都必须是来自上述的<a href="#group1">组 1</a>.</dd>
+  <dd>要使用的 *.bin 文件或在 <span class="ver">[v1.1.33.10+]</span> 中的 *.exe 文件. 如果没有提供扩展名, 则假定为 <code>.bin</code>. 可以为 <em>Name</em> 指定一个 DOS 掩码, 例如 <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code> 或为这三种掩码指定 <code>*bit</code>. 如果没有指定路径, 则会搜索编译器文件夹中的标准 *.bin 或 *.exe 文件. 编译器将为每个匹配的 *.bin 文件运行. 任何内置变量替换的使用都必须是来自上述的<a href="#group1">组 1</a>.</dd>
   <dt>[Exe_path\][Name]</dt>
   <dd><i>(可选)</i> 要给 .exe 的文件名. 任何提供的扩展名都将被替换为 <code>.exe</code>. 如果没有指定路径, 则会在脚本文件夹中创建 .exe 文件. 如果没有指定名称, .exe 将使用默认名称. (这个参数可以被 <a href="#ExeName">ExeName</a> 指令覆盖.)</dd>
   <dt>Codepage</dt>
@@ -165,7 +170,7 @@ MsgBox This message appears in both the compiled and uncompiled script
 </dl>
 
 <h3 id="ExeName">ExeName</h3>
-<p>指定生成的 .exe 文件的位置和名称. (另请参阅 <a href="#Bin">Bin</a> 指令.)</p>
+<p>指定生成的 .exe 文件的位置和名称. (另请参阅 <a href="#Bin">Base</a> 指令.) This directive may be overridden by an output file specified in the GUI or CLI.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-ExeName</span> [Path\][Name]</pre>
 <dl>
   <dt>[Path\][Name]</dt>
@@ -240,8 +245,16 @@ MsgBox This message appears in both the compiled and uncompiled script
 ;@Ahk2Exe-Cont  "11.UPX." "1.UPX!.", 2</pre>
 <p>在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 脚本中还有其他例子.</p>
 
+<h3 id="ResourceID">ResourceID</h3>
+<p>指定一个非标准的资源 ID, 用于使用 <a href="#Bin">.exe 基文件</a>编译的主脚本(请参阅 <a href="../program.htm#embedded-scripts">嵌入脚本</a>). 这个指令可以被 GUI 或 CLI 中指定的资源 ID 所覆盖. 如果该指令出现在由 <a href="#AddResource">AddResource</a> 指令插入的脚本中, 则会被忽略.</p>
+<pre class="Syntax"><span class="func">;@Ahk2Exe-ResourceID</span> Name</pre>
+<dl>
+  <dt>Name</dt>
+  <dd>要使用的资源 ID. 数字资源 ID 应该由一个哈希符号(#) 和一个十进制数字组成.</dd>
+</dl>
+
 <h3 id="SetMainIcon">SetMainIcon</h3>
-<p>覆盖用于编译的自定义 EXE 图标. (要改变其他图标, 请参阅 <a href="#AddResource">AddResource</a> 示例.)</p>
+<p>覆盖用于编译的自定义 EXE 图标. (要改变其他图标, 请参阅 <a href="#AddResource">AddResource</a> 示例.) 这个指令可以被 GUI 或 CLI 中指定的图标文件覆盖.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-SetMainIcon</span> <span class="optional">IcoFile</span></pre>
 <dl>
   <dt>IcoFile</dt>
@@ -254,7 +267,7 @@ MsgBox This message appears in both the compiled and uncompiled script
 <dl>
   <dt><em>Prop</em></dt>
   <dd>
-    <p>要更改的属性的名称. 必须是下列名单之一.</p>
+    <p>要更改的属性的名称. 必须是以下所列之一.</p>
     <table class="info">
       <tr>
         <th abbr="Prop">属性</th>
