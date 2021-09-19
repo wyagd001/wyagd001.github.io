@@ -25,7 +25,6 @@
   <li><a href="#expressions">表达式</a></li>
   <li><a href="#objects-misc">对象(其他)</a></li>
   <li><a href="#functions">函数</a></li>
-  <li><a href="#scope">作用域</a></li>
   <li><a href="#nested-functions">套嵌函数</a></li>
   <li><a href="#uncategorized">未分类</a></li>
   <li><a href="#continuation-sections">延续片段</a></li>
@@ -116,7 +115,7 @@
 <li>函数可以放在自动执行部分而不中断它. 自动执行部分现在可以很容易地跨越整个脚本, 所以可以改称为<a href="Language.htm#global-code">全局代码</a>, 在<a href="Scripts.htm#auto">自动执行线程</a>中执行.</li>
 <li>函数可能不太容易像 "goto" 一样被误用(用户循环跳转到当前子程序(循环子程序本身), 不可避免地耗尽堆栈空间并终止程序).</li>
 <li>如果没有接受标签或函数的函数(如 <a href="commands/Hotkey.htm">Hotkey</a>), 就不会有那么多的歧义, 因为两者可以同时以相同的名称存在.</li>
-<li>对于标签的所有其余用途, 从一个函数内部引用一个全局标签是无效的. 因此, 标签查找可以被限制在本地标签列表中. 因此, 没有必要检查从函数内部到外部的无效跳转(从未支持过).</li>
+<li>对于标签的所有其余用途, 从一个函数内部引用一个全局标签是无效的. 因此, 标签查找可以被限制在局部标签列表中. 因此, 没有必要检查从函数内部到外部的无效跳转(从未支持过).</li>
 </ul>
 <h3 id="hotkey-and-hotstring-labels">热键和热字串标签</h3>
 <p><a href="Hotkeys.htm">热键</a>和非自动替换<a href="Hotstrings.htm">热字串</a>不再是标签; 相反, 它们(自动) 定义了一个函数. 对于多行热键, 使用大括号将热键的主体括起来, 而不是用 <code>return</code>(其是隐式的大括号的结束) 终止它. 要允许显式调用一个热键, 在 <code>::</code> 和 <code>{</code> 之间指定 <code>funcName(ThisHotkey)</code> - 这在 v1.1.20+ 中也可以做到, 但现在有一个参数. 当函数定义不是显式的时, 参数被命名为 ThisHotkey.</p>
@@ -1117,7 +1116,7 @@ Gui GuiName: Default</p>
 <tr><td>Progress</td><td colspan="2">.Value</td><td>使用 <code>+=</code> 运算符代替 <code>+</code> 前缀.</td></tr>
 <tr><td>Radio</td><td>.Value</td><td>.Text</td><td></td></tr>
 <tr><td>Slider</td><td colspan="2">.Value</td><td>使用 <code>+=</code> 运算符代替 <code>+</code> 前缀.</td></tr>
-<tr><td>StatusBar</td><td colspan="2">.Text or SB.SetText()</td><td></td></tr>
+<tr><td>StatusBar</td><td colspan="2">.Text 或 SB.SetText()</td><td></td></tr>
 <tr><td>Tab</td><td colspan="2">.Delete/Add/Choose</td><td></td></tr>
 <tr><td>Text</td><td colspan="2">.Text</td><td></td></tr>
 <tr><td>TreeView</td><td colspan="2">N/A</td><td>命令没有效果.</td></tr>
@@ -1215,7 +1214,7 @@ catch err
     else
         throw err
 
-<em>; New</em>
+<em>; 新的</em>
 try
     SendMessage msg,,, "Control1", "The Window"
 catch TimeoutError
@@ -1226,8 +1225,8 @@ catch TimeoutError
 <li><code>catch</code> 捕获一个错误实例.</li>
 <li><code>catch as err</code> 捕捉一个 Error 实例, 它被分配给 err.</li>
 <li><code>catch ValueError as err</code> 捕捉一个 ValueError 实例, 它被分配给 err.</li>
-<li><code>catch ValueError, TypeError</code> 捕捉任一类型.</li>
-<li><code>catch ValueError, TypeError as err</code> 捕获任一类型并将实例分配给 err.</li>
+<li><code>catch ValueError, TypeError</code> 捕捉任一类型错误.</li>
+<li><code>catch ValueError, TypeError as err</code> 捕获任一类型错误并将实例分配给 err.</li>
 <li><code>catch Any</code> 捕捉 anything.</li>
 <li><code>catch (MyError as err)</code> 允许使用括号, 就像大多数其他控制流语句一样.</li>
 </ul>
@@ -1237,9 +1236,9 @@ catch Any
 {}
 </pre>
 <p>优先考虑错误类型而不是输出变量名称可能会鼓励更好的代码; 按照预期处理预期的错误, 而不是压制或错误地处理本应报告的意外错误.</p>
-<p>由于所有类型的值都可以被抛出, 任何类对过滤器来说都是有效的(例如 <code>String</code> 或 <code>Map</code>). 然而, 类的原型在加载时被解析, 必须被指定为一个完整的类名, 而不是一个任意的表达式(类似于 <code>y</code> in <code>class x extends y</code>).</p>
+<p>由于所有类型的值都可以被抛出, 任何类对过滤器来说都是有效的(例如 <code>String</code> 或 <code>Map</code>). 然而, 类的原型在加载时被解析, 必须被指定为一个完整的类名, 而不是一个任意的表达式(类似于 <code>class x extends y</code> 中的 <code>y</code>).</p>
 <p>当 <code>catch</code> 语句正在执行时, <code>throw</code> 可以在没有参数的情况下被用来重新抛出异常(避免了为此目的指定一个输出变量的需要). 这甚至在嵌套的 <code>try</code>...<code>finally</code> 中也被支持, 但在嵌套的 <code>try</code>...<code>catch</code> 中不支持. <code>throw</code> 不需要被 <code>catch</code> 语句的主体所包含; 它可以被一个被调用的函数所使用.</p>
-<p>An <code>else</code> 在最后一个 <code>catch</code> 之后可以有一个; 如果在 <code>try</code> 中没有抛出异常, 就执行这个.</p>
+<p>在最后一个 <code>catch</code> 之后可以有一个 <code>else</code>; 如果在 <code>try</code> 中没有抛出异常, 就执行它.</p>
 <h2 id="keyboard-mouse-hotkeys-and-hotstrings">键盘, 鼠标, 热键和热字串</h2>
 <p>更少的 VK 到 SC 和 SC 到 VK 的映射是硬编码的, 在理论上提高了与非常规的自定义键盘布局的兼容性.</p>
 <p>删除了 "Return" 和 "Break" 键的名称. 使用 "Enter" 和 "Pause" 代替.</p>
@@ -1270,14 +1269,13 @@ catch Any
 <ul>
 <li>行或延续片段最大长度为 16383 个字符.</li>
 <li>每个表达式最大 512 个标记(MAX_TOKENS).<br>
-基于 MAX_TOKENS 确定大小的表达式计算器的内部数组现在是基于预先计算的所需大小的估计值, 因此性能应该是相似的, 但在大多数情况下堆栈的使用量会低一些. 这可能会增加用户定义的函数的最大递归深度. 
-每个参数最多可引用 512 个 var 或函数(但无论如何, MAX_TOKENS 对表达式的限制更大).</li>
-<li>每个函数调用最大 255 个指定的参数值(但无论如何 MAX_TOKENS 更有限制性).</li>
-<li>每个函数调用最大 255 个指定的参数值(但无论如何 MAX_TOKENS 更有限制性).</li>
+基于 MAX_TOKENS 确定大小的表达式计算器的内部数组现在是基于预先计算的所需大小的估计值, 因此性能应该是相似的, 但在大多数情况下堆栈的使用量会低一些. 这可能会增加用户定义的函数的最大递归深度.</li>
+<li>每个参数最多可以引用 512 个 var 或函数(但无论如何, MAX_TOKENS 对表达式的限制更大).</li>
+<li>每个函数最多可以调用 255 个指定的参数值(但无论如何 MAX_TOKENS 更有限制性).</li>
 </ul>
 <p><a href="commands/ListVars.htm">ListVars</a> 现在将静态变量与局部变量分开显示. 在函数中声明的全局变量也被列为静态变量(这是新的实现细节的副作用, 但被保留下来, 因为它在有许多全局变量的脚本中可能是有用的).</p>
 <p>为了减少代码大小和维护成本, 删除了(未记录的) "lazy var". 这个优化改进了有超过 100,000 个变量的脚本的性能.</p>
-<p><a href="Program.htm#tray-icon">Tray menu</a>: 从 "Reload This Script" 和 "Edit This Script" 中删除了 "This", 以便与 "Pause Script" 和主窗口的菜单选项一致.</p>
+<p><a href="Program.htm#tray-icon">托盘菜单</a>: 从 "Reload This Script" 和 "Edit This Script" 中删除了 "This", 以便与 "Pause Script" 和主窗口的菜单选项一致.</p>
 <p>如果时间戳长度不是 4 到 14(包括) 之间的偶数, YYYYMMDDHH24MISS 时间戳值现在被认为是无效的.</p>
 <h3 id="persistence">持续运行</h3>
 <p>当至少满足以下条件之一时, 脚本 "<a href="commands/Persistent.htm">持续运行</a>":</p>
@@ -1312,7 +1310,7 @@ catch Any
 <h3 id="default-settings">默认设置</h3>
 <ul>
 <li>#NoEnv 是默认行为, 所以该指令本身已经被删除. 如果等效的内置变量不可用, 请使用 <a href="commands/EnvGet.htm">EnvGet</a> 代替.</li>
-<li><a href="commands/SendMode.htm">SendMode</a> 默认为输入而不是事件.</li>
+<li><a href="commands/SendMode.htm">SendMode</a> 默认为输入(Input) 而不是事件(Event).</li>
 <li><a href="commands/SetTitleMatchMode.htm">标题匹配模式</a>默认为 2 而不是 1.</li>
 <li>删除了 SetBatchLines, 因此所有脚本都以全速运行(等同于 v1 中的 SetBatchLines -1).</li>
 <li>工作目录默认为 <a href="Variables.htm#ScriptDir">A_ScriptDir</a>. <a href="Variables.htm#InitialWorkingDir">A_InitialWorkingDir</a> 包含由启动 AutoHotkey 的进程设置的工作目录.</li>
