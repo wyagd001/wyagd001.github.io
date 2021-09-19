@@ -510,7 +510,7 @@ Send {Up up}  <em>; 释放向上键.</em></pre>
     Sleep 30  <em>; 在两次键击之间的毫秒数(或使用 <a href="SetKeyDelay.htm">SetKeyDelay</a> 设置).</em>
 }
 Send {Tab up}  <em>; 松开按键.</em></pre>
-<p>默认情况下, 如果通过发送修饰键来表示键是按下的, Send 命令不会自动释放修饰键(Control, Shift, Alt 和 Win). 例如, 如果用户物理按下 <kbd>Ctrl</kbd> 时, <code>Send a</code> 类似于 <code>Send <a href="#blind">{Blind}</a>{Ctrl up}a{Ctrl down}</code> 的行为, 但 <code>Send {Ctrl Down}</code> 后面接着 <code>Send a</code> 将产生 <kbd>Ctrl</kbd>+<kbd>A</kbd> 的击键. <em>DownTemp</em> 和 <em>DownR</em> 可以用来覆盖这种行为. 除了修饰键(Control, Shift, Alt 和 Win) <em>DownTemp</em> 和 <em>DownR</em> 与 <em>Down</em> 相同.</p>
+<p>默认情况下, 如果一个修饰键在发送时是按下的, 则 Send 命令不会自动释放该修饰键(Control, Shift, Alt 和 Win). 例如, 如果用户物理按下 <kbd>Ctrl</kbd> 时, <code>Send a</code> 类似于 <code>Send <a href="#blind">{Blind}</a>{Ctrl up}a{Ctrl down}</code> 的行为, 但 <code>Send {Ctrl Down}</code> 后面接着 <code>Send a</code> 将产生 <kbd>Ctrl</kbd>+<kbd>A</kbd> 的击键. <em>DownTemp</em> 和 <em>DownR</em> 可以用来覆盖这种行为. 除了修饰键(Control, Shift, Alt 和 Win) <em>DownTemp</em> 和 <em>DownR</em> 与 <em>Down</em> 相同.</p>
 <p id="DownTemp"><strong>DownTemp</strong> 告诉随后的 Send, 按键不是永久按下的, 并且可以在按键调用时被释放. 例如, <code>Send {Control DownTemp}</code> 后面跟着 <code>Send a</code> 会产生一个 <kbd>A</kbd>, 而不是 <kbd>Ctrl</kbd>+<kbd>A</kbd>. 任何 Send 的使用都可能会永久释放修饰符, 所以 <em>DownTemp</em> 对于<a href="../misc/Remap.htm">重映射</a>修饰键是不理想的.</p>
 <p id="DownR"><span class="ver">[v1.1.27+]:</span> <strong>DownR</strong> (其中 "R" 表示<a href="../misc/Remap.htm">重映射</a>, 这是它的主要用途) 告诉后续的 send, 如果按键被自动释放, 当发送完成时应该再次按下. 例如, <code>Send {Control DownR}</code> 后面跟着 <code>Send a</code>会产生一个正常的 <kbd>A</kbd>, 而不是 <kbd>Ctrl</kbd>+<kbd>A</kbd>, 但是会使 <kbd>Ctrl</kbd> 处于按下状态, 以便与键盘快捷键一起使用. 换句话说, <em>DownR</em> 有类似于物理按键的效果.</p>
 <p>如果某个字符与当前键盘布局上的虚拟键不一致, 则不能 "按下" 或 "释放". 例如, <code>Send {μ up}</code> 对大多数键盘布局没有效果, 而 <code>Send {μ down}</code> 等同于 <code>Send μ</code>.</p>
@@ -529,7 +529,7 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
   <li>如果一个或多个修饰键已经通过 Send 命令生效, 或者如果该字母包裹在大括号中, 它将作为键码发送(如果字母为大写则用 <kbd>Shift</kbd> 修饰). 这使脚本可以更容易地激活标准键盘快捷键. 例如, <code>^c</code> 和 <code>{Ctrl down}c{Ctrl up}</code> 激活标准的 <kbd>Ctrl</kbd>+<kbd>C</kbd> 快捷键, 而 <code>{c}</code> 等同于 <code>{vk43}</code>.</li>
 </ul>
 <p>如果字母存在于当前的键盘布局中, 则始终以键盘布局与该字母关联的任何键码(除非使用<a href="#SendText">文本模式</a>, 在这种情况下该字符以其他方式发送) 的形式发送. 换句话说, 上面的部分只适用于非拉丁语的布局, 如俄语.</p>
-<p id="mask"><strong>Modifier State</strong>: 当 Send 需要更改 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 修饰键的状态时(例如, 如果用户正在按住其中一个键), 它可能会注入更多击键(默认情况下为 <kbd>Ctrl</kbd>), 以防止出现开始菜单或窗口菜单, 有关详细信息, 请参阅 <a href="_MenuMaskKey.htm">#MenuMaskKey</a>.</p>
+<p id="mask"><strong>修饰键状态</strong>: 当 Send 需要更改 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 修饰键的状态时(例如, 如果用户正在按住其中一个键), 它可能会注入更多击键(默认情况下为 <kbd>Ctrl</kbd>), 以防止出现开始菜单或窗口菜单, 有关详细信息, 请参阅 <a href="_MenuMaskKey.htm">#MenuMaskKey</a>.</p>
 <p><strong>BlockInput 与 SendInput/SendPlay 的比较</strong>: 尽管可以使用 <a href="BlockInput.htm">BlockInput</a> 命令防止用户输入的任何键击扰乱模拟键击流, 但使用 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 通常更好, 这样键击和鼠标点击会保持连续. 这是由于与 BlockInput 不同, SendInput/Play 不会丢弃发送期间用户输入的内容; 作为替代, 这些键击被缓冲起来在之后发送.</p>
 <p>发送大量键击时, 使用<a href="../Scripts.htm#continuation">延续片段</a>可以提高可读性和可维护性.</p>
 <p>由于操作系统不允许程序模拟 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 组合键, 所以执行像 <code>Send ^!{Delete}</code> 的命令不会产生效果.</p>
