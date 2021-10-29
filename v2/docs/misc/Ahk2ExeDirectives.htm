@@ -24,7 +24,7 @@
   <ul>
     <li><a href="#Intro2">介绍</a></li>
     <li><a href="#AddResource">AddResource</a>: 为 .exe 添加一个资源.</li>
-    <li><a href="#Bin">Bin</a>: 指定 AutoHotkey 的二进制版本.</li>
+    <li><a href="#Bin">Bin / Base</a>: 指定使用的 AutoHotkey 的基版本.</li>
     <li><a href="#ConsoleApp">ConsoleApp</a>: 设置 Console 模式.</li>
     <li><a href="#Cont">Cont</a>: 指定指令的延续行.</li>
     <li><a href="#Debug">Debug</a>: 显示指令的调试文本.</li>
@@ -32,6 +32,7 @@
     <li><a href="#Let">Let</a>: 设置一个用户变量.</li>
     <li><a href="#Obey">Obey</a>: 执行一个命令或表达式.</li>
     <li><a href="#PostExec">PostExec</a>: 编译后运行程序.</li>
+    <li><a href="#ResourceID">ResourceID</a>: 为主脚本指定一个非标准的资源 ID.</li>
     <li><a href="#SetMainIcon">SetMainIcon</a>: 设置主图标.</li>
     <li><a href="#SetProp">Set<i>Prop</i></a>: 设置 .exe 的一个属性.</li>
     <li><a href="#Set">Set</a>: 设置各种属性.</li>
@@ -126,18 +127,24 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <li>23 (RT_HTML): <code>.htm</code>, <code>.html</code>, <code>.mht</code></li>
   <li>24 (RT_MANIFEST): <code>.manifest</code>. 如果没有指定资源的名称, 则默认为 <code>1</code></li>
 </ul>
-<p><strong>示例:</strong> 替换标准图标(除<a href="#SetMainIcon">主图标</a>外):</p>
-<pre>;@Ahk2Exe-AddResource Icon1.ico, 160  ; Replaces 'H on blue'
-;@Ahk2Exe-AddResource Icon2.ico, 206  ; Replaces 'S on green'
-;@Ahk2Exe-AddResource Icon3.ico, 207  ; Replaces 'H on red'
-;@Ahk2Exe-AddResource Icon4.ico, 208  ; Replaces 'S on red'</pre>
+<p><strong>示例 1:</strong> 替换标准图标(除<a href="#SetMainIcon">主图标</a>外):</p>
+<pre>;@Ahk2Exe-AddResource Icon1.ico, 160  ; 替换 '蓝色 H'
+;@Ahk2Exe-AddResource Icon2.ico, 206  ; 替换 '绿色 S'
+;@Ahk2Exe-AddResource Icon3.ico, 207  ; 替换 '红色 H'
+;@Ahk2Exe-AddResource Icon4.ico, 208  ; 替换 '红色 S'</pre>
 
-<h3 id="Bin">Bin</h3>
-<p>指定要包含在生成的 .exe 文件中的 AutoHotkey 的二进制版本. (这将覆盖任何在 GUI 或 CLI 中指定的内容.) 如果有必要, 这个指令可以指定很多次, 但只能在顶层脚本文件中指定(即不能在 <a href="../commands/_Include.htm">#Include</a> 的文件中指定). 每找到一个 <em>Bin</em> 指令, 编译器就会至少运行一次. (如果在此指令中附加了实际的注释, 则必须使用 <code>&nbsp;;</code> 标志. 要真正注释这个指令, 请在第一个注释标志后插入一个空格.)</p>
-<pre class="Syntax"><span class="func">;@Ahk2Exe-Bin</span> [Path\]Name <span class="optional">, [Exe_path\][Name], Codepage</span></pre>
+<p><strong>示例 2:</strong> 要把另一个脚本作为单独的 RCDATA 资源包括在内(请参阅 <a href="../Program.htm#embedded-scripts">嵌入式脚本</a>):</p>
+<pre>;@Ahk2Exe-AddResource MyScript.ahk, MYRESOURCE</pre>
+
+<h3 id="Bin">Bin / Base</h3>
+<p>指定用于生成 .exe 文件的 AutoHotkey 的基础版本. 这个指令可以被 GUI 或 CLI 中指定的基文件参数所覆盖. 如果有必要, 这个指令可以被多次指定, 但只能在最顶层的脚本文件中指定(也就是说, 不能在 <a href="../commands/_Include.htm">#Include</a> 文件中). 编译器将为每个发现的 Bin/Base 指令至少运行一次. (如果要在这个指令上附加一个实际的注释, 必须使用 <code>&nbsp;;</code> 标志. 要想真正注释这个指令, 请在第一个注释标志后插入一个空格.)</p>
+
+<pre class="Syntax"><span class="func">;@Ahk2Exe-Bin </span> [Path\]Name <span class="optional">, [Exe_path\][Name], Codepage</span> <em>; 不推荐</em>
+<span class="func">;@Ahk2Exe-Base</span> [Path\]Name <span class="optional">, [Exe_path\][Name], Codepage</span></pre>
+
 <dl>
   <dt>[Path\]Name</dt>
-  <dd>要使用的 *.bin 文件. 如果没有提供扩展名, 则假定为 <code>.bin</code>. 可以为 <em>Name</em> 指定一个 DOS 掩码, 例如 <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code> 或为这三种掩码指定 <code>*bit</code>. 如果没有指定路径, 则会搜索编译器文件夹中的标准 *.bin 文件. 编译器将为每个匹配的 *.bin 文件运行. 任何使用内置变量替换的情况都必须是来自上述的<a href="#group1">组 1</a>.</dd>
+  <dd>要使用的 *.bin 或 *.exe 文件. 如果没有提供扩展名, 则假定为 <code>.bin</code>. 可以为 <em>Name</em> 指定一个 DOS 掩码, 例如 <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code> 或为这三种掩码指定 <code>*bit</code>. 如果没有指定路径, 则会搜索编译器文件夹中的标准 *.bin 文件. 编译器将为每个匹配的 *.bin 或 *.exe 文件运行. 任何使用内置变量替换的情况都必须是来自上述的<a href="#group1">组 1</a>.</dd>
   <dt>[Exe_path\][Name]</dt>
   <dd><i>(可选)</i> 要给 .exe 的文件名. 任何提供的扩展名都将被替换为 <code>.exe</code>. 如果没有指定路径, 则会在脚本文件夹中创建 .exe 文件. 如果没有指定名称, .exe 将使用默认名称. (这个参数可以被 <a href="#ExeName">ExeName</a> 指令覆盖.)</dd>
   <dt>Codepage</dt>
@@ -165,7 +172,7 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 </dl>
 
 <h3 id="ExeName">ExeName</h3>
-<p>指定生成的 .exe 文件的位置和名称. (另请参阅 <a href="#Bin">Bin</a> 指令.)</p>
+<p>指定生成的 .exe 文件的位置和名称. (另请参阅 <a href="#Bin">Base</a> 指令.) 这个指令可以被 GUI 或 CLI 中指定的输出文件覆盖.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-ExeName</span> [Path\][Name]</pre>
 <dl>
   <dt>[Path\][Name]</dt>
@@ -239,8 +246,16 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 ;@Ahk2Exe-Cont  "11.UPX." "1.UPX!.", 2</pre>
 <p><a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 脚本中还有一些其他的例子.</p>
 
+<h3 id="ResourceID">ResourceID</h3>
+<p>指定一个非标准的资源 ID, 用于使用 <a href="#Bin">.exe 基文件</a>编译的主脚本(请参阅 <a href="../Program.htm#embedded-scripts">嵌入脚本</a>). 这个指令可以被 GUI 或 CLI 中指定的资源 ID 所覆盖. 如果该指令出现在由 <a href="#AddResource">AddResource</a> 指令插入的脚本中, 则会被忽略.</p>
+<pre class="Syntax"><span class="func">;@Ahk2Exe-ResourceID</span> Name</pre>
+<dl>
+  <dt>Name</dt>
+  <dd>要使用的资源 ID. 数字资源 ID 应该由一个哈希符号(#) 和一个十进制数字组成.</dd>
+</dl>
+
 <h3 id="SetMainIcon">SetMainIcon</h3>
-<p>覆盖用于编译的自定义 EXE 图标. (要改变其他图标, 请参阅 <a href="#AddResource">AddResource</a> 的示例.)</p>
+<p>覆盖用于编译的自定义 EXE 图标. (要改变其他图标, 请参阅 <a href="#AddResource">AddResource</a> 的示例.) 这个指令可以被 GUI 或 CLI 中指定的图标文件覆盖.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-SetMainIcon</span> <span class="optional">IcoFile</span></pre>
 <dl>
   <dt>IcoFile</dt>

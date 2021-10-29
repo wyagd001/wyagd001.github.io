@@ -162,13 +162,13 @@ FileAppend "
 <p>Ahk2Exe 的使用方法如下:</p>
 <ul>
   <li>
-    <p><strong>GUI 界面</strong>: 运行开始菜单中的 "Convert .ahk to .exe" 项目.</p>
+    <p><strong>GUI 界面</strong>: 运行开始菜单中的 "Convert .ahk to .exe" 项目. (调用 GUI 后, 在窗口显示之前可能会有一个停顿; 有关详情, 请参阅<a href="#information">背景信息</a>.)</p>
   </li>
   <li>
-    <p><strong>右键点击</strong>: 在资源管理器中, 您可以在任何一个 .ahk 文件上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器选项时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它稍后会出现在同一目录下. 注: EXE 文件的生成使用的是前面的方法 #1 中最后使用的自定义图标, .bin 文件以及<a href="#mpress">压缩</a>设置.</p>
+    <p><strong>右键点击</strong>: 在资源管理器中, 在任何一个 .ahk 文件上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器选项时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它稍后会出现在同一目录下. 注: EXE 文件的生成使用的是前面的方法 #1 中最后保存的自定义图标, .bin 文件以及<a href="#mpress">压缩</a>设置, 或者由脚本中任何相关的<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>指定.</p>
   </li>
   <li id="ahk2exeCmd">
-    <p><strong>命令行</strong>: 编译器可以通过使用下面显示的参数从命令行中运行. 如果使用任何命令行参数, 脚本会立即被编译, 除非使用 <code class="no-highlight">/gui</code>.</p>
+    <p><strong>命令行</strong>: 编译器可以通过使用下面展示的参数从命令行中运行. 如果使用了任何命令行参数, 除非使用了 <code class="no-highlight">/gui</code>, 否则脚本会立即编译. 除了必须的 <code class="no-highlight">/gui</code> 或 <code class="no-highlight">/in</code> 参数外(二选一), 所有参数都是可选的.</p>
     <style>
       #param_pairs td:not(:last-child) {
         white-space: nowrap;
@@ -185,15 +185,19 @@ FileAppend "
       </tr>
       <tr id="SlashOut">
         <td>/out <i>exe_name</i></td>
-        <td>要创建的 .exe 的路径/名称. 默认值是输入文件的 directory\base_name 加上 .exe 的扩展名.</td>
+        <td>要创建的 .exe 的路径/名称. 默认值是输入文件的 directory\base_name 加上 .exe 的扩展名, 或脚本中任何相关的<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>指定.</td>
       </tr>
       <tr id="slashIcon">
         <td>/icon <i>icon_name</i></td>
-        <td>要使用的图标文件. 默认为 GUI 界面中最后使用的图标.</td>
+        <td>要使用的图标文件. 默认为 GUI 界面中最后保存的图标, 或脚本中任何 <a href="misc/Ahk2ExeDirectives.htm#SetMainIcon">SetMainIcon</a> 编译器指令指定.</td>
       </tr>
-      <tr id="SlashBin">
-        <td>/bin <i>file_name</i></td>
-        <td>要使用的 .bin 文件. 默认情况下是 GUI 界面中最后使用的 .bin 文件名.</td>
+      <tr id="SlashBase">
+        <td>/base <i>file_name</i></td>
+        <td>要使用的基文件(一个 .bin 文件或 .exe 文件). 默认是 GUI 界面中保存的最后一个基文件名, 或脚本中的任何 <a href="misc/Ahk2ExeDirectives.htm#Bin">Base</a> 编译器指令指定.</td>
+      </tr>
+      <tr id="SlashResourceID">
+        <td>/resourceid <i>name</i></td>
+        <td>指定一个非标准的资源 ID, 用于使用 <a href="#SlashBase">.exe 基文件</a>编译的主脚本(请参阅<a href="Program.htm#embedded-scripts">嵌入式脚本</a>). 数字型资源 ID 应该由一个哈希符号(#) 和一个十进制数字组成. 默认是 #1, 或脚本中的任何 <a href="misc/Ahk2ExeDirectives.htm#ResourceID">ResourceID</a> 编译器指令指定.</td>
       </tr>
       <tr id="SlashCp">
         <td>/cp <i>codepage</i></td>
@@ -201,19 +205,27 @@ FileAppend "
       </tr>
       <tr id="SlashCompress">
         <td>/compress <i>n</i></td>
-        <td>是否<a href="#mpress">压缩</a> exe 文件? 0 = 不压缩, 1 = 使用 MPRESS(如果存在), 2 = 使用 UPX(如果存在). 默认值是 GUI 界面中最后使用的设置.</td>
-      </tr>
-      <tr id="SlashAhk">
-        <td>/ahk <i>file_name</i></td>
-        <td>编译脚本时使用的 AutoHotkey.exe 的 path\name. 默认为 AutoHotkey.exe, 位于编译器上方的目录中. 如果没有, 则使用安装的 Autohotkey.exe(如果存在). 否则, 就会使用编译器的上层目录中的 AutoHotkeyU32.exe.</td>
+        <td>是否<a href="#mpress">压缩</a> exe 文件? 0 = 不压缩, 1 = 使用 MPRESS(如果存在), 2 = 使用 UPX(如果存在). 默认值是 GUI 界面中最后保存的设置.</td>
       </tr>
       <tr id="SlashGui">
         <td>/gui</td>
-        <td>显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中使用的设置. <code>/in</code> 在这种情况下是可选的.</td>
+        <td>显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中保存的设置. <code>/in</code> 在这种情况下是可选的.</td>
+      </tr>
+      <tr id="SlashGuiSilent">
+        <td>/silent [verbose]</td>
+        <td>禁用所有的消息框并将错误输出到标准错误流(stderr); 如果 stderr 失败, 则输出到标准输出流(stdout). 其他信息也会输出到 stdout. 可以选择输入 <code>verbose</code> 这个单词, 把状态信息也输出到 stdout.</td>
+      </tr>
+      <tr id="SlashAhk">
+        <td class="warning"><strong>不推荐:</strong><br>/ahk <i>file_name</i></td>
+        <td class="warning">编译脚本时使用的 AutoHotkey.exe 的 path\name.</td>
       </tr>
       <tr id="SlashMpress">
         <td class="warning"><strong>不推荐:</strong><br>/mpress <i>0or1</i></td>
         <td class="warning">使用 MPRESS <a href="#mpress">压缩</a> exe 文件? 0 = 不压缩, 1 = 压缩. 默认值是 GUI 界面中最后使用的设置.</td>
+      </tr>
+      <tr id="SlashBin">
+        <td class="warning"><strong>不推荐:</strong><br>/bin <i>file_name</i></td>
+        <td class="warning">要使用的 .bin 文件. 默认值是 GUI 界面中最后保存的 .bin 文件名.</td>
       </tr>
     </table>
     <p>例如:</p>
@@ -250,6 +262,28 @@ FileAppend "
 <p><strong>MPRESS</strong> 官网(介绍与下载): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a><br>MPRESS 镜像: <a href="https://www.autohotkey.com/mpress/">https://www.autohotkey.com/mpress/</a></p>
 <p><strong>UPX</strong> 官网(介绍与下载): <a href="https://upx.github.io/">https://upx.github.io/</a></p>
 <p><strong>注意:</strong> 压缩编译脚本可以保护脚本不被诸如记事本或 PE 编辑器这类的工具随意查看, 但并不能保护脚本源码不被专用的提取工具提取.</p>
+
+<h3 id="information">背景信息</h3>
+ <p>支持以下文件夹结构, 其中<code>Ahk2Exe.exe</code> 的运行版本在下面所示的第一个 \Compiler 目录中:</p>
+<pre class="no-highlight">\AutoHotkey 
+   AutoHotkeyA32.exe 
+   AutoHotkeyU32.exe
+   AutoHotkeyU64.exe
+   \Compiler
+      Ahk2Exe.exe  <em>; Ahk2Exe 的主版本</em>
+      ANSI 32-bit.bin
+      Unicode 32-bit.bin
+      Unicode 64-bit.bin
+   \AutoHotkey v2.0-a135
+      AutoHotkey32.exe
+      AutoHotkey64.exe
+      \Compiler
+   \v2.0-beta.1
+      AutoHotkey32.exe
+      AutoHotkey64.exe</pre>
+<p>当 Ahk2Exe 启动时, 基文件搜索算法会运行很短的时间, 其工作原理如下:</p>
+<p>在编译器的目录, 编译器的父目录和任何编译器同级的以 <code>AutoHotkey</code> 或 <code>V</code> 开头的目录中搜索符合的 AutoHotkey .exe 文件和所有的 .bin 文件, 但不在以 <code>AutoHotkey_H</code> 开头的目录中搜索. 递归搜索所选的目录. 任何找到的 AutoHotkey.exe 文件都被排除在外, 只留下诸如 AutoHotkeyA32.exe, AutoHotkey64.exe 等文件以及所有发现的 .bin 文件. 所有保留的 .exe 文件名称必须以 <code>AutoHotkey</code> 开头和文件描述包含 <code>AutoHotkey</code> 单词, 并且版本号必须 <code class="no-highlight">1.1.34+</code> 或 <code class="no-highlight">2.0-a135+</code>.</p>
+<p>一个成功的编译还需要一个 AutoHotkey 解释器的版本(作为一个工具), 并且使用类似的算法来选择一个版本. 在大多数情况下, 所使用的解释器的版本将与用户为编译所选择的基文件的版本相匹配.</p>
 
 <h2 id="cmd">向脚本传递命令行参数</h2>
 <p>脚本支持命令行参数. 格式为:</p>
@@ -313,7 +347,7 @@ FileAppend "
     <td>
       <p>在主脚本之前 <a href="commands/_Include.htm">Includes</a> 一个文件. 这个方法只能包含一个文件. 当脚本被<a href="commands/Reload.htm">重新加载</a>时, 这个开关会自动传递给新的实例.</p>
     </td>
-    <td>No</td>
+    <td>不支持</td>
   </tr>
   <tr id="SlashScript">
     <td>/script</td>

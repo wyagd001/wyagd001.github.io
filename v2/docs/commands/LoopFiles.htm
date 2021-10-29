@@ -26,6 +26,7 @@
       <p>单个文件或文件夹的名称, 或者通配符模式, 如 "C:\Temp\*.tmp". 如果未指定绝对路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
       <p>支持星号和问号作为通配符使用. 当模式出现在文件的长/普通名称或其 <a href="#LoopFileShortName">8.3  短名称</a>时出现匹配.</p>
       <p>如果此参数为单个文件或文件夹(即不含通配符) 且 <em>Mode</em> 包含 R, 同时指定的文件名出现在多个被搜索的文件夹中, 那么将找到多个匹配.</p>
+      <p>由于<a href="../misc/LongPaths.htm">系统限制(MAX_PATH)</a>, 超过 259 个字符的模式可能无法找到任何文件. 这个限制可以通过使用 <code>\\?\</code> <a href="../misc/LongPaths.htm#prefix">长路径前缀</a>绕过, 但有一些条件.</code></p>
   </dd>
 
   <dt>Mode</dt>
@@ -124,7 +125,12 @@ Loop Files, "*.jpg"
 Loop Parse, FileList, "`n"
     FileMove A_LoopField, "renamed_" A_LoopField</pre>
 <p>在 NTFS 文件系统中的文件可能总是按字母顺序来获取. 在其他文件系统中的文件则没有特殊的获取顺序. 要使用特殊的获取顺序, 使用 <a href="Sort.htm">Sort</a> 命令, 如同下文示例部分演示的那样.</p>
-<p>文件和文件夹的完整路径名称超过 259 个字符时, 这些文件和文件夹会被跳过, 就像它们不存在一样. 这样的文件很罕见, 因为操作系统一般不允许创建它们.</p>
+<p>支持超过 259 个字符的文件模式, 仅在满足至少一个以下情况时有效:</p>
+<ul>
+  <li>系统启用了<a href="../misc/LongPaths.htm">长路径支持</a>(需要 Windows 10 版本 1607 或更高).</li>
+  <li>使用了 <code>\\?\</code> <a href="../misc/LongPaths.htm#prefix">长路径前缀</a>(适用注意事项).</li>
+</ul>
+<p>在所有其他情况下, 超过 259 个字符的文件模式将不会找到任何文件或文件夹. 这个限制既适用于 <em>FilePattern</em>, 也适用于递归到子文件夹时使用的任何临时模式.</p>
 <p>请参阅 <a href="Loop.htm">Loop</a> 了解关于<a href="Block.htm">区块</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 A_Index 变量(其存在于各种类型的循环中) 的相关信息.</p>
 <p>循环后面可以有一个可选的 <a href="Else.htm">Else</a> 语句, 如果没有找到匹配的文件或目录(即循环的迭代次数为零), 则执行 Else 语句.</p>
 
