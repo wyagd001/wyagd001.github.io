@@ -7,16 +7,20 @@ layout: default
 # [](#header-2) 自用脚本介绍
 
 **运行-Ahk**: 这是一个方便自己使用的 AutoHotkey 脚本，看到对自己有用的代码就添加进来。所以代码很乱，功能很杂，重复的功能也比较多。  
-**关键词**: AutoHotkey [快捷键](#hotkey) [Candy](#Candy) [Windy](#Windy) [音频播放器](#AhkPlayer) [资源管理器右键菜单](#7plus) [FolderMenu](#FolderMenu) [自动激活](#AutoRaise) [定时提醒](#Naozhong) [局域网控制](#Rc) [文件预览](#FilePrew) [剪贴板记录](#Clip) [脚本管理器](#Sm) [鼠标手势](#mouse) [增加自定义托盘图标](#TrayIcon)  
+**关键词**: AutoHotkey [快捷键](#hotkey) [热字串](#hotstring) [Candy](#Candy) [Windy](#Windy) [音频播放器](#AhkPlayer) [资源管理器右键菜单](#7plus) [FolderMenu](#FolderMenu) [自动激活](#AutoRaise) [定时提醒](#Naozhong) [局域网控制](#RC) [文件预览](#FilePrew) [剪贴板记录](#Clip) [脚本管理器](#SM) [鼠标手势](#MG) [增加自定义托盘图标](#TrayIcon)  [左键增强](#click) [中键增强](#middle)
 
 ### [](#header-3)功能介绍
-- <span id="hotkey">快捷键</span>, 80 多个快捷键实现不同的功能
+- <span id="hotkey">快捷键</span>, 90 多个快捷键实现不同的功能
   - Ctrl+F2 Candy
   - Ctrl+F3 Windy
   - Alt + 鼠标左键 移动窗口位置
   - 空格预览
   - Win + J 一键打开文件, 文件夹, 注册表
   - Alt + F1 有道翻译选中的英语单词
+  - F6 查看文件(文本、图片、音频)
+- <span id="hotstring">热字串</span>
+  - == 计算公式结果
+  - @zhushi 根据窗口标题输入单行注释符号
 - <span id="Candy">Candy</span>, 针对选中的内容(文本、文件、文件夹), 弹出不同右键菜单
   - 分区快速更改盘符
   - 文件移动到指定文件夹(配置中只指定了音频文件,指定文件夹按需更改)
@@ -32,14 +36,16 @@ layout: default
   - cmd 目录
   - MD5
   - 移动文件到同名目录
-- <span id="FolderMenu">FolderMenu</span> 文件夹快速跳转的(右键菜单)
+- <span id="FolderMenu">FolderMenu</span> 文件夹快速跳转(右键菜单)
+  - 支持在自定义的软件中跳转(资源管理器, WinRar, 7-Zip, TC, 文件选择对话框)
 - <span id="AutoRaise">自动激活</span>
   - 鼠标移动到其他窗口后自动激活
   - 浏览器标签页自动点击
+  - 任务栏位置自动点击
 - <span id="Naozhong">定时提醒</span>(只有一个简单的对话框来提醒)
   - 节日提醒(农历, 公历节日)
   - 闹钟
-- <span id="Rc">局域网控制</span>, 测试网址: 127.0.0.1:2525 手机访问: 192.168.0.100:2525 (电脑IP按需更改)
+- <span id="RC">局域网控制</span>, 测试网址: 127.0.0.1:2525 手机访问: 192.168.0.100:2525 (电脑IP按需更改)
   - 控制主机(音频播放器, 音量, 关机, 查看电脑屏幕, 自定义命令)
   - 文件上传(测试)
   - 下载指定的文件
@@ -56,15 +62,24 @@ layout: default
   - 历史记录, 每次的文本都会保存在 db 库中
   - Ctrl+ ` 剪贴板上屏
   - Alt + ` 剪贴板收藏夹管理
-- <span id="Sm">脚本管理器</span>, 脚本管理器文件夹下的脚本随主脚本自启动, 文件名以 **!** 开头的脚本不会
+- <span id="SM">脚本管理器</span>, 脚本管理器文件夹下的脚本随主脚本自启动, 文件名以 **!** 开头的脚本不会
   - 鼠标手势
-- <span id="mouse">鼠标手势</span>, 按住鼠标右键后移动鼠标, 执行不同的命令
-  - 运行
-  - 发送按键
-  - 预设的其他动作
+- <span id="MG">鼠标手势</span>, 按住鼠标右键后移动鼠标, 执行不同的命令
+  - 动作自定义(默认为下右打开)
+  - 运行(函数)
+  - 发送按键(函数)
+  - 预设的其他动作(标签)
 - <span id="TrayIcon">自定义托盘图标</span>, 添加额外的托盘图标(最多添加两个)
   - 自定义图标动作
-
+- <span id="click">左键增强</span>, 添加额外的左键动作
+  - 屏幕右下角边缘启动任务管理器
+  - Chrome 双击便签页关闭
+  - 双击 WinRar 空白处返回上一级(白色空白处)
+- <span id="middle">中键增强</span>, 添加额外的中键动作
+  - 窗口标题栏关闭窗口
+  - 桌面空白处隐藏窗口图标
+  - 任务栏按钮关闭窗口
+  - 托盘处退出程序
 
 
 
