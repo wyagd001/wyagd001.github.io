@@ -257,7 +257,7 @@ IsChecked := (ErrorLevel &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选�
 <h2 id="G-Label_Notifications_Secondary">G-标签通知(次要)</h2>
 <p>如果 ListView 的<a href="#Options">选项</a>中含有单词 AltSubmit, 则其 g-标签会运行的更频繁并且 <strong>A_GuiEvent</strong> 还可能包含下列值:</p>
 <p><strong>Normal</strong>: 用户左键单击了一行. 变量 A_EventInfo 包含焦点行号.</p>
-<p><strong>RightClick</strong>: 用户右键单击了一行. 变量 A_EventInfo 包含焦点行号. 在大多数情况下, 最好不要通过显示菜单来响应此通过. 而应使用 <a href="Gui.htm#GuiContextMenu">GuiContextMenu 标签</a>, 因为它还能识别 Apps 键. 例如:</p>
+<p><strong>RightClick</strong>: 用户右键单击了一行. 变量 A_EventInfo 包含焦点行号. 在大多数情况下, 最好不要通过显示菜单来响应此通知. 而应使用 <a href="Gui.htm#GuiContextMenu">GuiContextMenu 标签</a>, 因为它还能识别 Apps 键. 例如:</p>
 <pre>GuiContextMenu:  <em>; 运行此标签来响应右键点击或按下 Apps 键.</em>
 if (A_GuiControl != "MyListView")  <em>; 这个检查是可选的. 让它只为 ListView 中的点击显示菜单.</em>
     return
@@ -410,17 +410,17 @@ Loop %Folder%\*.*
     if FileExt in EXE,ICO,ANI,CUR
     {
         ExtID := FileExt  <em>; 特殊 ID 作为占位符.</em>
-        IconNumber := 0  <em>; 进行标记这样每种类型就含有唯一的图标.</em>
+        IconNumber := 0  <em>; 标记为未找到, 以便这些类型可以各自拥有一个唯一的图标.</em>
     }
-    else  <em>; 其他的扩展名/文件类型, 计算它们的唯一 ID.</em>
+    else  <em>; 其他的扩展名/文件类型, 所以要计算它们的唯一 ID.</em>
     {
-        ExtID := 0  <em>; 进行初始化来处理比其他更短的扩展名.</em>
+        ExtID := 0  <em>; 进行初始化来处理为更短的扩展名.</em>
         Loop 7     <em>; 限制扩展名为 7 个字符, 这样之后计算的结果才能存放到 64 位值.</em>
         {
             ExtChar := SubStr(FileExt, A_Index, 1)
             if not ExtChar  <em>; 没有更多字符了.</em>
                 break
-            <em>; 把每个字符与不同的位置进行运算来得到唯一 ID:</em>
+            <em>; 通过给每个字符分配一个不同的比特位置, 来得到唯一 ID:</em>
             ExtID := ExtID | (Asc(ExtChar) &lt;&lt; (8 * (A_Index - 1)))
         }
         <em>; 检查此文件扩展名的图标是否已经在图像列表中. 如果是,</em>

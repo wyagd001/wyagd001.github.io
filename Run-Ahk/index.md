@@ -7,7 +7,7 @@ layout: default
 # [](#header-2) 自用脚本介绍
 
 **运行-Ahk**: 这是一个方便自己使用的 AutoHotkey 脚本，看到对自己有用的代码就添加进来。所以代码很乱，功能很杂，重复的功能也比较多。  
-**关键词**: AutoHotkey [快捷键](#hotkey) [热字串](#hotstring) [Candy](#Candy) [Windy](#Windy) [音频播放器](#AhkPlayer) [资源管理器右键菜单](#7plus) [FolderMenu](#FolderMenu) [自动激活](#AutoRaise) [定时提醒](#Naozhong) [局域网控制](#RC) [文件预览](#FilePrew) [剪贴板记录](#Clip) [脚本管理器](#SM) [鼠标手势](#MG) [增加自定义托盘图标](#TrayIcon)  [左键增强](#click) [中键增强](#middle)
+**关键词**: AutoHotkey [快捷键](#hotkey) [热字串](#hotstring) [Candy](#Candy) [Windy](#Windy) [音频播放器](#AhkPlayer) [资源管理器右键菜单](#7plus) [FolderMenu](#FolderMenu) [自动激活](#AutoRaise) [定时提醒](#Naozhong) [局域网控制](#RC) [文件预览](#FilePrew) [剪贴板记录](#Clip) [脚本管理器](#SM) [鼠标手势](#MG) [增加自定义托盘图标](#TrayIcon)  [左键增强](#click) [中键增强](#middle) [其他脚本](#other)
 
 ### [](#header-3)功能介绍
 - <span id="hotkey">快捷键</span>, 90 多个快捷键实现不同的功能
@@ -18,19 +18,25 @@ layout: default
   - Win + J 一键打开文件, 文件夹, 注册表
   - Alt + F1 有道翻译选中的英语单词
   - F6 查看文件(文本、图片、音频)
+  - ` 一键替换选中的文本(利用单词本来做翻译)
 - <span id="hotstring">热字串</span>
   - == 计算公式结果
   - @zhushi 根据窗口标题输入单行注释符号
 - <span id="Candy">Candy</span>, 针对选中的内容(文本、文件、文件夹), 弹出不同右键菜单
-  - 分区快速更改盘符
-  - 文件移动到指定文件夹(配置中只指定了音频文件,指定文件夹按需更改)
+  - 选中分区快速更改盘符
+  - 文件移动到指定文件夹(配置中只指定了音频文件, 指定文件夹按需更改)
+  - 字符查看编码
+  - 文本文件转换编码
+  - 文本比较(小文件, 大文件速度慢, 可能会卡死)
+  - 其他多种功能菜单
 - <span id="Windy">Windy</span>, 针对窗口弹出不同的菜单
   - 打开窗口进程所在目录
   - 关闭同名所有窗口
   - 引入 TTlib 管理控制窗口任务栏按钮分组
+  - 调用执行 WPS 中的vba的函数
 - <span id="AhkPlayer">音频播放器</span>
   - 播放指定音乐文件夹下的音频文件
-  - 可显示 Lrc 格式格式
+  - 可显示 Lrc 格式歌词
 - <span id="7plus">7plus右键菜单</span>, 引入 ShellExtension.dll 文件, 添加自定义资源管理器右键菜单
   - 记事本打开
   - cmd 目录
@@ -80,9 +86,12 @@ layout: default
   - 桌面空白处隐藏窗口图标
   - 任务栏按钮关闭窗口
   - 托盘处退出程序
-
-
-
-
-
-
+- <span id="other">其他脚本</span>, 独立的小脚本
+  - 文本文件中搜索内容
+  - 脚本管理器
+  - 迅雷开放引擎下载
+  - HashCalc
+  - IP 设置
+  - Runz, 另一款快速启动脚本
+  - 屏幕截图
+  - LnkEditor, 快捷方式编辑
