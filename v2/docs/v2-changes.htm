@@ -90,7 +90,7 @@
 <li>所有以前的命令现在都是函数(不包括控制流语句).</li>
 <li>如果不需要返回值, 所有的函数都可以不带括号调用(但是和以前一样, 表达式内的调用不能省略括号).</li>
 <li>所有参数都是表达式, 因此所有文本都是 "带引号的", 逗号不需要转义. 目前这不包括一些指令(它们既不是命令也不是函数).</li>
-<li>不管是否有括号, 参数都是一样的; 也就是说, 返回值没有输出变量, 所以如果省略括号, 它将被丢弃.</li>
+<li>不管是否有括号, 参数都是一样的; 也就是说, 返回值没有输出变量, 因此如果省略括号, 它将被丢弃.</li>
 <li>正常的变量引用从不用百分号括起来(除了 <a href="commands/_Include.htm">#Include</a> 和 <a href="commands/_DllLoad.htm">#DllLoad</a>). 使用<a href="Variables.htm#concat">连接</a>或 <a href="commands/Format.htm">Format</a> 来包含文本中的变量.</li>
 <li>在函数名和参数之间没有逗号, 所以 <code>MouseGetPos(, y)</code> = <code>MouseGetPos , y</code> (省略 x). 为了清楚起见, 需要一个空格或制表符. 为了保持一致性, 指令也遵循新的约定(指令名称和参数之间不能有逗号).</li>
 <li>没有百分号-空格前缀来强制表达式. 表达式中没有引号的百分号只用于双解引/动态引用, 有奇数个百分号是一个语法错误.</li>
@@ -652,7 +652,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <li>Pos, Len 和 Name 现在是属性和方法.</li>
 <li>Name 现在需要一个参数以避免混淆(<code>match.Name</code> 抛出一个错误).</li>
 <li>Count 和 Mark 现在只是属性.</li>
-<li>Value 已被删除; 使用 <code>match.0</code> 或 <code>match[]</code> 而不是 <code>match.Value()</code>, 和 <code>match[N]</code> 而不是<code>match.Value(N)</code>.</li>
+<li>Value 已被删除; 使用 <code>match.0</code> 或 <code>match[]</code> 而不是 <code>match.Value()</code>, 和 <code>match[N]</code> 而不是 <code>match.Value(N)</code>.</li>
 </ul>
 </li>
 </ul>
@@ -664,14 +664,14 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <li>增加了 <code>CallbackFree(Address)</code>, 以释放回调内存并释放关联的函数对象.</li>
 </ul>
 <p>注册表函数(<a href="commands/RegRead.htm">RegRead</a>, <a href="commands/RegWrite.htm">RegWrite</a>, <a href="commands/RegDelete.htm">RegDelete</a>): 在 v1.1.21+ 中增加的新语法现在是唯一的语法. 根键和子键被合并. 不写 <code>RootKey, Key</code>, 而写 <code>RootKey\Key</code>. 要连接到一个远程注册表, 使用 <code>\\ComputerName\RootKey\Key</code> 而不是 <code>\\ComputerName:RootKey, Key</code>.</p>
-<p>RegWrite 的参数被重新排序, 像 IniWrite 一样把<em>Value</em> 放在前面(但这并不影响单参数模式, 其中 <em>Value</em> 是唯一参数).</p>
+<p>RegWrite 的参数被重新排序, 像 IniWrite 一样把 <em>Value</em> 放在前面(但这并不影响单参数模式, 其中 <em>Value</em> 是唯一参数).</p>
 <p>当 <em>KeyName</em> 被省略, 并且当前的循环注册项目是一个子键时; RegDelete, RegRead 和 RegWrite 现在对该子键内的值进行操作; 即在这种情况下, <em>KeyName</em> 默认为 <code>A_LoopRegKey "\" A_LoopRegName</code>(注意, A_LoopRegKey 与 A_LoopRegSubKey 合并了). 以前它们的表现如下:</p>
 <ul>
 <li>RegRead 读取一个与子键同名的值, 如果父键中存在这样的子键.</li>
 <li>RegWrite 返回一个错误.</li>
 <li>RegDelete 删除该子键.</li>
 </ul>
-<p>RegDelete, RegRead 和 RegWrite 现在允许在省略<em>KeyName</em> 时指定<em>ValueName</em>:</p>
+<p>RegDelete, RegRead 和 RegWrite 现在允许在省略 <em>KeyName</em> 时指定 <em>ValueName</em>:</p>
 <ul>
 <li>如果当前循环注册表项是一个子键, <em>ValueName</em> 默认为空(子键的默认值) 并且必须指定 <em>ValueType</em>.</li>
 <li>如果当前的循环注册表项是一个值, <em>ValueName</em> 和 <em>ValueType</em> 默认为该值的名称和类型, 但其中一个或两个可以被覆盖.</li>
@@ -704,7 +704,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <p><a href="commands/StrGet.htm">StrGet</a>: 如果 <em>Length</em> 是负数, 它的绝对值表示要转换的确切字符数, 包括字符串可能包含的任何二进制零值--换句话说, 结果总是一个正好是这个长度的字符串. 如果 <em>Length</em> 是正数, 转换后的字符串在第一个二进制 0 处结束, 就像在 v1 中一样.</p>
 <p><a href="commands/StrGet.htm">StrGet</a>/<a href="commands/StrPut.htm">StrPut</a>: <em>Address</em> 参数可以是一个具有 <code>Ptr</code> 和 <code>Size</code> 属性的对象, 比如新的 <code>Buffer</code> 对象. 读/写会自动受到 <code>Size</code>(单位为字节) 的限制. 如果还指定了 <em>Length</em> 它不能超过 <em>Size</em>(对于 UTF-16 来说乘以 2).</p>
 <p>StrPut 的返回值现在是以字节为单位, 所以它可以直接传递给 Buffer().</p>
-<p><a href="commands/StrReplace.htm">StrReplace</a> 现在有一个<em>CaseSense</em> 参数来代替 <em>OutputVarCount</em>, 它被移到了一个参数的右边, <em>Limit</em> 在它后面.</p>
+<p><a href="commands/StrReplace.htm">StrReplace</a> 现在有一个 <em>CaseSense</em> 参数来代替 <em>OutputVarCount</em>, 它被移到了一个参数的右边, <em>Limit</em> 在它后面.</p>
 <p><a href="commands/Suspend.htm">Suspend</a>: 在热键或热串的第一行调用 Suspend 不再自动使其免于挂起. 相反, 使用 <code>#SuspendExempt</code> 或 <code>S</code> 选项. "Permit" 参数值不再有效.</p>
 <p><a href="commands/Switch.htm">Switch</a> 现在默认对字符串进行区分大小写的比较, 并且有一个 <em>CaseSense</em> 参数, 可以覆盖区分大小写的模式, 强制进行字符串(而不是数字) 比较. 以前, 只有当 StringCaseSense 被改为 On 时, 它才区分大小写.</p>
 <p><a href="commands/SysGet.htm">SysGet</a> 现在只有数字子命令; 它的其他子命令已经被分割成函数. 有关详情, 请参阅<a href="#sub-commands">子命令</a>.</p>
