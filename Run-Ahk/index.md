@@ -14,6 +14,7 @@ layout: default
   - Ctrl+F2 Candy
   - Ctrl+F3 Windy
   - Alt + 鼠标左键 移动窗口位置
+  - Alt + 鼠标中键 左 Alt 资源管理器打开窗口进程所在目录, 右 Alt 打开窗口文档所在目录
   - 空格预览
   - Win + J 一键打开文件, 文件夹, 注册表
   - Alt + F1 有道翻译选中的英语单词
@@ -42,6 +43,7 @@ layout: default
   - cmd 目录
   - MD5
   - 移动文件到同名目录
+  - 智能解压 解压到当前文件夹(压缩文件中只有一个文件(夹)时, 以该文件(夹)为名, 多个文件或多个文件夹或文件夹和文件都有, 以压缩文件名为名)
 - <span id="FolderMenu">FolderMenu</span> 文件夹快速跳转(右键菜单)
   - 支持在自定义的软件中跳转(资源管理器, WinRar, 7-Zip, TC, 文件选择对话框)
 - <span id="AutoRaise">自动激活</span>

@@ -39,7 +39,7 @@
 <p>OnMessage 的返回值和行为取决于传递给 <em>Function</em> 参数的是函数名称还是对象.</p>
 
 <h3>函数名称</h3>
-<p>为了向后兼容, 最多可以通过名称注册一个函数来监听每个唯一的 <em>MsgNumber</em> -- 这被称为 "传统" 监听器.</p>
+<p>为了向后兼容, 最多可以通过名称注册一个函数来监听每个唯一的 <em>MsgNumber</em> -- 这被称为 "传统" 监听器. (译者注: 传统监听器注册后最多只有一个传统监听器生效, 更新传统监听器为其他函数, 则将前一个传统监听器覆盖掉.)</p>
 <p>当首次注册传统监听器时, 它是在以前注册的监听器之前还是之后调用, 取决于 <em>MaxThreads</em> 参数. 更新监听器调用不同的函数不会影响顺序, 除非(原来的) 监听器先取消注册.</p>
 <p>这将为 <em>MsgNumber</em> 注册或更新当前传统监听器(如果传递变量, 则省略双引号):</p>
 <pre class="Syntax">Name := <span class="func">OnMessage</span>(MsgNumber, "FunctionName")</pre>
@@ -55,7 +55,7 @@
 <pre class="Syntax">Name := <span class="func">OnMessage</span>(MsgNumber)</pre>
 
 <h3>函数对象</h3>
-<p>任意数量的<a href="../objects/Functor.htm">函数对象</a>(包括<a href="../objects/Func.htm">Func 对象</a>) 可用于监听某个指定的 <em>MsgNumber</em>.</p>
+<p>任意数量的<a href="../objects/Functor.htm">函数对象</a>(包括 <a href="../objects/Func.htm">Func 对象</a>) 可用于监听某个指定的 <em>MsgNumber</em>.</p>
 <p>下面两种方法意义相同, 这样注册的监听器函数对象将在任何在它之前注册的监听器函数 <strong>之后</strong> 被调用:</p>
 <pre class="Syntax">
 <span class="func">OnMessage</span>(MsgNumber, FuncObj)     <em>; 方式 1</em>
@@ -66,9 +66,9 @@
 <pre class="Syntax"><span class="func">OnMessage</span>(MsgNumber, FuncObj, 0)</pre>
 
 <h2 id="Failure">失败</h2>
-<p>当 <em>Function</em> 为以下情况时将导致失败:</p>
+<p>当 <em>Function</em> 为以下情况时, 将导致失败:</p>
 <ol>
-  <li>不是用户定义函数对象的名称, 或是一个空字符串;</li>
+  <li>不是一个对象, 不是用户定义函数的名称, 也不是一个空字符串;</li>
   <li>显式定义了 4 个以上的参数; </li>
   <li>在 <span class="ver">[v1.0.48.05]</span> 及更旧版本时, 使用了 <a href="../Functions.htm#ByRef">ByRef</a> 或<a href="../Functions.htm#optional">可选</a>参数.</li>
 </ol>
@@ -86,7 +86,7 @@
   <li>参数 #1: 消息的 WPARAM 值.</li>
   <li>参数 #2: 消息的 LPARAM 值.</li>
   <li>参数 #3: 消息号, 可用在用一个函数监听多个消息时.</li>
-  <li>参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). 要使用 HWND 则需要加上 <a href="../misc/WinTitle.htm#ahk_id">ahk_id</a>.</li>
+  <li>参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). HWND 可以和 <a href="../misc/WinTitle.htm#ahk_id">ahk_id</a> 一起使用.</li>
 </ul>
 <p>根据运行脚本的 AutoHotkey.exe 是 32 位或 64 位, WPARAM 和 LPARAM 是无符号 32 位整数(从 0 到 2<sup>32</sup>-1) 或有符号 64 位整数(从 -2<sup>63</sup> 到 2<sup>63</sup>-1). 在 32 位脚本中, 如果传入参数应该为有符号整数, 则可以参照这个例子得到负数:</p>
 <pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; 检查 <a href="../Variables.htm#PtrSize">A_PtrSize</a> 以确保脚本为 32 位.</em>
