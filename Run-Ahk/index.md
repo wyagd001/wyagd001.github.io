@@ -14,7 +14,7 @@ layout: default
   - Ctrl+F2 Candy
   - Ctrl+F3 Windy
   - Alt + 鼠标左键 移动窗口位置
-  - Alt + 鼠标中键 左 Alt 资源管理器打开窗口进程所在目录, 右 Alt 打开窗口文档所在目录
+  - Alt + 鼠标中键, 资源管理器: 左 Alt 打开窗口进程所在目录, 右 Alt 打开窗口文档所在目录
   - 空格预览
   - Win + J 一键打开文件, 文件夹, 注册表
   - Alt + F1 有道翻译选中的英语单词
