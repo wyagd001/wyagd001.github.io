@@ -257,14 +257,14 @@ Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; 在这种�
     VarSetCapacity(CopyDataStruct, 3*A_PtrSize, 0)  <em>; 分配结构的内存区域.</em>
     <em>; 首先设置结构的 cbData 成员为字符串的大小, 包括它的零终止符:</em>
     SizeInBytes := (StrLen(StringToSend) + 1) * (A_IsUnicode ? 2 : 1)
-    NumPut(SizeInBytes, CopyDataStruct, A_PtrSize)  <em>; 操作系统要求这个需要完成.</em>
+    NumPut(SizeInBytes, CopyDataStruct, A_PtrSize)  <em>; 操作系统要求这样做.</em>
     NumPut(&amp;StringToSend, CopyDataStruct, 2*A_PtrSize)  <em>; 设置 lpData 为到字符串自身的指针.</em>
     Prev_DetectHiddenWindows := A_DetectHiddenWindows
     Prev_TitleMatchMode := A_TitleMatchMode
     DetectHiddenWindows On
     SetTitleMatchMode 2
     TimeOutTime := 4000  <em>; 可选的. 等待 receiver.ahk 响应的毫秒数. 默认是 5000</em>
-    <em>; 必须使用发送 SendMessage 而不是投递 PostMessage.</em>
+    <em>; 必须使用 SendMessage 而不是 PostMessage 发送.</em>
     SendMessage, 0x004A, 0, &amp;CopyDataStruct,, %TargetScriptTitle%  <em>; 0x004A 为 WM_COPYDAT</em>
     DetectHiddenWindows %Prev_DetectHiddenWindows%  <em>; 恢复调用者原来的设置.</em>
     SetTitleMatchMode %Prev_TitleMatchMode%         <em>; 同样.</em>
