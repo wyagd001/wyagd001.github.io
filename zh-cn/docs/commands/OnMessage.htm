@@ -116,7 +116,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>任意调用 OnMessage 的脚本会自动成为<a href="_Persistent.htm">持续运行的</a>. 同时也会单实例运行, 不过可以使用 <a href="_SingleInstance.htm">#SingleInstance</a> 覆盖了默认设置.</p>
 <p><p id="Critical">当一个消息达到时, 如果其函数由于之前到达的相同消息而仍在运行, 默认情况下, 该函数将不会被再次调用; 相反, 该消息将被视为不受监控. 如果不希望这样, 有多种方法可以避免它:</p>
 <ul>
-  <li>如果消息是 post 的, 而不是 sent 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让函数完成.</li>
+  <li>如果消息是 post 的, 而不是 send 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让函数完成.</li>
   <li><span class="ver">[v1.0.46+]:</span> 使用 <a href="Critical.htm">Critical</a> 来增加<a href="Critical.htm#Interval">消息检查间隔</a>, 可以让函数在任何消息被派发之前有更多的时间来完成. 为了保证可靠性, 可能需要一个大于 16 的间隔时间. 由于系统定时器的粒度(通常为 15.6 毫秒), 默认的 5 毫秒(对于非-Critical 线程) 或 15 毫秒(对于 Critical 线程) 的间隔可能会在函数启动后的瞬间出现.</li>
   <li>确保监控函数快速返回, 可以减少因 <em>MaxThreads</em> 而错过消息的风险. 一种方法是让它通过向自己的脚本 <a href="PostMessage.htm">posting</a> 大于 0x0311 的监控消息, 来排队等待未来的线程. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲. 另外, 也可以用一个<a href="SetTimer.htm">计时器</a>来排队等待未来的线程.</li>
   <li>为 <a href="#MaxThreads">MaxThreads</a> 参数指定一个较高的值, 可以使函数被中断以处理新收到的消息.</li>
