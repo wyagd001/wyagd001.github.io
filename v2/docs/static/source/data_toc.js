@@ -23,14 +23,7 @@
     ["线程","misc/Threads.htm"],
     ["调试客户端","AHKL_DBGPClients.htm"],
     ["编译器指令","misc/Ahk2ExeDirectives.htm"],
-    ["对象","Objects.htm",
-    [
-      ["基本用法","Objects.htm#Usage"],
-      ["扩展用法","Objects.htm#Extended_Usage"],
-      ["自定义对象","Objects.htm#Custom_Objects"],
-      ["原始值","Objects.htm#primitive"],
-      ["实现","Objects.htm#Implementation"]
-    ]]
+    ["对象","Objects.htm"]
   ]],
   ["驱动器", "commands/Drive.htm",
   [
@@ -300,10 +293,11 @@
     ["缓冲对象","objects/Buffer.htm"],
     ["Class 对象","objects/Class.htm"],
     ["文件对象","objects/File.htm"],
-    ["函数对象","objects/Functor.htm"],
     ["Func 对象","objects/Func.htm"],
+    ["函数对象","objects/Functor.htm"],
     ["枚举器对象 ","objects/Enumerator.htm"],
     ["Error 对象","objects/Error.htm"],
+    ["InputHook Object","commands/InputHook.htm#object"],
     ["正则匹配对象","commands/RegExMatch.htm#MatchObject"],
     ["Gui 对象","objects/Gui.htm"],
     ["GuiControl 对象","objects/GuiControl.htm"],

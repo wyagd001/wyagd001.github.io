@@ -497,6 +497,7 @@ this.__set(name, args, value)
 <li>SetBatchLines (-1 现在是默认行为)</li>
 <li>SetEnv</li>
 <li>SetFormat (<a href="commands/Format.htm">Format</a> 可以用来格式化一个字符串)</li>
+<li>SoundGet/SoundSet(请参阅 <a href="#Sound">Sound 函数</a>)</li>
 <li>SoundGetWaveVolume/SoundSetWaveVolume (在平衡方面与 SoundGet/SoundSet 的行为略有不同, 但都没有保留平衡)</li>
 <li>SplashImage (使用 <a href="objects/Gui.htm">Gui</a>)</li>
 <li>SplashTextOn/Off (使用 <a href="objects/Gui.htm">Gui</a>)</li>
@@ -571,6 +572,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <p><a href="commands/DllCall.htm">DllCall</a>: 请参阅下面的 <a href="#dllcall">DllCall</a> 部分.</p>
 <p>如果没有被注册 "edit" shell 动词, <a href="commands/Edit.htm">Edit</a> 以前有针对 <code>.ini</code> 文件类型的后备行为. 由于脚本文件不需要有 <code>.ini</code> 扩展名. <code>AutoHotkey.ini</code> 是旧版本 AutoHotkey 中的默认脚本名称.</p>
 <p>如果脚本是从 stdin 中读取的, 那么现在 <a href="commands/Edit.htm">Edit</a> 不会做任何事情, 而会尝试为 <code>*</code> 打开一个编辑器.</p>
+<p><a href="commands/EnvSet.htm">EnvSet</a> now deletes the environment variable if the value parameter is completely omitted.</p>
 <p>以前, 当脚本不是持续运行时, <a href="commands/Exit.htm">Exit</a> 作为 <a href="commands/ExitApp.htm">ExitApp</a> 使用, 即使有其他挂起的线程被调用 Exit 的线程打断. 现在它不再这样做了. 相反, 它总是正确地退出当前线程, 并且(如果不是持续运行的) 脚本只在最后一个线程退出后才终止. 这保证了 <code>finally</code> 语句的执行和局部变量的释放, 这可能允许对局部变量所包含的任何对象调用 <code>__delete</code> .</p>
 <p><a href="commands/FileAppend.htm">FileAppend</a> 默认为没有行末转换, 与 <a href="commands/FileRead.htm">FileRead</a> 和 <a href="commands/FileOpen.htm">FileOpen</a> 一致. FileAppend 和 FileRead 都有一个单独的 <em>Options</em> 参数, 它取代了选项前缀, 并可能包括一个可选的编码名称(取代 FileRead 的 <code>*Pnnn</code> 选项). FileAppend, FileRead 和 FileOpen 使用 <code>"`n"</code> 来实现行末转换. FileAppend 和 FileRead 支持 <code>"RAW"</code> 选项来禁用编码转换(读/写二进制数据); FileRead 在这种情况下返回一个 <code>Buffer</code> 对象. 这取代了 <code>*c</code>(见文档中的 ClipboardAll). FileAppend 可以接受一个类 <code>Buffer</code> 对象, 在这种情况下不进行转换.</p>
 <p>如果源路径不包含 <code>*</code> 或 <code>?</code> 并且没有找到文件, <a href="commands/FileCopy.htm">FileCopy</a> 和 <a href="commands/FileMove.htm">FileMove</a> 现在抛出异常. 然而, 当源路径包含通配符时, 复制或移动零个文件仍然不被视为错误.</p>
@@ -691,7 +693,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <li>当任何两个项目比较相等时, 项目的原始顺序将自动作为决定顺序的因素, 以确保结果更加稳定.</li>
 <li><code>C</code> 选项现在也接受相当于其他函数的 <em>CaseSense</em> 参数的后缀(除 <code>CL</code> 外): <code>CLocale CLogical COn C1 COff C0</code>. 特别是, 对 "logical" 比较模式的支持是新加入的.</li>
 </ul>
-<p><a href="commands/Sound.htm">Sound 函数</a>: 修改了 SoundGet 和 SoundSet 以更好地匹配 Vista+ 声音 API 的功能, 放弃了对 XP 的支持.</p>
+<p id="Sound"><a href="commands/Sound.htm">Sound 函数</a>: 修改了 SoundGet 和 SoundSet 以更好地匹配 Vista+ 声音 API 的功能, 放弃了对 XP 的支持.</p>
 <ul>
 <li>删除了不支持的控制类型.</li>
 <li>删除了传统的混音器组件类型.</li>
