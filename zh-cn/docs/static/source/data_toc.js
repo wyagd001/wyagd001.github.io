@@ -21,14 +21,7 @@
     ["线程","misc/Threads.htm"],
     ["调试客户端(DBGp)","AHKL_DBGPClients.htm"],
     ["编译器指令","misc/Ahk2ExeDirectives.htm"],
-    ["对象","Objects.htm",
-    [
-      ["基本用法","Objects.htm#Usage"],
-      ["扩展用法","Objects.htm#Extended_Usage"],
-      ["自定义对象","Objects.htm#Custom_Objects"],
-      ["默认基对象","Objects.htm#Default_Base_Object"],
-      ["实现","Objects.htm#Implementation"]
-    ]]
+    ["对象","Objects.htm"]
   ]],
   ["迁移到 AutoHotkey_L 1.1","",
   [
@@ -294,6 +287,7 @@
     ["文件对象","objects/File.htm"],
     ["Func 对象","objects/Func.htm"],
     ["函数对象","objects/Functor.htm"],
+    ["InputHook Object","commands/InputHook.htm#object"],
     ["匹配对象","commands/RegExMatch.htm#MatchObject"]
    ]],
   ["进程管理","",

@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>简单对象 - 关联数组 | AutoHotkey</title>
-<meta name="description" content="A basic object provides an interface to perform actions such as inserting or removing a key, getting the number of keys, cloning the object, etc." />
+<meta name="description" content="The basic object provides an interface to perform actions such as inserting or removing a key, getting the number of keys, cloning the object, etc." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,43 +12,48 @@
 <body>
 
 <h1>简单对象 - 关联数组</h1>
+<p>AutoHotkey 的基本对象数据类型是关联数组, 特点是允许<a href="../Objects.htm#Custom_Objects">自定义</a>它的行为. 默认情况下, 所有由 <code>{}</code>, <code>[]</code>, <code>Object()</code> 和 <code>Array()</code> 创建的对象支持以下方法, 属性和函数.</p>
 
-<p>AutoHotkey 的基本对象数据类型是关联数组, 特点是允许<a href="../Objects.htm#Custom_Objects">自定义</a>它的行为. 默认情况下, 所有由 <code>{}</code>, <code>[]</code>, <code>Object()</code> 和 <code>Array()</code> 创建的对象支持以下内容:</p>
-<p>方法:</p>
-<ul>
-  <li><a href="#InsertAt">InsertAt</a> / <a href="#RemoveAt">RemoveAt</a></li>
-  <li><a href="#Push">Push</a> / <a href="#Pop">Pop</a></li>
-  <li><a href="#Delete">Delete</a></li>
-	<li><a href="#MinMaxIndex">MinIndex / MaxIndex</a> / <a href="#Length">Length</a> / <a href="#Count">Count</a></li>
-	<li><a href="#SetCapacity">SetCapacity</a> / <a href="#GetCapacity">GetCapacity</a></li>
-	<li><a href="#GetAddress">GetAddress</a></li>
-	<li><a href="#NewEnum">_NewEnum</a></li>
-	<li><a href="#HasKey">HasKey</a></li>
-	<li><a href="#Clone">Clone</a></li>
+<h2 id="toc">目录</h2>
+<ul class="indent">
+  <li><a href="#Methods">方法</a>:
+    <ul>
+      <li><a href="#InsertAt">InsertAt</a>: 插入一个或多个值到线性数组中的给定序号位置中.</li>
+      <li><a href="#RemoveAt">RemoveAt</a>: 从线性数组的指定位置移除键值对.</li>
+      <li><a href="#Push">Push</a>: 追加值到数组的尾部.</li>
+      <li><a href="#Pop">Pop</a>: 删除并返回数组中最后一个数组元素.</li>
+      <li><a href="#Delete">Delete</a>: 删除对象中的键-值对.</li>
+      <li><a href="#MinMaxIndex">MinIndex / MaxIndex</a>: 如果存在, 则返回最小或最大整数键.</li>
+      <li><a href="#Length">Length</a>: 返回线性数组的长度.</li>
+      <li><a href="#Count">Count</a>: 返回对象中存在的键-值对的数量.</li>
+      <li><a href="#SetCapacity">SetCapacity</a>: 调整对象或其一个字段占用的内存空间.</li>
+      <li><a href="#GetCapacity">GetCapacity</a>: 返回对象或其一个字段当前占用的内存空间.</li>
+      <li><a href="#GetAddress">GetAddress</a>: 返回对象的区域字符串缓冲区地址, 如果它有.</li>
+      <li><a href="#NewEnum">_NewEnum</a>: 返回一个新的枚举器来枚举对象的键值对.</li>
+      <li><a href="#HasKey">HasKey</a>: Returns true if the specified key is associated with a value within an object.</li>
+      <li><a href="#Clone">Clone</a>: 返回对象的浅拷贝.</li>
+      <li><a class="deprecated" href="#Insert" title="Deprecated. Use InsertAt, Push, ObjRawSet or a simple assignment instead.">Insert</a> (不推荐): 插入键值对到对象中.</li>
+      <li><a class="deprecated" href="#Remove" title="Deprecated. Use RemoveAt, Delete or Pop instead.">Remove</a> (不推荐): 从对象中删除键值对.</li>
+    </ul>
+  </li>
+  <li><a href="#Properties">属性</a>:
+    <ul>
+      <li><a href="#Base">Base</a>: 检索或设置对象的基对象.</li>
+    </ul>
+  </li>
+  <li><a href="#Functions">函数</a>:
+    <ul>
+      <li><a href="#RawGet">ObjRawGet</a>: 在对象中检索给定键所关联的值.</li>
+      <li><a href="#RawSet">ObjRawSet</a>: 存储或覆盖对象中的一组键值对.</li>
+      <li><a href="#GetBase">ObjGetBase</a>: 返回对象的基对象.</li>
+      <li><a href="#SetBase">ObjSetBase</a>: 设置对象的基对象.</li>
+    </ul>
+  </li>
+  <li><a href="#Remarks">备注</a></li>
 </ul>
-<p>属性:</p>
-<ul>
-	<li><a href="#Base">Base</a></li>
-</ul>
-<p>函数:</p>
-<ul>
-	<li><a href="#RawGet">ObjRawGet</a></li>
-	<li><a href="#RawSet">ObjRawSet</a></li>
-	<li><a href="#GetBase">ObjGetBase</a></li>
-	<li><a href="#SetBase">ObjSetBase</a></li>
-</ul>
-<p><strong>弃用的</strong>(不推荐使用):</p>
-<ul>
-	<li><a href="#Insert">Insert</a></li>
-	<li><a href="#Remove">Remove</a></li>
-</ul>
-<p>每个方法都有对应的函数(译者注: 这里描述的是以 "Obj" 为前缀的内置函数, 下文统称为 "Obj前缀函数"), 可用于传递由对象实现的任何<a href="../Objects.htm#Custom_Objects">自定义行为</a> -- 推荐这些 Obj前缀函数 仅用于此目的. 要调用某个这种函数, 在方法名前加上 "Obj" 前缀并把目标对象作为首个参数传递过去. 例如:</p>
-<pre>array := [1, 2, 3]
-MsgBox % ObjMaxIndex(array) " = " array.MaxIndex()</pre>
-<p>如果对象的方法-函数的参数对象或值的类型不正确, 它将返回空字符串. 而独立函数如 ObjRawSet 则会抛出异常</p>
-&nbsp;
 
-<div class="methodShort" id="InsertAt"><h2>InsertAt <span class="ver">[v1.1.21+]</span></h2>
+<h2 id="Methods">方法</h2>
+<div class="methodShort" id="InsertAt"><h3>InsertAt <span class="ver">[v1.1.21+]</span></h3>
 <p>插入一个或多个值到线性数组中的给定序号位置中.</p>
 <pre class="Syntax">Object.<span class="func">InsertAt</span>(Pos, Value1 <span class="optional">, Value2, ... Value<i>N</i></span>)</pre>
 <dl>
@@ -57,7 +62,6 @@ MsgBox % ObjMaxIndex(array) " = " array.MaxIndex()</pre>
   <dt>Value1 ...</dt>
   <dd><p>要插入数组的一个或多个值. 要将另一个数组中的值一次性插入, 传递 <code><a href="../Functions.htm#VariadicCall">theArray*</a></code> 作为最后一个参数.</p></dd>
 </dl>
-<h3 id="InsertAt_Remarks">备注</h3>
 <p>InsertAt 对应的是 <a href="#RemoveAt">RemoveAt</a>.</p>
 <p>作为关联数组对象, <em>Pos</em> 的整数值同时也成为 <em>Value1</em> 在数组对象中的键名. 位于 <em>Pos</em> 之前或之后的键值对都会被自动改为正确的对应关系数值, 哪怕键对应的值不存在也是如此(因为对象是稀疏数组). 例如:</p>
 <pre>x := []
@@ -80,7 +84,7 @@ MsgBox % x[handleX+1]  <em>; 这是 "A" 新的 "位置"</em></pre>
 <p>InsertAt 不会影响文本或对象键, 所以可以安全的用于混合键类型的对象.</p>
 </div>
 
-<div class="methodShort" id="RemoveAt"><h2>RemoveAt <span class="ver">[v1.1.21+]</span></h2>
+<div class="methodShort" id="RemoveAt"><h3>RemoveAt <span class="ver">[v1.1.21+]</span></h3>
 <p>从线性数组的指定位置移除键值对.</p>
 <pre class="Syntax">Object.<span class="func">RemoveAt</span>(Pos <span class="optional">, Length</span>)</pre>
 <dl>
@@ -90,10 +94,8 @@ MsgBox % x[handleX+1]  <em>; 这是 "A" 新的 "位置"</em></pre>
   <dt>Length</dt>
   <dd><p>要删除值的范围. 从 <code>Pos</code> 到 <code>Pos+Length-1</code> 之间的所有值将被删除. 如果省略则仅删除 Pos 位置的值.</p></dd>
   
-  <dt>返回值</dt>
-  <dd><p>如果省略 <em>Length</em> , 返回 <em>Pos</em> 对应的值(如果不存在值则返回空值). 其他情况则返回被删除的值中非空值的计数, 可用 <em>Length</em> 区别于稀疏数组, 但它总是返回 0 或 <em>Length</em>(包括0).</p></dd>
 </dl>
-<h3 id="RemoveAt_Remarks">备注</h3>
+<p>如果省略 <em>Length</em>, 则返回从 <em>Pos</em> 删除的值(如果没有则为空). 否则, 返回值是已删除的有值项的数量, 它可以不同于稀疏数组中的 <em>Length</em>, 但它总是在 0 和 <em>Length</em>(包括) 之间.</p>
 <p>RemoveAt 对应于 <a href="#InsertAt">InsertAt</a>.</p>
 <p>剩下的那些位于 <em>Pos</em> 前后的键值对会根据 <em>Length</em>(或者省略时为 1) 长度强制对齐, 哪怕被删除的范围中不包含任何值. 例如:</p>
 <pre>x := ["A", "B"]
@@ -111,28 +113,26 @@ MsgBox % x[0x4321-1]        <em>; A</em></pre>
 <p>RemoveAt 不会影响文本或对象键, 所以可以安全的用于混合键类型的对象.</p>
 </div>
 
-<div class="methodShort" id="Push"><h2>Push <span class="ver">[v1.1.21+]</span></h2>
+<div class="methodShort" id="Push"><h3>Push <span class="ver">[v1.1.21+]</span></h3>
 <p>追加一个或多个值到数组的尾部.</p>
 <pre class="Syntax">Object.<span class="func">Push</span>(<span class="optional"> Value, Value2, ..., Value<i>N</i> </span>)</pre>
 <dl>
   <dt>Value ...</dt>
   <dd><p>要插入数组的一个或多个值. 要将另一个数组中的值一次性插入, 传递 <code><a href="../Functions.htm#VariadicCall">theArray*</a></code> 作为最后一个参数.</p></dd>
-  <dt>返回值</dt>
-  <dd><p>插入的最后一个值的位置(因为可能同时插入了多个值). 当数组仅包含负索引时可能为负数.</p></dd>
 </dl>
-<h3 id="Push_Remarks">备注</h3>
+<p>插入的最后一个值的位置(因为可能同时插入了多个值). 当数组仅包含负索引时可能为负数.</p>
 <p>如果数组为空或仅包含字符串或对象键时, 第一个插入的值的位置(索引) 为 1.</p>
 <p>其他情况下, 插入的第一个值位于 <code>Object.MaxIndex() + 1</code>, 哪怕那个位置是负数或零. 如果这不是您预期的结果, 对于含有负数键的对象也可以这样 <code>Object.InsertAt(Object.Length() + 1, ...)</code> .</p>
 </div>
 
-<div class="methodShort" id="Pop"><h2>Pop <span class="ver">[v1.1.21+]</span></h2>
+<div class="methodShort" id="Pop"><h3>Pop <span class="ver">[v1.1.21+]</span></h3>
 <p>删除并返回数组中最后一个数组元素.</p>
 <pre class="Syntax">Value := Object.<span class="func">Pop</span>()</pre>
 <p>如果该数组中不含有任何元素, 返回值为空字符串. 其他情况下, 它相当于:</p>
 <pre>Value := Object.RemoveAt(Object.Length())</pre>
 </div>
 
-<div class="methodShort" id="Delete"><h2>Delete <span class="ver">[v1.1.21+]</span></h2>
+<div class="methodShort" id="Delete"><h3>Delete <span class="ver">[v1.1.21+]</span></h3>
 <p>删除对象中的键-值对.</p>
 <pre class="Syntax">
 Object.<span class="func">Delete</span>(Key)
@@ -143,10 +143,8 @@ Object.<span class="func">Delete</span>(FirstKey, LastKey)
   <dd><p>任意一个键.</p></dd>
   <dt>FirstKey, LastKey</dt>
   <dd><p>任意有效的整数范围或字符串键, 其中 <em>FirstKey</em> &lt;= <em>LastKey</em>. 两个键必须是相同的类型.</p></dd>
-  <dt>返回值</dt>
-  <dd><p>如果只有一个参数, 将返回被删除的值(如果不存在则返回空值). 其他情况将返回范围中存在并被删除的键的计数.</p></dd>
 </dl>
-<h3 id="Delete_Remarks">备注</h3>
+<p>如果只有一个参数, 将返回被删除的值(如果不存在则返回空值). 其他情况将返回范围中存在并被删除的键的计数.</p>
 <p>与 <a href="#RemoveAt">RemoveAt</a> 不同的是, Delete 不会影响任何没有被删除的键-值对(译者注: 仅删除值, 而保留键位). 例如:</p>
 <pre>x := ["A", "B"]
 MsgBox % x.RemoveAt(1)  <em>; A</em>
@@ -157,35 +155,29 @@ MsgBox % x.Delete(1)    <em>; A</em>
 MsgBox % x[1]           <em>; 为空</em></pre>
 </div>
 
-<div class="methodShort" id="MinMaxIndex"><h2>MinIndex / MaxIndex <span class="ver">[AHK_L 31+]</span></h2>
+<div class="methodShort" id="MinMaxIndex"><h3>MinIndex / MaxIndex <span class="ver">[AHK_L 31+]</span></h3>
+<p>如果存在, 则返回最小或最大整数键.</p>
 <pre class="Syntax">
 MinIndex := Object.<span class="func">MinIndex</span>()
 MaxIndex := Object.<span class="func">MaxIndex</span>()
 </pre>
-<p>如果存在任何整数键, MinIndex 返回最小键值, 而 MaxIndex 返回最大键值. 其他情况返回空字符串.</p>
+<p>如果没有整数键, 则返回空字符串.</p></div>
+
+<div class="methodShort" id="Length"><h3>Length <span class="ver">[v1.1.21+]</span></h3>
+<p>返回线性数组的长度.</p>
+<pre class="Syntax">Length := Object.<span class="func">Length</span>()</pre>
+<p>这个方法返回从位置 1 开始的线性数组的长度; 即, 对象所包含的最大正整数键, 如果没有, 则为 0.</p>
 <pre>
 MsgBox % ["A", "B", "C"].MaxIndex()  <em>;  3</em>
 MsgBox % ["A",    , "C"].MaxIndex()  <em>;  3</em>
 MsgBox % {-10: 0, 10: 0}.MaxIndex()  <em>; 10</em>
-MsgBox % {-10: 0, -1: 0}.MaxIndex()  <em>; -1</em>
-MsgBox % {a: 1000, b: 0}.MaxIndex()  <em>;  空</em>
+MsgBox % {-10: 0, -1: 0}.MaxIndex()  <em>; 0</em>
 </pre></div>
 
-<div class="methodShort" id="Length"><h2>Length <span class="ver">[v1.1.21+]</span></h2>
-<pre class="Syntax">Length := Object.<span class="func">Length</span>()</pre>
-<p>返回从位置 1 开始的线性数组的长度; 也就是说, 对象包含的最大正整数键, 如果没有, 则为 0 .</p>
-<pre>
-MsgBox % ["A", "B", "C"].Length()  <em>;  3</em>
-MsgBox % ["A",    , "C"].Length()  <em>;  3</em>
-MsgBox % {-10: 0, 10: 0}.Length()  <em>; 10</em>
-MsgBox % {10: 10, 2: 20}.Length()  <em>; 10</em>
-MsgBox % {-10: 0, -1: 0}.Length()  <em>;  0</em>
-MsgBox % {a: 10, b: 200}.Length()  <em>;  0</em>
-</pre></div>
-
-<div class="methodShort" id="Count"><h2>Count <span class="ver">[v1.1.29+]</span></h2>
+<div class="methodShort" id="Count"><h3>Count <span class="ver">[v1.1.29+]</span></h3>
+<p>返回一个对象中存在的键值对的个数.</p>
 <pre class="Syntax">Count := Object.<span class="func">Count</span>()</pre>
-<p>返回对象中存在的键-值对的数量.</p>
+<p>Examples:</p>
 <pre>
 MsgBox % {A: 1, Z: 26}.Count()    <em>;  2</em>
 MsgBox % ["A", "B", "C"].Count()  <em>;  3</em>
@@ -193,7 +185,7 @@ MsgBox % ["A",    , "C"].Count()  <em>;  2</em>
 </pre>
 </div>
 
-<div class="methodShort" id="SetCapacity"><h2>SetCapacity <span class="ver">[AHK_L 31+]</span></h2>
+<div class="methodShort" id="SetCapacity"><h3>SetCapacity <span class="ver">[AHK_L 31+]</span></h3>
 <p>调整对象或其一个字段占用的内存空间.</p>
 <pre class="Syntax">
 Object.<span class="func">SetCapacity</span>(MaxItems)
@@ -206,76 +198,37 @@ Object.<span class="func">SetCapacity</span>(Key, ByteSize)
 	<dd><p>任何有效键.</p></dd>
 	<dt>ByteSize</dt>
 	<dd><p>为目标字段字符串缓存设置新的大小, 不包括空终止符, 单位为字节. 如果字段不存在, 则创建它. 如果 <i>ByteSize</i> 为零, 则清空缓存但不移除空字段. 如果 <i>ByteSize</i> 小于当前大小, 则移除额外的数据; 否则保留所有现有的数据.</p></dd>
-	<dt><strong>返回值</strong></dt>
-	<dd><p>成功时返回新设置的内存空间, 否则为空字符串.</p></dd>
 </dl>
+<p>成功时返回新设置的内存空间, 否则为空字符串.</p>
 </div>
  	 
-<div class="methodShort" id="GetCapacity"><h2>GetCapacity <span class="ver">[AHK_L 31+]</span></h2>
+<div class="methodShort" id="GetCapacity"><h3>GetCapacity <span class="ver">[AHK_L 31+]</span></h3>
+<p>返回对象或其一个字段当前占用的内存空间.</p>
 <pre class="Syntax">
 MaxItems := Object.<span class="func">GetCapacity</span>()
 ByteSize := Object.<span class="func">GetCapacity</span>(Key)
 </pre>
-<p>返回对象或其一个字段当前占用的内存空间.</p>
 <p>如果字段不存在或不包含字符串, 则返回空字符串.</p></div>
 
-<div class="methodShort" id="GetAddress"><h2>GetAddress <span class="ver">[AHK_L 31+]</span></h2>
-<pre class="Syntax">Ptr := Object.<span class="func">GetAddress</span>(Key)</pre>
-<p>返回对象的区域字符串缓冲区地址, 如果它有.</p></div>
+<div class="methodShort" id="GetAddress"><h3>GetAddress <span class="ver">[AHK_L 31+]</span></h3>
+<p>返回对象的区域字符串缓冲区地址, 如果它有.</p>
+<pre class="Syntax">Ptr := Object.<span class="func">GetAddress</span>(Key)</pre></div>
 
-<div class="methodShort" id="NewEnum"><h2>NewEnum <span class="ver">[AHK_L 49+]</span></h2>
+<div class="methodShort" id="NewEnum"><h3>NewEnum <span class="ver">[AHK_L 49+]</span></h3>
+<p>返回一个新的<a href="Enumerator.htm">枚举器</a>, 用于枚举当前对象中的键值对.</p>
 <pre class="Syntax">Enum := Object._<span class="func">NewEnum</span>()</pre>
-<p>返回一个新的<a href="Enumerator.htm">枚举器</a>用于枚举当前对象中的键值对. 该方法通常不直接调用, 而是使用 <a href="../commands/For.htm">for 循环</a>来遍历对象.</p></div>
-
-<div class="methodShort" id="HasKey"><h2>HasKey <span class="ver">[AHK_L 53+]</span></h2>
-<pre class="Syntax">Object.<span class="func">HasKey</span>(Key)</pre>
-<p>只要 <i>Object</i> 中 <i>Key</i> 关联的值(即使值为 "") 存在(已定义) 就返回真 true, 否则为假 false.</p></div>
-
-<div class="methodShort" id="Clone"><h2>Clone <span class="ver">[AHK_L 60+]</span></h2>
-<pre class="Syntax">Clone := Object.<span class="func">Clone</span>()</pre>
-<p>返回对象的一个浅拷贝(拷贝对象的指针, 而不是对象本身, 引用的内存地址资源相同, 对象引用加 1).</p></div>
-
-<div class="methodShort" id="Base"><h2>Base</h2>
-<p>检索或设置对象的<a href="../Objects.htm#Custom_Objects">基对象</a>.</p>
-<pre class="Syntax">BaseObject := Object.Base</pre>
-<pre class="Syntax">Object.Base := BaseObject</pre>
-<p><em>BaseObject</em> 必须是对象或空字符串.</p>
-<p>基对象定义的属性和方法只有在使用该基对象时才可访问. 因此, 更改 <em>对象</em>  的 base 也会改变可用属性和方法的集合.</p>
-<p>参见: <a href="#GetBase">ObjGetBase()</a>, <a href="#SetBase">ObjSetBase</a></p>
+<p>该方法通常不直接调用, 而是使用 <a href="../commands/For.htm">for-loop</a> 来遍历对象.</p>
 </div>
 
-<div class="methodShort" id="RawGet"><h2>ObjRawGet <span class="ver">[v1.1.29+]</span></h2>
-<p>在 <em>Object(对象)</em> 中检索给定键所关联的值.</p>
-<pre class="Syntax">Value := <span class="func">ObjRawGet</span>(Object, Key)</pre>
-<p>如果 <em>Object</em> 不包含 <em>Key</em>, 则返回空字符串. 没有<a href="../Objects.htm#Meta_Functions">元-函数</a>或<a href="../Objects.htm#Custom_Classes_property">属性函数</a>被调用. <em>Object</em> 的基对象的内容是不被考虑的, 因为 <a href="#Base">base</a> 本身是一个属性, 而不是<a href="../Objects.htm#base-key">默认的</a>键-值对, 所以它通常不会返回值.</p>
-<p>如果 <em>Object</em> 是不正确的类型, 则抛出异常.</p>
-</div>
+<div class="methodShort" id="HasKey"><h3>HasKey <span class="ver">[AHK_L 53+]</span></h3>
+<p>只要 <i>Object</i> 中 <i>Key</i> 关联的值(即使值为 "") 存在(已定义) 就返回真 true, 否则为假 false.</p>
+<pre class="Syntax">Object.<span class="func">HasKey</span>(Key)</pre></div>
 
-<div class="methodShort" id="RawSet"><h2>ObjRawSet <span class="ver">[v1.1.21+]</span></h2>
-<p>存储或覆盖对象中的一组键值对.</p>
-<pre class="Syntax"><span class="func">ObjRawSet</span>(Object, Key, Value)</pre>
-<p>这个函数提供一种绕过 __Set <a href="../Objects.htm#Meta_Functions">元函数</a>和<a href="../Objects.htm#Custom_Classes_property">属性</a>的途径. 如果不是必须的, 最好还是使用普通的(赋值) 方法. 例如: <code>Object[Key] := Value</code></p>
-<p>由于目的是绕过元函数, 所以它只是一个函数, 而不是(对象的) 方法. 因为调用(对象的) 内建方法, 通常也会调用 __Call 元函数.</p>
-<p>如果 <em>Object</em> 是不正确的类型, 则抛出异常.</p>
-</div>
+<div class="methodShort" id="Clone"><h3>Clone <span class="ver">[AHK_L 60+]</span></h3>
+<p>返回对象的一个浅拷贝(拷贝对象的指针, 而不是对象本身, 引用的内存地址资源相同, 对象引用加 1).</p>
+<pre class="Syntax">Clone := Object.<span class="func">Clone</span>()</pre></div>
 
-<div class="methodShort" id="GetBase"><h2>ObjGetBase <span class="ver">[v1.1.29+]</span></h2>
-<p>返回对象的<a href="../Objects.htm#Custom_Objects">基对象</a>.</p>
-<pre class="Syntax">BaseObject := <span class="func">ObjGetBase</span>(Object)</pre>
-<p>没有<a href="../Objects.htm#Meta_Functions">元-函数</a>被调用. 即使键 "base" 已经存储在对象中(如使用 <a href="#RawSet">ObjRawSet</a> 或 <a href="#SetCapacity">SetCapacity</a>) 也会返回对象的 base. 如果对象没有 base, 则返回空字符串.</p>
-<p>如果 <em>Object</em> 是不正确的类型, 则抛出异常.</p>
-<p>参见: <a href="#Base">Base property</a></p>
-</div>
-
-<div class="methodShort" id="SetBase"><h2>ObjSetBase <span class="ver">[v1.1.29+]</span></h2>
-<p>设置对象的<a href="../Objects.htm#Custom_Objects">基对象</a>.</p>
-<pre class="Syntax"><span class="func">ObjSetBase</span>(Object, BaseObject)</pre>
-<p>没有<a href="../Objects.htm#Meta_Functions">元-函数</a>被调用. 即使键 "base" 已经存储在对象中(如 <a href="#RawSet">ObjRawSet</a> 或 <a href="#SetCapacity">SetCapacity</a>) 也会返回对象的 base. 如果对象没有 base, 则返回空字符串.</p>
-<p>如果 <em>Object</em> 是不正确的类型或如果 <em>BaseObject</em> 不是对象或空字符串, 则抛出异常.</p>
-<p>参见: <a href="#Base">Base property</a></p>
-</div>
-
-<div class="methodShort" id="Insert"><h2>Insert <span class="ver">[AHK_L 31+]</span></h2>
+<div class="methodShort" id="Insert"><h3>Insert <span class="ver">[AHK_L 31+]</span></h3>
 <div class="warning"><strong>弃用的:</strong> Insert 不推荐在新脚本中继续使用. 可以用 <a href="#InsertAt">InsertAt</a>, <a href="#Push">Push</a>, <a href="#RawSet">ObjRawSet</a> 或简单赋值操作替代它.</div>
 <p>插入键值对到对象中, 如果传递的是整数键, 将自动调整现有的键.</p>
 <pre class="Syntax">
@@ -292,7 +245,7 @@ Object.<span class="func">Insert</span>(StringOrObjectKey, Value)
 <p>Insert 返回 <i>true</i>. 从 <span class="ver">[v1.1.21]</span> 开始, 当内存申请失败时将抛出异常. 之前的版本返回一个空字符串.</p>
 </div>
 
-<div class="methodShort" id="Remove"><h2>Remove <span class="ver">[AHK_L 31+]</span></h2>
+<div class="methodShort" id="Remove"><h3>Remove <span class="ver">[AHK_L 31+]</span></h3>
 <div class="warning"><strong>弃用的:</strong> Remove 不推荐在新脚本中继续使用. 可以用 <a href="#RemoveAt">RemoveAt</a>, <a href="#Delete">Delete</a> 或 <a href="#Pop">Pop</a> 替代.</div>
 <p>从对象中删除键值对.</p>
 <pre class="Syntax">Object.<span class="func">Remove</span>(FirstKey, LastKey)</pre>
@@ -305,6 +258,50 @@ Object.<span class="func">Insert</span>(StringOrObjectKey, Value)
   <li>其他任何合法的调用时, 表现得就像 <a href="#Delete">Delete</a>.</li>
 </ul>
 </div>
+
+<h2 id="Properties">属性</h2>
+<div class="methodShort" id="Base"><h3>Base</h3>
+<p>检索或设置对象的<a href="../Objects.htm#Custom_Objects">基对象</a>.</p>
+<pre class="Syntax">BaseObject := Object.Base</pre>
+<pre class="Syntax">Object.Base := BaseObject</pre>
+<p><em>BaseObject</em> 必须是对象或空字符串.</p>
+<p>基对象定义的属性和方法只有在使用该基对象时才可访问. 因此, 更改 <em>对象</em>  的 base 也会改变可用属性和方法的集合.</p>
+<p>参见: <a href="#GetBase">ObjGetBase()</a>, <a href="#SetBase">ObjSetBase</a></p>
+</div>
+
+<h2 id="Functions">函数</h2>
+<h3 id="RawGet">ObjRawGet <span class="ver">[v1.1.29+]</span></h3>
+<p>在对象中检索给定键所关联的值.</p>
+<pre class="Syntax">Value := <span class="func">ObjRawGet</span>(Object, Key)</pre>
+<p>如果 <em>Object</em> 不包含 <em>Key</em>, 则返回空字符串. 没有<a href="../Objects.htm#Meta_Functions">元-函数</a>或<a href="../Objects.htm#Custom_Classes_property">属性函数</a>被调用. <em>Object</em> 的基对象的内容是不被考虑的, 因为 <a href="#Base">base</a> 本身是一个属性, 而不是<a href="../Objects.htm#base-key">默认的</a>键-值对, 所以它通常不会返回值.</p>
+<p>如果 <em>Object</em> 是不正确的类型, 则抛出异常.</p>
+
+<h3 id="RawSet">ObjRawSet <span class="ver">[v1.1.21+]</span></h3>
+<p>存储或覆盖对象中的一组键值对.</p>
+<pre class="Syntax"><span class="func">ObjRawSet</span>(Object, Key, Value)</pre>
+<p>这个函数提供一种绕过 __Set <a href="../Objects.htm#Meta_Functions">元函数</a>和<a href="../Objects.htm#Custom_Classes_property">属性</a>的途径. 如果不是必须的, 最好还是使用普通的(赋值) 方法. 例如: <code>Object[Key] := Value</code></p>
+<p>由于目的是绕过元函数, 所以它只是一个函数, 而不是(对象的) 方法. 因为调用(对象的) 内建方法, 通常也会调用 __Call 元函数.</p>
+<p>如果 <em>Object</em> 是不正确的类型, 则抛出异常.</p>
+
+<h3 id="GetBase">ObjGetBase <span class="ver">[v1.1.29+]</span></h3>
+<p>返回对象的<a href="../Objects.htm#Custom_Objects">基对象</a>.</p>
+<pre class="Syntax">BaseObject := <span class="func">ObjGetBase</span>(Object)</pre>
+<p>没有<a href="../Objects.htm#Meta_Functions">元-函数</a>被调用. 即使键 "base" 已经存储在对象中(如使用 <a href="#RawSet">ObjRawSet</a> 或 <a href="#SetCapacity">SetCapacity</a>) 也会返回对象的 base. 如果对象没有 base, 则返回空字符串.</p>
+<p>如果 <em>Object</em> 是不正确的类型, 则抛出异常.</p>
+<p>参见: <a href="#Base">Base property</a></p>
+
+<h3 id="SetBase">ObjSetBase <span class="ver">[v1.1.29+]</span></h3>
+<p>设置对象的<a href="../Objects.htm#Custom_Objects">基对象</a>.</p>
+<pre class="Syntax"><span class="func">ObjSetBase</span>(Object, BaseObject)</pre>
+<p>没有<a href="../Objects.htm#Meta_Functions">元-函数</a>被调用. 即使键 "base" 已经存储在对象中(如 <a href="#RawSet">ObjRawSet</a> 或 <a href="#SetCapacity">SetCapacity</a>) 也会返回对象的 base. 如果对象没有 base, 则返回空字符串.</p>
+<p>如果 <em>Object</em> 是不正确的类型或如果 <em>BaseObject</em> 不是对象或空字符串, 则抛出异常.</p>
+<p>参见: <a href="#Base">Base property</a></p>
+
+<h2 id="Remarks">备注</h2>
+<p>每个方法都有等同的函数, 可用于传递由对象实现的任何<a href="../Objects.htm#Custom_Objects">自定义行为</a> -- 推荐这些 Obj前缀函数 仅用于此目的. 要调用某个这种函数, 在方法名前加上 "Obj" 前缀并把目标对象作为首个参数传递过去. 例如:</p>
+<pre>array := [1, 2, 3]
+MsgBox % ObjMaxIndex(array) " = " array.MaxIndex()</pre>
+<p>如果对象的方法-函数的参数对象或值的类型不正确, 它将返回空字符串. 而独立函数如 ObjRawSet 则会抛出异常.</p>
 
 </body>
 </html>

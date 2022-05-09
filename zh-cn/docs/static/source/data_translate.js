@@ -21,6 +21,8 @@
   "Highlight keywords":"高亮关键词",
   "Search":"搜索",
   "Go to previous/next occurrence":"前往关键词上一/下一个出现的位置",
+  "Quick reference":"快速跳转",
+  "Collapse or uncollapse the quick reference":"是否收缩快速跳转",
   // header
   "Skip navigation":true,
   "Hide or show the sidebar":"显示或隐藏侧边栏",
