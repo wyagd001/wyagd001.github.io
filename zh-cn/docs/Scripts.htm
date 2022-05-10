@@ -78,7 +78,7 @@ FileAppend,  <em>; 此时逗号是不能缺少的.</em>
 ), C:\My File.txt</pre>
 <p>在上面的例子中, 几行代码被一对圆括号包围起来. 这被称为 <em>延续片段</em>. 注意在底行的闭括号后面跟着 <a href="commands/FileAppend.htm">FileAppend</a> 的最后一个参数. 这种做法是可选的; 这样做是为了确保逗号被视为参数分隔符而不是原义的逗号.</p>
 <p>通过在延续片段的括号右侧包含一个或多个下列选项, 可以覆盖它的默认特性. 如果含有多个选项, 那么选项之间使用空格分开. 例如: <code>( LTrim Join| %</code>.</p>
-<p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 或者在单词 <em>Join</em> 后可以紧跟着多达 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格("`s"表示原义的空格, 这是一个只能被 <em>Join</em> 识别的特殊转义序列). 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 需要在它的闭括号上一行添加一个空行.</p>
+<p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 或者在单词 <em>Join</em> 后可以紧跟着多达 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格("`s" 表示原义的空格, 这是一个只能被 <em>Join</em> 识别的特殊转义序列). 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 需要在它的闭括号上一行添加一个空行.</p>
 <p>已知限制: 如果单词 Join 后面紧跟一个冒号, 那么冒号不能是这一行的最后一个. 因为 <code>(Join:</code> 将被当做一个名为 Join 的标签对待, 所以不支持 <code>(LTrim Join:</code> 这种写法, 而 <code>(Join: C</code> 这种写法没有问题.</p>
 <p id="LTrim"><strong>LTrim</strong>: 删除每行开头的空格和 tab. 主要用来允许延续片段使用缩进. 此外, 通过在一行中指定 <code>#LTrim</code> 自身可以为多个延续片段打开此选项. <code>#LTrim</code> 跟位置有关: 会影响它下面的所有延续片段. 使用 <code>#LTrim Off</code> 可以关闭此设置.</p>
 <p><strong>RTrim0</strong>(RTrim 后跟着一个零): 关闭自动删除每行末尾的空格和 tab 的设置.</p>
@@ -266,7 +266,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
 </tr>
   <tr id="SlashR">
     <td>/r 或 /restart</td>
-    <td>脚本将会执行 <a href="commands/Reload.htm">Reload</a> 命令.</td>
+    <td>指示脚本正在重新启动, 应该试图关闭该脚本的前一个实例(这也被 <a href="commands/Reload.htm">Reload</a> 命令内部使用).</td>
     <td>是</td>
   </tr>
   <tr id="ErrorStdOut">
@@ -365,7 +365,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
         break
 }</pre>
 <p>如果这些参数是文件名, 那么可以使用下列的例子把它们转换到大小写正确的长名称(与文件系统中存储的一致), 其中包含完整/绝对的路径.</p>
-<pre>Loop %0%  <em>; 对每个参数 (或拖放到脚本上的文件) 进行循环:</em>
+<pre>Loop %0%  <em>; 对每个参数(或拖放到脚本上的文件) 进行循环:</em>
 {
     GivenPath := %A_Index%  <em>; 取得名称为 A_Index 变量中的内容.</em>
     Loop %GivenPath%, 1

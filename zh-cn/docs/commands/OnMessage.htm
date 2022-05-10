@@ -98,15 +98,15 @@
 <ul>
   <li><a href="../Variables.htm#Gui">A_Gui</a>: 当消息被发送到 GUI 窗口或控件时 A_Gui 为 <a href="Gui.htm#MultiWin">Gui 窗口编号</a>(此窗口同时也被设置为函数的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>); 否则为空.</li>
   <li><a href="../Variables.htm#GuiControl">A_GuiControl</a>: 当消息被发送到 GUI 控件时它的值为控件的变量名或在 <a href="../Variables.htm#GuiControl">A_GuiControl</a> 中说明的其他值; 否则为空. 一些控件决不会接收到某些类型的消息. 例如, 当用户点击<a href="GuiControls.htm#Text">文本控件</a>时, 操作系统会发送 WM_LBUTTONDOWN 到它的父窗口而不是控件本身, 所以此时 A_GuiControl 是空的.</li>
-  <li><a href="../Variables.htm#GuiX">A_GuiX</a> 和 <a href="../Variables.htm#GuiY">A_GuiY</a>: 如果传入的消息是使用 <a href="PostMessage.htm">SendMessage</a> 发送的, 则它们的值都为 -2147483648. 如果是使用 <a href="PostMessage.htm">PostMessage</a> 发送的, 则它们的值为投递消息时鼠标光标的坐标(相对于屏幕)</li>
-  <li><a href="../Variables.htm#EventInfo">A_EventInfo</a>: 如果消息是使用 SendMessage 发送的, 则它的值为 0. 如果是使用 PostMessage 发送的, 则它的值为消息投递的 <a href="../Variables.htm#TickCount">tick-count 时间</a>.</li>
+  <li><a href="../Variables.htm#GuiX">A_GuiX</a> 和 <a href="../Variables.htm#GuiY">A_GuiY</a>: 如果传入的消息是使用 <a href="PostMessage.htm">SendMessage</a> 发送的, 则它们的值都为 -2147483648. 如果是使用 <a href="PostMessage.htm">PostMessage</a> 发布的, 则它们的值为发布消息时鼠标光标的坐标(相对于屏幕)</li>
+  <li><a href="../Variables.htm#EventInfo">A_EventInfo</a>: 如果消息是使用 SendMessage 发送的, 则它的值为 0. 如果是使用 PostMessage 发布的, 则它的值为消息发布的 <a href="../Variables.htm#TickCount">tick-count 时间</a>.</li>
 </ul>
 <p>监听函数的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始与消息发送的目标窗口的相同(即使消息是发送到控件的). 如果这个窗口是隐藏的但非 GUI 窗口(例如脚本的主窗口), 那么需要在使用前打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 例如:</p>
 <pre>DetectHiddenWindows On
 MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口的唯一 ID.</em></pre>
 
 <h2>函数应该 <em>返回</em> 什么</h2>
-<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至从不使用 Return), 则当此函数结束时将继续正常处理传入的消息. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exit</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与之相比, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x0201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 它不关心返回了哪个整数; 不过如果不确定, 0 通常是最安全的.</p>
+<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至从不使用 Return), 则当此函数结束时将继续正常处理传入的消息. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exit</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与之相比, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x0201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发布的消息), 它不关心返回了哪个整数; 不过如果不确定, 0 通常是最安全的.</p>
 <p>有效返回值的范围与运行脚本的 AutoHotkey.exe 是 32 位还是 64 位有关. 对于 32 位脚本(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>), 非空返回值必须介于 -2<sup>31</sup> 和 2<sup>32</sup>-1 之间, 而 64 位脚本 <code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code> 则必须介于 -2<sup>63</sup> 和 2<sup>63</sup>-1 之间.</p>
 <p><span class="ver">[v1.1.20+]:</span> 如果有多个函数监听某一个消息(message number), 它们将会一个接一个按顺序被调用, 直到被调用的函数返回一个非空值.</p>
 
@@ -116,7 +116,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>任意调用 OnMessage 的脚本会自动成为<a href="_Persistent.htm">持续运行的</a>. 同时也会单实例运行, 不过可以使用 <a href="_SingleInstance.htm">#SingleInstance</a> 覆盖了默认设置.</p>
 <p id="Critical">当一个消息达到时, 如果其函数由于之前到达的相同消息而仍在运行, 默认情况下, 该函数将不会被再次调用; 相反, 该消息将被视为不受监控. 如果不希望这样, 有多种方法可以避免它:</p>
 <ul>
-  <li>如果消息是 post 的, 而不是 sent 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让函数完成.</li>
+  <li>如果消息是 post(发布) 的, 而不是 send(发送) 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让函数完成.</li>
   <li><span class="ver">[v1.0.46+]:</span> 使用 <a href="Critical.htm">Critical</a> 来增加<a href="Critical.htm#Interval">消息检查间隔</a>, 可以让函数在任何消息被派发之前有更多的时间来完成. 为了保证可靠性, 可能需要一个大于 16 的间隔时间. 由于系统定时器的粒度(通常为 15.6 毫秒), 默认的 5 毫秒(对于非-Critical 线程) 或 15 毫秒(对于 Critical 线程) 的间隔可能会在函数启动后的瞬间出现.</li>
   <li>确保监控函数快速返回, 可以减少因 <em>MaxThreads</em> 而错过消息的风险. 一种方法是让它通过向自己的脚本 <a href="PostMessage.htm">posting</a> 大于 0x0311 的监控消息, 来排队等待未来的线程. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲. 另外, 也可以用一个<a href="SetTimer.htm">计时器</a>来排队等待未来的线程.</li>
   <li>为 <a href="#MaxThreads">MaxThreads</a> 参数指定一个较高的值, 可以使函数被中断以处理新收到的消息.</li>
@@ -126,8 +126,8 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
 <p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应可能超过系统预期的时间, 这样可能会导致一些副作用. 如果监听函数为了阻止对消息的进一步处理而返回整数而系统期望不同的处理或响应时, 可能会发生不想要的行为.</p>
-<p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递到控件的消息. 例如, 如果脚本正显示 MsgBox 而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
-<p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">MsgBox</a>) 则消息会丢失. 相反, 通常最好投递或发送消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
+<p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何发布到控件的消息. 例如, 如果脚本正显示 MsgBox 而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
+<p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接发布消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">MsgBox</a>) 则消息会丢失. 相反, 通常最好发布或发送消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
 <h2 id="Related">相关</h2>
 <p><a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="OnExit.htm">OnExit</a>, <a href="../misc/Clipboard.htm#OnClipboardChange">OnClipboardChange</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall()</a></p>
 <h2 id="Examples">示例</h2>
@@ -257,14 +257,14 @@ Send_WM_COPYDATA(ByRef StringToSend, ByRef TargetScriptTitle)  <em>; 在这种�
     VarSetCapacity(CopyDataStruct, 3*A_PtrSize, 0)  <em>; 分配结构的内存区域.</em>
     <em>; 首先设置结构的 cbData 成员为字符串的大小, 包括它的零终止符:</em>
     SizeInBytes := (StrLen(StringToSend) + 1) * (A_IsUnicode ? 2 : 1)
-    NumPut(SizeInBytes, CopyDataStruct, A_PtrSize)  <em>; 操作系统要求这个需要完成.</em>
+    NumPut(SizeInBytes, CopyDataStruct, A_PtrSize)  <em>; 操作系统要求这样做.</em>
     NumPut(&amp;StringToSend, CopyDataStruct, 2*A_PtrSize)  <em>; 设置 lpData 为到字符串自身的指针.</em>
     Prev_DetectHiddenWindows := A_DetectHiddenWindows
     Prev_TitleMatchMode := A_TitleMatchMode
     DetectHiddenWindows On
     SetTitleMatchMode 2
     TimeOutTime := 4000  <em>; 可选的. 等待 receiver.ahk 响应的毫秒数. 默认是 5000</em>
-    <em>; 必须使用发送 SendMessage 而不是投递 PostMessage.</em>
+    <em>; 必须使用 SendMessage 而不是 PostMessage.</em>
     SendMessage, 0x004A, 0, &amp;CopyDataStruct,, %TargetScriptTitle%  <em>; 0x004A 为 WM_COPYDAT</em>
     DetectHiddenWindows %Prev_DetectHiddenWindows%  <em>; 恢复调用者原来的设置.</em>
     SetTitleMatchMode %Prev_TitleMatchMode%         <em>; 同样.</em>
