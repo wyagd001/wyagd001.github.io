@@ -437,6 +437,7 @@ this.__set(name, args, value)
 <p>具有变体类型 VT_DISPATCH 或 VT_UNKNOWN 和空接口指针的 COM 封装对象现在有一个 <code>Ptr</code> 属性, 可以被读取或分配. 一旦分配了一个非空的指针, 该属性就是只读的. 这是为了与 DllCall 和 ComCall 一起使用, 所以在函数返回后不需要手动包装指针.</p>
 <p>ComObjArray 的枚举现在与 Array 一致; 例如 <code>for value in arr</code> 或 <code>for index, value in arr</code>, 而不是 <code>for value, vartype in arr</code>. <code>index</code> 索引的起始值是 ComObjArray(<code>arr.MinIndex()</code>) 的下限, 通常是 0.</p>
 <p>整数类型 I1, I8, UI1, UI2, UI4 和 UI8 现在被转换为整数, 而不是字符串. 这些在 COM 调用中很少发生, 但这也适用于 VT_BYREF 包装器. VT_ERROR 不再被转换为整数, 而是产生一个 ComValue.</p>
+<p>当属性或方法调用失败时, COM 对象不在设置 <a href="Variables.htm#LastError">A_LastError</a>.</p>
 <h3 id="default-property">默认属性</h3>
 <p>COM 对象可能有一个 "默认属性", 它有两种用途:</p>
 <ul>
@@ -572,7 +573,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <p><a href="commands/DllCall.htm">DllCall</a>: 请参阅下面的 <a href="#dllcall">DllCall</a> 部分.</p>
 <p>如果没有被注册 "edit" shell 动词, <a href="commands/Edit.htm">Edit</a> 以前有针对 <code>.ini</code> 文件类型的后备行为. 由于脚本文件不需要有 <code>.ini</code> 扩展名. <code>AutoHotkey.ini</code> 是旧版本 AutoHotkey 中的默认脚本名称.</p>
 <p>如果脚本是从 stdin 中读取的, 那么现在 <a href="commands/Edit.htm">Edit</a> 不会做任何事情, 而会尝试为 <code>*</code> 打开一个编辑器.</p>
-<p><a href="commands/EnvSet.htm">EnvSet</a> now deletes the environment variable if the value parameter is completely omitted.</p>
+<p>如果完全省略了 value 参数, <a href="commands/EnvSet.htm">EnvSet</a> 现在删除环境变量.</p>
 <p>以前, 当脚本不是持续运行时, <a href="commands/Exit.htm">Exit</a> 作为 <a href="commands/ExitApp.htm">ExitApp</a> 使用, 即使有其他挂起的线程被调用 Exit 的线程打断. 现在它不再这样做了. 相反, 它总是正确地退出当前线程, 并且(如果不是持续运行的) 脚本只在最后一个线程退出后才终止. 这保证了 <code>finally</code> 语句的执行和局部变量的释放, 这可能允许对局部变量所包含的任何对象调用 <code>__delete</code> .</p>
 <p><a href="commands/FileAppend.htm">FileAppend</a> 默认为没有行末转换, 与 <a href="commands/FileRead.htm">FileRead</a> 和 <a href="commands/FileOpen.htm">FileOpen</a> 一致. FileAppend 和 FileRead 都有一个单独的 <em>Options</em> 参数, 它取代了选项前缀, 并可能包括一个可选的编码名称(取代 FileRead 的 <code>*Pnnn</code> 选项). FileAppend, FileRead 和 FileOpen 使用 <code>"`n"</code> 来实现行末转换. FileAppend 和 FileRead 支持 <code>"RAW"</code> 选项来禁用编码转换(读/写二进制数据); FileRead 在这种情况下返回一个 <code>Buffer</code> 对象. 这取代了 <code>*c</code>(见文档中的 ClipboardAll). FileAppend 可以接受一个类 <code>Buffer</code> 对象, 在这种情况下不进行转换.</p>
 <p>如果源路径不包含 <code>*</code> 或 <code>?</code> 并且没有找到文件, <a href="commands/FileCopy.htm">FileCopy</a> 和 <a href="commands/FileMove.htm">FileMove</a> 现在抛出异常. 然而, 当源路径包含通配符时, 复制或移动零个文件仍然不被视为错误.</p>
@@ -583,6 +584,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <p><a href="objects/File.htm#ReadLine">File.ReadLine</a> 现在总是支持 <code>`r</code>, <code>`n</code> 和 <code>`r`n</code> 作为行尾, 并且不再在返回值中包括行尾. 如果没有启用 EOL 转换, <a href="objects/File.htm#Read">File.Read</a> 仍会按原样返回给脚本.</p>
 <p><a href="commands/FileEncoding.htm">FileEncoding</a> 现在允许用数字来指定代码页, 而不使用 <code>CP</code> 前缀.</p>
 <p><a href="commands/FileExist.htm">FileExist</a> 现在忽略了每个目录列表中隐含的 <code>.</code> 和 <code>..</code>, 因此当目录存在但为空时, <code>FileExist("dir\*")</code> 现在是 false, 而不是 true.</p>
+<p><a href="commands/FileGetAttrib.htm">FileGetAttrib</a> 和 A_LoopFileAttrib 现在对解析点或符号链接包含字母 "L".</p>
 <p>如果源文件和目标文件是同一路径, 非编译脚本中的 <a href="commands/FileInstall.htm">FileInstall</a> 不再尝试复制文件(在解析了相对路径之后, 因为源文件相对于 <a href="Variables.htm#ScriptDir">A_ScriptDir</a>, 而不是 <a href="Variables.htm#WorkingDir">A_WorkingDir</a>). 在 v1 中, 这导致 ErrorLevel 被设置为 1, 这通常不会被注意到. 试图通过两个不同的路径将一个文件复制到自身仍然会导致错误. </p>
 <p>FileSelectFile(现在名为 <a href="commands/FileSelect.htm">FileSelect</a>) 有两种多选模式, 可以通过选项 4 和 M 来访问. 选项 4 和相应的模式已经被删除; 它们已经有一段时间没有记录了. 当使用多选模式时, FileSelect 现在会返回一个路径的数组, 而不是像  <code>C:\Dir`nFile1`nFile2</code> 这样的字符串. 每个数组元素都包含一个文件的完整路径. 如果用户取消了, 数组就是空的.</p>
 <p>FileSelect 现在使用 Windows Vista 及以后版本中的 IFileDialog API, 而不是以前的 GetOpenFileName/GetSaveFileName API. 这样就不需要使用与对话框改变当前工作目录有关的(内置) 解决方法.</p>
@@ -931,6 +933,7 @@ Name    := MonitorGetName(N)
 <p><a href="Variables.htm#AhkPath">A_AhkPath</a> 总是返回当前可执行文件/解释器的路径, 即使脚本已被编译. 以前, 如果使用 BIN 文件作为基础文件, 它会返回编译后的脚本的路径, 但 V2.0 版本不再包括 BIN 文件.</p>
 <p>如果脚本没有被编译, <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 会返回 0 而不是 "".</p>
 <p><a href="Variables.htm#OSVersion">A_OSVersion</a> 总是返回格式为 <code>major.minor.build</code> 的字符串, 例如 <code>6.1.7601</code> 对应于 Windows 7 SP1. 由于只支持基于 NT 的系统, 因此删除了 A_OSType.</p>
+<p>当 <a href="Variables.htm#PriorHotkey">A_PriorHotkey</a> 为 "" 时, <a href="Variables.htm#TimeSincePriorHotkey">A_TimeSincePriorHotkey</a> 返回 "" 代替 -1 , 同样当 <a href="Variables.htm#ThisHotkey">A_ThisHotkey</a> 为空时, <a href="Variables.htm#TimeSinceThisHotkey">A_TimeSinceThisHotkey</a> 返回空值.</p>
 <p>所有内置的 "虚拟" 变量现在都有 <code>A_</code> 前缀(具体细节见下文). 任何没有这个前缀的预定义变量(比如 <code>Object</code>) 都只是全局变量. 这种区别可能很重要, 因为目前不可能对一个虚拟变量进行引用(除非直接传递给一个内置函数); 然而, <a href="Variables.htm#Args">A_Args</a> 不是一个虚拟变量.</p>
 <p>返回数字的内置变量现在以<a href="Concepts.htm#numbers">整数</a>, 而不是<a href="Concepts.htm#strings">字符串</a>的形式返回.</p>
 <p>重命名:</p>

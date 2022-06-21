@@ -28,7 +28,7 @@
     ["AutoHotkey_L 新特性","AHKL_Features.htm"],
     ["脚本兼容性","Compat.htm"]
   ]],
-  ["环境变量管理","",
+  ["环境变量","",
   [
     ["ClipWait","commands/ClipWait.htm"],
     ["EnvGet","commands/EnvGet.htm"],
@@ -62,7 +62,7 @@
       ["ObjAddRef() / ObjRelease()","commands/ObjAddRef.htm"]
     ]]
   ]],
-  ["文件,目录和磁盘管理","",
+  ["文件,目录和磁盘","",
   [
     ["Drive","commands/Drive.htm"],
     ["DriveGet","commands/DriveGet.htm"],
@@ -263,7 +263,7 @@
     ["SetScrollLockState","commands/SetNumScrollCapsLockState.htm"],
     ["SetStoreCapsLockMode","commands/SetStoreCapslockMode.htm"]
   ]],
-  ["杂项命令","",
+  ["杂项","",
   [
     ["AutoTrim","commands/AutoTrim.htm"],
     ["Edit","commands/Edit.htm"],
@@ -279,7 +279,7 @@
     ["URLDownloadToFile","commands/URLDownloadToFile.htm"],
     ["VarSetCapacity()","commands/VarSetCapacity.htm"]
   ]],
-  ["对象管理","",
+  ["对象类型","",
    [
     ["对象","objects/Object.htm"],
     ["枚举器对象","objects/Enumerator.htm"],
@@ -290,14 +290,14 @@
     ["InputHook Object","commands/InputHook.htm#object"],
     ["匹配对象","commands/RegExMatch.htm#MatchObject"]
    ]],
-  ["进程管理","",
+  ["进程","",
   [
     ["Process","commands/Process.htm"],
     ["Run[Wait]","commands/Run.htm"],
     ["RunAs","commands/RunAs.htm"],
     ["Shutdown","commands/Shutdown.htm"]
   ]],
-  ["注册表管理","",
+  ["注册表","",
   [
     ["Loop (注册表)","commands/LoopReg.htm"],
     ["RegDelete","commands/RegDelete.htm"],
@@ -305,13 +305,13 @@
     ["RegWrite","commands/RegWrite.htm"],
     ["SetRegView","commands/SetRegView.htm"]
   ]],
-  ["屏幕管理","",
+  ["屏幕","",
   [
     ["ImageSearch","commands/ImageSearch.htm"],
     ["PixelGetColor","commands/PixelGetColor.htm"],
     ["PixelSearch","commands/PixelSearch.htm"]
   ]],
-  ["声音管理","",
+  ["声音","",
   [
     ["SoundBeep","commands/SoundBeep.htm"],
     ["SoundGet","commands/SoundGet.htm"],
@@ -320,7 +320,7 @@
     ["SoundSet","commands/SoundSet.htm"],
     ["SoundSetWaveVolume","commands/SoundSetWaveVolume.htm"]
   ]],
-  ["字符串命令","",
+  ["字符串","",
   [
     ["Asc()","commands/Asc.htm"],
     ["Chr()","commands/Chr.htm"],
@@ -354,7 +354,7 @@
     ["SubStr()","commands/SubStr.htm"],
     ["Trim() / LTrim() / RTrim()","commands/Trim.htm"]
   ]],
-  ["窗口管理","",
+  ["窗口","",
   [
     ["控件操作","",
     [

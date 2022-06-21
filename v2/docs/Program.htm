@@ -33,7 +33,10 @@
   <li><a href="#embedded-scripts">嵌入脚本</a></li>
   <li><a href="#cmd">命令行用法</a></li>
   <li><a href="#portability">AutoHotkey.exe 的可移植性</a></li>
-  <li><a href="#install">安装选项</a>
+  <li><a href="#launcher">启动器</a></li>
+  <li><a href="#dash">Dash</a></li>
+  <li><a href="#newscript">新建脚本</a></li>
+  <li><a href="#install">安装</a>
   <ul>
     <li><a href="#Installer_uiAccess">以 UI 访问权限运行</a></li>
   </ul></li>
@@ -160,41 +163,117 @@ else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
 <p>运行任何的 .ahk 脚本所需要的只是 AutoHotkey.exe 文件.</p>
 <p>重命名 AutoHotkey.exe 会同时改变它<a href="Scripts.htm#defaultfile">默认</a>运行的脚本, 这是在没有安装 AutoHotkey 的计算机上运行脚本的一种可选方法. 例如, 在没有指定文件名时, 执行 <i>MyScript</i>.exe 会自动运行 <i>MyScript</i>.ahk, 但也能运行其他脚本.</p>
 
-<h2 id="install">安装选项</h2>
-<p class="warning"><strong>注意:</strong> 目前还没有 v2.0-alpha 的标准安装程序.</p>
-<p>要静默安装 AutoHotkey 到默认目录(这与手动安装时显示的目录相同), 需要向安装程序传递 /S 参数. 例如:</p>
-<pre>AutoHotkey110800_Install.exe /S</pre>
-<p>使用参数 /D 可以指定默认目录外的其他目录作为安装目录(如果没有使用 /S, 那么这样可以改变在安装程序中显示的默认目录). 例如:</p>
-<pre>AutoHotkey110800_Install.exe /S /D=C:\Program Files\AutoHotkey</pre>
-<p><strong>Version(版本)</strong>: 如果之前已经安装了 AutoHotkey, 则安装程序会自动检测 AutoHotkey.exe 的构建并设置为默认构建. 否则, 根据操作系统是否为 64 位设置默认构建为 Unicode 32 位或 Unicode 64 位. 要覆盖 AutoHotkey.exe 的默认构建设置, 请使用下列的其中一个开关:</p>
+<h2 id="launcher">启动器</h2>
+<p>启动器允许在一个系统上使用 v1 和 v2 脚本, 只有一个文件名扩展名, 而不必偏好一个版本或需要不同的启动脚本的方法. 它通过检查脚本以找到所需版本的线索, 然后定位一个适当的exe来运行脚本.</p>
+<p>如果脚本包含 <a href="commands/_Requires.htm">#Requires</a> 指令, 启动器将寻找满足需求的 exe. 否则, 启动程序可选地检查语法. 也就是说, 它检查只在两个主要版本之一中有效的模式. 它可能发现的一些常见模式包括:</p>
 <ul>
-  <li><code>/A32</code> 或 <code>/ANSI</code>: ANSI 32 位.</li>
-  <li><code>/U64</code> 或 <code>/x64</code>: Unicode 64 位(仅在 64 位系统中有效).</li>
-  <li><code>/U32</code>: Unicode 32 位.</li>
+  <li>v1: <code>MsgBox, with comma</code>, <code>MsgBox % "no end percent"</code> 和 <code>Legacy = assignment</code>.</li>
+  <li>v1: 没有大括号或函数定义的多行热键.</li>
+  <li>常见指令如 #NoEnv 和 #If(v1) 或 <a href="commands/_HotIf.htm">#HotIf</a>(v2).</li>
+  <li>v2: 通过<a href="Scripts.htm#continuation-expr">括号延续</a>或<a href="Scripts.htm#continuation-line">行末延续操作符</a>明确使用行延续.</li>
+  <li>v2: 在表达式中明确使用 <code>'单引号'</code> 或 <a href="Variables.htm#fat-arrow">胖箭头 <code>=></code></a>.</li>
 </ul>
-<p>例如, 下面的命令会静默安装并设置 ANSI 32 位为默认的构建:</p>
-<pre>AutoHotkey110800_Install.exe /S /A32</pre>
-<p><strong>Uninstall(卸载)</strong>: 要静默卸载 AutoHotkey, 需要向 Installer.ahk 传递 <code>/Uninstall</code> 参数. 例如:</p>
-<pre class="no-highlight">"C:\Program Files\AutoHotkey\AutoHotkey.exe" "C:\Program Files\AutoHotkey\Installer.ahk" /Uninstall</pre>
-<p><strong>注意:</strong> Installer.ahk 需要管理员权限才能正常运行.</p>
-<p><strong>Extract(提取解压)</strong>:  以后版本的安装包在右下角包含了用来提取安装文件而不进行安装的链接. 如果存在这个功能, 则可以在命令行中使用 <code>/E</code> 开关来调用它. 例如:</p>
-<pre>AutoHotkey110903_Install.exe /D=F:\AutoHotkey /E</pre>
-<p><strong>Restart scripts(重启脚本)</strong>: 在静默安装/卸载模式中, 运行中的脚本可能会自动关闭. 通过传递 <code>/R</code> 参数, 可自动用之前运行时对应的 EXE 版本重启脚本, <strong>无需</strong>其他命令行参数. 安装器将尝试通过资源管理器(Explorer) 启动脚本, 所以当用户账户控制(UAC) 开启的情况下, 脚本不会以管理员权限运行.</p>
+<p>检测是保守的; 如果一个案例是模棱两可的, 通常应该被忽略.</p>
+<p>在任何检测失败的情况下, 默认会显示一个菜单让用户选择一个版本. 这个默认值可以改变为启动 v1 或 v2.</p>
+<p><strong>已知限制:</strong></p>
+<ul>
+  <li>只检查主文件.</li>
+  <li>由于在 v1 中包含像 <code>/****/</code> 这样的行是合法的, 但在 v2 中行尾的 <code>*/</code> 只能关闭注释, 所以这样的行的存在可能会导致脚本的大部分被忽略(被启动器和 v1 解释器忽略).</li>
+  <li>只检查语法, 不检查语义. 例如, <code>xyz,</code> 在 v2 中是无效的, 所以被认为是有效的 v1 命令. <code>xyz 1</code> 在 v2 中可能是一个函数语句, 但被认为也是有效的 v1 命令, 因此被忽略.</li>
+  <li>由于被检测到的模式实际上是一个版本中的语法错误, 一个有实际语法错误或不正确的混合语法的脚本可能被错误地识别出来.</li>
+</ul>
+<p class="note"><strong>注意:</strong> 在主文件的顶部用 <a href="commands/_Requires.htm">#Requires</a> 声明所需的版本, 可以消除任何歧义.</p>
 
-<p id="Installer_IsHostApp"><strong>任务栏按钮</strong>: 在 Windows 7 及更高版本, 默认情况下, 任务栏的多个按钮将会组合为一个或一组. 而 <em>分隔任务栏按钮</em> 选项可关闭这个特性, 其原理是通过注册每一个 AutoHotkey 可执行文件为<a href="https://msdn.microsoft.com/en-us/library/ee872121#APPLICATIONS">宿主程序(IsHostApp)</a>.</p>
-<p>从命令行安装时, 设置 <code>/IsHostApp</code> 或 <code>/IsHostApp=1</code> 开启这个选项, 而设置 <code>/IsHostApp=0</code> 则是关闭.</p>
+<h3 id="launcher-config">启动设置</h3>
+<p>启动器可以通过启动设置GUI来启用、禁用或配置，该GUI可以通过dash访问 <a href="#dash">dash</a>.</p>
+<p><em>使用特定的解释器运行所有脚本</em> 将禁用启动程序, 并允许用户选择使用哪个 exe 来运行所有脚本, 这是传统的方式. 请注意, 选择 v1 exe 将使其难以运行任何支持脚本, 除非通过开始菜单中的 "AutoHotkey" 快捷方式.</p>
+<p><em>启动脚本时的自动检测版本</em> 将激活启动器. 其他设置可以控制启动器如何选择要使用的解释器.</p>
+
+<h2 id="dash">Dash</h2>
+<p>Dash 提供了对支持脚本和文档的访问. 它可以在安装后通过开始菜单中的 "AutoHotkey" 快捷方式打开, 或从安装目录 UX\ui-dash.ahk 直接运行. 目前它仅仅是一个包含以下项目的菜单, 但是它可以扩展为活动脚本或其他方便的功能提供控制.</p>
+<ul>
+  <li>New script(新建脚本): 从模板创建新脚本.</li>
+  <li>Compile(编译): 打开 Ahk2Exe, 或提供自动下载和安装它.</li>
+  <li>Help files (F1) (帮助文件): 显示一个菜单, 其中包含关于 v1 和 v2 的帮助文件和在线文档, 以及安装目录中找到的任何其他 CHM 文件.</li>
+  <li>Window spy</li>
+  <li>Launch settings(启动设置): 配置启动器.</li>
+  <li>Editor settings(编辑设置): 设置 .ahk 文件的默认编辑器.</li>
+</ul>
+<p>注意, 尽管开始菜单快捷方式启动了 Dash, 如果它被固定在任务栏上(或在Windows 7或10的开始菜单上), 跳转列表将包括任何最近使用 <em>open</em>, <em>runas</em> 或 <em>UIAccess</em> 动词启动的脚本(通常通过资源管理器上下文菜单或双击文件来访问). 可以固定脚本以便于访问.</p>
+
+<h2 id="newscript">新建脚本</h2>
+<p>新建脚本 GUI 可以通过开始菜单中的 Dash 访问, 也可以在资源管理器中的文件夹中右键单击并选择新建 &rarr; AutoHotkey Script. 可以使用它从预先安装的或用户定义的模板创建一个新的脚本文件, 并可选择打开它进行编辑.</p>
+<p>在列表中右键点击一个模板, 可以得到以下选项:</p>
+<ul>
+  <li>Edit template(编辑模板): 在默认编辑器中打开模板. 如果是预安装的模板, 则创建一个可编辑的副本, 而不是打开原始的.</li>
+  <li>Hide template(隐藏模板): 将模板名称添加到一个模板列表中, 该模板将不会显示在 GUI 中. 要取消隐藏模板, 请从 <code>HKCU\Software\AutoHotkey\New\HideTemplate</code> 中删除对应的注册表值.</li>
+  <li>Set as default(设置为默认值): 设置默认选择的模板.</li>
+</ul>
+<p>默认情况下, 除非按住 Ctrl 键，否则 GUI 会在创建文件后关闭.</p>
+<p>其他设置可以通过 GUI 左下角的设置按钮来访问.</p>
+
+<h3>模板</h3>
+<p>模板文件从 UX\Templates (预安装的) 和 <em>%A_MyDocuments%</em>\AutoHotkey\Templates (用户自定义的) 中绘制, 使用用户定义的模板覆盖任何具有相同名称的预安装模板. 如果一个文件存在于 <em>%A_WinDir%</em>\ShellNew\Template.ahk, 它被显示为 "Legacy", 可以被用户定义的同名模板覆盖.</p>
+<p>每个模板可以包含一个 INI 节, 如下所示:</p>
+<pre>/*
+[NewScriptTemplate]
+Description = Descriptive text
+Execute = true|false|1|0
+*/</pre>
+<p>如果如上面所示, INI 节以 <code>/*</code> 开始, 而以 <code>*/</code> 结束, 则它不包含在创建的文件中.</p>
+<p><strong>Description</strong>(描述) 是可选的. 除了文件名之外, 该项也显示在 GUI 中.</p>
+<p><strong>Execute</strong>(执行) 是可选的. 如果设置为 true, 执行模板脚本时 <code>A_Args[1]</code> 包含要创建的文件的路径, 而 <code>A_Args[2]</code> 包含 "Create" 或 "Edit", 这取决于用户单击的是哪个按钮. 模板脚本将创建文件并打开它进行编辑(如果适用的话). 如果模板脚本需要 <code>#include</code> 其他文件, 可以将它们放在子目录中, 以避免在模板列表中显示它们.</p>
+
+<h2 id="install">安装</h2>
+<p>这个安装程序和相关的脚本是为了允许多个版本的 AutoHotkey 共存. 安装程序提供的选项非常少, 因为大多数东西都可以在安装后进行配置. 只有以下选择必须在安装过程中做出:</p>
+<ul>
+  <li>安装在哪里.</li>
+  <li>是为所有用户还是为当前用户安装.</li>
+</ul>
+<p>默认情况下, 安装程序将为所有用户安装到 "%A_ProgramFiles%\AutoHotkey". 这是推荐的, 因为 UI Access 选项要求程序安装在 Program Files 下. 如果安装程序还没有以管理员身份运行, 当点击安装按钮时, 它将尝试提升权限, 如按钮上的盾牌图标所显示的.</p>
+<p>当前用户的安装不需要管理员权限，只要用户有对所选目录的写入权限。当前用户安装的默认目录是 "%LocalAppData%\Programs\AutoHotkey".</p>
+
+<h3 id="install_v1">与 v1 同时安装</h3>
+<p>同时安装 v1 和 v2, 有两种方式:</p>
+<ol>
+  <li>首先安装 v1, 然后安装 v2. 在这种情况下, v1 的文件被留在安装目录的根部, 以避免破坏任何依赖其当前路径的外部工具或快捷方式.</li>
+  <li>将 v1 作为一个额外的版本来安装. 运行 v1.1.34.03 或更高版本的安装程序会有这个选项. 或者, 使用下面描述的 <code>/install</code> 开关. 每个版本都会安装到它自己的子目录中.</li>
+</ol>
+<p>运行 v1.1.34.02 或更早的安装程序(或使用 v1.1.34.03 或更新的自定义安装程序) 将覆盖 v2 安装程序在注册表中设置的一些值, 如版本号, 卸载程序条目和文件类型注册的部分. 它还会注册 v1 版的卸载程序, 该程序无法正确卸载两个版本. 要重新注册 v2, 请重新运行任何 v2 安装程序或使用 AutoHotkey32.exe 或 AutoHotkey64.exe 运行 UX\install.ahk.</p>
+
+<h3 id="installdef">默认版本</h3>
+<p>与 v1 安装不同, 在安装期间不会选择默认版本. 缺省值由启动器更动态地处理, 并且可以为每个用户配置.</p>
+
+<h3 id="installcmd">使用命令行</h3>
+<p class="warning"><strong>注意:</strong> v2 安装程序的命令行使用还没有最终完成, 在 v2.0 版本发布之前可能会有所改变. v1 安装程序中提供的一些选项还没有重新实现.</p>
+<p>如果检测到冲突(例如正在运行的脚本或要覆盖的无法识别的文件, 在安装过程中可能会显示一些提示. 不支持静默模式.</p>
+<p>如果要安装到 <em>DESTINATION</em> 目录, 请在源目录内执行以下命令:</p>
+<pre>AutoHotkey32.exe UX\install.ahk /to "%DESTINATION%"</pre>
+<p>要从 <em>SOURCE</em> 安装额外的版本, 请在当前安装目录中执行以下命令(根据需要调整 AutoHotkey32.exe 的路径):</p>
+<pre>AutoHotkey32.exe UX\install.ahk /install "%SOURCE%"</pre>
+<p>上面的完整命令字符串在 under <code>HKLM\Software\AutoHotkey</code> 或 <code>HKCU\Software\AutoHotkey</code> 下 <em>InstallCommand</em> 注册, 其中 <code class="no-highlight">%1</code> 作为源目录的替代. 使用这个注册表值可能更具有前瞻性.</p>
+<p>重新注册当前安装:</p>
+<pre>AutoHotkey32.exe UX\install.ahk</pre>
+<p>卸载:</p>
+<pre>AutoHotkey32.exe UX\install.ahk /uninstall</pre>
+<p>或者, 从以下注册表键中读取 <em>QuietUninstallString</em> 值, 并执行它:</p>
+<pre>HKLM\Microsoft\Windows\CurrentVersion\Uninstall\AutoHotkey
+HKCU\Microsoft\Windows\CurrentVersion\Uninstall\AutoHotkey</pre>
+
+<h3 id="Installer_IsHostApp">任务栏按钮</h3>
+<p>v2 安装程序没有提供分离任务栏按钮的选项. 以前, 这是通过将每个 AutoHotkey 可执行文件注册为<a href="https://msdn.microsoft.com/en-us/library/ee872121#APPLICATIONS">宿主程序(IsHostApp)</a> 来实现的, 但这种方法有局限性, 当安装多个版本时, 就变得不容易管理. 作为替代, 每个脚本应该设置其进程或窗口的 <a href="https://docs.microsoft.com/en-us/windows/win32/shell/appids">AppUserModelID</a> 来控制分组.</p>
 
 <h3 id="Installer_uiAccess">以 UI Access 运行</h3>
-<p>安装器界面上有个 "增加 'Run with UI Access'(以 UI Access 运行) 到上下文菜单" 选项. 这个上下文菜单选项提供解决通常会遇到的 <a href="FAQ.htm#uac">UAC 的相关问题</a>, 它可让脚本自动管理程序权限, 且无需以管理员权限运行. 安装器实现该功能的方法是:</p>
+<p>当安装在 Program Files 时, 安装程序会创建一组额外的 AutoHotkey exe 文件, 可用于解决一些<a href="FAQ.htm#uac">常见的 UAC 相关问题</a>. 这些文件以 "_UIA.exe" 为后缀. 当管理员使用这些 UIA.exe 文件中的一个来运行脚本时, 脚本能够与以管理员权限运行的程序的窗口进行交互, 而不需要脚本本身以管理员权限来运行.</p>
+<p>安装程序执行如下操作:</p>
 <ul>
-  <li>复制 AutoHotkeyA32.exe, AutoHotkeyU32.exe 或 AutoHotkeyU64.exe(当前选择的版本) 为 AutoHotkey*_UIA.exe.</li>
+  <li>复制每个 AutoHotkey*.exe 为 AutoHotkey*_UIA.exe.</li>
   <li>在每个 UIA 文件的嵌入式清单(manifest) 中设置 <a href="https://msdn.microsoft.com/en-us/library/ee671610">uiAccess 属性</a>.</li>
   <li>创建名为 "AutoHotkey" 的自签名数字证书, 然后签名每个 UIA 文件.</li>
-  <li>注册上下文菜单选项来运行对应的 exe 文件.</li>
+  <li>注册 <em>UIAccess</em> 外壳动词, 在资源管理器的上下文菜单中显示为 "Run with UI access"(以 UI 权限运行). 默认情况下, 这会执行<a href="#launcher">启动器</a>, 它会尝试选择一个适当的 UIA.exe 文件来运行脚本.</li>
 </ul>
-<p>对应安装之前就存在的 UIA 文件, 无论是否开启了 UI Access 选项, 安装器都会自动升级它们.</p>
-<p>对于命令行安装方式, 指定 <code>/uiAccess</code> 或 <code>/uiAccess=1</code> 来开启选项, 设为 <code>/uiAccess=0</code> 则是关闭. 如果系统的 UAC(用户账户控制) 为开启的且 UI Access 上下文选项在安装之前已经注册过时, 安装器将默认开启这个选项.</p>
-<p>脚本可以以 UI access 方式运行其他的脚本, 只需要简单的 <a href="commands/Run.htm">Run</a> 对应的 UIA.exe 文件加上<a href="#cmd">命令行参数</a>即可.</p>
+<p><a href="#launcher">启动器</a>也可以配置为默认情况下使用 UI 权限运行 v1 脚本, v2 脚本或两者, 但如果所选版本和构建不存在 UIA.exe 文件, 则此选项无效.</p>
+<p>脚本需要其他脚本以 UI 权限运行, 可以简单地 <a href="commands/Run.htm">Run</a>(运行) 对应的 UIA.exe 文件加上正常的<a href="#cmd">命令行参数</a>. 另外, 如果注册了 <em>UIAccess</em> 外壳动词, 它可以通过 Run 使用. 例如: <code>Run '*UIAccess "Script.ahk"'</code></p>
 <p><strong>已知限制</strong>:</p>
 <ul>
   <li>UIA 只会影响信任区域的文件; 比如 Program Files 的子目录.</li>

@@ -237,8 +237,8 @@ Gui <strong>MyGui:</strong>+Resize -MaximizeBox  <em>; 改变名称为 <i>MyGui<
 <p><strong>Caption</strong>(默认具有此选项): 为窗口增加标题栏和粗边框. 如果要移除将要使用 <a href="WinSet.htm#TransColor">WinSet TransColor</a> 设置透明的窗口的标题栏, 那么在需要在设置 TransColor 后才进行移除.</p>
 <p id="Delimiter"><strong>Delimiter</strong>: 指定管道(|) 外的其他字符作为窗口的字段分隔符, 每当使用 <a href="#Add">Gui Add</a> 添加, 使用 <a href="GuiControl.htm">GuiControl</a> 修改, 使用 <a href="#Submit">Gui Submit</a> 或 <a href="GuiControlGet.htm">GuiControlGet</a> 获取控件的内容时. 在单词 Delimiter 后紧跟着单个字符. 例如, <code>Gui +Delimiter`n</code> 将使用换行符, 这可能特别适合于<a href="../Scripts.htm#continuation">延续片段</a>. 同样, 使用 <code>Gui +Delimiter|</code> 将恢复为默认的分隔符. 要使用空格或 tab, 指定 <code>Gui +DelimiterSpace</code> 或 <code>Gui +DelimiterTab</code>. 一旦改变数据分隔符, 它会影响作用于这个特殊窗口的所有现在和后续的<a href="../misc/Threads.htm">线程</a>.</p>
 <p><strong>Disabled</strong>: 禁用窗口, 阻止用户和窗口中的控件交互. 此选项常用于含有子窗口的窗口(请参阅 <a href="#Owner">Owner</a>).</p>
-<p id="DPIScale"><strong>DPIScale</strong> <span class="ver">[v1.1.11+]</span>: 使用 <code>Gui -DPIScale</code> 禁用 DPI 缩放, 它默认是启用的. 如果在使用非标准 DPI 设置的系统上启用 DPI 缩放, 则 Gui 子命令会自动调整坐标和尺寸来让控件具有大致相同的外观尺寸(不过解析率更高). 例如, 对于 144(150%) 的 DPI, <code>Gui Show, w100</code> 会让 Gui 宽度为 150 像素, 但 <a href="../Variables.htm#GuiWidth">A_GuiWidth</a> 将保持 100. <a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 包含了系统当前 DPI.</p>
-<p>DPI 缩放比例仅适用于 Gui 子命令, 所以类似 ControlGetPos 或 WinGetPos 命令返回的坐标无法工作. 解决方案如下列:</p>
+<p id="DPIScale"><strong>DPIScale</strong> <span class="ver">[v1.1.11+]</span>: 使用 <code>Gui -DPIScale</code> 禁用 DPI 缩放, 它默认是启用的. 如果启用了 DPI 缩放, 传递给 Gui 子命令或从其获取的坐标和大小以及相关变量会根据<a href="../Variables.htm#ScreenDPI">屏幕 DPI</a> 自动缩放. 例如, 对于 144(150%) 的 DPI, <code>Gui Show, w100</code> 会让 Gui 宽度为 150(100 * 1.5) 像素, 如果通过鼠标或 <a href="WinMove.htm">WinMove</a> 将窗口大小调整为 200 像素宽, 会导致 <a href="../Variables.htm#GuiWidth">A_GuiWidth</a> 返回 133(200 // 1.5). <a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 包含了系统当前 DPI.</p>
+<p>DPI 缩放仅适用于 Gui 子命令及相关参数, 因此, 直接来自其他来源(如 ControlGetPos 或 WinGetPos) 的坐标将不起作用. 有很多方法可以解决这个问题:</p>
 <ul>
     <li>尽量避免使用硬编码坐标系统. 例如, 使用类似 <a href="#xp">xp</a>, <a href="#xs">xs</a>, <a href="#xm">xm</a> 和 <a href="#PosPlusMargin">x+m</a> 选项设置控件的相对位置且用像素来设置<a href="#R">多行文本</a>的高度值.</li>
     <li>根据具体情况灵活的开启 (<code>Gui +DPIScale</code>) 和关闭 (<code>Gui -DPIScale</code>) DPI 缩放比例设置. 更改这个设置并不会影响已经设置过的坐标或大小.</li>
@@ -342,7 +342,7 @@ gui, add, edit
 gui, show</pre>
 <p><strong>xs</strong> 和 <strong>ys</strong> 后面可以跟着一个加号/减号和一个数字. 并且, 还可以在控件的选项中同时指定单词 <a href="#Section">Section</a> 和 xs/ys; 这样可以让当前控件使用之前的控件段, 但为后续控件定义一个新段.</p>
 <p>省略 <strong>X</strong>, <strong>Y</strong> 或两者都是有用的, 可以使 GUI 布局自动调整, 以适应将来可能对控件大小或字体所做的任何更改. 相比之下, 为每个控件指定绝对位置可能需要手动移动正在放大或缩小的控件下面和/或右侧的所有控件的位置.</p>
-<p>如果 <strong>X</strong> 和 <strong>Y</strong> 都被省略, 控件将使用标准填充距离(当前<a href="#Margin">边距</a>) 被放置在前一个控件的下面.</p>
+<p>如果 <strong>X</strong> 和 <strong>Y</strong> 都被省略, 控件将使用标准填充距离(当前<a href="#Margin">边距</a>) 被放置在前一个控件的下面. 连续的 Text 或 Link 控件被赋予额外的垂直填充, 以便在以后 Edit, DDL 或类似大小的控件列被添加到它们的右边时, 它们通常能更好地对齐. 要仅使用标准的垂直边距, 请指定 <code>Y+M</code> 或任何 X 值.</p>
 <p>如果只省略了一个组件, 它的默认值取决于使用哪个选项来指定其他组件:</p>
 <table class="info">
   <tr><th>指定了 X</th><th>Y 的默认值</th></tr>
@@ -815,7 +815,7 @@ if FileExist(CurrentFileName)
 }
 GuiControlGet, MainEdit  <em>; 获取编辑控件的内容.</em>
 FileAppend, %MainEdit%, %CurrentFileName%  <em>; 保存内容到文件.
-; 成功时在标题栏显示文件名 (以防 FileSaveAs 调用时的情况):</em>
+; 成功时在标题栏显示文件名(以防 FileSaveAs 调用时的情况):</em>
 Gui, Show,, %CurrentFileName%
 return
 
@@ -830,14 +830,14 @@ return
 AboutButtonOK:  <em>; 上面的 "关于对话框" 需要使用这部分.</em>
 AboutGuiClose:
 AboutGuiEscape:
-Gui, 1:-Disabled  <em>; 重新启用主窗口 (必须在下一步之前进行).</em>
+Gui, 1:-Disabled  <em>; 重新启用主窗口(必须在下一步之前进行).</em>
 Gui Destroy  <em>; 销毁关于对话框.</em>
 return
 
 GuiDropFiles:  <em>; 对拖放提供支持.</em>
 Loop, Parse, A_GuiEvent, `n
 {
-    SelectedFileName := A_LoopField  <em>; 仅获取首个文件 (如果有多个文件的时候).</em>
+    SelectedFileName := A_LoopField  <em>; 仅获取首个文件(如果有多个文件的时候).</em>
     break
 }
 Gosub FileRead

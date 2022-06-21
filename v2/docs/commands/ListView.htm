@@ -620,8 +620,9 @@ RunFile(LV, RowNumber)
 {
     FileName := LV.GetText(RowNumber, 1) <em>; 获取首个字段的文本.</em>
     FileDir := LV.GetText(RowNumber, 2)  <em>; 获取第二个字段的文本.</em>
-    try Run(FileDir "\" FileName)
-    if A_LastError
+    try
+        Run(FileDir "\" FileName)
+    catch
         MsgBox("Could not open " FileDir "\" FileName ".")
 }
 
@@ -641,11 +642,14 @@ ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; 响应右键或 Apps 键.</
     {
         FileName := LV.GetText(Item, 1) <em>; 获取首个字段的文本.</em>
         FileDir := LV.GetText(Item, 2)  <em>; 获取第二个字段的文本.</em>
-        if (ItemName = "Open")  <em>; 用户在上下文菜单中选择了 "Open".</em>
-            try Run(FileDir "\" FileName)
-        else
-            try Run("properties " FileDir "\" FileName)
-        if A_LastError
+        try
+        {
+            if (ItemName = "Open")  <em>; 用户在上下文菜单中选择了 "Open".</em>
+                Run(FileDir "\" FileName)
+            else
+                Run("properties " FileDir "\" FileName)
+        }
+        catch
             MsgBox("Could not perform requested action on " FileDir "\" FileName ".")
     }
 

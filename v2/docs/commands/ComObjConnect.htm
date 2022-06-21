@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>ComObjConnect - 语法 &amp; 使用 | AutoHotkey v2</title>
-	<meta name="description" content="The ComObjConnect function connects a COM object's event sources to functions with a given prefix." />
+<meta name="description" content="The ComObjConnect function connects a COM object's event source to the script, enabling events to be handled." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
 <body>
 
 <h1>ComObjConnect</h1>
-<p>将 COM 对象的事件源连接到具有给定前缀的函数.</p>
+<p>将 COM 对象的事件源连接到脚本, 使事件能够被处理.</p>
 <pre class="Syntax"><span class="func">ComObjConnect</span> ComObj <span class="optional">, Prefix</span></pre>
 
 <h2 id="Parameters">参数</h2>
@@ -29,7 +29,8 @@
   <dt>Prefix</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Objects.htm">对象</a></p>
-      <p>当事件发生时, 用于确定调用哪个函数的前缀字符串.</p>
+      <p>当事件发生时, 用于确定调用哪个全局函数的前缀字符串.</p>
+      <p class="warning"><strong>注意:</strong> 在此模式下不支持嵌套函数, 因为名称可能在当前函数返回后解析. 要使用嵌套函数或闭包, 请将它们附加到一个对象上, 并按照下面的描述传递该对象.</p>
       <p>如果省略, 则对象为 "disconnected"; 即脚本将不再接收其事件通知.</p>
       <p>此参数可以为脚本定义的对象. 事件发生时, 会调用相应的方法. 首个参数, 通常为隐式传递的参数 <code>this</code>, 其引用脚本定义的对象, 而非 COM 对象. 要捕获所有事件, 而又不想为每个事件定义方法, 可定义 <a href="../Objects.htm#Meta_Functions">__Call 元函数</a>.</p>
     </dd>
@@ -70,7 +71,9 @@ ie.Visible := true  <em>; 此语句在 IE7 中无法正常执行.</em>
 ie.Navigate("https://www.autohotkey.com/")
 Persistent
 
-IE_DocumentComplete(ieEventParam, url, ieFinalParam) {
+IE_DocumentComplete(ieEventParam, &amp;url, ieFinalParam) {
+    <em>; IE 传递的 url 作为 VARIANT 的引用, 因此在上面使用 &amp;url</em>
+    <em>; 以便下面的代码可以自然地引用它，而不是使用 %url%.</em>
     s := ""
     if (ie != ieEventParam)
         s .= "First parameter is a new wrapper object.`n"

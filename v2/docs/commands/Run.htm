@@ -9,7 +9,7 @@
 <script src="../static/content.js" type="text/javascript"></script>
 <script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
 <style type="text/css">
-.style3 {color: #FF0000; font-weight: bold; }
+.style3 {color: #000; background: rgba(255, 255, 0, 0.4);}
 </style>
 </head>
 <body>
@@ -29,7 +29,8 @@ ExitCode := <span class="func">RunWait</span>(Target <span class="optional">, Wo
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
       <p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk) 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是一个本地文件, 并且没有指定路径, 则首先搜索 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 在没有找到匹配的文件时, 如果该文件被集成在系统中("已知的"), 例如包含在 PATH 文件夹中的一个文件夹中, 系统将搜索并启动该文件.</p>
-      <p>若要传递参数, 请在程序或文档名称之后立即添加它们. 如果参数包含空格, 那么最安全的做法是用双引号括起来(即使在某些情况下可以不加空格).</p>
+      <p>要传递参数, 请让它们紧跟在程序或文档名的后面. 例如, <code>Run 'MyProgram.exe Param1 Param2'</code>.</p>
+      <p>如果程序/文档名称或参数包含空格, 则把它们括在双引号中是最可靠的(虽然它在某些情况下没有括在双引号中也能工作). 例如, <code>Run 'MyProgram.exe "param with spaces"'</code>.</p>
   </dd>
 
   <dt>WorkingDir</dt>
@@ -70,8 +71,8 @@ catch
 </pre>
 <p>内置变量 <a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统的 GetLastError() 函数的结果.</p>
 <h2 id="Remarks">备注</h2>
-<p>当通过 <a href="../Variables.htm#ComSpec">Comspec</a>(cmd.exe) 运行程序时 -- 也许是因为你需要重定向程序的输入或输出 -- 如果可执行文件的路径或名称中包含空格, 那么整个字符串应该用一对外置单引号来括起. 在下面的例子中, 外部的单引号用红色显示, 而内部的双引号用黑色显示:</p>
-<pre>Run A_ComSpec <span class="style3">'</span> /c "C:\My Utility.exe" "param 1" "second param" &gt;"C:\My File.txt"<span class="style3">'</span></pre>
+<p>当通过 <a href="../Variables.htm#ComSpec">ComSpec</a>(cmd.exe) 运行程序时 -- 也许是因为你需要重定向程序的输入或输出 -- 如果可执行文件的路径或名称中包含空格, 那么整个字符串应该用一对外置引号来括起. 在下面的例子中, 外部的引号用黄色高亮显示:</p>
+<pre>Run A_ComSpec ' /c <span class="style3">"</span>"C:\My Utility.exe" "param 1" "second param" &gt;"C:\My File.txt"<span class="style3">"</span>'</pre>
 <p>如果 <em>Target</em> 为准确路径时可轻微提升性能, 例如使用 <code>Run 'C:\Windows\Notepad.exe "C:\My Documents\Test.txt"'</code> 代替 <code>Run "C:\My Documents\Test.txt"</code>.</p>
 <p>Run 还可以打开指定的 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>. 例如:</p>
 <pre>Run "::{20d04fe0-3aea-1069-a2d8-08002b30309d}"  <em>; 打开 "我的电脑" 文件夹.</em>
