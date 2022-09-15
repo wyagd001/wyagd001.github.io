@@ -29,7 +29,9 @@
   <dt>Value</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>要包装的值. 当前仅支持整数和指针值.</p>
+    <p>要包装的值.</p>
+    <p>如果这是一个纯整数且 <em>VarType</em> 不是 VT_R4, VT_R8, VT_DATE 或 VT_CY, 则直接使用其值; 特别是 VT_BSTR, VT_DISPATCH 和 VT_UNKNOWN 可以用一个指针值来初始化.</p>
+    <p>在任何其他情况下, 使用与普通 COM 方法调用相同的规则将值复制到临时 VARIANT 中. 如果源变量类型不等于 <em>VarType</em>, 则通过调用 <em>wFlags</em> 值为 0 的 <a href="https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantchangetype">VariantChangeType</a> 来尝试转换. 如果转换失败, 则抛出异常.</p>
   </dd>
 
   <dt>Flags</dt>
@@ -43,10 +45,11 @@
 <h2 id="Returns">返回值</h2>
 <p>类型: ComValue, ComValueRef, <a href="ComObjArray.htm">ComObjArray</a> 或 <a href="ComObject.htm">ComObject</a></p>
 <p>返回包含<a href="ComObjType.htm#vt">变体类型</a>和值或指针的封装对象.</p>
-<p>该对象有两个用途:</p>
+<p>该对象有多个用途:</p>
 <ol>
   <li>某些 COM 方法可能需要特定类型的值, 这些值在 AutoHotkey 中没有直接等效的值. 此函数允许在将值传递给 COM 方法时指定值的类型. 例如, <code>ComValue(0xB, -1)</code> 创建一个表示 COM 布尔值为 <em>true</em> 的对象.</li>
   <li>通过封装 COM 对象或 SafeArray, 脚本可以使用<a href="../Objects.htm#Usage_Objects">对象语法</a>更自然地与其交互. 但是, 大多数脚本不需要手动执行此操作, 因为封装对象是由 <a href="ComObject.htm">ComObject</a>, <a href="ComObjArray.htm">ComObjArray</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjGet.htm">ComObjGet</a> 和任何返回对象的 COM 方法自动创建的.</li>
+  <li>封装 COM 接口指针允许脚本利用自动引用计数. 接口指针可以在返回到脚本时立即包装(通常是从 <a href="ComCall.htm">ComCall</a> 或 <a href="DllCall.htm">DllCall</a> 返回), 避免在稍后的某个点需要显式<a href="ObjAddRef.htm">释放</a>它.</li>
 </ol>
 
 <h2 id="Ptr">Ptr</h2>
@@ -71,7 +74,8 @@ MsgBox some_var</pre>
 <p>然而, 有些方法需要更特定的变体类型, 如 <code>VT_BYREF | VT_I4</code>. 在这种情况下, 必须使用上面所示的第一种方法, 用适当的变体类型替换 0x400C.</p>
 
 <h2 id="Remarks">一般说明</h2>
-<p>当使用此函数包装 <a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a> 或 IUnknown 接口指针时, 包装器对象负责在适当的时候自动释放指针. 因此, 如果脚本打算在调用这个函数后使用指针, 它必须首先调用 <code><a href="ObjAddRef.htm">ObjAddRef</a>(DispPtr)</code>.</p>
+<p>当此函数用于包装 <a href="http://msdn.microsoft.com/en-us/library/dd318520.aspx">IDispatch</a> 或 IUnknown 接口指针(以整数形式传递) 时, 包装器对象负责在适当的时候自动释放指针. 因此, 如果脚本打算在调用这个函数之后使用指针, 它必须首先调用 <code><a href="ObjAddRef.htm">ObjAddRef</a>(DispPtr)</code>. 相比之下, 如果 <em>Value</em> 本身是 ComValue 或 ComObject, 则没有必要这样做.</p>
+<p>从 VT_UNKNOWN 到 VT_DISPATCH 的转换会导致对 <a href="https://docs.microsoft.com/en-au/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</a> 的调用, 这可能会产生一个不同于原来的接口指针, 并且如果对象没有实现 IDispatch, 会抛出异常 . 相反, 如果 <em>Value</em> 是整数, and <em>VarType</em> is VT_DISPATCH, 则直接使用该值, 因此必须是一个 idispatch 兼容的接口指针.</p>
 <p>可以使用 <a href="ComObjType.htm">ComObjType</a> 检索包装器对象的 <em>VarType</em>.</p>
 <p>可以使用 <a href="ComObjValue.htm">ComObjValue</a> 检索包装器对象的 <em>Value</em>.</p>
 <p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>obj1 == obj2</code> 和 <code>array[obj1] := value</code> 这样的比较和赋值运算, 将这两个包装器对象视为唯一的, 即使它们包含相同的变体类型和值.</p>

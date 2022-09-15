@@ -30,6 +30,7 @@
     <li><a href="#Debug">Debug</a>: 显示指令的调试文本.</li>
     <li><a href="#ExeName">ExeName</a>: 指定 .exe 的位置和名称.</li>
     <li><a href="#Let">Let</a>: 设置一个用户变量.</li>
+    <li><a href="#Nop">Nop</a>: Does nothing.</li>
     <li><a href="#Obey">Obey</a>: 执行一个命令或表达式.</li>
     <li><a href="#PostExec">PostExec</a>: 编译后运行程序.</li>
     <li><a href="#ResourceID">ResourceID</a>: 为主脚本指定一个非标准的资源 ID.</li>
@@ -109,7 +110,7 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 <pre class="Syntax"><span class="func">;@Ahk2Exe-AddResource</span> FileName <span class="optional">, ResourceName</span></pre>
 <dl>
   <dt>FileName</dt>
-  <dd>要添加的资源的文件名. 资源的类型(作为整数或字符串) 可以通过附加一个星号显式指定: <code class="no-highlight">*type Filename</code>. 如果省略, Ahk2Exe 会根据文件扩展名自动检测类型.</dd>
+  <dd>要添加的资源的文件名. 如果没有指定绝对路径, 则假定该文件位于(或相对于) 脚本自己的目录中. 资源的类型(作为整数或字符串) 可以通过附加一个星号显式指定: <code class="no-highlight">*type Filename</code>. 如果省略, Ahk2Exe 会根据文件扩展名自动检测类型.</dd>
   <dt>ResourceName</dt>
   <dd><i>(可选)</i> 资源将具有的名称(可以为整数或字符串). 如果省略, 则默认为文件的名称(没有路径), 大写.</dd>
 </dl>
@@ -134,7 +135,9 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 ;@Ahk2Exe-AddResource Icon4.ico, 208  ; 替换 '红色 S'</pre>
 
 <p><strong>示例 2:</strong> 要把另一个脚本作为单独的 RCDATA 资源包括在内(请参阅 <a href="../Program.htm#embedded-scripts">嵌入式脚本</a>):</p>
-<pre>;@Ahk2Exe-AddResource MyScript.ahk, MYRESOURCE</pre>
+<pre>;@Ahk2Exe-AddResource MyScript1.ahk, #2
+;@Ahk2Exe-AddResource MyScript2.ahk, MYRESOURCE</pre>
+<p>注意, 使用此指令添加的每个脚本将由编译器完全单独处理, 并且可以包含更多的指令. 如果有任何相冲突的指令, 编译器将使用最后遇到的那个指令.</p>
 
 <h3 id="Bin">Bin / Base</h3>
 <p>指定用于生成 .exe 文件的 AutoHotkey 的基础版本. 这个指令可以被 GUI 或 CLI 中指定的基文件参数所覆盖. 如果有必要, 这个指令可以被多次指定, 但只能在最顶层的脚本文件中指定(也就是说, 不能在 <a href="../commands/_Include.htm">#Include</a> 文件中). 编译器将为每个发现的 Bin/Base 指令至少运行一次. (如果要在这个指令上附加一个实际的注释, 必须使用 <code>&nbsp;;</code> 标志. 要想真正注释这个指令, 请在第一个注释标志后插入一个空格.)</p>
@@ -144,7 +147,7 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 
 <dl>
   <dt>[Path\]Name</dt>
-  <dd>要使用的 *.bin 或 *.exe 文件. 如果没有提供扩展名, 则假定为 <code>.bin</code>. 可以为 <em>Name</em> 指定一个 DOS 掩码, 例如 <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code> 或为这三种掩码指定 <code>*bit</code>. 如果没有指定路径, 则会搜索编译器文件夹中的标准 *.bin 文件. 编译器将为每个匹配的 *.bin 或 *.exe 文件运行. 任何使用内置变量替换的情况都必须是来自上述的<a href="#group1">组 1</a>.</dd>
+  <dd>要使用的 *.bin 或 *.exe 文件. 如果没有提供扩展名, 则假定为 <code>.bin</code>. 如果没有指定绝对路径, 则假定该文件位于(或相对于) 编译器自己的目录中. 可以为 <em>Name</em> 指定一个 DOS 掩码, 例如 <code>ANSI*</code>, <code>Unicode 32*</code>, <code>Unicode 64*</code> 或为这三种掩码指定 <code>*bit</code>. 编译器将为每个匹配的 *.bin 或 *.exe 文件运行. 任何使用内置变量替换的情况都必须是来自上述的<a href="#group1">组 1</a>.</dd>
   <dt>[Exe_path\][Name]</dt>
   <dd><i>(可选)</i> 要给 .exe 的文件名. 任何提供的扩展名都将被替换为 <code>.exe</code>. 如果没有指定路径, 则会在脚本文件夹中创建 .exe 文件. 如果没有指定名称, .exe 将使用默认名称. (这个参数可以被 <a href="#ExeName">ExeName</a> 指令覆盖.)</dd>
   <dt>Codepage</dt>
@@ -192,6 +195,18 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <dt>Value</dt>
   <dd>要使用的值.</dd>
 </dl>
+
+<h3 id="Nop">Nop</h3>
+<p>什么也不做.</p>
+<pre class="Syntax"><span class="func">;@Ahk2Exe-Nop</span> <span class="optional">Text</span></pre>
+<dl>
+  <dt>Text</dt>
+  <dd><i>(可选)</i> 任何文本, 会被忽略.</dd>
+</dl>
+<strong>示例:</strong>
+<pre>Ver := A_AhkVersion "" ; 如果加引号的原义文字不为空, 执行 'SetVersion'
+;@Ahk2Exe-Obey U_V, = "%A_PriorLine~U)^(.+")(.*)".*$~$2%" ? "SetVersion" : "Nop"
+;@Ahk2Exe-%U_V%        %A_AhkVersion%%A_PriorLine~U)^(.+")(.*)".*$~$2%</pre>
 
 <h3 id="Obey">Obey</h3>
 <p>执行独立于 AutoHotkey 的命令或表达式, 结果为 <code>U_<i>Name</i></code>.</p>
@@ -255,7 +270,7 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 </dl>
 
 <h3 id="SetMainIcon">SetMainIcon</h3>
-<p>覆盖用于编译的自定义 EXE 图标. (要改变其他图标, 请参阅 <a href="#AddResource">AddResource</a> 的示例.) 这个指令可以被 GUI 或 CLI 中指定的图标文件覆盖.</p>
+<p>覆盖用于编译的自定义 EXE 图标. (要改变其他图标, 请参阅 <a href="#AddResource">AddResource</a> 的示例.) 这个指令可以被 GUI 或 CLI 中指定的图标文件覆盖. 如果编译文件之前存在一个不同的图标, 新图标可能不会立即在 Windows 资源管理器中可见, 但是可以通过从 Ahk2Exe 的 <code>File</code> 菜单中选择 <code>Refresh Windows Icons</code> 来显示新图标.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-SetMainIcon</span> <span class="optional">IcoFile</span></pre>
 <dl>
   <dt>IcoFile</dt>

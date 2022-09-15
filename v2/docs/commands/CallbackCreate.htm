@@ -101,10 +101,11 @@ TheFunc(params) {
 <p>与之相比, <a href="#Fast">快速模式</a>会继承在调用函数时正在运行的<a href="../misc/Threads.htm">线程</a>的全局设置. 而且, 函数对全局设置的任何修改(包括<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在<a href="../misc/Threads.htm">当前线程</a>生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
 <p>要避免被自己(或其他任何线程) 中断, 回调可以在它的首行使用 <a href="Critical.htm">Critical</a>. 但是, 通过小于 0x0312 消息达到的间接调用函数时, 这并不是完全有效的(增加 Critical 的 <a href="Critical.htm#Interval">interval</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="SendMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
 
-<h2 id="CallbackFree">内存</h2>
-<p>每次使用 CallbackCreate 都会分配少量内存(32 字节加上系统开销). 由于操作系统会在脚本退出时自动释放该内存, 因此分配了少量, <em>固定</em> 数量的回调的任何脚本都不必显式释放内存. 相比之下, 不确定/无限制次数调用 CallbackCreate 的脚本应在任何未使用的回调中显式调用以下代码:</p>
-<pre>CallbackFree(Address)</pre>
-<p>这也会释放对脚本的函数对象的回调引用.</p>
+<h2 id="CallbackFree">CallbackFree</h2>
+<p>删除回调函数并释放它对函数对象的引用.</p>
+<pre class="Syntax"><span class="func">CallbackFree</span>(Address)</pre>
+<p>每次使用 CallbackCreate 都会分配少量内存(32 或 48 字节加上系统开销). 由于操作系统会在脚本退出时自动释放该内存, 因此任何分配了少量, <em>固定</em> 数量的回调的脚本都不必显式释放内存.</p>
+<p>但是, 如果回调函数持有的函数对象是动态的(例如, <a href="../Functions.htm#closures">闭包</a>或<a href="../objects/Functor.htm#BoundFunc">绑定函数</a>), 当不再需要回调函数时, 释放回调函数可能是特别重要的; 否则, 函数对象将不会被释放.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="DllCall.htm">DllCall</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort 回调</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">窗口消息列表</a>, <a href="../misc/Threads.htm">线程</a></p>

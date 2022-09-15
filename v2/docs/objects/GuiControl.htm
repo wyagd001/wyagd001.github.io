@@ -55,6 +55,11 @@
   <li><a href="#Visible">Visible</a>: 检索控件的当前可见状态, 或显示或隐藏它.</li>
     </ul>
   </li>
+  <li><a href="#GenRemarks">General Remarks</a>:
+    <ul>
+      <li><a href="#redraw-remarks">Redraw</a>: Performance-related remarks about redraw behaviour of controls.</li>
+    </ul>
+  </li>
 </ul>
 
 <h2 id="Methods">方法</h2>
@@ -211,7 +216,7 @@ MyEdit.Move(VarX+10, VarY+5, VarW*2, VarH*1.5)</pre>
     <p>参数为 1 表示第一个条目, 2 表示第二个, 等等. 如果 <em>Value</em> 不是一个整数, 前面部分与 <em>Value</em> 匹配的标签将被使用. 搜索不区分大小写. 例如, 如果一个控件包含 "UNIX Text" 标签, 指定单词 unix(小写) 就可以使用它. 如果 <em>Value</em> 为 0, 是一个空白字符串或被省略, 随后的控件将被添加到 Tab 控件之外.</p>
   </dd>
   <dt>ExactMatch</dt><dd>
-    <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
     <p>如果该参数为 true, <em>Value</em> 必须完全匹配, 但不区分大小写.</p>
   </dd>
 </dl>
@@ -342,6 +347,12 @@ MyEdit.Move(VarX+10, VarY+5, VarW*2, VarH*1.5)</pre>
 <pre class="Syntax">GuiCtrl.Visible := NewState</pre>
 <p>对于 Tab 控件, 这也将显示或隐藏该 Tab 的所有子控件. 如果您还想阻止一个控件的快捷键(下划线字母) 工作, 通过 <code>GuiCtrl.Enabled := false</code> 禁用该控件.</p>
 </div>
+
+<h2 id="GenRemarks">General Remarks</h2>
+
+<h3 id="redraw-remarks">Redraw</h3>
+<p>When adding a large number of items to a control (such as a <a href="../commands/ListView.htm">ListView</a>, <a href="../commands/TreeView.htm">TreeView</a> or <a href="../commands/GuiControls.htm#ListBox">ListBox</a>), performance can be improved by preventing the control from being redrawn while the changes are being made. This is done by using <code>GuiCtrl.Opt("-Redraw")</code> before adding the items and <code>GuiCtrl.Opt("+Redraw")</code> afterward. Changes to the control which have not yet become visible prior to disabling redraw will generally not become visible until after redraw is re-enabled.</p>
+<p>For performance reasons, changes to a control's content generally do not cause the control to be immediately redrawn even if redraw is enabled. Instead, a portion of the control is "invalidated" and is usually repainted after a brief delay, when the program checks its internal message queue. The script can force this to take place immediately by calling <code>Sleep -1</code>.</p>
 
 </body>
 </html>

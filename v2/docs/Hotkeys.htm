@@ -130,7 +130,7 @@ AppsKey Up::ToolTip
       <pre>*LWin::Send "{LControl down}"
 *LWin Up::Send "{LControl up}"
 </pre>
-      <p>"Up" 也可以用于普通热键中, 例如: <code>^!r Up::MsgBox "You pressed and released Ctrl+Alt+R"</code>. 它还可以用在<a href="#combo">组合键</a>(例如 <code>F1 &amp; e Up::</code>)</p>      
+      <p>"Up" 也可以用于普通热键中, 例如: <code>^!r Up::MsgBox "You pressed and released Ctrl+Alt+R"</code>. 它还可以用在<a href="#combo">组合键</a>(例如 <code>F1 &amp; e Up::</code>)</p>
       <p>限制: 1) "Up" 不能和<a href="KeyList.htm">游戏杆按钮</a>一起使用; 2) 在没有普通/按下热键副本的 "Up" 热键会完全接管那个按键以防被卡住. 避免这种情况的一种方法是添加<a href="#Tilde">颚化符(波浪号) 前缀</a>(例如 <code>~LControl up::</code>)</p>
       <p>"Up" 热键和其 key-down 副本(如果有的话) 总是使用键盘钩子.</p>
       <p>相关提示, 类似于上面的一种技术是让热键成为前缀键. 好处是尽管热键会在按键松开时激发, 但仅在您之前按住此前缀键时没有按其他任何键的情况下才会如此. 例如:</p>
@@ -165,7 +165,14 @@ WheelDown::Send "{Volume_Down}" <em>;</em>
 </pre>
 
 <h2 id="combo">自定义组合键</h2>
-<p>通过在两个按键(不包括操纵杆按钮) 间使用 " &amp; " 可以定义自定义的组合键. 在下面的例子中, 您在按住 Numpad0 接着按下第二个按键时会触发此热键:</p>
+<p>通常快捷键组合由可选的前缀/修饰键(<kbd>Ctrl</kbd>, <kbd>Alt</kbd>, <kbd>Shift</kbd> 和 <kbd>LWin</kbd>/<kbd>RWin</kbd>) 和单个后缀键组成. 标准的修饰键就是这样设计的, 所以按下时通常没有立即效果.</p>
+<p>两个按键(包括鼠标, 但不包括操纵杆按钮) 的自定义组合热键可以通过在它们之间使用 "&amp;" 来定义. 因为它们是为与前缀键一起使用而设计的, 所以自定义组合有以下特殊行为:</p>
+<ul>
+  <li>除非前缀键是标准的修饰键或可切换键(如 <kbd>CapsLock</kbd>), 否则前缀键将失去其原来的功能.</li>
+  <li>如果前缀键还用作另一个热键中的后缀, 则默认情况下, 该热键在释放时触发, 如果它用于激活自定义组合, 则根本不会触发. 如果同时有 key-down 热键和 <a href="#keyup">key-up</a> 热键, 两个热键将同时被触发. 如果<a href="#Tilde">波浪号前缀</a>
+</ul>
+<p class="note"><strong>注意:</strong> 对于带有标准修饰键的组合, 通常最好使用标准语法. 例如, 使用 <code>&lt;+s::</code> 而不是 <code>LShift &amp; s::</code>.</p>
+<p>在下面的例子中, 你可以按住 Numpad0, 然后按下第二个按键来触发热键:</p>
 <pre id="prefix">Numpad0 &amp; Numpad1::MsgBox "You pressed Numpad1 while holding down Numpad0."
 Numpad0 &amp; Numpad2::Run "Notepad"</pre>
 <p><strong>前缀键会失去它原有的功能:</strong> 在上面的例子中, Numpad0 为 <em>前缀键</em>; 但是这也让 Numpad0 在被按下时失去了它原有/自带的功能. 为了避免此问题, 脚本中可以配置 Numpad0 执行新的动作, 例如下列热键的其中一个:</p>
@@ -173,7 +180,6 @@ Numpad0 &amp; Numpad2::Run "Notepad"</pre>
 Numpad0::Send "{Numpad0}"  <em>; 让 Numpad0 <i>释放</i> 时产生 Numpad0 键击. 请参阅下面的注释.</em></pre>
 <p><strong>释放时触发:</strong> 使用上面的其中一个自定义组合热键可以在 <em>释放</em> Numpad0 时执行指定的动作, 但不包括按住 Numpad0 时您又按下了其他按键的情况. 可以在其中某个热键前使用<a href="#Tilde">颚化符(波浪号) 前缀</a>来避免这种行为.</p>
 <p id="combo_mods"><strong>修饰:</strong> 与普通热键不同的是, 自定义组合在默认情况下表现得就像拥有一个<a href="#wildcard">通配符(*)</a> 修饰一样. 例如, <code>1 &amp; 2::</code> 当按下 <kbd>1</kbd> 和 <kbd>2</kbd> 时, 无论 <kbd>Ctrl</kbd> 或 <kbd>Alt</kbd> 是否被按住都会触发, 然而 <code>^1::</code> 仅在 <kbd>Ctrl</kbd>+<kbd>1</kbd> 组合键时触发, 而 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>1</kbd> 不会触发.</p>
-<p>对于普通的修饰键, 一般的热键会比 "自定义" 组合工作得更好. 例如, <code>&lt;+s::</code> 就是比 <code>LShift &amp; s::</code> 更好的用法.</p>
 <p>不支持组合三个或更多的键. 一般来说组合键支持你键盘上物理存在的所有按键, 都可以用 <a href="commands/_HotIf.htm">#HotIf</a> 和 <a href="commands/GetKeyState.htm">GetKeyState</a> 探测状态, 但是也可能出现不一致的情况. 例如:</p>
 <pre><em>; 以任何顺序按下 AppsKey 和 Alt, 然后按下反斜杠键(/).</em>
 #HotIf GetKeyState("AppsKey", "P")

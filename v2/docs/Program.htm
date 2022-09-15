@@ -43,11 +43,12 @@
 </ul>
 
 <h2 id="create">创建脚本</h2>
-<p>有几种常见的方法来创建脚本文件:</p>
+<p>有一些常见的方法来创建脚本文件:</p>
 <ul>
   <li>在记事本(或你选择的<a href="commands/Edit.htm#Editors">文本编辑器</a>) 中, 使用 <code>.ahk</code> 文件扩展名保存文件. 在某些系统上, 您可能需要将文件名用引号括起来, 以确保编辑器不会添加其他扩展名(例如 .txt).
 <p class="note">如果文件包含非 ASCII 字符, 请确保将文件保存为带有 BOM(字节顺序标记) 的 UTF-8. 有关详情, 请参阅<a href="FAQ.htm#nonascii">常见问题(FAQ)</a>.</p></li>
   <li>在资源管理器, 希望保存脚本的文件夹中的空白区域右键单击, 然后选择 <strong>新建</strong> 和 <strong>AutoHotkey Script</strong>. 然后, 您可以输入脚本的名称(注意, 如果 <code>.ahk</code> 扩展名可见时, 请不要删掉它).</li>
+  <li>在 <a href="#dash">Dash</a>, 选择 <a href="#newscript">New script</a>, 为脚本输入名称(不包括 <code>.ahk</code> 扩展名), 然后单击 <em>Create</em> 或 <em>Edit</em>. 可以在此窗口中配置用于创建脚本的模板和保存脚本的位置, 并根据需要将其设置为默认值.</li>
 </ul>
 <p class="note">有关如何编写脚本的详细信息, 请参阅<a href="Language.htm">脚本语言</a>.</p>
 
@@ -140,7 +141,8 @@ else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
 </pre>
 
 <h2 id="embedded-scripts">嵌入脚本</h2>
-<p>脚本可以被嵌入到一个标准的 AutoHotkey .exe 文件中, 方法是将它们作为 Win32(RCDATA) 资源来添加. 嵌入的脚本可以在命令行中指定, 也可以使用 <a href="commands/_Include.htm">#Include</a> 在资源名称后跟一个星号(*). 对于整数 ID, 资源名称必须是一个哈希符号(#) 后面是一个十进制数字.</p>
+<p>通过使用 <a href="Scripts.htm#ahk2exe">Ahk2Exe 编译器</a>, 可以将脚本嵌入到标准的 AutoHotkey .exe 文件, 方法是将它们作为 Win32(RCDATA) 资源来添加. 要添加其他脚本, 请参阅 <a href="misc\Ahk2ExeDirectives.htm#AddResource">AddResource</a> 编译器指令.</p>
+<p>嵌入的脚本可以在命令行中指定, 也可以使用 <a href="commands/_Include.htm">#Include</a> 在资源名称后跟一个星号(*). 对于一个整数 ID, 资源名称必须是一个哈希符号(#), 后面是一个十进制数字.</p>
 <p>程序可以自动从以下资源加载脚本代码, 如果存在于文件中:</p>
 <table class="info">
   <tr><th>ID</th><th>Spec</th><th>Usage</th></tr>
@@ -171,7 +173,7 @@ else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
   <li>v1: 没有大括号或函数定义的多行热键.</li>
   <li>常见指令如 #NoEnv 和 #If(v1) 或 <a href="commands/_HotIf.htm">#HotIf</a>(v2).</li>
   <li>v2: 通过<a href="Scripts.htm#continuation-expr">括号延续</a>或<a href="Scripts.htm#continuation-line">行末延续操作符</a>明确使用行延续.</li>
-  <li>v2: 在表达式中明确使用 <code>'单引号'</code> 或 <a href="Variables.htm#fat-arrow">胖箭头 <code>=></code></a>.</li>
+  <li>v2: 在表达式中明确使用 <code>'单引号'</code> 或 <a href="Variables.htm#fat-arrow">胖箭头 <code>=&gt;</code></a>.</li>
 </ul>
 <p>检测是保守的; 如果一个案例是模棱两可的, 通常应该被忽略.</p>
 <p>在任何检测失败的情况下, 默认会显示一个菜单让用户选择一个版本. 这个默认值可以改变为启动 v1 或 v2.</p>
@@ -210,9 +212,16 @@ else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
   <li>Set as default(设置为默认值): 设置默认选择的模板.</li>
 </ul>
 <p>默认情况下, 除非按住 Ctrl 键，否则 GUI 会在创建文件后关闭.</p>
-<p>其他设置可以通过 GUI 左下角的设置按钮来访问.</p>
+<p>其他设置可以通过 GUI 左下角的设置按钮来访问:</p>
+<ul>
+  <li>Default to Create(默认创建): 按 Enter 将激活 Create 按钮, 创建脚本并在资源管理器中选择它.</li>
+  <li>Default to Edit(默认编辑): :按 Enter 将激活 Edit 按钮, 这将创建脚本并在默认脚本编辑器中打开它.</li>
+  <li>Stay open(保持打开): 如果启用, 创建脚本后窗口不会自动关闭.</li>
+  <li>Set folder as default(设置文件夹为默认): 将当前文件夹设置为脚本的默认保存位置. 如果新建脚本窗口直接打开或通过 Dash 打开, 则使用默认位置; 当通过资源管理器上下文菜单调用新脚本时不使用它.</li>
+  <li>Open templates folder(打开模板文件夹): 打开存放用户定义<a href="#templates">模板</a>的文件夹.</li>
+</ul>
 
-<h3>模板</h3>
+<h3 id="templates">模板</h3>
 <p>模板文件从 UX\Templates (预安装的) 和 <em>%A_MyDocuments%</em>\AutoHotkey\Templates (用户自定义的) 中绘制, 使用用户定义的模板覆盖任何具有相同名称的预安装模板. 如果一个文件存在于 <em>%A_WinDir%</em>\ShellNew\Template.ahk, 它被显示为 "Legacy", 可以被用户定义的同名模板覆盖.</p>
 <p>每个模板可以包含一个 INI 节, 如下所示:</p>
 <pre>/*

@@ -40,6 +40,7 @@ MsgBox users[1]</pre>
     <ul>
       <li><a href="#Clone">Clone</a>: 返回对象的一个浅拷贝.</li>
       <li><a href="#Delete">Delete</a>: 删除数组元素的值, 使索引不包含值.</li>
+      <li><a href="#Get">Get</a>: Returns the value at a given index, or a default value.</li>
       <li><a href="#Has">Has</a>: 如果 Index 有效且在该位置有一个值, 则返回 true.</li>
       <li><a href="#InsertAt">InsertAt</a>: 插入一个或多个值到给定位置.</li>
       <li><a href="#Pop">Pop</a>: 删除并返回最后的数组元素.</li>
@@ -53,6 +54,7 @@ MsgBox users[1]</pre>
     <ul>
       <li><a href="#Length">Length</a>: 检索或设置数组的长度.</li>
       <li><a href="#Capacity">Capacity</a>: 检索或设置数组的当前容量.</li>
+      <li><a href="#Default">Default</a>: Defines the default value returned when an element with no value is requested.</li>
       <li><a href="#__Item">__Item</a>: 检索或设置数组元素的值.</li>
     </ul>
   </li>
@@ -88,6 +90,20 @@ MsgBox users[1]</pre>
 <p>返回删除的值(如果没有, 则为空).</p>
 <p>Delete 不影响数组的 <a href="#Length">Length(长度)</a>.</p>
 <p>如果 <em>Index</em> 超出范围, 则抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
+</div>
+
+<div class="methodShort" id="Get"><h3>Get</h3>
+<p>返回给定索引处的值, 或默认值.</p>
+<pre class="Syntax">Value := ArrayObj.<span class="func">Get</span>(Index <span class="optional">, Default</span>)</pre>
+<p>该方法执行如下操作:</p>
+<ul>
+  <li>如果 <em>Index</em> 为零或超出范围,  则抛出 <a href="Error.htm#IndexError">IndexError</a>.</li>
+  <li>返回 <em>Index</em> 处的值, 如果有(请参阅 <a href="#Has">Has</a>).</li>
+  <li>如果指定, 则返回 <em>Default</em> 参数的值.</li>
+  <li>如果定义, 则返回 <code>ArrayObj.Default</code> 的值.</li>
+  <li>抛出 <a href="Error.htm#UnsetError">UnsetItemError</a>.</li>
+</ul>
+<p>当 <em>Default</em> 被省略时, 它等价于 <code>ArrayObj[Index]</code>, 除了没有调用 <a href="#__Item">__Item</a>.</p>
 </div>
 
 <div class="methodShort" id="Has"><h3>Has</h3>
@@ -231,6 +247,13 @@ x := ["A", "B", "C"]
 x.push("D", "E", "F", "G")
 MsgBox  x.Capacity  <em>;  7</em>
 </pre>
+</div>
+
+<div class="methodShort" id="Default"><h3>Default</h3>
+<p>定义请求没有值的元素时返回的默认值.</p>
+<pre class="Syntax">ArrayObj.<span class="func">Default</span> := Value</pre>
+<p>默认情况下, 该属性实际上不存在, 但是可以由脚本定义. 当脚本请求一个没有值的元素时, 数组在抛出 <a href="Error.htm#UnsetError">UnsetItemError</a> 之前检查该属性. 它可以通过任何常规方法实现, 包括<a href="Object.htm#DefineProp">动态属性</a>或<a href="../Objects.htm#Meta_Functions">元函数</a>, 但要确定查询的是哪个键, 则需要重写 <a href="#__Item">__Item</a> 或 <a href="#Get">Get</a>.</p>
+<p>设置默认值并不会在索引超出范围时防止抛出错误.</p>
 </div>
 
 <div class="methodShort" id="__Item"><h3>__Item</h3>

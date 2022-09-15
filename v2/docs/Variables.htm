@@ -31,7 +31,7 @@ CopyOfVar := Var</pre>
 <pre>MyVar := ""</pre>
 <p>变量也可以间接赋值, 通过<a href="#ref">获取它的引用</a>并使用<a href="#deref">双重解引</a>或将其传递给一个函数. 例如:</p>
 <pre><a href="commands/MouseGetPos.htm">MouseGetPos</a> &amp;x, &amp;y</pre>
-<p>访问一个没有赋值的变量被视为一个错误. <a href="commands/IsSet.htm">IsSet</a> 可以用来检测这种情况.</p>
+<p>读取一个没有赋值的变量的值被视为一个错误. <a href="commands/IsSet.htm">IsSet</a> 可以用来检测这种情况.</p>
 <p id="retrieving"><strong>检索变量的内容</strong>: 若要将变量的内容包含在字符串中, 请使用<a href="#concat">连接</a>或 <a href="commands/Format.htm">Format</a>. 例如:</p>
 <pre><a href="commands/MsgBox.htm">MsgBox</a> "变量的值是 " . Var . "."
 MsgBox "变量 Var 中的值为 " Var "."
@@ -85,13 +85,22 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
       <p class="note"><strong>注意:</strong> 子表达式 <em>Expr</em> 的 <u>结果</u> 必须是要访问的变量或属性的名称或部分名称.</p>
       <p>由于存在歧义, 百分号不能直接在 <em>Expr</em> 中使用, 但可以在括号中嵌套. 否则, <em>Expr</em> 可以是任何表达式.</p>
       <p>如果有任何相邻的 <em>%Expr%</em> 序列和部分<a href="Concepts.htm#names">名称</a>(它们之间没有任何空格或其他字符), 则将它们组合成一个单一的名称.</p>
-      <p>如果变量并不存在, 或者它未初始化并且它的值正在被读取, 则抛出一个 <a href="objects/Error.htm">Error</a>.</p>
+      <p>如果变量并不存在, 或者它未初始化并且它的值正在被读取, 则通常抛出一个 <a href="objects/Error.htm">Error</a>. 可以使用 <a href="#or-maybe">or-maybe 运算符(??)</a> 通过提供默认值来避免这种情况. 例如: <code>%'novar'% ?? 42</code>.</p>
       <p>虽然这在历史上被称为 "双重解引", 但当 <em>Expr</em> 不包含一个变量(第一重解引), 以及当产生的变量是赋值的目标, 而不是解引用(第二重解引), 这个术语是不准确的.</p>
     </td>
   </tr>
   <tr id="objdot">
     <td class="center bold">x.y<br>x.%z%</td>
     <td><strong>成员访问</strong>. 获取或设置一个值或调用对象 <i>x</i> 的方法, 此处 <i>y</i> 是个原义名称, 而 <em>z</em> 是一个表达式, 它的值是一个名称. 请参阅<a href="Objects.htm#Usage_Objects">对象语法</a>.</td>
+  </tr>
+  <tr id="maybe">
+    <td class="center"><em>var</em><strong>?</strong></td>
+    <td>
+      <p><strong>Maybe</strong>. 允许未设置的变量. 这只在将变量传递给可选参数, 数组元素或文本对象时有效. 问号后面必须跟随下列符号之一(忽略空白): <code class="no-highlight">)]},:</code>. 变量可以通过<a href="#ternary">三元运算符</a>或在 <a href="#and">AND</a>/<a href="#or">OR</a> 的右边有条件地传递.</p>
+      <p>变量通常也是一个可选参数, 但可以是任何变量. 对于不是函数参数的变量, 如果有对该变量的其他引用但没有赋值, 在加载时仍然可能显示 <a href="commands/_Warn.htm#VarUnset">VarUnset 警告</a>.</p>
+      <p>该操作符目前仅支持变量. 要在更一般的情况下显式或有条件地省略参数, 请使用 <code>unset</code> 关键字.</p>
+      <p>另请参阅: <a href="Language.htm#unset">unset(可选参数)</a></p>
+    </td>
   </tr>
   <tr id="IncDec">
     <td class="center bold">++<br>
@@ -236,10 +245,20 @@ MsgBox(A || B || C || D || ++E) <em>; 返回 <strong>第一个</strong> 为真�
 MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</em></pre>
         <p>以 <code>OR</code> 或 <code>||</code>(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾.</p></td>
     </tr>
+  <tr id="or-maybe">
+    <td class="center bold">??</td>
+    <td>
+      <p><strong>Or maybe</strong>, 也称为合并运算符. 如果左操作数(必须是一个变量) 有一个值, 它就成为结果, 并跳过右分支. 否则, 右操作数将成为结果. 换句话说, <code>A ?? B</code> 的行为类似于 <code>A || B</code> (<a href="#or">逻辑或</a>), 除了条件是 <code>IsSet(A)</code>.</p>
+      <p>这通常用于在已知变量或可选参数可能还没有值时提供默认值. 例如:</p>
+      <pre>MsgBox MyVar ?? "Default value"</pre>
+      <p>由于期望变量有时<a href="Concepts.htm#uninitialized-variables">未初始化</a>, 因此在这种情况下不会抛出错误. 与 <code>IsSet(A) ? A : B</code> 不同的是, 如果变量有其他引用但没有赋值, <a href="commands/_Warn.htm#VarUnset">VarUnset 警告</a>仍然可以在加载时显示.</p>
+    </td>
+  </tr>
   <tr id="ternary">
     <td class="center bold">?:</td>
     <td>
       <p><strong>三元运算符</strong>. 此运算符是 <a href="commands/If.htm">if-else 语句</a>的简写形式. 它计算左侧的条件来决定两个分支中哪个作为最终结果. 例如, <code>var := x&gt;y ? 2 : 3</code>, 当 x 大于 y 时保存 2 到 <em>Var</em>; 否则保存 3. 为了提高性能, 只计算决定性的分支(请参阅<a href="Functions.htm#ShortCircuit">求值优化</a>).</p>
+      <p>另请参阅: <a href="#maybe">maybe(<em>var</em>?)</a>, <a href="#or-maybe">or-maybe(??)</a></p>
       <p class="warning"><strong>注意:</strong> 当在行的开头使用时, 三元条件通常应该用括号括起来, 以减少与其他类型语句的歧义. 有关详情, 请参阅<a href="Language.htm#expression-statements">表达式语句</a>.</p>
     </td>
   </tr>
@@ -920,7 +939,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   </tr>
   <tr id="LastError">
     <td>A_LastError</td>
-    <td><p>这通常是脚本调用某些函数后, 包括 <a href="commands/DllCall.htm">DllCall</a>, <a href="commands/Run.htm">Run/RunWait</a>, <a href="commands/ComObjQuery.htm">ComObjQuery</a>, File/Ini/Reg 函数(在文档中) 和可能的其他函数, 系统 GetLastError() 函数的结果. A_LastError 是一个介于 0 和 4294967295 之间的数字(通常格式化为十进制, 而不是十六进制). 零(0) 表示成功, 但是任何其他数字都表示调用失败. 每个数字对应一个特定的错误条件(要获得列表, 请搜索 <a href="http://www.microsoft.com">www.microsoft.com</a> 中的 "系统错误代码"). A_LastError 是每个线程的设置; 也就是说, 被其他<a href="misc/Threads.htm">线程</a>中断不能改变它.</p>
+    <td><p>这通常是脚本调用某些函数后, 包括 <a href="commands/DllCall.htm">DllCall</a>, <a href="commands/Run.htm">Run/RunWait</a>, File/Ini/Reg 函数(在文档中) 和可能的其他函数, 系统 GetLastError() 函数的结果. A_LastError 是一个介于 0 和 4294967295 之间的数字(通常格式化为十进制, 而不是十六进制). 零(0) 表示成功, 但是任何其他数字都表示调用失败. 每个数字对应一个特定的错误条件(要获得列表, 请搜索 <a href="http://www.microsoft.com">www.microsoft.com</a> 中的 "系统错误代码"). A_LastError 是每个线程的设置; 也就是说, 被其他<a href="misc/Threads.htm">线程</a>中断不能改变它.</p>
     <p>给 A_LastError 赋值, 也会调用系统的 SetLastError() 函数.</p></td>
   </tr>
   <tr id="TrueFalse">

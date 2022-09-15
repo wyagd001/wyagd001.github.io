@@ -119,8 +119,7 @@ MsgBox "这行没有被注释."
 </ul>
 <p>隐式连接也被称为 <em>自动连接</em>. 在这两种情况下, 变量和点之前的空格都是必需的.</p>
 <p><a href="commands/Format.htm">Format</a> 函数也可以用于此目的. 例如:</p>
-<pre>MsgBox Format("You are using AutoHotkey v{1} {2}-bit.", A_AhkVersion, A_PtrSize*8)
-</pre>
+<pre>MsgBox Format("You are using AutoHotkey v{1} {2}-bit.", A_AhkVersion, A_PtrSize*8)</pre>
 <p>要为变量赋值, 请使用 <code>:=</code> <a href="Variables.htm#AssignOp">赋值运算符</a>, 如 <code>MyVar := "Some text"</code>.</p>
 <p>表达式中的 <em>百分号</em> 用于创建<a href="#dynamic-variables">动态变量引用</a>, 但这些都是很少需要的.</p>
 
@@ -146,8 +145,7 @@ MsgBox "这行没有被注释."
 <h3 id="function-calls">函数调用</h3>
 <p class="note">有关函数和相关术语的一般解释, 请参阅<a href="Concepts.htm#functions">函数</a>.</p>
 <p><em>函数</em> 接受可变数量的输入, 去执行一些动作或计算, 然后 <a href="Concepts.htm#return-a-value"><em>return</em>(返回)</a> 一个结果. 函数的输入被称为<a href="Concepts.htm#parameters">参数</a>(<em>parameters</em> 或 <em>arguments</em>). 一个函数被 <a href="Concepts.htm#call"><em>called</em>(调用)</a>, 只需写下目标函数, 后面的参数用括号括起来即可. 例如, 如果 <kbd>Shift</kbd> 键被按下, 则 <code>GetKeyState("Shift")</code> 返回(计算为) 1, 否则返回 0.</p>
-<p class="warning"><strong>注意:</strong> 函数和左括号之间不能有任何空格.
-</p>
+<p class="warning"><strong>注意:</strong> 函数和左括号之间不能有任何空格.</p>
 <p>对于刚接触编程的人来说, 括号的要求起初可能看起来很神秘或冗长, 但它们允许将函数调用与其他操作结合起来. 例如, 只有当两个键被物理按下时, 表达式 <code>GetKeyState("Shift", "P") and GetKeyState("Ctrl", "P")</code> 才会返回 1.</p>
 <p>虽然函数调用表达式通常以原义的函数名开头, 但调用的目标可以是生成<a href="objects/Functor.htm">函数对象</a>的任何表达式. 在表达式 <code>GetKeyState("Shift")</code> 中, <em>GetKeyState</em> 实际上是一个变量引用, 尽管它通常引用包含内置函数的只读变量.</p>
 
@@ -173,6 +171,15 @@ Run "notepad.exe", "C:\"
 Run "notepad.exe",, "Min"
 Run("notepad.exe", , , &amp;notepadPID)
 </pre>
+<p id="unset">在<a href="Language.htm#function-calls">函数调用</a>, <a href="Variables.htm#square-brackets">原义数组</a> 或 <a href="Variables.htm#curly-braces">原义对象</a> 中, 关键字 <code>unset</code> 可用于显式省略参数或值. Unset 表达式具有以下效果之一:</p>
+<ul>
+  <li>对于用户定义的函数, 使用参数的<a href="Functions.htm#optional">默认值</a>.</li>
+  <li>对于内置函数, 该参数被认为被忽略了.</li>
+  <li>对于<a href="Variables.htm#square-brackets">文本数组</a> 如 <code>[var?]</code>, 该元素被包含在数组的长度中, 但没有给出值.</li>
+  <li>对于<a href="Variables.htm#curly-braces">文本对象</a> 如 <code>{x: y?}</code>, 该属性不被分配.</li>
+</ul>
+<p><code>Unset</code> 关键字还可以在<a href="Functions.htm#unset">函数定义中使用</a>, 表示参数是可选的, 但没有默认值. 当函数执行时, 如果省略了参数, 对应于该参数的局部变量将<a href="Concepts.htm#nothing">没有值</a>.</p>
+<p><a href="Variables.htm#maybe">maybe operator(<em>var</em><strong>?</strong>)</a> 根据变量是否有值来传递或省略变量. 例如, <code>Array(MyVar?)</code> 等同于 <code>Array(IsSet(MyVar) ? MyVar : unset)</code>.</p>
 
 <h3 id="operators-for-objects">对象的运算符</h3>
 <p>这里表达式中使用的其他符号不完全符合上面定义的任何类别, 或影响表达式其他部分的含义, 如下所述. 这些都以某种方式与 <em>对象</em> 有关. 对于每个构造所做的事情提供一个完整的解释, 需要引入更多的概念, 而这不属于本节的范围.</p>
@@ -380,8 +387,7 @@ Loop 3
 
 <h3 id="labels">标签</h3>
 <p>标签标识只是一行代码, 可以用作 <a href="commands/Goto.htm">Goto</a> 的目标, 或<a href="#named-loops">指定一个循环</a>来跳出或继续. 标签由一个名称后跟一个冒号组成:</p>
-<pre>this_is_a_label:
-</pre>
+<pre>this_is_a_label:</pre>
 <p>除了空格和注释外, 其他代码不能和标签写在同一行. 有关详情, 请参阅<a href="misc/Labels.htm">标签</a>.</p>
 </body>
 </html>

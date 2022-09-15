@@ -28,9 +28,9 @@
 
 <h2 id="syntax">语法</h2>
 
-<p>在 AutoHotkey 中正则调出的语法为 <span class="regex">(?C<em>Number</em>:<em>Function</em>)</span>, 其中 <em>Number</em> 和 <em>Function</em> 都是可选的. 只有在指定了 <em>Function</em>才允许使用冒号 ':', 而如果省略 <em>Number</em> 则冒号也可以省略. 如果指定的 <em>Function</em> 不是自定义的函数名称, 则会出现编译错误且不会开始模式匹配.</p>
+<p>在 AutoHotkey 中正则调出的语法为 <span class="regex">(?C<em>Number</em>:<em>Function</em>)</span>, 其中 <em>Number</em> 和 <em>Function</em> 都是可选的. 只有在指定了 <em>Function</em>才允许使用冒号 ':', 而如果省略 <em>Number</em> 则冒号也可以省略. 如果指定的 <em>Function</em> 不是<a href="../objects/Functor.htm">函数对象</a>的名称, 则会出现编译错误且不会开始模式匹配.</p>
 
-<p>如果省略 <em>Function</em>, 则必须在名为 <b>pcre_callout</b> 的变量中指定函数名称. 如果全局变量和局部变量都以这个名称存在, 则以局部变量为准. 如果 <em>pcre_callout</em> 不包含用户定义的函数名, 那么省略 <em>Function</em> 的正则调出将被忽略.</p>
+<p>如果省略 <em>Function</em>, 则必须定义默认的正则调出函数名 <b>pcre_callout</b>. 如果没有定义 <em>pcre_callout</em>, 那么省略 <em>Function</em> 的正则调出将被忽略.</p>
 
 <h2 id="callout-functions">正则调出函数</h2>
 
@@ -47,6 +47,7 @@
   <li><b>NeedleRegEx</b>: 接收传递给 RegExMatch 或 RegExReplace 的 <em>NeedleRegEx</em>.</li>
 </ul>
 <p>这些名称只是提示性的. 实际中可以使用其他的名称.</p>
+<p class="warning"><strong>警告:</strong> 不支持在 <a href="../commands/RegExReplace.htm">RegExReplace</a> 或 <a href="../commands/RegExMatch.htm">RegExMatch</a> 在被调用期间更改其输入参数, 这可能会导致不可预测的行为.</p>
 
 <p>模式匹配是继续进行或失败, 取决于正则调出函数的返回值:</p>
 <ul>
@@ -90,13 +91,11 @@ if (version &gt;= 2)
 <h2 id="auto">自动调出</h2>
 
 <p>在模式的选项中包含 <strong>C</strong> 来启用自动调出模式. 在这种情况下的正则调出相当于在模式里的每项前插入了 <span class="regex">(?C255)</span>. 例如, 下面的模板可以用来调试正则表达式:</p>
-<pre><em>; 设置默认的正则调出函数.</em>
-pcre_callout := "DebugRegEx"
-
-<em>; 使用自动调出选项 C 来调用 RegExMatch.</em>
+<pre><em>; Call RegExMatch with auto-callout option C.</em>
 RegExMatch("xxxabc123xyz", "C)abc.*xyz")
 
-DebugRegEx(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
+<em>; Define the default RegEx callout function.</em>
+pcre_callout(Match, CalloutNumber, FoundPos, Haystack, NeedleRegEx)
 {
     <em>; 请参阅 pcre.txt 了解这些字段的说明.</em>
     start_match       := NumGet(A_EventInfo, 12 + A_PtrSize*2, "Int")

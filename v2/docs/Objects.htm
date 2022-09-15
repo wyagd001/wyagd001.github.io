@@ -97,19 +97,32 @@ For value in MyArray
 <p>对象可以有 <em>属性</em> 和 <em>项目</em>(如, 数组元素). 项目可以使用 <code>[]</code> 来访问, 如前面几节所示. 属性通常通过在一个点后面加上一个标识符(只是一个<a href="Concepts.htm#names">名称</a>) 来访问. <em>方法</em> 是可以被调用的属性.</p>
 <p><strong>示例:</strong></p>
 <p>检索或设置一个原义名称为 <em>Property</em> 的属性:</p>
-<pre>Value := Object.Property</pre>
-<pre>Object.Property := Value</pre>
+<pre>Value := MyObject.Property</pre>
+<pre>MyObject.Property := Value</pre>
 <p>检索或设置通过计算<a href="Language.htm#expressions">表达式</a>或<a href="Concepts.htm#variables">变量</a>来确定名称的属性:</p>
-<pre>Value := Object.%Expression%</pre>
-<pre>Object.%Expression% := Value</pre>
+<pre>Value := MyObject.%Expression%</pre>
+<pre>MyObject.%Expression% := Value</pre>
 <p>调用一个原义名称为 <em>Method</em> 的属性/方法:</p>
-<pre>ReturnValue := Object.Method(Parameters)</pre>
+<pre>ReturnValue := MyObject.Method(Parameters)</pre>
 <p>调用通过计算表达式或变量来确定名称的属性/方法:</p>
-<pre>ReturnValue := Object.%Expression%(Parameters)</pre>
+<pre>ReturnValue := MyObject.%Expression%(Parameters)</pre>
 <p>在检索或赋值属性时, 有些属性可以接受参数:</p>
-<pre>Value := Object.Property[Parameters]
-Object.Property[Parameters] := Value</pre>
-<p>事实上, 数组索引语法 <code>MyArray[Index]</code> 实际上调用 <code>MyArray</code> 的 <a href="#__Item">__Item</a> 属性, 并将 <code>Index</code> 作为参数传递.</p>
+<pre>Value := MyObject.Property[Parameters]
+MyObject.Property[Parameters] := Value</pre>
+<p>对象可能支持索引: <code>MyArray[Index]</code> 实际上调用 <code>MyArray</code> 的 <a href="#__Item">__Item</a> 属性, 并将 <code>Index</code> 作为参数传递.</p>
+
+<h3 id="object-literal">对象字面量(文本对象)</h3>
+<p>可以在<a href="Language.htm#expressions">表达式</a>中使用对象字面量来创建临时对象. 对象字面量由一对大括号(<code>{}</code>) 组成, 其中包含一组以逗号分隔的名称-值对. 每一对都由一个文字(未加引号) 的<a href="Concepts.htm#names">属性名</a>和一个用冒号(<code>:</code>) 分隔的值(子表达式) 组成. 例如:</p>
+<pre>Coord := {X: 13, Y: 240}</pre>
+<p>这等同于:</p>
+<pre>Coord := Object()
+Coord.X := 13
+Coord.Y := 240</pre>
+<p>每个名称-值对都会导致定义一个值属性, 但可以设置 <a href="objects/Object.htm#Base">Base</a>(具有与普通赋值相同的限制).</p>
+<p><a href="Variables.htm#deref">名称替换</a>允许通过计算<a href="Language.htm#expressions">表达式</a>或<a href="Concepts.htm#variables">变量</a>来确定属性名称. 例如:</p>
+<pre>parts := StrSplit("key = value", "=", " ")
+pair := {%parts[1]%: parts[2]}
+MsgBox pair.key</pre>
 
 <h3 id="Usage_Freeing_Objects">释放对象</h3>
 <p>脚本不会显式的释放对象. 当到对象的最后一个引用被释放时, 会自动释放这个对象. 当某个保存引用的变量被赋为其他值时, 会自动释放它原来保存的引用. 例如:</p>
@@ -220,8 +233,7 @@ thing_test(this) {
 <pre>other := {}
 other.base := thing
 other.test()</pre>
-<p>此时, <i>other</i> 从 <i>thing</i> 继承了 <i>foo</i> 和 <i>test</i>. 这种继承是动态的, 所以如果 <code>thing.foo</code> 被改变了, 这改变也会由 <code>other.foo</code> 表现出来. 如果脚本赋值给 <code>other.foo</code>, 值存储到 <i>other</i> 中并且之后对 <code>thing.foo</code> 任何改变都不会影响 <code>other.foo</code>. 当调用 <code>other.test()</code> 时, 它的 <i>this</i> 参数包含 <i>other</i> 而不是 <i>thing</i> 的引用.
-</p>
+<p>此时, <i>other</i> 从 <i>thing</i> 继承了 <i>foo</i> 和 <i>test</i>. 这种继承是动态的, 所以如果 <code>thing.foo</code> 被改变了, 这改变也会由 <code>other.foo</code> 表现出来. 如果脚本赋值给 <code>other.foo</code>, 值存储到 <i>other</i> 中并且之后对 <code>thing.foo</code> 任何改变都不会影响 <code>other.foo</code>. 当调用 <code>other.test()</code> 时, 它的 <i>this</i> 参数包含 <i>other</i> 而不是 <i>thing</i> 的引用.</p>
 
 <h3 id="Custom_Classes">类</h3>
 <blockquote>在面向对象编程中, 类是一个可扩展的程序代码模板, 为状态(成员变量) 和行为实现(成员函数或方法) 提供初始值.

@@ -133,7 +133,7 @@ MyGui.Add("Edit")
 MyGui.Show</pre>
   <p><strong>xs</strong> 和 <strong>ys</strong> 后面可以跟着一个加号/减号和一个数字. 并且, 还可以在控件的选项中同时指定单词 <a href="#Section">Section</a> 和 xs/ys; 这样可以让当前控件使用之前的控件段, 但为后续控件定义一个新段.</p>
   <p>省略 <strong>X</strong>, <strong>Y</strong> 的其中一个或同时省略, 有助于 GUI 布局自动调整, 以适应将来可能对控件大小或字体所做的任何更改. 相比之下, 为每个控件指定绝对位置可能需要手动移动正在放大或缩小的控件下面和/或右侧的所有控件的位置.</p>
-  <p>如果 <strong>X</strong> 和 <strong>Y</strong> 都被省略, 控件将使用标准填充距离(当前<a href="#MarginX">边距</a>) 被放置在前一个控件的下面.</p>
+  <p>如果 <strong>X</strong> 和 <strong>Y</strong> 都被省略, 控件将使用标准填充距离(当前<a href="#MarginX">边距</a>) 被放置在前一个控件的下面. Consecutive Text or Link controls are given additional vertical padding, so that they typically align better in cases where a column of Edit, DDL or similar-sized controls are later added to their right. To use only the standard vertical margin, specify <code>Y+M</code> or any value for X.</p>
   <p>如果只省略了一个组件, 它的默认值取决于使用哪个选项来指定其他组件:</p>
   <table class="info">
     <tr><th>指定了 X</th><th>Y 的默认值</th></tr>
@@ -171,6 +171,7 @@ MyGui.Show</pre>
   <p id="BackgroundTrans"><strong>BackgroundTrans</strong>: 使用透明的背景, 允许任何位于 Text, Picture 或 GroupBox 后面的控件显示出来. 例如, 在 Picture 控件上显示一个透明背景的 Text 可以让文字看起来就像图片的一部分. 以后可以使用 <code>GuiCtrl.<a href="GuiControl.htm#Opt">Opt</a>("+Background")</code> 移除此选项. 有关透明图像的更多信息, 请参阅 <a href="../commands/GuiControls.htm#PicAltSubmit">Picture 控件的 AltSubmit 部分</a>. 已知限制: 对包含了 <a href="../commands/ListView.htm">ListView</a> 的 <a href="../commands/GuiControls.htm#Tab">Tab 控件</a>内的其他控件, BackgroundTrans 可能无法正确应用. 如果控件类型不支持这个选项, 则抛出错误.</p>
   <p id="Background"><strong>Background</strong><em>Color</em>: 更改控件的背景色. 用颜色名称(请参阅<a href="../misc/Colors.htm">颜色图表</a>) 或 RGB 值(0x 前缀可以省略) 替换 <em>Color</em>. 例如: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>. 如果不使用这个选项, <a href="../commands/GuiControls.htm#Text">Text</a>, <a href="../commands/GuiControls.htm#Picture">Picture</a>, <a href="../commands/GuiControls.htm#GroupBox">GroupBox</a>, <a href="../commands/GuiControls.htm#Checkbox">CheckBox</a>, <a href="../commands/GuiControls.htm#Radio">Radio</a>, <a href="../commands/GuiControls.htm#Slider">Slider</a>, <a href="../commands/GuiControls.htm#Tab">Tab</a> 或 <a href="../commands/GuiControls.htm#Link">Link</a> 控件初始默认为 <a href="#BackColor">Gui.BackColor</a> 设置的背景色(如果没有设置或其他控件类型, 则为系统默认的背景色). 指定 <code>BackgroundDefault</code> 或 <code>-Background</code> 会应用系统的默认背景色. 例如, 控件可以通过 <code>LV.Opt("+BackgroundDefault")</code> 恢复到默认颜色. 在没有指定颜色的情况下使用 <code>+Background</code> 可以恢复 <code>-Background</code>. 如果控件类型不支持这个选项, 则抛出错误.</p>
   <p><strong>Border</strong>: 为控件增加一个细边框. 对于大多数控件不需要使用此选项, 因为它们已经含有特定于类型的边框. 添加边框到 <em>现有</em> 控件时, 可能需要给控件的宽度和高度增加 1 个像素.</p>
+  <p id="Redraw"><strong>Redraw</strong>: When used with <a href="GuiControl.htm#Opt">Opt</a>, this option enables or disables redraw (visual updates) for a control by sending it a <a href="https://docs.microsoft.com/en-us/windows/win32/gdi/wm-setredraw">WM_SETREDRAW message</a>. See <a href="GuiControl.htm#redraw-remarks">Redraw</a> for more details.</p>
   <p><strong>Theme</strong>: 使用此选项可以让新建的控件忽略窗口当前的主题设置. 它对于现有控件没有效果; 不过, 这种情况可能在将来的版本中改变. 请参阅 GUI 的 <a href="#Theme">+/-Theme</a> 选项了解详情.</p>
   <p><strong>(未命名样式)</strong>: 在十进制或十六进制的<a href="../misc/Styles.htm">样式编号</a>前加上加号或减号表示添加或删除此样式. 如果省略了符号, 则默认为加号.</p>
   <p><strong>(未命名扩展样式)</strong>: 在字母 E 和十进制或十六进制的扩展样式编号前加上加号或减号表示添加或删除此扩展样式. 如果省略了符号, 则默认为加号. 例如, <code>E0x200</code> 表示添加 WS_EX_CLIENTEDGE 样式, 它可以为图片和其他控件增加一个下沉的边框样式. 这里没有列出其他的扩展样式编号(因为它们极少使用), 有关完整列表, 前参阅 <a href="https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles">Extended Window Styles | Microsoft Docs</a>.</p></dd>
@@ -191,7 +192,7 @@ MyGui.Show</pre>
 <pre class="Syntax">MyGui.<span class="func">Flash</span>(<span class="optional">Blink</span>)</pre>
 <dl>
   <dt>Blink</dt><dd>
-    <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
     <p>如果此参数被省略或为 1(true), 任务栏中的窗口按钮将闪烁. 这是通过反转窗口的标题栏和/或任务栏按钮(如果有的话) 的颜色来实现的. 指定 0(false) 可恢复标题栏和任务栏按钮的原始颜色(但实际行为可能因操作系统版本而异).</p>
   </dd>
 </dl>
@@ -280,8 +281,8 @@ MyGui.Move(x-10,, w+20)</pre>
   <p><strong>Border</strong>: 为窗口增加细边框. 此选项不常用.</p>
   <p><strong>Caption</strong>(默认具有此选项): 为窗口增加标题栏和粗边框.  当从将使用 <a href="../commands/WinSetTransColor.htm">WinSetTransColor</a> 的窗口中移除标题时, 只有在设置 TransColor 后才能移除.</p>
   <p><strong>Disabled</strong>: 禁用窗口, 阻止用户和窗口中的控件交互. 此选项常用于含有子窗口的窗口(请参阅 <a href="#Owner">Owner</a>).</p>
-  <p id="DPIScale"><strong>DPIScale</strong>: 使用 <code>MyGui.Opt("-DPIScale")</code> 禁用 DPI 缩放, 它默认是启用的. 如果在使用非标准 DPI 设置的系统上启用 DPI 缩放, 则 Gui 对象和 <a href="GuiControl.htm">GuiControl 对象</a>会自动调整坐标和尺寸来让控件具有大致相同的外观尺寸(不过分辨率更高). 例如, 对于, 对于 144(150%) 的 DPI, <code>E := MyGui.Add("Edit", "w100")</code> 会让 Gui 宽度为 150 像素, 但 <code>E.GetPos(,,&amp;W)</code> 将保持 <em>W</em> 为 100. <a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 包含了系统当前 DPI.</p>
-  <p>DPI 缩放只适用于 Gui 对象和 <a href="GuiControl.htm">GuiControl 对象</a>, 所以直接来自其他来源的坐标, 如 ControlGetPos 或 WinGetPos 将无法使用. 有很多方法可以处理这个问题:</p>
+  <p id="DPIScale"><strong>DPIScale</strong>: 使用 <code>MyGui.Opt("-DPIScale")</code> 禁用 DPI 缩放, 它默认是启用的. 如果启用了 DPI 缩放, 传递给或从 Gui 和 <a href="GuiControl.htm">GuiControl</a> 的方法/属性获取的坐标和大小会根据<a href="../Variables.htm#ScreenDPI">屏幕 DPI</a> 自动缩放. 例如, 对于 144(150%) 的 DPI, <code>MyGui.Show("w100")</code> 会让 Gui 宽度为 150(100 * 1.5) 像素, 如果通过鼠标或 <a href="WinMove.htm">WinMove</a> 将窗口大小调整为 200 像素宽, 会导致 <code>MyGui.GetClientPos(,,&amp;W)</code> 设置 <em>W</em> 为 133(200 // 1.5). <a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 包含了系统当前 DPI.</p>
+  <p>DPI 缩放只适用于 Gui 和 <a href="GuiControl.htm">GuiControl</a> 方法/属性, 所以直接来自其他来源的坐标, 如 ControlGetPos 或 WinGetPos 将无法使用. 有很多方法可以处理这个问题:</p>
   <ul>
     <li>尽可能避免使用硬编码坐标. 例如, 使用 <a href="#xp">xp</a>, <a href="#xs">xs</a>, <a href="#xm">xm</a> 和 <a href="#PosPlusMargin">x+m</a> 选项来定位控件, 并以<a href="#R">文本的行数</a>而不是像素来指定高度.</li>
     <li>根据需要, 启用(<code>Gui.Opt("+DPIScale")</code>) 和禁用(<code>Gui.Opt("-DPIScale")</code>) 缩放. 更改这个设置并不会影响已经设置过的坐标或大小.</li>
@@ -415,7 +416,7 @@ MyGui.SetFont(, "Verdana")  <em>; 优选字体.</em></pre></dd>
 <pre class="Syntax">NamedCtrlContents := MyGui.<span class="func">Submit</span>(<span class="optional">Hide</span>)</pre>
 <dl>
   <dt>Hide</dt><dd>
-    <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
     <p>如果省略或为 1(true), 则窗口将被隐藏. 如果是 0(false), 则窗口不会被隐藏.</p>
   </dd>
 </dl>

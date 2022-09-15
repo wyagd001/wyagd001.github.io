@@ -73,7 +73,9 @@ Swap(&amp;Left, &amp;Right)
   <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>MyFunc(Var, Var++)</code> 会意外地传递 1 和 0, 因为在函数调用执行之前, 第一个 Var 不会被解引用. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
 </ul>
 <h2 id="optional">可选参数</h2>
-<p>定义函数时, 可以把它的一个或多个参数标记为可选的. 这是通过追加 <code>:=</code> 后跟参数的默认值来实现的, 默认值必须是下列值之一: <code>true</code>, <code>false</code>, <code>unset</code>, 原义的整数, 原义的浮点数, 或引号包围的/原义的字符串例如 "fox" 或 "".</p>
+<p>在定义函数时, 可以把它的一个或多个参数标记为可选的.</p>
+<p>在参数后追加 <code>:=</code> 后跟文本的数字, 加引号的/原义的字符串, 如 "fox" 或 "", 或一个表达式, 该表达式应该在每次需要初始化参数时使用其默认值. 例如, <code>X:=[]</code> 每次都会创建一个新的 Array(数组).</p>
+<p>附加 <code>?</code> 或 <code>:= unset</code> 来定义一个<a href="#unset">默认未设置的</a>参数.</p>
 <p>下面这个函数中的 Z 参数就是一个可选参数:</p>
 <pre>Add(X, Y, Z := 0) {
     return X + Y + Z
@@ -85,9 +87,11 @@ MyFunc(X, Y:=2, Z:=0) {  <em>; 注意: 这里的 Z 必须是可选参数.</em>
     MsgBox X ", " Y ", " Z
 }</pre>
 <p id="OptionalByRef"><a href="#ByRef">ByRef 参数</a>也支持默认值; 例如: <code>MyFunc(&amp;p1 := "")</code>. 每当调用者省略这样的参数时, 函数会创建一个包含默认值的局部变量; 换句话说, 此时函数的行为就与 "&amp;" 符号不存在时一样.</p>
-<p id="unset"><strong>Unset:</strong> 为了准确地确定调用者是否遗漏了一个参数, 请指定 <code>unset</code> 作为参数的默认值, 并使用 <a href="commands/IsSet.htm">IsSet</a> 来确定参数是否被赋值, 如下所示:</p>
+
+<h3 id="unset">Unset Parameters</h3>
+<p>要将参数标记为可选而不提供默认值, 请使用关键字 <code>unset</code> 或 <code>?</code> 后缀. 在这种情况下, 只要省略了参数, 相应的变量就没有值. 请使用 <a href="commands/IsSet.htm">IsSet</a> 来确定参数是否被赋值, 如下所示:</p>
 <pre>
-MyFunc(p := unset) {
+MyFunc(p?) { <em>; 等同于 MyFunc(p := unset)</em>
     if IsSet(p)
         MsgBox "Caller passed " p
     else
@@ -96,6 +100,15 @@ MyFunc(p := unset) {
 
 MyFunc(42)
 MyFunc
+</pre>
+<p>当参数值为空时, 试图读取参数值将被视为错误, 与任何<a href="Concepts.htm#uninitialized-variables">未初始化变量</a>一样. 即使参数没有值, 也要将可选参数传递给另一个函数, 可以使用 <a href="Variables.htm#maybe">maybe 操作符(<em>var</em><strong>?</strong>)</a>. 例如:</p>
+<pre>
+Greet(title?) {
+    MsgBox("Hello!", title?)
+}
+
+Greet "Greeting"  <em>; 标题是 "Greeting"</em>
+Greet             <em>; 标题是 A_ScriptName</em>
 </pre>
 
 <h2 id="return">返回值给调用者</h2>
@@ -222,6 +235,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
     FileAppend LoggedLines ": " TextToLog "`n", LogFileName
 }</pre>
 <p id="InitStatic">静态变量可以在声明的同一行初始化, 方法是在它后面跟 <code>:=</code> 和任意<a href="Variables.htm#Expressions">表达式</a>. 例如: <code>static X:=0, Y:="fox"</code>. 静态声明的计算与 <a href="#Local">local</a> 声明相同, 只是在静态初始化器(或组合初始化器组) 被成功计算后, 它将有效地从控制流中移除, 并且不会再执行第二次.</p>
+<p>可以将套嵌函数<a href="#static-functions">声明为静态</a>, 以阻止他们捕获外部函数的非静态局部变量.</p>
 <p id="AssumeStatic"><strong>假定-静态模式</strong>: 函数的第一行是单词 "static", 将函数定义为假定-静态模式, 假定其所有未声明变量都是静态的(参数除外). 例如:</p>
 <pre>GetFromStaticArray(WhichItemNumber)
 {
@@ -282,14 +296,13 @@ outer(x) {
 }
 outer("title")
 </pre>
-<p>嵌套函数不能在紧邻着包含它的函数外部通过名称访问, 但是可以在该函数内部的任何地方访问, 包括在其他嵌套函数内部.</p>
-<p>默认情况下, 嵌套函数可以访问包围它的函数中的任何<a href="#static">静态</a>变量, 甚至是动态变量.</p>
+<p>嵌套函数不能在紧邻着包含它的函数外部通过名称访问, 但是可以在该函数内部的任何地方访问, 包括在其他嵌套函数内部(with exceptions).</p>
+<p>默认情况下, 嵌套函数可以访问包围它的函数中的任何<a href="#static">静态</a>变量, 甚至是动态变量. 但是, 如果外部函数既没有声明也没有非动态赋值, 那么嵌套函数内部的非动态赋值通常会解析为局部变量.</p>
 <p id="capture-var">默认情况下, 当满足以下要求时, 嵌套函数会自动 "捕获" 外部函数的非静态局部变量:</p>
 <ol>
   <li>外部(outer) 函数必须以下列至少一种方式引用这个变量:
     <ol type="a">
-      <li>通过用 <code>local</code> 声明它.</li>
-      <li>通过在参数列表中声明它.</li>
+      <li>通过用 <code>local</code> 声明它, 作为一个参数, 或套嵌函数.</li>
       <li>作为赋值或<a href="Variables.htm#ref">引用操作符(&amp;)</a> 的非动态目标.</li>
     </ol>
   </li>
@@ -298,9 +311,23 @@ outer("title")
 <p>捕获了变量的嵌套函数称为 <a href="#closures">closure(闭包)</a>.</p>
 <p>外部函数的非静态局部变量不能被<a href="Language.htm#dynamic-variables">动态访问</a>, 除非它们已经被捕获.</p>
 <p>显式声明总是优先于包围它们的函数中的局部变量. 例如, <code>local x</code> 声明了一个当前函数的局部变量, 与外部函数中的任何 <code>x</code> 无关. 外部函数中的<a href="#Global">全局</a>声明也会影响嵌套函数, 除非被显式声明覆盖.</p>
-<p>如果函数声明为<a href="#AssumeGlobal">假定-全局</a>, 那么在该函数 <em>之外</em> 创建的任何局部或静态变量都不能被该函数本身或其任何嵌套函数直接访问. 相比之下, 假定静态的嵌套函数仍然可以引用外部函数中的变量.</p>
+<p>如果函数声明为<a href="#AssumeGlobal">假定-全局</a>, 那么在该函数 <em>之外</em> 创建的任何局部或静态变量都不能被该函数本身或其任何嵌套函数直接访问. 相比之下, 假定静态的嵌套函数仍然可以引用外部函数中的变量, 除非函数被<a href="#static-functions">声明为静态</a>.</p>
 <p>默认情况下, 函数是<a href="#AssumeLocal">假定-局部的</a>, 其嵌套函数也是如此, 即使是<a href="#AssumeStatic">假定-静态</a>函数中的函数也是如此. 但是, 如果外部函数是<a href="#AssumeGlobal">假定-全局</a>, 那么嵌套函数默认情况下表现为假定-全局, 除非它们可以引用外部函数的局部和静态变量.</p>
 <p>每个函数定义都创建一个包含函数本身的只读变量; 也就是说, 创建一个 <a href="objects/Func.htm">Func</a> 或 <a href="#closures">Closure</a> 对象. 请参阅下面的例子来了解如何使用这个方法.</p>
+
+<h3 id="static-functions">静态函数</h3>
+<p>任何嵌套函数不捕获变量的都是自动静态的; 也就是说, 对外部函数的每次调用都引用同一个 <a href="objects/Func.htm">Func</a>. 关键字 <code>static</code> 可用于显式声明嵌套函数为静态, 在这种情况下, 外部函数的任何非静态局部变量都会被忽略. 例如:</p>
+<pre>outer() {
+    x := "outer value"
+    static inner() {
+        x := "inner value"  <em>; 创建一个从局部到内部的变量</em>
+        MsgBox type(inner)  <em>; 显示 "Func"</em>
+    }
+    inner()
+    MsgBox x  <em>; 显示 "outer value"</em>
+}
+outer()</pre>
+<p>静态函数不能引用自身函数体之外的其他嵌套函数, 除非显式声明为静态. 注意, 即使函数是<a href="#AssumeStatic">假定静态的</a>, 非静态嵌套函数在引用函数参数时也可能成为闭包.</p>
 
 <h3 id="closures">闭包</h3>
 <p><em>闭包</em> 是与 <em>自由变量</em> 集绑定的嵌套函数. 自由变量是 outer 函数的局部变量, 嵌套函数也使用这些局部变量. 闭包允许一个或多个嵌套函数与 outer 函数共享变量, 即使 outer 函数返回后也是如此.</p>

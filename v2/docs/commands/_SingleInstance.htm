@@ -23,7 +23,7 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>如果省略参数, 则默认为 <em>Force</em>. 要更改此行为, 请指定以下单词之一:</p>
-    <p><strong>Force:</strong> 跳过对话框并自动替换旧实例, 效果类似于 <a href="Reload.htm">Reload</a> 函数.</p>  
+    <p><strong>Force:</strong> 跳过对话框并自动替换旧实例, 效果类似于 <a href="Reload.htm">Reload</a> 函数.</p>
     <p><strong>Ignore:</strong> 跳过对话框并让旧实例继续运行. 换句话说, 试图启动已经运行的脚本会被忽略.</p>
     <p><strong>Prompt:</strong> 显示一个对话框, 询问是保留旧实例还是用新实例替换它. 如果不使用此指令, 这是默认的行为.</p>
     <p><strong>Off:</strong> 允许一个脚本同时运行多个实例.</p>
@@ -32,8 +32,21 @@
 </dl>
 <h2 id="Remarks">备注</h2>
 <p>当使用以下<a href="../Scripts.htm#cmd">命令行开关</a>时, 该指令将被忽略: /force /restart</p>
-<p>AutoHotkey 依赖于脚本<a href="../Program.htm#main-window">主窗口</a>的标题来标识脚本的其他运行实例.</p>
 <p>和其他指令一样, #SingleInstance 不能有条件地执行.</p>
+
+<h2 id="Limitations">限制</h2>
+<p>脚本以前的实例是通过搜索带有<a href="../Program.htm#title">默认标题</a>的<a href="../Program.htm#main-window">主窗口</a>来识别的. 因此, 在下列情况下, 可能找不到该脚本的先前实例:</p>
+<ul>
+  <li>其主窗口的标题已经改变.</li>
+  <li>它运行在不同版本的 AutoHotkey 上.</li>
+  <li>它的主窗口不再是顶层的, 比如脚本使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setparent">SetParent</a> 把它的父窗口改成 NULL(0) 以外的窗口.</li>
+</ul>
+<p>最多只能检测到一个先前的实例, 并向其发送消息要求其关闭. 因此, 以下的额外限制也适用:</p>
+<ul>
+  <li>如果有多个实例(比如脚本的前几个实例使用了 <code>#SingleInstance Off</code> 模式), 则向最上面的匹配实例发送消息, 而其他实例则不被考虑.</li>
+  <li>如果之前的实例运行的完整性级别高于新的实例(其中以管理员身份运行 &gt; <a href="../Program.htm#Installer_uiAccess">以 UI 权限运行</a> &gt; 正常运行), 由于安全限制, 它不能被关闭.</li>
+</ul>
+<p>如果脚本的多个实例同时启动, 它们可能无法检测到彼此, 或者都针对同一个前一个实例. 这将导致脚本的多个实例启动.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="Reload.htm">Reload</a></p>

@@ -84,7 +84,7 @@ SetKeyDelay -1, 0</pre>
 <p><a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="../misc/EscapeChar.htm">转义序列(例如 `n) </a>, <a href="Control.htm">Control 函数</a>, <a href="Send.htm">Send</a>, <a href="../misc/Winamp.htm">自动化 Winamp</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExNotepad">
-<p><a class="ex_number" href="#ExNotepad"></a> 打开记事本(最小化的) 并发送一些文本.</p>
+<p><a class="ex_number" href="#ExNotepad"></a> 打开记事本(最小化的) 并发送一些文本. 这个例子在 Windows 11 或更高版本系统可能会失败, 因为它需要经典版本的记事本.</p>
 <pre>Run "Notepad",, "Min", &amp;PID  <em>; 最小化运行记事本.</em>
 WinWait "ahk_pid " PID  <em>; 等待记事本进程的出现.</em>
 <em>; 将文本发送到不活动的记事本编辑控件.
@@ -97,11 +97,20 @@ WinActivate "ahk_pid " PID  <em>; 显示结果.</em></pre>
 </div>
 
 <div class="ex" id="ExCmd">
-<p><a class="ex_number" href="#ExCmd"></a> 打开命令提示符并向它发送一些文本.</p>
+<p><a class="ex_number" href="#ExCmd"></a> 打开命令提示符并向它发送一些文本. 这个例子在 Windows 11 或更高版本系统可能会失败, 因为它需要经典版本的命令提示符.</p>
 <pre>SetTitleMatchMode 2
 Run A_ComSpec,,, &amp;PID  <em>; 打开命令提示符.</em>
 WinWait "ahk_pid " PID  <em>; 等待它的出现.</em>
 ControlSend "ipconfig{Enter}",, "cmd.exe"  <em>; 直接发送到命令提示符窗口.</em></pre>
+</div>
+<div class="ex" id="ExGUI">
+<p><a class="ex_number" href="#ExGUI"></a> 创建一个带有编辑控件的 <a href="../objects/Gui.htm">GUI</a>, 并向它发送一些文本.</p>
+<pre>MyGui := Gui()
+MyGui.Add("Edit", "r10 w500")
+MyGui.Show()
+ControlSend "This is a line of text in the edit control.{Enter}", "Edit1", MyGui
+ControlSendText "Notice that {Enter} is not sent as an Enter keystroke with ControlSendText.", "Edit1", MyGui
+</pre>
 </div>
 
 </body>
