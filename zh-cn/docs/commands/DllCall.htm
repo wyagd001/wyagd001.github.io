@@ -19,9 +19,6 @@
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>Result</dt>
-  <dd><p>DllCall 返回由被调用函数所返回的实际值. 如果函数没有返回值, 那么结果为未定义整数. 如果函数在被调用时发生了<a href="#error">错误</a>, 那么返回值为空(一个空字符串).</p></dd>
-
   <dt>[DllFile\]Function</dt>
   <dd><p>DLL 或 EXE 文件名, 后面跟着一个反斜杠和函数名. 例如: <code>"MyDLL\MyFunction"</code> (省略时文件扩展名默认为 ".dll"). 如果未指定绝对路径, 则假定 <em> DllFile </em> 在系统的 PATH 指定的路径或 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
       <p id="std">调用 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数时可以省略 <em>DllFile</em>. 例如, 使用 <code>"User32\IsWindowVisible"</code> 和 <code>"IsWindowVisible"</code> 得到相同的结果.</p>
@@ -39,6 +36,9 @@
       <p><em>ReturnType</em>: 如果函数返回 32 位的有符号整型(Int), BOOL 或没有返回值, 则 <em>ReturnType</em> 可以省略. 否则, 需要指定下面<a href="#types">类型表</a>中参数类型的其中一个. 还支持<a href="#asterisk">星号后缀</a>.</p></dd>
 
 </dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>DllCall 返回由被调用 <em>Function</em> 实际返回的值. 如果 <em>Function</em> 没有返回值, 那么结果为未定义整数. 如果 <em>Function</em> 在被调用时发生了 <a href="#error">错误</a>, 那么返回值为空(一个空字符串).</p>
 
 <h2 id="types">参数和返回值类型</h2>
 <table class="info">
@@ -162,8 +162,7 @@ result := DllCall("CharLower", "<strong><u>Str</u></strong>", DllCall("CharUpper
 <h3 id="COM">组件对象模型(COM)</h3>
 <p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate()</a>, <a href="ComObjGet.htm">ComObjGet()</a> 或 <a href="ComObjActive.htm">ComObjActive()</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
 <p>不支持 <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx">IDispatch</a> 的 COM 对象可以通过从对象接口的虚函数表中获取函数的地址用于 DllCall 中. 想了解更多细节, 请参阅较远后面的<a href="#ExTaskbar">这个例子</a>.</p>
-<p>许多 .NET Framework 也可以使用 COM 和 DllCall 进行访问. 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>.
-</p>
+<p>许多 .NET Framework 也可以使用 COM 和 DllCall 进行访问. 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity()</a>, <a href="Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="http://msdn.microsoft.com/library/">MSDN Library</a></p>
@@ -213,7 +212,7 @@ SPI_GETMOUSESPEED := 0x70
 SPI_SETMOUSESPEED := 0x71
 <em>; 获取鼠标当前的速度以便稍后恢复:</em>
 DllCall("SystemParametersInfo", "UInt", SPI_GETMOUSESPEED, "UInt", 0, "UIntP", OrigMouseSpeed, "UInt", 0)
-<em>; 现在在倒数第二个参数中设置较低的速度 (范围为 1-20, 10 是默认值):</em>
+<em>; 现在在倒数第二个参数中设置较低的速度(范围为 1-20, 10 是默认值):</em>
 DllCall("SystemParametersInfo", "UInt", SPI_SETMOUSESPEED, "UInt", 0, "Ptr", <strong>3</strong>, "UInt", 0)
 KeyWait F1  <em>; 这里避免了由于键盘的重复特性导致再次执行 DllCall.</em>
 return
@@ -377,10 +376,8 @@ SetSystemTime(YYYYMMDDHHMISS)
 }</pre>
 <p>更多结构的例子:</p>
 <ul>
-  <li>请参阅 <a href="../scripts/index.htm#WinLIRC">WinLIRC 客户端脚本</a>演示来学习如何使用 DllCall() 来创建
-到 TCP/IP 服务器的连接并从那里接收数据.</li>
-  <li>操作系统提供了标准的对话框让用户选取字体和/或颜色或图标.
-  这些对话框使用了结构, 并可以在这里找到演示的例子: <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a>.</li>
+  <li>请参阅 <a href="../scripts/index.htm#WinLIRC">WinLIRC 客户端脚本</a>演示来学习如何使用 DllCall() 来创建到 TCP/IP 服务器的连接并从那里接收数据.</li>
+  <li>操作系统提供了标准的对话框让用户选取字体和/或颜色或图标. 这些对话框使用了结构, 并可以在这里找到演示的例子: <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a>.</li>
 </ul>
 </div>
 

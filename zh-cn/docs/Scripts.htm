@@ -113,6 +113,15 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <h2 id="ahk2exe">把脚本转换成 EXE(Ahk2Exe)</h2>
 <p>程序中已包含了脚本编译器(感谢 fincs 提供, 以及 TAC109 的补充).</p>
 <p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本, 脚本<a href="commands/_Include.htm">包含</a>的任何文件以及通过 <a href="commands/FileInstall.htm">FileInstall</a> 命令内嵌的任何文件. <span class="ver">[v1.1.33+]:</span> 可以使用<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>包含其他文件.</p>
+<h3 id="toc">编译器主题</h3>
+<ul>
+  <li><a href="#ahk2exe-run">运行编译器</a></li>
+  <li><a href="#ahk2exe-base">基础可执行文件</a></li>
+  <li><a href="#CompilerDirectives">脚本编译器指令</a></li>
+  <li><a href="#mpress">压缩编译的脚本</li>
+  <li><a href="#information">背景信息</a></li>
+</ul>
+<h3 id="ahk2exe-run">运行编译器</h3>
 <p>使用 Ahk2Exe 有下列几种方式:</p>
 <ul>
   <li>
@@ -133,61 +142,50 @@ FileAppend, %Var%, C:\My File.txt</pre>
         <th abbr="Param">参数对</th>
         <th>意义</th>
       </tr>
-
       <tr id="SlashIn">
         <td>/in <i>script_name</i></td>
         <td>要编译的脚本的路径和名称. 如果使用任何其他参数, 这是强制性的, 除非使用了 <code class="no-highlight">/gui</code>.</td>
       </tr>
-
       <tr id="SlashOut">
         <td>/out <i>exe_name</i></td>
         <td>要创建的 .exe 的路径\名称. 默认值是输入文件的 directory\base_name 加上 .exe 的扩展名, 或脚本中任何相关的<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>.</td>
       </tr>
-
       <tr id="slashIcon">
         <td>/icon <i>icon_name</i></td>
         <td>要使用的图标文件. 默认是 GUI 界面中最后保存的图标, 或脚本中任何 <a href="misc/Ahk2ExeDirectives.htm#SetMainIcon">SetMainIcon</a> 编译器指令.</td>
       </tr>
-
       <tr id="SlashBase">
         <td>/base <i>file_name</i></td>
         <td><span class="ver">[v1.1.33.10+]:</span> 要使用的基文件(一个 .bin 文件或 <span class="ver">[v1.1.34+]</span> 中可以是 .exe 文件). 默认是 GUI 界面中保存的最后一个基文件名, 或脚本中的任何 <a href="misc/Ahk2ExeDirectives.htm#Bin">Base</a> 编译器指令.</td>
       </tr>
-
       <tr id="SlashResourceID">
         <td>/resourceid <i>name</i></td>
         <td><span class="ver">[v1.1.34+]</span>: 指定一个非标准的资源 ID, 用于使用 <a href="#SlashBase">.exe 基文件</a>编译的主脚本(请参阅<a href="Program.htm#embedded-scripts">嵌入式脚本</a>). 数字型资源 ID 应该由一个哈希符号(#) 和一个十进制数字组成. 默认是 #1, 或脚本中的任何 <a href="misc/Ahk2ExeDirectives.htm#ResourceID">ResourceID</a> 编译器指令.</td>
-
+      </tr>
       <tr id="SlashCp">
         <td>/cp <i>codepage</i></td>
         <td><span class="ver">[v1.1.23.01+]:</span> 覆盖用于读取脚本文件的默认代码页. 关于可能的值列表, 请参阅<a href="https://docs.microsoft.com/en-au/windows/win32/intl/code-page-identifiers">代码页标识符</a>. 注意, Unicode 脚本应该以字节顺序标记(BOM) 开始, 因此不需要使用这个参数.</td>
       </tr>
-
       <tr id="SlashCompress">
         <td>/compress <i>n</i></td>
         <td><span class="ver">[v1.1.33+]:</span> 是否 <a href="#mpress">Compress(压缩)</a> exe 文件? 0 = 不压缩, 1 = 使用 MPRESS(如果存在), 2 = 使用 UPX(如果存在). 默认值是 GUI 界面中最后保存的设置.</td>
       </tr>
-
       <tr id="SlashGui">
         <td>/gui</td>
         <td><span class="ver">[v1.1.33+]:</span> 显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中保存的设置. <code>/in</code> 在这种情况下是可选的.</td>
       </tr>
-
       <tr id="SlashGuiSilent">
         <td>/silent [verbose]</td>
         <td><span class="ver">[v1.1.33.10+]:</span> 禁用所有的消息框并将错误输出到标准错误流(stderr); 如果 stderr 失败, 则输出到标准输出流(stdout). 其他信息也会输出到 stdout. 可以选择输入 <code>verbose</code> 这个单词, 把状态信息也输出到 stdout.</td>
       </tr>
-
       <tr id="SlashAhk">
         <td class="warning"><strong>过时的:</strong><br>/ahk <i>file_name</i></td>
         <td class="warning"><span class="ver">[v1.1.33+]:</span> 编译脚本时使用的 AutoHotkey.exe 的 path\name.</td>
       </tr>
-
       <tr id="SlashMpress">
         <td class="warning"><strong>过时的:</strong><br>/mpress <i>0or1</i></td>
         <td class="warning">使用 MPRESS <a href="#mpress">压缩</a> exe 文件? 0 = 不压缩, 1 = 压缩. 默认值是 GUI 界面中使用的最后一个设置.</td>
       </tr>
-
       <tr id="SlashBin">
         <td class="warning"><strong>过时的:</strong><br>/bin <i>file_name</i></td>
         <td class="warning">要使用的 .bin 文件. 默认值是 GUI 界面中最后保存的 .bin 文件名.</td>
@@ -211,7 +209,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
 
 <h3 id="ahk2exe-base">基础可执行文件</h3>
 <p>每个编译的脚本 .exe 都是基于一个实现解释器的可执行文件. 包含在编译器目录中的基础文件的扩展名是 ".bin"; 这些版本的解释器不包含加载外部脚本文件的能力. 相反, 程序会寻找一个名为 "&gt;AUTOHOTKEY SCRIPT&lt;" 的 Win32(RCDATA) 资源并加载它, 如果没有找到, 则会失败.</p>
-<p><span class="ver">[v1.1.34+]:</span> 标准的 AutoHotkey 可执行文件也可以作为编译脚本的基础, 通过嵌入一个 ID 为 1 的 Win32(RCDATA) 资源. 这使得编译后的脚本 .exe 可以与 <a href="#SlashScript">/script</a> 开关一起使用, 以执行除主嵌入脚本之外的其他脚本. 有关详情, 请参阅<a href="Program.htm#embedded-scripts">嵌入式脚本</a>.</p>
+<p><span class="ver">[v1.1.34+]:</span> 标准的 AutoHotkey 可执行文件也可以作为编译脚本的基础, 通过嵌入一个 ID 为 1 的 Win32(RCDATA) 资源. (额外的脚本也可以通过 <a href="misc\Ahk2ExeDirectives.htm#AddResource">AddResource</a> 编译器指令添加.) 这使得编译后的脚本 .exe 可以与 <a href="#SlashScript">/script</a> 开关一起使用, 以执行除主嵌入脚本之外的其他脚本. 有关详情, 请参阅<a href="Program.htm#embedded-scripts">嵌入式脚本</a>.</p>
 
 <h3 id="CompilerDirectives">脚本编译器指令</h3>
 <p><span class="ver">[v1.1.33+]:</span> 脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>

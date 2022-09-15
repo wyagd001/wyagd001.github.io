@@ -13,7 +13,7 @@
 
 <h1>ComObjConnect() <span class="ver">[AHK_L 53+]</span></h1>
 <p>链接 COM 对象的事件到给定的前缀名的响应函数.</p>
-<pre class="Syntax"><span class="func">ComObjConnect</span>(ComObject <span class="optional">, Prefix</span>)</pre>
+<pre class="Syntax"><span class="func">ComObjConnect</span>(ComObject <span class="optional">, PrefixOrSink</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -25,11 +25,10 @@
     <p><span class="ver">[v1.1.22+]</span>: 如果对象支持, 使用 IProvideClassInfo 接口以接收此对象类的类型信息. 否则, ComObjConnect 尝试通过对象的 IDispatch 接口以接收类型信息, 这可能不可靠.</p>
   </dd>
 
-  <dt>Prefix</dt>
+  <dt>PrefixOrSink</dt>
   <dd>
-      <p>用于确定当事件发生时应调用哪个函数, 此字符串为事件名称(EventName) 对应的前缀(Prefix) .</p>
+      <p>作为事件名称前缀的字符串, 用于确定在事件发生时调用哪个函数, 或者 <span class="ver">[在 v1.1.01+]</span> 作为<a href="#event-sink">事件接收对象</a>(为要处理的每个事件定义方法).</p>
       <p>如果省略, 则对象为 "未连接的"; 即脚本将不再接收其事件通知.</p>
-      <p><span class="ver">[v1.1.01+]:</span> 此参数可以为脚本定义的对象. 事件发生时, 会调用相应的方法. 首个参数, 通常为隐式传递的参数 <code>this</code>, 其引用脚本定义的对象, 而非 COM 对象. 要捕获所有事件, 而又不想为每个事件定义方法, 可定义 <a href="../Objects.htm#Meta_Functions">__Call 元函数</a>.</p>
     </dd>
 
 </dl>
@@ -41,12 +40,17 @@
     <i class="dull">... 事件处理代码 ...</i>
     return <i>ReturnValue</i>
 }</pre>
-<p><i>Prefix(前缀)</i> 为用户定义; 而 <b>EventName(事件名称)</b> 为期望此函数响应的事件名称, 定义于产生事件的对象.</p>
-<p><i>Params(参数)</i> 对应于事件包含的所有参数. 如果事件不含有参数, <i>Params</i> 应完全省略. <i>ComObject</i> 为可选, 仅当 <i>Params</i> 的数目正确时; 它包含了到传递给 ComObjConnect 的原始包装器(转换器) 对象的引用. "ComObject"应被替换为与您脚本上下文相关的更有意义的名称.</p>
+<p>如果是字符串, <i>Prefix</i> 应该与 <em>PrefixOrSink</em> 参数相同; 否则, 它应该被省略. <b>EventName</b> 应该替换为函数应该处理的任何事件的名称.</p>
+<p><i>Params(参数)</i> 对应于事件包含的所有参数. 如果事件不含有参数, <i>Params</i> 应完全省略. <i>ComObject</i> 为可选, 仅当 <i>Params</i> 的数目正确时; 它包含了到传递给 ComObjConnect 的原始包装器(转换器) 对象的引用. "ComObject" 应被替换为与您脚本上下文相关的更有意义的名称.</p>
 <p>注意, 事件处理程序可以产生返回值. 要返回特定的 COM 类型的值, 使用 <a href="ComObjActive.htm#param">ComObject(Type, Value)</a>. 例如, <code>return ComObject(0,0)</code> 返回类型为 VT_EMPTY 的变体, 其等效于从 JavaScript 函数中返回 <code>undefined</code>(或未返回).</p>
 <p>调用 <code>ComObjConnect(目标对象, "<i>Prefix</i>")</code> 以启用事件处理.</p>
 <p>调用 <code>ComObjConnect(目标对象)</code> 以断开对象(停止事件处理).</p>
 <p>如果参数的数目未知, 可用<a href="../Functions.htm#Variadic">可变参数函数</a>.</p>
+
+<h3 id="event-sink">Event Sink <span class="ver">[v1.1.01+]</span></h3>
+<p>如果 <em>PrefixOrSink</em> 是一个对象, 则每当引发事件时, 就会调用该对象的相应方法. 虽然对象可以动态构造, 但 <em>PrefixOrSink</em> 更典型的做法是引用一个类或类的实例. 在这种情况下, 方法的定义如上所示, 但没有 <em>Prefix</em>.</p>
+<p>与对方法的任何调用一样, 方法的(通常是隐藏的) <code>this</code> 参数包含对方法调用所通过的对象的引用; 即事件接收器对象, 而不是 COM 对象. 这可用于为事件处理程序提供上下文, 或在它们之间共享值.</p>
+<p>要捕获所有事件而不为每个事件定义方法, 请定义 <a href="../Objects.htm#Meta_Functions">__Call 元函数</a>.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>脚本必须保留对 <em>ComObject</em> 的引用, 否则它将自动释放, 并与其 COM 对象断开连接, 从而阻止任何进一步的事件被检测. 没有标准的方法来检测何时不再需要连接, 因此脚本必须通过调用 ComObjConnect 来手动断开连接.</p>
