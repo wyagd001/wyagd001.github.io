@@ -307,6 +307,7 @@
   [
     ["ProcessClose","commands/ProcessClose.htm"],
     ["ProcessExist","commands/ProcessExist.htm"],
+    ["ProcessGetName/Path","commands/ProcessGetName.htm"],
     ["ProcessSetPriority","commands/ProcessSetPriority.htm"],
     ["ProcessWait","commands/ProcessWait.htm"],
     ["ProcessWaitClose","commands/ProcessWaitClose.htm"],
@@ -317,6 +318,7 @@
   ["注册表","",
   [
     ["Loop Reg","commands/LoopReg.htm"],
+    ["RegCreateKey","commands/RegCreateKey.htm"],
     ["RegDelete","commands/RegDelete.htm"],
     ["RegDeleteKey","commands/RegDeleteKey.htm"],
     ["RegRead","commands/RegRead.htm"],
@@ -487,6 +489,7 @@
     ["#NoTrayIcon","commands/_NoTrayIcon.htm"],
     ["#Requires","commands/_Requires.htm"],
     ["#SingleInstance","commands/_SingleInstance.htm"],
+    ["#SuspendExempt","commands/_SuspendExempt.htm"],
     ["#UseHook","commands/_UseHook.htm"],
     ["#Warn","commands/_Warn.htm"],
     ["#WinActivateForce","commands/_WinActivateForce.htm"]

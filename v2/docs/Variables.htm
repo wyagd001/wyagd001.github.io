@@ -96,8 +96,8 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   <tr id="maybe">
     <td class="center"><em>var</em><strong>?</strong></td>
     <td>
-      <p><strong>Maybe</strong>. 允许未设置的变量. 这只在将变量传递给可选参数, 数组元素或文本对象时有效. 问号后面必须跟随下列符号之一(忽略空白): <code class="no-highlight">)]},:</code>. 变量可以通过<a href="#ternary">三元运算符</a>或在 <a href="#and">AND</a>/<a href="#or">OR</a> 的右边有条件地传递.</p>
-      <p>变量通常也是一个可选参数, 但可以是任何变量. 对于不是函数参数的变量, 如果有对该变量的其他引用但没有赋值, 在加载时仍然可能显示 <a href="commands/_Warn.htm#VarUnset">VarUnset 警告</a>.</p>
+      <p><strong>Maybe</strong>. 允许未设置的变量. 这只在将变量传递给可选参数, 数组元素或文本对象; 或直接赋值的右边时有效. 问号后面必须跟随下列符号之一(忽略空白): <code class="no-highlight">)]},:</code>. 变量可以通过<a href="#ternary">三元运算符</a>或在 <a href="#and">AND</a>/<a href="#or">OR</a> 的右边有条件地传递.</p>
+      <p>变量通常是一个可选参数, 但可以是任何变量. 对于不是函数参数的变量, 如果有对该变量的其他引用但没有赋值, 在加载时仍然可能显示 <a href="commands/_Warn.htm#VarUnset">VarUnset 警告</a>.</p>
       <p>该操作符目前仅支持变量. 要在更一般的情况下显式或有条件地省略参数, 请使用 <code>unset</code> 关键字.</p>
       <p>另请参阅: <a href="Language.htm#unset">unset(可选参数)</a></p>
     </td>
@@ -281,6 +281,7 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>.</p>
     <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 将赋值与<a href="#ref">引用操作符</a>结合起来也是有效的, 如 <code>&amp;(Var := "initial value")</code>.</p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
+    <p>目标变量可以通过将直接赋值(<code>:=</code>) 与 <code>unset</code> 关键字或 <a href="Variables.htm#maybe">maybe(<em>var</em>?)</a> 运算符联合使用来 <em>un-set</em>(取消设置). 例如: <code>Var := unset</code>, <code>Var1 := (Var2?)</code>.</p>
     <p>赋值还可以针对对象的属性, 如 <code>myArray.Length += n</code> 或 <code>myArray[i] .= t</code>. 当赋值给一个属性时, 子表达式的结果是赋值的值, 而不是变量引用.</p>
     </td>
   </tr>
@@ -319,7 +320,10 @@ sumfn := Sum</pre>
   </tr>
   <tr>
     <td class="center"><strong>(</strong><em>表达式</em><strong>)</strong></td>
-    <td><p>括号中包含的任何子表达式. 例如, <code>(3 + 2) * 2</code> 强制首先计算 <code>3 + 2</code>.</p></td>
+    <td>
+      <p>括号中包含的任何子表达式. 例如, <code>(3 + 2) * 2</code> 强制首先计算 <code>3 + 2</code>.</p>
+      <p>对于多语句表达式, 将返回 <u>最后</u> 一条语句的结果. 例如, <code>(a := 1, b := 2, c := 3)</code> 返回 3.</p>
+    </td>
   </tr>
   <tr>
      <td class="center"><p>Mod<strong>()</strong><br>

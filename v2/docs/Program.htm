@@ -254,11 +254,10 @@ Execute = true|false|1|0
 <p>与 v1 安装不同, 在安装期间不会选择默认版本. 缺省值由启动器更动态地处理, 并且可以为每个用户配置.</p>
 
 <h3 id="installcmd">使用命令行</h3>
-<p class="warning"><strong>注意:</strong> v2 安装程序的命令行使用还没有最终完成, 在 v2.0 版本发布之前可能会有所改变. v1 安装程序中提供的一些选项还没有重新实现.</p>
-<p>如果检测到冲突(例如正在运行的脚本或要覆盖的无法识别的文件, 在安装过程中可能会显示一些提示. 不支持静默模式.</p>
-<p>如果要安装到 <em>DESTINATION</em> 目录, 请在源目录内执行以下命令:</p>
+<p>要从源目录中直接安装到 <em>DESTINATION</em> 目录, 请使用下面展示的 <code>/installto</code> 或 <code>/to</code>(这两个开关可以互换). 使用下载的 setup.exe 或从下载的 zip 或其他来源中提取的文件.</p>
+<pre>AutoHotkey_setup.exe /installto "%DESTINATION%"</pre>
 <pre>AutoHotkey32.exe UX\install.ahk /to "%DESTINATION%"</pre>
-<p>要从 <em>SOURCE</em> 安装额外的版本, 请在当前安装目录中执行以下命令(根据需要调整 AutoHotkey32.exe 的路径):</p>
+<p>要从 <em>SOURCE</em>(目录中应该有 AutoHotkey*.exe 文件) 安装额外的版本, 请在当前安装目录中执行以下命令(根据需要调整 AutoHotkey32.exe 的路径):</p>
 <pre>AutoHotkey32.exe UX\install.ahk /install "%SOURCE%"</pre>
 <p>上面的完整命令字符串在 under <code>HKLM\Software\AutoHotkey</code> 或 <code>HKCU\Software\AutoHotkey</code> 下 <em>InstallCommand</em> 注册, 其中 <code class="no-highlight">%1</code> 作为源目录的替代. 使用这个注册表值可能更具有前瞻性.</p>
 <p>重新注册当前安装:</p>
@@ -268,6 +267,11 @@ Execute = true|false|1|0
 <p>或者, 从以下注册表键中读取 <em>QuietUninstallString</em> 值, 并执行它:</p>
 <pre>HKLM\Microsoft\Windows\CurrentVersion\Uninstall\AutoHotkey
 HKCU\Microsoft\Windows\CurrentVersion\Uninstall\AutoHotkey</pre>
+<p>使用 <code>/silent</code> 开关来抑制警告或确认对话框, 并防止在安装完成时显示 <a href="#dash">Dash</a>. 以下操作可能会自动执行, 而且没有警告:</p>
+<ul>
+  <li>终止脚本以允许 AutoHotkey*.exe 被覆盖.</li>
+  <li>覆盖安装程序以前没有注册的文件, 或注册后修改的文件.</li>
+</ul>
 
 <h3 id="Installer_IsHostApp">任务栏按钮</h3>
 <p>v2 安装程序没有提供分离任务栏按钮的选项. 以前, 这是通过将每个 AutoHotkey 可执行文件注册为<a href="https://msdn.microsoft.com/en-us/library/ee872121#APPLICATIONS">宿主程序(IsHostApp)</a> 来实现的, 但这种方法有局限性, 当安装多个版本时, 就变得不容易管理. 作为替代, 每个脚本应该设置其进程或窗口的 <a href="https://docs.microsoft.com/en-us/windows/win32/shell/appids">AppUserModelID</a> 来控制分组.</p>

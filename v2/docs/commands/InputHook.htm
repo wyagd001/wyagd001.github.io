@@ -21,6 +21,7 @@
 
   <dt>Options</dt>
   <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p><u>由零个或多个下列字母组成的字符串(可任意顺序, 中间可选空格):</u></p>
     <p id="option-b"><strong>B</strong>: 设置 <a href="#BackspaceIsUndo">BackspaceIsUndo</a> 为 false, 这会导致 <kbd>Backspace</kbd> 被忽略.</p>
     <p id="option-c"><strong>C</strong>: 设置 <a href="#CaseSensitive">CaseSensitive</a> 为 true, 使 <em>MatchList</em> 区分大小写.</p>
@@ -43,6 +44,7 @@ if (ih.Input = CtrlC)
 
   <dt id="EndKeys">EndKeys</dt>
   <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>一个由零个或多个按键组成的列表, 其中任何一个键在按下时终止输入(结束键本身不会写入输入缓冲). 当 Input 以这种方式终止时, EndReason 设置为单词 EndKey, <a href="#EndKey">EndKey</a> 属性设置为键的名称.</p>
     <p><em>EndKeys</em> 列表使用类似于 <a href="Send.htm">Send</a> 函数的格式. 例如, 指定 <code>{Enter}.{Esc}</code> 将使 <kbd>Enter</kbd>, <kbd>.</kbd> 或 <kbd>Esc</kbd> 任一一个都能终止 Input. 使用大括号本身作为结束键, 指定 <code>{{}</code> 和/或 <code>{}}</code>.</p>
     <p>要使用 <kbd>Ctrl</kbd>, <kbd>Alt</kbd> 或 <kbd>Shift</kbd> 作为结束键, 请指定键的左和/或右的版本, 而不是中性版本. 例如, 指定 <code>{LControl}{RControl}</code> 而不是 <code>{Control}</code>.</p>
@@ -52,6 +54,7 @@ if (ih.Input = CtrlC)
 
   <dt id="MatchList">MatchList</dt>
   <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>以逗号分隔的关键词列表, 其中任何一个都将导致终止输入(在这种情况下, EndReason 将被设置为单词 Match). 用户输入的内容必须完全匹配匹配列表中的某个词组(除非有 <a href="#asterisk">* 选项</a>). 此外, <strong>分隔符逗号周围的任何空格或制表符都是有意义的</strong>, 这意味着它们是匹配字符串的一部分. 例如, 如果 <em>MatchList</em> 为 <code>ABC , XYZ</code>, 则用户必须在 ABC 之后或 XYZ 之前键入空格以形成匹配.</p>
     <p>两个连续的逗号产生单个原义逗号. 例如, 后面的匹配列表会在 string1 的末尾产生单个原义逗号: <code>string1,,,string2</code>. 类似的, 后面的匹配列表仅包含其中有一个原义逗号的单个项目: <code>single,,item</code>.</p>
     <p>因为 <em>MatchList</em> 中的项目不被视为单独的参数, 所以列表可以完全包含在一个变量中. 事实上, 如果此列表的长度超过 16383, 那么列表的全部或部分必须包含在变量中, 因为这个长度是任何脚本行的最大长度. 例如, <em>MatchList</em> 可能由 <code>List1 "," List2 "," List3</code> 组成 -- 其中每个变量都包含匹配词组的子列表.</p>
@@ -110,10 +113,14 @@ if (ih.Input = CtrlC)
 <pre class="Syntax">InputHook.<span class="func">KeyOpt</span>(Keys, KeyOptions)</pre>
 <dl>
   <dt>Keys</dt>
-  <dd><p>按键列表. 大括号用于括起按键名称, 虚拟键码或扫描码, 类似于 <a href="Send.htm">Send</a> 函数. 例如, <code>{Enter}.{{}</code> 将应用于 <kbd>Enter</kbd>, <kbd>.</kbd> 和 <kbd>{</kbd>. 按名称, 按 <code>{vkNN}</code> 或按 <code>{scNNN}</code> 指定按键可能会产生三种不同的结果; 有关详情, 请参阅下文.</p>
+  <dd>
+  <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+  <p>按键列表. 大括号用于括起按键名称, 虚拟键码或扫描码, 类似于 <a href="Send.htm">Send</a> 函数. 例如, <code>{Enter}.{{}</code> 将应用于 <kbd>Enter</kbd>, <kbd>.</kbd> 和 <kbd>{</kbd>. 按名称, 按 <code>{vkNN}</code> 或按 <code>{scNNN}</code> 指定按键可能会产生三种不同的结果; 有关详情, 请参阅下文.</p>
   <p id="all-keys">单独指定字符串 <code>{All}</code>(不区分大小写) 以便将 <em>KeyOptions</em> 应用于所有 VK 和所有 SC. 然后可以再次调用 KeyOpt 从特定按键中删除选项.</p></dd>
   <dt>KeyOptions</dt>
-  <dd><p>下列单字符选项中的一个或多个(空格和制表符).</p>
+  <dd>
+  <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+  <p>下列单字符选项中的一个或多个(空格和制表符).</p>
   <p id="KeyOpt-minus"><strong>-</strong>(减号): 移除 <code>-</code> 后面的任何选项, 直到下一个 <code>+</code>.</p>
   <p id="KeyOpt-plus"><strong>+</strong>(加号): 取消任何先前的 <code>-</code>, 否则无效.</p>
   <p id="KeyOpt-e"><strong>E</strong>: 结束键. 如果启用, 则按下键终止 Input, 将 <a href="#EndReason">EndReason</a> 设置为单词 EndKey, 将 <a href="#EndKey">EndKey</a> 属性设置为键的标准名称. 与 <em>EndKeys</em> 参数不同, Shift 键的状态将被忽略. 例如, <code>@</code> 和 <code>2</code> 在美式键盘布局中都相当于 <code>{vk32}</code>.</p>
@@ -148,7 +155,9 @@ if (ih.Input = CtrlC)
 <pre class="Syntax">InputHook.<span class="func">Wait</span>(<span class="optional">MaxTime</span>)</pre>
 <dl>
   <dt>MaxTime</dt>
-  <dd><p>等待的最大秒数. 如果 Input 在 <em>MaxTime</em> 秒后仍在进行中, 则该方法返回且不终止 Input.</p></dd>
+  <dd>
+  <p>类型: <a href="../Concepts.htm#numbers">浮点数</a></p>
+  <p>等待的最大秒数. 如果 Input 在 <em>MaxTime</em> 秒后仍在进行中, 则该方法返回且不终止 Input.</p></dd>
 </dl>
 <p>返回 <a href="#EndReason">EndReason</a>.</p>
 
@@ -267,7 +276,7 @@ if (ih.Input = CtrlC)
 <p>检索或设置要收集输入的最小<a href="SendLevel.htm">发送级别</a>.</p>
 <pre class="Syntax">Level := InputHook.MinSendLevel</pre>
 <pre class="Syntax">InputHook.MinSendLevel := Level</pre>
-<p>Type: <a href="../Concepts.htm#numbers">Integer</a>. 默认值: 0. 选项 <strong>I</strong> 设置该值为 1(或给定值).</p>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a>. 默认值: 0. 选项 <strong>I</strong> 设置该值为 1(或给定值).</p>
 <p><em>Level</em> 应该是 0 到 101 之间的整数. 发送级别 <em>低于</em> 此值的事件将被忽略. 例如, 值 101 会忽略 <a href="Send.htm">SendEvent</a> 生成的所有输入, 而值 1 只会忽略默认发送级别(0) 的输入.</p>
 <p>无论这个设置如何, <a href="Send.htm#SendInput">SendInput</a> 和 <a href="Send.htm#SendPlay">SendPlay</a> 方法总是被忽略. 除了 AutoHotkey 以外的任何其他源生成的输入都不会因为这个设置而被忽略.</p>
 </div>
