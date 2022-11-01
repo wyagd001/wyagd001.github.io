@@ -2,7 +2,7 @@
 layout: default
 ---
 
-AutoHotkey  中文帮助&emsp; [[v1]](zh-cn/index.html) &emsp; [[v2]](v2/index.html) &emsp;&&emsp; [自用脚本](Run-Ahk/index.md)
+AutoHotkey  中文帮助&emsp; [[v1]](zh-cn/index.html) &emsp; [[v2]](v2/index.html) &emsp;&&emsp; [运行-Ahk](Run-Ahk/index.md)
 
 感谢您的支持
 

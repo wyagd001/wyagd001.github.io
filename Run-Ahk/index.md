@@ -4,13 +4,14 @@ layout: default
 
 [返回主页](http://wyagd001.github.io)
 
-# [](#header-2) 自用脚本介绍
+# [](#header-2) 运行-Ahk 简介
 
-**运行-Ahk**: 这是一个方便自己使用的 AutoHotkey 脚本，看到对自己有用的代码就添加进来。所以代码很乱，功能很杂，重复的功能也比较多。  
-**关键词**: AutoHotkey [快捷键](#hotkey) [热字串](#hotstring) [Candy](#Candy) [Windy](#Windy) [音频播放器](#AhkPlayer) [资源管理器右键菜单](#7plus) [FolderMenu](#FolderMenu) [自动激活](#AutoRaise) [定时提醒](#Naozhong) [局域网控制](#RC) [文件预览](#FilePrew) [剪贴板记录](#Clip) [脚本管理器](#SM) [鼠标手势](#MG) [增加自定义托盘图标](#TrayIcon)  [左键增强](#click) [中键增强](#middle) [其他脚本](#other)
+**运行-Ahk**: 这是一个自己日常使用的 AutoHotkey 脚本，看到有用的代码就添加进来。所以代码很乱，功能很杂，重复的功能也比较多。  
+**代码下载**: https://github.com/wyagd001/MyScript
+**关键词及目录**: AutoHotkey [快捷键](#hotkey) [热字串](#hotstring) [Candy](#Candy) [Windy](#Windy) [音频播放器](#AhkPlayer) [资源管理器右键菜单](#7plus) [FolderMenu](#FolderMenu) [自动激活](#AutoRaise) [定时提醒](#Naozhong) [局域网控制](#RC) [文件预览](#FilePrew) [剪贴板记录](#Clip) [脚本管理器](#SM) [鼠标手势](#MG) [增加自定义托盘图标](#TrayIcon)  [左键增强](#click) [中键增强](#middle) [其他脚本](#other)
 
 ### [](#header-3)功能介绍
-- <span id="hotkey">快捷键</span>, 90 多个快捷键实现不同的功能
+- <span id="hotkey">快捷键</span>, 90 多个快捷键(可自定义) 实现不同的功能
   - Ctrl+F2 Candy
   - Ctrl+F3 Windy
   - Alt + 鼠标左键 移动窗口位置
@@ -53,7 +54,7 @@ layout: default
 - <span id="Naozhong">定时提醒</span>(只有一个简单的对话框来提醒)
   - 节日提醒(农历, 公历节日)
   - 闹钟
-- <span id="RC">局域网控制</span>, 测试网址: 127.0.0.1:2525 手机访问: 192.168.0.100:2525 (电脑IP按需更改)
+- <span id="RC">局域网控制</span>, 测试网址: 127.0.0.1:2525 手机访问: 192.168.0.100:2525 (电脑IP 192.168.0.100 按需更改)
   - 控制主机(音频播放器, 音量, 关机, 查看电脑屏幕, 自定义命令)
   - 文件上传(测试)
   - 下载指定的文件
