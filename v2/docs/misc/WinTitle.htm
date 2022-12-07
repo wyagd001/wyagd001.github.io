@@ -71,8 +71,9 @@
 <pre>WinActivate "ahk_class i)^ConsoleWindowClass$"</pre>
 
 <h3 id="ahk_id">ahk_id(唯一 ID / HWND)</h3>
+<p>每个窗口或控件都有一个唯一 ID, 也被称为 HWND(即窗口句柄的缩写). 即使其标题更改了, 此 ID 也可用于标识窗口或控件.</p>
 <p>在 <var>WinTitle</var> 中使用 <code>ahk_id <var>HWND</var></code>, <code><var>HWND</var></code>(即, 没有 ahk_id 关键字的<a href="../Concepts.htm#numbers">整数</a>) 或一个具有 HWND 属性的<a href="../Objects.htm">对象</a>, 通过其唯一的 ID 来识别窗口或控件.</p>
-<p>每个窗口或控件都有一个唯一 ID, 也称为 HWND(即窗口句柄的缩写). 即使在窗口或控件的标题改变时也可用这个 ID 来识别它.</p>
+<p><a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 影响 ahk_id 条件是否检测到隐藏的顶级窗口, 但始终能检测到隐藏的控件. 它还会影响是否检测到由 HWND 标识的隐藏窗口(作为 Object 属性或 Integer), 但只有在与 <a href="../commands/WinWait.htm">WinWait</a> 或 <a href="../commands/WinWaitClose.htm">WinWaitClose</a> 一起使用时才会如此.</p>
 <p><a href="../commands/DetectHiddenWindows.htm">DetectHiddenWindows</a> 会影响 ahk_id 条件是否检测隐藏的顶层窗口, 但隐藏的控件总是会被检测到. 如果传递了一个有效的<a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a>, 则隐藏的窗口总是能被检测到.</p>
 <p>ahk_id 条件也可以和给定窗口必须匹配的其他条件相结合. 例如, <code>WinExist("ahk_id " ahwnd " ahk_class " aclass)</code> 在窗口被 "检测到"(根据 DetectHiddenWindows) 且其窗口类别与 <var>aclass</var> 所包含的字符串相匹配时, 返回 <var>ahwnd</var>.</p>
 <p>窗口的 ID 通常通过 <a href="../commands/WinExist.htm">WinExist</a> 或 <a href="../commands/WinGetID.htm">WinGetID</a> 来检索. 控件的 ID 通常通过 <a href="../commands/ControlGetHwnd.htm">ControlGetHwnd</a>, <a href="../commands/MouseGetPos.htm">MouseGetPos</a> 或 <a href="../commands/DllCall.htm">DllCall</a> 来检索. <a href="../objects/Gui.htm">Gui</a> 和 <a href="../objects/GuiControl.htm">GuiControl</a> 对象具有 <code>Hwnd</code> 属性, 因此可以直接在 <var>WinTitle</var> 中使用.</p>
@@ -126,7 +127,6 @@ if WinExist("ahk_class Notepad ahk_id " id)
     MsgBox "The mouse is over Notepad."
 </pre>
 
-
 <h2 id="LastFoundWindow">"上次找到的" 窗口</h2>
 
 <p>"上次找到的" 窗口是由最近的 <a href="../commands/WinExist.htm">WinExist</a>, <a href="../commands/WinActive.htm">WinActive</a>, <a href="../commands/WinWaitActive.htm">WinWait[Not]Active</a> 或 <a href="../commands/WinWait.htm">WinWait</a> 发现的窗口. 这样可以让脚本更容易创建和维护, 因为目标窗口的 <var>WinTitle</var> 和 <var>WinText</var> 不需要在每个窗口函数中重复. 此外, 脚本会执行的更好, 因为在首次找到目标窗口后这些函数不需要再次搜索目标窗口.</p>
@@ -139,7 +139,7 @@ WinWait "Untitled - Notepad"
 <em>; WinWait "无标题 - 记事本"</em>
 WinActivate  <em>; 使用由 WinWait 找到的窗口.</em></pre>
 
-<p>下面的例子是激活并最大化由上面的 WinExist 函数找到的记事本窗口:</p>
+<p>下面的例子是激活并最大化由 WinExist 找到的记事本窗口:</p>
 <pre>if WinExist("Untitled - Notepad")
 <em>; if WinExist("无标题 - 记事本")</em>
 {
@@ -149,9 +149,12 @@ WinActivate  <em>; 使用由 WinWait 找到的窗口.</em></pre>
     return
 }</pre>
 
-<p>如果计算器不存在, 下面的例子将返回, 否则计算器将被激活并移动到一个新的位置:</p>
+<p>下面的例子激活由 WinExist 找到的计算器, 并移动它到一个新的位置:</p>
 <pre>if not WinExist("Calculator")
     return
+{
+    <em>; ...</em>
+}
 else
 {
     WinActivate  <em>; 使用由 WinExist 找到的窗口.</em>

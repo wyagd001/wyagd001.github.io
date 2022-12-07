@@ -21,16 +21,19 @@
 <dl>
   <dt>Requirement</dt>
   <dd>
-    <p>如果以 "AutoHotkey" 开头, 后面是空格或制表符, 那么后面应该是一个版本字符串, 可选前缀 "v". 如果 <a href="../Variables.htm#AhkVersion">A_AhkVersion</a> 被认为是兼容的, 那么脚本的加载就会继续, 不会出现错误. 例如, 一个需要 v1.1.33 版本的脚本也可以在 v1.1.33.01 和 v1.1.34 上运行, 但不能在 v2.0 上运行.</p>
-    <p>否则, 将显示一个错误信息并退出程序.</p>
+    <p>如果不是以单词 "AutoHotkey" 开头, 则显示错误消息并退出程序. 这将保证清晰, 并为将来的使用保留指令. AutoHotkey 的其他分支可能支持其他名称.</p>
+    <p>否则, 单词 "AutoHotkey" 后面应该跟下列任意组合, 并用空格或制表符分隔:</p>
+    <ul>
+      <li>一个可选的字母 "v" 后面跟着一个版本号. <a href="../Variables.htm#AhkVersion">A_AhkVersion</a> 必须大于或等于此版本, 但小于下一个主版本.</li>
+      <li><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> 或 <code>=</code> 中的一个, 后面紧跟着可选的字母 "v" 和版本号. 例如, <code class="no-highlight">&gt;=2-rc &lt;2</code> 允许 v2 的候选版本, 但不允许最终版本.</li>
+      <li>以下单词之一, 用于限制可运行脚本的可执行文件(EXE) 的类型: "32-bit", "64-bit".</li>
+    </ul>
   </dd>
 </dl>
 
 <h2 id="Error_Message">错误消息</h2>
-<p>如果需要不同版本的 AutoHotkey, 信息包括 <a href="../Variables.htm#AhkVersion">A_AhkVersion</a>:</p>
-<pre class="no-highlight">This script requires <i>%Requirement%</i>, but you have v<i>%A_AhkVersion%</i>.</pre>
-<p>如果需求没有被识别, 消息格式如下:</p>
-<pre class="no-highlight">This script requires <i>%Requirement%</i>.</pre>
+<p>显示的消息取决于解释该指令的 AutoHotkey 的版本.</p>
+<p>对于 v2, AutoHotkey 的路径, 版本和构建总是显示在错误消息中.</p>
 <p>如果脚本启动时使用的 AutoHotkey 版本不支持这个指令, 错误信息如下:</p>
 <pre class="no-highlight">Line Text: #Requires <i>%Requirement%</i>
 Error: This line does not contain a recognized action.</pre>
@@ -38,7 +41,7 @@ Error: This line does not contain a recognized action.</pre>
 <h2 id="Remarks">备注</h2>
 <p>如果脚本使用了在早期版本中不可用的语法或函数, 使用这条指令可以确保错误信息显示未满足的要求, 而不是显示任意的语法错误. 这不能用 <code>if (A_AhkVersion &lt;= "1.1.33")</code> 这样的指令来做, 因为在脚本的其他地方出现语法错误会使脚本无法执行.</p>
 <p>当分享一个脚本或在网上发布代码时, 使用这个指令可以让任何发现代码的人很容易地识别出它是为哪个版本的 AutoHotkey 准备的.</p>
-<p>其他程序或脚本可以出于各种目的检查这个指令. 例如, 一个启动脚本可能会用它来决定启动哪个 AutoHotkey 可执行文件, 而脚本编辑器或相关工具可能会用它来决定如何解释或突出显示脚本文件.</p>
+<p>其他程序或脚本可以出于各种目的检查这个指令. 例如, 安装 AutoHotkey v2 自带的启动器可能会用它来决定启动哪个 AutoHotkey 可执行文件, 而脚本编辑器或相关工具可能会用它来决定如何解释或突出显示脚本文件.</p>
 <p id="VerCompare">版本字符串是以一系列点分隔的部分进行比较, 后面的连字符和预发布标识符是可选的.</p>
 <ul>
   <li>数值部分是以数字来比较的. 例如, v1.01 = v1.1, 但 a20 &gt; a112.</li>
@@ -59,6 +62,21 @@ Error: This line does not contain a recognized action.</pre>
 <p><a class="ex_number" href="#ExBasic"></a> 使脚本仅在 v2.0 上运行, 包括测试版.</p>
 <pre>#Requires AutoHotkey v2.0-a
 MsgBox "This script will run only on v2.0, including alpha releases."</pre>
+</div>
+
+<div class="ex" id="ExUpper">
+<p><a class="ex_number" href="#ExUpper"></a> 使脚本仅在 v2.0(包括预发布版本) 上运行.</p>
+<pre>#Requires AutoHotkey &gt;=2.0- &lt;2.1</pre>
+</div>
+
+<div class="ex" id="ExBuild">
+<p><a class="ex_number" href="#ExBuild"></a> 使脚本仅在 64 位解释器(EXE) 下运行.</p>
+<pre>#Requires AutoHotkey 64-bit</pre>
+</div>
+
+<div class="ex" id="ExVerBuild">
+<p><a class="ex_number" href="#ExVerBuild"></a> 使脚本仅在 64 位解释器(EXE) 2.0-rc 版本或更高版本下运行.</p>
+<pre>#Requires AutoHotkey v2.0-rc.2 64-bit</pre>
 </div>
 
 </body>

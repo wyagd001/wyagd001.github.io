@@ -49,7 +49,8 @@
 <p>函数 <a href="Thread.htm">Thread "NoTimers"</a> 类似于 Critical, 除了它仅阻止被<a href="SetTimer.htm">计时器</a>中断.</p>
 
 <h2 id="Interval">消息检查间隔</h2>
-<p>指定一个正数作为首个参数(例如 <code>Critical 30</code>) 将会打开 Critical, 但同时也会改变检查内部消息队列的时间间隔(以 ms 毫秒计). 如果未指定该参数, 在 Critical 打开的状态下, 每 16ms 检查一次消息队列, 在 Critical 关闭状态下, 每 5ms 检查一次. 延长时间间隔会推迟消息/事件的到达, 给出更多的时间让<a href="../misc/Threads.htm">当前线程</a>结束. 这会减少某些 <a href="OnMessage.htm">OnMessage()</a> 和 <a href="../objects/GuiOnEvent.htm">GUI events</a> 因为 "线程已运行" 而丢失的可能性. 然而, 像 <a href="Sleep.htm">Sleep</a> 和 <a href="WinWait.htm">WinWait</a> 这样的等待型函数则无视此设定而照常检查消息(一个解决办法是 <code>DllCall("Sleep", "UInt", 500)</code>).</p>
+<p>指定一个正数作为首个参数(例如 <code>Critical 30</code>) 将会打开 Critical, 但同时也会改变检查内部消息队列的最小时间间隔(以 ms 毫秒计). 如果未指定该参数, 在 Critical 打开的状态下, 默认为 16ms, 在 Critical 关闭状态下, 每 5ms 检查一次. 延长时间间隔会推迟消息/事件的到达, 给出更多的时间让<a href="../misc/Threads.htm">当前线程</a>结束. 这会减少某些 <a href="OnMessage.htm">OnMessage()</a> 和 <a href="../objects/GuiOnEvent.htm">GUI events</a> 因为 "线程已运行" 而丢失的可能性. 然而, 像 <a href="Sleep.htm">Sleep</a> 和 <a href="WinWait.htm">WinWait</a> 这样的等待型函数则无视此设定而照常检查消息(一个解决办法是 <code>DllCall("Sleep", "UInt", 500)</code>).</p>
+<p>因为系统滴答计数的间隔通常为 15.6 毫秒, 所以最小增量值通常至少为 15 或 16. 自上次检查以来的持续时间必须 <em>超过</em> 设置的间隔, 以便进行另一次检查. 例如, 设置为 16 要求滴答计数更改为 17 或更大. 由于消息检查可以在 15.6 毫秒窗口内的任何时间发生, 因此在 1 到 16 之间的任何设置都可以允许在单个间隔内进行两次消息检查.</p>
   <p class="note"><strong>注意</strong>: 将消息检查间隔设置的太大会减少对多种事件的响应能力, 例如 <a href="../objects/Gui.htm">GUI</a> 窗口的重绘.</p>
 
 <h2 id="Related">相关</h2>

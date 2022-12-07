@@ -7,7 +7,9 @@ layout: default
 # [](#header-2) 运行-Ahk 简介
 
 **运行-Ahk**: 这是一个自己日常使用的 AutoHotkey 脚本，看到有用的代码就添加进来。所以代码很乱，功能很杂，重复的功能也比较多。  
-**代码下载**: <https://github.com/wyagd001/MyScript>  
+
+**脚本源码**: [https://github.com/wyagd001/MyScript](https://github.com/wyagd001/MyScript)  
+
 **关键词及目录**: AutoHotkey [快捷键](#hotkey) [热字串](#hotstring) [Candy](#Candy) [Windy](#Windy) [音频播放器](#AhkPlayer) [资源管理器右键菜单](#7plus) [FolderMenu](#FolderMenu) [自动激活](#AutoRaise) [定时提醒](#Naozhong) [局域网控制](#RC) [文件预览](#FilePrew) [剪贴板记录](#Clip) [脚本管理器](#SM) [鼠标手势](#MG) [增加自定义托盘图标](#TrayIcon)  [左键增强](#click) [中键增强](#middle) [其他脚本](#other)
 
 ### [](#header-3)功能介绍

@@ -528,7 +528,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <li>#KeyHistory (使用 <code>KeyHistory N</code>)</li>
 <li>#LTrim</li>
 <li>#MaxHotkeysPerInterval (使用 <a href="misc/A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a>)</li>
-<li>#MaxMem</li>
+<li>#MaxMem(每个变量的最大容量现在没有限制)</li>
 <li>#MenuMaskKey (使用 <a href="misc/A_MenuMaskKey.htm">A_MenuMaskKey</a>)</li>
 <li>#NoEnv (现在是默认行为)</li>
 </ul>
@@ -555,7 +555,8 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <li>File.__Handle → <a href="objects/File.htm#Handle">File.Handle</a></li>
 </ul>
 <h3 id="modified-commandsfunctions">修改的命令/函数</h3>
-<p class="note">关于这一节的标题: v2 中没有命令, 只有函数. 标题引用两个版本.</p>
+<p class="note">关于这一节的标题: v2 中没有命令, 只有函数. 标题引用这两个概念.</p>
+<p>当使用 SendEvent 方法发送 Alt 事件时, <a href="commands/BlockInput.htm">BlockInput</a> 不再临时禁用. 这最初是为了解决 Windows XP 某些版本中的一个 bug, 其中 BlockInput 阻止了人工 Alt 事件.</p>
 <p><code>Chr(0)</code> 返回一个长度为 1 的字符串, 包含一个二进制零. 这是改进了对字符串中二进制零的支持的结果.</p>
 <p>如果等待期过了, <a href="commands/ClipWait.htm">ClipWait</a> 现在返回 0, 否则返回 1. ErrorLevel 被删除. 指定 0 不再等同于指定 0.5; 相反, 它产生尽可能短的等待.</p>
 <p><code>ComObj()</code>: 这个函数有一种通配符的名字, 允许许多不同的后缀. 有些名字通常用于特定类型的参数, 如 <code>ComObjActive(CLSID)</code>, <code>ComObjParameter(vt, value)</code>, <code>ComObjEnwrap(dsp)</code>. 取而代之的是单独的函数/类, 不再有通配符名称. 有关详情, 请参阅 <a href="#com-objects-comobject">COM 对象(ComObject)</a>.</p>
@@ -582,7 +583,7 @@ StringTrimRight  -- 使用 <a href="commands/SubStr.htm">SubStr</a> 来代替这
 <p>对于由脚本分配的缓冲, 新的 <code>Buffer</code> 对象比变量更受欢迎; 可以使用任何对象, 但必须有 <code>Ptr</code> 和 <code>Size</code> 属性.</p>
 <p><a href="objects/File.htm#RawWrite">File.RawWrite</a>: 和上面一样, 除了它可以接受一个字符串(或包含一个字符串的变量), 在这种情况下 <em>Bytes</em> 默认为字符串的字节大小. 字符串可以包含二进制的零.</p>
 <p><a href="objects/File.htm#ReadLine">File.ReadLine</a> 现在总是支持 <code>`r</code>, <code>`n</code> 和 <code>`r`n</code> 作为行尾, 并且不再在返回值中包括行尾. 如果没有启用 EOL 转换, <a href="objects/File.htm#Read">File.Read</a> 仍会按原样返回给脚本.</p>
-<p><a href="commands/FileEncoding.htm">FileEncoding</a> 现在允许用数字来指定代码页, 而不使用 <code>CP</code> 前缀. Its parameter is no longer optional, but can still be explicitly blank.</p>
+<p><a href="commands/FileEncoding.htm">FileEncoding</a> 现在允许用数字来指定代码页, 而不使用 <code>CP</code> 前缀. 其参数不再为可选, 但任然可以显式的指定为空值.</p>
 <p><a href="commands/FileExist.htm">FileExist</a> 现在忽略了每个目录列表中隐含的 <code>.</code> 和 <code>..</code>, 因此当目录存在但为空时, <code>FileExist("dir\*")</code> 现在是 false, 而不是 true.</p>
 <p><a href="commands/FileGetAttrib.htm">FileGetAttrib</a> 和 A_LoopFileAttrib 现在对解析点或符号链接包含字母 "L".</p>
 <p>如果源文件和目标文件是同一路径, 非编译脚本中的 <a href="commands/FileInstall.htm">FileInstall</a> 不再尝试复制文件(在解析了相对路径之后, 因为源文件相对于 <a href="Variables.htm#ScriptDir">A_ScriptDir</a>, 而不是 <a href="Variables.htm#WorkingDir">A_WorkingDir</a>). 在 v1 中, 这导致 ErrorLevel 被设置为 1, 这通常不会被注意到. 试图通过两个不同的路径将一个文件复制到自身仍然会导致错误. </p>

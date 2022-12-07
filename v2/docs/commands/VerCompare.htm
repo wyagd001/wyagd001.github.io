@@ -3,7 +3,6 @@
 <head>
 <title>VerCompare - 语法 &amp; 使用 | AutoHotkey v2</title>
 <meta name="description" content="The VerCompare function compares two version strings." />
-<meta name="ahk:equiv-v1" content="AutoHotkey.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css">
@@ -18,16 +17,22 @@
 
 <h2 id="Parameters">参数</h2>
 <dl>
-  <dt>VersionA, VersionB</dt>
+  <dt>VersionA</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>要比较的版本字符串.</p>
+    <p>要比较的第一个版本字符串.</p>
+  </dd>
+  <dt>VersionB</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要比较的第二个版本字符串, 可选地使用以下操作符之一作为前缀: <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> 或 <code>=</code>.</p>
   </dd>
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>为了表示 <em>VersionA</em> 和 <em>VersionB</em> 之间的关系, 该函数返回以下值之一:</p>
+<p>如果 <em>VersionB</em> 以操作符符号开头, 则此函数返回 1(true) 或 0(false).</p>
+<p>否则, 该函数返回以下值之一, 以指示 <em>VersionA</em> 和 <em>VersionB</em> 之间的关系:</p>
 <ul>
   <li>如果 <em>VersionA</em> 等于 <em>VersionB</em>, 则返回 0</li>
   <li>如果 <em>VersionA</em> 大于 <em>VersionB</em>, 则返回正整数</li>
@@ -39,7 +44,7 @@ a_greater_than_or_equal_to_b := VerCompare(a, b) &gt;= 0</pre>
 
 <h2 id="Remarks">备注</h2>
 <p>版本字符串是按照与 <a href="_Requires.htm#VerCompare">#Requires</a> 相同的规则进行比较的.</p>
-<p>这个函数应该能够正确地比较 <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning 2.0.0</a> 版本字符串, 但是不要求参数是有效的 SemVer 字符串.</p>
+<p>这个函数应该能够正确地比较 <a href="https://semver.org/lang/zh-CN/spec/v2.0.0.html">Semantic Versioning 2.0.0</a> 版本字符串, 但是不要求参数是有效的 SemVer 字符串.</p>
 <p>该函数可用于<a href="Sort.htm#callback">排序回调</a>.</p>
 
 <h2 id="Related">相关</h2>
@@ -65,11 +70,18 @@ MsgBox StrCompare("1.20.0", "1.3")  <em>; 返回 -1</em>
 </div>
 
 <div class="ex" id="ExPre">
-<p><a class="ex_number" href="#ExPre"></a> 示范与预发布版本的比较.</p>
+<p><a class="ex_number" href="#ExPre"></a> 示范预发布版本的比较.</p>
 <pre>
-MsgBox VerCompare("2.0-a137", "2.0-a136")  <em>; Returns 1</em>
-MsgBox VerCompare("2.0-a137", "2.0")  <em>; Returns -1</em>
-MsgBox VerCompare("10.2-beta.3", "10.2.0")  <em>; Returns -1</em>
+MsgBox VerCompare("2.0-a137", "2.0-a136")  <em>; 返回 1</em>
+MsgBox VerCompare("2.0-a137", "2.0")  <em>; 返回 -1</em>
+MsgBox VerCompare("10.2-beta.3", "10.2.0")  <em>; 返回 -1</em>
+</pre>
+</div>
+
+<div class="ex" id="ExPreRange">
+<p><a class="ex_number" href="#ExPreRange"></a> 演示范围检查.</p>
+<pre>
+MsgBox VerCompare("2.0.1", "&gt;=2.0") &amp;&amp; VerCompare("2.0.1", "&lt;2.1")  <em>; 返回 1</em>
 </pre>
 </div>
 

@@ -141,7 +141,7 @@ else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
 </pre>
 
 <h2 id="embedded-scripts">嵌入脚本</h2>
-<p>通过使用 <a href="Scripts.htm#ahk2exe">Ahk2Exe 编译器</a>, 可以将脚本嵌入到标准的 AutoHotkey .exe 文件, 方法是将它们作为 Win32(RCDATA) 资源来添加. 要添加其他脚本, 请参阅 <a href="misc\Ahk2ExeDirectives.htm#AddResource">AddResource</a> 编译器指令.</p>
+<p>通过使用 <a href="Scripts.htm#ahk2exe">Ahk2Exe 编译器</a>, 可以将脚本嵌入到标准的 AutoHotkey .exe 文件, 方法是将它们作为 Win32(RCDATA) 资源来添加. 要添加其他脚本, 请参阅 <a href="misc/Ahk2ExeDirectives.htm#AddResource">AddResource</a> 编译器指令.</p>
 <p>嵌入的脚本可以在命令行中指定, 也可以使用 <a href="commands/_Include.htm">#Include</a> 在资源名称后跟一个星号(*). 对于一个整数 ID, 资源名称必须是一个哈希符号(#), 后面是一个十进制数字.</p>
 <p>程序可以自动从以下资源加载脚本代码, 如果存在于文件中:</p>
 <table class="info">
@@ -190,6 +190,55 @@ else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
 <p>启动器可以通过启动设置GUI来启用、禁用或配置，该GUI可以通过dash访问 <a href="#dash">dash</a>.</p>
 <p><em>使用特定的解释器运行所有脚本</em> 将禁用启动程序, 并允许用户选择使用哪个 exe 来运行所有脚本, 这是传统的方式. 请注意, 选择 v1 exe 将使其难以运行任何支持脚本, 除非通过开始菜单中的 "AutoHotkey" 快捷方式.</p>
 <p><em>启动脚本时的自动检测版本</em> 将激活启动器. 其他设置可以控制启动器如何选择要使用的解释器.</p>
+
+<h3 id="launcher-criteria">Criteria</h3>
+<p>当找到具有相同版本号的多个解释器时, 启动器可以根据预先确定的或用户定义的一组条件对它们进行排序. 这些条件可以表示为以逗号分隔的子字符串列表, 其中每个子字符串可以用 "!" 作为前缀来否定匹配. 根据匹配的子串来计算得分, 最左边的子串具有最高的优先级.</p>
+<p>子字符串在文件的描述中匹配, 但 "UIA" 除外, 如果文件名包含 "_UIA", 则匹配.</p>
+<p>例如, <code>_H, 64, !ANSI</code> 倾向于 AutoHotkey_H(如果可用), 64-位(如果与系统兼容), 最后是 Unicode 而不是 ANSI.</p>
+<p>尽管启动器设置 GUI 提供带有选项的下拉列表, 如 "Unicode 32-bit", 但可以手动输入子字符串列表.</p>
+<p>可以使用 <a href="#SlashRunWith">/RunWith</a> 启动器开关在命令行上指定其他(更高优先级的) 条件.</p>
+<p>Criteria can be specified within the script by using the <a href="commands/_Requires.htm">#Requires</a> directive, either as a requirement (if supported by the target AutoHotkey version), or appended to the directive as a comment beginning with "prefer" and ending with a full stop or line ending. For example:</p>
+<pre>#Requires AutoHotkey v1.1.35 ; prefer 64-bit, Unicode.  More comments.</pre>
+
+<h3 id="launcher-run">Run *Launch</h3>
+<p>安装程序注册一个名为 "launch" 的隐藏 shell 动词, 它使用 <a href="#SlashLaunch">/Launch</a> 开关执行启动程序. 它可以通过以下示例使用:</p>
+<pre>pid := RunWait('*Launch "' PathOfScript '"')</pre>
+<p>与 .ahk 文件的默认操作相比:</p>
+<ul>
+  <li>/Launch 导致新启动脚本的进程 ID(PID) 作为启动器的退出码返回, 而通常情况下, 它会返回启动脚本的退出码. Run 的 <em>OutputVarPID</em> 参数返回启动器的 PID.</li>
+  <li>/Launch 使启动器在启动脚本后立即退出. 如果没有使用 /Launch, 启动器通常必须假定它的父进程可能正在执行 <code>RunWait(PathOfScript)</code> 之类的操作, 如果启动器在启动脚本之前退出, 将无法正常工作.</li>
+</ul>
+
+<h3 id="launcher-cmd">命令行用法</h3>
+<p>如果 .ahk 文件没有默认设置使用启动程序, 或者为了更好地控制其行为, 可以在命令行显式地执行启动程序. 如果编译了启动程序, 它的用法基本上与 AutoHotkey.exe 相同, 除了附加的启动程序开关. 否则, 命令行使用格式如下:</p>
+<pre>AutoHotkeyUX.exe launcher.ahk [<i>Switches</i>] [<i>Script Filename</i>] [<i>Script Parameters</i>]</pre>
+<p>通常, AutoHotkeyUX.exe 和 launcher.ahk 的路径使用全路径和双引号, 可以在 AutoHotkey 安装的 UX 子目录中找到. 一个适当版本的 AutoHotkey32.exe 或 AutoHotkey64.exe 可以用来代替 AutoHotkeyUX.exe(这只是一个副本).</p>
+<p><em>Switches</em> 可以是任何<a href="Scripts.htm#cmd">标准开关</a>和以下启动器专用开关的混合:</p>
+<table class="info">
+  <tr><th>开关</th><th>意义</th></tr>
+  <tr id="SlashLaunch">
+    <td>/Launch</td>
+    <td>导致启动器在启动脚本后立即退出, 而不是在后台等待它终止. 启动器的退出代码是新脚本进程的进程 ID(PID).</td>
+  </tr>
+  <tr id="SlashRunWith">
+    <td>/RunWith <em>criteria</em></td>
+    <td>指定用于确定要使用哪个可执行文件来启动脚本的附加 <a href="#launcher-criteria">criteria</a>. 例如, <code>/RunWith UIA</code>.</td>
+  </tr>
+  <tr id="SlashWhich">
+    <td>/Which</td>
+    <td>
+      <p>使启动器识别它将使用的解释器并返回它, 而不是运行脚本.</p>
+      <p>如果由 #Requires 或语法(如果启用了语法检测) 标识, 启动器的退出代码是主版本号(1 或 2), 否则为 0.</p>
+      <p>Stdout 接收以下 UTF-8 字符串, 每个字符串以 <code>`n</code> 结尾:</p>
+      <ul>
+        <li>版本号. 如果检测到 #Requires, 则这是它指定的任何数字, 不包括 "v". 否则, 它是一个与退出码相同的整数, 除非没有检测到版本, 在这种情况下, 该值为 0 表示用户会被提示, 1 或 2 表示在 Launch Settings 中配置的用户首选版本.</li>
+        <li>如果找到解释器 EXE, 将使用的解释器 EXE 的路径. 如果用户被提示或没有找到兼容的解释器, 则此选项为空.</li>
+        <li>启动器将插入的任何额外的命令行开关, 如 <code>/CP65001</code>.</li>
+      </ul>
+      <p>将来可能会返回更多的行.</p>
+    </td>
+  </tr>
+</table>
 
 <h2 id="dash">Dash</h2>
 <p>Dash 提供了对支持脚本和文档的访问. 它可以在安装后通过开始菜单中的 "AutoHotkey" 快捷方式打开, 或从安装目录 UX\ui-dash.ahk 直接运行. 目前它仅仅是一个包含以下项目的菜单, 但是它可以扩展为活动脚本或其他方便的功能提供控制.</p>

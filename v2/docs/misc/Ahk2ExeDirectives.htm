@@ -78,6 +78,8 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 
 <p id="WorkFileName">除了这些变量名之外, 特殊变量 <strong>A_WorkFileName</strong> 还保存着处理后的 .exe 文件的临时名称. 这可以用来将文件名作为参数传递给任何需要访问生成的 .exe 文件的 <a href="#PostExec">PostExec</a> 指令.</p>
 
+<p id="BasePath">此外, 特殊变量 <strong>A_BasePath</strong> 包含所选基文件的完整路径和名称.</p>
+
 <p id="PriorLine">另外, 特殊变量 <strong>A_PriorLine</strong> 包含了紧接当前编译器指令之前的源代码行. 只忽略中间的空白行和注释, 以及任何中间的编译器指令行. 这个变量可以用来从脚本源代码中 "提取" 常量信息, 并在以后的编译器指令中使用它. 一个例子是访问脚本的版本号, 因为它可能会经常改变. 以这种方式访问版本号, 意味着在源代码中只需要更改一次, 更改的内容会被复制到必要的指令中. (有关详情, 请参阅下面的 RegEx 示例.)</p>
 
 <p>同样, 也可以使用 <a href="#Let">Let</a> 和 <a href="#Obey">Obey</a> 指令来创建形如 <code>U_<i>Name</i></code> 的特殊用户变量, 如下所示.</p>
@@ -97,8 +99,8 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <li>
     <p>假设有一个源码行后面有两个编译器指令, 如下所示:</p>
     <pre>CodeVersion := "1.2.3.4", company := "My Company"</pre>
-    <pre>;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%</pre>
-    <pre>;@Ahk2Exe-Let U_company = %A_PriorLine~U)^(.+"){3}(.+)".*$~$2%</pre>
+    <pre><em>;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%</em></pre>
+    <pre><em>;@Ahk2Exe-Let U_company = %A_PriorLine~U)^(.+"){3}(.+)".*$~$2%</em></pre>
     <p>这些指令将版本号 <code>1.2.3.4</code> 复制到特殊变量 <code>U_version</code>, 将公司名称 <code>My Company</code> 复制到特殊变量 <code>U_company</code> 中, 供后面其他指令使用.<br>
     (第一个正则表达式中的 <code>{1}</code> 在第二个正则表达式中改为 <code>{3}</code> 以便在第三个 <code>"</code> 之后选择提取公司名称.)</p>
   </li>
@@ -129,14 +131,14 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <li>24 (RT_MANIFEST): <code>.manifest</code>. 如果没有指定资源的名称, 则默认为 <code>1</code></li>
 </ul>
 <p><strong>示例 1:</strong> 替换标准图标(除<a href="#SetMainIcon">主图标</a>外):</p>
-<pre>;@Ahk2Exe-AddResource Icon1.ico, 160  ; 替换 '蓝色 H'
+<pre><em>;@Ahk2Exe-AddResource Icon1.ico, 160  ; 替换 '蓝色 H'
 ;@Ahk2Exe-AddResource Icon2.ico, 206  ; 替换 '绿色 S'
 ;@Ahk2Exe-AddResource Icon3.ico, 207  ; 替换 '红色 H'
-;@Ahk2Exe-AddResource Icon4.ico, 208  ; 替换 '红色 S'</pre>
+;@Ahk2Exe-AddResource Icon4.ico, 208  ; 替换 '红色 S'</em></pre>
 
 <p><strong>示例 2:</strong> 要把另一个脚本作为单独的 RCDATA 资源包括在内(请参阅 <a href="../Program.htm#embedded-scripts">嵌入式脚本</a>):</p>
-<pre>;@Ahk2Exe-AddResource MyScript1.ahk, #2
-;@Ahk2Exe-AddResource MyScript2.ahk, MYRESOURCE</pre>
+<pre><em>;@Ahk2Exe-AddResource MyScript1.ahk, #2
+;@Ahk2Exe-AddResource MyScript2.ahk, MYRESOURCE</em></pre>
 <p>注意, 使用此指令添加的每个脚本将由编译器完全单独处理, 并且可以包含更多的指令. 如果有任何相冲突的指令, 编译器将使用最后遇到的那个指令.</p>
 
 <h3 id="Bin">Bin / Base</h3>
@@ -151,7 +153,7 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <dt>[Exe_path\][Name]</dt>
   <dd><i>(可选)</i> 要给 .exe 的文件名. 任何提供的扩展名都将被替换为 <code>.exe</code>. 如果没有指定路径, 则会在脚本文件夹中创建 .exe 文件. 如果没有指定名称, .exe 将使用默认名称. (这个参数可以被 <a href="#ExeName">ExeName</a> 指令覆盖.)</dd>
   <dt>Codepage</dt>
-  <dd><i>(可选)</i> 覆盖用于处理脚本文件的默认 <a href="http://msdn.microsoft.com/en-us/library/dd317756.aspx">代码页</a>. (脚本应该以 Unicode 字节顺序标记(BOM) 开始, 因此不需要使用这个参数.)</dd>
+  <dd><i>(可选)</i> 覆盖用于处理脚本文件的默认 <a href="https://learn.microsoft.com/windows/desktop/Intl/code-page-identifiers">代码页</a>. (脚本应该以 Unicode 字节顺序标记(BOM) 开始, 因此不需要使用这个参数.)</dd>
 </dl>
 
 <h3 id="ConsoleApp">ConsoleApp</h3>
@@ -182,9 +184,9 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <dd>.exe 文件的名称. 任何提供的扩展名都将被替换为 <code>.exe</code>. 如果没有指定路径, .exe 将在脚本文件夹中创建. 如果没有指定名称, .exe 将使用默认名称.</dd>
 </dl>
 <strong>示例:</strong>
-<pre>;@Ahk2Exe-Obey U_bits, = %A_PtrSize% * 8
+<pre><em>;@Ahk2Exe-Obey U_bits, = %A_PtrSize% * 8
 ;@Ahk2Exe-Obey U_type, = "%A_IsUnicode%" ? "Unicode" : "ANSI"
-;@Ahk2Exe-ExeName %A_ScriptName~\.[^\.]+$%_%U_type%_%U_bits%</pre>
+;@Ahk2Exe-ExeName %A_ScriptName~\.[^\.]+$%_%U_type%_%U_bits%</em></pre>
 
 <h3 id="Let">Let</h3>
 <p>创建(或修改) 一个或多个用户变量, 这些变量可以通过 <code>%U_<i>Name</i>%</code> 来访问, 类似于内置变量(见上文).</p>
@@ -204,9 +206,9 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <dd><i>(可选)</i> 任何文本, 会被忽略.</dd>
 </dl>
 <strong>示例:</strong>
-<pre>Ver := A_AhkVersion "" ; 如果加引号的原义文字不为空, 执行 'SetVersion'
+<pre>Ver := A_AhkVersion "" <em>; 如果加引号的原义文字不为空, 执行 'SetVersion'
 ;@Ahk2Exe-Obey U_V, = "%A_PriorLine~U)^(.+")(.*)".*$~$2%" ? "SetVersion" : "Nop"
-;@Ahk2Exe-%U_V%        %A_AhkVersion%%A_PriorLine~U)^(.+")(.*)".*$~$2%</pre>
+;@Ahk2Exe-%U_V%        %A_AhkVersion%%A_PriorLine~U)^(.+")(.*)".*$~$2%</em></pre>
 
 <h3 id="Obey">Obey</h3>
 <p>执行独立于 AutoHotkey 的命令或表达式, 结果为 <code>U_<i>Name</i></code>.</p>
@@ -218,11 +220,11 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <dd>
     <p>要执行的命令或表达式.</p>
     <p><strong>Command</strong> 格式必须使用 <em>Name</em> 作为输出变量(通常是第一个参数), 例如</p>
-    <pre>;@Ahk2Exe-Obey U_date, FormatTime U_date`, R D2 T2</pre>
+    <pre><em>;@Ahk2Exe-Obey U_date, FormatTime U_date`, R D2 T2</em></pre>
     <p><strong>Expression</strong> 格式必须以 <code>=</code> 开头, 例如</p>
-    <pre>;@Ahk2Exe-Obey U_type, = "%A_IsUnicode%" ? "Unicode" : "ANSI"</pre>
+    <pre><em>;@Ahk2Exe-Obey U_type, = "%A_IsUnicode%" ? "Unicode" : "ANSI"</em></pre>
     <p>表达式可以用命令格式来写, 例如</p>
-    <pre>;@Ahk2Exe-Obey U_bits, U_bits := %A_PtrSize% * 8</pre>
+    <pre><em>;@Ahk2Exe-Obey U_bits, U_bits := %A_PtrSize% * 8</em></pre>
     <p>如果需要, 用 <code>`n</code> 分隔多个命令和表达式.</p>
   </dd>
   <dt>Extra</dt>
@@ -230,7 +232,7 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
 </dl>
 
 <h3 id="PostExec">PostExec</h3>
-<p>指定在编译成功后, 在任何<a href="../Scripts.htm#mpress">压缩程序</a>应用于 .exe 文件之前(或之后) 要执行的程序.</p>
+<p>指定在编译成功后, 在任何<a href="../Scripts.htm#mpress">压缩程序</a>应用于 .exe 文件之前(或之后) 要执行的程序. 该指令可以多次出现, 并将按照编译器遇到的顺序, 在由 <code>When</code> 参数指定的适当队列中执行.</p>
 <pre class="Syntax"><span class="func">;@Ahk2Exe-PostExec</span> Program [parameters] <span class="optional">, When, WorkingDir, Hidden, IgnoreErrors</span></pre>
 <dl>
   <dt>Program [parameters]</dt>
@@ -251,15 +253,20 @@ MsgBox "这条信息同时出现在已编译和未编译的脚本中"
   <dt>IgnoreErrors</dt>
   <dd><i>(可选)</i> 如果设置为 1, 则不会向用户报告程序启动或运行过程中发生的任何错误.</dd>
 </dl>
-<p><strong>示例 1:</strong> (要使用这些例子, 首先要下载 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 并根据下载的脚本中的说明进行编译.)</p>
+<p><strong>示例 1:</strong> (要使用前两个例子, 首先要下载 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 并根据下载的脚本中的说明进行编译.)</p>
 <p>这个例子可以用来删除生成的 .exe 文件中对 "AutoHotkey" 的引用, 以掩盖它是一个编译过的 AutoHotkey 脚本:</p>
-<pre>;@Ahk2Exe-Obey U_au, = "%A_IsUnicode%" ? 2 : 1    ; Script ANSI or Unicode?
+<pre><em>;@Ahk2Exe-Obey U_au, = "%A_IsUnicode%" ? 2 : 1    ; Script ANSI or Unicode?
 ;@Ahk2Exe-PostExec "BinMod.exe" "%A_WorkFileName%"
-;@Ahk2Exe-Cont  "%U_au%2.&gt;AUTOHOTKEY SCRIPT&lt;. DATA              "</pre>
+;@Ahk2Exe-Cont  "%U_au%2.&gt;AUTOHOTKEY SCRIPT&lt;. DATA              "</em></pre>
 <p><strong>示例 2:</strong> 这个例子将改变一个 UPX 压缩的 .exe 文件, 使它不能用 <code>UPX -d</code> 来解压:</p>
-<pre>;@Ahk2Exe-PostExec "BinMod.exe" "%A_WorkFileName%"
-;@Ahk2Exe-Cont  "11.UPX." "1.UPX!.", 2</pre>
-<p><a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 脚本中还有一些其他的例子.</p>
+<pre><em>;@Ahk2Exe-PostExec "BinMod.exe" "%A_WorkFileName%"
+;@Ahk2Exe-Cont  "11.UPX." "1.UPX!.", 2</em></pre>
+<p>(<a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/BinMod.ahk">BinMod.ahk</a> 脚本中还有一些其他的例子.)</p>
+<p><strong>示例 3:</strong> 如果在 CLI 或 GUI 中没有指定压缩, 则此示例指定要在在编译脚本上使用的<a href="../Scripts.htm#mpress">压缩程序</a>. 编译器通常使用的默认参数如下所示.</p><p>对于 MPRESS:</p>
+<pre><em>;@Ahk2Exe-PostExec "MPRESS.exe" "%A_WorkFileName%" -q -x, 0,, 1</em></pre>
+<p>对于 UPX:</p>
+<pre><em>;@Ahk2Exe-PostExec "UPX.exe" "%A_WorkFileName%" 
+;@Ahk2Exe-Cont  -q --all-methods --compress-icons=0, 0,, 1</em></pre>
 
 <h3 id="ResourceID">ResourceID</h3>
 <p>指定一个非标准的资源 ID, 用于使用 <a href="#Bin">.exe 基文件</a>编译的主脚本(请参阅 <a href="../Program.htm#embedded-scripts">嵌入脚本</a>). 这个指令可以被 GUI 或 CLI 中指定的资源 ID 所覆盖. 如果该指令出现在由 <a href="#AddResource">AddResource</a> 指令插入的脚本中, 则会被忽略.</p>
