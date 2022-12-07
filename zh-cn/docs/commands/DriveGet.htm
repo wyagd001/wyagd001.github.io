@@ -22,49 +22,72 @@
 <p>对于 <em>SubCommand</em>, 指定以下命令之一:</p>
 <ul>
     <li><a href="#List">List</a>: 检索(获取) 一串字母, 其中每个字母表示系统中的一个驱动器.</li>
-    <li><a href="#Capacity">Capacity</a>: 检索指定路径的总容量, 以 MB 为单位.</li>
+    <li><a href="#Capacity">Capacity</a>: 检索指定驱动器的总容量, 以 MB 为单位.</li>
     <li><a href="#FileSystem">FileSystem</a>: 检索指定驱动器的文件系统的类型.</li>
     <li><a href="#Label">Label</a>: 检索指定驱动器的卷标.</li>
     <li><a href="#Serial">Serial</a>: 检索指定驱动器的卷序列号.</li>
-    <li><a href="#Type">Type</a>: 检索指定路径的驱动器类型.</li>
-    <li><a href="#Status">Status</a>: 检索指定路径的状态.</li>
+    <li><a href="#Type">Type</a>: 检索包含指定路径的驱动器的类型.</li>
+    <li><a href="#Status">Status</a>: 检索包含指定路径的驱动器的状态.</li>
     <li><a href="#StatusCD">StatusCD</a>: 检索 CD 或 DVD 驱动器的媒体状态.</li>
 </ul>
 
 <h3 id="List">List</h3>
-<p>检索一串字母, 其中每个字母表示系统中的一个驱动器. 例如: ACDEZ.</p>
+<p>检索一串字母, 其中每个字母表示系统中的一个驱动器.</p>
 <pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, List <span class="optional">, Type</span></pre>
-<p>如果省略 <em>Type</em>, 则获取所有类型的驱动器. 否则, 指定 <em>Type</em> 为下列单词的其中一个来获取该特定类型的驱动器: CDROM, REMOVABLE, FIXED, NETWORK, RAMDISK, UNKNOWN.</p>
+<p>例如: ACDEZ. 如果省略 <em>Type</em>, 则获取所有类型的驱动器. 否则, 指定 <em>Type</em> 为下列单词的其中一个来获取该特定类型的驱动器: CDROM, REMOVABLE, FIXED, NETWORK, RAMDISK, UNKNOWN.</p>
 
-<h3 id="Capacity">Capacity</h3>
-<p>检索指定 <em>Path</em>(例如 <code>C:\</code>) 的总容量, 单位为 MB.</p>
+<h3 id="Capacity">Capacity(或 Cap)</h3>
+<p>检索指定包含指定路径的驱动器的总容量, 单位为 MB.</p>
 <pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Capacity, Path</pre>
-<p>使用 <a href="DriveSpaceFree.htm">DriveSpaceFree</a> 来获取可用空间. Cap 可用来代替 Capacity.</p>
+<p><var>Path</var> 是驱动器包含的任何路径(可能也适用于 UNC 路径和映射驱动器). 结果四舍五入到最接近的整数. 使用 <a href="DriveSpaceFree.htm">DriveSpaceFree</a> 来获取可用的空间.</p>
 
-<h3 id="FileSystem">FileSystem</h3>
-<p>检索 <em>Drive</em> 的文件系统的类型.</p>
+<h3 id="FileSystem">FileSystem(或 FS)</h3>
+<p>检索指定驱动器的文件系统的类型.</p>
 <pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, FileSystem, Drive</pre>
-<p><em>Drive</em> 由驱动器字母, 跟着一个冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. <em>OutputVar</em> 将被设为下列单词的其中一个: FAT, FAT32, NTFS, CDFS(通常表示 CD), UDF(通常表示 DVD). 如果驱动器中不包含格式化的媒体, <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1. FS 可用来代替 FileSystem.</p>
+<p><em>Drive</em> 由驱动器字母, 跟着一个冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. <em>OutputVar</em> 的可能值由系统定义; 它们包括(但不限于) 以下: NTFS, FAT32, FAT, CDFS(通常表示 CD), 或 UDF(通常表示 DVD). 如果驱动器中不包含格式化的媒体, <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
 
 <h3 id="Label">Label</h3>
-<p>检索 <em>Drive</em> 的卷标.</p>
+<p>检索指定驱动器的卷标.</p>
 <pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Label, Drive</pre>
-<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. 要改变卷标, 请参照此例: <code><a href="Drive.htm">Drive</a>, Label, C:, MyLabel</code>.</p>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>.</p>
+<p>要改变卷标, 请使用 <a href="Drive.htm#Label">Drive 的 Label 子命令</a>, 如 <code>Drive, Label, C:, MyLabel</code>.</p>
 
 <h3 id="Serial">Serial</h3>
-<p>检索以十进制数表示的 <em>Drive</em> 的卷序列号.</p>
+<p>检索以十进制数表示的指定驱动器的卷序列号.</p>
 <pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Serial, Drive</pre>
-<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. 请参阅 <a href="Format.htm">Format()</a> 或 <a href="SetFormat.htm">SetFormat</a> 了解如何把它转换成十六进制.</p>
+<p><em>Drive</em> 由驱动器字母, 跟着冒号和可选的反斜杠组成, 或为 UNC 名称, 例如 <code>\\server1\share1</code>. 请参阅 <a href="Format.htm">Format()</a> 或 <a href="SetFormat.htm">SetFormat</a> 了解如何把结果转换成十六进制.</p>
 
 <h3 id="Type">Type</h3>
-<p>检索 <em>Path</em> 的驱动器类型.</p>
+<p>检索包含指定路径的驱动器的类型.</p>
 <pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Type, Path</pre>
-<p><em>OutputVar</em> 为下列单词的其中一个: Unknown, Removable, Fixed, Network, CDROM, RAMDisk.</p>
+<p><var>Path</var> 是驱动器包含的任何路径(可能也适用于 UNC 路径和映射驱动器). 如果路径无效(例如, 驱动器不存在), 则 <em>OutputVar</em> 置空. 否则, 它被设置为以下单词之一: Unknown, Removable, Fixed, Network, CDROM, RAMDisk.</p>
 
 <h3 id="Status">Status</h3>
-<p>检索 <em>Path</em> 的状态.</p>
+<p>检索包含指定路径的驱动器的状态.</p>
 <pre class="Syntax"><span class="func">DriveGet</span>, OutputVar, Status, Path</pre>
-<p><em>OutputVar</em> 为下列单词的其中一个: Unknown(能表示未格式化/RAW), Ready, NotReady(常表示不含媒体的可移动驱动器), Invalid(<em>Path</em> 不存在或为当前无法访问的网络驱动器, 等等.)</p>
+<p><var>Path</var> 是驱动器包含的任何路径(可能也适用于 UNC 路径和映射驱动器). <em>OutputVar</em> 被设置为以下单词之一:</p>
+<table class="info">
+    <tr>
+        <th style="width:15%">Status</th>
+        <th>注意</th>
+    </tr>
+    <tr>
+        <td>Unknown</td>
+        <td>能表示未格式化/RAW 文件系统.</td>
+    </tr>
+    <tr>
+        <td>Ready</td>
+        <td>这是最常见的.</td>
+    </tr>
+    <tr>
+        <td>NotReady</td>
+        <td>常表示不含媒体的可移动驱动器.</td>
+    </tr>
+    <tr>
+        <td>Invalid</td>
+        <td><em>Path</em> 不存在或为当前无法访问的网络驱动器, 等等.</td>
+    </tr>
+</table>
 
 <h3 id="StatusCD">StatusCD</h3>
 <p>检索 CD 或 DVD 驱动器的媒体状态.</p>
@@ -72,8 +95,8 @@
 <p><em>Drive</em> 由驱动器字母跟着冒号组成. 如果省略  <em>Drive</em>, 则使用默认的 CD/DVD 驱动器. 如果无法确定它的状态, <em>OutputVar</em> 被置空. 否则, 它被设置为下列字符串的其中一个:</p>
 <table class="info">
     <tr>
-        <th style="width:15%">字符串</th>
-        <th abbr="Descr">描述</th>
+        <th style="width:15%">状态</th>
+        <th abbr="Descr">意义</th>
     </tr>
     <tr>
         <td>not ready</td>
@@ -102,7 +125,7 @@
 </table>
 <p>此子命令对网络驱动器或非 CD/DVD 驱动器不起作用; 如果因为这种或其他原因失败了, 则 <em>OutputVar</em> 被置空且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
 <p>如果托盘刚才被关闭, 则此子命令可能需要一些时间才能完成.</p>
-<p>要弹出或收回托盘, 请参阅 <a href="Drive.htm">Drive</a> 命令.</p>
+<p>要弹出或收回托盘, 请参阅 <a href="Drive.htm#Eject">Drive 的 Eject 子命令</a>.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>

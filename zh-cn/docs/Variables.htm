@@ -158,8 +158,15 @@ msgbox % (-2)**0.5 ; 结果为空
   </tr>
   <tr id="bitwise">
     <td class="center bold">&lt;&lt;<br>
-	   &gt;&gt;</td>
-    <td><strong>按位左移(&lt;&lt;)</strong> 和 <strong>右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 任何浮点数在计算前会被截取成整数. 左移(<strong>&lt;&lt;</strong>) 相当于把 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂". 右移(<strong>&gt;&gt;</strong>) 相当于把 <em>Value1</em> 除以 "2 的 <em>Value2</em> 次幂" 并把结果往下取整到最近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2.<br>译者注: 由于左移操作的运算速度比乘法的运算速度高很多, 因此在处理数据的乘法运算的时, 采用位移运算可以获得较快的速度(对 2 的乘法运算转换为位移运算, 可提高程序的运行效率).<br>实例过程演示: 例 5 &lt;&lt; 2(左移 2 位, 空出的位置上填 0, 最高位溢出则舍弃), 0000 0101(十进制 5) → 0001 0100(十进制 20). 右移与之相反, 对应除法(对 2 的整除运算).</td>
+    &gt;&gt;<br>
+    &gt;&gt;&gt;</td>
+    <td>
+      <p><strong>按位左移(&lt;&lt;)</strong>. 用法示例: <code>Value1 &lt;&lt; Value2</code>. 这等同于将 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂".</p>
+      <p><strong>算术位右移(&gt;&gt;)</strong>. 用法示例: <code>Value1 &gt;&gt; Value2</code>. 这等同于将 <em>Value1</em> 除以 "2 的 <em>Value2</em> 次幂" 并把结果舍入到数轴上向左取整到最近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2.</p>
+      <p><strong>逻辑位右移(&gt;&gt;&gt;)</strong> <span class="ver">[v1.1.35+]</span>. 用法示例: <code>Value1 &gt;&gt;&gt; Value2</code>. 与算术位右移不同, 这不会保留数字的符号. 例如, -1 与无符号 64 位整数 0xffffffffffffffff 具有相同的位表示, 因此 <code>-1 &gt;&gt;&gt; 1</code> 就是 0x7fffffffffffffff.</p>
+      <p>对于这三个操作符, 在计算之前, 任何浮点输入都被截断为整数. 如果 <em>Value2</em> 小于 0 或大于 63, 则结果未定义.</p>
+      <p class="note"><strong>译者注</strong>: 由于左移操作的运算速度比乘法的运算速度高很多, 因此在处理数据的乘法运算的时, 采用位移运算可以获得较快的速度(对 2 的乘法运算转换为位移运算, 可提高程序的运行效率).<br>实例过程演示: 例 5 &lt;&lt; 2(左移 2 位, 空出的位置上填 0, 最高位溢出则舍弃), 0000 0101(十进制 5) → 0001 0100(十进制 20). 右移与之相反, 对应除法(对 2 的整除运算).</p>
+    </td>
   </tr>
   <tr>
     <td class="center bold">&amp;<br>
@@ -190,18 +197,18 @@ msgbox % (-2)**0.5 ; 结果为空
     <td><span class="ver">[AHK_L 31+]:</span> 这是 <a href="commands/RegExMatch.htm">RegExMatch()</a> 的简写形式. 例如, <code>"abc123" ~= "\d"</code> 会设置 ErrorLevel 为 0 并返回数字 4(首个数字的位置). 在 <span class="ver">[v1.1.03]</span> 之前, 此运算符和 <em>等号 </em>(=) 或 (:=) 运算符优先级相同, 但并未在文档中说明.<br>译者注, ~= 的优先级低于 not(!), 也就是说会先取反再匹配. 下面是一个很深的坑, 请测试下面这个<span class="red">错误的例子</span>:<br>
     <pre>
 str := "d"
-if (! str ~= "abc"){     	;~ 必须用括号包围才能获得预期的效果 if ! (str ~= "abc")
-  Msgbox 无法匹配字母 %str%   	;~ 不会进入这里
+if (! str ~= "abc"){        ; 必须用括号包围才能获得预期的效果 if ! (str ~= "abc")
+  Msgbox 无法匹配字母 %str% ; 不会进入这里
 } else {
-  Msgbox 可以匹配字母 %str%	;~ 出乎意料的结果
+  Msgbox 可以匹配字母 %str% ; 出乎意料的结果
 }
     </pre>
 再来测试, not(!) 与 := 相比优先级更低, 这是一个<span class="red">结果可以预料的例子</span>:
     <pre>
-if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
+if (!str := "a"){            ; 效果同 if ! (str := "a")
   Msgbox 不正常: %str% 为 false
 }else{
-  Msgbox 正常: %str% 为 true	;~ 预期的效果
+  Msgbox 正常: %str% 为 true ; 预期的效果
 }
     </pre>
     </td>
@@ -216,10 +223,12 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   </tr>
   <tr id="equal">
     <td class="center bold">=<br>
-	  ==<br>
-	  &lt;&gt; !=</td>
+    ==<br>
+    &lt;&gt; !=<br>
+    !==</td>
     <td>
-      <p><strong>Equal (=)</strong>, <strong>区分大小写的等于(==)</strong> 和 <strong>不等于(&lt;&gt; 或 !=)</strong>. 如果两个输入都是<a href="Concepts.htm#numbers">数字</a>或<a href="Concepts.htm#numeric-strings">数字字符串</a>时, 则会对其进行数字比较; 否则按字母顺序进行比较. 运算符 <strong>!=</strong> 和 <strong>&lt;&gt;</strong> 在功能上是完全相同的. 运算符 <strong>==</strong> 的行为与 <strong>=</strong> 完全相同, 除了其中一个输入不是数字时, <strong>==</strong> 总是区分大小写, 而 <strong>=</strong> 总是不区分大小写(不区分大小写的方法取决于 <a href="commands/StringCaseSense.htm">StringCaseSense</a>). 与之相比, <strong>&lt;&gt;</strong> 和 <strong>!=</strong> 都遵循 <a href="commands/StringCaseSense.htm">StringCaseSense</a>.</p>
+      <p><strong>不区分大小写的等号(=)</strong>, <strong>区分大小写的等号(==)</strong> 和 <strong>不相等(&lt;&gt; 或 !=)</strong>. 如果两个输入都是<a href="Concepts.htm#numbers">数字</a>或<a href="Concepts.htm#numeric-strings">数字字符串</a>时, 则会对其进行数字比较; 否则按字母顺序进行比较. 运算符 <strong>!=</strong> 和 <strong>&lt;&gt;</strong> 在功能上是完全相同的. 运算符 <strong>==</strong> 的行为与 <strong>=</strong> 相同, 除了其中一个输入不是数字时, <strong>==</strong> 总是区分大小写, 而 <strong>=</strong> 总是不区分大小写(不区分大小写的方法取决于 <a href="commands/StringCaseSense.htm">StringCaseSense</a>). 与之相比, <strong>&lt;&gt;</strong> 和 <strong>!=</strong> 都遵循 <a href="commands/StringCaseSense.htm">StringCaseSense</a>.</p>
+      <p><strong>区分大小写的不等号(!==)</strong> <span class="ver">[v1.1.35+]</span>. 行为与 <strong>==</strong> 相同, 只是结果是相反的.</p>
       <p class="note"><strong>注意</strong>: 在 AutoHotkey v1 中, 直接在表达式中使用的带引号字符串(或与带引号的字符串连接的结果) 始终不被认为是数字.</p>
       <p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用 &lt;&gt; 运算符. 请使用 != 运算符代替.</p>
     </td>
@@ -254,12 +263,14 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
         &amp;=<br>
         ^=<br>
         &gt;&gt;=<br>
-        &lt;&lt;=
+        &lt;&lt;=<br>
+        &gt;&gt;&gt;=
     </td>
     <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中(但在 1.0.46 之前的版本中, 这些运算符只能在一行中最左边使用, 且仅支持前五个运算符). 最简单的赋值运算符为<a href="commands/SetExpression.htm">冒号等号(:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#FloorDivide">向下舍除</a>, 把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 同样地, <code>Var <strong>.=</strong> "abc"</code> 为 <code>Var := Var <strong>.</strong> "abc"</code> 的一种简写形式. </p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>. </p>
     <p>如果使用赋值运算的结果作为其他某些运算符的输入, 那么输入的值是变量自身. 例如, 如果变量 <em>Var</em> 新增值后大于 50, 那么表达式 <code>(Var+=2) &gt; 50</code> 结果为真. 这样还允许赋值被作为 <a href="Functions.htm#ByRef">ByRef</a> 传递或获取它的<a href="#amp">地址</a>, 例如: <code>&amp;(x:="abc")</code>. </p>
-    <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等价于 <code>not (x:=y)</code>. 同样地, <code>++Var := X</code> 等价于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等价于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>. </p>
+    <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等价于 <code>not (x:=y)</code>. 同样地, <code>++Var := X</code> 等价于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等价于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
+    <p><strong>&gt;&gt;&gt;=</strong> 需要 <span class="ver">[v1.1.35+]</span>.</p>
     <p>由向后兼容引起的已知限制(可能会在未来的版本中解决): 1) 当 <strong>/=</strong> 为表达式中最左边的运算符并且它不是<a href="#comma">多语句表达式</a>的一部分时, 而且输入都不是浮点数时, 它会执行<a href="#FloorDivide">向下舍除</a>(在其他所有情况中, <strong>/=</strong> 会执行<a href="#divide">真除</a>); 2) 仅当 <strong>+=</strong> 和 <strong>-=</strong> 为一行中最左边的运算符时, 它们才支持<a href="commands/EnvAdd.htm">日期/时间的计算</a>; 3) 运算符 <strong>+=</strong>, <strong>-=</strong> 和 <strong>*=</strong> 仅在空变量在一行单独使用时才把空变量视为零; 例如, <code>y:=1, x+=1</code> 和 <code>MsgBox % x-=3</code> 当 x 为空时都得到空的结果. </p></td>
   </tr>
   <tr id="comma">
@@ -276,8 +287,11 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
     <th abbr="Descr">描述</th>
   </tr>
 <tr>
-<td class="center"><strong>(</strong><em>expression</em><strong>)</strong></td>
-<td><p>括号中包含的任何子表达式. 例如, <code>(3 + 2) * 2</code> 强制 <code>3 + 2</code> 首先计算.</p></td>
+   <td class="center"><strong>(</strong><em>expression</em><strong>)</strong></td>
+   <td>
+      <p>括号中包含的任何子表达式. 例如, <code>(3 + 2) * 2</code> 强制 <code>3 + 2</code> 首先计算.</p>
+      <p>对于多语句表达式, 将返回 <u>最开始的</u> 语句的结果. 例如, <code>(a := 1, b := 2, c := 3)</code> 返回 1.</p>
+    </td>
 </tr>
   <tr>
     <td class="center"><p><strong>mod()<br>
@@ -363,6 +377,10 @@ if (!str := "a"){ 	;~ 效果同 if ! (str := "a")
   <tr id="WorkingDir">
     <td>A_WorkingDir</td>
     <td>脚本当前工作目录, 这是脚本访问文件的默认路径. 除非是根目录, 否则路径末尾不包含反斜杠. 两个示例: C:\ 和 C:\My Documents. 使用 <a href="commands/SetWorkingDir.htm">SetWorkingDir</a> 可以改变当前工作目录.</td>
+  </tr>
+  <tr id="InitialWorkingDir">
+    <td>A_InitialWorkingDir<br><span class="ver">[v1.1.35+]</span></td>
+    <td>脚本的初始工作目录, 这是由启动方式决定的. 例如, 如果它是通过快捷方式运行的 -- 比如在开始菜单上 -- 它的初始工作目录由快捷方式属性中的 "起始位置" 字段决定.</td>
   </tr>
   <tr id="ScriptDir">
     <td>A_ScriptDir</td>
@@ -995,7 +1013,10 @@ return
   </tr>
   <tr id="Clipboard">
     <td>Clipboard</td>
-    <td>可用于获取或设置操作系统剪贴板的内容. 有关详情, 请参阅<a href="misc/Clipboard.htm">剪贴板</a>.</td>
+    <td rowspan="2">可用于获取或设置操作系统剪贴板的内容. 有关详情, 请参阅<a href="misc/Clipboard.htm">剪贴板</a>.</td>
+  </tr>
+  <tr id="A_Clipboard">
+    <td>A_Clipboard <span class="ver">[v1.1.35+]</span></td>
   </tr>
   <tr id="ClipboardAll">
     <td>ClipboardAll</td>

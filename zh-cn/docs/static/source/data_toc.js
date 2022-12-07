@@ -31,6 +31,7 @@
   ["环境变量","",
   [
     ["ClipWait","commands/ClipWait.htm"],
+    ["DPI Scaling","misc/DPIScaling.htm"],
     ["EnvGet","commands/EnvGet.htm"],
     ["EnvSet","commands/EnvSet.htm"],
     ["EnvUpdate","commands/EnvUpdate.htm"],
@@ -272,6 +273,7 @@
     ["IsFunc()","commands/IsFunc.htm"],
     ["IsLabel()","commands/IsLabel.htm"],
     ["IsObject()","commands/IsObject.htm"],
+    ["IsSet()","commands/IsSet.htm"],
     ["ListLines","commands/ListLines.htm"],
     ["ListVars","commands/ListVars.htm"],
     ["OutputDebug","commands/OutputDebug.htm"],
@@ -352,7 +354,8 @@
     ["StrReplace()","commands/StrReplace.htm"],
     ["StrSplit()","commands/StrSplit.htm"],
     ["SubStr()","commands/SubStr.htm"],
-    ["Trim() / LTrim() / RTrim()","commands/Trim.htm"]
+    ["Trim() / LTrim() / RTrim()","commands/Trim.htm"],
+    ["VerCompare()","commands/VerCompare.htm"]
   ]],
   ["窗口","",
   [

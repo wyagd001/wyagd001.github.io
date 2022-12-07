@@ -45,7 +45,7 @@
   </tr>
   <tr id="opt_s">
     <td class="center bold">s</td>
-    <td>DotAll. 此选项会让句点(.) 匹配包含换行符在内的所有字符(一般情况下, 它不能匹配换行符). 然而, 如果换行符是默认的 CRLF(`r`n), 则必须使用两个句点才能进行匹配(不是一个). 不论是否使用此选项, 排除型字符类(例如 <span class="regex">[^a]</span>) 总能匹配换行符.</td>
+    <td>DotAll. 此选项会让句点(.) 匹配包含换行符在内的所有字符(一般情况下, 不能匹配换行符). 然而, 两个句点才能匹配 CRLF(`r`n) 换行序列, 不是一个. 不论是否使用此选项, 排除型字符类(例如 <span class="regex">[^a]</span>) 总能匹配换行符.</td>
   </tr>
   <tr id="opt_x">
     <td class="center bold">x</td>
@@ -111,7 +111,7 @@
   </tr>
 	<tr id="dot">
 		<td class="center bold">.</td>
-		<td>默认情况下, 句点匹配换行符(`r`n) 中除 `r 外的任何单个字符, 但是这种特性可以使用 <a href="#opt_s">DotAll(s)</a>, <a href="#opt_esc_n">换行符(`n)</a>, <a href="#opt_esc_r">回车符(`r)</a>, <a href="#NEWLINE_ANY">`a 或(*ANYCRLF)</a> 选项进行改变. 例如, <span class="regex">ab.</span> 可以匹配 <span class="subj">abc</span> 和 <span class="subj">abz</span> 以及 <span class="subj">ab_</span>.</td>
+		<td>默认情况下, 句点匹配除换行符(`r`n) 中的 `r 或 `n 外的任何单个字符, 但是这种特性可以使用 <a href="#opt_s">DotAll(s)</a>, <a href="#opt_esc_n">换行符(`n)</a>, <a href="#opt_esc_r">回车符(`r)</a>, <a href="#NEWLINE_ANY">`a 或(*ANYCRLF)</a> 选项进行改变. 例如, <span class="regex">ab.</span> 可以匹配 <span class="subj">abc</span> 和 <span class="subj">abz</span> 以及 <span class="subj">ab_</span>.</td>
 	</tr>
 	<tr>
 		<td class="center bold">*</td>
@@ -176,7 +176,7 @@
 	    <ul>
 	      <li>确定求值的顺序. 例如, <span class="regex">(Sun|Mon|Tues|Wednes|Thurs|Fri|Satur)day</span> 可以匹配任何一天的名称.</li>
 	      <li>把 <strong>*</strong>, <strong>?</strong>, <strong>+</strong> 或 <strong>{min,max}</strong> 应用到 <em>系列</em> 字符而不只是单个字符. 例如, <span class="regex">(abc)+</span> 匹配一个或一串字符串 "abc"; 因此它可以匹配 <span class="subj">abcabc</span>123 但不会匹配 ab123 或 bc123.</li>
-          <li id="capture">捕获子模式. 如 <span class="regex">abc<span class="red">(.*)</span>xyz</span> 中被圆括号包围的句点和星号的匹配子模式. 调用 <a href="../commands/RegExMatch.htm">RegExMatch()</a> 函数时, 会把匹配成功的每个子模式字符串保存到它的 <a href="../commands/RegExMatch.htm#Array">output array</a>(输出数组) 参数中. 而调用 <a href="../commands/RegExReplace.htm">RegExReplace()</a> 函数时, 允许把匹配成功的每个子模式字符串通过<a href="../commands/RegExReplace.htm#BackRef">后引用</a>(如 $1 表示匹配到的第一组) 重新插入到最终替换结果中. 如果希望括号中的子模式内容不参与<a href="../commands/RegExReplace.htm#BackRef">后引用</a>, 可以在括号内开始位置增加 <strong>?:</strong> 这两个符号, 例如: <span class="regex">(<span class="red">?:</span>.*)</span><br><strong class="red">译者注</strong> 举个对比的例子:<br><code>RegExReplace("abc123efg555", "abc(.*)efg(.*)", "pre$1sub") ; 返回 pre123sub<br>RegExReplace("abc123efg555", "abc(<span class="red">?:</span>.*)efg(.*)", "pre$1sub") ; 返回 <span class="red">pre555sub</span></code></li>
+          <li id="capture">捕获子模式. 如 <span class="regex">abc<span class="red">(.*)</span>xyz</span> 中被圆括号包围的句点和星号的匹配子模式. 调用 <a href="../commands/RegExMatch.htm">RegExMatch()</a> 函数时, 会把匹配成功的每个子模式字符串保存到它的 <a href="../commands/RegExMatch.htm#Array">output array</a>(输出数组) 参数中. 而调用 <a href="../commands/RegExReplace.htm">RegExReplace()</a> 函数时, 允许把匹配成功的每个子模式字符串通过<a href="../commands/RegExReplace.htm#BackRef">后引用</a>(如 $1 表示匹配到的第一组) 重新插入到最终替换结果中. 如果希望括号中的子模式内容不参与<a href="../commands/RegExReplace.htm#BackRef">后引用</a>, 可以在括号内开始位置增加 <strong>?:</strong> 这两个符号, 例如: <span class="regex">(<span class="red">?:</span>.*)</span><br><strong class="red">译者注</strong> 举个对比的例子:<br><code>RegExReplace("abc123efg555", "abc(.*)efg(.*)", "pre$1sub") ; 返回 pre123sub</code><br><code>RegExReplace("abc123efg555", "abc(<span class="red">?:</span>.*)efg(.*)", "pre$1sub") ; 返回 <span class="red">pre555sub</span></code></li>
 	      <li>在匹配过程中改变<a href="#Options">选项</a>. 例如, <span class="regex">(?im)</span> 会为模式的后续部分打开不区分大小写和多行选项(如果它在子模式中则它会改变子模式的选项). 相反地, <span class="regex">(?-im)</span> 会关闭它们. 支持除 DPS`r`n`a 外的所有选项.</li>
 	    </ul></td>
   </tr>

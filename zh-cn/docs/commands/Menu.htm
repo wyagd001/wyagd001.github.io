@@ -106,7 +106,8 @@ Menu, Tray, Add, This menu item is a submenu, :MySubmenu</pre>
 <h3 id="Delete">Delete</h3>
 <p>从菜单中删除指定的菜单项.</p>
 <pre class="Syntax"><span class="func">Menu</span>, MenuName, Delete <span class="optional">, MenuItemName</span></pre>
-<p><em>MenuItemName</em> 是菜单项的名称或位置(详细信息请参阅 <a href="#MenuItemName">MenuItemName</a>). 标准菜单项例如 "Exit"(请参阅下面) 不能被单独删除. 如果删除了 <em>default</em> 菜单项, 则效果与使用了 <a href="#NoDefault">NoDefault</a> 子命令类似. 如果省略了  <em>MenuItemName</em>, 则会删除整个 <em>MenuName</em> 菜单以及在其他菜单中名称为 <em>MenuName</em> 的任何子菜单项. 删除菜单还会导致当前 <a href="#Win32_Menus">Win32 菜单</a>的父菜单和子菜单的被销毁, 之后在需要时重新创建.</p>
+<p><em>MenuItemName</em> 是菜单项的名称或位置(有关详情, 请参阅 <a href="#MenuItemName">MenuItemName</a>). 标准菜单项例如 "Exit"(见下文) 不能被单独删除. 如果删除了 <em>default</em> 菜单项, 效果将类似于使用 <a href="#NoDefault">NoDefault</a> 子命令.</p>
+<p>如果省略了 <em>MenuItemName</em>, 则会删除整个 <em>MenuName</em> 菜单以及其他菜单中名称为 <em>MenuName</em> 的子菜单项. 删除菜单还会导致当前 <a href="#Win32_Menus">Win32 菜单</a> 及其每个子菜单被销毁, 稍后在需要时重新创建. 包含这些子菜单的其他菜单也可能受到影响. 这可以通过在删除菜单本身之前使用 <a href="#DeleteAll">DeleteAll</a> 删除菜单中的项目来避免.</p>
 
 <h3 id="DeleteAll">DeleteAll</h3>
 <p>从菜单中删除所有自定义菜单项.</p>
@@ -214,7 +215,7 @@ Menu, Tray, Add, This menu item is a submenu, :MySubmenu</pre>
 <h3 id="Show">Show</h3>
 <p>显示 <em>MenuName</em>.</p>
 <pre class="Syntax"><span class="func">Menu</span>, MenuName, Show <span class="optional">, X, Y</span></pre>
-<p>允许用户使用方向键, 菜单快捷键(下划线字母) 或鼠标选择菜单项. 可以显示包括托盘菜单在内的任何菜单, 但 <a href="Gui.htm">GUI</a> 菜单栏除外. 如果同时省略 X 和 Y, 则菜单显示在鼠标光标的当前位置. 如果仅省略其中一个, 则用鼠标光标的位置代替省略的这个. X 和 Y 相对于活动窗口. 预先指定 "<a href="CoordMode.htm">CoordMode</a>, Menu" 可以让它们相对于整个屏幕.</p>
+<p>允许用户使用方向键, 菜单快捷键(下划线字母) 或鼠标选择菜单项. 可以显示包括托盘菜单在内的任何菜单, 但 <a href="Gui.htm">GUI</a> 菜单栏除外. 如果同时省略 X 和 Y, 则菜单显示在鼠标光标的当前位置. 如果仅省略其中一个, 则用鼠标光标的位置代替省略的这个. X 和 Y 相对于活动窗口. 预先指定 <code><a href="CoordMode.htm">CoordMode</code>, Menu" 可以让它们相对于整个屏幕.</p>
 
 <h3 id="Color">Color</h3>
 <p>改变菜单的背景颜色为 <em>ColorValue</em>.</p>
@@ -248,18 +249,20 @@ Menu, Tray, Add, This menu item is a submenu, :MySubmenu</pre>
 <h2 id="MenuItemName"><em>MenuItemName</em> 参数</h2>
 <p>菜单项的名称或位置. 一些通用规则适用于所有使用该参数的子命令:</p>
 <ul>
-    <li>要为菜单项名称的某个字母加下划线, 在这个字母前加一个 &amp; 符号. 当菜单显示出来时, 此项可以通过按键盘上对应的按键来选中. 要显示原义的 &amp; 符号, 像这个例子一样, 指定连续的两个 &amp; 号: <code>Save &amp;&amp; Exit</code></li>
-    <li>当引用到一个已存在的菜单或菜单项时, 其名称不区分大小写但 & 号不能少. 例如: <code>&amp;Open</code></li>
-    <li><span class="ver">[v1.1.23+]:</span> 要通过在菜单中的位置确定一个菜单项, 写下该菜单项的位置并尾随一个 &amp; 号. 例如, <code>1&amp;</code> 表示第一个菜单项.</li>
+    <li>要为菜单项名称的某个字母加下划线, 在这个字母前加一个 &amp; 符号. 当菜单显示出来时, 此项可以通过按键盘上对应的按键来选中. 要显示原义的 &amp; 符号, 像这个例子一样, 指定连续的两个 &amp; 号: <code class="no-highlight">Save &amp;&amp; Exit</code></li>
+    <li>当引用到一个已存在的菜单或菜单项时, 其名称不区分大小写但 & 号不能少. 例如: <code class="no-highlight">&amp;Open</code></li>
+    <li><span class="ver">[v1.1.23+]:</span> 要通过在菜单中的位置确定一个菜单项, 写下该菜单项的位置并尾随一个 &amp; 号. 例如, <code class="no-highlight">1&amp;</code> 表示第一个菜单项.</li>
 </ul>
 
 <h2 id="Win32_Menus">Win32 菜单</h2>
-<p>当菜单项被添加到菜单中或被修改时, 每个菜单项的名称和其他属性会被 Menu 命令记录下来,  但实际上 <a href="https://msdn.microsoft.com/en-us/library/ms646977">Win32 菜单</a>并不会被马上创建. 这种情况发生在菜单或父菜单被附加到一个 GUI 或者首次被显示或者菜单在最近一次显示后被 "销毁". 下列任意一种情形都会导致 Win32 菜单被销毁, 其父菜单和子菜单也会随之销毁:</p>
+<p>当菜单项被添加到菜单中或被修改时, 每个菜单项的名称和其他属性会被 Menu 命令记录下来,  但实际上 <a href="https://msdn.microsoft.com/en-us/library/ms646977">Win32 菜单</a>并不会被马上创建. 这种情况发生在菜单或父菜单被附加到一个 GUI 或者首次被显示或者菜单在最近一次显示后被 "销毁". 下列任意一种情形都会导致 Win32 菜单被销毁:</p>
 <ul>
   <li>删除菜单.</li>
   <li>用标签或不同的菜单替换某个菜单项的子菜单.</li>
   <li><span class="ver">[v1.1.27.03]</span> 之前的版本, 调用子命令 <a href="#NoStandard">NoStandard</a>(如果标准项存在) 或 <a href="#DeleteAll">DeleteAll</a>.</li>
 </ul>
+<p>当 Win32 菜单被销毁时, 每一个 Win32 菜单的子菜单和父菜单也可能被销毁.</p>
+<p>当一个包含标准项的菜单重新创建它的 Win32 菜单时, 标准项目将被放置在顶部.</p>
 <p>任何通过 Win32 API 调用直接对菜单进行的修改仅适用与菜单的当前 "实例" , 在菜单被销毁后丢失.</p>
 <p>在首次添加到菜单中时每个菜单项都会被分配到一个 ID. 脚本不能依靠某个菜单项来接收其特定 ID, 但可以像 <a href="MenuGetHandle.htm#Examples">MenuGetHandle 示例</a>中那样使用 GetMenuItemID 获取该 ID. 此 ID 不可以用在 Menu 命令中, 却可以用于多种 <a href="https://msdn.microsoft.com/en-us/library/ms646977">Win32 函数</a>.</p>
 

@@ -17,6 +17,58 @@
 <p>对于较旧的变更, 请参阅<a href="ChangeLogHelp.htm">存档变更</a>.</p>
 
 <!--new revisions go here-->
+<h2 id="v1.1.36.01">1.1.36.01 - 2022 年 12 月 2 日</h2>
+<p>修复 Switch 数值比较的未定义行为.</p>
+
+<h2 id="v1.1.36.00">1.1.36.00 - 2022 年 12 月 1 日</h2>
+<p>新增 <a href="commands/VerCompare.htm">VerCompare()</a>.</p>
+<p>新增 通过 DBGp 支持 <a href="https://github.com/Lexikos/AutoHotkey_L/commit/19924b473999d79d86ae5f0159d0311600b68efc">断点异常</a>.</p>
+<p>扩展 <a href="commands/_Requires.htm">#Requires</a> 支持范围检查的操作符(<code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code> <code>=</code>) 和其他关键字: <code>Unicode</code>, <code>ANSI</code>, <code>32-bit</code>, <code>64-bit</code>.</p>
+<p>新增 CompanyName 到 AutoHotkey.exe 的版本信息, 这可能会解决 Windows 10 的一个 bug, 该程序不会出现在打开方式中.</p>
+<p>更改 Switch/Case, 当 switch 或 case 表达式是一个单独的原义字符串(如 <code>"00"</code>) 时, 执行非数字比较, 并记录了以前没有记录的比较行为.</p>
+<p>修复 一些与整数属性名称不一致的问题, 通过 IDispatch.</p>
+<ul>
+  <li>负值总是被认为是非数字的.</li>
+  <li>正值丢失格式, 例如前导零.</li>
+</ul>
+<p>修复 使用 ComObjConnect 后通过 DBGp 检查 ComObject 时潜在的崩溃.</p>
+<p>修复 FileAppend 将空白 <em>Encoding</em> 处理为省略的问题.</p>
+<p>修正 版本比较忽略数字构建信息; 例如 1.1.35.00+1+abcdef(1 是从 1.1.35.00 以来提交的数量).</p>
+<p>修正 <code>FileCreateDir X\Y\</code>(带有尾斜杠) 创建 X 失败的问题[由 v1.1.35.00 引入].</p>
+
+<h2 id="v1.1.35.00">1.1.35.00 - 2022 年 10 月 30 日</h2>
+<p>变更 GroupActivate 和 GroupClose, 使其行为更为直观:</p>
+<ul>
+  <li>将窗口组作为一个整体而不是单独的窗口规范来计算.</li>
+  <li>当 GroupClose 间接导致另一个匹配窗口被激活时, 即使它没有被相同的窗口规范匹配, 也将保持它的激活状态.</li>
+</ul>
+<p>jeeswg 的贡献(拉取请求 #186, #235, #240, #249, #273, #274):</p>
+<ul>
+  <li>移植了 v2 中的运算符 !==, &gt;&gt;&gt; 和 &gt;&gt;&gt;=.</li>
+  <li>移植了 v2 中的 A_InitialWorkingDir.</li>
+  <li>移植了 v2 中的 File.Handle.</li>
+  <li>移植了 v2 中的 A_Clipboard.</li>
+  <li>移植了 v2 中的 IsSet().</li>
+</ul>
+<strong>错误修复:</strong>
+<p>修复 #Warn 未达消息中的一个拼写错误.</p>
+<p>修复 FileCreateDir 对包含 ".." 或 "/" 路径的处理.</p>
+<p>修复 FileSelectFile 的 RootDir\Filename 参数的一些问题:</p>
+<ul>
+  <li>当 RootDir 是一个格式糟糕的 CLSID 时, 没有使用文件名.</li>
+  <li>当 GetShortPathName 失败时, 长路径的未定义行为(例如当长路径感知被禁用或有一个不是现有文件的默认文件名).</li>
+</ul>
+<p>修复 FileSetTime 在找不到文件时设置 A_LastError 的问题.</p>
+<p>修复 EnvAdd/+= 增加 115,292,150,461+ 秒时, 会失去精度.</p>
+<p>修复 键盘钩子在按下 Enter 键时, 重新插入被抑制的死键的问题, 例如在 <code>`o{Enter}</code> 序列中, 当以下为真时:</p>
+<ul>
+  <li>一个单独的脚本由于 <code>:?*:ò::</code> 而抑制 "ò".</li>
+  <li>当前进程也有活动的热字串.</li>
+  <li>另一个进程最后安装了它的钩子.</li>
+</ul>
+<p>修复 当目标为 32 位时, ControlGet List "Selected" 在 x64 上重复输出.</p>
+<p>修复 ControlGet List "Count" 选项的堆栈损坏.</p>
+
 <h2 id="v1.1.34.04">1.1.34.04 - 2022 年 8 月 23 日</h2>
 <p>修复 回调函数不包含在调试器的调用堆栈中.</p>
 <p>修复 如果 MsgBox 超时显示在启动后 100ms 内, 会报告为 "OK".</p>
