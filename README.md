@@ -3,6 +3,6 @@
 
 感谢您的支持
 
-![Image text](https://wyagd001.github.io/img/coffee.png)
+![Image text](https://wyagd001.github.io/img/coffee.png =256x256)
 
 ![Image text](https://autohotkey.com/assets/images/ahk-logo-no-text241x78-180.png)
