@@ -8,7 +8,7 @@ layout: default
 
 **如意百宝箱-Ahk**: 如意百宝箱是一款按下快捷键后针对不同窗口和选中文件显示一个定制的动作面板的快捷启动工具. 动作可以通过添加ahk脚本来新增.  
 
-**脚本下载**: [https://wyagd001.github.io/RuYi-Ahk](https://wyagd001.github.io/RuYi-ahk/RuYi.zip)  
+**脚本下载**: [https://wyagd001.github.io/RuYi-Ahk](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
 **关键词及目录**: AutoHotkey [快捷键和主面板](#hotkey) [面板](#Board) [动作](#Action)  [外部脚本](#Script)
 
