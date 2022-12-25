@@ -30,10 +30,10 @@ CopyOfVar := Var</pre>
 <p>变量不能被显式删除, 但是它的前一个值可以通过赋值一个新的值来释放, 比如一个空字符串:</p>
 <pre>MyVar := ""</pre>
 <p>变量也可以间接赋值, 通过<a href="#ref">获取它的引用</a>并使用<a href="#deref">双重解引</a>或将其传递给一个函数. 例如:</p>
-<pre><a href="commands/MouseGetPos.htm">MouseGetPos</a> &amp;x, &amp;y</pre>
-<p>读取一个没有赋值的变量的值被视为一个错误. <a href="commands/IsSet.htm">IsSet</a> 可以用来检测这种情况.</p>
-<p id="retrieving"><strong>检索变量的内容</strong>: 若要将变量的内容包含在字符串中, 请使用<a href="#concat">连接</a>或 <a href="commands/Format.htm">Format</a>. 例如:</p>
-<pre><a href="commands/MsgBox.htm">MsgBox</a> "变量的值是 " . Var . "."
+<pre><a href="lib/MouseGetPos.htm">MouseGetPos</a> &amp;x, &amp;y</pre>
+<p>读取一个没有赋值的变量的值被视为一个错误. <a href="lib/IsSet.htm">IsSet</a> 可以用来检测这种情况.</p>
+<p id="retrieving"><strong>检索变量的内容</strong>: 若要将变量的内容包含在字符串中, 请使用<a href="#concat">连接</a>或 <a href="lib/Format.htm">Format</a>. 例如:</p>
+<pre><a href="lib/MsgBox.htm">MsgBox</a> "变量的值是 " . Var . "."
 MsgBox "变量 Var 中的值为 " Var "."
 MsgBox Format("Var has the value {1}.", Var)
 </pre>
@@ -68,7 +68,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
 
 <h2 id="Operators">表达式中的运算符</h2>
 <p class="note">有关运算符的一般信息, 请参阅<a href="Language.htm#operators">运算符</a>.</p>
-<p>除了下面提到的, 数学运算中涉及的任何空值(空字符串) 或非数字值都<strong>不会</strong>假定为零. 相反, 会抛出 <a href="objects/Error.htm#TypeError">TypeError</a>. 如果未使用 <a href="commands/Try.htm">Try</a>, 默认情况下, 未处理的异常将导致一个错误对话框.</p>
+<p>除了下面提到的, 数学运算中涉及的任何空值(空字符串) 或非数字值都<strong>不会</strong>假定为零. 相反, 会抛出 <a href="lib/Error.htm#TypeError">TypeError</a>. 如果未使用 <a href="lib/Try.htm">Try</a>, 默认情况下, 未处理的异常将导致一个错误对话框.</p>
 
 <h3 id="operators">表达式运算符(按优先级降序排列)</h3>
 <table class="info">
@@ -85,7 +85,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
       <p class="note"><strong>注意:</strong> 子表达式 <em>Expr</em> 的 <u>结果</u> 必须是要访问的变量或属性的名称或部分名称.</p>
       <p>由于存在歧义, 百分号不能直接在 <em>Expr</em> 中使用, 但可以在括号中嵌套. 否则, <em>Expr</em> 可以是任何表达式.</p>
       <p>如果有任何相邻的 <em>%Expr%</em> 序列和部分<a href="Concepts.htm#names">名称</a>(它们之间没有任何空格或其他字符), 则将它们组合成一个单一的名称.</p>
-      <p>如果变量并不存在, 或者它未初始化并且它的值正在被读取, 则通常抛出一个 <a href="objects/Error.htm">Error</a>. 可以使用 <a href="#or-maybe">or-maybe 运算符(??)</a> 通过提供默认值来避免这种情况. 例如: <code>%'novar'% ?? 42</code>.</p>
+      <p>如果变量并不存在, 或者它未初始化并且它的值正在被读取, 则通常抛出一个 <a href="lib/Error.htm">Error</a>. 可以使用 <a href="#or-maybe">or-maybe 运算符(??)</a> 通过提供默认值来避免这种情况. 例如: <code>%'novar'% ?? 42</code>.</p>
       <p>虽然这在历史上被称为 "双重解引", 但当 <em>Expr</em> 不包含一个变量(第一重解引), 以及当产生的变量是赋值的目标, 而不是解引用(第二重解引), 这个术语是不准确的.</p>
     </td>
   </tr>
@@ -97,7 +97,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     <td class="center"><em>var</em><strong>?</strong></td>
     <td>
       <p><strong>Maybe</strong>. 允许未设置的变量. 这只在将变量传递给可选参数, 数组元素或文本对象; 或直接赋值的右边时有效. 问号后面必须跟随下列符号之一(忽略空白): <code class="no-highlight">)]},:</code>. 变量可以通过<a href="#ternary">三元运算符</a>或在 <a href="#and">AND</a>/<a href="#or">OR</a> 的右边有条件地传递.</p>
-      <p>变量通常是一个可选参数, 但可以是任何变量. 对于不是函数参数的变量, 如果有对该变量的其他引用但没有赋值, 在加载时仍然可能显示 <a href="commands/_Warn.htm#VarUnset">VarUnset 警告</a>.</p>
+      <p>变量通常是一个可选参数, 但可以是任何变量. 对于不是函数参数的变量, 如果有对该变量的其他引用但没有赋值, 在加载时仍然可能显示 <a href="lib/_Warn.htm#VarUnset">VarUnset 警告</a>.</p>
       <p>该操作符目前仅支持变量. 要在更一般的情况下显式或有条件地省略参数, 请使用 <code>unset</code> 关键字.</p>
       <p>另请参阅: <a href="Language.htm#unset">unset(可选参数)</a></p>
     </td>
@@ -127,9 +127,9 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
       <p><strong>一元负号(-)</strong>: 反转其运算元的符号.</p>
       <p><strong>一元正号(+)</strong>: <code>+N</code> 等同于 <code>-(-N)</code>. 应用于纯数字时无效, 但可用于将数字字符串转换为纯数字.</p>
       <p><strong>逻辑非(!)</strong>: 如果运算元为空或 0, 那么逻辑非的结果为 1, 这表示 "true". 否则, 结果为 0(false). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
-      <p><strong>按位非(~)</strong>: 此运算符对运算元按位取反. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果. 如果操作数是一个浮点值, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</p>
+      <p><strong>按位非(~)</strong>: 此运算符对运算元按位取反. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果. 如果操作数是一个浮点值, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</p>
       <p id="ref"><strong>引用(&amp;)</strong>: 创建一个 VarRef, 它是一个代表变量引用的值. VarRef 可以用来间接访问目标变量. 例如, <code>ref := &amp;target</code> 接着的 <code>%ref% := 1</code> 将把值 1 赋值给 <em>target</em>. VarRef 通常会被传递给一个函数, 但也可以存储在一个数组或属性中. 另请参阅: <a href="#deref">Dereference</a>, <a href="Functions.htm#ByRef">ByRef</a>.</p>
-      <p>目前不支持对内置变量(如 <a href="misc/A_Clipboard.htm">A_Clipboard</a>) 的引用, 除非是直接传递给内置函数的 <em>OutputVar</em> 参数.</p>
+      <p>目前不支持对内置变量(如 <a href="lib/A_Clipboard.htm">A_Clipboard</a>) 的引用, 除非是直接传递给内置函数的 <em>OutputVar</em> 参数.</p>
     </td>
   </tr>
   <tr id="MulDiv">
@@ -140,9 +140,9 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     <td><p><strong>乘(*)</strong>: 如果两个输入都为整数, 则结果为整数; 否则结果为浮点数.</p>
       <p><strong>其他用途</strong>: 星号(*) 运算符也用于<a href="Functions.htm#VariadicCall">可变参数函数调用</a>.</p>
       <p id="divide"><strong>真除(/)</strong>: 即使两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
-      <p id="IntegerDivide"><strong>整数除法(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点格式, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>. 有关取模, 请参阅 <a href="commands/Math.htm#Mod">Mod</a>.</p>
+      <p id="IntegerDivide"><strong>整数除法(//)</strong>: 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点格式, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>. 有关取模, 请参阅 <a href="lib/Math.htm#Mod">Mod</a>.</p>
     <p><a href="#AssignOp">*= 和 /= 运算符</a>是用变量的值乘以或除以另一个值的一种简写形式. 例如, <code>Var*=2</code> 和 <code>Var:=Var*2</code> 会得到相同的结果(不过前者执行的更好).</p>
-    <p>除数为零, 则导致抛出 <a href="objects/Error.htm#ZeroDivisionError">ZeroDivisionError</a>.</p></td>
+    <p>除数为零, 则导致抛出 <a href="lib/Error.htm#ZeroDivisionError">ZeroDivisionError</a>.</p></td>
   </tr>
   <tr id="AddSub">
     <td class="center bold">+<br>
@@ -161,7 +161,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
       <p><strong>逻辑位右移(&gt;&gt;&gt;)</strong>. 使用示例: <code>Value1 &gt;&gt;&gt; Value2</code>. 与算术位右移不同, 这并不保留数字的符号. 例如, -1 与无符号的 64 位整数 0xffffffffffffffff 拥有相同的位表示, 因此 <code>-1 &gt;&gt;&gt; 1</code> 结果为 0x7fffffffffffffff.</p>
       <p>下面的内容适用于所有三个运算符:</p>
       <ul>
-        <li>如果任何一个输入是浮点数, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</li>
+        <li>如果任何一个输入是浮点数, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</li>
         <li>如果 <em>Value2</em> 小于 0 或大于 63, 则抛出异常.</li>
       </ul>
     </td>
@@ -173,7 +173,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     </td>
     <td>
       <p><strong>按位与(&amp;)</strong>, <strong>按位异或(^)</strong> 和 <strong>按位或(|)</strong>. 这三个运算符中, <strong>&amp;</strong> 优先级最高, 而 <strong>|</strong> 优先级最低.</p>
-      <p>如果其中一个输入是浮点数, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</p>
+      <p>如果其中一个输入是浮点数, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</p>
       <p>相关: <a href="#unary">按位非(~)</a></p>
     </td>
   </tr>
@@ -186,19 +186,19 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
 </pre>
       <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " <strong>.</strong>  Price * (1 - Discount/100)</code>.</p>
       <p>以句点(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾.</p>
-      <p>每个输入的整个<a href="commands/StrLen.htm">长度</a>会被使用, 即使它包含二进制零. 例如, <code>Chr(0x2010) Chr(0x0000) Chr(0x4030)</code> 生成以下字节的字符串(由于 UTF-16-LE 编码): 0x10, 0x20, 0, 0, 0x30, 0x40. 结果有一个额外的空结束符(二进制零), 它不包含在长度中.</p>
+      <p>每个输入的整个<a href="lib/StrLen.htm">长度</a>会被使用, 即使它包含二进制零. 例如, <code>Chr(0x2010) Chr(0x0000) Chr(0x4030)</code> 生成以下字节的字符串(由于 UTF-16-LE 编码): 0x10, 0x20, 0, 0, 0x30, 0x40. 结果有一个额外的空结束符(二进制零), 它不包含在长度中.</p>
       <p><strong>其他用途</strong>: 如果句点右侧没有空格或制表符, 则将其解释为原义<a href="#numbers">浮点数</a>或<a href="#objdot">成员访问</a>. 例如, <code>1.1</code> 和 <code>(.5)</code> 是数字, <code>A_Args.Has(3)</code> 方法调用, 而 <code>A_Args.Length</code> 是一个属性访问.</p>
     </td>
   </tr>
   <tr id="regex">
     <td class="center bold">~=</td>
-    <td><a href="commands/RegExMatch.htm">RegExMatch</a> 的简写形式. 例如, <code>"abc123" ~= "\d"</code> 结果为 4(首个数字字符串的位置).</td>
+    <td><a href="lib/RegExMatch.htm">RegExMatch</a> 的简写形式. 例如, <code>"abc123" ~= "\d"</code> 结果为 4(首个数字字符串的位置).</td>
   </tr>
   <tr id="compare">
     <td class="center bold">&gt;&nbsp;&nbsp;&nbsp;&lt;<br>
     &gt;= &lt;=</td>
     <td>
-      <p><strong>大于(&gt;)</strong>, <strong>小于(&lt;)</strong>, <strong>大于或等于(&gt;=)</strong> 和 <strong>小于或等于(&lt;=)</strong>. 输入的数据是以数字方式进行比较的. 如果其中一个输入不是数字或数字字符串, 则抛出 <a href="objects/Error.htm#TypeError">TypeError</a>.</p>
+      <p><strong>大于(&gt;)</strong>, <strong>小于(&lt;)</strong>, <strong>大于或等于(&gt;=)</strong> 和 <strong>小于或等于(&lt;=)</strong>. 输入的数据是以数字方式进行比较的. 如果其中一个输入不是数字或数字字符串, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</p>
     </td>
   </tr>
   <tr id="equal">
@@ -209,13 +209,13 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
     <td>
       <p><strong>不区分大小写的等号(=) / 不等号(!=)</strong> 和 <strong>区分大小写的等号(==) / 不等号(!==)</strong>. 运算符 <strong>==</strong> 的行为和 <strong>=</strong> 是一样的, 除非其中一个输入不是数字(或都是字符串), 在这种情况下 <strong>==</strong> 总是区分大小写的, 而 <strong>=</strong> 总是不区分大小写的. <strong>!=</strong> 和 <strong>!==</strong> 与其对应的没有 <strong>!</strong> 的运算符是一样的, 只是其结果取反.</p>
       <p><strong>==</strong> 和 <strong>!==</strong> 运算符可用于比较包含二进制零的字符串. 除了 <strong>~=</strong> 之外的所有其他比较运算符仅比较到第一个二进制零.</p>
-      <p>对于不区分大小写的比较, 只有 ASCII 字母 A-Z 才会被认为等同于它们的小写字母. 如果要根据当前用户区域规则进行比较, 请使用 <a href="commands/StrCompare.htm">StrCompare</a> 并为 <em>CaseSense</em> 参数指定 "Locale".</p>
+      <p>对于不区分大小写的比较, 只有 ASCII 字母 A-Z 才会被认为等同于它们的小写字母. 如果要根据当前用户区域规则进行比较, 请使用 <a href="lib/StrCompare.htm">StrCompare</a> 并为 <em>CaseSense</em> 参数指定 "Locale".</p>
     </td>
   </tr>
   <tr>
     <td class="center bold">IS<br>IN<br>CONTAINS</td>
     <td id="is">
-      <p>如果 <em>Value</em> 是 <em>Class</em> 的实例, 那么 <code><i>Value</i> <strong>is</strong> <i>Class</i></code> 结果为 true(1), 否则为 false(0). <em>Class</em> 必须是一个<a href="objects/Object.htm">对象</a>, 并具有 <a href="objects/Class.htm#Prototype">Prototype</a> 自有属性, 但通常该属性是由类定义隐式定义的. 这个操作一般等同于 <code>HasBase(<i>Value</i>, <i>Class</i>.Prototype)</code>.</p>
+      <p>如果 <em>Value</em> 是 <em>Class</em> 的实例, 那么 <code><i>Value</i> <strong>is</strong> <i>Class</i></code> 结果为 true(1), 否则为 false(0). <em>Class</em> 必须是一个<a href="lib/Object.htm">对象</a>, 并具有 <a href="lib/Class.htm#Prototype">Prototype</a> 自有属性, 但通常该属性是由类定义隐式定义的. 这个操作一般等同于 <code>HasBase(<i>Value</i>, <i>Class</i>.Prototype)</code>.</p>
       <p><code id="in"><strong>in</strong></code> 和 <code id="contains"><strong>contains</strong></code> 保留给将来使用.</p>
     </td>
   </tr>
@@ -251,13 +251,13 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
       <p><strong>Or maybe</strong>, 也称为合并运算符. 如果左操作数(必须是一个变量) 有一个值, 它就成为结果, 并跳过右分支. 否则, 右操作数将成为结果. 换句话说, <code>A ?? B</code> 的行为类似于 <code>A || B</code> (<a href="#or">逻辑或</a>), 除了条件是 <code>IsSet(A)</code>.</p>
       <p>这通常用于在已知变量或可选参数可能还没有值时提供默认值. 例如:</p>
       <pre>MsgBox MyVar ?? "Default value"</pre>
-      <p>由于期望变量有时<a href="Concepts.htm#uninitialized-variables">未初始化</a>, 因此在这种情况下不会抛出错误. 与 <code>IsSet(A) ? A : B</code> 不同的是, 如果变量有其他引用但没有赋值, <a href="commands/_Warn.htm#VarUnset">VarUnset 警告</a>仍然可以在加载时显示.</p>
+      <p>由于期望变量有时<a href="Concepts.htm#uninitialized-variables">未初始化</a>, 因此在这种情况下不会抛出错误. 与 <code>IsSet(A) ? A : B</code> 不同的是, 如果变量有其他引用但没有赋值, <a href="lib/_Warn.htm#VarUnset">VarUnset 警告</a>仍然可以在加载时显示.</p>
     </td>
   </tr>
   <tr id="ternary">
     <td class="center bold">?:</td>
     <td>
-      <p><strong>三元运算符</strong>. 此运算符是 <a href="commands/If.htm">if-else 语句</a>的简写形式. 它计算左侧的条件来决定两个分支中哪个作为最终结果. 例如, <code>var := x&gt;y ? 2 : 3</code>, 当 x 大于 y 时保存 2 到 <em>Var</em>; 否则保存 3. 为了提高性能, 只计算决定性的分支(请参阅<a href="Functions.htm#ShortCircuit">求值优化</a>).</p>
+      <p><strong>三元运算符</strong>. 此运算符是 <a href="lib/If.htm">if-else 语句</a>的简写形式. 它计算左侧的条件来决定两个分支中哪个作为最终结果. 例如, <code>var := x&gt;y ? 2 : 3</code>, 当 x 大于 y 时保存 2 到 <em>Var</em>; 否则保存 3. 为了提高性能, 只计算决定性的分支(请参阅<a href="Functions.htm#ShortCircuit">求值优化</a>).</p>
       <p>另请参阅: <a href="#maybe">maybe(<em>var</em>?)</a>, <a href="#or-maybe">or-maybe(??)</a></p>
       <p class="warning"><strong>注意:</strong> 当在行的开头使用时, 三元条件通常应该用括号括起来, 以减少与其他类型语句的歧义. 有关详情, 请参阅<a href="Language.htm#expression-statements">表达式语句</a>.</p>
     </td>
@@ -288,7 +288,7 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
   <tr id="fat-arrow">
     <td class="center"><strong>() =&gt;</strong> <em>expr</em></td>
     <td>
-      <p><strong>胖箭头函数</strong>. 定义一个简单的<a href="Functions.htm">函数</a>并返回一个 <a href="objects/Func.htm">Func</a> 或<a href="Functions.htm#closures">闭包</a>对象. 将函数的<a href="Functions.htm#param">参数列表</a>(可以在前面加上函数名) 写在操作符的左边. 当函数被调用时(通过返回的引用), 它计算子表达式 <em>expr</em> 并返回结果.</p>
+      <p><strong>胖箭头函数</strong>. 定义一个简单的<a href="Functions.htm">函数</a>并返回一个 <a href="lib/Func.htm">Func</a> 或<a href="Functions.htm#closures">闭包</a>对象. 将函数的<a href="Functions.htm#param">参数列表</a>(可以在前面加上函数名) 写在操作符的左边. 当函数被调用时(通过返回的引用), 它计算子表达式 <em>expr</em> 并返回结果.</p>
       <p>下面两个例子是等价的:</p>
       <pre>sumfn := Sum(a, b) =&gt; a + b</pre>
       <pre>Sum(a, b) {
@@ -299,7 +299,7 @@ sumfn := Sum</pre>
       <p>如果函数名被省略, 而参数列表只包含一个参数名, 则可以省略圆括号. 下面的例子定义了一个带有一个参数 <code>a</code> 的匿名函数, 并将其引用存储在变量 <code>double</code> 中:</p>
       <pre>double := a =&gt; a * 2</pre>
       <p><em>expr</em> 中的变量引用的解析方法与完整函数定义中的方法相同. 例如, <em>expr</em> 可以引用 outer 函数的局部变量(就像在任何<a href="Functions.htm#nested">嵌套函数</a>中一样), 在这种情况下, 每当计算胖箭头表达式时, 都会创建一个新的<a href="Functions.htm#closures">闭包</a>并返回它. 因为不能使用声明, 所以该函数总是<a href="Functions.htm#AssumeLocal">假定-局部的</a>.</p>
-      <p>为函数指定名称允许递归地调用它或由其他嵌套函数调用它, 而无需在其内部存储对<a href="Functions.htm#closures">闭包</a>的引用(从而创建有问题的<a href="Objects.htm#Circular_References">循环引用</a>). 它还有助于调试, 比如 <a href="objects/Func.htm#Name">Func.Name</a> 或显示在调试器的调用堆栈上.</p>
+      <p>为函数指定名称允许递归地调用它或由其他嵌套函数调用它, 而无需在其内部存储对<a href="Functions.htm#closures">闭包</a>的引用(从而创建有问题的<a href="Objects.htm#Circular_References">循环引用</a>). 它还有助于调试, 比如 <a href="lib/Func.htm#Name">Func.Name</a> 或显示在调试器的调用堆栈上.</p>
       <p>胖箭头语法也可以用来定义简写的<a href="Objects.htm#Custom_Classes_property_short">属性</a>和<a href="Objects.htm#Custom_Classes_method">方法</a>.</p>
     </td>
 
@@ -338,7 +338,7 @@ sumfn := Sum</pre>
   </tr>
   <tr>
     <td class="center">Fn(<strong><em>Params</em>*</strong>)</td>
-    <td><p><a href="Functions.htm#VariadicCall">可变参数函数调用</a>. <em>Params</em> 是一个可枚举的对象(具有 <a href="Objects.htm#__Enum">__Enum</a> 方法的对象), 例如包含参数值的<a href="objects/Array.htm">数组</a>.</p></td>
+    <td><p><a href="Functions.htm#VariadicCall">可变参数函数调用</a>. <em>Params</em> 是一个可枚举的对象(具有 <a href="Objects.htm#__Enum">__Enum</a> 方法的对象), 例如包含参数值的<a href="lib/Array.htm">数组</a>.</p></td>
   </tr>
   <tr id="square-brackets">
     <td class="center"><strong>x[y]<br>[a, b, c]</strong></td>
@@ -351,7 +351,7 @@ sumfn := Sum</pre>
   <tr id="curly-braces">
     <td class="center"><strong>{a: b, c: d}</strong></td>
     <td>
-      <p><strong>对象标识符</strong>. 创建一个<a href="objects/Object.htm">对象</a>. 其中的每一对项目由一个原义的属性名称 <code>a</code> 和一个属性值表达式 <code>b</code> 组成. 例如, <code>x := {a: b}</code> 等同于 <code>x := Object(), x.a := b</code>. 可以在对象文本中设置 <a href="objects/Object.htm#Base">Base</a>, 但是所有其他属性都设置为 <em>自有的属性</em>, 可能会覆盖从基对象继承的属性.</p>
+      <p><strong>对象标识符</strong>. 创建一个<a href="lib/Object.htm">对象</a>. 其中的每一对项目由一个原义的属性名称 <code>a</code> 和一个属性值表达式 <code>b</code> 组成. 例如, <code>x := {a: b}</code> 等同于 <code>x := Object(), x.a := b</code>. 可以在对象文本中设置 <a href="lib/Object.htm#Base">Base</a>, 但是所有其他属性都设置为 <em>自有的属性</em>, 可能会覆盖从基对象继承的属性.</p>
       <p>要使用动态属性名, 请将子表达式用百分号括起来. 例如: <code>{%nameVar%: valueVar}</code>.</p>
     </td>
   </tr>
@@ -402,7 +402,7 @@ sumfn := Sum</pre>
   <tr id="WorkingDir">
     <td>A_WorkingDir</td>
     <td><p>可以用来获取或设置脚本当前工作目录, 这是访问文件的默认路径. 除非是根目录, 否则路径末尾不包含反斜杠. 两个示例: <code>C:\</code> 和 <code>C:\My Documents</code>.</p>
-    <p>使用 <a href="commands/SetWorkingDir.htm">SetWorkingDir</a> 或赋值路径到 A_WorkingDir 可以改变当前工作目录.</p>
+    <p>使用 <a href="lib/SetWorkingDir.htm">SetWorkingDir</a> 或赋值路径到 A_WorkingDir 可以改变当前工作目录.</p>
     <p>无论脚本是如何启动的, 脚本的工作目录默认为 A_ScriptDir.</p></td>
   </tr>
   <tr id="InitialWorkingDir">
@@ -437,19 +437,19 @@ sumfn := Sum</pre>
   </tr>
   <tr id="LineNumber">
     <td>A_LineNumber</td>
-    <td><p>脚本(或其 <a href="commands/_Include.htm">#Include 文件</a>) 中正在执行的行的行号. 这个行号与 <a href="commands/ListLines.htm">ListLines</a> 显示的一致; 它对于错误报告非常有用, 比如这个例子: <code>MsgBox "Could not write to log file (line number " A_LineNumber ")"</code>.</p>
-    <p>由于<a href="Scripts.htm#ahk2exe">已编译脚本</a>已经把它所有的 <a href="commands/_Include.htm">#Include 文件</a>合并成一个大脚本, 所以它的行号可能与它在未编译模式运行时不一样.</p></td>
+    <td><p>脚本(或其 <a href="lib/_Include.htm">#Include 文件</a>) 中正在执行的行的行号. 这个行号与 <a href="lib/ListLines.htm">ListLines</a> 显示的一致; 它对于错误报告非常有用, 比如这个例子: <code>MsgBox "Could not write to log file (line number " A_LineNumber ")"</code>.</p>
+    <p>由于<a href="Scripts.htm#ahk2exe">已编译脚本</a>已经把它所有的 <a href="lib/_Include.htm">#Include 文件</a>合并成一个大脚本, 所以它的行号可能与它在未编译模式运行时不一样.</p></td>
   </tr>
   <tr id="LineFile">
     <td>A_LineFile</td>
     <td>
-      <p><a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称. 如果脚本是从外部文件加载的, 这等同于 <a href="#ScriptFullPath">A_ScriptFullPath</a>, 除非该行属于脚本的 <a href="commands/_Include.htm">#Include 文件</a>之一.</p>
+      <p><a href="#LineNumber">A_LineNumber</a> 所属文件的完整路径和名称. 如果脚本是从外部文件加载的, 这等同于 <a href="#ScriptFullPath">A_ScriptFullPath</a>, 除非该行属于脚本的 <a href="lib/_Include.htm">#Include 文件</a>之一.</p>
       <p>如果脚本是基于一个 <a href="Scripts.htm#ahk2exe-base">.bin 文件</a><a href="Scripts.htm#ahk2exe">编译的</a>, 这就是当前可执行文件的完整路径和名称, 等同于 <a href="#ScriptFullPath">A_ScriptFullPath</a>.</p>
       <p>如果脚本是<a href="Program.htm#embedded-scripts">嵌入的</a>, A_LineFile 包含一个星号(*) 后面是资源名称; 例如 *#1</p>
   </tr>
   <tr id="ThisFunc">
     <td>A_ThisFunc</td>
-    <td>当前正在执行的<a href="Functions.htm">自定义函数</a>的名称(没有则为空); 例如: MyFunction. 另请参阅: <a href="objects/Func.htm#Name">Name property (Func)</a></td>
+    <td>当前正在执行的<a href="Functions.htm">自定义函数</a>的名称(没有则为空); 例如: MyFunction. 另请参阅: <a href="lib/Func.htm#Name">Name property (Func)</a></td>
   </tr>
   <tr id="AhkVersion">
     <td>A_AhkVersion</td>
@@ -480,7 +480,7 @@ AhkPath := InstallDir ? InstallDir "\AutoHotkey.exe" : ""</pre>
     <td>A_YYYY</td>
     <td>
       <p>4 位数表示的当前年份(例如 2004). 与 A_Year 含义相同.</p>
-      <p class="note"><strong>注意</strong>: 要检索符合您区域设置和语言的格式化时间或日期, 请使用 <code><a href="commands/FormatTime.htm">FormatTime</a>()</code>(时间和长日期) 或 <code><a href="commands/FormatTime.htm">FormatTime</a>(, "LongDate")</code>(检索长格式日期).</p>
+      <p class="note"><strong>注意</strong>: 要检索符合您区域设置和语言的格式化时间或日期, 请使用 <code><a href="lib/FormatTime.htm">FormatTime</a>()</code>(时间和长日期) 或 <code><a href="lib/FormatTime.htm">FormatTime</a>(, "LongDate")</code>(检索长格式日期).</p>
     </td>
   </tr>
   <tr id="MM">
@@ -513,15 +513,15 @@ AhkPath := InstallDir ? InstallDir "\AutoHotkey.exe" : ""</pre>
   </tr>
   <tr id="YDay">
     <td>A_YDay</td>
-    <td>当前年份中经过的天数(1-366). 不会使用零对变量的值进行填充, 例如检索到 9, 而不是 009. 要检索零填充的值, 请使用: <code><a href="commands/FormatTime.htm">FormatTime</a>(, "YDay0")</code>.</td>
+    <td>当前年份中经过的天数(1-366). 不会使用零对变量的值进行填充, 例如检索到 9, 而不是 009. 要检索零填充的值, 请使用: <code><a href="lib/FormatTime.htm">FormatTime</a>(, "YDay0")</code>.</td>
   </tr>
   <tr id="YWeek">
     <td>A_YWeek</td>
-    <td>符合 ISO 8601 标准的当前的年份和周数(例如 200453). 要分离年份和周数, 请使用 <code>Year := <a href="commands/SubStr.htm">SubStr</a>(A_YWeek, 1, 4)</code> 和 <code>Week := <a href="commands/SubStr.htm">SubStr</a>(A_YWeek, -2)</code>. A_YWeek 的准确定义为: 如果含有 1 月 1 日的星期内有四天或四天以上在新年里, 则它被认为是新年的第一个星期. 否则, 它为前一年的最后一个星期, 而下一星期为新年的第一个星期.</td>
+    <td>符合 ISO 8601 标准的当前的年份和周数(例如 200453). 要分离年份和周数, 请使用 <code>Year := <a href="lib/SubStr.htm">SubStr</a>(A_YWeek, 1, 4)</code> 和 <code>Week := <a href="lib/SubStr.htm">SubStr</a>(A_YWeek, -2)</code>. A_YWeek 的准确定义为: 如果含有 1 月 1 日的星期内有四天或四天以上在新年里, 则它被认为是新年的第一个星期. 否则, 它为前一年的最后一个星期, 而下一星期为新年的第一个星期.</td>
   </tr>
   <tr id="Hour">
     <td>A_Hour</td>
-    <td>在 24 小时制(例如, 17 表示 5pm) 中 2 位数表示的当前小时数(00-23). 要获取带 AM/PM 提示的 12 小时制的时间, 请参照此例: <code><a href="commands/FormatTime.htm">FormatTime</a>(, "h:mm:ss tt")</code></td>
+    <td>在 24 小时制(例如, 17 表示 5pm) 中 2 位数表示的当前小时数(00-23). 要获取带 AM/PM 提示的 12 小时制的时间, 请参照此例: <code><a href="lib/FormatTime.htm">FormatTime</a>(, "h:mm:ss tt")</code></td>
   </tr>
   <tr id="Min">
     <td>A_Min</td>
@@ -538,13 +538,13 @@ AhkPath := InstallDir ? InstallDir "\AutoHotkey.exe" : ""</pre>
   <tr id="Now">
     <td>A_Now</td>
     <td>
-      <p>以 <a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式表示的当前本地时间.</p>
-      <p class="note"><strong>注意</strong>: 可以使用 <a href="commands/DateAdd.htm">DateAdd</a> 和 <a href="commands/DateDiff.htm">DateDiff</a> 执行日期和时间的数学运算. 此外, <a href="commands/FormatTime.htm">FormatTime</a> 可以根据您的区域设置或选项来格式化日期和/或时间.</p>
+      <p>以 <a href="lib/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式表示的当前本地时间.</p>
+      <p class="note"><strong>注意</strong>: 可以使用 <a href="lib/DateAdd.htm">DateAdd</a> 和 <a href="lib/DateDiff.htm">DateDiff</a> 执行日期和时间的数学运算. 此外, <a href="lib/FormatTime.htm">FormatTime</a> 可以根据您的区域设置或选项来格式化日期和/或时间.</p>
     </td>
   </tr>
   <tr id="NowUTC">
     <td>A_NowUTC</td>
-    <td>以 <a href="commands/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式表示的当前的协调世界时(UTC). UTC 本质上和格林威治标准时间(GMT) 一致.</td>
+    <td>以 <a href="lib/FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式表示的当前的协调世界时(UTC). UTC 本质上和格林威治标准时间(GMT) 一致.</td>
   </tr>
   <tr id="TickCount">
     <td>A_TickCount</td>
@@ -553,7 +553,7 @@ AhkPath := InstallDir ? InstallDir "\AutoHotkey.exe" : ""</pre>
 Sleep 1000
 ElapsedTime := A_TickCount - StartTime
 MsgBox ElapsedTime " milliseconds have elapsed."</pre>
-<p>如果您需要比 A_TickCount 的 10 ms 更高的精确度, 请使用 <a href="commands/DllCall.htm#ExQPC">QueryPerformanceCounter()</a>(一个高精度计时器).</p>
+<p>如果您需要比 A_TickCount 的 10 ms 更高的精确度, 请使用 <a href="lib/DllCall.htm#ExQPC">QueryPerformanceCounter()</a>(一个高精度计时器).</p>
 </td>
   </tr>
 </table>
@@ -565,82 +565,82 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="IsSuspended">
     <td>A_IsSuspended</td>
-    <td>如果脚本<a href="commands/Suspend.htm">挂起</a>时值为 1, 否则为 0.</td>
+    <td>如果脚本<a href="lib/Suspend.htm">挂起</a>时值为 1, 否则为 0.</td>
   </tr>
   <tr id="IsPaused">
     <td>A_IsPaused</td>
-    <td>如果在当前线程之后的<a href="misc/Threads.htm">线程</a>是<a href="commands/Pause.htm">暂停</a>时值为 1, 否则为 0.</td>
+    <td>如果在当前线程之后的<a href="misc/Threads.htm">线程</a>是<a href="lib/Pause.htm">暂停</a>时值为 1, 否则为 0.</td>
   </tr>
   <tr id="IsCritical">
     <td>A_IsCritical</td>
-    <td>如果<a href="misc/Threads.htm">当前线程</a>的 <a href="commands/Critical.htm">Critical</a> 是关闭时值为 0. 否则值为大于零的整数, 即为 Critical 使用的<a href="commands/Critical.htm#Interval">消息检查频率</a>. Critical 的当前状态可以通过 <code>Old_IsCritical := A_IsCritical</code> 然后是 <code>A_IsCritical := Old_IsCritical</code> 来保存和恢复.</td>
+    <td>如果<a href="misc/Threads.htm">当前线程</a>的 <a href="lib/Critical.htm">Critical</a> 是关闭时值为 0. 否则值为大于零的整数, 即为 Critical 使用的<a href="lib/Critical.htm#Interval">消息检查频率</a>. Critical 的当前状态可以通过 <code>Old_IsCritical := A_IsCritical</code> 然后是 <code>A_IsCritical := Old_IsCritical</code> 来保存和恢复.</td>
   </tr>
   <tr id="ListLines">
     <td>A_ListLines</td>
-    <td>可用于获取或设置是否记录行. 可能的值是 0(禁用) 和 1(启用). 有关详情, 请参阅 <a href="commands/ListLines.htm">ListLines</a>.</td>
+    <td>可用于获取或设置是否记录行. 可能的值是 0(禁用) 和 1(启用). 有关详情, 请参阅 <a href="lib/ListLines.htm">ListLines</a>.</td>
   </tr>
   <tr id="TitleMatchMode">
     <td>A_TitleMatchMode</td>
-    <td>可用于获取或设置标题匹配模式. 可能的值是 1, 2, 3 和 RegEx. 有关详情, 请参阅 <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>.</td>
+    <td>可用于获取或设置标题匹配模式. 可能的值是 1, 2, 3 和 RegEx. 有关详情, 请参阅 <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a>.</td>
   </tr>
   <tr id="TitleMatchModeSpeed">
     <td>A_TitleMatchModeSpeed</td>
-    <td>可用于获取或设置标题匹配速度. 可能的值是 fast 和 slow. 有关详情, 请参阅 <a href="commands/SetTitleMatchMode.htm">SetTitleMatchMode</a>.</td>
+    <td>可用于获取或设置标题匹配速度. 可能的值是 fast 和 slow. 有关详情, 请参阅 <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a>.</td>
   </tr>
   <tr id="DetectHiddenWindows">
     <td>A_DetectHiddenWindows</td>
-    <td>可用于获取或设置是否检测隐藏窗口. 可能的值是 0(禁止) 和 1(启用). 有关详情, 请参阅 <a href="commands/DetectHiddenWindows.htm">DetectHiddenWindows</a>.</td>
+    <td>可用于获取或设置是否检测隐藏窗口. 可能的值是 0(禁止) 和 1(启用). 有关详情, 请参阅 <a href="lib/DetectHiddenWindows.htm">DetectHiddenWindows</a>.</td>
   </tr>
   <tr id="DetectHiddenText">
     <td>A_DetectHiddenText</td>
-    <td>可以用来获取或设置是否检测窗口中的隐藏文本. 可能的值是 0(禁止) 和 1(启用). 有关详情, 请参阅 <a href="commands/DetectHiddenText.htm">DetectHiddenText</a>.</td>
+    <td>可以用来获取或设置是否检测窗口中的隐藏文本. 可能的值是 0(禁止) 和 1(启用). 有关详情, 请参阅 <a href="lib/DetectHiddenText.htm">DetectHiddenText</a>.</td>
   </tr>
   <tr id="FileEncoding">
     <td>A_FileEncoding</td>
-    <td>可以用来获取或设置各种内置函数的默认编码. 有关详情, 请参阅 <a href="commands/FileEncoding.htm">FileEncoding</a>.</td>
+    <td>可以用来获取或设置各种内置函数的默认编码. 有关详情, 请参阅 <a href="lib/FileEncoding.htm">FileEncoding</a>.</td>
   </tr>
   <tr id="SendMode">
     <td>A_SendMode</td>
-    <td>可用于获取或设置发送模式. 可能的值是 Event, Input, Play 和 InputThenPlay. 有关详情, 请参阅 <a href="commands/SendMode.htm">SendMode</a>.</td>
+    <td>可用于获取或设置发送模式. 可能的值是 Event, Input, Play 和 InputThenPlay. 有关详情, 请参阅 <a href="lib/SendMode.htm">SendMode</a>.</td>
   </tr>
   <tr id="SendLevel">
     <td>A_SendLevel</td>
-    <td>可用于获取或设置发送级别, 为 0 至 100 之间的整数, 包括 0 和 100. 有关详情, 请参阅 <a href="commands/SendLevel.htm">SendLevel</a>.</td>
+    <td>可用于获取或设置发送级别, 为 0 至 100 之间的整数, 包括 0 和 100. 有关详情, 请参阅 <a href="lib/SendLevel.htm">SendLevel</a>.</td>
   </tr>
   <tr id="StoreCapsLockMode">
     <td>A_StoreCapsLockMode</td>
-    <td>可以用来获取或设置是否在 <a href="commands/Send.htm">Send</a> 后恢复 <kbd>CapsLock</kbd> 的状态. 可能的值是 0(禁止) 和 1(启用). 有关详情, 请参阅 <a href="commands/SetStoreCapslockMode.htm">SetStoreCapsLockMode</a>.</td>
+    <td>可以用来获取或设置是否在 <a href="lib/Send.htm">Send</a> 后恢复 <kbd>CapsLock</kbd> 的状态. 可能的值是 0(禁止) 和 1(启用). 有关详情, 请参阅 <a href="lib/SetStoreCapslockMode.htm">SetStoreCapsLockMode</a>.</td>
   </tr>
   <tr id="KeyDelay">
     <td>A_KeyDelay<br>
     A_KeyDuration</td>
-    <td>可以用来获取或设置按键的延迟或持续时间, 单位为毫秒. 有关详情, 请参阅 <a href="commands/SetKeyDelay.htm">SetKeyDelay</a>.</td>
+    <td>可以用来获取或设置按键的延迟或持续时间, 单位为毫秒. 有关详情, 请参阅 <a href="lib/SetKeyDelay.htm">SetKeyDelay</a>.</td>
   </tr>
   <tr id="KeyDelayPlay">
     <td>A_KeyDelayPlay<br>
     A_KeyDurationPlay</td>
-    <td>可以用来获取或设置通过 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a> 模式发送的按键的延迟或持续时间, 单位为毫秒. 有关详情, 请参阅 <a href="commands/SetKeyDelay.htm">SetKeyDelay</a>.</td>
+    <td>可以用来获取或设置通过 <a href="lib/Send.htm#SendPlayDetail">SendPlay</a> 模式发送的按键的延迟或持续时间, 单位为毫秒. 有关详情, 请参阅 <a href="lib/SetKeyDelay.htm">SetKeyDelay</a>.</td>
   </tr>
   <tr id="WinDelay">
     <td>A_WinDelay</td>
-    <td>可用于获取或设置窗口函数的延迟, 单位为毫秒. 有关详情, 请参阅 <a href="commands/SetWinDelay.htm">SetWinDelay</a>.</td>
+    <td>可用于获取或设置窗口函数的延迟, 单位为毫秒. 有关详情, 请参阅 <a href="lib/SetWinDelay.htm">SetWinDelay</a>.</td>
   </tr>
   <tr id="ControlDelay">
     <td>A_ControlDelay</td>
-    <td>可用于获取或设置控件修改函数的延迟, 单位为毫秒. 有关详情, 请参阅 <a href="commands/SetControlDelay.htm">SetControlDelay</a>.</td>
+    <td>可用于获取或设置控件修改函数的延迟, 单位为毫秒. 有关详情, 请参阅 <a href="lib/SetControlDelay.htm">SetControlDelay</a>.</td>
   </tr>
   <tr id="MenuMaskKey">
     <td>A_MenuMaskKey</td>
-    <td>控制哪个键被用来掩饰(屏蔽) Win 或 Alt 键松开事件. 有关详情, 请参阅 <a href="misc/A_MenuMaskKey.htm">A_MenuMaskKey</a>.</td>
+    <td>控制哪个键被用来掩饰(屏蔽) Win 或 Alt 键松开事件. 有关详情, 请参阅 <a href="lib/A_MenuMaskKey.htm">A_MenuMaskKey</a>.</td>
   </tr>
   <tr id="MouseDelay">
     <td>A_MouseDelay<br>
     A_MouseDelayPlay</td>
-    <td>可以用来获取或设置鼠标延迟, 单位为毫秒. 传统的 SendEvent 模式为 A_MouseDelay, 而 <a href="commands/Send.htm#SendPlayDetail">SendPlay</a> 为 A_MouseDelayPlay. 有关详情, 请参阅 <a href="commands/SetMouseDelay.htm">SetMouseDelay</a>.</td>
+    <td>可以用来获取或设置鼠标延迟, 单位为毫秒. 传统的 SendEvent 模式为 A_MouseDelay, 而 <a href="lib/Send.htm#SendPlayDetail">SendPlay</a> 为 A_MouseDelayPlay. 有关详情, 请参阅 <a href="lib/SetMouseDelay.htm">SetMouseDelay</a>.</td>
   </tr>
   <tr id="DefaultMouseSpeed">
     <td>A_DefaultMouseSpeed</td>
-    <td>可以用来获取或设置默认的鼠标速度, 从 0(最快) 到 100(最慢) 的整数. 有关详情, 请参阅 <a href="commands/SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>.</td>
+    <td>可以用来获取或设置默认的鼠标速度, 从 0(最快) 到 100(最慢) 的整数. 有关详情, 请参阅 <a href="lib/SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>.</td>
   </tr>
   <tr id="CoordMode">
     <td>A_CoordModeToolTip<br>
@@ -648,27 +648,27 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
     A_CoordModeMouse<br>
     A_CoordModeCaret<br>
     A_CoordModeMenu</td>
-    <td>可以用来获取或设置相对坐标的区域. 可能的值是 Window, Client 或 Screen. 有关详情, 请参阅 <a href="commands/CoordMode.htm">CoordMode</a>.</td>
+    <td>可以用来获取或设置相对坐标的区域. 可能的值是 Window, Client 或 Screen. 有关详情, 请参阅 <a href="lib/CoordMode.htm">CoordMode</a>.</td>
   </tr>
   <tr id="RegView">
     <td>A_RegView</td>
-    <td>可用于获取或设置注册表视图. 可能的值是 32, 64 和 Default. 有关详情, 请参阅 <a href="commands/SetRegView.htm">SetRegView</a>.</td>
+    <td>可用于获取或设置注册表视图. 可能的值是 32, 64 和 Default. 有关详情, 请参阅 <a href="lib/SetRegView.htm">SetRegView</a>.</td>
   </tr>
   <tr id="TrayMenu">
     <td>A_TrayMenu</td>
-    <td><p>返回可用于修改或显示托盘菜单的<a href="objects/Menu.htm">菜单对象</a>.</p></td>
+    <td><p>返回可用于修改或显示托盘菜单的<a href="lib/Menu.htm">菜单对象</a>.</p></td>
   </tr>
   <tr id="AllowMainWindow">
     <td>A_AllowMainWindow</td>
     <td>
     <p>可以用来获取或设置是否允许通过托盘图标打开脚本的<a href="Program.htm#main-window">主窗口</a>. 可能的值是 0(禁止) 和 1(允许).</p>
     <p>如果脚本既不是<a href="Scripts.htm#ahk2exe">编译的</a>也不是<a href="Program.htm#embedded-scripts">嵌入的</a>, 此变量默认为 1, 否则此变量默认为 0, 但可以通过给该变量赋值来改写它. 将其设置为 1 还可以恢复托盘菜单中的 "Open" 选项, 并启用主窗口的 View 菜单中的项目, 如 "Lines most recently executed", 这允许查看脚本的源代码和其他信息.</p>
-    <p>在脚本运行时遇到下列函数, 总是能够显示主窗口并激活相应的视图选项: <a href="commands/ListLines.htm">ListLines</a>, <a href="commands/ListVars.htm">ListVars</a>, <a href="commands/ListHotkeys.htm">ListHotkeys</a> 和 <a href="commands/KeyHistory.htm">KeyHistory</a>.</p>
-    <p>设置为 1 并不妨碍主窗口被 <a href="commands/WinShow.htm">WinShow</a> 显示, 或者被 <a href="commands/ControlGetText.htm">ControlGetText</a> 或类似的方法检查, 但它确实阻止了脚本的源代码和其他信息通过主窗口暴露出来, 除非脚本调用了上述的某个函数.</p></td>
+    <p>在脚本运行时遇到下列函数, 总是能够显示主窗口并激活相应的视图选项: <a href="lib/ListLines.htm">ListLines</a>, <a href="lib/ListVars.htm">ListVars</a>, <a href="lib/ListHotkeys.htm">ListHotkeys</a> 和 <a href="lib/KeyHistory.htm">KeyHistory</a>.</p>
+    <p>设置为 1 并不妨碍主窗口被 <a href="lib/WinShow.htm">WinShow</a> 显示, 或者被 <a href="lib/ControlGetText.htm">ControlGetText</a> 或类似的方法检查, 但它确实阻止了脚本的源代码和其他信息通过主窗口暴露出来, 除非脚本调用了上述的某个函数.</p></td>
   </tr>
   <tr id="IconHidden">
     <td>A_IconHidden</td>
-    <td>可以用来获取或设置是否隐藏<a href="Program.htm#tray-icon">托盘图标</a>. 可能的值是 0(可见) 和 1(隐藏). 有关详情, 请参阅 <a href="commands/_NoTrayIcon.htm">#NoTrayIcon</a>.</td>
+    <td>可以用来获取或设置是否隐藏<a href="Program.htm#tray-icon">托盘图标</a>. 可能的值是 0(可见) 和 1(隐藏). 有关详情, 请参阅 <a href="lib/_NoTrayIcon.htm">#NoTrayIcon</a>.</td>
   </tr>
   <tr id="IconTip">
     <td>A_IconTip</td>
@@ -677,7 +677,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="IconFile">
     <td>A_IconFile</td>
-    <td>如果通过 <a href="commands/TraySetIcon.htm">TraySetIcon</a> 指定自定义的<a href="Program.htm#tray-icon">托盘图标</a>时, 变量的值为图标文件的完整路径和名称, 否则为空.</td>
+    <td>如果通过 <a href="lib/TraySetIcon.htm">TraySetIcon</a> 指定自定义的<a href="Program.htm#tray-icon">托盘图标</a>时, 变量的值为图标文件的完整路径和名称, 否则为空.</td>
   </tr>
   <tr id="IconNumber">
     <td>A_IconNumber</td>
@@ -692,21 +692,21 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="TimeIdle">
     <td>A_TimeIdle</td>
-    <td>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入(例如 <a href="commands/Send.htm">Send</a> 或 <a href="commands/MouseMove.htm">MouseMove</a> 函数) 会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如:
+    <td>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入(例如 <a href="lib/Send.htm">Send</a> 或 <a href="lib/MouseMove.htm">MouseMove</a> 函数) 会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如:
 <pre>if A_TimeIdle &gt; 600000
     MsgBox "The last keyboard or mouse activity was at least 10 minutes ago."</pre></td>
   </tr>
   <tr id="TimeIdlePhysical">
     <td>A_TimeIdlePhysical</td>
-    <td>与上面类似, 但在安装了相应的钩子(<a href="commands/InstallKeybdHook.htm">键盘</a>或<a href="commands/InstallMouseHook.htm">鼠标</a>) 后会忽略模拟的键击和/或鼠标点击; 即此变量仅对物理事件做出响应. (这样避免了由于模拟键击和鼠标点击而误以为用户存在.) 如果两种钩子都没有安装, 则此变量等同于 A_TimeIdle. 如果仅安装了一种钩子, 那么仅此类型的物理输入才会对 A_TimeIdlePhysical 起作用(另一种/未安装钩子的输入, 包括物理的和模拟的, 都会被忽略).</td>
+    <td>与上面类似, 但在安装了相应的钩子(<a href="lib/InstallKeybdHook.htm">键盘</a>或<a href="lib/InstallMouseHook.htm">鼠标</a>) 后会忽略模拟的键击和/或鼠标点击; 即此变量仅对物理事件做出响应. (这样避免了由于模拟键击和鼠标点击而误以为用户存在.) 如果两种钩子都没有安装, 则此变量等同于 A_TimeIdle. 如果仅安装了一种钩子, 那么仅此类型的物理输入才会对 A_TimeIdlePhysical 起作用(另一种/未安装钩子的输入, 包括物理的和模拟的, 都会被忽略).</td>
   </tr>
   <tr id="TimeIdleKeyboard">
     <td>A_TimeIdleKeyboard</td>
-    <td>如果安装了<a href="commands/InstallKeybdHook.htm">键盘钩子</a>, 这是自系统上次接收物理键盘输入以来所经过的毫秒数. 否则, 这个变量就等于 A_TimeIdle.</td>
+    <td>如果安装了<a href="lib/InstallKeybdHook.htm">键盘钩子</a>, 这是自系统上次接收物理键盘输入以来所经过的毫秒数. 否则, 这个变量就等于 A_TimeIdle.</td>
   </tr>
   <tr id="TimeIdleMouse">
     <td>A_TimeIdleMouse</td>
-    <td>如果安装了<a href="commands/InstallMouseHook.htm">鼠标钩子</a>, 这是自系统上次收到物理鼠标输入以来所经过的毫秒数. 否则, 这个变量就等于 A_TimeIdle.</td>
+    <td>如果安装了<a href="lib/InstallMouseHook.htm">鼠标钩子</a>, 这是自系统上次收到物理鼠标输入以来所经过的毫秒数. 否则, 这个变量就等于 A_TimeIdle.</td>
   </tr>
 </table>
 <h3 id="h">热键, 热字串和自定义菜单项</h3>
@@ -718,7 +718,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   <tr id="ThisHotkey">
     <td>A_ThisHotkey</td>
     <td><p>最近执行的<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">非自动替换热字串</a>(如果没有则为空), 例如 #z. 如果<a href="misc/Threads.htm">当前线程</a>被其他热键或热字串中断, 那么此变量的值会变化, 所以一般情况下, 最好使用 <a href="Hotkeys.htm#ThisHotkey">ThisHotkey</a> 参数.</p>
-      <p>首次创建热键时 -- 通过 <a href="commands/Hotkey.htm">Hotkey 函数</a>或<a href="Hotkeys.htm">双冒号语法</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="commands/_HotIf.htm#variant">变体</a>共享.</p>
+      <p>首次创建热键时 -- 通过 <a href="lib/Hotkey.htm">Hotkey 函数</a>或<a href="Hotkeys.htm">双冒号语法</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="lib/_HotIf.htm#variant">变体</a>共享.</p>
       <p>当热字符串是首次创建时, 用于创建它的确切文本将成为热字符串的永久名称.</p>
     </td>
   </tr>
@@ -728,7 +728,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="PriorKey">
     <td>A_PriorKey</td>
-    <td>在最近一次键-按下或键-释放之前按下的最后一个键的名称, 如果在按键历史中找不到合适的键-按下则为空. 不包括由 AutoHotkey 脚本生成的所有输入. 要使用此变量, 首先必须安装<a href="commands/InstallKeybdHook.htm">键盘</a>或<a href="commands/InstallMouseHook.htm">鼠标钩子</a>并且启用了<a href="commands/KeyHistory.htm">key history(按键历史)</a>.</td>
+    <td>在最近一次键-按下或键-释放之前按下的最后一个键的名称, 如果在按键历史中找不到合适的键-按下则为空. 不包括由 AutoHotkey 脚本生成的所有输入. 要使用此变量, 首先必须安装<a href="lib/InstallKeybdHook.htm">键盘</a>或<a href="lib/InstallMouseHook.htm">鼠标钩子</a>并且启用了<a href="lib/KeyHistory.htm">key history(按键历史)</a>.</td>
   </tr>
   <tr id="TimeSinceThisHotkey">
     <td>A_TimeSinceThisHotkey</td>
@@ -744,15 +744,15 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="MaxHotkeysPerInterval">
     <td>A_MaxHotkeysPerInterval</td>
-    <td>在 A_HotkeyInterval 定义的时间间隔内, 可以按下的最大热键数, 而不触发警告对话框. 有关详情, 请参阅 <a href="misc/A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a>.</td>
+    <td>在 A_HotkeyInterval 定义的时间间隔内, 可以按下的最大热键数, 而不触发警告对话框. 有关详情, 请参阅 <a href="lib/A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a>.</td>
   </tr>
   <tr id="HotkeyInterval">
     <td>A_HotkeyInterval</td>
-    <td><a href="misc/A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a> 使用的间隔长度, 以毫秒为单位.</td>
+    <td><a href="lib/A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a> 使用的间隔长度, 以毫秒为单位.</td>
   </tr>
   <tr id="HotkeyModifierTimeout">
     <td>A_HotkeyModifierTimeout</td>
-    <td>影响带有以下<a href="Hotkeys.htm">热键</a>修饰符的 <a href="commands/Send.htm">Send</a> 的行为: <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, <kbd>Win</kbd> 和 <kbd>Shift</kbd>. 有关详情, 请参阅 <a href="misc/A_HotkeyModifierTimeout.htm">A_HotkeyModifierTimeout</a>.</td>
+    <td>影响带有以下<a href="Hotkeys.htm">热键</a>修饰符的 <a href="lib/Send.htm">Send</a> 的行为: <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, <kbd>Win</kbd> 和 <kbd>Shift</kbd>. 有关详情, 请参阅 <a href="lib/A_HotkeyModifierTimeout.htm">A_HotkeyModifierTimeout</a>.</td>
   </tr>
 </table>
 <h3 id="os">操作系统和用户信息</h3>
@@ -763,7 +763,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="ComSpec">
     <td>A_ComSpec</td>
-    <td><p>包含与环境的 ComSpec 变量相同的字符串. 常与 <a href="commands/Run.htm">Run/RunWait</a> 一起使用. 例如:</p>
+    <td><p>包含与环境的 ComSpec 变量相同的字符串. 常与 <a href="lib/Run.htm">Run/RunWait</a> 一起使用. 例如:</p>
       <pre class="NoIndent no-highlight">C:\Windows\system32\cmd.exe</pre>
     </td>
   </tr>
@@ -896,24 +896,24 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   <tr id="IsAdmin">
     <td>A_IsAdmin</td>
     <td><p>如果当前用户有管理员权限, 则此变量的值为 1. 否则为 0.</p>
-    <p id="RequireAdmin">要使脚本以管理员权限重新启动(或显示提示向用户请求管理员权限), 请使用 <a href="commands/Run.htm#RunAs">Run *RunAs</a>. 但是请注意, 以管理员权限运行脚本会导致脚本启动的所有程序也以管理员权限运行. 对于可能的替代方案, 请参阅<a href="FAQ.htm#uac">常见问题(FAQ)</a>.</p>
+    <p id="RequireAdmin">要使脚本以管理员权限重新启动(或显示提示向用户请求管理员权限), 请使用 <a href="lib/Run.htm#RunAs">Run *RunAs</a>. 但是请注意, 以管理员权限运行脚本会导致脚本启动的所有程序也以管理员权限运行. 对于可能的替代方案, 请参阅<a href="FAQ.htm#uac">常见问题(FAQ)</a>.</p>
     </td>
   </tr>
   <tr id="Screen">
     <td><p>A_ScreenWidth<br>
     A_ScreenHeight</p></td>
     <td><p>主监视器的宽度和高度, 单位为像素(例如 1024 和 768).</p>
-      <p>要获取多显示器系统中其他显示器的尺寸, 请使用 <a href="commands/SysGet.htm">SysGet</a>.</p>
+      <p>要获取多显示器系统中其他显示器的尺寸, 请使用 <a href="lib/SysGet.htm">SysGet</a>.</p>
       <p>要获取整个桌面(即使它横跨多个显示器) 的宽度和高度, 请使用下面的例子:</p>
 <pre>
-VirtualWidth := <a href="commands/SysGet.htm">SysGet</a>(78)
-VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
+VirtualWidth := <a href="lib/SysGet.htm">SysGet</a>(78)
+VirtualHeight := <a href="lib/SysGet.htm">SysGet</a>(79)
 </pre>
-    <p>此外, 使用 <a href="commands/SysGet.htm">SysGet</a> 可以获取显示器的工作区域, 它比显示器的整个区域小, 因为它不包括任务栏和其他注册的桌面工具栏.</p></td>
+    <p>此外, 使用 <a href="lib/SysGet.htm">SysGet</a> 可以获取显示器的工作区域, 它比显示器的整个区域小, 因为它不包括任务栏和其他注册的桌面工具栏.</p></td>
   </tr>
   <tr id="ScreenDPI">
     <td>A_ScreenDPI</td>
-    <td>沿屏幕宽度每逻辑英寸的像素数. 在具有多个显示监视器的系统中, 此值对于所有监视器都是相同的. 在大多数系统中该值为 96; 它取决于系统文本大小(DPI) 设置. 另请参阅 GUI 的 <a href="objects/Gui.htm#DPIScale">-DPIScale</a> 选项.</td>
+    <td>沿屏幕宽度每逻辑英寸的像素数. 在具有多个显示监视器的系统中, 此值对于所有监视器都是相同的. 在大多数系统中该值为 96; 它取决于系统文本大小(DPI) 设置. 另请参阅 GUI 的 <a href="lib/Gui.htm#DPIScale">-DPIScale</a> 选项.</td>
   </tr>
 </table>
 <h3 id="misc">杂项</h3>
@@ -924,7 +924,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   </tr>
   <tr id="Clipboard">
     <td>A_Clipboard</td>
-    <td>可用于获取或设置系统剪贴板的内容. 有关详情, 请参阅 <a href="misc/A_Clipboard.htm">A_Clipboard</a>.</td>
+    <td>可用于获取或设置系统剪贴板的内容. 有关详情, 请参阅 <a href="lib/A_Clipboard.htm">A_Clipboard</a>.</td>
   </tr>
   <tr id="Cursor">
     <td>A_Cursor</td>
@@ -935,7 +935,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
     <td><p>包含下列事件的额外信息:</p>
       <ul>
         <li><a href="Hotkeys.htm#Wheel">鼠标滚轮热键</a>(WheelDown/Up/Left/Right)</li>
-        <li><a href="commands/OnMessage.htm">OnMessage</a></li>
+        <li><a href="lib/OnMessage.htm">OnMessage</a></li>
         <li><a href="misc/RegExCallout.htm">Regular Expression Callouts</a></li>
       </ul>
       <p>注意: 与类似 A_ThisHotkey 这样的变量不同, 每个<a href="misc/Threads.htm">线程</a>保留自身的 A_EventInfo 值. 因此, 如果一个线程被另一个中断, 在这个线程恢复时它仍将看到这些变量的原来/正确的值.</p>
@@ -943,7 +943,7 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   </tr>
   <tr id="LastError">
     <td>A_LastError</td>
-    <td><p>这通常是脚本调用某些函数后, 包括 <a href="commands/DllCall.htm">DllCall</a>, <a href="commands/Run.htm">Run/RunWait</a>, File/Ini/Reg 函数(在文档中) 和可能的其他函数, 系统 GetLastError() 函数的结果. A_LastError 是一个介于 0 和 4294967295 之间的数字(通常格式化为十进制, 而不是十六进制). 零(0) 表示成功, 但是任何其他数字都表示调用失败. 每个数字对应一个特定的错误条件(要获得列表, 请搜索 <a href="http://www.microsoft.com">www.microsoft.com</a> 中的 "系统错误代码"). A_LastError 是每个线程的设置; 也就是说, 被其他<a href="misc/Threads.htm">线程</a>中断不能改变它.</p>
+    <td><p>这通常是脚本调用某些函数后, 包括 <a href="lib/DllCall.htm">DllCall</a>, <a href="lib/Run.htm">Run/RunWait</a>, File/Ini/Reg 函数(在文档中) 和可能的其他函数, 系统 GetLastError() 函数的结果. A_LastError 是一个介于 0 和 4294967295 之间的数字(通常格式化为十进制, 而不是十六进制). 零(0) 表示成功, 但是任何其他数字都表示调用失败. 每个数字对应一个特定的错误条件(要获得列表, 请搜索 <a href="http://www.microsoft.com">www.microsoft.com</a> 中的 "系统错误代码"). A_LastError 是每个线程的设置; 也就是说, 被其他<a href="misc/Threads.htm">线程</a>中断不能改变它.</p>
     <p>给 A_LastError 赋值, 也会调用系统的 SetLastError() 函数.</p></td>
   </tr>
   <tr id="TrueFalse">
@@ -961,23 +961,23 @@ VirtualHeight := <a href="commands/SysGet.htm">SysGet</a>(79)
   </tr>
   <tr id="Index">
     <td>A_Index</td>
-    <td>可用于获取或设置当前循环迭代(64 位整数). 例如, 当脚本首次执行此循环体时, 此变量的值为 1. 要了解详情, 请参阅 <a href="commands/Loop.htm">Loop</a> 或 <a href="commands/While.htm">While-loop</a>.</td>
+    <td>可用于获取或设置当前循环迭代(64 位整数). 例如, 当脚本首次执行此循环体时, 此变量的值为 1. 要了解详情, 请参阅 <a href="lib/Loop.htm">Loop</a> 或 <a href="lib/While.htm">While-loop</a>.</td>
   </tr>
   <tr>
     <td>A_LoopFileName, 等</td>
-    <td>此变量和其他相关变量仅在<a href="commands/LoopFiles.htm">文件循环</a>中有效.</td>
+    <td>此变量和其他相关变量仅在<a href="lib/LoopFiles.htm">文件循环</a>中有效.</td>
   </tr>
   <tr>
     <td>A_LoopRegName, 等</td>
-    <td>此变量和其他相关变量仅在<a href="commands/LoopReg.htm">注册表循环</a>中有效.</td>
+    <td>此变量和其他相关变量仅在<a href="lib/LoopReg.htm">注册表循环</a>中有效.</td>
   </tr>
   <tr>
     <td>A_LoopReadLine</td>
-    <td>请参阅<a href="commands/LoopRead.htm">文件读取循环</a>.</td>
+    <td>请参阅<a href="lib/LoopRead.htm">文件读取循环</a>.</td>
   </tr>
   <tr>
     <td>A_LoopField</td>
-    <td>请参阅<a href="commands/LoopParse.htm">解析循环</a>.</td>
+    <td>请参阅<a href="lib/LoopParse.htm">解析循环</a>.</td>
   </tr>
 </table>
 

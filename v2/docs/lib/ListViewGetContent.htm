@@ -1,0 +1,94 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>ListViewGetContent - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The ListViewGetContent function returns a list of items/rows from a ListView." />
+<meta name="ahk:equiv-v1" content="lib/ControlGet.htm#List" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>ListViewGetContent</h1>
+
+<p>返回列表视图中的项目/行列表.</p>
+
+<pre class="Syntax">List := <span class="func">ListViewGetContent</span>(<span class="optional">Options, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
+
+<h2 id="Parameters">参数</h2>
+<dl>
+    <dt>Options</dt>
+    <dd>
+        <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+        <p>指定检索什么. 如果为空或省略, 则检索 ListView 中的所有文本. 否则, 指定零个或多个下列单词, 每个单词之间用空格或制表符分隔:</p>
+        <p><strong>Selected:</strong> 只返回选中(突出显示) 的行, 而不是所有行. 如果没有, 则返回值为空.</p>
+        <p><strong>Focused:</strong> 只返回聚焦行. 如果没有, 则返回值为空.</p>
+        <p id="ColN"><strong>Col4:</strong> 仅获取第四列(字段) 而不是所有列(把 4 替换为您选择的数字).</p>
+        <p><strong>Count:</strong> 返回 ListView 中的总行数.</p>
+        <p><strong>Count Selected:</strong> 返回选中(高亮显示) 行的数量.</p>
+        <p><strong>Count Focused:</strong> 返回聚焦行的行号(位置)(如果没有, 则返回 0).</p>
+        <p><strong>Count Col:</strong> 返回控件中的列数(如果无法确定列数, 则返回 -1).</p>
+    </dd>
+    <dt>Control</dt>
+    <dd>
+        <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
+        控件的 ClassNN, 文本或 HWND, 或具有 <code>Hwnd</code> 属性的对象. 有关详情, 请参阅 <a href="Control.htm#Parameter">Control 参数</a>.</p>
+    </dd>
+    <dt>WinTitle</dt>
+    <dd>
+        <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
+        <p>识别目标窗口的窗口标题或其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
+    </dd>
+    <dt>WinText</dt>
+    <dd>
+        <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+        <p>如果存在, 此参数必须是目标窗口的单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON, 那么会检测隐藏文本元素.</p>
+    </dd>
+    <dt>ExcludeTitle</dt>
+    <dd>
+        <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+        <p>标题中含有此参数值的窗口将被排除.</p>
+    </dd>
+    <dt>ExcludeText</dt>
+    <dd>
+        <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+        <p>文本中含有此参数值的窗口将被排除.</p>
+    </dd>
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+<p>此函数从 ListView 返回项目/行的列表. 在每一行中, 除最后一个字段外的每个字段(列) 都将以制表符(`t) 结尾. 若要分别访问项目/行, 请使用 <a href="LoopParse.htm">parsing loop</a>, 如<a href="#ExListView">示例 #1</a> 所示.</p>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>如果找不到窗口或控件, 则抛出 <a href="Error.htm#TargetError">TargetError</a>.</p>
+<p>如果消息无法发送到控件, 或拥有 ListView 的进程无法打开, 这可能是由于缺少用户权限或因为它已被锁定, 则抛出 <a href="Error.htm#OSError">OSError</a>.</p>
+<p>如果 <a href="#ColN">Col<em>N</em> 选项</a>指定不存在的列, 则抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>一些应用程序将其 ListView 文本单独存储, 从而防止检索它们的文本. 在这些情况下, 通常不会抛出异常, 但是所有检索到的字段都是空的.</p>
+<p>ListView 中的列可以通过 <a href="SendMessage.htm">SendMessage</a> 调整大小, 如下例所示:</p>
+<pre>SendMessage(0x101E, 0, 80, "SysListView321", WinTitle)  <em>; 0x101E 是 LVM_SETCOLUMNWIDTH 消息.</em></pre>
+<p>在上面, 0 表示第一列(第二列指定 1, 2 为第三列, 依此类推). 此外, 80 是新宽度. 用 -1 替换 80 以自动调整列大小. 将其替换为 -2 即可执行相同操作, 但还要考虑标题文本的宽度.</p>
+<p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="ControlGetItems.htm">ControlGetItems</a>, <a href="WinGetList.htm">WinGetList</a>, <a href="Control.htm">控件函数</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExListView">
+<p><a class="ex_number" href="#ExListView"></a> 从 ListView 中提取各个行和字段.</p>
+<pre>List := ListViewGetContent("Selected", "SysListView321", WinTitle)
+Loop Parse, List, "`n"  <em>; 行由换行符(`n) 分隔.</em>
+{
+    RowNumber := A_Index
+    Loop Parse, A_LoopField, A_Tab  <em>; 每行中的字段(列) 由制表符(A_Tab) 分隔.</em>
+        MsgBox "Row #" RowNumber " Col #" A_Index " is " A_LoopField
+}</pre>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>ComObject - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The ComObject function creates a COM object." />
+<meta name="ahk:equiv-v1" content="lib/ComObjActive.htm" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>ComObject</h1>
+<p>创建 COM 对象.</p>
+<pre class="Syntax">ComObj := <span class="func">ComObject</span>(CLSID <span class="optional">, IID</span>)</pre>
+<p><code>ComObject</code> 本身是一个派生自 <code>ComValue</code> 的<a href="Class.htm">类</a>, 但只用于创建或识别 COM 对象.</p>
+
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>CLSID</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要创建的 COM 对象的 CLSID 或可读的 Prog ID.</p>
+  </dd>
+
+  <dt>IID</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要返回的接口的标识符. 在大多数情况下, 它是省略的; 如果省略, 它默认为 <code>"{00020400-0000-0000-C000-000000000046}"</code>(IID_IDispatch).</code></p>
+  </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="ComValue.htm#Returns">ComValue</a> 或 ComObject</p>
+<p>该函数返回一个 COM 包装器对象, 其类型取决于 IID 参数.</p>
+<table class="info">
+  <tr><th>IID</th><th>Class</th><th abbr="Type">变体类型</th><th abbr="Descr">描述</th></tr>
+  <tr>
+    <td>IID_IDispatch</td>
+    <td><code style="white-space:nowrap">ComObject</code></td>
+    <td><span style="white-space:nowrap">VT_DISPATCH (9)</span></td>
+    <td>允许脚本使用普通的<a href="../Objects.htm#Usage_Objects">对象语法</a>来调用对象的属性和方法.</td>
+  </tr>
+  <tr>
+    <td>任意其他 IID</td>
+    <td><code style="white-space:nowrap">ComValue</code></td>
+    <td><span style="white-space:nowrap">VT_UNKNOWN (13)</span></td>
+    <td>只提供一个 <code>Ptr</code> 属性, 允许对象被传递给 <a href="DllCall.htm">DllCall</a> 或 <a href="ComCall.htm">ComCall</a>.</td>
+  </tr>
+</table>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>失败时抛出异常, 例如参数无效或对象不支持由 <em>IID</em> 指定的接口.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="ComValue.htm">ComValue</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjArray.htm">ComObjArray</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="ComCall.htm">ComCall</a>, <a href="http://msdn.microsoft.com/en-us/library/dcw63t7z.aspx">CreateObject (MSDN)</a></p>
+
+<h2 id="Examples">示例</h2>
+<p>有关更多的示例列表, 请参阅后面的的论坛主题: <a href="https://www.autohotkey.com/forum/topic61509.html">https://www.autohotkey.com/forum/topic61509.html</a>.</p>
+<div class="ex" id="ExIE">
+<p><a class="ex_number" href="#ExIE"></a> 启动 Internet Explorer 实例, 使其可见并导航到一个网站.</p>
+<pre>ie := ComObject("InternetExplorer.Application")
+ie.Visible := true  <em>; 此语句在 IE7 中无法正常执行.</em>
+ie.Navigate("https://www.autohotkey.com/")
+</pre>
+</div>
+<div class="ex" id="ExWallpaper">
+<p><a class="ex_number" href="#ExWallpaper"></a> 检索桌面当前壁纸的路径.</p>
+<pre>
+AD_GETWP_BMP := 0
+AD_GETWP_LAST_APPLIED := 0x00000002
+CLSID_ActiveDesktop := "{75048700-EF1F-11D0-9888-006097DEACF9}"
+IID_IActiveDesktop := "{F490EB00-1240-11D1-9888-006097DEACF9}"
+cchWallpaper := 260
+GetWallpaper := 4
+
+AD := ComObject(CLSID_ActiveDesktop, IID_IActiveDesktop)
+wszWallpaper := Buffer(cchWallpaper * 2)
+ComCall(GetWallpaper, AD, "ptr", wszWallpaper, "uint", cchWallpaper, "uint", AD_GETWP_LAST_APPLIED)
+Wallpaper := StrGet(wszWallpaper, "UTF-16")
+MsgBox "Wallpaper: " Wallpaper
+</pre>
+</div>
+
+</body>
+</html>

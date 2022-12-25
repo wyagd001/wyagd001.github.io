@@ -1,0 +1,109 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>FileMove - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The FileMove function moves or renames one or more files." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>FileMove</h1>
+
+<p>移动或重命名一个或多个文件.</p>
+
+<pre class="Syntax"><span class="func">FileMove</span> SourcePattern, DestPattern <span class="optional">, Overwrite</span></pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>SourcePattern</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>单个文件的名称或通配符模式, 例如 C:\Temp\*.tmp. 如果没有指定绝对路径, 则假定 <em>SourcePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+  </dd>
+
+  <dt>DestPattern</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>目标的名称或模式, 如果没有指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+    <p>如果星号存在, 则将文件名中的第一个星号(<code>*</code>) 替换为不包含其扩展名的源文件名, 而将最后一个句号(<code>.</code>) 后的第一个星号替换为源文件的扩展名. 如果有星号, 但省略了扩展名, 则使用源文件的扩展名.</p>
+    <p>要执行简单地移动 -- 保留现有文件名 -- 只需指定文件夹名, 如下面功能几乎等同的两个例子所示:</p>
+    <pre>FileMove "C:\*.txt", "C:\My Folder"</pre>
+    <pre>FileMove "C:\*.txt", "C:\My Folder\*.*"</pre>
+    <p>目标目录必须已经存在. 如果 <em>My Folder</em> 不存在, 上面第一个示例将使用 "My Folder" 作为目标文件名, 而第二个示例不会移动任何文件.</p>
+  </dd>
+
+  <dt>Overwrite</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
+    <p>此参数确定是否覆盖已存在的文件. 如果此参数为 1(true), 则该函数将覆盖现有文件. 如果省略或为 0(false), 则该函数不会覆盖现有文件.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>如果有文件移动失败, 则抛出 <a href="Error.htm">Error</a>, 并且它的 <a href="Error.htm#Extra">Extra</a> 属性设置为失败次数. 如果没有找到文件, 只有当 <em>SourcePattern</em> 缺少通配符 <code>*</code> 和 <code>?</code> 时, 才会抛出异常. 换句话说, 移动一个通配符模式, 如 <code>"*.txt"</code>, 当它不与任何文件匹配时, 被视为成功.</p>
+<p>与 <a href="FileCopy.htm">FileCopy</a> 不同, 移动一个文件来覆盖它自己总被认为是成功的, 即使在覆盖模式没有生效的情况下.</p>
+<p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0(零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>FileMove 只移动文件. 要移动整个文件夹的内容(它的所有文件和子文件夹), 请参阅下面的示例部分. 要移动或重命名单个文件夹, 请使用 <a href="DirMove.htm">DirMove</a>.</p>
+<p>在遇到错误后操作仍会继续进行.</p>
+<p>尽管此函数可以移动文件到不同的卷, 但这样的操作会比在相同卷上消耗更多的时间. 这是由于在相同卷上类似于重命名, 因此快速得多.</p>
+<h2 id="Related">相关</h2>
+<p><a href="FileCopy.htm">FileCopy</a>, <a href="DirCopy.htm">DirCopy</a>, <a href="DirMove.htm">DirMove</a>, <a href="FileDelete.htm">FileDelete</a></p>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExNoRename">
+<p><a class="ex_number" href="#ExNoRename"></a> 移动文件而不进行重命名.</p>
+<pre>FileMove "C:\My Documents\List1.txt", "D:\Main Backup\"</pre>
+</div>
+
+<div class="ex" id="ExRename">
+<p><a class="ex_number" href="#ExRename"></a> 重命名单个文件.</p>
+<pre>FileMove "C:\File Before.txt", "C:\File After.txt"</pre>
+</div>
+
+<div class="ex" id="ExNewExt">
+<p><a class="ex_number" href="#ExNewExt"></a> 移动文本文件到新位置并使用新的扩展名重命名文件.</p>
+<pre>FileMove "C:\Folder1\*.txt", "D:\New Folder\*.bkp"</pre>
+</div>
+
+<div class="ex" id="ExMoveAll">
+<p><a class="ex_number" href="#ExMoveAll"></a> 移动一个文件夹中所有文件和文件夹到另一个文件夹中.</p>
+<pre>ErrorCount := MoveFilesAndFolders("C:\My Folder\*.*", "D:\Folder to receive all files &amp; folders")
+if ErrorCount != 0
+    MsgBox ErrorCount " files/folders could not be moved."
+
+MoveFilesAndFolders(SourcePattern, DestinationFolder, DoOverwrite := false)
+<em>; 移动匹配 SourcePattern 的所有文件和文件夹到 DestinationFolder 文件夹中且
+; 返回无法移动的文件/文件夹的数目.</em>
+{
+    ErrorCount := 0
+    if DoOverwrite = 1
+        DoOverwrite := 2  <em>; 请参阅 <a href="DirMove.htm">DirMove</a> 了解模式 2 与模式 1 的区别.</em>
+    <em>; 首先移动所有文件(不是文件夹):</em>
+    try
+        FileMove SourcePattern, DestinationFolder, DoOverwrite
+    catch as Err
+        ErrorCount := Err.Extra
+    <em>; 现在移动所有文件夹:</em>
+    Loop Files, SourcePattern, "D"  <em>; D 表示 "只获取文件夹".</em>
+    {
+        try
+            DirMove A_LoopFilePath, DestinationFolder "\" A_LoopFileName, DoOverwrite
+        catch
+        {
+            ErrorCount += 1
+            <em>; 报告每个出现问题的文件夹名称.</em>
+            MsgBox "Could not move " A_LoopFilePath " into " DestinationFolder
+        }
+    }
+    return ErrorCount
+}</pre>
+</div>
+
+</body>
+</html>

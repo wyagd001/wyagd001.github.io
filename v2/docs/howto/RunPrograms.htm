@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Learn how to run programs with AutoHotkey." />
+<meta name="ahk:equiv-v1" content="Tutorial.htm#s4" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>How to Run Programs | AutoHotkey v2</title>
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>如何运行程序</h1>
+<p>AutoHotkey 可以做的最简单和最有用的事情之一是允许您创建启动程序的键盘快捷键(热键).</p>
+<p>通过调用 <a href="../lib/Run.htm">Run</a> 函数启动程序, 将程序的命令行作为<a href="../Concepts.htm#parameters">参数</a><a href="../Concepts.htm#pass-parameters">传递</a>:</p>
+<pre>Run "C:\Windows\notepad.exe"</pre>
+<p>这个例子启动记事本. 想要了解如何试用, 请参阅<a href="RunExamples.htm">如何运行示例代码</a>.</p>
+<p>在这个阶段, 我们还没有定义热键(换句话说, 分配了键盘快捷键), 所以指令是立即执行的. 在这种情况下, 脚本没有其他事情要做, 因此它自动退出. 如果你更喜欢在学习过程中创建有用的热键, 请先查看<a href="WriteHotkeys.htm">如何编写热键</a>.</p>
+<p class="note"><strong>注意:</strong> Run 也可以用来打开文档, 文件夹和 URL.</p>
+<p>要启动其他程序, 只需将上面示例中的路径替换为您希望启动的程序的路径. 有些程序已经在系统中注册了它们的路径, 在这种情况下, 你可以只传递程序的文件名, 带或(有时)不带 ".exe" 扩展名. 例如:</p>
+<pre>Run "notepad"</pre>
+
+<h2>命令行参数</h2>
+<p>如果程序接受命令行参数, 它们可以作为 <a href="../lib/Run.htm">Run</a> 函数的第一个参数的一部分传递. 下面的例子应该在记事本中打开 license.txt:</p>
+<pre>
+Run "notepad C:\Program Files\AutoHotkey\license.txt"
+</pre>
+<p class="note"><strong>注意:</strong> 本例假设 AutoHotkey 安装在默认位置, 否则将显示错误.</p>
+<p>简单, 是吧? 现在假设我们想要在写字板而不是记事本中打开文件.</p>
+<pre>Run "wordpad C:\Program Files\AutoHotkey\license.txt"</pre>
+<p>运行这段代码, 看看可以从结果中了解到什么.</p>
+<p>好吧, 新代码不管用. 希望您没有立即关闭错误对话框; 错误对话框是编码过程的正常组成部分, 通常包含非常有用的信息. 这句话应该告诉我们一些事情:</p>
+<ul>
+  <li>首先, 显而易见的是: 该程序无法启动.</li>
+  <li>对话框显示 "Action" 和 "Params", 但是我们的整个命令行显示在 "Action" 旁边, 而 "Params" 是空的. 换句话说, Run 函数不知道程序名在哪里结束, 参数从哪里开始.</li>
+  <li>"The system cannot find the file specified(系统无法找到指定的文件)" (在英语系统上). 也许系统找不到 "wordpad", 但它真正的意思是没有 "wordpad C:\..." 这样的文件.</li>
+</ul>
+<p>但是记事本为什么正常? 单独运行 "notepad" 或 "wordpad" 都可以, 但原因不同. 与 notepad.exe 不同, wordpad.exe 不能通过检查 PATH 环境变量中列出的每个目录来找到. 可以通过不同的方法来定位它，这需要 Run 函数来分离程序名称和参数.</p>
+<p>所以在这种情况下, Run 函数需要一些帮助, 以以下任何或所有形式:</p>
+<ul>
+  <li>显式地使用 ".exe" 扩展名.</li>
+  <li>显式使用 wordpad.exe 的完整路径.</li>
+  <li>程序名用引号括起来.</li>
+</ul>
+<p>现在, 选择最简单的方法:</p>
+<pre>Run "wordpad.exe C:\Program Files\AutoHotkey\license.txt"</pre>
+<p>现在写字板启动, 但它显示错误: "C:\Program" wasn't found.</p>
+
+<h2>引号和空格</h2>
+<p>通常, 在向程序传递命令行参数时, 如果参数中包含空格, 则需要将每个参数用引号括起来. 这对于记事本来说是不必要的, 但是记事本是一般规则的一个例外. 一种天真的解决方法可能是简单地添加更多的引号:</p>
+<pre>Run "wordpad.exe "C:\Program Files\AutoHotkey\license.txt""</pre>
+<p>但这行不通, 因为默认情况下, 引号是用来表示原义文本的开始和结束. 那么, 我们如何在命令行中包含一个文字引号, 而不是让它结束命令行呢?</p>
+<p><strong>方法 1:</strong> 在每个文字引号前面加上 <code>`</code>(back-tick, 反引号或重音). 这被称为 <a href="../misc/EscapeChar.htm">转义序列</a>. 然后引号被包含在命令行中(即传递给 Run 函数的字符串), 而反勾号, 完成了它的目的, 被省略了.</p>
+<pre>Run "wordpad.exe `"C:\Program Files\AutoHotkey\license.txt`""</pre>
+<p><strong>方法 2:</strong> 将命令行括在单引号而不是双引号中.</p>
+<pre>Run 'wordpad.exe "C:\Program Files\AutoHotkey\license.txt"'</pre>
+<p>当然, 在这种情况下, 文本中的任何 <em>原义</em> 单引号(或撇号) 都需要转义(<code>`'</code>).</p>
+<p>编写代码的方式会影响到 Run 函数中实际使用的引号. 在上面的两个例子中, the Run 函数接收字符串 <code>wordpad.exe "C:\Program Files\AutoHotkey\license.txt"</code>. Run 函数要么将其拆分为 <em>程序名</em> 和 <em>参数</em>(其他所有内容), 要么将其留给系统. 在任何一种情况下, 如何解释剩余的引号完全取决于目标程序.</p>
+<p>如果引号前面有反斜杠, 许多程序将其视为参数的一部分. 例如, <code>Run 'my.exe "A\" B'</code> 可能会生成一个值为 <code>A" B</code> 的参数, 而不是两个参数. 这取决于程序, 通常可以通过双反斜杠来避免, 如在 <code>Run 'my.exe "A\\" B'</code>, 通常会产生两个参数(<code>A\</code> 和 <code>B</code>).</p>
+<p>大多数程序将引号解释为一种切换, 在 "空格结束参数" 和 "空格包含在参数中" 之间切换模式. 换句话说, <code>Run 'my.exe "A B"'</code> 通常相当于运行 <code>Run 'my.exe A" "B'</code>. 因此, 另一种避免使用斜杠的方法是引用 <em>空格</em> 而不是整个参数, 或者在斜杠之前结束引号, 如 <code>Run 'my.exe "A"\ B'</code>.</p>
+
+<h2>包括变量</h2>
+<p>命令行通常需要包含一些 <a href="../Concepts.htm#variables">变量</a>. 例如, "Program Files" 目录的位置可能因系统而异, 脚本可以通过使用 <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a> 变量来考虑这一点. 如果变量包含整个命令行, 只需将变量传递给 Run 函数以执行它.</p>
+<pre>Run A_ComSpec  <em>; 启动命令提示符(几乎总是 cmd.exe).</em>
+Run A_MyDocuments  <em>; 打开用户的文档文件夹.</em></pre>
+<p>在带引号的字符串中 <em>包含</em> 变量是行不通的; 相反, 我们使用<a href="../Variables.htm#concat">连接</a>将文字字符串与变量连接在一起. 例如:</p>
+<pre>Run 'notepad.exe "' A_MyDocuments '\AutoHotkey.ahk"'</pre>
+<p>另一种方法是使用 <a href="../lib/Format.htm">Format</a> 执行替换. 例如:</p>
+<pre>Run Format('notepad.exe "{1}\AutoHotkey.ahk"', A_MyDocuments)</pre>
+<p class="note"><strong>注意:</strong> Format 可以同时执行其他格式化, 例如用 0 或空格填充, 或将数字格式化为十六进制而不是十进制.</p>
+
+<h2>运行的参数</h2>
+<p>除了要执行的命令行之外, Run 数还接受一些影响其行为的其他<a href="../Concepts.htm#parameters">参数</a>.</p>
+<p><em>WorkingDir</em> 指定新进程的工作目录. 如果您为程序指定了相对路径, 则它相对于此目录. 命令行参数中的相对路径通常也相对于该目录, 但这取决于程序.</p>
+<pre>Run "cmd", "C:\"  <em>; 在 C:\ 处打开命令提示符</em></pre>
+<p><em>选项</em> 通常可以用来运行最小化或隐藏的程序, 而不是让它弹出在屏幕上, 但有些程序忽略它.</p>
+<p><em>OutputVarPID</em> 提供了进程 ID, 它通常与 <a href="../lib/WinWait.htm">WinWait</a> 或 <a href="../lib/WinWaitActive.htm">WinWaitActive</a> 和 <a href="../misc/WinTitle.htm#ahk_pid">ahk_pid</a> 一起使用, 以等待程序在屏幕上显示一个窗口, 或标识其中一个窗口. 例如:</p>
+<pre>Run "notepad",,, &amp;pid
+WinWaitActive "ahk_pid " pid
+SendText "Hello, world!"</pre>
+
+<h2>系统的动词</h2>
+<p><a href="../lib/Run.htm#verbs">系统动词</a>是系统或应用程序为特定文件类型注册的操作. 它们通常在资源管理器中文件的右键菜单中可用, 但它们的实际名称并不总是与菜单中显示的文本相匹配. 例如, AutoHotkey 脚本有一个 "edit" 动词, 用于在编辑器中打开脚本, 以及(如果安装了 Ahk2Exe) 一个 <a href="../Scripts.htm#ahk2exe">compiles</a> 动词, 用于编译脚本.</p>
+<p>"Edit" 是 Run 默认识别的常用动词列表之一, 因此只需将单词后跟空格和文件名, 如下所示:</p>
+<pre>Run 'edit ' A_ScriptFullPath  <em>; 通常等同于 <a href="../lib/Edit.htm">Edit</a></em></pre>
+<p>任何在系统中注册的动词都可以使用 * 前缀执行, 如下所示:</p>
+<pre>Run '*Compile-Gui ' A_ScriptFullPath</pre>
+<p>如果安装了 Ahk2Exe, 这将打开预先选择当前脚本的 Ahk2Exe Gui.</p>
+
+<h2>环境</h2>
+<p>每当一个新进程启动时, 它通常会继承启动它的进程(<em>父进程</em>) 的 <em>环境</em>. 这基本上意味着所有脚本的<a href="../Concepts.htm#environment-variables">环境变量</a>都由使用 <a href="../lib/Run.htm">Run</a> 启动的任何程序继承.</p>
+<p>在某些情况下, 可以在启动程序之前使用 <a href="../lib/EnvSet.htm">EnvSet</a> 设置环境变量以影响程序的行为, 或将信息传递给程序. 脚本还可以使用 <a href="../lib/EnvGet.htm">EnvGet</a> 读取它可能从其父进程继承的环境变量.</p>
+<p>在 64 位系统上, 脚本自身的环境很大程度上取决于运行它的 EXE 是 32 位还是 64 位. 32 位进程不仅具有不同的环境变量, 而且出于兼容性原因还具有<a href="https://learn.microsoft.com/en-us/windows/win32/winprog64/file-system-redirector">文件系统重定向</a>.</p>
+<pre>Run "cmd /k set pro"</pre>
+<p>上面的例子显示了一个命令提示符, 它打印所有以 "pro" 开头的环境变量. 如果您从 32 位脚本运行它, 您可能会看到 <code>PROCESSOR_ARCHITECTURE=x86</code> 和 <code>ProgramFiles=C:\Program Files (x86)</code>. 虽然标题显示类似于 "C:\Windows\System32\cmd.exe", 这是一个谎言; 它实际上是 32 位版本, 它实际上位于 "C:\Windows\SysWow64\cmd.exe" 中.</p>
+<p>在这种简单的情况下, 绕过 "System32" 重定向的最简单方法是使用 "SysNative". 但是, 这只能在 64 位系统上的 32 位进程中工作, 因此必须有条件地完成. 当以下示例在 64 位系统上执行时, 即使脚本是 32 位的, 它也会显示 64 位命令提示符:</p>
+<pre>if FileExist(A_WinDir "\SysNative")
+    Run A_WinDir "\SysNative\cmd.exe /k set pro"
+else
+    Run "cmd /k set pro"</pre>
+
+</body>
+</html>

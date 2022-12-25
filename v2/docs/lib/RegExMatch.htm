@@ -1,0 +1,170 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>RegExMatch - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The RegExMatch function determines whether a string contains a pattern (regular expression)." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>RegExMatch</h1>
+
+<p>判断字符串是否包含某个匹配模式(正则表达式).</p>
+
+<pre class="Syntax">FoundPos := <span class="func">RegExMatch</span>(Haystack, NeedleRegEx <span class="optional">, &amp;OutputVar, StartingPos := 1</span>)</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Haystack</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要搜索其内容的字符串. 可能包含二进制零.</p>
+  </dd>
+
+  <dt>NeedleRegEx</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要搜索的模式, 它是兼容 Perl 的正则表达式(PCRE). 模式的<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>(如果有) 必须放在模式字符串的开始且后面跟着闭括号. 例如, 模式 <span class="regex"><span class="red">i)</span>abc.*123</span> 将匹配不区分大小写的 "abc", 接着零个或多个任意字符, 然后是 "123". 如果没有选项, ")" 是可选的; 例如, <span class="regex">)abc</span> 等同于 <span class="regex">abc</span>.</p>
+    <p>虽然 <em>NeedleRegEx</em> 不能包含二进制零, 但模式 <code>\x00</code> 可用来匹配 <em>Haystack</em> 中的二进制零.</p>
+  </dd>
+
+  <dt>&amp;OutputVar</dt>
+  <dd>
+        <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>指定一个变量引用, 在其中存储<a href="#MatchObject">匹配对象</a>, 可以用来获取整体匹配和每个<a href="../misc/RegEx-QuickRef.htm#subpat">捕获子模式</a>(如果存在) 的位置, 长度和值.</p>
+    <p>如果没有找到模式(也就是说, 如果函数返回 0), 这个变量将被置空.</p>
+  </dd>
+
+  <dt>StartingPos</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>如果省略 <em>StartingPos</em>, 则它默认为 1(<em>Haystack</em> 的开始位置). 否则, 指定 2 从第二个字符开始, 3 从第三个字符开始, 以此类推. 如果 <em>StartingPos</em> 的长度超过 <em>Haystack</em> 的长度, 那么搜索将从 <em>Haystack</em> 末尾的空字符串开始(常结果是不匹配).</p>
+    <p>指定负值的 <em>StartingPos</em>, 从右边的位置开始搜索. 例如, -1 从最后一个字符开始, -2 从倒数第二个字符开始. 如果 <em>StartingPos</em> 试图超出 <em>Haystack</em> 的左端, 则会搜索整个 <em>Haystack</em>.</p>
+    <p>指定 0, 从 <em>Haystack</em> 的末尾开始; 即最后一个字符的右边的位置. 这可以用于零宽度的断言, 如 <code>(?&lt;=a)</code>.</p>
+    <p>不论 <em>StartingPos</em> 的值是多少, 返回的值总是相对于 <em>Haystack</em> 的第一个字符. 例如, "abc" 在 "123abc789" 中的位置总是 4.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+<p>函数返回在字符串 <em>Haystack</em> 中最左边出现 <em>NeedleRegEx</em> 的位置. 位置 1 表示第一个字符. 如果没有找到模式, 则返回 0.</p>
+
+<h2 id="Errors">错误</h2>
+<p><strong>语法错误:</strong> 如果模式中包含语法错误, 则抛出 <a href="Error.htm">Error</a>, 并带有以下形式的消息: <em>Compile error N at offset M: description</em>. 在该字符串中, <em>N</em> 是 PCRE 中错误的编号, <em>M</em> 是正则表达式中违规字符的位置, 而 <em>description</em> 是描述该错误的文本.</p>
+<p><strong>执行错误:</strong> 如果在 <em>执行</em> 正则表达式的过程中发生错误, 则抛出 <a href="Error.htm">Error</a>. 错误对象的 <em>Extra</em> 属性包含了 PCRE 的错误编号. 虽然这种错误很少发生, 但最有可能发生的是 ""太多空字符串匹配"(-22), "递归太深"(-21), 和 "达到匹配限制"(-8). 如果出现这些情况, 请尝试重新设计更严格的匹配模式, 例如无论是否可行都把每个 * 替换为 ?, + 或像 {0,3} 这样的限制.</p>
+
+<h2 id="Options">选项</h2>
+<p>请参阅<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>了解修饰符, 例如 <span class="regex"><span class="red">i)</span>abc</span>, 它关闭了模式 "abc" 的区分大小写.</p>
+
+<h2 id="MatchObject">匹配对象(RegExMatchInfo)</h2>
+<p>如果找到了匹配, 一个包含匹配信息的对象将被存储在 <em>OutputVar</em>. 这个对象有以下方法和属性:</p>
+<p><strong>Match.Pos</strong>, <strong>Match.Pos[N]</strong> or <strong>Match.Pos(N)</strong>: 返回整个匹配或捕获子模式的位置.</p>
+<p><strong>Match.Len</strong>, <strong>Match.Len[N]</strong> or <strong>Match.Len(N)</strong>: 返回整个匹配或捕获子模式的长度.</p>
+<p><strong>Match.Name[N]</strong> or <strong>Match.Name(N)</strong>: 返回指定的子模式的名称(如果它含有).</p>
+<p><strong>Match.Count</strong>: 返回所有子模式的数目(捕获组), 这也是 <em>N</em> 的最大值.</p>
+<p><strong>Match.Mark</strong>: 适用时返回上次遇到 <span class="regex">(*MARK:NAME)</span> 的 <em>NAME</em>.</p>
+<p><strong>Match[]</strong> 或 <strong>Match[N]</strong>: 返回整个匹配或捕获子模式.</p>
+<p>对于上面的所有, <em>N</em> 可以为下列值:</p>
+<ul>
+  <li>0 表示整个匹配.</li>
+  <li>子模式的编号, 包括含有名称的子模式.</li>
+  <li>子模式的名称.</li>
+</ul>
+<p><strong>Match.N</strong>: <strong>Match["N"]</strong> 的简写, 其中 <em>N</em> 是任何未加引号的名称或数字, 其不能与定义的属性(上面列出) 冲突. 例如, <code>match.1</code> 或 <code>match.Year</code>.</p>
+<p>该对象还支持枚举; 也就是说, 支持 <a href="For.htm">for-loop</a>. 或者, 可以使用 <code><a href="Loop.htm">Loop</a> Match.Count</code>.</p>
+
+<h2 id="Performance">性能</h2>
+<p>要在一个较大的字符串中搜索简单的子字符串, 请使用 <a href="InStr.htm">InStr</a>, 因为它比 RegExMatch 更快.</p>
+<p>为了提升性能, 最近使用的 100 个正则表达式会被缓存在内存中(以已编译的形式).</p>
+<p>多次使用一个正则表达式时(例如在循环中), 使用<a href="../misc/RegEx-QuickRef.htm#Study">研究选项(S)</a> 可以提高性能.</p>
+
+<h2 id="Remarks">备注</h2>
+<p id="NamedSubPat">可以为子模式指定名称, 例如模式 <span class="regex">(?P&lt;Year&gt;\d{4})</span> 中的单词 <em>Year</em>. 这种名称最多可以由 32 个字母数字和下划线组成. 请注意, 命名的子模式也是有编号的, 如果在 "Year" 后出现了一个<a href="../misc/RegEx-QuickRef.htm#subpat">未命名的子模式</a>, 它将被存储在 <code>OutputVar[2]</code> 中, 而不是 <code>OutputVar[1]</code> 中.</p>
+<p>大多数字符, 如 abc123 可以原义使用在正则表达式中. 然而, <strong>\.*?+[{|()^$</strong> 这些字符则必须在其前面加上反斜杠才能被视为原义. 例如, <strong>\.</strong> 表示一个原义的句点, 而 <strong>\\</strong> 表示一个原义的反斜杠. 使用 \Q...\E 能避免转义. 例如: <span class="regex">\QLiteral Text\E</span>.</p>
+<p>在正则表达式中, 特殊字符(如制表符和换行符) 可以使用一个重音符(`) 或反斜杠(\) 进行转义. 例如, 在不使用 <b>x</b> 选项时, `t 等同于 \t.</p>
+<p>要了解正则表达式的基础(或复习正则表达式的语法), 请参阅<a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</p>
+<p>AutoHotkey 的正则表达式是使用 <a href="http://www.pcre.org/">www.pcre.org</a> 的兼容 Perl Regular Expressions(PCRE) 实现的.</p>
+<p>在<a href="../Variables.htm#Expressions">表达式</a>中, <code>a <a href="../Variables.htm#regex">~=</a> b</code> 能被当作 <code>RegExMatch(a, b)</code> 的缩写.</p>
+<h2 id="Related">相关</h2>
+<p><a href="RegExReplace.htm">RegExReplace</a>, <a href="../misc/RegEx-QuickRef.htm">RegEx 快速参考</a>, <a href="../misc/RegExCallout.htm">Regular Expression Callouts</a>, <a href="InStr.htm">InStr</a>, <a href="SubStr.htm">SubStr</a>, <a href="SetTitleMatchMode.htm#RegEx">SetTitleMatchMode RegEx</a>, <a href="https://www.autohotkey.com/forum/topic16164.html">Global matching and Grep (forum link)</a></p>
+<p>文本数据的常见来源: <a href="FileRead.htm">FileRead</a>, <a href="Download.htm">Download</a>, <a href="A_Clipboard.htm">A_Clipboard</a>, <a href="GuiControls.htm#Edit">GUI Edit 控件</a></p>
+
+<h2 id="Examples">示例</h2>
+<p>有关普通 RegEx 的示例, 请参阅 <a href="../misc/RegEx-QuickRef.htm">RegEx 快速参考</a>.</p>
+
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 报告 4, 这是找到匹配的位置.</p>
+<pre>MsgBox RegExMatch("xxxabc123xyz", "abc.*xyz")</pre>
+</div>
+
+<div class="ex" id="ExDollar">
+<p><a class="ex_number" href="#ExDollar"></a> 报告 7, 因为 $ 要求在末端进行匹配.</p>
+<pre>MsgBox RegExMatch("abc123123", "123$")</pre>
+</div>
+
+<div class="ex" id="ExCaseInsens">
+<p><a class="ex_number" href="#ExCaseInsens"></a> 报告 1, 因为通过不区分大小写选项实现了匹配.</p>
+<pre>MsgBox RegExMatch("abc123", "i)^ABC")</pre>
+</div>
+
+<div class="ex" id="ExOutputVar">
+<p><a class="ex_number" href="#ExOutputVar"></a> 报告 1, 并把 "XYZ" 保存到 SubPat[1].</p>
+<pre>MsgBox RegExMatch("abcXYZ123", "abc(.*)123", &amp;SubPat)</pre>
+</div>
+
+<div class="ex" id="ExStartingPos">
+<p><a class="ex_number" href="#ExStartingPos"></a> 报告 7 而不是 1, 这是由于开始位置为 2 而不是 1.</p>
+<pre>MsgBox RegExMatch("abc123abc456", "abc\d+",, 2)</pre>
+</div>
+
+<div class="ex" id="ExObject">
+<p><a class="ex_number" href="#ExObject"></a> 演示匹配对象的用法.</p>
+<pre>FoundPos := RegExMatch("Michiganroad 72", "(.*) (?&lt;nr&gt;\d+)", &amp;SubPat)
+MsgBox SubPat.Count ": " SubPat[1] " " SubPat.Name[2] "=" SubPat.nr  <em>; 显示 "2: Michiganroad nr=72"</em></pre>
+</div>
+
+<div class="ex" id="ExExtension">
+<p><a class="ex_number" href="#ExExtension"></a> 检索文件的扩展名. 注意 <a href="SplitPath.htm">SplitPath</a> 也可以用于此目的, 而且更可靠.</p>
+<pre>Path := "C:\Foo\Bar\Baz.txt"
+RegExMatch(Path, "\w+$", &amp;Extension)
+MsgBox Extension[]  <em>; 报告 "txt".</em></pre>
+</div>
+
+<div class="ex" id="ExDeref">
+<p><a class="ex_number" href="#ExDeref"></a> 类似于 AutoHotkey v1 的 Transform Deref, 下面的函数可以扩展包含在其他变量中的变量引用和<a href="../misc/EscapeChar.htm">转义序列</a>. 此外, 这个例子还展示了如何在一个字符串中找到所有匹配项, 而不是停留在第一个匹配项(类似于 JavaScript 的 RegEx 中的 g 标志).</p>
+<pre>var1 := "abc"
+var2 := 123
+MsgBox Deref("%var1%def%var2%")  <em>; 报告 abcdef123.</em>
+
+Deref(Str)
+{
+    spo := 1
+    out := ""
+    while (fpo:=RegexMatch(Str, "(%(.*?)%)|``(.)", &amp;m, spo))
+    {
+        out .= SubStr(Str, spo, fpo-spo)
+        spo := fpo + StrLen(m[0])
+        if (m[1])
+            out .= %m[2]%
+        else switch (m[3])
+        {
+            case "a": out .= "`a"
+            case "b": out .= "`b"
+            case "f": out .= "`f"
+            case "n": out .= "`n"
+            case "r": out .= "`r"
+            case "t": out .= "`t"
+            case "v": out .= "`v"
+            default: out .= m[3]
+        }
+    }
+    return out SubStr(Str, spo)
+}</pre>
+</div>	</div>
+</body>
+</html>

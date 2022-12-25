@@ -1,0 +1,73 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>StrGet - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The StrGet function copies a string from a memory address or buffer, optionally converting it from a given code page." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>StrGet</h1>
+
+<p>从内存地址或缓冲中复制字符串, 可选地从给定的代码页进行转换.</p>
+
+<pre class="Syntax">String := <span class="func">StrGet</span>(Source <span class="optional">, Length</span> <span class="optional">, Encoding</span>)</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Source</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#numbers">整数</a></p>
+    <p>包含字符串的类<a href="Buffer.htm">缓冲</a>对象, 或字符串的内存地址.</p>
+    <p>可以使用任何实现 <a href="Buffer.htm#Ptr">Ptr</a> 和 <a href="Buffer.htm#Size">Size</a> 属性的对象, 但此函数针对原生的<a href="Buffer.htm">缓冲</a>对象进行了优化. 传递具有这些属性的对象可确保函数不会从无效位置读取内存; 这样做可能会导致崩溃或其他不可预测的行为.</p>
+    <p>如果提供了类缓冲对象, 或者指定了 <em>Length</em> 参数, 则字符串不需要以<a href="../Concepts.htm#null-termination">空终止符</a>结尾.</p>
+  </dd>
+
+  <dt>Length</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>需读取的最大<a href="../Concepts.htm#character">字符</a>数. 如果字符串以<a href="../Concepts.htm#null-termination">空终止符</a>结尾, 则可以省略.</p>
+    <p>默认情况下, 只复制到第一个二进制零. 如果 <em>Length</em> 为负数, 则它的绝对值指示要转换的确切字符数, 包括字符串可能包含的任何二进制零 - 换句话说, 结果始终是具有该长度的字符串.</p>
+    <p class="warning"><strong>注意:</strong> 如果字符串不是以空终止符结尾的, 则省略 <em>Length</em> 可能会造成访问冲突, 从而导致程序终止或其他一些不希望的结果. 指定不正确的长度可能会产生意外的行为.</p>
+</dd>
+
+  <dt>Encoding</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>源编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在指定 <em>Length</em> 时, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码页.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+<p>函数返回复制或转换后的字符串. 如果正确地指定了源编码, 则返回值总是使用<a href="../Concepts.htm#string-encoding">原生编码</a>. 它总是以<a href="../Concepts.htm#null-termination">空终止符</a>终止, 但是空终止符不包括在返回值的 <a href="StrLen.htm">length</a> 中, 除非 <em>Length</em> 为负数, 如前所述.</p>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>如果检测到无效参数, 则抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
+<p>如果转换无法执行, 则抛出 <a href="Error.htm#OSError">OSError</a>.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>注意, 返回值总是使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定如何解释从给定 <i>Source</i> 读取的字符串. 如果没有指定 <em>Encoding</em>, 只复制字符串而不进行任何转换.</p>
+<p class="note">换句话说, StrGet 用于从内存地址或缓冲检索文本, 或者将其转换为脚本可以接受的格式.</p>
+<p>如果需要在代码页之间进行转换, 返回值的长度可能与源字符串的长度不同.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="../Concepts.htm#string-encoding">字符编码</a>, <a href="StrPut.htm">StrPut</a>, <a href="../Compat.htm">二进制兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="DllCall.htm">DllCall</a>, <a href="Buffer.htm">缓冲对象</a>, <a href="VarSetCapacity.htm">VarSetCapacity</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExNumEnc">
+<p><a class="ex_number" href="#ExNumEnc"></a> <em>Length</em> 或 <em>Encoding</em> 都可以直接在 <em>Source</em> 后面指定, 但在这种情况下 <em>Encoding</em> 必须是非数字的.</p>
+<pre>
+str := StrGet(address, "cp0")  <em>; 代码页 0, 未指定长度</em>
+str := StrGet(address, n, 0)   <em>; 最大 n 字符, 代码页 0</em>
+str := StrGet(address, 0)      <em>; 最大 0 字符(始终为空)</em>
+</pre>
+</div>
+
+</body>
+</html>

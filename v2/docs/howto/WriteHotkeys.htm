@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Learn how to write hotkeys." />
+<meta name="ahk:equiv-v1" content="Tutorial.htm#s2" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>How to Write Hotkeys | AutoHotkey v2</title>
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>如何编写热键</h1>
+<p>热键是一个可以触发某个动作的键或组合键. 例如, <kbd>Win</kbd>+<kbd>E</kbd> 通常会启动文件资源管理器, 而 <kbd>F1</kbd> 通常会激活一个特定应用程序的帮助功能. AutoHotkey 有能力定义热键, 这些热键可以在任何地方使用, <em>或</em> 只在特定的应用程序中使用, 执行任何你能用代码表达的动作.</p>
+<p>定义热键最常见的方法是写下 <em>热键的名称</em>, 后面加上双冒号, 然后是动作:</p>
+<pre>#n::Run "notepad"</pre>
+<p>这个例子定义了一个热键, 每当你按下 <kbd>Win</kbd>+<kbd>N</kbd> 时运行记事本. 要了解如何试用, 请参阅<a href="RunExamples.htm">如何运行示例代码</a>.</p>
+<p>有关运行程序的更多信息, 请参阅<a href="RunPrograms.htm">如何运行程序</a>.</p>
+<p>如果需要多行, 请使用大括号标记热键动作的开始和结束. 这就是所谓的<a href="../lib/Block.htm">块</a>.</p>
+<pre>#n::
+{
+    if WinExist("ahk_class Notepad")
+        WinActivate  <em>; Activate the window found above</em>
+    else
+        Run "notepad"  <em>; Open a new Notepad window</em>
+}</pre>
+<p>开大括号也可以写在热键的同一行, 在 <code>::</code> 之后.</p>
+<p>双冒号热键后面的块隐式的是<a href="../Functions.htm">函数</a>的主体, 但这只有在定义自己的<a href="../Concepts.htm#variables">变量</a>时才重要. 现在, 只需知道块是用来将多行组合成一个动作或 <em>语句</em> (有关详情, 请参阅<a href="../Concepts.htm#control-flow">控制流</a>).</p>
+
+<h2>基本的快捷键</h2>
+<p>对于大多数热键, the <em>热键名称</em> 由紧跟着单个字母或符号, 或<a href="../KeyList.htm">键名</a>的可选修饰符组成. 试着对上面的例子做以下修改:</p>
+<ul>
+  <li>去掉 <code>#</code>, 每当你单独按下 <kbd>N</kbd> 时, 热键激活. 请记住, 如果出现错误, 您可以随时<a href="RunExamples.htm#bailing-out">退出脚本</a>.</li>
+  <li>使用 <code>^</code> 代表 Ctrl, <code>!</code> 代表 Alt 或 <code>+</code> 代表 Shift 替换 <code>#</code>, 或者尝试各种组合.</li>
+  <li>使用 <code>&lt;^</code> 替换 <code>#</code> 使其只在按下 <em>左</em> Ctrl 键时激活, 或者 <code>&gt;^</code> 代表右 Ctrl 键, 或 <em>同时</em> 使用两个键.</li>
+  <li>将 <code>n</code> 替换为任何其他字母或符号(除了 <code>:</code>).</li>
+  <li>将 <code>n</code> 替换为<a href="../KeyList.htm">按键列表</a>中的任意名称.</li>
+</ul>
+<p class="note"><strong>注意:</strong><code>::</code> 前面的最后一个字符永远不会被解释为修饰符.</p>
+<p>使用这种形式的热键, 只有组合中的最后一个键可以按字面意思写成单个字符或将其名称完整地拼写出来. 例如:</p>
+<ul>
+  <li><code>#::</code> 将创建一个由哈希键(井号键 #)激活的热键, 或与该符号相关的任何组合(在美国布局中, 它是 <kbd>Shift</kbd>+<kbd>3</kbd>).</li>
+  <li><code>##::</code> 会创建一个类似上面的热键, 但只有当你同时按住 Windows 键时才会激活.</li>
+  <li><code>LWin::</code> 将创建一个热键, 通过按住左边的 Windows 键而不使用任何其他修饰键来激活.</li>
+</ul>
+<p>最常见的修饰符是 Ctrl(<code>^</code>), Alt(<code>!</code>), Shift(<code>+</code>) 和 Win(<code>#</code>).</p>
+<p>符号 <code>&lt;</code> 和 <code>&gt;</code> 可以作为上述四个修饰符中任何一个的前缀, 以指定该键的左侧或右侧变体. 修饰符组合 <code>&lt;^&gt;!</code> 对应于 AltGr 键(如果你的键盘布局中存在), 因为操作系统将其作为 LCtrl 和 Alt 的组合来实现.</p>
+<p>其他的修饰符是:</p>
+<ul>
+  <li><code>*</code>(<a href="../Hotkeys.htm#wildcard">通配符</a>) 允许热键激活, 即使你按住的修饰键不在热键符号中.</li>
+  <li><code>~</code>(<a href="../Hotkeys.htm#Tilde">非抑制</a>) 防止热键阻塞该键的原生功能.</li>
+  <li><code>$</code>(<a href="../Hotkeys.htm#prefixdollar">使用钩子</a>) 防止在发送按键时出现无意义的循环, 并且在某些情况下使热键更可靠.</li>
+</ul>
+<p>要使热键只在释放键时触发, 而不是在按下键时触发, 请使用 <a href="../Hotkeys.htm#keyup">UP 后缀</a>.</p>
+<p><strong>相关:</strong> <a href="../Hotkeys.htm#Symbols">热键修饰符</a>, <a href="../KeyList.htm">按键列表</a></p>
+
+<h2>上下文敏感的热键</h2>
+<p><a href="../lib/_HotIf.htm">#HotIf</a> 指令可以用来指定激活热键必须满足的条件, 如:</p>
+<ul>
+  <li>当您按下热键时, 某个特定应用程序的窗口处于活动状态.</li>
+  <li>如果按下热键时, CapsLock 是打开的.</li>
+  <li>可以用代码检测的任何其他条件.</li>
+</ul>
+<p>例如:</p>
+<pre>#HotIf WinActive("ahk_class Notepad")
+^a::MsgBox "You pressed Ctrl-A while Notepad is active. Pressing Ctrl-A in any other window will pass the Ctrl-A keystroke to that window."
+#c::MsgBox "You pressed Win-C while Notepad is active."
+
+#HotIf
+#c::MsgBox "You pressed Win-C while any window except Notepad is active."</pre>
+<p>您可以通过编写一个<a href="../Language.htm#expressions">表达式</a>来定义条件, 每当您按下热键时, 该表达式都会被求值. 如果表达式的 <a href="../Concepts.htm#boolean">计算结果为 true</a>, 则执行热键的操作.</p>
+<p>通过为热键的每次出现或每个 <em>热键变体</em> 指定不同的条件, 同一热键可以使用多次. 当您按下热键时, 程序将执行满足条件的第一个热键变体, 或没有条件的热键变体(例如上面示例中的最终的 <code>#c::</code>).</p>
+<p>如果不满足热键的条件, 并且热键没有无条件的变体, 则按键将传递到活动窗口, 就好像一开始就没有定义热键一样. 例如, 如果在运行上述示例时, Notepad <em>未处于</em> 活动状态, 则 <kbd>Ctrl</kbd>+<kbd>A</kbd> 将执行其正常功能(可能是全选).</p>
+<p>尝试对示例进行以下更改:</p>
+<ul>
+  <li>将 <code>WinActive</code> 替换为 <code>WinExist</code>, 以便在记事本正在运行时激活热键, 即使记事本没有焦点也是如此.</li>
+  <li>将条件替换为 <code>GetKeyState("CapsLock", "T")</code> 以便热键仅在 CapsLock 打开时激活.</li>
+  <li>为其他窗口添加另一个 ^a 或 #c 热键, 例如您的 Web 浏览器或编辑器. 请注意, 我们使用 <a href="../misc/WinTitle.htm#ahk_class">ahk_class</a> 以便该示例适用于非英语系统, 但如果您需要, 您可以将其删除并使用窗口的标题.</li>
+</ul>
+<p>正确识别您希望热键影响的窗口有时需要使用窗口标题以外的条件. 有关详情, 请参阅<a href="ManageWindows.htm">如何管理窗口</a>.</p>
+<p><strong>相关:</strong> <a href="../lib/_HotIf.htm">#HotIf</a>, <a href="../Language.htm#expressions">表达式</a>, <a href="../lib/WinActive.htm">WinActive</a></p>
+
+<h2>自定义组合</h2>
+<p><em>自定义组合</em> 是一个热键, 它将两个通常不用于组合的键组合在一起. 例如, <code>Numpad0 &amp; Numpad1::</code> 定义了一个热键, 当你按住 Numpad0 并按下 Numpad1 时激活.</p>
+<p>当您在自定义组合中使用一个键作为前缀时, AutoHotkey 假定您不希望激活该键的正常功能, 因为这将干扰它作为修饰键的使用. 有两种方法可以恢复按键的正常功能:</p>
+<ol>
+  <li>使用另一个热键, 如 <code>Numpad0::Send "{Numpad0}"</code> 来复制该键的原始功能. 默认情况下, 热键只有在你 <em>释放</em> Numpad0 时才会激活, 而且只有在你没有同时按下 Numpad0 和 Numpad1 时才会激活.</li>
+  <li>在组合的前缀中加上<a href="../Hotkeys.htm#Tilde">波浪号(~)</a>, 如 <code>~Numpad0 &amp; Numpad1::</code>. 这可以防止 AutoHotkey 抑制 Numpad0 的正常功能, 除非你也定义了 <code>Numpad0::</code>, 在这种情况下, 波浪号允许后者的热键立即激活, 而不是当你释放 Numpad0 时.</li>
+</ol>
+<p class="note"><strong>注意:</strong> 自定义组合只支持两个键/鼠标按钮的组合, 不能与其他修饰符组合, 如 <code>!#^+</code> 代表的 Alt, Win, Ctrl 和 Shift.</p>
+<p>虽然 AutoHotkey 不能直接支持两个以上键的自定义组合, 但使用 <a href="../lib/_HotIf.htm">#HotIf</a> 也可以实现类似的结果. 如果你运行下面的例子, 按下 <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd>+<kbd>Space</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Space</kbd>+<kbd>CapsLock</kbd> 应该显示一条消息:</p>
+<pre>#HotIf GetKeyState("Ctrl")
+Space &amp; CapsLock::
+CapsLock &amp; Space::MsgBox "Success!"</pre>
+<p>在本例中, 有必要先按 Ctrl. 这样做的好处是, 如果你不按住 Ctrl, Space 和 CapsLock 会执行他们正常的功能.</p>
+<p><strong>相关:</strong> <a href="../Hotkeys.htm#combo">Custom Combinations</a></p>
+
+<h2>其他功能</h2>
+<p>AutoHotkey 的热键还有其他一些值得探索的功能. 虽然大多数应用程序都局限于组合 Ctrl, Alt, Shift, Win 与另一个键(通常不是键盘上的所有键都被支持), AutoHotkey 没有那么多限制. 如需进一步阅读, 请参阅<a href="../Hotkeys.htm">热键</a>.</p>
+
+</body>
+</html>

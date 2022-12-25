@@ -1,0 +1,115 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>RegExReplace - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The RegExReplace function replaces occurrences of a pattern (regular expression) inside a string." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>RegExReplace</h1>
+
+<p>替换字符串中匹配模式(正则表达式) 出现的地方.</p>
+
+<pre class="Syntax">NewStr := <span class="func">RegExReplace</span>(Haystack, NeedleRegEx <span class="optional">, Replacement, &amp;OutputVarCount, Limit, StartingPos</span>)</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Haystack</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要搜索和替换其内容的字符串. 可以包含二进制零.</p>
+  </dd>
+
+  <dt>NeedleRegEx</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要搜索的模式, 它是兼容 Perl 的正则表达式(PCRE). 模式的<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>(如果有) 必须放在模式字符串的开始且后面跟着闭括号. 例如, 模式 <span class="regex"><span class="red">i)</span>abc.*123</span> 将打开不区分大小写的选项并搜索 "abc", 接着零个或多个任意字符, 然后是 "123". 如果没有选项, ")" 是可选的; 例如, <span class="regex">)abc</span> 等同于 <span class="regex">abc</span>.</p>
+    <p>虽然 <em>NeedleRegEx</em> 不能包含二进制零, 但模式 <code>\x00</code> 可用来匹配 <em>Haystack</em> 中的二进制零.</p>
+  </dd>
+
+  <dt>Replacement</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p id="BackRef">每个匹配项要替换的字符串, 它是纯文本(不是正则表达式). 它可能包括反向引用, 比如 $1, 它从 <em>Haystack</em> 中引入匹配第一个<a href="../misc/RegEx-QuickRef.htm#subpat">子模式</a>的子串. 最简单的反向引用是 $0 到 $9, 其中 $0 是匹配整个模式的子串, $1 是匹配第一个子模式的子串, $2 是第二个, 以此类推. 对于高于 9 的反引用(也可以是低于 9 的反引用), 请将数字用大括号括起来; 例如 ${10}, ${11}, 以此类推. 对于<a href="RegExMatch.htm#NamedSubPat">命名的子模式</a>, 请将其名称用大括号括起来; 例如 ${SubpatternName}. 要指定一个原义的 $, 请使用 $$(这是唯一一个需要特殊处理的字符; 反斜杠永远不需要用来转义任何东西).</p>
+    <p>要转换子模式的大小写, 请在 $ 后面加上下列字符之一: U 或 u(大写), L 或 l(小写), T 或 t(标题大小写, 其中每个单词的第一个字母大写, 但所有其他字母小写). 例如, $U1 和 $U{1} 都转写了第一个子模式的大写版本.</p>
+    <p>不存在的反向引用和与 <em>Haystack</em> 中任何内容都不匹配的反向引用 --  例如 <span class="regex">(abc)|(xyz)</span> 中的一个子模式 -- 将被转录为空字符串.</p>
+  </dd>
+
+  <dt>&amp;OutputVarCount</dt>
+  <dd>
+        <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>指定一个变量引用, 用于存储发生的替换次数(如果没有, 则为 0).</p>
+  </dd>
+
+  <dt>Limit</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>如果省略 <em>Limit</em>, 则默认为 -1, 即替换 <em>Haystack</em> 中出现的 <strong>所有</strong> 模式. 否则, 指定允许的最大替换次数. <em>Haystack</em> 中最后一次替换右边的部分将保持不变.</p>
+  </dd>
+
+  <dt>StartingPos</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>如果省略 <em>StartingPos</em>, 则它默认为 1(<em>Haystack</em> 的开始位置). 否则, 指定 2 从第二个字符开始, 3 从第三个字符开始, 以此类推. 如果 <em>StartingPos</em> 的长度超过 <em>Haystack</em> 的长度, 那么搜索将从 <em>Haystack</em> 末尾的空字符串开始(常结果是不替换).</p>
+    <p>指定负值的 <em>StartingPos</em> 将从右边的位置开始. 例如, -1 从最后一个字符开始, -2 从倒数第二个字符开始. 如果 <em>StartingPos</em> 试图超出 <em>Haystack</em> 的左端, 则会搜索整个 <em>Haystack</em>.</p>
+    <p>指定 0 从 <em>Haystack</em> 的末尾开始; 也就是最后一个字符的右边的位置. 这可以用于零宽度的断言, 如 <code>(?&lt;=a)</code>.</p>
+    <p>不论 <em>StartingPos</em> 的值是多少, 返回值始终是 <em>Haystack</em> 的完整副本 -- 唯一的区别是, 与 <em>StartingPos</em> 为 1 时相比, 它的左侧更多部分可能没有改变.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+<p>函数将返回 <em>Haystack</em> 的一个版本, 其内容已经被操作所替换. 如果没有发生替换, 将返回 <em>Haystack</em> 原始值.</p>
+
+<h2 id="Errors">错误</h2>
+<p>在以下情况下会抛出 <a href="Error.htm">Error</a>:</p>
+<ul>
+  <li>该模式包含一个语法错误; 或</li>
+  <li>在 <em>execution</em> 正则表达式的过程中发生了错误.</li>
+</ul>
+<p>有关详情, 请参阅 <a href="RegExMatch.htm#Errors">RegExMatch</a>.</p>
+
+<h2 id="Options">选项</h2>
+<p>请参阅<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>了解修饰符, 例如 <span class="regex"><span class="red">i)</span>abc</span>, 它关闭了模式 "abc" 的区分大小写.</p>
+<h2 id="Performance">性能</h2>
+<p>要进行简单的子字符串替换, 请使用 <a href="StrReplace.htm">StrReplace</a>, 因为它比 RegExReplace 执行地更快.</p>
+<p>如果您知道替换的最大次数是多少, 请在 <em>Limit</em> 参数中指定来提高性能, 因为这样可以早一些停止搜索(这样也可能会降低在替换操作过程中占用的系统内存). 例如, 如果您知道在一个大字符串的开始处仅有一个匹配, 请指定最大次数为 1.</p>
+<p>为了提升性能, 最近使用的 100 个正则表达式会被缓存在内存中(以已编译的形式).</p>
+<p>多次使用一个正则表达式时(例如在循环中), 使用<a href="../misc/RegEx-QuickRef.htm#Study">研究选项(S)</a> 可以提高性能.</p>
+<h2 id="Remarks">备注</h2>
+<p>大多数字符(例如 abc123) 可以原义使用在正则表达式中. 然而 <strong>\.*?+[{|()^$</strong> 这些字符则必须在其前面加上反斜杠才能被视为原义. 例如, <strong>\.</strong> 表示一个原义的句点, 而 <strong>\\</strong> 表示一个原义的反斜杠. 使用 \Q...\E 能避免转义. 例如: <span class="regex">\QLiteral Text\E</span>.</p>
+<p>在正则表达式中, 特殊字符(如制表符和换行符) 可以使用一个重音符(`) 或反斜杠(\) 进行转义. 例如, `t 等同于 \t.</p>
+<p>要了解正则表达式的基础(或复习正则表达式的语法), 请参阅<a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</p>
+<h2 id="Related">相关</h2>
+<p><a href="RegExMatch.htm">RegExMatch</a>, <a href="../misc/RegEx-QuickRef.htm">RegEx 快速参考</a>, <a href="../misc/RegExCallout.htm">正则表达式调出</a>, <a href="StrReplace.htm">StrReplace</a>, <a href="InStr.htm">InStr</a></p>
+<p>文本数据的常见来源: <a href="FileRead.htm">FileRead</a>, <a href="Download.htm">Download</a>, <a href="A_Clipboard.htm">A_Clipboard</a>, <a href="GuiControls.htm#Edit">GUI Edit 控件</a></p>
+<h2 id="Examples">示例</h2>
+<p>有关普通 RegEx 的示例, 请参阅 <a href="../misc/RegEx-QuickRef.htm">RegEx 快速参考</a>.</p>
+<div class="ex" id="ExDollar">
+<p><a class="ex_number" href="#ExDollar"></a> 报告 "abc123xyz", 因为 $ 只能在末尾形成匹配.</p>
+<pre>MsgBox RegExReplace("abc123123", "123$", "xyz")</pre>
+</div>
+
+<div class="ex" id="ExCaseInsens">
+<p><a class="ex_number" href="#ExCaseInsens"></a> 报告 "123", 因为通过不区分大小写选项实现了匹配.</p>
+<pre>MsgBox RegExReplace("abc123", "i)^ABC")</pre>
+</div>
+
+<div class="ex" id="ExBackref">
+<p><a class="ex_number" href="#ExBackref"></a> 报告 "aaaXYZzzz", 使用了 $1 <a href="#BackRef">后向引用</a>.</p>
+<pre>MsgBox RegExReplace("abcXYZ123", "abc(.*)123", "aaa$1zzz")</pre>
+</div>
+
+<div class="ex" id="ExOutputVarCount">
+<p><a class="ex_number" href="#ExOutputVarCount"></a> 报告空字符串, 并保存 2 到 <var>ReplacementCount</var>.</p>
+<pre>MsgBox RegExReplace("abc123abc456", "abc\d+", "", &amp;ReplacementCount)</pre>
+</div>
+
+</body>
+</html>

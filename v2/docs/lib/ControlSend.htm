@@ -1,0 +1,119 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>ControlSend[Text] - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The ControlSend and ControlSendText functions send simulated keystrokes or text to a window or control." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>ControlSend / ControlSendText</h1>
+
+<p>发送模拟键盘输入到窗口或控件.</p>
+
+<pre class="Syntax"><span class="func">ControlSend</span> Keys <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
+<span class="func">ControlSendText</span> Keys <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Keys</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要发送的按键的序列(有关详情, 请参阅 <a href="Send.htm">Send</a> 函数). 发送字符的速率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定.</p>
+    <p>与 <a href="Send.htm">Send</a> 函数不同, ControlSend 不能发送鼠标点击. 请使用 <a href="ControlClick.htm">ControlClick</a> 来发送.</p>
+  </dd>
+
+  <dt>Control</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
+    控件的 ClassNN, 文本或 HWND, 或具有 <code>Hwnd</code> 属性的对象. 有关详情, 请参阅 <a href="Control.htm#Parameter">Control 参数</a>.</p>
+    <p>如果省略此参数, 击键将直接发送到目标窗口, 而不是它的一个控件(有关示例, 请参阅 <a href="../misc/Winamp.htm">Automating Winamp</a>).</p>
+  </dd>
+
+  <dt>WinTitle</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
+    <p>识别目标窗口的窗口标题或其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
+  </dd>
+
+  <dt>WinText</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>如果存在, 此参数必须是目标窗口的单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON, 那么会检测隐藏文本元素.</p>
+  </dd>
+
+  <dt>ExcludeTitle</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>标题中含有此参数值的窗口将被排除.</p>
+  </dd>
+
+  <dt>ExcludeText</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>文本中含有此参数值的窗口将被排除.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>如果找不到窗口或控件, 则抛出 <a href="Error.htm#TargetError">TargetError</a>.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>ControlSendText 发送 <em>Keys</em> 参数中的单个字符, 不将 <code>{Enter}</code> 转换为 <kbd>Enter</kbd>, <code>^c</code> 转换为 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 有关详情, 请参阅 <a href="Send.htm#SendText">Text 模式</a>. 也可以在 ControlSend 中使用 <a href="Send.htm#Raw">{Raw}</a> 或 <a href="Send.htm#Text">{Text}</a>.</p>
+<p>如果省略 <em>Control</em> 参数, 该函数将尝试直接发送至目标窗口的最上面的控件(通常是正确的控件), 如果没有控件, 则发送至窗口本身. 如果一个窗口看起来根本没有任何控件, 或者只是为了方便且不必担心发送到哪个控件, 那么这个函数就很有用.</p>
+<p>默认情况下, 修饰键(Ctrl, Alt, Shift 和 Win) 会像正常情况下一样由 Send 函数发送. 这使得命令提示符和其他控制台窗口能够正确检测大写字母, 控制字符等. 它还可以在其他方面提高可靠性.</p>
+<p>然而, 在某些情况下, 这些修饰符事件可能会干扰活动窗口, 特别是当用户在 ControlSend 期间正在进行输入, 或者正在发送 <kbd>Alt</kbd> 键时(因为 <kbd>Alt</kbd> 会激活活动窗口的菜单栏). 可以通过显式发送修饰符按下和弹起事件来避免这种情况, 如本例所示:</p>
+<pre>ControlSend "{Alt down}f{Alt up}", "Edit1", "Untitled - Notepad"</pre>
+<p>上面的方法也允许在工作站被锁定(由登录提示保护) 时发送修饰键(Ctrl, Alt, Shift 和 Win).</p>
+<p>当在命令提示符等控制台窗口中使用 ControlSend 时, 应避免使用 <a href="BlockInput.htm">BlockInput</a>. 这是因为它可能会阻止大写和修饰键(如 <kbd>Ctrl</kbd>) 的正常工作.</p>
+<p><a href="SetKeyDelay.htm">SetKeyDelay</a> 的值决定了按键的发送速度. 如果目标窗口无法可靠地接收按键, 请尝试通过 <a href="SetKeyDelay.htm">SetKeyDelay</a> 的第二个参数来增加按下的持续时间, 如下面的例子所示:</p>
+<pre>SetKeyDelay 10, 10
+SetKeyDelay 0, 10
+SetKeyDelay -1, 0</pre>
+<p>如果目标控件是一个 Edit 控件(或类似的控件), 下面的方法通常比 ControlSend 更可靠和更快:</p>
+<pre><a href="EditPaste.htm">EditPaste</a>("This text will be inserted at the caret position.", ControlName, WinTitle)</pre>
+<pre><a href="ControlSetText.htm">ControlSetText</a>("This text will entirely replace any current text.", ControlName, WinTitle)</pre>
+<p>ControlSend 通常不能操纵窗口的菜单栏. 要解决这个问题, 可以使用 <a href="MenuSelect.htm">MenuSelect</a>. 如果由于菜单栏的性质而无法做到这一点, 你可以尝试按照 <a href="../misc/SendMessage.htm">SendMessage 教程</a>来发现对应于所需菜单项的消息.</p>
+<p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="../misc/EscapeChar.htm">转义序列(例如 `n) </a>, <a href="Control.htm">控件函数</a>, <a href="Send.htm">Send</a>, <a href="../misc/Winamp.htm">自动化 Winamp</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExNotepad">
+<p><a class="ex_number" href="#ExNotepad"></a> 打开记事本(最小化的) 并发送一些文本. 这个例子在 Windows 11 或更高版本系统可能会失败, 因为它需要经典版本的记事本.</p>
+<pre>Run "Notepad",, "Min", &amp;PID  <em>; 最小化运行记事本.</em>
+WinWait "ahk_pid " PID  <em>; 等待记事本进程的出现.</em>
+<em>; 将文本发送到不活动的记事本编辑控件.
+; 省略了第三个参数, 因此使用最后一个找到的窗口.</em>
+ControlSend "This is a line of text in the notepad window.{Enter}", "Edit1"
+ControlSendText "Notice that {Enter} is not sent as an Enter keystroke with ControlSendText.", "Edit1"
+
+Msgbox "Press OK to activate the window to see the result."
+WinActivate "ahk_pid " PID  <em>; 显示结果.</em></pre>
+</div>
+
+<div class="ex" id="ExCmd">
+<p><a class="ex_number" href="#ExCmd"></a> 打开命令提示符并向它发送一些文本. 这个例子在 Windows 11 或更高版本系统可能会失败, 因为它需要经典版本的命令提示符.</p>
+<pre>SetTitleMatchMode 2
+Run A_ComSpec,,, &amp;PID  <em>; 打开命令提示符.</em>
+WinWait "ahk_pid " PID  <em>; 等待它的出现.</em>
+ControlSend "ipconfig{Enter}",, "cmd.exe"  <em>; 直接发送到命令提示符窗口.</em></pre>
+</div>
+<div class="ex" id="ExGUI">
+<p><a class="ex_number" href="#ExGUI"></a> 创建一个带有编辑控件的 <a href="Gui.htm">GUI</a>, 并向它发送一些文本.</p>
+<pre>MyGui := Gui()
+MyGui.Add("Edit", "r10 w500")
+MyGui.Show()
+ControlSend "This is a line of text in the edit control.{Enter}", "Edit1", MyGui
+ControlSendText "Notice that {Enter} is not sent as an Enter keystroke with ControlSendText.", "Edit1", MyGui
+</pre>
+</div>
+
+</body>
+</html>

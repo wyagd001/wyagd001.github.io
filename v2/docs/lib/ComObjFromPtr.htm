@@ -1,0 +1,43 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>ComObjFromPtr - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The ComObjFromPtr function wraps a raw IDispatch interface pointer (COM object) for use by the script." />
+<meta name="ahk:equiv-v1" content="lib/ComObjActive.htm" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ComObjFromPtr</h1>
+
+<p>包装一个原始 <a href="https://docs.microsoft.com/windows/desktop/api/oaidl/nn-oaidl-idispatch">IDispatch</a> 指针(COM 对象), 以供脚本使用.</p>
+<pre class="Syntax">ComObj := <span class="func">ComObjFromPtr</span>(DispPtr)</pre>
+
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>DispPtr</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>IDispatch 或派生接口的一个非空接口指针.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Returns">返回值</h2>
+<p>类型: <a href="ComObject.htm">ComObject</a></p>
+<p>返回一个包含<a href="ComObjType.htm#vt">变体类型</a> VT_DISPATCH 和给定指针的封装对象.</p>
+<p>封装一个 COM 对象可以使脚本更自然地使用 <a href="../Objects.htm#Usage_Objects">对象语法</a>与之交互. 然而, 大多数脚本都不需要手动操作, 因为 <a href="ComObject.htm">ComObject</a>, <a href="ComObjActive.htm">ComObjActive</a>, <a href="ComObjGet.htm">ComObjGet</a> 和任何返回对象的 COM 方法都会自动创建一个包装对象.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>封装器对象在适当的时候承担自动释放指针的责任. 函数<a href="ComObjQuery.htm">查询</a>对象的 IDispatch 接口; 如果返回一个接口, <em>DispPtr</em> 将被立即释放. 因此, 如果脚本打算在调用此函数后使用指针, 它必须先调用 <code><a href="ObjAddRef.htm">ObjAddRef</a>(DispPtr)</code> first.</p>
+<p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>obj1 == obj2</code> 和 <code>array[obj1] := value</code> 这样的比较和赋值运算, 将这两个包装器对象视为唯一的, 即使它们包含相同的 COM 对象.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="ComObject.htm">ComObject</a>, <a href="ComValue.htm">ComValue</a>, <a href="ComObjGet.htm">ComObjGet</a>, <a href="ComObjConnect.htm">ComObjConnect</a>, <a href="ComObjFlags.htm">ComObjFlags</a>, <a href="ObjAddRef.htm">ObjAddRef/ObjRelease</a>, <a href="ComObjQuery.htm">ComObjQuery</a>, <a href="http://msdn.microsoft.com/en-us/library/ms221467.aspx">GetActiveObject (MSDN)</a></p>
+
+</body>
+</html>

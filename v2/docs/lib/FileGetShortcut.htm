@@ -1,0 +1,96 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>FileGetShortcut - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The FileGetShortcut function retrieves information about a shortcut (.lnk) file, such as its target file." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>FileGetShortcut</h1>
+
+<p>获取快捷方式(.lnk) 文件的信息, 例如其目标文件.</p>
+
+<pre class="Syntax"><span class="func">FileGetShortcut</span> LinkFile <span class="optional">, &amp;OutTarget, &amp;OutDir, &amp;OutArgs, &amp;OutDescription, &amp;OutIcon, &amp;OutIconNum, &amp;OutRunState</span></pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>LinkFile</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要分析的快捷方式文件名, 如果未指定绝对路径则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 必须确保扩展名为 <strong>.lnk</strong>.</p>
+  </dd>
+
+  <dt>&amp;OutTarget</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>用来存储快捷方式目标的变量的引用(不包含它可能含有的任何参数). 例如: C:\WINDOWS\system32\notepad.exe</p>
+  </dd>
+
+  <dt>&amp;OutDir</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>用来保存快捷方式工作目录的变量的引用. 例如: C:\My Documents. 如果在字符串中存在像 %WinDir% 这样的环境变量, 那么解决它们的一种方法是使用 <a href="StrReplace.htm">StrReplace</a>. 例如: <code>OutDir := StrReplace(OutDir, "%WinDir%", <a href="../Variables.htm#WinDir">A_WinDir</a>)</code></p>
+  </dd>
+
+  <dt>&amp;OutArgs</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>用来保存快捷方式参数的变量的引用(如果没有则为空).</p>
+  </dd>
+
+  <dt>&amp;OutDescription</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>用来保存快捷方式注释的变量的引用(如果没有则为空).</p>
+  </dd>
+
+  <dt>&amp;OutIcon</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>用来保存快捷方式图标文件名的变量的引用(如果没有则为空).</p>
+  </dd>
+
+  <dt>&amp;OutIconNum</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>用来保存快捷方式图标在图标文件中编号的变量的引用(如果没有则为空). 这个值通常为 1, 表示首个图标.</p>
+  </dd>
+
+  <dt>&amp;OutRunState</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>用来存储快捷方式初始运行方式的变量的引用, 其值为下列数字的其中一个:</p>
+    <ul>
+      <li>1 = 普通</li>
+      <li>3 = 最大化</li>
+      <li>7 = 最小化</li>
+    </ul>
+  </dd>
+
+</dl>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>失败时抛出 <a href="Error.htm#OSError">OSError</a>.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>如果不需要相应的信息, 则可以省略输出变量.</p>
+<h2 id="Related">相关</h2>
+<p><a href="FileCreateShortcut.htm">FileCreateShortcut</a>, <a href="SplitPath.htm">SplitPath</a></p>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 允许用户选择一个 .lnk 文件来显示其信息.</p>
+<pre>LinkFile := FileSelect(32,, "Pick a shortcut to analyze.", "Shortcuts (*.lnk)")
+if LinkFile = ""
+    return
+FileGetShortcut LinkFile, &amp;OutTarget, &amp;OutDir, &amp;OutArgs, &amp;OutDesc, &amp;OutIcon, &amp;OutIconNum, &amp;OutRunState
+MsgBox OutTarget "`n" OutDir "`n" OutArgs "`n" OutDesc "`n" OutIcon "`n" OutIconNum "`n" OutRunState
+</pre>
+</div>
+
+</body>
+</html>

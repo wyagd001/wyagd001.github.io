@@ -1,0 +1,184 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>SetTimer - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The SetTimer function causes a function to be called automatically and repeatedly at a specified time interval." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>SetTimer</h1>
+
+<p>在指定的时间间隔内自动重复调用函数.</p>
+
+<pre class="Syntax"><span class="func">SetTimer</span> <span class="optional">Function, Period, Priority</span></pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt id="Function">Function</dt>
+  <dd>
+    <p>类型: <a href="../misc/Functor.htm">函数对象</a></p>
+    <p>要调用的函数对象.</p>
+    <p>函数对象的<a href="../Concepts.htm#references-to-objects">引用</a>保存在脚本的计时器列表中, 除非删除计时器, 否则不会释放该引用. 对于<a href="#once">只运行一次</a>的计时器, 此操作会自动发生, 但是也可以通过调用 <em>Period(周期)</em> 为 0 的 SetTimer 来完成.</p>
+    <p id="OmitCallback">如果省略 <em>Function</em>, 如果有的话, SetTimer 将在启动当前线程的定时器上运行. 例如, <code>SetTimer , 0</code> 可以在一个定时器函数中用于标记要删除的定时器, 而 <code>SetTimer , 1000</code> 将更新当前定时器的 <em>Period</em>.</p>
+    <p class="warning"><strong>注意:</strong> 传递空变量或返回空值的表达式被看做一个错误. 这个参数必须为非空的值或完全忽略.</p>
+  </dd>
+
+  <dt>Period</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>参数的绝对值被用作在执行计时器之前必须经过的<a href="#Precision">大约</a>毫秒数. 定时器将被自动<a href="#reset">重置</a>. 可以设置为自动重复或只运行一次:</p>
+    <ul>
+      <li>如果 <em>Period</em> 大于 0, 定时器将自动重复, 直到脚本明确禁用.</li>
+      <li id="once">如果 <em>Period</em> 小于 0, 定时器将只运行一次. 例如, 指定 -100 将在 100 ms 后调用 <em>Function</em>, 然后删除定时器, 就像使用 <code>SetTimer <i>Function</i>, 0</code> 一样.</li>
+      <li>如果 <em>Period</em> 为 0, 定时器被标记为删除. 如果由这个定时器启动的线程还在运行, 那么在线程结束后, 定时器就会被删除(除非它被重新启用); 否则, 它会被立即删除. 在任何情况下, 定时器之前的 <em>Period</em> 和 <em>Priority</em> 都不会被保留.</li>
+    </ul>
+    <p><em>Period</em> 的绝对值不能大于 4294967295 ms(49.7 天).</p>
+    <p><strong>默认值</strong>: 如果此参数为空并且:<br>
+    1) 计时器不存在: 则使用 250 的周期进行创建.<br>
+    2) 计时器已经存在: 则以原来的 <em>period</em> 进行<a href="#reset">重置</a>, 除非指定了 <em>Priority(优先级)</em>.</p>
+  </dd>
+
+  <dt>Priority</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>这个可选参数是一个介于 -2147483648 和 2147483647 之间的整数(或为<a href="../Variables.htm#Expressions">表达式</a>) 来表示计时器的优先级. 如果省略, 则使用 0. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
+    <p>要改变现有计时器的优先级而不以任何其他方式影响它, 请省略 <em>Period</em>.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Remarks">备注</h2>
+<p>计时器很有用, 因为它们是异步运行的, 这意味着它们会以指定的频率(间隔) 运行, 即使脚本正等待窗口, 显示对话框或忙于其他任务的时候. 它们的许多应用实例包括了当用户空闲时(如 <a href="../Variables.htm#TimeIdle">A_TimeIdle</a> 反映的那样) 执行一些动作或在不需要的窗口出现时关闭它们.</p>
+<p>尽管计时器给人一种脚本同时执行多个任务的错觉, 实际并非如此. 相反地, 定时子程序只是被当作其他线程来处理: 它们可以中断另一个线程或被另一个线程中断, 例如 <a href="../Hotkeys.htm">热键子程序</a>. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
+<p>每当创建或重新启用计时器或用新的 <em>period</em> 更新计时器时, 它的函数不会立即被调用; 必须先经过它的 <em>period</em> 时间. 如果您希望立即开始计时器的首次执行, 请直接调用计时器的函数(但是, 这不会像定时器本身那样启动一个新的线程; 所以像 <a href="SendMode.htm">SendMode</a> 这样的设置不会以其默认值启动).</p>
+<p id="reset"><strong>重置</strong>: 如果 SetTimer 被用在一个已经存在的计时器上, 那么这个计时器会被重置(除非指定了 <em>Priority</em> 并且省略了 <em>Period</em>); 换句话说, 在经过它的整个周期后函数才会再次被调用.</p>
+<p id="Precision"><strong>计时器精度</strong>: 由于操作系统中计时系统的精确度, <em>Period</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于安装的硬件和驱动程序的类型). 可以通过 Loop+Sleep 实现更短的延迟, 如 <a href="Sleep.htm#ExShorterSleep">DllCall+timeBeginPeriod+Sleep</a> 所示.</p>
+<p id="Reliability"><strong>可靠性</strong>: 在以下情况下, 计时器可能无法按预期时间运行:</p>
+<ol>
+  <li>其他应用程序对 CPU 造成了很大的负荷.</li>
+  <li>计时器函数在计时器周期到期时仍在运行.</li>
+  <li>有太多其他竞争的计时器.</li>
+  <li>计时器被另一个<a href="../misc/Threads.htm">线程</a>中断, 即另一个定时函数, <a href="../Hotkeys.htm">热键子程序</a>或<a href="Menu.htm">自定义菜单项</a>(这可以通过 <a href="Critical.htm">Critical</a> 来避免). 如果发生这种情况, 而中断的线程需要很长时间才能完成, 那么被中断的计时器将在这段时间内有效地被禁用. 但是, 任何其他的计时器都会通过中断中断第一个计时器的<a href="../misc/Threads.htm">线程</a>继续运行.</li>
+  <li>使用 <a href="Critical.htm">Critical</a> 或 <a href="Thread.htm">Thread "Interrupt/Priority"</a> 后脚本会变成不可中断的. 在这样的时期, 计时器不会运行. 之后, 当脚本恢复可中断时, 任何过时的计时器会尽快运行一次然后恢复到正常的调度..</li>
+</ol>
+<p>虽然当脚本被<a href="Suspend.htm">挂起</a>时, 计时器会运行, 但如果<a href="../misc/Threads.htm">当前线程</a>的 <a href="Thread.htm">Thread "NoTimers"</a> 正在生效或任何线程<a href="Pause.htm">暂停</a>时, 计时器都不会运行. 此外, 当用户正在浏览脚本的某个菜单(如托盘图标菜单或菜单栏) 时, 它们也不会运行.</p>
+<p>因为定时器是通过临时中断脚本的当前线程来运行的, 所以当长时间的中断是不可取的, 它们的函数应该保持短暂的(以便快速完成).</p>
+<p id="otherremarks"><strong>其他备注</strong>: 临时的计时器经常可以在它自己的函数中禁用(请参阅此页面底部的示例).</p>
+<p>每当函数被定时器调用时, 它都会以默认的设置值(如 <a href="SendMode.htm">SendMode</a>) 重新开始. 这些默认值可以在<a href="../Scripts.htm#auto">脚本启动</a>中更改.</p>
+<p>如果<a href="../Hotkeys.htm">热键</a>的响应时间非常重要(如在游戏中) 并且脚本中包含的任何计时器, 其函数的执行时间超过 5 毫秒, 请使用下面的函数来避免 15 毫秒的延迟. 否则, 如果在计时器线程处于不中断期的时候按下热键, 就会出现这样的延迟:</p>
+<pre><a href="Thread.htm">Thread</a> "interrupt", 0  <em>; 使所有线程始终处于不可中断状态.</em></pre>
+<p>如果一个计时器的函数正在运行时被禁用, 那么该函数将继续运行, 直到完成.</p>
+<p><a href="KeyHistory.htm">KeyHistory</a> 功能显示存在的计时器数目, 以及当前启用的数目.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread (函数)</a>, <a href="Critical.htm">Critical</a>, <a href="../misc/Functor.htm">函数对象</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExampleClose">
+<p><a class="ex_number" href="#ExampleClose"></a> 当不想要的窗口出现时关闭它们.</p>
+<pre>SetTimer CloseMailWarnings, 250
+
+CloseMailWarnings()
+{
+    WinClose "Microsoft Outlook", "A timeout occured while communicating"
+    WinClose "Microsoft Outlook", "A connection to the server could not be established"
+}</pre>
+</div>
+
+<div class="ex" id="ExampleWait">
+<p><a class="ex_number" href="#ExampleWait"></a> 等待特定的窗口出现, 然后通知用户.</p>
+<pre>SetTimer Alert1, 500
+
+Alert1()
+{
+    if !WinExist("Video Conversion", "Process Complete")
+        return
+    <em>; 否则:</em>
+    SetTimer, 0  <em>; 即此处计时器关闭自己.</em>
+    MsgBox "The video conversion is finished."
+}</pre>
+</div>
+
+<div class="ex" id="ExampleCount">
+<p><a class="ex_number" href="#ExampleCount"></a> 检测热键的单次, 两次和三次按下. 这样允许热键根据您按下次数的多少执行不同的操作.</p>
+<pre>#c::
+KeyWinC(ThisHotkey)  <em>; 这是一个<a href="../Hotkeys.htm#Function">命名的函数热键</a>.</em>
+{
+    static winc_presses := 0
+    if winc_presses &gt; 0 <em>; SetTimer 已经启动, 所以我们记录键击.</em>
+    {
+        winc_presses += 1
+        return
+    }
+    <em>; 否则, 这是新开始系列中的首次按下. 把次数设为 1 并启动计时器</em>
+    winc_presses := 1
+    SetTimer After400, -400 <em>; 在 400 毫秒内等待更多的键击.</em>
+
+    After400()  <em>; 这是一个<a href="../Functions.htm#nested">嵌套函数</a>.</em>
+    {
+        if winc_presses = 1 <em>; 此键按下了一次.</em>
+        {
+            Run "m:\"  <em>; 打开文件夹.</em>
+        }
+        else if winc_presses = 2 <em>; 此键按下了两次.</em>
+        {
+            Run "m:\multimedia"  <em>; 打开一个不同的文件夹.</em>
+        }
+        else if winc_presses &gt; 2
+        {
+            MsgBox "Three or more clicks detected."
+        }
+        <em>; 不论触发了上面的哪个动作, 都对 count 进行重置
+        ; 为下一个系列的按键做准备:</em>
+        winc_presses := 0
+    }
+}
+</pre>
+</div>
+
+<div class="ex" id="ExampleClass">
+<p><a class="ex_number" href="#ExampleClass"></a> 使用<a href="../Objects.htm#Custom_Classes_method">方法</a>作为计时器函数.</p>
+<pre>counter := SecondCounter()
+counter.Start
+Sleep 5000
+counter.Stop
+Sleep 2000
+
+<em>; 一个记录秒数的示例类...</em>
+class SecondCounter {
+    __New() {
+        this.interval := 1000
+        this.count := 0
+        <em>; Tick() 有一个隐式参数 "this", 其引用一个对象
+        ; 所以, 我们需要创建一个封装了 "this " 和调用方法的函数:</em>
+        this.timer := ObjBindMethod(this, "Tick")
+    }
+    Start() {
+        SetTimer this.timer, this.interval
+        ToolTip "Counter started"
+    }
+    Stop() {
+        <em>; 要关闭计时器, 我们必须传递和之前一样的对象:</em>
+        SetTimer this.timer, 0
+        ToolTip "Counter stopped at " this.count
+    }
+    <em>; 本例中, 计时器调用了以下方法:</em>
+    Tick() {
+        ToolTip ++this.count
+    }
+}</pre>
+<p>示例 #4 的备注:</p>
+<ul>
+  <li>我们也可使用 <code>this.timer := this.Tick.<a href="Func.htm#Bind">Bind</a>(this)</code>. 当 <code>this.timer</code> 被调用时, 它实际上是调用 <code><i>tick_function</i>.<a href="Func.htm#Call">Call</a>(this)</code>, 而 <i>tick_function</i> 是实现该方法的函数对象. 相比之下, <a href="ObjBindMethod.htm">ObjBindMethod</a> 会产生一个调用 <code>this.Tick()</code> 的对象.</li>
+  <li>如果我们将 <em>Tick</em> 重命名为 <em>Call</em>, 我们可以直接使用 <code>this</code> 来代替 <code>this.timer</code>. 然而, 当对象有多个方法需要被不同的事件源调用时, ObjBindMethod 是非常有用的, 如热键, 菜单项, GUI 控件, 等等.</li>
+  <li>如果计时器是在计时器调用的函数/方法中修改或删除时, 可能更容易<a href="#OmitCallback">省略 <em>Function</em> 参数</a>. 在某些情况下, 这样可以避免保留传递给 SetTimer 的原始对象.</li>
+</ul>
+</div>
+
+</body>
+</html>

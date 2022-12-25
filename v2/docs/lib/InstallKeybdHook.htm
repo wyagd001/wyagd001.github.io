@@ -1,0 +1,63 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>InstallKeybdHook - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The InstallKeybdHook function installs or uninstalls the keyboard hook." />
+<meta name="ahk:equiv-v1" content="lib/_InstallKeybdHook.htm" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>InstallKeybdHook</h1>
+
+<p>安装或卸载键盘钩子.</p>
+<pre class="Syntax"><span class="func">InstallKeybdHook</span> <span class="optional">Install, Force</span></pre>
+
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Install</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
+    <p>省略此参数或传递 true(任何非零, 非空白值) 来要求钩子被安装. 传递 false 删除此函数之前设置的任何要求, 并可能卸载钩子.</p>
+  </dd>
+
+  <dt>Force</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
+    <p>如果 <em>Force</em> 为 true, 并且 <em>Install</em> 省略或为 true, 钩子会被卸载和重新安装. 这具有使其优先于其他进程先前安装的钩子的效果. 如果系统由于一个无响应的程序而停止调用该钩子, 重新安装该钩子可能会使其再次工作.</p>
+    <p>如果 <em>Force</em> 为 true, 并且 <em>Install</em> 为 false, 那么钩子就会被卸载, 即使是其他目的需要. 如果<a href="../Hotkeys.htm">热键</a>, <a href="../Hotstrings.htm">热字串</a>或 <a href="InputHook.htm">InputHook</a> 需要钩子, 它将停止工作, 直到该钩子被重新安装. 钩子可以通过调用这个函数显式地被重新安装, 也可以作为启用或禁用热键或调用其他需要钩子的函数的副作用而自动安装.</p>
+    <p>如果 <em>Force</em> 为 false, 内部变量会被更新, 以表明脚本是否需要钩子, 但是如果钩子是其他目的而需要的, 可能不会有直接的变化.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Remarks">备注</h2>
+<p>键盘钩子监视击键, 以便激活<a href="../Hotstrings.htm">热字串</a>和任何 RegisterHotkey(操作系统内置的函数) 不支持的键盘<a href="../Hotkeys.htm">热键</a>. 它还支持其他一些特性, 如 <a href="InputHook.htm">InputHook</a> 函数.</p>
+<p>AutoHotkey 不会无条件安装键盘和鼠标钩子, 因为它们合起来至少占用 500 KB 的内存. 因此, 通常仅在脚本包含以下内容之一时才会安装键盘钩子: 1) <a href="../Hotstrings.htm">热字串</a>; 2)  一个或多个需要键盘钩子(大多数不需要) 的<a href="../Hotkeys.htm">热键</a>; 3) <a href="SetNumScrollCapsLockState.htm">SetCaps/Scroll/NumLock AlwaysOn/AlwaysOff</a>; 4) 激活 <a href="InputHook.htm">Input 钩子</a>.</p>
+<p>与之相比, InstallKeybdHook 函数可以用来无条件安装键盘钩子, 它的好处包括:</p>
+<ul>
+  <li><a href="KeyHistory.htm">KeyHistory</a> 可以用来显示最近的 20 次击键(用于调试).</li>
+  <li>可以可靠地跟踪修饰符键的物理状态, 这就消除了 <a href="A_HotkeyModifierTimeout.htm">A_HotkeyModifierTimeout</a> 的需要, 并且可以提高 <a href="Send.htm">Send</a> 将临时释放的修饰符键恢复到合适状态的可靠性.</li>
+  <li><a href="GetKeyState.htm">GetKeyState</a> 可以检索到一个键的物理状态.</li>
+  <li><a href="../Variables.htm#TimeIdleKeyboard">A_TimeIdleKeyboard</a> 和 <a href="../Variables.htm#TimeIdlePhysical">A_TimeIdlePhysical</a> 可以正确工作(分别忽略鼠标输入和人工输入).</li>
+  <li>使用 Alt 修饰符的鼠标热键(如 <code>!LButton::</code>) 可以更有效地抑制窗口菜单, 当 Alt 键释放时只发送一个<a href="A_MenuMaskKey.htm">菜单掩饰键</a>, 而不是每次单击按钮时发送一个.</li>
+</ul>
+<p>不需要钩子的键盘热键将使用 <em>reg</em> 方法, 即使使用 InstallKeybdHook 函数. 相比之下, 将 <a href="_UseHook.htm">#UseHook</a> 指令或 <a href="../Hotkeys.htm#prefixdollar">$ 前缀</a>应用于键盘热键, 强制需要钩子, 如果热键被启用, 就会导致钩子被安装.</p>
+<p>你可以通过 <a href="KeyHistory.htm">KeyHistory</a> 函数或菜单项来确定脚本是否在使用钩子. 你可以通过 <a href="ListHotkeys.htm">ListHotkeys</a> 函数或菜单项来确定哪些热键正在使用钩子.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="InstallMouseHook.htm">InstallMouseHook</a>, <a href="_UseHook.htm">#UseHook</a>, <a href="Hotkey.htm">Hotkey</a>, <a href="InputHook.htm">InputHook</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="../Hotstrings.htm">Hotstrings</a>, <a href="GetKeyState.htm">GetKeyState</a>, <a href="KeyWait.htm">KeyWait</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 无条件安装键盘钩子.</p>
+<pre>InstallKeybdHook</pre>
+</div>
+
+</body>
+</html>

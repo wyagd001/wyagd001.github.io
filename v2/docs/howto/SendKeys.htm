@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Learn how to send keystrokes or text with AutoHotkey." />
+<meta name="ahk:equiv-v1" content="Tutorial.htm#s3" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>How to Send Keystrokes | AutoHotkey v2</title>
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>如何发送击键</h1>
+<pre>Send "Hello, world{!}{Left}^+{Left}"</pre>
+<p>发送击键(或简称键) 是自动化程序最常见的方法, 因为它是最常用的方法. 更直接的方法往往只适用于特定类型的应用程序.</p>
+<p>学习如何发送 key 大致有两个部分:</p>
+<ol>
+  <li>如何编写代码, 以便程序知道要发送哪些 key.</li>
+  <li>如何使用可用的模式和选项来获得正确的最终结果.</li>
+</ol>
+<p>重要的是要理解, 发送一个键并不能完美地复制物理按下键的行为, 即使您将其降低到人类的速度. 但在深入研究之前, 我们先了解一些基础知识.</p>
+
+<h2>尝试这些例子</h2>
+<p>如果您运行 <code>SendText "Hi!"</code> 这样的示例, 文本将立即发送到活动(聚焦)窗口, 这可能没有多大用处, 这取决于您如何运行示例. 通常更好的方法是定义一个热键, 运行示例来加载它, 然后在您想要测试它的效果时按下热键. 下面的一些例子将使用有编号的热键 <code>^1::</code> (<kbd>Ctrl</kbd> 和一个数字, 所以如果没有重复的例子, 你可以一次尝试多个例子), 但你可以根据自己的需要进行更改.</p>
+<p>要了解如何自定义热键或创建自己的热键, 请参阅<a href="WriteHotkeys.htm">如何编写热键</a>.</p>
+<p>如果您不确定如何尝试这些示例, 请参阅<a href="RunExamples.htm">如何运行示例代码</a>.</p>
+
+<h2>如何编写代码</h2>
+<p>当发送按键时, 您通常希望发送按键或键组合以获得其效果(如 <kbd>Ctrl</kbd>+<kbd>C</kbd> 复制到剪贴板), 或键入一些文本. 键入文本更简单, 因此我们将从那里开始: 只需调用 <a href="../lib/Send.htm">SendText</a> 函数, 将您想要发送的确切文本<a href="../Concepts.htm#pass-parameters">传递</a>给它.</p>
+<pre>^1::SendText "To Whom It May Concern"</pre>
+<p>从技术上讲, SendText 实际上发送的是 Unicode 字符包, 而不是击键, 这使得它对于通常使用组合键(如 <kbd>Shift</kbd>+<kbd>2</kbd> 或 <kbd>AltGr</kbd>+<kbd>a</kbd>) 键入的字符更加可靠.</p>
+
+<h3>带引号的字符串的规则</h3>
+<p>SendText 逐字发送文本, 但请记住<a href="../Language.htm">语言</a>规则. 例如, <a href="../Language.htm#strings">原义文本</a>必须括在引号中(双引号 <code>"</code> 或单引号 <code>'</code>), 并且引号本身不会被 SendText 函数 "看到". 若要发送原义引号, 可以将其括在相反类型的引号中. 例如:</p>
+<pre>^2::SendText 'Quote marks are also known as "quotes".'</pre>
+<p>或者, 使用<a href="../misc/EscapeChar.htm">转义序列</a>. 在带引号的字符串中, <code>`"</code> 转换为原义的 <code>"</code>, 而 <code>`'</code> 转换为原义的 <code>'</code>. 例如:</p>
+<pre>^3::{
+    SendText "Double quote (`")"
+    SendText 'Single quote (`')'
+}</pre>
+<p>您还可以交替使用两种引号:</p>
+<pre>^4::SendText 'Double (") and' . " single (') quote"</pre>
+<p>这两个字符串在传递给 SendText 函数之前连接在一起(<a href="../Variables.htm#concat">连接</a>). 点(<code>.</code>) 可以省略, 但这会使一个结束和另一个开始的位置更难看到.</p>
+<p>正如您在上面看到的, 转义字符 <code>`</code>(被称为 <em>backquote</em>, <em>backtick</em>, <em>grave accent</em> 和其他名称) 具有特殊含义, 因此如果您想发送该原义字符(或发送相应的按键), 则需要将其加倍, 如发送 <code>Send "``"</code>. 其他常见的转义序列包括 <code>`n</code> 表示换行符(Enter) 和 <code>`t</code> 表示制表符. 有关详情, 请参阅<a href="../misc/EscapeChar.htm">转义序列</a>.</p>
+
+<h3>发送键和组合键</h3>
+<p><a href="../lib/Send.htm">SendText</a> 最适合逐字发送文本, 但它不能发送不生成文本的键, 如 <kbd>Left</kbd> 或 <kbd>Home</kbd>. <a href="../lib/Send.htm">Send</a>, <a href="../lib/Send.htm">SendInput</a>, <a href="../lib/Send.htm">SendPlay</a>, <a href="../lib/Send.htm">SendEvent</a> 和 <a href="../lib/ControlSend.htm">ControlSend</a> 可以发送文本和组合键, 或者不产生文本的键. 为了完成所有这些操作, 它们为以下符号添加了特殊含义: <code>^!+#{}</code></p>
+<p>前四个符号对应于标准修键, Ctrl(<code>^</code>), Alt(<code>!</code>), Shift(<code>+</code>) 和 Win(<code>#</code>). 它们可以组合使用, 但仅影响下一个键.</p>
+<p>要按名称发送按键, 或发送上述任一符号的原义文本, 请将其括在大括号中. 例如:</p>
+<ul>
+  <li><code>^+{Left}</code> 生成 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Left</kbd></li>
+  <li><code>^{+}{Left}</code> 生成 <kbd>Ctrl</kbd>+<kbd>+</kbd> 后跟字母 <kbd>Left</kbd></li>
+  <li><code>^+Left</code> 生成 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> 后跟原义字母 <code>eft</code></li>
+</ul>
+<p>当按下 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>"</kbd> 时, 下面的示例发送两个引号, 然后将插入点向左移动, 准备在引号内键入内容:</p>
+<!-- span works around a highlighter bug (4/12/22) -->
+<pre><span class="no-highlight">^+"</span>::Send '""{Left}'</pre>
+<p>对于 <code>^!+#{}</code> 以外的任何单个字符, Send 将其转换为相应的组合键, 并按下并释放该组合键. 例如, <code>Send "aB"</code> 按下并释放 <kbd>A</kbd>, 然后按下并释放 <kbd>Shift</kbd>+<kbd>B</kbd>. 类似地, 在默认情况下, 用大括号括起来的任何键名都会被按下并释放. 例如, <code>Send "{Ctrl}a"</code> 会按下并释放 <kbd>Ctrl</kbd>, 然后按下并释放 <kbd>A</kbd>; 可能这并不是你想要的.</p>
+<p>若要只按下(按住) 或释放某个键, 请将键名用大括号括起来, 后面跟着空格, 然后是单词 "down" 或 "up". 下面的例子使 <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd> 切换 <kbd>Shift</kbd>:</p>
+<pre>*^CapsLock::{
+    if GetKeyState("Shift")
+        Send "{Shift up}"
+    else
+        Send "{Shift down}"
+}</pre>
+
+<h3>热键 vs. Send</h3>
+<p class="warning"><strong>警告:</strong> 热键和发送有一些您应该注意的差异.</p>
+<p>尽管<a href="../Hotkeys.htm">热键</a>也使用符号 <code>^!+#</code> 和相同的按键名称, 但有几个重要的区别:</p>
+<ul>
+  <li>Send 不支持其他热键修饰符号. 例如, <code>&gt;^a::</code> 对应于 <kbd>RCtrl</kbd>+<kbd>A</kbd>, 但要发送该组合, 您需要完整拼写出键名, 如 <code>Send "{RCtrl down}a{RCtrl up}"</code>.</li>
+  <li>按键名称从不括在热键中的大括号中, 但在 Send 中必须始终括在大括号中(如果长度超过一个字符).</li>
+  <li>Send 区分大小写. 例如, <code>Send "^A"</code> 发送 <kbd>Ctrl</kbd> 和 <em>大写</em> "a" 的组合, 因此 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd>. 相比之下, <code>^a::</code> 和 <code>^A::</code> 是等价的.</li>
+</ul>
+<p>这是因为 Send 有多种用途, 而热键针对组合键进行了优化.</p>
+<p>在相关说明中, <a href="../Hotstrings.htm">热字符串</a>专门用于检测文本输入, 因此符号 <code>^!+#{}</code> 在热字符串触发文本中没有特殊含义. 但是, 热字符串的 <em>replacement</em> 文本使用与 Send 相同的语法(使用 <a href="../Hotstrings.htm#T">T 选项</a> 时除外). 每当在以下热字符串处于活动状态的情况下键入 "{" 时, 它都会发送 "}", 然后发送 <kbd>Left</kbd>, 以将插入点 移回括号之间:</p>
+<pre>:*?B0:{::{}}{Left}</pre>
+
+<h3>Blind 模式</h3>
+<p>通常情况下, Send 假定您物理按住的任何修饰键都不应该与您要求它发送的键组合在一起. 例如, 如果你按住 <kbd>Ctrl</kbd> 并调用 <code>Send "Hi"</code>, Send 会在发送 "Hi" 之前自动释放 <kbd>Ctrl</kbd>, 然后再按下它.</p>
+<p>有时你想要的是将一些键与之前按下或发送的其他修饰符一起发送. 为此, 您可以使用 <code>{Blind}</code> 前缀. 在运行以下示例时, 尝试聚焦一个非空文本编辑器或输入字段, 并按住 <kbd>Ctrl</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Shift</kbd> 的同时按住 <kbd>1</kbd> 或 <kbd>2</kbd>:</p>
+<pre>*^1::Send "{Blind}{Home}"
+*^2::Send "{Blind}{End}"</pre>
+<p>For more about <code>{Blind}</code>, see <a href="../lib/Send.htm#Blind">Blind mode</a>.</p>
+
+<h3>其他</h3>
+<p>Send 支持其他一些特殊的结构, 如:</p>
+<ul>
+  <li><code>{U+00B5}</code> 按其序号值(字符代码)发送一个 Unicode 字符.</li>
+  <li><code>{ASC 0181}</code> 发送 Alt+Numpad 序列.</li>
+  <li><code class="no-highlight">{Click <i>Options</i>}</code> 单击或移动鼠标.</li>
+</ul>
+<p>有关完整列表, 请参阅<a href="../lib/Send.htm#keynames">按键名称</a>.</p>
+
+<h2>模式和选项</h2>
+<p>发送一个键并不能完全复制物理按下键的行为. 操作系统提供了几种不同的发送按键的方法, 每种方法都有不同的注意事项. 有时候为了得到你想要的结果, 你不仅需要尝试不同的方法, 还需要调整时间.</p>
+<p><a href="../lib/Send.htm#Send_variants">主要方法</a>有 SendInput, SendEvent 和 SendPlay. SendInput 通常是最可靠的, 因此默认情况下, Send 等同于 SendInput. <a href="../lib/SendMode.htm">SendMode</a> 可以用来使 Send 与 SendEvent 或 SendPlay 同义. 文档详细描述了 <a href="../lib/Send.htm#SendInputDetail">SendInput</a> 和 <a href="../lib/Send.htm#SendPlayDetail">SendPlay</a> 的其他优点和缺点, 但我建议当您使用 SendInput 时, 只尝试 SendEvent 或 SendPlay.</p>
+<p class="warning"><strong>警告:</strong> SendPlay 不能在现代系统上工作, 除非你<a href="../Program.htm#Installer_uiAccess">使用 UI 访问</a>.</p>
+<p>另一个值得尝试的选项是 <a href="../lib/ControlSend.htm">ControlSend</a>. 这并不使用发送击键的正式方法, 而是直接将消息发送到您指定的窗口.主要的优点是窗口通常不需要处于活动状态来接收这些消息. 但由于它绕过了系统对键盘输入的正常处理, 有时它无法工作.</p>
+
+<h3>时间和延迟</h3>
+<p>有时你可以比人类更快地发送大量的击键, 有时你不能. 通常有两种情况可能需要延迟:</p>
+<ul>
+  <li>按键应该触发目标应用中的某些更改(例如显示新控件或窗口), 并且在发生这种情况之前发送另一个按键会产生错误的效果.</li>
+  <li>该应用程序无法跟上快速的击键流, 您需要将它们全部放慢.</li>
+</ul>
+<p>对于第一种情况, 您可以简单地调用 Send, 接着 <a href="../lib/Sleep.htm">Sleep</a>, 继续 Send, 依此类推.</p>
+<p>对于第二种情况, 使用 <a href="../lib/SetKeyDelay.htm">SetKeyDelay</a>. 此函数可以设置每次击键之间的延迟和击键的持续时间(即按下和松开键之间的延迟).</p>
+<pre>^1::{
+    SetKeyDelay 75, 25  <em>; 75ms between keys, 25ms between down/up.</em>
+    SendEvent "You should see the keys{bs 4}text appear gradually."
+}</pre>
+<p class="warning"><strong>警告:</strong> SendInput 不支持键延迟, 默认情况下 Send 也不支持.</p>
+<p>为了使 SetKeyDelay 有效, 你通常必须使用 <code>SendMode "Event"</code> 或调用 SendEvent, SendPlay 或 ControlSend 代替 Send 或 SendText.</p>
+
+<h2>发送大量文本</h2>
+<p>发送多行文本的一种方法是使用<a href="../Scripts.htm#continuation-section">延续片段</a>:</p>
+<pre>SendText "
+(
+    Leading indentation is stripped out,
+    based on the first line.
+    Line breaks are kept
+    unless you use the "Join" option.
+)"</pre>
+<p>虽然它通常非常快, 但 SendText 仍然必须每次发送一个字符, 而 Send 通常需要发送至少两倍的消息(按下 <em>和</em> 松开键). 当发送大量文本时, 这会造成明显的延迟. 它也可能变得不可靠, 因为较长的延迟意味着与用户输入冲突, 键盘焦点转移或其他条件变化的风险更高.</p>
+<p>一般来说, 将文本放在剪贴板上并 <em>粘贴</em> 会更快, 更可靠. 例如:</p>
+<pre>^1::{
+    old_clip := ClipboardAll()  <em>; Save all clipboard content</em>
+    A_Clipboard := "
+    (Join`s
+        This text is placed on the clipboard,
+        and will be pasted below by sending Ctrl+V.
+    )"
+    Send "^v"
+    Sleep 500  <em>; Wait a bit for Ctrl+V to be processed</em>
+    A_Clipboard := old_clip  <em>; Restore previous clipboard content</em>
+}</pre>
+
+</body>
+</html>

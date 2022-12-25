@@ -1,0 +1,82 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>GetMethod - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The GetMethod function retrieves the implementation function of a method." />
+<meta name="ahk:equiv-v1" content="AutoHotkey.htm" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+ <h1>GetMethod</h1>
+
+ <p>检索方法的实现函数.</p>
+
+<pre class="Syntax">Method := <span class="func">GetMethod</span>(Value <span class="optional">, Name, ParamCount</span>)</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+  <dt>Value</dt>
+  <dd>
+    <p>类型: <a href="Any.htm">Any</a></p>
+    <p>除了 ComObject 之外的任何类型的任何值.</p>
+  </dd>
+  <dt>Name</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要检索的方法的名称.</p>
+    <p>省略此参数, 对 <em>Value</em> 本身进行验证, 如果成功, 则返回 <em>Value</em>.</p>
+  </dd>
+  <dt>ParamCount</dt>
+  <dd>
+    <tp>类型: <a href="../Concepts.htm#numbers">整数</a></tp>
+    <p>将被传递给方法或函数的参数数量. 如果指定, 可以查询该方法的 MinParams, MaxParams 和 IsVariadic 属性, 以验证它是否可以接受这个参数指定的数量. 如果这些属性不存在, 参数数就不会被验证.</p>
+    <p>这个计数不应该包括隐含的 <code>this</code> 参数.</p>
+    <p>如果省略(或者参数数没有被验证), 则会对 Call 方法进行基本检查, 以验证该对象可调用的.</p>
+  </dd>
+</dl>
+
+ <h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../misc/Functor.htm">函数对象</a></p>
+<p>函数返回包含方法实现的函数对象, 如果省略了 <em>Name</em>, 则返回 <em>Value</em> 本身.</p>
+
+ <h2 id="Errors">错误</h2>
+<p>如果没有找到该方法或在没有调用属性获取器(getter) 的情况下不能被检索到, 则抛出 <a href="Error.htm#MethodError">MethodError</a>.</p>
+<p>如果尝试验证, 可能会因为查询方法的属性而抛出异常. 如果验证失败, 则抛出 <a href="Error.htm#ValueError">ValueError</a> 或 <a href="Error.htm#MethodError">MethodError</a>.</p>
+
+ <h2 id="Remarks">备注</h2>
+<p>方法可以通过以下方式来定义:</p>
+<ul>
+  <li>一个具有 <em>call</em> 访问函数的动态属性. 这包括:
+    <ul>
+      <li>任何由类中的<a href="../Objects.htm#Custom_Classes_method">方法定义</a>创建的属性.</li>
+      <li>通过向 <a href="Object.htm#DefineProp">DefineProp</a> 传递 <code>{Call: fn}</code> 这样的描述符创建的任何属性, 其中 <em>fn</em> 实现了方法.</li>
+      <li>任何预定义/内置的方法.</li>
+    </ul>
+  </li>
+  <li>对象或其基对象之一的自有值属性, 其中的值是一个<a href="../misc/Functor.htm">函数对象</a>.</li>
+  <li>一个带有 getter 的动态属性, 它返回一个函数对象. GetMethod 不支持这种情况.</li>
+  <li>在 __Call <a href="../Objects.htm#Meta_Functions">元函数</a>中进行处理. 这种方式实现的方法不能被检测到, 甚至可能没有对应的函数对象, 所以不受 GetMethod 的支持.</li>
+</ul>
+<p>当调用函数对象时, 需要为通常隐藏的 <em>this</em> 参数提供一个值. 例如, <code>Method(Value, Parameters*)</code>.</p>
+<p>尽管 GetMethod 的标准实现有上述限制, 但如果使用 <code>Value.GetMethod(Name)</code> 而不是 <code>GetMethod(Value, Name)</code>, 对象 <em>Value</em> 可以定义自己的 GetMethod 的实现.</p>
+<p><code>GetMethod(Value, "Call", N)</code> 不等同于 <code>GetMethod(Value,, N)</code>, 因为 Call 方法将函数对象本身作为参数, 而且其用法可能与 <em>Value</em> 的用法不同. 例如, <code>Func.Prototype.Call</code> 是一个单一的方法, 适用于所有内置和用户定义的函数, 因此必须接受任何数量的参数.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="../Objects.htm">Objects</a>, <a href="HasMethod.htm">HasMethod</a>, <a href="HasBase.htm">HasBase</a>, <a href="HasProp.htm">HasProp</a></p>
+
+ <h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 检索并报告有关 <a href="Any.htm#GetMethod">GetMethod 方法</a>的信息.</p>
+<pre>
+method := GetMethod({}, "GetMethod")  <em>; 这也是一种方法.</em>
+MsgBox method.MaxParams  <em>; 接受 2 个参数, 包括 'this'.</em>
+MsgBox method = GetMethod  <em>; 在这种情况下, 实际上是同一个对象.</em>
+</pre>
+</div>
+
+ </body>
+</html>

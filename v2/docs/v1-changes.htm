@@ -51,19 +51,19 @@
 <p>v2.0 版的错误检测一般来说更加稳健, 由于在错误检测和处理之外还有许多用法上的变化, 所以这里不列出 v1.0 版和 v1.1 版在错误检测方面的区别. 有关详情, 请参阅 v1.1 版的文档.</p>
 
 <h2 id="FileRead">FileRead</h2>
-<p>在某些常见情况下, <a href="commands/FileRead.htm#Binary">FileRead</a> 会在代码页之间转换文本, 因此可能输出错误的二进制数据. 要在 v2.0 版中避免此问题, 请添加 <code>RAW</code> 选项或使用 <a href="commands/FileOpen.htm">FileOpen</a> 代替.</p>
+<p>在某些常见情况下, <a href="lib/FileRead.htm#Binary">FileRead</a> 会在代码页之间转换文本, 因此可能输出错误的二进制数据. 要在 v2.0 版中避免此问题, 请添加 <code>RAW</code> 选项或使用 <a href="lib/FileOpen.htm">FileOpen</a> 代替.</p>
 
 <h2 id="Names">变量和函数名称</h2>
 <p>字符 <code>[</code>, <code>]</code> 和 <code>?</code> 被保留在<a href="Language.htm#expressions">表达式</a>中使用, 所以在变量名中不再合法. 因此, <code>?</code>(在<a href="Variables.htm#ternary">三元运算</a>中使用) 不再需要在两边加上空格. 在变量名中使用这些字符的 v1.0 版本的代码在 v1.1 版本中会有新的解释, 因此可能不会被检测出错误.</p>
 <p>相关: <a href="Language.htm#operators-for-objects">对象的运算符</a>, <a href="v2-changes.htm#names">名称(v1.1 到 v2.0 的更改)</a></p>
 
 <h2 id="DPIScale">DPI 缩放</h2>
-<p><a href="objects/Gui.htm#DPIScale">DPI 缩放</a>对于脚本 GUI 是默认开启的, 以确保它们根据<a href="Variables.htm#ScreenDPI">系统 DPI 设置</a>缩放. 如果启用, 并且系统 DPI 设置不是 96(100%), 那么由 Gui 方法/属性接受或返回的位置和尺寸将与其他函数不兼容. 要禁用 DPI 缩放功能, 请使用 <code>MyGui.Opt("-DPIScale")</code>.</p>
+<p><a href="lib/Gui.htm#DPIScale">DPI 缩放</a>对于脚本 GUI 是默认开启的, 以确保它们根据<a href="Variables.htm#ScreenDPI">系统 DPI 设置</a>缩放. 如果启用, 并且系统 DPI 设置不是 96(100%), 那么由 Gui 方法/属性接受或返回的位置和尺寸将与其他函数不兼容. 要禁用 DPI 缩放功能, 请使用 <code>MyGui.Opt("-DPIScale")</code>.</p>
 
 <h2 id="Transform">Transform</h2>
 <p>一些 <i>Transform</i> 子命令被修改或不可用:</p>
 <ul>
-  <li><code>Transform, Unicode</code> 只在 ANSI 版本的 AutoHotkey 中可用. 要将 Unicode 文本赋值到剪贴板, 请使用常规赋值. 另请参阅: <a href="commands/StrPut.htm">StrPut</a>/<a href="commands/StrGet.htm">StrGet</a>.</li>
+  <li><code>Transform, Unicode</code> 只在 ANSI 版本的 AutoHotkey 中可用. 要将 Unicode 文本赋值到剪贴板, 请使用常规赋值. 另请参阅: <a href="lib/StrPut.htm">StrPut</a>/<a href="lib/StrGet.htm">StrGet</a>.</li>
   <li><code>Transform, HTML</code> 在 Unicode 版本的 AutoHotkey_L 中支持额外的功能.</li>
 </ul>
 <p><code>Transform</code> 本身在 v2.0 中被删除.</p>
@@ -83,7 +83,7 @@
 <p>v1.0 和 v1.1 中的 MsgBox 有 "智能逗号处理", 以避免在未加引号的文本中转义逗号. 这种处理方式在两个版本中略有不同, 在阅读 v1.0 版本的代码时, 可能需要考虑到极少数情况. v2.0 完全使用表达式语法, 因此不需要对逗号进行任何特殊处理.</p>
 
 <h2 id="GuiOwner">GUI 的 Owner 选项</h2>
-<p>对 Gui 应用 <a href="objects/Gui.htm#Owner">+Owner</a> 选项还会移除 WS_CHILD 样式并设置 WS_POPUP 样式. 这样会破坏在设置这些样式 <em>之后</em> 使用 <code>+Owner</code> 设置 Gui 的父窗口的脚本.</p>
+<p>对 Gui 应用 <a href="lib/Gui.htm#Owner">+Owner</a> 选项还会移除 WS_CHILD 样式并设置 WS_POPUP 样式. 这样会破坏在设置这些样式 <em>之后</em> 使用 <code>+Owner</code> 设置 Gui 的父窗口的脚本.</p>
 
 <h2 id="Tilde">颚化符(~) 和自定义组合键</h2>
 <p>从 v1.1.14 起, 当一个按键作为修饰符用于自定义组合键时, <a href="Hotkeys.htm#Tilde">颚化符前缀</a>会影响该热键的工作方式.</p>
@@ -92,27 +92,27 @@
 <p>除了使用颚化符前缀的情况, 对于自定义修饰键会同时定义按键按下和弹起热键, 它们在该按键释放时都会触发. 例如, <code>x &amp; y::</code> 会使得 <code>x::</code> 和 <code>x up::</code> 都会在 x 释放时触发, 而以前 <code>x::</code> 是不会触发的.</p>
 
 <h2 id="IfIs">If <em>var</em> is <em>type</em></h2>
-<p><code>If <i>var</i> is <i>type</i></code> 在 v1.0 中默认将某些(可能是特有的区域) 非 ASCII 字符识别为字母/小写/大写, 而在 v1.1 中只有在使用 <code>StringCaseSense, Locale</code> 时才会如此. 同样, v2.0 版中的 <a href="commands/Is.htm">Is<em>Type</em></a> 函数只有在第二个参数是 <code>"Locale"</code> 时才会将非 ASCII 字符识别为字母.</p>
+<p><code>If <i>var</i> is <i>type</i></code> 在 v1.0 中默认将某些(可能是特有的区域) 非 ASCII 字符识别为字母/小写/大写, 而在 v1.1 中只有在使用 <code>StringCaseSense, Locale</code> 时才会如此. 同样, v2.0 版中的 <a href="lib/Is.htm">Is<em>Type</em></a> 函数只有在第二个参数是 <code>"Locale"</code> 时才会将非 ASCII 字符识别为字母.</p>
 
 <h2 id="Window_Groups">窗口组</h2>
-<p><a href="commands/GroupActivate.htm">GroupActivate</a> 只在 v1.1 中设置 ErrorLevel, 而不在 v1.0 或 v2.0 中设置.</p>
-<p><a href="commands/GroupAdd.htm">GroupAdd</a> 的 <em>Label</em> 参数在 v1.0 和 v1.1 中的表现不同, 但在 v2.0 中被删除.</p>
+<p><a href="lib/GroupActivate.htm">GroupActivate</a> 只在 v1.1 中设置 ErrorLevel, 而不在 v1.0 或 v2.0 中设置.</p>
+<p><a href="lib/GroupAdd.htm">GroupAdd</a> 的 <em>Label</em> 参数在 v1.0 和 v1.1 中的表现不同, 但在 v2.0 中被删除.</p>
 
 <h2 id="Run">Run / RunWait</h2>
-<p>AutoHotkey_L 对 <a href="commands/Run.htm">Run</a> 和 <a href="commands/Run.htm">RunWait</a> 命令解释 <em>Target</em> 参数的方式进行了一些改进. 这样能允许一些以前不工作的情况, 但在一些非常罕见的情况下, 也可能影响到已经在 AutoHotkey Basic 中正常工作的脚本. 新的行为如下:</p>
+<p>AutoHotkey_L 对 <a href="lib/Run.htm">Run</a> 和 <a href="lib/Run.htm">RunWait</a> 命令解释 <em>Target</em> 参数的方式进行了一些改进. 这样能允许一些以前不工作的情况, 但在一些非常罕见的情况下, 也可能影响到已经在 AutoHotkey Basic 中正常工作的脚本. 新的行为如下:</p>
 <ul>
   <li>如果 <i>Target</i> 以引号开始, 则到下一个引号之间的所有内容被视为要执行的操作, 一般为可执行文件.</li>
   <li>否则首个以空格结束并且为一个现有文件或以 .exe, .bat, .com, .cmd 或 .hta 结尾的子字符串被视为操作. 这样就允许 .ahk, .vbs 或 .lnk 等文件类型接受参数, 同时仍然允许运行 "已知" 的可执行文件(例如 wordpad.exe), 而不像以前的版本那样需要绝对路径.</li>
 </ul>
 
 <h2 id="ControlZ">Control-Z</h2>
-<p><a href="commands/LoopRead.htm">Loop Read</a> 和 <a href="objects/File.htm#ReadLine">File.ReadLine</a> 不再把字符 <kbd>Ctrl</kbd>+<kbd>Z</kbd>(0x1A) 解释为文件结束标记. 任何的 <kbd>Ctrl</kbd>+<kbd>Z</kbd>, 即使某一个恰好出现在文件末尾, 都原样加载. <a href="commands/FileRead.htm">FileRead</a> 已经忽略这个字符, 所以不受这个问题的影响.</p>
+<p><a href="lib/LoopRead.htm">Loop Read</a> 和 <a href="lib/File.htm#ReadLine">File.ReadLine</a> 不再把字符 <kbd>Ctrl</kbd>+<kbd>Z</kbd>(0x1A) 解释为文件结束标记. 任何的 <kbd>Ctrl</kbd>+<kbd>Z</kbd>, 即使某一个恰好出现在文件末尾, 都原样加载. <a href="lib/FileRead.htm">FileRead</a> 已经忽略这个字符, 所以不受这个问题的影响.</p>
 
 <h2 id="IsCompiled">A_IsCompiled</h2>
 <p>如果脚本没有被编译, <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 也会被定义; 它的值在 v1.1 中是 <code>""</code>, 在 v2.0 中是 <code>0</code>. 以前它是未定义的, 这意味着如果脚本没有被编译, 诸如 <code>A_IsCompiled := 1</code> 这样的赋值是有效的. 现在在所有的情况下都被视为一个只读的内置变量.</p>
 
 <h2 id="DllCall">DllCall</h2>
-<p>当给 <a href="commands/DllCall.htm">DllCall</a> 的函数名不能被解析时, AutoHotkey_L 会自动在函数名上附加一个 "A"(ANSI) 或 "W"(Unicode), 而不管指定的是哪个 Dll. 相比之下, AutoHotkey Basic 仅对 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数添加 "A" 后缀.</p>
+<p>当给 <a href="lib/DllCall.htm">DllCall</a> 的函数名不能被解析时, AutoHotkey_L 会自动在函数名上附加一个 "A"(ANSI) 或 "W"(Unicode), 而不管指定的是哪个 Dll. 相比之下, AutoHotkey Basic 仅对 User32.dll, Kernel32.dll, ComCtl32.dll 或 Gdi32.dll 中的函数添加 "A" 后缀.</p>
 
 </body>
 </html>

@@ -1,0 +1,226 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>Object - 方法 &amp; 属性 | AutoHotkey v2</title>
+<meta name="description" content="Object is the basic class from which other AutoHotkey object classes derive." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>Object</h1>
+<pre class="NoIndent">class Object extends Any</pre>
+
+<p><strong>Object(对象)</strong> 是派生其他 AutoHotkey 对象类的基本类. Object 的每个实例都由一组 "自有属性" 和一个基对象组成, 可以从基对象中继承更多的属性. Object 也有方法, 但这些只是可以调用的属性.</p>
+<p>有值属性和动态属性. 值属性只是包含一个值. 动态属性不包含一个值, 而是根据访问方式(get, set 或 call) 调用一个 <em>访问函数</em>.</p>
+<p>下面使用 "Obj" 作为 Object 类的任何实例的占位符.</p>
+<p>所有 Object 的实例都基于 <code>Object.Prototype</code>, 而其又基于 <code>Any.Prototype</code>. 除了从 <a href="Any.htm">Any</a> 继承的方法和属性外, Object 还具有以下预定义的方法和属性.</p>
+
+<h2 id="toc">目录</h2>
+<ul class="indent">
+  <li><a href="#StaticMethods">静态方法</a>:
+    <ul>
+      <li><a href="#Call">Call</a>: 创建一个新对象.</li>
+    </ul>
+  </li>
+  <li><a href="#Methods">方法</a>:
+    <ul>
+      <li><a href="#Clone">Clone</a>: 返回对象的一个浅拷贝.</li>
+      <li><a href="#DefineProp">DefineProp</a>: 定义一个新的自有属性.</li>
+      <li><a href="#DeleteProp">DeleteProp</a>: 删除对象拥有的属性.</li>
+      <li><a href="#GetOwnPropDesc">GetOwnPropDesc</a>: 返回给定自有属性的描述符, 兼容于 DefineProp.</li>
+      <li><a href="#HasOwnProp">HasOwnProp</a>: 如果对象拥有该名称的属性, 则返回 true.</li>
+      <li><a href="#OwnProps">OwnProps</a>: 枚举一个对象自有的属性.</li>
+    </ul>
+  </li>
+  <li><a href="#Properties">属性</a>:
+    <ul>
+      <li><a href="#Base">Base</a>: 检索或设置一个对象的基对象.</li>
+    </ul>
+  </li>
+  <li><a href="#Functions">函数</a>:
+    <ul>
+      <li><a href="#SetBase">ObjSetBase</a>: 设置对象的<a href="../Objects.htm#delegation">基对象</a>.</li>
+      <li><a href="#GetCapacity">ObjGetCapacity</a>, <a href="#SetCapacity">ObjSetCapacity</a>: 检索或设置对象所包含属性的容量.</li>
+      <li><a href="#OwnPropCount">ObjOwnPropCount</a>: 检索对象包含的自有属性的数量.</li>
+      <li>ObjHasOwnProp, ObjOwnProps: 等同于相应的预定义方法, 但不能被覆盖.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="StaticMethods">静态函数</h2>
+
+<div class="methodShort" id="Call"><h3>Call</h3>
+<p>创建一个新对象.</p>
+<pre class="Syntax">Obj := <span class="func">Object</span>()</pre>
+</div>
+
+<h2 id="Methods">方法</h2>
+
+<div class="methodShort" id="Clone"><h3>Clone</h3>
+<p>返回对象的一个浅拷贝.</p>
+<pre class="Syntax">Clone := Obj.<span class="func">Clone</span>()</pre>
+<p>对象拥有的每个属性或方法都被复制到副本中. 对象 <em>引用</em> 被复制(就像普通的赋值一样), 而不是对象本身; 换句话说, 如果属性包含对对象的引用, 则副本将包含对同一对象的引用.</p>
+<p>动态属性被复制, 而不是调用.</p>
+<p>副本具有与原始对象相同的基对象.</p>
+</div>
+
+<div class="methodShort" id="DefineProp"><h3>DefineProp</h3>
+<p>定义一个新的自有属性.</p>
+<pre class="Syntax">Obj.<span class="func">DefineProp</span>(Name, Desc)</pre>
+<dl>
+  <dt>Name</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>属性的名称.</p>
+  </dd>
+  <dt>Desc</dt>
+  <dd>
+    <p>类型: 对象</p>
+    <p>具有以下自有属性之一的对象, 或同时具有 <em>Get</em> 和 <em>Set</em>:</p>
+    <p><code>Get</code>: 获取属性值时调用的<a href="../misc/Functor.htm">函数对象</a>.</p>
+    <p><code>Set</code>: 属性被赋值时调用的<a href="../misc/Functor.htm">函数对象</a>. 第二个参数是要分配的值.</p>
+    <p><code>Call</code>: 调用该属性时要调用的<a href="../misc/Functor.htm">函数对象</a>.</p>
+    <p><code>Value</code>: 要赋值该属性的任何值.</p>
+  </dd>
+</dl>
+<p>返回目标对象(<em>Obj</em>).</p>
+<p>该方法可用于将值属性转换为动态属性, 反之亦然, 但不可能同时指定一个值和访问函数.</p>
+<p>如果省略任何一个访问函数, 行为就会从基对象中继承.</p>
+<ul>
+  <li>一个继承的值属性相当于一组访问函数, 它们返回或调用该值, 或在 <code>this</code> 中存储一个新的值. 注意, 一个新的值将覆盖其在 <code>this</code> 本身中的任何动态属性, 并覆盖任何继承的访问函数.</li>
+  <li>如果没有定义或继承 <em>Set</em> 或值, 那么试图设置该属性将抛出异常.</li>
+  <li>如果没有定义或继承 <em>Call</em>, 可以调用 <em>Get</em> 来检索一个函数对象, 然后再调用它.</li>
+<li>如果没有定义或继承 <em>Get</em>, 但有一个 <em>Call</em> 访问函数, 那么函数本身就会成为属性的值(只读).</li>
+</ul>
+<p>与方法一样, <em>Get</em>, <em>Set</em> 或 <em>Call</em> 的第一个参数是 <code>this</code>(目标对象). 对于 <em>Set</em>, 第二个参数是 <code>value</code>(被分配的值). 这些参数由类中的方法和属性定义自动定义, 但如果使用普通函数, 则必须显式定义. 调用者传递的任何其他参数都会附加到参数列表中.</p>
+<p>计算函数对象的 <code>MaxParams</code> 和 <code>IsVariadic</code> 属性, 以确定该属性是否可以接受参数. 如果 <em>get</em> 的 <code>MaxParams</code> 为 1, 或 <em>set</em> 的 <code>MaxParams</code> 为 2, 并且 <code>IsVariadic</code> 为 false 或未定义, 则属性不能接受参数; 它们被转发到由 <em>get</em> 返回的对象的 <a href="../Objects.htm#__Item">__Item</a> 属性.</p>
+</div>
+
+<div class="methodShort" id="DeleteProp"><h3>DeleteProp</h3>
+<p>删除对象拥有的属性.</p>
+<pre class="Syntax">Obj.<span class="func">DeleteProp</span>(Name)</pre>
+<dl>
+  <dt>Name</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>属性名.</p>
+  </dd>
+</dl>
+<p>删除属性的值(如果没有则为空).</p>
+</div>
+
+<div class="methodShort" id="GetOwnPropDesc"><h3>GetOwnPropDesc</h3>
+<p>返回给定自有属性的描述符, 兼容于 <a href="#DefineProp">DefineProp</a>.</p>
+<pre class="Syntax">Obj.<span class="func">GetOwnPropDesc</span>(Name)</pre>
+<dl>
+  <dt>Name</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>属性名.</p>
+  </dd>
+</dl>
+<p>对于动态属性, 返回值是一个新对象, 其中每个访问函数都有自己的属性: <code>Get</code>, <code>Set</code>, <code>Call</code>. 只有在 <em>Obj</em> 本身定义了相应的访问函数, 每个属性才会存在. 对于值属性, 返回值是一个新对象, 其属性名为 <code>Value</code>. 在这种情况下, <code>Obj.GetOwnPropDesc(Name).Value == Obj.%Name%</code>.</p>
+<p>除非调用 <a href="#DefineProp">DefineProp</a>, 否则修改返回的对象对 <em>Obj</em> 没有影响.</p>
+<p>如果 <em>Obj</em> 不拥有该名称的属性, 则抛出 <a href="Error.htm#PropertyError">PropertyError</a>. 脚本可以通过检查 <code>not desc.HasProp("Value")</code> 来确定一个属性是否是动态的, 其中 <em>desc</em> 是 GetOwnPropDesc 的返回值.</p>
+</div>
+
+<div class="methodShort" id="HasOwnProp"><h3>HasOwnProp</h3>
+<p>如果对象拥有该名称的属性, 则返回 true, 否则返回 false.</p>
+<pre class="Syntax">Obj.<span class="func">HasOwnProp</span>(Name)</pre>
+<p>该方法的默认实现也被定义为一个函数: <code>ObjHasOwnProp(Obj, Name)</code>.</p>
+</div>
+
+<div class="methodShort" id="OwnProps"><h3>OwnProps</h3>
+<p>枚举一个对象自有的属性.</p>
+<pre class="Syntax">For Name <span class="optional">, Value</span> in Obj.<span class="func">OwnProps</span>()</pre>
+<p>返回一个新的<a href="Enumerator.htm">枚举器</a>. 该枚举器通常直接传递给 <a href="For.htm">for-loop</a>, 循环的每次迭代都调用一次枚举器. 每次对枚举器的调用都会返回下一个属性名和/或其值. for-loop 的变量对应于枚举器的参数, 它们是:</p>
+<dl>
+  <dt>Name</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>属性名.</p>
+  </dd>
+  <dt>Value</dt>
+  <dd>
+    <p>属性的值.</p>
+    <p>如果该属性具有 getter 方法, 则将调用该方法以获得该值(除非省略 <em>Value</em>).</p>
+  </dd>
+</dl>
+<p>动态属性包含在枚举中. 但是:</p>
+<ul>
+  <li>因为只有对象自有的属性才会被枚举, 所以属性必须在 <em>Obj</em> 中直接定义.</li>
+  <li>如果只指定了第一个变量, 则返回属性的名称, 不调用它的 getter.</li>
+  <li>如果指定了两个变量, 枚举器会尝试调用属性的 getter 来检索值.
+    <ul>
+      <li>如果 getter 需要参数, 则跳过该属性.</li>
+      <li>如果 <em>Obj</em> 本身没有为该属性定义 getter, 则跳过.
+        <p class="warning"><strong>注意:</strong> Properties defined by a method definition typically do not have a getter, so are skipped.</p>
+      </li>
+      <li>如果 <em>Obj</em> 是一个类原型对象, 则不应该(在某些情况下不能) 调用 getter; 所以跳过该属性.</li>
+      <li>如果 getter 抛出异常, 它将被传播(而不是被抑制). 调用者只有在保留了对枚举器的引用的情况下, 才能继续对下一个属性进行枚举(例如, 如果直接将枚举器传递给 for-loop, 则不能继续枚举, 因为在这种情况下, 当 for-loop 中止时, 枚举器会被释放).</li>
+    </ul>
+  </li>
+</ul>
+<p>要在不调用属性获取器(getters) 的情况下枚举自有的属性, 或者要枚举所有的属性而不考虑类型, 只需向 for-loop 或枚举器传递一个变量. <a href="#GetOwnPropDesc">GetOwnPropDesc</a> 可以用来区分值属性和动态属性, 同时还可以检索值或获取器/设置器(setter)/方法.</p>
+<p>方法通常被排除在双参数模式的枚举之外, 因为属性的计算通常取决于对象是否有相应的 getter 或值(在同一对象或基对象中). 为了避免在指定两个变量时出现不一致, OwnProps 跳过了只有一个 <em>Call</em> 访问函数的自有属性. 例如:</p>
+<ul>
+  <li>如果 OwnProps 在没有定义 getter 的情况下返回方法本身, 那么定义 getter 就会阻止该方法被返回. 依靠双变量模式来检索方法的脚本就会缺失一些方法.</li>
+  <li>如果 OwnProps 在基对象定义了 getter 时返回方法本身, 这将与属性的正常计算结果不一致.</li>
+</ul>
+<p>该方法的默认实现也被定义为一个函数: <code>ObjOwnProps(Obj)</code>.</p>
+</div>
+
+<h2 id="Properties">属性</h2>
+
+<div class="methodShort" id="Base"><h3>Base</h3>
+<p>检索或设置一个对象的<a href="../Objects.htm#delegation">基对象</a>.</p>
+<pre class="Syntax">BaseObj := Obj.Base</pre>
+<pre class="Syntax">Obj.Base := BaseObj</pre>
+<p><em>BaseObj</em> 必须是一个对象.</p>
+<p>如果给新基赋值会改变对象的原生类型, 则抛出异常. 对象的原生类型由属于内置类的最近原型对象决定, 例如 <code>Object.Prototype</code> 或 <code>Array.Prototype</code>. 例如, Array 的实例必须始终直接或间接地从 <code>Array.Prototype</code> 派生.</p>
+<p>属性和方法是从基对象动态继承的, 因此更改对象的基也会更改哪些可用继承的属性和方法.</p>
+<p>属性继承于 <a href="Any.htm">Any</a>; 但是, 只能为 Object 的实例设置它.</p>
+<p>另请参阅: <a href="Any.htm#GetBase">ObjGetBase</a>, <a href="#SetBase">ObjSetBase</a></p>
+</div>
+
+<h2 id="Functions">函数</h2>
+
+<div class="methodShort" id="SetBase"><h3>ObjSetBase</h3>
+<p>设置一个对象的<a href="../Objects.htm#delegation">基对象</a>.</p>
+<pre class="Syntax"><span class="func">ObjSetBase</span>(Obj, BaseObj)</pre>
+<p>不调用<a href="../Objects.htm#Meta_Functions">元-函数</a>或<a href="../Objects.htm#Custom_Classes_property">属性函数</a>. 覆盖 <a href="#Base">Base</a> 属性不会影响此函数的行为.</p>
+<p>如果 <em>Obj</em> 或 <em>BaseObj</em> 的类型不正确, 则抛出异常.</p>
+<p>另请参阅: <a href="Any.htm#GetBase">ObjGetBase</a>, <a href="#Base">Base 属性</a></p>
+</div>
+
+<div class="methodShort" id="OwnPropCount"><h3>ObjOwnPropCount</h3>
+<p>返回对象拥有的属性的数量.</p>
+<pre class="Syntax">Count := <span class="func">ObjOwnPropCount</span>(Obj)</pre>
+</div>
+
+<div class="methodShort" id="SetCapacity"><h3>ObjSetCapacity</h3>
+<p>设置对象内部自有属性的当前容量.</p>
+<pre class="Syntax"><span class="func">ObjSetCapacity</span>(Obj, MaxProps)</pre>
+<dl>
+	<dt>MaxProps</dt>
+	<dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>新的容量. 如果小于自有属性的当前数量, 则使用该数量, 并释放所有未使用的空间.</p>
+  </dd>
+</dl>
+<p>返回新容量.</p>
+<p>如果 <em>Obj</em> 的类型不正确, 则抛出异常.</p>
+</div>
+
+<div class="methodShort" id="GetCapacity"><h3>ObjGetCapacity</h3>
+<pre class="Syntax">MaxItems := <span class="func">ObjGetCapacity</span>(Obj)</pre>
+<p>返回对象内部属性数组的当前容量.</p>
+<p>如果 <em>Obj</em> 的类型不正确, 则抛出异常.</p>
+</div>
+
+</body>
+</html>

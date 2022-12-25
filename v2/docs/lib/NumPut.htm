@@ -1,0 +1,64 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>NumPut - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The NumPut function stores one or more numbers in binary format at the specified address+offset." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>NumPut</h1>
+<p>将一个或多个数字以二进制格式存储到指定地址+偏移的位置.</p>
+<pre class="Syntax"><span class="func">NumPut</span> Type, Number, <span class="optional">Type2, Number2, ...</span> Target <span class="optional">, Offset</span></pre>
+
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Type</dt>
+  <dd>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+      <p>下列字符串的其中一个: UInt, UInt64, Int, Int64, Short, UShort, Char, UChar, Double, Float, Ptr 或 UPtr</p>
+      <p>对于所有整数类型, 或者在传递纯整数时, 有符号与无符号并不影响结果, 因为使用了二进制补码来表示有符号整数.</p>
+      <p>作为原义字符串使用时, 这些类型名必须用引号括起来.</p>
+      <p>有关详情, 请参阅 <a href="DllCall.htm#types">DllCall 类型</a>.</p>
+    </dd>
+
+  <dt>Number</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>要保存的数字.</p>
+  </dd>
+
+  <dt>Target</dt>
+  <dd>
+    <p>类型: <a href="Buffer.htm">对象</a>或<a href="../Concepts.htm#numbers">整数</a>或</p>
+    <p>类<a href="Buffer.htm">缓冲</a>对象, 内存地址.</p>
+    <p>可以使用任何实现 <a href="Buffer.htm#Ptr">Ptr</a> 和 <a href="Buffer.htm#Size">Size</a> 属性的对象, 但此函数针对原生的<a href="Buffer.htm">缓冲</a>对象进行了优化. 传递具有这些属性的对象可确保函数不会将内存写入无效位置; 这样做可能会导致崩溃或其他不可预测的行为.</p>
+  </dd>
+
+  <dt>Offset</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>偏移 - 以字节为单位 - 将其添加到 <em>Target</em> 以确定目标地址. 如果省略, 则默认为 0.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+<p>函数返回最后写入的项右边的地址. 这在写入一个不连续的数字序列时, 例如在 <a href="DllCall.htm">DllCall</a> 中使用的结构, 有些字段没有被设置, 就可以使用这个函数. 但是, 在许多情况下, 指定多个 <em>Type</em>, <em>Number</em> 对更简单有效. 将地址传回 NumPut 比传给一个具有更新的 <em>Offset</em> 的类 Buffer 对象更不安全.</p>
+
+<h2 id="General_Remarks">一般说明</h2>
+<p>可以在第一个 <em>Number</em> 之后, 通过重复任意次数的 <em>Type</em> 和 <em>Number</em> 来写入数字序列. 每个数字都写入前一个数字之后的下一个字节, 不带填充. 创建用于 <a href="DllCall.htm">DllCall</a> 的结构时, 请注意, 由于数据对齐要求, 某些字段可能需要添加显式填充.</p>
+<p>如果整数太大而无法放入指定的 <em>Type</em>, 那么它的高位会被忽略; 例如 <code>NumPut("Char", 257, buf)</code> 将存储数字 1.</p>
+<p>如果目标地址无效, 则可能抛出异常. 但是, 一些无效地址不能被检测到, 并可能导致不可预知的行为. 传递<a href="Buffer.htm">缓冲</a>对象而不是地址可以确保目标地址总是可以得到验证.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="NumGet.htm">NumGet</a>, <a href="DllCall.htm">DllCall</a>, <a href="Buffer.htm">Buffer 对象</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a></p>
+
+</body>
+</html>

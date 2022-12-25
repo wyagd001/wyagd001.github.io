@@ -1,0 +1,80 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>StrSplit - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The StrSplit function separates a string into an array of substrings using the specified delimiters." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>StrSplit</h1>
+<p>使用指定的分隔符将字符串分成子字符串<a href="../Objects.htm#Usage_Simple_Arrays">数组</a>.</p>
+<pre class="Syntax">Array := <span class="func">StrSplit</span>(String <span class="optional">, Delimiters, OmitChars, MaxParts</span>)</pre>
+
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>String</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要分割的字符串.</p>
+  </dd>
+
+  <dt>Delimiters</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#strings">字符串</a><a href="../lib/Array.htm">数组</a></p>
+    <p>如果此参数为空或省略, 那么将把输入字符串中的每个字符解析为单独的子字符串.</p>
+    <p>否则, <em>Delimiters</em> 可以是单个字符串, 也可以是字符串数组, 每个分隔符用于确定子字符串之间的边界出现的位置. 由于分隔符不被视为子字符串本身的一部分, 因此它们决不会包含在返回的数组中. 同样, 如果输入字符串中的一对定界符之间没有任何内容, 则对应的数组元素将为空.</p>
+    <p>例如: <code>","</code> 将根据逗号每次出现的位置分割字符串. 同样地, 使用 <code>[A_Tab, A_Space]</code> 作为分隔符将在输入字符串中每次遇到空格或制表符时创建一个新的数组元素.</p>
+  </dd>
+
+  <dt>OmitChars</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>可选的字符列表(区分大小写), 用来从每个数组元素的开始和结尾部分移除这些字符. 例如, 如果 <em>OmitChars</em> 是 <code>" `t"</code>, 那么每个元素中开始和结尾部分(但中间的不会) 的空格和制表符会被移除.</p>
+    <p>如果 <em>Delimiters</em> 为空, 那么 <em>OmitChars</em> 表示需要从数组中排除的那些字符.</p>
+  </dd>
+  
+  <dt>MaxParts</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>如果省略, 则默认为 -1, 表示 "没有限制". 否则, 请指定返回的子字符串的最大数目. 如果非零, 则字符串最多被分割 <em>MaxParts</em>-1 次, 并且在最后一个子字符串中返回字符串的其余部分(不包括任何前导或尾随的 <em>OmitChars</em>).</p>
+  </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#objects">数组</a></p>
+<p>函数返回一个包含指定字符串的子字符串的数组.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>除非空格和制表符之类的空白字符包含在 <em>Delimiters</em> 或 <em>OmitChars</em> 参数中, 否则它们将被保留. 可以使用 <a href="Trim.htm">Trim</a> 从任何变量的两端移除制表符和空格. 例如: <code>Var := Trim(Var)</code></p>
+<p>要拆分标准 CSV(逗号分隔值) 格式的字符串, 请使用<a href="LoopParse.htm">解析循环</a>, 因为它具有内置 CSV 处理功能.</p>
+<p>要在分割前按不同的顺序排列字段, 请使用 <a href="Sort.htm">Sort</a> 函数.</p>
+<p>如果您不需要把子字符串长时间的存储到内存中, 建议使用<a href="LoopParse.htm">解析循环</a> -- 尤其在 <em>String</em> 非常大时可以节约大量内存. 例如:</p>
+<pre>Colors := "red,green,blue"
+Loop Parse, Colors, ","
+    MsgBox "Color number " A_Index " is " A_LoopField</pre>
+<h2 id="Related">相关</h2>
+<p><a href="LoopParse.htm">Parsing loop</a>, <a href="Sort.htm">Sort</a>, <a href="SplitPath.htm">SplitPath</a>, <a href="InStr.htm">InStr</a>, <a href="SubStr.htm">SubStr</a>, <a href="StrLen.htm">StrLen</a>, <a href="StrLower.htm">StrLower</a>, <a href="StrLower.htm">StrUpper</a>, <a href="StrReplace.htm">StrReplace</a></p>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExSpace">
+<p><a class="ex_number" href="#ExSpace"></a> 将一个句子拆分成单词数组, 并报告第四个单词.</p>
+<pre>TestString := "This is a test."
+word_array := StrSplit(TestString, A_Space, ".")  <em>; 忽略句点.</em>
+MsgBox "The 4th word is " word_array[4]</pre>
+</div>
+
+<div class="ex" id="ExComma">
+<p><a class="ex_number" href="#ExComma"></a> 将一个以逗号分隔的颜色列表拆分成一个子字符串数组, 并逐个遍历它们.</p>
+<pre>colors := "red,green,blue"
+For index, color in StrSplit(colors, ",")
+    MsgBox "Color number " index " is " color</pre>
+</div>
+
+</body>
+</html>

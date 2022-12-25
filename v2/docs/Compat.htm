@@ -31,7 +31,7 @@
 <p>在一个字符串(文本值) 中, 每个字符的数字编码和大小(字节) 取决于字符串的<a href="Concepts.htm#string-encoding">编码</a>. 这些细节通常对做以下事情的脚本很重要:</p>
 <ul>
   <li>通过 <a href="#DllCall">DllCall</a> 传递字符串到外部函数.</li>
-  <li>通过 <a href="commands/PostMessage.htm">PostMessage</a> 或 <a href="commands/SendMessage.htm">SendMessage</a> 传递字符串.</li>
+  <li>通过 <a href="lib/PostMessage.htm">PostMessage</a> 或 <a href="lib/SendMessage.htm">SendMessage</a> 传递字符串.</li>
   <li>通过 <a href="#NumPutGet">NumPut/NumGet</a> 直接操作字符串.</li>
   <li>分配 <a href="#Buffer">Buffer</a> 来容纳特定数量的字符.</li>
 </ul>
@@ -41,10 +41,10 @@
 <p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为 <i>两个</i> 16 位代码单元, 一起被称为 "代理项对". 同样地, 一些 <a href="http://msdn.microsoft.com/en-us/library/dd317752.aspx">ANSI 代码页</a>(通常称为<a href="http://msdn.microsoft.com/en-us/library/dd317794.aspx">双字节字符集</a>, 例如 cp936 中的汉字) 含有一些双字节字符. 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为 "字符").</p>
 
 <h3 id="Buffer">Buffer</h3>
-<p>在分配 <a href="objects/Buffer.htm">Buffer</a> 时, 要注意为所需的任何编码计算正确的 <em>字节</em> 数. 例如:</p>
+<p>在分配 <a href="lib/Buffer.htm">Buffer</a> 时, 要注意为所需的任何编码计算正确的 <em>字节</em> 数. 例如:</p>
 <pre>ansi_buf  := Buffer(capacity_in_chars)
 utf16_buf := Buffer(capacity_in_chars * 2)</pre>
-<p>如果使用 <a href="commands/StrPut.htm">StrPut</a> 将 ANSI 或 UTF-8 字符串写入缓冲, 不要使用 <a href="commands/StrLen.htm">StrLen</a> 来确定缓冲的大小, 因为 ANSI 或 UTF-8 的长度可能与原生(UTF-16) 长度不同. 相反, 使用 <a href="commands/StrPut.htm#ExEncoding">StrPut</a> 来计算所需的缓冲大小. 例如:</p>
+<p>如果使用 <a href="lib/StrPut.htm">StrPut</a> 将 ANSI 或 UTF-8 字符串写入缓冲, 不要使用 <a href="lib/StrLen.htm">StrLen</a> 来确定缓冲的大小, 因为 ANSI 或 UTF-8 的长度可能与原生(UTF-16) 长度不同. 相反, 使用 <a href="lib/StrPut.htm#ExEncoding">StrPut</a> 来计算所需的缓冲大小. 例如:</p>
 <pre>required_bytes := StrPut(source_string, "cp0")
 ansi_buf := Buffer(required_bytes)
 StrPut(source_string, ansi_buf)</pre>
@@ -69,7 +69,7 @@ DllCall("DeleteFile", "Str", filename)</pre>
   <li>如果函数仅接受特定类型的字符串作为输入, 那么脚本可能需要使用相应的字符串类型:
   <pre>DllCall("DeleteFileA", "AStr", filename)
 DllCall("DeleteFileW", "WStr", filename)</pre></li>
-  <li>如果函数有一个用于输出的字符串参数, 脚本必须如<a href="#Buffer">上</a> 所述分配一个缓冲并将其传递给函数. 如果该参数接受输入, 脚本还必须将输入的字符串转换为适当的格式; 为此可以使用 <a href="commands/StrPut.htm">StrPut</a>.</li>
+  <li>如果函数有一个用于输出的字符串参数, 脚本必须如<a href="#Buffer">上</a> 所述分配一个缓冲并将其传递给函数. 如果该参数接受输入, 脚本还必须将输入的字符串转换为适当的格式; 为此可以使用 <a href="lib/StrPut.htm">StrPut</a>.</li>
 </ol>
 
 <h3 id="NumPutGet">NumPut / NumGet</h3>
@@ -85,9 +85,9 @@ NumPut(type_of_char, <i>n</i>th_char, buffer_or_address, (<i>n</i>-1)*size_of_ch
 <ul>
   <li>含有一个或多个指针的结构字段的偏移计算.</li>
   <li>含有一个或多个指针的结构大小计算.</li>
-  <li>在 <a href="commands/DllCall.htm">DllCall</a>, <a href="commands/NumPut.htm">NumPut</a> 或 <a href="commands/NumGet.htm">NumGet</a> 中使用的类型名称.</li>
+  <li>在 <a href="lib/DllCall.htm">DllCall</a>, <a href="lib/NumPut.htm">NumPut</a> 或 <a href="lib/NumGet.htm">NumGet</a> 中使用的类型名称.</li>
 </ul>
-<p>对于大小和偏移计算, 使用 <a href="Variables.htm#PtrSize">A_PtrSize</a>. 对于 DllCall, NumPut 和 NumGet, 使用适当的 <a href="commands/DllCall.htm">Ptr</a> 类型.</p>
+<p>对于大小和偏移计算, 使用 <a href="Variables.htm#PtrSize">A_PtrSize</a>. 对于 DllCall, NumPut 和 NumGet, 使用适当的 <a href="lib/DllCall.htm">Ptr</a> 类型.</p>
 <p>记住一个字段的偏移常常是在它之前所有字段的总大小. 同时注意句柄(包括类似 HWND 和 HBITMAP 的类型) 实际上是指针类型.</p>
 <pre><em>/*
   typedef struct _PROCESS_INFORMATION {

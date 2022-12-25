@@ -1,0 +1,82 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>FileExist - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The FileExist function checks for the existence of a file or folder and returns its attributes." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>FileExist</h1>
+
+<p>检查文件或目录是否存在并返回它的属性.</p>
+
+<pre class="Syntax">AttributeString := <span class="func">FileExist</span>(FilePattern)</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>FilePattern</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要检查的路径, 文件名或文件模式(文件模式指类似 "*.txt" 这样的 Dos 表示法). 如果未指定完整路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+<p>函数返回第一个匹配文件或文件夹的属性. 这个字符串是 <code>RASHNDOCT</code> 的子集, 其中每个字母的意思如下:</p>
+<ul>
+    <li>R = READONLY(只读)</li>
+    <li>A = ARCHIVE(存档)</li>
+    <li>S = SYSTEM(系统)</li>
+    <li>H = HIDDEN(隐藏)</li>
+    <li>N = NORMAL(普通)</li>
+    <li>D = DIRECTORY(目录)</li>
+    <li>O = OFFLINE(离线)</li>
+    <li>C = COMPRESSED(压缩)</li>
+    <li>T = TEMPORARY(临时)</li>
+    <li>L = REPARSE_POINT(通常是一个符号链接)</li>
+</ul>
+<p>如果文件没有任何属性(罕见), 则返回 "X". 如果文件不存在则返回空字符串.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>注意, 像这样的通配符检查 <code>InStr(FileExist("FolderWithFilesAndSubfolders\*"), "D")</code> 只告诉您 <em>第一个</em> 匹配的文件是否是一个文件夹, 而不是一个文件夹是否存在. 要检查后者, 请使用 <a href="DirExist.htm">DirExist</a>. 例如: <code>DirExist("FolderWithFilesAndSubfolders\*")</code>.</p>
+<p>与 <a href="FileGetAttrib.htm">FileGetAttrib</a> 不同, FileExist 支持通配符模式, 如果存在匹配的文件, 它总是返回一个非空值.</p>
+<p>由于空字符串被视为 "false", 所以函数的返回值总是可以用作准布尔值. 例如, 如果文件存在, 语句 <code>if FileExist("C:\My File.txt")</code> 为真(true), 否则返回假(false).</p>
+<p>由于 <em>FilePattern</em> 可能包含通配符, 因此 FileExist 可能不适合验证将与其他函数或程序一起使用的文件路径. 例如, <code>FileExist("*.txt")</code> 可能会返回属性即使 "*.txt" 不是有效的文件名. 在这种情况下, <a href="FileGetAttrib.htm">FileGetAttrib</a> 是首选.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="DirExist.htm">DirExist</a>, <a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="LoopFiles.htm">File-loops</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExDrive">
+<p><a class="ex_number" href="#ExDrive"></a> 如果 D 盘确实存在, 则显示一个消息框.</p>
+<pre>if FileExist("D:\")
+    MsgBox "The drive exists."</pre>
+</div>
+
+<div class="ex" id="ExPattern">
+<p><a class="ex_number" href="#ExPattern"></a> 如果目录中至少有一个文本文件存在, 则显示一个消息框.</p>
+<pre>if FileExist("D:\Docs\*.txt")
+    MsgBox "At least one .txt file exists."</pre>
+</div>
+
+<div class="ex" id="ExNot">
+<p><a class="ex_number" href="#ExNot"></a> 如果文件 <strong>不</strong> 存在, 则显示一个消息框.</p>
+<pre>if not FileExist("C:\Temp\FlagFile.txt")
+    MsgBox "The target file does not exist."</pre>
+</div>
+
+<div class="ex" id="ExAttr">
+<p><a class="ex_number" href="#ExAttr"></a> 展示如何检查文件的指定属性.</p>
+<pre>if InStr(FileExist("C:\My File.txt"), "H")
+    MsgBox "The file is hidden."</pre>
+</div>
+
+</body>
+</html>

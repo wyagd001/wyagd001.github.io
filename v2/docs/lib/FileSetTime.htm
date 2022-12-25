@@ -1,0 +1,131 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>FileSetTime - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The FileSetTime function changes the datetime stamp of one or more files or folders. Wildcards are supported." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>FileSetTime</h1>
+
+<p>改变一个或多个文件或文件夹的时间戳. 支持通配符.</p>
+
+<pre class="Syntax"><span class="func">FileSetTime</span> <span class="optional">YYYYMMDDHH24MISS, FilePattern, WhichTime, Mode</span></pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>YYYYMMDDHH24MISS</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>如果为空或省略, 则它默认为当前时间. 否则, 指定操作使用的时间(请参阅备注了解时间的格式). 不支持 1601 以前的年份.</p>
+  </dd>
+
+  <dt>FilePattern</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>单个文件或文件夹的名称或者通配符模式, 例如 C:\Temp\*.tmp. 如果未指定绝对路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+    <p>如果省略, 则使用 <a href="LoopFiles.htm">File-Loop</a> 最内层的当前文件.</p>
+  </dd>
+
+  <dt>WhichTime</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>如果为空或省略, 则默认为 M(修改时间). 否则, 指定以下字母之一来设置应该更改的时间戳:</p>
+    <ul>
+      <li>M = 修改时间</li>
+      <li>C = 创建时间</li>
+      <li>A = 上次访问时间</li>
+    </ul>
+  </dd>
+
+  <dt>Mode</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>如果为空或省略, 则仅对文件进行操作, 子目录不被递归. 否则, 请指定零个或更多的下列字母:</p>
+    <ul>
+      <li>D = 包含目录(文件夹).</li>
+      <li>F = 包含文件. 如果同时省略 F 和 D, 则仅包含文件而不包括目录.</li>
+      <li>R = 子文件夹被递归到其中, 这样包含在其中的文件和文件夹如果匹配 <em>FilePattern</em>, 则对它们进行操作. 所有子文件夹都将被递归到其中, 而不仅仅是那些名称匹配 <em>FilePattern</em> 的子文件夹. 如果省略 R, 则不包含子目录中的文件和目录.</li>
+    </ul>
+    <p class="note"><strong>注意</strong>: 如果 <em>FilePattern</em> 是单个文件夹, 而不是通配符模式, 则无论该设置如何, 它都将始终被操作.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>如果有文件更改失败, 则抛出 <a href="Error.htm">Error</a>, 并且它的 <a href="Error.htm#Extra">Extra</a> 属性设置为失败次数.</p>
+<p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0(零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError 包含了没有找到文件原因的错误码.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>文件的上次访问时间在 FAT16 &amp; FAT32 卷上可能不如在 NTFS 卷上精确.</p>
+<p id="YYYYMMDD">YYYYMMDDHH24MISS 格式中元素表示的含义分别为:</p>
+<table class="info">
+  <tr>
+    <th>Element</th>
+    <th abbr="Descr">描述</th>
+  </tr>
+  <tr>
+    <td>YYYY</td>
+    <td>年份(4 位数)</td>
+  </tr>
+  <tr>
+    <td>MM</td>
+    <td>月份(2 位数)(01-12)</td>
+  </tr>
+  <tr>
+    <td>DD</td>
+    <td>月份的天数(2 位数)(01-31)</td>
+  </tr>
+  <tr>
+    <td>HH24</td>
+    <td>24 小时格式的小时数(2 位数)(00-23). 例如, 09 是 9am, 而 21 是 9pm.</td>
+  </tr>
+  <tr>
+    <td>MI</td>
+    <td>分钟数(2 位数)(00-59)</td>
+  </tr>
+  <tr>
+    <td>SS</td>
+    <td>秒数(2 位数)(00-59)</td>
+  </tr>
+</table>
+<p>如果只给出了 YYYYMMDDHH24MISS 中的部分字符串(例如 200403), 则任何省略的元素将使用下面的默认值:</p>
+<ul>
+  <li>MM = 月份 01</li>
+  <li>DD = 日 01</li>
+  <li>HH24 = 小时 00</li>
+  <li>MI = 分 00</li>
+  <li>SS = 秒 00</li>
+</ul>
+<p>内置变量 <a href="../Variables.htm#Now">A_Now</a> 包含了上述格式的当前本地时间. 同样地, <a href="../Variables.htm#NowUTC">A_NowUTC</a> 包含了当前的协调世界时.</p>
+<p class="note"><strong>注意</strong>: 可以通过 <a href="DateAdd.htm">DateAdd</a> 和 <a href="DateDiff.htm">DateDiff</a> 对日期-时间值进行比较和加减. 此外, 最后不要使用大于或小于来比较时间, 除非它们的字符串长度相同. 这是因为此时它们被视为数字进行比较; 例如, 20040201 数值上总是小于(但时间顺序上较后) 200401010533. 所以应该使用 <a href="DateDiff.htm">DateDiff</a> 来计算出它们之间的时间差是正数还是负数.</p>
+<h2 id="Related">相关</h2>
+<p><a href="FileGetTime.htm">FileGetTime</a>, <a href="FileGetAttrib.htm">FileGetAttrib</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileGetSize.htm">FileGetSize</a>, <a href="FileGetVersion.htm">FileGetVersion</a>, <a href="FormatTime.htm">FormatTime</a>, <a href="LoopFiles.htm">File-loop</a>, <a href="DateAdd.htm">DateAdd</a>, <a href="DateDiff.htm">DateDiff</a></p>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExOmitted">
+<p><a class="ex_number" href="#ExOmitted"></a> 设置所有匹配文件的修改时间为当前时间.</p>
+<pre>FileSetTime "", "C:\temp\*.txt"</pre>
+</div>
+
+<div class="ex" id="ExModTime">
+<p><a class="ex_number" href="#ExModTime"></a> 设置修改日期(时间将为午夜).</p>
+<pre>FileSetTime 20040122, "C:\My Documents\test.doc"</pre>
+</div>
+
+<div class="ex" id="ExCreateTime">
+<p><a class="ex_number" href="#ExCreateTime"></a> 设置创建日期. 把时间设置为 4:55pm.</p>
+<pre>FileSetTime 200401221655, "C:\My Documents\test.doc", "C"</pre>
+</div>
+
+<div class="ex" id="ExPattern">
+<p><a class="ex_number" href="#ExPattern"></a> 更改匹配文件的修改日期和时间. 由于最后一个参数的作用, 所以也会改变所有匹配的文件夹.</p>
+<pre>FileSetTime 20040122165500, "C:\Temp\*.*", "M", "DF"</pre>
+</div>
+
+</body>
+</html>

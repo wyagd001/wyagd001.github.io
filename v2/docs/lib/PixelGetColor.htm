@@ -1,0 +1,66 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>PixelGetColor - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The PixelGetColor function retrieves the color of the pixel at the specified x,y coordinates." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>PixelGetColor</h1>
+
+<p>获取指定的 x, y 坐标处像素的颜色.</p>
+
+<pre class="Syntax">Color := <span class="func">PixelGetColor</span>(X, Y <span class="optional">, Mode</span>)</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>X, Y</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+    <p>目标像素的 X 和 Y 坐标. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置.</p>
+  </dd>
+
+  <dt>Mode</dt>
+  <dd>
+      <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+      <p>此参数可以包含零个或多个下列单词. 如果含有多个单词, 则它们之间使用空格分隔(例如 <code>"Alt Slow"</code>).</p>
+      <p><strong>Alt</strong>:  使用另一种方法获取颜色, 当在特殊类型的窗口中正常的方法获取到无效或错误的颜色时, 应考虑使用这种方法. 此方法比正常方法大约慢 10%.</p>
+      <p><strong>Slow</strong>: 使用一种更精细复杂的方法获取颜色, 在某些全屏应用程序中其他方法失败时, 此方法可能有效. 此方法比正常方法大约慢三倍. 注: <em>Slow</em> 方法优先于 <em>Alt</em>, 所以此时不需要指定 <em>Alt</em>.</p>
+    </dd>
+
+</dl>
+
+<h2 id="Return_Value">返回值</h2>
+<p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+<p>该函数返回一个十六进制数字字符串, 代表像素的 RGB(红-绿-蓝) 颜色. 例如, 紫色被定义为 0x800080, 因为它的红色和蓝色分量的强度为 0x80(128) 而绿色分量的强度为 0x00(0).</p>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>在失败时抛出 <a href="Error.htm#OSError">OSError</a>.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>像素必须是可见的; 换句话说, 无法获取隐藏在其他窗口背后的窗口的像素颜色. 与之相比, 鼠标光标下方的像素颜色通常可以检测出来. 例外情况是游戏的指针, 在大多数情况下它会隐藏其下方的任何像素.</p>
+<p>使用 Window Spy(从托盘图标菜单打开) 或参阅本页底部的示例可以确定当前屏幕上的颜色.</p>
+<p>已知限制:</p>
+<ul>
+  <li>在<a href="WinSetTransparent.htm">部分透明</a>或其中某种颜色透明(<a href="WinSetTransColor.htm">WinSetTransColor</a>) 的窗口中实际获取的是它后面窗口的颜色而不是它自己的颜色(即我们在屏幕上看到的颜色.</li>
+  <li>在某些应用程序中 PixelGetColor 可能得不到准确的结果. 如果发生这种情况, 请尝试在最后一个参数中指定单词 <em>Alt</em> 或 <em>Slow</em>.</li>
+</ul>
+<h2 id="Related">相关</h2>
+<p><a href="PixelSearch.htm">PixelSearch</a>, <a href="ImageSearch.htm">ImageSearch</a>, <a href="CoordMode.htm">CoordMode</a>, <a href="MouseGetPos.htm">MouseGetPos</a></p>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a>按下热键显示位于鼠标光标当前位置的像素的颜色.</p>
+<pre>^!z::  <em>; Control+Alt+Z 热键.</em>
+{
+    MouseGetPos &amp;MouseX, &amp;MouseY
+    MsgBox "The color at the current cursor position is " PixelGetColor(MouseX, MouseY)
+}</pre>
+</div>
+
+</body>
+</html>

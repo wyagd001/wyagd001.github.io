@@ -1,0 +1,54 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>A_MaxHotkeysPerInterval - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The A_MaxHotkeysPerInterval and A_HotkeyInterval variables control the rate of hotkey activations beyond which a warning dialog will be displayed." />
+<meta name="ahk:equiv-v1" content="lib/_MaxHotkeysPerInterval.htm" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>A_MaxHotkeysPerInterval</h1>
+
+<p>A_MaxHotkeysPerInterval 和 A_HotkeyInterval 变量控制热键激活的速度, 超过这个速度就会显示警告对话框.</p>
+
+<table class="info">
+  <tr><th>变量</th><th>意义</th><th>默认值</th><th>类型</th></tr>
+  <tr>
+    <td>A_MaxHotkeysPerInterval</td>
+    <td>在不触发警告对话框的情况下, 在间隔时间内可按下的最大热键数量.</td>
+    <td>70</td>
+    <td><a href="../Concepts.htm#numbers">整数</a></td>
+  </tr>
+  <tr>
+    <td>A_HotkeyInterval</td>
+    <td>间隔的长度, 以毫秒为单位.</td>
+    <td>2000</td>
+    <td><a href="../Concepts.htm#numbers">整数</a></td>
+  </tr>
+</table>
+
+<h2 id="Remarks">备注</h2>
+<p>这些内置变量通常应该在脚本启动时被赋值(如果默认值不合适的话), 但脚本可以在任何时候获取或设置它们的值.</p>
+<p>注意不要把上面的数值设置的过于宽松, 因为如果您可能曾经不小心引入了无限循环的键击(通过会意外触发其他热键的 <a href="Send.htm">Send</a> 函数), 那么您的电脑会因快速的键击事件流而无响应.</p>
+<p>举个简单的例子, 热键 <code>^c::Send "^c"</code> 会产生无限循环的键击. 要避免此问题, 添加 <a href="../Hotkeys.htm#prefixdollar">$ 前缀</a>热键的定义(例如 <code>$^c::</code>), 这样 Send 函数就不会触发热键了.</p>
+<p>除了无限循环之外, 还可能通过其他方式达到极限, 例如:</p>
+<ul>
+  <li>当限制相对于重复按键速率来说太低时, 或者系统处于重载状态时, 重复按键.</li>
+  <li>键盘或鼠标硬件发出的输入事件比典型的重复按键速率更快. 例如, 在某些鼠标上向左或向右倾斜滚轮会发出快速的事件, 可能会达到热键的极限, 如 <code>WheelLeft::</code> 和 <code>WheelRight::</code>.</li>
+</ul>
+<p>要完全停用警告对话框, 请指定 <code>A_HotkeyInterval := 0</code>.</p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 允许在 2000 毫秒内最多按下 200 个热键而不触发警告对话框.</p>
+<pre>A_HotkeyInterval := 2000  <em>; 此为默认值 (毫秒).</em>
+A_MaxHotkeysPerInterval := 200</pre>
+</div>
+
+</body>
+</html>

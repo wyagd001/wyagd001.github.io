@@ -1,0 +1,120 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>For Loop - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The For loop statement repeats a series of code lines once for each key-value pair in an object." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>For-loop</h1>
+
+<p>对对象中的每对键值对重复执行一系列函数.</p>
+
+<pre class="Syntax"><span class="func">For</span> Value1 <span class="optional">, Value2</span> in Expression</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Value1</dt>
+  <dt>Value2</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#variables">变量</a></p>
+    <p>用于存储枚举器在每次迭代开始时返回的值的变量. 这些值的性质由枚举器定义, 枚举器由 <em>Expression</em> 决定. 这些变量不能是<a href="../Language.htm#dynamic-variables">动态的</a>.</p>
+    <p>当循环中断或完成时, 这些变量将恢复到原来的值. 如果一个循环变量是 <a href="../Functions.htm#ByRef">ByRef 参数</a>, 那么目标变量不受循环的影响. 引用该变量(如果是局部变量) 的<a href="../Functions.htm#closures">闭包</a>也不受影响, 并将仍保持为它在循环外的值.</p>
+    <p class="warning"><strong>注意:</strong> 即使定义在循环主体内, 引用循环变量的嵌套函数也不能看到或改变当前迭代的值. 相反, 要显式传递变量或将其值<a href="Func.htm#Bind">绑定</a>到一个参数.</p>
+    <p>如果被枚举器支持, 最多支持 19 个变量.</p>
+    <p>变量可以被省略. 例如, <code>for , value in myMap</code> 仅用第二个参数调用 <em>myMap</em> 的枚举器, 而省略其第一个参数. 如果枚举器是用户定义的, 并且参数是强制性的, 那么就会像往常一样抛出异常. 如果没有变量或逗号, 传递给 <a href="../Objects.htm#__Enum">__Enum</a> 的参数数为 0; 否则为 1 加上存在的逗号数.</p>
+  </dd>
+
+  <dt>Expression</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#objects">对象</a></p>
+    <p>结果为可枚举对象的<a href="../Variables.htm#Expressions">表达式</a>, 或包含可枚举对象的变量.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Remarks">备注</h2>
+<p>可以选择将参数列表括在括号中. 例如: <code>for (val in myarray)</code></p>
+<p>枚举过程如下:</p>
+<ul>
+  <li>在循环开始之前, 计算 <i>Expression</i> 以确定目标对象.</li>
+  <li>调用对象的 <code>__Enum</code> 方法以检索 <a href="Enumerator.htm"><i>枚举器</i></a> 对象. 如果不存在这样的方法, 则假定对象本身是枚举器对象.</li>
+  <li>在每次迭代开始时, <a href="Enumerator.htm#Call">调用</a>枚举器以检索下一个值或下一对值. 如果返回 false(0 或空字串), 则循环终止.</li>
+</ul>
+<p>尽管不完全等同于 for 循环, 下面演示了这个过程:</p>
+<pre>_enum := <i>Expression</i>
+try _enum := _enum.__Enum(2)
+while _enum(&amp;Value1, &amp;Value2)
+{
+    ...
+}
+</pre>
+<p>与上面的代码一样, 如果 <em>Expression</em> 或 __Enum 产生了一个不能被调用的值, 则抛出异常.</p>
+<p>在枚举属性, 方法或数组元素时, 插入或删除该类型的项目通常是不安全的. 这样做可能导致某些项目被多次跳过或枚举. 一种解决方法是建立要删除的项目列表, 然后在第一个循环完成后使用第二个循环删除这些项目.</p>
+<p>for 循环后通常跟着<a href="Block.htm">区块</a>, 这是构成循环 <em>主体</em> 的语句的集合. 不过, 在单语句的循环中可以不使用区块(用于此目的时 "if" 与其相匹配的 "else" 一起被视为单语句). 可以选择使用 <a href="Block.htm#otb">One True Brace(OTB) 样式</a>, 这样允许左大括号在同一行而不是在其下面. 例如: <code>for x, y in z {</code>.</p>
+<p>和所有的循环一样, 可以使用 <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 <a href="../Variables.htm#Index">A_Index</a>.</p>
+<p>循环后面可以有一个可选的 <a href="Else.htm">Else</a> 语句, 如果循环的迭代次数为零, 则执行 Else 语句.</p>
+
+<h2 id="COM_Objects">COM 对象</h2>
+<p>因为 <i>Value1</i> 和 <i>Value2</i> 是直接传递给枚举器的, 所以它们的值取决于被枚举的对象类型. 对于 COM 对象, <i>Value1</i> 包含由 <a href="http://msdn.microsoft.com/en-us/library/ms221369.aspx">IEnumVARIANT::Next()</a> 返回的值, 而 <i>Value2</i> 包含了表示其<a href="http://msdn.microsoft.com/en-us/library/cc237865.aspx">变体类型</a>的数字. 例如, 用于 <a href="http://msdn.microsoft.com/en-us/library/x4k5wbx4.aspx">Scripting.Dictionary</a> 对象时, 每个 <i>Value1</i> 包含字典中的键, 而 <i>Value2</i> 通常为 8(对于字符串) 和 3(对于整数). 有关类型代码表, 请参阅 <a href="ComObjType.htm">ComObjType</a>.</p>
+<p>枚举 <a href="ComObjArray.htm">SafeArray</a> 时, <i>Value1</i> 包含了当前元素, 而 <i>Value2</i> 包含其变体类型.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="Enumerator.htm">Enumerator 对象</a>, <a href="Object.htm#OwnProps">OwnProps</a>, <a href="While.htm">While-loop</a>, <a href="Loop.htm">Loop</a>, <a href="Until.htm">Until</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">区块</a></p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 列出对象的自有属性.</p>
+<pre>colours := {red: 0xFF0000, blue: 0x0000FF, green: 0x00FF00}
+<em>; 上面的表达式可以直接代替下面的 "colours":</em>
+s := ""
+for k, v in colours.OwnProps()
+    s .= k "=" v "`n"
+MsgBox s
+</pre>
+</div>
+
+<div class="ex" id="ExCOM">
+<p><a class="ex_number" href="#ExCOM"></a> 列出所有打开的资源管理器和 Internet Explorer 窗口, 使用 <a href="https://docs.microsoft.com/en-us/windows/win32/shell/shell">Shell</a> 对象.</p>
+<pre>windows := ""
+for window in ComObject("Shell.Application").Windows
+    windows .= window.LocationName " :: " window.LocationURL "`n"
+MsgBox windows</pre>
+</div>
+
+<div class="ex" id="ExFibF">
+<p><a class="ex_number" href="#ExFibF"></a> 将枚举器定义为<a href="../Variables.htm#fat-arrow">胖箭头函数</a>. 返回斐波那契数列中的数字, 无限次或直到停止.</p>
+<pre>for n in FibF()
+    if MsgBox("#" A_Index " = " n "`nContinue?",, "y/n") = "No"
+        break
+
+FibF() {
+    a := 0, b := 1
+    return (&amp;n) => (
+        n := c := b, b += a, a := c,
+        true
+    )
+}</pre>
+</div>
+
+<div class="ex" id="ExFibC">
+<p><a class="ex_number" href="#ExFibC"></a> 将枚举器定义为<a href="../Objects.htm#Custom_Classes">类</a>. 与<a href="#ExFibF">前面的示例</a>相同.</p>
+<pre>for n in FibC()
+    if MsgBox("#" A_Index " = " n "`nContinue?",, "y/n") = "No"
+        break
+
+class FibC {
+    a := 0, b := 1
+    Call(&amp;n) {
+        n := c := this.b, this.b += this.a, this.a := c
+        return true
+    }
+}</pre>
+</div>
+</body>
+</html>

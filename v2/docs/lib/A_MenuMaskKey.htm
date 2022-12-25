@@ -1,0 +1,76 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>A_MenuMaskKey - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The A_MenuMaskKey variable controls directive changes which key is used to mask WIN or ALT keyup events." />
+<meta name="ahk:equiv-v1" content="lib/_MenuMaskKey.htm" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>A_MenuMaskKey</h1>
+
+<p>控制哪个键被用来掩饰(屏蔽) Win 或 Alt 键松开事件.</p>
+
+<dl>
+  <dt>Value</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>vkNNscNNN 序列识别虚拟键码(NN) 和扫描码(NNN), 以十六进制表示, 如果屏蔽被禁用则为空字符串.</p>
+    <p>脚本也可以指定一个<a href="../KeyList.htm">按键名称</a>, <a href="../KeyList.htm#vk">vkNN</a> 序列或 <a href="../KeyList.htm#sc">scNNN</a> 序列, 在这种情况下, 通常 VK 或 SC 码被保留为零, 直到按键被发送, 然后自动确定. 指定 "vk00sc000" 可禁用屏蔽, 等同于指定 "".</p>
+    <p>如果启用, 返回的字符串总是 vkNNscNNN 序列, 如果禁用, 则是 "", 不管它是如何赋值的. 所有的 vkNNscNNN 序列和所有非零的 vkNN 或 scNNN 序列都是允许的, 但一些组合可能无法抑制菜单. 任何其他无效的键都会导致抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
+  </dd>
+</dl>
+
+<h2 id="Remarks">备注</h2>
+<p>掩饰键会自动发送, 以防止开始菜单或活动窗口的菜单栏在未预期的时间激活.</p>
+<p>默认的掩饰键为 <kbd>Ctrl</kbd>. 此变量可用于将掩饰键更改为具有较少副作用的键.</p>
+<p>好的候选者是通常不会有效果的虚拟按键代码, 例如 vkE8, 微软的文档是 "未定义的", 或 vkFF, 它被保留为 "没有映射"(一个没有功能的键). 某些值, 如 0 VK 和非 0 SC, 可能无法抑制开始菜单. 按键码不需要匹配按键的存在.</p>
+<p class="note"><strong>注意</strong>: Microsoft 可以随时为未指定的键码指定一个效果. 例如, vk07 曾经是未定义的并且可以安全使用, 但从 Windows 10 1909 开始, 它就被保留为打开游戏栏.</p>
+<p>这个设置是全局的, 也就是说, 只需要指定一次就可以影响整个脚本的行为.</p>
+<p><strong>Hotkeys:</strong> 如果是使用键盘钩子或鼠标钩子实现的热键, 则最终的按键可能对活动窗口和系统是不可见的. 如果系统 <em>仅</em> 检测到 Win 或 Alt 按下和松开, 而期间没有其他键按下, 通常会激活一个菜单. 为防止这种情况发生, 键盘或鼠标钩子可能会自动发送掩饰键.</p>
+<p>如果满足以下所有条件, 则按下钩子热键将导致下一个 Alt 或 Win 的松开被屏蔽(发送掩饰键):</p>
+<ul>
+  <li>热键原有功能被屏蔽(没有<a href="../Hotkeys.htm#Tilde">颚化符修饰键</a>).</li>
+  <li>当按下热键时, <kbd>Alt</kbd> 或 <kbd>Win</kbd> 逻辑上是按下的.</li>
+  <li>修饰符键物理上被按下或热键需要修饰符是激活的. 例如, <code>$#a::</code> 与 <code>AppsKey::RWin</code> 一起使用时, 当 <kbd>Menu</kbd>+<kbd>A</kbd> 按下时发送掩饰键, 但是 <kbd>Menu</kbd> 本身能打开开始菜单.</li>
+  <li>当热键被按下时如果按下了 <kbd>Ctrl</kbd> 键, 则不会掩饰(屏蔽) <kbd>Alt</kbd> 键, 因为 <kbd>Ctrl</kbd>+<kbd>Alt</kbd> 不会激活菜单栏.</li>
+  <li>如果最近的 Win 按下被 <kbd>Ctrl</kbd>, <kbd>Shift</kbd> 或 <kbd>Alt</kbd> 修饰, 则不会掩饰(屏蔽) <kbd>Win</kbd>, 因为在这些情况下, 开始菜单通常不会激活. 然而, 如果 <kbd>Win</kbd> 是最后一次物理按下的键, 其也会出现重复按键的情况, 所以很难预测最近一次的 <kbd>Win</kbd> 是 <em>何时</em> 按下的.</li>
+  <li>要么是没有安装键盘钩子(如鼠标热键), 要么自最近一次 <kbd>Alt</kbd> 或 <kbd>Win</kbd> 按下之后没有其他(未被抑制的) 按下或松开事件发生. 请注意, 即使对于修饰键, 甚至在发送其他键之后, 重复按键也会发生, 但只发生在最后一次物理按下的键上.</li>
+</ul>
+<p>如果没有安装键盘钩子, 鼠标热键会立即发送掩饰键.</p>
+<p>带有<a href="../Hotkeys.htm#Tilde">颚化符修饰键</a>的热键并不会阻止按键的原有功能, 因此不会引发掩饰键. 像 <code>~#a::</code> 这样的热键仍然屏蔽开始菜单, 因为系统检测到 <kbd>Win</kbd> 已经与另一个键组合使用. 但是, 鼠标热键和 <kbd>Win</kbd> 本身(<code>~LWin::</code> 和 <code>~RWin::</code>) 不会屏蔽开始菜单.</p>
+<p>开始菜单(或活动窗口的菜单栏) 可以通过发送任何按键来屏蔽. 以下示例禁用左 <kbd>Win</kbd> 激活开始菜单的功能, 同时仍允许将其用于修饰键:</p>
+<pre>~LWin::Send "{Blind}{vkE8}"</pre>
+<p><strong>Send:</strong> <a href="Send.htm">Send</a>, <a href="ControlSend.htm">ControlSend</a> 和相关的经常释放修饰键作为其正常操作的一部分. 例如, 热键 <code>&lt;#a::SendText Address</code> 通常必须在发送 <em>Address</em> 的内容之前释放左 <kbd>Win</kbd>, 之后再按下左 <kbd>Win</kbd> 键(以便其他 <kbd>Win</kbd> 组合继续工作). 在这种情况下, 可以发送掩码键, 以防止 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 松开后激活菜单.</p>
+
+<h2 id="Related">相关</h2>
+<p>有关背景信息, 请参阅<a href="https://www.autohotkey.com/board/topic/20619-extraneous-control-key-presses-generated-by-or-hotkeys/">这个帖子</a>.</p>
+
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 基础用法.</p>
+<pre>A_MenuMaskKey := "vkE8"  <em>; 将掩码键改成未分配的按键, 如 vkE8 等.</em>
+#Space::Run A_ScriptDir  <em>; 额外的 Ctrl 键不会被触发.</em></pre>
+</div>
+
+<div class="ex" id="ExAdvanced">
+<p><a class="ex_number" href="#ExAdvanced"></a> 展示该变量如何使 vkFF 代替 LControl 被发送.</p>
+<pre>A_MenuMaskKey := "vkFF"  <em>; vkFF 是未映射的.</em>
+#UseHook
+#Space::
+!Space::
+{
+    KeyWait "LWin"
+    KeyWait "RWin"
+    KeyWait "Alt"
+    KeyHistory
+}</pre>
+</div>
+
+</body>
+</html>

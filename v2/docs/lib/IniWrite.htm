@@ -1,0 +1,84 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>IniWrite - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The IniWrite function writes a value or section to a standard format .ini file." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>IniWrite</h1>
+
+<p>写入值或段到标准格式的 .ini 文件.</p>
+
+<pre class="Syntax"><span class="func">IniWrite</span> Value, Filename, Section, Key
+<span class="func">IniWrite</span> Pairs, Filename, Section</pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Value</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>将被写入到 <em>Key</em> 的等号(=) 右边的字符串或数字.</p>
+    <p>如果文本较长, 可以通过<a href="../Scripts.htm#continuation">延续片段</a>的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p>
+  </dd>
+  
+  <dt>Pairs</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要写入 .ini 文件的 Section 的完整内容, 不包括 [SectionName] 题头. <em>Key</em> 必须省略. <em>Pairs</em> 不能包含空行. 如果 section 已经存在, 最后一个键=值对之前的所有内容都被覆盖. <em>Pairs</em> 可以包含没有等号(=) 的行, 但这可能会产生不一致的结果. 注释可以写入文件中, 但被 <a href="IniRead.htm">IniRead</a> 读回时将被抛弃.</p>
+  </dd>
+
+  <dt>Filename</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>.ini 文件的名称, 如果未指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+  </dd>
+
+  <dt>Section</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>.ini 文件的段名, 它是包含在方括号中的标题短语(在此参数中不需要加方括号).</p>
+  </dd>
+
+  <dt>Key</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>.ini 文件中的键名.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>失败时抛出 <a href="Error.htm#OSError">OSError</a>.</p>
+<p>无论是否抛出异常, <a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统的 GetLastError() 函数的结果.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>超过 65,535 个字符的值可以写入文件, 但可能会产生不一致的结果, 因为 <a href="IniRead.htm">IniRead</a> 或其他应用程序通常无法正确读取它们.</p>
+<p>标准的 ini 文件看起来类似下面这样:</p>
+<pre>[SectionName]
+Key=Value</pre>
+<p>新文件使用带有 UTF-16 字节顺序标记的方式来创建, 以确保可以使用全部的 Unicode 字符. 如果不希望这样, 那么请确保在调用 IniWrite 前目标文件已经存在. 例如:</p>
+<pre>
+<em>; 创建一个 ANSI 编码的文件.</em>
+FileAppend "", "NonUnicode.ini", "CP0"
+
+<em>; 创建一个没有字节顺序标记的 UTF-16 文件.</em>
+FileAppend "[SectionName]`n", "Unicode.ini", "UTF-16-RAW"
+</pre>
+<p><b>Unicode:</b> IniRead 和 IniWrite 依靠外部函数 <a href="http://msdn.microsoft.com/en-us/library/ms724353.aspx">GetPrivateProfileString</a> 和 <a href="http://msdn.microsoft.com/en-us/library/ms725501.aspx">WritePrivateProfileString</a> 来读取和写入值. 这些函数只支持 UTF-16 件中的 Unicode; 所有其他文件都假定使用系统的默认 ANSI 代码页.</p>
+<pre>FileAppend "", "NonUnicode.ini", "CP0" <em>; 在大多数情况下最后一个参数是可选的.</em></pre>
+<h2 id="Related">相关</h2>
+<p><a href="IniDelete.htm">IniDelete</a>, <a href="IniRead.htm">IniRead</a>, <a href="RegWrite.htm">RegWrite</a></p>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a>  将一个值写入位于标准格式 .ini 文件中 section2 的一个键.</p>
+<pre>IniWrite "this is a new value", "C:\Temp\myfile.ini", "section2", "key"</pre>
+</div>
+
+</body>
+</html>

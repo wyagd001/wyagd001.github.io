@@ -1,0 +1,105 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+<title>FileAppend - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The FileAppend function writes text or binary data to the end of a file (first creating the file, if necessary)." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<script src="../static/content.js" type="text/javascript"></script>
+<script type="text/javascript">$(function(){0<=window.navigator.userAgent.toLowerCase().indexOf("ucbrowser")&&CaoNiMaDeUc()})</script>
+</head>
+<body>
+
+<h1>FileAppend</h1>
+
+<p>在文件末尾处追加(写入) 文本或二进制数据(如果有必要, 首先创建文件).</p>
+
+<pre class="Syntax"><span class="func">FileAppend</span> Text <span class="optional">, Filename, Options</span></pre>
+<h2 id="Parameters">参数</h2>
+<dl>
+
+  <dt>Text</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#objects">对象</a></p>
+    <p>要追加到文件的文本或文本二进制数据. 文本可以包含换行符(`n) 来开始新行. 此外, 一个长行可以使用<a href="../Scripts.htm#continuation">延续片段</a>的方法分成较短的几行.</p>
+    <p>可以传递类似类<a href="Buffer.htm">缓冲</a>的对象来附加文本二进制数据. 如果创建了一个文件, 只有在 <em>选项</em> 中指定了 "UTF-8" 或 "UTF-16" 时, 才会写入字节顺序标记(BOM). 不管 <em>选项</em> 是什么, 都会忽略<a href="../Variables.htm#FileEncoding">默认编码</a>, 对象所包含的数据按原样写入. 可以使用任何实现 <a href="Buffer.htm#Ptr">Ptr</a> 和 <a href="Buffer.htm#Size">Size</a> 属性的对象.</p>
+    <p>如果  <em>Text</em> 为空, 则创建一个文件名为 <em>Filename</em> 的空白文件(但如果文件已经存在, 则更新其修改时间).</p>
+  </dd>
+
+  <dt>Filename</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要追加内容的文件名, 如果未指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中. 目标目录必须已经存在.</p>
+    <p id="stdout"><strong>标准输出(stdout)</strong>: 在 <em>Filename</em> 指定星号(*) 可以把 <em>Text</em> 发送到标准输出(stdout). 这样文本可以重定向到文件, 指向另一个 EXE 的管道或被<a href="_ErrorStdOut.htm">高级文本编辑器</a>捕获. 例如, 在命令提示符中输入后面的例子是有效的:</p>
+      <pre class="no-highlight">"%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script.ahk" &gt;"Error Log.txt"</pre>
+    <p>然而, 发送到标准输出的文本将不会出现在运行它的命令提示符中. 解决此问题的方法是 1) 使用 <a href="../misc/Ahk2ExeDirectives.htm#ConsoleApp">Ahk2Exe ConsoleApp 指令</a>编译脚本, 或 2) 把脚本的输出通过管道传递给另一个命令或程序. 例如:</p>
+      <pre class="no-highlight">"%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script.ahk" |more</pre>
+      <pre class="no-highlight">For /F "tokens=*" %L in ('""%ProgramFiles%\AutoHotkey\AutoHotkey.exe" "My Script .ahk""') do @Echo %L</pre>
+    <p> 在 <em>Filename</em> 指定两个星号(**) 可以把 <em>Text</em> 发送到标准错误输出(stderr).</p>
+    </dd>
+
+  <dt>Options</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>零个或多个以下字符串. 使用单个空格或制表符将每个选项与下一个选项分开. 例如: <code>"`n UTF-8"</code></p>
+    <p><strong>Encoding</strong>: 如果文件缺少 UTF-8 或 UTF-16 字节顺序标记, 则指定 <a href="FileEncoding.htm">FileEncoding</a> 接受的任何编码名称(不包括空字符串) 以使用该编码. 如果省略, 默认为 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a>(除非 <em>Text</em> 是对象, 在这种情况下不写入字节顺序标记).</p>
+    <p><strong>RAW</strong>: 指定单词 RAW(不区分大小写) 按原样将 <em>Text</em> 包含的确切字节写入文件, 不进行任何转换. 此选项覆盖以前指定的任何编码, 反之亦然. 如果 <em>Text</em> 不是对象, 由于使用 UTF-16 字符串, 数据大小总是 2 字节的倍数.</p>
+    <p><strong>`n</strong>(换行符): 如果回车符不存在, 则在每个换行符(`n) 之前插入回车符(`r). 换句话说, 将转换 `n 为 `r`n. 这种转换通常不会影响性能. 如果不使用此选项, 则不会更改 <em>Text</em> 中的行尾.</p>
+  </dd>
+
+</dl>
+
+<h2 id="Error_Handling">错误处理</h2>
+<p>失败时抛出 <a href="Error.htm#OSError">OSError</a>.</p>
+<p><a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统 GetLastError() 函数返回的结果.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>要覆盖现有的文件, 请在使用 FileAppend 前用 <a href="FileDelete.htm">FileDelete</a> 删除它.</p>
+<p>追加文本后目标文件会自动关闭(除非在<a href="LoopRead.htm">文件读取/写入循环</a>中以单参数模式使用 FileAppend).</p>
+<p>追加模式的 <a href="FileOpen.htm">FileOpen</a> 比 FileAppend 提供了更多的控制性并且允许文件保持打开状态而不是每次都要打开和关闭文件. 一旦以追加模式打开文件后, 请使用 <code>file.<a href="File.htm#Write">Write</a>(string)</code> 来追加字符串. 文件对象通过 <a href="File.htm#RawWrite">RawWrite</a>/<a href="File.htm#RawRead">RawRead</a> 或 <a href="File.htm#WriteNum">Write<i>Num</i></a>/<a href="File.htm#ReadNum">Read<i>Num</i></a> 也支持二进制 I/O.</p>
+<h2 id="Related">相关</h2>
+<p><a href="FileOpen.htm">FileOpen</a>/<a href="File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a>, <a href="LoopRead.htm">文件读取循环</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="FileDelete.htm">FileDelete</a>, <a href="OutputDebug.htm">OutputDebug</a>, <a href="../Scripts.htm#continuation">延续片段</a></p>
+<h2 id="Examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 必要时创建一个文件, 并附加一行.</p>
+<pre>FileAppend "Another line.`n", "C:\My Documents\Test.txt"</pre>
+</div>
+
+<div class="ex" id="ExContSect">
+<p><a class="ex_number" href="#ExContSect"></a> 使用<a href="../Scripts.htm#continuation">延续片段</a>来提高可读性和可维护性.</p>
+<pre>FileAppend "
+(
+一行文字.
+默认情况下, 前一行和这一行之间的硬回车(Enter) 将被写进文件.
+	这一行缩进了一个制表符; 默认情况下, 该制表符也将被写入文件.
+)", A_Desktop "\My File.txt"</pre>
+</div>
+
+<div class="ex" id="ExFTP">
+<p><a class="ex_number" href="#ExFTP"></a> 演示如何使用操作系统内置的 FTP 命令自动进行 FTP 上传.</p>
+<pre>FTPCommandFile := A_ScriptDir "\FTPCommands.txt"
+FTPLogFile := A_ScriptDir "\FTPLog.txt"
+try FileDelete FTPCommandFile  <em>; 避免之前运行意外中止带来的问题.</em>
+
+FileAppend
+(
+"open host.domain.com
+username
+password
+binary
+cd htdocs
+put " VarContainingNameOfTargetFile "
+delete SomeOtherFile.htm
+rename OldFileName.htm NewFileName.htm
+ls -l
+quit"
+), FTPCommandFile
+
+RunWait Format('{1} /c ftp.exe -s:"{2}" &gt;"{3}"', A_ComSpec, FTPCommandFile, FTPLogFile)
+FileDelete FTPCommandFile  <em>; 为确保安全进行删除.</em>
+Run FTPLogFile  <em>; 显示日志进行复查.</em></pre>
+</div>
+
+</body>
+</html>

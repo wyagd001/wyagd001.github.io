@@ -8,20 +8,26 @@ layout: default
 
 **如意百宝箱-Ahk**: 如意百宝箱是一款按下快捷键后针对不同窗口和选中文件显示一个定制的动作面板的快捷启动工具. 动作可以通过添加ahk脚本来新增.  
 
-**脚本下载**: [https://wyagd001.github.io/RuYi-Ahk](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
+**脚本打包**: [https://wyagd001.github.io/RuYi-Ahk](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**关键词及目录**: AutoHotkey [快捷键和主面板](#hotkey) [面板](#Board) [动作](#Action)  [外部脚本](#Script)
+**当前版本**: [1.0 - 2022/12/12](history.md)
 
+**最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
+
+**关键词及目录**: AutoHotkey [快捷键和模式](#hotkey) [面板](#Board)  [动作](#Action)  [外部脚本](#Script)
 
 ### [](#header-3)功能介绍
 如意百宝箱受到类似软件 Quicker, Ahk 的 Windy 和 Candy 脚本的影响, 是一款由 AutoHotkey 脚本语言编写的快速启动软件. 打开 [如一.exe] 即启动了程序, 然后按下鼠标中键显示所需的动作面板.  
 - <span id="hotkey">快捷键</span>
   - Mbutton 默认的快捷键是鼠标中键, 可以右键托盘菜单的热键管理菜单自定义为其他按键. 按下后显示一个动作主面板, 主面板由上面的12个按钮(针对当前窗口)和下面的12个按钮(针对选中的文字, 或文件, 由Ctrl+C 获取)组成, 其中每个按钮执行一个指定的动作.  
-  下图是主面板图片
-  - ![Image text](../img/主面板.jpg)  
+    下图是主面板图片
+    - ![Image text](../img/主面板.jpg)  
+
+  - Ctrl + 1, 将面板模式转换为菜单模式, 按下后显示为菜单, 这在针对当前窗口操作时容易获取到当前窗口.  可以右键托盘菜单的热键管理菜单自定义为其他按键.
+    - ![Image text](../img/菜单模式.jpg)
 
   - CapLocks 热键为不可更改的固定热键. 按下后将面板界面转为纯按键模式, 工具提示中的每个按键(0-9,q-])执行一个动作.  
-  - ![Image text](../img/按键模式.jpg)  
+    - ![Image text](../img/按键模式.jpg)  
 
 - <span id="Board">面板</span>
   - 面板的设置保存在 配置文件/面板列表.ini 文件中. 面板分为三种类型: 窗口 Classs(如资源管理器的 [CabinetWClass], [Progman]), 文件扩展名后缀(如 txt, 短文本, 文件夹), 和自定义名称. 前两种主要显示在主面板界面(按下热键后根据窗口类名和选中内容自动匹配), 后者多用于子面板(由主面板上的按钮来启动).
@@ -32,12 +38,12 @@ layout: default
   - ![Image text](../img/按钮编辑.jpg)
 
 - <span id="Action">动作</span>
-  - 动作的的设置保存在 配置文件/动作列表.ini 文件中. 动作有以下类别: 运行(Run), 面板(Gui), 菜单(Menu), 发送按键(Key), 内置命令和函数(Cando 和 CanFunc). 面板上的按钮对应一个动作, 点击面板上的按钮就会执行相应的动作.  
+  - 动作的的设置保存在 配置文件/动作列表.ini 文件中. 动作有以下类别: 运行(Run), 面板(Gui), 菜单(Menu), 发送按键(Key), 内置命令和函数(Cando 和 CanFunc) 等. 面板上的按钮对应一个动作, 点击面板上的按钮就会执行相应的动作.  
      - 运行: 运行程序, 打开文件(文件夹, 网址). 如打开C盘写为 "Run&#124;C:", 打开记事本写为 "Run&#124;notepad.exe". 要运行的外部 Ahk 脚本统一放在 外部脚本 目录, 现在内置的动作脚本有50个左右.  
      - 面板: 在主面板上点击按钮后, 显示一个子面板. 动作写作 "Gui&#124;常用工具"  
      - 菜单: 在主面板上点击按钮后, 显示一个子面板中按钮的菜单.  动作写作 "Menu&#124;常用工具"  
      - 内置命令和函数: 执行内置的 ahk 脚本标签和函数.  
-
+  -  [完整的动作列表](ActionList.md)  
   - 动作的管理由托盘菜单的 "动作管理" 和面板按钮编辑界面的 转到动作编辑 按钮来启动.  
   - ![Image text](../img/动作管理.jpg)
 
