@@ -3,7 +3,7 @@
 <head>
 <title>Clipboard / ClipboardAll | AutoHotkey</title>
 <meta name="description" content="Clipboard and ClipboardAll are built-in variables which reflect the current contents of the Windows clipboard. ClipboardAll contains everything on the clipboard, such as pictures and formatting." />
-<meta name="ahk:equiv-v2" content="misc/A_Clipboard.htm" />
+<meta name="ahk:equiv-v2" content="lib/A_Clipboard.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -17,12 +17,12 @@
 <p><em>Clipboard</em> 是内置<a href="../Variables.htm">变量</a>, 它包含当前 Windows 剪贴板中可以用文本形式表示的内容. 与之相比, <em><a href="#ClipboardAll">ClipboardAll</a></em> 包含了剪贴板中的所有内容, 例如图片和其他特定格式的东西.</p>
 <p><span class="ver">[v1.1.35+]:</span> <code>A_Clipboard</code> 是 <code>Clipboard</code> 的别名.</p>
 <p id="CopiedFiles"><em>Clipboard</em> 中的每行文本通常都是以回车和换行符(CR+LF) 结尾, 它们在脚本中表示为 <code>`r`n</code>. 文件(例如从资源管理器窗口中使用 <kbd>Ctrl</kbd>+<kbd>C</kbd> 复制的文件) 被视为文本: 每当在脚本中引用 <em>Clipboard</em> 时, 它们会被自动转换为它们的文件名(完整路径). 要逐个提取这些文件, 请参照此例:</p>
-<pre><a href="../commands/LoopParse.htm">Loop, parse</a>, clipboard, `n, `r
+<pre><a href="../lib/LoopParse.htm">Loop, parse</a>, clipboard, `n, `r
 {
     MsgBox, 4, , File number %A_Index% is %A_LoopField%.`n`nContinue?
     IfMsgBox, No, break
 }</pre>
-<p>要按字母顺序排列文件名, 请使用 <a href="../commands/Sort.htm">Sort</a> 命令. 要把剪贴板中的文件名写入到文件中, 请使用 <code><a href="../commands/FileAppend.htm">FileAppend</a>, %clipboard%`r`n, C:\My File.txt</code>. 要改变脚本尝试打开剪贴板的持续时间, 例如另一个程序在使用剪贴板的时候, 请使用 <a href="../commands/_ClipboardTimeout.htm">#ClipboardTimeout</a>.</p>
+<p>要按字母顺序排列文件名, 请使用 <a href="../lib/Sort.htm">Sort</a> 命令. 要把剪贴板中的文件名写入到文件中, 请使用 <code><a href="../lib/FileAppend.htm">FileAppend</a>, %clipboard%`r`n, C:\My File.txt</code>. 要改变脚本尝试打开剪贴板的持续时间, 例如另一个程序在使用剪贴板的时候, 请使用 <a href="../lib/_ClipboardTimeout.htm">#ClipboardTimeout</a>.</p>
 <strong>基本示例:</strong>
 <pre>clipboard := "my text"   <em>; 在剪贴板中存入新内容.</em>
 clipboard := ""   <em>; 清空剪贴板.</em>
@@ -33,18 +33,18 @@ StringReplace, clipboard, clipboard, ABC, DEF, All   <em>; 把剪贴板中所有
 <p><strong>使用 ClipWait 提高脚本的可靠性:</strong></p>
 <pre>clipboard := ""  <em>; 让剪贴板初始为空, 这样可以使用 ClipWait 检测文本什么时候被复制到剪贴板中.</em>
 Send ^c
-<a href="../commands/ClipWait.htm">ClipWait</a>  <em>; 等待剪贴板中出现文本.</em>
+<a href="../lib/ClipWait.htm">ClipWait</a>  <em>; 等待剪贴板中出现文本.</em>
 MsgBox Control-C copied the following contents to the clipboard:`n`n%clipboard%</pre>
 <h2 id="ClipboardAll">ClipboardAll<span class="headnote">(保存并恢复剪贴板中的所有内容)</span></h2>
 <p><em>ClipboardAll</em> 包含了剪贴板中的所有内容(例如图片和格式). 它常用来保存剪贴板的内容, 以便脚本可以在某个操作中临时使用剪贴板. 当这个操作结束后, 脚本可以恢复剪贴板为原来的内容, 如下所示:</p>
 <pre>ClipSaved := ClipboardAll   <em>; 把剪贴板的所有内容保存到您选择的变量中.
-; ... 这里临时使用剪贴板, 例如使用 <a href="../commands/Transform.htm#Unicode">Transform Unicode</a> 粘贴 Unicode 文本 ...</em>
+; ... 这里临时使用剪贴板, 例如使用 <a href="../lib/Transform.htm#Unicode">Transform Unicode</a> 粘贴 Unicode 文本 ...</em>
 Clipboard := ClipSaved   <em>; 恢复剪贴板为原来的内容. 注意这里使用 <i>Clipboard</i>(不是 <i>ClipboardAll</i>).</em>
 ClipSaved := ""   <em>; 在原来的剪贴板含大量内容时释放内存.</em></pre>
 <p><em>ClipboardAll</em> 中的内容可以保存到文件中(在这种模式中, FileAppend 总是覆盖任何现有的文件):</p>
-<pre><a href="../commands/FileAppend.htm">FileAppend</a>, %ClipboardAll%, C:\Company Logo.clip <em>; 文件扩展名无关紧要.</em></pre>
+<pre><a href="../lib/FileAppend.htm">FileAppend</a>, %ClipboardAll%, C:\Company Logo.clip <em>; 文件扩展名无关紧要.</em></pre>
 <p>要在之后加载这个文件的内容回剪贴板(或变量中), 请参照此例:</p>
-<pre><a href="../commands/FileRead.htm">FileRead</a>, Clipboard, <strong>*c</strong> C:\Company Logo.clip <em>; 注意 *c 必须在文件名的前面.</em></pre>
+<pre><a href="../lib/FileRead.htm">FileRead</a>, Clipboard, <strong>*c</strong> C:\Company Logo.clip <em>; 注意 *c 必须在文件名的前面.</em></pre>
 
 <h3 id="limitations">限制</h3>
 <p>一些直接使用 <em>ClipboardAll</em> 的限制:</p>
@@ -55,29 +55,29 @@ ClipSaved := ""   <em>; 在原来的剪贴板含大量内容时释放内存.</em
 <p>包含二进制剪贴板数据的变量可以按如下方式使用:</p>
 <ul>
   <li>通过赋值给 <em>Clipboard</em> 将数据放回剪贴板, 如上所示.</li>
-  <li>用 <a href="../commands/FileAppend.htm">FileAppend</a> 将剪贴板数据写入文件, 如上所示.</li>
+  <li>用 <a href="../lib/FileAppend.htm">FileAppend</a> 将剪贴板数据写入文件, 如上所示.</li>
   <li>将其复制到另一个变量(或 <a href="../Functions.htm#ByRef">ByRef</a> 参数) 如此例所示: <code>ClipSaved2 := ClipSaved</code>.</li>
   <li><a href="../Functions.htm#ByRef">通过引用</a>或通过值(<span class="ver">[v1.0.46+]</span>), 将其传递给<a href="../Functions.htm">用户定义的函数</a>.</li>
-  <li>通过将其传递给 <a href="../commands/StrLen.htm">StrLen()</a>  来确定数据的大小, 如<a href="#len">下</a>所示.</li>
+  <li>通过将其传递给 <a href="../lib/StrLen.htm">StrLen()</a>  来确定数据的大小, 如<a href="#len">下</a>所示.</li>
   <li>通过使用传统 IF 比较这两个变量, 如<a href="#compare">下</a>所示.</li>
-  <li>使用其<a href="../Variables.htm#amp">地址</a>或将变量本身传递给 <a href="../commands/NumGet.htm">NumGet</a> 来检查数据.</li>
+  <li>使用其<a href="../Variables.htm#amp">地址</a>或将变量本身传递给 <a href="../lib/NumGet.htm">NumGet</a> 来检查数据.</li>
 </ul>
 <p>其他限制:</p>
 <ul>
-  <li>当将二进制剪贴板数据赋值给一个变量时, 该变量将被标记一个隐藏属性. 这个属性只能通过 <a href="../commands/FileRead.htm">FileRead</a> 的 <code>*c</code> 选项来设置, 或者通过直接从 <em>ClipboardAll</em>(如上所示) 或其他具有该属性的变量赋值来设置.</li>
+  <li>当将二进制剪贴板数据赋值给一个变量时, 该变量将被标记一个隐藏属性. 这个属性只能通过 <a href="../lib/FileRead.htm">FileRead</a> 的 <code>*c</code> 选项来设置, 或者通过直接从 <em>ClipboardAll</em>(如上所示) 或其他具有该属性的变量赋值来设置.</li>
   <li>当以与上述不同的方式使用时, 二进制剪贴板数据通常被解释为文本, 并在第一个空字符处(通常是在数据的开头) 截断. 例如, 当试图从函数返回数据或将其赋值给属性或数组元素时, 就会发生这种情况.</li>
-  <li>当变量被释放或赋值任何其他值时, 剪贴板属性将被删除, 即使是通过间接方法(如 <a href="../commands/StrReplace.htm">StrReplace()</a> 或 <a href="../commands/StringReplace.htm">StringReplace</a>).</li>
+  <li>当变量被释放或赋值任何其他值时, 剪贴板属性将被删除, 即使是通过间接方法(如 <a href="../lib/StrReplace.htm">StrReplace()</a> 或 <a href="../lib/StringReplace.htm">StringReplace</a>).</li>
   <li>不带剪贴板属性的变量在复制到 <em>Clipboard</em> 或传递给 FileAppend 时将被视为文本, 即使数据采用适当的二进制格式也是如此.</li>
 </ul>
 
 <h3 id="Notes">注意</h3>
 <p>如果 <em>ClipboardAll</em> 不能获取剪贴板中一个或多个数据对象(格式), 则会忽略它们但仍保存剩余的所有对象.</p>
-<p><a href="../commands/ClipWait.htm">ClipWait</a> 可以用来检测剪贴板何时包含数据(可以包含非文本数据).</p>
-<p id="len">可以使用 <a href="../commands/StrLen.htm">StrLen() / StringLen</a> 来发现复制到 <em>ClipboardAll</em> 的变量的总大小. 但是, 要在 AutoHotkey 的 Unicode 版本中获取字节的大小, 则前面得到的长度必须乘以 2. <a href="../Variables.htm#IsUnicode">A_IsUnicode</a> 可用来支持 ANSI 和 Unicode 版本, 如此例所示: <code>size := StrLen(ClipSaved) * (A_IsUnicode ? 2 : 1)</code>.</p>
-<p id="compare">接受 <em>ClipboardAll</em> 赋值的变量可以通过 <a href="../commands/IfEqual.htm">If[Not]Equal</a>, <code>If Var1 = %Var2%</code>, 或 <code>If Var1 != %Var2%</code> 互相进行比较(但不能直接和 <em>ClipboardAll</em> 进行比较). 在下面的例子中, 首先检查每个变量的大小. 如果大小不足以判断, 则比较它们的内容来得到结果:</p>
+<p><a href="../lib/ClipWait.htm">ClipWait</a> 可以用来检测剪贴板何时包含数据(可以包含非文本数据).</p>
+<p id="len">可以使用 <a href="../lib/StrLen.htm">StrLen() / StringLen</a> 来发现复制到 <em>ClipboardAll</em> 的变量的总大小. 但是, 要在 AutoHotkey 的 Unicode 版本中获取字节的大小, 则前面得到的长度必须乘以 2. <a href="../Variables.htm#IsUnicode">A_IsUnicode</a> 可用来支持 ANSI 和 Unicode 版本, 如此例所示: <code>size := StrLen(ClipSaved) * (A_IsUnicode ? 2 : 1)</code>.</p>
+<p id="compare">接受 <em>ClipboardAll</em> 赋值的变量可以通过 <a href="../lib/IfEqual.htm">If[Not]Equal</a>, <code>If Var1 = %Var2%</code>, 或 <code>If Var1 != %Var2%</code> 互相进行比较(但不能直接和 <em>ClipboardAll</em> 进行比较). 在下面的例子中, 首先检查每个变量的大小. 如果大小不足以判断, 则比较它们的内容来得到结果:</p>
 <pre>if ClipSaved1 != %ClipSaved2%   <em>; 这里 <u>必须</u> 使用传统语法的 IF 语句, 不能使用表达式.</em>
     MsgBox The two saved clipboards are different.</pre>
-<p>保存 <em>ClipboardAll</em> 到变量时, 这个变量的大小不受 <a href="../commands/_MaxMem.htm">#MaxMem</a> 设置的内存限制.</p>
+<p>保存 <em>ClipboardAll</em> 到变量时, 这个变量的大小不受 <a href="../lib/_MaxMem.htm">#MaxMem</a> 设置的内存限制.</p>
 <p>保存的剪贴板文件在内部由 4 字节格式类型, 然后是 4 字节(32-位) 或 8 字节(64-位) 的数据块大小, 然后是该格式的数据块组成. 如果剪贴板包含多种格式(几乎总是这种情况), 则重复这三项, 直到包含所有格式. 该文件以 4 字节格式类型 0 结束.</p>
 <p>已知限制: 当剪贴板中含有 Microsoft Excel 单元格数据时获取 <em>ClipboardAll</em> 可能会导致 Excel 弹出 "找不到打印机" 的对话框.</p>
 <p>使用 AutoHotkey 编写的剪贴板实用工具:</p>
@@ -87,7 +87,7 @@ ClipSaved := ""   <em>; 在原来的剪贴板含大量内容时释放内存.</em
 </ul>
 
 <h2 id="OnClipboardChange">OnClipboardChange</h2>
-<p>脚本可以使用 <a href="../commands/OnClipboardChange.htm#function">OnClipboardChange()</a> 或 <a href="../commands/OnClipboardChange.htm#label">OnClipboardChange 标签</a>监视系统剪贴板的改变.</p>
+<p>脚本可以使用 <a href="../lib/OnClipboardChange.htm#function">OnClipboardChange()</a> 或 <a href="../lib/OnClipboardChange.htm#label">OnClipboardChange 标签</a>监视系统剪贴板的改变.</p>
 
 </body>
 </html>

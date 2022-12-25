@@ -22,14 +22,14 @@
   <dt id="Label">Label</dt>
   <dd><p>跳转的目标<a href="../misc/Labels.htm">标签</a>或<a href="../Hotkeys.htm">热键标签</a>的名称, 这样会执行 <em>Label</em> 下的命令, 直到遇到 <a href="Return.htm">Return</a> 或 <a href="Exit.htm">Exit</a>. 和几乎其他所有命令的参数一样, <em>Label</em> 可以为<a href="../Variables.htm">变量</a>引用(例如 %MyLabel%), 此时将使用变量中的名称作为跳转的目标.</p>
   <p id="OmitLabel"><span class="ver">[v1.1.01+]:</span> 如果省略 <em>Label</em>, 则使用 <a href="../Variables.htm#ThisLabel">A_ThisLabel</a>. 例如, <code>SetTimer,, Off</code> 可以用来在定时子程序中关闭计时器, 当 <code>SetTimer,, 1000</code> 还会更新当前计时器的 <em>Period(周期)</em> 或者对当前正在运行的 label 设置一个新的定时值. <span class="ver">[v1.1.24+]:</span> 如果 A_ThisLabel 为空但是当前线程为计时器启动的, 那么就会直接使用这个计时器. 这个特性对于用计时器调用函数或函数对象时非常方便.</p>
-  <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不存在有效的标签名称, 这个参数可以为一个函数的名称, 其参数列表没有强制参数(请参阅<a href="#ExFunction">函数示例</a>), 或者是引用<a href="../objects/Functor.htm">函数对象</a>的单个变量. 例如, <code>SetTimer %funcObj%, 1000</code> 或 <code>SetTimer % funcObj, 1000</code>. 目前暂不支持其他返回对象的表达式. 详情参见<a href="#ExampleClass">类的例子</a>.</p>
+  <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不存在有效的标签名称, 这个参数可以为一个函数的名称, 其参数列表没有强制参数(请参阅<a href="#ExFunction">函数示例</a>), 或者是引用<a href="../misc/Functor.htm">函数对象</a>的单个变量. 例如, <code>SetTimer %funcObj%, 1000</code> 或 <code>SetTimer % funcObj, 1000</code>. 目前暂不支持其他返回对象的表达式. 详情参见<a href="#ExampleClass">类的例子</a>.</p>
 <p class="note"><strong>注意</strong>: <span class="ver">[v1.1.24+]:</span> 传递空变量或返回空值的表达式被看做一个错误. 这个参数必须为非空的值或完全忽略.</p>
   </dd>
 
   <dt>PeriodOnOffDelete</dt>
   <dd><p><strong>On(开启)</strong>: 以原来的 <em>周期</em> 重新启用之前禁用的计时器. 如果计时器不存在, 则进行创建(使用默认的周期 250). 计时器也会<a href="#reset">重置</a>. 如果计时器存在但之前被设为<a href="#once">单次运行模式</a>, 那么它仍然只运行一次.</p>
       <p><strong>Off(关闭)</strong>: 禁用现有的计时器.</p>
-      <p><strong>Delete(删除)</strong> <span class="ver">[v1.1.20+]</span>: 禁止并删除已存在的计时器. 如果计时器已经关联了某个<a href="../objects/Functor.htm">函数对象</a>, 该对象将被释放. 关闭计时器并不会释放该(函数) 对象.</p>
+      <p><strong>Delete(删除)</strong> <span class="ver">[v1.1.20+]</span>: 禁止并删除已存在的计时器. 如果计时器已经关联了某个<a href="../misc/Functor.htm">函数对象</a>, 该对象将被释放. 关闭计时器并不会释放该(函数) 对象.</p>
       <p><strong>Period(周期)</strong>: 使用该参数的绝对值创建或更新一个计时器, 如同在此计时器执行前必须经过的<a href="#Precision">近似</a>的毫秒数一样. 计时器会被自动启用和<a href="#reset">重置</a>. 计时器可以设置成重复执行或只执行一次:</p>
       <ul>
         <li>如果 <em>周期</em> 为正数, 计时器会自动重复直到被脚本明确的关闭.</li>
@@ -185,7 +185,7 @@ class SecondCounter {
 }</pre>
 <p>示例 #5 的备注:</p>
 <ul>
-  <li>我们也可使用 <code>this.timer := this.Tick.<a href="../objects/Func.htm#Bind">Bind</a>(this)</code>. 当 <code>this.timer</code> 被调用时, 它实际上是调用 <code>this.Tick.<a href="../objects/Func.htm#Call">Call</a>(this)</code> 元方法(除非 <code>this.Tick</code> 没有再次执行). 而 <a href="ObjBindMethod.htm">ObjBindMethod()</a> 则是创建了一个调用 <code>this.Tick()</code> 的对象.</li>
+  <li>我们也可使用 <code>this.timer := this.Tick.<a href="Func.htm#Bind">Bind</a>(this)</code>. 当 <code>this.timer</code> 被调用时, 它实际上是调用 <code>this.Tick.<a href="Func.htm#Call">Call</a>(this)</code> 元方法(除非 <code>this.Tick</code> 没有再次执行). 而 <a href="ObjBindMethod.htm">ObjBindMethod()</a> 则是创建了一个调用 <code>this.Tick()</code> 的对象.</li>
   <li>如果我们将 <em>Tick</em> 更名为 <em>Call</em>, 可直接使用 <code>this</code> 而非 <code>this.timer</code>. 这样也不会产生临时变量.  但 ObjBindMethod() 在对象拥有多个可被不同事件源触发的方法时会很有用, 如热键, 菜单项, GUI 控件等.</li>
   <li>如果计时器被自身调用的 函数/方法 修改或删除时, 它可能会简单的<a href="#OmitLabel">忽略 <em>Label</em> 参数</a>. 在某些情况下, 这样就避免了需要保留原始对象传递给计时器, 这样可以省略一个临时变量(就像上面例子中的 <code>timer</code> 那样).</li>
 </ul>

@@ -34,9 +34,9 @@ ul.list_of_p li { margin: 1em 0; }
 
 <p>有关标准对象类型的列表, 请参阅文档侧栏中的 <em>对象类型</em>. 有三种基本类型:</p>
 <ul>
-  <li><a href="objects/Object.htm"><b>Object</b></a>: 所有用户定义对象, 简单数组和关联数组的基本类型.</li>
-  <li><strong>内置对象</strong>, 例如 <a href="objects/File.htm">File</a>. 内置对象有一组严格的属性和方法, 不允许添加新的属性或方法.</li>
-  <li><strong>COM 包装器对象</strong>. 它们通常代表一个实现 <a href="https://docs.microsoft.com/windows/desktop/api/oaidl/nn-oaidl-idispatch">IDispatch 接口的</a> COM 或 "Automation(自动化)" 对象, 但也用于包装传递给 COM 对象和函数的<a href="commands/ComObjActive.htm">特定类型的包装值</a>. COM 对象是由外部库实现的, 因此通常与 AutoHotkey 对象的行为不同.</li>
+  <li><a href="lib/Object.htm"><b>Object</b></a>: 所有用户定义对象, 简单数组和关联数组的基本类型.</li>
+  <li><strong>内置对象</strong>, 例如 <a href="lib/File.htm">File</a>. 内置对象有一组严格的属性和方法, 不允许添加新的属性或方法.</li>
+  <li><strong>COM 包装器对象</strong>. 它们通常代表一个实现 <a href="https://docs.microsoft.com/windows/desktop/api/oaidl/nn-oaidl-idispatch">IDispatch 接口的</a> COM 或 "Automation(自动化)" 对象, 但也用于包装传递给 COM 对象和函数的<a href="lib/ComObjActive.htm">特定类型的包装值</a>. COM 对象是由外部库实现的, 因此通常与 AutoHotkey 对象的行为不同.</li>
 </ul>
 <p>对对象的支持需要 <span class="ver">[AHK_L 31+]</span>, 但是一些特性可能需要更后面的版本.</p>
 
@@ -58,23 +58,23 @@ Array := Array(Item1, Item2, ..., ItemN)</pre>
 <pre>Value := Array[Index]</pre>
 <p>对项进行赋值:</p>
 <pre>Array[Index] := Value</pre>
-<p>使用 <a href="objects/Object.htm#InsertAt">InsertAt</a> 方法插入一个或多个项到指定索引:</p>
+<p>使用 <a href="lib/Object.htm#InsertAt">InsertAt</a> 方法插入一个或多个项到指定索引:</p>
 <pre>Array.InsertAt(Index, Value, Value2, ...)</pre>
-<p>使用 <a href="objects/Object.htm#Push">Push</a> 方法追加一个或多个项:</p>
+<p>使用 <a href="lib/Object.htm#Push">Push</a> 方法追加一个或多个项:</p>
 <pre>Array.Push(Value, Value2, ...)</pre>
-<p>使用 <a href="objects/Object.htm#RemoveAt">RemoveAt</a> 方法移除项:</p>
+<p>使用 <a href="lib/Object.htm#RemoveAt">RemoveAt</a> 方法移除项:</p>
 <pre>RemovedValue := Array.RemoveAt(Index)</pre>
-<p>使用 <a href="objects/Object.htm#Pop">Pop</a> 方法移除最后一项:</p>
+<p>使用 <a href="lib/Object.htm#Pop">Pop</a> 方法移除最后一项:</p>
 <pre>RemovedValue := Array.Pop()</pre>
-<p>如果数组不是空的, 那么 <a href="objects/Object.htm#MinMaxIndex">MinIndex</a> 和 <a href="objects/Object.htm#MinMaxIndex">MaxIndex</a>/<a href="objects/Object.htm#Length">Length</a> 分别返回数组中当前使用的最小和最大的索引. 因为最小的索引几乎总是 1, 所以 MaxIndex 通常返回项目的数量. 如果没有整数键, MaxIndex 返回空, 而 Length 返回 0. 循环遍历数组的内容可以通过索引或 For 循环实现. 例如:</p>
+<p>如果数组不是空的, 那么 <a href="lib/Object.htm#MinMaxIndex">MinIndex</a> 和 <a href="lib/Object.htm#MinMaxIndex">MaxIndex</a>/<a href="lib/Object.htm#Length">Length</a> 分别返回数组中当前使用的最小和最大的索引. 因为最小的索引几乎总是 1, 所以 MaxIndex 通常返回项目的数量. 如果没有整数键, MaxIndex 返回空, 而 Length 返回 0. 循环遍历数组的内容可以通过索引或 For 循环实现. 例如:</p>
 <pre>array := ["one", "two", "three"]
 
 <em>; 从 1 依次递加到数组的项目数:</em>
-<a href="commands/Loop.htm">Loop</a> % array.Length()
+<a href="lib/Loop.htm">Loop</a> % array.Length()
     MsgBox % array[A_Index]
 
 <em>; 枚举数组内容:</em>
-<a href="commands/For.htm">For</a> index, value in array
+<a href="lib/For.htm">For</a> index, value in array
     MsgBox % "Item " index " is '" value "'"
 </pre>
 
@@ -87,11 +87,11 @@ Array := Object("KeyA", ValueA, "KeyB", ValueB, ..., "KeyZ", ValueZ)</pre>
 <pre>Value := Array[Key]</pre>
 <p>对项进行赋值:</p>
 <pre>Array[Key] := Value</pre>
-<p>使用 <a href="objects/Object.htm#Delete">Delete</a> 方法移除项:</p>
+<p>使用 <a href="lib/Object.htm#Delete">Delete</a> 方法移除项:</p>
 <pre>RemovedValue := Array.Delete(Key)</pre>
 <p>枚举项:</p>
 <pre>array := {ten: 10, twenty: 20, thirty: 30}
-<a href="commands/For.htm">For</a> key, value in array
+<a href="lib/For.htm">For</a> key, value in array
     MsgBox %key% = %value%</pre>
 <p>关联数组可以是稀疏分布的 - 即 <code>{1:"a",1000:"b"}</code> 仅包含两个键值对, 而不是 1000.</p>
 <p id="same_thing">到现在, 您也许已经注意到关联数组使用与简单数组非常相似的语法. 事实上, 在 v1.x 中它们是相同的东西. 然而, 把 <code>[]</code> 视为简单线性数组有助于保持其作用清晰, 并且改善您脚本与 AutoHotkey 未来版本的兼容性, 未来版本中可能改变实现方式.</p>
@@ -110,7 +110,7 @@ Array := Object("KeyA", ValueA, "KeyB", ValueB, ..., "KeyZ", ValueZ)</pre>
 <p>COM 对象和用户定义对象的一些属性可以接受参数:</p>
 <pre>Value := Object.Property[Parameters]
 Object.Property[Parameters] := Value</pre>
-<p><strong>相关:</strong> <a href="objects/Object.htm">对象</a>, <a href="objects/File.htm">文件对象</a>, <a href="objects/Func.htm">Func 对象</a>, <a href="commands/ComObjCreate.htm">COM 对象</a></p>
+<p><strong>相关:</strong> <a href="lib/Object.htm">对象</a>, <a href="lib/File.htm">文件对象</a>, <a href="lib/Func.htm">Func 对象</a>, <a href="lib/ComObjCreate.htm">COM 对象</a></p>
 <p><b>已知限制:</b></p>
 <ul><li>当前 <code><span class="dull">x</span>.y[z]<span class="dull">()</span></code> 会被视为 <code><span class="dull">x</span>["y", z]<span class="dull">()</span></code>, 这是不受支持的. 作为一种变通方法, <code><span class="red">(</span><span class="dull">x.y</span><span class="red">)</span>[z]()</code> 首先计算 <code>x.y</code>, 然后把结果作为方法调用的目标. 请注意 <code>x.y[z].Call()</code> 没有这个限制, 因为它的求值方式和 <code>(x.y[z]).Call()</code> 一样.</li></ul>
 
@@ -156,9 +156,9 @@ obj.item[x] := y</pre>
   <li>整数值的字符串格式不会被保留. 例如, 在 AutoHotkey v1 中, <code>0x10</code> 和 <code>16</code> 是两个不同的字符串(这与 <a href="https://www.autohotkey.com/v2/">AutoHotkey v2</a> 不同), 但 <code>x[0x10]</code>, <code>x[16]</code> 和 <code>x[00016]</code> 是等同的, 因为只使用数字值.</li>
   <li>不含小数点的数值型字符串被转换为纯整数, 所以受到上述的限制. 64 位范围之外的数字字符串可能产生不一致的结果.</li>
   <li>用引号括起来的原义字符串在 v1.x 中被视为纯非数值型, 所以 <code>x[1]</code> 和 <code>x["1"]</code> 是 <i>不</i> 等同的. 同时, 如果原义字符串和另一个值串联在一起(如同在 <code>"0x" x</code>), 结果被视为纯非数值型. 不过, 这不适用于变量, 所以 <code>x[1]</code> 和 <code>x[y:="1"]</code> 是等同的. 此问题将在 <a href="https://autohotkey.com/v2/">AutoHotkey v2</a> 中解决, 所以脚本应避免使用用引号括起来的原义数字作为键.</li>
-  <li>不支持使用浮点数作为键 - 而是把它们转换成字符串. 在 v1.x 中, 浮点数文字保留它们原始的格式, 而纯浮点数(例如 <code>0+1.0</code> 或 <code>Sqrt(y)</code> 的结果) 被强制转换成当前的<a href="commands/SetFormat.htm">浮点格式</a>. 考虑到一致和清晰, 脚本中应避免使用浮点文字作为键.</li>
-  <li id="base-key">默认情况下, 字符串键 "base" 对应对象的 <a href="objects/Object.htm#Base">base</a> 属性, 因此不能通过正常的赋值来存储普通值. 但是, 任何属性都可以通过其他方式存储值来覆盖, 例如 <code><a href="objects/Object.htm#RawSet">ObjRawSet</a>(Object, "base", "")</code> 或 <code><a href="objects/Object.htm#SetCapacity">Object.SetCapacity</a>("base", 0)</code>. 一旦完成, 键 "base" 就跟其他字符串一样了.</li>
-  <li>尽管<a href="objects/Object.htm">内置方法</a>的名称可以作为键名来使用, 这样将阻止同名对应的方法被调用, 比如一个键的名称是 "Length", 那么你将无法调用 obj.Length() 方法. (除非键的值是相应函数的引用, 比如 <em>ObjLength</em>).</li>
+  <li>不支持使用浮点数作为键 - 而是把它们转换成字符串. 在 v1.x 中, 浮点数文字保留它们原始的格式, 而纯浮点数(例如 <code>0+1.0</code> 或 <code>Sqrt(y)</code> 的结果) 被强制转换成当前的<a href="lib/SetFormat.htm">浮点格式</a>. 考虑到一致和清晰, 脚本中应避免使用浮点文字作为键.</li>
+  <li id="base-key">默认情况下, 字符串键 "base" 对应对象的 <a href="lib/Object.htm#Base">base</a> 属性, 因此不能通过正常的赋值来存储普通值. 但是, 任何属性都可以通过其他方式存储值来覆盖, 例如 <code><a href="lib/Object.htm#RawSet">ObjRawSet</a>(Object, "base", "")</code> 或 <code><a href="lib/Object.htm#SetCapacity">Object.SetCapacity</a>("base", 0)</code>. 一旦完成, 键 "base" 就跟其他字符串一样了.</li>
+  <li>尽管<a href="lib/Object.htm">内置方法</a>的名称可以作为键名来使用, 这样将阻止同名对应的方法被调用, 比如一个键的名称是 "Length", 那么你将无法调用 obj.Length() 方法. (除非键的值是相应函数的引用, 比如 <em>ObjLength</em>).</li>
 </ul>
 
 <h2 id="Extended_Usage">扩展用法</h2>
@@ -171,7 +171,7 @@ RetVal := %Func%(<i>Params</i>)     <em>; 需要 <span class="ver">[v1.1.07+]</s
 RetVal := Func.Call(<i>Params</i>)  <em>; 需要 <span class="ver">[v1.1.19+]</span></em>
 RetVal := Func.(<i>Params</i>)      <em>; 不推荐</em>
 </pre>
-<p>有关函数引用的其他属性的详细信息, 请参阅 <a href="objects/Func.htm">Func 对象</a>.</p>
+<p>有关函数引用的其他属性的详细信息, 请参阅 <a href="lib/Func.htm">Func 对象</a>.</p>
 
 <span id="JaggedArrays"></span><h3 id="Usage_Arrays_of_Arrays">数组嵌套</h3>
 <p>AutoHotkey 通过显式地把数组存储到其他数组中来支持 "多维" 数组. 例如, 表格可以表示为行数组, 其中每一行本身是一个列数组. 在这种情况下,  <code>x</code> 行 <code>y</code> 列的内容可以用以下两种方法的其中一个进行设置:</p>
@@ -223,7 +223,7 @@ SecondFunc(param) {
 }
 <em>; 或</em>
 baseObject := {foo: "bar"}</pre>
-<p>要继承其他对象来创建新对象, 脚本可以赋值为 <a href="objects/Object.htm#Base">base 属性</a>或使用 <a href="#Custom_NewDelete"><code>new</code> 关键字</a>:</p>
+<p>要继承其他对象来创建新对象, 脚本可以赋值为 <a href="lib/Object.htm#Base">base 属性</a>或使用 <a href="#Custom_NewDelete"><code>new</code> 关键字</a>:</p>
 <pre>obj1 := Object(), obj1.base := baseObject
 obj2 := {base: baseObject}
 obj3 := new baseObject
@@ -281,7 +281,7 @@ other.test()</pre>
 </pre>
 <p>在加载脚本时, 这里会创建对象并将其存储到全局(或 <span class="ver">[v1.1.05]</span> <a href="Functions.htm#SuperGlobal">超级全局</a>) 变量 <i>ClassName</i>. 在<a href="Functions.htm#ForceLocal">强制局部模式</a>(或在 <span class="ver">[v1.1.05]</span> 之前, 假定局部模式或假定静态模式的函数) 的函数中引用此类
 , 那么需要进行声明, 例如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的完整名称(从 <span class="ver">[v1.1.11]</span> 开始, 对于早期的版本它们所定义的无关紧要). 每个类的完整名称存储在 <code><i>object</i>.__Class</code>.</p>
-<p>因为类是通过变量引用的, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := new Box</code> 将会用其本身的实例替换 <em>Box</em> 中的类对象. <span class="ver">[v1.1.27+]:</span> 每当尝试覆盖一个类时, <a href="commands/_Warn.htm#ClassOverwrite">#Warn ClassOverwrite</a> 允许在加载时显示一个警告.</p>
+<p>因为类是通过变量引用的, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := new Box</code> 将会用其本身的实例替换 <em>Box</em> 中的类对象. <span class="ver">[v1.1.27+]:</span> 每当尝试覆盖一个类时, <a href="lib/_Warn.htm#ClassOverwrite">#Warn ClassOverwrite</a> 允许在加载时显示一个警告.</p>
 <p>在本文档中, "class" 这个单词表示一个类对象是由 <code>class</code> 构造的.</p>
 <p>类定义可以包含变量声明, 方法定义和内嵌的类定义.</p>
 
@@ -322,7 +322,7 @@ Method()
   <li><code>base.Method()</code> 总是调用基类的当前方法的定义, 即使 <code>this</code> 完全是从那个类派生的 <em>sub-class</em> 或其他类派生而来的.</li>
   <li><code>base.Method()</code> 隐式传递 <code>this</code> 作为首个(隐藏) 参数.</li>
 </ul>
-<p><code>base</code> 仅在后面跟着点 <code>.</code> 或方括号 <code>[]</code> 时才有特殊含义, 所以像 <code>obj := base, obj.Method()</code> 这样的代码将不起作用. 通过把 <i>base</i> 赋为非空值可以禁用它的特殊行为, 但是不建议这样做. 因为变量 <i>base</i> 必须为空, 所以如果脚本中不含有 <a href="commands/_NoEnv.htm">#NoEnv</a> 指令那么性能可能会降低.</p>
+<p><code>base</code> 仅在后面跟着点 <code>.</code> 或方括号 <code>[]</code> 时才有特殊含义, 所以像 <code>obj := base, obj.Method()</code> 这样的代码将不起作用. 通过把 <i>base</i> 赋为非空值可以禁用它的特殊行为, 但是不建议这样做. 因为变量 <i>base</i> 必须为空, 所以如果脚本中不含有 <a href="lib/_NoEnv.htm">#NoEnv</a> 指令那么性能可能会降低.</p>
 
 <h4 id="Custom_Classes_property">Properties(属性)<span class="ver">[v1.1.16+]</span></h4>
 <p>属性定义允许当脚本获取或设置一个指定键时调用一个方法.</p>
@@ -367,7 +367,7 @@ class GMem
 <p>__Delete 不可被任何含有 "__Class" 键的对象调用. <a href="#Custom_Classes">Class Object(类对象)</a> 默认包含这个键.</p>
 <p>如果类有定义这些方法的父类, 则通常应该调用 <code>base.__New()</code>(带有适当的参数) 和 <code>base.__Delete()</code>. 否则, 只调用方法的最派生的定义, 不包括目标对象本身中的任何定义.</p>
 <p><span class="ver">[v1.1.28+]:</span> 如果在 __Delete 执行时抛出了异常或运行时错误, 并且未在 __Delete 中处理, 则它就像从一个新<a href="misc/Threads.htm">线程</a>调用 __Delete. 也就是说, 显示一个错误对话框并 __Delete 返回, 但是线程不会退出(除非它已经退出). 在 v1.1.28 之前, 未处理的异常会导致不一致的行为.</p>
-<p>如果脚本被任何方式直接终止, 包括托盘菜单, <a href="commands/ExitApp.htm">ExitApp</a>, 或 <a href="commands/Exit.htm">Exit</a>(当脚本不是<a href="commands/_Persistent.htm">持续运行</a>时), 任何尚未返回的函数都没有机会返回. 因此, 这些函数的局部变量所引用的任何对象都不会被释放, 所以 __Delete 也不会被调用.</p>
+<p>如果脚本被任何方式直接终止, 包括托盘菜单, <a href="lib/ExitApp.htm">ExitApp</a>, 或 <a href="lib/Exit.htm">Exit</a>(当脚本不是<a href="lib/_Persistent.htm">持续运行</a>时), 任何尚未返回的函数都没有机会返回. 因此, 这些函数的局部变量所引用的任何对象都不会被释放, 所以 __Delete 也不会被调用.</p>
 <p>当脚本退出时, 全局变量和静态变量所包含的对象会按照任意的, 实现定义的顺序自动释放. 当 __Delete 在这个过程中被调用时, 一些全局变量或静态变量可能已经被释放, 但对象本身包含的任何引用仍然有效. 因此 __Delete 最好是完全自包含的, 而不依赖于任何全局变量或静态变量.</p>
 
 <h3 id="Meta_Functions">元函数(Meta-Functions)</h3>
@@ -400,14 +400,14 @@ class <i>ClassName</i> {
   <li>如果在 <i>get</i> 或 <i>set</i> 指定了多个参数且找到了键, 则检查其值. 如果那个值为对象, 则调用它处理剩余参数, 不做进一步处理.</li>
   <li>如果找到了键,<br>
     <i>Get</i>: 返回值.<br>
-    <i>Call</i>: 尝试调用一个值, 传递目标对象为第一个参数(<code>this</code>). 值应该是一个函数名或<a href="objects/Functor.htm">函数对象</a>.</li>
+    <i>Call</i>: 尝试调用一个值, 传递目标对象为第一个参数(<code>this</code>). 值应该是一个函数名或<a href="misc/Functor.htm">函数对象</a>.</li>
 </ul>
 <p>如果元函数把匹配的键保存在对象中但未 <code>return</code>, 则行为类似于该键原本就存在于对象中. 使用 __Set 的示例, 请参阅<a href="#Subclassing_aoa">子类化数组的数组</a>.</p>
 <p>如果操作仍为得到处理, 则检查是否有内置方法或属性:</p>
 <ul>
   <li><i>Get</i>: 如果该键是 "base", 则返回对象的基.</li>
   <li><i>Set</i>: 如果该键是 "base", 则设置对象的基(如果值不是对象则移除).</li>
-  <li><i>Call</i>: 适用时调用<a href="objects/Object.htm">内置方法</a>.</li>
+  <li><i>Call</i>: 适用时调用<a href="lib/Object.htm">内置方法</a>.</li>
 </ul>
 <p>如果操作仍未得到处理,</p>
 <ul>
@@ -477,9 +477,9 @@ class Color
 <p>然而, 还可以用<a href="#Custom_Classes_property">属性语法</a>实现一个中央方法, 来替代本例中这种调用相同代码逻辑的一组属性. 由于使用元函数出错的风险较大, 应该尽量避免使用(见上面代码中的注意).</p>
 
 <h4 id="Objects_as_Functions">对象作为函数</h4>
-<p>对于利用对象实现函数的基本思路, 请参考<a href="objects/Functor.htm#User-Defined">函数对象</a>章节.</p>
+<p>对于利用对象实现函数的基本思路, 请参考<a href="misc/Functor.htm#User-Defined">函数对象</a>章节.</p>
 <p>函数对象还可以实现元函数的功能, 效果和前面几节中定义动态属性一样. 尽管推荐用<a href="#Custom_Classes_property">属性语法</a>替代, 下面的例子演示了如何利用元函数的潜能实现新的概念或结构, 甚至改变脚本代码的结构.</p>
-<pre><em>; 此示例需要 <a href="objects/Functor.htm#class_FunctionObject">FunctionObject class</a> 才能工作.</em>
+<pre><em>; 此示例需要 <a href="misc/Functor.htm#class_FunctionObject">FunctionObject class</a> 才能工作.</em>
 blue := new Color(0x0000ff)
 MsgBox % blue.R "," blue.G "," blue.B
 
@@ -617,7 +617,7 @@ Default__Warn(nonobj, p1="", p2="", p3="", p4="")
 <p>在一些罕见的情况中, 可能需要通过 DllCall() 传递对象到外部代码或把它存储到二进制数据结构以供以后检索. 可以通过 <code>address := &amp;object</code> 来检索对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道对象中的一个. 如果对象的最后一个 <em>已知</em> 引用被释放, 该对象将被删除. 因此, 脚本必须设法通知对象它的引用增加了. 有两种方法实现:</p>
 <pre><em>; 方法 #1: 显式地增加引用计数.</em>
 address := &amp;object
-<a href="commands/ObjAddRef.htm">ObjAddRef</a>(address)
+<a href="lib/ObjAddRef.htm">ObjAddRef</a>(address)
 
 <em>; 方法 #2: 使用 Object(), 增加一个引用并返回地址.</em>
 address := Object(object)</pre>
@@ -625,10 +625,10 @@ address := Object(object)</pre>
 <pre>object := Object(address)</pre>
 <p>无论用的上述哪种方法, 脚本都需要在完成对象的引用之后通知对象:</p>
 <pre><em>; 减少对象的引用计数, 以允许它被释放:</em>
-<a href="commands/ObjAddRef.htm">ObjRelease</a>(address)
+<a href="lib/ObjAddRef.htm">ObjRelease</a>(address)
 </pre>
 <p>一般来说, 对象地址的每个新副本都应该被视为对象的另一个引用, 所以脚本必须在获得副本之后立即调用 ObjAddRef(), 并在丢弃副本之前立即调用 ObjRelease(). 例如, 每当通过类似 <code>x := address</code> 这样复制地址时, 就应该调用一次 ObjAddRef. 同样的, 当脚本使用 <em>x</em> 完时(或者用其他值覆盖 <em>x</em>), 就应该调用一次 ObjRelease.</p>
-<p>注意, Object() 函数甚至可以在对象创建之前就可以使用, 比如 <a href="commands/ComObjCreate.htm">COM 对象</a>和 <a href="objects/File.htm">File 对象</a>.</p>
+<p>注意, Object() 函数甚至可以在对象创建之前就可以使用, 比如 <a href="lib/ComObjCreate.htm">COM 对象</a>和 <a href="lib/File.htm">File 对象</a>.</p>
 
 </body>
 </html>

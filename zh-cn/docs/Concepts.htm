@@ -80,11 +80,11 @@ Exception handling
 <p>除本文档注明外, 十六进制数字必须使用 <code>0x</code> 或 <code>0X</code> 前缀. 这个前缀必须写在 <code>+</code> 或 <code>-</code> 符号之后(如果存在), 并且在前导零之前. 例如, <code>0x001</code> 有效, 但 <code>000x1</code> 无效.</p>
 <p>带小数点的数字总是被认为是浮点数, 即使小数部分是零. 例如, <code>42</code> 和 <code>42.0</code> 通常可以互换, 但并非总是如此. 科学记数法也是公认的, 但前提是存在一个小数点(如 <code>1.0e4</code> 和 <code>-2.1E-4</code>).</p>
 <p>小数点分隔符总是一个点, 即使用户的区域设置指定了一个逗号.</p>
-<p>当数字被转换为字符串时, 它是根据当前的<a href="commands/SetFormat.htm#remarks">整数或浮点格式</a>进行格式化. 尽管 <a href="commands/SetFormat.htm">SetFormat</a> 命令可以用来更改当前的格式, 但通常使用 <a href="commands/Format.htm">Format</a> 函数格式化字符串会更好. 浮点数也可以使用 <a href="commands/Math.htm#Round">Round</a> 函数进行格式化.</p>
+<p>当数字被转换为字符串时, 它是根据当前的<a href="lib/SetFormat.htm#remarks">整数或浮点格式</a>进行格式化. 尽管 <a href="lib/SetFormat.htm">SetFormat</a> 命令可以用来更改当前的格式, 但通常使用 <a href="lib/Format.htm">Format</a> 函数格式化字符串会更好. 浮点数也可以使用 <a href="lib/Math.htm#Round">Round</a> 函数进行格式化.</p>
 <p>有关数字值的范围和精度的详细信息, 请参阅<a href="#pure-numbers">纯数字</a>.</p>
 
 <h3 id="boolean">布尔值</h3>
-<p><em>布尔值</em> 可以是 <em>true(真)</em> 或 <em>false(假)</em>. 布尔值用于表示具有两种可能状态的任何东西, 例如表达式的 <em>真假</em>. 例如, 当 x 小于或等于 y 的值时, 表达式 <code>(x &lt;= y)</code> 是 <em>真</em>. 布尔值也可以表示 <em>是</em> 或 <em>否</em>, <em>开</em> 或 <em>关</em>, <em>下</em> 或 <em>上</em>(如 <a href="commands/GetKeyState.htm#function">GetKeyState</a>) 等等.</p>
+<p><em>布尔值</em> 可以是 <em>true(真)</em> 或 <em>false(假)</em>. 布尔值用于表示具有两种可能状态的任何东西, 例如表达式的 <em>真假</em>. 例如, 当 x 小于或等于 y 的值时, 表达式 <code>(x &lt;= y)</code> 是 <em>真</em>. 布尔值也可以表示 <em>是</em> 或 <em>否</em>, <em>开</em> 或 <em>关</em>, <em>下</em> 或 <em>上</em>(如 <a href="lib/GetKeyState.htm#function">GetKeyState</a>) 等等.</p>
 <p>AutoHotkey 没有特定的布尔类型, 因此它使用整数值 <code>0</code> 表示假, 而 <code>1</code> 表示真. 当要求判断一个值的真假时, 空白或零值被认为是假, 而所有其他值被认为是真. (对象总是被视为真.)</p>
 <p>单词 <code>true</code> 和 <code>false</code> 是值分别为 1 和 0 的<a href="#built-in-variables">内置变量</a>. 使用它们可以增加脚本的可读性.</p>
 
@@ -148,8 +148,8 @@ myObj.name[arg2, ..., argN] := value
 <h3 id="uninitialised-variables">未初始化变量</h3>
 <p><em>初始化</em> 变量是给它分配一个起始值. 虽然程序会自动初始化所有的变量(一个空字符串是默认值), 但是脚本在使用之前初始化它的变量是一个好习惯. 这样, 任何阅读脚本的人都可以看到脚本将使用哪些变量以及他们预期具有的起始值.</p>
 <p>脚本通常需要初始化任何预期包含数字的变量. 例如, 如果 x 从未被赋值 <code>x := x + 1</code> 将不起作用, 因为 <em>空字符串</em> 被认为是非数字的. 脚本应该分配一个起始值, 如 <code>x := 0</code>. 有些情况下空值 <em>是</em> 被假定为 0, 但是最好不要依赖这个方法.</p>
-<p><a href="commands/IsSet.htm">IsSet</a> can be used to determine whether a variable has been initialized, such as to initialize a global or static variable on first use.</p>
-<p>脚本作者可以使用 <a href="commands/_Warn.htm">#Warn</a> 指令来帮助查找变量被使用而未被脚本初始化的情况.</p>
+<p><a href="lib/IsSet.htm">IsSet</a> can be used to determine whether a variable has been initialized, such as to initialize a global or static variable on first use.</p>
+<p>脚本作者可以使用 <a href="lib/_Warn.htm">#Warn</a> 指令来帮助查找变量被使用而未被脚本初始化的情况.</p>
 
 <h3 id="built-in-variables">内置变量</h3>
 <p>程序中内置了许多有用的变量, 可以通过任何脚本来引用. 除了 <a href="misc/Clipboard.htm">Clipboard</a>, <a href="misc/ErrorLevel.htm">ErrorLevel</a> 和<a href="Scripts.htm#cmd">命令行参数</a>外, 这些变量是只读的; 也就是说, 他们的内容不能被脚本直接改变. 按照惯例, 这些变量中的大部分以前缀 <code>A_</code> 开头, 所以最好避免使用这个前缀作为你自己的变量.</p>
@@ -159,10 +159,10 @@ myObj.name[arg2, ..., argN] := value
 
 <h3 id="environment-variables">环境变量</h3>
 <p>环境变量由操作系统维护. 在命令提示符中输入 SET 并回车后, 您可以看到环境变量列表.</p>
-<p>脚本中可以使用 <a href="commands/EnvSet.htm">EnvSet</a> 创建新的环境变量或改变现有环境变量的内容. 系统的其他部分不会看到这种添加和改变. 但是, 通过调用 <a href="commands/Run.htm">Run</a> 或 <a href="commands/Run.htm">RunWait</a> 启动的任何程序或脚本会继承其父脚本的环境变量的副本.</p>
-<p>推荐在所有新脚本中使用 <a href="commands/EnvGet.htm">EnvGet</a> 来获取环境变量, 例如 Path:</p>
+<p>脚本中可以使用 <a href="lib/EnvSet.htm">EnvSet</a> 创建新的环境变量或改变现有环境变量的内容. 系统的其他部分不会看到这种添加和改变. 但是, 通过调用 <a href="lib/Run.htm">Run</a> 或 <a href="lib/Run.htm">RunWait</a> 启动的任何程序或脚本会继承其父脚本的环境变量的副本.</p>
+<p>推荐在所有新脚本中使用 <a href="lib/EnvGet.htm">EnvGet</a> 来获取环境变量, 例如 Path:</p>
 <pre>EnvGet, OutputVar, Path  <em>; 有关解释, 请参阅 #NoEnv.</em></pre>
-<p>如果脚本中没有 <a href="commands/_NoEnv.htm">#NoEnv</a> 指令, 则读取一个空变量将返回具有该名称(如果有的话) 的环境变量的值. 这可能会导致混淆, 所以建议所有新脚本使用 <code>#NoEnv</code>.</p>
+<p>如果脚本中没有 <a href="lib/_NoEnv.htm">#NoEnv</a> 指令, 则读取一个空变量将返回具有该名称(如果有的话) 的环境变量的值. 这可能会导致混淆, 所以建议所有新脚本使用 <code>#NoEnv</code>.</p>
 
 <h3 id="caching">缓存</h3>
 <p>尽管变量通常被认为是持有单个值, 而该值具有不同的类型(字符串, 数字或对象), 但在 <code>myString + 1</code> 和 <code>MsgBox %myNumber%</code> 等情况下, AutoHotkey 会自动在数字和字符串之间进行转换. 由于这些转换可能非常频繁地发生, 因此只要转换了变量, 就会将结果 <em>缓存</em> 在变量中.</p>
@@ -171,7 +171,7 @@ myObj.name[arg2, ..., argN] := value
   <li>COM 对象. 为了将参数传递给 COM 对象, 程序必须将变量的内容转换为数字 <em>或</em> 字符串. 如果传递错误类型的值, 某些 COM 对象会引发异常. 如果变量同时具有数字和字符串, 则使用数字. 通常这会得到正确的结果, 但有时不会.</li>
   <li>对象不能将同时包含数字和字符串的字串存储为键或值. 由于数字的内存效率更高, 因此如果变量同时具有两者, 则使用数字(除了用作键的浮点值).</li>
 </ol>
-<p><a href="commands/SetFormat.htm">SetFormat</a> 的慢速模式强制分配一个纯数字, 以便立即将该数字转换为一个字符串. 对于整数, 这个数字也被存储, 所以除了性能之外, 这不会有不利的影响. 对于浮点数, 不存储数字, 因为 SetFormat 会影响值的精度, 甚至可能会截断所有的小数位数. 换句话说, SetFormat 的慢速模式可防止纯浮点数存储在变量中.</p>
+<p><a href="lib/SetFormat.htm">SetFormat</a> 的慢速模式强制分配一个纯数字, 以便立即将该数字转换为一个字符串. 对于整数, 这个数字也被存储, 所以除了性能之外, 这不会有不利的影响. 对于浮点数, 不存储数字, 因为 SetFormat 会影响值的精度, 甚至可能会截断所有的小数位数. 换句话说, SetFormat 的慢速模式可防止纯浮点数存储在变量中.</p>
 <p>取一个变量的地址有效地将变量的值转换为一个字符串, 禁用缓存直到变量的地址改变(这发生在容量改变时). 这既是为了向后兼容, 也是因为脚本可以随时通过其地址间接地改变值, 使得缓存不准确.</p>
 
 <h3 id="Related">相关</h3>
@@ -183,20 +183,20 @@ myObj.name[arg2, ..., argN] := value
 <h2 id="functions">函数/命令</h2>
 <p><em>函数</em> 或 <em>命令</em> 是脚本 <em>执行某些操作</em> 的基本手段.</p>
 <p>实质上, 函数和命令是一回事, 所以这里解释的概念适用于两者. 然而, AutoHotkey v1 的悠久历史和强化向后兼容性, 导致了需要传统语法的 <em>命令</em> 和需要表达式语法的<em>函数</em> 之间的差异.</p>
-<p>命令和函数可以有很多不同的目的. 一些函数可能只是执行一个简单的计算, 而另一些可以立即看到效果, 比如移动一个窗口. AutoHotkey 的优势之一就是脚本可以轻松地自动执行其他程序, 并通过简单地调用几个函数执行许多其他常见任务. 有关示例, 请参阅<a href="commands/index.htm">命令和函数列表</a>.</p>
+<p>命令和函数可以有很多不同的目的. 一些函数可能只是执行一个简单的计算, 而另一些可以立即看到效果, 比如移动一个窗口. AutoHotkey 的优势之一就是脚本可以轻松地自动执行其他程序, 并通过简单地调用几个函数执行许多其他常见任务. 有关示例, 请参阅<a href="lib/index.htm">命令和函数列表</a>.</p>
 <p>在整篇文档中, 一些常见的词汇的使用方式对于没有经验的人来说可能并不是通俗易懂的. 下面是一些与函数和命令相关的常用单词/短语:</p>
 <dl>
   <dt id="call">调用函数或命令</dt>
   <dd><p><em>调用</em> 函数或命令会导致程序调用, 执行或计算它. 换句话说, <em>函数调用</em> 暂时将控制权从脚本转移到函数. 函数完成其目的时, 它将控制权 <em>返回</em> 给脚本. 换句话说, 函数调用之后的任何代码都不会执行, 直到函数完成.</p>
-  <p>但是, 有时一个函数或命令可以在用户看到它的效果之前完成. 例如, <a href="commands/Send.htm">Send</a> 命令 <em>发送</em> 键击, 但可能会在键击到达其目的地并返回其预期效果之前返回.</p></dd>
+  <p>但是, 有时一个函数或命令可以在用户看到它的效果之前完成. 例如, <a href="lib/Send.htm">Send</a> 命令 <em>发送</em> 键击, 但可能会在键击到达其目的地并返回其预期效果之前返回.</p></dd>
   <dt id="parameters">参数</dt>
-  <dd><p>通常一个命令或函数接受 <em>参数</em>, 告诉它如何操作或操作什么. 每个参数都是一个<a href="#values">值</a>, 如字符串或数字. 例如, <a href="commands/WinMove.htm">WinMove</a> 移动一个窗口, 所以它的参数告诉它要移动哪个窗口以及移动到哪里. Parameter(参数) 也可以被称为 <em>arguments(参数)</em>. 常用的缩写包括 <em>param</em> 和 <em>arg</em>.</p></dd>
+  <dd><p>通常一个命令或函数接受 <em>参数</em>, 告诉它如何操作或操作什么. 每个参数都是一个<a href="#values">值</a>, 如字符串或数字. 例如, <a href="lib/WinMove.htm">WinMove</a> 移动一个窗口, 所以它的参数告诉它要移动哪个窗口以及移动到哪里. Parameter(参数) 也可以被称为 <em>arguments(参数)</em>. 常用的缩写包括 <em>param</em> 和 <em>arg</em>.</p></dd>
   <dt id="pass-parameters">传递参数</dt>
-  <dd><p>参数被 <em>传递</em> 给一个函数或命令, 这意味着函数或命令被调用时每个参数都会指定一个值. 例如, 可以 <em>传递</em> 键的名称给 <a href="commands/GetKeyState.htm#function">GetKeyState()</a> 以确定该键是否被按下.</p></dd>
+  <dd><p>参数被 <em>传递</em> 给一个函数或命令, 这意味着函数或命令被调用时每个参数都会指定一个值. 例如, 可以 <em>传递</em> 键的名称给 <a href="lib/GetKeyState.htm#function">GetKeyState()</a> 以确定该键是否被按下.</p></dd>
   <dt id="return-a-value">返回值</dt>
-  <dd><p>函数 <em>返回</em> 一个值, 所以函数的结果通常称为 <em>返回值</em>. 例如, <a href="commands/StrLen.htm">StrLen()</a> 返回字符串中的字符数. 命令不直接返回结果; 作为代替, 他们将结果存储在一个<a href="#variables">变量</a>中. 函数也可以这样做, 比如当有多个结果时.</p></dd>
+  <dd><p>函数 <em>返回</em> 一个值, 所以函数的结果通常称为 <em>返回值</em>. 例如, <a href="lib/StrLen.htm">StrLen()</a> 返回字符串中的字符数. 命令不直接返回结果; 作为代替, 他们将结果存储在一个<a href="#variables">变量</a>中. 函数也可以这样做, 比如当有多个结果时.</p></dd>
 </dl>
-<p>函数和命令通常期望参数以特定的顺序写入, 因此每个参数值的含义取决于它在逗号分隔的参数列表中的位置. 有些参数可以省略, 在这种情况下参数可以留空, 但是其后面的逗号只能在所有剩余的参数都省略的情况下才能省略. 例如, <a href="commands/ControlSend.htm">ControlSend</a> 的语法是:</p>
+<p>函数和命令通常期望参数以特定的顺序写入, 因此每个参数值的含义取决于它在逗号分隔的参数列表中的位置. 有些参数可以省略, 在这种情况下参数可以留空, 但是其后面的逗号只能在所有剩余的参数都省略的情况下才能省略. 例如, <a href="lib/ControlSend.htm">ControlSend</a> 的语法是:</p>
 <pre class="Syntax"><span class="func">ControlSend</span> <span class="optional">, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>方括号表示所包含的参数是可选的(方括号本身不应出现在实际的代码中). 但是, 除非指定了 <em>Keys</em>, 否则 ControlSend 是无用的, 通常还必须指定目标窗口. 例如:</p>
 <pre>ControlSend, Edit1, ^{Home}, A  <em>; 正确. 控件被指定.</em>
@@ -249,7 +249,7 @@ else
     WinActivate ahk_class Notepad
 Send Hello`, world{!}
 </pre>
-<p>在我们书写的指令中, 我们使用了缩进和编号来对语句进行了分组. 脚本工作有点不同. 尽管缩进使得代码更容易阅读, 但在 AutoHotkey 中, 它并不影响语句的分组. 作为替代, 如上所示, 语句通过将它们括在花括号中进行分组. 这被称为一个<a href="commands/Block.htm"><em>块</em></a>.</p>
+<p>在我们书写的指令中, 我们使用了缩进和编号来对语句进行了分组. 脚本工作有点不同. 尽管缩进使得代码更容易阅读, 但在 AutoHotkey 中, 它并不影响语句的分组. 作为替代, 如上所示, 语句通过将它们括在花括号中进行分组. 这被称为一个<a href="lib/Block.htm"><em>块</em></a>.</p>
 <p class="note">有关语法的详细信息 - 即如何在 AutoHotkey 中编写或识别控制流程语句 - 请参阅<a href="Language.htm#control-flow">控制流</a>.</p>
 
 <h2 id="details">细节</h2>
@@ -262,7 +262,7 @@ Send Hello`, world{!}
 </table>
 <p><strong>编码:</strong> 字符串的 <em>编码</em> 定义了符号如何映射到序数, 以及序数到字节. 尽管有许多不同的编码, 但是由于所有由 AutoHotkey 支持的编码都包含 ASCII 作为子集, 所以字符编码 0 到 127 总是具有相同的含义. 例如, 'A' 的字符编码总是 65.</p>
 <p id="null-termination"><strong>空终止符:</strong> 每个字符串都以 "空终止符" 结束, 换句话说, 二进制值为零的字符标志着字符串的结束. 字符串的长度不需要存储, 因为它可以通过空终止符的位置推断出来. 为了提高性能, AutoHotkey 有时也存储长度, 比如字符串存储在变量中时.</p>
-<p class="warning"><strong>注意:</strong> 由于依赖于空终止符, AutoHotkey v1 通常不支持包含空终止符的字符串. 可以使用 <a href="commands/VarSetCapacity.htm">VarSetCapacity()</a> 和 <a href="commands/NumPut.htm">NumPut()</a> 或 <a href="commands/DllCall.htm">DllCall()</a> 创建这样的字符串, 但是可能会产生不一致的结果.</p>
+<p class="warning"><strong>注意:</strong> 由于依赖于空终止符, AutoHotkey v1 通常不支持包含空终止符的字符串. 可以使用 <a href="lib/VarSetCapacity.htm">VarSetCapacity()</a> 和 <a href="lib/NumPut.htm">NumPut()</a> 或 <a href="lib/DllCall.htm">DllCall()</a> 创建这样的字符串, 但是可能会产生不一致的结果.</p>
 <p id="native-encoding"><strong>原生编码:</strong> 尽管 AutoHotkey 提供了使用各种编码处理文本的方法, 但是内置的命令和函数--在某种程度上包括语言本身--都假定字符串值是在一个特定的编码中. 这被称为 <em>原生</em> 编码. 原生编码取决于 AutoHotkey 的版本:</p>
 <ul>
   <li>
@@ -273,8 +273,8 @@ Send Hello`, world{!}
 </li>
 </ul>
 <p id="character"><strong>字符:</strong> 一般来说, 本文档的其他部分使用的术语 "字符" 表示的是字符串的最小单位; ANSI 字符串的字节和 Unicode(UTF-16) 字符串的 16 位编码单元. 出于实际的原因, 字符串的长度和字符串中的位置是通过计数这些固定大小的单位来测量的, 尽管它们可能不是完整的 Unicode 字符.</p>
-<p><a href="commands/FileRead.htm">FileRead</a>, <a href="commands/FileAppend.htm">FileAppend</a>, <a href="commands/FileOpen.htm">FileOpen()</a> 和 <a href="objects/File.htm">File 对象</a>提供了在具有特定编码的文件中读写文本的方法.</p>
-<p><a href="commands/StrGet.htm">StrGet()</a> 和 <a href="commands/StrPut.htm">StrPut()</a> 函数可用于在原生编码和某些其他指定编码之间转换字符串. 但是, 这些通常只与数据结构和 <a href="commands/DllCall.htm">DllCall()</a> 函数结合使用. 直接传入或传出 <a href="commands/DllCall.htm">DllCall()</a> 的字符串可以通过使用 <code>AStr</code> 或 <code>WStr</code> 参数类型转换为 ANSI 或 UTF-16.</p>
+<p><a href="lib/FileRead.htm">FileRead</a>, <a href="lib/FileAppend.htm">FileAppend</a>, <a href="lib/FileOpen.htm">FileOpen()</a> 和 <a href="lib/File.htm">File 对象</a>提供了在具有特定编码的文件中读写文本的方法.</p>
+<p><a href="lib/StrGet.htm">StrGet()</a> 和 <a href="lib/StrPut.htm">StrPut()</a> 函数可用于在原生编码和某些其他指定编码之间转换字符串. 但是, 这些通常只与数据结构和 <a href="lib/DllCall.htm">DllCall()</a> 函数结合使用. 直接传入或传出 <a href="lib/DllCall.htm">DllCall()</a> 的字符串可以通过使用 <code>AStr</code> 或 <code>WStr</code> 参数类型转换为 ANSI 或 UTF-16.</p>
 <p>处理 AutoHotkey ANSI 和 Unicode 版本之间差异的技术可以在 <a href="Compat.htm#Format">Unicode 和 ANSI</a> 下找到.</p>
 
 <h3 id="pure-numbers">纯数字</h3>
@@ -289,7 +289,7 @@ Send Hello`, world{!}
 <p>整数必须在 -9223372036854775808(-0x8000000000000000 或 -2<sup>63</sup>) 到 9223372036854775807(0x7FFFFFFFFFFFFFFF 或 2<sup>63</sup>-1) 的范围内. 尽管字符串中可以包含更大的值, 但是将字符串转换为数字(例如在数学运算中使用该字符串)  的尝试可能会产生不一致的结果.</p>
 </li>
   <li>
-<p>浮点数字通常支持 15 位精度. 但是, 将浮点数字转换为字符串会使数字根据当前的<a href="commands/SetFormat.htm#Float">浮点格式</a>进行四舍五入的操作, 默认为小数点后 6 位. 如果 <a href="commands/SetFormat.htm">SetFormat</a> 的 "慢速" 模式存在于脚本的任意位置, 数字赋值给<a href="#variables">变量</a>时, <em>总是</em> 转为字符串.</p>
+<p>浮点数字通常支持 15 位精度. 但是, 将浮点数字转换为字符串会使数字根据当前的<a href="lib/SetFormat.htm#Float">浮点格式</a>进行四舍五入的操作, 默认为小数点后 6 位. 如果 <a href="lib/SetFormat.htm">SetFormat</a> 的 "慢速" 模式存在于脚本的任意位置, 数字赋值给<a href="#variables">变量</a>时, <em>总是</em> 转为字符串.</p>
 </li>
 </ul>
 <p><strong>注意:</strong> 二进制浮点格式不能精确地表示一些小数, 所以一个数字四舍五入到最接近的可表示数字. 例如:</p>
@@ -307,7 +307,7 @@ MsgBox % 0.1 + 0.2 = 0.3   <em>; 0(不相等, 结果为假)</em>
 </pre>
 
 <h3 id="names">名称</h3>
-<p>AutoHotkey 使用相同的一组规则来命名各种东西, 包括, 变量, 函数, <a href="commands/GroupAdd.htm">窗口组</a>, <a href="commands/Gui.htm">GUI</a>, 类和方法:</p>
+<p>AutoHotkey 使用相同的一组规则来命名各种东西, 包括, 变量, 函数, <a href="lib/GroupAdd.htm">窗口组</a>, <a href="lib/Gui.htm">GUI</a>, 类和方法:</p>
 <ul>
   <li><strong>大小写敏感性:</strong> ASCII 字符不区分大小写. 例如, <code>CurrentDate</code> 等同于 <code>currentdate</code>. 但是, 大写的非 ASCII 字符例如 '&Auml;' <em>不</em> 被认为等于他们的小写字母, 不管当前用户的区域设置如何. 这有助于脚本在多个语言环境中保持一致.</li>
   <li><strong>最大长度:</strong> 253 个字符.</li>

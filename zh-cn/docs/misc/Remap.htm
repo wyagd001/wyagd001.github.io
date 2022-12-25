@@ -88,13 +88,13 @@ b::a</pre>
   </tr>
   <tr>
     <td></code>RWin::Return</code></td>
-    <td>禁用右 <kbd>Win</kbd>, 通过简单地执行 <a href="../commands/Return.htm">return</a>.</td>
+    <td>禁用右 <kbd>Win</kbd>, 通过简单地执行 <a href="../lib/Return.htm">return</a>.</td>
   </tr>
 </table>
 <p>您可以尝试执行这里的每个例子: 把它们复制到新文本文件(例如 "Remap.ahk"), 然后运行这个文件.</p>
 <p>请参阅<a href="../KeyList.htm">按键列表</a>来了解按键和鼠标按钮名称的完整列表.</p>
 <h2 id="remarks">备注</h2>
-<p>使用 <a href="../commands/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以让重映射仅在指定的窗口中有效. 例如:</p>
+<p>使用 <a href="../lib/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以让重映射仅在指定的窗口中有效. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
 a::b  <em>; 让 'a' 键到 'b' 键的映射仅在记事本中有效.</em>
 #IfWinActive  <em>; 这里让后续的重映射和热键对所有窗口生效.</em></pre>
@@ -105,13 +105,13 @@ a::b  <em>; 让 'a' 键到 'b' 键的映射仅在记事本中有效.</em>
   <li>按住目标键或按钮的时间和您持续按住原始键的时间一样长. 但是, 一些游戏不支持重映射; 此时, 键盘和鼠标的重映射没有效果.</li>
   <li>按住被重映射的按键时, 它们的目标键会自动重复(除非是把按键重映射为鼠标按钮).</li>
 </ul>
-<p id="HookHotkeys">尽管被重映射的按键可以触发普通热键, 但默认情况下它不能触发鼠标热键或<a href="../commands/_UseHook.htm">钩子热键</a>(请使用 <a href="../commands/ListHotkeys.htm">ListHotkeys</a> 来找出哪些热键使用了钩子). 例如, 如果重映射 <code>a::b</code> 有效, 那么按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd> 会触发 <code>^!b</code> 热键, 但仅在 <code>^!b</code> 不是钩子热键的时候. 如果 <code>^!b</code> 是钩子热键, 而且您希望使用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd> 来执行和 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>B</kbd> 相同的动作, 那么您可以把 <code>^!a</code> 定义为热键. 例如:</p>
+<p id="HookHotkeys">尽管被重映射的按键可以触发普通热键, 但默认情况下它不能触发鼠标热键或<a href="../lib/_UseHook.htm">钩子热键</a>(请使用 <a href="../lib/ListHotkeys.htm">ListHotkeys</a> 来找出哪些热键使用了钩子). 例如, 如果重映射 <code>a::b</code> 有效, 那么按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd> 会触发 <code>^!b</code> 热键, 但仅在 <code>^!b</code> 不是钩子热键的时候. 如果 <code>^!b</code> 是钩子热键, 而且您希望使用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>A</kbd> 来执行和 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>B</kbd> 相同的动作, 那么您可以把 <code>^!a</code> 定义为热键. 例如:</p>
 <pre>a::b
 ^!a::
 ^!b::
 ToolTip You pressed %A_ThisHotkey%.
 return</pre>
-<p>在 <span class="ver">[v1.1.06]</span>  及更高版本中, 还可使用 <a href="../commands/_InputLevel.htm">#InputLevel</a> 来覆盖此默认行为. 例如:</p>
+<p>在 <span class="ver">[v1.1.06]</span>  及更高版本中, 还可使用 <a href="../lib/_InputLevel.htm">#InputLevel</a> 来覆盖此默认行为. 例如:</p>
 <pre>#InputLevel 1
 a::b
 
@@ -119,11 +119,11 @@ a::b
 ^!b::
 ToolTip You pressed %A_ThisHotkey%.
 return</pre>
-<p id="SendPlay">如果在自动运行段(脚本的顶部) 使用了 <a href="../commands/SendMode.htm">SendMode</a>, 那么它会影响所有的重映射. 但是, 由于重映射使用 <a href="../commands/Send.htm#blind">Send {Blind}</a> 而 <a href="../commands/SendMode.htm">SendPlay 模式</a>不完全支持 {Blind}, 所以一些映射在 SendPlay 模式中可能无法正常运行(尤其是 <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd> 和 <kbd>Win</kbd>). 要变通解决此问题, 当您脚本中含有重映射时请避免在自动执行段中使用 SendPlay; 而仅在整个脚本的一些需要的地方使用 <a href="../commands/Send.htm#SendPlay">SendPlay</a> 命令而不是 Send. 或者, 您可以把您的重映射转换为热键(如下所述), 这样就明确调用 SendEvent 而不是 Send.</p>
+<p id="SendPlay">如果在自动运行段(脚本的顶部) 使用了 <a href="../lib/SendMode.htm">SendMode</a>, 那么它会影响所有的重映射. 但是, 由于重映射使用 <a href="../lib/Send.htm#blind">Send {Blind}</a> 而 <a href="../lib/SendMode.htm">SendPlay 模式</a>不完全支持 {Blind}, 所以一些映射在 SendPlay 模式中可能无法正常运行(尤其是 <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd> 和 <kbd>Win</kbd>). 要变通解决此问题, 当您脚本中含有重映射时请避免在自动执行段中使用 SendPlay; 而仅在整个脚本的一些需要的地方使用 <a href="../lib/Send.htm#SendPlay">SendPlay</a> 命令而不是 Send. 或者, 您可以把您的重映射转换为热键(如下所述), 这样就明确调用 SendEvent 而不是 Send.</p>
 <p id="actually">加载脚本时, 每个重映射会被转换为一对<a href="../Hotkeys.htm">热键</a>. 例如, 包含重映射 <code>a::b</code> 的脚本实际包含下面的两个热键:</p>
 <pre>*<strong>a</strong>::
 SetKeyDelay -1   <em>; 如果目标键是鼠标按钮, 则使用 SetMouseDelay 代替.</em>
-Send <a href="../commands/Send.htm#blind">{Blind}</a>{<strong>b</strong> DownR}  <em>; <a href="../commands/Send.htm#DownR">DownR</a> 和 Down 相似, 不过使用 DownTemp 时脚本中后面的其他 Send 命令则不会假定 "b" 仍然处于按下的状态.</em>
+Send <a href="../lib/Send.htm#blind">{Blind}</a>{<strong>b</strong> DownR}  <em>; <a href="../lib/Send.htm#DownR">DownR</a> 和 Down 相似, 不过使用 DownTemp 时脚本中后面的其他 Send 命令则不会假定 "b" 仍然处于按下的状态.</em>
 return
 
 *<strong>a up</strong>::
@@ -142,20 +142,20 @@ return</pre>
   </li>
   <li>当源代码是 <span class="ver">[v1.1.27.01+]</span> 中的自定义组合键时, 通配符修饰符(*) 被省略以允许热键工作.</li>
 </ol>
-<p>在 <span class="ver">[v1.1.27]</span> 之前, 使用 <a href="../commands/Send.htm#DownTemp">DownTemp</a> 而不是 <a href="../commands/Send.htm#DownR">DownR</a>.</p>
-<p>请注意在上面的热键中省略了 SetKeyDelay 的第二个参数(<a href="../commands/SetKeyDelay.htm#dur">按键时长</a>). 这是因为按键时长不适用于独立的按键按下或按键弹起事件, 例如 <code>{b down}</code> 和 <code>{b up}</code>. 但是, 它适用于修饰键(Shift, Ctrl, Alt 和 Win) 状态的改变, 这会影响像 <code>a::B</code> 或 <code>a::^b</code> 的重映射. 因此, 脚本中任何在<a href="../Scripts.htm#auto">自动执行段</a>生效的按键时长会应用于所有这类重映射.</p>
-<p>由于重映射会被简单翻译为上面描述的热键, 所以 <a href="../commands/Suspend.htm">Suspend</a> 也会影响它们. 同样地, <a href="../commands/Hotkey.htm">Hotkey</a> 命令可以禁用或修改重映射. 例如, 下面的两个命令会禁用重映射 <code>a::b</code>.</p>
+<p>在 <span class="ver">[v1.1.27]</span> 之前, 使用 <a href="../lib/Send.htm#DownTemp">DownTemp</a> 而不是 <a href="../lib/Send.htm#DownR">DownR</a>.</p>
+<p>请注意在上面的热键中省略了 SetKeyDelay 的第二个参数(<a href="../lib/SetKeyDelay.htm#dur">按键时长</a>). 这是因为按键时长不适用于独立的按键按下或按键弹起事件, 例如 <code>{b down}</code> 和 <code>{b up}</code>. 但是, 它适用于修饰键(Shift, Ctrl, Alt 和 Win) 状态的改变, 这会影响像 <code>a::B</code> 或 <code>a::^b</code> 的重映射. 因此, 脚本中任何在<a href="../Scripts.htm#auto">自动执行段</a>生效的按键时长会应用于所有这类重映射.</p>
+<p>由于重映射会被简单翻译为上面描述的热键, 所以 <a href="../lib/Suspend.htm">Suspend</a> 也会影响它们. 同样地, <a href="../lib/Hotkey.htm">Hotkey</a> 命令可以禁用或修改重映射. 例如, 下面的两个命令会禁用重映射 <code>a::b</code>.</p>
 <pre>Hotkey, *a, Off
 Hotkey, *a up, Off</pre>
 <p id="AltTab">Alt-tab 的问题: 如果您把一个按键或鼠标按钮映射为 <kbd>Alt</kbd>, 那么这个键很可能无法正确实现 alt-tab 的功能. 一个可能的变通解决方法是添加热键 <code>*Tab::Send {Blind}{Tab}</code>, 但是需要注意这样很可能妨碍使用真正的 <kbd>Alt</kbd> 实现 alt-tab 的功能. 因此, 这种方法只应当用于在您希望单独使用重映射的按键和/或 <a href="../Hotkeys.htm#alttab">alt-tab 热键</a>实现 alt-tab 功能的时候.</p>
 <p>除了<a href="../KeyList.htm">按键列表</a>页面中的按键和鼠标按钮, 原始键还可以是在<a href="../KeyList.htm#SpecialKeys">特殊按键</a>页面描述的虚拟键(VKnn) 或扫描码(SCnnn). 对于目标键同样如此, 不过它还可以在虚拟键后指定扫描码. 例如, 在大多数键盘布局中 <code>sc01e::vk42sc030</code> 相当于 <code>a::b</code>.</p>
-<p>要禁用按键而不进行重映射, 请把它设置为只含有 <a href="../commands/Return.htm">return</a> 的热键. 例如,<code>F1::return</code> 会禁用 <kbd>F1</kbd>.</p>
+<p>要禁用按键而不进行重映射, 请把它设置为只含有 <a href="../lib/Return.htm">return</a> 的热键. 例如,<code>F1::return</code> 会禁用 <kbd>F1</kbd>.</p>
 <p>内置的重映射功能不支持下列键:</p>
 <ul>
   <li>鼠标滚轮(WheelUp/Down/Left/Right).</li>
   <li>Pause 和 Break 不能作为目标键(因为它们会被作为命令执行).</li>
-  <li>大括号 {} 不能作为目标键. 作为替代请使用 <a href="../commands/Send.htm#vk">VK/SC 方法</a>; 例如 <code>x::+sc01A</code> 和 <code>y::+sc01B</code>.</li>
-  <li>百分号(%) 不能作为目标键. 作为替代请使用 <a href="../commands/Send.htm#vk">VK/SC 方法</a>.</li>
+  <li>大括号 {} 不能作为目标键. 作为替代请使用 <a href="../lib/Send.htm#vk">VK/SC 方法</a>; 例如 <code>x::+sc01A</code> 和 <code>y::+sc01B</code>.</li>
+  <li>百分号(%) 不能作为目标键. 作为替代请使用 <a href="../lib/Send.htm#vk">VK/SC 方法</a>.</li>
   <li>"Return" 不能作为目标键. 作为替代请使用 "Enter".</li>
 </ul>
 <h2 id="moving-the-mouse-cursor">通过键盘移动鼠标光标</h2>
@@ -197,7 +197,7 @@ return</pre>
 <h2 id="related">相关主题</h2>
 <ul>
   <li><a href="../KeyList.htm#Joystick">按键和鼠标按钮列表</a></li>
-  <li><a href="../commands/GetKeyState.htm#function">GetKeyState()</a></li>
+  <li><a href="../lib/GetKeyState.htm#function">GetKeyState()</a></li>
    <li><a href="RemapJoystick.htm">重映射操纵杆</a></p></li>
  </ul>
 </body>

@@ -34,7 +34,7 @@
 
 ; Run a search for "Transparency" and edit the number to make it more/less opaque.
 ; Run a search for "BackgroundRed" and edit "Red" to change the flash color.
-; Usable colors: https://www.autohotkey.com/docs/commands/Progress.htm#colors
+; Usable colors: https://www.autohotkey.com/docs/lib/Progress.htm#colors
  
 ; Changing this font size will resize the keyboard:
 k_FontSize = 10
@@ -209,7 +209,7 @@ labels := { ""     : ""
     , "PgUp"       : "PU"
     , "RAlt"       : "Alt" zwnbs
     , "RCtrl"      : "Ctrl" zwnbs
-    , "Right"      : Chr(0x27A4)
+    , "Right"      : Chr(0x2B9E)
     , "RShift"     : "Shift" zwnbs
     , "RWin"       : "Win" zwnbs
     , "Tab"        : Chr(0x2B7E)
@@ -493,7 +493,7 @@ Loop {
     k_char := Chr(k_ASCII)
 
     ; These keys are only accessible using modifier keys; that's why we're escaping them.
-    if k_char not in <,>,^,`,
+    if k_char not in <,>,^,`,,?,:,@
         Hotkey, ~*%k_char%, flashButton
         ; In the above, the asterisk prefix allows the key to be detected regardless
         ; of whether the user is holding down modifier keys such as Control and Shift.

@@ -47,11 +47,11 @@
 
 <h4 id="Method_1">方法 #1</h4>
 <p>此方法简单地发送键击和鼠标点击. 例如:</p>
-<pre>Joy1::<a href="../commands/Send.htm">Send</a> {Left}  <em>; 让按钮 #1 发送左方向键的键击.</em>
-Joy2::<a href="../commands/Click.htm">Click</a>  <em>; 让按钮 #2 发送鼠标左键的点击.</em>
+<pre>Joy1::<a href="../lib/Send.htm">Send</a> {Left}  <em>; 让按钮 #1 发送左方向键的键击.</em>
+Joy2::<a href="../lib/Click.htm">Click</a>  <em>; 让按钮 #2 发送鼠标左键的点击.</em>
 Joy3::Send a{Esc}{Space}{Enter}  <em>; 让按钮 #3 发送字母 "a" 后面跟着 Escape, Space 以及 Enter.</em>
 Joy4::Send Sincerely,{Enter}John Smith  <em>; 让按钮 #4 发送两行的签名.</em></pre>
-<p>要让一个按钮执行多个命令, 请把首个命令放到按钮名称的 <em>下面</em> 并使用 <a href="../commands/Return.htm">return</a> 作为最后一个命令. 例如:</p>
+<p>要让一个按钮执行多个命令, 请把首个命令放到按钮名称的 <em>下面</em> 并使用 <a href="../lib/Return.htm">return</a> 作为最后一个命令. 例如:</p>
 <pre>Joy5::
 Run Notepad
 WinWait Untitled - Notepad
@@ -64,7 +64,7 @@ return</pre>
 <p>必须使用此方法的情况是当您在按住操纵杆按钮的整个过程中必须按住按键或鼠标按钮的时候. 下面的例子把操纵杆的第二个按钮映射为左方向键:</p>
 <pre>Joy2::
 Send {Left down}  <em>; 按住左方向键.</em>
-<a href="../commands/KeyWait.htm">KeyWait</a> Joy2  <em>; 等待用户释放操纵杆按钮.</em>
+<a href="../lib/KeyWait.htm">KeyWait</a> Joy2  <em>; 等待用户释放操纵杆按钮.</em>
 Send {Left up}  <em>; 释放左方向键.</em>
 return</pre>
 
@@ -76,7 +76,7 @@ SetTimer, WaitForButtonUp3, 10
 return
 
 WaitForButtonUp3:
-if <a href="../commands/GetKeyState.htm#function">GetKeyState</a>("Joy3")  <em>; 按钮仍处于按下的状态, 所以继续等待.</em>
+if <a href="../lib/GetKeyState.htm#function">GetKeyState</a>("Joy3")  <em>; 按钮仍处于按下的状态, 所以继续等待.</em>
     return
 <em>; 否则按钮已经松开了.</em>
 Send {LButton up}  <em>; 释放鼠标左键.</em>
@@ -103,22 +103,22 @@ Send {Space down}  <em>; 再次发送空格键击.</em>
 return</pre>
 
 <h3 id="context-sensitive-joystick-buttons">上下文相关的操纵杆按钮</h3>
-<p><a href="../commands/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以用来让选择的操纵杆按钮根据窗口是否活动或存在的不同情况执行不同的动作(或什么都不做).</p>
+<p><a href="../lib/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以用来让选择的操纵杆按钮根据窗口是否活动或存在的不同情况执行不同的动作(或什么都不做).</p>
 
 <h3 id="using-a-joystick-as-a-mouse">把操纵杆作为鼠标</h3>
 <p><a href="../scripts/index.htm#JoystickMouse">操纵杆映射到鼠标的脚本</a>通过重映射操纵杆的按钮和轴向控制器来把操纵杆变成鼠标.</p>
 
 <h2 id="axis">让其他操纵杆控制器发送键击或鼠标点击</h2>
-<p>要让脚本对操纵杆轴或视点帽的移动进行响应, 请使用 <a href="../commands/SetTimer.htm">SetTimer</a> 和 <a href="../commands/GetKeyState.htm#function">GetKeyState()</a>.</p>
+<p>要让脚本对操纵杆轴或视点帽的移动进行响应, 请使用 <a href="../lib/SetTimer.htm">SetTimer</a> 和 <a href="../lib/GetKeyState.htm#function">GetKeyState()</a>.</p>
 
 <h3 id="joystick-axes">操纵杆轴</h3>
-<p>下面的例子让 X 和 Y 轴的功能像键盘上的方向键群 (左, 右, 上和下):</p>
+<p>下面的例子让 X 和 Y 轴的功能像键盘上的方向键群(左, 右, 上和下):</p>
 <pre>#Persistent  <em>; 让脚本保持运行, 直到用户明确退出.</em>
-<a href="../commands/SetTimer.htm">SetTimer</a>, WatchAxis, 5
+<a href="../lib/SetTimer.htm">SetTimer</a>, WatchAxis, 5
 return
 
 WatchAxis:
-JoyX := <a href="../commands/GetKeyState.htm#function">GetKeyState</a>("JoyX")  <em>; 获取 X 轴的位置.</em>
+JoyX := <a href="../lib/GetKeyState.htm#function">GetKeyState</a>("JoyX")  <em>; 获取 X 轴的位置.</em>
 JoyY := GetKeyState("JoyY")  <em>; 获取 Y 轴的位置.</em>
 KeyToHoldDownPrev = %KeyToHoldDown%  <em>; Prev 现在保存了之前按下的按键(如果有).</em>
 
@@ -196,7 +196,7 @@ return</pre>
 <ul>
     <li><a href="../scripts/index.htm#JoystickMouse">操纵杆到鼠标的映射脚本(把操纵杆作为鼠标使用)</a></li>
     <li><a href="../KeyList.htm#Joystick">操纵杆按钮, 轴向和控制器的列表</a></li>
-    <li><a href="../commands/GetKeyState.htm#function">GetKeyState()</a></li>
+    <li><a href="../lib/GetKeyState.htm#function">GetKeyState()</a></li>
     <li><a href="Remap.htm">重映射键盘和鼠标</a></li>
 </ul>
 

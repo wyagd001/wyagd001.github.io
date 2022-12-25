@@ -13,40 +13,40 @@
 <body>
 <h1>线程</h1>
 
-<p>最近事件调用的执行流被定义为 <em>当前线程</em>; 例如包括<a href="../Hotkeys.htm">热键</a>, <a href="../commands/SetTimer.htm">SetTimer 子程序</a>, <a href="../commands/Menu.htm">自定义菜单项</a>以及 <a href="../commands/Gui.htm#Events">GUI 事件</a>. <em>当前线程</em> 可以在它自身子程序或由那个子程序调用其他子程序中执行命令.</p>
+<p>最近事件调用的执行流被定义为 <em>当前线程</em>; 例如包括<a href="../Hotkeys.htm">热键</a>, <a href="../lib/SetTimer.htm">SetTimer 子程序</a>, <a href="../lib/Menu.htm">自定义菜单项</a>以及 <a href="../lib/Gui.htm#Events">GUI 事件</a>. <em>当前线程</em> 可以在它自身子程序或由那个子程序调用其他子程序中执行命令.</p>
 <p>尽管 AutoHotkey 实际并不支持多线程, 但它模拟了多线程的某些特性: 如果启动了第二个线程, 例如在前一个热键仍在执行时又按了另一个热键, 那么 <em>当前线程</em> 会被中断(暂时停止) 来让新的线程成为 <em>当前</em> 线程. 如果在第二个线程还在运行时又启动了第三个线程, 那么第二个和第一个线程都会进入休眠状态, 依此类推.</p>
-<p>当 <em>当前线程</em> 结束时, 最近中断的线程将恢复执行, 依此类推, 直到最后所有的线程都结束. 当线程被恢复时, 它的设置例如 <a href="ErrorLevel.htm">ErrorLevel</a> 和 <a href="../commands/SendMode.htm">SendMode</a> 会自动恢复到中断前的状态; 换句话说, 中断不会给线程带来副作用(不过<a href="../commands/WinActivate.htm">活动窗口</a>可能会变化而产生影响).</p>
-<p class="note"><strong>注意</strong>: <a href="../commands/KeyHistory.htm">KeyHistory</a> 命令/菜单项会显示处于中断状态的线程数量, 而 <a href="../commands/ListHotkeys.htm">ListHotkeys</a> 命令/菜单项则显示哪些热键拥有线程.</p>
-<p>一个脚本可以同时含有多个 <a href="../commands/MsgBox.htm">MsgBox</a>, <a href="../commands/InputBox.htm">InputBox</a>, <a href="../commands/FileSelectFile.htm">FileSelectFile</a> 和 <a href="../commands/FileSelectFolder.htm">FileSelectFolder</a> 对话框. 这是在前一个线程已经显示对话框后启动新线程(通过<a href="../Hotkeys.htm">热键</a>, <a href="../commands/SetTimer.htm">定时子程序</a>, <a href="../commands/Menu.htm">自定义菜单项</a>等) 实现的.</p>
-<p>默认情况下, 子程序仍在运行的<a href="../Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">热字串</a>不能再次启动. 使用 <a href="../commands/_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 可以改变此特性.</p>
-<p><strong>相关:</strong> <a href="../commands/Thread.htm">Thread</a> 命令用于设置线程的优先级或中断性.</p>
+<p>当 <em>当前线程</em> 结束时, 最近中断的线程将恢复执行, 依此类推, 直到最后所有的线程都结束. 当线程被恢复时, 它的设置例如 <a href="ErrorLevel.htm">ErrorLevel</a> 和 <a href="../lib/SendMode.htm">SendMode</a> 会自动恢复到中断前的状态; 换句话说, 中断不会给线程带来副作用(不过<a href="../lib/WinActivate.htm">活动窗口</a>可能会变化而产生影响).</p>
+<p class="note"><strong>注意</strong>: <a href="../lib/KeyHistory.htm">KeyHistory</a> 命令/菜单项会显示处于中断状态的线程数量, 而 <a href="../lib/ListHotkeys.htm">ListHotkeys</a> 命令/菜单项则显示哪些热键拥有线程.</p>
+<p>一个脚本可以同时含有多个 <a href="../lib/MsgBox.htm">MsgBox</a>, <a href="../lib/InputBox.htm">InputBox</a>, <a href="../lib/FileSelectFile.htm">FileSelectFile</a> 和 <a href="../lib/FileSelectFolder.htm">FileSelectFolder</a> 对话框. 这是在前一个线程已经显示对话框后启动新线程(通过<a href="../Hotkeys.htm">热键</a>, <a href="../lib/SetTimer.htm">定时子程序</a>, <a href="../lib/Menu.htm">自定义菜单项</a>等) 实现的.</p>
+<p>默认情况下, 子程序仍在运行的<a href="../Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">热字串</a>不能再次启动. 使用 <a href="../lib/_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 可以改变此特性.</p>
+<p><strong>相关:</strong> <a href="../lib/Thread.htm">Thread</a> 命令用于设置线程的优先级或中断性.</p>
 
 <h2 id="Priority">线程优先级</h2>
-<p>优先级低于 <em>当前线程</em> 的任何线程(<a href="../Hotkeys.htm">热键</a>, <a href="../commands/SetTimer.htm">定时子程序</a>, <a href="../commands/Menu.htm">自定义菜单项</a>等) 不能中断当前线程. 在这种时候, 这样的计时器不会运行, 且用户试图创建线程(例如按下<a href="../Hotkeys.htm">热键</a>或 <a href="../commands/GuiControls.htm#Button">GUI 按钮</a>) 会没有效果, 也不会被缓存起来. 由于这个原因, 通常在设计时最好让高优先级的线程快速结束, 或使用 <a href="../commands/Critical.htm">Critical</a> 而不将它们设置成高优先级.</p>
+<p>优先级低于 <em>当前线程</em> 的任何线程(<a href="../Hotkeys.htm">热键</a>, <a href="../lib/SetTimer.htm">定时子程序</a>, <a href="../lib/Menu.htm">自定义菜单项</a>等) 不能中断当前线程. 在这种时候, 这样的计时器不会运行, 且用户试图创建线程(例如按下<a href="../Hotkeys.htm">热键</a>或 <a href="../lib/GuiControls.htm#Button">GUI 按钮</a>) 会没有效果, 也不会被缓存起来. 由于这个原因, 通常在设计时最好让高优先级的线程快速结束, 或使用 <a href="../lib/Critical.htm">Critical</a> 而不将它们设置成高优先级.</p>
 <p>默认的优先级为 0. 所有线程使用默认的优先级, 不过可以使用下列的其中一种方法改变:</p>
 <ul>
-  <li>通过 <a href="../commands/SetTimer.htm">SetTimer</a> 给定时子程序指定优先级.</li>
-  <li>通过 <a href="../commands/Hotkey.htm">Hotkey</a> 命令给热键指定优先级.</li>
-  <li><a href="../Hotstrings.htm">热字串</a>在定义时或通过 <a href="../commands/_Hotstring.htm">#Hotstring</a> 可以指定优先级.</li>
-  <li>通过 <a href="../commands/Menu.htm">Menu</a> 命令给自定义菜单项指定优先级.</li>
-  <li>通过 <a href="../commands/Thread.htm">Thread</a> 命令给 <em>当前线程</em> 设置自己的优先级.</li>
+  <li>通过 <a href="../lib/SetTimer.htm">SetTimer</a> 给定时子程序指定优先级.</li>
+  <li>通过 <a href="../lib/Hotkey.htm">Hotkey</a> 命令给热键指定优先级.</li>
+  <li><a href="../Hotstrings.htm">热字串</a>在定义时或通过 <a href="../lib/_Hotstring.htm">#Hotstring</a> 可以指定优先级.</li>
+  <li>通过 <a href="../lib/Menu.htm">Menu</a> 命令给自定义菜单项指定优先级.</li>
+  <li>通过 <a href="../lib/Thread.htm">Thread</a> 命令给 <em>当前线程</em> 设置自己的优先级.</li>
 </ul>
-<p>不论 <em>当前线程</em> 的优先级如何, <a href="../commands/OnExit.htm">OnExit</a> 线程(如果有) 被调用时总是会运行.</p>
+<p>不论 <em>当前线程</em> 的优先级如何, <a href="../lib/OnExit.htm">OnExit</a> 线程(如果有) 被调用时总是会运行.</p>
 
 <h2 id="Interrupt">线程可中断性</h2>
 <p>对于大多数类型的事件, 只有在当前线程 <em>可中断</em> 的情况下, 才允许启动新线程. 一个线程可以因为一些原因而 <em>不可中断</em>, 包括:</p>
 <ul>
-  <li>线程已被标记为 <em>critical</em>. <a href="../commands/Critical.htm">Critical</a> 可能已经被线程本身或从<a href="../Scripts.htm#auto">自动执行段</a>调用.</li>
-  <li>线程运行时间不够长, 无法满足线程中断设置的成为可中断的条件, 如 <a href="../commands/Thread.htm#Interrupt">Thread Interrupt</a> 设置的.</li>
+  <li>线程已被标记为 <em>critical</em>. <a href="../lib/Critical.htm">Critical</a> 可能已经被线程本身或从<a href="../Scripts.htm#auto">自动执行段</a>调用.</li>
+  <li>线程运行时间不够长, 无法满足线程中断设置的成为可中断的条件, 如 <a href="../lib/Thread.htm#Interrupt">Thread Interrupt</a> 设置的.</li>
   <li>脚本的一个菜单正在显示(如托盘图标菜单或菜单栏).</li>
-  <li><a href="../commands/Send.htm">Send</a> (最常见的是由于 <a href="../commands/SetKeyDelay.htm">SetKeyDelay</a>), <a href="../commands/WinActivate.htm">WinActivate</a>, 或 <a href="Clipboard.htm">Clipboard</a> 操作正在执行延迟.</li>
-  <li><a href="../commands/OnExit.htm">OnExit</a> 线程正在执行.</li>
-  <li>由于达到了 <a href="../commands/_MaxHotkeysPerInterval.htm">#MaxHotkeysPerInterval</a> 的限制, 或者由于激活键盘或鼠标钩子的问题(非常罕见), 正在显示一个警告对话框.</li>
+  <li><a href="../lib/Send.htm">Send</a>(最常见的是由于 <a href="../lib/SetKeyDelay.htm">SetKeyDelay</a>), <a href="../lib/WinActivate.htm">WinActivate</a>, 或 <a href="Clipboard.htm">Clipboard</a> 操作正在执行延迟.</li>
+  <li><a href="../lib/OnExit.htm">OnExit</a> 线程正在执行.</li>
+  <li>由于达到了 <a href="../lib/_MaxHotkeysPerInterval.htm">#MaxHotkeysPerInterval</a> 的限制, 或者由于激活键盘或鼠标钩子的问题(非常罕见), 正在显示一个警告对话框.</li>
 </ul>
 <h3 id="Behave">不可中断线程的特性</h3>
 <p>与<a href="../misc/Threads.htm">高优先级</a>线程不同, 在关键线程中产生的事件不会被丢弃. 例如, 在当前线程为关键线程时用户按下了<a href="../Hotkeys.htm">热键</a>, 那么此热键会被缓冲到当前线程结束或成为非关键线程时才作为新的线程启动.</p>
 <p>关键线程也会被紧急事件中断. 紧急事件包括: 1) <a href="OnExit.htm#function">OnExit</a> 回调; 2) 监听消息号小于 0x0312 的任何 <a href="OnMessage.htm">OnMessage()</a> 函数(或被这些消息触发的<a href="RegisterCallback.htm">回调</a>); 和 3) 由紧急线程自身间接触发的任何<a href="RegisterCallback.htm">回调</a>(例如通过 <a href="PostMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>). 要避免被这些事件中断, 可以临时禁用这些函数.</p>
-<p>当显示 <a href="../commands/MsgBox.htm">MsgBox</a> 或其他对话框时, <a href="../commands/Critical.htm">critical</a> 会变得可中断. 但与 <a href="../commands/Thread.htm">Thread Interrupt</a> 不同的是, 在用户解除对话框后, 线程又变成了 critical(因此不可中断).</p>
+<p>当显示 <a href="../lib/MsgBox.htm">MsgBox</a> 或其他对话框时, <a href="../lib/Critical.htm">critical</a> 会变得可中断. 但与 <a href="../lib/Thread.htm">Thread Interrupt</a> 不同的是, 在用户解除对话框后, 线程又变成了 critical(因此不可中断).</p>
 
 </body>
 </html>
