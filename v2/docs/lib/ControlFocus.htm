@@ -58,6 +58,16 @@
 <p>要让设置生效, 控件所在的窗口一般不能处于最小化或隐藏状态.</p>
 <p>为了提高可靠性, 每次使用此函数后都会自动执行延迟. 该延迟可以通过 <a href="SetControlDelay.htm">SetControlDelay</a> 来更改.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
+<p id="WM_NEXTDLGCTL">当控件被聚焦以响应用户输入(例如按 Tab 键) 时, 对话管理器应用附加效果, 这些效果独立于具有焦点的控件. 这些效果不是由 ControlFocus 应用的, 因此以下限制适用:</p>
+<ul>
+  <li>聚焦按钮不会自动使其成为默认按钮, 这与通过用户输入对焦按钮通常会发生的情况不同. 默认按钮通常可以通过按 Enter 来激活.</li>
+  <li>如果先前的用户输入导致默认按钮被临时更改, 聚焦非按钮控件不会自动将默认高亮显示恢复到实际的默认按钮. 按 Enter 键可以激活默认按钮, 即使它没有突出显示.</li>
+  <li>聚焦编辑控件不会自动选择其文本. 相反, 插入点(插入) 通常位于控件上次有焦点时的位置.</li>
+</ul>
+<p><a href="https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-nextdlgctl">WM_NEXTDLGCTL</a> 消息可以用来聚焦控件并应用这些附加效果. 例如:</p>
+<pre>WinExist("A") <em>; 将最后找到的窗口设置为活动窗口</em>
+ControlGet, hWndControl, Hwnd,, Button1  <em>; 获取第一个按钮的 HWND</em>
+SendMessage, 0x0028, hWndControl, True  <em>; 0x0028 对应 WM_NEXTDLGCTL</em></pre>
 
 <h2 id="Related">相关</h2>
 <p><a href="SetControlDelay.htm">SetControlDelay</a>, <a href="ControlGetFocus.htm">ControlGetFocus</a>, <a href="Control.htm">控件函数</a></p>

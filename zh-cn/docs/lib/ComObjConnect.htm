@@ -51,6 +51,8 @@
 <p>如果 <em>PrefixOrSink</em> 是一个对象, 则每当引发事件时, 就会调用该对象的相应方法. 虽然对象可以动态构造, 但 <em>PrefixOrSink</em> 更典型的做法是引用一个类或类的实例. 在这种情况下, 方法的定义如上所示, 但没有 <em>Prefix</em>.</p>
 <p>与对方法的任何调用一样, 方法的(通常是隐藏的) <code>this</code> 参数包含对方法调用所通过的对象的引用; 即事件接收器对象, 而不是 COM 对象. 这可用于为事件处理程序提供上下文, 或在它们之间共享值.</p>
 <p>要捕获所有事件而不为每个事件定义方法, 请定义 <a href="../Objects.htm#Meta_Functions">__Call 元函数</a>.</p>
+<p><em>ComObject</em> 保留了对 <em>PrefixOrSink</em> 的引用, 因此在对象断开连接之前不能删除它.</p>
+<p><span class="ver">[v1.1.36.02+]:</span> 如果 COM 对象释放连接, <em>ComObject</em> 会自动释放它对 <em>PrefixOrSink</em> 的引用. 例如, Internet Explorer 在退出时就会这样做. 如果脚本不保留自己对 <em>PrefixOrSink</em> 的引用, 它可以使用 <a href="../Objects.htm#Custom_NewDelete">__Delete</a> 来检测何时发生这种情况. 如果该对象由远程进程托管, 并且该进程意外终止, 则系统可能需要几分钟才能释放连接.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>脚本必须保留对 <em>ComObject</em> 的引用, 否则它将自动释放, 并与其 COM 对象断开连接, 从而阻止任何进一步的事件被检测. 没有标准的方法来检测何时不再需要连接, 因此脚本必须通过调用 ComObjConnect 来手动断开连接.</p>
