@@ -8,9 +8,9 @@ layout: default
 
 **如意百宝箱-Ahk**: 如意百宝箱是一款按下快捷键后针对不同窗口和选中文件显示一个定制的动作面板的快捷启动工具. 动作可以通过添加ahk脚本来新增.  
 
-**脚本打包**: [https://wyagd001.github.io/RuYi-Ahk](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
+**脚本下载**: [https://wyagd001.github.io/RuYi-Ahk](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [1.0 - 2022/12/12](history.md)
+**当前版本**: [1.3 - 2023/1/24](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
