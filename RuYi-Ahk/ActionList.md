@@ -7,7 +7,7 @@ layout: default
 
 | 动作编号 | 图标码 | 按钮名称 | 动作对象 | 描述 | 动作 |
 | ----------- | ----------- | ----------- | ----------- | ----------- |----------- |
-|999|E710|添加按钮|无条件|为界面的按钮指定要执行的动作|<div style="width:120pt">Cando&#124;BAdd</div>|
+|999|E710|添加按钮|无条件|<span style="display:inline-block;width:100px">为界面的按钮指定要执行的动作</span>|<span style="display:inline-block;width:150px">Cando&#124;BAdd</span>|
 |1001|E703|电脑图标|无条件|设置我的电脑中显示的图标(视频, 图片等六个文件夹..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\此电脑图标设置.ahk"|
 |1002|EE3F|桌面图标|无条件|设置桌面中显示的图标(此电脑, 回收站, 网络..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\桌面图标设置.ahk"|
 |1003|E71D|导航栏|无条件|资源管理器左侧导航栏中项目的设置(收藏夹, 库, 快速启动..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\导航栏项目设置.ahk"|
