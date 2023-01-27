@@ -1,13 +1,14 @@
----
+﻿---
 layout: default
 ---
+
 [返回主页](http://wyagd001.github.io)
 
 # [](#header-2) 如意百宝箱-Ahk 内置动作列表
 
 | 动作编号 | 图标码 | 按钮名称 | 动作对象 | 描述 | 动作 |
 | ----------- | ----------- | ----------- | ----------- | ----------- |----------- |
-|999|E710|添加按钮|无条件|<span style="display:inline-block;width:100px">为界面的按钮指定要执行的动作</span>|<span style="display:inline-block;width:150px">Cando&#124;BAdd</span>|
+|999|E710|添加按钮|无条件|为界面的按钮指定要执行的动作|Cando&#124;BAdd|
 |1001|E703|电脑图标|无条件|设置我的电脑中显示的图标(视频, 图片等六个文件夹..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\此电脑图标设置.ahk"|
 |1002|EE3F|桌面图标|无条件|设置桌面中显示的图标(此电脑, 回收站, 网络..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\桌面图标设置.ahk"|
 |1003|E71D|导航栏|无条件|资源管理器左侧导航栏中项目的设置(收藏夹, 库, 快速启动..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\导航栏项目设置.ahk"|
@@ -49,7 +50,7 @@ layout: default
 |1039|e896|放入同名|选中文件|将选中的文件放入同名的文件夹中(自动创建目录)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\放入同名文件夹.ahk" "%CandySel%"|
 |1040|E8DE|解散目录|选中文件|将选中文件夹中的文件移动到当前目录后, 删除选中文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\解散文件夹.ahk" "%CandySel%"|
 |1041|E735|收藏夹|子面板|以当前窗口打开指定文件夹|GUI&#124;收藏夹_当前窗口|
-|1042|E838|C:\|资源管理器|在当前资源管理器窗口打开动作中指定的目录 C:\|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\当前窗口打开.ahk" "C:\"|
+|1042|E838|C:\\|资源管理器|在当前资源管理器窗口打开动作中指定的目录 C:\\|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\当前窗口打开.ahk" "C:\\"|
 |1043|eb41|百度|无条件|打开百度的网页|run&#124;https://www.baidu.com|
 |1044|f17f|转码|选中文件|将选中的文本文件转换编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件转码.ahk" "%candysel%"|
 |1045|eafc|软硬链接|选中文件|为选中的文件创建软硬链接|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件创建软硬链接.ahk" "%candysel%"|
@@ -94,9 +95,9 @@ layout: default
 |1084|e908|透明关|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
 |1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
 |1086|e126|复制到Music|选中文件|复制选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
-|1087|E703|同步文件夹|资源管理器|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" %Windy_CurWin_FolderPath%|
-|1088|E703|同步文件夹2|资源管理器|左侧文件夹同步到右侧(左→右)|canfunc&#124;ExecSend&#124;%Windy_CurWin_FolderPath%&#124;文件夹同步|
-|1089|E703|同步文件夹|无条件|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱 - 发布版本\RuYi-Ahk"|
+|1087|e89a|同步文件夹|资源管理器|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" %Windy_CurWin_FolderPath%|
+|1088|e89a|同步文件夹2|资源管理器|左侧文件夹同步到右侧(左→右)|canfunc&#124;ExecSend&#124;%Windy_CurWin_FolderPath%&#124;文件夹同步|
+|1089|e89a|同步如意|无条件|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱 - 发布版本\RuYi-Ahk"|
 |1090|E734|网址收藏夹|子面板||gui&#124;网址收藏夹|
 |1091|e728|网址收藏夹|菜单||menu&#124;网址收藏夹|
 |1092|e8c1|查看编码|选中文本|查看选中文本的编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查看字符编码.ahk" "%CandySel%"|
@@ -175,5 +176,5 @@ layout: default
 |1165|E77F|粘贴为数值|Excel|Excel, WPS 表格快捷键, 将选中单元格粘贴为数值|Cando&#124;粘贴为数值|
 |1166|E77F|输入为数值|Excel|Excel, WPS 表格快捷键, 将选中单元格输入为数值|Cando&#124;输入为数值|
 |1167|E8FF|打印预览|WPS 表格|Excel, WPS 表格快捷键, 按下 Ctrl+F2, 打印预览|Keys&#124;^{F2}|
-
+|1168|eb55|关闭显示器|无条件|关闭显示器|canfunc|CF_CloseScreen
 
