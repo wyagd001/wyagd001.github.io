@@ -176,5 +176,5 @@ layout: default
 |1165|E77F|粘贴为数值|Excel|Excel, WPS 表格快捷键, 将选中单元格粘贴为数值|Cando&#124;粘贴为数值|
 |1166|E77F|输入为数值|Excel|Excel, WPS 表格快捷键, 将选中单元格输入为数值|Cando&#124;输入为数值|
 |1167|E8FF|打印预览|WPS 表格|Excel, WPS 表格快捷键, 按下 Ctrl+F2, 打印预览|Keys&#124;^{F2}|
-|1168|eb55|关闭显示器|无条件|关闭显示器|canfunc|CF_CloseScreen
+|1168|eb55|关闭显示器|无条件|关闭显示器|canfunc&#124;CF_CloseScreen
 
