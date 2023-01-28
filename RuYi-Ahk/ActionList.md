@@ -178,3 +178,4 @@ layout: default
 |1167|E8FF|打印预览|WPS 表格|Excel, WPS 表格快捷键, 按下 Ctrl+F2, 打印预览|Keys&#124;^{F2}|
 |1168|eb55|关闭显示器|无条件|关闭显示器|canfunc&#124;CF_CloseScreen
 |1169|E71B|复制路径|注册表|复制注册表窗口打开的路径到剪切板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\注册表定位.ahk"
+|1170|e16d|复制内容|选中文件|复制文本文件内容到记事本|canfunc&#124;CF_FileToClip&#124;%CandySel%
