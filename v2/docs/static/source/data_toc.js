@@ -30,6 +30,7 @@
     ["函数","Functions.htm"],
     ["标签","misc/Labels.htm"],
     ["线程","misc/Threads.htm"],
+    ["支持 AHK 的编辑器","misc/Editors.htm"],
     ["调试客户端","AHKL_DBGPClients.htm"],
     ["编译器指令","misc/Ahk2ExeDirectives.htm"],
     ["对象","Objects.htm"]
