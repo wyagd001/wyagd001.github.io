@@ -116,6 +116,42 @@ var isPhone = (document.documentElement.clientWidth <= 600);
   if (isSearchBot)
     return;
 
+  // Get user data:
+  if (!isCacheLoaded) {
+    if (isInsideCHM) {
+      var m = scriptDir.match(/mk:@MSITStore:(.*?)\\[^\\]+\.chm/i);
+      if (m[1])
+        loadScript(decodeURI(m[1]) + '\\chm_config.js', function () {
+          try {
+            $.extend(cache, overwriteProps(user, config));
+            setInitialSettings();
+          } catch (e) {}
+        });
+    }
+    else if (window.localStorage) {
+      config = JSON.parse(window.localStorage.getItem('config'));
+      $.extend(cache, overwriteProps(user, config));
+      setInitialSettings();
+    }
+    else if (navigator.cookieEnabled) {
+      config = document.cookie.match(/config=([^;]+)/);
+      config && (config = JSON.parse(config[1]));
+      $.extend(cache, overwriteProps(user, config));
+      setInitialSettings();
+    }
+  }
+  else
+    setInitialSettings();
+  
+  function setInitialSettings() {
+    // font size
+    if (!isFrameCapable && cache.fontSize != 1)
+      $('head').append('<style>#right .area {font-size:' + cache.fontSize + 'em}</style>');
+    // color theme
+    if (cache.colorTheme)
+      structure.setTheme(cache.colorTheme);
+  }
+
   // Exit the script on sites which doesn't need the sidebar:
   if (forceNoScript || cache.forceNoScript)
     return;
@@ -125,7 +161,8 @@ var isPhone = (document.documentElement.clientWidth <= 600);
   {
     if (isInsideFrame)
     {
-      $('head').append('<style>body {font-size:' + cache.fontSize + 'em}</style>');
+      if (cache.fontSize != 1)
+        $('head').append('<style>body {font-size:' + cache.fontSize + 'em}</style>');
       normalizeParentURL = function() {
         postMessageToParent('normalizeURL', [$.extend({}, window.location), document.title, supportsHistory ? history.state : null, equivPath]);
         if (cache.toc_clickItem)
@@ -138,6 +175,10 @@ var isPhone = (document.documentElement.clientWidth <= 600);
       structure.addShortcuts();
       structure.addAnchorFlash();
       structure.saveCacheBeforeLeaving();
+      if (!isIE) {
+        structure.hideFrameBeforeLeaving();
+        postMessageToParent('unhideFrame', []);
+      }
       $(document).ready(function() {
         $('html').attr({ id: 'right'});
         features.add();
@@ -202,6 +243,15 @@ var isPhone = (document.documentElement.clientWidth <= 600);
           case 'updateQuickRef':
           structure.updateQuickRef(data[1], data[2]);
           break;
+
+          case 'hideFrame':
+          $('#right .load').hide().show(0); // reload animation
+          document.getElementById('frame').className = 'hidden';
+          break;
+
+          case 'unhideFrame':
+          document.getElementById('frame').className = 'visible';
+          break;
         }
       });
 
@@ -213,41 +263,6 @@ var isPhone = (document.documentElement.clientWidth <= 600);
 
   // Add elements for sidebar:
   structure.build();
-
-  // Get user data:
-  if (!isCacheLoaded) {
-      if (isInsideCHM) {
-        var m = scriptDir.match(/mk:@MSITStore:(.*?)\\[^\\]+\.chm/i);
-        if (m[1])
-          loadScript(decodeURI(m[1]) + '\\chm_config.js', function () {
-            try {
-              $.extend(cache, overwriteProps(user, config));
-              setInitialSettings();
-            } catch (e) {}
-          });
-      }
-      else if (window.localStorage) {
-        config = JSON.parse(window.localStorage.getItem('config'));
-        $.extend(cache, overwriteProps(user, config));
-        setInitialSettings();
-      }
-      else if (navigator.cookieEnabled) {
-        config = document.cookie.match(/config=([^;]+)/);
-        config && (config = JSON.parse(config[1]));
-        $.extend(cache, overwriteProps(user, config));
-        setInitialSettings();
-      }
-  }
-  else
-    setInitialSettings();
-
-  function setInitialSettings() {
-    // font size
-    $('head').append('<style>#right .area {font-size:' + cache.fontSize + 'em}</style>');
-    // color theme
-    if(cache.colorTheme)
-      structure.setTheme(cache.colorTheme);
-  }
 
   // Load current URL into frame:
   if (isFrameCapable)
@@ -391,10 +406,10 @@ function ctor_toc()
       if (!href)
         continue;
       // Search for items which matches the address:
-      if (href.indexOf(relPath, href.length - relPath.length) !== -1)
+      if (href.indexOf('/' + relPath, href.length - relPath.length - 1) !== -1)
         foundList.push($(tocList[i]));
       // Search for items which matches the address without anchor:
-      else if (href.indexOf(relPathNoHash, href.length - relPathNoHash.length) !== -1)
+      else if (href.indexOf('/' + relPathNoHash, href.length - relPathNoHash.length - 1) !== -1)
         foundNoHashList.push($(tocList[i]));
     }
     if (foundList.length)
@@ -947,12 +962,12 @@ function ctor_structure()
     var lang = T("en"), ver = T("v1");
     // language links. Keys are based on ISO 639-1 language name standard:
     var link = { 'v1': { 'en': 'https://www.autohotkey.com/docs/v1/',
-                         'de': 'https://ahkde.github.io/docs/',
+                         'de': 'https://ahkde.github.io/docs/v1/',
                          'ko': 'https://ahkscript.github.io/ko/docs/',
                          'pt': 'https://ahkscript.github.io/pt/docs/',
                          'zh': 'https://wyagd001.github.io/zh-cn/docs/' },
                  'v2': { 'en': 'https://www.autohotkey.com/docs/v2/',
-                         'de': 'https://ahkde.github.io/v2/docs/',
+                         'de': 'https://ahkde.github.io/docs/v2/',
                          'zh': 'https://wyagd001.github.io/v2/docs/' } }
 
     var $langList = $online.find('ul.languages')
@@ -1294,6 +1309,12 @@ function ctor_structure()
       history.replaceState($.extend(history.state, state), null, null);
     });
   }
+  // Hide frame before leaving site:
+  self.hideFrameBeforeLeaving = function() {
+    $(window).on('beforeunload', function() {
+      postMessageToParent('hideFrame', []);
+    });
+  }
   // Focus content:
    self.focusContent = function() {
      if (isFrameCapable) {
@@ -1410,20 +1431,16 @@ function ctor_structure()
     }
   } 
   // Set color theme:
+  self.themes = [null, 'dark'];
   self.setTheme = function(id) {
-    switch (id)
-    {
-      case 0:
-        $('#current-theme').remove();
-        break;
-      case 1:
-        var link = document.createElement('link');
-        link.href = workingDir + 'static/dark.css';
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.id = 'current-theme';
-        $('head').append(link);
-        break;
+    $('#current-theme').remove();
+    if (id > 0 && id < self.themes.length) {
+      var link = document.createElement('link');
+      link.href = workingDir + 'static/' + self.themes[id] + '.css';
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.id = 'current-theme';
+      $('head').append(link);
     }
   };
   // Add events for ListBox items such as double-click:

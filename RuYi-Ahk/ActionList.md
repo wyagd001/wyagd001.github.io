@@ -123,9 +123,9 @@ layout: default
 |1112|e982|有道翻译|选中文本|使用有道翻译选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\有道翻译.ahk" "%CandySel%"|
 |1113|E839|网络适配器|无条件|使用资源管理器以新窗口方式打开网络适配器|run&#124;rundll32.exe shell32.dll,Control_RunDLL ncpa.cpl|
 |1114|E756|环境变量|无条件|打开系统环境变量设置|run&#124;rundll32 sysdm.cpl,EditEnvironmentVariables|
-|1115|f19d|显示隐藏|无条件|资源管理器显示隐藏文件(需手动刷新, 或按F5后生效)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\显示隐藏文件.ahk"|
+|1115|f19d|显示隐藏|无条件|资源管理器显示隐藏文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\显示隐藏文件.ahk"|
 |1116|f56f|隐藏文件|无条件|资源管理器隐藏文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\不显示隐藏文件.ahk"|
-|1117|ea49|显示扩展名|无条件|资源管理器显示文件的扩展名(需手动刷新, 或按F5后生效)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\显示扩展名.ahk"|
+|1117|ea49|显示扩展名|无条件|资源管理器显示文件的扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\显示扩展名.ahk"|
 |1118|e89f|隐藏扩展名|无条件|资源管理器隐藏文件的扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\不显示扩展名.ahk"|
 |1119|e16d|多文件名|选中文件|将选中的多个文件的文件名放入剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\多文件仅复制文件名.ahk" "%CandySel%"|
 |1120|f17f|剪贴板至文件|资源管理器|剪贴板保存为文件到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\剪贴板保存为文件到当前文件夹.ahk" "%Windy_CurWin_FolderPath%"|
@@ -134,7 +134,7 @@ layout: default
 |1123|f095|开启黑域|无条件|开启手机黑域|run&#124;%A_ScriptDir%\引用程序\adb.exe shell sh /data/data/me.piebridge.brevent/brevent.sh|
 |1124|ef3b|重启桌面|无条件|强制关闭所有资源管理器后重新打开|canfunc&#124;CF_restartexplorer|
 |1125|f781|窗口静音|任意窗口|任意窗口静音, 再次运行恢复|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口静音.ahk"|
-|1126|E70F|浏览器打开|特定窗口|使用当前浏览器当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "%A_ScriptDir%\引用程序\AnyToAhk.exe"|
+|1126|E70F|浏览器打开|特定窗口|使用(当前打开的)浏览器打开当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "当前浏览器"|
 |1127|e16d|复制进程路径|任意窗口|复制当前窗口的进程路径到剪贴板|setclip&#124;%Windy_CurWin_Fullpath%|
 |1128|e70f|其他编辑|子面板|使用指定的编辑器打开当前窗口打开的文本文件|Gui&#124;编辑器打开|
 |1129|E70F|记事本|特定窗口|使用记事本编辑当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "notepad.exe"|
@@ -176,6 +176,16 @@ layout: default
 |1165|E77F|粘贴为数值|Excel|Excel, WPS 表格快捷键, 将选中单元格粘贴为数值|Cando&#124;粘贴为数值|
 |1166|E77F|输入为数值|Excel|Excel, WPS 表格快捷键, 将选中单元格输入为数值|Cando&#124;输入为数值|
 |1167|E8FF|打印预览|WPS 表格|Excel, WPS 表格快捷键, 按下 Ctrl+F2, 打印预览|Keys&#124;^{F2}|
-|1168|eb55|关闭显示器|无条件|关闭显示器|canfunc&#124;CF_CloseScreen
-|1169|E71B|复制路径|注册表|复制注册表窗口打开的路径到剪切板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\注册表定位.ahk"
-|1170|e16d|复制内容|选中文件|复制文本文件内容到剪切板|canfunc&#124;CF_FileToClip&#124;%CandySel%
+|1168|eb55|关闭显示器|无条件|关闭显示器|canfunc&#124;CF_CloseScreen|
+|1169|E71B|复制路径|注册表|复制注册表窗口打开的路径到剪切板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\注册表定位.ahk"|
+|1170|e16d|复制内容|选中文件|复制文本文件内容到剪切板|canfunc&#124;CF_FileToClip&#124;%CandySel%|
+|1171|e9a6|截取窗口|任意窗口|截取窗口并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "窗口截图"|
+|1172|f617|截取屏幕|无条件|截取显示器屏幕并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk"|
+|1173|ed14|二维码|选中文本|选中文字生成二维码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\生成二维码.ahk" "%CandySel%"|
+|1174|ec5c|更改盘符|选中驱动器|更改选中驱动器的盘符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_更改盘符.ahk" "%CandySel%"|
+|1175|eda2|序列号|选中驱动器|读取选中驱动器的序列号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_读取序列号.ahk" "%CandySel%"|
+|1176|ea5b|AppId|任意窗口|更改窗口的AppId, 将窗口从当前任务栏分组中移除|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\更改appid.ahk"|
+|1177|EDE3|FolderMenu|选中文件夹|将选中文件夹以菜单形式显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\FolderMenu.ahk" "%CandySel%"|
+|1178|EDE3|当前文件夹|子面板|资源管理器当前打开文件夹的相关动作集合的子面板|Gui&#124;资源管理器_当前文件夹|
+
+
