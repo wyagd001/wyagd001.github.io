@@ -18,7 +18,7 @@ layout: default
 |1007|f19d|资源管理器|菜单|资源管理器动作面板|menu&#124;资源管理器|
 |1008|F8B0|注册表相关|子面板||gui&#124;系统优化|
 |1009|e16d|复制路径|资源管理器|复制资源管理器当前窗口路径|setclip&#124;%Windy_CurWin_FolderPath%|
-|1010|EDE3|通用菜单|菜单|选中文件的通用动作面板|menu&#124;文件默认|
+|1010|EDE3|通用菜单|菜单|选中文件的通用动作菜单|menu&#124;文件通用|
 |1011|E70F|记事本打开|选中文本|使用记事本打开选定文件|openwith&#124;Notepad.exe|
 |1012|E756|CMD|资源管理器|打开cmd, 并跳转到当前资源管理器窗口路径|run&#124;cmd.exe /k cd /d "%Windy_CurWin_FolderPath%"|
 |1013|f0b2|程序和功能|无条件|打开系统的程序管理删除界面|run&#124;appwiz.cpl|
@@ -43,7 +43,7 @@ layout: default
 |1032|E734|收藏夹|子面板|自定义的目录收藏夹|GUI&#124;自定义收藏夹|
 |1033|f617|水平最大化|任意窗口|水平最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "水平最大化"|
 |1034|f616|垂直最大化|任意窗口|垂直最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "垂直最大化"|
-|1035|e728|通用2|子面板|文件通用|GUI&#124;文件通用|
+|1035|e728|通用2|子面板|选中文件的通用动作的子面板2|GUI&#124;文件通用2|
 |1036|efa5|文件改名|选中文件|修改选中的文本文件的名称和扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名修改.ahk" "%candysel%"|
 |1037|f87e|打开选中|选中对象|运行选中的文本(路径(程序, 文件, 目录), 网址, 注册表地址)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\运行选中的文本.ahk" "%CandySel%"|
 |1038|E70F|编辑|选中文件|编辑选中的lnk快捷方式文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\LnkEditor.ahk" "%CandySel%"|
@@ -74,13 +74,13 @@ layout: default
 |1063|f0f9|编辑模式|Chrome|Chrome 浏览器开启网页编辑模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:void((function(){document.body.contentEditable='true'; document.designMode='on'; void 0})())"|
 |1064|edb1|!编辑模式|Chrome|Chrome 浏览器关闭网页编辑模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.body.contentEditable=false"|
 |1065|f0f9|强制复制|Chrome|Chrome 浏览器强制打开网页的右键复制功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:alert(document.onselectstart = document.onbeforecopy = document.oncontextmenu = document.onmousedown = document.onkeydown = function(){return true;});void(document.body.onmousedown='');void(document.body.contextmenu=''); void(document.body.onselectstart=''); void(document.body.onmouseup=''); void(document.body.oncopy='');"|
-|1066|f552|获取权限|选中文件|获取选中文件的权限|run&#124;cmd.exe /c takeown /f "{file:fullpath}" && icacls "%CandySel%" /grant administrators:F|
+|1066|f552|获取权限|选中文件|设置选中文件的权限为管理员组|run&#124;cmd.exe /c takeown /f "%CandySel%" && icacls "%CandySel%" /grant administrators:F|
 |1067|ed2b|合并文件|选中文件|将选中的多个文本文件合并为一个文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\合并文本文件.ahk" "%candysel%"|
 |1068|e907|透明75%|任意窗口|将当前窗口透明度设为75%|canfunc&#124;CF_WinSetTransparent&#124;192|
 |1069|e906|透明50%|任意窗口|将当前窗口透明度设为50%|canfunc&#124;CF_WinSetTransparent&#124;128|
 |1070|ef3b|预览文件|选中文件|使用ahk预览选中的文件(文本, 图片, 压缩包...)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件预览.ahk" "%CandySel%"|
 |1071|e929|打开方式|选中文件|弹出选中文件的打开方式菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件打开方式.ahk" "%CandySel%"|
-|1072|EDE3|窗口默认|菜单||menu&#124;窗口默认|
+|1072|EDE3|窗口通用|菜单|当前窗口的通用动作的菜单|menu&#124;窗口通用|
 |1073|E107|永久删除|选中文件|永久删除选中的文件, 无确认提示|canfunc&#124;CF_FileDelete&#124;%CandySel%|
 |1074|e193|画图|无条件|打开系统自带画图程序|run&#124;mspaint|
 |1075|f69e|常用工具|子面板||Gui&#124;常用工具|
@@ -91,7 +91,7 @@ layout: default
 |1080|f14a|MD5|选中文件|计算选中文件的MD5值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5_File.ahk" "%CandySel%"|
 |1081|e8b1|交换文件名|选中文件|将当前选中的两个文件交换文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\两个文件交换文件名.ahk" "%CandySel%"|
 |1082|e775|获取文本|任务管理器|获取任务管理器的命令行文本和服务的文本|cando&#124;获取任务管理器文本|
-|1083|EDE3|窗口默认2|菜单||Menu&#124;窗口默认2|
+|1083|EDE3|窗口通用2|菜单|当前窗口的通用动作的菜单2|Menu&#124;窗口通用2|
 |1084|e908|透明关|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
 |1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
 |1086|e126|复制到Music|选中文件|复制选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
@@ -187,5 +187,10 @@ layout: default
 |1176|ea5b|AppId|任意窗口|更改窗口的AppId, 将窗口从当前任务栏分组中移除|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\更改appid.ahk"|
 |1177|EDE3|FolderMenu|选中文件夹|将选中文件夹以菜单形式显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\FolderMenu.ahk" "%CandySel%"|
 |1178|EDE3|当前文件夹|子面板|资源管理器当前打开文件夹的相关动作集合的子面板|Gui&#124;资源管理器_当前文件夹|
-
-
+|1179|EDE3|当前文件夹|子面板|资源管理器当前打开文件夹的相关动作集合的子面板|Gui&#124;资源管理器_当前文件夹|
+|1180|EDE3|文件通用|子面板|选中文件的通用动作的子面板|Gui&#124;文件通用|
+|1181|EDE3|通用2|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用2|
+|1182|EDE3|窗口通用|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用|
+|1183|EDE3|通用2|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用2|
+|1184|EDE3|目录通用|菜单|选中文件夹的通用动作的菜单|Menu&#124;文件夹通用|
+|1185|f552|获取权限|选中文件|设置选中文件的权限为管理员|run&#124;cmd.exe /c takeown /f "%CandySel%" && icacls "%CandySel%" /grant administrator:F|
