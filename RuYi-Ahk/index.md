@@ -10,7 +10,7 @@ layout: default
 
 **脚本下载**: [https://wyagd001.github.io/RuYi-Ahk/RuYi.zip](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [1.3 - 2023/1/24](history.md)
+**当前版本**: [1.4 - 2023/2/4](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
@@ -132,7 +132,7 @@ layout: default
      - 1174	ec5c&#124;更改盘符&#124;选中驱动器&#124;更改选中驱动器的盘符
      - 1175	eda2&#124;序列号&#124;选中驱动器&#124;读取选中驱动器的序列号
      - 1176	ea5b&#124;AppId&#124;任意窗口&#124;更改窗口的AppId, 将窗口从当前任务栏分组中移除
-     - 1177	EDE3&#124;FolderMenu&#124;选中文件夹&#124;将选中文件夹以菜单形式显示
+     - 1177	EDE3&#124;FolderMenu&#124;选中文件夹&#124;将选中文件夹以菜单形式显示(以文件夹中的文件创建一个右键菜单)
 
  
 
