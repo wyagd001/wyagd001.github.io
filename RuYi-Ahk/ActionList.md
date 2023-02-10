@@ -163,7 +163,7 @@ layout: default
 |1152|f6fa|Bing搜索|选中文本|Bing搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://cn.bing.com/search?q=%CandySel%|
 |1153|f6fa|Baidu/Bing|Chrome|百度 Bing切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\百度Bing切换.ahk"|
 |1154|f6fa|京东搜索|选中文本|京东搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.jd.com/Search?keyword=%CandySel%|
-|1155|f6fa|搜索引擎|菜单|打开网页搜索所选文本|Menu&#124;网页搜索|
+|1155|f6fa|搜索引擎|菜单|搜索引擎集合的菜单|Menu&#124;搜索引擎|
 |1156|f6fa|B站搜索|选中文本|B站搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.bilibili.com/all?keyword=%CandySel%|
 |1157|ed25|如意目录|无条件|打开脚本所在目录|run&#124;%A_ScriptDir%|
 |1158|ed25|AppData|无条件|打开 AppData 目录|run&#124;shell:AppData|
@@ -194,3 +194,22 @@ layout: default
 |1183|EDE3|通用2|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用2|
 |1184|EDE3|目录通用|菜单|选中文件夹的通用动作的菜单|Menu&#124;文件夹通用|
 |1185|f552|获取权限|选中文件|设置选中文件的权限为管理员|run&#124;cmd.exe /c takeown /f "%CandySel%" && icacls "%CandySel%" /grant administrator:F|
+|1186|f2b7|百度网盘|选中文本|自动打开选中文本中的百度网盘网址, 并将提取码放入剪贴板和自动填写|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\百度网盘链接.ahk" "%CandySel%"|
+|1187|e947|关闭窗口|任意窗口|关闭窗口(chrome 等特定窗口为关闭标签页)|Cando&#124;关闭窗口|
+|1188|e72b|左半后退|任意窗口|浏览器发送后退快捷键, 其他窗口为移到左半屏幕|Cando&#124;左半后退|
+|1189|e72a|右半前进|任意窗口|浏览器发送前进快捷键, 其他窗口为移到右半屏幕|Cando&#124;右半前进|
+|1190|e74b|最小化|任意窗口|窗口最小化|Cando&#124;窗口最小化|
+|1191|e74a|最大化|任意窗口|窗口最大化|Cando&#124;窗口最大化|
+|1192|ee92|动作管理|无条件|动作管理|Cando&#124;TM_ActionM|
+|1193|e1ce|最多运行|无条件|最多运行动作的子面板|canfunc&#124;ShowDBData&#124;execcount&#124;面板|
+|1194|e728|最多运行|无条件|最多运行动作的菜单|canfunc&#124;ShowDBData&#124;execcount&#124;菜单|
+|1195|e1cf|最近运行|无条件|最近运行动作的子面板|canfunc&#124;ShowDBData&#124;lastexectime&#124;面板|
+|1196|f0e9|最近运行|无条件|最近运行动作的菜单|canfunc&#124;ShowDBData&#124;lastexectime&#124;菜单|
+|1197|f2b7|DllFunc|选中文件|查看选中Dll文件中的函数|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Dll文件中的函数.ahk" "%CandySel%"|
+|1198|f2b7|智能解压|选中文件|将选中的压缩文件解压到当前文件夹,并且只有一层文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\压缩文件智能解压.ahk" "%CandySel%"|
+|1199|f2b7|窗口列表|无条件|列出系统中的所有窗口, 可以隐藏和显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_显示或隐藏.ahk"|
+|1200|f2b7|进制转换|选中文本|将选中的10进数字转换为16进制, 或将选中的16进数字转换为10进制|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_十进制十六进制转换.ahk" "%CandySel%"|
+|1201|f2b7|对应颜色|选中文本|查看选中数字对应的颜色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_查看代码对应的颜色.ahk" "%CandySel%"|
+|1202|EDE3|文本通用|子面板|短文本的通用动作的子面板|Gui&#124;短文本通用|
+|1203|EDE3|文本通用|菜单|选中短文本通用动作的菜单|Menu&#124;短文本通用|
+|1204|EDE3|数字通用|菜单|选中数字通用动作的菜单|Menu&#124;数字通用|
