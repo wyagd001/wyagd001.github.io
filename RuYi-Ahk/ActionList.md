@@ -186,7 +186,7 @@ layout: default
 |1175|eda2|序列号|选中驱动器|读取选中驱动器的序列号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_读取序列号.ahk" "%CandySel%"|
 |1176|ea5b|AppId|任意窗口|更改窗口的AppId, 将窗口从当前任务栏分组中移除|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\更改appid.ahk"|
 |1177|EDE3|FolderMenu|选中文件夹|将选中文件夹以菜单形式显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\FolderMenu.ahk" "%CandySel%"|
-|1178|EDE3|当前文件夹|子面板|资源管理器当前打开文件夹的相关动作集合的子面板|Gui&#124;资源管理器_当前文件夹|
+|1178|EDE3|FolderMenu|资源管理器|将资源管理器当前打开的文件夹以菜单形式显示|run#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\FolderMenu.ahk" "%Windy_CurWin_FolderPath%"|
 |1179|EDE3|当前文件夹|子面板|资源管理器当前打开文件夹的相关动作集合的子面板|Gui&#124;资源管理器_当前文件夹|
 |1180|EDE3|文件通用|子面板|选中文件的通用动作的子面板|Gui&#124;文件通用|
 |1181|EDE3|通用2|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用2|
@@ -218,6 +218,10 @@ layout: default
 |1207|eb9f|提取图标|选中文件|提取选中文件(exe, dll)中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\提取图标.ahk" "%CandySel%"|
 |1208|eb9f|关联图标|选中文件|保存选中文件关联的图标到文件所在文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\关联图标存为png文件.ahk" "%CandySel%" ".png"|
 |1209|eb9f|测试|无条件|测试插件脚本里的例子|canfunc&#124;ExecSendToDll&#124;%CandySel%|
-|1210|ed
-11|完整歌单|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.cookie='os=pc';f()"|
+|1210|ed11|完整歌单|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.cookie='os=pc';f()"|
 |1211|ea47|下一页|Chrome|Chrome 浏览器自动下一页|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:var Re=new RegExp('(下☆后)(一☆\s)*(页☆頁☆章☆篇☆翻)','i');var a=document.getElementsByTagName('A');for(var i=0;i<a.length;i++){if(Re.test(a[i].innerHTML)){if(a[i].href.substr(0,11).toLowerCase()=='javascript:')a[i].click();else document.location.href=a[i].href;break}}"|
+|1212|ed11|Ini_Fav|选中文件|Ini 文件式的收藏夹菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹菜单.ahk" "%CandySel%"|
+|1213|ed11|Ini_Opw|选中文件|Ini 文件式的程序菜单, 使用菜单中的程序打开选中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_程序打开选中文件.ahk" "%CandySel%"|
+|1214|f6fa|百度搜索|选中文件|百度搜索选中文件的文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel_FileName%|
+|1215|f093|Adb|子面板|手机Adb的子面板|Gui&#124;Adb|
+|1216|e898|收藏夹|Chrome|快捷键打开Chrome的收藏夹|Keys&#124;^+o|
