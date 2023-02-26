@@ -33,12 +33,12 @@ var cache = {
   sidebarWidth: '18em',
   collapseQuickRef: user.collapseQuickRef,
   RightIsFocused: true,
-  toc_clickItem: 0,
+  toc_clickItem: null,
+  toc_clickItemTemp: null,
   toc_scrollPos: 0,
   index_filter:-1,
   index_input: "",
-  toc_clickItem: null,
-  toc_clickItemTemp: null,
+  index_clickItem: 0,
   index_scrollPos: 0,
   search_data: {},
   search_highlightWords: false,
@@ -398,10 +398,10 @@ function ctor_toc()
   self.preSelect = function($toc, url) { // Apply stored settings.
     var tocList = $toc.find('li > span');
     var clicked = tocList.eq(cache.toc_clickItem);
-    var relPathNoHash = relPath.replace(url.hash,'');
     var found = null;
     var foundList = [];
     var foundNoHashList = [];
+    var url_href = (url.href.slice(-1) == '/') ? url.href + 'index.htm' : url.href;
     for (var i = 0; i < tocList.length; i++) {
       var href = tocList[i].firstChild.href;
       if (!href)
