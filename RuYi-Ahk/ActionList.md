@@ -225,3 +225,13 @@ layout: default
 |1214|f6fa|百度搜索|选中文件|百度搜索选中文件的文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel_FileName%|
 |1215|f093|Adb|子面板|手机Adb的子面板|Gui&#124;Adb|
 |1216|e898|收藏夹|Chrome|快捷键打开Chrome的收藏夹|Keys&#124;^+o|
+|1217|e89a|到手机|无条件|同步电脑文件夹到手机文件夹(参数指定文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\同步文件夹到手机.ahk" "H:\备份\同步文件夹" "/storage/emulated/0/1_文档/资料/同步文件夹"|
+|1218|e952|连接手机|无条件|使用adb连接到手机|run&#124;%A_ScriptDir%\引用程序\adb.exe connect 192.168.1.109:5555|
+|1219|e89a|到手机|选中文件|发送电脑选中文件到手机的根目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\发送文件到手机目录.ahk" "%CandySel%"|
+|1220|e16d|放入剪贴板|选中文件|将选中的文本文件内容放入剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件内容放入剪贴板.ahk" "%CandySel%"|
+|1221|E734|收藏夹|子面板|浏览器收藏夹菜单的子面板|Gui&#124;浏览器收藏夹|
+|1222|E734|360收藏夹|无条件|将360浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\360浏览器收藏夹.ahk"|
+|1223|E734|Chrome收藏夹|无条件|将Chrome浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk"|
+|1224|e16d|Edge收藏夹|无条件|将Edge浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MsEdge收藏夹.ahk"|
+|1225|e8a3|文件库搜索|选中文件|使用文件名搜索文件库中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\数据库_文件库中搜索文件.ahk" "%CandySel_FileNameNoExt%"|
+
