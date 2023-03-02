@@ -234,4 +234,4 @@ layout: default
 |1223|E734|Chrome收藏夹|无条件|将Chrome浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk"|
 |1224|e16d|Edge收藏夹|无条件|将Edge浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MsEdge收藏夹.ahk"|
 |1225|e8a3|文件库搜索|选中文件|使用文件名搜索文件库中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\数据库_文件库中搜索文件.ahk" "%CandySel_FileNameNoExt%"|
-
+|1226|e8a3|打开的|对话框|显示一个当前打开的文件夹的菜单, 对话框跳转到选择的项目|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框.ahk" "%Windy_CurWin_id%"|
