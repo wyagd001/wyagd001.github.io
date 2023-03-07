@@ -90,7 +90,7 @@ layout: default
 |1079|f608|取消关机|无条件|取消强制关机|run&#124;shutdown -a|
 |1080|f14a|MD5|选中文件|计算选中文件的MD5值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5_File.ahk" "%CandySel%"|
 |1081|e8b1|交换文件名|选中文件|将当前选中的两个文件交换文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\两个文件交换文件名.ahk" "%CandySel%"|
-|1082|e775|获取文本|任务管理器|获取任务管理器的命令行文本和服务的文本|cando&#124;获取任务管理器文本|
+|1082|e775|获取文本|任意窗口|获取任意窗口鼠标下的文本(例如 任务管理器的命令行)|cando&#124;获取鼠标下文本|
 |1083|EDE3|窗口通用2|菜单|当前窗口的通用动作的菜单2|Menu&#124;窗口通用2|
 |1084|e908|透明关|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
 |1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
@@ -206,8 +206,8 @@ layout: default
 |1195|e1cf|最近运行|无条件|最近运行动作的子面板|canfunc&#124;ShowDBData&#124;lastexectime&#124;面板|
 |1196|f0e9|最近运行|无条件|最近运行动作的菜单|canfunc&#124;ShowDBData&#124;lastexectime&#124;菜单|
 |1197|f2b7|DllFunc|选中文件|查看选中Dll文件中的函数|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Dll文件中的函数.ahk" "%CandySel%"|
-|1198|f2b7|智能解压|选中文件|将选中的压缩文件解压到当前文件夹,并且只有一层文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\压缩文件智能解压.ahk" "%CandySel%"|
-|1199|f2b7|窗口列表|无条件|列出系统中的所有窗口, 可以隐藏和显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_显示或隐藏.ahk"|
+|1198|e74c|智能解压|选中文件|将选中的压缩文件解压到当前文件夹,并且只有一层文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\压缩文件智能解压.ahk" "%CandySel%"|
+|1199|f5ed|窗口列表|无条件|列出系统中的所有窗口, 可以隐藏和显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_显示或隐藏.ahk"|
 |1200|f2b7|进制转换|选中文本|将选中的10进数字转换为16进制, 或将选中的16进数字转换为10进制|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_十进制十六进制转换.ahk" "%CandySel%"|
 |1201|f2b7|对应颜色|选中文本|查看选中数字对应的颜色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_查看代码对应的颜色.ahk" "%CandySel%"|
 |1202|EDE3|文本通用|子面板|短文本的通用动作的子面板|Gui&#124;短文本通用|
@@ -233,5 +233,9 @@ layout: default
 |1222|E734|360收藏夹|无条件|将360浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\360浏览器收藏夹.ahk"|
 |1223|E734|Chrome收藏夹|无条件|将Chrome浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk"|
 |1224|e16d|Edge收藏夹|无条件|将Edge浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MsEdge收藏夹.ahk"|
-|1225|e8a3|文件库搜索|选中文件|使用文件名搜索文件库中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\数据库_文件库中搜索文件.ahk" "%CandySel_FileNameNoExt%"|
+|1225|e8a3|文件库搜索|选中对象|使用选中对象在文件库中搜索文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\数据库_文件库中搜索文件.ahk" "%CandySel%"|
 |1226|e8a3|打开的|对话框|显示一个当前打开的文件夹的菜单, 对话框跳转到选择的项目|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框.ahk" "%Windy_CurWin_id%"|
+|1227|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)|run&#124;sysdm.cpl|
+|1228|e982|搜狗翻译|选中文本|使用搜狗翻译选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\搜狗翻译.ahk" "%CandySel%"|
+|1229|ef58|环境变量|无条件|打开环境变量设置界面|run&#124;rundll32 sysdm.cpl,EditEnvironmentVariables|
+|1230|E894|结束进程|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F||hide|
