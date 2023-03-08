@@ -298,7 +298,7 @@
   <tr id="Unicode">
     <td>{U+nnnn}</td>
     <td><p id="sendu"><span class="ver">[AHK_L 24+]:</span> 发送 Unicode 字符, 其中 <em>nnnn</em> 为不包括 0x 前缀的字符的十六进制值. 在 AutoHotkey 的 Unicode 版本中通常不需要这么做, 因为它包含的 Send 和 ControlSend 自动支持 Unicode 文本.</p>
-    <p>使用 <a href="http://msdn.microsoft.com/en-us/library/ms646310.aspx">SendInput()</a> 或 <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> 发送这个字符而当前的发送模式无效. 以这种方式发送的字符通常不会触发快捷键或热键.</p></td>
+    <p>使用 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-sendinput">SendInput()</a> 或 <a href="https://learn.microsoft.com/windows/win32/inputdev/wm-char">WM_CHAR</a> 发送这个字符而当前的发送模式无效. 以这种方式发送的字符通常不会触发快捷键或热键.</p></td>
   </tr>
   <tr id="vk" class="sep_below">
     <td><p>{vkXX}<br>
@@ -517,9 +517,9 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <h2 id="Remarks">一般说明</h2>
 <p id="characters"><strong>字符 vs. 按键</strong>: 默认情况下, 先将字符转换为按键来发送字符. 如果这种转换是不可能的(即, 如果当前的键盘布局不包含产生该字符的键或键组合), 则通过以下备用方法之一发送字符:</p>
 <ul id="fallback">
-  <li>SendEvent 和 SendInput 带有 <a href="https://msdn.microsoft.com/en-us/library/ms646271#keyeventf_unicode">KEYEVENTF_UNICODE flag</a> 的 <a href="http://msdn.microsoft.com/en-us/library/ms646310">SendInput()</a>. <span class="ver">[v1.1.27+]:</span> 在发送之前, ANSI 版本的 AutoHotkey 将字符转换为 Unicode. 在 v1.1.27 之前, ANSI 版本使用了 Alt+nnnnn 方法.</li>
+  <li>SendEvent 和 SendInput 带有 <a href="https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-keybdinput#keyeventf_unicode">KEYEVENTF_UNICODE flag</a> 的 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-sendinput">SendInput()</a>. <span class="ver">[v1.1.27+]:</span> 在发送之前, ANSI 版本的 AutoHotkey 将字符转换为 Unicode. 在 v1.1.27 之前, ANSI 版本使用了 Alt+nnnnn 方法.</li>
   <li>SendPlay 使用 <a href="#asc">Alt+nnnnn</a> 方法, 仅在目标应用程序支持的情况下才生成 Unicode.</li>
-  <li>ControlSend 发布 <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> 消息.</li>
+  <li>ControlSend 发布 <a href="https://learn.microsoft.com/windows/win32/inputdev/wm-char">WM_CHAR</a> 消息.</li>
 </ul>
 <p class="warning"><strong>注意:</strong> 使用上述方法发送字符通常不会触发键盘快捷键或热键.</p>
 <p id="AZ"><span class="ver">[v1.1.27+]:</span> 对于 <strong>a-z</strong> 或 <strong>A-Z</strong> (纯 ASCII 字母) 范围内的字符, 每个当前键盘布局中不存在的字符可以作为字符或相应的虚拟键码(vk41-vk5A) 发送:</p>

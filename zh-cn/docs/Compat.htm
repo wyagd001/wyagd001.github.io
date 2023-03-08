@@ -162,7 +162,7 @@ MsgBox,, Title
 <p><a href="lib/LoopReadFile.htm">Loop Read</a> 和 <a href="lib/FileReadLine.htm">FileReadLine</a> 不再把字符 <kbd>Ctrl</kbd>+<kbd>Z</kbd>(0x1A) 解释为文件结束标记. 任何的 <kbd>Ctrl</kbd>+<kbd>Z</kbd>, 即使某一个恰好出现在文件末尾, 都原样加载. <a href="lib/FileRead.htm">FileRead</a> 已经忽略这个字符, 所以不受这个问题的影响.</p>
 
 <h3 id="Compatibility_Mode">兼容模式</h3>
-<p>如果用于运行脚本的 EXE 文件属性中设置<a href="https://support.microsoft.com/en-us/help/15078/windows-make-older-programs-compatible">兼容模式</a>为 Windows 95, 98/ME 或 NT4, 脚本可能无法正常运行. 这是由于兼容模式会把特定的 Windows 版本报告给应用程序, 但 AutoHotkey_L 不支持这些版本. 例如设置兼容模式为 Windows 95 或 98/ME 将使得 <code>MsgBox %A_OSVersion%</code> 报告 <code>WIN_NT4</code>.</p>
+<p>如果用于运行脚本的 EXE 文件属性中设置<a href="https://support.microsoft.com/windows/make-older-apps-or-programs-compatible-with-windows-783d6dd7-b439-bdb0-0490-54eea0f45938">兼容模式</a>为 Windows 95, 98/ME 或 NT4, 脚本可能无法正常运行. 这是由于兼容模式会把特定的 Windows 版本报告给应用程序, 但 AutoHotkey_L 不支持这些版本. 例如设置兼容模式为 Windows 95 或 98/ME 将使得 <code>MsgBox %A_OSVersion%</code> 报告 <code>WIN_NT4</code>.</p>
 
 <h3 id="IsCompiled">A_IsCompiled</h3>
 <p><a href="Variables.htm#IsCompiled">A_IsCompiled</a> 当脚本未编译时被定义为空字符串. 之前它会被保留为未定义, 这意味着当脚本未编译时对它进行赋值(例如 <code>A_IsCompiled := 1</code>) 是有效的. 现在在所有的情况中它都被视为只读的内置变量.</p>
@@ -183,7 +183,7 @@ MsgBox,, Title
 <pre>MsgBox % <a href="Variables.htm#IsUnicode">A_IsUnicode</a> ? "Unicode" : "ANSI"</pre>
 <p><strong>ANSI:</strong> 每个字符占用<strong>一个字节</strong>(8 位). 大于 127 的字符代码取决于系统的语言设置.</p>
 <p><strong>Unicode:</strong> 每个字符占用<strong>两个字节</strong>(16 位). 字符代码在 <a href="https://en.wikipedia.org/wiki/UTF-16">UTF-16</a> 格式中定义.</p>
-<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为 <i>两个</i> 16 位代码单元<strong>(四个字节)</strong>, 一起被称为 "代理项对". 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为 "字符"). 同样地, 一些 <a href="http://msdn.microsoft.com/en-us/library/dd317752.aspx">ANSI 代码页</a>(通常称为<a href="http://msdn.microsoft.com/en-us/library/dd317794.aspx">双字节字符集</a>,  例如 cp936) 含有双字节字符.</p>
+<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为 <i>两个</i> 16 位代码单元<strong>(四个字节)</strong>, 一起被称为 "代理项对". 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为 "字符"). 同样地, 一些 <a href="https://learn.microsoft.com/windows/win32/intl/code-pages">ANSI 代码页</a>(通常称为<a href="https://learn.microsoft.com/windows/win32/intl/double-byte-character-sets">双字节字符集</a>,  例如 cp936) 含有双字节字符.</p>
 
 <h3 id="VarSetCapacity">VarSetCapacity</h3>
 <p>VarSetCapacity 设置一个变量占用的空间, <i>单位为字节</i>. 要根据字符数设置变量的容量, 必须同时考虑字符的大小. 例如:</p>
@@ -254,10 +254,10 @@ t_size(char_count=1) {
     HANDLE hThread;
     DWORD  dwProcessId; // UInt (4 字节)
     DWORD  dwThreadId;
-  } <a href="http://msdn.microsoft.com/en-us/library/ms684873.aspx">PROCESS_INFORMATION</a>, *LPPROCESS_INFORMATION;
+  } <a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information">PROCESS_INFORMATION</a>, *LPPROCESS_INFORMATION;
 */</em>
 VarSetCapacity(pi, A_PtrSize*2 + 8) <em>; Ptr + Ptr + UInt + UInt</em>
-DllCall("<a href="http://msdn.microsoft.com/en-us/library/ms682425.aspx">CreateProcess</a>", <span class="dull">&lt;为简短而省略&gt;</span>, "Ptr", &amp;pi, <span class="dull">&lt;omitted&gt;</span>)
+DllCall("<a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">CreateProcess</a>", <span class="dull">&lt;为简短而省略&gt;</span>, "Ptr", &amp;pi, <span class="dull">&lt;omitted&gt;</span>)
 hProcess    := NumGet(pi, 0)         <em>; 默认为 "Ptr".</em>
 hThread     := NumGet(pi, A_PtrSize) <em>;</em>
 dwProcessId := NumGet(pi, A_PtrSize*2,     "UInt")

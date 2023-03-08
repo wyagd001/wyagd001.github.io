@@ -24,7 +24,7 @@
       <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
       <p>虚拟函数表中方法的索引(从零开始).</p>
       <p><em>Index</em> 对应于方法在原始接口定义中的位置. Microsoft 文档通常按字母顺序列出方法, 这是不相关的. 为了确定正确的索引, 请找到原来的接口定义. 这可能在头文件或类型库中.</p>
-      <p>考虑方法继承于的父接口是很重要的. 因为所有的 COM 接口最终都是从 <a href="https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown">IUnknown</a> 派生出来的, 所以前三个方法总是 QueryInterface (0), AddRef (1) 和 Release (2). 例如, <em>IShellItem2</em> 是 <em>IShellItem</em> 的扩展, 它从索引 3 开始, 包含 5 个方法, 所以 <em>IShellItem2</em> 的第一个方法(GetPropertyStore) 的索引为 8.</p>
+      <p>考虑方法继承于的父接口是很重要的. 因为所有的 COM 接口最终都是从 <a href="https://learn.microsoft.com/windows/win32/api/unknwn/nn-unknwn-iunknown">IUnknown</a> 派生出来的, 所以前三个方法总是 QueryInterface (0), AddRef (1) 和 Release (2). 例如, <em>IShellItem2</em> 是 <em>IShellItem</em> 的扩展, 它从索引 3 开始, 包含 5 个方法, 所以 <em>IShellItem2</em> 的第一个方法(GetPropertyStore) 的索引为 8.</p>
       <p class="note"><strong>提示:</strong> 对于微软定义的 COM 接口, 尝试在互联网或 Windows SDK 中搜索 "<em>IInterfaceName</em><b>Vtbl</b>" - 例如, "IUnknownVtbl". Microsoft 自己的接口定义附带这个接口的虚拟函数表的纯-C 语言定义, 它以正确的顺序显式地列出了所有方法.</p>
       <p>传递无效的索引可能会导致不确定的行为, 包括(但不限于) 程序终止.</p>
   </dd>
@@ -56,7 +56,7 @@
 
  <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-<p>如果 <em>ReturnType</em> 是 <a href="DllCall.htm#HRESULT">HRESULT</a>(或省略), 并且方法返回一个错误值(由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义), 则抛出 <a href="Error.htm#OSError">OSError</a>.</p>
+<p>如果 <em>ReturnType</em> 是 <a href="DllCall.htm#HRESULT">HRESULT</a>(或省略), 并且方法返回一个错误值(由 <a href="https://learn.microsoft.com/windows/win32/api/winerror/nf-winerror-failed">FAILED macro</a> 定义), 则抛出 <a href="Error.htm#OSError">OSError</a>.</p>
 <p>否则, ComCall 将返回该方法返回的实际值. 如果方法是不返回值的类型(该返回类型在 C 语言中定义为 <code>void</code>), 则结果是未定义的, 应将其忽略.</p>
 
  <h2 id="Remarks">备注</h2>
@@ -78,7 +78,7 @@
  <div class="ex" id="ExTaskbar">
 <p><a class="ex_number" href="#ExTaskbar"></a> 从任务栏中删除活动窗口 3 秒钟. 可以与<a href="DllCall.htm#ExTaskbar">等效的 DllCall 示例</a>进行比较.</p>
 <pre><em>/*
-  <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a> 虚拟函数列表中的方法:
+  <a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist">ITaskbarList</a> 虚拟函数列表中的方法:
     IUnknown:
       0 QueryInterface  -- 使用 <a href="ComObjQuery.htm">ComObjQuery</a> 代替
       1 AddRef          -- 使用 <a href="ObjAddRef.htm">ObjAddRef</a> 代替
@@ -98,10 +98,10 @@ tbl := ComObject(CLSID_TaskbarList, IID_ITaskbarList)
 
 activeHwnd := WinExist("A")
 
-ComCall(3, tbl)                     <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774650.aspx">HrInit</a>()</em>
-ComCall(5, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774648.aspx">DeleteTab</a>(activeHwnd)</em>
+ComCall(3, tbl)                     <em>; tbl.<a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit">HrInit</a>()</em>
+ComCall(5, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-deletetab">DeleteTab</a>(activeHwnd)</em>
 Sleep 3000
-ComCall(4, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
+ComCall(4, tbl, "ptr", activeHwnd)  <em>; tbl.<a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-addtab">AddTab</a>(activeHwnd)</em>
 
 <em>; 完成对象后, 只需将所有引用替换为
 ; 其他一些值(如果是局部变量, 就返回):</em>

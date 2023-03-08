@@ -90,7 +90,7 @@ SendText "Hello, world!"</pre>
 <h2>环境</h2>
 <p>每当一个新进程启动时, 它通常会继承启动它的进程(<em>父进程</em>) 的 <em>环境</em>. 这基本上意味着所有脚本的<a href="../Concepts.htm#environment-variables">环境变量</a>都由使用 <a href="../lib/Run.htm">Run</a> 启动的任何程序继承.</p>
 <p>在某些情况下, 可以在启动程序之前使用 <a href="../lib/EnvSet.htm">EnvSet</a> 设置环境变量以影响程序的行为, 或将信息传递给程序. 脚本还可以使用 <a href="../lib/EnvGet.htm">EnvGet</a> 读取它可能从其父进程继承的环境变量.</p>
-<p>在 64 位系统上, 脚本自身的环境很大程度上取决于运行它的 EXE 是 32 位还是 64 位. 32 位进程不仅具有不同的环境变量, 而且出于兼容性原因还具有<a href="https://learn.microsoft.com/en-us/windows/win32/winprog64/file-system-redirector">文件系统重定向</a>.</p>
+<p>在 64 位系统上, 脚本自身的环境很大程度上取决于运行它的 EXE 是 32 位还是 64 位. 32 位进程不仅具有不同的环境变量, 而且出于兼容性原因还具有<a href="https://learn.microsoft.com/windows/win32/winprog64/file-system-redirector">文件系统重定向</a>.</p>
 <pre>Run "cmd /k set pro"</pre>
 <p>上面的例子显示了一个命令提示符, 它打印所有以 "pro" 开头的环境变量. 如果您从 32 位脚本运行它, 您可能会看到 <code>PROCESSOR_ARCHITECTURE=x86</code> 和 <code>ProgramFiles=C:\Program Files (x86)</code>. 虽然标题显示类似于 "C:\Windows\System32\cmd.exe", 这是一个谎言; 它实际上是 32 位版本, 它实际上位于 "C:\Windows\SysWow64\cmd.exe" 中.</p>
 <p>在这种简单的情况下, 绕过 "System32" 重定向的最简单方法是使用 "SysNative". 但是, 这只能在 64 位系统上的 32 位进程中工作, 因此必须有条件地完成. 当以下示例在 64 位系统上执行时, 即使脚本是 32 位的, 它也会显示 64 位命令提示符:</p>

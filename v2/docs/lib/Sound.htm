@@ -46,7 +46,7 @@
 <p>音频驱动程序能够显示其他控制, 如低音和高音. 但是, 常见的音频驱动程序往往只具有音量和静音控制, 或者根本没有组件. 音量和静音控制是通过 <a href="SoundGetVolume.htm">SoundGetVolume</a>, <a href="SoundSetVolume.htm">SoundSetVolume</a>, <a href="SoundGetMute.htm">SoundGetMute</a> 和 <a href="SoundSetMute.htm">SoundSetMute</a> 直接支持的. 所有其他控制仅通过 <a href="SoundGetInterface.htm">SoundGetInterface</a> 和 <a href="ComCall.htm">ComCall</a> 间接支持.</p>
 
 <h3 id="Advanced_Details">详细信息</h3>
-<p>组件可以通过 <a href="https://docs.microsoft.com/en-us/windows/win32/coreaudio/devicetopology-api">DeviceTopology API</a> 发现, 该 API 公开 <em>Connectors</em> 和 <em>Subunits</em> 的图表. 上面显示的每个组件都有一个连接器, 而连接器定义了组件的名称. 每个控制(例如音量或静音) 由位于连接器和终端之间的子单元表示. 数据从连接器 "流出" 或流入, 并随着流过每个子单元而改变, 例如调节音量或抑制(静音) 所有声音.</p>
+<p>组件可以通过 <a href="https://learn.microsoft.com/windows/win32/coreaudio/devicetopology-api">DeviceTopology API</a> 发现, 该 API 公开 <em>Connectors</em> 和 <em>Subunits</em> 的图表. 上面显示的每个组件都有一个连接器, 而连接器定义了组件的名称. 每个控制(例如音量或静音) 由位于连接器和终端之间的子单元表示. 数据从连接器 "流出" 或流入, 并随着流过每个子单元而改变, 例如调节音量或抑制(静音) 所有声音.</p>
 <p>SoundGet 和 SoundSet 函数通过遍历 <em>device topology</em> 图并计算具有给定名称的连接器(或所有未指定名称的连接器) 来标识组件. 一旦找到匹配的连接器, 就可以从最近的连接器开始通过查询图形的该特定分支上的每个子单元来检索控制接口(例如 IAudioVolumeLevel 或 IAudioMute).</p>
 <p>应用于多个连接器的子单元被排除在外 - 例如与主音量和静音控制对应的子单元. 如果连接器至少有一个自己的子单元, 即使该子单元不是所请求的类型, 该连接器也会被计数.</p>
 <p>实际上, 最终结果的可用的组件和<a href="#components">级别选项卡</a>中列出的是一样的, 并且它们的顺序是相同的. 但是, 这个过程是基于观察, 反复尝试的, 所以可能不是 100% 的准确.</p>
@@ -62,7 +62,7 @@
       <li><a href="#components">component</a> 的索引, 其中 1 是第一个组件.</li>
       <li>组件的完整显示名称(不区分大小写).</li>
       <li>如上, 但后跟冒号和整数, 其中 1 是第一个使用该名称的组件. 例如, <code>"Line In:2"</code> 是名称为 "Line In" 的第二个组件. 仅当 <em>Component</em> 可能导致歧义时, 例如多个组件具有相同的名称, 或显示名称为空, 为整数或包含冒号时, 才需要这样做.</li>
-      <li>如果省略或为空, 则该函数以主音量/静音控制或由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/mmdeviceapi/nf-mmdeviceapi-immdevice-activate">IMMDevice::Activate</a> 返回的接口为目标.</li>
+      <li>如果省略或为空, 则该函数以主音量/静音控制或由 <a href="https://learn.microsoft.com/windows/win32/api/mmdeviceapi/nf-mmdeviceapi-immdevice-activate">IMMDevice::Activate</a> 返回的接口为目标.</li>
     </ul>
     <p>如果只指定索引, 则忽略显示名称. 例如, <code>1</code>, <code>"1"</code> 和 <code>":1"</code> 使用第一个组件, 而不管名称如何, 而 <code>""</code> 使用主控制.</p>
     <p>如果声音设备缺少指定的 <em>Component</em>, 则抛出 <a href="Error.htm#TargetError">TargetError</a>.</p>

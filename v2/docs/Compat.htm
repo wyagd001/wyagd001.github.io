@@ -37,7 +37,7 @@
 <p>AutoHotkey v2 原生使用 Unicode(UTF-16), 但一些外部库或窗口信息可能需要 ANSI 字符串.</p>
 <p><strong>ANSI:</strong> 每个字符占用<strong>一个字节</strong>(8 位). 大于 127 的字符编码取决于系统的语言设置(或在对文本进行编码时选择的编码页, 例如, 当它被写入文件时).</p>
 <p><strong>Unicode:</strong> 每个字符占用<strong>两个字节</strong>(16 位). 字符编码是由 <a href="https://en.wikipedia.org/wiki/UTF-16">UTF-16</a> 格式定义的.</p>
-<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为 <i>两个</i> 16 位代码单元, 一起被称为 "代理项对". 同样地, 一些 <a href="http://msdn.microsoft.com/en-us/library/dd317752.aspx">ANSI 代码页</a>(通常称为<a href="http://msdn.microsoft.com/en-us/library/dd317794.aspx">双字节字符集</a>, 例如 cp936 中的汉字) 含有一些双字节字符. 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为 "字符").</p>
+<p class="Indent"><em>语义注:</em> 技术上, 一些 Unicode 字符表示为 <i>两个</i> 16 位代码单元, 一起被称为 "代理项对". 同样地, 一些 <a href="https://learn.microsoft.com/windows/win32/intl/code-pages">ANSI 代码页</a>(通常称为<a href="https://learn.microsoft.com/windows/win32/intl/double-byte-character-sets">双字节字符集</a>, 例如 cp936 中的汉字) 含有一些双字节字符. 然而, 由于特殊的原因它们几乎都被视为两个单独的单元(为了简化而称为 "字符").</p>
 
 <h3 id="Buffer">Buffer</h3>
 <p>在分配 <a href="lib/Buffer.htm">Buffer</a> 时, 要注意为所需的任何编码计算正确的 <em>字节</em> 数. 例如:</p>
@@ -94,10 +94,10 @@ NumPut(type_of_char, <i>n</i>th_char, buffer_or_address, (<i>n</i>-1)*size_of_ch
     HANDLE hThread;
     DWORD  dwProcessId; // UInt(4 字节)
     DWORD  dwThreadId;
-  } <a href="http://msdn.microsoft.com/en-us/library/ms684873.aspx">PROCESS_INFORMATION</a>, *LPPROCESS_INFORMATION;
+  } <a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information">PROCESS_INFORMATION</a>, *LPPROCESS_INFORMATION;
 */</em>
 pi := Buffer(A_PtrSize*2 + 8) <em>; Ptr + Ptr + UInt + UInt</em>
-DllCall("<a href="http://msdn.microsoft.com/en-us/library/ms682425.aspx">CreateProcess</a>", <span class="dull">&lt;为简短而省略&gt;</span>, "Ptr", &amp;pi, <span class="dull">&lt;省略&gt;</span>)
+DllCall("<a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">CreateProcess</a>", <span class="dull">&lt;为简短而省略&gt;</span>, "Ptr", &amp;pi, <span class="dull">&lt;省略&gt;</span>)
 hProcess    := NumGet(pi, 0)         <em>; 默认为 "Ptr".</em>
 hThread     := NumGet(pi, A_PtrSize) <em>;</em>
 dwProcessId := NumGet(pi, A_PtrSize*2,     "UInt")

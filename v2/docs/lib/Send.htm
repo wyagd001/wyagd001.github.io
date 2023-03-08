@@ -83,7 +83,7 @@
 <p><strong>Send:</strong> 默认情况下, Send 等同于 SendInput; 但是可以通过 <a href="SendMode.htm">SendMode</a> 使其等同于 SendEvent 或 SendPlay.</p>
 <p><strong>SendText:</strong> 类似于 Send, 除了 <em>Keys</em> 中的所有字符都按原义解释. 有关详情, 请参阅<a href="#Text">文本模式</a>.</p>
 <p><strong id="SendInput">SendInput</strong> 和 <strong id="SendPlay">SendPlay</strong>: SendInput 和 SendPlay 使用与 SendEvent 相同的语法, 但通常更快更可靠. 此外, 它们在发送过程中缓冲任何物理键盘或鼠标活动, 这可以防止用户的击键与发送的击键穿插在一起. 通过 <a href="SendMode.htm">SendMode</a> 可以使 Send 等同于 SendInput 或 SendPlay. 有关每种模式的更多信息, 请参阅下面的 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendPlayDetail">SendPlay</a>.</p>
-<p id="SendEvent"><strong>SendEvent</strong>: SendEvent 使用 Windows keybd_event 函数发送键击(有关详情, 请搜索 MSDN). 发送击键的速率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定. 通过 <a href="SendMode.htm">SendMode</a> 可以使 Send 等同于 SendEvent 或 SendPlay.</p>
+<p id="SendEvent"><strong>SendEvent</strong>: SendEvent 使用 Windows keybd_event 函数发送键击(有关详情, 请在 Microsoft Docs 搜索). 发送击键的速率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定. 通过 <a href="SendMode.htm">SendMode</a> 可以使 Send 等同于 SendEvent 或 SendPlay.</p>
 
 <h2 id="Special_modes">特殊模式</h2>
 <p>以下模式影响 <em>Keys</em> 中字符的解释, 或键发送函数(例如 Send, SendInput, SendPlay, SendEvent 和 <a href="ControlSend.htm">ControlSend</a>) 的行为. 这些模式必须在 <em>Keys</em> 中指定 <code>{x}</code>, 其中 x 可以是 Raw, Text 或 Blind. 例如, <code>{Raw}</code>.</p>
@@ -298,7 +298,7 @@
   <tr id="Unicode">
     <td>{U+nnnn}</td>
     <td><p id="sendu">发送 Unicode 字符, 其中 <em>nnnn</em> 为字符的不包括 0x 前缀的十六进制值. 通常不需要这么做, 因为 Send 和 ControlSend 自动支持 Unicode 文本.</p>
-    <p>会使用 <a href="http://msdn.microsoft.com/en-us/library/ms646310.aspx">SendInput()</a> 或 <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> 来发送字符, 并且当前的发送模式没有效果. 以这种方式发送的字符通常不会触发快捷键或热键.</p></td>
+    <p>会使用 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-sendinput">SendInput()</a> 或 <a href="https://learn.microsoft.com/windows/win32/inputdev/wm-char">WM_CHAR</a> 来发送字符, 并且当前的发送模式没有效果. 以这种方式发送的字符通常不会触发快捷键或热键.</p></td>
   </tr>
   <tr id="vk" class="sep_below">
     <td><p>{vkXX}<br>
@@ -515,9 +515,9 @@ Send "{Tab up}"  <em>; 松开按键.</em></pre>
 <h2 id="Remarks">备注</h2>
 <p id="characters"><strong>字符 vs. 按键</strong>: 默认情况下, 先将字符转换为按键来发送字符. 如果这种转换是不可能的(即, 如果当前的键盘布局不包含产生该字符的键或键组合), 则通过以下回退方法之一来发送字符:</p>
 <ul id="fallback">
-  <li>SendEvent 和 SendInput 使用带有 <a href="https://msdn.microsoft.com/en-us/library/ms646271#keyeventf_unicode">KEYEVENTF_UNICODE 标志</a>的 <a href="http://msdn.microsoft.com/en-us/library/ms646310">SendInput()</a>.</li>
+  <li>SendEvent 和 SendInput 使用带有 a href="https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-keybdinput#keyeventf_unicode">KEYEVENTF_UNICODE 标志</a>的 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-sendinput">SendInput()</a>.</li>
   <li>SendPlay 使用 <a href="#asc">Alt+nnnnn</a> 方法, 只有在目标应用程序支持的情况下才会产生 Unicode 字符.</li>
-  <li>ControlSend 发布 <a href="http://msdn.microsoft.com/en-us/library/ms646276.aspx">WM_CHAR</a> 消息.</li>
+  <li>ControlSend 发布 <a href="https://learn.microsoft.com/windows/win32/inputdev/wm-char">WM_CHAR</a> 消息.</li>
 </ul>
 <p class="warning"><strong>注意:</strong> 使用上述方法发送字符通常不会触发键盘快捷键或热键.</p>
 <p id="AZ">对于 <strong>a-z</strong> 或 <strong>A-Z</strong>(纯 ASCII 字母) 范围内的字符, 每个当前键盘布局中不存在的字符可以作为字符或相应的虚拟键码(vk41-vk5A) 发送:</p>

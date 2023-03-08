@@ -20,12 +20,12 @@
 <p>这些限制通常被称为 "MAX_PATH 限制", 常量 <code>MAX_PATH</code>, 其值为 260. 一般为空终止符保留一个字符, 为实际路径保留 259 个字符.</p>
 <p>AutoHotkey <span class="ver">[v1.1.31+]</span> (不包括 ANSI 版本) 在大多数情况下删除了第二种类型, 这使得脚本可以围绕第一种类型工作. 有两种方法可以做到这一点:</p>
 <ul>
-  <li>长路径可以在 Windows 10 上为 AutoHotkey 和所有其他长路径感知程序启用. 有关详细信息, 请参阅 <a href="https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#enable-long-paths-in-windows-10-version-1607-and-later">Microsoft 文档</a>. 简而言之, 这使大多数命令和函数能够透明地处理长路径, 但需要 Windows 10 1607 版本或更高版本.</li>
+  <li>长路径可以在 Windows 10 上为 AutoHotkey 和所有其他长路径感知程序启用. 有关详细信息, 请参阅 <a href="https://learn.microsoft.com/windows/win32/fileio/naming-a-file#enable-long-paths-in-windows-10-version-1607-and-later">Microsoft 文档</a>. 简而言之, 这使大多数命令和函数能够透明地处理长路径, 但需要 Windows 10 1607 版本或更高版本.</li>
   <li>在很多情况下, 在路径前面加上前缀 <code>\\?\</code> 使其超过通常的限制. 但是, 有一些系统函数不支持(或者通常不支持长路径). 有关详细信息, 请参阅<a href="#limitations">已知限制</a>.</li>
 </ul>
 
 <h2 id="prefix">长路径前缀</h2>
-<p>如果底层系统函数支持 <code>\\?\</code> 前缀 -- 例如, <code>\\?\C:\My Folder</code> -- 将限制增加到 32,767 个字符. 但是, 它通过跳过<a href="https://blogs.msdn.microsoft.com/jeremykuhne/2016/04/21/path-normalization/">路径规范化</a>来实现这一点. 路径的某些元素通常会被规范化删除或更改, 但它们会成为文件实际路径的一部分. 必须小心, 因为这允许创建 "正常" 程序无法访问的路径.</p>
+<p>如果底层系统函数支持 <code>\\?\</code> 前缀 -- 例如, <code>\\?\C:\My Folder</code> -- 将限制增加到 32,767 个字符. 但是, 它通过跳过<a href="https://learn.microsoft.com/archive/blogs/jeremykuhne/path-normalization">路径规范化</a>来实现这一点. 路径的某些元素通常会被规范化删除或更改, 但它们会成为文件实际路径的一部分. 必须小心, 因为这允许创建 "正常" 程序无法访问的路径.</p>
 <p>特别是, 规范化:</p>
 <ul>
   <li>解析相对路径, 如 <code>dir\file.ext</code>, <code>\file.ext</code> 和 <code>C:file.ext</code>(注意没有反斜杠).</li>
@@ -33,7 +33,7 @@
   <li>规范化组件/目录分隔符, 用 <code>\</code> 替换 <code>/</code> 并消除多余的分隔符.</li>
   <li>删除某些字符, 如组件末尾的单个句点(<code>dir.\file</code>) 或尾随空格和句点(<code>dir\filename . .</code>).</li>
 </ul>
-<p>在应用前缀之前, 可以通过下面定义的函数将路径传递给 <a href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew">GetFullPathName</a>, 从而显式地规范化路径. 例如:</p>
+<p>在应用前缀之前, 可以通过下面定义的函数将路径传递给 <a href="https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew">GetFullPathName</a>, 从而显式地规范化路径. 例如:</p>
 <pre>MsgBox % "\\?\" NormalizePath("..\file.ext")</pre>
 <pre filename="foo.ahk">NormalizePath(path) {
     cc := DllCall("GetFullPathName", "str", path, "uint", 0, "ptr", 0, "ptr", 0, "uint")

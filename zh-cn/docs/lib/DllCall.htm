@@ -160,11 +160,11 @@ result := DllCall("CharLower", "<strong><u>Str</u></strong>", DllCall("CharUpper
 <p>处理字符串时可能遇到某些限制. 更多细节请参阅<a href="../Compat.htm#DllCall">脚本兼容性</a>.</p>
 <h3 id="COM">组件对象模型(COM)</h3>
 <p>在 VBScript 和其他类似语言中可访问的 COM 对象在 AutoHotkey 中一般可以通过 <a href="ComObjCreate.htm">ComObjCreate()</a>, <a href="ComObjGet.htm">ComObjGet()</a> 或 <a href="ComObjActive.htm">ComObjActive()</a> 以及内置的<a href="../Objects.htm#Usage_Objects">对象语法</a>进行访问.</p>
-<p>不支持 <a href="http://msdn.microsoft.com/en-us/library/ms221608.aspx">IDispatch</a> 的 COM 对象可以通过从对象接口的虚函数表中获取函数的地址用于 DllCall 中. 想了解更多细节, 请参阅较远后面的<a href="#ExTaskbar">这个例子</a>.</p>
+<p>不支持 <a href="https://learn.microsoft.com/windows/win32/api/oaidl/nn-oaidl-idispatch">IDispatch</a> 的 COM 对象可以通过从对象接口的虚函数表中获取函数的地址用于 DllCall 中. 想了解更多细节, 请参阅较远后面的<a href="#ExTaskbar">这个例子</a>.</p>
 <p>许多 .NET Framework 也可以使用 COM 和 DllCall 进行访问. 请参阅 <a href="https://www.autohotkey.com/forum/topic26191.html">.NET Framework Interop</a>.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity()</a>, <a href="Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="http://msdn.microsoft.com/library/">MSDN Library</a></p>
+<p><a href="../Compat.htm#DllCall">脚本兼容性</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="Run.htm">Run</a>, <a href="VarSetCapacity.htm">VarSetCapacity()</a>, <a href="Functions.htm">函数</a>, <a href="SysGet.htm">SysGet</a>, <a href="https://learn.microsoft.com/docs/">Microsoft Docs</a></p>
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExMessageBox">
 <p><a class="ex_number" href="#ExMessageBox"></a> 调用 Windows API 函数 "MessageBox" 并报告用户按下了哪个按钮.</p>
@@ -383,7 +383,7 @@ SetSystemTime(YYYYMMDDHHMISS)
 <div class="ex" id="ExTaskbar">
 <p><a href="#ExTaskbar">#13</a>: 使用 COM 从任务栏暂时地移除活动窗口.</p>
 <pre><em>/*
-  <a href="http://msdn.microsoft.com/en-us/library/bb774652.aspx">ITaskbarList</a> 的 VTable 中的方法:
+  <a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist">ITaskbarList</a> 的 VTable 中的方法:
     IUnknown:
       0 QueryInterface  -- 使用 <a href="ComObjQuery.htm">ComObjQuery()</a> 代替
       1 AddRef          -- 使用 <a href="ObjAddRef.htm">ObjAddRef()</a> 代替
@@ -403,10 +403,10 @@ tbl := <a href="ComObjCreate.htm">ComObjCreate</a>(CLSID_TaskbarList, IID_ITaskb
 
 activeHwnd := WinExist("A")
 
-DllCall(vtable(tbl,3), "ptr", tbl)                     <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774650.aspx">HrInit</a>()</em>
-DllCall(vtable(tbl,5), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774648.aspx">DeleteTab</a>(activeHwnd)</em>
+DllCall(vtable(tbl,3), "ptr", tbl)                     <em>; tbl.<a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit">HrInit</a>()</em>
+DllCall(vtable(tbl,5), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-deletetab">DeleteTab</a>(activeHwnd)</em>
 Sleep 3000
-DllCall(vtable(tbl,4), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="http://msdn.microsoft.com/en-us/library/bb774646.aspx">AddTab</a>(activeHwnd)</em>
+DllCall(vtable(tbl,4), "ptr", tbl, "ptr", activeHwnd)  <em>; tbl.<a href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-addtab">AddTab</a>(activeHwnd)</em>
 
 <em>; 非 dispatch 对象总是需要手动释放.</em>
 ObjRelease(tbl)
