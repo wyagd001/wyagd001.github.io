@@ -237,5 +237,7 @@ layout: default
 |1226|e8a3|打开的|对话框|显示一个当前打开的文件夹的菜单, 对话框跳转到选择的项目|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框.ahk" "%Windy_CurWin_id%"|
 |1227|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)|run&#124;sysdm.cpl|
 |1228|e982|搜狗翻译|选中文本|使用搜狗翻译选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\搜狗翻译.ahk" "%CandySel%"|
-|1229|ef58|环境变量|无条件|打开环境变量设置界面|run&#124;rundll32 sysdm.cpl,EditEnvironmentVariables|
+|1229|ef58|环境变量|无条件|打开系统的环境变量设置界面|run&#124;rundll32 sysdm.cpl,EditEnvironmentVariables|
 |1230|E894|结束进程|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F||hide|
+|1231|ef58|环境变量|无条件|环境变量编辑备份脚本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\环境变量.ahk"|
+|1232|ef58|新增Path|资源管理器|将资源管理器当前打开的路径加入环境变量Path中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\Environment.ahk" "%Windy_CurWin_FolderPath%"|
