@@ -10,7 +10,7 @@ layout: default
 
 **脚本下载**: [https://wyagd001.github.io/RuYi-Ahk/RuYi.zip](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [1.5 - 2023/02/21](history.md)
+**当前版本**: [1.6 - 2023/03/09](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
