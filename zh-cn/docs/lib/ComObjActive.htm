@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>ComObjActive() | AutoHotkey</title>
-<meta name="description" content="The ComObjActive function retrieves a running object that has been registered with OLE." />
+<title>ComObjActive() 和相关函数 | AutoHotkey</title>
+<meta name="description" content="The ComObjActive function retrieves a registered COM object. ComObject wraps a value and type to pass as a parameter or return value." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -10,52 +10,57 @@
 </head>
 <body>
 
-<h1>ComObjActive() <span class="ver">[AHK_L 53+]</span></h1>
+<h1>ComObjActive() 和相关函数 <span class="ver">[AHK_L 53+]</span></h1>
 
+<h2 id="toc">目录</h2>
+<ul>
+  <li><a href="#ComObjActive">ComObjActive()</a>: 检索注册的 COM 对象.</li>
+  <li><a href="#ComObject">ComObject()</a>: 包装一个要作为参数或返回值传递的值和类型.</li>
+  <li><a href="#ComObjParameter">ComObjParameter()</a>: 包装要作为参数传递的值和类型.</li>
+  <li><a href="#ComObjMissing">ComObjMissing()</a>: 创建一个传递给 COM 方法的 "缺参数" 对象.</li>
+  <li><a href="#ComObjEnwrapUnwrap">ComObjEnwrap() / ComObjUnwrap()</a>: 包装/拆包 COM 对象.</li>
+  <li><a href="#Remarks">备注</a></li>
+  <li><a href="#Related">相关</a></li>
+  <li><a href="#Examples">示例</a></li>
+</ul>
+
+<h2 id="ComObjActive">ComObjActive()</h2>
 <p>检索已使用 OLE(对象连接与嵌入) 注册的运行对象.</p>
 <pre class="Syntax">ComObject := <span class="func">ComObjActive</span>(CLSID)</pre>
 
-<p id="param">创建一个表示要作为参数或返回值传递的类型化值的对象.</p>
-<pre class="Syntax">ParamObj := <span class="func">ComObject</span>(VarType, Value <span class="optional">, Flags</span>)</pre>
-<hr>
-<p class="warning"><strong>过时的:</strong> 不推荐使用以下方法, 后续版本中可能被替换或不再支持.</p>
-<p id="missing">在调用 COM(组件对象模型) 对象的方法时创建一个可用于替代可选参数默认值的对象. <span class="ver">[v1.1.12+]</span>: 这种函数已废弃使用. 作为代替, 使用两个连续的逗号, 如 <code>Obj.Method(1,,3)</code></p>
-<pre class="Syntax">ParamObj := <span class="func">ComObjMissing</span>()</pre>
-
-<p id="enwrap">装包或拆包位于可用对象的原始 <a href="https://learn.microsoft.com/windows/win32/winauto/idispatch-interface">IDispatch</a> 指针, 并自动调用 AddRef(增加引用).</p>
-<pre class="Syntax">
-ComObject := <span class="func">ComObjEnwrap</span>(DispPtr)
-DispPtr := <span class="func">ComObjUnwrap</span>(ComObject)
-</pre>
-<p>要写更多面向未来的代码, 请改用以下代码:</p>
-<pre>ComObject := ComObject(9, DispPtr, 1), ObjAddRef(DispPtr)
-DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispPtr)</pre>
-<hr>
-
-<h2 id="Parameters">参数</h2>
+<h3 id="ComObjActive_Parameters">参数</h3>
 <dl>
 
   <dt>CLSID</dt>
   <dd><p>要检索的 COM 对象的 CLSID 或可读 Prog ID.</p></dd>
+  
+</dl>
 
-  <dt>ComObject</dt>
-  <dd><p>可以使用<a href="../Objects.htm#Usage_Objects">对象语法</a>的 COM 对象.</p></dd>
+<h3 id="ComObjActive_Return_Value">返回值</h3>
+<p>该函数返回一个新的 COM 包装对象, 其<a href="ComObjType.htm#vt">变量类型</a>为 VT_DISPATCH(9).</p>
+
+<h2 id="ComObject">ComObject()</h2>
+<p>创建一个表示要作为参数或返回值传递的类型化值的对象.</p>
+<pre class="Syntax">ParamObj := <span class="func">ComObject</span>(VarType, Value <span class="optional">, Flags</span>)</pre>
+
+<h3 id="ComObject_Parameters">参数</h3>
+<dl>
 
   <dt>VarType</dt>
   <dd><p>表示值类型的整数. 类型列表见 <a href="ComObjType.htm#vt">ComObjType()</a>.</p></dd>
-
+  
   <dt>Value</dt>
   <dd><p>要包装的值. 当前仅支持整数值和指针值.</p></dd>
 
   <dt>Flags</dt>
-  <dd><p>影响此函数和包装器对象行为的标志, 请参阅后面.</p></dd>
-
-  <dt>DispPtr</dt>
-  <dd><p>原始的 IDispatch 指针.</p></dd>
+  <dd><p>影响此函数和包装器对象行为的标志, 请参阅下表.</p></dd>
 
 </dl>
 
-<h2 id="Flags">Flags</h2>
+<h3 id="ComObject_Return_Value">返回值</h3>
+<p>此函数返回一个包装对象, 其中包含<a href="ComObjType.htm#vt">变量类型</a>和值或指针.</p>
+
+<h3 id="Flags">Flags</h3>
 <table class="info">
   <tr>
     <th class="center">Flag</th>
@@ -74,7 +79,7 @@ DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispP
   </tr>
 </table>
 
-<h2 id="ByRef">ByRef <span class="ver">[v1.1.17+]</span></h2>
+<h3 id="ByRef">ByRef <span class="ver">[v1.1.17+]</span></h3>
 <p>如果包装器对象的 <a href="ComObjType.htm"><em>变量类型</em></a> 包含 VT_BYREF(0x4000) 标签, 可用空的方括号对 <code>[]</code> 来读写引用的值.</p>
 <p>当创建一个引用, <em>值</em> 须为变量的内存地址, 或足够存储指定类型的值的缓存. 例如, 下面的代码可以用来创建一个 VBScript 函数可以写入的变量:</p>
 <pre>VarSetCapacity(var, 24, 0)
@@ -85,17 +90,57 @@ sc.Run("Example", vref)  <em>; sc 应像<a href="#ByRefEx">下面例子</a>一�
 MsgBox % vref[]</pre>
 <p>请注意, 尽管在通过 <code>vref[]</code> 或 COM 方法分配新值时, 任何先前的值都会被释放, 但最终的值不会被自动释放. 释放该值需要知道它是哪种类型. 因为如果是 VT_VARIANT, 它可以通过使用 <a href="DllCall.htm">DllCall</a> 调用 <a href="https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-variantclear">VariantClear</a>,  或使用一个更简单的方法来释放: 赋值一个整数, 如 <code>vref[] := 0</code>.</p>
 
+<h2 id="ComObjParameter">ComObjParameter()</h2>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此函数. 使用 <a href="#ComObject">ComObject()</a> 代替.</p>
+<p>创建一个对象, 该对象表示要作为参数传递的类型化值.</p>
+<pre class="Syntax">ParamObj := <span class="func">ComObjParameter</span>(VarType, Value <span class="optional">, Flags</span>)</pre>
+<p>有关详情, 请参阅上文的 <a href="#ComObject">ComObject()</a>.</p>
+
+<h2 id="ComObjMissing">ComObjMissing()</h2>
+<p class="warning"><span class="ver">[v1.1.12+]</span> <strong>过时的:</strong> 不推荐在新脚本中使用此函数. 而是, 简单的书写两个连续的逗号, 如 <code>Obj.Method(1,,3)</code>.</p>
+<p>在调用 COM(组件对象模型) 对象的方法时创建一个可用于替代可选参数默认值的对象.</p>
+<pre class="Syntax">ParamObj := <span class="func">ComObjMissing</span>()</pre>
+<h3 id="ComObjMissing_Return_Value">返回值</h3>
+<p>该函数返回一个<a href="ComObjType.htm#vt">变量类型</a>为 VT_ERROR(0xA) 的包装对象.</p>
+
+<div id="ComObjEnwrap"><div id="ComObjUnwrap"><h2 id="ComObjEnwrapUnwrap">ComObjEnwrap() / ComObjUnwrap()</h2></div></div>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用这些函数. 请参阅下文的<a href="#ComObjEnwrap_Remarks">备注</a>.</p>
+<p id="enwrap">装包或拆包位于可用对象的原始 <a href="https://learn.microsoft.com/windows/win32/winauto/idispatch-interface">IDispatch</a> 指针, 并自动调用 AddRef(增加引用).</p>
+<pre class="Syntax">
+ComObject := <span class="func">ComObjEnwrap</span>(DispPtr)
+DispPtr := <span class="func">ComObjUnwrap</span>(ComObject)
+</pre>
+
+<h3 id="ComObjEnwrap_Parameters">参数</h3>
+<dl>
+
+  <dt>ComObject</dt>
+  <dd><p>可以使用<a href="../Objects.htm#Usage_Objects">对象语法</a>的 COM 对象.</p></dd>
+
+  <dt>DispPtr</dt>
+  <dd><p>原始的 IDispatch 指针.</p></dd>
+
+</dl>
+
+<h3 id="ComObjEnwrap_Return_Value">返回值</h3>
+<p>ComObjEnwrap 返回一个可用<a href="../Objects.htm#Usage_Objects">对象语法</a>的 COM 对象. ComObjUnwrap 返回一个原始的 IDispatch 指针.</p>
+
+<h3 id="ComObjEnwrap_Remarks">备注</h3>
+<p>要编写更多面向未来的代码, 请改用以下代码:</p>
+<pre>ComObject := ComObject(9, DispPtr, 1), ObjAddRef(DispPtr)
+DispPtr := <a href="ComObjValue.htm">ComObjValue</a>(ComObject), ObjAddRef(DispPtr)</pre>
+<p>相关示例, 请参阅 <a href="ComObjConnect.htm#Examples">ComObjConnect()</a>.</p>
+
 <h2 id="Remarks">备注</h2>
 <p>当前版本中, 任何以 "ComObj" 开头的函数调用, 如果不匹配目录列表中的其他 COM 函数, 则实际调用 ComObjActive 函数. 如, <code>ComObjEnwrap(DispPtr)</code> 及 <code>ComObjActive(DispPtr)</code> 均等效于 <code>ComObject(DispPtr)</code>(隐式地, <em>变量类型</em> 为 9). 此行为可能于后续版本不再可用, 故建议仅使用本页所展示的 <code>ComObject()</code> 及 <code>ComObjActive()</code>.</p>
 <p>如果 ComObjActive 不能检索活动的对象, 则可能会抛出异常, 退出脚本或返回空字符串, 具体取决于当前的 <a href="ComObjError.htm">ComObjError()</a> 设置和<a href="ComObjError.htm#factors">其他因素</a>.</p>
-<p>当使用此函数包装或检索 IDispatch 或 IUnknown 接口指针时, 默认的行为会增加 COM 对象的引用计数. 因此, 当不使用时, 须<a href="ObjAddRef.htm">手动释放</a>接口指针. 当用于封装的对象被释放时, 他所包含的引用被自动释放.</p>
+<p>当使用此函数包装或检索 IDispatch 或 IUnknown 接口指针时, 默认的行为会增加 COM 对象的引用计数. 因此, 当不使用时, 须<a href="ObjAddRef.htm">手动释放</a>接口指针. 当用于封装的对象被释放时, 它所包含的引用被自动释放.</p>
 <p><b>已知限制:</b> 每次包装 COM 对象时, 都会创建新的包装器对象. 如 <code>if (obj1 == obj2)</code>, <code>array[obj1] := value</code> 这样的比较和赋值运算, 会把两个包装器对象视为独立的, 即使它们包含相同的 COM 对象.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="ComObjCreate.htm">ComObjCreate()</a>, <a href="ComObjGet.htm">ComObjGet()</a>, <a href="ComObjConnect.htm">ComObjConnect()</a>, <a href="ComObjError.htm">ComObjError()</a>, <a href="ComObjFlags.htm">ComObjFlags()</a>, <a href="ObjAddRef.htm">ObjAddRef() / ObjRelease()</a>, <a href="ComObjQuery.htm">ComObjQuery()</a>, <a href="https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-getactiveobject">GetActiveObject (Microsoft Docs)</a></p>
 
 <h2 id="Examples">示例</h2>
-<p>ComObjUnwrap(COM 对象拆包): 参见 <a href="ComObjConnect.htm#Examples">ComObjConnect()</a>.</p>
 <div class="ex" id="ByRefEx">
 <p><a class="ex_number" href="#ByRefEx"></a> 传递 VARIANT ByRef 给 COM 函数.</p>
 <pre>
@@ -108,7 +153,6 @@ Sub Example(Var)
 End Sub
 )
 sc := <a href="ComObjCreate.htm">ComObjCreate</a>("ScriptControl"), sc.Language := "VBScript", sc.AddCode(code)
-
 
 <em>; 示例: 传递 VARIANT ByRef 至 COM 函数.</em>
 var := ComVar()
@@ -143,7 +187,7 @@ ComVar(Type := 0xC)
     NumPut(0, NumPut(0, ptr+0, "int64"), "int64")
 
     if (Type != 0xC) { <em>; 不是 VT_VARIANT.</em>
-        NumPut(Type, ptr+0, "ushort") <em>; 为 __delete 设置变体类型.</em>
+        NumPut(Type, ptr+0, "ushort") <em>; 为 __delete 设置变量类型.</em>
         ptr += 8 <em>; 实际值的指针.</em>
     }
 

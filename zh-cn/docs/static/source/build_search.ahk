@@ -1,9 +1,4 @@
-#Requires AutoHotkey v2.0-a131
-if (A_PtrSize != 4)
-{
-    MsgBox "This script only works with the 32-bit version of AutoHotkey."
-    ExitApp
-}
+#Requires AutoHotkey v2.0-rc.3 32-bit
 #Warn
 SetWorkingDir A_ScriptDir "\..\.."
 FileEncoding "UTF-8"
@@ -139,7 +134,7 @@ ScanFiles()
     s := SubStr(s,1,-1) "}`n`n"
     
     abbs := Map(
-        "C", "commands/",
+        "C", "lib/",
         "V", "Variables#",
         "F", "Functions#"
         )
@@ -165,7 +160,7 @@ ScanFiles()
     
     s .= "var SearchTitles = ["
     for i, t in stitles
-        s .= Format('"{1}",', t)
+        s .= Format('"{1}",', StrReplace(t, '"', '\"'))
     s := SubStr(s,1,-1) "]`n`n"
     
     s .= "

@@ -247,7 +247,7 @@ left:0;
 background-color: inherit;
 }
 
-#left .load div {
+#left .load div, #right .load div {
 height:100%;
 width:100%;
 display:flex;
@@ -258,7 +258,11 @@ align-items:center
 .lds-dual-ring {
 display:inline-block;
 width:64px;
-height:64px
+height:64px;
+opacity: 0;
+animation: fadeIn .6s ease 1;
+animation-delay: 2s;
+animation-fill-mode: forwards;
 }
 
 .lds-dual-ring:after {
@@ -270,15 +274,24 @@ margin:1px;
 border-radius:50%;
 border:5px solid #fff;
 border-color:#3F627F transparent #3F627F transparent;
-animation:lds-dual-ring 1.2s linear infinite
+animation:rotate 1.2s linear infinite
 }
 
-@keyframes lds-dual-ring {
+@keyframes rotate {
   0% {
     transform:rotate(0deg);
   }
   100% {
     transform:rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
@@ -421,7 +434,7 @@ right:.72em;
 height:2em
 }
 
- #left .select select {
+#left .select select {
 border:1px solid #ccc;
 width:100%;
 height:100%;
@@ -431,12 +444,12 @@ background:#fff;
 font-size:inherit
 }
 
- #left .select select>option {
+#left .select select>option {
 font-size:inherit;
 color:black
 }
 
- #left .select .empty {
+#left .select .empty {
 color:grey !important
 }
 
@@ -455,7 +468,7 @@ top:5.28em;
 bottom:.72em
 }
 
- #left .search .list {
+#left .search .list {
 top:3em;
 bottom:3em
 }
@@ -498,7 +511,7 @@ top:0;
 width: 1.15em;
 }
 
- #left .search .checkbox .up {
+#left .search .checkbox .up {
 position:absolute;
 left:0;
 right:0;
@@ -506,7 +519,7 @@ top:0;
 height: 50%;
 }
 
- .triangle-up {
+.triangle-up {
 width:0;
 margin: auto;
 position: absolute;
@@ -518,12 +531,12 @@ border-width:0 .4em .4em .4em;
 border-color:transparent transparent #505050 transparent
 }
 
- #left .search .checkbox .up:hover {
+#left .search .checkbox .up:hover {
 background-color:#c2c2c2;
 cursor:pointer
 }
 
- #left .search .checkbox .down {
+#left .search .checkbox .down {
 position:absolute;
 bottom:0;
 left:0;
@@ -535,7 +548,7 @@ height: 50%;
 color: brown !important;
 }
 
- .triangle-down {
+.triangle-down {
 width:0;
 margin: auto;
 position: absolute;
@@ -547,7 +560,7 @@ border-width:.4em .4em 0 .4em;
 border-color:#505050 transparent transparent transparent;
 }
 
- #left .search .checkbox .down:hover {
+#left .search .checkbox .down:hover {
 background-color:#c2c2c2;
 cursor:pointer
 }
@@ -659,7 +672,17 @@ top:0
 height:100%;
 overflow:auto;
 -webkit-overflow-scrolling:touch;
-outline:none
+outline:none;
+}
+
+div#right {
+display: grid;
+grid-template-columns: 1fr;
+}
+
+#right .load {
+grid-row-start: 1;
+grid-column-start: 1;
 }
 
 #frame {
@@ -667,7 +690,20 @@ border:0;
 height:100%;
 width:100%;
 display:block;
-position:relative
+position:relative;
+grid-row-start: 1;
+grid-column-start: 1;
+}
+
+#frame.hidden {
+opacity: 0;
+visibility: hidden;
+}
+
+#frame.visible {
+opacity: 1.0;
+visibility: visible;
+transition: opacity .1s, visibility .1s;
 }
 
 #right .area {
@@ -827,7 +863,7 @@ code span > a,code span > a:link,code span > a:hover {
 color:inherit !important
 }
 
- pre > .cmd, pre > .bif, code > .cmd, code > .bif {
+pre > .cmd, pre > .bif, code > .cmd, code > .bif {
 color:#0148c2
 }
 
@@ -864,7 +900,7 @@ pre > .num, code > .num {
 color:#1a6c4e
 }
 
- pre.origin em, code em, pre .cmt, code .cmt {
+pre.origin em, code em, pre .cmt, code .cmt {
 color:#708090 !important
 }
 
