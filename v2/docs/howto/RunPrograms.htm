@@ -20,7 +20,7 @@
 <p>要启动其他程序, 只需将上面示例中的路径替换为您希望启动的程序的路径. 有些程序已经在系统中注册了它们的路径, 在这种情况下, 你可以只传递程序的文件名, 带或(有时)不带 ".exe" 扩展名. 例如:</p>
 <pre>Run "notepad"</pre>
 
-<h2>命令行参数</h2>
+<h2 id="Command-line_Parameters">命令行参数</h2>
 <p>如果程序接受命令行参数, 它们可以作为 <a href="../lib/Run.htm">Run</a> 函数的第一个参数的一部分传递. 下面的例子应该在记事本中打开 license.txt:</p>
 <pre>
 Run "notepad C:\Program Files\AutoHotkey\license.txt"
@@ -46,7 +46,7 @@ Run "notepad C:\Program Files\AutoHotkey\license.txt"
 <pre>Run "wordpad.exe C:\Program Files\AutoHotkey\license.txt"</pre>
 <p>现在写字板启动, 但它显示错误: "C:\Program" wasn't found.</p>
 
-<h2>引号和空格</h2>
+<h2 id="Quote_Marks_and_Spaces">引号和空格</h2>
 <p>通常, 在向程序传递命令行参数时, 如果参数中包含空格, 则需要将每个参数用引号括起来. 这对于记事本来说是不必要的, 但是记事本是一般规则的一个例外. 一种天真的解决方法可能是简单地添加更多的引号:</p>
 <pre>Run "wordpad.exe "C:\Program Files\AutoHotkey\license.txt""</pre>
 <p>但这行不通, 因为默认情况下, 引号是用来表示原义文本的开始和结束. 那么, 我们如何在命令行中包含一个文字引号, 而不是让它结束命令行呢?</p>
@@ -59,7 +59,7 @@ Run "notepad C:\Program Files\AutoHotkey\license.txt"
 <p>如果引号前面有反斜杠, 许多程序将其视为参数的一部分. 例如, <code>Run 'my.exe "A\" B'</code> 可能会生成一个值为 <code>A" B</code> 的参数, 而不是两个参数. 这取决于程序, 通常可以通过双反斜杠来避免, 如在 <code>Run 'my.exe "A\\" B'</code>, 通常会产生两个参数(<code>A\</code> 和 <code>B</code>).</p>
 <p>大多数程序将引号解释为一种切换, 在 "空格结束参数" 和 "空格包含在参数中" 之间切换模式. 换句话说, <code>Run 'my.exe "A B"'</code> 通常相当于运行 <code>Run 'my.exe A" "B'</code>. 因此, 另一种避免使用斜杠的方法是引用 <em>空格</em> 而不是整个参数, 或者在斜杠之前结束引号, 如 <code>Run 'my.exe "A"\ B'</code>.</p>
 
-<h2>包括变量</h2>
+<h2 id="Including_Variables">包括变量</h2>
 <p>命令行通常需要包含一些<a href="../Concepts.htm#variables">变量</a>. 例如, "Program Files" 目录的位置可能因系统而异, 脚本可以通过使用 <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a> 变量来考虑这一点. 如果变量包含整个命令行, 只需将变量传递给 Run 函数以执行它.</p>
 <pre>Run A_ComSpec  <em>; 启动命令提示符(几乎总是 cmd.exe).</em>
 Run A_MyDocuments  <em>; 打开用户的文档文件夹.</em></pre>
@@ -69,7 +69,7 @@ Run A_MyDocuments  <em>; 打开用户的文档文件夹.</em></pre>
 <pre>Run Format('notepad.exe "{1}\AutoHotkey.ahk"', A_MyDocuments)</pre>
 <p class="note"><strong>注意:</strong> Format 可以同时执行其他格式化, 例如用 0 或空格填充, 或将数字格式化为十六进制而不是十进制.</p>
 
-<h2>运行的参数</h2>
+<h2 id="Runs_Parameters">运行的参数</h2>
 <p>除了要执行的命令行之外, Run 数还接受一些影响其行为的其他<a href="../Concepts.htm#parameters">参数</a>.</p>
 <p><em>WorkingDir</em> 指定新进程的工作目录. 如果您为程序指定了相对路径, 则它相对于此目录. 命令行参数中的相对路径通常也相对于该目录, 但这取决于程序.</p>
 <pre>Run "cmd", "C:\"  <em>; 在 C:\ 处打开命令提示符</em></pre>
@@ -79,7 +79,7 @@ Run A_MyDocuments  <em>; 打开用户的文档文件夹.</em></pre>
 WinWaitActive "ahk_pid " pid
 SendText "Hello, world!"</pre>
 
-<h2>系统的动词</h2>
+<h2 id="System_Verbs">系统的动词</h2>
 <p><a href="../lib/Run.htm#verbs">系统动词</a>是系统或应用程序为特定文件类型注册的操作. 它们通常在资源管理器中文件的右键菜单中可用, 但它们的实际名称并不总是与菜单中显示的文本相匹配. 例如, AutoHotkey 脚本有一个 "edit" 动词, 用于在编辑器中打开脚本, 以及(如果安装了 Ahk2Exe) 一个 <a href="../Scripts.htm#ahk2exe">compiles</a> 动词, 用于编译脚本.</p>
 <p>"Edit" 是 Run 默认识别的常用动词列表之一, 因此只需将单词后跟空格和文件名, 如下所示:</p>
 <pre>Run 'edit ' A_ScriptFullPath  <em>; 通常等同于 <a href="../lib/Edit.htm">Edit</a></em></pre>
@@ -87,7 +87,7 @@ SendText "Hello, world!"</pre>
 <pre>Run '*Compile-Gui ' A_ScriptFullPath</pre>
 <p>如果安装了 Ahk2Exe, 这将打开预先选择当前脚本的 Ahk2Exe Gui.</p>
 
-<h2>环境</h2>
+<h2 id="Environment">环境</h2>
 <p>每当一个新进程启动时, 它通常会继承启动它的进程(<em>父进程</em>) 的 <em>环境</em>. 这基本上意味着所有脚本的<a href="../Concepts.htm#environment-variables">环境变量</a>都由使用 <a href="../lib/Run.htm">Run</a> 启动的任何程序继承.</p>
 <p>在某些情况下, 可以在启动程序之前使用 <a href="../lib/EnvSet.htm">EnvSet</a> 设置环境变量以影响程序的行为, 或将信息传递给程序. 脚本还可以使用 <a href="../lib/EnvGet.htm">EnvGet</a> 读取它可能从其父进程继承的环境变量.</p>
 <p>在 64 位系统上, 脚本自身的环境很大程度上取决于运行它的 EXE 是 32 位还是 64 位. 32 位进程不仅具有不同的环境变量, 而且出于兼容性原因还具有<a href="https://learn.microsoft.com/windows/win32/winprog64/file-system-redirector">文件系统重定向</a>.</p>

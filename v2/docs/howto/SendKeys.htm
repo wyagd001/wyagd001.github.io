@@ -20,17 +20,17 @@
 </ol>
 <p>重要的是要理解, 发送一个键并不能完美地复制物理按下键的行为, 即使您将其降低到人类的速度. 但在深入研究之前, 我们先了解一些基础知识.</p>
 
-<h2>尝试这些例子</h2>
+<h2 id="Trying_the_examples">尝试这些例子</h2>
 <p>如果您运行 <code>SendText "Hi!"</code> 这样的示例, 文本将立即发送到活动(聚焦)窗口, 这可能没有多大用处, 这取决于您如何运行示例. 通常更好的方法是定义一个热键, 运行示例来加载它, 然后在您想要测试它的效果时按下热键. 下面的一些例子将使用有编号的热键 <code>^1::</code> (<kbd>Ctrl</kbd> 和一个数字, 所以如果没有重复的例子, 你可以一次尝试多个例子), 但你可以根据自己的需要进行更改.</p>
 <p>要了解如何自定义热键或创建自己的热键, 请参阅<a href="WriteHotkeys.htm">如何编写热键</a>.</p>
 <p>如果您不确定如何尝试这些示例, 请参阅<a href="RunExamples.htm">如何运行示例代码</a>.</p>
 
-<h2>如何编写代码</h2>
+<h2 id="How_to_write_the_code">如何编写代码</h2>
 <p>当发送按键时, 您通常希望发送按键或键组合以获得其效果(如 <kbd>Ctrl</kbd>+<kbd>C</kbd> 复制到剪贴板), 或键入一些文本. 键入文本更简单, 因此我们将从那里开始: 只需调用 <a href="../lib/Send.htm">SendText</a> 函数, 将您想要发送的确切文本<a href="../Concepts.htm#pass-parameters">传递</a>给它.</p>
 <pre>^1::SendText "To Whom It May Concern"</pre>
 <p>从技术上讲, SendText 实际上发送的是 Unicode 字符包, 而不是击键, 这使得它对于通常使用组合键(如 <kbd>Shift</kbd>+<kbd>2</kbd> 或 <kbd>AltGr</kbd>+<kbd>a</kbd>) 键入的字符更加可靠.</p>
 
-<h3>带引号的字符串的规则</h3>
+<h3 id="Rules_of_quoted_strings">带引号的字符串的规则</h3>
 <p>SendText 逐字发送文本, 但请记住<a href="../Language.htm">语言</a>规则. 例如, <a href="../Language.htm#strings">原义文本</a>必须括在引号中(双引号 <code>"</code> 或单引号 <code>'</code>), 并且引号本身不会被 SendText 函数 "看到". 若要发送原义引号, 可以将其括在相反类型的引号中. 例如:</p>
 <pre>^2::SendText 'Quote marks are also known as "quotes".'</pre>
 <p>或者, 使用<a href="../misc/EscapeChar.htm">转义序列</a>. 在带引号的字符串中, <code>`"</code> 转换为原义的 <code>"</code>, 而 <code>`'</code> 转换为原义的 <code>'</code>. 例如:</p>
@@ -43,7 +43,7 @@
 <p>这两个字符串在传递给 SendText 函数之前连接在一起(<a href="../Variables.htm#concat">连接</a>). 点(<code>.</code>) 可以省略, 但这会使一个结束和另一个开始的位置更难看到.</p>
 <p>正如您在上面看到的, 转义字符 <code>`</code>(被称为 <em>backquote</em>, <em>backtick</em>, <em>grave accent</em> 和其他名称) 具有特殊含义, 因此如果您想发送该原义字符(或发送相应的按键), 则需要将其加倍, 如发送 <code>Send "``"</code>. 其他常见的转义序列包括 <code>`n</code> 表示换行符(Enter) 和 <code>`t</code> 表示制表符. 有关详情, 请参阅<a href="../misc/EscapeChar.htm">转义序列</a>.</p>
 
-<h3>发送键和组合键</h3>
+<h3 id="Sending_keys_and_key_combinations">发送键和组合键</h3>
 <p><a href="../lib/Send.htm">SendText</a> 最适合逐字发送文本, 但它不能发送不生成文本的键, 如 <kbd>Left</kbd> 或 <kbd>Home</kbd>. <a href="../lib/Send.htm">Send</a>, <a href="../lib/Send.htm">SendInput</a>, <a href="../lib/Send.htm">SendPlay</a>, <a href="../lib/Send.htm">SendEvent</a> 和 <a href="../lib/ControlSend.htm">ControlSend</a> 可以发送文本和组合键, 或者不产生文本的键. 为了完成所有这些操作, 它们为以下符号添加了特殊含义: <code>^!+#{}</code></p>
 <p>前四个符号对应于标准修键, Ctrl(<code>^</code>), Alt(<code>!</code>), Shift(<code>+</code>) 和 Win(<code>#</code>). 它们可以组合使用, 但仅影响下一个键.</p>
 <p>要按名称发送按键, 或发送上述任一符号的原义文本, 请将其括在大括号中. 例如:</p>
@@ -64,7 +64,7 @@
         Send "{Shift down}"
 }</pre>
 
-<h3>热键 vs. Send</h3>
+<h3 id="Hotkeys_vs_Send">热键 vs. Send</h3>
 <p class="warning"><strong>警告:</strong> 热键和发送有一些您应该注意的差异.</p>
 <p>尽管<a href="../Hotkeys.htm">热键</a>也使用符号 <code>^!+#</code> 和相同的按键名称, 但有几个重要的区别:</p>
 <ul>
@@ -76,14 +76,14 @@
 <p>在相关说明中, <a href="../Hotstrings.htm">热字符串</a>专门用于检测文本输入, 因此符号 <code>^!+#{}</code> 在热字符串触发文本中没有特殊含义. 但是, 热字符串的 <em>replacement</em> 文本使用与 Send 相同的语法(使用 <a href="../Hotstrings.htm#T">T 选项</a> 时除外). 每当在以下热字符串处于活动状态的情况下键入 "{" 时, 它都会发送 "}", 然后发送 <kbd>Left</kbd>, 以将插入点 移回括号之间:</p>
 <pre>:*?B0:{::{}}{Left}</pre>
 
-<h3>Blind 模式</h3>
+<h3 id="Blind_mode">Blind 模式</h3>
 <p>通常情况下, Send 假定您物理按住的任何修饰键都不应该与您要求它发送的键组合在一起. 例如, 如果你按住 <kbd>Ctrl</kbd> 并调用 <code>Send "Hi"</code>, Send 会在发送 "Hi" 之前自动释放 <kbd>Ctrl</kbd>, 然后再按下它.</p>
 <p>有时你想要的是将一些键与之前按下或发送的其他修饰符一起发送. 为此, 您可以使用 <code>{Blind}</code> 前缀. 在运行以下示例时, 尝试聚焦一个非空文本编辑器或输入字段, 并按住 <kbd>Ctrl</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Shift</kbd> 的同时按住 <kbd>1</kbd> 或 <kbd>2</kbd>:</p>
 <pre>*^1::Send "{Blind}{Home}"
 *^2::Send "{Blind}{End}"</pre>
 <p>For more about <code>{Blind}</code>, see <a href="../lib/Send.htm#Blind">Blind mode</a>.</p>
 
-<h3>其他</h3>
+<h3 id="Others">其他</h3>
 <p>Send 支持其他一些特殊的结构, 如:</p>
 <ul>
   <li><code>{U+00B5}</code> 按其序号值(字符代码)发送一个 Unicode 字符.</li>
@@ -92,13 +92,13 @@
 </ul>
 <p>有关完整列表, 请参阅<a href="../lib/Send.htm#keynames">按键名称</a>.</p>
 
-<h2>模式和选项</h2>
+<h2 id="Modes_and_options">模式和选项</h2>
 <p>发送一个键并不能完全复制物理按下键的行为. 操作系统提供了几种不同的发送按键的方法, 每种方法都有不同的注意事项. 有时候为了得到你想要的结果, 你不仅需要尝试不同的方法, 还需要调整时间.</p>
 <p><a href="../lib/Send.htm#Send_variants">主要方法</a>有 SendInput, SendEvent 和 SendPlay. SendInput 通常是最可靠的, 因此默认情况下, Send 等同于 SendInput. <a href="../lib/SendMode.htm">SendMode</a> 可以用来使 Send 与 SendEvent 或 SendPlay 同义. 文档详细描述了 <a href="../lib/Send.htm#SendInputDetail">SendInput</a> 和 <a href="../lib/Send.htm#SendPlayDetail">SendPlay</a> 的其他优点和缺点, 但我建议当您使用 SendInput 时, 只尝试 SendEvent 或 SendPlay.</p>
 <p class="warning"><strong>警告:</strong> SendPlay 不能在现代系统上工作, 除非你<a href="../Program.htm#Installer_uiAccess">使用 UI 访问</a>.</p>
 <p>另一个值得尝试的选项是 <a href="../lib/ControlSend.htm">ControlSend</a>. 这并不使用发送击键的正式方法, 而是直接将消息发送到您指定的窗口.主要的优点是窗口通常不需要处于活动状态来接收这些消息. 但由于它绕过了系统对键盘输入的正常处理, 有时它无法工作.</p>
 
-<h3>时间和延迟</h3>
+<h3 id="Timing_and_delays">时间和延迟</h3>
 <p>有时你可以比人类更快地发送大量的击键, 有时你不能. 通常有两种情况可能需要延迟:</p>
 <ul>
   <li>按键应该触发目标应用中的某些更改(例如显示新控件或窗口), 并且在发生这种情况之前发送另一个按键会产生错误的效果.</li>
@@ -113,7 +113,7 @@
 <p class="warning"><strong>警告:</strong> SendInput 不支持键延迟, 默认情况下 Send 也不支持.</p>
 <p>为了使 SetKeyDelay 有效, 你通常必须使用 <code>SendMode "Event"</code> 或调用 SendEvent, SendPlay 或 ControlSend 代替 Send 或 SendText.</p>
 
-<h2>发送大量文本</h2>
+<h2 id="Sending_a_lot_of_text">发送大量文本</h2>
 <p>发送多行文本的一种方法是使用<a href="../Scripts.htm#continuation-section">延续片段</a>:</p>
 <pre>SendText "
 (

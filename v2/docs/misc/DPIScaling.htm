@@ -16,26 +16,26 @@
 <p><a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 返回主屏幕的 DPI 设置.</p>
 <p>有两种类型的 DPI 缩放与 AutoHotkey 相关: Gui DPI 缩放和系统 DPI 缩放.</p>
 
-<h2>Gui DPI 缩放</h2>
+<h2 id="Gui_DPI_Scaling">Gui DPI 缩放</h2>
 <p>默认情况下, Gui 命令执行自动缩放, 因此具有硬编码位置, 大小和边距的 Gui 脚本将在高 DPI 屏幕上根据需要进行缩放. 如果这干扰了脚本, 或者脚本将自己进行缩放, 那么可以禁用自动缩放. 有关详情, 请参阅 <a href="../lib/Gui.htm#DPIScale">-DPIScale</a> 选项.</p>
 
-<h2>系统 DPI 缩放</h2>
+<h2 id="OS_DPI_Scaling">系统 DPI 缩放</h2>
 <p>对于不支持 dpi 的应用程序, 操作系统会自动缩放传递给某些系统函数和从某些系统函数返回的坐标. 这种类型的缩放只影响具有多个屏幕且并非所有屏幕都具有相同 DPI 设置的系统上的 AutoHotkey.</p>
 
-<h3>每台监视器 DPI 感知</h3>
+<h3 id="Per-Monitor_DPI_Awareness">每台监视器 DPI 感知</h3>
 <p>在 Windows 8.1 和更高版本上, 辅助屏幕可以有不同的 DPI 设置, "每监视器 DPI-感知" 应用程序可以根据它们当前所处屏幕的 DPI 来缩放它们的窗口, 当窗口在屏幕之间移动时动态调整.</p>
 <p>对于不支持感知每个监视器 DPI 的应用程序, 系统执行位图缩放, 以允许窗口在屏幕之间移动时改变大小. 并通过报告缩放到应用程序预期的全局 DPI 设置的坐标和大小来向应用程序隐藏这一点. 例如, 在一个 11 英寸的 4K 屏幕上, 一个设计成 96 dpi(100%) 显示的 GUI 几乎不可能使用，而将其放大 200% 就可以使用了.</p>
 <p>AutoHotkey 不是设计来执行每监视器缩放的, 因此没有被标记为每监视器 dpi 感知的. 这是一个好处, 例如, 当在一个 100% DPI 的外部大屏幕和一个 200% DPI 的小屏幕之间移动一个 GUI 窗口时. 然而, 自动缩放确实有负面影响.</p>
 <p>为了使系统的自动缩放工作, 系统函数如 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-movewindow">MoveWindow</a> 和 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowrect">GetWindowRect</a> 会自动缩放它们接受或返回的坐标. 当 AutoHotkey 使用这些函数处理外部窗口时, 如果坐标不在主屏幕上, 这通常会产生意外的结果. 更加令人困惑的是, 一些函数根据脚本最后一个活动窗口显示在哪个屏幕上来缩放坐标.</p>
 
-<h2>解决办法</h2>
+<h2 id="Workarounds">解决办法</h2>
 <p>在 Windows 10 1607 及更高版本上, 可以使用 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setthreaddpiawarenesscontext">SetThreadDpiAwarenessContext</a> 系统函数在运行时更改程序的 DPI 感知设置. 例如, 启用每监视器 DPI 感知将禁用系统执行的缩放, 因此诸如 <a href="../lib/WinMove.htm">WinMove</a> 和 <a href="../lib/WinGetPos.htm">WinGetPos</a> 之类的命令将接受或返回像素坐标, 不受 DPI 缩放的影响. 然而, 如果一个 GUI 的大小适合于 100% DPI 的屏幕, 然后移动到 200% DPI 的屏幕, 它将不会自动调整, 并且可能会非常难以使用.</p>
 <p>要启用每个监视器的 DPI 感知, 请在使用通常受 DPI 缩放影响的函数之前调用以下函数:</p>
 <pre>DllCall("SetThreadDpiAwarenessContext", "ptr", -3, "ptr")</pre>
 <p>在 Windows 10 1703 及更高版本上, 可以使用 -4 替换 -3 以启用 "Per Monitor v2" 模式. 样就可以缩放对话框, 菜单, 工具提示和其他一些东西. 然而, 它也会导致非客户端区域(标题栏) 的缩放, 这可能会导致窗口的客户端区域太小, 除非脚本被设计为对此进行调整(例如通过响应 <a href="https://learn.microsoft.com/windows/win32/hidpi/wm-dpichanged">WM_DPICHANGED 消息</a>). 可以在创建 GUI 之前将上下文设置为 -3, 而在创建任何工具提示, 菜单或对话框之前将上下文设置为 -4 来避免这种情况.</p>
 <p>当用户移动脚本的一个窗口或脚本显示对话框时, 线程的 DPI 感知可能会临时更改. 因此, 在使用依赖 DPI 感知的任何函数之前, 立即设置 DPI 感知是最安全的.</p>
 
-<h3>编译脚本</h3>
+<h3 id="Compiled_Scripts">编译脚本</h3>
 <p>通过将已编译脚本清单资源的 <code>&lt;dpiAware&gt;</code> 元素的内容从 <code>true</code>(基础 AutoHotkey 可执行文件中的默认设置) 更改为 <code>true/pm</code>, 可以在整个过程中启用每监视器 DPI 感知.</p>
 
 </body>
