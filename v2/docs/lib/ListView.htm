@@ -528,6 +528,13 @@ B3.OnEvent("Click", SwitchView)
 <em>; 应用窗口事件:</em>
 MyGui.OnEvent("Size", Gui_Size)
 
+<em>; 创建弹出式菜单, 作为上下文菜单使用:</em>
+ContextMenu := Menu()
+ContextMenu.Add("Open", ContextOpenOrProperties)
+ContextMenu.Add("Properties", ContextOpenOrProperties)
+ContextMenu.Add("Clear from ListView", ContextClearRows)
+ContextMenu.Default := "Open"  <em>; 将 "Open(打开)" 改为粗体字, 以表明这是双击的默认动作.</em>
+
 <em>; 显示窗口:</em>
 MyGui.Show()
 
@@ -558,7 +565,7 @@ LoadFolder(*)
         ; 例如破折号. 这种使用唯一 ID 的方法也会执行地更好,
         ; 因为在数组中查找项目不需要进行搜索循环.</em>
         SplitPath(FileName,,, &amp;FileExt)  <em>; 获取文件扩展名.</em>
-        if FileExt ~= "^(EXE|ICO|ANI|CUR)$"
+        if FileExt ~= "i)\A(EXE|ICO|ANI|CUR)\z"
         {
             ExtID := FileExt  <em>; 特殊 ID 作为占位符.</em>
             IconNumber := 0  <em>; 将其标记为未找到, 以便这些类型可以有一个唯一的图标.</em>
@@ -630,44 +637,42 @@ RunFile(LV, RowNumber)
 
 ShowContextMenu(LV, Item, IsRightClick, X, Y)  <em>; 响应右键或 Apps 键.</em>
 {
-    <em>; 创建弹出式菜单, 作为上下文菜单使用:</em>
-    static ContextMenu := Menu()
-    ContextMenu.Add("Open", OpenOrProperties)
-    ContextMenu.Add("Properties", OpenOrProperties)
-    ContextMenu.Add("Clear from ListView", ClearRows)
-    ContextMenu.Default := "Open"  <em>; 将 "Open(打开)" 改为粗体字, 以表明这是双击的默认动作.
-    ; 在所提供的 X 和 Y 坐标处显示菜单.
+    <em>; 在所提供的 X 和 Y 坐标处显示菜单.
     ; 这些应该被使用, 因为即使用户按了 Apps 键, 它们也能提供正确的坐标:</em>
     ContextMenu.Show(X, Y)
+}
 
-    OpenOrProperties(ItemName, *)  <em>; 用户在上下文菜单中选择了 "Open" 或 "Properties".</em>
+OpenOrProperties(ItemName, *)  <em>; 用户在上下文菜单中选择了 "Open" 或 "Properties".</em>
+{
+    <em>; 简单地说, 只对焦点行进行操作, 而不是对所有选中的行进行操作:</em>
+    FocusedRowNumber := LV.GetNext(0, "F")  <em>; Find the focused row.</em>
+    if not FocusedRowNumber  <em>; 没有聚焦行.</em>
+        return
+    FileName := LV.GetText(FocusedRowNumber, 1) <em>; 获取首个字段的文本.</em>
+    FileDir := LV.GetText(FocusedRowNumber, 2)  <em>; 获取第二个字段的文本.</em>
+    try
     {
-        FileName := LV.GetText(Item, 1) <em>; 获取首个字段的文本.</em>
-        FileDir := LV.GetText(Item, 2)  <em>; 获取第二个字段的文本.</em>
-        try
-        {
-            if (ItemName = "Open")  <em>; 用户在上下文菜单中选择了 "Open".</em>
-                Run(FileDir "\" FileName)
-            else
-                Run("properties " FileDir "\" FileName)
-        }
-        catch
-            MsgBox("Could not perform requested action on " FileDir "\" FileName ".")
+        if (ItemName = "Open")  <em>; 用户在上下文菜单中选择了 "Open".</em>
+            Run(FileDir "\" FileName)
+        else
+            Run("properties " FileDir "\" FileName)
     }
+    catch
+        MsgBox("Could not perform requested action on " FileDir "\" FileName ".")
+}
 
-    ClearRows(*)  <em>; 用户在上下文菜单中选择了 "Clear".</em>
+ContextClearRows(*)  <em>; 用户在上下文菜单中选择了 "Clear".</em>
+{
+    RowNumber := 0  <em>; 这会使得首次循环从顶部开始搜索.</em>
+    Loop
     {
-        RowNumber := 0  <em>; 这会使得首次循环从顶部开始搜索.</em>
-        Loop
-        {
-            <em>; 由于删除了一行使得此行下面的所有行的行号都减小了,
-            ; 所以把行号减 1, 这样搜索里包含的行号才会与之前找到的行号相一致
-            ; (以防选择了相邻行):</em>
-            RowNumber := LV.GetNext(RowNumber - 1)
-            if not RowNumber  <em>; 上面返回零, 所以没有更多选择的行了.</em>
-                break
-            LV.Delete(RowNumber)  <em>; 从 ListView 中删除行.</em>
-        }
+        <em>; 由于删除了一行使得此行下面的所有行的行号都减小了,
+        ; 所以把行号减 1, 这样搜索里包含的行号才会与之前找到的行号相一致
+        ; (以防选择了相邻行):</em>
+        RowNumber := LV.GetNext(RowNumber - 1)
+        if not RowNumber  <em>; 上面返回零, 所以没有更多选择的行了.</em>
+            break
+        LV.Delete(RowNumber)  <em>; 从 ListView 中删除行.</em>
     }
 }
 

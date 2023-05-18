@@ -148,7 +148,6 @@
       ["Loop Parse (字符串)","lib/LoopParse.htm"],
       ["Loop Read (文件内容)","lib/LoopRead.htm"],
       ["Loop Reg (注册表)","lib/LoopReg.htm"],
-      ["Loop Reg (注册表)","lib/LoopReg.htm"],
       ["While","lib/While.htm"],
       ["For","lib/For.htm"],
       ["Break","lib/Break.htm"],
@@ -244,7 +243,7 @@
       ["HotIf / HotIfWin...","lib/HotIf.htm"],
       ["Hotkey","lib/Hotkey.htm"],
       ["Hotstring","lib/Hotstring.htm"],
-      ["Hotstrings & auto-replace","Hotstrings.htm"],
+      ["热字串和自动替换","Hotstrings.htm"],
       ["ListHotkeys","lib/ListHotkeys.htm"],
       ["Suspend","lib/Suspend.htm"]
     ]],

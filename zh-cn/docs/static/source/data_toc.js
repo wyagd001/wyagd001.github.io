@@ -90,8 +90,8 @@
     ["FileMove","lib/FileMove.htm"],
     ["FileMoveDir","lib/FileMoveDir.htm"],
     ["FileOpen()","lib/FileOpen.htm"],
-    ["FileReadLine","lib/FileReadLine.htm"],
     ["FileRead","lib/FileRead.htm"],
+    ["FileReadLine","lib/FileReadLine.htm"],
     ["FileRecycle","lib/FileRecycle.htm"],
     ["FileRecycleEmpty","lib/FileRecycleEmpty.htm"],
     ["FileRemoveDir","lib/FileRemoveDir.htm"],
@@ -184,7 +184,7 @@
     ["Progress","lib/Progress.htm"],
     ["SplashImage","lib/Progress.htm"],
     ["SplashTextOn/Off","lib/SplashTextOn.htm"],
-    ["Standard Windows Fonts","misc/FontsStandard.htm"],
+    ["标准 Windows 字体","misc/FontsStandard.htm"],
     ["窗口/控件的样式","misc/Styles.htm"],
     ["ToolTip","lib/ToolTip.htm"],
     ["TrayTip","lib/TrayTip.htm"]
@@ -232,7 +232,7 @@
       ["#UseHook","lib/_UseHook.htm"],
       ["Hotkey","lib/Hotkey.htm"],
       ["Hotstring()","lib/Hotstring.htm"],
-      ["Hotstrings & auto-replace","Hotstrings.htm"],
+      ["热字串 & 自动替换","Hotstrings.htm"],
       ["ListHotkeys","lib/ListHotkeys.htm"],
       ["Suspend","lib/Suspend.htm"]
     ]],
