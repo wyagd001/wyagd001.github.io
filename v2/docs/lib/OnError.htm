@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>OnError - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The OnError function causes the specified function to be called automatically when an unhandled error occurs." />
+<meta name="description" content="The OnError function registers a function to be called automatically whenever an unhandled error occurs." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,64 +11,69 @@
 <body>
 
 <h1>OnError</h1>
-<p>当发生未处理错误时, 会自动调用指定的函数.</p>
+<p>注册一个当发生未处理错误时, 会自动调用的<a href="../Functions.htm">函数</a>.</p>
 
-<pre class="Syntax"><span class="func">OnError</span> Function <span class="optional">, AddRemove</span></pre>
+<pre class="Syntax"><span class="func">OnError</span> Callback <span class="optional">, AddRemove</span></pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>Function</dt>
+  <dt>Callback</dt>
   <dd>
     <p>类型: <a href="../misc/Functor.htm">函数对象</a></p>
-    <p>当未处理的错误发生时调用的函数对象. 函数的参数和返回值<a href="#Function">如下</a>所示.</p>
+    <p>要调用的函数.</p>
+    <p>回调接受两个参数,  可以<a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(Thrown, Mode) { ...</pre>
+    <p>虽然你给参数的名称并不重要, 但是下面的值会依次赋值给它们:</p>
+    <ol>
+      <li>抛出的值, 通常为 <a href="Error.htm">Error 对象</a>.</li>
+      <li>错误的模式: Return, Exit 或 ExitApp. 有关详情, 请参阅<a href="#Error_Modes">下面的表格</a>.</li>
+    </ol>
+    <p>You can omit one or more parameters from the end of the callback's parameter list if the corresponding information is not needed, but in this case an asterisk must be specified as the final parameter, e.g. <code>MyCallback(Param1, *)</code>.</p>
+    <p>回调可以返回以下值之一(其他值是为将来使用而保留的, 应该避免):</p>
+    <ul>
+      <li><code>0</code>, <code>""</code> 或没有 Return: 允许错误处理正常进行.</li>
+      <li><code>1</code>: 抑制默认错误对话框和任何剩余的错误回调.</li>
+      <li><code>-1</code>:同上, 但如果 <em>Mode</em>(第二个参数) 包含单词 Return, 则允许继续执行当前线程.</li>
+    </ul>
   </dd>
   
   <dt>AddRemove</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>如果省略, 则默认为 1(在所有之前注册的函数之后调用该函数). 否则, 指定下列数字之一:</p>
+    <p>如果未设置或省略, 则默认为 1(在所有之前注册的回调之后调用该回调). 否则, 指定下列数字之一:</p>
     <ul>
-      <li>1 = 在所有之前注册的函数之后调用该函数.</li>
-      <li>-1 = 在所有之前注册的函数之前调用该函数.</li>
-      <li>0 = 不调用该函数.</li>
+      <li>1 = 在所有之前注册的回调之后调用该回调.</li>
+      <li>-1 = 在所有之前注册的回调之前调用该回调.</li>
+      <li>0 = 不调用该回调.</li>
     </ul>
   </dd>
 
 </dl>
 
-<h2 id="Function">Function</h2>
-<p>函数应该接受两个参数:</p>
-<pre class="Syntax"><i>FunctionName</i>(Thrown, Mode)</pre>
-<dl>
-  <dt>Thrown</dt>
-    <dd>
-    <p>类型: <a href="Any.htm">Any</a></p>
-    <p>抛出的值, 通常为 <a href="Error.htm">Error 对象</a>.</p>
-  </dd>
-  <dt>Mode</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>以下字符串之一:</p>
-    <ul>
-      <li><code>"Return"</code>: <em>Thrown</em> 是一个可持续的运行时错误. 如果回调返回 -1, 则线程继续; 否则线程退出.</li>
-      <li><code>"Exit"</code>: <em>Thrown</em> 是一个不可持续的运行时错误或脚本<a href="Throw.htm">抛出</a>的一个值. 线程将退出.</li>
-      <li><code>"ExitApp"</code>: <em>Thrown</em> 是一个关键的运行时错误, 如 DllCall 检测到的损坏. 程序将退出.</li>
-    </ul>
-  </dd>
-</dl>
-
-<h3 id="Return_Value">返回值</h3>
-<p>回调函数可以返回以下值之一(其他值是为将来使用而保留的, 应该避免):</p>
-<ul>
-  <li><code>0</code>, <code>""</code> 或没有 <code>return</code>: 允许错误处理正常进行.</li>
-  <li><code>1</code>: 抑制默认错误对话框和任何剩余的错误回调.</li>
-  <li><code>-1</code>: 同上, 但如果 <em>Mode</em> 为 <code>"Return"</code>, 则允许继续执行当前线程.</li>
-</ul>
+<h2 id="Error_Modes">Error 模式</h2>
+<table class="info">
+  <tr>
+    <th>Mode</th>
+    <th abbr="Descr">描述</th>
+  </tr>
+  <tr>
+    <td>Return</td>
+    <td>The thrown value is a continuable runtime error. The thread continues if the callback returns -1; otherwise the thread exits.</td>
+  </tr>
+  <tr>
+    <td>Exit</td>
+    <td>The thrown value is a non-continuable runtime error or a value <a href="Throw.htm">thrown</a> by the script. The thread will exit.</td>
+  </tr>
+  <tr>
+    <td>ExitApp</td>
+    <td>The thrown value is a critical runtime error, such as corruption detected by DllCall. The program will exit.</td>
+  </tr>
+</table>
 
 <h2 id="Remarks">备注</h2>
-<p><em>Function</em> 只会被调用来处理通常会导致显示错误消息的错误或异常. 加载时的错误无法调用, 因为在加载脚本完毕之前无法调用 OnError.</p>
-<p><em>Function</em> 在当前<a href="../misc/Threads.htm">线程</a>中被调用, 在线程退出之前(即在调用堆栈展开之前).</p>
+<p><em>Callback</em> 只会被调用来处理通常会导致显示错误消息的错误或异常. 加载时的错误无法调用, 因为在加载脚本完毕之前无法调用 OnError.</p>
+<p><em>Callback</em> 在当前<a href="../misc/Threads.htm">线程</a>中被调用, 在线程退出之前(即在调用堆栈展开之前).</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="Try.htm">Try</a>, <a href="Catch.htm">Catch</a>, <a href="Throw.htm">Throw</a>, <a href="OnExit.htm">OnExit</a></p>
@@ -84,8 +89,7 @@ LogError(exception, mode) {
     FileAppend "Error on line " exception.Line ": " exception.Message "`n"
         , "errorlog.txt"
     return true
-}
-</pre>
+}</pre>
 </div>
 
 <div class="ex" id="ExAccumulator">
@@ -110,7 +114,7 @@ class ErrorAccumulator
     __delete() => this.Stop()           <em>; 用于与函数范围绑定.</em>
 }
 
-<em>; 这是 OnError 回调函数. 'errors' 是通过 Bind() 给定的值.</em>
+<em>; 这是 OnError 回调. 'errors' 是通过 Bind() 给定的值.</em>
 AccumulateError(errors, e, mode)
 {
     if mode != "Return" <em>; 不可继续.</em>

@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>OnMessage - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The OnMessage function causes the specified function to be called automatically whenever the script receives the specified message." />
+<meta name="description" content="The OnMessage function registers a function to be called automatically whenever the script receives the specified message." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,9 +12,9 @@
 
 <h1>OnMessage</h1>
 
-<p>当脚本接收到指定消息时, 会自动调用指定的函数.</p>
+<p>注册一个当脚本接收到指定消息时, 会自动调用的<a href="../Functions.htm">函数</a>.</p>
 
-<pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function <span class="optional">, MaxThreads</span></pre>
+<pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Callback <span class="optional">, MaxThreads</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -24,75 +24,72 @@
     <p>需要监听或查询的消息编号, 应该介于 0 和 4294967295(0xFFFFFFFF) 之间. 如果你不想监听<a href="../misc/SendMessageList.htm">系统消息</a>(即编号小于 0x0400 的那些), 那么最好选择一个大于 4096(0x1000) 的数字. 这降低了可能对当前及将来版本的 AutoHotkey 内部所使用的消息的干扰.</p>
   </dd>
 
-  <dt>Function</dt>
+  <dt id="The_Functions_Parameters">Callback</dt>
   <dd>
     <p>类型: <a href="../misc/Functor.htm">函数对象</a></p>
-    <p>当接收到消息时要调用的函数对象. 函数的参数和返回值如<a href="#The_Functions_Parameters">下</a>所示.</p>
+    <p>要调用的函数.</p>
+    <p>回调函数接受四个参数, 可以<a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(wParam, lParam, msg, hwnd) { ...</pre>
+    <p>虽然给参数的名称并不重要, 但是下面的值会依次赋值给它们:</p>
+    <ol>
+      <li>消息的 WPARAM 值.</li>
+      <li>消息的 LPARAM 值.</li>
+      <li>消息号, 可用在用一个回调监听多个消息时.</li>
+      <li>The HWND (unique ID) of the window or control to which the message was sent. The HWND can be used directly in a <a href="../misc/WinTitle.htm#ahk_id">WinTitle parameter</a>.</li>
+    </ol>
+    <p>You can omit one or more parameters from the end of the callback's parameter list if the corresponding information is not needed, but in this case an asterisk must be specified as the final parameter, e.g. <code>MyCallback(Param1, *)</code>.</p>
+    <p>WPARAM 和 LPARAM 是无符号的 32 位整数(从 0 到 2<sup>32</sup>-1) 或有符号的 64 位整数(从 -2<sup>63</sup> 到 2<sup>63</sup>-1), 这取决于运行脚本的 exe 程序是 32 位还是 64 位. 对于 32 位的脚本, 如果传入参数预期为有符号整数, 则可以参照下面的这个例子得到负数:</p>
+    <pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; 检查 <a href="../Variables.htm#PtrSize">A_PtrSize</a> 以确保脚本为 32 位.</em>
+    wParam := -(~wParam) - 1</pre>
   </dd>
 
   <dt id="MaxThreads">MaxThreads</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>这个整数通常被省略, 在这种情况下, 监控函数一次只能处理一个<a href="../misc/Threads.htm">线程</a>. 这通常是最好的, 因为否则每当监控函数中断时, 脚本就会按时间顺序处理消息. 因此, 作为 <em>MaxThreads</em> 的替代方案, 可以考虑使用 <em>Critical</em>, 如<a href="#Critical">下</a>所示.</p>
-    <p>如果监控函数直接或间接导致消息再次被发送, 而该函数仍在运行, 则有必要指定一个大于 1 或小于 -1 的 <em>MaxThreads</em> 值, 以允许监控函数为了新消息而被调用(如果需要). 脚本自己的进程向自己发送(不是发布) 的消息不能被延迟或缓冲.</p>
-    <p>指定 0 来取消注册之前由 <em>Function</em> 标识的函数.</p>
-    <p>默认情况下, 当为一个 <em>MsgNumber</em> 注册了多个函数时, 会按照注册的顺序调用它们. 要在之前注册的函数之前注册一个函数, 请为 <em>MaxThreads</em> 指定一个负值. 例如, <code>OnMessage Msg, Fn, -2</code> 将 <code>Fn</code> 注册为在之前为 <em>Msg</em> 注册的任何其他函数之前被调用, 并且允许 <em>Fn</em> 最多有 2 个线程. 但是, 如果函数已经被注册了, 除非取消注册然后重新注册, 否则顺序不会改变.</p>
+    <p>如果未设置或省略, 则默认为 1, 这表示回调一次只能处理一个<a href="../misc/Threads.htm">线程</a>. 这通常是最好的, 因为否则每当监控函数中断时, 脚本就会按时间顺序处理消息. 因此, 作为 <em>MaxThreads</em> 的替代方案, 可以考虑使用 <em>Critical</em>, 如<a href="#Critical">下</a>所示.</p>
+    <p>如果回调直接或间接导致消息再次被发送, 而该回调仍在运行, 则有必要指定一个大于 1 或小于 -1 的 <em>MaxThreads</em> 值, 以允许回调为了新消息而被调用(如果需要). 脚本自己的进程向自己发送(不是发布) 的消息不能被延迟或缓冲.</p>
+    <p>指定 0 来取消注册之前由 <em>Callback</em> 标识的回调.</p>
+    <p>默认情况下, 当为一个 <em>MsgNumber</em> 注册了多个回调时, 会按照注册的顺序调用它们. 要在之前注册的回调之前注册一个回调, 请为 <em>MaxThreads</em> 指定一个负值. 例如, <code>OnMessage Msg, Fn, -2</code> 将 <code>Fn</code> 注册为在之前为 <em>Msg</em> 注册的任何其他回调之前被调用, 并且允许 <em>Fn</em> 最多有 2 个线程. 但是, 如果回调已经被注册了, 除非取消注册然后重新注册, 否则顺序不会改变.</p>
   </dd>
 
 </dl>
 
 <h2 id="Usage">使用</h2>
+<p>Any number of callbacks can monitor a given <em>MsgNumber</em>.</p>
+<p>Either of these two lines registers a callback to be called <u>after</u> any previously registered callbacks:</p>
+<pre>OnMessage MsgNumber, Callback     <em>; 选项 1 - 省略 MaxThreads</em>
+OnMessage MsgNumber, Callback, 1  <em>; 选项 2 - 指定 MaxThreads 为 1</em></pre>
+<p>注册一个回调, 以便在任何先前注册的回调 <u>之前</u> 被调用:</p>
+<pre>OnMessage MsgNumber, Callback, -1</pre>
+<p>要取消注册一个回调, 将 <em>MaxThreads</em> 指定为 0:</p>
+<pre>OnMessage MsgNumber, Callback, 0</pre>
 
-<p>任何数量的函数或<a href="../misc/Functor.htm">函数对象</a>都可以监视一个给定的 <em>MsgNumber</em>.</p>
-<p>这两行中的任何一行都会注册一个函数对象, 以便在任何先前注册的函数 <strong>之后</strong> 被调用:</p>
-<pre>OnMessage</span> MsgNumber, Function     <em>; 选项 1 - 省略 MaxThreads</em>
-OnMessage MsgNumber, Function, 1  <em>; 选项 2 - 指定 MaxThreads 为 1</em></pre>
-<p>注册一个函数对象, 以便在任何先前注册的函数 <strong>之前</strong> 被调用:</p>
-<pre>OnMessage</span> MsgNumber, Function, -1</pre>
-<p>要取消注册一个函数对象, 请将 <em>MaxThreads</em> 指定为 0:</p>
-<pre class="Syntax"><span class="func">OnMessage</span> MsgNumber, Function, 0</pre>
-
-<h2 id="The_Functions_Parameters">函数的参数</h2>
-<p><a href="../Functions.htm">函数</a>可以监视一个或多个消息并应该接受四个参数:</p>
-<pre class="Syntax"><i>FunctionName</i>(wParam, lParam, msg, hwnd)</pre>
-<p>尽管您赋予参数的名称并不重要, 但以下信息将按顺序分配给它们:</p>
-<ul>
-  <li>参数 #1: 消息的 WPARAM 值.</li>
-  <li>参数 #2: 消息的 LPARAM 值.</li>
-  <li>参数 #3: 消息号, 这在一个函数监视多个消息的情况下很有用.</li>
-  <li>参数 #4: 发送消息的窗口或控件的 HWND(唯一 ID). HWND 可以直接用于 <a href="../misc/WinTitle.htm#ahk_id">WinTitle 参数</a>.</li>
-</ul>
-<p>WPARAM 和 LPARAM 是无符号的 32 位整数(从 0 到 2<sup>32</sup>-1) 或有符号的 64 位整数(从 -2<sup>63</sup> 到 2<sup>63</sup>-1), 这取决于运行脚本的 exe 程序是 32 位还是 64 位. 对于 32 位的脚本, 如果传入参数预期为有符号整数, 则可以参照这个例子得到负数:</p>
-<pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; 检查 <a href="../Variables.htm#PtrSize">A_PtrSize</a> 以确保脚本为 32 位.</em>
-    wParam := -(~wParam) - 1</pre>
-<p>如果不需要相应的信息, 你可以从列表末尾省略一个或多个参数, 但在这种情况下, 必须指定一个星号作为最后的参数. 例如, 一个定义为 <code>MyMsgMonitor(wParam, lParam, *)</code> 函数将只接收前两个参数, 而定义为 <code>MyMsgMonitor(*)</code> 的函数将不接收任何参数.</p>
-
-<h2 id="Additional_Information_Available_to_the_Function">函数中可用的附加信息</h2>
-<p>除了上面接收到的参数外, 该函数还可以查询内置变量 <a href="../Variables.htm#EventInfo">A_EventInfo</a>, 如果消息是通过 SendMessage 发送的, 则其为 0. 如果是通过 PostMessage 发送的, 则其为消息发出时的 <a href="../Variables.htm#TickCount">tick-count 时间</a>.</p>
-<p>监听函数的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始与消息发送到的父窗口相同(即使消息是发送到控件的). 如果窗口是隐藏的, 但不是 GUI 窗口(例如<a href="../Program.htm#main-window">脚本的主窗口</a>), 在使用它之前打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 例如:</p>
+<h2 id="Additional_Information_Available_to_the_Callback">Additional Information Available to the Callback</h2>
+<p>除了上面接收到的参数外, 回调还可以查询内置变量 <strong>A_EventInfo</strong>, 如果消息是通过 SendMessage 发送的, 则其为 0. 如果是通过 PostMessage 发送的, 则其为消息发出时的 <a href="../Variables.htm#TickCount">tick-count 时间</a>.</p>
+<p>回调的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始与消息发送到的父窗口相同(即使消息是发送到控件的). 如果窗口是隐藏的, 但不是 GUI 窗口(例如<a href="../Program.htm#main-window">脚本的主窗口</a>), 在使用它之前打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 例如:</p>
 <pre>DetectHiddenWindows True
 MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口的唯一 ID.</em></pre>
 
-<h2 id="What_the_Function_Should_Return">函数应该 <em>Return</em>(返回) 什么</h2>
-<p>如果监听函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至没有使用 Return), 则当此函数结束时, 传入的消息将继续被正常处理. 同样的情况也会出现在函数使用 <a href="Exit.htm">Exit</a> 或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与此相反, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x0201) 的函数可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 返回哪个整数并不重要; 不过如果不确定, 0 通常是最安全的.</p>
+<h2 id="What_the_Callback_Should_Return">What the Callback Should Return</h2>
+<p>如果回调使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至没有使用 Return), 则当此回调结束时, 传入的消息将继续被正常处理. 同样的情况也会出现在使用 <a href="Exit.htm">Exit</a> 回调或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与此相反, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x0201) 的回调可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 返回哪个整数并不重要; 不过如果不确定, 0 通常是最安全的.</p>
 <p>有效返回值的范围取决于运行脚本的 exe 文件是 32 位还是 64 位. 对于 32 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>) 脚本, 非空的返回值必须在 -2<sup>31</sup> 和 2<sup>32</sup>-1 之间, 对于 64 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code>) 脚本, 必须在 -2<sup>63</sup> 和 2<sup>63</sup>-1 之间.</p>
-<p>如果有多个函数监听一个给定的消息号, 它们会被逐一调用, 直到其中一个函数返回一个非空值.</p>
+<p>如果有多个回调一个给定的消息号, 它们会被逐一调用, 直到其中一个回调返回一个非空值.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>与普通的函数调用不同, 当一个被监听的消息到达时, 函数会作为一个新的<a href="../misc/Threads.htm">线程</a>被调用. 因此, 函数会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
+<p>与普通的函数调用不同, 当一个被监听的消息到达时, 回调会作为一个新的<a href="../misc/Threads.htm">线程</a>被调用. 因此, 回调会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
 <p>Send(发送)(而不是 Post) 到控件的消息不会被监听, 因为系统直接把它们发送给后台的控件了. 对于系统生成的消息来说, 这很少是一个问题, 因为大多数信息都是 Post 的.</p>
 <p>如果脚本要在空闲状态下保持运行, 以监测传入的消息, 可能需要调用 <a href="Persistent.htm">Persistent</a> 函数来防止脚本退出. OnMessage 不会自动使脚本持续运行, 因为这有时是不必要的或不需要的. 例如, 当 OnMessage 被用来监视 GUI 窗口的输入时(如在 <a href="#ExLButtonDown">WM_LBUTTONDOWN 的例子</a>), 通常让脚本在最后一个 GUI 窗口关闭时自动退出更为合适.</p>
-<p><p id="Critical">当一个消息达到时, 如果其函数由于之前到达的相同消息而仍在运行, 默认情况下, 该函数将不会被再次调用; 相反, 该消息将被视为不受监控. 如果不希望这样, 有多种方法可以避免它:</p>
+<p><p id="Critical">当一个消息达到时, 如果其回调由于之前到达的相同消息而仍在运行, 默认情况下, 该回调将不会被再次调用; 相反, 该消息将被视为不受监控. 如果不希望这样, 有多种方法可以避免它:</p>
 <ul>
-  <li>如果消息是 post 的, 而不是 sent 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为函数的第一行来缓冲, 直到其函数完成. 另外, <a href="Thread.htm">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让函数完成.</li>
-  <li>使用 <a href="Critical.htm">Critical</a> 来增加<a href="Critical.htm#Interval">消息检查间隔</a>, 可以让函数在任何消息被派发之前有更多的时间来完成. 为了保证可靠性, 可能需要一个大于 16 的间隔时间. 由于系统定时器的粒度(通常为 15.6 毫秒), 非-Critical 线程默认的间隔(5 毫秒) 可能会在函数启动后的瞬间出现.</li>
-  <li>确保监控函数快速返回, 可以减少因 <em>MaxThreads</em>. 而错过消息的风险. 一种方法是让它通过向自己的脚本 <a href="PostMessage.htm">post</a> 大于 0x0311 的监控消息, 让它在未来的线程中排队. 该消息的函数应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲. 另外, 也可以用一个<a href="SetTimer.htm">计时器</a>来在未来的线程中排队.</li>
-  <li>为 <a href="#MaxThreads">MaxThreads</a> 参数指定一个较高的值, 可以使函数被中断以处理新收到的消息.</li>
+  <li>如果消息是 post 的, 而不是 sent 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为回调的第一行来缓冲, 直到其回调完成. 另外, <a href="Thread.htm#Interrupt">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让回调完成.</li>
+  <li>使用 <a href="Critical.htm">Critical</a> 来增加<a href="Critical.htm#Interval">消息检查间隔</a>, 可以让回调在任何消息被派发之前有更多的时间来完成. 为了保证可靠性, 可能需要一个大于 16 的间隔时间. 由于系统定时器的粒度(通常为 15.6 毫秒), 非-Critical 线程默认的间隔(5 毫秒) 可能会在回调启动后的瞬间出现.</li>
+  <li>确保回调快速返回, 可以减少因 <em>MaxThreads</em>. 而错过消息的风险. 一种方法是让它通过向自己的脚本 <a href="PostMessage.htm">post</a> 大于 0x0311 的监控消息, 让它在未来的线程中排队. 该消息的回调应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲. 另外, 也可以用一个<a href="SetTimer.htm">计时器</a>来在未来的线程中排队.</li>
+  <li>为 <a href="#MaxThreads"><em>MaxThreads</em></a> 参数指定一个较高的值, 可以使回调被中断以处理新收到的消息.</li>
 </ul>
-<p id="buffering">如果在脚本<a href="../misc/Threads.htm#Interrupt">不可中断的</a>情况下, Post 一条数值大于 0x0311 的监控信息, 那么这条信息就会被缓冲; 也就是说, 在脚本变得可中断之前, 它的函数不会被调用. 然而, sent 而不是 posted 的消息不能被缓冲, 因为它们必须提供一个返回值. Post 的消息也可能不被缓冲, 当一个模式消息循环在运行时, 如系统对话框, ListView 拖放操作或菜单.</p>
-<p>如果一个被监控的消息到达并且没有被缓冲, 那么它的函数会被立即调用, 即使在收到消息的时候线程是<a href="../misc/Threads.htm#Interrupt">不可中断的</a>.</p>
+<p id="buffering">如果在脚本<a href="../misc/Threads.htm#Interrupt">不可中断的</a>情况下, Post 一条数值大于 0x0311 的监控信息, 那么这条信息就会被缓冲; 也就是说, 在脚本变得可中断之前, 它的回调不会被调用. 然而, sent 而不是 posted 的消息不能被缓冲, 因为它们必须提供一个返回值. Post 的消息也可能不被缓冲, 当一个模式消息循环在运行时, 如系统对话框, ListView 拖放操作或菜单.</p>
+<p>如果一个被监控的消息到达并且没有被缓冲, 那么它的回调会被立即调用, 即使在收到消息的时候线程是<a href="../misc/Threads.htm#Interrupt">不可中断的</a>.</p>
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
-<p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果监听函数返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>
+<p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果回调不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果回调返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>
 <p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递(Post) 到控件的消息. 例如, 如果脚本正显示消息框而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
 <p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递(Post) 消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">消息框</a>) . 则消息会丢失. 相反, 通常最好投递或发送(Send) 消息到<a href="../Program.htm#main-window">脚本的主窗口</a>或其中的某个 GUI 窗口.</p>
 
@@ -180,11 +177,11 @@ Persistent
 MsgMonitor(wParam, lParam, msg, *)
 {
     <em>; 由于尽快返回常常很重要, 所以最好使用 ToolTip 而不是</em>
-    <em>; 类似 MsgBox 的进行显示, 以避免阻止函数结束:</em>
+    <em>; 类似 MsgBox 的进行显示, 以避免阻止回调结束:</em>
     ToolTip "Message " msg " arrived:`nWPARAM: " wParam "`nLPARAM: " lParam
 }
 
-<em>; 下面的代码可用于其他脚本内来激发运行上面脚本中的函数:</em>
+<em>; 下面的代码可用于其他脚本内来激发运行上面脚本中的回调:</em>
 SetTitleMatchMode 2
 DetectHiddenWindows True
 if WinExist("Name of Receiving Script.ahk ahk_class AutoHotkey")
