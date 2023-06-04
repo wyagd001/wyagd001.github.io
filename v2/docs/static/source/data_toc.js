@@ -257,7 +257,7 @@
     ["GetKeySC","lib/GetKeySC.htm"],
     ["GetKeyState","lib/GetKeyState.htm"],
     ["GetKeyVK","lib/GetKeyVK.htm"],
-    ["List of Keys","KeyList.htm"],
+    ["按键列表","KeyList.htm"],
     ["KeyHistory","lib/KeyHistory.htm"],
     ["KeyWait","lib/KeyWait.htm"],
     ["InputHook","lib/InputHook.htm"],

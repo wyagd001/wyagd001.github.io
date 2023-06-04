@@ -69,7 +69,7 @@
   <li>ByRef 不直接支持函数调用 COM 客户端, 或调用 COM 方法. 作为替代, 脚本必须接受或传递一个 <a href="lib/ComObjActive.htm#ByRef">wrapper object(包装对象)</a> 包含特殊的 <a href="lib/ComObjType.htm">VarType(变量类型)</a> 和变量内存地址.</li>
 </ul>
 <h2 id="optional">可选参数</h2>
-<p>定义函数时, 可以把它的一个或多个参数标记为可选的. 这可以通过在参数后添加一个 <code>:=</code>(在 <span class="ver">[v1.1.09]</span> 及以后的版本) 或 <code>=</code>, 后面跟着参数的默认值来表示. 参数的默认值必须是下列形式中的一种: <code>true</code>, <code>false</code>, 原义的整数, 原义的浮点数或引号包围的/原义的字符串例如 "fox" 或 ""(但在 <span class="ver">[1.0.46.13]</span> 之前的版本中字符串只支持 "").</p>
+<p>定义函数时, 可以把它的一个或多个参数标记为可选的. 这可以通过在参数后添加一个 <code>:=</code>(在 <span class="ver">[v1.1.09+]</span>) 或 <code>=</code>, 后面跟着参数的默认值来表示. 参数的默认值必须是下列形式中的一种: <code>true</code>, <code>false</code>, 原义的整数, 原义的浮点数或引号包围的/原义的字符串例如 "fox" 或 ""(但在 <span class="ver">[1.0.46.13]</span> 之前的版本中字符串只支持 "").</p>
 <p>允许使用 <code>=</code>(没有冒号) 是为了向后兼容, 但是已经不推荐使用, 而且 AutoHotkey v2 将不再允许这样做. 不管使用哪种操作符, 字符串格式的默认值总是被双引号包围的.</p>
 <p>下面这个函数中的 Z 参数就是一个可选参数:</p>
 <pre>Add(X, Y, Z:=0) {
@@ -287,7 +287,7 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>要使用一个或多个空值(空字符串) 调用函数, 可以使用空的引号对, 例如: <code>FindColor(ColorName, "")</code>.</p>
 <p>因为调用函数不会开启新<a href="misc/Threads.htm">线程</a>, 所以函数对设置例如 <a href="lib/SendMode.htm">SendMode</a> 和 <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a> 做出的任何改变对其调用者同样有效.</p>
 <p>函数的调用者可以传递不存在的变量或<a href="misc/Arrays.htm">数组</a>元素给它, 当函数期望和 <a href="#ByRef">ByRef</a> 一致的参数时这很有用. 例如, 调用 <code>GetNextLine(BlankArray%i%)</code> 会自动地创建<a href="#Local">局部</a>或全局的变量 <code>BlankArray%i%</code>(是局部还是全局取决于调用者是否在函数内并且它的<a href="#AssumeGlobal">假设全局模式</a>是否有效).</p>
-<p>在函数中使用 <a href="lib/ListVars.htm">ListVars</a> 时, 它会显示函数的<a href="#Local">局部变量</a>及其内容. 这样可以帮助调试脚本.</p>
+<p>在函数中使用 <a href="lib/ListVars.htm">ListVars</a> 时, 它会显示函数的<a href="#Local">局部变量</a>及其内容. 这样可以帮助<a href="Scripts.htm#debug">调试脚本</a>.</p>
 <h2  id="Style_and_Naming_Conventions">风格和命名约定</h2>
 <p>您也许会发现, 如果给复杂函数中的特定变量加上独特的前缀会让函数更容易阅读和维护. 例如, 使用 "p" 或 "p_" 开头来命名函数中的每个参数可以让它们的性质一目了然, 尤其是当函数中有许多<a href="#Local">局部变量</a>吸引您的注意力的时候. 同样地, 前缀 "r" 或 "r_" 可以用于 <a href="#ByRef">ByRef 参数</a>, 而 "s" 或 "s_" 可以用于<a href="#static">静态变量</a>.</p>
 <p>在定义函数时可以使用 <a href="lib/Block.htm#otb">One True Brace(OTB) 风格</a>. 例如:</p>
@@ -326,7 +326,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
   </tr>
   <tr id="GetKeyState">
     <td><a href="lib/GetKeyState.htm#function">GetKeyState</a></td>
-    <td>获取指定键盘按键是否被按下的状态, 当指定按键被按下时返回 true(1) 否则返回 false(0).</td>
+    <td>根据指定的键盘键或鼠标/控制器按钮是按下还是松开, 返回 1(true) 或 0(false).</td>
   </tr>
   <tr id="InStr">
     <td><a href="lib/InStr.htm">InStr</a></td>
@@ -489,19 +489,19 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
   </tr>
   <tr id="OnClipboardChange">
     <td><a href="lib/OnClipboardChange.htm#function">OnClipboardChange</a></td>
-    <td>注册一个每当剪贴板内容发生改变时都会运行的函数或<a href="misc/Functor.htm">函数对象</a>.</td>
+    <td>注册一个每当剪贴板内容发生改变时都会自动调用的函数.</td>
   </tr>
   <tr id="OnError">
     <td><a href="lib/OnError.htm">OnError</a></td>
-    <td>指定一个在未处理错误发生时自动运行的函数.</td>
+    <td>注册一个在未处理错误发生时自动调用的函数.</td>
   </tr>
   <tr id="OnExit">
     <td><a href="lib/OnExit.htm#function">OnExit</a></td>
-    <td>指定一个在脚本退出时自动运行的函数.</td>
+    <td>注册一个在脚本退出时自动调用的函数.</td>
   </tr>
   <tr id="OnMessage">
     <td><a href="lib/OnMessage.htm">OnMessage</a></td>
-    <td>监听消息/事件.</td>
+    <td>注册一个在脚本接受到指定消息时自动调用的函数.</td>
   </tr>
   <tr id="Ord">
     <td><a href="lib/Ord.htm">Ord</a></td>
@@ -572,7 +572,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
   </tr>
   <tr>
     <td><span id="Max"></span><span id="Min"></span><a href="lib/Math.htm#Max">Max</a> / <a href="lib/Math.htm#Min">Min</a></td>
-    <td>返回 一个或多个数字的最大/最小值.</td>
+    <td>返回 一组数字中的最大/最小的数字.</td>
   </tr>
   <tr id="Mod">
     <td><a href="lib/Math.htm#Mod">Mod</a></td>
@@ -592,7 +592,7 @@ directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前�
   </tr>
   <tr>
     <td><span id="ASin"></span><span id="ACos"></span><span id="ATan"></span><a href="lib/Math.htm#ASin">ASin</a> / <a href="lib/Math.htm#ACos">ACos</a> / <a href="lib/Math.htm#ATan">ATan</a></td>
-    <td>返回 Number 的 arcsine(反正弦)/arccosine(反余弦)/arctangent(反正切) 的弧度值.</td>
+    <td>返回以弧度表示的 arcsine(反正弦)/arccosine(反余弦)/arctangent(反正切) (其指定数字的 sine(正弦)/cosine(余弦)/tangent(正切) 的值为该数字).</td>
   </tr>
 </table>
 

@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<h1>热键<span class="headnote">(鼠标, 操纵杆和键盘快捷键)</span></h1>
+<h1>热键<span class="headnote">(鼠标, 控制器和键盘快捷键)</span></h1>
 
 
 <h2 id="toc">目录</h2>
@@ -126,14 +126,14 @@ AppsKey Up::ToolTip
 *LWin Up::Send {LControl up}
 </pre>
       <p>"Up" 也可以用于普通热键中, 例如: <code>^!r Up::MsgBox You pressed and released Ctrl+Alt+R</code>. 它还可以用在<a href="#combo">组合键</a>(例如 <code>F1 &amp; e Up::</code>)</p>
-      <p>限制: 1) "Up" 不能和<a href="KeyList.htm">游戏杆按钮</a>一起使用; 2) 在没有普通/按下热键副本的 "Up" 热键会完全接管那个按键以防被卡住. 避免这种情况的一种方法是添加<a href="#Tilde">颚化符(波浪号) 前缀</a>(例如 <code>~LControl up::</code>)</p>
+      <p>限制: 1) "Up" 不能和<a href="KeyList.htm#Controller">控制器按钮</a>一起使用; 2) 在没有普通/按下热键副本的 "Up" 热键会完全接管那个按键以防被卡住. 避免这种情况的一种方法是添加<a href="#Tilde">颚化符(波浪号) 前缀</a>(例如 <code>~LControl up::</code>)</p>
       <p>"Up" 热键和其同行的键(如果有的话) 总是使用键盘钩子.</p>
       <p>相关提示, 类似于上面的一种技术是让热键成为前缀键. 好处是尽管热键会在按键松开时激发, 但仅在您之前按住此前缀键时没有按其他任何键的情况下才会如此. 例如:</p>
       <pre>LControl &amp; F1::return  <em>; 通过把左 control 键放在 "&amp;" 前面至少一次来让它成为前缀键.</em>
 LControl::MsgBox You released LControl without having used it to modify any other key.</pre></td>
   </tr>
 </table>
-<p class="note"><strong>注意</strong>: 请参阅<a href="KeyList.htm">按键列表</a>来了解键盘按键和鼠标/操纵杆按钮的完整列表.</p>
+<p class="note"><strong>注意</strong>: 请参阅<a href="KeyList.htm">按键列表</a>来了解键盘按键和鼠标/控制器按钮的完整列表.</p>
 <p>多个热键可以垂直地叠放来让它们执行相同的动作. 例如:</p>
 <pre>^Numpad0::
 ^Numpad1::
@@ -158,7 +158,7 @@ WheelDown::Send {Volume_Down} <em>;</em>
 
 <h2 id="combo">自定义组合键</h2>
 <p>通常快捷键组合由可选的前缀/修饰键(Ctrl, Alt, Shift 和 LWin/RWin) 和单个后缀键组成. 标准的修饰键就是这样设计的, 所以按下时通常没有立即效果.</p>
-<p>两个按键(包括鼠标, 但不包括操纵杆按钮) 的自定义组合热键可以通过在它们之间使用 "&amp;" 来定义. 因为它们是为与前缀键一起使用而设计的, 所以自定义组合有以下特殊行为:</p>
+<p>两个按键(包括鼠标, 但不包括控制器按钮) 的自定义组合热键可以通过在它们之间使用 "&amp;" 来定义. 因为它们是为与前缀键一起使用而设计的, 所以自定义组合有以下特殊行为:</p>
 <ul>
   <li>除非前缀键是标准的修饰键或可切换键(如 <kbd>CapsLock</kbd>), 否则前缀键将失去其原来的功能.</li>
   <li>如果前缀键还用作另一个热键中的后缀, 则默认情况下, 该热键在释放时触发, 如果它用于激活自定义组合, 则根本不会触发. <span class="ver">[v1.1.14+]:</span> 如果同时有 key-down 热键和 <a href="#keyup">key-up</a> 热键, 两个热键将同时被触发. 如果<a href="#Tilde">波浪号前缀</a>应用于至少一个活动自定义组合中的前缀键或后缀热键本身中的前缀键, 则禁用释放时触发这个效果.</li>
@@ -229,11 +229,11 @@ return</pre>
 RButton &amp; WheelUp::MsgBox You turned the mouse wheel up while holding down the right button.</pre>
 <p><a href="lib/Suspend.htm">Suspend</a> 命令可以临时禁用所有的热键, 但不包括您要排除的那些. 要得到更大的选择性, 请使用 <a href="lib/_IfWinActive.htm">#IfWinActive/Exist</a>.</p>
 <p>通过使用 <a href="lib/Hotkey.htm">Hotkey</a> 命令, 可以在脚本运行时动态创建热键. Hotkey 命令还能单独地修改, 禁用或启用脚本现有的热键.</p>
-<p>操纵杆热键当前不支持修饰符前缀, 例如 ^(<kbd>Ctrl</kbd>) 和 #(<kbd>Win</kbd>). 不过, 您可以使用 <a href="lib/GetKeyState.htm">GetKeyState</a> 来模仿这种效果, 如下所示:</p>
+<p>控制器热键当前不支持修饰符前缀, 例如 ^(<kbd>Ctrl</kbd>) 和 #(<kbd>Win</kbd>). 不过, 您可以使用 <a href="lib/GetKeyState.htm">GetKeyState</a> 来模仿这种效果, 如下所示:</p>
 <pre>Joy2::
 if not GetKeyState("Control")  <em>; 左边和右边的 Control 键都没有按下.</em>
     return  <em>; 即什么都不做.</em>
-MsgBox You pressed the first joystick's second button while holding down the Control key.
+MsgBox You pressed the first controller's second button while holding down the Control key.
 return</pre>
 <p>如果热键应该在继续执行前等待其修饰键被释放, 这可能需要一些时间. 请参考下面的例子:</p>
 <pre>^!s::Send {Delete}</pre>

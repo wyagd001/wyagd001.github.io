@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>GetKeyState - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The GetKeyState function checks if a keyboard key or mouse/joystick button is down or up. Also retrieves joystick status." />
+<meta name="description" content="The GetKeyState function checks if a keyboard key or mouse/controller button is down or up. Also retrieves controller status." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
 
 <h1>GetKeyState</h1>
 
-<p>检查键盘按键或鼠标/操纵杆按键是否按下或放开. 也可以获取操纵杆的状态.</p>
+<p>检查键盘按键或鼠标/控制器按键是否按下或放开. 也可以获取控制器的状态.</p>
 
 <pre class="Syntax">IsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional">, Mode</span>)</pre>
 <h2 id="Parameters">参数</h2>
@@ -21,7 +21,7 @@
   <dt>KeyName</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>此参数可以是键盘中任何的单个字符或<a href="../KeyList.htm">按键列表</a>中的其中一个键名, 如一个鼠标/操纵杆按键. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
+      <p>此参数可以是键盘中任何的单个字符或<a href="../KeyList.htm">按键列表</a>中的其中一个键名, 如一个鼠标/控制器按键. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
       <p>或者, 可以指定明确的虚拟键代码, 例如 vkFF. 这在按键没有名字的罕见情况下很有用. 这种按键的代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页</a>底部的步骤来确定. 请注意, 这个代码必须是十六进制的.</p>
       <p><b>已知限制:</b> 此函数不能区分两个共享相同虚拟键代码的键, 例如 Left 和 NumpadLeft.</p>
   </dd>
@@ -29,7 +29,7 @@
   <dt>Mode</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>获取操纵杆状态时, 此参数被忽略.</p>
+      <p>获取控制器状态时, 此参数被忽略.</p>
       <p>如果省略, 则模式默认是获取按键的逻辑状态. 这是操作系统和活动窗口所认为的按键所处的状态, 但可能和按键的物理状态不一致.</p>
 	    <p>或者, 可以指定这些字母的其中一个:</p>
       <p><strong>P</strong>: 获取物理状态( 即用户是否实际按住了按键). 按键或鼠标按键的物理状态通常和逻辑状态一致, 除非安装了键盘和/或鼠标钩子, 在这种情况下, 它将准确反映出用户是否按下了按键或鼠标按键(只要在脚本执行时按键正被按住). 您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 函数或菜单项来确定脚本中是否使用了钩子. 您可以通过调用 <a href="InstallKeybdHook.htm">#InstallKeybdHook</a> 和/或 <a href="InstallMouseHook.htm">#InstallMouseHook</a> 函数来强制安装钩子.</p>
@@ -41,8 +41,8 @@
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a>, <a href="../Concepts.htm#numbers">浮点数</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#nothing">字符串(空值)</a></p>
 <p>对于键盘键和鼠标按钮, 如果键位向下(或切换开启), 该函数返回 1(true) 如果键位向上(或切换关闭), 该函数返回 0(false).</p>
-<p>当 <em>KeyName</em> 是操纵杆的轴, 如 JoyX, 函数返回一个 0 到 100 之间的<a href="../Concepts.htm#numbers">浮点数</a>, 用于指示操纵杆的位置为该轴运动范围的百分比. 这个<a href="../scripts/index.htm#JoystickTest">测试脚本</a>可以用来分析你的操纵杆.</p>
-<p>当 <em>KeyName</em> 是 JoyPOV 时, 函数返回一个 0 到 35900 之间的<a href="../Concepts.htm#numbers">整数</a>. 许多操纵杆使用与下列近似的 POV 值:</p>
+<p>当 <em>KeyName</em> 是控制器的轴, 如 JoyX, 函数返回一个 0 到 100 之间的<a href="../Concepts.htm#numbers">浮点数</a>, 用于指示控制器的位置为该轴运动范围的百分比. 这个<a href="../scripts/index.htm#ControllerTest">测试脚本</a>可以用来分析你的控制器.</p>
+<p>当 <em>KeyName</em> 是 JoyPOV 时, 函数返回一个 0 到 35900 之间的<a href="../Concepts.htm#numbers">整数</a>. 许多控制器使用与下列近似的 POV 值:</p>
 <ul>
     <li>-1: 没有角度</li>
     <li>0: 向前 POV</li>
@@ -50,18 +50,19 @@
     <li>27000(即 270 度): 向左 POV</li>
     <li>18000 (即 180 度): 向后 POV</li>
 </ul>
-<p>当 <em>KeyName</em> 是无法检测到的操纵杆的按钮或控件时, 此函数返回一个空字符串.</p>
+<p>当 <em>KeyName</em> 为 JoyName, JoyButtons, JoyAxes 或 JoyInfo, 检索值将是控制器的名称, 按钮数量, 轴数量或功能. 有关详情, 请参阅<a href="../KeyList.htm#Controller">游戏控制器</a>.</p>
+<p>当 <em>KeyName</em> 是无法检测到的控制器的按钮或控制键时, 函数返回空字符串.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
 <p>如果检测到无效参数, 则抛出 <a href="Error.htm#ValueError">ValueError</a>, 例如当前键盘布局中不存在 <em>KeyName</em>.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>为了等待按键或鼠标/操纵杆按钮进入新的状态, 通常使用 <a href="KeyWait.htm">KeyWait</a> 代替 GetKeyState 的循环会更简单.</p>
+<p>为了等待按键或鼠标/控制器按钮进入新的状态, 通常使用 <a href="KeyWait.htm">KeyWait</a> 代替 GetKeyState 的循环会更简单.</p>
 <p>带有不常见键盘驱动的系统更新按键的状态可能比较慢, 尤其是像 <kbd>CapsLock</kbd>. 这样按键的切换状态. 在按键状态改变后立即对其状态进行检查的脚本可以预先使用 <a href="Sleep.htm">Sleep</a>, 以便系统有时间更新按键的状态.</p>
-<p>有关对操纵杆使用, 请参阅<a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a>和<a href="../scripts/index.htm#JoystickMouse">操纵杆到鼠标的映射脚本</a>.</p>
+<p>有关对控制器使用, 请参阅<a href="../misc/RemapController.htm">控制器重映射页面</a>和<a href="../scripts/index.htm#ControllerMouse">控制器到鼠标的映射脚本</a>.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="GetKeyVK.htm">GetKeyVK</a>, <a href="GetKeySC.htm">GetKeySC</a>, <a href="GetKeyName.htm">GetKeyName</a>, <a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">Key List</a>, <a href="../misc/RemapJoystick.htm">Joystick remapping</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="InstallKeybdHook.htm">InstallKeybdHook</a>, <a href="InstallMouseHook.htm">InstallMouseHook</a></p>
+<p><a href="GetKeyVK.htm">GetKeyVK</a>, <a href="GetKeySC.htm">GetKeySC</a>, <a href="GetKeyName.htm">GetKeyName</a>, <a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">Key List</a>, <a href="../misc/RemapController.htm">Controller remapping</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="InstallKeybdHook.htm">InstallKeybdHook</a>, <a href="InstallMouseHook.htm">InstallMouseHook</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
@@ -70,7 +71,7 @@
 </div>
 
 <div class="ex" id="ExBasic2">
-<p><a class="ex_number" href="#ExBasic2"></a> 检索首个操纵杆的第二个按钮的当前状态.</p>
+<p><a class="ex_number" href="#ExBasic2"></a> 检索首个控制器的第二个按钮的当前状态.</p>
 <pre>state := GetKeyState("Joy2")</pre>
 </div>
 
@@ -103,21 +104,21 @@ else
 }</pre>
 </div>
 
-<div class="ex" id="ExJoystick">
-<p><a class="ex_number" href="#ExJoystick"></a> 使操纵杆按钮的行为取决于操纵杆轴的位置.</p>
+<div class="ex" id="ExController">
+<p><a class="ex_number" href="#ExController"></a> 使控制器按钮的行为取决于操纵杆轴的位置.</p>
 <pre>joy2::
 {
     JoyX := GetKeyState("JoyX")
     if JoyX &gt; 75
-        MsgBox "Action #1 (button pressed while joystick was pushed to the right)."
+        MsgBox "Action #1 (button pressed while stick was pushed to the right)."
     else if JoyX &lt; 25
-        MsgBox "Action #2 (button pressed while joystick was pushed to the left)."
+        MsgBox "Action #2 (button pressed while stick was pushed to the left)."
     else
-        MsgBox "Action #3 (button pressed while joystick was centered horizontally)."
+        MsgBox "Action #3 (button pressed while stick was centered horizontally)."
 }</pre>
 </div>
 
-<p>请参阅<a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a>和<a href="../scripts/index.htm#JoystickMouse">操纵杆到鼠标的映射脚本</a>的其他示例.</p>
+<p>请参阅<a href="../misc/RemapController.htm">控制器重映射页面</a>和<a href="../scripts/index.htm#ControllerMouse">控制器到鼠标的映射脚本</a>的其他示例.</p>
 
 </body>
 </html>

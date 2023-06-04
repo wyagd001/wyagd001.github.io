@@ -34,7 +34,9 @@
   <dt>Overwrite</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>此参数确定是否覆盖已存在的文件. 如果此参数为 1(true), 则该函数将覆盖现有文件. 如果省略或为 0(false), 则该函数不会覆盖现有文件.</p>
+    <p>此参数指定是否覆盖已存在的文件. 如果省略, 它默认为 0(不覆盖). 否则, 请指定以下数字之一:</p>
+    <p><strong>0</strong>: 不覆盖现有的文件. 如果 <em>Dest</em> 已经存在, 则操作会失败并且没有任何效果.</p>
+    <p><strong>1</strong>: 覆盖现有的文件.</p>
     <p>其他值保留供将来使用.</p>
   </dd>
 
@@ -44,7 +46,7 @@
 
 <p>任何不能将文件写到目的地的情况都被认为是失败. 例如:</p>
 <ul>
-  <li>目标文件已经存在, 并且 <em>Overwrite</em> 参数为 0(false) 或省略.</li>
+  <li>目标文件已经存在, 并且 <em>Overwrite</em> 参数为 0 或省略.</li>
   <li>由于权限错误, 或由于文件正在使用, 目标文件无法打开.</li>
   <li>目标路径无效或指定了一个不存在的文件夹.</li>
   <li>源文件不存在(只针对未编译的脚本).</li>
@@ -53,7 +55,7 @@
 <h2 id="Remarks">备注</h2>
 <p>当 <a href="../Scripts.htm#ahk2exe">Ahk2Exe</a> 在编译脚本的过程中读取对这个函数的调用时, <em>Source</em> 所指定的文件会被添加到所生成的编译脚本中. 之后, 当编译后的脚本 EXE 运行并执行对 FileInstall 的调用时, 该文件会从 EXE 中提取并写入 <em>Dest</em> 指定的位置.</p>
 <p>在编译过程中, 添加到脚本中的文件既不会被压缩也不会被加密, 但编译的脚本 EXE 可以通过使用 Ahk2Exe 中适当的选项进行压缩.</p>
-<p>如果在普通(未编译) 脚本中使用此函数, 则会简单地复制一个副本 -- 这有助于测试最终将被编译的脚本. No action is taken if the full source and destination paths are equal, as attempting to copy the file to its current location would result in an error. The paths are compared with <a href="https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-lstrcmpiw">lstrcmpi</a> after expansion with <a href="https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew">GetFullPathName</a>.</p>
+<p>如果在普通(未编译) 脚本中使用此函数, 则会简单地复制一个副本 -- 这有助于测试最终将被编译的脚本. 如果完整的源路径和目标路径相同, 则不进行任何操作, 因为尝试将文件复制到其当前位置将导致错误. 路径在使用 <a href="https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew">GetFullPathName</a> 展开后与 <a href="https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-lstrcmpiw">lstrcmpi</a> 进行比较.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="FileCopy.htm">FileCopy</a>, <a href="_Include.htm">#Include</a></p>

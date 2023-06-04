@@ -22,8 +22,8 @@
   <li><a href="#EasyWindowDrag_(KDE)">Easy Window Dragging (KDE style)</a></li>
   <li><a href="#FavoriteFolders">Easy Access to Favorite Folders</a></li>
   <li><a href="#IntelliSense">IntelliSense</a></li>
-  <li><a href="#JoystickMouse">Using a Joystick as a Mouse</a></li>
-  <li><a href="#JoystickTest">Joystick Test Script</a></li>
+  <li><a href="#ControllerMouse">Using a Controller as a Mouse</a></li>
+  <li><a href="#ControllerTest">Controller Test Script</a></li>
   <li><a href="#KeyboardOnScreen">On-Screen Keyboard</a></li>
   <li><a href="#MinimizeToTrayMenu">Minimize Window to Tray Menu</a></li>
   <li><a href="#MsgBoxButtonNames">Changing MsgBox's Button Names</a></li>
@@ -63,17 +63,18 @@
 <p>此脚本会在您编辑 AutoHotkey 脚本时进行监视. 当它看到您输入命令后跟着逗号或空格后, 会显示此命令的参数列表以给您提示. 此外, 您可以按下 <kbd>Ctrl</kbd>+<kbd>F1</kbd>(或您选择的其他热键) 来显示帮助文件中此命令的页面. 要取消参数列表, 请按 <kbd>Esc</kbd> 或 <kbd>Enter</kbd>.</p>
 <p class="show_code"><a href="IntelliSense.ahk">显示代码</a></p>
 
-<h2 id="JoystickMouse">Using a Joystick as a Mouse(把操纵杆当作鼠标)</h2>
-<p>此脚本把操纵杆转换为三键的鼠标. 它允许每个按钮像鼠标按钮那样拖动, 且它几乎不消耗 CPU 时间. 还有, 您将操纵杆推离中央越远, 它会让光标移动的越快. 您可以在脚本的顶部个性化各种设置.</p>
-<p class="show_code"><a href="JoystickMouse.ahk">显示代码</a></p>
+<h2 id="ControllerMouse">Using a Controller as a Mouse(把控制器当作鼠标)</h2>
+<p>此脚本把控制器转换为三键的鼠标. 它允许每个按钮像鼠标按钮那样拖动, 且它几乎不消耗 CPU 时间. 还有, 您将控制器推离中央越远, 它会让光标移动的越快. 您可以在脚本的顶部个性化各种设置.</p>
+<p>注意: 对于 Xbox 控制器 2013 和更新的版本(任何比 Xbox 360 控制器更新的版本), 这个脚本只有在它拥有的窗口处于活动状态时才会工作, 例如<a href="../lib/MsgBox.htm">消息框</a>, <a href="../lib/Gui.htm">GUI</a>, 或<a href="../Program.htm#main-window">脚本主窗口</a>.</p>
+<p class="show_code"><a href="ControllerMouse.ahk">显示代码</a></p>
 
-<h2 id="JoystickTest">Joystick Test Script(操纵杆测试脚本)</h2>
-<p>此脚本帮助您判断操纵杆的按钮数目和其他属性. 它还可能显示您的操纵杆是否需要校准; 即它的每个轴向的活动范围是否在百分之零到百分之百的范围内, 这是它应该处于的范围. 如果需要校准, 请使用操作系统控制面板或操纵杆的自带软件.</p>
-<p class="show_code"><a href="JoystickTest.ahk">显示代码</a></p>
+<h2 id="ControllerTest">Controller Test Script(控制器测试脚本)</h2>
+<p>此脚本帮助您判断控制器(游戏手柄, 操纵杆等) 的按钮数目和其他属性. 它还可能显示您的控制器是否需要校准; 即它的每个轴向的活动范围是否在百分之零到百分之百的范围内, 这是它应该处于的范围. 如果需要校准, 请使用操作系统控制面板或控制器的自带软件.</p>
+<p class="show_code"><a href="ControllerTest.ahk">显示代码</a></p>
 
 <h2 id="KeyboardOnScreen">On-Screen Keyboard(屏幕键盘)</h2>
 <p>基于 Jon 编写的 v1 脚本</p>
-<p>此脚本会在屏幕的底部创建一个模拟键盘来实时显示您按下的按键. 我写这个是为了帮我学习盲打(来适应不去看键盘). 在脚本的顶部可以自定义屏幕键盘的大小. 还有, 您可以双击托盘图标来显示或隐藏键盘.</p>
+<p>此脚本会在屏幕的底部创建一个模拟键盘来实时显示您按下的按键. 我写这个是为了帮我学习盲打(来适应不去看键盘). 在脚本的顶部可以自定义屏幕键盘的大小. 还有, 您可以双击<a href="Program.htm#tray-icon">托盘图标</a>来显示或隐藏键盘.</p>
 <p class="show_code"><a href="KeyboardOnScreen.ahk">显示代码</a></p>
 
 <h2 id="MinimizeToTrayMenu">Minimize Window to Tray Menu(最小化窗口到托盘菜单)</h2>
@@ -141,9 +142,7 @@ function addOnClickEvent() {
   var text_loading_code = document.querySelectorAll('.loading_code')[0].innerHTML;
   $.get(els[0].href, function() { // Check whether it is possible to get a file
     for (var i = 0; i < els.length; i++) {
-      var el = els[i];
-      var text = el.innerHTML;
-      el.onclick = function() {
+      els[i].onclick = function() {
         if (this.innerHTML !== text_hide_code) {
           this.innerHTML = text_hide_code;
           if (!this.nextSibling) {
@@ -168,7 +167,11 @@ function addOnClickEvent() {
         return false; // Suppress opening the file in a normal way
       };
     }
-  }, 'text');
+  }, 'text').fail(function() {
+    if (!isInsideCHM)
+      for (var i = 0; i < els.length; i++)
+        els[i].setAttribute('target', '_blank');
+  });
 }
 </script>
 </body>

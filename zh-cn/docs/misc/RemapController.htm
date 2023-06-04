@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>重映射操纵杆为键盘或鼠标 | AutoHotkey</title>
-<meta name="description" content="Learn how to make joystick buttons or other joystick controls send keystrokes or mouse clicks." />
-<meta name="keywords" content="keyboard,keys,key,keystrokes,clicks,mouse,buttons,button,joystick,hotkeys,hotkey,macro">
+<title>重映射控制器为键盘或鼠标 | AutoHotkey</title>
+<meta name="description" content="Learn how to make controller buttons or other controller controls send keystrokes or mouse clicks." />
+<meta name="keywords" content="keyboard,keys,key,keystrokes,clicks,mouse,buttons,button,controller,gamepad,joystick,hotkeys,hotkey,macro">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,22 +11,22 @@
 </head>
 <body>
 
-<h1>重映射操纵杆为键盘或鼠标</h1>
+<h1>重映射控制器为键盘或鼠标</h1>
 
 <h2 id="toc">目录</h2>
 <ul>
   <li><a href="#imp">重要事项</a></li>
-  <li><a href="#button">让操纵杆按钮发送键击或鼠标点击</a></li>
+  <li><a href="#button">让控制器按钮发送键击或鼠标点击</a></li>
  <ul>
       <li><a href="#different-approaches">不同的方法</a></li>
       <li><a href="#auto-repeating-joystick-buttons">自动重复键击</a></li>
-      <li><a href="#context-sensitive-joystick-buttons">上下文相关的操纵杆按钮</a></li>
-      <li><a href="#using-a-joystick-as-a-mouse">用操纵杆作为鼠标</a></li>
+      <li><a href="#context-sensitive-joystick-buttons">上下文相关的控制器按钮</a></li>
+      <li><a href="#using-a-joystick-as-a-mouse">用控制器作为鼠标</a></li>
   </ul></li>
-  <li><a href="#axis">让其他操纵杆控制发送按键或鼠标点击</a>
+  <li><a href="#axis">让其他控制器控制发送按键或鼠标点击</a>
   <ul>
-      <li><a href="#joystick-axes">操纵杆轴</a></li>
-      <li><a href="#joystick-pov-hat">操纵杆 POV 帽</a></li>
+      <li><a href="#controller-axes">控制器轴</a></li>
+      <li><a href="#controller-pov-hat">控制器 POV 帽</a></li>
       <li><a href="#auto-repeating-other">自动重复按键</a></li>
   </ul></li>
   <li><a href="#Remarks">备注</a></li>
@@ -35,11 +35,13 @@
 
 <h2 id="imp">重要事项</h2>
 <ul>
-  <li>虽然可以把操纵杆按钮或轴向重映射为按键或鼠标按钮, 但不能把它重映射为其他的操纵杆按钮或轴向. 需借助游戏模拟器例如 <a href="https://sourceforge.net/projects/vjoystick/">vJoy</a> 才有可能实现这样操作.</li>
-  <li>AutoHotkey 用 1 和 32 之间的一个唯一的数字来标识操纵杆上的每个按钮. 要判断这些编号, 请使用<a href="../scripts/index.htm#JoystickTest">操纵杆测试脚本</a>.</li>
+  <li>由于历史原因, 以下按钮和控件名称以 <code>Joy</code> 开头, 代表操纵杆. 然而, 它们通常也适用于其他游戏控制器, 如游戏手柄或方向盘.</li>
+  <li>虽然可以把控制器按钮或轴向重映射为按键或鼠标按钮, 但不能把它重映射为其他的控制器按钮或轴向. 需借助游戏模拟器例如 <a href="https://sourceforge.net/projects/vjoystick/">vJoy</a> 才有可能实现这样操作.</li>
+  <li>AutoHotkey 用 1 和 32 之间的一个唯一的数字来标识控制器上的每个按钮. 要判断这些编号, 请使用<a href="../scripts/index.htm#JoystickTest">控制器测试脚本</a>.</li>
+<li>对于 Xbox 控制器 2013 和更新的版本(任何比 Xbox 360 控制器更新的版本), Joy1 到 Joy32 热键将只有当脚本拥有的窗口处于活动状态时才能工作, 如 <a href="../lib/MsgBox.htm">消息框</a>, <a href="../lib/Gui.htm">GUI</a>, 或<a href="../Program.htm#main-window">脚本的主窗口</a>. 这个限制也适用于 Joy1 到 Joy32 和 JoyX, JoyY, JoyZ, JoyR, JoyU, JoyPOV(和可能的 JoyV) 的 <a href="../lib/GetKeyState.htm">GetKeyState</a>, 但不适用于 JoyName, JoyButtons, JoyAxes 和 JoyInfo. 要检测其他活动窗口的这些控制器输入, 请使用 <a href="https://www.autohotkey.com/boards/viewtopic.php?f=6&t=29659">XInput.ahk 库</a>.</li>
 </ul>
 
-<h2 id="button">让游戏杆按钮发送键击或鼠标点击</h2>
+<h2 id="button">让控制器按钮发送键击或鼠标点击</h2>
 
 <h3 id="different-approaches">不同的方法</h3>
 <p>下面是从最简单到最复杂的三种方法. 最复杂的方法能适用于更大范围的情况(例如需要按下按键或鼠标按钮的游戏).</p>
@@ -60,15 +62,15 @@ return</pre>
 <p>请参阅<a href="../KeyList.htm">按键列表</a>来了解按键和鼠标/游戏杆按钮的完整列表.</p>
 
 <h4 id="Method_2">方法 #2</h4>
-<p>必须使用此方法的情况是当您在按住操纵杆按钮的整个过程中必须按住按键或鼠标按钮的时候. 下面的例子把操纵杆的第二个按钮映射为左方向键:</p>
+<p>必须使用此方法的情况是当您在按住控制器按钮的整个过程中必须按住按键或鼠标按钮的时候. 下面的例子把控制器的第二个按钮映射为左方向键:</p>
 <pre>Joy2::
 Send {Left down}  <em>; 按住左方向键.</em>
-<a href="../lib/KeyWait.htm">KeyWait</a> Joy2  <em>; 等待用户释放操纵杆按钮.</em>
+<a href="../lib/KeyWait.htm">KeyWait</a> Joy2  <em>; 等待用户释放控制器按钮.</em>
 Send {Left up}  <em>; 释放左方向键.</em>
 return</pre>
 
 <h4 id="Method_3">方法 #3</h4>
-<p>必须使用此方法的情况是在您设置了多个方法 #2 中描述的热键类型, 且有时需要同时按下和释放这些热键的时候. 下面的例子把操纵杆的第三个按钮映射为鼠标左键:</p>
+<p>必须使用此方法的情况是如果你有方法 #2 中描述的多个的控制器热键, 且有时需要同时按下和释放这些热键的时候. 下面的例子把控制器的第三个按钮映射为鼠标左键:</p>
 <pre>Joy3::
 Send {LButton down}   <em>; 按住鼠标左键.</em>
 SetTimer, WaitForButtonUp3, 10
@@ -83,8 +85,9 @@ SetTimer, WaitForButtonUp3, Off
 return
 </pre>
 
-<h3 id="auto-repeating-joystick-buttons">自动重复键击</h3>
-<p>有些程序或游戏可能需要您重复发送某个按键(就像您按住键盘上的那个键不放一样). 下面的例子在您按住操纵杆的第二个按钮时通过重复发送空格的键击来达到此目的.</p>
+<a id="auto-repeating-joystick-buttons"></a>
+<h3 id="auto-repeating-controller-buttons">自动重复键击</h3>
+<p>有些程序或游戏可能需要您重复发送某个按键(就像您按住键盘上的那个键不放一样). 下面的例子在您按住控制器的第二个按钮时通过重复发送空格的键击来达到此目的.</p>
 <pre>Joy2::
 Send {Space down}   <em>; 按下空格键.</em>
 SetTimer, WaitForJoy2, <strong>30</strong>  <em>; 减小数字 <strong>30</strong> 到 20 或 10 来更快地发送按键. 增加这个数字以减小发送的速度.</em>
@@ -101,17 +104,20 @@ if not GetKeyState("Joy2")  <em>; 按钮已经释放了.</em>
 Send {Space down}  <em>; 再次发送空格键击.</em>
 return</pre>
 
-<h3 id="context-sensitive-joystick-buttons">上下文相关的操纵杆按钮</h3>
-<p><a href="../lib/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以用来让选择的操纵杆按钮根据窗口是否活动或存在的不同情况执行不同的动作(或什么都不做).</p>
+<a id="context-sensitive-joystick-buttons"></a>
+<h3 id="context-sensitive-controller-buttons">上下文相关的控制器按钮</h3>
+<p><a href="../lib/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以用来让选择的控制器按钮根据窗口是否活动或存在的不同情况执行不同的动作(或什么都不做).</p>
 
-<h3 id="using-a-joystick-as-a-mouse">把操纵杆作为鼠标</h3>
-<p><a href="../scripts/index.htm#JoystickMouse">操纵杆映射到鼠标的脚本</a>通过重映射操纵杆的按钮和轴向控制器来把操纵杆变成鼠标.</p>
+<a id="using-a-joystick-as-a-mouse"></a>
+<h3 id="using-a-controller-as-a-mouse">把控制器作为鼠标</h3>
+<p><a href="../scripts/index.htm#ControllerMouse">控制器映射到鼠标的脚本</a>通过重映射控制器的按钮和轴向控制器来把控制器变成鼠标.</p>
 
-<h2 id="axis">让其他操纵杆控制器发送键击或鼠标点击</h2>
-<p>要让脚本对操纵杆轴或视点帽的移动进行响应, 请使用 <a href="../lib/SetTimer.htm">SetTimer</a> 和 <a href="../lib/GetKeyState.htm#function">GetKeyState()</a>.</p>
+<h2 id="axis">让其他控制器控制器发送键击或鼠标点击</h2>
+<p>要让脚本对控制器轴或视点帽的移动进行响应, 请使用 <a href="../lib/SetTimer.htm">SetTimer</a> 和 <a href="../lib/GetKeyState.htm">GetKeyState</a>.</p>
 
-<h3 id="joystick-axes">操纵杆轴</h3>
-<p>下面的例子让 X 和 Y 轴的功能像键盘上的方向键群(左, 右, 上和下):</p>
+<a id="joystick-axes"></a>
+<h3 id="controller-axes">控制器轴</h3>
+<p>下面的例子让控制器的 X 和 Y 轴的功能像键盘上的方向键群(左, 右, 上和下):</p>
 <pre>#Persistent  <em>; 让脚本保持运行, 直到用户明确退出.</em>
 <a href="../lib/SetTimer.htm">SetTimer</a>, WatchAxis, 5
 return
@@ -143,8 +149,9 @@ if KeyToHoldDown   <em>; 要按下按键.</em>
     Send, {%KeyToHoldDown% down}  <em>; 按下它.</em>
 return</pre>
 
-<h3 id="joystick-pov-hat">操纵杆 POV 帽</h3>
-<p>下面的例子让操纵杆的视点帽的功能像键盘上的方向键群; 即视点帽会发送方向键的键击(左, 右, 上和下):</p>
+<a id="joystick-pov-hat"></a>
+<h3 id="controller-pov-hat">控制器 POV 帽</h3>
+<p>下面的例子让控制器的视点帽的功能像键盘上的方向键群; 即视点帽会发送方向键的键击(左, 右, 上和下):</p>
 <pre>#Persistent  <em>; 让脚本保持运行, 直到用户明确退出.</em>
 SetTimer, WatchPOV, 5
 return
@@ -153,7 +160,7 @@ WatchPOV:
 POV := GetKeyState("JoyPOV")  <em>; 获取 POV 控制器的位置.</em>
 KeyToHoldDownPrev := KeyToHoldDown  <em>; Prev 现在保存了之前按下的按键(如果有).</em>
 
-<em>; 有些操纵杆可能有平滑/连续的视角切换而不是使用固定的增幅. 要全部支持它们, 请使用范围:</em>
+<em>; 有些控制器可能有平滑/连续的视角切换而不是使用固定的增幅. 要全部支持它们, 请使用范围:</em>
 if (POV &lt; 0)   <em>; 没有角度</em>
     KeyToHoldDown := ""
 else if (POV &gt; 31500)                 <em>; 315 至 360 度: 向前</em>
@@ -188,14 +195,14 @@ return</pre>
     return
 }</pre>
 <h2 id="Remarks">备注</h2>
-<p>通过在按钮或轴的名称之前加上操纵杆的编号可以使用首个外的其他操纵杆. 例如, <code>2Joy1</code> 表示第二个操纵杆的首个按钮.</p>
-<p>要找到其他有用的操纵杆脚本, 请访问 <a href="https://www.autohotkey.com/forum/">AutoHotkey 论坛</a>. 进行类似 <em>Joystick and GetKeyState and Send</em> 的关键词搜索有可能找到有趣的主题.</p>
+<p>通过在按钮或轴的名称之前加上控制器的编号可以使用首个外的其他控制器. 例如, <code>2Joy1</code> 表示第二个控制器的首个按钮.</p>
+<p>要找到其他有用的控制器脚本, 请访问 <a href="https://www.autohotkey.com/forum/">AutoHotkey 论坛</a>. 进行类似 <em>Joystick and GetKeyState and Send</em> 的关键词搜索有可能找到有趣的主题.</p>
 
 <h2 id="related">相关主题</h2>
 <ul>
-    <li><a href="../scripts/index.htm#JoystickMouse">操纵杆到鼠标的映射脚本(把操纵杆作为鼠标使用)</a></li>
-    <li><a href="../KeyList.htm#Joystick">操纵杆按钮, 轴向和控制器的列表</a></li>
-    <li><a href="../lib/GetKeyState.htm#function">GetKeyState()</a></li>
+    <li><a href="../scripts/index.htm#ControllerMouse">控制器到鼠标的映射脚本(把控制器作为鼠标使用)</a></li>
+    <li><a href="../KeyList.htm#Controller">控制器按钮, 轴向和控制的列表</a></li>
+    <li><a href="../lib/GetKeyState.htm">GetKeyState</a></li>
     <li><a href="Remap.htm">重映射键盘和鼠标</a></li>
 </ul>
 

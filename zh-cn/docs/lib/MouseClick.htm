@@ -12,39 +12,42 @@
 
 <h1>MouseClick</h1>
 
-<p>点击或按住鼠标按钮, 或滚动鼠标滚轮. 注意: <a href="Click.htm">Click 命令</a>通常更灵活和易于使用.</p>
+<p>点击或按住鼠标按钮, 或滚动鼠标滚轮. 注意: <a href="Click.htm">Click</a> 命令通常更灵活和易于使用.</p>
 
 <pre class="Syntax"><span class="func">MouseClick</span> <span class="optional">, WhichButton, X, Y, ClickCount, Speed, DownOrUp, Relative</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>WhichButton</dt>
-  <dd><p><u>要点击的按钮</u>: Left(默认), Right, Middle(或仅使用这些名称的首个字母), 或鼠标的第四或第五个按钮(X1 或 X2). 例如: <code>MouseClick, X1</code>. 此参数可以省略, 此时它默认为 Left.</p>
-      <p><u>要转动的鼠标滚轮</u>: 指定 WheelUp 或 WU 来向上转动滚轮(远离您的方向), 指定 WheelDown 或 WD 来向下转动滚轮(靠近您的方向). <span class="ver">[v1.0.48+]</span>: 使用 WheelLeft(或 WL) 或 WheelRight(或 WR) 分别向左或向右滚动滚轮(但是它们在比 Windows Vista 早的操作系统中没有效果). <em>ClickCount</em> 为需要转动的滚轮格数.</p>
-      <p>要避免受用户通过系统控制面板对左右键功能交换的设置的影响, 请使用 <a href="Click.htm">Click 命令</a>代替.</p></dd>
+  <dd>
+    <p>如果为空或省略, 默认为 Left(鼠标左键). 否则, 指定要单击的按钮或鼠标滚轮的旋转/推入方向.</p>
+    <p>strong>按钮:</strong> Left, Right, Middle(或这些单词的首字母); X1(第四个按钮) 或 X2(第五个按钮). 例如: <code>MouseClick, X1</code>.</p>
+    <p><strong>鼠标滚轮:</strong> 指定 WheelUp 或 WU 使滚轮向上转动(远离你); 指定 WheelDown 或 WD 使滚轮向下转(朝向你). <span class="ver">[v1.0.48+]</span>: 指定 WheelLeft(或 WL) 或 WheelRight(或 WR) 分别向左或向右转动(但这些对 Windows Vista 以前的操作系统没有影响). <em>ClickCount</em> 为需要转动的滚轮格数.</p>
+    <p> 为了自动适配用户通过系统控制面板调换鼠标左键和右键的情况, 可以使用 <a href="Click.htm">Click</a> 命令来代替.</p>
+  </dd>
 
   <dt>X, Y</dt>
-  <dd><p>在点击前, 鼠标光标要移动到的 x/y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置. 如果省略, 那么使用光标的当前位置.</p></dd>
+  <dd><p>如果为空或省略, 则使用光标的当前坐标. 否则, 请指定在点击前, 鼠标光标要移动到的 X 和 Y 坐标, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 坐标相对于活动窗口, 除非曾使用 <a href="CoordMode.htm">CoordMode</a> 改变了这个设置. 如果省略, 那么使用光标的当前位置.</p></dd>
 
   <dt>ClickCount</dt>
-  <dd><p>点击鼠标的次数, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果省略, 那么点击鼠标一次.</p></dd>
+  <dd><p>如果为空或省略, 默认为 1. 否则, 请指定单击鼠标按钮或转动鼠标滚轮的次数, 可以是<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
 
   <dt>Speed</dt>
-  <dd><p>移动鼠标的速度, 介于 0(最快) 和 100(最慢) 之间, 可以为<a href="../Variables.htm#Expressions">表达式</a>.</p>
-    <p class="note"><strong>注意</strong>: 速度为 0 表示瞬时移动鼠标到目标位置.</p>
-    <p>如果省略, 则使用默认速度(通过 <a href="SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a> 设置, 若未设置则使用 2).</p>
+  <dd><p>如果省略, 则使用默认速度(通过 <a href="SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a> 设置, 否则为 2). 否则, 请指定移动鼠标的速度, 介于 0(最快) 和 100(最慢) 之间, 可以为<a href="../Variables.htm#Expressions">表达式</a>.</p>
+    <p class="note"><strong>注意:</strong> 速度为 0 表示瞬时移动鼠标到目标位置.</p>
       <p>在 <a href="SendMode.htm">SendInput/Play 模式</a>中会忽略 <em>Speed</em>; 它们会瞬时移动鼠标到目标位置(不过 <a href="SetMouseDelay.htm">SetMouseDelay</a> 有适用于 SendPlay 的模式). 要显示鼠标移动轨迹(例如使用脚本向观众进行演示时), 请使用 <code><a href="Send.htm#Click">SendEvent {Click 100 200}</a></code> 或 <code><a href="SendMode.htm">SendMode</a> Event</code>(可以和 <a href="BlockInput.htm">BlockInput</a> 联合使用).</p></dd>
 
   <dt>DownOrUp</dt>
   <dd>
-    <p>如果省略, 则每次点击会由 "按下" 事件后接着 "弹起" 事件组成. 要更改此行为, 请指定以下字母之一:</p>
+    <p>如果省略, 则每次点击包括按下事件和接着的弹起事件. 否则, 指定以下字母之一:</p>
+    <p>如果为空省略, 则每次点击会由 "按下" 事件后接着 "弹起" 事件组成. 要更改此行为, 请指定以下字母之一:</p>
     <p><strong>D:</strong> 按下鼠标按钮, 但不释放(即生成按下事件).</p>
     <p><strong>U:</strong> 释放鼠标按钮(即生成弹起事件).
   </dd>
 
   <dt>Relative</dt>
   <dd>
-    <p>如果省略, 则会把 X 和 Y 坐标视为绝对值. 要更改此行为, 请指定下面的字母:</p>
+    <p>如果为空或省略, 则会把 X 和 Y 坐标视为绝对值. 否则, 请指定下面的字母:</p>
     <p><strong>R:</strong> 将 X 和 Y 坐标视为距离当前鼠标位置的偏移. 换句话说, 会把光标从当前位置往右移动 X 像素(负值则往左) 且往下移动 Y 像素(负值则往上).</p>
   </dd>
 
@@ -52,7 +55,7 @@
 
 <h2 id="Remarks">备注</h2>
 <p>此命令的发送模式由 <a href="SendMode.htm">SendMode</a> 设置.</p>
-<p>比起 MouseClick, 更推荐使用 <a href="Click.htm">Click 命令</a>, 因为:</p>
+<p>比起 MouseClick, 更推荐使用 <a href="Click.htm">Click</a> 命令, 因为:</p>
 <ol>
   <li>它自动适应控制面板中左右键功能交换的设置.</li>
   <li>它一般更容易使用.</li>
@@ -73,8 +76,10 @@ Send, {Shift up}</pre>
     MouseClick, WheelUp</pre>
 <p>可以使用 <a href="BlockInput.htm">BlockInput</a> 命令防止用户对鼠标的任何物理操作扰乱由鼠标命令生成的模拟鼠标事件. 不过, 在 <a href="SendMode.htm">SendInput/Play</a> 模式中通常不需要这个命令, 因为它们会自动延迟用户对鼠标的物理操作到发送之后.</p>
 <p>在每次鼠标按下事件和鼠标弹起事件后都会有一个自动的延时(不包括在 <a href="SendMode.htm">SendInput 模式</a>中转动鼠标滚轮的情况). 使用 <a href="SetMouseDelay.htm">SetMouseDelay</a> 可以改变延时的长度.</p>
+
 <h2 id="Related">相关</h2>
 <p><a href="CoordMode.htm">CoordMode</a>, <a href="SendMode.htm">SendMode</a>, <a href="SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>, <a href="SetMouseDelay.htm">SetMouseDelay</a>, <a href="Click.htm">Click</a>, <a href="MouseClickDrag.htm">MouseClickDrag</a>, <a href="MouseGetPos.htm">MouseGetPos</a>, <a href="MouseMove.htm">MouseMove</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="BlockInput.htm">BlockInput</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExDoubleClick">
 <p><a class="ex_number" href="#ExDoubleClick"></a> 在当前鼠标位置双击.</p>

@@ -25,16 +25,15 @@
 
   <dt>KeyName(按键名称)</dt>
   <dd><p>热键的按键的名称, 包括所有<a href="../Hotkeys.htm#Symbols">修饰符</a>. 例如, 指定 <code>#c</code> 来触发 <kbd>Win</kbd>+<kbd>C</kbd> 热键.</p>
-    <p>如果 <em>KeyName</em> 是现有的热键, 那么将使用此命令的其他参数值更新原来的热键.</p>
-    <p><em>KeyName</em> 也可以是现有的热键标签的名称(即双冒号标签), 这样会使用此命令的其他参数值更新原来的热键.</p>
-    <p>指定 <em>现有的</em> 热键时, <em>KeyName</em> 是不区分大小写的. 但是, 按键名称必须和现有的热键拼写相同(例如, 在这种情况下 Esc 与 Escape 是不同的). 此外, <a href="../Hotkeys.htm#Symbols">修饰符</a>(例如 ^!+#) 的顺序是无关紧要的. <a href="GetKey.htm">GetKeyName()</a> 可用于获取正常的按键名称.</p>
+    <p>如果 <em>KeyName</em> 是已经存在的热键 -- 通过 Hotkey 命令或脚本中的<a href="../Hotkeys.htm">双冒号标签</a> -- 那么将使用此命令的其他参数值更新原有的热键.</p>
+    <p>指定 <em>现有的</em> 热键时, <em>KeyName</em> 是不区分大小写的. 但是, 按键名称必须和现有的热键拼写相同(例如, 在这种情况下 Esc 与 Escape 是不同的). 此外, <a href="../Hotkeys.htm#Symbols">修饰符</a>(例如 <code>^!+#</code>) 的顺序是无关紧要的. <a href="GetKey.htm">GetKeyName()</a> 可用于获取正常的按键名称.</p>
     <p>首次创建一个热键时(通过 Hotkey 命令或脚本中的<a href="../Hotkeys.htm">双冒号标签</a>), 其键名以及修饰符的顺序成为此热键的固定名称, 像 <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a> 包含的那样. 这个名称由热键的所有<a href="_IfWinActive.htm#variant">变体</a>共享, 并且即使之后 Hotkey 命令使用不同的修饰符顺序操作此热键, 此名称也不会改变.</p>
     <p><span class="ver">[v1.1.15+]</span>: 如果已存在该热键变体, 则根据 <em>KeyName</em> 是否包含<a href="../Hotkeys.htm#Tilde">颚化符前缀(~)</a> 更新它的行为. 但在 <span class="ver">[v1.1.19]</span> 之前, 如果 <em>Label</em> 被省略时, 热键不会更新.</p>
     <p><span class="ver">[v1.1.19+]</span>: 使用<a href="../Hotkeys.htm#prefixdollar">钩子前缀($)</a> 可添加到现有热键上. 这个前缀影响所有热键的变体且不能被删除. 在 <span class="ver">[v1.1.19]</span> 之前, 当修改一个现有热键时, 这个前缀被直接忽略.</p>
     </dd>
 
   <dt>Label(标签)</dt>
-  <dd><p>当按下对应热键时, 该<a href="../misc/Labels.htm">标签</a>区块中的所有内容都会被执行(作为一个新的<a href="../misc/Threads.htm">线程</a>运行). 可以使用普通标签和<a href="../Hotkeys.htm">热键</a>/<a href="../Hotstrings.htm">热字串</a>标签, 但如果脚本中包含多个同名的标签, 则只会使用第一个. 不要包含尾随的冒号(: 或 ::). 如果 <em>标签</em> 是动态的(比如 %VarContainingLabelName%), 可用 <a href="IsLabel.htm">IsLabel(VarContainingLabelName)</a> 事先检查标签是否存在.</p>
+  <dd><p>当按下对应热键时, 该<a href="../misc/Labels.htm">标签</a>区块中的所有内容都会被执行(作为一个新的<a href="../misc/Threads.htm">线程</a>运行). 可以使用普通标签和<a href="../Hotkeys.htm">热键</a>/<a href="../Hotstrings.htm">热字串</a>标签, 但如果脚本中包含多个同名的标签, 则只会使用第一个. 不要包含尾随的冒号(: 或 ::). 如果 <em>标签</em> 是动态的(比如 %VarContainingLabelName%), 可用 <code><a href="IsLabel.htm">IsLabel</a>(VarContainingLabelName)</code> 事先检查标签是否存在.</p>
   <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不是一个有效的标签名称, 这个参数可以是一个函数的名称, 或者是一个<a href="../misc/Functor.htm">函数对象</a>单个引用变量. 比如, <code>Hotkey #z, %funcObj%, On</code> 或 <code>Hotkey #z, % funcObj, On</code>. 其他返回对象的表达式目前暂不支持. 当热键被触发, 函数就会被调用且无需任何参数. 热键还可以直接<a href="../Hotkeys.htm#Function">定义为函数</a>而无需使用 Hotkey 命令.</p>
       <p>如果 <em>KeyName</em> 已经作为热键, 那么参数可以为空, 这种情况下标签不会被改变. 这在需要仅改变热键 <em>Options(选项)</em> 时很有用.</p>
       <p class="note"><strong>注意</strong>: 如果指定了标签或函数, 但热键之前已经使用此命令禁用了, 那么热键会保持禁用状态. 要启用它, 请在 <em>Options</em> 中包含单词 ON.</p>
@@ -47,14 +46,14 @@
       </dd>
 
   <dt>Options(选项)</dt>
-  <dd><p>由零个或多个下列字母组成的字符串, 字母间可以用空格分隔. 例如: <code>UseErrorLevel B0</code></p>
+  <dd><p>由零个或多个下列选项组成的字符串, 字母间可以用空格分隔. 例如: <code>UseErrorLevel B0</code></p>
       <p id="UseErrorLevel"><strong>UseErrorLevel</strong>: 如果命令遇到问题, 使用此选项会跳过警告对话框, 设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为<a href="#ErrorLevel">下表</a>中的一个代码, 然后让<a href="../misc/Threads.htm">当前线程</a>继续执行.</p>
       <p><strong>On</strong>: 如果热键当前是禁用的则启用它.</p>
       <p><strong>Off</strong>: 如果热键当前是启用的则禁用它. 此选项常用来创建初始状态为禁用的热键.</p>
-      <p><strong>B</strong> 或 <strong>B0</strong>: 指定字母 B 将按照 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a> 描述的方法缓冲热键. 指定 B0(B 后跟着数字 0) 来禁用这种类型的缓冲.</p>
-      <p><strong>Pn</strong>: 指定字母 P 后面跟着热键的<a href="../misc/Threads.htm">线程优先级</a>. 如果创建热键时省略 P 选项, 则设置优先级为 0.</p>
-      <p><strong>Tn</strong>: 指定字母 T 后面跟着一个表示此热键允许的线程数, 如同 <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 中描述的那样. 例如: <code>T5</code>.</p>
-      <p><strong>In</strong>(表示: InputLevel 输入级别) <span class="ver">[v1.1.23+]</span>: 指定字母 I(或 i) 跟随热键的 <a href="_InputLevel.htm">input level(输入级别)</a>. 例如: <code>I1</code>.</p>
+      <p><strong>B</strong> 或 <strong>B0</strong>: 指定字母 B 将按照 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a> 描述的方法缓冲热键. 指定 <code>B0</code>(B 后跟着数字 0) 来禁用这种类型的缓冲.</p>
+      <p><strong>P</strong><em>n</em>: 指定字母 P 后面跟着热键的<a href="../misc/Threads.htm">线程优先级</a>. 如果创建热键时省略 P 选项, 则设置优先级为 0.</p>
+      <p><strong>T</strong><em>n</em>: 指定字母 T 后面跟着一个表示此热键允许的线程数, 如同 <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a> 中描述的那样. 例如: <code>T5</code>.</p>
+      <p><strong>I</strong><em>n</em>(表示: InputLevel 输入级别) <span class="ver">[v1.1.23+]</span>: 指定字母 I(或 i) 跟随热键的 <a href="_InputLevel.htm">input level(输入级别)</a>. 例如: <code>I1</code>.</p>
       <p>如果任一选项字母被忽略并且热键已经存在, 这些选项将不会起作用. 但如果热键还没创建(将由这条命令创建), 这些选项将会影响那些最近创建的热键. 例如, 即使 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a> 出现在脚本底部的情况下也会被采用. 而如果脚本中没有出现 <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, 则会采用其默认值(这里是 OFF). 这种特性也适用于 <a href="_IfWinActive.htm">#IfWin</a>: 脚本最底部出现的 #IfWin 会适用于最近创建的热键除非 "<a href="#IfWin">Hotkey IfWin</a>" 在脚本开始时就已执行.</p>
       </dd>
 
@@ -151,7 +150,7 @@ Hotkey, ^!e, MyLabel  <em>; 创建仅在记事本中有效的热键.</em></pre>
 <p>使用 "Hotkey If" 会把后续创建或修改的所有<a href="../Hotkeys.htm">热键</a>都变成上下文相关的. 此外, 每个子命令都是互斥的 ; 也就是说, 只有最新的才会生效.</p>
 <p>要关闭上下文相关性(也就是说, 使后续创建的热键在所有窗口工作), 指定 if 命令, 但省略参数. 例如: <code>Hotkey, If</code> 或 <code>Hotkey, IfWinActive</code>.</p>
 <p>如果 "Hotkey If" 在脚本中从未使用过, 最后使用的 <a href="_If.htm">#If</a> 或 <a href="_IfWinActive.htm">#IfWin</a> 指令(如果有的话) 会影响热键命令.</p>
-<p>使用 if 子命令或指令禁用鼠标或键盘热键后, 它会执行其原来的功能; 也就是说, 它传递到活动窗口, 就好像不存在热键一样. 然而, 操纵杆热键总是有效, 无论禁用与否.</p>
+<p>使用 if 子命令或指令禁用鼠标或键盘热键后, 它会执行其原来的功能; 也就是说, 它传递到活动窗口, 就好像不存在热键一样. 然而, 控制器热键总是有效, 无论禁用与否.</p>
 
 <h2 id="variant">变体(副本) 热键</h2>
 <p>只要每次定义时含有不同的 IfWin 条件, 一个特定的热键可以被创建多次. 这被称为 <em>热键变体</em>. 例如:</p>
@@ -162,7 +161,7 @@ Hotkey, ^!c, MyLabelForWordPad
 Hotkey, IfWinActive
 Hotkey, ^!c, MyLabelForAllOtherWindows</pre>
 <p>如果有多个变体符合触发条件, 那么仅触发最早创建的那个. 这种情况的例外是全局变体(不带有 IfWin 条件的那个): 它的优先级总是最低, 仅当其他变体都不触发时它才会被触发.</p>
-<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序例如 ^!+# 没有关系. 例如: <code>^!c</code> 等效于 <code>!^c</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时 <em>Esc</em> 与 <em>Escape</em> 是有区别的(尽管不会受大小写形式的影响). 最后, 任何带有<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不带通配符的完全不同; 例如, <code>*F1</code> 和 <code>F1</code> 将拥有各自的变体设置.</p>
+<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序例如 <code>^!+#</code> 没有关系. 例如: <code>^!c</code> 等效于 <code>!^c</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时 <em>Esc</em> 与 <em>Escape</em> 是有区别的(尽管不会受大小写形式的影响). 最后, 任何带有<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不带通配符的完全不同; 例如, <code>*F1</code> 和 <code>F1</code> 将拥有各自的变体设置.</p>
 <p>关于 IfWin 热键的更多信息, 请参阅 <a href="_IfWinActive.htm#gen">#IfWin 的一般说明</a>.</p>
 <h2 id="Related">相关</h2>
 <p><a href="../Hotkeys.htm#Symbols">热键修饰符</a>, <a href="_IfWinActive.htm">#IfWinActive/Exist</a>, <a href="_MaxThreadsBuffer.htm">#MaxThreadsBuffer</a>, <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a>, <a href="Suspend.htm">Suspend</a>, <a href="IsLabel.htm">IsLabel()</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread</a>, <a href="Critical.htm">Critical</a>, <a href="Gosub.htm">Gosub</a>, <a href="Return.htm">Return</a>, <a href="Menu.htm">Menu</a>, <a href="SetTimer.htm">SetTimer</a></p>

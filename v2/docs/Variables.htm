@@ -279,7 +279,7 @@ MsgBox(A || B || C) <em>; 返回 <strong>最后</strong> 为假的运算元(0)</
     <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中. 最简单的赋值运算符为冒号等号(:=), 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#IntegerDivide">整数除法</a>把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 类似的, <code>Var <strong>.=</strong> "abc"</code> 为 <code>Var := Var <strong>.</strong> "abc"</code> 的一种简写形式.</p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>.</p>
     <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 将赋值与<a href="#ref">引用操作符</a>结合起来也是有效的, 如 <code>&amp;(Var := "initial value")</code>.</p>
-    <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
+    <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 另外, <code class="no-highlight">x==y &amp;&amp; z:=1</code> 计算为 <code class="no-highlight">x==y &amp;&amp; (z:=1)</code>, 当 x 不等于 y 时进行<a href="Functions.htm#ShortCircuit">短路</a>计算. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
     <p>目标变量可以通过将直接赋值(<code>:=</code>) 与 <code>unset</code> 关键字或 <a href="Variables.htm#maybe">maybe(<em>var</em>?)</a> 运算符联合使用来 <em>un-set</em>(取消设置). 例如: <code>Var := unset</code>, <code>Var1 := (Var2?)</code>.</p>
     <p>赋值还可以针对对象的属性, 如 <code>myArray.Length += n</code> 或 <code>myArray[i] .= t</code>. 当赋值给一个属性时, 子表达式的结果是赋值的值, 而不是变量引用.</p>
     </td>
@@ -660,9 +660,9 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   <tr id="AllowMainWindow">
     <td>A_AllowMainWindow</td>
     <td>
-    <p>可以用来获取或设置是否允许通过托盘图标打开脚本的<a href="Program.htm#main-window">主窗口</a>. 可能的值是 0(禁止) 和 1(允许).</p>
-    <p>如果脚本既不是<a href="Scripts.htm#ahk2exe">编译的</a>也不是<a href="Program.htm#embedded-scripts">嵌入的</a>, 此变量默认为 1, 否则此变量默认为 0, 但可以通过给该变量赋值来改写它. 将其设置为 1 还可以恢复托盘菜单中的 "Open" 选项, 并启用主窗口的 View 菜单中的项目, 如 "Lines most recently executed", 这允许查看脚本的源代码和其他信息.</p>
-    <p>在脚本运行时遇到下列函数, 总是能够显示主窗口并激活相应的视图选项: <a href="lib/ListLines.htm">ListLines</a>, <a href="lib/ListVars.htm">ListVars</a>, <a href="lib/ListHotkeys.htm">ListHotkeys</a> 和 <a href="lib/KeyHistory.htm">KeyHistory</a>.</p>
+    <p>可以用来获取或设置是否允许通过<a href="Program.htm#tray-icon">托盘图标</a>打开脚本的<a href="Program.htm#main-window">主窗口</a>. 可能的值是 0(禁止) 和 1(允许).</p>
+    <p>如果脚本既不是<a href="Scripts.htm#ahk2exe">编译的</a>也不是<a href="Program.htm#embedded-scripts">嵌入的</a>, 此变量默认为 1, 否则此变量默认为 0, 但可以通过给该变量赋值来改写它. 将其设置为 1 还可以恢复托盘菜单中的 "Open" 菜单项, 并启用主窗口的 View 菜单中的项目, 如 "Lines most recently executed", 这允许查看脚本的源代码和其他信息.</p>
+    <p>在脚本运行时遇到下列函数, 总是能够显示主窗口并选择相应的视图选项: <a href="lib/ListLines.htm">ListLines</a>, <a href="lib/ListVars.htm">ListVars</a>, <a href="lib/ListHotkeys.htm">ListHotkeys</a> 和 <a href="lib/KeyHistory.htm">KeyHistory</a>.</p>
     <p>设置为 1 并不妨碍主窗口被 <a href="lib/WinShow.htm">WinShow</a> 显示, 或者被 <a href="lib/ControlGetText.htm">ControlGetText</a> 或类似的方法检查, 但它确实阻止了脚本的源代码和其他信息通过主窗口暴露出来, 除非脚本调用了上述的某个函数.</p></td>
   </tr>
   <tr id="IconHidden">
@@ -718,8 +718,8 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   <tr id="ThisHotkey">
     <td>A_ThisHotkey</td>
     <td><p>最近执行的<a href="Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">非自动替换热字串</a>(如果没有则为空), 例如 #z. 如果<a href="misc/Threads.htm">当前线程</a>被其他热键或热字串中断, 那么此变量的值会变化, 所以一般情况下, 最好使用 <a href="Hotkeys.htm#ThisHotkey">ThisHotkey</a> 参数.</p>
-      <p>首次创建热键时 -- 通过 <a href="lib/Hotkey.htm">Hotkey 函数</a>或<a href="Hotkeys.htm">双冒号语法</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="lib/_HotIf.htm#variant">变体</a>共享.</p>
-      <p>当热字符串是首次创建时, 用于创建它的确切文本将成为热字符串的永久名称.</p>
+      <p>首次创建热键时 -- 通过 <a href="lib/Hotkey.htm">Hotkey 函数</a>或脚本中的<a href="Hotkeys.htm">双冒号语法</a> -- 其键名及其修饰符的顺序成为此热键的固定名称, 由热键的所有<a href="lib/_HotIf.htm#variant">变体</a>共享.</p>
+      <p>首次创建热字串时 -- 通过 <a href="lib/Hotstring.htm">Hotstring 函数</a>或脚本中的<a href="Hotstring.htm">双冒号标签</a> -- 它的触发字符串和选项字符序列成为该热字符串的永久名称.</p>
     </td>
   </tr>
   <tr id="PriorHotkey">

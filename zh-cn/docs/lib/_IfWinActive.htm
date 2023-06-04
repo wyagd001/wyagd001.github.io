@@ -47,7 +47,7 @@
 <p>要关闭上下文相关性, 请指定任一 #IfWin 指令但省略所有参数. 例如:</p>
 <pre>#IfWinActive</pre>
 <p>当 #IfWin 关闭时(或从未在脚本中使用), 所有的<a href="../Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>对所有的窗口有效(除非使用 <a href="Suspend.htm">Suspend</a> 或 <a href="Hotkey.htm">Hotkey 命令</a>进行禁用).</p>
-<p>使用 #IfWin 禁用鼠标或键盘热键后, 它会执行它原来的功能, 即会直接被传递到活动窗口, 就像不存在这样的热键. 有一种情况例外: 对于操纵杆热键, 尽管 #IfWin 有效, 但它不能阻止其他程序探测到按钮的按下动作.</p>
+<p>使用 #IfWin 禁用鼠标或键盘热键后, 它会执行它原来的功能, 即会直接被传递到活动窗口, 就像不存在这样的热键. 有一种情况例外: 对于控制器热键, 尽管 #IfWin 有效, 但它不能阻止其他程序探测到按钮的按下动作.</p>
 <p>#IfWin 还可以用来改变普通按键的行为, 例如 <kbd>Enter</kbd> 或 <kbd>Space</kbd>. 这可以用于特殊的窗口忽略那个按键或执行您不希望的其他动作时. 例如:</p>
 <pre>#IfWinActive Reminders ahk_class #32770  <em>; Outlook 中的 "提醒" 窗口.</em>
 Enter::Send !o  <em>; 让 "Enter" 键打开选择的提醒.</em>
@@ -62,7 +62,7 @@ Enter::Send !o  <em>; 让 "Enter" 键打开选择的提醒.</em>
 #IfWinActive
 ^!c::MsgBox You pressed Control+Alt+C in a window other than Notepad/WordPad.</pre>
 <p>如果有多个变体符合触发条件, 那么只有最接近脚本顶部的那个会触发. 例外的情况是全局变体(不含 #IfWin 条件的变体): 它的优先级总是最低; 因此, 只有在没有其他变体符合条件时才会触发它(这种例外情况不适用于<a href="Hotstrings.htm">热字串</a>).</p>
-<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序例如 ^!+# 没有关系. 例如: <code>^!c</code> 等效于 <code>!^c</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时 <em>Esc</em> 与 <em>Escape</em> 是有区别的(尽管不会受大小写形式的影响). 同样, 含<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不含通配符的是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 每个都有自己的变体集.</p>
+<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序例如 <code>^!+#</code> 没有关系. 例如: <code>^!c</code> 等效于 <code>!^c</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时 <em>Esc</em> 与 <em>Escape</em> 是有区别的(尽管不会受大小写形式的影响). 同样, 含<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不含通配符的是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 每个都有自己的变体集.</p>
 <p>要让多个变体执行相同的热键子程序, 最简单的方法是把同个热键的变体叠放在一起, 其中在每个的前面使用不同的 #IfWin 指令. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
 #z::
@@ -75,7 +75,7 @@ return</pre>
 <h2 id="gen">一般说明</h2>
 <p>#IfWin 还能在适当时恢复前缀键为它们原来的功能(在 "a &amp; b" 这样的热键中<a href="../Hotkeys.htm#prefix">前缀键</a>为 <kbd>A</kbd>). 每当组合键中给定的前缀没有启动热键时会发生这样的情况, 即前缀键恢复为原来的功能.</p>
 <p>当使用 Gosub 或 Goto 跳转到热键或热字串标签时, 它会跳转到最接近脚本顶部的变体.</p>
-<p>当前被 #IfWin 禁用的热键, 其中的按键或鼠标按钮在 <a href="KeyHistory.htm">KeyHistory</a> 的 "Type" 列中显示时会带有 "#" 字符. 这样可以帮助调试脚本.</p>
+<p>当前被 #IfWin 禁用的热键, 其中的按键或鼠标按钮在 <a href="KeyHistory.htm">KeyHistory</a> 的 "Type" 列中显示时会带有 "#" 字符. 这样可以帮助<a href="../Scripts.htm#debug">调试脚本</a>.</p>
 <p>当前不支持变量引用, 例如 %Var%. 因此, 百分号必须<a href="../misc/EscapeChar.htm">转义</a>为 `% 以便在将来支持它们. 同样, 原义的逗号必须进行转义(为 `,) 以便在将来增加额外的参数. 如果您需要解决此限制, 请使用 <a href="GroupAdd.htm">GroupAdd</a> 和 <a href="../misc/WinTitle.htm#ahk_group">ahk_group</a>.</p>
 <p>由 <a href="Hotkey.htm">Hotkey 命令</a>设置的热键的标签不会直接受 #IfWin 影响. 相反地, 在靠近脚本的底部使用 #IfWin 会影响所有由 Hotkey 命令创建的热键(除非使用 <a href="Hotkey.htm#IfWin">"Hotkey IfWin"</a> 改变了这种行为).</p>
 <p><a href="../Hotkeys.htm#alttab">Alt-tab 热键</a>不受 #IfWin 影响: 它们总是对所有窗口有效的.</p>

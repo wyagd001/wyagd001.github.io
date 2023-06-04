@@ -69,7 +69,7 @@ OnMessage MsgNumber, Function, 1  <em>; 选项 2 - 指定 MaxThreads 为 1</em><
 
 <h2 id="Additional_Information_Available_to_the_Function">函数中可用的附加信息</h2>
 <p>除了上面接收到的参数外, 该函数还可以查询内置变量 <a href="../Variables.htm#EventInfo">A_EventInfo</a>, 如果消息是通过 SendMessage 发送的, 则其为 0. 如果是通过 PostMessage 发送的, 则其为消息发出时的 <a href="../Variables.htm#TickCount">tick-count 时间</a>.</p>
-<p>监听函数的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始与消息发送到的父窗口相同(即使消息是发送到控件的). 如果窗口是隐藏的, 但不是 GUI 窗口(例如脚本的主窗口), 在使用它之前打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 例如:</p>
+<p>监听函数的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始与消息发送到的父窗口相同(即使消息是发送到控件的). 如果窗口是隐藏的, 但不是 GUI 窗口(例如<a href="../Program.htm#main-window">脚本的主窗口</a>), 在使用它之前打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 例如:</p>
 <pre>DetectHiddenWindows True
 MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口的唯一 ID.</em></pre>
 
@@ -94,7 +94,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>OnMessage 的<a href="../misc/Threads.htm">优先级</a>总是为 0. 因此, 如果当前线程的优先级大于 0 时将不会监听或缓冲任何消息.</p>
 <p>监听系统消息(小于 0x0400 的那些) 时应多加小心. 例如, 如果监听函数不会快速结束, 那么对消息的响应时间可能比系统预期的要长, 这可能会导致一些副作用. 如果监听函数返回一个整数来抑制对消息的进一步处理, 但系统期望不同的处理或响应方式时, 可能会发生不想要的行为.</p>
 <p>当脚本显示系统对话框时(例如 <a href="MsgBox.htm">MsgBox</a>), 则不会监听到任何投递(Post) 到控件的消息. 例如, 如果脚本正显示消息框而用户点击一个 GUI 窗口上的按钮, 则 WM_LBUTTONDOWN 消息会被直接发送到按钮而不会调用监听函数.</p>
-<p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递(Post) 消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">消息框</a>) . 则消息会丢失. 相反, 通常最好投递或发送(Send) 消息到脚本的主窗口或其中的某个 GUI 窗口.</p>
+<p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接投递(Post) 消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">消息框</a>) . 则消息会丢失. 相反, 通常最好投递或发送(Send) 消息到<a href="../Program.htm#main-window">脚本的主窗口</a>或其中的某个 GUI 窗口.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="CallbackCreate.htm">CallbackCreate</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">窗口消息列表</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall</a></p>

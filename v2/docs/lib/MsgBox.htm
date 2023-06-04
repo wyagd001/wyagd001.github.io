@@ -30,21 +30,21 @@ Result := <span class="func">MsgBox</span>(<span class="optional">Text, Title, O
   <dt>Text</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>要在消息框中显示的文本. 如果省略, 如果 "OK" 是存在的唯一按钮, 则默认文本是 "Press OK to continue.", 否则为空.</p>
-    <p>可以使用<a href="../misc/EscapeChar.htm">转义序列</a>来表示特殊字符. 例如, `n 表示换行符, 它结束当前行并开始一个新行. 因此, 使用 text1`n`ntext2 会在 text1 和 text2 之间添加一个空行.</p>
+    <p>要在消息框中显示的文本. 如果未设置或省略, 如果 "OK" 是存在的唯一按钮, 则默认文本是 "Press OK to continue.", 否则为空.</p>
+    <p>可以使用<a href="../misc/EscapeChar.htm">转义序列</a>来表示特殊字符. 例如, `n 表示换行符, 它结束当前行并开始一个新行. 因此, 使用 <code>text1`n`ntext2</code> 会在 text1 和 text2 之间添加一个空行.</p>
     <p>如果 <em>Text</em> 较长, 可以通过<a href="../Scripts.htm#continuation">延续片段</a>的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p>
   </dd>
 
   <dt>Title</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>消息框窗口的标题. 如果省略, 那么它默认为 <a href="../Variables.htm#ScriptName">A_ScriptName</a> 的当前值.</p>
+    <p>如果未设置或省略, 则默认为 <a href="../Variables.htm#ScriptName">A_ScriptName</a> 的当前值. 否则, 请指定消息框的标题.</p>
   </dd>
 
   <dt>Options</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>表示消息框的类型和可能的按钮组合. 如果为空或省略, 则默认为 0. 请参阅下面的表格来了解允许的值.</p>
+    <p>如果未设置或省略, 则默认为 0(只显示 OK 按钮)). 否则, 从下表中指定值的组合(总和) 或一个或多个选项的字符串, 以指示消息框的类型和可能的按钮组合.</p>
     <p>此外, 还可以指定以下零个或多个选项:</p>
     <p id="OwnerOption"><strong>Owner</strong>: 要为消息框指定<a href="#Owner">所有者窗口</a>, 请使用单词 Owner 后接 HWND(窗口 ID).</p>
     <p id="Timeout"><strong>T</strong>: 超时. 如果用户在指定的时间内没有关闭消息框, 要让消息框自动关闭, 请使用字母 T 后接超时秒数, 可以包含小数点. 如果这个值超过 2147483(24.8 天), 将被设置为 2147483. 如果消息框超时, <a href="#Result">返回值</a>为单词 Timeout.</p>
@@ -262,17 +262,17 @@ else
 
 if MsgBox("Retry or cancel?",, "R/C") = "Retry"
     MsgBox("You pressed Retry.")</pre>
-<p>参照<a href="../scripts/index.htm#MsgBoxButtonNames">这个示例</a>可以自定义按钮的名称.</p>
-<p><strong>提示</strong>: 当消息框窗口处于活动状态时, 按下 <kbd>Ctrl</kbd>+<kbd>C</kbd> 将复制其中的文本到剪贴板. 这适用于所有的消息框, 而不仅是 AutoHotkey 生成的那些.</p>
-<p id="Owner"><strong>GUI 窗口当作 MsgBox</strong>: 通过使用 <a href="Gui.htm#OwnDialogs">OwnDialogs 选项</a>的方法 GUI 窗口可以显示为 <em>modal(模式)</em> 消息框. <em>模式</em> 消息框在其消失之前会阻止用户与原来的 GUI 窗口进行交互. 此时, 不需要指定上表中的系统模式或任务模式选项.</p>
+<p>若要自定义按钮的名称, 请参阅<a href="../scripts/index.htm#MsgBoxButtonNames">Changing MsgBox's Button Names</a>.</p>
+<p class="note"><strong>注意:</strong> 当消息框窗口处于活动状态时, 按下 <kbd>Ctrl</kbd>+<kbd>C</kbd> 将复制其中的文本到剪贴板. 这适用于所有的消息框, 而不仅是 AutoHotkey 生成的那些.</p>
+<p id="Owner"><strong>GUI 窗口当作 MsgBox:</strong> 通过使用 <a href="Gui.htm#OwnDialogs">OwnDialogs 选项</a>的方法 GUI 窗口可以显示为 <em>modal(模式)</em> 消息框. <em>模式</em> 消息框在其消失之前会阻止用户与原来的 GUI 窗口进行交互. 此时, 不需要指定上表中的系统模式或任务模式选项.</p>
 <p>当 <a href="Gui.htm#OwnDialogs">OwnDialogs 选项</a> <em>无效</em> 时, 任务模式选项(8192) 可用于禁用所有脚本的窗口, 直到用户取消消息框.</p>
 <p>如果指定了 <code>Owner<i>HWND</i></code> 选项, 它将优先于任何其他设置. <i>HWND</i> 可以是任何窗口的 HWND, 即使不是脚本所拥有的窗口.</p>
-<p><strong>帮助按钮</strong>: 在 <em>Options</em> 中使用了帮助按钮选项(16384) 时, 只有符合下面两个条件, 那么按下帮助按钮才会有效果:</p>
+<p><strong>帮助按钮:</strong> 在 <em>Options</em> 中使用了帮助按钮选项(16384) 时, 只有符合下面两个条件, 那么按下帮助按钮才会有效果:</p>
 <ol>
   <li>消息框是使用 <a href="Gui.htm#OwnDialogs">OwnDialogs 选项</a>的方法为 Gui 窗口所有.</li>
   <li>脚本正在监控 WM_HELP 消息(0x0053). 例如: <code><a href="OnMessage.htm">OnMessage</a>(0x0053, "WM_HELP")</code>. 当 WM_HELP 函数被调用时, 可能会通过诸如显示另一个窗口或消息框等方式引导用户.</li>
 </ol>
-<p><strong>关闭按钮(在消息框的标题栏)</strong>: 由于消息框窗口是操作系统内置的特性, 所以它的 <strong>X</strong> 按钮只有在某些按钮存在时才会被启用. 如果只有一个 OK(确认) 按钮, 点击 <strong>X</strong> 按钮等同于点击 OK 按钮. 否则, X 按钮将被禁用, 除非有一个取消按钮, 在这种情况下, 点击 <strong>X</strong> 按钮就等同于按下取消.</p>
+<p><strong>关闭按钮(在消息框的标题栏)</strong>: 由于消息框窗口是操作系统内置的特性, 所以它的 X 按钮只有在某些按钮存在时才会被启用. 如果只有一个 OK(确认) 按钮, 点击 X 按钮等同于点击 OK 按钮. 否则, X 按钮将被禁用, 除非有一个取消按钮, 在这种情况下, 点击 X 按钮就等同于按下取消.</p>
 <p id="max"><strong>最大持续调用数 7</strong>: 显示消息框的<a href="../misc/Threads.htm">线程</a>通常可以被中断, 从而允许新线程在前一个调用返回之前显示自己的消息框. 最多允许对 MsgBox 进行 7 次进行中的调用, 任何第 7 次以后的调用都会抛出 <a href="Error.htm">Error</a>. 注意, 在中断的线程中, 对 MsgBox 的调用只有在线程恢复后才能返回.</p>
 
 <h2 id="Related">相关</h2>

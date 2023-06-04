@@ -23,14 +23,14 @@
   <dd>
     <p>如果参数为空或省略, 默认为 On. 否则, 请指定以下之一:</p>
     <p><strong>On</strong>: 设置<a href="../misc/Threads.htm">当前线程</a>为关键的, 这意味着它不会被其他线程中断.</p>
-    <p><strong>Off</strong>: 当前线程立即成为可中断的, 无论 <a href="Thread.htm">Thread Interrupt</a> 的设置如何. 有关详情, 请参阅 <a href="#Off">Critical Off</a>.</p>
+    <p><strong>Off</strong>: 当前线程立即成为可中断的, 无论 <a href="Thread.htm#Interrupt">Thread Interrupt</a> 的设置如何. 有关详情, 请参阅 <a href="#Off">Critical Off</a>.</p>
     <p><strong>(数字)</strong> <span class="ver">[v1.0.47+]</span>: 指定一个正数来打开 Critical, 但同时也会改变检查内部消息队列的时间间隔. 有关详情, 请参阅<a href="#Interval">消息检查间隔</a>. <span class="ver">[v1.0.48+]</span>: 指定 0 关闭 Critical. 指定 -1 将启用 Critical, 但禁用消息检查.</p>
   </dd>
 </dl>
 
 <h2 id="Behave">关键线程的行为</h2>
 <p>Critical 线程是 <em>不可中断的</em>; 有关详情, 请参阅<a href="../misc/Threads.htm#Behave">线程</a>.</p>
-<p>关键线程在显示<a href="MsgBox.htm">消息框</a>或其他对话框时, 会变成可中断的. 但是, 与 <a href="Thread.htm">Thread Interrupt</a> 不同, 在用户解除对话框后这个线程会再恢复为关键的.</p>
+<p>关键线程在显示<a href="MsgBox.htm">消息框</a>或其他对话框时, 会变成可中断的. 但是, 与 <a href="Thread.htm#Interrupt">Thread Interrupt</a> 不同, 在用户解除对话框后这个线程会再恢复为关键的.</p>
 
 <h2 id="Off">Critical Off</h2>
 <p>当缓冲的事件等待启动新的线程时, 使用 <code>Critical Off</code> 不会导致立即中断当前线程, 而会经过平均 5ms 才发生中断. 这会导致在中断前有超过 99.999% 的可能执行了至少一行 <code>Critical Off</code> 后面的代码. 可通过使用像 <code><a href="Sleep.htm">Sleep</a> -1</code> 或 <a href="WinWait.htm">WinWait</a> 一个尚不存在的窗口这样的延迟手段立即产生强制中断.</p>
@@ -38,12 +38,12 @@
 
 <h2 id="Settings">线程设定</h2>
 <p>如何保存和还原当前线程的关键设定请看 <a href="../Variables.htm#IsCritical">A_IsCritical</a>. Critical 是一个对于特定线程的设定, 当一个关键线程结束时, 随后/接续的线程(如果有的话) 会自动变成非关键线程. 因此没有必要在一个线程结束时马上使用 <code>Critical Off</code>.</p>
-<p>如果在自动执行段没有使用 Critical(脚本开头部分), 所有的线程将会以非关键线程开始(但<a href="Thread.htm">线程中断</a>的设定仍然有效). 与之对比的是, 如果自动执行段打开了 Critical 但随后并没有关闭过它, 每个新启动的<a href="../misc/Threads.htm">线程</a>(像<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项目</a>或<a href="SetTimer.htm">计时器</a>子程序) 都会以关键线程开始.</p>
-<p><a href="Thread.htm">Thread NoTimers</a> 命令类似于 Critical, 但前者仅保护线程不被<a href="SetTimer.htm">计时器</a>中断.</p>
+<p>如果在自动执行段没有使用 Critical(脚本开头部分), 所有的线程将会以非关键线程开始(但 <a href="Thread.htm#Interrupt">Thread Interrupt</a> 的设定仍然有效). 与之对比的是, 如果自动执行段打开了 Critical 但随后并没有关闭过它, 每个新启动的<a href="../misc/Threads.htm">线程</a>(像<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项目</a>或<a href="SetTimer.htm">计时器</a>子程序) 都会以关键线程开始.</p>
+<p><a href="Thread.htm#Interrupt">Thread NoTimers</a> 命令类似于 Critical, 但前者仅保护线程不被<a href="SetTimer.htm">计时器</a>中断.</p>
 <p><span class="ver">[v1.0.47+]</span>: 打开 Critical 的同时也会让 <code><a href="SetBatchLines.htm">SetBatchLines</a> -1</code> 对<a href="../misc/Threads.htm">当前线程</a>生效.</p>
 
 <h2 id="Interval">消息检查间隔</h2>
-<p>在 <span class="ver">[v1.0.47+]</span>: 指定一个正数作为首个参数(如 <code>Critical 30</code>) 将会打开 Critical 但同时也会改变检查内部消息队列的最小时间间隔(以 ms 毫秒计). 如果未指定该参数, 在 Critical 打开的状态下默认为 16ms, 在 Critical 关闭状态下为 5ms. 延长时间间隔会推迟消息/事件的到达, 给出更多的时间让<a href="../misc/Threads.htm">当前线程</a>结束. 这会减少某些 <a href="OnMessage.htm">OnMessage()</a> 和 <a href="Gui.htm#DefaultWin">GUI 事件</a>因为 "线程已运行" 而丢失的可能性. 然而, 像 <a href="Sleep.htm">Sleep</a> 和 <a href="WinWait.htm">WinWait</a> 这样的等待型命令则无视此设定而照常检查消息(一个变通的解决办法是 <code>DllCall("Sleep", "UInt", 500)</code>).</p>
+<p>在 <span class="ver">[v1.0.47+]</span>: 指定一个正数作为首个参数(如 <code>Critical 30</code>) 将会打开 Critical 但同时也会改变检查内部消息队列的最小时间间隔(以 ms 毫秒计). 如果未指定该参数, 在 Critical 打开的状态下默认为 16ms, 在 Critical 关闭状态下为 5ms. 延长时间间隔会推迟消息/事件的到达, 给出更多的时间让<a href="../misc/Threads.htm">当前线程</a>结束. 这会减少某些 <a href="OnMessage.htm">OnMessage 回调</a> 和 <a href="Gui.htm#DefaultWin">GUI 事件</a>因为 "线程已运行" 而丢失的可能性. 然而, 像 <a href="Sleep.htm">Sleep</a> 和 <a href="WinWait.htm">WinWait</a> 这样的等待型命令则无视此设定而照常检查消息(一个变通的解决办法是 <code>DllCall("Sleep", "UInt", 500)</code>).</p>
 <p>此设置影响如下:</p>
 <ul>
   <li>抢先消息检查, 可能发生在每一行代码执行之前.</li>

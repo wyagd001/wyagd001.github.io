@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>GetKeyState() / GetKeyState | AutoHotkey</title>
-<meta name="description" content="The GetKeyState function or command checks if a keyboard key or mouse/joystick button is down or up. Also retrieves joystick status." />
+<title>GetKeyState | AutoHotkey</title>
+<meta name="description" content="The GetKeyState function or command checks if a keyboard key or mouse/controller button is down or up. Also retrieves controller status." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -10,67 +10,67 @@
 </head>
 <body>
 
-<h1>GetKeyState() / GetKeyState</h1>
-<p>检查键盘按键或鼠标/操纵杆按键是否按下或放开. 也可以获取操纵杆的状态.</p>
+<h1>GetKeyState</h1>
+<p>GetKeyState 可以用作<a href="#function">函数</a>或<a href="#command">命令</a>, 但建议在新脚本中使用前者. 两者都检查键盘按键或鼠标/控制器按钮是否按下或松开, 并且能检索控制器状态. 不同之处在于, 函数可以在<a href="../Variables.htm#Expressions">表达式</a>中使用, 并返回 1(true) 表示向下或 0(false) 表示向上, 而命令将 D(表示向下) 或 U(表示向上) 存储在变量中.</p>
 
-<h2 id="function">GetKeyState()</h2>
+<h2 id="function">GetKeyState 函数</h2>
+<p>根据指定的键盘按键或鼠标/控制器按钮是上还是下, 返回 1 (true) 或 0(false). 也检索控制器状态.</p>
+<pre class="Syntax">KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional">, Mode</span>)</pre>
 
-<pre class="Syntax">
-KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional">, Mode</span>)
-</pre>
 <h3 id="Function_Parameters">参数</h3>
 <dl>
 
   <dt>KeyName(按键名称)</dt>
-  <dd><p>此参数可以是键盘中任何的单个字符或<a href="../KeyList.htm">按键列表</a>中的其中一个键名, 如一个鼠标/操纵杆按键. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
+  <dd><p>此参数可以是键盘中任何的单个字符或<a href="../KeyList.htm">按键列表</a>中的其中一个键名, 如一个鼠标/控制器按键. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
       <p>或者, 可以指定明确的虚拟键代码, 例如 vkFF. 只有在一个按键没有指定名称这样少见的情况下, 这种方法才有用. 按键的虚拟键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p>
       <p><b>已知限制:</b> 此函数无法区别共享相同虚拟按键代码的两个按键, 例如 Left 和 NumpadLeft.</p></dd>
 
   <dt>Mode</dt>
-  <dd><p>获取操纵杆状态时, 此参数被忽略.</p>
-      <p>如果省略, 则模式默认是获取按键的逻辑状态. 这是操作系统和活动窗口所认为的按键所处的状态, 但可能和按键的物理状态不一致.</p>
-	  <p>或者, 可以指定这些字母的其中一个:</p>
-      <p><strong>P</strong>: 获取物理状态( 即用户是否实际按住了按键). 如果没有安装键盘和/或鼠标钩子, 则按键或鼠标按键的物理状态通常和逻辑状态一致(有时逻辑状态可能比物理状态滞后), 如果安装了钩子, 则它会准确反映出用户是否按下了按键或鼠标按键(只要在脚本执行时按键正被按住). 您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 命令或菜单项来确定脚本中是否使用了钩子. 您可以通过添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 和/或 <a href="_InstallMouseHook.htm">#InstallMouseHook</a> 指令到脚本中来强制安装钩子.</p>
-      <p><strong>T</strong>: 获取切换状态(仅对可以切换的按键才有效, 例如 <kbd>CapsLock</kbd>, <kbd>NumLock</kbd>, <kbd>ScrollLock</kbd> 和 <kbd>Insert</kbd>). 获取的值为 1(true) 表明按键是 "on"(打开的), 而 0(false) 表明它是 "off"(关闭的).</p>
+  <dd><p>获取控制器状态时, 此参数被忽略.</p>
+      <p>如果为空或省略, 则模式默认是获取按键的逻辑状态. 这是操作系统和活动窗口所认为的按键所处的状态, 但可能和按键的物理状态不一致.</p>
+	  <p>或者, 可以指定以下字母之一:</p>
+      <p><strong>P:</strong> 获取物理状态( 即用户是否实际按住了按键). 如果没有安装键盘和/或鼠标钩子, 则按键或鼠标按键的物理状态通常和逻辑状态一致(有时逻辑状态可能比物理状态滞后), 如果安装了钩子, 则它会准确反映出用户是否按下了按键或鼠标按键(只要在脚本执行时按键正被按住). 您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 命令或菜单项来确定脚本中是否使用了钩子. 您可以通过添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 和/或 <a href="_InstallMouseHook.htm">#InstallMouseHook</a> 指令到脚本中来强制安装钩子.</p>
+      <p><strong>T:</strong> 获取切换状态(仅对可以切换的按键才有效, 例如 <kbd>CapsLock</kbd>, <kbd>NumLock</kbd>, <kbd>ScrollLock</kbd> 和 <kbd>Insert</kbd>). 获取的值为 1(true) 表明按键是 "on"(打开的), 而 0(false) 表明它是 "off"(关闭的).</p>
     </dd>
 
 </dl>
 
 <h3 id="Function_Return_Value">返回值</h3>
-<p>如果键是按下的(或打开了), 函数返回 1, 如果是松开的, 则返回 0. 对于操纵杆的特殊键, 如轴和 POV 开关, <a href="#joystick">返回其他值</a>.</p>
+<p>如果键是按下的(或打开了), 函数返回 1(true), 如果是松开的, 则返回 0(false). 对于控制器的特殊控制, 如轴和 POV 开关, <a href="#joystick">返回其他值</a>.</p>
 <p>如果 <em>KeyName</em> 无效或者无法确定键的状态, 则返回空字符串.</p>
 
-<h2 id="command">GetKeyState</h2>
-<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此命令. 请使用 <a href="#function">GetKeyState</a> 函数代替.</p>
+<h2 id="command">GetKeyState 命令</h2>
+<!-- <p>Stores the letter D in a variable if a keyboard key or mouse/controller button is down or U if it is up. Also retrieves controller status.</p> -->
+<p>根据指定的键盘按键或鼠标/控制器按钮是上还是下, 将字母 D 或 U 存储在变量中. 也检索控制器状态.</p>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此命令. 请使用上面的 <a href="#function">GetKeyState()</a> 函数来代替.</p>
+<pre class="Syntax"><span class="func">GetKeyState</span>, OutputVar, KeyName <span class="optional">, Mode</span></pre>
 
-<pre class="Syntax">
-<span class="func">GetKeyState</span>, OutputVar, KeyName <span class="optional">, Mode</span>
-</pre>
 <h3 id="Command_Parameters">参数</h3>
 <dl>
 
   <dt>OutputVar</dt>
-  <dd><p>用于存储检索到的键状态的输出变量的名称, 它是 D 表示按下或 U 表示松开. 如果无法确定键的状态, 则该变量为空. 对于操纵杆的特殊键, 如轴和 POV 开关, 将<a href="#joystick">返回其他值</a>.</p>
+  <dd><p>用于存储检索到的键状态的输出变量的名称, 它是 D 表示按下或 U 表示松开. 如果无法确定键的状态, 则该变量为空. 对于控制器的特殊控制, 如轴和 POV 开关, 将<a href="#joystick">返回其他值</a>.</p>
       </dd>
 
   <dt>KeyName</dt>
-  <dd><p>此参数可以是键盘中任何的单个字符或<a href="../KeyList.htm">按键列表</a>中的其中一个键名, 如一个鼠标/操纵杆按键. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
+  <dd><p>此参数可以是键盘中任何的单个字符或<a href="../KeyList.htm">按键列表</a>中的其中一个键名, 如一个鼠标/控制器按键. 例如: B, 5, LWin, RControl, Alt, Enter, Escape, LButton, MButton, Joy1.</p>
       <p>或者, 可以指定明确的虚拟键代码, 例如 vkFF. 只有在一个按键没有指定名称这样少见的情况下, 这种方法才有用. 按键的虚拟键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p>
       <p><b>已知限制:</b> 此命令无法区别共享相同虚拟按键代码的两个按键, 例如 Left 和 NumpadLeft.</p></dd>
 
   <dt>Mode</dt>
-  <dd><p>获取操纵杆状态时, 此参数被忽略.</p>
-      <p>如果省略, 则默认的模式是获取按键的逻辑状态. 这是操作系统和活动窗口所认为的按键所处的状态, 但可能和它的物理状态不一致.</p>
-	  <p>或者, 可以指定这些字母的其中一个:</p>
-      <p><strong>P</strong>: 获取物理状态(即用户是否实际按住了按键). 如果没有安装键盘和/或鼠标钩子, 则按键或鼠标按钮的物理状态通常和逻辑状态一致(有时逻辑状态可能比物理状态滞后); 如果安装了钩子, 则它会准确反映出用户是否按下了按键或鼠标按钮(只要在脚本执行时按键正被按住). 您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 命令或菜单项确定脚本中是否使用了钩子. 您可以通过添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 和/或 <a href="_InstallMouseHook.htm">#InstallMouseHook</a> 指令到脚本中来强制安装钩子.</p>
-      <p><strong>T</strong>: 获取切换状态(仅对可以切换的按键才有效, 例如 <kbd>CapsLock</kbd>, <kbd>NumLock</kbd>, <kbd>ScrollLock</kbd> 和 <kbd>Insert</kbd>). 获取的值为 D 表明按键是打开的, 而 U 表明它是关闭的.</p>
+  <dd><p>获取控制器状态时, 此参数被忽略.</p>
+      <p>如果为空或省略, 则默认的模式是获取按键的逻辑状态. 这是操作系统和活动窗口所认为的按键所处的状态, 但可能和它的物理状态不一致.</p>
+	  <p>否则, 可以指定以下字母之一:</p>
+      <p><strong>P:</strong> 获取物理状态(即用户是否实际按住了按键). 如果没有安装键盘和/或鼠标钩子, 则按键或鼠标按钮的物理状态通常和逻辑状态一致(有时逻辑状态可能比物理状态滞后); 如果安装了钩子, 则它会准确反映出用户是否按下了按键或鼠标按钮(只要在脚本执行时按键正被按住). 您可以通过 <a href="KeyHistory.htm">KeyHistory</a> 命令或菜单项确定脚本中是否使用了钩子. 您可以通过添加 <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a> 和/或 <a href="_InstallMouseHook.htm">#InstallMouseHook</a> 指令到脚本中来强制安装钩子.</p>
+      <p><strong>T:</strong> 获取切换状态(仅对可以切换的按键才有效, 例如 <kbd>CapsLock</kbd>, <kbd>NumLock</kbd>, <kbd>ScrollLock</kbd> 和 <kbd>Insert</kbd>). 获取的值为 D 表明按键是打开的, 而 U 表明它是关闭的.</p>
     </dd>
 
 </dl>
 
-<h2 id="joystick">操纵杆的特殊按键</h2>
-<p>当 <em>KeyName</em> 是 joystick 的轴, 如 JoyX 时, 返回值将是一个 0 到 100 之间的浮点数, 用于指示操纵杆的位置为该轴运动范围的百分比. 可以通过 <a href="Format.htm">Format()</a> 或 <a href="SetFormat.htm">SetFormat</a> 更改数字的格式. 这个<a href="../scripts/index.htm#JoystickTest">测试脚本</a>可以用来分析你的操纵杆.</p>
-<p>当 <em>KeyName</em> 为 JoyPOV 时, 获取的值将介于 0 和 35900 之间. 许多操纵杆使用与下列近似的 POV 值:</p>
+<a id="joystick"></a>
+<h2 id="controller">控制器的特殊控制</h2>
+<p>当 <em>KeyName</em> 是控制器的轴, 如 JoyX 时, 返回值将是一个 0 到 100 之间的浮点数, 用于指示控制器的位置为该轴运动范围的百分比. 可以通过 <a href="Format.htm">Format()</a> 或 <a href="SetFormat.htm">SetFormat</a> 更改数字的格式. 这个<a href="../scripts/index.htm#ControllerTest">测试脚本</a>可以用来分析你的控制器.</p>
+<p>当 <em>KeyName</em> 为 JoyPOV 时, 获取的值将介于 0 和 35900 之间. 许多控制器使用与下列近似的 POV 值:</p>
 <ul>
   <li>-1: 没有角度</li>
   <li>0: 向前 POV</li>
@@ -78,20 +78,22 @@ KeyIsDown := <span class="func">GetKeyState</span>(KeyName <span class="optional
   <li>27000(即 270 度): 向左 POV</li>
   <li>18000(即 180 度): 向后 POV</li>
 </ul>
+<p>当 <em>KeyName</em> 为 JoyName, JoyButtons, JoyAxes 或 JoyInfo, 检索值将是控制器的名称, 按钮数量, 轴数量或功能. 有关详情, 请参阅<a href="../KeyList.htm#Controller">游戏控制器</a>.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>为了等待按键或鼠标/操纵杆按钮进入新的状态, 通常用 <a href="KeyWait.htm">KeyWait</a> 代替 GetKeyState 的循环会更简单.</p>
+<p>为了等待按键或鼠标/控制器按钮进入新的状态, 通常用 <a href="KeyWait.htm">KeyWait</a> 代替 GetKeyState 的循环会更简单.</p>
 <p>带有不常见键盘驱动的系统更新按键的状态可能比较慢, 尤其是像 <kbd>CapsLock</kbd> 这样按键的切换状态. 在按键状态改变后立即对其状态进行检查的脚本可以预先使用 <a href="Sleep.htm">Sleep</a>, 以便系统有时间更新按键的状态.</p>
-<p>关于对操纵杆使用 GetKeyState 的例子, 请参阅<a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a>和<a href="../scripts/index.htm#JoystickMouse">操纵杆到鼠标的映射脚本</a>.</p>
+<p>关于对控制器使用 GetKeyState 的例子, 请参阅<a href="../misc/RemapController.htm">控制器重映射页面</a>和<a href="../scripts/index.htm#ControllerMouse">控制器到鼠标的映射脚本</a>.</p>
 <h2 id="Related">相关</h2>
-<p><a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">按键列表</a>, <a href="../misc/RemapJoystick.htm">操纵杆重映射</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a></p>
+<p><a href="KeyWait.htm">KeyWait</a>, <a href="../KeyList.htm">按键列表</a>, <a href="../misc/RemapController.htm">控制器重映射</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a></p>
 
 <h2 id="Examples">示例</h2>
 
-<div class="ex" id="ExCmdVsFn">
-<p><a class="ex_number" href="#ExCmdVsFn"></a> 函数 vs. 命令. 虽然第一个代码块使用函数, 第二个代码块使用命令, 但这两个代码块在功能上是相同的.</p>
+<a id="ExCmdVsFn"></a>
+<div class="ex" id="ExFnVsCmd">
+<p><a class="ex_number" href="#ExFnVsCmd"></a> 函数 vs. 命令. 虽然第一个代码块使用函数, 第二个代码块使用命令, 但这两个代码块在功能上是相同的.</p>
 <pre>state := GetKeyState("RButton")  <em>; 鼠标右键.</em>
-state := GetKeyState("Joy2")  <em>; 你操纵杆的第二个按钮.</em>
+state := GetKeyState("Joy2")  <em>; 第一个控制器的第二个按钮.</em>
 
 if GetKeyState("Shift")
     MsgBox At least one Shift key is down.
@@ -101,7 +103,7 @@ else
 state := GetKeyState("CapsLock", "T") <em>;  如果 CapsLock 为 ON , 则为 True, 否则为 false.</em>
 </pre>
 <pre>GetKeyState, state, RButton  <em>; 鼠标右键.</em>
-GetKeyState, state, Joy2  <em>; 操纵杆的第二个按钮.</em>
+GetKeyState, state, Joy2  <em>; 控制器的第二个按钮.</em>
 
 GetKeyState, state, Shift
 if (state = "D")
@@ -129,22 +131,23 @@ MouseClick, left,,, 1, 0, U  <em>; 释放鼠标按钮.</em>
 return</pre>
 </div>
 
-<div class="ex" id="ExJoystick">
-<p><a class="ex_number" href="#ExJoystick"></a> 使操纵杆按钮的行为取决于操纵杆轴的位置.</p>
+<a id="ExJoystick"></a>
+<div class="ex" id="ExController">
+<p><a class="ex_number" href="#ExController"></a> 使控制器按钮的行为取决于控制器轴的位置.</p>
 <pre>joy2::
 JoyX := GetKeyState("JoyX")
 if (JoyX &gt; 75) 
-    MsgBox Action #1 (button pressed while joystick was pushed to the right).
+    MsgBox Action #1 (button pressed while stick was pushed to the right).
 else if (JoyX &lt; 25)
-    MsgBox Action #2 (button pressed while joystick was pushed to the left).
+    MsgBox Action #2 (button pressed while stick was pushed to the left).
 else
-    MsgBox Action #3 (button pressed while joystick was centered horizontally).
+    MsgBox Action #3 (button pressed while stick was centered horizontally).
 return
 </pre>
 </div>
 
 <h3 id="ex-other">其他示例</h3>
-<p>请参阅<a href="../misc/RemapJoystick.htm">操纵杆重映射页面</a>和<a href="../scripts/index.htm#JoystickMouse">操纵杆到鼠标的映射脚本</a>的其他示例.</p>
+<p>请参阅<a href="../misc/RemapController.htm">控制器重映射页面</a>和<a href="../scripts/index.htm#ControllerMouse">控制器到鼠标的映射脚本</a>的其他示例.</p>
 
 </body>
 </html>

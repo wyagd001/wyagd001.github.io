@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>OnClipboardChange | AutoHotkey</title>
-<meta name="description" content="As function, OnClipboardChange registers a function or function object to run whenever the clipboard's content changes. As label, it is launched automatically whenever the clipboard's content changes." />
+<meta name="description" content="OnClipboardChange can be used in two different ways. As a function, it registers a function to be called automatically whenever the clipboard's content changes. As a label, it is launched automatically whenever the clipboard's content changes." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,48 +11,45 @@
 <body>
 
 <h1>OnClipboardChange</h1>
+<p>OnClipboardChange 可以用作<a href="#function">函数</a>或<a href="#command">命令</a>, 但建议在新脚本中使用前者. 作为一个函数, 它注册一个函数, 以便在剪贴板的内容更改时自动调用该函数. 作为一个标签, 它在剪贴板的内容发生变化时自动启动.</p>
 
-<h2 id="function">OnClipboardChange() <span class="ver">[v1.1.20+]</span></h2>
-<p>注册一个每当剪贴板内容发生改变时都会运行的<a href="../Functions.htm">函数</a>或<a href="../misc/Functor.htm">函数对象</a>.</p>
-<pre class="Syntax"><span class="func">OnClipboardChange</span>(Func <span class="optional">, AddRemove</span>)</pre>
+<h2 id="function">OnClipboardChange Function <span class="ver">[v1.1.20+]</span></h2>
+<p>注册一个每当剪贴板内容发生改变时都会自动调用的<a href="../Functions.htm">函数</a>.</p>
+<pre class="Syntax"><span class="func">OnClipboardChange</span>(Callback <span class="optional">, AddRemove</span>)</pre>
 
 <h3 id="Parameters">参数</h3>
 <dl>
 
-  <dt>Func</dt>
-  <dd><p>要调用的函数或<a href="../misc/Functor.htm">函数对象</a>名称. 函数的参数和返回值<a href="#Func">如下</a>所述.</p></dd>
+  <dt id="Func">Callback</dt>
+  <dd>
+    <p>要调用的函数或<a href="../misc/Functor.htm">函数对象</a>的名称. 若要传递原义的函数名称, 将其括在双引号中.</p>
+    <p>回调函数接受一个参数, 可以<a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(DataType) { ...</pre>
+    <p>虽然你给参数的名称并不重要, 但是下面的数字之一会赋值给它:</p>
+    <ul>
+      <li>0 = 剪贴板当前为空.</li>
+      <li>1 = 剪贴板包含可以用文本形式表示的内容(包括从资源管理器窗口<a href="../misc/Clipboard.htm#CopiedFiles">复制的文件</a>).</li>
+      <li>2 = 剪贴板包含完全是非文本的内容, 例如图片.</li>
+    </ul>
+    <p>如果不需要相应的信息, 可以省略回调的参数.</p>
+    <p>如果这是最近的或仅有的回调, 其返回值会被忽略. 否则, 此回调会返回一个非零整数来阻止随后的回调被调用.</p>
+  </dd>
   
   <dt>AddRemove</dt>
-  <dd><p>如果为空或省略, 则默认为 1(在先前任意的注册函数之后调用该函数). 否则, 请指定以下数字之一:</p>
+  <dd><p>如果为空或省略, 则默认为 1(在先前任意的注册回调之后调用该回调). 否则, 请指定以下数字之一:</p>
     <ul>
-      <li>1 = 在先前任意的注册函数之后调用该函数.</li>
-      <li>-1 = 在先前任意的注册函数之前调用该函数.</li>
-      <li>0 = 不调用该函数.</li>
+      <li>1 = 在先前任意的注册回调之后调用该回调.</li>
+      <li>-1 = 在先前任意的注册回调之前调用该回调.</li>
+      <li>0 = 不调用该回调.</li>
     </ul>
   <p>如果存在 OnClipboardChange 标签, 它总是会被率先调用.</p></dd>
 
 </dl>
 
-<h3 id="Func">Func</h3>
-<pre class="Syntax"><i>FunctionName</i>(Type)</pre>
-<dl>
-  <dt>Type</dt>
-  <dd><p>下列数值之一:</p>
-    <ul>
-      <li>0 = 剪贴板当前为空.</li>
-     <li>1 = 剪贴板包含可以用文本形式表示的内容(包括从资源管理器窗口<a href="../misc/Clipboard.htm#CopiedFiles">复制的文件</a>).</li>
-     <li>2 = 剪贴板包含完全是非文本的内容, 例如图片.</li>
-    </ul>
-  </dd>
-  
-  <dt><em>返回值</em></dt>
-  <dd><p>如果这是最近的或仅有的 OnClipboardChange 函数, 其返回值会被忽略. 否则, 此函数会返回一个非零整数来阻止随后的函数被调用.</p></dd>
-</dl>
-
 <h2 id="label">OnClipboardChange 标签</h2>
-<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用这种方法. 使用 <a href="#function">OnClipboardChange</a> 函数代替.</p>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用 OnClipboardChange 标签. 请使用上面描述的 <a href="#function">OnClipboardChange</a> 函数代替.</p>
 <p>当任何程序(甚至脚本本身) 改变了剪贴板内容时一个以 OnClipboardChange 命名的标签(如果存在) 会自动执行. 这个标签在脚本启动时也会执行一次.</p>
-<p>内置变量 A_EventInfo 包含以下数值之一:<br>
+<p>内置变量 <strong>A_EventInfo</strong> 包含以下数值之一:<br>
 <ul>
   <li>0 = 剪贴板当前为空.</li>
   <li>1 = 剪贴板包含可以用文本形式表示的内容(包括从资源管理器窗口<a href="../misc/Clipboard.htm#CopiedFiles">复制的文件</a>).</li>
@@ -60,22 +57,22 @@
 </ul>
 
 <h2 id="Remarks">备注</h2>
-<p>在 OnClipboardChange 函数或标签正在运行时如果剪贴板内容改变, 这时的剪贴板通知事件会丢失. 如果不希望这样, 在标签的首行指定 <a href="Critical.htm">Critical</a>. 不过, 这样做也会缓冲/延迟在 OnClipboardChange 线程运行期间产生的其他<a href="../misc/Threads.htm">线程</a>的运行(例如热键的按击).</p>
-<p>如果是脚本本身改变了剪贴板内容, 脚本中的 OnClipboardChange 函数或标签通常不会立即执行; 也就是说紧接在改变剪贴板命令后面的命令就像提前运行了一样. 要强制立即执行这个函数或标签, 请在改变剪贴板内容后使用短暂的延迟, 例如 <code><a href="Sleep.htm">Sleep</a> 20</code>.</p>
+<p>在回调或标签正在运行时, 如果剪贴板内容改变, 这时的剪贴板通知事件会丢失. 如果不希望这样, 请使用 <a href="Critical.htm">Critical</a>. 不过, 这样做也会缓冲/延迟在 OnClipboardChange 线程运行期间产生的其他<a href="../misc/Threads.htm">线程</a>的运行(例如热键的按击).</p>
+<p>如果是脚本本身改变了剪贴板内容, 回调或标签通常不会立即执行; 也就是说, 紧接在改变剪贴板语句后面的语句就像提前运行了一样. 要强制立即执行这个回调或标签, 请在改变剪贴板内容后使用短暂的延迟, 例如 <code><a href="Sleep.htm">Sleep</a> 20</code>.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="../misc/Clipboard.htm">Clipboard</a>, <a href="OnExit.htm#function">OnExit()</a>, <a href="OnExit.htm#command">OnExit</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a></p>
+<p><a href="../misc/Clipboard.htm">Clipboard</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnMessage.htm">OnMessage()</a>, <a href="RegisterCallback.htm">RegisterCallback()</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExFnVsLabel">
 <p><a class="ex_number" href="#ExFnVsLabel"></a> 函数 vs. 标签.</p>
-<p>尽管方法不同, 但这两个例子都有相同的效果; 即, 用简短的 ToolTip 显示每次剪贴板的更改. 注意, 脚本首次启动时不会马上调用此函数; 仅当剪贴板的内容发生改变时才会调用该函数.</p>
+<p>尽管语法不同, 但这两个例子都有相同的效果; 即, 用简短的 ToolTip 显示每次剪贴板的更改. 注意: 与标签不同, 回调不会在脚本第一次启动时运行一次, 而只在剪贴板的内容发生更改时运行一次.</p>
 <pre id="FunctionExample">#Persistent
 OnClipboardChange("ClipChanged")
 return
 
-ClipChanged(Type) {
-    ToolTip Clipboard data type: %Type%
+ClipChanged(DataType) {
+    ToolTip Clipboard data type: %DataType%
     Sleep 1000
     ToolTip  <em>; 关闭提示.</em>
 }</pre>
@@ -87,6 +84,21 @@ ToolTip Clipboard data type: %A_EventInfo%
 Sleep 1000
 ToolTip  <em>; 关闭提示.</em>
 return</pre>
+</div>
+
+<div class="ex" id="ExFnObj">
+<p><a class="ex_number" href="#ExFnObj"></a> 与上面相同, 但使用函数对象.</p>
+<pre>#Persistent
+OnClipboardChange(ClipChanged)
+return
+
+class ClipChanged {
+    Call(DataType) {
+        ToolTip Clipboard data type: %DataType%
+        Sleep 1000
+        ToolTip  <em>; 关闭提示.</em>
+    }
+}</pre>
 </div>
 
 </body>

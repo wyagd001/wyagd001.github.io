@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>OnError() | AutoHotkey</title>
-<meta name="description" content="The OnError function specifies a function to run automatically when an unhandled error occurs." />
+<meta name="description" content="The OnError function registers a function to be called automatically whenever an unhandled error occurs." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,49 +11,67 @@
 <body>
 
 <h1>OnError() <span class="ver">[v1.1.29+]</span></h1>
-<p>指定一个在未处理错误发生时自动运行的<a href="../Functions.htm">函数</a>.</p>
+<p>注册一个每当未处理错误发生时自动调用的<a href="../Functions.htm">函数</a>.</p>
 
-<pre class="Syntax"><span class="func">OnError</span>(Func <span class="optional">, AddRemove</span>)</pre>
+<pre class="Syntax"><span class="func">OnError</span>(Callback <span class="optional">, AddRemove</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>Func</dt>
-  <dd><p>当未处理的错误发生时调用的函数名或<a href="../misc/Functor.htm">函数对象</a>. 该函数将异常对象作为参数, 并可能返回一个非零的整数来阻止默认的错误对话框.</p></dd>
-  
+  <dt>Callback</dt>
+  <dd>
+    <p>要调用的函数或<a href="../misc/Functor.htm">函数对象</a>的名称. 若要传递原义的函数名称, 将其括在双引号中.</p>
+    <p>回调函数接受两个参数, 可以<a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(Exception) { ...</pre>
+    <p>虽然给参数的名称并不重要, 但它被赋值为抛出值或 <a href="Throw.htm#Exception">Exception</a> 对象. 如果这是一个对象, 则可以修改它以影响默认错误对话框显示.</p>
+    <p>如果不需要相应的信息, 可以省略回调的参数.</p>
+    <p>回调可以返回一个非零的整数来阻止默认的错误对话框.</p>
+  </dd>
+
   <dt>AddRemove</dt>
-  <dd><p>如果为空或省略, 则默认为 1(在所有之前注册的函数之后调用该函数). 否则, 指定下列数字之一:</p>
+  <dd><p>如果为空或省略, 则默认为 1(在所有之前注册的回调之后调用该回调). 否则, 指定下列数字之一:</p>
     <ul>
-      <li>1 = 在所有之前注册的函数之后调用该函数.</li>
-      <li>-1 = 在所有之前注册的函数之前调用该函数.</li>
-      <li>0 = 不调用该函数.</li>
+      <li>1 = 在所有之前注册的回调之后调用该回调.</li>
+      <li>-1 = 在所有之前注册的回调之前调用该回调.</li>
+      <li>0 = 不调用该回调.</li>
    </ul>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p><em>Func</em> 只会被调用来处理通常会导致显示错误消息的错误或异常. 加载时的错误无法调用, 因为在加载脚本完毕之前无法调用 OnError.</p>
-<p>如果任何错误函数返回一个非零整数, 则线程退出. 如果在错误函数中发生错误(或抛出异常), 则会为新错误显示错误消息并退出线程. 否则, 将调用整个错误函数, 显示错误消息并退出该线程.</p>
-<p><em>Func</em> 的第一个参数接收抛出的值或 <a href="Throw.htm#Exception">Exception(异常)</a> 对象. 如果是一个对象, 可以修改它来影响默认的错误对话框显示的内容.</p>
-<p><em>Func</em> 在当前<a href="../misc/Threads.htm">线程</a>中被调用, 在线程退出之前(即在调用堆栈展开之前).</p>
+<p><em>Callback</em> 只在出现错误或异常时才会被调用, 这些错误或异常通常会导致显示错误消息. 它不能被加载时错误调用, 因为 OnError 在脚本加载之后才能被调用.</p>
+<p>如果任何回调返回一个非零整数, 则线程退出. 如果在回调中发生错误(或抛出异常), 则会为新错误显示错误消息并退出线程. 否则, 将调用所有回调函数, 显示错误消息并退出该线程.</p>
+<p>在当前<a href="../misc/Threads.htm">线程</a>调用 <em>Callback</em>, 在其退出之前(即在调用堆栈展开之前).</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="Try.htm">Try</a>, <a href="Catch.htm">Catch</a>, <a href="Throw.htm">Throw</a>, <a href="OnExit.htm#function">OnExit()</a>, <a href="OnExit.htm#command">OnExit</a></p></p>
+<p><a href="Try.htm">Try</a>, <a href="Catch.htm">Catch</a>, <a href="Throw.htm">Throw</a>, <a href="OnExit.htm">OnExit</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 将脚本造成的错误记录到文本文件中, 而不是显示给用户.</p>
-<pre>
-OnError("LogError")
+<pre>OnError("LogError")
 %cause% := error
 
-LogError(exception) {
-    FileAppend % "Error on line " exception.Line ": " exception.Message "`n"
+LogError(exc) {
+    FileAppend % "Error on line " exc.Line ": " exc.Message "`n"
         , errorlog.txt
     return true
-}
-</pre>
+}</pre>
+</div>
+
+<div class="ex" id="ExObj">
+<p><a class="ex_number" href="#ExObj"></a> 与上面相同, 但使用函数对象.</p>
+<pre>OnError(LogError)
+%cause% := error
+
+class LogError {
+    Call(exc) {
+        FileAppend % "Error on line " exc.Line ": " exc.Message "`n"
+            , errorlog.txt
+        return true
+    }
+}</pre>
 </div>
 
 </body>
