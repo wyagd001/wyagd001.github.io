@@ -35,9 +35,9 @@
       <li>消息的 WPARAM 值.</li>
       <li>消息的 LPARAM 值.</li>
       <li>消息号, 可用在用一个回调监听多个消息时.</li>
-      <li>The HWND (unique ID) of the window or control to which the message was sent. The HWND can be used directly in a <a href="../misc/WinTitle.htm#ahk_id">WinTitle parameter</a>.</li>
+      <li>发送消息到的窗口或控件的 HWND(唯一 ID). HWND 可以直接在 <a href="../misc/WinTitle.htm#ahk_id">WinTitle 参数</a>中使用.</li>
     </ol>
-    <p>You can omit one or more parameters from the end of the callback's parameter list if the corresponding information is not needed, but in this case an asterisk must be specified as the final parameter, e.g. <code>MyCallback(Param1, *)</code>.</p>
+    <p>如果不需要相应的信息, 可以从回调参数列表的末尾省略一个或多个参数, 但在这种情况下, 必须指定星号作为最后一个参数, 例如 <code>MyCallback(Param1, *)</code>.</p>
     <p>WPARAM 和 LPARAM 是无符号的 32 位整数(从 0 到 2<sup>32</sup>-1) 或有符号的 64 位整数(从 -2<sup>63</sup> 到 2<sup>63</sup>-1), 这取决于运行脚本的 exe 程序是 32 位还是 64 位. 对于 32 位的脚本, 如果传入参数预期为有符号整数, 则可以参照下面的这个例子得到负数:</p>
     <pre>if (A_PtrSize = 4 &amp;&amp; wParam &gt; 0x7FFFFFFF)  <em>; 检查 <a href="../Variables.htm#PtrSize">A_PtrSize</a> 以确保脚本为 32 位.</em>
     wParam := -(~wParam) - 1</pre>
@@ -55,8 +55,8 @@
 </dl>
 
 <h2 id="Usage">使用</h2>
-<p>Any number of callbacks can monitor a given <em>MsgNumber</em>.</p>
-<p>Either of these two lines registers a callback to be called <u>after</u> any previously registered callbacks:</p>
+<p>任意数量的回调都可以监视给定的 <em>MsgNumber</em>.</p>
+<p>这两行中的任何一行都注册了一个回调, 在先前注册的回调 <u>之后</u> 被调用:</p>
 <pre>OnMessage MsgNumber, Callback     <em>; 选项 1 - 省略 MaxThreads</em>
 OnMessage MsgNumber, Callback, 1  <em>; 选项 2 - 指定 MaxThreads 为 1</em></pre>
 <p>注册一个回调, 以便在任何先前注册的回调 <u>之前</u> 被调用:</p>
@@ -64,13 +64,13 @@ OnMessage MsgNumber, Callback, 1  <em>; 选项 2 - 指定 MaxThreads 为 1</em><
 <p>要取消注册一个回调, 将 <em>MaxThreads</em> 指定为 0:</p>
 <pre>OnMessage MsgNumber, Callback, 0</pre>
 
-<h2 id="Additional_Information_Available_to_the_Callback">Additional Information Available to the Callback</h2>
+<h2 id="Additional_Information_Available_to_the_Callback">Callback 中可获取的额外信息</h2>
 <p>除了上面接收到的参数外, 回调还可以查询内置变量 <strong>A_EventInfo</strong>, 如果消息是通过 SendMessage 发送的, 则其为 0. 如果是通过 PostMessage 发送的, 则其为消息发出时的 <a href="../Variables.htm#TickCount">tick-count 时间</a>.</p>
 <p>回调的<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>初始与消息发送到的父窗口相同(即使消息是发送到控件的). 如果窗口是隐藏的, 但不是 GUI 窗口(例如<a href="../Program.htm#main-window">脚本的主窗口</a>), 在使用它之前打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 例如:</p>
 <pre>DetectHiddenWindows True
 MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口的唯一 ID.</em></pre>
 
-<h2 id="What_the_Callback_Should_Return">What the Callback Should Return</h2>
+<h2 id="What_the_Callback_Should_Return">Callback 应该返回什么</h2>
 <p>如果回调使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至没有使用 Return), 则当此回调结束时, 传入的消息将继续被正常处理. 同样的情况也会出现在使用 <a href="Exit.htm">Exit</a> 回调或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与此相反, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x0201) 的回调可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发送的消息), 返回哪个整数并不重要; 不过如果不确定, 0 通常是最安全的.</p>
 <p>有效返回值的范围取决于运行脚本的 exe 文件是 32 位还是 64 位. 对于 32 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>) 脚本, 非空的返回值必须在 -2<sup>31</sup> 和 2<sup>32</sup>-1 之间, 对于 64 位(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code>) 脚本, 必须在 -2<sup>63</sup> 和 2<sup>63</sup>-1 之间.</p>
 <p>如果有多个回调一个给定的消息号, 它们会被逐一调用, 直到其中一个回调返回一个非空值.</p>
