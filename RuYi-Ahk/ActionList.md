@@ -22,22 +22,22 @@ layout: default
 |1011|E70F|记事本打开|选中文件|使用记事本打开选定文件|openwith&#124;Notepad.exe|
 |1012|E756|CMD|资源管理器|打开cmd, 并跳转到当前资源管理器窗口路径|run&#124;cmd.exe /k cd /d "%Windy_CurWin_FolderPath%"|
 |1013|f0b2|程序和功能|无条件|打开系统的程序管理删除界面|run&#124;appwiz.cpl|
-|1014|ea6c|计算机管理|无条件|打开计算机管理|run&#124;compmgmt.msc|
+|1014|ea6c|计算机管理|无条件|打开计算机管理(任务计划, 事件查看, 共享文件夹, 用户和组, 设备管理器, 磁盘管理, 服务管理)|run&#124;compmgmt.msc|
 |1015|e9f5|服务管理|无条件|打开服务管理|run&#124;services.msc|
 |1016|e9f9|任务管理器|无条件|打开任务管理器|run&#124;taskmgr.exe|
 |1017|E70F|记事本|无条件|打开系统记事本|run&#124;notepad.exe|
 |1018|EC7A|系统工具|子面板||gui&#124;系统工具|
 |1019|E8EF|计算器|无条件|打开计算器|run&#124;calc.exe|
-|1020|EF16|主策略|无条件|打开主策略|run&#124;gpedit.msc|
-|1021|e835|启动配置|无条件|打开启动配置|run&#124;msconfig.exe|
+|1020|EF16|主策略|无条件|打开本地组策略编辑器|run&#124;gpedit.msc|
+|1021|e835|启动配置|无条件|打开系统配置(msconfig, 启动, 引导)|run&#124;msconfig.exe|
 |1022|EF58|注册表|无条件|打开注册表|run&#124;regedit.exe|
 |1023|EA1F|系统信息|无条件|打开系统信息|run&#124;msinfo32.exe|
-|1024|ee92|事件查看|无条件|打开事件|run&#124;eventvwr.exe|
+|1024|ee92|事件查看|无条件|打开系统事件查看器|run&#124;eventvwr.exe|
 |1025|ef58|系统属性|无条件|打开系统属性|run&#124;control.exe system|
 |1026|E756|cmd|无条件|打开 CMD|run&#124;cmd.exe|
 |1027|EF16|安全策略|无条件|打开安全策略|run&#124;secpol.msc|
 |1028|ebc4|磁盘清理|无条件|打开磁盘清理|run&#124;cleanmgr.exe|
-|1029|e121|任务管理|无条件|打开任务管理|run&#124;taskschd.msc|
+|1029|e121|任务管理|无条件|打开系统任务计划程序|run&#124;taskschd.msc|
 |1030|e728|通用目录|菜单|一些通用的目录面板(我的电脑,回收站等)|menu&#124;通用目录|
 |1031|E734|通用目录|子面板|一些通用的目录面板(我的电脑,回收站等)|GUI&#124;通用目录|
 |1032|E734|收藏夹|子面板|自定义的目录收藏夹|GUI&#124;自定义收藏夹|
@@ -46,14 +46,14 @@ layout: default
 |1035|e728|通用2|子面板|选中文件的通用动作的子面板2|GUI&#124;文件通用2|
 |1036|efa5|文件改名|选中文件|修改选中的文本文件的名称和扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名修改.ahk" "%candysel%"|
 |1037|f87e|打开选中|选中对象|运行选中的文本(路径(程序, 文件, 目录), 网址, 注册表地址)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\运行选中的文本.ahk" "%CandySel%"|
-|1038|E70F|编辑|选中文件|编辑选中的lnk快捷方式文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\LnkEditor.ahk" "%CandySel%"|
+|1038|E70F|编辑链接|选中文件|编辑选中的lnk快捷方式文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\LnkEditor.ahk" "%CandySel%"|
 |1039|e896|放入同名|选中文件|将选中的文件放入同名的文件夹中(自动创建目录)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\放入同名文件夹.ahk" "%CandySel%"|
 |1040|E8DE|解散目录|选中文件|将选中文件夹中的文件移动到当前目录后, 删除选中文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\解散文件夹.ahk" "%CandySel%"|
 |1041|E735|收藏夹|子面板|以当前窗口打开指定文件夹|GUI&#124;收藏夹_当前窗口|
 |1042|E838|C:\ |资源管理器|在当前资源管理器窗口打开动作中指定的目录 C:\ |run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\当前窗口打开.ahk" "C:\"|
 |1043|eb41|百度|无条件|打开百度的网页|run&#124;https://www.baidu.com|
 |1044|f17f|转码|选中文件|将选中的文本文件转换编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件转码.ahk" "%candysel%"|
-|1045|eafc|软硬链接|选中文件|为选中的文件创建软硬链接|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件创建软硬链接.ahk" "%candysel%"|
+|1045|eafc|创建软硬链接|选中文件|为选中的文件创建软硬链接|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件创建软硬链接.ahk" "%candysel%"|
 |1046|ed2b|文件属性|选中文件|修改选中的文件的属性(只读, 系统, 隐藏, 修改时间等)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件属性.ahk" "%candysel%"|
 |1047|e7ad|运行窗口进程|任意窗口|运行一次窗口同名的进程|run&#124;%Windy_CurWin_Fullpath%|
 |1048|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录|run&#124;explorer.exe /select,%Windy_CurWin_Fullpath%|
@@ -220,8 +220,8 @@ layout: default
 |1209|eb9f|测试|无条件|测试插件脚本里的例子|canfunc&#124;ExecSendToDll&#124;%CandySel%|
 |1210|ed11|完整歌单|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.cookie='os=pc';f()"|
 |1211|ea47|下一页|Chrome|Chrome 浏览器自动下一页|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:var Re=new RegExp('(下~&#124;后)(一~&#124;\s)*(页~&#124;頁~&#124;章~&#124;篇~&#124;翻)','i');var a=document.getElementsByTagName('A');for(var i=0;i<a.length;i++){if(Re.test(a[i].innerHTML)){if(a[i].href.substr(0,11).toLowerCase()=='javascript:')a[i].click();else document.location.href=a[i].href;break}}"|
-|1212|ed11|Ini_Fav|选中文件|Ini 文件式的收藏夹菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹菜单.ahk" "%CandySel%"|
-|1213|ed11|Ini_Opw|选中文件|Ini 文件式的程序菜单, 使用菜单中的程序打开选中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_程序打开选中文件.ahk" "%CandySel%"|
+|1212|ed11|Ini_Fav|选中文件|Ini 文件显示为菜单(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹菜单.ahk" "%CandySel%"|
+|1213|ed11|Ini_Opw|选中文件|Ini 文件显示为程序菜单, 使用菜单中的程序打开选中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_程序打开选中文件.ahk" "%CandySel%"|
 |1214|f6fa|百度搜索|选中文件|百度搜索选中文件的文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel_FileName%|
 |1215|f093|Adb|子面板|手机Adb的子面板|Gui&#124;Adb|
 |1216|e898|收藏夹|Chrome|快捷键打开Chrome的收藏夹|Keys&#124;^+o|
@@ -230,9 +230,9 @@ layout: default
 |1219|e89a|到手机|选中文件|发送电脑选中文件到手机的根目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\发送文件到手机目录.ahk" "%CandySel%"|
 |1220|e16d|放入剪贴板|选中文件|将选中的文本文件内容放入剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件内容放入剪贴板.ahk" "%CandySel%"|
 |1221|E734|收藏夹|子面板|浏览器收藏夹菜单的子面板|Gui&#124;浏览器收藏夹|
-|1222|E734|360收藏夹|无条件|将360浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\360浏览器收藏夹.ahk"|
-|1223|E734|Chrome收藏夹|无条件|将Chrome浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk"|
-|1224|e16d|Edge收藏夹|无条件|将Edge浏览器的收藏夹显示为菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MsEdge收藏夹.ahk"|
+|1222|E734|360收藏夹|无条件|将360浏览器的收藏夹显示为菜单(只支持一级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\360浏览器收藏夹.ahk" "%CandySel%"|
+|1223|E734|Chrome收藏夹|无条件|将Chrome浏览器的收藏夹显示为菜单(只支持两级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk" "%CandySel%"|
+|1224|e16d|Edge收藏夹|无条件|将Edge浏览器的收藏夹显示为菜单(只支持两级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MsEdge收藏夹.ahk" "%CandySel%"|
 |1225|e8a3|文件库搜索|选中对象|使用选中对象在文件库中搜索文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\数据库_文件库中搜索文件.ahk" "%CandySel%"|
 |1226|e184|打开目录|对话框|显示一个菜单, 对话框跳转到选择的项目|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框_打开目录.ahk" "%Windy_CurWin_id%"|
 |1227|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)|run&#124;sysdm.cpl|
@@ -241,9 +241,9 @@ layout: default
 |1230|E894|结束进程|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F&#124;&#124;hide|
 |1231|ef58|环境变量|无条件|环境变量编辑备份脚本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\环境变量.ahk"|
 |1232|ef58|新增Path|资源管理器|将资源管理器当前打开的路径加入环境变量Path中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\Environment.ahk" "%Windy_CurWin_FolderPath%"|
-|1233|e74a|搜索动作|无条件|搜索运行动作|Cando&#124;ActionSR|
+|1233|e11a|搜索动作|无条件|搜索和运行动作的界面|Cando&#124;ActionSR|
 |1234|ec24|Dll注册|选中文件|注册选中的dll文件|run&#124;regsvr32.exe "%CandySel%"|
-|1235|ec24|Dll卸载|选中文件|卸载选中的dll文件|run&#124;regsvr32.exe /u "%CandySel%"|
+|1235|e789|Dll卸载|选中文件|卸载选中的dll文件|run&#124;regsvr32.exe /u "%CandySel%"|
 |1236|e74c|Msi解压|选中文件|将选中的msi文件解压|run&#124;msiexec.exe /a "%CandySel%" /qb TARGETDIR="%CandySel_ParentPath%\%CandySel_FileNameNoExt%"|
 |1237|e74c|chm解压|选中文件|解压缩选中的chm文件|run&#124;hh.exe -decompile %CandySel_FileNameNoExt% %CandySel_FileName%&#124;%CandySel_ParentPath%|
 |1238|e8b1|前后交换|选中文件|重命名文件, 将文件名使用分隔符分为前后两部分,然后交换其位置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名前后交换.ahk" "%CandySel%"|
@@ -257,8 +257,8 @@ layout: default
 |1246|EDE3|通用3|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用3|
 |1247|e8f9|加入Ini_Fav|任意窗口|将窗口的进程加入Ini收藏夹|canfunc&#124;FileToIniFav&#124;%Windy_CurWin_Fullpath%|
 |1248|eda4|快捷方式到桌面|任意窗口|创建窗口的进程文件的文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%Windy_CurWin_Fullpath%|
-|1249|e8c8|文件夹结构|选中文件夹|将选中文件夹的的结构复制到当前文件夹(仅复制选中文件夹及其下的子文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%"|
-|1250|e8c8|结构+空文件|选中文件夹|将选中文件夹的的结构和空白文件复制到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 1|
+|1249|e8c8|文件夹结构|选中文件夹|将选中文件夹的结构复制到当前文件夹(仅复制选中文件夹及其下的子文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%"|
+|1250|e8c8|结构+空文件|选中文件夹|将选中文件夹的结构和空白文件复制到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 1|
 |1251|e16d|复制文件名|选中文件|将选中文件的文件名放入剪贴板|setclip&#124;%CandySel_FileName%|
 |1252|e8d3|Ahk控制|子面板|控制Ahk脚本的动作集|Gui&#124;A_脚本控制|
 |1253|f259|主窗口|Ahk窗口|主窗口|canfunc&#124;PostMessToAhk&#124;65300&#124;%Windy_CurWin_id%|
@@ -276,7 +276,61 @@ layout: default
 |1265|e8ec|设置如意|子面板|管理和设置如意的子面板|Gui&#124;如意|
 |1266|e9d5|多文件通用|子面板|多文件通用子面板|Gui&#124;多文件通用|
 |1267|e1a5|移至新文件夹|选中文件|将选中的文件移动到同级的新建文件夹中|canfunc&#124;CF_FileMoveToFolder&#124;%CandySel%|
-|1268|f103|文件临时共享|选中文件|将选中文件共享到局域网, 局域网内的手机或电脑打开网址下载文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件临时共享.ahk" "%CandySel%"|
-|1269|e8b3|Zip压缩|选中文件|将选中的文件添加到 Zip 压缩包中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip压缩.ahk" "%CandySel%"|
-|1270|e74c|Zip解压|选中文件|将选中的 Zip 文件自动解压到压缩包所在文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip智能解压.ahk" "%CandySel%"|
-|1271|e74c|Rar解压|选中文件|将选中的 Rar 文件自动解压到压缩包所在文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\UnRar.ahk" "%CandySel%"|
+|1268|f103|临时共享|选中文件|将选中文件共享到局域网, 局域网内的手机和电脑使用浏览器打开网址, 或手机扫码下载文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件临时共享.ahk" "%CandySel%"|
+|1269|e8b3|Zip压缩|选中文件|将选中的文件添加到 Zip 压缩包中(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip压缩.ahk" "%CandySel%"|
+|1270|e74c|Zip解压|选中文件|将选中的 Zip 文件自动解压到压缩包所在文件夹(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip智能解压.ahk" "%CandySel%"|
+|1271|e74c|Rar解压|选中文件|将选中的 Rar 文件自动解压到压缩包所在文件夹(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\UnRar.ahk" "%CandySel%"|
+|1272|f552|安全和维护|无条件|打开系统安全和维护界面|run&#124;wscui.cpl|
+|1273|e9d9|性能监视器|无条件|打开系统性能监视器|run&#124;perfmon.exe|
+|1274|e9f9|资源监视器|无条件|打开系统资源监视器|run&#124;resmon.exe|
+|1275|e74e|磁盘管理|无条件|打开系统磁盘管理工具|run&#124;diskmgmt.msc|
+|1276|ec26|共享管理|无条件|打开系统共享文件夹管理器|run&#124;fsmgmt.msc|
+|1277|e8cf|用户和组|无条件|打开本机用户和组|run&#124;lusrmgr.msc|
+|1278|ec31|屏幕键盘|无条件|打开系统的屏幕键盘|run&#124;osk.exe|
+|1279|f5ff|电源选项|无条件|打开系统的电源选项|run&#124;powercfg.cpl|
+|1280|f623|声音与音频|无条件|打开系统的声音与音频设置|run&#124;mmsys.cpl|
+|1281|e95d|设备管理|无条件|打开系统的设备管理器|run&#124;hdwwiz.cpl|
+|1282|f56d|设备管理|无条件|打开系统的设备管理器|run&#124;devmgmt.msc|
+|1283|ec27|Internet|无条件|打开系统的 Internet 选项|run&#124;inetcpl.cpl|
+|1284|ed15|用户账户|无条件|打开系统用户账户对话框|run&#124;netplwiz|
+|1285|e995|音量合成|无条件|打开系统音量合成器|run&#124;sndvol|
+|1286|f8a6|文件选项|无条件|打开系统文件夹选项|run&#124;RunDll32.exe shell32.dll,Options_RunDLL|
+|1287|f8a6|文件夹选项|无条件|打开系统文件夹选项|run&#124;control.exe folders|
+|1288|f17f|字体设置|无条件|打开字体文件夹|run&#124;fonts|
+|1289|f17f|字体设置|无条件|打开控制面板字体文件夹|run&#124;control.exe fonts|
+|1290|e835|功能管理|无条件|打开启用或关闭 Windows 功能对话框|run&#124;OptionalFeatures.exe|
+|1291|f69e|管理工具|无条件|打开控制面板管理工具文件夹|run&#124;control admintools|
+|1292|ed5a|日期时间|无条件|打开控制面板日期和时间设置|run&#124;timedate.cpl|
+|1293|e962|鼠标属性|无条件|打开控制面板鼠标属性|run&#124;main.cpl|
+|1294|e775|区域和语言|无条件|打开控制面板区域和语言选项|run&#124;intl.cpl|
+|1295|f8b0|任务栏设置|无条件|打开任务栏设置|run&#124;rundll32.exe shell32.dll, Options_RunDLL 1|
+|1296|ed5a|时间戳|选中文本|选中的文本进行时间戳和日期时间的互相转换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_时间戳转换.ahk" "%CandySel%"|
+|1297|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(整合版)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(整合版).ahk" "%CandySel%"|
+|1298|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按 Ahk 遍历顺序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表.ahk" "%CandySel%"|
+|1299|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按创建时间降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按创建时间降序).ahk" "%CandySel%"|
+|1300|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按最近修改时间降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按最近修改时间降序).ahk" "%CandySel%"|
+|1301|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按文件大小降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按文件大小降序).ahk" "%CandySel%"|
+|1302|e16d|复制信息|选中文件|将资源管理器选中文件各列显示的信息复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制资源管理器各列的信息.ahk" "%CandySel%"|
+|1303|e8c8|ADS管理|选中文件夹|列出选中文件夹中带有ADS数据的文件, 并可以对ADS数据进行管理(新建, 删除, 另存为)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件ADS.ahk" "%CandySel%"|
+|1304|f16c|添加 ADS|选中文件|为选中的文件添加文本的 ADS 流(流名称为 ADS1, ADS2)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\添加文本到 ADS 流.ahk" "%CandySel%"|
+|1305|ed5a|HTML转文本|剪贴板|将剪贴板中的 HTML 源代码去掉标签转换为纯文本后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转纯文本后粘贴.ahk"|
+|1306|ed5a|文本转HTML|剪贴板|将剪贴板中的 HTML 源代码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转html后粘贴.ahk"|
+|1307|ed5a|中英符号|选中文本|选中的标点符号中英互转(没选中时光标在标点后也可以进行转换)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中英文符号转换.ahk" "%CandySel%"|
+|1308|E77F|粘贴All|ET|将当前选中的单元格内容复制到所有以数字为名称的工作表的相同位置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_当前单元格内容复制到所有数字名称的工作表相同位置.ahk"|
+|1309|f32a|软链接管理|选中文件夹|列出选中文件夹的软链接文件和文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件软链接.ahk" "%CandySel%"|
+|1310|f32a|硬链接管理|选中文件夹|列出选中文件夹的硬链接文件和文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件硬链接.ahk" "%CandySel%"|
+|1311|e16d|软硬链接检查|选中文件|检查选中文件是否存在硬链接文件, 或是否是软链接文件及显示其目标文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件软硬链接检查.ahk" "%CandySel%"|
+|1312|E77F|列宽All|ET|所有以数字为名称的工作表的相同列的宽度设置为当前选中的单元格的列宽|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_所有数字名称的工作表相同列设置当前单元格列宽.ahk"|
+|1313|e8ec|如意托盘|无条件|点击如意托盘图标显示的面板(窗口为桌面, 未选中状态剪贴板获取为空)|Cando&#124;TM_ShowMG|
+|1314|E77F|水平对齐|ET|将当前选中的单元格对齐方式复制到所有以数字为名称的工作表的相同位置的单元格中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_当前单元格水平对齐方式复制到所有数字名称的工作表相同位置.ahk"|
+|1315|e9d5|剪贴板|子面板|剪贴板子面板|Gui&#124;剪贴板通用|
+|1316|f17f|管理编码|选中文件夹|列出选中文件夹中文本文件编码, 批量转码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文本文件编码.ahk" "%CandySel%"|
+|1317|ed11|Ini_Fav|无条件|Ini 文件显示为Gui面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹界面.ahk"|
+|1318|E77F|插入列|ET|所有以数字为名称的工作表的相同位置的右侧插入一列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表相同位置右边批量插入一列.ahk"|
+|1319|E77F|删除列|ET|所有以数字为名称的工作表批量删除选中列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表批量删除选中列.ahk"|
+|1320|f151|数字分表|子面板|ET_批量子面板|Gui&#124;ET_批量|
+
+
+
+
+
