@@ -12,7 +12,7 @@
 
 <h1>SetTitleMatchMode</h1>
 
-<p>设置在类似 <a href="WinWait.htm">WinWait</a> 命令中 WinTitle 参数的匹配模式.</p>
+<p>设置在类似 <a href="WinWait.htm">WinWait</a> 命令中 <a href="../misc/WinTitle.htm"><em>WinTitle</em> 参数</a> 的匹配模式.</p>
 
 <pre class="Syntax">
 <span class="func">SetTitleMatchMode</span>, MatchMode
@@ -22,51 +22,48 @@
 <dl>
 
   <dt>MatchMode</dt>
-  <dd><p>指定下列数字的其中一个或单词 RegEx:</p>
+  <dd><p>指定下列值之一:</p>
     <ul>
-      <li>1 = 窗口标题必须以指定的 <em>WinTitle</em> 开头才能匹配.</li>
-      <li>2 = 窗口标题的任意位置包含 <em>WinTitle</em> 才能匹配.</li>
-      <li>3 = 窗口标题必须和 <em>WinTitle</em> 完全一致才能匹配.</li>
-      <li id="RegEx">RegEx <span class="ver">[v1.0.45+]</span> = <em>WinTitle</em>, <em>WinText</em>, <em>ExcludeTitle</em> 以及 <em>ExcludeText</em> 支持<a href="../misc/RegEx-QuickRef.htm">正则表达式</a>. 这些正则表达式在与命令一起使用时, 不要把正则表达式括在引号中. 例如: <code><a href="WinActivate.htm">WinActivate</a> Untitled.*Notepad</code>.
-        <p>RegEx 还适用于 <a href="../misc/WinTitle.htm#ahk_class">ahk_class</a> 和 <a href="../misc/WinTitle.htm#ahk_exe">ahk_exe</a>; 例如, <code>ahk_class IEFrame</code> 会搜索类名包含 <em>IEFrame</em> 的所有窗口(这是由于在默认情况下, 正则表达式在目标字符串 <em>任意位置</em> 查找匹配).</p>
-        <p>对于 <em>WinTitle</em>, 每个项目都是分开的. 例如, 在 <code>i)^untitled ahk_class i)^notepad$ ahk_pid %mypid%</code>, <code>i)^untitled</code> 和 <code>i)^notepad$</code> 都是独立的正则表达式, 且 <code>%mypid%</code> 总是比较数值(它并不是一个正则表达式).</p>
-        <p>对于 <em>WinText</em>, 每个文本元素(比如: 每个控件的文本) 都是独立匹配正则表达式的.  因此, 它不可能有跨越多个文本元素的匹配.</p>
-      </li>
-    </ul>
-      <p>上面的模式还会对 <em> ExcludeTitle</em> 产生与 <em>WinTitle</em> 相同的影响. 例如, 模式 3 要求被排除的窗口的标题必须准确匹配 <em>ExcludeTitle</em>.</p>
+      <p><strong>1:</strong> 默认行为. 窗口标题必须以指定的 <em>WinTitle</em> 开头才能匹配.</p>
+      <p><strong>2:</strong>  窗口标题的任意位置包含 <em>WinTitle</em> 才能匹配.</p>
+      <p><strong>3:</strong> 窗口标题必须和 <em>WinTitle</em> 完全一致才能匹配.</p>
+      <p id="RegEx"><strong>RegEx</strong> <span class="ver">[v1.0.45+]</span>: 使 <em>WinTitle</em>, <em>WinText</em>, <em>ExcludeTitle</em> 和 <em>ExcludeText</em> 支持<a href="../misc/RegEx-QuickRef.htm">正则表达式</a>, 例如 <code><a href="WinActivate.htm">WinActivate</a> Untitled.*Notepad</code>. RegEx 还适用于 <a href="../misc/WinTitle.htm#ahk_class">ahk_class</a> 和 <a href="../misc/WinTitle.htm#ahk_exe">ahk_exe</a>, 例如 <code>ahk_class IEFrame</code> 会搜索任何类名包含 <em>IEFrame</em> 的窗口(这是由于在默认情况下, 正则表达式在目标字符串 <em>anywhere</em> 查找匹配). 对于 <em>WinTitle</em>, 每个项目都是分开的. 例如, 在 <code>i)^untitled ahk_class i)^notepad$ ahk_pid %mypid%</code>, <code>i)^untitled</code> 和 <code>i)^notepad$</code> 都是独立的正则表达式, 且 <code>%mypid%</code> 总是比较数值(它并不是一个正则表达式). 对于 <em>WinText</em>, 每个文本元素(比如: 每个控件的文本) 都是独立匹配正则表达式的. 因此, 它不可能有跨越多个文本元素的匹配.</p>
+      <p>上面的模式还会对 <em>ExcludeTitle</em> 产生与 <em>WinTitle</em> 相同的影响. 例如, 模式 3 要求被排除的窗口的标题必须准确匹配 <em>ExcludeTitle</em>.</p>
     </dd>
 
   <dt>Speed</dt>
   <dd>
-    <p>以下单词之一来指定 <em>WinText</em> 和 <em>ExcludeText</em> 参数应如何匹配:</p>
-  	<p><strong>Fast</strong>: 这是默认行为. 性能比起 <em>Slow</em> 有较大提升, 但某些类型的控件无法被检测到. 例如, 通常能检测到 Static 和 Button 控件中的文本, 但不能检测到 Edit 控件的, 除非它们属于脚本.</p>
-	<p><strong>Slow</strong>: 速度慢得多, 但适用于所有响应 <a href="https://learn.microsoft.com/windows/win32/winmsg/wm-gettext">WM_GETTEXT</a> 消息的控件.</p>
+    <p>指定以下单词之一, 来指示 <em>WinText</em> 和 <em>ExcludeText</em> 参数应如何匹配:</p>
+    <p><strong>Fast:</strong> 默认行为. 性能比起慢速模式有较大提升, 但某些类型的控件无法被检测到. 例如, 通常能检测到 Static 和 Button 控件中的文本, 但不能检测到 Edit 控件的, 除非它们属于脚本.</p>
+	<p><strong>Slow:</strong> 速度慢得多, 但适用于所有响应 <a href="https://learn.microsoft.com/windows/win32/winmsg/wm-gettext">WM_GETTEXT</a> 消息的控件.</p>
   </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>此命令影响所有窗口函数和命令的行为, 例如 <a href="WinExist.htm">WinExist()</a> 和 <a href="WinActivate.htm">WinActivate</a>. <a href="WinGetText.htm">WinGetText</a> 与其他命令一样会受到影响, 但它总是使用 <em>Slow</em> 方法来检索文本.</p></p>
-<p>如果未指定, 则 TitleMatchMode 默认为 1 和 <em>fast</em> 模式.</p>
+<p>如果没有使用过 SetTitleMatchMode, 默认的匹配模式为 1, 且默认的速度为 Fast.</p>
+<p>此命令影响所有窗口函数和命令的行为, 例如 <a href="WinExist.htm">WinExist()</a> 和 <a href="WinActivate.htm">WinActivate</a>. <a href="WinGetText.htm">WinGetText</a> 与其他命令一样会受到影响, 但它总是使用慢速模式方法来检索文本.</p></p>
 <p>如果使用<a href="../misc/WinTitle.htm#ahk_group">窗口组</a>, 则当前标题匹配模式适用于组中的每个单独的规则.</p>
-<p>通常, 在使用标题和 <em>快速</em> 模式的文本无法唯一标识目标窗口时才应该使用 <em>慢速</em> 模式. 这是因为当任意一个应用程序窗口正忙或 "无响应" 时慢速模式会非常慢.</p>
+<p>通常, 在使用标题和快速模式的文本无法唯一标识目标窗口时, 才应该使用慢速模式. 这是因为当任意一个应用程序窗口正忙或 "无响应" 时慢速模式会非常慢.</p>
 <p>AutoHotkey 自带的 Window Spy 自定义版本会在单独区域中显示 <em>slow TitleMatchMode</em> 文本, 这样很容易判断是否需要使用 <em>慢速</em> 模式.</p>
 <p>如果您想同时改变两个属性, 请执行两次命令, 例如:</p>
 <pre>SetTitleMatchMode, 2
-SetTitleMatchMode, slow</pre>
+SetTitleMatchMode, Slow</pre>
 <p>内置变量 <strong>A_TitleMatchMode</strong> 和 <strong>A_TitleMatchModeSpeed</strong> 包含了当前的设置.</p>
-<p>不管当前的 TitleMatchMode 如何, <em>WinTitle</em>, <em>WinText</em>, <em>ExcludeTitle</em> 和 <em>ExcludeText</em> 都是区分大小写的. 唯一的例外是带<a href="../misc/RegEx-QuickRef.htm#Options">不区分大小写选项</a>的 RegEx 模式; 例如: <code><strong>i)</strong>untitled - notepad</code>.</p>
-<p>每个新运行的<a href="../misc/Threads.htm">线程</a>(例如<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">定时</a>子程序) 都会以此命令的默认设置开始. 通过在脚本的自动执行段(脚本的顶部) 使用此命令可以改变这个默认设置.</p>
+<p>不管当前的匹配模式如何, <em>WinTitle</em>, <em>WinText</em>, <em>ExcludeTitle</em> 和 <em>ExcludeText</em> 都是区分大小写的. 唯一的例外是带<a href="../misc/RegEx-QuickRef.htm#Options">不区分大小写选项</a>的 RegEx 模式, 例如: <code><strong>i)</strong>untitled - notepad</code>.</p>
+<p>每个新运行的<a href="../misc/Threads.htm">线程</a>(例如<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">定时</a>子程序) 都会以此命令的默认设置开始. 通过在脚本的<a href="../Scripts.htm#auto">自动执行段</a>(脚本的顶部) 使用此命令可以改变这个默认设置.</p>
+
 <h2 id="Related">相关</h2>
-<p><a href="SetWinDelay.htm">SetWinDelay</a>, <a href="WinExist.htm">WinExist()</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="RegExMatch.htm">RegExMatch()</a></p>
+<p><a href="../misc/WinTitle.htm">The WinTitle Parameter</a>, <a href="SetWinDelay.htm">SetWinDelay</a>, <a href="WinExist.htm">WinExist()</a>, <a href="WinActivate.htm">WinActivate</a>, <a href="RegExMatch.htm">RegExMatch()</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExMatchMode">
-<p><a class="ex_number" href="#ExMatchMode"></a> 允许窗口函数和命令去操作在任何地方包含 <var>WinTitle</var>  而不是开头处的窗口.</p>
+<p><a class="ex_number" href="#ExMatchMode"></a> 允许窗口命令去操作在任何地方包含 <var>WinTitle</var>  而不是开头处的窗口.</p>
 <pre>SetTitleMatchMode 2</pre>
 </div>
 
 <div class="ex" id="ExSpeed">
-<p><a class="ex_number" href="#ExSpeed"></a> 允许窗口函数和命令检测更多的控件类型, 但性能较低. 注意, Slow/Fast 可以独立于所有其他模式进行设置.</p>
+<p><a class="ex_number" href="#ExSpeed"></a> 允许窗口命令尽可能地检测更多的控件类型, 但性能较低. 注意, Slow/Fast 可以独立于所有其他模式进行设置.</p>
 <pre>SetTitleMatchMode Slow</pre>
 </div>
 

@@ -22,20 +22,13 @@
   <dd><p>用来存储获取的文本的输出变量的名称.</p></dd>
 
   <dt>Control</dt>
-  <dd><p>可以是 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 如果此参数为空或省略, 则使用目标窗口的顶层控件.</p>
+  <dd><p>可以指定 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 如果此参数为空或省略, 则使用目标窗口的顶层控件.</p>
     <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code>ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p></dd>
 
-  <dt>WinTitle</dt>
-  <dd><p>窗口标题或识别目标窗口的其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
-
-  <dt>WinText</dt>
-  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd><p>标题中含有此参数值的窗口将被排除.</p></dd>
-
-  <dt>ExcludeText</dt>
-  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
+  <dd>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
+  </dd>
 
 </dl>
 
@@ -43,7 +36,7 @@
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
 <h2 id="Remarks">备注</h2>
-<p class="note"><strong>注意</strong>: 要获取列表视图, 列表框或组合框的文本, 请使用 <a href="ControlGet.htm#List">ControlGet List</a>.</p>
+<p class="note"><strong>注意:</strong> 要获取列表视图, 列表框或组合框的文本, 请使用 <a href="ControlGet.htm#List">ControlGet List</a>.</p>
 <p>如果获取的文本看起来像被截短了(不完整), 请在 ControlGetText 前尝试使用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(OutputVar, 55)</code> (把 55 替换为超过截短文本许多的大小). 在一些应用程序不能正确响应 WM_GETTEXTLENGTH 消息时需要这样, 否则会导致 AutoHotkey 把输出变量设的过小以致无法保存所有的文本.</p>
 <p>可获取的最多文本数限制于变量的最大容量(这可以通过 <a href="_MaxMem.htm">#MaxMem</a> 指令改变). 因此, 如果目标控件(例如打开了大文档的编辑器) 包含大量文本, 那么此命令可能会使用大量的内存. 不过, 在使用后可以为变量赋值为空来释放它占用的内存, 即 <code>OutputVar =</code>.</p>
 <p>从大多数控件类型获取的文本使用回车和换行符(`r`n) 而不是单独的换行符(`n) 来表示每行的结尾.</p>

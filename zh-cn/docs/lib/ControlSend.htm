@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>ControlSend[Raw] | AutoHotkey</title>
+<title>ControlSend / ControlSendRaw | AutoHotkey</title>
 <meta name="description" content="The ControlSend and ControlSendRaw commands send simulated keystrokes to a window or control." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,36 +10,29 @@
 </head>
 <body>
 
-<h1>ControlSend[Raw]</h1>
+<h1>ControlSend / ControlSendRaw</h1>
 
 <p>发送模拟键击到窗口或控件.</p>
 
 <pre class="Syntax">
 <span class="func">ControlSend</span> <span class="optional">, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
-ControlSendRaw: 参数同上.
+<span class="func">ControlSendRaw</span> <span class="optional">, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
 </pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>Control</dt>
-  <dd><p>可以是 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 如果此参数为空或省略, 则使用目标窗口的顶层控件. 如果此参数为 <code>ahk_parent</code>, 则直接发送键击到目标窗口而非其中的某个控件(请参阅<a href="../misc/Winamp.htm">自动化 Winamp</a> 中的例子).</p>
+  <dd><p>可以指定 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 如果此参数为空或省略, 则使用目标窗口的顶层控件. 如果此参数为 <code>ahk_parent</code>, 则直接发送键击到目标窗口而非其中的某个控件(请参阅<a href="../misc/Winamp.htm">自动化 Winamp</a> 中的例子).</p>
     <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code>ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p></dd>
 
   <dt>Keys</dt>
   <dd><p>要发送的按键序列(请参阅 <a href="Send.htm">Send</a> 命令了解详情). 要发送原义的逗号, 需要对它进行<a href="../misc/EscapeChar.htm">转义</a>(<code>`,</code>). 发送字符的速率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定.</p>
     <p>与 <a href="Send.htm">Send</a> 命令不同, ControlSend 不能发送鼠标点击. 请用 <a href="ControlClick.htm">ControlClick</a> 发送.</p></dd>
 
-  <dt>WinTitle</dt>
-  <dd><p>窗口标题或识别目标窗口的其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
-
-  <dt>WinText</dt>
-  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd><p>标题中含有此参数值的窗口将被排除.</p></dd>
-
-  <dt>ExcludeText</dt>
-  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
+  <dd>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
+  </dd>
 
 </dl>
 
@@ -47,7 +40,7 @@ ControlSendRaw: 参数同上.
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
 <h2 id="Remarks">备注</h2>
-<p>ControlSendRaw 会准确地按照原样发送 <em>Keys</em> 参数中的按键, 而不把 <code>{Enter}</code> 转换成 <kbd>Enter</kbd>, 把 <code>^c</code> 转换成 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 有关详细信息, 请参阅<a href="Send.htm#SendRaw">原始模式</a>. 在 ControlSend 中, 使用 <a href="Send.htm#Raw">{Raw}</a> 或 <a href="Send.htm#Text">{Text}</a> 也是有效的. <span class="ver">[v1.1.27+]:</span> <a href="Send.htm#SendText">文本模式</a>可能更可靠的发送文本.</p>
+<p>ControlSendRaw 会准确地按照原样发送 <em>Keys</em> 参数中的按键, 而不把 <code>{Enter}</code> 转换成 <kbd>Enter</kbd>, 把 <code>^c</code> 转换成 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 有关详细信息, 请参阅<a href="Send.htm#SendRaw">原始模式</a>. 在 ControlSend 中, 使用 <a href="Send.htm#Raw">{Raw}</a> 或 <a href="Send.htm#Text">{Text}</a> 也是有效的. <span class="ver">[v1.1.27+]</span>: <a href="Send.htm#SendText">文本模式</a>可能更可靠的发送文本.</p>
 <p>如果省略 <em>Control</em> 参数, 那么此命令会尝试直接发送到目标窗口的顶层控件(一般这个是正确的), 当目标窗口没有控件时则发送到窗口自身. 这可以用在窗口还不含有任何控件或无所谓发送给哪个控件的时候.</p>
 <p>默认情况下, 修饰符键击(Ctrl, Alt, Shift 和 Win) 的发送方法和在 Send 命令一般模式下发送相同. 这样可以让命令提示符和其他控制台窗口正确检测到大写字母, 控制字符, 等等. 这样也提供了其他方面的可靠性.</p>
 <p>然而, 在某些情况下这些修饰符事件可能和活动窗口发生冲突, 尤其是在 ControlSend 发送期间或正发送 <kbd>Alt</kbd> 的时候用户正在输入(因为 <kbd>Alt</kbd> 会激活活动窗口的菜单栏). 通过显式地发送修饰键的按下和弹起事件可以避免此问题, 例如:</p>

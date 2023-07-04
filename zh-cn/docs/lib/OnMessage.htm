@@ -43,8 +43,8 @@
   <dt id="MaxThreads">MaxThreads(最大线程)<span class="ver">[v1.0.47+]</span></dt>
   <dd><p>如果为空或省略, 则默认为 1, 此时表示回调在同一时刻只能运行一个<a href="../misc/Threads.htm">线程</a>. 这通常是最佳的, 因为如果不这样, 则每当回调中断它自己时脚本将不会按照时间先后顺序来处理消息. 因此, 代替 <em>MaxThreads</em> 的一种方法是, 请像<a href="#Critical">下面</a>描述的那样使用 <em>Critical</em> :</p>
   <p>如果回调直接或间接导致消息再次被发送, 而该回调仍在运行, 则有必要指定一个大于 1 或小于 -1 的 <em>MaxThreads</em> 值, 以允许回调被调用为了新的消息(如果需要). 脚本自己的进程向自己 send(非 post) 的消息不能被延迟或缓冲.</p>
-  <p><span class="ver">[v1.1.20+]:</span> 指定 0 以注销以前注册的回调. 如果 <em>Callback</em> 是字符串, 则删除 "传统" 监听器. 否则, 仅注销给定的函数对象.</p>
-  <p><span class="ver">[v1.1.20+]:</span> 默认情况下多个回调注册到同一个 <em>MsgNumber</em> 时, 它们被调用的顺序按照它们注册的顺序来. 如果希望某个回调在其他比它先注册的回调之前就被调用, 可以给 <em>MaxThreads</em> 指定一个负数值. 例如, <code>OnMessage(Msg, Fn, -2)</code> 可将 <code>Fn</code> 函数提前到其他所有注册响应 <em>Msg</em> 的回调之前调用, 且允许 <em>Fn</em> 函数最大线程为 2. 然而, 如果回调已经注册了, 这个命令不会改变它, 除非进行解除注册之后再次注册.</p></dd>
+  <p><span class="ver">[v1.1.20+]</span>: 指定 0 以注销以前注册的回调. 如果 <em>Callback</em> 是字符串, 则删除 "传统" 监听器. 否则, 仅注销给定的函数对象.</p>
+  <p><span class="ver">[v1.1.20+]</span>: 默认情况下多个回调注册到同一个 <em>MsgNumber</em> 时, 它们被调用的顺序按照它们注册的顺序来. 如果希望某个回调在其他比它先注册的回调之前就被调用, 可以给 <em>MaxThreads</em> 指定一个负数值. 例如, <code>OnMessage(Msg, Fn, -2)</code> 可将 <code>Fn</code> 函数提前到其他所有注册响应 <em>Msg</em> 的回调之前调用, 且允许 <em>Fn</em> 函数最大线程为 2. 然而, 如果回调已经注册了, 这个命令不会改变它, 除非进行解除注册之后再次注册.</p></dd>
 
 </dl>
 
@@ -82,9 +82,9 @@ OnMessage(MsgNumber, FuncObj, 1)  <em>; 方式 2 (MaxThreads = 1)</em></pre>
 <ol>
   <li>不是一个对象, 不是用户定义函数的名称, 也不是一个空字符串;</li>
   <li>显式定义了 4 个以上的参数; </li>
-  <li>在 v1.0.48.05 及更旧版本时, 使用了 <a href="../Functions.htm#ByRef">ByRef</a> 或<a href="../Functions.htm#optional">可选</a>参数.</li>
+  <li>在 <span class="ver">[v1.0.48.05]</span> 及更旧版本时, 使用了 <a href="../Functions.htm#ByRef">ByRef</a> 或<a href="../Functions.htm#optional">可选</a>参数.</li>
 </ol>
-<p>在 v1.1.19.03 及更旧的版本时, 当(一个函数对象) 企图监听超过 500 个不同的消息时也会出错.</p>
+<p>在 <span class="ver">[v1.1.19.03]</span> 及更旧的版本时, 当(一个函数对象) 企图监听超过 500 个不同的消息时也会出错.</p>
 <p>如果 <em>Callback</em> 为对象时, 失败将抛出一个异常. 其他情况下, 返回空字符串.</p>
 
 <h2 id="Additional_Information_Available_to_the_Callback">回调中可用的附加信息</h2>
@@ -100,7 +100,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <h2 id="What_the_Callback_Should_Return">Callback 应该返回什么</h2>
 <p>如果回调使用不带任何参数的 <a href="Return.htm">Return</a>, 或指定空值如 ""(甚至从不使用 Return), 则当此回调结束时将继续正常处理传入的消息. 同样的情况也会出现在使用 <a href="Exit.htm">exits</a> 回调或者出现了运行时错误的时候(例如, <a href="Run.htm">运行</a>不存在的文件). 与之相比, 返回一个整数时会被作为回复立即发送; 即程序不会再进一步处理此消息. 例如, 监听 WM_LBUTTONDOWN(0x0201) 的回调可以返回一个整数来阻止目标窗口接收到鼠标点击的通知. 在许多情况下(例如使用 <a href="PostMessage.htm">PostMessage</a> 发布的消息), 它不关心返回了哪个整数; 不过如果不确定, 0 通常是最安全的.</p>
 <p>有效返回值的范围与运行脚本的 AutoHotkey.exe 是 32 位还是 64 位有关. 对于 32 位脚本(<code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 4</code>), 非空返回值必须介于 -2<sup>31</sup> 和 2<sup>32</sup>-1 之间, 而 64 位脚本 <code><a href="../Variables.htm#PtrSize">A_PtrSize</a> = 8</code> 则必须介于 -2<sup>63</sup> 和 2<sup>63</sup>-1 之间.</p>
-<p><span class="ver">[v1.1.20+]:</span> 如果有多个回调数监听某一个消息(message number), 它们将会一个接一个按顺序被调用, 直到被调用的函数返回一个非空值.</p>
+<p><span class="ver">[v1.1.20+]</span>: 如果有多个回调数监听某一个消息(message number), 它们将会一个接一个按顺序被调用, 直到被调用的函数返回一个非空值.</p>
 
 <h2 id="Remarks">一般说明</h2>
 <p>与普通的函数调用不同, 被监听消息的到达会启动新<a href="../misc/Threads.htm">线程</a>来调用回调. 因此, 回调会以设置的默认值启动, 例如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>. 这些默认值可以在<a href="../Scripts.htm#auto">自动执行段</a>改变.</p>
@@ -109,7 +109,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p id="Critical">当一个消息达到时, 如果其回调由于之前到达的相同消息而仍在运行, 默认情况下, 该回调将不会被再次调用; 相反, 该消息将被视为不受监控. 如果不希望这样, 有多种方法可以避免它:</p>
 <ul>
   <li>如果消息是 post(发布) 的, 而不是 send(发送) 的, 并且其编号大于 0x0311, 那么可以通过指定 <a href="Critical.htm">Critical</a> 作为回调的第一行来缓冲, 直到其回调完成. 另外, <a href="Thread.htm#Interrupt">Thread Interrupt</a> 也可以达到同样的效果, 只要它持续的时间足够长能让函数完成.</li>
-  <li><span class="ver">[v1.0.46+]:</span> 使用 <a href="Critical.htm">Critical</a> 来增加<a href="Critical.htm#Interval">消息检查间隔</a>, 可以让回调在任何消息被派发之前有更多的时间来完成. 为了保证可靠性, 可能需要一个大于 16 的间隔时间. 由于系统定时器的粒度(通常为 15.6 毫秒), 默认的 5 毫秒(对于非-Critical 线程) 或 15 毫秒(对于 Critical 线程) 的间隔可能会在回调启动后的瞬间出现.</li>
+  <li><span class="ver">[v1.0.46+]</span>: 使用 <a href="Critical.htm">Critical</a> 来增加<a href="Critical.htm#Interval">消息检查间隔</a>, 可以让回调在任何消息被派发之前有更多的时间来完成. 为了保证可靠性, 可能需要一个大于 16 的间隔时间. 由于系统定时器的粒度(通常为 15.6 毫秒), 默认的 5 毫秒(对于非-Critical 线程) 或 15 毫秒(对于 Critical 线程) 的间隔可能会在回调启动后的瞬间出现.</li>
   <li>确保回调快速返回, 可以减少因 <em>MaxThreads</em> 而错过消息的风险. 一种方法是让它通过向自己的脚本 <a href="PostMessage.htm">posting</a> 大于 0x0311 的监控消息, 来排队等待未来的线程. 该消息的回调应该使用 <a href="Critical.htm">Critical</a> 作为其第一行, 以确保其消息被缓冲. 另外, 也可以用一个<a href="SetTimer.htm">计时器</a>来排队等待未来的线程.</li>
   <li>为 <a href="#MaxThreads"><em>MaxThreads</em></a> 参数指定一个较高的值, 可以使回调被中断以处理新收到的消息.</li>
 </ul>

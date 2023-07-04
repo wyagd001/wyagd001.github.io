@@ -23,9 +23,9 @@
 
   <dt>ControlID</dt>
   <dd><p>如果目标控件有关联变量, 则指定此变量名作为 <em>ControlID</em>(此方法优先于下面描述的方法). 由于这个原因, 通常最好给每个之后要使用 GuiControl 或 GuiControlGet 访问的控件分配一个变量, 即使该控件不支持输入(例如 GroupBox 或 Text).</p>
-  <p>或者 <em>ControlID</em> 可以是 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
-<p class="note"><strong>注意</strong>: 图片控件的文件名(和控件创建时指定的一样) 可以作为 <em>ControlID</em> 使用.</p>
-  <p><span class="ver">[v1.1.04+]:</span> <em>ControlID</em> 可以是控件的 <a href="Gui.htm#HwndOutputVar">HWND</a></p>
+  <p>或者 <em>ControlID</em> 可以指定为 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
+<p class="note"><strong>注意:</strong> 图片控件的文件名(和控件创建时指定的一样) 可以作为 <em>ControlID</em> 使用.</p>
+  <p><span class="ver">[v1.1.04+]</span>: <em>ControlID</em> 可以是控件的 <a href="Gui.htm#HwndOutputVar">HWND</a></p>
   <p>如果控件不在默认 GUI 中, <strong>那么还必须指定 GUI 的名称或 HWND</strong> -- 除非 <span class="ver">[v1.1.20+]</span> <em>ControlID</em> 是一个 HWND 值, 因为每个 HWND 都是唯一值. 详情参见<a href="#Remarks">备注</a>.</p>
   </dd>
 </dl>
@@ -54,7 +54,7 @@
 <pre class="Syntax"><span class="func">GuiControl</span>,, ControlID <span class="optional">, Value</span></pre>
 <p>将 <em>SubCommand</em> 留空, 通过 <em>Value</em> 将新内容放入控件中. 具体地:</p>
 <p><a href="GuiControls.htm#Picture">Picture</a>: <em>Value</em> 为要加载的新图像的文件名(或<a href="../misc/ImageHandles.htm">句柄</a>)(请参阅 <a href="GuiControls.htm#Picture">Gui Picture</a> 了解支持的文件类型). 在文件名的前面可以指定零个或多个下列选项: <code>*wN</code>(宽度 N), <code>*hN</code>(高度 N) 以及<code>*IconN</code>(在 DLL 或 EXE 文件中的图标组编号 N). 在下面的例子中, 将加载第二个图标组中的默认图标, 设置宽度为 100 以及通过 "保持高宽比" 自动设置高度: <code>GuiControl,, MyPic, *icon2 *w100 *h-1 C:\My Application.exe</code>. 指定 <code>*w0 *h0</code> 使用图像的实际宽度和高度. 如果同时省略 <code>*w</code> 和 <code>*h</code>, 则调整图像以适应控件当前的大小. 从多图标的 .ICO 文件中加载时, 指定宽度和高度也决定了加载哪个图标.</p>
-<p class="note"><strong>注意</strong>: 在最后一个选项和文件名之间只能含有一个空格或 tab; 其他任何空格或 tab 都会被视为文件名的一部分.</p>
+<p class="note"><strong>注意:</strong> 在最后一个选项和文件名之间只能含有一个空格或 tab; 其他任何空格或 tab 都会被视为文件名的一部分.</p>
 <p><a href="GuiControls.htm#Text">Text</a>/<a href="GuiControls.htm#Button">Button</a>/<a href="GuiControls.htm#GroupBox">GroupBox</a>/<a href="GuiControls.htm#StatusBar">StatusBar</a>/<a href="GuiControls.htm#Link">Link</a>: 指定 <em>Value</em> 为控件的新文本. 因为控件不会自动进行扩展, 所以如果需要加宽控件请使用 <code><a href="#Move">GuiControl, Move</a>, MyText, W300</code>. 对于 <a href="GuiControls.htm#StatusBar">StatusBar</a>, 这里只设置了第一部分的文本(使用 <a href="GuiControls.htm#SB_SetText">SB_SetText()</a> 会更灵活).</p>
 <p><a href="GuiControls.htm#Edit">Edit</a>: <em>Value</em> 中任何没有前导回车符(`r) 的换行符(`n) 都会自动转换成 CR+LF(`r`n) 以使它们正确显示. 然而, 通常不需要担心, 因为 <code>Gui Submit</code> 和 <code>GuiControlGet OutputVar</code> 命令会自动将 CR+LF 替换为 LF(`n) 来撤销这种转换.</p>
 <p><a href="GuiControls.htm#Hotkey">Hotkey</a>: <em>Value</em> 可以为空来清空控件, 也可以是一组带有键名的修饰符. 例如: <code>^!c</code>, <code>^Numpad1</code>, <code>+Home</code>. 支持的修饰符仅包含 ^(Control), !(Alt) 和 +(Shift). 请参阅<a href="../KeyList.htm">按键列表</a>了解可用的按键名称.</p>
@@ -115,12 +115,12 @@ GuiControl, Move, MyEdit, % "x" VarX+10 "y" VarY+5 "w" VarW*2 "h" VarH*1.5 <em>;
 <p>对于选项卡控件, 这样还会显示选项卡中的所有子控件. 单词 Show 后可以紧跟着 0 或 1. 0(零) 会产生相反的效果. 例如, <code>Show</code> 和 <code>Show%VarContainingOne%</code> 都会显示控件, 而 <code>Show%VarContainingZero%</code> 隐藏控件.</p>
 
 <h3 id="Delete">Delete</h3>
-<p><strong>未实现</strong>: 这个子命令还不存在. 作为变通的解决方法, 请使用上面的 <a href="#Hide">Hide</a> 和/或 <a href="#Disable">Disable</a> 子命令, 或使用 <a href="Gui.htm#Destroy">Gui Destroy</a> 销毁和重建整个窗口.</p>
+<p><strong>未实现:</strong> 这个子命令还不存在. 作为变通的解决方法, 请使用上面的 <a href="#Hide">Hide</a> 和/或 <a href="#Disable">Disable</a> 子命令, 或使用 <a href="Gui.htm#Destroy">Gui Destroy</a> 销毁和重建整个窗口.</p>
 
 <h3 id="Choose">Choose</h3>
 <p>设置 ListBox, DropDownList, ComboBox 或 Tab 控件中的选择对象为第 N 个项目.</p>
 <pre class="Syntax"><span class="func">GuiControl</span>, Choose, ControlID, N</pre>
-<p><em>N</em> 为 1 表示第一个项目, 2 表示第二个, 等等. 如果 <em>N</em> 不是整数, 则使用下面 <a href="#ChooseString">ChooseString</a> 子命令. <span class="ver">[v1.1.06+]:</span> 如果 <em>N</em> 为 0(零), 则移除 ListBox, DropDownList 或 ComboBox 的当前选择对象.</p>
+<p><em>N</em> 为 1 表示第一个项目, 2 表示第二个, 等等. 如果 <em>N</em> 不是整数, 则使用下面 <a href="#ChooseString">ChooseString</a> 子命令. <span class="ver">[v1.1.06+]</span>: 如果 <em>N</em> 为 0(零), 则移除 ListBox, DropDownList 或 ComboBox 的当前选择对象.</p>
 <p>与 <a href="Control.htm">Control Choose</a> 不同, 此子命令不会触发与控件关联的任何 <a href="Gui.htm#label">g-标签</a>, 除非在 <em>N</em> 前面加上管道符(即使如此, 也只有在新选择对象与旧的不同时才会触发 g-标签, 至少对 <a href="GuiControls.htm#Tab">Tab 控件</a>是这样). 例如: <code>GuiControl, Choose, MyListBox, <strong>|3</strong></code>.</p>
 <p>要同时产生结束事件(双击 ListBox 时), 请用两个前导的管道符而不是一样(这不支持 Tab 控件).</p>
 <p>要选择或取消选择<a href="GuiControls.htm#ListBoxMulti">多选 ListBox</a> 中的 <u>所有</u> 项目, 请参照此例:</p>
@@ -149,7 +149,7 @@ GuiControl, Font, MyEdit  <em>; 让上面的字体设置对控件生效.</em></p
 <p>在下一个例子中, 会把 OK 按钮设置为新的默认按钮:</p>
 <pre>GuiControl, +Default, OK</pre>
 <p>尽管也能识别<a href="../misc/Styles.htm">样式</a>和扩展样式, 但是其中的某些无法在控件创建后应用或移除. 如果至少成功应用一个指定的改变, 则 ErrorLevel 被置为 0. 否则, 它被设置为 1 来表示没有应用任何改变. 即使成功应用了变化, 控件也可能选择忽略它(还是等于没有任何效果).</p>
-<p id="Functor"><span class="ver">[v1.1.20+]:</span> 要设置<a href="../misc/Functor.htm">函数对象</a>来处理<a href="Gui.htm#label">控件事件</a>, <em>Value</em> 必须为单个变量引用, 如下例所示. 目前不支持其他返回对象的表达式.</p>
+<p id="Functor"><span class="ver">[v1.1.20+]</span>: 要设置<a href="../misc/Functor.htm">函数对象</a>来处理<a href="Gui.htm#label">控件事件</a>, <em>Value</em> 必须为单个变量引用, 如下例所示. 目前不支持其他返回对象的表达式.</p>
 <pre>GuiControl +g, <i>ControlID</i>, %FuncObj%
 GuiControl +g, <i>ControlID</i>, % FuncObj</pre>
 

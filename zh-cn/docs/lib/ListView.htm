@@ -88,7 +88,7 @@ ExitApp</pre>
 
 <h2 id="BuiltIn">ListView 中的内置函数</h2>
 <p>所有的 ListView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <code><a href="Gui.htm#Default">Gui, 2:Default</a></code> 进行改变). 如果默认窗口不存在或不含有 ListView 控件, 则所有函数返回零来表明此问题.</p>
-<p id="GuiLV">如果窗口含有多个 ListView 控件, 默认情况下函数操作于最近添加的那个. 要改变这种情况, 请指定 <code>Gui, ListView, ListViewName</code>, 其中 <em>ListViewName</em> 为 ListView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN 或在 <span class="ver">[v1.1.04+]</span> 其 HWND. 一旦改变后, 所有现有和将来的<a href="../misc/Threads.htm">线程</a>将使用指定的 ListView. <span class="ver">[v1.1.23+]:</span> <a href="../Variables.htm#DefaultListView">A_DefaultListView</a> 包含了当前的设置.</p>
+<p id="GuiLV">如果窗口含有多个 ListView 控件, 默认情况下函数操作于最近添加的那个. 要改变这种情况, 请指定 <code>Gui, ListView, ListViewName</code>, 其中 <em>ListViewName</em> 为 ListView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN 或在 <span class="ver">[v1.1.04+]</span> 其 HWND. 一旦改变后, 所有现有和将来的<a href="../misc/Threads.htm">线程</a>将使用指定的 ListView. <span class="ver">[v1.1.23+]</span>: <a href="../Variables.htm#DefaultListView">A_DefaultListView</a> 包含了当前的设置.</p>
 <p id="RowNumber">当在此页面使用短语 "row number(行号)", 它指的是 ListView 中行的当前位置. 最上面一行为 1, 第二行为 2, 依此类推. 添加一行后, 其行号会因为排序, 删除和插入其他行而发生变化. 因此, 要根据内容查找特定的一行或多行, 通常最好在循环中使用 <a href="#LV_GetText">LV_GetText()</a>.</p>
 
 <p id="bifRow"><strong>行函数</strong></p>
@@ -127,9 +127,9 @@ ExitApp</pre>
 <h4 id="RowOptions">行选项</h4>
 <p><em>Options</em> 参数是一个包含零个或多个下表中选项的字符串(不区分大小写). 选项间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
 <p id="Check"><strong>Check:</strong> 在行中显示选中标记(需要 ListView 含有<a href="#Checked">复选框</a>). 以后要取消选中它, 请使用 <code>LV_Modify(RowNumber, "-Check")</code>.</p>
-<p id="ColN"><strong>ColN</strong>: 指定单词 <em>Col</em> 后紧跟着列号, 从此列开始往后应用参数 <em>Col1</em> 和其后参数的内容. 此选项通常和 <a href="#LV_Modify">LV_Modify()</a> 一起使用来修改行中的个别字段, 而不会影响其他字段.</p>
+<p id="ColN"><strong>ColN:</strong> 指定单词 <em>Col</em> 后紧跟着列号, 从此列开始往后应用参数 <em>Col1</em> 和其后参数的内容. 此选项通常和 <a href="#LV_Modify">LV_Modify()</a> 一起使用来修改行中的个别字段, 而不会影响其他字段.</p>
 <p id="Focus"><strong>Focus:</strong> 设置键盘焦点到此行(通常和下面的 <a href="#Select">Select</a> 选项一起使用). 以后要取消它的焦点, 请使用 <code>LV_Modify(RowNumber, "-Focus")</code>.</p>
-<p><strong>Icon</strong>: 指定单词 <em>Icon</em> 后紧跟着这行图标的编号, 这行图标显示在首列的左侧. 如果此选项不存在, 则使用<a href="#IL">图像列表</a>中的首个图标. 要显示空白图标, 请指定 -1 或一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则<a href="#View">报告视图</a>中既不显示图标也不为其保留空间.</p>
+<p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着这行图标的编号, 这行图标显示在首列的左侧. 如果此选项不存在, 则使用<a href="#IL">图像列表</a>中的首个图标. 要显示空白图标, 请指定 -1 或一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则<a href="#View">报告视图</a>中既不显示图标也不为其保留空间.</p>
 <p>该选项接受基于 1 开始的的图标编号, 但在内部转换为基于 0 开始的索引; 因此, <code>Icon0</code> 对应于常数 <a href="https://learn.microsoft.com/windows/win32/controls/list-view-controls-overview#callback-items-and-the-callback-mask">I_IMAGECALLBACK</a>, 它通常被定义为 -1, 而 <code class="no-highlight">Icon-1</code> 对应于 I_IMAGENONE. 其他超出范围的值也可能导致图标所在位置出现空白.</p>
 <p id="Select"><strong>Select:</strong> 选择行. 以后要取消选择, 请使用 <code>LV_Modify(RowNumber, "-Select")</code>. 当选择行时, 通常最好确保至少有一行总含有<a href="#Focus">焦点属性</a>, 因为这样允许 Apps 键在焦点行附近显示其<a href="Gui.htm#GuiContextMenu">上下文菜单</a>(如果有). 单词 <em>Select</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Select"</code> 和 <code>"Select" <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>). 这种技术也适用于上面的 <a href="#Focus">Focus</a> 和 <a href="#Check">Check</a> 选项.</p>
 <p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>: 必要时通过滚动 ListView 来确保指定行完全可见. 此参数仅对 <a href="#LV_Modify">LV_Modify()</a> 有效; 例如: <code>LV_Modify(RowNumber, "Vis")</code>.</p>
@@ -159,7 +159,7 @@ ExitApp</pre>
 
 <h4 id="Column_Options_General">列选项: 常规</h4>
 <p><strong>N:</strong> 指定 <em>N</em> 为列的新宽度, 单位为像素. 如果这是唯一的选项, 则此数字可以不加引号. 例如, 后面两种形式都是有效的: <code>LV_ModifyCol(1, 50)</code> 和 <code>LV_ModifyCol(1, "50 Integer")</code>.</p>
-<p><strong>Auto</strong>: 调整列宽来适应其内容. 只有在<a href="#View">报告(详细信息) 视图</a>中此选项才有效果.</p>
+<p><strong>Auto:</strong> 调整列宽来适应其内容. 只有在<a href="#View">报告(详细信息) 视图</a>中此选项才有效果.</p>
 <p><strong>AutoHdr:</strong> 调整列宽来适应其内容和列标题的文本, 以其中较宽的为准. 当应用于最后一列时, 它将被设置为至少和 ListView 中剩余空间的宽度一样. 通常最好仅在行已经添加后才应用此设置, 因为这样允许当调整最后一列的大小时考虑到可能新增加的垂直滚动栏. 只有在<a href="#View">报告(详细信息) 视图</a>中此选项才有效果.</p>
 <p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着<a href="#IL">图像列表</a>中要显示在列标题文本后的图标的编号. 指定 <code>-Icon</code>(负 icon) 来移除任何现有的图标.</p>
 <p><strong>IconRight:</strong> 把图标放在列的右边而不是左边.</p>
@@ -178,7 +178,7 @@ ExitApp</pre>
 <p id="Case"><strong>Case:</strong> 让列排序区分大小写(仅影响<a href="#Text">文本</a>列). 如果 <em>Case</em>, <em>CaseLocale</em> 以及 <em>Logical</em> 选项都省略, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
 <p><strong>CaseLocale</strong> <span class="ver">[v1.0.43.03+]</span>: 让列排序基于当前用户的区域设置且不区分大小写(仅影响<a href="#Text">文本</a>列). 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 &Auml; 和 &Uuml; 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起.</p>
 <p id="Desc"><strong>Desc:</strong> 降序排列. 用户首次对此列排序时使用下降的顺序.</p>
-<p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]:</span> 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如, 字符串 "T33" 将被视为大于 "T4". <em>Logical</em> 需要 Windows XP 或更高版本(在较旧的操作系统中, 会自动使用 <em>CaseLocale</em> 代替). 此外, <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
+<p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]</span>: 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如, 字符串 "T33" 将被视为大于 "T4". <em>Logical</em> 需要 Windows XP 或更高版本(在较旧的操作系统中, 会自动使用 <em>CaseLocale</em> 代替). 此外, <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
 <p><strong>NoSort:</strong> 避免用户点击此列对自动排序产生的影响. 要禁用所有列的排序而不仅是其中的子集, 请在 ListView 的选项中包含 <a href="#NoSort">NoSort</a>. 如果 ListView 含有 g-标签, 则当用户点击 no-sort 的列时仍会接收到 <a href="#ColClick">ColClick 通知</a>.</p>
 <p><strong>Sort:</strong> 立即对列按升序排列(即使它含有 <a href="#Desc">Desc</a> 选项).</p>
 <p><strong>SortDesc:</strong> 立即对列按降序排列.</p>
@@ -303,7 +303,7 @@ ExitApp</pre>
 <p><em>Filename</em> 为图标(.ICO), 光标(.CUR) 或动画光标(.ANI) 文件的名称(动画光标在 ListView 中显示时实际将不会动). 图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR, 以及包含图标资源的其他类型. 要使用文件中第一个以外的图标组, 请在 <em>IconNumber</em> 指定它的编号. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
 <p>还可以加载非图标图像, 例如 BMP, GIF 和 JPG. 然而, 此时应该指定最后两个参数以确保正确执行: <em>IconNumber</em> 应该为屏蔽的/透明的颜色编码(对于大多数图片 0xFFFFFF [白色] 可能是最佳的); 而 <em>ResizeNonIcon</em> 应该为非零值来缩放图片为单个图标, 或者为零来把图像分割为多个可以匹配实际宽度的图标.</p>
 <p>在所有的操作系统中都支持 GIF, JPG, BMP, ICO, CUR 和 ANI 图像. 在 Windows XP 或更高版本中, 还支持其他图像格式, 例如 PNG, TIF, Exif, WMF 和 EMF. 比 XP 早的操作系统可以通过复制微软免费的 GDI+ DLL 到 AutoHotkey.exe 文件夹中来提供支持(但如果是<a href="Scripts.htm#ahk2exe">已编译脚本</a>, 则复制此 DLL 到脚本的文件夹). 要下载这个 DLL, 请在 <a href="https://www.microsoft.com">www.microsoft.com</a> 搜索下列短语: gdi redistributable</p>
-<p><span class="ver">[v1.1.23+]:</span> <a href="../misc/ImageHandles.htm">位图或图标句柄</a>可用于替代文件名称. 例如, <code>HBITMAP:%handle%</code>.</p>
+<p><span class="ver">[v1.1.23+]</span>: <a href="../misc/ImageHandles.htm">位图或图标句柄</a>可用于替代文件名称. 例如, <code>HBITMAP:%handle%</code>.</p>
 
 <h3 id="IL_Destroy">IL_Destroy</h3>
 <p>删除指定的图像列表, 成功时返回 1, 而失败返回 0.</p>

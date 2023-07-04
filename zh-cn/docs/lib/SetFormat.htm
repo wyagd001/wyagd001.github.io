@@ -21,30 +21,28 @@
 <dl>
 
   <dt>NumberType</dt>
-  <dd><p>必须为 IntegerFast, FloatFast, Integer 或 Float(其中两种快速模式需要 <span class="ver">[v1.0.48+]</span>; 请参阅<a href="#Fast">备注</a>).</p></dd>
+  <dd><p>必须为 IntegerFast, FloatFast, Integer 或 Float(其中两种快速模式需要 <span class="ver">[v1.0.48+]</span>; 请参阅下面的<a href="#Fast">Fast vs. Slow</a>).</p></dd>
 
   <dt>Format</dt>
-  <dd><p>当 <em>NumberType</em> 为 Integer 或 IntegerFast, 对于十六进制数请指定 H 或 HEX, 而十进制则指定 D. 十六进制数必须以前缀 0x 开头(例如 0xFF). <span class="ver">[AHK_L 42+]:</span> 当此参数为 <code>h</code> 时十六进制数会被格式化为含有小写数字 A-F, 而为 <code>H</code> 时则为大写形式.</p>
-      <p id="sci">当 <em>NumberType</em> 为 Float 或 FloatFast, 请指定 <code>总宽度<strong>.</strong>小数位数</code>(例如 <code>0.6</code>). <span class="ver">[v1.0.46.11+]</span>: 可以在后面添加字母 "e" 来得到科学计数法表示的结果; 例如 <code>0.6e</code> 或 <code>0.6E</code>(使用大写字母 E 则在结果的数字中使用大写的 E). 注: 在 AutoHotkey 1.x, 使用科学计数法表示格式时必须包含小数点; 例如 <code>1.0e1</code> 是正确的但 <code>1e1</code> 则错误.</p>
-      <p><em>总宽度</em> 通常为 0 表示结果不需要使用空格或零填充. 如果总宽度大于实际宽度, 则结果中将使用空格或零填充(请参阅<a href="#Float">备注</a>) 到指定宽度.</p>
+  <dd><p>当 <em>NumberType</em> 为 Integer 或 IntegerFast, 对于十六进制数请指定 H 或 HEX, 而十进制则指定 D. 十六进制数必须以前缀 0x 开头(例如 0xFF). 在 <span class="ver">[AHK_L 42+]</span> 中, 当此参数为 <code>h</code> 时, 十六进制数会被格式化为含有小写数字 A-F, 而为 <code>H</code> 时, 则为大写形式.</p>
+      <p id="sci">当 <em>NumberType</em> 为 Float 或 FloatFast, 请指定 <code><i>总宽度</i>.<i>小数位数</i></code>(例如 <code class="no-highlight">0.6</code>). 在 <span class="ver">[v1.0.46.11+]</span> 中, 可以在后面添加字母 "e" 来得到科学计数法表示的结果; 例如 <code class="no-highlight">0.6e</code> 或 <code class="no-highlight">0.6E</code>(使用大写字母 E 则在结果的数字中使用大写的 E). 注: 在 AutoHotkey 1.x, 使用科学计数法表示格式时必须包含小数点; 例如 <code>1.0e1</code> 是正确的, 但 <code>1e1</code> 错误.</p>
+      <p><em>总宽度</em> 通常为 0 表示结果不需要使用空格或零填充. 如果总宽度大于实际宽度, 则结果中将使用空格或零填充(请参阅下面的<a href="#Float">Floating Point Forma</a>) 到指定宽度.</p>
     <p id="DecimalPlaces"><em>小数位数</em> 为要显示的小数部分的位数(超出部分将进行四舍五入). 如果为空或零, 则结果中不会显示小数点和小数部分, 即浮点运算的结果会显示为整数而不是浮点数. 默认的小数位数为 6.</p>
-    <p>填充: 如果 <em>总宽度</em> 大于实际宽度, 那么结果中将在左边填充空格; 即每个数字是右对齐的. 要让数字左对齐, 请在 <em>总宽度</em> 前加上负号. 要使用零而不是空格填充, 请在 <em>总宽度</em> 前加上零(例如 <code>06.2</code>).</p></dd>
+    <p>填充: 如果 <em>总宽度</em> 大于实际宽度, 那么结果中将在左边填充空格; 即每个数字是右对齐的. 要让数字左对齐, 请在 <em>总宽度</em> 前加上负号. 要使用零而不是空格填充, 请在 <em>总宽度</em> 前加上零(例如 <code class="no-highlight">06.2</code>).</p></dd>
 
 </dl>
 
 <h2 id="Fast">快速模式与慢速模式的比较</h2>
-<p><span class="ver">[v1.0.48+]</span>: 可以使用 IntegerFast 代替 Integer, 使用 FloatFast 代替 Float.</p>
-<ul>
-<li><strong>优点</strong>: 快速模式能维持变量<a href="../Concepts.htm#caching">缓存</a>整数和浮点数的能力, 这样可以极大地加快数值密集型运算. (相反地, 慢速模式强制将所有的数值结果立即转换并保存为字符串.)</li>
-<li id="FastDisadv"><strong>缺点</strong>: 保存数字到变量时, 快速模式延迟 SetFormat 的效果到脚本实际需要此变量的文本/字符串版本时(例如要在<a href="MsgBox.htm">消息框</a>显示变量的内容). 由于不同的 SetFormat 可能同时生效(例如更多或更少的小数位), 这可能导致不可预期的结果. 要让当前的快速模式立即生效, 请执行像 <code>HexValue <strong>.</strong>= ""</code> 这样的操作, 这个操作中把空字符串附加到当前保存在 <em>HexValue</em> 的数字上.</li>
-</ul>
+<p>在 <span class="ver">[v1.0.48+]</span> 中, 可以使用 IntegerFast 代替 Integer, 使用 FloatFast 代替 Float.</p>
+<p><strong>优点:</strong> 快速模式能维持变量<a href="../Concepts.htm#caching">缓存</a>整数和浮点数的能力, 这样可以极大地加快数值密集型运算. (相反地, 慢速模式强制将所有的数值结果立即转换并保存为字符串.)</p>
+<p id="FastDisadv"><strong>缺点:</strong> 保存数字到变量时, 快速模式延迟 SetFormat 的效果到脚本实际需要此变量的文本/字符串版本时(例如要在<a href="MsgBox.htm">消息框</a>显示变量的内容). 由于不同的 SetFormat 可能同时生效(例如更多或更少的小数位), 这可能导致不可预期的结果. 要让当前的快速模式立即生效, 请执行像 <code>HexValue .= ""</code> 这样的操作, 这个操作中把空字符串附加到当前保存在 <em>HexValue</em> 的数字上.</p>
 <p>如果在脚本的任意位置使用了慢速模式 "Integer" 或 "Float", 即使 SetFormat 命令所在的这行从未执行, 在脚本开始运行时都会禁用整数或浮点数的<a href="../Concepts.htm#caching">缓冲</a>.</p>
 
 <h2 id="Float">浮点格式</h2>
-<p><span class="ver">[v1.0.48+]</span>: 浮点变量的内部精确度大约为 15 位, 除非在脚本的某个位置使用了 <code>SetFormat Float</code>(即慢速模式). 此时, 浮点数保存的精度由 <em><a href="#DecimalPlaces">小数位数</a></em> 决定(就像 1.0.48 之前的版本那样). 换句话说, 一旦浮点运算的结果保存到变量中, 多余的精度会丢失并且无法通过再进行像 <code>SetFormat, Float, 0.15</code> 这样的计算进行还原. 为了防止精度丢失, 请避免在脚本中使用 <code>SetFormat Float</code>, 或者使用 <code><a href="#Fast">SetFormat FloatFast</a></code> 代替.</p>
+<p>在 <span class="ver">[v1.0.48+]</span> 中, 浮点变量的内部精确度大约为 15 位, 除非在脚本的某个位置使用了 <code>SetFormat Float</code>(即慢速模式). 此时, 浮点数保存的精度由 <em><a href="#DecimalPlaces">小数位数</a></em> 决定(就像 1.0.48 之前的版本那样). 换句话说, 一旦浮点运算的结果保存到变量中, 多余的精度会丢失并且无法通过再进行像 <code>SetFormat, Float, 0.15</code> 这样的计算进行还原. 为了防止精度丢失, 请避免在脚本中使用 <code>SetFormat Float</code>, 或者使用 <code>SetFormat FloatFast</code> 代替.</p>
 <p>不论当前有效的是快速模式还是慢速模式, 每当浮点结果和变量需要显示或转换到字符串文本时(例如 <a href="MsgBox.htm">MsgBox</a> 或 <a href="FileAppend.htm">FileAppend</a>), 它们都会被四舍五入到 <em><a href="#DecimalPlaces">小数位数</a></em>. 要查看完整的精度, 请使用类似 <code>SetFormat, FloatFast, 0.15</code> 这样的命令.</p>
-<p>要把浮点数转换成整数, 请使用 <code>Var:=<a href="Math.htm#Round">Round</a>(Var)</code>, <code>Var:=<a href="Math.htm#Floor">Floor</a>(Var)</code> 或 <code>Var:=<a href="Math.htm#Ceil">Ceil</a>(Var)</code>. 要把整数转换成浮点数, 给它加上 0.0(例如 <code>Var+=0.0</code>) 或使用像 <code>MyFloat:=<a href="Math.htm#Round">Round</a>(MyInteger, 1)</code> 这样的命令.</p>
-<p>内置变量 <strong>A_FormatFloat</strong> 包含了当前的浮点格式(例如 <code>0.6</code>).</p>
+<p>要把浮点数转换成整数, 请使用 <code>Var := <a href="Math.htm#Round">Round</a>(Var)</code>, <code>Var := <a href="Math.htm#Floor">Floor</a>(Var)</code> 或 <code>Var := <a href="Math.htm#Ceil">Ceil</a>(Var)</code>. 要把整数转换成浮点数, 给它加上 0.0(例如 <code>Var += 0.0</code>) 或使用像 <code>MyFloat := <a href="Math.htm#Round">Round</a>(MyInteger, 1)</code> 这样的命令.</p>
+<p>内置变量 <strong>A_FormatFloat</strong> 包含了当前的浮点格式(例如 <code class="no-highlight">0.6</code>).</p>
 <h2 id="Integer">整数格式</h2>
 <p>整数的运算结果一般显示为十进制, 而不是十六进制. 要切换为十六进制, 请使用 <code>SetFormat, IntegerFast, Hex</code>. 这种方法还可以用来把整数从十进制转换为十六进制(反之亦然), 如同此页面底部示例演示的那样.</p>
 <p>在脚本中指定为原义的整数可以写为十六进制或十进制. 十六进制整数必须以前缀 0x 开头(例如 <code>0xA9</code>). 它们可以用在任何需要数字的地方. 例如, <code>Sleep 0xFF</code> 相当于 <code>Sleep 255</code>, 不论当前 SetFormat 中整数格式的设置如何.</p>
@@ -52,16 +50,16 @@
 <p>内置变量 <strong>A_FormatInteger</strong> 包含了当前的整数格式(H 或 D).</p>
 
 <h2 id="remarks">一般说明</h2>
-<p>如果脚本中没有使用 SetFormat, 则整数默认为十进制格式, 而浮点数默认为 <code>总宽度.小数位数</code> = <code>0.6</code>. 每个新运行的<a href="../misc/Threads.htm">线程</a>(例如<a href="../Hotkeys.htm">热键</a>,<a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">定时</a>子程序) 都会以这些默认设置开始; 但可以在脚本的自动执行段(脚本的顶部) 使用 SetFormat 来改变这些默认值.</p>
-<p>旧式风格的赋值(如 <code>x=%y%</code>) 会忽略任何前导或尾随的空格(即填充的). 要避免这种情况, 请使用 <a href="AutoTrim.htm">AutoTrim</a> 或<a href="SetExpression.htm">冒号等号运算符</a>(例如 <code>x:=y</code>).</p>
-<p>使用 "<a href="IfIs.htm">if var is number/integer/float</a>" 可以判断一个变量的内容是否为数值.</p>
+<p>如果脚本中没有使用 SetFormat, 则整数默认为十进制格式, 而浮点数默认为 <code class="no-highlight">0.6</code> 格式. 每个新运行的<a href="../misc/Threads.htm">线程</a>(例如<a href="../Hotkeys.htm">热键</a>,<a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">定时</a>子程序) 都会以这些默认设置开始; 但可以在脚本的<a href="../Scripts.htm#auto">自动执行段</a>(脚本的顶部) 使用 SetFormat 来改变这些默认值.</p>
+<p>旧式风格的赋值(如 <code>x = %y%</code>) 会忽略任何前导或尾随的空格(即填充的). 要避免这种情况, 请使用 <a href="AutoTrim.htm">AutoTrim</a> 或<a href="SetExpression.htm">冒号等号运算符</a>(例如 <code>x := y</code>).</p>
+<p>使用 <a href="IfIs.htm">If Var is [not] Type</a> 可以判断一个变量的内容是否为数值.</p>
 <p>要对整数填充零或空格时可以不需要进行浮点运算, 请参照此例:</p>
-<pre>Var := "          " . Var     <em>; 引号内包含 10 个空格. 要用零填充, 请把其中的空格替换为零.</em>
+<pre>Var := "          " . Var  <em>; 引号内包含 10 个空格. 要用零填充, 请把其中的空格替换为零.</em>
 Var := SubStr(Var, -9)  <em>; 这里用足够的空格填充 <i>Var</i> 中数字使其总宽度为 10 个字符.</em>
 Var := SubStr("          " . Var, -9)  <em>; 这里一行实现上面两行的操作.</em></pre>
 
 <h2 id="Related">相关</h2>
-<p><a href="Format.htm">Format()</a>, <a href="SetExpression.htm">表达式赋值(:=)</a>, <a href="../Concepts.htm#caching">缓存</a>, <a href="EnvAdd.htm">EnvAdd</a>, <a href="EnvSub.htm">EnvSub</a>, <a href="EnvMult.htm">EnvMult</a>, <a href="EnvDiv.htm">EnvDiv</a>, <a href="AutoTrim.htm">AutoTrim</a>, <a href="IfIs.htm">if var is type</a></p>
+<p><a href="Format.htm">Format()</a>, <a href="SetExpression.htm">表达式赋值(:=)</a>, <a href="../Concepts.htm#caching">缓存</a>, <a href="EnvAdd.htm">EnvAdd</a>, <a href="EnvSub.htm">EnvSub</a>, <a href="EnvMult.htm">EnvMult</a>, <a href="EnvDiv.htm">EnvDiv</a>, <a href="AutoTrim.htm">AutoTrim</a>, <a href="IfIs.htm">If Var is [not] Type</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
@@ -76,7 +74,7 @@ Var += 0  <em>; 赋值 Var 为 000011</em>
 
 <em>; 把十进制整数转换为十六进制:</em>
 SetFormat, IntegerFast, hex
-Var += 0  <em>; 赋值 Var(原来的内容为 11) 为 0xb</em>.
+Var += 0  <em>; 赋值 Var(原来的内容为 11) 为 0xb.</em>
 Var <strong>.</strong>= ""  <em>; 这行是必须的, 因为在快速模式.</em>
 SetFormat, IntegerFast, d</pre>
 </div>

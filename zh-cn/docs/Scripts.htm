@@ -32,7 +32,7 @@
 <p>每个脚本都是纯文本文件, 其中包含了可由程序(AutoHotkey.exe) 执行的文本行. 脚本中还可以包含<a href="Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>或者甚至完全由它们组成. 不过, 在不包含热键和热字串时, 脚本会在启动后从上往下按顺序执行其中的命令.</p>
 <p>程序会把脚本逐行加载到内存中, 每行最多可以包含 16,383 个字符. 在加载过程中, 脚本会被<a href="misc/Performance.htm">优化</a>和检查. 将列出所有的语法错误, 更正它们后脚本才能运行.</p>
 <h2 id="auto">脚本顶部(自动执行段)</h2>
-<p>脚本加载完成后, 它会从顶行开始执行, 直到遇到 <a href="lib/Return.htm">Return</a>, <a href="lib/Exit.htm">Exit</a>, <a href="Hotkeys.htm">热键/热字串标签</a>或脚本的底部(无论最先遇到哪个). 脚本的这个顶端部分被称为 <em>自动执行段</em>.</p>
+<p>脚本加载完成后, 它会从顶行开始执行, 直到遇到 <a href="lib/Return.htm">Return</a>, <a href="lib/ExitApp.htm">Exit</a>, 脚本的第一个<a href="Hotkeys.htm">热键/热字串标签</a>或脚本的底部(无论最先遇到哪个). 脚本的这个顶端部分被称为 <em>自动执行段</em>, 但它实际上只是一个在程序启动后被调用的<a href="Language.htm#subroutines">子程序</a>.</p>
 <p class="warning"><strong>注意:</strong> 虽然脚本的 <em>第一个</em> 热键/热字串标签与 <a href="lib/Return.htm">return(返回)</a> 的效果相同, 但其他热键和标签却没有.</p>
 <p>如果脚本不是<a href="lib/_Persistent.htm">持续运行的</a>, 它将在自动执行部分完成后终止. 否则, 它会以空闲状态持续运行, 从而对诸如<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="lib/Gui.htm#label">GUI 事件</a>, <a href="lib/Menu.htm">自定义菜单项</a>和<a href="lib/SetTimer.htm">计时器</a>等事件做出响应. 如果一个脚本包含了热键, 热字串, <a href="lib/OnMessage.htm">OnMessage()</a> 或 <a href="lib/Gui.htm">GUI</a>, 以及一些其他情况, 它就会自动变为持续运行的. 也可以用 <a href="lib/_Persistent.htm">#Persistent</a> 指令来显式地使脚本持续运行.</p>
 <p>每个由<a href="Hotkeys.htm">热键</a>, <a href="Hotstrings.htm">热字串</a>, <a href="lib/Menu.htm">菜单项</a>, <a href="lib/Gui.htm#label">GUI 事件</a>或<a href="lib/SetTimer.htm">计时器</a>启动的<a href="misc/Threads.htm">线程</a>都以在自动执行段设置的下列属性值作为默认值开始. 如果没有设置, 则使用标准的默认值(与下面每个页面中注明的一样): <a href="lib/AutoTrim.htm">AutoTrim</a>, <a href="lib/CoordMode.htm">CoordMode</a>, <a href="lib/Critical.htm">Critical</a>, <a href="lib/DetectHiddenText.htm">DetectHiddenText</a>, <a href="lib/DetectHiddenWindows.htm">DetectHiddenWindows</a>, <a href="lib/FileEncoding.htm">FileEncoding</a>, <a href="lib/ListLines.htm">ListLines</a>, <a href="lib/SendLevel.htm">SendLevel</a>, <a href="lib/SendMode.htm">SendMode</a>, <a href="lib/SetBatchLines.htm">SetBatchLines</a>, <a href="lib/SetControlDelay.htm">SetControlDelay</a>, <a href="lib/SetDefaultMouseSpeed.htm">SetDefaultMouseSpeed</a>, <a href="lib/SetFormat.htm">SetFormat</a>, <a href="lib/SetKeyDelay.htm">SetKeyDelay</a>, <a href="lib/SetMouseDelay.htm">SetMouseDelay</a>, <a href="lib/SetRegView.htm">SetRegView</a>, <a href="lib/SetStoreCapslockMode.htm">SetStoreCapsLockMode</a>, <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="lib/SetWinDelay.htm">SetWinDelay</a>, <a href="lib/StringCaseSense.htm">StringCaseSense</a> 和 <a href="lib/Thread.htm">Thread</a>.</p>
@@ -40,7 +40,7 @@
 
 <h2 id="continuation">把过长的行分割成一系列短行</h2>
 <p>可以把过长的行分割成一系列较短的行来提高可读性和可维护性. 这样不会降低脚本的执行速度, 因为在脚本启动时这些短行会在内存中合并起来.</p>
-<p id="continuation-line"><strong>方法 #1</strong>: 以 "and", "or", ||, &amp;&amp;, 逗号或<a href="Variables.htm#concat">句点</a>开始的行会自动合并到其前一行(在 v1.0.46+, 除了 ++ 和 -- 外其他所有的<a href="Variables.htm#Operators">表达式运算符</a>开头的行也会如此). 在下面的例子中, 第二行会自动附加到首行, 因为它以逗号开始:</p>
+<p id="continuation-line"><strong>方法 #1:</strong> 以 "and", "or", ||, &amp;&amp;, 逗号或<a href="Variables.htm#concat">句点</a>开始的行会自动合并到其前一行(在 <span class="ver">[v1.0.46+]</span> 中, 除了 ++ 和 -- 外其他所有的<a href="Variables.htm#Operators">表达式运算符</a>开头的行也会如此). 在下面的例子中, 第二行会自动附加到首行, 因为它以逗号开始:</p>
 <pre>FileAppend, This is the text to append.`n   <em>; 这里可以使用注释.</em>
     , %A_ProgramFiles%\SomeApplication\LogFile.txt  <em>; 注释.</em></pre>
 <p>同样地, 下列几行也会合并成单行, 因为最后两行以 "and" 或 "or" 开始:</p>
@@ -52,7 +52,7 @@
     <strong>?</strong> false  <em>; 我们没有任何红色产品, 所以不用那么麻烦去调用函数.</em>
     <strong>:</strong> ProductIsAvailableInColor(Product, Color)</pre>
 <p>尽管在上面的例子中缩进不是必须的, 但它可以显示出哪些行属于上一行从而提高代码清晰度. 并且, 可以不必在单词 "AND" 和 "OR" 开始的行加上额外的空格; 程序会自动处理这些. 最后, 可以在上面例子中任意行的末尾或行与行之间添加空行或<a href="Language.htm#comments">注释</a>.</p>
-<p id="continuation-section"><strong>方法 #2</strong>: 这种方法用于合并大量的行或不适合方法 #1 处理的行. 此方法对<a href="Hotstrings.htm">自动替换热字串</a>特别有用, 但它也可以用于命令或<a href="Variables.htm#Expressions">表达式</a>中. 例如:</p>
+<p id="continuation-section"><strong>方法 #2:</strong> 这种方法用于合并大量的行或不适合方法 #1 处理的行. 此方法对<a href="Hotstrings.htm">自动替换热字串</a>特别有用, 但它也可以用于命令或<a href="Variables.htm#Expressions">表达式</a>中. 例如:</p>
 <pre><em>; 示例 #1:</em>
 Var =
 (
@@ -77,14 +77,14 @@ FileAppend,  <em>; 此时逗号是不能缺少的.</em>
 ), C:\My File.txt</pre>
 <p>在上面的例子中, 几行代码被一对圆括号包围起来. 这被称为 <em>延续片段</em>. 注意在底行的闭括号后面跟着 <a href="lib/FileAppend.htm">FileAppend</a> 的最后一个参数. 这种做法是可选的; 这样做是为了确保逗号被视为参数分隔符而不是原义的逗号.</p>
 <p>通过在延续片段的括号右侧包含一个或多个下列选项, 可以覆盖它的默认特性. 如果含有多个选项, 那么选项之间使用空格分开. 例如: <code>( LTrim Join| %</code>.</p>
-<p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 或者在单词 <em>Join</em> 后可以紧跟着多达 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格("`s" 表示原义的空格, 这是一个只能被 <em>Join</em> 识别的特殊转义序列). 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 需要在它的闭括号上一行添加一个空行.</p>
+<p id="Join"><strong>Join:</strong> 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 或者在单词 <em>Join</em> 后可以紧跟着多达 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格("`s" 表示原义的空格, 这是一个只能被 <em>Join</em> 识别的特殊转义序列). 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 需要在它的闭括号上一行添加一个空行.</p>
 <p>已知限制: 如果单词 Join 后面紧跟一个冒号, 那么冒号不能是这一行的最后一个. 因为 <code>(Join:</code> 将被当做一个名为 Join 的标签对待, 所以不支持 <code>(LTrim Join:</code> 这种写法, 而 <code>(Join: C</code> 这种写法没有问题.</p>
-<p id="LTrim"><strong>LTrim</strong>: 删除每行开头的空格和 tab. 主要用来允许延续片段使用缩进. 此外, 通过在一行中指定 <code>#LTrim</code> 自身可以为多个延续片段打开此选项. <code>#LTrim</code> 跟位置有关: 会影响它下面的所有延续片段. 使用 <code>#LTrim Off</code> 可以关闭此设置.</p>
+<p id="LTrim"><strong>LTrim:</strong> 删除每行开头的空格和 tab. 主要用来允许延续片段使用缩进. 此外, 通过在一行中指定 <code>#LTrim</code> 自身可以为多个延续片段打开此选项. <code>#LTrim</code> 跟位置有关: 会影响它下面的所有延续片段. 使用 <code>#LTrim Off</code> 可以关闭此设置.</p>
 <p><strong>RTrim0</strong>(RTrim 后跟着一个零): 关闭自动删除每行末尾的空格和 tab 的设置.</p>
 <p id="CommentOption"><strong>Comments</strong>(或 <strong>Comment</strong> 或 <strong>Com</strong> 或 <strong>C</strong>) <span class="ver">[v1.0.45.03+]</span>: 允许在延续片段中使用<a href="Language.htm#comments">分号注释</a>(但不支持 <code>/*..*/</code>). 这样的注释(以及它们左边的空格和 tab) 会在连接时完全被忽略而不是当成原义文本处理. 每个注释可以放在一行的右侧或单独一行.</p>
-<p><strong>%(百分号)</strong>: 把百分号视为原义字符而不是变量引用. 这样就不需要把每个百分号<a href="misc/EscapeChar.htm">转义</a>成原义字符. 在百分号已经为原义的地方不需要使用此选项, 例如, <a href="Hotstrings.htm">自动替换热字串</a>.</p>
-<p><strong>,(逗号)</strong>: 把逗号作为分隔符而不是原义逗号. 这个非常少用的选项只有在命令的参数之间才需要, 因为在<a href="Functions.htm">函数调用</a>中逗号的类型没有影响. 并且, 此选项只会转换那些真正的分隔参数的逗号. 换句话说, 一旦到了命令的最后一个参数(或者命令没有参数), 那么会忽略此选项而把后续的逗号当成原义逗号.</p>
-<p id="accent"><strong>`(重音符)</strong>: 把每个反引号视为原义字符而不是<a href="misc/EscapeChar.htm">转义符</a>. 此选项同时也避免了需要分别对逗号和百分号进行明确地转义. 此外, 它还阻止对任何特定的转义序列例如 `r 和 `t 进行转义.</p>
+<p><strong>%(百分号):</strong> 把百分号视为原义字符而不是变量引用. 这样就不需要把每个百分号<a href="misc/EscapeChar.htm">转义</a>成原义字符. 在百分号已经为原义的地方不需要使用此选项, 例如, <a href="Hotstrings.htm">自动替换热字串</a>.</p>
+<p><strong>,(逗号):</strong> 把逗号作为分隔符而不是原义逗号. 这个非常少用的选项只有在命令的参数之间才需要, 因为在<a href="Functions.htm">函数调用</a>中逗号的类型没有影响. 并且, 此选项只会转换那些真正的分隔参数的逗号. 换句话说, 一旦到了命令的最后一个参数(或者命令没有参数), 那么会忽略此选项而把后续的逗号当成原义逗号.</p>
+<p id="accent"><strong>`(重音符):</strong> 把每个反引号视为原义字符而不是<a href="misc/EscapeChar.htm">转义符</a>. 此选项同时也避免了需要分别对逗号和百分号进行明确地转义. 此外, 它还阻止对任何特定的转义序列例如 `r 和 `t 进行转义.</p>
 <p id="non-continuation"><strong>)</strong> <span class="ver">[v1.1.01+]</span>: 如果一个右括号出现在延续代码的参数中(除了作为 <a href="#Join">Join</a> 的选项参数), 那么这一行将重新解释为一个表达式, 而不是作为一段延续代码的开始. 这将避免类似 <code>(x.y)[z]()</code> 的表达式需要对左括号进行转义.</p>
 <p><u>备注</u></p>
 <p>当没有指定<a href="#accent">重音符(`) 选项</a>时, 支持在延续片段中使用<a href="misc/EscapeChar.htm">转义序列</a>, 例如 `n(换行) 和 `t(tab).</p>
@@ -111,7 +111,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
 
 <h2 id="ahk2exe">把脚本转换成 EXE(Ahk2Exe)</h2>
 <p>程序中已包含了脚本编译器(感谢 fincs 提供, 以及 TAC109 的补充).</p>
-<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本, 脚本<a href="lib/_Include.htm">包含</a>的任何文件以及通过 <a href="lib/FileInstall.htm">FileInstall</a> 命令内嵌的任何文件. <span class="ver">[v1.1.33+]:</span> 可以使用<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>包含其他文件.</p>
+<p>脚本编译完成后, 就成了一个独立的可执行文件; 也就是说, 可以在没有安装 AutoHotkey 的机器上运行. 编译过程中会创建一个包含下列文件的可执行文件: AutoHotkey 解释器, 脚本, 脚本<a href="lib/_Include.htm">包含</a>的任何文件以及通过 <a href="lib/FileInstall.htm">FileInstall</a> 命令内嵌的任何文件. <span class="ver">[v1.1.33+]</span>: 可以使用<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>包含其他文件.</p>
 <p>v1.1 和 v2 脚本使用相同的编译器. 编译器通过检查所提供的基文件的主版本来区分脚本版本.</p>
 <h3 id="ahk2exe-toc">编译器目录</h3>
 <ul>
@@ -125,13 +125,13 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <p>使用 Ahk2Exe 有下列几种方式:</p>
 <ul>
   <li>
-  <p><strong>GUI 界面</strong>: 运行开始菜单中的 "Convert .ahk to .exe" 菜单项. (调用 GUI 后, 在窗口显示之前可能会有一个停顿; 有关详情, 请参阅<a href="#information">背景信息</a>.)</p>
+  <p><strong>GUI 界面:</strong> 运行开始菜单中的 "Convert .ahk to .exe" 菜单项. (调用 GUI 后, 在窗口显示之前可能会有一个停顿; 有关详情, 请参阅<a href="#information">背景信息</a>.)</p>
   </li>
   <li>
-  <p><strong>右键点击</strong>: 在资源管理器中, 在任何一个 .ahk 上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它会在稍后出现在相同目录中. 注: EXE 文件的生成使用的是 上述方法 #1 中最后保存的相同的自定义图标, .bin 文件和<a href="#mpress">压缩</a>设置, 或者由脚本中任何相关的<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>指定.</li>
+  <p><strong>右键点击:</strong> 在资源管理器中, 在任何一个 .ahk 上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它会在稍后出现在相同目录中. 注: EXE 文件的生成使用的是 上述方法 #1 中最后保存的相同的自定义图标, .bin 文件和<a href="#mpress">压缩</a>设置, 或者由脚本中任何相关的<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>指定.</li>
   </li>
   <li id="ahk2exeCmd">
-    <p><strong>命令行</strong>: 编译器可以通过以下参数从命令行运行.  如果使用了任何的命令行参数, 除非使用的是 <code class="no-highlight">/gui</code>, 否则脚本会立即被编译. 除了必须的 <code class="no-highlight">/gui</code> 或 <code class="no-highlight">/in</code> 参数外, 所有参数都是可选的.</p>
+    <p><strong>命令行:</strong> 编译器可以通过以下参数从命令行运行.  如果使用了任何的命令行参数, 除非使用的是 <code class="no-highlight">/gui</code>, 否则脚本会立即被编译. 除了必须的 <code class="no-highlight">/gui</code> 或 <code class="no-highlight">/in</code> 参数外, 所有参数都是可选的.</p>
     <style>
       #param_pairs td:not(:last-child) {
         white-space: nowrap;
@@ -156,7 +156,7 @@ FileAppend, %Var%, C:\My File.txt</pre>
       </tr>
       <tr id="SlashBase">
         <td>/base <i>file_name</i></td>
-        <td><span class="ver">[v1.1.33.10+]:</span> 要使用的基文件(一个 .bin 文件或 <span class="ver">[v1.1.34+]</span> 中可以是 .exe 文件). 使用的基文件的主版本必须与编译的脚本的版本相同. 默认是 GUI 界面中保存的最后一个基文件名, 或脚本中的任何 <a href="misc/Ahk2ExeDirectives.htm#Bin">Base</a> 编译器指令.</td>
+        <td><span class="ver">[v1.1.33.10+]</span>: 要使用的基文件(一个 .bin 文件或 <span class="ver">[v1.1.34+]</span> 中可以是 .exe 文件). 使用的基文件的主版本必须与编译的脚本的版本相同. 默认是 GUI 界面中保存的最后一个基文件名, 或脚本中的任何 <a href="misc/Ahk2ExeDirectives.htm#Bin">Base</a> 编译器指令.</td>
       </tr>
       <tr id="SlashResourceID">
         <td>/resourceid <i>name</i></td>
@@ -164,23 +164,23 @@ FileAppend, %Var%, C:\My File.txt</pre>
       </tr>
       <tr id="SlashCp">
         <td>/cp <i>codepage</i></td>
-        <td><span class="ver">[v1.1.23.01+]:</span> 覆盖用于读取脚本文件的默认代码页. 关于可能的值列表, 请参阅<a href="https://learn.microsoft.com/windows/win32/intl/code-page-identifiers">代码页标识符</a>. 注意, Unicode 脚本应该以字节顺序标记(BOM) 开始, 因此不需要使用这个参数.</td>
+        <td><span class="ver">[v1.1.23.01+]</span>: 覆盖用于读取脚本文件的默认代码页. 关于可能的值列表, 请参阅<a href="https://learn.microsoft.com/windows/win32/intl/code-page-identifiers">代码页标识符</a>. 注意, Unicode 脚本应该以字节顺序标记(BOM) 开始, 因此不需要使用这个参数.</td>
       </tr>
       <tr id="SlashCompress">
         <td>/compress <i>n</i></td>
-        <td><span class="ver">[v1.1.33+]:</span> 是否 <a href="#mpress">Compress(压缩)</a> exe 文件? 0 = 不压缩, 1 = 使用 MPRESS(如果存在), 2 = 使用 UPX(如果存在). 默认值是 GUI 界面中最后保存的设置.</td>
+        <td><span class="ver">[v1.1.33+]</span>: 是否 <a href="#mpress">Compress(压缩)</a> exe 文件? 0 = 不压缩, 1 = 使用 MPRESS(如果存在), 2 = 使用 UPX(如果存在). 默认值是 GUI 界面中最后保存的设置.</td>
       </tr>
       <tr id="SlashGui">
         <td>/gui</td>
-        <td><span class="ver">[v1.1.33+]:</span> 显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中保存的设置. <code>/in</code> 在这种情况下是可选的.</td>
+        <td><span class="ver">[v1.1.33+]</span>: 显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中保存的设置. <code>/in</code> 在这种情况下是可选的.</td>
       </tr>
       <tr id="SlashGuiSilent">
         <td>/silent [verbose]</td>
-        <td><span class="ver">[v1.1.33.10+]:</span> 禁用所有的消息框并将错误输出到标准错误流(stderr); 如果 stderr 失败, 则输出到标准输出流(stdout). 其他信息也会输出到 stdout. 可以选择输入 <code>verbose</code> 这个单词, 把状态信息也输出到 stdout.</td>
+        <td><span class="ver">[v1.1.33.10+]</span>: 禁用所有的消息框并将错误输出到标准错误流(stderr); 如果 stderr 失败, 则输出到标准输出流(stdout). 其他信息也会输出到 stdout. 可以选择输入 <code>verbose</code> 这个单词, 把状态信息也输出到 stdout.</td>
       </tr>
       <tr id="SlashAhk">
         <td class="warning"><strong>过时的:</strong><br>/ahk <i>file_name</i></td>
-        <td class="warning"><span class="ver">[v1.1.33+]:</span> 编译脚本时使用的 AutoHotkey.exe 的 path\name.</td>
+        <td class="warning"><span class="ver">[v1.1.33+]</span>: 编译脚本时使用的 AutoHotkey.exe 的 path\name.</td>
       </tr>
       <tr id="SlashMpress">
         <td class="warning"><strong>过时的:</strong><br>/mpress <i>0or1</i></td>
@@ -199,20 +199,20 @@ FileAppend, %Var%, C:\My File.txt</pre>
 <ul>
   <li>包含空格的参数必须用双引号括起来.</li>
   <li>进行编译通常并不会提升脚本的性能.</li>
-  <li>从 v1.1.01 开始, 不支持密码保护和 /NoDecompile 选项.</li>
+  <li>在 <span class="ver">[v1.1.01+]</span> 中, 不再支持密码保护和 /NoDecompile 选项.</li>
   <li>命令 <a href="lib/_NoTrayIcon.htm">#NoTrayIcon</a> 和 "<a href="lib/Menu.htm#MainWindow">Menu, Tray, MainWindow</a>" 会影响编译后脚本的行为.</li>
    <li>如果脚本以编译的形式运行, 则内置变量 <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 的值为 1. 否则为空.</li>
-   <li><span class="ver">[v1.0.43+]:</span> 传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符中, 但可以通过像重定向输出到文件的方法 "捕获".</li>
-  <li> <span class="ver">[v1.1.22.03+]:</span> 此外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 这些错误代码可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 上找到.</li>
+   <li><span class="ver">[v1.0.43+]</span>: 传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符中, 但可以通过像重定向输出到文件的方法 "捕获".</li>
+  <li> <span class="ver">[v1.1.22.03+]</span>: 此外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 这些错误代码可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 上找到.</li>
 </ul>
 <p>编译器的源码和新版本可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe">GitHub</a> 找到.</p>
 
 <h3 id="ahk2exe-base">基础可执行文件</h3>
 <p>每个编译的脚本 .exe 都是基于一个实现解释器的可执行文件. 包含在编译器目录中的基础文件的扩展名是 ".bin"; 这些版本的解释器不包含加载外部脚本文件的能力. 相反, 程序会寻找一个名为 "&gt;AUTOHOTKEY SCRIPT&lt;" 的 Win32(RCDATA) 资源并加载它, 如果没有找到, 则会失败.</p>
-<p><span class="ver">[v1.1.34+]:</span> 标准的 AutoHotkey 可执行文件也可以作为编译脚本的基础, 通过嵌入一个 ID 为 1 的 Win32(RCDATA) 资源. (额外的脚本也可以通过 <a href="misc/Ahk2ExeDirectives.htm#AddResource">AddResource</a> 编译器指令添加.) 这使得编译后的脚本 .exe 可以与 <a href="#SlashScript">/script</a> 开关一起使用, 以执行除主嵌入脚本之外的其他脚本. 有关详情, 请参阅<a href="Program.htm#embedded-scripts">嵌入式脚本</a>.</p>
+<p><span class="ver">[v1.1.34+]</span>: 标准的 AutoHotkey 可执行文件也可以作为编译脚本的基础, 通过嵌入一个 ID 为 1 的 Win32(RCDATA) 资源. (额外的脚本也可以通过 <a href="misc/Ahk2ExeDirectives.htm#AddResource">AddResource</a> 编译器指令添加.) 这使得编译后的脚本 .exe 可以与 <a href="#SlashScript">/script</a> 开关一起使用, 以执行除主嵌入脚本之外的其他脚本. 有关详情, 请参阅<a href="Program.htm#embedded-scripts">嵌入式脚本</a>.</p>
 
 <h3 id="CompilerDirectives">脚本编译器指令</h3>
-<p><span class="ver">[v1.1.33+]:</span> 脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
+<p><span class="ver">[v1.1.33+]</span>: 脚本编译器指令允许用户指定如何编译脚本的细节. 其中的一些功能是:</p>
 <ul>
   <li>能够改变版本信息(如名称, 描述, 版本...).</li>
   <li>能够为编译后的脚本添加资源.</li>
@@ -271,27 +271,27 @@ FileAppend, %Var%, C:\My File.txt</pre>
     <td>/ErrorStdOut<br><br>/ErrorStdOut=<em>Encoding</em></td>
     <td> 
       <p>把阻止脚本运行的语法错误发送到标准错误流(stderr) 而不显示在对话框中. 请参阅 <a href="lib/_ErrorStdOut.htm">#ErrorStdOut</a> 了解详情. 这可以联合 /iLib 在不运行脚本的情况下验证脚本.</p>
-      <p><span class="ver">[v1.1.33+]:</span> 可以选择指定<a href="lib/FileEncoding.htm">编码</a>. 例如, <code>/ErrorStdOut=UTF-8</code> 在将消息写入 stderr 之前将其编码为 UTF-8.</p>
+      <p><span class="ver">[v1.1.33+]</span>: 可以选择指定<a href="lib/FileEncoding.htm">编码</a>. 例如, <code>/ErrorStdOut=UTF-8</code> 在将消息写入 stderr 之前将其编码为 UTF-8.</p>
     </td>
     <td>是</td>
   </tr>
   <tr id="SlashDebug">
     <td>/Debug</td>
-    <td><span class="ver">[AHK_L 11+]:</span> 连接到调试客户端. 想了解更多细节, 请参阅<a href="#idebug">交互调试</a>.</td>
+    <td><span class="ver">[AHK_L 11+]</span>: 连接到调试客户端. 想了解更多细节, 请参阅<a href="#idebug">交互调试</a>.</td>
     <td>否</td>
   </tr>
   <tr id="CPn">
     <td>/CP<i>n</i></td>
     <td>
-      <p><span class="ver">[AHK_L 51+]:</span> 覆盖用于读取脚本文件的默认代码页. 想了解更多信息, 请参阅<a href="#cp">脚本文件代码页</a>.</p>
-      <p><span class="ver">[v1.1.33+]:</span> 如果在安装程序中启用了 "Default to UTF-8" 选项, 那么 ".ahk" 文件类型就会在包括 <code>/CP65001</code> 在内的命令行中注册. 这将导致所有通过 shell(Explorer(资源管理器)) 启动的脚本在没有 UTF-16 字节顺序标记的情况下默认为 UTF-8. 通过直接运行 AutoHotkey.exe 启动的脚本仍然默认为 <code>CP0</code>, 因为没有 <code>/CP65001</code> 开关.</p>
+      <p><span class="ver">[AHK_L 51+]</span>: 覆盖用于读取脚本文件的默认代码页. 想了解更多信息, 请参阅<a href="#cp">脚本文件代码页</a>.</p>
+      <p><span class="ver">[v1.1.33+]</span>: 如果在安装程序中启用了 "Default to UTF-8" 选项, 那么 ".ahk" 文件类型就会在包括 <code>/CP65001</code> 在内的命令行中注册. 这将导致所有通过 shell(Explorer(资源管理器)) 启动的脚本在没有 UTF-16 字节顺序标记的情况下默认为 UTF-8. 通过直接运行 AutoHotkey.exe 启动的脚本仍然默认为 <code>CP0</code>, 因为没有 <code>/CP65001</code> 开关.</p>
     </td>
     <td>否</td>
   </tr>
   <tr>
     <td>/iLib <em>"OutFile"</em></td>
     <td>
-      <p><span class="ver">[v1.0.47+]:</span> AutoHotkey 加载但不运行脚本. 通过<a href="Functions.htm#lib">库机制</a>自动 include 每个脚本, 两行代码会写到 OutFile 指定的文件里面. 这些行以以下格式编写, 其中 LibDir 是 Lib 文件夹的完整路径, LibFile 是库的文件名:</p>
+      <p><span class="ver">[v1.0.47+]</span>: AutoHotkey 加载但不运行脚本. 通过<a href="Functions.htm#lib">库机制</a>自动 include 每个脚本, 两行代码会写到 OutFile 指定的文件里面. 这些行以以下格式编写, 其中 LibDir 是 Lib 文件夹的完整路径, LibFile 是库的文件名:</p>
 <pre>#Include LibDir\
 #IncludeAgain LibDir\LibFile.ahk</pre>
       <p>如果输出文件存在会被覆盖. <em>OutFile</em> 可以是 <code>*</code> 从而将输出写到 stdout 中.</p>
@@ -301,14 +301,14 @@ FileAppend, %Var%, C:\My File.txt</pre>
     <tr id="SlashInclude">
     <td>/include <em>"IncFile"</em></td>
     <td>
-      <p><span class="ver">[v1.1.34+]:</span> 在主脚本之前 <a href="lib/_Include.htm">Includes</a> 一个文件. 这个方法只能包含一个文件. 当脚本被<a href="lib/Reload.htm">重新加载</a>时, 这个开关会自动传递给新的实例.</p>
+      <p><span class="ver">[v1.1.34+]</span>: 在主脚本之前 <a href="lib/_Include.htm">Includes</a> 一个文件. 这个方法只能包含一个文件. 当脚本被<a href="lib/Reload.htm">重新加载</a>时, 这个开关会自动传递给新的实例.</p>
     </td>
     <td>否</td>
   </tr>
   <tr id="SlashScript">
     <td>/script</td>
     <td>
-      <p><span class="ver">[v1.1.34+]:</span> 当与基于 .exe 文件的编译脚本一起使用时, 这个开关会使程序忽略主嵌入脚本. 这允许编译后的脚本 .exe 执行外部脚本文件或除主脚本以外的嵌入式脚本. 其他通常不被编译脚本支持的开关也可以使用, 但必须列在这个开关的右边. 例如:</p>
+      <p><span class="ver">[v1.1.34+]</span>: 当与基于 .exe 文件的编译脚本一起使用时, 这个开关会使程序忽略主嵌入脚本. 这允许编译后的脚本 .exe 执行外部脚本文件或除主脚本以外的嵌入式脚本. 其他通常不被编译脚本支持的开关也可以使用, 但必须列在这个开关的右边. 例如:</p>
       <pre class="no-highlight">CompiledScript.exe /script /ErrorStdOut MyScript.ahk "Script's arg 1"</pre>
       <p>如果当前的可执行文件没有嵌入脚本, 这个开关是允许的, 但没有效果.</p>
       <p>基于 .bin 文件的编译脚本不支持这个开关.</p>
@@ -326,10 +326,10 @@ FileAppend, %Var%, C:\My File.txt</pre>
 </ul>
 <p><code><i>AutoHotkey</i>.ahk</code> 的文件名取决于 Autohotkey 的文件名. 例如重命名 AutoHotkey.exe 为 MyScript.exe, 它会尝试打开 <code>MyScript.ahk</code>. 如果你运行 AutoHotkeyU32.exe 没有参数则会运行 AutoHotkeyU32.ahk.</p>
 <p>注意: 在早期版本 <a href="AHKL_ChangeLog.htm#L51">revision 51</a>, 程序会在工作目录寻找 AutoHotkey.ini 或者我的文档下的 AutoHotkey.ahk.</p>
-<p><span class="ver">[v1.1.17+]:</span> 星号(*) 加在文件名上会打开标准输入通道(stdin) 的脚本. 例如 <a href="lib/Run.htm#ExecScript">ExecScript()</a>.</p>
-<p><span class="ver">[v1.1.34+]:</span> 如果当前可执行文件有<a href="Program.htm#embedded-scripts">嵌入脚本</a>, 此参数可以是星号, 后面跟着嵌入脚本的资源名或 ID. 对于编译脚本(例如, 如果存在 ID 为 #1 的嵌入式脚本), 此参数前必须有 <code>/script</code> 开关.</p>
+<p><span class="ver">[v1.1.17+]</span>: 星号(*) 加在文件名上会打开标准输入通道(stdin) 的脚本. 例如 <a href="lib/Run.htm#ExecScript">ExecScript()</a>.</p>
+<p><span class="ver">[v1.1.34+]</span>: 如果当前可执行文件有<a href="Program.htm#embedded-scripts">嵌入脚本</a>, 此参数可以是星号, 后面跟着嵌入脚本的资源名或 ID. 对于编译脚本(例如, 如果存在 ID 为 #1 的嵌入式脚本), 此参数前必须有 <code>/script</code> 开关.</p>
 <p id="cmd_args"><strong>Script Parameters:</strong> 你想要传递给脚本的参数用空格分隔. 任何包含空格的参数需要在两端加上引号(<strong>"</strong>). 如果你想传递一个空字符串作为参数, 请指定两个连续的引号. 如果参数本身包含引号(<strong>"</strong>) 则需要转义(\"). 因此, 加引号参数(例如 "C:\My Documents<span class="red">\"</span>) 末尾的斜杠(\) 都被当作原义的引号(就是说, 脚本将接收到字符串 C:\My Documents<span class="red">"</span>). 要移除这样的引号, 请使用 <code><a href="lib/StringReplace.htm">StringReplace</a>, 1, 1, <span class="red">"</span>,, All</code>.</p>
-<p><span class="ver">[v1.1.27+]:</span> 传入参数, 如果存在, 作为数组存储在内置变量 <strong>A_Args</strong> 中, 可以使用<a href="Objects.htm#Usage_Simple_Arrays">数组语法</a>来访问. <code>A_Args[1]</code> 包含第一个参数. 下面的示例在传递给它的参数太少时退出脚本:</p>
+<p><span class="ver">[v1.1.27+]</span>: 传入参数, 如果存在, 作为数组存储在内置变量 <strong>A_Args</strong> 中, 可以使用<a href="Objects.htm#Usage_Simple_Arrays">数组语法</a>来访问. <code>A_Args[1]</code> 包含第一个参数. 下面的示例在传递给它的参数太少时退出脚本:</p>
 <pre>if A_Args.Length() &lt; 3
 {
     MsgBox % "脚本需要至少 3 个参数, 但实际只接收到" A_Args.Length() "个."
@@ -421,7 +421,7 @@ Pause</pre>
 <p><i>SERVER</i> 和 <i>PORT</i> 可以省略. 例如, 下面的方式是等同的:</p>
 <pre class="no-highlight">AutoHotkey /Debug "myscript.ahk"
 AutoHotkey /Debug=localhost:9000 "myscript.ahk"</pre>
-<p id="debug_attach"><span class="ver">[AHK_L 59+]:</span> 要向已经在运行的脚本附加调试器, 请向脚本发送消息, 如下所示:</p>
+<p id="debug_attach"><span class="ver">[AHK_L 59+]</span>: 要向已经在运行的脚本附加调试器, 请向脚本发送消息, 如下所示:</p>
 <pre>ScriptPath := "" <em>; 设置此变量为脚本的完整路径</em>
 DetectHiddenWindows On
 if WinExist(ScriptPath " ahk_class AutoHotkey")

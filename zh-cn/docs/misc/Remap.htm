@@ -24,7 +24,7 @@
 </ul>
 
 <h2 id="intro">简介</h2>
-<p><strong>限制</strong>: 下面描述的 AutoHotkey 重映射功能通常不如直接通过 Windows 注册表进行映射那么直接有效. 对于每种方法的优点和缺点, 请参阅<a href="#registry">注册表重映射</a>.</p>
+<p><strong>限制:</strong> 下面描述的 AutoHotkey 重映射功能通常不如直接通过 Windows 注册表进行映射那么直接有效. 对于每种方法的优点和缺点, 请参阅<a href="#registry">注册表重映射</a>.</p>
 <h2 id="Remap">重映射键盘和鼠标</h2>
 <p>内置重映射功能的语法为 <code>OriginKey::DestinationKey</code>. 例如, 只包含下面这行内容的<a href="../Scripts.htm">脚本</a>会将 <kbd>A</kbd> 重映射成 <kbd>B</kbd>:</p>
 <pre>a::b</pre>
@@ -118,14 +118,14 @@ a::b
 ^!b::
 ToolTip You pressed %A_ThisHotkey%.
 return</pre>
-<p id="SendPlay">如果在自动运行段(脚本的顶部) 使用了 <a href="../lib/SendMode.htm">SendMode</a>, 那么它会影响所有的重映射. 但是, 由于重映射使用 <a href="../lib/Send.htm#blind">Send {Blind}</a> 而 <a href="../lib/SendMode.htm">SendPlay 模式</a>不完全支持 {Blind}, 所以一些映射在 SendPlay 模式中可能无法正常运行(尤其是 <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd> 和 <kbd>Win</kbd>). 要变通解决此问题, 当您脚本中含有重映射时请避免在自动执行段中使用 SendPlay; 而仅在整个脚本的一些需要的地方使用 <a href="../lib/Send.htm#SendPlay">SendPlay</a> 命令而不是 Send. 或者, 您可以把您的重映射转换为热键(如下所述), 这样就明确调用 SendEvent 而不是 Send.</p>
+<p id="SendPlay">如果在<a href="../Scripts.htm#auto">自动执行段</a>(脚本的顶部) 使用了 <a href="../lib/SendMode.htm">SendMode</a>, 那么它会影响所有的重映射. 但是, 由于重映射使用 <a href="../lib/Send.htm#blind">Send {Blind}</a> 而 <a href="../lib/SendMode.htm">SendPlay 模式</a>不完全支持 {Blind}, 所以一些映射在 SendPlay 模式中可能无法正常运行(尤其是 <kbd>Ctrl</kbd>, <kbd>Shift</kbd>, <kbd>Alt</kbd> 和 <kbd>Win</kbd>). 要变通解决此问题, 当您脚本中含有重映射时请避免在自动执行段中使用 SendPlay; 而仅在整个脚本的一些需要的地方使用 <a href="../lib/Send.htm#SendPlay">SendPlay</a> 命令而不是 Send. 或者, 您可以把您的重映射转换为热键(如下所述), 这样就明确调用 SendEvent 而不是 Send.</p>
 <p id="actually">加载脚本时, 每个重映射会被转换为一对<a href="../Hotkeys.htm">热键</a>. 例如, 包含重映射 <code>a::b</code> 的脚本实际包含下面的两个热键:</p>
-<pre>*<strong>a</strong>::
+<pre>*<strong>a:</strong>:
 SetKeyDelay -1   <em>; 如果目标键是鼠标按钮, 则使用 SetMouseDelay 代替.</em>
 Send <a href="../lib/Send.htm#blind">{Blind}</a>{<strong>b</strong> DownR}  <em>; <a href="../lib/Send.htm#DownR">DownR</a> 和 Down 相似, 不过使用 DownTemp 时脚本中后面的其他 Send 命令则不会假定 "b" 仍然处于按下的状态.</em>
 return
 
-*<strong>a up</strong>::
+*<strong>a up:</strong>:
 SetKeyDelay -1  <em>; 请参阅下面的注意事项来了解在这段代码中两处 SetKeyDelay 都没有指定按键时长的原因.</em>
 Send {Blind}{<strong>b</strong> up}
 return</pre>

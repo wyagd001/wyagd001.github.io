@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Return | AutoHotkey</title>
-<meta name="description" content="The Return statement returns from a subroutine to which execution had previously jumped via function-call, Gosub, Hotkey activation, or other means." />
+<meta name="description" content="The Return statement returns from a function or subroutine to which execution had previously jumped via function-call, Gosub, Hotkey activation, or other means." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,33 +12,39 @@
 
 <h1>Return</h1>
 
-<p>从子程序返回到之前通过<a href="Functions.htm">函数调用</a>, <a href="Gosub.htm">Gosub</a>, <a href="../Hotkeys.htm">Hotkey</a> 激活, <a href="GroupActivate.htm">GroupActivate</a> 或其他方式执行跳转的地方.</p>
+<p>从函数或子程序返回到之前通过<a href="Functions.htm">函数调用</a>, <a href="Gosub.htm">Gosub</a>, <a href="../Hotkeys.htm">Hotkey</a> 激活, <a href="GroupActivate.htm">GroupActivate</a> 或其他方式执行跳转的地方.</p>
 
 <pre class="Syntax"><span class="func">Return</span> <span class="optional">, Expression</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>Expression</dt>
-  <dd><p>当 <code>return</code> 不在<a href="Functions.htm">函数</a>内时应该省略此参数.</p>
-      <p>由于此参数为<a href="../Variables.htm#Expressions">表达式</a>, 所以下面所有的都是有效的例子:</p>
-<pre>return 3
+  <dd>
+    <p>此参数只能在<a href="../Functions.htm">函数</a>中使用.</p>
+    <p>如果为空或省略, 默认为空字符串.</p>
+    <p>由于此参数为<a href="../Variables.htm#Expressions">表达式</a>, 所以下面所有的例子都是有效的:</p>
+    <pre>return 3
 return "literal string"
 return MyVar 
 return i + 1
 return true  <em>; 返回数字 1 表示 "true".</em>
 return ItemCount &lt; MaxItems  <em>; 返回真值或假值.</em>
 return FindColor(TargetColor)</pre>
-<p><strong>已知限制</strong>: 为了向后兼容和方便使用, 下面两个例子功能是等同的:</p>
-<pre>return MyVar
+    <p><strong>已知限制:</strong> 为了向后兼容和方便使用, 下面两个例子功能是等同的:</p>
+    <pre>return MyVar
 return %MyVar%</pre>
-<p>换句话说, 包围在百分号中的单变量会被视为非表达式. 要变通解决此问题, 请通过把它放到括号中来让它明确为表达式; 例如: <code>return (%MyVar%)</code>.</p></dd>
+    <p>换句话说, 包围在百分号中的单变量会被视为非表达式. 要变通解决此问题, 请通过把它放到括号中来让它明确为表达式; 例如: <code>return (%MyVar%)</code>.</p>
+  </dd>
 
 </dl>
+
 <h2 id="Remarks">备注</h2>
 <p>如果没有调用者可返回, 则 <em>Return</em> 将执行 <a href="Exit.htm">Exit</a> 代替.</p>
 <p>在<a href="../Functions.htm#return">返回值给调用者</a>中描述了多种从函数中返回多个值给调用者的方法.</p>
+
 <h2 id="Related">相关</h2>
 <p><a href="Functions.htm">函数</a>, <a href="Gosub.htm">Gosub</a>, <a href="Exit.htm">Exit</a>, <a href="ExitApp.htm">ExitApp</a>, <a href="GroupActivate.htm">GroupActivate</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 第一个 Return 将热键与下面的子程序分开. 如果它不存在, 按下热键会导致 <code>Sleep 1000</code> 被执行两次.</p>
@@ -52,5 +58,13 @@ Sleep 1000
 return</pre>
 </div>
 
+<div class="ex" id="ExFunc">
+<p><a class="ex_number" href="#ExFunc"></a> 报告函数返回的值.</p>
+<pre>MsgBox % returnTest() <em>; 显示 123</em>
+
+returnTest() {
+    return 123
+}</pre>
+</div>
 </body>
 </html>

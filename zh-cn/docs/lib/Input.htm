@@ -28,20 +28,20 @@
 
   <dt>Options</dt>
   <dd><p>由零个或多个下列选项组成的字符串(可任意顺序, 字母间可以用空格分隔):</p>
-      <p><strong>B</strong>: 忽略 <kbd>Backspace</kbd>(退格) 键. 一般情况下, 按下 <kbd>Backspace</kbd> 会删除最后一个输入的字符. 注: 如果输入的文本是可见的(例如在编辑器中), 在其中使用方向键或其他方式移动了光标后, <kbd>Backspace</kbd> 仍然会删除最后一个字符而不是光标(插入点) 后面的字符.</p>
-      <p><strong>C</strong>: 区分大小写. 一般情况下, <em>MatchList</em> 是不区分大小写的(在 1.0.43.03 之前的版本中, 只有字母 A-Z 被认为具有大小写形式, 而像 ü/ü 这样的字母则没有).</p>
-      <p><strong>I</strong>: 忽略由 AutoHotkey 脚本产生的所有字符, 例如 <a href="Send.htm#SendEvent">SendEvent</a> 命令. 然而, 不论此设置如何, <a href="Send.htm#SendInput">SendInput</a> 和 <a href="Send.htm#SendPlay">SendPlay</a> 模式生成的输入总是被忽略. <span class="ver">[v1.1.31+]:</span> 选项字母后面可以跟着一个数字来设置最低发送级别. <code>I</code> 等同于 <code>I1</code>, 而 <code>I0</code> 等同于没有指定该选项.</p></p>
-      <p><strong>L</strong>: 长度限制(例如 <code>L5</code>). 允许输入文本的最大长度. 当文本到达这个长度, 则输入会被终止且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为单词 Max, 不过如果此时文本匹配 <em>MatchList</em> 中的某个词组, 则把 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为单词 Match. 如果未指定, 则长度限制为 16383, 这也是 <span class="ver">[v1.1.31]</span> 之前版本的绝对最大长度.</p>
-      <p><strong>M</strong>: 如果含修饰符的键击(例如 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>) 对应于真实的 ASCII 字符, 则会识别并对它们进行转译. 参考这个例子, 其中识别了 <kbd>Ctrl</kbd>+<kbd>C</kbd>: </p>
+      <p><strong>B:</strong> 忽略 <kbd>Backspace</kbd>(退格) 键. 一般情况下, 按下 <kbd>Backspace</kbd> 会删除最后一个输入的字符. 注: 如果输入的文本是可见的(例如在编辑器中), 在其中使用方向键或其他方式移动了光标后, <kbd>Backspace</kbd> 仍然会删除最后一个字符而不是光标(插入点) 后面的字符.</p>
+      <p><strong>C:</strong> 区分大小写. 一般情况下, <em>MatchList</em> 是不区分大小写的(在 1.0.43.03 之前的版本中, 只有字母 A-Z 被认为具有大小写形式, 而像 ü/ü 这样的字母则没有).</p>
+      <p><strong>I:</strong> 忽略由 AutoHotkey 脚本产生的所有字符, 例如 <a href="Send.htm#SendEvent">SendEvent</a> 命令. 然而, 不论此设置如何, <a href="Send.htm#SendInput">SendInput</a> 和 <a href="Send.htm#SendPlay">SendPlay</a> 模式生成的输入总是被忽略. <span class="ver">[v1.1.31+]</span>: 选项字母后面可以跟着一个数字来设置最低发送级别. <code>I</code> 等同于 <code>I1</code>, 而 <code>I0</code> 等同于没有指定该选项.</p></p>
+      <p><strong>L:</strong> 长度限制(例如 <code>L5</code>). 允许输入文本的最大长度. 当文本到达这个长度, 则输入会被终止且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被设置为单词 Max, 不过如果此时文本匹配 <em>MatchList</em> 中的某个词组, 则把 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为单词 Match. 如果未指定, 则长度限制为 16383, 这也是 <span class="ver">[v1.1.31]</span> 之前版本的绝对最大长度.</p>
+      <p><strong>M:</strong> 如果含修饰符的键击(例如 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>) 对应于真实的 ASCII 字符, 则会识别并对它们进行转译. 参考这个例子, 其中识别了 <kbd>Ctrl</kbd>+<kbd>C</kbd>: </p>
       <pre>Transform, CtrlC, Chr, 3 <em>; 把 Ctrl-C 对应的字符保存到 CtrlC 变量.</em>
 Input, OutputVar, L1 M
 if OutputVar = %CtrlC%
     MsgBox, You pressed Control-C.
 ExitApp</pre>
-      <p class="note"><strong>注意</strong>: 从 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd> 对应的字符为从 <a href="Chr.htm">Chr(1)</a> 到 <a href="Chr.htm">Chr(26)</a>. 此外, M 选项可能会导致某些键盘快捷键(例如 <kbd>Ctrl</kbd>+<kbd>&larr;</kbd>) 在 Input 执行时表现不正常.</p>
-      <p><strong>T</strong>: 超时(例如 <code>T3</code>). 在终止输入前等待的秒数, 超时后设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为单词 Timeout.Input 超时后, <em>OutputVar</em> 会被设置为用户在超时前输入的文本. 该选项可以为浮点数, 例如 <code class="no-highlight">T2.5</code>.</p>      
-      <p id="vis"><strong>V</strong>: 可见. 一般情况下, 用户的输入是阻塞的(隐藏在操作系统后). 使用此选项来发送用户的键击到活动窗口.</p>
-      <p id="asterisk"><strong>*</strong>: 通配符(查找所有地方). 一般情况下, 用户输入的文本必须准确匹配 <em>MatchList</em> 中的某个词组, 匹配才会成功. 使用此选项搜索输入文本的整个长度, 这样会更容易找到匹配.</p>
+      <p class="note"><strong>注意:</strong> 从 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd> 对应的字符为从 <a href="Chr.htm">Chr(1)</a> 到 <a href="Chr.htm">Chr(26)</a>. 此外, M 选项可能会导致某些键盘快捷键(例如 <kbd>Ctrl</kbd>+<kbd>&larr;</kbd>) 在 Input 执行时表现不正常.</p>
+      <p><strong>T:</strong> 超时(例如 <code>T3</code>). 在终止输入前等待的秒数, 超时后设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为单词 Timeout.Input 超时后, <em>OutputVar</em> 会被设置为用户在超时前输入的文本. 该选项可以为浮点数, 例如 <code class="no-highlight">T2.5</code>.</p>      
+      <p id="vis"><strong>V:</strong> 可见. 一般情况下, 用户的输入是阻塞的(隐藏在操作系统后). 使用此选项来发送用户的键击到活动窗口.</p>
+      <p id="asterisk"><strong>*:</strong> 通配符(查找所有地方). 一般情况下, 用户输入的文本必须准确匹配 <em>MatchList</em> 中的某个词组, 匹配才会成功. 使用此选项搜索输入文本的整个长度, 这样会更容易找到匹配.</p>
       <p id="E"><strong>E</strong> <span class="ver">[v1.1.20+]</span>: 使结束键响应单个字符而替代使用 keycode(按键码). 这样使得当用户键盘布局和脚本的不同的时候得到一致的返回值. 同时它还能避免实际发生的组合键和定义的不同的歧义; 举个例子, 如果 @ 作为结束键, 在 US 键盘布局上 <kbd>Shift</kbd>+<kbd>2</kbd> 会触发它, 但是 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd> 不会(如果使用了 E 选项的话). 如果 C 选项也同时开启, 那么结束字符是大小写敏感的.</p>
       </dd>
 
@@ -109,7 +109,8 @@ ExitApp</pre>
 <p><a href="InputHook.htm">InputHook()</a> 比 Input 命令更灵活.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="KeyWait.htm">KeyWait</a>, <a href="Hotstrings.htm">热字串</a>, <a href="InputBox.htm">InputBox</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="../misc/Threads.htm">线程</a>, <a href="IfIn.htm">if var in/contains MatchList</a></p>
+<p><a href="KeyWait.htm">KeyWait</a>, <a href="Hotstrings.htm">热字串</a>, <a href="InputBox.htm">InputBox</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="../misc/Threads.htm">线程</a>, <a href="IfIn.htm">If Var [not] in/contains MatchList</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExAnyKey">
 <p><a class="ex_number" href="#ExAnyKey"></a> 等待用户按下任意键. 产生不可见字符的这些键(例如, 修饰键, 功能键和方向键) 已经被列为终止键, 这样就能检测到它们.</p>

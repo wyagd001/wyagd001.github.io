@@ -26,23 +26,25 @@
 
   <dt>Target</dt>
   <dd><p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk) 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是本地文件且指定时没有包含路径, 则首先搜索 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 如果那里没有找到匹配的文件, 如果它集成在系统中("已知的"), 则系统会搜索并运行此文件, 例如包含在 PATH 环境变量的其中某个文件夹中.</p>
-      <p>要传递参数, 请让它们紧跟在程序或文档名的后面. 例如, <code>Run, MyProgram.exe Param1 Param2</code>.</p>
-      <p>如果程序/文档名称或参数包含空格, 则把它们括在双引号中是最可靠的(虽然它在某些情况下没有括在双引号中也能工作). 例如, <code>Run, "My Program.exe" "param with spaces"</code>.</p></dd>
+      <p>要传递参数, 请让它们紧跟在程序或文档名的后面, 如下所示:</p>
+      <pre>Run, MyProgram.exe Param1 Param2</pre>
+      <p>如果程序/文档名称或参数包含空格, 则把它们括在双引号中是最可靠的(虽然它在某些情况下没有括在双引号中也能工作)., 如下所示:</p>
+      <pre>Run, "My Program.exe" "param with spaces"</pre></dd>
 
   <dt>WorkingDir</dt>
-  <dd><p>用于运行项目的工作目录. 即使它包含空格, 也不要括在双引号中. 如果省略, 则使用脚本自己的工作目录(<a href="../Variables.htm#WorkingDir">A_WorkingDir</a>).</p></dd>
+  <dd><p>如果为空或省略, 则使用脚本自己的工作目录(<a href="../Variables.htm#WorkingDir">A_WorkingDir</a>). 否则, 请指定 <em>Target</em> 的工作目录. 即使它包含空格, 也不要括在双引号中.</p></dd>
 
   <dt>Options</dt>
-  <dd><p>如果为空或省略, 命令正常运行 <em>Target</em>, 并且当 <em>Target</em> 不能启动时显示警告对话框. 否则, 请指定以下一个或多个选项:</p>
-      <p><strong>Max</strong>: 最大化运行</p>
-      <p><strong>Min</strong>: 最小化运行</p>
-      <p><strong>Hide</strong>: 隐藏运行(不能和上面任意一个选项组合使用)</p>
-      <p class="note"><strong>注意</strong>: 一些程序(例如 Calc.exe) 不会遵循请求的启动状态, 因此对于它们 Max/Min/Hide 没有效果.</p>
-      <p id="UseErrorLevel"><strong>UseErrorLevel</strong>: 可以单独指定 UseErrorLevel 或和上面的其中一个单词组合使用(把它和其他单词用空格分隔). 如果运行失败, 则使用此选项会跳过警告对话框, 设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为单词 ERROR, 并让<a href="../misc/Threads.htm">当前线程</a>继续执行. 如果运行成功, 则 RunWait 会把 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为程序的退出代码, 而 Run 把它设置为 0.</p>
-      <p id="LastError">指定 UseErrorLevel 时, 变量 <strong>A_LastError</strong> 被设置为操作系统 GetLastError() 函数返回的结果. A_LastError 是一个介于 0 和 4294967295 之间的数字(总是为十进制而非十六进制). 零(0) 意味着成功, 但其他任何数字意味着运行失败. 每个数字对应一种特定的错误状态(要获取整个列表, 请在 <a href="https://www.microsoft.com">www.microsoft.com</a> 中搜索 "system error codes"). 像 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 一样, A_LastError 是与每个线程关联的设置, 即由其他<a href="../misc/Threads.htm">线程</a>产生的中断不会改变它. 然而, A_LastError 还可由 <a href="DllCall.htm#LastError">DllCall()</a> 设置.</p></dd>
+  <dd><p>如果为空或省略, 正常启动 <em>Target</em>, 并且当 <em>Target</em> 不能启动时, 将显示警告对话框. 否则, 请指定以下一个或多个选项:</p>
+      <p><strong>Max:</strong> 最大化运行</p>
+      <p><strong>Min:</strong> 最小化运行</p>
+      <p><strong>Hide:</strong> 隐藏运行(不能和上面任意一个选项组合使用)</p>
+      <p class="note"><strong>注意:</strong> 一些程序(例如 Calc.exe) 不会遵循请求的启动状态, 因此对于它们 Max/Min/Hide 没有效果.</p>
+      <p id="UseErrorLevel"><strong>UseErrorLevel:</strong> 可以单独指定 UseErrorLevel 或和上面的其中一个单词组合使用(把它和其他单词用空格分隔). 如果运行失败, 则使用此选项会跳过警告对话框, 设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为单词 ERROR, 并让<a href="../misc/Threads.htm">当前线程</a>继续执行. 如果运行成功, 则 RunWait 会把 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为程序的退出代码, 而 Run 把它设置为 0.</p>
+      <p id="LastError">指定 UseErrorLevel 时, 内置变量 <strong>A_LastError</strong> 被设置为操作系统 GetLastError() 函数返回的结果. A_LastError 是一个介于 0 和 4294967295 之间的数字(总是为十进制而非十六进制). 零(0) 意味着成功, 但其他任何数字意味着运行失败. 每个数字对应一种特定的错误状态(要获取整个列表, 请在 <a href="https://www.microsoft.com">www.microsoft.com</a> 中搜索 "system error codes"). 像 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 一样, A_LastError 是与每个线程关联的设置, 即由其他<a href="../misc/Threads.htm">线程</a>产生的中断不会改变它. 然而, A_LastError 还可由 <a href="DllCall.htm#LastError">DllCall()</a> 设置.</p></dd>
 
   <dt>OutputVarPID</dt>
-  <dd><p>用来存储新运行程序的唯一<a href="Process.htm">进程 ID(PID)</a>的输出变量的名称. 如果无法确定则 PID 被设置为空, 这经常发生在运行系统动词, 文档或快捷方式而不是直接的可执行文件时. RunWait 也支持此参数, 不过它获取的 <em>OutputVarPID</em> 必须在<a href="../misc/Threads.htm">另一个线程</a>中进行检查(否则, 这个 PID 将是无效的, 因为 RunWait 后的代码执行时相应的进程已经终止了).</p>
+  <dd><p>如果为空或省略, 不使用输出变量. 否则, 请指定用来存储新运行程序的唯一<a href="Process.htm">进程 ID(PID)</a>的输出变量的名称. 如果无法确定则 PID 被设置为空, 这经常发生在运行系统动词, 文档或快捷方式而不是直接的可执行文件时. RunWait 也支持此参数, 不过它获取的 <em>OutputVarPID</em> 必须在<a href="../misc/Threads.htm">另一个线程</a>中进行检查(否则, 这个 PID 将是无效的, 因为 RunWait 后的代码执行时相应的进程已经终止了).</p>
       <p>在 Run 命令获取 PID, 此进程要创建的窗口可能还不存在. 要等待它至少创建一个窗口, 请使用 <code><a href="WinWait.htm">WinWait</a> ahk_pid %OutputVarPID%</code>.</p></dd>
 
 </dl>
@@ -56,7 +58,7 @@
 <pre>Run rundll32.exe shell32.dll<span class="style3">`,</span>Control_RunDLL desk.cpl<span class="style3">`,`,</span> 3  <em>; 打开控制面板 &gt; 显示属性 &gt; 设置</em></pre>
 <p>通过 <a href="../Variables.htm#ComSpec">ComSpec</a>(cmd.exe) 运行程序时(也许由于您需要重定向程序的输入和输出), 如果可执行程序的路径或名称包含空格, 则整个字符串必须括在一对外部的引号中. 在下面的例子中, 外部引号以<span class="style3">黄色</span>高亮显示:</p>
 <pre>Run %comSpec% /c <span class="style3">"</span>"C:\My Utility.exe" "param 1" "second param" &gt;"C:\My File.txt"<span class="style3">"</span></pre>
-<p>如果无法启动 <em>目标</em>, 将显示包含此错误信息的窗口, 并结束当前线程, 除非在第 3 个参数中指定字符串 <strong>UseErrorLevel</strong>, 或者使用 <a href="Try.htm">Try</a>/<a href="Catch.htm">Catch</a> 语句进行捕获.</p>
+<p>如果无法启动 <em>目标</em>, 将显示包含此错误信息的窗口, 并结束当前线程, 除非在第 3 个参数中指定字符串 <u>UseErrorLevel</u>, 或者使用 <a href="Try.htm">Try</a>/<a href="Catch.htm">Catch</a> 语句进行捕获.</p>
 <p>当 <em>Target</em> 为准确路径时可轻微提升性能, 例如使用 <code>Run, C:\Windows\Notepad.exe "C:\My Documents\Test.txt"</code> 代替 <code>Run, C:\My Documents\Test.txt</code>.</p>
 <p>Run 还可以打开特殊的 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>. 例如:</p>
 <pre>Run ::{20d04fe0-3aea-1069-a2d8-08002b30309d}  <em>; 打开 "我的电脑" 文件夹.</em>
@@ -69,13 +71,13 @@ Run ::{645ff040-5081-101b-9f08-00aa002f954e}  <em>; 打开回收站.</em></pre>
   </tr>
   <tr>
     <td>*<i>动词</i></td>
-    <td><span class="ver">[AHK_L 57+]:</span> 任何系统定义或自定义的动词. 例如: <code>Run *Compile %A_ScriptFullPath%</code>. 在 Windows Vista 和更高版本中, 可以使用 <a href="#RunAs">*RunAs</a> 动词代替 <i>以管理员身份运行</i> 右键菜单.</td>
+    <td><span class="ver">[AHK_L 57+]</span>: 任何系统定义或自定义的动词. 例如: <code>Run *Compile %A_ScriptFullPath%</code>. 在 Windows Vista 和更高版本中, 可以使用 <a href="#RunAs">*RunAs</a> 动词代替 <i>以管理员身份运行</i> 右键菜单.</td>
   </tr>
   <tr>
     <td>properties(属性)</td>
     <td>
       <p>显示指定文件的资源管理器属性窗口. 例如: <code>Run, properties "C:\My File.txt"</code></p>
-      <p class="note"><strong>注意</strong>: 当脚本终止时属性窗口会自动关闭. 要避免这种情况, 请使用 <a href="WinWait.htm">WinWait</a> 等待窗口出现, 然后使用 <a href="WinWaitClose.htm">WinWaitClose</a> 等待用户关闭它.</p>
+      <p class="note"><strong>注意:</strong> 当脚本终止时属性窗口会自动关闭. 要避免这种情况, 请使用 <a href="WinWait.htm">WinWait</a> 等待窗口出现, 然后使用 <a href="WinWaitClose.htm">WinWaitClose</a> 等待用户关闭它.</p>
     </td>
   </tr>
   <tr>
@@ -118,16 +120,16 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
 }
 
 MsgBox A_IsAdmin: %A_IsAdmin%`nCommand line: %full_command_line%</pre>
-<p>如果用户取消了 UAC 对话框或者是其他原因启动失败, 脚本就会直接退出.</p>
+<p>如果用户取消了 <a href="https://en.wikipedia.org/wiki/User_Account_Control">User Account Control (UAC)</a> 对话框或者是其他原因启动失败, 脚本就会直接退出.</p>
 <p>在使用了 <a href="../Scripts.htm#SlashR">/restart</a> 启动参数, 且启动新进程实例的语句在 ExitApp 之前的时候, 需要确保 <a href="_SingleInstance.htm">single instance(单一实例)</a> 提示弹窗没有关闭.</p>
 <p>如果 UAC 禁止了, <em>*RunAs</em> 将不提权启动进程. 在命令行检查 <code>/restart</code> 以防脚本进入无限重启的循环之中. 注意 <code>/restart</code> 为内置开关, 所以它没有列入<a href="../Scripts.htm#cmd_args">命令行参数之中</a>.</p>
 <p>可以修改该示例以适应脚本的需要:</p>
 <ul>
-  <li>如果脚本的确需要管理员权限, 检查一次 A_IsAdmin 以免 <em>*RunAs</em> 提权脚本失败(比如因为被 UAC 禁止了).</li>
-  <li>为保持脚本运行, 即使用户取消了 UAC 提示, 移动 ExitApp 到 try 区块.</li>
+  <li>如果脚本的确需要管理员权限, 检查一次 <a href="../Variables.htm#IsAdmin">A_IsAdmin</a> 以免 <em>*RunAs</em> 提权脚本失败(比如因为被 UAC 禁止了).</li>
+  <li>为保持脚本运行, 即使用户取消了 UAC 提示, 移动 <a href="ExitApp.htm">ExitApp</a> 到 try 区块.</li>
   <li>为保持脚本运行, 即使重新启动失败(比如脚本文件已被重命名或删除), 移除 ExitApp 并且使用 RunWait 代替 Run. 若是成功, <code>/restart</code> 使新实例终止旧实例. 若是失败, 新实例的退出及 RunWait 返回.</li>
 </ul>
-<p><span class="ver">[v1.0.92.01+]:</span> 如果 UAC 开启, AutoHotkey 安装程序为 <em>.ahk</em> 文件注册 <em>RunAs</em> 动作, 这允许 <code>Run *RunAs script.ahk</code> 默认以管理员权限启动脚本.</p>
+<p><span class="ver">[v1.0.92.01+]</span>: 如果 UAC 开启, AutoHotkey 安装程序为 <em>.ahk</em> 文件注册 <em>RunAs</em> 动作, 这允许 <code>Run *RunAs script.ahk</code> 默认以管理员权限启动脚本.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="RunAs.htm">RunAs</a>, <a href="Process.htm">Process</a>, <a href="Exit.htm">Exit</a>, <a href="../misc/CLSID-List.htm">CLSID 列表</a>, <a href="DllCall.htm">DllCall()</a></p>

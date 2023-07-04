@@ -17,14 +17,14 @@
 
 <h2 id="Parameters">参数</h2>
 <dl>
-    <dt>SubCommand, Value</dt>
-    <dd>他们互相依赖, 其用法描述<a href="#SubCommands">如下</a>.</dd>
+  <dt>SubCommand, Value</dt>
+  <dd>他们互相依赖, 其用法描述<a href="#SubCommands">如下</a>.</dd>
 
-    <dt>PIDOrName</dt>
-    <dd>
-        <p>此参数可以为下面的数字(PID) 或进程名称. 它还可以被留空来改变脚本自己的优先级.</p>
-        <p><strong>PID:</strong> 进程 ID, 唯一标识一个特定进程的数字(只有在此进程的生存期这个数字才有意义). 新运行的进程的 PID 可以通过 <a href="Run.htm">Run</a> 命令获取. 同样的, 窗口的 PID 可以通过 <a href="WinGet.htm">WinGet</a> 获取. Process 命令自身也可以获取 PID.</p>
-        <p><strong>Name:</strong> 进程的名称, 通常和它的可执行文件名相同(不带路径), 例如 notepad.exe 或 winword.exe. 一个名称可能匹配多个正在运行的进程, 但只会对第一个进程进行操作. 这个名称不区分大小写.</p>
+  <dt>PIDOrName</dt>
+  <dd>
+    <p>此参数可以为下面描述的数字(PID) 或进程名称. 此参数可以为空或省略, 取决于所使用的子命令.</p>
+    <p><strong>PID:</strong> 进程 ID, 唯一标识一个特定进程的数字(只有在此进程的生存期这个数字才有意义). 新运行的进程的 PID 可以通过 <a href="Run.htm">Run</a> 命令获取. 同样的, 窗口的 PID 可以通过 <a href="WinGet.htm#PID">WinGet</a> 获取. Process 命令自身也可以获取 PID.</p>
+    <p><strong>Name:</strong> 进程的名称, 通常和它的可执行文件名相同(不带路径), 例如 notepad.exe 或 winword.exe. 一个名称可能匹配多个正在运行的进程, 但只会对第一个进程进行操作. 这个名称不区分大小写.</p>
     </dd>
  </dl>
 
@@ -42,12 +42,12 @@
 <h3 id="Exist">Exist</h3>
 <p>检查指定的进程是否存在.</p>
 <pre class="Syntax"><span class="func">Process</span>, Exist <span class="optional">, PIDOrName</span></pre>
-<p>如果存在一个匹配的进程则设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>  为此进程 ID(PID), 否则为 0. 如果 <em>PIDOrName</em> 参数为空, 则获取脚本自身的 PID. 检索脚本的另一种单行的方法是 <code>PID := DllCall("GetCurrentProcessId")</code>.</p>
+<p>如果存在一个匹配的进程则设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为此进程 ID(PID), 否则为 0. 如果 <em>PIDOrName</em> 参数为空或省略, 则获取脚本自身的 PID. 检索脚本的另一种单行的方法是 <code>PID := DllCall("GetCurrentProcessId")</code>.</p>
 
 <h3 id="Close">Close</h3>
 <p>强制关闭第一个匹配的进程.</p>
-<pre class="Syntax"><span class="func">Process</span>, Close <span class="optional">, PIDOrName</span></pre>
-<p>如果成功终止一个匹配的进程, 则设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为此进程原来的进程 ID(PID). 否则(没有找到匹配的进程或在终止匹配进程的过程中出现了问题) 它被设置为 0. 因为进程会被突然终止(可能在一个关键点中断它的工作或导致窗口中未保存数据的丢失), 因此只有当无法使用 <a href="WinClose.htm">WinClose</a> 作用于它的窗口来关闭相应进程时才使用这种方法.</p>
+<pre class="Syntax"><span class="func">Process</span>, Close, PIDOrName</pre>
+<p>如果成功终止一个匹配的进程, 则设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为此进程原来的进程 ID(PID). 否则(例如, 没有找到匹配的进程或在终止匹配进程的过程中出现了问题) 它被设置为 0. 因为进程会被突然终止(可能在一个关键点中断它的工作或导致窗口中未保存数据的丢失), 因此只有当无法使用 <a href="WinClose.htm">WinClose</a> 作用于它的窗口来关闭相应进程时才使用这个子命令.</p>
 
 <h3 id="List">List</h3>
 <p>虽然这个子命令还没有得到支持, <a href="#ListEx">示例 #4</a> 演示了如何通过 <a href="DllCall.htm">DllCall()</a> 检索进程列表.</p>
@@ -61,18 +61,17 @@
 <h3 id="Wait">Wait</h3>
 <p>等待指定的进程存在.</p>
 <pre class="Syntax"><span class="func">Process</span>, Wait, PIDOrName <span class="optional">, Timeout</span></pre>
-<p><em>Timeout</em> 指定秒数(可以为小数) 以便在超时前等待. 如果忽略 <em>Timeout</em>, 子命令将无限期地等待. 如果发现匹配进程, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为其进程ID(PID). 如果子命令超时, ErrorLevel 设置为 0.</p>
+<p><em>Timeout</em> 指定秒数(可以为小数) 以便在超时前等待. 如果 <em>Timeout</em> 为空或省略, 子命令将无限期地等待. 如果发现匹配进程, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为其进程 ID(PID). 如果子命令超时, ErrorLevel 设置为 0.</p>
+<p>每隔 100 毫秒检查目标进程一次; 当条件满足时, 子命令停止等待. 换句话说, 它不会等待超时过期, 而是像上面描述的那样立即设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, 然后继续执行脚本. 此外, 当子命令处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单</a>或<a href="SetTimer.htm">计时器</a>启动新<a href="../misc/Threads.htm">线程</a>.</p>
 
 <h3 id="WaitClose">WaitClose</h3>
-<p>等待<strong>所有</strong>匹配进程关闭.</p>
+<p>等待 <u>所有</u> 匹配进程关闭.</p>
 <pre class="Syntax"><span class="func">Process</span>, WaitClose, PIDOrName <span class="optional">, Timeout</span></pre>
-<p><em>Timeout</em> 指定秒数(可以为小数) 以便在超时前等待. 如果忽略 <em>Timeout</em>, 子命令将无限期地等待. 如果所有的匹配进程都关闭了, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0. 如果子命令超时, ErrorLevel 设置为仍然存在的首个匹配进程的 ID(PID).</p>
+<p><em>Timeout</em> 指定秒数(可以为小数) 以便在超时前等待. 如果 <em>Timeout</em> 为空或省略, 子命令将无限期地等待. 如果所有的匹配进程都关闭了, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0. 如果子命令超时, ErrorLevel 设置为仍然存在的首个匹配进程的 ID(PID).</p>
+<p>每隔 100 毫秒检查目标进程一次; 当条件满足时, 子命令停止等待. 换句话说, 它不会等待超时过期, 而是像上面描述的那样立即设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, 然后继续执行脚本. 此外, 当子命令处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单</a>或<a href="SetTimer.htm">计时器</a>启动新<a href="../misc/Threads.htm">线程</a>.</p>
 
 <h2 id="ErrorLevel">ErrorLevel</h2>
 <p>如果子命令失败或超时, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设置为 0. 否则, 它将被设置为进程 ID(PID). 有关详细信息, 请参阅上面的子命令.</p>
-
-<h2 id="Remarks">备注</h2>
-<p>对于 <a href="#Wait">Wait</a> 和 <a href="#WaitClose">WaitClose</a> 子命令: 每隔 100 毫秒检查目标进程一次; 当条件满足时, 子命令停止等待. 换句话说, 它不会等待超时过期, 而是像上面描述的那样立即设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a>, 然后继续执行脚本. 此外, 当子命令处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单</a>或<a href="SetTimer.htm">计时器</a>启动新<a href="../misc/Threads.htm">线程</a>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="Run.htm">Run</a>, <a href="WinGet.htm">WinGet</a>, <a href="WinClose.htm">WinClose</a>, <a href="WinKill.htm">WinKill</a>, <a href="WinWait.htm">WinWait</a>, <a href="WinWaitClose.htm">WinWaitClose</a>, <a href="WinExist.htm">WinExist()</a></p>
@@ -80,14 +79,14 @@
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 启动记事本, 将其优先级设置为 "High" 并显示当前的 PID.</p>
+<p><a class="ex_number" href="#ExBasic"></a> 启动记事本, 将其优先级设置为 High 并显示当前的 PID.</p>
 <pre>Run notepad.exe,,, NewPID
 Process, Priority, %NewPID%, High
 MsgBox The newly launched Notepad's PID is %NewPID%.</pre>
 </div>
 
 <div class="ex" id="ExAdvanced">
-<p><a class="ex_number" href="#ExAdvanced"></a> 对于记事本的出现, 最多等待 5.5 秒. 如果记事本出现在此秒数内, 则其优先级设置为 "Low", 并且脚本自身的优先级设置为 "High". 之后, 记事本将被关闭, 如果在 5 秒内未关闭, 将显示一个消息框.</p>
+<p><a class="ex_number" href="#ExAdvanced"></a> 等待记事本进程出现, 如果在 5.5 秒内出现, 则其优先级设置为 Low, 而脚本自己的优先级设置为 High.</p>
 <pre>Process, Wait, notepad.exe, 5.5
 NewPID := ErrorLevel  <em>; 由于 ErrorLevel 会经常发生改变, 所以要立即保存这个值.</em>
 if not NewPID
@@ -137,7 +136,7 @@ return</pre>
 </div>
 
 <div class="ex" id="ListEx">
-<p<a class="ex_number" href="#ListEx"></a> 使用 <a href="DllCall.htm">DllCall()</a> 获取正在运行的进程列表然后显示在消息框中.</p>
+<p<a class="ex_number" href="#ListEx"></a> 显示一个通过 <a href="DllCall.htm">DllCall()</a> 获取的正在运行的进程列表.</p>
 <pre>d := "  |  "  <em>; 字符串分隔符</em>
 s := 4096  <em>; 缓存和数组的大小(4 KB)</em>
 
@@ -183,7 +182,7 @@ MsgBox, 0, %c% Processes, %l%</pre>
 </div>
 
 <div class="ex" id="ListCom">
-<p><a class="ex_number" href="#ListCom"></a> 使用 COM 获取正在运行的进程列表. 有关 Win32_Process, 请参阅 <a href="https://learn.microsoft.com/windows/win32/cimwin32prov/win32-process">Microsoft Docs</a>.</p>
+<p><a class="ex_number" href="#ListCom"></a> 显示通过 COM 和 <a href="https://learn.microsoft.com/windows/win32/cimwin32prov/win32-process">Microsoft Docs</a> 获取的正在运行的进程列表.</p>
 <pre id="ListCom" class="NoIndent">Gui, Add, ListView, x2 y0 w400 h500, Process Name|Command Line
 for proc in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process")
     LV_Add("", proc.Name, proc.CommandLine)

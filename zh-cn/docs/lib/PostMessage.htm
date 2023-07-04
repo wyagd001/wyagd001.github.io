@@ -26,30 +26,23 @@
   <dd><p>要发送的消息号, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 请参阅<a href="../misc/SendMessageList.htm">消息列表</a>来确定编号.</p></dd>
 
   <dt>wParam</dt>
-  <dd><p>消息的第一个组件, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果为空或省略, 则会被设置为 0.</p></dd>
+  <dd><p>如果为空或省略, 将发送 0. 否则, 请指定消息的第一个组件, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果为空或省略, 则会被设置为 0.</p></dd>
 
   <dt>lParam</dt>
-  <dd><p>消息的第二个组件, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果为空或省略, 则会被设置为 0.</p></dd>
+  <dd><p>如果为空或省略, 将发送 0. 否则, 请指定消息的第二个组件, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果为空或省略, 则会被设置为 0.</p></dd>
 
   <dt>Control</dt>
-  <dd><p>如果此参数为空或省略, 则消息会被直接发送到目标窗口而不是它的某个控件. 或者此参数可以是 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
+  <dd><p>如果此参数为空或省略, 则消息会被直接发送到目标窗口而不是它的某个控件. 或者指定 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
     <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code>ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p>
     </dd>
 
-  <dt>WinTitle</dt>
-  <dd><p>窗口标题或识别目标窗口的其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p></dd>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
+  <dd>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
+  </dd>
 
-  <dt>WinText</dt>
-  <dd><p>如果使用此参数, 那么它必须是目标窗口中单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 当 <a href="DetectHiddenText.htm">DetectHiddenText</a> 的设置为 ON 时, 那么会检测到隐藏文本元素.</p></dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd><p>标题中含有此参数值的窗口将被排除.</p></dd>
-
-  <dt>ExcludeText</dt>
-  <dd><p>文本中含有此参数值的窗口将被排除.</p></dd>
-
-  <dt>Timeout</dt>
-  <dd><p><span class="ver">[AHK_L 42+]:</span> 等待目标窗口处理消息的最大毫秒数. 如果省略, 则默认为 5000(毫秒), 这同时也是不支持此参数的 AutoHotkey 旧版本的默认行为. 如果在这时间内消息没有被处理, 则命令结束并设置 ErrorLevel 为单词 FAIL. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
+  <dt>Timeout <span class="ver">[AHK_L 42+]</span></dt>
+  <dd><p>如果为空或省略, 默认为 5000, 这同时也是不支持此参数的 AutoHotkey 旧版本的默认行为. 否则, 请指定等待目标窗口处理消息的最大毫秒数. 如果在这时间内消息没有被处理, 则命令结束并设置 ErrorLevel 为单词 FAIL. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
 
 </dl>
 
@@ -64,17 +57,17 @@
 
 <h2 id="Remarks">备注</h2>
 <p>应该小心使用这些命令, 因为发送消息到错误的窗口(或发送错误的消息) 可能导致意外的行为或者甚至让目标应用程序崩溃. 这是因为大多数应用程序并不是设计用于从外部来源中接受某些类型的消息.</p>
-<p>PostMessage 把消息放置到和目标窗口关联的消息队列中. 它不会等待确认或回应. 与之相比, SendMessage 在到达超时时间前会等待目标窗口处理消息.</p>
+<p>PostMessage 把消息放置到和目标窗口关联的消息队列中, 并且不会等待确认或回应. 与之相比, SendMessage 在到达超时时间前会等待目标窗口处理消息.</p>
 <p><em>wParam</em> 和 <em>lParam</em> 必须为整数. 如果 AutoHotkey 或目标窗体为 32 位, 那么只有低 32 位被使用; 也就是说, 值将是 -2147483648 到 4294967295(0xFFFFFFFF) 之间. 如果 AutoHotkey 和目标窗体都是 64 位, 那么 <a href="../Variables.htm#cap">AutoHotkey 支持的</a>任何整数值都可以使用. 与 AutoHotkey 支持的所有整数值一样, 前缀 0x 表示一个十六进制值. 例如, 0xFF 等同于 255.</p>
 <p>字符串可以通过 <em>wParam</em> 或 <em>lParam</em> 来传递变量地址(实现传递字符串的效果). 下面的例子演示了通过<a href="../Variables.htm#amp">地址操作符(&amp;)</a> 实现这一效果:</p>
 <pre>SendMessage, 0x000C, 0, <strong>&amp;MyVar</strong>, ClassNN, WinTitle  <em>; 0X000C 为 WM_SETTEXT</em></pre>
-<p><span class="ver">[v1.0.43.06+]</span>: 由消息的接收者放入 MyVar 的字符串可以正确识别而不需要额外的步骤. 不过, 只有在参数的首个字符为和符号(&amp;) 时才可以; 例如, <code>5+&amp;MyVar</code> 不行, 但 <code>&amp;MyVar</code> 或 <code>&amp;MyVar+5</code> 可以.</p>
+<p><span class="ver">[v1.0.43.06+]</span>: 由消息的接收者放入 <em>MyVar</em> 的字符串可以正确识别而不需要额外的步骤. 不过, 只有在参数的首个字符为和符号(&amp;) 时才可以; 例如, <code>&amp;MyVar</code> 或 <code>&amp;MyVar+5</code> 可以正常工作, 单 <code>5+&amp;MyVar</code> 不能.</p>
 <p>引号包围的(原义) 字符串也可以发送, 例如下面这个可运行示例(此时不应该使用 &amp; 运算符):</p>
 <pre>#Persistent
 ListVars
 WinWaitActive, ahk_class AutoHotkey
 SendMessage, 0x000C, 0, "<strong>New Title</strong>"  <em>; 0x000C is WM_SETTEXT</em></pre>
-<p>要发送消息到系统中的所有窗口, 包括隐藏或禁用的那些, 请在 <em>WinTitle</em> 中指定 <code>ahk_id 0xFFFF</code>(0xFFFF 为 HWND_BROADCAST). 这种技术应该只用于目标为广播的消息, 例如:</p>
+<p>要发送消息到系统中的所有窗口, 包括隐藏或禁用的那些, 请在 <em>WinTitle</em> 中指定 <code class="no-highlight">ahk_id 0xFFFF</code>(0xFFFF 为 HWND_BROADCAST). 这种技术应该只用于目标为广播的消息, 例如:</p>
 <pre>SendMessage, 0x001A,,,, ahk_id 0xFFFF  <em>; 0x001A 为 WM_SETTINGCHANGE</em></pre>
 <p>要让脚本接收消息, 请使用 <a href="OnMessage.htm">OnMessage()</a>.</p>
 <p>请参阅<a href="../misc/SendMessage.htm">消息指南</a>来查看使用这些命令的介绍.</p>

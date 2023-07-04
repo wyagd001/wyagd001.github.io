@@ -19,42 +19,35 @@
 <dl>
 
   <dt id="Label">Label</dt>
-  <dd><p>跳转的目标<a href="../misc/Labels.htm">标签</a>或<a href="../Hotkeys.htm">热键标签</a>的名称, 这样会执行 <em>Label</em> 下的命令, 直到遇到 <a href="Return.htm">Return</a> 或 <a href="Exit.htm">Exit</a>. 和几乎其他所有命令的参数一样, <em>Label</em> 可以为<a href="../Variables.htm">变量</a>引用(例如 %MyLabel%), 此时将使用变量中的名称作为跳转的目标.</p>
-  <p id="OmitLabel"><span class="ver">[v1.1.01+]:</span> 如果省略 <em>Label</em>, 则使用 <a href="../Variables.htm#ThisLabel">A_ThisLabel</a>. 例如, <code>SetTimer,, Off</code> 可以用来在定时子程序中关闭计时器, 当 <code>SetTimer,, 1000</code> 还会更新当前计时器的 <em>Period(周期)</em> 或者对当前正在运行的 label 设置一个新的定时值. <span class="ver">[v1.1.24+]:</span> 如果 A_ThisLabel 为空但是当前线程为计时器启动的, 那么就会直接使用这个计时器. 这个特性对于用计时器调用函数或函数对象时非常方便.</p>
-  <p id="Functor"><span class="ver">[v1.1.20+]:</span> 如果不存在有效的标签名称, 这个参数可以为一个函数的名称, 其参数列表没有强制参数(请参阅<a href="#ExFunction">函数示例</a>), 或者是引用<a href="../misc/Functor.htm">函数对象</a>的单个变量. 例如, <code>SetTimer %funcObj%, 1000</code> 或 <code>SetTimer % funcObj, 1000</code>. 目前暂不支持其他返回对象的表达式. 详情参见<a href="#ExampleClass">类的例子</a>.</p>
-<p class="note"><strong>注意</strong>: <span class="ver">[v1.1.24+]:</span> 传递空变量或返回空值的表达式被看做一个错误. 这个参数必须为非空的值或完全忽略.</p>
+  <dd><p>跳转的目标<a href="../misc/Labels.htm">标签</a>, <a href="../Hotkeys.htm">热键标签</a>或<a href="../Hotstrings.htm">热字串标签</a>的名称, 这样会执行 <em>Label</em> 下的命令, 直到遇到 <a href="Return.htm">Return</a> 或 <a href="Exit.htm">Exit</a>. 和几乎其他所有命令的参数一样, <em>Label</em> 可以为<a href="../Variables.htm">变量</a>引用(例如 %MyLabel%), 此时将使用变量中的名称作为跳转的目标.</p>
+  <p id="OmitLabel"><span class="ver">[v1.1.01+]</span>: 如果为空或省略, 则使用 <a href="../Variables.htm#ThisLabel">A_ThisLabel</a>. 例如, <code>SetTimer,, Off</code> 可以用来在定时子程序中关闭计时器, 当 <code>SetTimer,, 1000</code> 还会更新当前计时器的 <em>Period(周期)</em> 或者对当前正在运行的 label 设置一个新的定时值. <span class="ver">[v1.1.24+]</span>: 如果 A_ThisLabel 为空但是当前线程为计时器启动的, 那么就会直接使用这个计时器. 这个特性对于用计时器调用函数或函数对象时非常方便.</p>
+  <p id="Functor"><span class="ver">[v1.1.20+]</span>: 如果不存在有效的标签名称, 这个参数可以为一个函数的名称, 其参数列表没有强制参数, 如<a href="#ExFunction">示例 #4</a>), 或者是引用<a href="../misc/Functor.htm">函数对象</a>的单个变量, 如<a href="#ExampleClass">示例 #5</a>. 目前暂不支持其他返回对象的表达式.</p>
+<p class="note"><strong>注意:</strong> 在 <span class="ver">[v1.1.24+]</span> 中, 传递空变量或返回空值的表达式被看做一个错误. 这个参数必须为非空的值或完全忽略.</p>
   </dd>
 
   <dt>PeriodOnOffDelete</dt>
-  <dd><p><strong>On(开启)</strong>: 以原来的 <em>周期</em> 重新启用之前禁用的计时器. 如果计时器不存在, 则进行创建(使用默认的周期 250). 计时器也会<a href="#reset">重置</a>. 如果计时器存在但之前被设为<a href="#once">单次运行模式</a>, 那么它仍然只运行一次.</p>
-      <p><strong>Off(关闭)</strong>: 禁用现有的计时器.</p>
-      <p><strong>Delete(删除)</strong> <span class="ver">[v1.1.20+]</span>: 禁止并删除已存在的计时器. 如果计时器已经关联了某个<a href="../misc/Functor.htm">函数对象</a>, 该对象将被释放. 关闭计时器并不会释放该(函数) 对象.</p>
-      <p><strong>Period(周期)</strong>: 使用该参数的绝对值创建或更新一个计时器, 如同在此计时器执行前必须经过的<a href="#Precision">近似</a>的毫秒数一样. 计时器会被自动启用和<a href="#reset">重置</a>. 计时器可以设置成重复执行或只执行一次:</p>
-      <ul>
-        <li>如果 <em>周期</em> 为正数, 计时器会自动重复直到被脚本明确的关闭.</li>
-        <li id="once"><p><span class="ver">[v1.0.46.16+]:</span> 如果 <em>周期</em> 为负数, 则计时器仅执行一次. 例如指定 -100, 计时器将在 100 ms 后执行然后关闭, 就像使用了 <code>SetTimer, Label, Off</code> 命令一样.</p>
-        <p><span class="ver">[v1.1.24+]:</span> 如果 <em>Label</em> 为脚本生成的对象(不是代码中存在的函数或标签), 计时器将在计时器函数返回后自动删除, 除非定时为可开启的. 这使得对象在脚本不再引用它时可以被释放, 但是它也意味着计时器的 <em>周期</em> 和 <em>优先级</em> 都不会保留.</p></li>
-      </ul>  
-      <p><em>周期</em> 必须为整数, 除非用的是变量或表达式, 在这种情况下, 任何小数部分都被忽略. 周期的绝对值不能大于 4294967295ms(49.7 天).</p>
-      <p><strong>默认值</strong>: 如果此参数为空并且:<br>
-	  1) 计时器不存在: 则使用 250 的周期进行创建.<br>
-      2) 计时器已经存在: 则以原来的 <em>周期</em> 启用和<a href="#reset">重置</a>计时器, 除非指定了 <em>Priority(优先级)</em>.</p>
-
-    </dd>
+  <dd>
+    <p>如果为空或省略, 并且计时器不存在, 将创建一个周期为 250. 如果为空或省略, 并且计时器已经存在, 将激活并<a href="#reset">重置</a>之前的周期, 除非指定了 <em>Priority</em>. 否则, 指定以下参数之一:</p>
+    <p id="Period"><strong>Period:</strong> 使用该参数的绝对值创建或更新一个计时器, 如同在此计时器执行前必须经过的<a href="#Precision">近似</a>的毫秒数一样. 计时器会被自动启用和<a href="#reset">重置</a>. 如果 <em>Period</em> 为正数, 计时器会自动重复直到被脚本显式禁用. <span class="ver">[v1.0.46.16+]</span>: 如果 <em>Period</em> 为负数, 则计时器仅执行一次. 例如, 指定 -100 , 计时器将在 100 ms 后执行然后关闭, 就像使用了 <code>SetTimer, Label, Off</code> 一样. <span class="ver">[v1.1.24+]</span>: 如果 <em>Label</em> 为脚本生成的对象(不是实际的函数或标签), 计时器将在计时器函数返回后自动删除, 除非重新打开定时器. 这使得对象在脚本不再引用它时可以被释放, 但是它也意味着计时器的 <em>Period</em> 和 <em>Priority</em> 都不会保留.</p>
+    <p><em>Period</em> 必须为整数, 除非用的是变量或表达式, 在这种情况下, 任何小数部分都被忽略. 周期的绝对值不能大于 4294967295&nbsp;ms(49.7 天).</p>
+    <p><strong>On:</strong> 以原来的周期重新启用之前禁用的计时器. 如果计时器不存在, 则进行创建(使用默认的周期 250). 计时器也会<a href="#reset">重置</a>. 如果计时器存在但之前被设为单次运行模式(见上文), 那么它仍然只运行一次.</p>
+    <p><strong>Off:</strong> 禁用现有的计时器.</p>
+    <p><strong>Delete</strong> <span class="ver">[v1.1.20+]</span>: 禁止并删除已存在的计时器. 如果计时器已经关联了某个<a href="../misc/Functor.htm">函数对象</a>, 该对象将被释放. 关闭计时器并不会释放该(函数) 对象.</p>
+  </dd>
 
   <dt>Priority</dt>
-  <dd><p>这个可选参数是一个介于 -2147483648 和 2147483647 之间的整数(或为<a href="../Variables.htm#Expressions">表达式</a>) 来表示计时器的优先级. 如果省略, 则使用 0. 请参阅<a href="../misc/Threads.htm">线程</a>了解详情.</p>
+  <dd><p>如果为空或省略, 默认为 0. 否则, 请指定一个介于 -2147483648 和 2147483647 之间的整数(或为<a href="../Variables.htm#Expressions">表达式</a>) 来表示计时器的优先级. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
       <p>要改变现有计时器的优先级而不影响其他方面, 请留空前一个参数.</p></dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
 <p>计时器很有用, 因为它们是异步运行的, 这意味着它们会以指定的频率(间隔) 运行, 即使脚本正等待窗口, 显示对话框或忙于其他任务的时候. 它们的许多应用实例包括了当用户空闲时(如 <a href="../Variables.htm#TimeIdle">A_TimeIdle</a> 反映的那样) 执行一些动作或在不需要的窗口出现时关闭它们.</p>
-<p>尽管计时器给人一种脚本同时执行多个任务的错觉, 实际并非如此. 相反地, 定时子程序只是被当作其他线程来处理: 它们可以中断另一个线程或被另一个线程中断, 例如 <a href="../Hotkeys.htm">热键子程序</a>. 请参阅<a href="../misc/Threads.htm">线程</a>了解详情.</p>
+<p>尽管计时器给人一种脚本同时执行多个任务的错觉, 实际并非如此. 相反地, 定时子程序只是被当作其他线程来处理: 它们可以中断另一个线程或被另一个线程中断, 例如 <a href="../Hotkeys.htm">热键子程序</a>. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
 <p>每当创建或重新启用计时器或用新的 <em>周期</em> 更新计时器时, 它的子程序都不会立即运行, 必须先经过它的 <em>周期</em> 时间. 如果您希望立即开始计时器的首次执行, 请使用 <a href="Gosub.htm">Gosub</a> 来执行计时器的子程序(但是, 这种方式不会像计时器那样启动新线程; 所以诸如 <a href="SendMode.htm">SendMode</a> 的设置不会以它们的默认值开始).</p>
-<p id="reset"><strong>重置</strong>: 如果 SetTimer 用于现有的计时器且第二个参数为数字或单词 ON(或省略), 则计时器内部的 "上次运行的时间" 会被重置为当前时间; 换句话说, 在经过它的整个周期后子程序才会再次运行.</p>
-<p id="Precision"><strong>计时器精度</strong>: 由于操作系统中计时系统的精确度, <em>周期</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于所安装的硬件和驱动的类型). 例如, 在 Windows NT/2000/XP 中介于 1 和 10(含边界) 的 <em>周期</em> 通常相当于 10 或 15.6. 使用 Loop+Sleep 可以实现更短的延时, 请参阅演示: <a href="Sleep.htm#ShorterSleep">DllCall+timeBeginPeriod+Sleep</a>.</p>
-<p id="Reliability"><strong>可靠性</strong>: 在以下条件下, 计时器可能无法按预期时间运行:</p>
+<p id="reset"><strong>重置:</strong> 如果 SetTimer 用于现有的计时器且第二个参数为数字或单词 ON(为空或省略), 则计时器内部的 "上次运行的时间" 会被重置为当前时间; 换句话说, 在经过它的整个周期后子程序才会再次运行.</p>
+<p id="Precision"><strong>计时器精度:</strong> 由于操作系统中计时系统的精确度, <em>周期</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于所安装的硬件和驱动的类型). 例如, 在 Windows NT/2000/XP 中介于 1 和 10(含边界) 的周期, 通常相当于 10 或 15.6. 使用 Loop+Sleep 可以实现更短的延时, 请参阅演示: <a href="Sleep.htm#ShorterSleep">DllCall+timeBeginPeriod+Sleep</a>.</p>
+<p id="Reliability"><strong>可靠性:</strong> 在以下条件下, 计时器可能无法按预期时间运行:</p>
 <ol>
   <li>其他程序让 CPU 高负载.</li>
   <li>计时器子程序本身在计时器周期到期时仍在运行(定时子程序运行的时间超过它自己的周期), 或者有太多竞争计时器(改变 <a href="SetBatchLines.htm">SetBatchLines</a> 可能有帮助).</li>
@@ -63,15 +56,17 @@
 </ol>
 <p>尽管计时器在脚本<a href="Suspend.htm">挂起</a>时仍会运行, 但是如果<a href="../misc/Threads.htm">当前线程</a>的 <a href="Thread.htm#NoTimers">Thread NoTimers</a> 正在起作用或者任意线程被<a href="Pause.htm">暂停</a>时则不会运行. 此外, 当用户通过脚本的菜单(例如托盘图标菜单或菜单栏) 进行导航时它们也不会运行.</p>
 <p>因为计时器是通过临时中断脚本当前线程来运行的, 所以它们的子程序应该保持简短(以便很快地结束), 无论何时很长的中断都是不好的.</p>
-<p id="otherremarks"><strong>其他备注</strong>: 要在脚本运行期间保持有效的计时器一般应在<a href="../Scripts.htm#auto">自动执行段</a>中进行创建. 与之相比, 临时的计时器经常可以在它自己的子程序中禁用(请参阅此页面底部的示例).</p>
+<p id="otherremarks"><strong>其他备注:</strong> 要在脚本运行期间保持有效的计时器一般应在<a href="../Scripts.htm#auto">自动执行段</a>中进行创建. 与之相比, 临时的计时器经常可以在它自己的子程序中禁用(请参阅此页面底部的示例).</p>
 <p>每当计时子程序运行时, 它会使用设置(例如 <a href="SendMode.htm">SendMode</a>) 的默认值开始. 这些默认值可以在<a href="../Scripts.htm#auto">自动执行段</a>改变.</p>
-<p>如果<a href="../Hotkeys.htm">热键</a>的响应时间非常重要(例如在游戏中) 且脚本包含了子程序执行时间超过 5ms 的计时器, 那么请使用下列命令来避免 15ms 的延迟. 如果在热键按下时恰好处于计时器线程的不可中断期间, 那么这样的延迟还是会发生.</p>
-<pre><a href="Thread.htm">Thread</a>, interrupt, 0  <em>; 让所有的线程总是不可中断的.</em></pre>
+<p>如果<a href="../Hotkeys.htm">热键</a>的响应时间非常重要(例如在游戏中) 且脚本包含了子程序执行时间超过 5&nbsp;ms 的计时器, 那么请使用下列命令来避免 15&nbsp;ms 的延迟. 如果在热键按下时恰好处于计时器线程的不可中断期间, 那么这样的延迟还是会发生.</p>
+<pre><a href="Thread.htm">Thread</a>, Interrupt, 0  <em>; 让所有的线程总是不可中断的.</em></pre>
 <p>如果计时器在它的子程序正运行时被禁用, 那么该子程序会继续运行直到完成.</p>
 <p><a href="KeyHistory.htm">KeyHistory</a> 功能会显示存在的计时器数目以及当前启用的数目.</p>
 <p>要让脚本持续运行(例如只包含计时器的脚本), 请使用 <a href="_Persistent.htm">#Persistent</a>.</p>
+
 <h2 id="Related">相关</h2>
 <p><a href="Gosub.htm">Gosub</a>, <a href="Return.htm">Return</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread (命令)</a>, <a href="Critical.htm">Critical</a>, <a href="IsLabel.htm">IsLabel()</a>, <a href="Menu.htm">Menu</a>, <a href="_Persistent.htm">#Persistent</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExampleClose">
 <p><a class="ex_number" href="#ExampleClose"></a> 当不想要的窗口出现时关闭它们.</p>
@@ -94,7 +89,7 @@ return
 Alert1:
 if not WinExist("Video Conversion", "Process Complete")
     return
-<em>; Otherwise:</em>
+<em>; 否则:</em>
 SetTimer, Alert1, Off  <em>; 即此处计时器关闭自己.</em>
 SplashTextOn, , , The video conversion is finished.
 Sleep, 3000

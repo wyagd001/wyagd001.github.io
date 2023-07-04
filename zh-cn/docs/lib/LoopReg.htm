@@ -23,8 +23,11 @@
   <dd><p>原义单词 <code>Reg</code>(不区分大小写), 不可用变量或表达式.</p></dd>
 
   <dt>KeyName</dt>
-  <dd><p>注册表键的全名, 如 <code>HKLM\Software</code> 或 <code>%FullPathOfKey%</code>.</p>
-      <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG(或这些的缩写, 如 HKLM) 开始. 要访问<a href="#remote">远程注册表</a>, 请在前面加上计算机名和冒号, 就像在本例中一样: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+  <dd>
+    <p>注册表键的全名, 如 <code>HKLM\Software\SomeApplication</code>.</p>
+    <p>必须以 HKEY_LOCAL_MACHINE(或 HKLM), HKEY_USERS(或 HKU), HKEY_CURRENT_USER(或 HKCU), HKEY_CLASSES_ROOT(或 HKCR) 或 HKEY_CURRENT_CONFIG(或 HKCC) 开始.</p>
+    <p>要访问<a href="#remote">远程注册表</a>, 请在前面加上计算机名和冒号(或在 <span class="ver">[v1.1.21+]</span> 使用反斜杠), 例如 <code>\\workstation01\HKEY_LOCAL_MACHINE</code>.</p>
+  </dd>
 
   <dt>Mode</dt>
   <dd><p>如果为空或省略, 则只包含值且不递归子键. 否则, 指定一个或多个下列字母:</p>
@@ -38,7 +41,7 @@
 </dl>
 
 <h2 id="old">传统语法</h2>
-<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此语法. 而是使用<a href="#new">新语法</a>.</p>
+<p class="warning"><strong>过时的:</strong> 不推荐在新脚本中使用此语法. 而是使用上面的<a href="#new">新语法</a>.</p>
 <pre class="Syntax"><span class="func">Loop</span>, RootKey <span class="optional">, Key, IncludeSubkeys?, Recurse?</span></pre>
 
 <h3 id="Old_Parameters">参数</h3>
@@ -46,10 +49,10 @@
 
   <dt>RootKey</dt>
   <dd><p>必须为 HKEY_LOCAL_MACHINE(或 HKLM), HKEY_USERS(或 HKU), HKEY_CURRENT_USER(或 HKCU), HKEY_CLASSES_ROOT(或 HKCR) 或 HKEY_CURRENT_CONFIG(或 HKCC) 的其中一个.</p>
-      <p>要访问<a href="#remote">远程注册表</a>, 请在前面加上计算机名和冒号, 例如: <code>\\workstation01:HKEY_LOCAL_MACHINE</code></p></dd>
+      <p>要访问<a href="#remote">远程注册表</a>, 请在前面加上计算机名和冒号(或在 <span class="ver">[v1.1.21+]</span> 使用反斜杠), 例如 <code>\\workstation01\HKEY_LOCAL_MACHINE</code>.</p>
 
   <dt>Key</dt>
-  <dd><p>键名(例如 Software\SomeApplication). 如果为空或省略, 将获取 <em>根键</em> 的内容.</p></dd>
+  <dd><p>键名, 例如 <code>Software\SomeApplication</code>. 如果为空或省略, 将获取 <em>根键</em> 的内容.</p></dd>
   
   <dt>IncludeSubkeys?</dt>
   <dd><p>如果为空或省略, 则默认为 0(只获取值). 否则, 指定下列数字之一:</p>
@@ -61,6 +64,7 @@
   </dd>
   
   <dt>Recurse?(递归?)</dt>
+  <dd><p>如果为空或省略, 则默认为 0(不递归子键). 否则, 指定下列数字之一:</p>
     <ul>
       <li>0 = 不对子键进行递归.</li>
       <li>1 = 对子键进行递归, 以便获取包含在其中的所有值和子键.</li>
@@ -86,7 +90,7 @@
   </tr>
   <tr>
     <td>A_LoopRegKey</td>
-    <td>正在访问的根键名(HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG). 访问远程注册表时, 此变量的值将<strong>不</strong>包含计算机名.</td>
+    <td>正在访问的根键名(HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG). 访问远程注册表时, 此变量的值将 <u>不</u> 包含计算机名.</td>
   </tr>
   <tr>
     <td>A_LoopRegSubKey</td>
@@ -131,14 +135,23 @@
 <p><a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">区块</a>, <a href="RegRead.htm">RegRead</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="RegDelete.htm">RegDelete</a>, <a href="SetRegView.htm">SetRegView</a></p>
 
 <h2 id="Examples">示例</h2>
+<div class="ex" id="ExNewVsOld">
+<p><a class="ex_number" href="#ExNewVsOld"></a> 新语法 vs. 旧语法.</p>
+<p>尽管语法不同, 但这两个示例具有相同的效果: 它们检索指定注册表子键的内容, 每次检索一项.</p>
+<pre>Loop, Reg, HKEY_LOCAL_MACHINE\Software\SomeApplication
+    MsgBox %A_LoopRegName%</pre>
+<pre>Loop, HKEY_LOCAL_MACHINE, Software\SomeApplication
+    MsgBox %A_LoopRegName%</pre>
+</div>
+
 <div class="ex" id="ExRegDelete">
 <p><a class="ex_number" href="#ExRegDelete"></a> 删除用户输入的 Internet Explorer 的 URL 历史.</p>
-<pre>Loop, HKEY_CURRENT_USER, Software\Microsoft\Internet Explorer\TypedURLs
+<pre>Loop, Reg, HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\TypedURLs
     RegDelete</pre>
 </div>
 
-<div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 有效的测试脚本.</p>
+<div class="ex" id="ExText">
+<p><a class="ex_number" href="#ExText"></a> 有效的测试脚本.</p>
 <pre>Loop, Reg, HKEY_CURRENT_USER\Software\Microsoft\Windows, KVR
 {
     if (A_LoopRegType = "key")
