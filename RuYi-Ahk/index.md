@@ -10,14 +10,14 @@ layout: default
 
 **脚本下载**: [https://wyagd001.github.io/RuYi-Ahk/RuYi.zip](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [1.9 - 2023/06/07](history.md)
+**当前版本**: [2.0 - 2023/07/05](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
 **关键词及目录**: AutoHotkey [快捷键与模式](#hotkey) [面板](#Board)  [动作](#Action)  [外部脚本](#Script)
 
 ### [](#header-3)功能介绍
-如意百宝箱受到类似软件 Quicker, Ahk 的 Windy 和 Candy 脚本的影响, 是一款由 AutoHotkey 脚本语言编写的快速启动软件. 打开 "如一.exe" 即启动了程序, 然后在不同的窗口按下 Ctrl+Mbutton 即可显示定制的动作面板, 点击面板上的按钮来执行相应的动作, 也可以使用鼠标手势 "上右" 来显示主面板. 欢迎大家试用, 非常渴望倾听您的声音。欢迎您的任何意见、建议、疑问、吐槽，或者鼓励。  
+如意百宝箱受到类似软件 Quicker, Ahk 的 Windy 和 Candy 脚本的影响, 是一款由 AutoHotkey 脚本语言编写的快速启动软件. 打开 "如一.exe" 即启动了程序, 然后在不同的窗口按下 Ctrl+Mbutton 即可显示定制的动作面板, 点击面板上的按钮来执行相应的动作, 也可以使用鼠标手势 "上右" 来显示主面板. 欢迎大家试用, 非常渴望倾听您的声音. 欢迎您的任何意见、建议、疑问、吐槽, 或者鼓励.  
 
 #### <span id="hotkey">快捷键与模式</span>
 不同的快捷键对应不同的显示模式. 如意百宝箱的 3 组快捷键 Ctrl+Mbutton, Ctrl + 1, CapLocks 分别对应着面板, 菜单, 工具提示这 3 种模式. 热键可以在配置文件 "如一.ini" 中手动修改(重启程序后生效).  
