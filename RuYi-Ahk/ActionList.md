@@ -370,7 +370,7 @@ layout: default
 |[1359](http://127.0.0.1:5151/runcom?aabb=1359)|e8ee|强制重启|无条件|强制重启|canfunc&#124;CF_重启|
 |[1360](http://127.0.0.1:5151/runcom?aabb=1360)|f617|截取屏幕|无条件|截取显示器屏幕并保存到脚本指定的路径(网页控制使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "%A_ScriptDir%\临时目录\Screen.jpg"|
 |[1361](http://127.0.0.1:5151/runcom?aabb=1361)|e992|显示桌面|无条件|最小化所有窗口(显示桌面)|canfunc&#124;CF_WinMinimizeAll|
-|[1362](http://127.0.0.1:5151/runcom?aabb=1362)|e992|清空回收站|无条件|清空回收站|canfunc&#124;CF_FileRecycleEmpty|
+|[1362](http://127.0.0.1:5151/runcom?aabb=1362)|E107|清空回收站|无条件|清空回收站|canfunc&#124;CF_FileRecycleEmpty|
 |[1363](http://127.0.0.1:5151/runcom?aabb=1363)|f8ac|上一首|无条件|播放器上一首(foobar2000, wmplayer, ttplayer, Winamp)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\播放器控制.ahk" "/prev"|
 |[1364](http://127.0.0.1:5151/runcom?aabb=1364)|f8ae|暂停|无条件|播放器暂停(foobar2000, wmplayer, ttplayer, Winamp)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\播放器控制.ahk" "/pause"|
 |[1365](http://127.0.0.1:5151/runcom?aabb=1365)|f8ad|下一首|无条件|播放器下一首(foobar2000, wmplayer, ttplayer, Winamp)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\播放器控制.ahk" "/next"|
@@ -409,7 +409,7 @@ layout: default
 |1398|e8c1|deepl|选中文本|使用deepl翻译选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Deepl翻译.ahk" "%CandySel%"|
 |1399|e97c|设为壁纸|选中文件|将选中图片文件设置为桌面壁纸(第二块屏幕)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_设置壁纸.ahk" "%CandySel%" "2"|
 |1400|EDE3|长文本|子面板|选中长文本的通用动作的子面板|Gui&#124;长文本通用|
-|1401|f19d|额外属性|选中文件|获取选中文件的额外属性|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_额外的属性(ExtendedProperty).ahk" "%CandySel%"|
+|1401|f19d|详细信息|选中文件|获取选中文件的额外属性|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_额外的属性(ExtendedProperty).ahk" "%CandySel%"|
 |1402|f19d|查看属性|选中文件|获取选中文件的资源管理器详细信息列中能列出的属性|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_额外的属性(GetDetailsOf).ahk" "%CandySel%"|
 |1403|e197|虚拟为磁盘 X|选中文件夹|将选中文件夹挂载为虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_虚拟磁盘.ahk" "%CandySel%" "X"|
 |1404|e159|卸载磁盘 X|选中驱动器|卸载虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_卸载虚拟磁盘.ahk" "%CandySel%"|
@@ -435,9 +435,21 @@ layout: default
 |1406|e159|取消挂载|选中文件夹|将选中文件夹(分区挂载的文件夹) 取消挂载|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_取消挂载.ahk" "%CandySel%"|
 |1407|e8c1|Bing词典|选中文本|使用Bing网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Bing词典.ahk" "%CandySel%"|
 |1408|e8c1|有道词典|选中文本|使用有道网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\有道词典.ahk" "%CandySel%"|
-|1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免QTTabBer打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
+|1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免 QTTabBer 打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
 |[1416](http://127.0.0.1:5151/runcom?aabb=1416)|f8af|移动鼠标|无条件|移动鼠标到指定坐标并点击鼠标左键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\移动鼠标.ahk" "%CandySel%"|
 |[1417](http://127.0.0.1:5151/runcom?aabb=1417)|e961|屏蔽键盘|无条件|临时屏蔽键盘按键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\屏蔽键盘.ahk"|
+|[1418](http://127.0.0.1:5151/runcom?aabb=1418)|E756|CMD|无条件|标准用户下以管理员权限打开 CMD|run&#124;runas /user:administrator cmd|
+|[1419](http://127.0.0.1:5151/runcom?aabb=1419)|E756|UAC|无条件|打开 UAC 通知管理(拉到最底部只是关闭 UAC 通知, 并不是关闭 UAC)|run&#124;C:\WINDOWS\System32\UserAccountControlSettings.exe|
+|[1420](http://127.0.0.1:5151/runcom?aabb=1420)|E756|UAC|无条件|打开 UAC 通知管理(以管理员身份打开)|run&#124;runas /user:administrator C:\WINDOWS\System32\UserAccountControlSettings.exe|
+|1421|f19d|文件属性|选中文件|打开选中文件系统属性对话框|CanFunc&#124;CF_OpenProp&#124;%CandySel%|
+|[1422](http://127.0.0.1:5151/runcom?aabb=1422)|E756|远程协助|无条件|工具: 系统远程协助|run&#124;msra.exe|
+|[1423](http://127.0.0.1:5151/runcom?aabb=1423)|E107|回收站预览|无条件|显示回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件预览.ahk" "::{645FF040-5081-101B-9F08-00AA002F954E}"|
+
+
+
+
+
+
 
 
 
