@@ -10,7 +10,7 @@ layout: default
 
 **脚本下载**: [https://wyagd001.github.io/RuYi-Ahk/RuYi.zip](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [2.2 - 2023/08/__](history.md)
+**当前版本**: [2.2 - 2023/08/17](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
@@ -68,7 +68,7 @@ layout: default
      -  .3 [1.8+]动作可以通过热字串来启动打开. 例: 默认的 "jsb" 来打开记事本  
 
 #### <span id="Script">外部脚本</span>
-  - 许多动作是由外部的 ahk 脚本来完成的, 它们统一放在 "外部脚本" 目录. 现在内置的外部动作脚本有 171 个.  
+  - 许多动作是由外部的 ahk 脚本来完成的, 它们统一放在 "外部脚本" 目录. 现在内置的外部动作脚本有 170 个.  
     下面列出了内置的外部脚本动作, 第二列为外部动作脚本是否集成在 AnyToAhk.exe(ATA) 中.  
 
 | 动作编号 | ATA内置 | 按钮名称 | 动作对象 | 描述 | 脚本名称 |
