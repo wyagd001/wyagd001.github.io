@@ -124,7 +124,7 @@ layout: default
 |[1113](http://127.0.0.1:5151/runcom?aabb=1113)|E839|网络适配器|无条件|使用资源管理器以新窗口方式打开网络适配器|run&#124;rundll32.exe shell32.dll,Control_RunDLL ncpa.cpl|
 |[1114](http://127.0.0.1:5151/runcom?aabb=1114)|E756|环境变量|无条件|打开系统环境变量的设置界面|run&#124;rundll32 sysdm.cpl,EditEnvironmentVariables|
 |[1115](http://127.0.0.1:5151/runcom?aabb=1115)|f19d|显示隐藏|无条件|资源管理器显示隐藏文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\显示隐藏文件.ahk"|
-|[1116](http://127.0.0.1:5151/runcom?aabb=1116)|f56f|隐藏文件|无条件|资源管理器隐藏文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\不显示隐藏文件.ahk"|
+|[1116](http://127.0.0.1:5151/runcom?aabb=1116)|f618|隐藏文件|无条件|资源管理器隐藏文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\不显示隐藏文件.ahk"|
 |[1117](http://127.0.0.1:5151/runcom?aabb=1117)|ea49|显示扩展名|无条件|资源管理器显示文件的扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\显示扩展名.ahk"|
 |[1118](http://127.0.0.1:5151/runcom?aabb=1118)|e89f|隐藏扩展名|无条件|资源管理器隐藏文件的扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\不显示扩展名.ahk"|
 |1119|e16d|多文件名|选中文件|将选中文件的文件名放入剪贴板(支持多文件)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\多文件仅复制文件名.ahk" "%CandySel%"|
@@ -364,8 +364,8 @@ layout: default
 |[1353](http://127.0.0.1:5151/runcom?aabb=1353)|e992|静音切换|无条件|系统静音切换|canfunc&#124;CF_静音|
 |[1354](http://127.0.0.1:5151/runcom?aabb=1354)|e198|静音|无条件|系统静音|canfunc&#124;CF_静音&#124;1|
 |[1355](http://127.0.0.1:5151/runcom?aabb=1355)|e995|取消静音|无条件|系统取消静音|canfunc&#124;CF_静音&#124;0|
-|[1356](http://127.0.0.1:5151/runcom?aabb=1356)|e996|关机|无条件|关机|canfunc&#124;CF_关机|
-|[1357](http://127.0.0.1:5151/runcom?aabb=1357)|e996|强制关机|无条件|强制关机|canfunc&#124;CF_关机&#124;13|
+|[1356](http://127.0.0.1:5151/runcom?aabb=1356)|e7e8|关机|无条件|关机|canfunc&#124;CF_关机|
+|[1357](http://127.0.0.1:5151/runcom?aabb=1357)|e7e8|强制关机|无条件|强制关机|canfunc&#124;CF_关机&#124;13|
 |[1358](http://127.0.0.1:5151/runcom?aabb=1358)|e8ee|重启|无条件|重启|canfunc&#124;CF_重启&#124;6|
 |[1359](http://127.0.0.1:5151/runcom?aabb=1359)|e8ee|强制重启|无条件|强制重启|canfunc&#124;CF_重启|
 |[1360](http://127.0.0.1:5151/runcom?aabb=1360)|f617|截取屏幕|无条件|截取显示器屏幕并保存到脚本指定的路径(网页控制使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "%A_ScriptDir%\临时目录\Screen.jpg"|
@@ -402,7 +402,7 @@ layout: default
 |1391|e8b7@62CBB9|青色图标|选中文件夹|将文件夹的图标设置为青色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "青色"|
 |1392|e8b7@E9AAAA|粉红图标|选中文件夹|将文件夹的图标设置为粉红.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "粉红"|
 |1393|e8b7@8D5E2F|棕色图标|选中文件夹|将文件夹的图标设置为棕色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "棕色"|
-|1394|ef3b|测试|无条件|测试插件脚本里的例子2|canfunc&#124;ExecSendToDll&#124;%CandySel%&#124;1394|
+|1394|ef3b|测试|选中对象|测试插件脚本里的例子2|canfunc&#124;ExecSendToDll&#124;%CandySel%&#124;1394|
 |[1395](http://127.0.0.1:5151/runcom?aabb=1395)|e11a|Ahk Spy|无条件|第三方的 Autohotkey Spy|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\AhkSpy.ahk"|
 |1396|e11a|IconEx|选中文件|提取文件(Exe, Dll) 中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\IconEx.ahk" %CandySel%|
 |1397|e8c1|Id3v2|选中文件|读取修改音频文件的标签|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\音频文件标签.ahk" "%CandySel%"|
@@ -444,6 +444,25 @@ layout: default
 |1421|f19d|文件属性|选中文件|打开选中文件系统属性对话框|CanFunc&#124;CF_OpenProp&#124;%CandySel%|
 |[1422](http://127.0.0.1:5151/runcom?aabb=1422)|E756|远程协助|无条件|工具: 系统远程协助|run&#124;msra.exe|
 |[1423](http://127.0.0.1:5151/runcom?aabb=1423)|E107|回收站预览|无条件|显示回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件预览.ahk" "::{645FF040-5081-101B-9F08-00AA002F954E}"|
+|[1424](http://127.0.0.1:5151/runcom?aabb=1424)|f5a9|同时编辑|无条件|同时使用记事本打开两个文件夹下(当前打开的文件夹) 的同名文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\同时编辑两个同名的文件.ahk" "%CandySel%"|
+|1425|EDE3|通用4|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用4|
+|1426|EDE3|通用4|子面板|选中文件的通用动作的子面板|Gui&#124;文件通用4|
+|1427|EDE3|Ahk通用|菜单|选中ahk文件通用动作的菜单|Menu&#124;ahk文件通用|
+|[1428](http://127.0.0.1:5151/runcom?aabb=1428)|e775|输入法指示|无条件|工具: 在鼠标旁边显示当前窗口输入法状态(A, 中, 英)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\输入法指示器.ahk"|
+|[1429](http://127.0.0.1:5151/runcom?aabb=1429)|e8d2|脚本管理器|无条件|Ahk 脚本管理器|Cando&#124;ScriptManager|
+|[1430](http://127.0.0.1:5151/runcom?aabb=1430)|f597|托盘图标管理|无条件|显示隐藏系统托盘区域中图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\托盘图标管理器.ahk"|
+|[1431](http://127.0.0.1:5151/runcom?aabb=1431)|e1e0|普通权限|无条件|使用标准用户的权限创建任务计划,通过打开计划来打开文件(普通用户下以管理员权限运行如意以普通权限来打开文件)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\通过当前用户的权限新建任务计划并执行打开文件.ahk" "c:\windows\system32\cmd.exe"|
+|[1432](http://127.0.0.1:5151/runcom?aabb=1432)|e1e0|普通权限|无条件|使用当前 Shell 的权限(正常情况下为登录用户的权限) 打开文件(以管理员权限运行如意时想以普通用户的权限打开文件)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\通过桌面权限打开文件(ShellRun).ahk"  "cmd.exe"|
+|[1433](http://127.0.0.1:5151/runcom?aabb=1433)|e198|隐藏静音|无条件|将任意窗口隐藏并静音, 再次运行恢复|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\隐藏窗口并静音.ahk" "%Windy_CurWin_id%"|
+|[1434](http://127.0.0.1:5151/runcom?aabb=1434)|ec80|保存桌面位置|无条件|将桌面图标位置信息保存到临时文件夹, 并删除7天前保存的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复桌面图标位置.ahk"|
+|[1435](http://127.0.0.1:5151/runcom?aabb=1435)|ec77|恢复桌面位置|无条件|利用先前保存的文件恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复桌面图标位置.ahk" "restore"|
+|[1436](http://127.0.0.1:5151/runcom?aabb=1436)|ef3c|获取颜色|无条件|查看选中数字对应的颜色, 并带有取色功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\取色小程序.ahk" "%CandySel%"|
+|[1437](http://127.0.0.1:5151/runcom?aabb=1437)|f16a|暂时隐藏|任意窗口|将任意窗口暂时隐藏 3 秒后恢复显示(任务栏按钮会被放到同类的最右边)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\暂时隐藏窗口.ahk" "%Windy_CurWin_id%"|
+|1438|e8e7|保存并运行|选中文本|将选中 Ahk 保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun&#124;CandySel_Rich|
+|1439|E70F|打开本地网页|Chrome|使用文本编辑器打开浏览器正在浏览的本地文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\记事本打开浏览器当前浏览的本地文件.ahk" "%Windy_CurWin_Class%"|
+|[1440](http://127.0.0.1:5151/runcom?aabb=1440)|E107|回收站预览|无条件|显示当前登录用户的回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\当前用户回收站中的文件信息.ahk"|
+|[1441](http://127.0.0.1:5151/runcom?aabb=1441)|f58b|系统切换任务|无条件|显示系统切换窗口界面|Keys&#124;^!{Tab}|
+
 
 
 
