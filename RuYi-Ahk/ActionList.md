@@ -196,10 +196,10 @@ layout: default
 |1185|f552|获取权限|选中文件|设置选中文件的权限为管理员|run&#124;cmd.exe /c takeown /f "%CandySel%" && icacls "%CandySel%" /grant administrator:F|
 |1186|f2b7|百度网盘|选中文本|自动打开选中文本中的百度网盘网址, 并将提取码放入剪贴板和自动填写|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\百度网盘链接.ahk" "%CandySel%"|
 |1187|e947|[关闭窗口](/Actions/1187.md)|任意窗口|关闭窗口(chrome 等特定窗口为关闭标签页)|Cando&#124;关闭窗口|
-|1188|e72b|左半后退|任意窗口|浏览器发送后退快捷键, 其他窗口为移到左半屏幕|Cando&#124;左半后退|
-|1189|e72a|右半前进|任意窗口|浏览器发送前进快捷键, 其他窗口为移到右半屏幕|Cando&#124;右半前进|
-|1190|e74b|最小化|任意窗口|窗口最小化|Cando&#124;窗口最小化|
-|1191|e74a|最大化|任意窗口|窗口最大化|Cando&#124;窗口最大化|
+|1188|e72b|[左半后退](/Actions/1188.md)|任意窗口|浏览器发送后退快捷键, 其他窗口为移到左半屏幕|Cando&#124;左半后退|
+|1189|e72a|[右半前进](/Actions/1189.md)|任意窗口|浏览器发送前进快捷键, 其他窗口为移到右半屏幕|Cando&#124;右半前进|
+|1190|e74b|[最小化](/Actions/1190.md)|任意窗口|窗口最小化|Cando&#124;窗口最小化|
+|1191|e74a|[最大化](/Actions/1191.md)|任意窗口|窗口最大化|Cando&#124;窗口最大化|
 |[1192](http://127.0.0.1:5151/runcom?aabb=1192)|ee92|动作管理|无条件|动作管理|Cando&#124;TM_ActionM|
 |[1193](http://127.0.0.1:5151/runcom?aabb=1193)|e1ce|最多运行|无条件|最多运行动作的子面板|canfunc&#124;ShowDBData&#124;execcount&#124;面板|
 |[1194](http://127.0.0.1:5151/runcom?aabb=1194)|e728|最多运行|无条件|最多运行动作的菜单|canfunc&#124;ShowDBData&#124;execcount&#124;菜单|
@@ -423,18 +423,6 @@ layout: default
 |[1412](http://127.0.0.1:5151/runcom?aabb=1412)|e8ec|如意托盘菜单|无条件|显示如意的托盘菜单(右击托盘图标显示的菜单)|Cando&#124;TM_show|
 |[1413](http://127.0.0.1:5151/runcom?aabb=1413)|e8ec|如意设置|无条件|显示如意的设置界面|Cando&#124;TM_SettingsM|
 |[1414](http://127.0.0.1:5151/runcom?aabb=1414)|e121|定时管理|无条件|定时动作管理界面|Cando&#124;TimingActionM|
-|1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免QTTabBer打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
-|[1416](http://127.0.0.1:5151/runcom?aabb=1416)|f8af|移动鼠标|无条件|移动鼠标到指定坐标并点击鼠标左键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\移动鼠标.ahk" "%CandySel%"|
-|[1417](http://127.0.0.1:5151/runcom?aabb=1417)|e961|屏蔽键盘|无条件|临时屏蔽键盘按键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\屏蔽键盘.ahk"|
-|1399|e97c|设为壁纸|选中文件|将选中图片文件设置为桌面壁纸(第二块屏幕)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_设置壁纸.ahk" "%CandySel%" "2"|
-|1401|f19d|额外属性|选中文件|获取选中文件的额外属性|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_额外的属性(ExtendedProperty).ahk" "%CandySel%"|
-|1402|f19d|查看属性|选中文件|获取选中文件的资源管理器详细信息列中能列出的属性|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_额外的属性(GetDetailsOf).ahk" "%CandySel%"|
-|1403|e197|虚拟为磁盘 X|选中文件夹|将选中文件夹挂载为虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_虚拟磁盘.ahk" "%CandySel%" "X"|
-|1404|e159|卸载磁盘 X|选中驱动器|卸载虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_卸载虚拟磁盘.ahk" "%CandySel%"|
-|1405|e197|载为目录|选中磁盘|将选中磁盘挂载为到指定文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_挂载为文件夹.ahk" "%CandySel%" "C:\123"|
-|1406|e159|取消挂载|选中文件夹|将选中文件夹(分区挂载的文件夹) 取消挂载|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_取消挂载.ahk" "%CandySel%"|
-|1407|e8c1|Bing词典|选中文本|使用Bing网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Bing词典.ahk" "%CandySel%"|
-|1408|e8c1|有道词典|选中文本|使用有道网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\有道词典.ahk" "%CandySel%"|
 |1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免 QTTabBer 打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
 |[1416](http://127.0.0.1:5151/runcom?aabb=1416)|f8af|移动鼠标|无条件|移动鼠标到指定坐标并点击鼠标左键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\移动鼠标.ahk" "%CandySel%"|
 |[1417](http://127.0.0.1:5151/runcom?aabb=1417)|e961|屏蔽键盘|无条件|临时屏蔽键盘按键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\屏蔽键盘.ahk"|
