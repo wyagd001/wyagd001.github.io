@@ -250,7 +250,7 @@ layout: default
 |1239|E734|收藏夹|对话框|对话框跳转到ini文件中预设的文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框_收藏夹.ahk" "%Windy_CurWin_id%"|
 |[1240](http://127.0.0.1:5151/runcom?aabb=1240)|E7AC|测试动作|无条件|对话框显示动作中变量|msgbox&#124;你好啊~&#124;hello~&#124;Ahk|
 |1241|e8f9|任务栏按钮|任意窗口|移除或恢复窗口在任务栏的按钮|canfunc&#124;CF_WinRemoveTaskbarButton&#124;%Windy_CurWin_id%|
-|1242|e982|文本处理|选中文本|编辑选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\文本处理.ahk" "%CandySel%"|
+|1242|e982|[文本处理](/Actions/1242.md)|选中文本|编辑选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\文本处理.ahk" "%CandySel%"|
 |1243|E894|结束进程|任意窗口|强制结束窗口进程|canfunc&#124;CF_WinKill&#124;%Windy_CurWin_id%|
 |1244|E894|结束进程|任意窗口|强制结束窗口进程|canfunc&#124;CF_ProcessClose&#124;%Windy_CurWin_Pid%|
 |1245|EDE3|通用3|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用3|
@@ -451,7 +451,31 @@ layout: default
 |[1440](http://127.0.0.1:5151/runcom?aabb=1440)|E107|回收站预览|无条件|显示当前登录用户的回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\当前用户回收站中的文件信息.ahk"|
 |[1441](http://127.0.0.1:5151/runcom?aabb=1441)|f58b|系统切换任务|无条件|显示系统切换窗口界面|Keys&#124;^!{Tab}|
 
-
+|1442|f61b|新建文本文件|特定窗口|在当前打开的目录新建文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_新建.ahk" "%Windy_CurWin_FolderPath%" "文本文件"|
+|1443|f407|新建文本文件|特定窗口|在当前打开的目录新建文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_新建.ahk"|
+|[1444](http://127.0.0.1:5151/runcom?aabb=1444)|eda9|保存WPS菜单|无条件|保存 WPS 任务栏按钮的 JumpList 菜单文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复WPS任务栏的JumpList项目菜单.ahk"|
+|[1445](http://127.0.0.1:5151/runcom?aabb=1445)|edaa|恢复WPS菜单|无条件|利用先前保存的 WPS 任务栏按钮的 JumpList 菜单文件来恢复 WPS 的任务栏按钮菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复WPS任务栏的JumpList项目菜单.ahk" "restore"|
+|[1446](http://127.0.0.1:5151/runcom?aabb=1446)|e1e1|任务栏快捷键|无条件|按下 Win 键在任务栏上显示编号, 然后使用 Win+ 数字键(1-9) 激活任务栏上的按钮的窗口(已经打开的)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任务栏按钮窗口热键切换.ahk" "1"|
+|[1447](http://127.0.0.1:5151/runcom?aabb=1447)|e1e1|任务栏快捷键|无条件|按下 Win 键在任务栏上显示编号, 然后使用 Win+ 数字键(1-9) 激活任务栏上的按钮的窗口(所有)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任务栏按钮窗口热键切换.ahk" "0"|
+|[1448](http://127.0.0.1:5151/runcom?aabb=1448)|e1e1|任务栏按钮列表|无条件|显示任务栏上按钮窗口列表的菜单(已经打开的窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\指定激活任务栏按钮窗口.ahk" "menu"|
+|[1449](http://127.0.0.1:5151/runcom?aabb=1449)|e1e1|指定任务栏按钮|无条件|按传入的数字激活任务栏上按钮窗口(已经打开的窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\指定激活任务栏按钮窗口.ahk" "1"|
+|1450|e8c1|Dll 文本|选中文本|根据注册表中的文本(如 notepad.exe,470) 查看 dll, exe 文件中的字符串|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\dll文本查看.ahk" "%CandySel%"|
+|1451|ea3a|Dll 图标|选中文本|根据注册表中的文本(如 shell32.dll,-16802) 查看 dll, exe 文件中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\dll图标查看.ahk" "%CandySel%"|
+|1452|EDE3|虚拟桌面|子面板|虚拟桌面动作的子面板|Gui&#124;虚拟桌面|
+|1453|f146|虚拟桌面1|选中对象|切换到虚拟桌面1|SendMsgToATA&#124;&#124;1|
+|1454|f147|虚拟桌面2|选中对象|切换到虚拟桌面2|SendMsgToATA&#124;&#124;2|
+|1455|f148|虚拟桌面3|选中对象|切换到虚拟桌面3|SendMsgToATA&#124;1455&#124;3|
+|1456|f093|移到桌面1|任意窗口|将鼠标下的窗口移动到虚拟桌面1|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;1|
+|1457|f094|移到桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;2|
+|1458|f095|移到桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3|SendMsgToATA&#124;1458&#124;%Windy_CurWin_Title%&#124;3|
+|1459|f146|移并跳桌面1|任意窗口|将鼠标下的窗口移动到虚拟桌面1, 并跳转到虚拟桌面1|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;1|
+|1460|f147|移并跳桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;2|
+|1461|f148|移并跳桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;3|
+|1462|ea44|所有桌面显示窗口|任意窗口|将鼠标下的窗口在所有的虚拟桌面显示|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|1463|ea43|所有桌面显示进程|任意窗口|将鼠标下的窗口进程在所有的虚拟桌面显示|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|1464|e122|虚拟桌面找窗口|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时跳到窗口所在虚拟桌面(寻剑)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|1465|ea63|虚拟桌面窗口来|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时将标记窗口移到所在虚拟桌面(剑来)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|1466|f19d|缩微窗口0.3|任意窗口|以动态缩略图方式显示(原窗口的0.3)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\动态缩略图.ahk" "%Windy_CurWin_id%"|
 
 
 
