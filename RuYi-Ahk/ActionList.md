@@ -450,7 +450,6 @@ layout: default
 |1439|E70F|打开本地网页|Chrome|使用文本编辑器打开浏览器正在浏览的本地文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\记事本打开浏览器当前浏览的本地文件.ahk" "%Windy_CurWin_Class%"|
 |[1440](http://127.0.0.1:5151/runcom?aabb=1440)|E107|回收站预览|无条件|显示当前登录用户的回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\当前用户回收站中的文件信息.ahk"|
 |[1441](http://127.0.0.1:5151/runcom?aabb=1441)|f58b|系统切换任务|无条件|显示系统切换窗口界面|Keys&#124;^!{Tab}|
-
 |1442|f61b|新建文本文件|特定窗口|在当前打开的目录新建文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_新建.ahk" "%Windy_CurWin_FolderPath%" "文本文件"|
 |1443|f407|新建文本文件|特定窗口|在当前打开的目录新建文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_新建.ahk"|
 |[1444](http://127.0.0.1:5151/runcom?aabb=1444)|eda9|保存WPS菜单|无条件|保存 WPS 任务栏按钮的 JumpList 菜单文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复WPS任务栏的JumpList项目菜单.ahk"|
