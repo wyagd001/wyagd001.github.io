@@ -45,7 +45,7 @@ layout: default
 |1034|f616|垂直最大化|任意窗口|垂直最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "垂直最大化"|
 |1035|e728|通用2|子面板|选中文件的通用动作的子面板2|GUI&#124;文件通用2|
 |1036|efa5|文件改名|选中文件|修改选中的文本文件的名称和扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名修改.ahk" "%candysel%"|
-|1037|f87e|打开选中|选中对象|运行选中的文本(路径(程序, 文件, 目录), 网址, 注册表地址)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\运行选中的文本.ahk" "%CandySel%"|
+|1037|f87e|[打开选中](/Actions/1037.md)|选中对象|运行选中的文本(路径(程序, 文件, 目录), 网址, 注册表地址)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\运行选中的文本.ahk" "%CandySel%"|
 |1038|E70F|编辑链接|选中文件|编辑选中的lnk快捷方式文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\LnkEditor.ahk" "%CandySel%"|
 |1039|e896|放入同名|选中文件|将选中的文件放入同名的文件夹中(自动创建目录)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\放入同名文件夹.ahk" "%CandySel%"|
 |1040|E8DE|解散目录|选中文件|将选中文件夹中的文件移动到当前目录后, 删除选中文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\解散文件夹.ahk" "%CandySel%"|
@@ -95,7 +95,7 @@ layout: default
 |1084|e908|透明关|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
 |1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
 |1086|e126|复制到Music|选中文件|复制选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
-|1087|e89a|同步文件夹|资源管理器|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "%Windy_CurWin_FolderPath%"|
+|1087|e89a|[同步文件夹](/Actions/1087.md)|资源管理器|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "%Windy_CurWin_FolderPath%"|
 |1088|e89a|同步文件夹2|资源管理器|左侧文件夹同步到右侧(左→右)|canfunc&#124;ExecSend&#124;%Windy_CurWin_FolderPath%&#124;文件夹同步 ahk_class AutoHotkeyGUI|
 |[1089](http://127.0.0.1:5151/runcom?aabb=1089)|e89a|同步如意|无条件|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱 - 发布版本\RuYi-Ahk"|
 |1090|E734|网址收藏夹|子面板||gui&#124;网址收藏夹|
@@ -179,7 +179,7 @@ layout: default
 |[1168](http://127.0.0.1:5151/runcom?aabb=1168)|eb55|关闭显示器|无条件|关闭显示器屏幕(黑屏)|canfunc&#124;CF_CloseScreen|
 |1169|E71B|复制路径|注册表|复制注册表窗口打开的路径到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\注册表定位.ahk"|
 |1170|e16d|复制内容|选中文件|复制文本文件内容到剪贴板|canfunc&#124;CF_FileToClip&#124;%CandySel%|
-|1171|e9a6|截取窗口|任意窗口|截取窗口并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "窗口截图"|
+|1171|e9a6|截取窗口|任意窗口|截取窗口并存入脚本所在目录的截图目录中(客户区域不带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "窗口截图"|
 |[1172](http://127.0.0.1:5151/runcom?aabb=1172)|f617|截取屏幕|无条件|截取显示器屏幕并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk"|
 |1173|ed14|二维码|选中文本|选中文字生成二维码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\生成二维码.ahk" "%CandySel%"|
 |1174|ec5c|更改盘符|选中驱动器|更改选中驱动器的盘符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_更改盘符.ahk" "%CandySel%"|
@@ -461,9 +461,9 @@ layout: default
 |1450|e8c1|Dll 文本|选中文本|根据注册表中的文本(如 notepad.exe,470) 查看 dll, exe 文件中的字符串|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\dll文本查看.ahk" "%CandySel%"|
 |1451|ea3a|Dll 图标|选中文本|根据注册表中的文本(如 shell32.dll,-16802) 查看 dll, exe 文件中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\dll图标查看.ahk" "%CandySel%"|
 |1452|EDE3|虚拟桌面|子面板|虚拟桌面动作的子面板|Gui&#124;虚拟桌面|
-|1453|f146|虚拟桌面1|选中对象|切换到虚拟桌面1|SendMsgToATA&#124;&#124;1|
-|1454|f147|虚拟桌面2|选中对象|切换到虚拟桌面2|SendMsgToATA&#124;&#124;2|
-|1455|f148|虚拟桌面3|选中对象|切换到虚拟桌面3|SendMsgToATA&#124;1455&#124;3|
+|[1453](http://127.0.0.1:5151/runcom?aabb=1453)|f146|虚拟桌面1|无条件|切换到虚拟桌面1|SendMsgToATA&#124;&#124;1|
+|[1454](http://127.0.0.1:5151/runcom?aabb=1454)|f147|虚拟桌面2|无条件|切换到虚拟桌面2|SendMsgToATA&#124;&#124;2|
+|[1455](http://127.0.0.1:5151/runcom?aabb=1455)|f148|虚拟桌面3|无条件|切换到虚拟桌面3|SendMsgToATA&#124;1455&#124;3|
 |1456|f093|移到桌面1|任意窗口|将鼠标下的窗口移动到虚拟桌面1|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;1|
 |1457|f094|移到桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;2|
 |1458|f095|移到桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3|SendMsgToATA&#124;1458&#124;%Windy_CurWin_Title%&#124;3|
@@ -475,22 +475,46 @@ layout: default
 |1464|e122|虚拟桌面找窗口|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时跳到窗口所在虚拟桌面(寻剑)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
 |1465|ea63|虚拟桌面窗口来|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时将标记窗口移到所在虚拟桌面(剑来)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
 |1466|f19d|缩微窗口0.3|任意窗口|以动态缩略图方式显示(原窗口的0.3)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\动态缩略图.ahk" "%Windy_CurWin_id%"|
-|1467|e76c|下一虚拟桌面|无条件|切换到下一虚拟桌面|SendMsgToATA&#124;1467|
-|1468|e76b|上一虚拟桌面|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
-|1469|e76c|下一虚拟桌面|无条件|切换到下一虚拟桌面(VirtualDesktopAccessor_Win10/11.dll)|SendMsgToATA&#124;1469|
-|1470|e76b|上一虚拟桌面|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
-|1471|f146|虚拟桌面1|无条件|切换到虚拟桌面1|SendMsgToATA&#124;&#124;0|
-|1472|f147|虚拟桌面2|无条件|切换到虚拟桌面2|SendMsgToATA&#124;&#124;1|
-|1473|f148|虚拟桌面3|无条件|切换到虚拟桌面3|SendMsgToATA&#124;&#124;2|
+|[1467](http://127.0.0.1:5151/runcom?aabb=1467)|e76c|下一虚拟桌面|无条件|切换到下一虚拟桌面|SendMsgToATA&#124;1467|
+|[1468](http://127.0.0.1:5151/runcom?aabb=1468)|e76b|上一虚拟桌面|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
+|[1469](http://127.0.0.1:5151/runcom?aabb=1469)|e76c|下一虚拟桌面|无条件|切换到下一虚拟桌面(VirtualDesktopAccessor_Win10/11.dll)|SendMsgToATA&#124;1469|
+|[1470](http://127.0.0.1:5151/runcom?aabb=1470)|e76b|上一虚拟桌面|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
+|[1471](http://127.0.0.1:5151/runcom?aabb=1471)|f146|虚拟桌面1|无条件|切换到虚拟桌面1|SendMsgToATA&#124;&#124;0|
+|[1472](http://127.0.0.1:5151/runcom?aabb=1472)|f147|虚拟桌面2|无条件|切换到虚拟桌面2|SendMsgToATA&#124;&#124;1|
+|[1473](http://127.0.0.1:5151/runcom?aabb=1473)|f148|虚拟桌面3|无条件|切换到虚拟桌面3|SendMsgToATA&#124;&#124;2|
 |1474|f146|移并跳桌面1|任意窗口|将鼠标下的窗口移动到虚拟桌面1, 并跳转到虚拟桌面1|SendMsgToATA&#124;&#124;0&#124;%Windy_CurWin_Id%|
-|1475|f147|移并跳桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面5|SendMsgToATA&#124;&#124;1&#124;%Windy_CurWin_Id%|
-|1476|f148|移并跳桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面5|SendMsgToATA&#124;&#124;2&#124;%Windy_CurWin_Id%|
-
-
-
-
-
-
+|1475|f147|移并跳桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;1&#124;%Windy_CurWin_Id%|
+|1476|f148|移并跳桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面3|SendMsgToATA&#124;&#124;2&#124;%Windy_CurWin_Id%|
+|1477|f354|黑转透明|选中文件|将图片中的黑色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0x000000"|
+|1478|e790|白转透明|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0xFFFFFF"|
+|1479|f406|白转红|选中文件|将图片中的白色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0xFFFF0000"|
+|1480|e790|白转透明|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0x00000000"|
+|1481|f406|留白转红|选中文件|保留图片中的白色, 其他所有颜色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0xFFFFFF" "0xFF0000"|
+|1482|eb9f|转 Ico|选中文件|将选中的图片文件转为 Ico 文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_转为Ico文件.ahk" "%CandySel%"|
+|1483|eb3c|图片转换|子面板|图片转换动作子面板|Gui&#124;图片转换|
+|1484|eb9f|转为png|选中文件|将选中的图形文件转为png|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "png"|
+|1485|eb9f|转为jpg|选中文件|将选中的图形文件转为jpg|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "jpg"|
+|[1486](http://127.0.0.1:5151/runcom?aabb=1486)|e115|系统设置|无条件|打开系统设置(Win10)|run&#124;ms-settings:system|
+|[1487](http://127.0.0.1:5151/runcom?aabb=1487)|e783|系统关于|无条件|打开系统关于设置(Win10)|run&#124;ms-settings:about|
+|[1488](http://127.0.0.1:5151/runcom?aabb=1488)|e7f4|屏幕设置|无条件|打开系统屏幕设置(Win10)|run&#124;ms-settings:display|
+|[1489](http://127.0.0.1:5151/runcom?aabb=1489)|e895|更新设置|无条件|打开系统Windows更新设置(Win10)|run&#124;ms-settings:windowsupdate|
+|[1490](http://127.0.0.1:5151/runcom?aabb=1490)|ed15|个性化设置|无条件|打开系统个性化设置(Win10)|run&#124;ms-settings:personalization|
+|[1491](http://127.0.0.1:5151/runcom?aabb=1491)|e790|颜色设置|无条件|打开系统颜色设置(Win10)|run&#124;ms-settings:colors|
+|[1492](http://127.0.0.1:5151/runcom?aabb=1492)|e771|主题设置|无条件|打开系统主题设置(Win10)|run&#124;ms-settings:themes|
+|[1493](http://127.0.0.1:5151/runcom?aabb=1493)|e147|任务栏设置|无条件|打开系统任务栏设置(Win10)|run&#124;ms-settings:taskbar|
+|[1494](http://127.0.0.1:5151/runcom?aabb=1494)|e185|字体设置|无条件|打开系统字体设置(Win10)|run&#124;ms-settings:fonts|
+|[1495](http://127.0.0.1:5151/runcom?aabb=1495)|e179|应用和功能|无条件|打开系统应用和功能设置(Win10)|run&#124;ms-settings:appsfeatures|
+|[1496](http://127.0.0.1:5151/runcom?aabb=1496)|e18d|启动设置|无条件|打开系统启动设置(Win10)|run&#124;ms-settings:startupapps|
+|[1497](http://127.0.0.1:5151/runcom?aabb=1497)|e8c1|语言设置|无条件|打开系统语言设置(Win10)|run&#124;ms-settings:regionlanguage|
+|[1498](http://127.0.0.1:5151/runcom?aabb=1498)|ed25|开始菜单|无条件|打开开始菜单目录|run&#124;shell:Start Menu|
+|[1499](http://127.0.0.1:5151/runcom?aabb=1499)|ed25|SendTo|无条件|打开发送到目录|run&#124;shell:SendTo|
+|[1500](http://127.0.0.1:5151/runcom?aabb=1500)|ed25|最近的文档|无条件|打开最近的文档目录|run&#124;shell:Recent|
+|[1501](http://127.0.0.1:5151/runcom?aabb=1501)|ed25|用户目录|无条件|打开用户目录|run&#124;shell:Profile|
+|[1502](http://127.0.0.1:5151/runcom?aabb=1502)|e839|桌面图标|无条件|打开桌面图标设置|run&#124;Rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0|
+|[1503](http://127.0.0.1:5151/runcom?aabb=1503)|e9a6|截取窗口|任意窗口|窗口截图并存入脚本所在目录的截图目录中(带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_截图并自动保存.ahk" "%Windy_CurWin_Id%"|
+|1504|e982|文本编辑|子面板|文本编辑子面板|gui&#124;文本编辑|
+|1505|e982|去除空行|选中文本|如果有选中文本,去除选中文本中的空行(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空白行.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1506|e982|整理序号|选中文本|如果有选中文本,按数字顺序整理选中文本的行号(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_数字序号整理.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 
 
 
