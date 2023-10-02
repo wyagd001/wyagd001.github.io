@@ -214,7 +214,7 @@ layout: default
 |1203|EDE3|文本通用|菜单|选中短文本通用动作的菜单|Menu&#124;短文本通用|
 |1204|EDE3|数字通用|菜单|选中数字通用动作的菜单|Menu&#124;数字通用|
 |1205|e1df|Exe2目录图标|选中文件|将选中exe文件的图标设为所在文件夹的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Exe图标设为文件夹图标.ahk" "%CandySel%"|
-|1206|e838|还原图标|选中文件夹|将选中文件夹的图标设为默认的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Exe图标设为文件夹图标.ahk" "%CandySel%"|
+|1206|e8b7|还原图标|选中文件夹|将选中文件夹的图标设为默认的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Exe图标设为文件夹图标.ahk" "%CandySel%"|
 |1207|eb9f|提取图标|选中文件|提取选中文件(exe, dll)中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\提取图标.ahk" "%CandySel%"|
 |1208|eb9f|关联图标|选中文件|保存选中文件关联的图标到文件所在文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\关联图标存为png文件.ahk" "%CandySel%" ".png"|
 |[1209](http://127.0.0.1:5151/runcom?aabb=1209)|eb9f|测试|无条件|测试插件脚本里的例子|canfunc&#124;ExecSendToDll&#124;%CandySel%|
@@ -390,18 +390,18 @@ layout: default
 |1379|EDE3|目录通用2|菜单|选中文件夹的通用动作的菜单|Menu&#124;文件夹通用2|
 |1380|EDE3|目录通用2|子面板|选中文件夹的通用动作的菜单|Gui&#124;文件夹通用2|
 |1381|e8b7|彩色目录|子面板|彩色文件夹的子面板|Gui&#124;彩色目录|
-|1382|e8b7@DD3c4F|红色图标|选中文件夹|将文件夹的图标设置为红色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "红色"|
-|1383|e8b7@27BB27|绿色图标|选中文件夹|将文件夹的图标设置为绿色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "绿色"|
-|1384|e8b7@2242DF|蓝色图标|选中文件夹|将文件夹的图标设置为蓝色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝色"|
-|1385|e8b7@6C2490|蓝紫图标|选中文件夹|将文件夹的图标设置为蓝紫.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝紫"|
-|1386|e8b7@353535|黑色图标|选中文件夹|将文件夹的图标设置为黑色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "黑色"|
-|1387|e8b7@C74A90|紫色图标|选中文件夹|将文件夹的图标设置为紫色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "紫色"|
-|1388|e8b7@C3A81C|金色图标|选中文件夹|将文件夹的图标设置为金色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "金色"|
-|1389|e8b7@C3A81C|橘色图标|选中文件夹|将文件夹的图标设置为橘色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "橘色"|
-|1390|e8b7@BEBBB1|银灰图标|选中文件夹|将文件夹的图标设置为银灰.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "银灰"|
+|1382|e188@DD3c4F|红色图标|选中文件夹|将文件夹的图标设置为红色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "红色"|
+|1383|e188@27BB27|绿色图标|选中文件夹|将文件夹的图标设置为绿色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "绿色"|
+|1384|e188@2242DF|蓝色图标|选中文件夹|将文件夹的图标设置为蓝色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝色"|
+|1385|e188@6C2490|蓝紫图标|选中文件夹|将文件夹的图标设置为蓝紫.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝紫"|
+|1386|e188@353535|黑色图标|选中文件夹|将文件夹的图标设置为黑色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "黑色"|
+|1387|e188@C74A90|紫色图标|选中文件夹|将文件夹的图标设置为紫色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "紫色"|
+|1388|e188@C3A81C|金色图标|选中文件夹|将文件夹的图标设置为金色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "金色"|
+|1389|e188@FB9A12|橘色图标|选中文件夹|将文件夹的图标设置为橘色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "橘色"|
+|1390|e188@BEBBB1|银灰图标|选中文件夹|将文件夹的图标设置为银灰.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "银灰"|
 |1391|e8b7@62CBB9|青色图标|选中文件夹|将文件夹的图标设置为青色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "青色"|
-|1392|e8b7@E9AAAA|粉红图标|选中文件夹|将文件夹的图标设置为粉红.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "粉红"|
-|1393|e8b7@8D5E2F|棕色图标|选中文件夹|将文件夹的图标设置为棕色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "棕色"|
+|1392|e188@E9AAAA|粉红图标|选中文件夹|将文件夹的图标设置为粉红.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "粉红"|
+|1393|e188@8D5E2F|棕色图标|选中文件夹|将文件夹的图标设置为棕色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "棕色"|
 |1394|ef3b|测试|选中对象|测试插件脚本里的例子2|canfunc&#124;ExecSendToDll&#124;%CandySel%&#124;1394|
 |[1395](http://127.0.0.1:5151/runcom?aabb=1395)|e11a|Ahk Spy|无条件|第三方的 Autohotkey Spy|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\AhkSpy.ahk"|
 |1396|e11a|IconEx|选中文件|提取文件(Exe, Dll) 中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\IconEx.ahk" %CandySel%|
@@ -454,8 +454,8 @@ layout: default
 |1443|f407|新建文本文件|特定窗口|在当前打开的目录新建文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_新建.ahk"|
 |[1444](http://127.0.0.1:5151/runcom?aabb=1444)|eda9|保存WPS菜单|无条件|保存 WPS 任务栏按钮的 JumpList 菜单文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复WPS任务栏的JumpList项目菜单.ahk"|
 |[1445](http://127.0.0.1:5151/runcom?aabb=1445)|edaa|恢复WPS菜单|无条件|利用先前保存的 WPS 任务栏按钮的 JumpList 菜单文件来恢复 WPS 的任务栏按钮菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复WPS任务栏的JumpList项目菜单.ahk" "restore"|
-|[1446](http://127.0.0.1:5151/runcom?aabb=1446)|e1e1|任务栏快捷键|无条件|按下 Win 键在任务栏上显示编号, 然后使用 Win+ 数字键(1-9) 激活任务栏上的按钮的窗口(已经打开的)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任务栏按钮窗口热键切换.ahk" "1"|
-|[1447](http://127.0.0.1:5151/runcom?aabb=1447)|e1e1|任务栏快捷键|无条件|按下 Win 键在任务栏上显示编号, 然后使用 Win+ 数字键(1-9) 激活任务栏上的按钮的窗口(所有)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任务栏按钮窗口热键切换.ahk" "0"|
+|[1446](http://127.0.0.1:5151/runcom?aabb=1446)|e1e1|任务栏快捷键|无条件|按下 Win 键在任务栏上显示编号, 然后使用 Win+ 数字键(1-9) 激活任务栏上的按钮的窗口(已经打开的)(适用于任务栏在底部的情况)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任务栏按钮窗口热键切换.ahk" "1"|
+|[1447](http://127.0.0.1:5151/runcom?aabb=1447)|e1e1|任务栏快捷键|无条件|按下 Win 键在任务栏上显示编号, 然后使用 Win+ 数字键(1-9) 激活任务栏上的按钮的窗口(所有)(适用于任务栏在底部的情况)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任务栏按钮窗口热键切换.ahk" "0"|
 |[1448](http://127.0.0.1:5151/runcom?aabb=1448)|e1e1|任务栏按钮列表|无条件|显示任务栏上按钮窗口列表的菜单(已经打开的窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\指定激活任务栏按钮窗口.ahk" "menu"|
 |[1449](http://127.0.0.1:5151/runcom?aabb=1449)|e1e1|指定任务栏按钮|无条件|按传入的数字激活任务栏上按钮窗口(已经打开的窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\指定激活任务栏按钮窗口.ahk" "1"|
 |1450|e8c1|Dll 文本|选中文本|根据注册表中的文本(如 notepad.exe,470) 查看 dll, exe 文件中的字符串|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\dll文本查看.ahk" "%CandySel%"|
@@ -515,6 +515,17 @@ layout: default
 |1504|e982|文本编辑|子面板|文本编辑子面板|gui&#124;文本编辑|
 |1505|e982|去除空行|选中文本|如果有选中文本,去除选中文本中的空行(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空白行.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1506|e982|整理序号|选中文本|如果有选中文本,按数字顺序整理选中文本的行号(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_数字序号整理.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+
+|1507|f406|留黑转白|选中文件|保留图片中的黑色, 其他所有颜色转为白色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0x000000" "0xFFFFFF"|
+|[1508](http://127.0.0.1:5151/runcom?aabb=1508)|e7f4|屏保设置|无条件|打开屏幕保护程序设置|run&#124;rundll32.exe shell32.dll,Control_RunDLL desk.cpl,ScreenSaver,@ScreenSaver|
+|[1509](http://127.0.0.1:5151/runcom?aabb=1509)|e7f4|气泡屏保|无条件|打开气泡屏幕保护程序|run&#124;%windir%\system32\Bubbles.scr /s|
+|[1510](http://127.0.0.1:5151/runcom?aabb=1510)|e7f4|启动屏保|无条件|打开设置的屏幕保护程序(如果没有设置, 则没有效果)|Cando&#124;RunScreenSaver|
+|[1511](http://127.0.0.1:5151/runcom?aabb=1511)|e790|浅色模式|无条件|打开系统浅色模式(Win10+)|Cando&#124;LightTheme|
+|[1512](http://127.0.0.1:5151/runcom?aabb=1512)|f354|深色模式|无条件|打开系统深色模式(Win10+)|Cando&#124;DarkTheme|
+|[1513](http://127.0.0.1:5151/runcom?aabb=1513)|e18d|启动文件夹|无条件|打开开始菜单启动文件夹|run&#124;shell:startup|
+|[1514](http://127.0.0.1:5151/runcom?aabb=1514)|ec27|网络设置|无条件|打开系统网络设置(Win10)|run&#124;ms-settings:network|
+|1515|e982|去除空格|选中文本|如果有选中文本, 去除选中文本中的所有空格(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空格.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+
 
 
 
