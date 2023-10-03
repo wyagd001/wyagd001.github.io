@@ -109,8 +109,8 @@ layout: default
 |1098|f5a5|文本比较1|选中对象|将选中对象(选中的文件或文本)放入文本对比的左侧界面|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本比较.ahk" "%CandySel%"|
 |[1099](http://127.0.0.1:5151/runcom?aabb=1099)|e768|自定义运行|无条件|自定义注册表中注册的exe文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\自定义运行命令.ahk"|
 |1100|f5a6|文本比较2|选中对象|将选中对象放入文本对比的右侧界面|canfunc&#124;ExecSend&#124;%CandySel%&#124;文本比较 ahk_class AutoHotkeyGUI|
-|1101|f14a|MD5对比1|选中文件|将选中文件放入MD5计算界面的上部编辑框|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5.ahk" "%CandySel%"|
-|1102|f14a|MD5对比2|选中文件|将选中文件放入MD5计算界面的下部编辑框|canfunc&#124;ExecSend&#124;%CandySel%&#124;MD5验证 ahk_class AutoHotkeyGUI|
+|1101|f14a|[MD5对比1](/Actions/1101.md)|选中文件|将选中文件放入MD5计算界面的上部编辑框|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5.ahk" "%CandySel%"|
+|1102|f14a|[MD5对比2](/Actions/1101.md)|选中文件|将选中文件放入MD5计算界面的下部编辑框|canfunc&#124;ExecSend&#124;%CandySel%&#124;MD5验证 ahk_class AutoHotkeyGUI|
 |1103|e928|Hash2|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Hash_File.ahk" "%CandySel%"|
 |1104|e124|缩小50%|选中文件|将选中的图形文件尺寸缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%"|
 |1105|e19b|灰度图像|选中文件|将选中的图形文件转换为灰度图像|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像变灰度.ahk" "%CandySel%"|
@@ -220,8 +220,8 @@ layout: default
 |[1209](http://127.0.0.1:5151/runcom?aabb=1209)|eb9f|测试|无条件|测试插件脚本里的例子|canfunc&#124;ExecSendToDll&#124;%CandySel%|
 |1210|ed11|完整歌单|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.cookie='os=pc';f()"|
 |1211|ea47|下一页|Chrome|Chrome 浏览器自动下一页|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:var Re=new RegExp('(下~&#124;后)(一~&#124;\s)*(页~&#124;頁~&#124;章~&#124;篇~&#124;翻)','i');var a=document.getElementsByTagName('A');for(var i=0;i<a.length;i++){if(Re.test(a[i].innerHTML)){if(a[i].href.substr(0,11).toLowerCase()=='javascript:')a[i].click();else document.location.href=a[i].href;break}}"|
-|1212|ed11|Ini_Fav|选中文件|Ini 文件显示为菜单(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹菜单.ahk" "%CandySel%"|
-|1213|ed11|Ini_Opw|选中文件|Ini 文件显示为程序菜单, 使用菜单中的程序打开选中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_程序打开选中文件.ahk" "%CandySel%"|
+|1212|ed11|[Ini_Fav](/Actions/1212.md)|选中文件|Ini 文件显示为菜单(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹菜单.ahk" "%CandySel%"|
+|1213|ed11|[Ini_Opw](/Actions/1213.md)|选中文件|Ini 文件显示为程序菜单, 使用菜单中的程序打开选中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_程序打开选中文件.ahk" "%CandySel%"|
 |1214|f6fa|百度搜索|选中文件|百度搜索选中文件的文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel_FileName%|
 |1215|f093|Adb|子面板|手机Adb的子面板|Gui&#124;Adb|
 |1216|e898|收藏夹|Chrome|快捷键打开Chrome的收藏夹|Keys&#124;^+o|
@@ -241,7 +241,7 @@ layout: default
 |1230|E894|结束进程|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F&#124;&#124;hide|
 |[1231](http://127.0.0.1:5151/runcom?aabb=1231)|ef58|环境变量|无条件|环境变量编辑备份脚本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\环境变量.ahk"|
 |1232|ef58|新增Path|资源管理器|将资源管理器当前打开的路径加入环境变量Path中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\Environment.ahk" "%Windy_CurWin_FolderPath%"|
-|[1233](http://127.0.0.1:5151/runcom?aabb=1233)|e11a|搜索动作|无条件|搜索和运行动作的界面|Cando&#124;ActionSR|
+|[1233](http://127.0.0.1:5151/runcom?aabb=1233)|e11a|[搜索动作](/Actions/1233.md)|无条件|搜索和运行动作的界面|Cando&#124;ActionSR|
 |1234|ec24|Dll注册|选中文件|注册选中的dll文件|run&#124;regsvr32.exe "%CandySel%"|
 |1235|e789|Dll卸载|选中文件|卸载选中的dll文件|run&#124;regsvr32.exe /u "%CandySel%"|
 |1236|e74c|Msi解压|选中文件|将选中的msi文件解压|run&#124;msiexec.exe /a "%CandySel%" /qb TARGETDIR="%CandySel_ParentPath%\%CandySel_FileNameNoExt%"|
@@ -255,7 +255,7 @@ layout: default
 |1244|E894|结束进程|任意窗口|强制结束窗口进程|canfunc&#124;CF_ProcessClose&#124;%Windy_CurWin_Pid%|
 |1245|EDE3|通用3|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用3|
 |1246|EDE3|通用3|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用3|
-|1247|e8f9|加入Ini_Fav|任意窗口|将窗口的进程(exe) 加入 Ini收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247|
+|1247|e8f9|[加入Ini_Fav](/Actions/1247.md)|任意窗口|将窗口的进程(exe) 加入 Ini收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247|
 |1248|eda4|快捷方式到桌面|任意窗口|创建窗口的进程文件的文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%Windy_CurWin_Fullpath%|
 |1249|e8c8|文件夹结构|选中文件夹|将选中文件夹的结构复制到当前文件夹(仅复制选中文件夹及其下的子文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%"|
 |1250|e8c8|结构+空文件|选中文件夹|将选中文件夹的结构和空白文件复制到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 1|
@@ -325,7 +325,7 @@ layout: default
 |1314|E77F|水平对齐|ET|将当前选中的单元格对齐方式复制到所有以数字为名称的工作表的相同位置的单元格中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_当前单元格水平对齐方式复制到所有数字名称的工作表相同位置.ahk"|
 |1315|e9d5|剪贴板|子面板|剪贴板子面板|Gui&#124;剪贴板通用|
 |1316|f17f|管理编码|选中文件夹|列出选中文件夹中文本文件编码, 批量转码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文本文件编码.ahk" "%CandySel%"|
-|[1317](http://127.0.0.1:5151/runcom?aabb=1317)|e1e4|Ini_Fav|无条件|Ini 文件显示为 Gui 面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹界面.ahk"|
+|[1317](http://127.0.0.1:5151/runcom?aabb=1317)|e1e4|[Ini_Fav](/Actions/1317.md)|无条件|Ini 文件显示为 Gui 面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹界面.ahk"|
 |1318|E77F|插入列|ET|所有以数字为名称的工作表的相同位置的右侧插入一列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表相同位置右边批量插入一列.ahk"|
 |1319|E77F|删除列|ET|所有以数字为名称的工作表批量删除选中列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表批量删除选中列.ahk"|
 |1320|f151|数字分表|子面板|ET_批量子面板|Gui&#124;ET_批量|
@@ -417,7 +417,7 @@ layout: default
 |1406|e159|取消挂载|选中文件夹|将选中文件夹(分区挂载的文件夹) 取消挂载|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_取消挂载.ahk" "%CandySel%"|
 |1407|e8c1|Bing词典|选中文本|使用Bing网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Bing词典.ahk" "%CandySel%"|
 |1408|e8c1|有道词典|选中文本|使用有道网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\有道词典.ahk" "%CandySel%"|
-|1409|ed11|加入Ini_Fav|选中对象|将选中对象(文件, 网址) 加入 Ini 收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247&#124;%CandySel%|
+|1409|ed11|[加入Ini_Fav](/Actions/1409.md)|选中对象|将选中对象(文件, 网址) 加入 Ini 收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247&#124;%CandySel%|
 |[1410](http://127.0.0.1:5151/runcom?aabb=1410)|edb4|暂停如意|无条件|暂停如意|Cando&#124;TM_Pause|
 |[1411](http://127.0.0.1:5151/runcom?aabb=1411)|e149|重启如意|无条件|重启如意|Cando&#124;TM_Reload|
 |[1412](http://127.0.0.1:5151/runcom?aabb=1412)|e8ec|如意托盘菜单|无条件|显示如意的托盘菜单(右击托盘图标显示的菜单)|Cando&#124;TM_show|
@@ -515,7 +515,6 @@ layout: default
 |1504|e982|文本编辑|子面板|文本编辑子面板|gui&#124;文本编辑|
 |1505|e982|去除空行|选中文本|如果有选中文本,去除选中文本中的空行(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空白行.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1506|e982|整理序号|选中文本|如果有选中文本,按数字顺序整理选中文本的行号(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_数字序号整理.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
-
 |1507|f406|留黑转白|选中文件|保留图片中的黑色, 其他所有颜色转为白色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0x000000" "0xFFFFFF"|
 |[1508](http://127.0.0.1:5151/runcom?aabb=1508)|e7f4|屏保设置|无条件|打开屏幕保护程序设置|run&#124;rundll32.exe shell32.dll,Control_RunDLL desk.cpl,ScreenSaver,@ScreenSaver|
 |[1509](http://127.0.0.1:5151/runcom?aabb=1509)|e7f4|气泡屏保|无条件|打开气泡屏幕保护程序|run&#124;%windir%\system32\Bubbles.scr /s|
@@ -525,7 +524,8 @@ layout: default
 |[1513](http://127.0.0.1:5151/runcom?aabb=1513)|e18d|启动文件夹|无条件|打开开始菜单启动文件夹|run&#124;shell:startup|
 |[1514](http://127.0.0.1:5151/runcom?aabb=1514)|ec27|网络设置|无条件|打开系统网络设置(Win10)|run&#124;ms-settings:network|
 |1515|e982|去除空格|选中文本|如果有选中文本, 去除选中文本中的所有空格(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空格.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
-
+|1516|f5ad|[Ini_Fav](/Actions/1516.md)|无条件|Ini 文件显示为列表面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹列表.ahk"|
+|1517|e1e4|Ini_Fav|子面板|Ini_Fav相关动作的子面板|Gui&#124;Ini_Fav|
 
 
 
