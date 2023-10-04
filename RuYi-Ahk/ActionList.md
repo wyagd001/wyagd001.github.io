@@ -461,30 +461,30 @@ layout: default
 |1450|e8c1|Dll 文本|选中文本|根据注册表中的文本(如 notepad.exe,470) 查看 dll, exe 文件中的字符串|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\dll文本查看.ahk" "%CandySel%"|
 |1451|ea3a|Dll 图标|选中文本|根据注册表中的文本(如 shell32.dll,-16802) 查看 dll, exe 文件中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\dll图标查看.ahk" "%CandySel%"|
 |1452|EDE3|虚拟桌面|子面板|虚拟桌面动作的子面板|Gui&#124;虚拟桌面|
-|[1453](http://127.0.0.1:5151/runcom?aabb=1453)|f146|虚拟桌面1|无条件|切换到虚拟桌面1|SendMsgToATA&#124;&#124;1|
-|[1454](http://127.0.0.1:5151/runcom?aabb=1454)|f147|虚拟桌面2|无条件|切换到虚拟桌面2|SendMsgToATA&#124;&#124;2|
-|[1455](http://127.0.0.1:5151/runcom?aabb=1455)|f148|虚拟桌面3|无条件|切换到虚拟桌面3|SendMsgToATA&#124;1455&#124;3|
-|1456|f093|移到桌面1|任意窗口|将鼠标下的窗口移动到虚拟桌面1|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;1|
-|1457|f094|移到桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;2|
-|1458|f095|移到桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3|SendMsgToATA&#124;1458&#124;%Windy_CurWin_Title%&#124;3|
-|1459|f146|移并跳桌面1|任意窗口|将鼠标下的窗口移动到虚拟桌面1, 并跳转到虚拟桌面1|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;1|
-|1460|f147|移并跳桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;2|
-|1461|f148|移并跳桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;3|
-|1462|ea44|所有桌面显示窗口|任意窗口|将鼠标下的窗口在所有的虚拟桌面显示|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
-|1463|ea43|所有桌面显示进程|任意窗口|将鼠标下的窗口进程在所有的虚拟桌面显示|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
-|1464|e122|虚拟桌面找窗口|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时跳到窗口所在虚拟桌面(寻剑)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
-|1465|ea63|虚拟桌面窗口来|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时将标记窗口移到所在虚拟桌面(剑来)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|[1453](http://127.0.0.1:5151/runcom?aabb=1453)|f146|[虚拟桌面1](/Actions/1453.md)|无条件|切换到虚拟桌面1|SendMsgToATA&#124;&#124;1|
+|[1454](http://127.0.0.1:5151/runcom?aabb=1454)|f147|[虚拟桌面2](/Actions/1453.md)|无条件|切换到虚拟桌面2|SendMsgToATA&#124;&#124;2|
+|[1455](http://127.0.0.1:5151/runcom?aabb=1455)|f148|[虚拟桌面3](/Actions/1453.md)|无条件|切换到虚拟桌面3|SendMsgToATA&#124;1455&#124;3|
+|1456|f093|[移到桌面1](/Actions/1456.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面1|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;1|
+|1457|f094|[移到桌面2](/Actions/1456.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;2|
+|1458|f095|[移到桌面3](/Actions/1456.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面3|SendMsgToATA&#124;1458&#124;%Windy_CurWin_Title%&#124;3|
+|1459|f146|[移并跳桌面1](/Actions/1459.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面1, 并跳转到虚拟桌面1|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;1|
+|1460|f147|[移并跳桌面2](/Actions/1459.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;2|
+|1461|f148|[移并跳桌面3](/Actions/1459.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%&#124;3|
+|1462|ea44|[所有桌面显示窗口](/Actions/1462.md)|任意窗口|将鼠标下的窗口在所有的虚拟桌面显示|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|1463|ea43|[所有桌面显示进程](/Actions/1463.md)|任意窗口|将鼠标下的窗口进程在所有的虚拟桌面显示|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|1464|e122|[虚拟桌面找窗口](/Actions/1464.md)|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时跳到窗口所在虚拟桌面(寻剑)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
+|1465|ea63|[虚拟桌面窗口来](/Actions/1465.md)|任意窗口|首次运行时将鼠标下的窗口标记, 再次运行时将标记窗口移到所在虚拟桌面(剑来)|SendMsgToATA&#124;&#124;%Windy_CurWin_Title%|
 |1466|f19d|缩微窗口0.3|任意窗口|以动态缩略图方式显示(原窗口的0.3)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\动态缩略图.ahk" "%Windy_CurWin_id%"|
-|[1467](http://127.0.0.1:5151/runcom?aabb=1467)|e76c|下一虚拟桌面|无条件|切换到下一虚拟桌面|SendMsgToATA&#124;1467|
-|[1468](http://127.0.0.1:5151/runcom?aabb=1468)|e76b|上一虚拟桌面|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
-|[1469](http://127.0.0.1:5151/runcom?aabb=1469)|e76c|下一虚拟桌面|无条件|切换到下一虚拟桌面(VirtualDesktopAccessor_Win10/11.dll)|SendMsgToATA&#124;1469|
-|[1470](http://127.0.0.1:5151/runcom?aabb=1470)|e76b|上一虚拟桌面|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
-|[1471](http://127.0.0.1:5151/runcom?aabb=1471)|f146|虚拟桌面1|无条件|切换到虚拟桌面1|SendMsgToATA&#124;&#124;0|
-|[1472](http://127.0.0.1:5151/runcom?aabb=1472)|f147|虚拟桌面2|无条件|切换到虚拟桌面2|SendMsgToATA&#124;&#124;1|
-|[1473](http://127.0.0.1:5151/runcom?aabb=1473)|f148|虚拟桌面3|无条件|切换到虚拟桌面3|SendMsgToATA&#124;&#124;2|
-|1474|f146|移并跳桌面1|任意窗口|将鼠标下的窗口移动到虚拟桌面1, 并跳转到虚拟桌面1|SendMsgToATA&#124;&#124;0&#124;%Windy_CurWin_Id%|
-|1475|f147|移并跳桌面2|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;1&#124;%Windy_CurWin_Id%|
-|1476|f148|移并跳桌面3|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面3|SendMsgToATA&#124;&#124;2&#124;%Windy_CurWin_Id%|
+|[1467](http://127.0.0.1:5151/runcom?aabb=1467)|e76c|[下一虚拟桌面](/Actions/1467.md)|无条件|切换到下一虚拟桌面|SendMsgToATA&#124;1467|
+|[1468](http://127.0.0.1:5151/runcom?aabb=1468)|e76b|[上一虚拟桌面](/Actions/1468.md)|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
+|[1469](http://127.0.0.1:5151/runcom?aabb=1469)|e76c|[下一虚拟桌面](/Actions/1469.md)|无条件|切换到下一虚拟桌面(VirtualDesktopAccessor_Win10/11.dll)|SendMsgToATA&#124;1469|
+|[1470](http://127.0.0.1:5151/runcom?aabb=1470)|e76b|[上一虚拟桌面](/Actions/1470.md)|无条件|切换到上一虚拟桌面|SendMsgToATA&#124;|
+|[1471](http://127.0.0.1:5151/runcom?aabb=1471)|f146|[虚拟桌面1](/Actions/1471.md)|无条件|切换到虚拟桌面1|SendMsgToATA&#124;&#124;0|
+|[1472](http://127.0.0.1:5151/runcom?aabb=1472)|f147|[虚拟桌面2](/Actions/1471.md)|无条件|切换到虚拟桌面2|SendMsgToATA&#124;&#124;1|
+|[1473](http://127.0.0.1:5151/runcom?aabb=1473)|f148|[虚拟桌面3](/Actions/1471.md)|无条件|切换到虚拟桌面3|SendMsgToATA&#124;&#124;2|
+|1474|f146|[移并跳桌面1](/Actions/1474.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面1, 并跳转到虚拟桌面1|SendMsgToATA&#124;&#124;0&#124;%Windy_CurWin_Id%|
+|1475|f147|[移并跳桌面2](/Actions/1474.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;1&#124;%Windy_CurWin_Id%|
+|1476|f148|[移并跳桌面3](/Actions/1474.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面3|SendMsgToATA&#124;&#124;2&#124;%Windy_CurWin_Id%|
 |1477|f354|黑转透明|选中文件|将图片中的黑色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0x000000"|
 |1478|e790|白转透明|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0xFFFFFF"|
 |1479|f406|白转红|选中文件|将图片中的白色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0xFFFF0000"|
