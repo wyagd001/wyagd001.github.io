@@ -134,7 +134,7 @@ layout: default
 |[1123](http://127.0.0.1:5151/runcom?aabb=1123)|f095|开启黑域|无条件|开启手机黑域|%A_ComSpec% /k "%A_ScriptDir%\引用程序\adb.exe" shell sh /data/data/me.piebridge.brevent/brevent.sh|
 |[1124](http://127.0.0.1:5151/runcom?aabb=1124)|ef3b|重启桌面|无条件|强制关闭所有资源管理器后重新打开|canfunc&#124;CF_restartexplorer|
 |1125|e198|窗口静音|任意窗口|任意窗口静音, 再次运行恢复|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口静音.ahk" "%Windy_CurWin_ProcName%"|
-|1126|E70F|浏览器打开|特定窗口|使用(当前打开的)浏览器打开当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "当前浏览器"|
+|1126|E70F|[浏览器打开](/Actions/1126.md)|特定窗口|使用(当前打开的)浏览器打开当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "当前浏览器"|
 |1127|e16d|复制进程路径|任意窗口|复制当前窗口的进程路径到剪贴板|setclip&#124;%Windy_CurWin_Fullpath%|
 |1128|e70f|其他编辑|子面板|使用指定的编辑器打开当前窗口打开的文本文件|Gui&#124;编辑器打开|
 |1129|E70F|记事本|特定窗口|使用记事本编辑当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "notepad.exe"|
@@ -277,8 +277,8 @@ layout: default
 |1266|e9d5|多文件通用|子面板|多文件通用子面板|Gui&#124;多文件通用|
 |1267|e1a5|移至新文件夹|选中文件|将选中的文件移动到同级的新建文件夹中|canfunc&#124;CF_FileMoveToFolder&#124;%CandySel%|
 |1268|f103|临时共享|选中文件|将选中文件共享到局域网, 局域网内的手机和电脑使用浏览器打开网址, 或手机扫码下载文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件临时共享.ahk" "%CandySel%"|
-|1269|e8b3|Zip压缩|选中文件|将选中的文件添加到 Zip 压缩包中(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip压缩.ahk" "%CandySel%"|
-|1270|e74c|Zip解压|选中文件|将选中的 Zip 文件自动解压到压缩包所在文件夹(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip智能解压.ahk" "%CandySel%"|
+|1269|e8b3|[Zip压缩](/Actions/1169.md)|选中文件|将选中的文件添加到 Zip 压缩包中(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip压缩.ahk" "%CandySel%"|
+|1270|e74c|[Zip解压](/Actions/1170.md)|选中文件|将选中的 Zip 文件自动解压到压缩包所在文件夹(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\7zip智能解压.ahk" "%CandySel%"|
 |1271|e74c|Rar解压|选中文件|将选中的 Rar 文件自动解压到压缩包所在文件夹(引用程序内置)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\UnRar.ahk" "%CandySel%"|
 |[1272](http://127.0.0.1:5151/runcom?aabb=1272)|f552|安全和维护|无条件|打开系统安全和维护界面|run&#124;wscui.cpl|
 |[1273](http://127.0.0.1:5151/runcom?aabb=1273)|e9d9|性能监视器|无条件|打开系统性能监视器|run&#124;perfmon.exe|
@@ -335,7 +335,7 @@ layout: default
 |1324|EDE3|窗口通用3|菜单|当前窗口的通用动作的菜单3|Menu&#124;窗口通用3|
 |1325|e947|关闭其他|任意窗口|关闭除当前窗口外的同进程名的所有其他窗口(拥有标题栏和最大化按钮的窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\关闭同进程所有其他窗口.ahk"|
 |1326|e947|关闭其他|任意窗口|关闭除当前窗口外的所有其他窗口(只包括任务上可见的活动窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\关闭所有其他窗口.ahk"|
-|[1327](http://127.0.0.1:5151/runcom?aabb=1327)|e97c|Bing壁纸|无条件|将Bing背景图片设置为桌面壁纸|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\Bing壁纸.ahk"|
+|[1327](http://127.0.0.1:5151/runcom?aabb=1327)|e97c|[Bing壁纸](/Actions/1327.md)|无条件|将Bing背景图片设置为桌面壁纸|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\Bing壁纸.ahk"|
 |[1328](http://127.0.0.1:5151/runcom?aabb=1328)|e97c|壁纸路径|无条件|获取桌面壁纸的文件路径|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\壁纸路径.ahk"|
 |[1329](http://127.0.0.1:5151/runcom?aabb=1329)|f738|整点敲钟|无条件|整点半点敲钟|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_整点半点敲钟.ahk"|
 |[1330](http://127.0.0.1:5151/runcom?aabb=1330)|f739|节日提醒|无条件|节日提醒|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_节日提醒.ahk"|
