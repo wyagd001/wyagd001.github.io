@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>TreeView (GUI) | AutoHotkey</title>
+<title>TreeView (GUI) | AutoHotkey v1</title>
 <meta name="description" content="The TreeView control displays a hierarchy of items by indenting child items beneath their parents. This page contains the functions to modify it." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -50,7 +50,7 @@ ExitApp</pre>
 <p><strong>C:</strong> 文本颜色. 指定字母 C 后面紧跟着颜色名称(请参阅<a href="Progress.htm#colors">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>cRed</code>, <code>cFF2211</code>, <code>c0xFF2211</code>, <code>cDefault</code>.</p>
 <p id="Checked"><strong>Checked:</strong> 在每项的左边提供一个复选框. 当<a href="#TV_Add">添加</a>项目时, 在其选项中指定单词 <em>Check</em> 来让复选框初始为选中而不是未选中状态. 用户可以点击复选框或按下空格键来选中或取消选中项目. 要找出 TreeView 中当前选中了哪些项目, 请调用 <a href="#TV_GetNext">TV_GetNext()</a> 或 <a href="#TV_Get">TV_Get()</a>.</p>
 <p><strong>HScroll:</strong> 指定 <code>-HScroll</code>(负 HScroll) 来禁用控件中的水平滚动(而且控件将不显示水平滚动条).</p>
-<p id="ImageList"><strong>ImageList:</strong> 这是把图标添加到 TreeView 的方法. 指定单词 <em>ImageList</em> 后紧跟着由之前调用 <a href="ListView.htm#IL_Create">IL_Create()</a> 返回的 ImageListID. 此选项仅在创建 TreeView 时才有效果(但是, <a href="#TV_SetImageList">TV_SetImageList()</a> 没有此限制). 这里是一个可运行示例:</p>
+<p id="ImageList"><strong>ImageList:</strong> 这是把图标添加到 TreeView 的方法. 指定单词 <em>ImageList</em> 后紧跟着由之前调用 <a href="ListView.htm#IL_Create">IL_Create()</a> 返回的 ImageList ID. 此选项仅在创建 TreeView 时才有效果(但是, <a href="#TV_SetImageList">TV_SetImageList()</a> 没有此限制). 这里是一个可运行示例:</p>
 <pre>ImageListID := <a href="ListView.htm#IL_Create">IL_Create</a>(10)  <em>; 创建初始容量为 10 个图标的图像列表.</em>
 Loop 10  <em>; 加载一些标准系统图标到图像列表中.</em>
     <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, "shell32.dll", A_Index)
@@ -70,92 +70,172 @@ return</pre>
 <p><strong>(未命名的数值样式):</strong> 由于上述以外的其他样式很少使用, 所以没有为它们命名. 请参阅 <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a>了解这些样式.</p>
 
 <h2 id="BuiltIn">TreeView 中的内置函数</h2>
-<p>所有的 TreeView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <code><a href="Gui.htm#Default">Gui, 2:Default</a></code> 进行改变). 如果默认窗口不存在或不含有 TreeView 控件, 则所有函数返回零来表明此问题.</p>
+<p>以下所有的 TreeView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <code><a href="Gui.htm#Default">Gui, 2:Default</a></code> 进行改变). 如果默认窗口不存在或不含有 TreeView 控件, 则所有函数返回零来表明此问题.</p>
 <p id="GuiTV">如果窗口中含有多个 TreeView 控件, 则默认情况下函数操作于最近添加的那个. 要改变这种情况, 请指定 <code>Gui, TreeView, TreeViewName</code>, 其中 <em>TreeViewName</em> 为 TreeView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN 或在 <span class="ver">[v1.1.04+]</span> 它的 HWND. 一旦改变后, 所有现有和将来的<a href="../misc/Threads.htm">线程</a>都会使用指定的 TreeView. <span class="ver">[v1.1.23+]</span>: <a href="../Variables.htm#DefaultTreeView">A_DefaultTreeView</a> 包含当前设置.</p>
 
-<p id="bifAddModifyDelete"><strong>项目函数:</strong></p>
+<p id="bifAddModifyDelete">项目函数:</p>
 <ul>
-    <li><a href="#TV_Add">TV_Add</a>: 添加新的项目到 TreeView.</li>
-    <li><a href="#TV_Modify">TV_Modify</a>: 修改项目的属性和/或名称.</li>
-    <li><a href="#TV_Delete">TV_Delete</a>: 删除指定项目或所有项目.</li>
+  <li><a href="#TV_Add">TV_Add</a>: 添加新的项目到 TreeView.</li>
+  <li><a href="#TV_Modify">TV_Modify</a>: 修改项目的属性和/或名称.</li>
+  <li><a href="#TV_Delete">TV_Delete</a>: 删除指定项目或所有项目.</li>
 </ul>
 
-<p id="bifGet"><strong>检索函数:</strong></p>
+<p id="bifGet">检索函数:</p>
 <ul>
-    <li><a href="#TV_GetSelection">TV_GetSelection</a>: 返回选择项目的 ID 号.</li>
-    <li><a href="#TV_GetCount">TV_GetCount</a>: 返回控件中项目的总数.</li>
-    <li><a href="#TV_GetParent">TV_GetParent</a>: 返回指定项目的父项目的 ID.</li>
-    <li><a href="#TV_GetChild">TV_GetChild</a>: 返回指定项目的第一个/最上面的子项目的 ID 号.</li>
-    <li><a href="#TV_GetPrev">TV_GetPrev</a>: 返回指定项目上面一个的同级项目的 ID 号.</li>
-    <li><a href="#TV_GetNext">TV_GetNext</a>: 返回指定项目下面一个项目的 ID 号.</li>
-    <li><a href="#TV_GetText">TV_GetText</a>: 返回指定项目的文本/名称.</li>
-    <li><a href="#TV_Get">TV_Get</a>: 指定项目含有指定的属性, 则返回它的 ID.</li>
+  <li><a href="#TV_GetSelection">TV_GetSelection</a>: 返回选择项目的 ID 号.</li>
+  <li><a href="#TV_GetCount">TV_GetCount</a>: 返回控件中项目的总数.</li>
+  <li><a href="#TV_GetParent">TV_GetParent</a>: 返回指定项目的父项目的 ID.</li>
+  <li><a href="#TV_GetChild">TV_GetChild</a>: 返回指定项目的第一个/最上面的子项目的 ID 号.</li>
+  <li><a href="#TV_GetPrev">TV_GetPrev</a>: 返回指定项目上面一个的同级项目的 ID 号.</li>
+  <li><a href="#TV_GetNext">TV_GetNext</a>: 返回指定项目下面一个项目的 ID 号.</li>
+  <li><a href="#TV_GetText">TV_GetText</a>: 返回指定项目的文本/名称.</li>
+  <li><a href="#TV_Get">TV_Get</a>: 指定项目含有指定的属性, 则返回它的 ID.</li>
 </ul>
 
-<p id="bifIcon"><strong>其他函数:</strong></p>
+<p id="bifIcon">其他函数:</p>
 <ul>
-    <li><a href="#TV_SetImageList">TV_SetImageList</a> <span class="ver">[v1.1.02+]</span>: 设置或替换用于显示图标的 ImageList.</li>
+  <li><a href="#TV_SetImageList">TV_SetImageList</a> <span class="ver">[v1.1.02+]</span>: 设置或替换用于显示图标的 ImageList.</li>
 </ul>
 
 <h3 id="TV_Add">TV_Add</h3>
-<p>添加新的项目到 TreeView 并返回其唯一的项目 ID 号(失败时返回 0).</p>
-<pre class="Syntax"><span class="func">TV_Add</span>(Name, <span class="optional">ParentItemID, Options</span>)</pre>
-<p><em>Name</em> 是项目显示的文本, 它可以为文本或数值(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). <em>ParentItemID</em> 为新项目的父项的 ID(省略它或指定 0 来添加顶级项目). 当添加大量项目时, 在添加项目前使用 <code>GuiControl, -Redraw, MyTreeView</code> 并且在添加项目后使用 <code>GuiControl, +Redraw, MyTreeView</code> 可以提升性能.</p>
-
-<h4 id="Options_for_TV_Add_and_TV_Modify">TV_Add() 和 TV_Modify() 中的选项参数</h4>
-<p><em>Options</em> 参数是一个包含零个或多个下表中选项的字符串(不区分大小写). 选项间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
-<p id="Bold"><strong>Bold:</strong> 用粗体显示项目的名称. 以后要取消项目名称的粗体显示, 请使用 <code>TV_Modify(ItemID, "-Bold")</code>. <span class="ver">[v1.1.30.01+]</span>: 单词 <em>Bold</em> 后可以可选地紧跟着 0 或 1 以指示起始状态.</p>
-<p id="Check"><strong>Check:</strong> 在项目的坐标显示一个复选标记(需要 TreeView 含有<a href="#Checked">复选框</a>). 以后要取消复选它, 请使用 <code>TV_Modify(ItemID, "-Check")</code>. 在单词 <em>Check</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Check"</code> 和 <code>"Check" <strong>.</strong> VarContainingOne</code> 是相同的(这里中间使用的是<a href="../Variables.htm#concat">连接运算符</a>).</p>
-<p id="Expand"><strong>Expand:</strong> 展开此项以让其子项目显示出来(如果有). 以后要折叠项目, 请使用 <code>TV_Modify(ItemID, "-Expand")</code>. 如果没有子项目, 那么 <a href="#TV_Modify">TV_Modify()</a> 返回 0 而不是它的项目 ID. 与之相比, <a href="#TV_Add">TV_Add()</a> 标记此项目为展开的以防以后要添加子项目. 与下面的 <a href="#Select">Select</a> 选项不同, 展开一个项目不会自动展开其父项目. 最后, 在单词 <em>Expand</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Expand"</code> 和 <code>"Expand" <strong>.</strong> VarContainingOne</code> 是相同的.</p>
-<p><strong>First | Sort | N:</strong> 这些选项仅适用于 <a href="#TV_Add">TV_Add()</a>. 它们指定新项目相对于其同级项目的位置(此处 <em>同级项目</em> 是同一级别的其他任何项目). 如果这些选项都不存在, 则新项目被添加到同级项目的最后一个/底部. 否则, 请指定单词 <em>First</em> 来添加项目到同级项目的第一个/顶部, 或指定单词 <em>Sort</em> 来按字母顺序插入新项目到同级项目中间. 如果指定一个纯整数 <em>N</em>, 则假定它为同级项目的 ID 号, 新项目会被插入到它的后面(如果 <em>N</em>是唯一使用的选项, 则它不需要括在引号中).</p>
-<p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着此项目图标的编号, 项目图标显示在项目名称的左边. 如果此选项不存在, 则使用<a href="#ImageList">图像列表</a>中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有图像列表, 则既不显示图标也不为图标保留空间.</p>
-<p id="Select"><strong>Select:</strong> 选择项目. 因为一次只能选择一个项目, 此时任何原来选择的项目会自动取消选择. 此外, 如果有必要此选项会展开其父项目以显示新选择的项目. 要找出当前选择的项目, 请使用 <a href="#TV_GetSelection">TV_GetSelection()</a>.</p>
-<p><strong>Sort:</strong> 对于 <a href="#TV_Modify">TV_Modify()</a>, 此选项按字母顺序排列指定项目的子项目. 要对所有顶级项目进行排序, 请使用 <code>TV_Modify(0, "Sort")</code>. 如果不含子项目, 则返回 0 而不是所修改项目的 ID.</p>
-<p><strong>Vis:</strong> 通过滚动 TreeView 和/或展开其父项目(必要时) 来确保此项完全可见.</p>
-<p><strong>VisFirst:</strong> 和上面一样, 不过在可行时它还会滚动 TreeView 使得此项显示在最上面. 此选项与 <a href="#TV_Modify">TV_Modify()</a> 一起使用比与 <a href="#TV_Add">TV_Add()</a> 通常更有效.</p>
+<p>添加新的项目到 TreeView.</p>
+<pre class="Syntax">ItemID := <span class="func">TV_Add</span>(Name, <span class="optional">ParentItemID, Options</span>)</pre>
+<h4 class="func_section" id="TV_Add_Parameters">参数</h4>
+<dl>
+  <dt>Name</dt>
+  <dd>
+    <p>项目显示的文本, 它可以为文本或数值(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果).</p>
+  </dd>
+  <dt>ParentItemID</dt>
+  <dd>
+    <p>如果为空或省略, 默认为 0, 这意味着项目将被添加到顶级. 否则, 请指定新项目的父项的 ID.</p>
+  </dd>
+  <dt id="Options_for_TV_Add_and_TV_Modify">Options</dt>
+  <dd>
+    <p>如果为空或省略, 则默认为无选项. 否则, 从下面的列表中指定一个或多个选项(不区分大小写). 选项间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 允许使用加号, 但不是必需的.</p>
+    <p id="Bold"><strong>Bold:</strong> 用粗体显示项目的名称. 以后要取消项目名称的粗体显示, 请使用 <code>TV_Modify(ItemID, "-Bold")</code>. <span class="ver">[v1.1.30.01+]</span>: 单词 <em>Bold</em> 后可以可选地紧跟着 0 或 1 以指示起始状态.</p>
+    <p id="Check"><strong>Check:</strong> 在项目的坐标显示一个复选标记(需要 TreeView 具有<a href="#Checked">复选框</a>). 以后要取消复选它, 请使用 <code>TV_Modify(ItemID, "-Check")</code>. 在单词 <em>Check</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Check"</code> 和 <code>"Check" <strong>.</strong> VarContainingOne</code> 是相同的(这里中间使用的是<a href="../Variables.htm#concat">连接运算符</a>).</p>
+    <p id="Expand"><strong>Expand:</strong> 展开此项以让其子项目显示出来(如果有). 以后要折叠项目, 请使用 <code>TV_Modify(ItemID, "-Expand")</code>. 如果没有子项目, 那么 <a href="#TV_Modify">TV_Modify()</a> 返回 0 而不是它的项目 ID. 与之相比, <a href="#TV_Add">TV_Add()</a> 标记此项目为展开的以防以后要添加子项目. 与下面的 <a href="#Select">Select</a> 选项不同, 展开一个项目不会自动展开其父项目. 最后, 在单词 <em>Expand</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Expand"</code> 和 <code>"Expand" <strong>.</strong> VarContainingOne</code> 是相同的.</p>
+    <p><strong>First | Sort | N:</strong> 这些选项仅适用于 <a href="#TV_Add">TV_Add()</a>. 它们指定新项目相对于其同级项目的位置(此处 <em>同级项目</em> 是同一级别的其他任何项目). 如果这些选项都不存在, 则新项目被添加到同级项目的最后一个/底部. 否则, 请指定单词 <em>First</em> 来添加项目到同级项目的第一个/顶部, 或指定单词 <em>Sort</em> 来按字母顺序插入新项目到同级项目中间. 如果指定一个纯整数 <em>N</em>, 则假定它为同级项目的 ID 号, 新项目会被插入到它的后面(如果 <em>N</em>是唯一使用的选项, 则它不需要括在引号中).</p>
+    <p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着此项目图标的编号, 项目图标显示在项目名称的左边. 如果此选项不存在, 则使用<a href="#ImageList">图像列表</a>中的首个图标. 要显示空白图标, 请指定一个大于图像列表中图标数目的数字. 如果控件没有图像列表, 则既不显示图标也不为图标保留空间.</p>
+    <p id="Select"><strong>Select:</strong> 选择项目. 因为一次只能选择一个项目, 此时任何原来选择的项目会自动取消选择. 此外, 如果有必要此选项会展开其父项目以显示新选择的项目. 要找出当前选择的项目, 请使用 <a href="#TV_GetSelection">TV_GetSelection()</a>.</p>
+    <p><strong>Sort:</strong> 对于 <a href="#TV_Modify">TV_Modify()</a>, 此选项按字母顺序排列指定项目的子项目. 要对所有顶级项目进行排序, 请使用 <code>TV_Modify(0, "Sort")</code>. 如果不含子项目, 则返回 0 而不是所修改项目的 ID.</p>
+    <p><strong>Vis:</strong> 通过滚动 TreeView 和/或展开其父项目(必要时) 来确保此项完全可见.</p>
+    <p><strong>VisFirst:</strong> 和上面一样, 不过在可行时它还会滚动 TreeView 使得此项显示在最上面.  此选项与 <a href="#TV_Modify">TV_Modify()</a> 一起使用比与 <a href="#TV_Add">TV_Add()</a> 通常更有效.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_Add_Return_Value">返回值</h4>
+<p>成功时, 函数返回新添加项目的唯一 ID. 失败时, 返回 0.</p>
+<h4 class="func_section" id="TV_Add_Remarks">备注</h4>
+<p>当添加大量项目时, 在添加项目前使用 <code>GuiControl, -Redraw, MyTreeView</code> 并且在添加项目后使用 <code>GuiControl, +Redraw, MyTreeView</code> 可以提升性能.</p>
 
 <h3 id="TV_Modify">TV_Modify</h3>
 <p>修改项目的属性和/或名称.</p>
-<pre class="Syntax"><span class="func">TV_Modify</span>(ItemID <span class="optional">, Options, NewName</span>)</pre>
-<p>成功时返回项目自己的 ID 而失败(或部分失败) 时返回 0. 如果只使用首个参数, 则<a href="#Select">选择</a>指定的项目. 如果省略 <em>NewName</em>, 则保持当前名称不变. 要了解 <em>Options</em>, 请参阅上面的列表.</p>
+<pre class="Syntax">ItemID := <span class="func">TV_Modify</span>(ItemID <span class="optional">, Options, NewName</span>)</pre>
+<h4 class="func_section" id="TV_Modify_Parameters">参数</h4>
+<dl>
+  <dt>ItemID</dt>
+  <dd>
+    <p>要修改的项目的 ID 号.</p>
+  </dd>
+  <dt>Options</dt>
+  <dd>
+    <p>如果和 <em>NewName</em> 参数一起省略, 则选择项目. 否则, 请指定<a href="#Options_for_TV_Add_and_TV_Modify">上表</a>中的一个或多个选项.</p>
+  </dd>
+  <dt>NewName</dt>
+  <dd>
+    <p>如果省略, 则保持当前名称不变. 否则, 请指定项目的新名称.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_Modify_Return_Value">返回值</h4>
+<p>成功时, 函数返回项目自己的 ID. 失败时(或部分失败), 返回 0.</p>
 
 <h3 id="TV_Delete">TV_Delete</h3>
 <p>删除指定项目或所有项目.</p>
-<pre class="Syntax"><span class="func">TV_Delete</span>(<span class="optional">ItemID</span>)</pre>
-<p>如果省略 <em>ItemID</em>, 则删除 TreeView 中<u>所有</u>项目. 否则, 仅删除指定的 <em>ItemID</em> 表示的项目. 成功时返回 1 而失败时返回 0.</p>
+<pre class="Syntax">IsDeleted := <span class="func">TV_Delete</span>(<span class="optional">ItemID</span>)</pre>
+<h4 class="func_section" id="TV_Delete_Parameters">参数</h4>
+<dl>
+  <dt>ItemID</dt>
+  <dd>
+    <p>如果为空或省略, 则删除 TreeView 中的 <u>所有</u> 项目. 否则, 请指定要删除项目的 ID 号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_Delete_Return_Value">返回值</h4>
+<p>成功时, 函数返回 1. 失败时, 返回 0.</p>
 
 <h3 id="TV_GetSelection">TV_GetSelection</h3>
 <p>返回选择项目的 ID 号.</p>
-<pre class="Syntax"><span class="func">TV_GetSelection</span>()</pre>
+<pre class="Syntax">ItemID := <span class="func">TV_GetSelection</span>()</pre>
+<h4 class="func_section" id="TV_GetSelection_Return_Value">返回值</h4>
+<p>函数返回选择项目的 ID 号.</p>
 
 <h3 id="TV_GetCount">TV_GetCount</h3>
 <p>返回控件中项目的总数.</p>
-<pre class="Syntax"><span class="func">TV_GetCount</span>()</pre>
-<p>此函数总是即时的, 因为控件会跟踪此计数.</p>
+<pre class="Syntax">Count := <span class="func">TV_GetCount</span>()</pre>
+<h4 class="func_section" id="TV_GetCount_Return_Value">返回值</h4>
+<p>函数返回控件中项目的总数. 该值总是即时返回的, 因为控件会跟踪此计数.</p>
 
 <h3 id="TV_GetParent">TV_GetParent</h3>
-<p>返回指定项目的父项目的 ID.</p>
-<pre class="Syntax"><span class="func">TV_GetParent</span>(ItemID)</pre>
-<p>顶级项目没有父项目, 因此返回 0.</p>
+<p>返回指定项目的父项目的 ID 号.</p>
+<pre class="Syntax">ParentItemID := <span class="func">TV_GetParent</span>(ItemID)</pre>
+<h4 class="func_section" id="TV_GetParent_Parameters">参数</h4>
+<dl>
+  <dt>ItemID</dt>
+  <dd>
+    <p>要检查的项目的 ID 号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_GetParent_Return_Value">返回值</h4>
+<p>函数返回指定项目的父项目的 ID 号. 如果项目没有父项目, 返回 0, 这适用于所有顶级项目.</p>
 
 <h3 id="TV_GetChild">TV_GetChild</h3>
-<p>返回指定项目的第一个/最上面的子项目的 ID 号(如果没有则为 0).</p>
-<pre class="Syntax"><span class="func">TV_GetChild</span>(ParentItemID)</pre>
-<p>如果 <em>ParentItemID</em> 为 0, 返回 TreeView 中第一个/顶部项目的 ID 号.</p>
+<p>返回指定项目的第一个/最上面的子项目的 ID 号.</p>
+<pre class="Syntax">ChildItemID := <span class="func">TV_GetChild</span>(ItemID)</pre>
+<h4 class="func_section" id="TV_GetChild_Parameters">参数</h4>
+<dl>
+  <dt>ItemID</dt>
+  <dd>
+    <p>要检查的项目的 ID 号. 如果为 0, 返回 TreeView 中第一个/顶层项目的 ID 号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_GetChild_Return_Value">返回值</h4>
+<p>函数返回指定项目的第一个/最上面的子项目的 ID 号. 如果没有子项目, 返回 0.</p>
 
 <h3 id="TV_GetPrev">TV_GetPrev</h3>
-<p>返回指定项目上面一个的同级项目的 ID 号(如果没有则为 0).</p>
-<pre class="Syntax"><span class="func">TV_GetPrev</span>(ItemID)</pre>
+<p>返回指定项目上一个的同级项目的 ID 号.</p>
+<pre class="Syntax">PrevItemID := <span class="func">TV_GetPrev</span>(ItemID)</pre>
+<h4 class="func_section" id="TV_GetPrev_Parameters">参数</h4>
+<dl>
+  <dt>ItemID</dt>
+  <dd>
+    <p>要检查的项目的 ID 号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_GetPrev_Return_Value">返回值</h4>
+<p>函数返回指定项目上一个的同级项目的 ID 号. 如果没有同级项目, 返回 0.</p>
 
 <h3 id="TV_GetNext">TV_GetNext</h3>
-<p>返回指定项目下面一个项目的 ID 号(如果没有则为 0).</p>
-<pre class="Syntax"><span class="func">TV_GetNext</span>(<span class="optional">ItemID, ItemType</span>)</pre>
-<p>它包含了下列模式:</p>
-<ul>
-  <li>省略所有参数时, 它返回 TreeView 中第一个/最上面的项目的 ID 号(如果没有则为 0).</li>
-  <li>如果只是 <em>ItemID</em> 存在, 则它返回指定项目下面一个同级项目的 ID 号(如果没有则为 0). 如果 <em>ItemID</em> 为 0, 则它返回 TreeView 中第一个/最上面的项目的 ID 号(如果没有则为 0).</li>
-  <li>当 <em>ItemType</em> 为 <code>"Full"</code> 或 <code>"F"</code>, 则获取下一个项目, 不论它是否为指定项目的同级项目. 这使得脚本可以容易地逐项遍历整个数. 例如:
-    <pre>ItemID := 0  <em>; 这样使得首次循环从树的顶部开始搜索.</em>
+<p>返回指定项目下一个项目的 ID 号.</p>
+<pre class="Syntax">NextItemID := <span class="func">TV_GetNext</span>(<span class="optional">ItemID, ItemType</span>)</pre>
+<h4 class="func_section" id="TV_GetNext_Parameters">参数</h4>
+<dl>
+  <dt>ItemID</dt>
+  <dd>
+    <p>如果为空或省略, 默认为 0, 这意味着将返回 TreeView 中第一个/最上面的项目的 ID 号. 否则, 请指定要检查的项目的 ID 号.</p>
+  </dd>
+  <dt>ItemType</dt>
+  <dd>
+    <p>如果省略, 将检索指定项目下面一个同级项目的 ID 号. 否则, 请指定以下字符串之一:</p>
+    <p><strong>Full</strong> 或 <strong>F</strong>: 检索下一个项目, 不论它是否为指定项目的同级项目. 这使得脚本可以容易地逐项遍历整个树. 请参阅下面的示例.</p>
+
+    <p><strong>Check</strong>, <strong>Checked</strong> 或 <strong>C</strong>: 仅获取下一个带复选标记的项目.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_GetNext_Return_Value">返回值</h4>
+<p>函数返回指定项目下一个项目的 ID 号. 如果没有下一个项目, 返回 0.</p>
+<h4 class="func_section" id="TV_GetNext_Remarks">备注</h4>
+<p>下面的示例逐项遍历整个树:</p>
+<pre>ItemID := 0  <em>; 这样使得首次循环从树的顶部开始搜索.</em>
 Loop
 {
     ItemID := TV_GetNext(ItemID, "Full")  <em>; 把 "Full" 替换为 "Checked" 来找出所有含复选标记的项目.</em>
@@ -164,25 +244,62 @@ Loop
     TV_GetText(ItemText, ItemID)
     MsgBox The next Item is %ItemID%, whose text is "%ItemText%".
 }</pre>
-  </li>
-  <li>当 <em>ItemType</em> 为 <code>"Check"</code>, <code>"Checked"</code> 或 <code>"C"</code>, 与上面行为相同, 不过会跳过任何没有复选标记的项目. 这样可以逐个获取 TreeView 中所有含有复选标记的项目.</li>
-</ul>
 
 <h3 id="TV_GetText">TV_GetText</h3>
-<p>返回指定 <em>ItemID</em> 的文本/名称并保存到 <em>OutputVar</em>.</p>
-<pre class="Syntax"><span class="func">TV_GetText</span>(OutputVar, ItemID)</pre>
-<p>如果文本长度超过 8191, 则仅获取前 8191 个字符.  成功时函数返回项目自己的 ID. 失败时返回 0(且 <em>OutputVar</em> 被置空).</p>
+<p>检索指定项目的文本/名称.</p>
+<pre class="Syntax">ItemID := <span class="func">TV_GetText</span>(OutputVar, ItemID)</pre>
+<h4 class="func_section" id="TV_GetText_Parameters">参数</h4>
+<dl>
+  <dt>OutputVar</dt>
+  <dd>
+    <p>输出变量的名称, 该变量储存了检索到的文本. 最多只能检索 8191 个字符. 失败时, 变量被置空.</p>
+  </dd>
+  <dt>ItemID</dt>
+  <dd>
+    <p>要检索其文本的项目的 ID 号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_GetText_Return_Value">返回值</h4>
+<p>成功时, 函数返回项目自己的 ID. 失败时, 返回 0.</p>
 
 <h3 id="TV_Get">TV_Get</h3>
 <p>如果指定项目含有指定的属性, 则返回它的 ID.</p>
-<pre class="Syntax"><span class="func">TV_Get</span>(ItemID, Attribute)</pre>
-<p>如果指定的项目具有指定的属性, 则返回它自己的 <em>ItemID</em>. 否则返回 0. 对于 <em>Attribute</em>, 指定 <code>"E"</code>, <code>"Expand"</code> 或 <code>"Expanded"</code> 来判断此项当前是否<a href="#Expand">展开的</a>(即它的子项目是显示的); 指定 <code>"C"</code>, <code>"Check"</code> 或 <code>"Checked"</code> 来判断此项是否含有<a href="#Check">复选标记</a>; 或指定 <code>"B"</code> 或 <code>"Bold"</code> 来判断此项当前是否为<a href="#Bold">粗体</a>.</p>
-<p class="note"><strong>提示:</strong> 因为在 IF 语句中把任何非零值视为 "true", 所以下面两行功能相同: <code>if TV_Get(ItemID, "Checked") = ItemID</code> 和 <code>if TV_Get(ItemID, "Checked")</code>.</p>
+<pre class="Syntax">ItemID := <span class="func">TV_Get</span>(ItemID, Attribute)</pre>
+<h4 class="func_section" id="TV_Get_Parameters">参数</h4>
+<dl>
+  <dt>ItemID</dt>
+  <dd>
+    <p>要检查的项目的 ID 号.</p>
+  </dd>
+  <dt>Attribute</dt>
+  <dd>
+    <p>指定以下字符串之一:</p>
+    <p><strong>E</strong>, <strong>Expand</strong> 或 <strong>Expanded</strong>: 当前<a href="#Expand">展开</a>的项目(即它的子项目是显示的).</p>
+    <p><strong>C</strong>, <strong>Check</strong> 或 <strong>Checked</strong>: 项目具有<a href="#Check">复选标记</a>.</p>
+    <p><strong>B</strong> 或 <strong>Bold</strong>: 当前字体为<a href="#Bold">粗体</a>的项目.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="TV_Get_Return_Value">返回值</h4>
+<p>如果指定的项目具有指定的属性, 则返回它自己的 ID. 否则, 返回 0.</p>
+<h4 class="func_section" id="TV_Get_Remarks">备注</h4>
+<p>因为在 IF 语句中把任何非零值视为 "true", 所以下面两行功能相同: <code>if TV_Get(ItemID, "Checked") = ItemID</code> 和 <code>if TV_Get(ItemID, "Checked")</code>.</p>
 
 <h3 id="TV_SetImageList">TV_SetImageList <span class="ver">[v1.1.02+]</span></h3>
 <p>设置或替换用于显示图标的 <a href="#ImageList">ImageList</a>.</p>
-<pre class="Syntax"><span class="func">TV_SetImageList</span>(ImageListID <span class="optional">, IconType</span>)</pre>
-<p><em>ImageListID</em> 是先前调用 <a href="ListView.htm#IL_Create">IL_Create()</a> 时返回的数字. <em>IconType</em> 一般情况下忽略, 默认为 0. 否则, 对于状态图标指定 2(还没有直接支持状态图标, 不过可以通过 <a href="PostMessage.htm">SendMessage</a> 使用). 如果成功, 则 TV_SetImageList() 返回之前与 TreeView 关联的 <em>ImageListID</em>(如果没有则为 0). 任何分离的图像列表一般应使用 <a href="ListView.htm#IL_Destroy">IL_Destroy()</a> 进行销毁.</p>
+<pre class="Syntax">PrevImageListID := <span class="func">TV_SetImageList</span>(ImageListID <span class="optional">, IconType</span>)</pre>
+<h4 class="func_section" id="TV_SetImageList_Parameters">参数</h4>
+<dl>
+  <dt>ImageListID</dt>
+  <dd>
+    <p>之前调用 <a href="ListView.htm#IL_Create">IL_Create()</a> 返回的 ID 号.</p>
+  </dd>
+  <dt>IconType</dt>
+  <dd>
+    <p>如果省略, 默认为 0. 否则, 请指定 2 表示状态图标(目前还不直接支持, 但可以通过 <a href="PostMessage.htm">SendMessage</a> 来使用).</p>
+  </dd>
+  </dl>
+<h4 class="func_section" id="TV_SetImageList_Return_Value">返回值</h4>
+<p>成功时, 函数返回先前与 TreeView 关联的 ImageList ID. 失败时, 返回 0. 任何这样分离的 ImageList 通常应该通过 <a href="ListView.htm#IL_Destroy">IL_Destroy()</a> 来销毁.</p>
 
 <h2 id="notify">G-标签通知(主要)</h2>
 <p><a href="Gui.htm#label">g-标签</a>例如 <code><strong>g</strong>MySubroutine</code> 可以使用在此控件的选项中. 这使得当用户在控件中执行动作时 <em>MySubroutine</em> 标签会自动运行. 此子程序中可引用内置变量 <a href="../Variables.htm#Gui">A_Gui</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a> 来找出产生事件的是哪个窗口和 TreeView. 更重要的是, 它可以参考 <strong>A_GuiEvent</strong>, 其包含下列字符串或字母的其中一个(考虑到和未来版本的兼容性, 脚本不应假定这些字符串或字母是唯一可能的值):</p>
@@ -233,7 +350,6 @@ return</pre>
 <p><a href="ListView.htm">ListView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="Gui.htm">Gui</a>, <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="../misc/Styles.htm#TreeView">TreeView 样式表</a></p>
 
 <h2 id="Examples">示例</h2>
-
 <div class="ex" id="ExAdvanced">
 <p><a class="ex_number" href="#ExAdvanced"></a> 下面是一个比页面顶部的脚本更复杂的可工作的脚本. 它创建并显示一个 TreeView, 其中包含所有用户开始菜单中的所有文件夹. 当用户选择一个文件夹时, 它的内容会显示在右边的 ListView 中(类似于 Windows 资源管理器). 此外, <a href="GuiControls.htm#StatusBar">StatusBar</a> 控件会显示当前选择文件夹的信息.</p>
 <pre><em>; 下面的文件夹为 TreeView 的根文件夹. 请注意, 如果指定整个驱动器例如 C:\

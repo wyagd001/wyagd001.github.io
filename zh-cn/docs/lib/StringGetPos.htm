@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>StringGetPos | AutoHotkey</title>
+<title>StringGetPos | AutoHotkey v1</title>
 <meta name="description" content="The StringGetPos command retrieves the position of the specified substring within a string." />
 <meta name="ahk:equiv-v2" content="lib/InStr.htm" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -21,35 +21,37 @@
 <dl>
 
   <dt>OutputVar</dt>
-  <dd><p>用来存储获取的相对于 <em>InputVar</em> 首个字符的位置的输出变量的名称. StringGetPos 中首个字符的位置为 0, 而 <a href="InStr.htm">InStr()</a> 中首个字符的位置为 1.</p></dd>
+  <dd><p>用来存储获取的相对于 <em>InputVar</em> 首个字符的位置的输出变量的名称. StringGetPos 中首个字符的位置为 0.</p></dd>
 
   <dt>InputVar</dt>
-  <dd><p>内容将被搜索的输入变量名. 不要把名称括在百分号中, 除非您希望使用变量的 <em>内容</em> 作为被解析的变量名.</p></dd>
+  <dd><p>内容将被搜索的输入变量名. 不要把名称括在百分号中, 除非您希望使用变量的内容作为被解析的变量名.</p></dd>
 
   <dt>SearchText</dt>
   <dd><p>要搜索的字符串. 如果没有启用 <a href="StringCaseSense.htm">StringCaseSense</a>, 那么匹配过程不区分大小写.</p></dd>
 
   <dt>Occurrence</dt>
   <dd>
-    <p>如果 <em>SearchText</em> 在 <em>InputVar</em> 中出现多次, 此参数影响那个将被找到. 如果为空或省略, 默认为 L1(将从 <em>InputVar</em> 左边开始查找首个匹配). 否则, 请指定以下选项之一:</p>
-    <p><strong>L<em>n</em>:</strong> 从 <em>InputVar</em> 的左边开始搜索, 并继续向右直到找到第 <em>n</em> 个匹配.</p>
-    <p><strong>R<em>n</em>:</strong> 从 <em>InputVar</em> 的右边开始搜索, 并继续向左直到找到第 <em>n</em> 个匹配. 如果 <em>n</em> 省略(或 <em>Occurrence</em> 参数为 1), 默认为 R1. </p>
-    <p>例如, 要找到从右边开始的第四个匹配, 请指定 R4. 注意: 如果 <em>n</em> 小于或等于零, 将找不到匹配.</p>
+    <p>如果为空或省略, 默认为 L1. 否则, 请指定以下选项之一, 以影响如果 <em>SearchText</em> 在 <em>InputVar</em> 中出现多次, 将被找到哪一个.</p>
+    <p><strong>L</strong><em>n</em> 从 <em>InputVar</em> 的左边开始搜索, 并继续向右直到找到第 <em>n</em> 个匹配.</p>
+    <p><strong>R</strong><em>n</em>: 从 <em>InputVar</em> 的右边开始搜索, 并继续向左直到找到第 <em>n</em> 个匹配. 如果 <em>n</em> 省略(或 <em>Occurrence</em> 参数为 1), 默认为 R1. </p>
+    <p>例如, 要找到从右边开始的第四个匹配, 请指定 <code>R4</code>. 注意: 如果 <em>n</em> 小于或等于零, 将找不到匹配.</p>
   </dd>
 
   <dt>Offset</dt>
-  <dd><p>最左边或最右边(取决于上面的参数) 需要跳过的字符数. 省略时默认为 0. 例如, 后面的语句会从左边的第十个字符开始查找:<code>StringGetPos, OutputVar, InputVar, abc, , 9</code>. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
+  <dd><p>如果为空或省略, 默认为 0. 否则, 请指定最左边或最右边(取决于上面的参数) 需要跳过的字符数. 省略时默认为 0. 例如, 后面的语句会从左边的第十个字符开始查找:<code>StringGetPos, OutputVar, InputVar, abc, , 9</code>. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
 
 </dl>
 
 <h2 id="ErrorLevel">ErrorLevel</h2>
 <p>在 <em>InputVar</em> 中的指定位置没有找到 <em>SearchText</em> 时 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
+
 <h2 id="Remarks">备注</h2>
+<p>在这个及其他所有命令中, <em>OutputVar</em> 和 <em>InputVar</em> 中可以使用相同的变量.</p>
 <p>与 <a href="StringMid.htm">StringMid</a> 和 <a href="InStr.htm">InStr()</a> 不同, StringGetPos 中首个字符的位置为 0.</p>
 <p>获取的位置总是相对于 <em>InputVar</em> 的首个字符, 不受 <em>Occurrence</em> 和/或 <em>Offset</em> 的值影响. 例如, 如果在 123abc789 中查找 "abc", 那么获取的位置总为 3, 而不论查找的参数如何.</p>
 <p>如果 <em>SearchText</em> 不存在于 <em>InputVar</em> 中的指定出现位置, 那么 <em>OutputVar</em> 将被置为 -1 且 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1.</p>
 <p>使用 <a href="SplitPath.htm">SplitPath</a> 可以更容易地将文件路径分解为目录, 文件名和扩展名.</p>
-<p>内置变量 <a href="../Variables.htm">%A_Space%</a> 和 <a href="../Variables.htm">%A_Tab%</a> 分别包含了单个空格和单个 tab 字符. 当您需要搜索单独的空格或 tab 或在 <em>SearchText</em> 的开始或末尾含有空格或 tab 时, 这很有用.</p>
+<p>内置变量<strong>A_Space</strong> 和 <strong>A_Tab</strong> 分别包含了单个空格和单个 tab 字符. 当您需要搜索单独的空格或 tab 或在 <em>SearchText</em> 的开始或末尾含有空格或 tab 时, 这很有用.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="InStr.htm">InStr()</a>, <a href="RegExMatch.htm">RegExMatch()</a>, <a href="IfInString.htm">IfInString</a>, <a href="IfIn.htm">If Var [not] in/contains MatchList</a>, <a href="StringCaseSense.htm">StringCaseSense</a>, <a href="StringReplace.htm">StringReplace</a>, <a href="SplitPath.htm">SplitPath</a>, <a href="StringLeft.htm">StringLeft</a>, <a href="StringLeft.htm">StringRight</a>, <a href="StringMid.htm">StringMid</a>, <a href="StringTrimLeft.htm">StringTrimLeft</a>, <a href="StringTrimLeft.htm">StringTrimRight</a>, <a href="StringLen.htm">StringLen</a>, <a href="StringLower.htm">StringLower</a>, <a href="StringLower.htm">StringUpper</a>, <a href="IfIs.htm">If Var is [not] Type</a></p>

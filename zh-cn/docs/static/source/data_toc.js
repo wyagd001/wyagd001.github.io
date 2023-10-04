@@ -124,7 +124,7 @@
     ["If 语句","Language.htm#if-statement",
     [
       ["If (表达式)","lib/IfExpression.htm"],
-      ["If (传统型)","lib/IfEqual.htm"],
+      ["If (遗留型)","lib/IfEqual.htm"],
       ["If var [not] between Low and High","lib/IfBetween.htm"],
       ["If var is [not] type","lib/IfIs.htm"],
       ["If var [not] in/contains MatchList","lib/IfIn.htm"],

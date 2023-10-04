@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>OnMessage() | AutoHotkey</title>
+<title>OnMessage() | AutoHotkey v1</title>
 <meta name="description" content="The OnMessage function registers a function to be called automatically whenever the script receives the specified message." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,7 +41,7 @@
   </dd>
 
   <dt id="MaxThreads">MaxThreads(最大线程)<span class="ver">[v1.0.47+]</span></dt>
-  <dd><p>如果为空或省略, 则默认为 1, 此时表示回调在同一时刻只能运行一个<a href="../misc/Threads.htm">线程</a>. 这通常是最佳的, 因为如果不这样, 则每当回调中断它自己时脚本将不会按照时间先后顺序来处理消息. 因此, 代替 <em>MaxThreads</em> 的一种方法是, 请像<a href="#Critical">下面</a>描述的那样使用 <em>Critical</em> :</p>
+  <dd><p>如果省略, 则默认为 1, 此时表示回调在同一时刻只能运行一个<a href="../misc/Threads.htm">线程</a>. 这通常是最佳的, 因为如果不这样, 则每当回调中断它自己时脚本将不会按照时间先后顺序来处理消息. 因此, 代替 <em>MaxThreads</em> 的一种方法是, 请像<a href="#Critical">下面</a>描述的那样使用 <em>Critical</em> :</p>
   <p>如果回调直接或间接导致消息再次被发送, 而该回调仍在运行, 则有必要指定一个大于 1 或小于 -1 的 <em>MaxThreads</em> 值, 以允许回调被调用为了新的消息(如果需要). 脚本自己的进程向自己 send(非 post) 的消息不能被延迟或缓冲.</p>
   <p><span class="ver">[v1.1.20+]</span>: 指定 0 以注销以前注册的回调. 如果 <em>Callback</em> 是字符串, 则删除 "传统" 监听器. 否则, 仅注销给定的函数对象.</p>
   <p><span class="ver">[v1.1.20+]</span>: 默认情况下多个回调注册到同一个 <em>MsgNumber</em> 时, 它们被调用的顺序按照它们注册的顺序来. 如果希望某个回调在其他比它先注册的回调之前就被调用, 可以给 <em>MaxThreads</em> 指定一个负数值. 例如, <code>OnMessage(Msg, Fn, -2)</code> 可将 <code>Fn</code> 函数提前到其他所有注册响应 <em>Msg</em> 的回调之前调用, 且允许 <em>Fn</em> 函数最大线程为 2. 然而, 如果回调已经注册了, 这个命令不会改变它, 除非进行解除注册之后再次注册.</p></dd>
@@ -121,7 +121,7 @@ MsgParentWindow := WinExist()  <em>; 这里保存了消息发送的目标窗口�
 <p>尽管外部程序可以使用 PostThreadMessage() 或其他 API 调用直接发布消息给脚本的线程, 但不建议这么做, 因为如果此时脚本正显示系统窗口(例如 <a href="MsgBox.htm">MsgBox</a>) 则消息会丢失. 相反, 通常最好发布或发送消息到<a href="Program.htm#main-window">脚本主窗口</a>或其中的某个 GUI 窗口.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息列表</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall()</a></p>
+<p><a href="RegisterCallback.htm">RegisterCallback()</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="PostMessage.htm">Post/SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Critical.htm">Critical</a>, <a href="DllCall.htm">DllCall()</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExLButtonDown">

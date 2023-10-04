@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>StrPut() | AutoHotkey</title>
+<title>StrPut() | AutoHotkey v1</title>
 <meta name="description" content="The StrPut function copies a string to a memory address, optionally converting it to a given code page." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,8 +15,9 @@
 <p>将字符串复制到内存地址, 可选地转换它到给定的代码页.</p>
 
 <pre class="Syntax">
-<span class="func">StrPut</span>(String <span class="optional">, Encoding := <i>None</i></span>)
-<span class="func">StrPut</span>(String, Target <span class="optional">, Length</span> <span class="optional">, Encoding := <i>None</i></span>)
+CharCount := <span class="func">StrPut</span>(String, Target <span class="optional">, Length, Encoding</span>)
+CharCount  := <span class="func">StrPut</span>(String, Target <span class="optional">, Encoding</span>)
+ReqBufSize := <span class="func">StrPut</span>(String <span class="optional">, Encoding</span>)
 </pre>
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -35,28 +36,28 @@
 
   <dt>Length</dt>
   <dd>
-    <p>要写入的最大<a href="../Concepts.htm#character">字符</a>数, 需要时包含<a href="../Concepts.htm#null-termination">空终止符</a>.</p>
+    <p>要写入的最大<a href="../Concepts.htm#character">字符</a>数, 如果需要, 须包含<a href="../Concepts.htm#null-termination">空终止符</a>.</p>
     <p>如果 <em>Length</em> 为 0 或小于转换后的计划长度(或不需要转换时, 源字符串的长度), 没有字符被写入.</p>
-    <p>除非已知缓冲大小足够大, 否则不能省略 <em>Length</em>, 例如, 如果缓冲是基于先前使用相同的 <em>Source</em> 和 <em>Encoding</em> 调用的 StrPut 而分配的.</p>
+    <p><em>Length</em> 不能被省略, 除非已知缓冲大小足够, 例如, 如果缓冲是基于先前使用相同的 <em>String</em> 和 <em>Encoding</em> 调用 StrPut 分配的.</p>
     <p class="warning"><strong>注意:</strong> 当指定 <em>Encoding</em> 时, <em>Length</em> 应该是缓冲的大小(以字符为单位), <strong>而不是</strong> <em>String</em> 或子字符串的长度, 因为转换可能会增加其长度.</p>
     <p class="warning"><strong>注意:</strong> <em>Length</em> 和 StrPut 的返回值是以字符数来计算的, 而缓冲大小通常以字节度量.</p>
   </dd>
 
   <dt>Encoding</dt>
   <dd>
-    <p>目标编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在指定 <em>Length</em> 时, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码页.</p>
+    <p>如果省略, 那么将简单地复制或测量字符串, 而不进行任何转换. 否则, 请指定目标编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在 4 参数模式时, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码页.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
-<p>函数返回写入的<a href="../Concepts.htm#character">字符</a>数. 如果没有指定 <i>Target</i>, 则返回以字符数表示的必须的缓冲大小. 如果 <em>Length</em> 准确等于转换的字符串的长度, 那么字符串不包含<a href="../Concepts.htm#null-termination">空终止符</a>; 否则返回的大小包含空终止符.</p>
+<p>在 4 或 3 参数模式下, 函数返回写入的<a href="../Concepts.htm#character">字符</a>数. 在 2 参数模式下, 则返回以字符数表示的必须的缓冲大小. 如果 <em>Length</em> 准确等于转换的字符串的长度, 那么字符串不包含<a href="../Concepts.htm#null-termination">空终止符</a>; 否则返回的大小包含空终止符.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
 <p>如果检测到无效参数或转换无法执行, 则返回空字符串. 如果最终字符数超过 <em>Length</em>, 则返回 0.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>注意, <i>String</i> 参数总是假定为使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定了写入给定的 <i>Target</i> 的字符串的编码. 如果没有指定 <em>Encoding</em>, 则只测量或复制字符串, 而不进行任何转换.</p>
+<p>注意, <i>String</i> 参数总是假定为使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定了写入给定的 <i>Target</i> 的字符串的编码. 如果没有指定 <em>Encoding</em>, 则只复制或测量字符串, 而不进行任何转换.</p>
 
 
 <h2 id="Related">相关</h2>

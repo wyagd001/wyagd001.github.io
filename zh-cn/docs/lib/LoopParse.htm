@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Loop Parse | AutoHotkey</title>
+<title>Loop Parse | AutoHotkey v1</title>
 <meta name="description" content="The Loop Parse statement retrieves substrings (fields) from a string, one at a time." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +14,7 @@
 
 <p>从一个字符串中获取子字符串(片段), 每次一个.</p>
 
-<pre class="Syntax"><span class="func">Loop, Parse</span>, InputVar <span class="optional">, Delimiters, OmitChars</span></pre>
+<pre class="Syntax"><span class="func">Loop, Parse</span>, InputVar <span class="optional">, DelimiterChars, OmitChars</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -23,27 +23,27 @@
 
   <dt>InputVar</dt>
   <dd>
-    <p>需要被分解的输入变量的名称. 不要把名称括在百分号中, 除非您希望使用变量的 <em>内容</em> 作为被解析的变量名.</p>
+    <p>需要被分解的输入变量的名称. 不要把名称括在百分号中, 除非您希望使用变量的内容作为被解析的变量名.</p>
     <p><span class="ver">[v1.1.21+]</span>: 此参数可以是 <a href="../Variables.htm#Expressions">表达式</a></code>, 但必须使用 <a href="../Language.htm#-expression">百分号空格前缀</a>, 例如 <code>% "red,green,blue"</code>.</p>
   </dd>
 
-  <dt>Delimiters(分隔符)</dt>
-  <dd><p>如果此参数为空或省略, 那么将把 <em>InputVar</em> 中的每个字符解析为单独的子字符串.</p>
+  <dt>DelimiterChars(分隔字符)</dt>
+  <dd><p>如果为空或省略, 那么将把 <em>InputVar</em> 中的每个字符解析为单独的子字符串.</p>
       <p>如果此参数为 <strong>CSV</strong>, 那么将把 <em>InputVar</em> 按逗号分隔值格式标准进行解析. 这个是 MS Excel 生成的 CSV 文件行的示例:</p>
 <pre class="no-highlight">"first field",SecondField,"the word ""special"" is quoted literally",,"last field, has literal comma"</pre>
-      <p>其他情况下, <em>Delimiters</em> 中可以包含一个或多个字符(区分大小写), 其中的每个都被用来确定 <em>InputVar</em> 中子字符串之间的边界.</p>
-      <p>分隔符不会被视为子字符串自身的一部分. 此外, 在 <em>InputVar</em> 中如果一对分隔符之间没有任何字符, 那么相应的子字符串将为空.</p>
-      <p>例如: <code>`,</code>(转义的逗号) 将根据逗号每次出现的位置分割字符串. 同样地, 使用 <code>%A_Tab%%A_Space%</code> 作为分隔符将在 <em>InputVar</em> 中每次遇到空格或 tab 时开始一个新的子字符串.</p>
-      <p>要使用字符串而不是字符作为分隔符, 首先使用 <a href="StrReplace.htm">StrReplace()</a> 或 <a href="StringReplace.htm">StringReplace</a> 把这个字符串在所有出现的地方替换为文本中从未使用的单个字符, 例如这些特殊字符的其中一个: &cent;&curren;&yen;&brvbar;&sect;&copy;&ordf;&laquo;&reg;&micro;&para;. 参考这个例子, 其中使用字符串 &lt;br&gt; 作为分隔符:</p>
+     <p>否则, 请指定一个或多个字符(区分大小写), 其中的每个都被用来确定 <em>InputVar</em> 中子字符串之间的边界.</p>
+      <p>分隔字符不会被视为子字符串自身的一部分. 此外, 在 <em>InputVar</em> 中如果一对分隔符之间没有任何字符, 那么相应的子字符串将为空.</p>
+      <p>例如: <code>`,</code>(转义的逗号) 将根据逗号每次出现的位置分割字符串. 同样地, 使用 <code>%A_Space%%A_Tab%</code> 作为分隔符将在 <em>InputVar</em> 中每次遇到空格或 tab 时开始一个新的子字符串.</p>
+      <p>要使用字符串而不是字符作为分隔符, 首先使用 <a href="StrReplace.htm">StrReplace()</a> 或 <a href="StringReplace.htm">StringReplace</a> 把这个字符串在所有出现的地方替换为文本中从未使用的单个字符, 例如这些特殊字符的其中一个: <code>&cent;&curren;&yen;&brvbar;&sect;&copy;&ordf;&laquo;&reg;&micro;&para;</code>. 参考这个例子, 其中使用字符串 &lt;br&gt; 作为分隔符:</p>
       <pre>StringReplace, NewHTML, HTMLString, &lt;br&gt;, ￠, All
 Loop, parse, NewHTML, ￠ <em>; 使用 ￠ 解析字符串.</em>
 {
-...
+    <em>; ...</em>
 }</pre></dd>
 
   <dt>OmitChars(删除字符)</dt>
-  <dd><p>可选的字符列表(区分大小写), 用来从每个子字符串的开始和结尾部分移除这些字符. 例如, 如果在 <em>OmitChars</em> 使用 <code>%A_Space%%A_Tab%</code>, 那么每个解析出来的子字符串中开始和结尾部分(但中间的不会) 的空格和 tab 会被移除.</p>
-    <p>如果 <em>Delimiters</em> 为空, 那么 <em>OmitChars</em> 表示应该考虑移除哪些字符(它们将不会出现在循环中).</p>
+  <dd><p>如果为空或省略, 则不排除任何字符. 否则, 请指定一个字符列表(区分大小写), 用来从每个子字符串的开始和结尾部分移除这些字符. 例如, 如果在 <em>OmitChars</em> 使用 <code>%A_Space%%A_Tab%</code>, 那么每个解析出来的子字符串中开始和结尾部分(但中间的不会) 的空格和 tab 会被移除.</p>
+    <p>如果 <em>DelimiterChars</em> 为空, 那么 <em>OmitChars</em> 表示应该考虑移除哪些字符(它们将不会出现在循环中).</p>
     <p>与其他大多数命令的最后一个参数不同, 在 <em>OmitChars</em> 中的逗号必须进行转义(<code>`,</code>).</p></dd>
 
 </dl>
@@ -51,12 +51,14 @@ Loop, parse, NewHTML, ￠ <em>; 使用 ￠ 解析字符串.</em>
 <h2 id="Remarks">备注</h2>
 <p>当您想对包含在字符串中的片段逐个进行操作时, 字符串解析循环很有用. 解析循环比 <a href="StrSplit.htm">StrSplit()</a> 或 <a href="StringSplit.htm">StringSplit</a> 使用更少的内存(因为它创建了永久的<a href="../misc/Arrays.htm#object-based">数组</a>或<a href="../misc/Arrays.htm#pseudo">伪数组</a>) 且在大多数情况下更容易使用.</p>
 <p id="LoopField">内置变量 <strong>A_LoopField</strong> 存在于任何解析循环中. 它包含了 <em>InputVar</em> 中当前子字符串(片段) 的内容. 如果一个内层解析循环包含在一个外层解析循环中, 则最内层循环的片段将具有优先权.</p>
-<p>尽管不存在内置变量 "A_LoopDelimiter", 不过在此页面最底部的例子演示了如何检测在分割每个片段时是由于遇到哪个分隔符.</p>
+<p>尽管不存在内置变量 "A_LoopDelimiter", 不过在此页面最底部的例子演示了如何检测在分割每个片段时是由于遇到哪个分隔字符.</p>
 <p><em>InputVar</em> 或其片段没有大小限制. 此外, 如果 <em>InputVar</em> 的内容在循环执行期间改变了, 循环将 "无视" 这些变化, 因为它正在操作的是原始内容的临时副本.</p>
 <p>要在解析前按不同的顺序排列字段, 请使用 <a href="Sort.htm">Sort</a> 命令.</p>
 <p>请参阅 <a href="Loop.htm">Loop</a> 了解关于<a href="Block.htm">区块</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a> 和 A_Index 变量(其存在于各种类型的循环中) 的相关信息.</p>
+
 <h2 id="Related">相关</h2>
 <p><a href="StrSplit.htm">StrSplit()</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="Loop.htm">Loop</a>, <a href="Break.htm">Break</a>, <a href="Continue.htm">Continue</a>, <a href="Block.htm">区块</a>, <a href="Sort.htm">Sort</a>, <a href="FileSetAttrib.htm">FileSetAttrib</a>, <a href="FileSetTime.htm">FileSetTime</a>, <a href="StringSplit.htm">StringSplit</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 解析一个逗号分隔的字符串.</p>
@@ -100,7 +102,7 @@ Loop, parse, Colors, `,
 </div>
 
 <div class="ex" id="ExDelimiter">
-<p><a class="ex_number" href="#ExDelimiter"></a> 判断遇到了哪个分隔符.</p>
+<p><a class="ex_number" href="#ExDelimiter"></a> 判断遇到了哪个分隔字符.</p>
 <pre><em>; 初始化要搜索的字符串.</em>
 Colors = := "red,green|blue;yellow|cyan,magenta"
 <em>; 初始化计数器来跟踪字符串中我们的位置.</em>
@@ -108,12 +110,12 @@ Position := 0
 
 Loop, Parse, Colors, `,|;
 {
-    <em>; 计算在这个字段末尾分隔符的位置.</em>
+    <em>; 计算在这个字段末尾分隔字符的位置.</em>
     Position += StrLen(A_LoopField) + 1
-    <em>; 获取解析循环中找到的分隔符.</em>
-    Delimiter := SubStr(Colors, Position, 1)
+    <em>; 获取解析循环中找到的分隔字符.</em>
+    DelimiterChar := SubStr(Colors, Position, 1)
 
-    MsgBox Field: %A_LoopField%`nDelimiter: %Delimiter%
+    MsgBox Field: %A_LoopField%`nDelimiter character: %DelimiterChar%
 }</pre>
 </div>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>FileSelectFile | AutoHotkey</title>
+<title>FileSelectFile | AutoHotkey v1</title>
 <meta name="description" content="The FileSelectFile command displays a standard dialog that allows the user to open or save file(s)." />
 <meta name="ahk:equiv-v2" content="lib/FileSelect.htm" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -23,10 +23,10 @@
   <dd><p>用来保存用户选择的文件名的输出变量的名称. 如果用户取消了对话框(即不想选择文件), 则此变量被置空.</p></dd>
 
   <dt>Options</dt>
-  <dd><p>如果省略, 则它默认为零, 相当于下面的任意选项都没有指定.</p>
-      <p><strong>M:</strong> 多选. 指定字母 M 让用户可以使用 Shift+点击, Control+点击 或其他方法来选择多个文件. M 后面可以跟着下面描述的数字(例如, <code>M</code> 和 <code>M1</code> 都是有效的). 要逐个提取文件, 请参阅此页面底部的例子.</p>
-      <p><strong>S:</strong> 保存对话框. 指定字母 S 让对话框显示保存按钮代替打开按钮. S 后面可以跟着下面描述的数字(或几个数的和)(例如, <code>S</code> 和 <code>S16</code> 都是有效的).</p>
-      <p>即使同时省略 M 和 S, 仍然可以使用下面的数字. 要让多个数字同时生效, 请把它们加在一起. 例如, 如果要使用 1 和 2, 请指定数字 3.</p>
+  <dd><p>如果为空或省略, 则默认为零, 相当于没有指定下面的任意选项. 否则, 指定一个数字或下面列出的字母之一, 后面跟着一个数字(可选). 例如, <code class="no-highlight">M</code>, <code class="no-highlight">1</code> 和 <code class="no-highlight">M1</code> 都是有效的(但不相同)</p>
+      <p><strong>M:</strong> 多选. 指定字母 M 让用户可以使用 Shift+点击, Control+点击 或其他方法来选择多个文件. 要逐个提取文件, 请参阅此页面底部的例子.</p>
+      <p><strong>S:</strong> 保存对话框. 指定字母 S 让对话框显示保存按钮代替打开按钮.</p>
+      <p>可以使用下面的数字. 要让多个数字同时生效, 请把它们加在一起. 例如, 如果要使用 1 和 2, 请指定数字 3.</p>
       <p><strong>1:</strong> 文件必须存在<br>
         <strong>2:</strong> 路径必须存在<br>
         <strong>8:</strong> 提示创建新文件<br>
@@ -36,8 +36,8 @@
       <p>由于 "提示覆盖" 选项只有保存对话框支持, 因此在没有 "提示创建" 选项的情况下指定该选项也会使 S 选项生效. 同样, 当 S 选项存在时, "提示创建" 选项也没有效果. 指定数字 24 可以启用对话框支持的任何一种提示类型.</p></dd>
 
   <dt>RootDir\Filename</dt>
-  <dd><p>如果存在, 则此参数包含下列的其中一个或两个:</p>
-      <p><strong>RootDir:</strong> 根(起始) 目录, 如果未指定绝对路径, 则假定为 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中的子文件夹. 如果省略或为空, 则起始目录将为默认值, 这可能操作系统版本有关(它很可能是之前使用 FileSelectFile 时用户最近选择的目录). <span class="ver">[v1.0.43.10+]</span>: 在 Windows XP/2003 或早期系统中, 还可以指定 <a href="../misc/CLSID-List.htm">CLSID</a> 例如 <code class="no-highlight">::{20d04fe0-3aea-1069-a2d8-08002b30309d}</code>(即我的电脑), 此时在 CLSID 后任何子目录都应该以反斜杠结尾(否则在最后一个反斜杠后的字符串会被解释为默认文件名, 这点在下面说明).</p>
+  <dd><p>如果为空或省略, 则起始目录将为默认值, 这可能操作系统版本有关(它很可能是之前使用 FileSelectFile 时用户最近选择的目录). 否则, 请指定下列的其中一个或两个:</p>
+      <p><strong>RootDir:</strong> 根(起始) 目录, 如果未指定绝对路径, 则假定为 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中的子文件夹. <span class="ver">[v1.0.43.10+]</span>: 在 Windows XP/2003 或早期系统中, 还可以指定 <a href="../misc/CLSID-List.htm">CLSID</a> 例如 <code class="no-highlight">::{20D04FE0-3AEA-1069-A2D8-08002B30309D}</code>(即此电脑; 以前是我的电脑或计算机), 此时在 CLSID 后任何子目录都应该以反斜杠结尾(否则在最后一个反斜杠后的字符串会被解释为默认文件名, 这点在下面说明).</p>
       <p><strong>Filename:</strong> 初始显示对话框时在编辑区域的默认文件名. 只显示单独的文件名(不带路径). 要让对话框正确显示, 请确保不包含非法字符(例如 <code>/&lt;|:"</code>).</p>
       <p>示例:</p>
       <pre class="no-highlight">C:\My Pictures\Default Image Name.gif  <em>; 同时使用了 <i>RootDir</i> 和 <i>Filename</i>.</em>
@@ -46,14 +46,13 @@ My Pictures  <em>; 只使用了 <i>RootDir</i>, 且它相对于当前工作目�
 My File  <em>; 只使用了 <i>Filename</i>(但如果已存在 "My File" 的文件夹, 则它会被认为是 <i>RootDir</i>).</em></pre></dd>
 
   <dt>Title</dt>
-  <dd><p>文件选择窗口的标题. 如果省略或为空, 则它默认为 "Select File - %A_ScriptName%"(即当前脚本的名称).</p></dd>
+  <dd><p>如果为空或省略, 则默认为 "Select File - %A_ScriptName%"(即当前脚本的名称). 否则, 请指定文件选择窗口的标题.</p></dd>
 
   <dt>Filter</dt>
-  <dd><p>表示希望对话框显示的文件类型.</p>
-      <p>例如: 文本文档 (*.txt)<br>
-        例如: 音频文件 (*.wav; *.mp2; *.mp3)</p>
-      <p>如果省略, 则过滤器默认为 所有文件(*.*). 在对话框 "文件类型" 菜单中, 文本文档 (*.txt) 选项还是可用的.</p>
-    <p>否则, 过滤器使用指示的字符串, 不过在对话框的 "文件类型" 下拉列表中仍然提供了 所有文件(*.*) 选项. 要在过滤器中包含多个文件扩展名, 请使用分号分隔它们, 如上所示.</p></dd>
+  <dd>
+    <p>如果为空或省略, 对话框将显示所有类型的文件. 并在 "文件类型" 下拉列表中提供 "所有文件 (*.*)" 和 "文本文档(*.txt)" 选项.</p>
+   <p>否则, 请指定一个字符串来指示对话框显示的文件类型, 例如 <code>文本文档 (*.txt)</code>. 要在过滤器中包含多个文件扩展名, 请使用分号分隔它们, 例如 <code>音频文件 (*.wav; *.mp2; *.mp3)</code>. 在这个例子中, "文件类型" 下拉列表中有指定的字符串和 "所有文件 (*.*)" 作为选项.</p>
+  </dd>
 
 </dl>
 
@@ -90,8 +89,8 @@ else
 </div>
 
 <div class="ex" id="ExCLSID">
-<p><aclass="ex_number" href="#ExCLSID"></a> <a href="../misc/CLSID-List.htm">CLSID</a> 的例子(需要 XP/2003 或早期系统). 允许用户在回收站中选择一个文件. 注意, 这个例子只适用于 Windows XP/2003 或更早的操作系统.</p>
-<pre>FileSelectFile, OutputVar,, ::{645ff040-5081-101b-9f08-00aa002f954e}  <em>; 回收站.</em></pre>
+<p><a class="ex_number" href="#ExCLSID"></a> <a href="../misc/CLSID-List.htm">CLSID</a> 的例子(需要 XP/2003 或早期系统). 允许用户在回收站中选择一个文件. 注意, 这个例子只适用于 Windows XP/2003 或更早的操作系统.</p>
+<pre>FileSelectFile, OutputVar,, ::{645FF040-5081-101B-9F08-00AA002F954E}  <em>; 回收站.</em></pre>
 </div>
 
 <div class="ex" id="ExMulti">

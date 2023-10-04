@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>FileSetTime | AutoHotkey</title>
+<title>FileSetTime | AutoHotkey v1</title>
 <meta name="description" content="The FileSetTime command changes the datetime stamp of one or more files or folders. Wildcards are supported." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,20 +14,19 @@
 
 <p>改变一个或多个文件或文件夹的时间戳. 支持通配符.</p>
 
-<pre class="Syntax"><span class="func">FileSetTime</span> <span class="optional">, YYYYMMDDHH24MISS, FilePattern, WhichTime, OperateOnFolders?, Recurse?</span></pre>
+<pre class="Syntax"><span class="func">FileSetTime</span> <span class="optional">, YYYYMMDDHH24MISS, FilePattern, WhichTime, OperateOnFolders, Recurse</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>YYYYMMDDHH24MISS</dt>
-  <dd><p>如果为空或省略, 则默认为当前时间. 否则, 指定操作使用的时间(请参阅备注了解时间的格式). 不支持 1601 以前的年份.</p>
-    <p>此参数可以为<a href="../Variables.htm#Expressions">表达式</a>. 因此, 如果需要连接多个变量来形成单个时间戳, 则应该使用<a href="../Variables.htm#concat">点运算符</a>代替百分号. 例如: <code>FileSetTime, Year <strong>.</strong> Month <strong>.</strong> Day, C:\My File.txt</code>.</p></dd>
+  <dd><p>如果为空或省略, 则默认为当前本地日期和时间. 否则, 指定操作使用的时间(有关时间的格式, 请参阅<a href="#Remarks">备注</a>). 不支持 1601 以前的年份.</p>
+    <p>此参数可以为<a href="../Variables.htm#Expressions">表达式</a>. 因此, 不要将变量用百分号括起来, 并且每个变量与下一个变量之间至少用一个空格隔开, 例如: <code>FileSetTime, Year Month Day, C:\My File.txt</code>.</p></dd>
 
   <dt>FilePattern</dt>
-  <dd><p>单个文件或文件夹的名称或者通配符模式, 例如 <code>C:\Temp\*.tmp</code>. 如果未指定绝对路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p>
-    <p>如果省略, 则使用最内层<a href="LoopFile.htm">文件循环</a>的当前文件.</p></dd>
+  <dd><p>如果为空或省略, 则使用最内层<a href="LoopFile.htm">文件循环</a>的当前文件. 否则, 请指定单个文件或文件夹的名称或者通配符模式, 例如 <code>C:\Temp\*.tmp</code>. 如果未指定绝对路径, 则假定 <em>FilePattern</em> 在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中.</p></dd>
 
   <dt>WhichTime</dt>
-  <dd><p>如果空白或省略, 则默认为 M(修改时间). 否则, 指定以下字母之一来设置应该更改的时间戳:</p>
+  <dd><p>如果空白或省略, 则默认为 M. 否则, 指定以下字母之一来设置应该更改的时间戳:</p>
     <ul>
       <li>M = 修改时间</li>
       <li>C = 创建时间</li>
@@ -35,8 +34,8 @@
     </ul>
   </dd>
 
-  <dt>OperateOnFolders?</dt>
-  <dd><p>如果空白或省略, 则默认为 0(仅对文件进行操作). 否则, 指定下列数字之一:</p>
+  <dt>OperateOnFolders</dt>
+  <dd><p>如果空白或省略, 则默认为 0. 否则, 指定下列数字之一:</p>
     <ul>
       <li>0 = 不对文件夹进行操作(仅文件).</li>
       <li>1 = 对匹配通配符模式的所有文件和文件夹进行操作.</li>
@@ -45,8 +44,8 @@
       <p class="note"><strong>注意:</strong> 如果 <em>FilePattern</em> 是单个文件夹而不是通配符模式, 那么总是忽略此设置.</p>
       <p>此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
 
-  <dt>递归?</dt>
-  <dd><p>如果空白或省略, 则默认为 0(不对子文件夹进行递归). 否则, 指定下列数字之一:</p>
+  <dt>Recurse</dt>
+  <dd><p>如果空白或省略, 则默认为 0. 否则, 指定下列数字之一:</p>
     <ul>
       <li>0 = 不对子文件夹进行递归.</li>
       <li>1 = 递归子文件夹, 以便对包含在其中的匹配 <em>FilePattern</em> 的所有文件和文件夹进行操作. 将递归所有子文件夹, 而不仅是名称匹配 <em>FilePattern</em> 的那些. 但是, 文件和文件夹的完整路径和名称超过 259 个字符时, 这些文件和文件夹会被跳过, 就像它们不存在一样. 这样的文件很罕见, 因为操作系统一般不允许创建它们.</li>

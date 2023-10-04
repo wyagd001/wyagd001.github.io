@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>WinSet | AutoHotkey</title>
+<title>WinSet | AutoHotkey v1</title>
 <meta name="description" content="The WinSet command makes a variety of changes to the specified window, such as "always on top" and transparency." />
 <meta name="ahk:equiv-v2" content="lib/Win.htm" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -46,7 +46,7 @@
 <h3 id="AlwaysOnTop">AlwaysOnTop</h3>
 <p>让窗口处于置顶状态.</p>
 <pre class="Syntax"><span class="func">WinSet</span>, AlwaysOnTop <span class="optional">, OnOffToggle, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>对于 <em>OnOffToggle</em>, 指定 <code>On</code> 打开此设置, <code>Off</code> 关闭, 而 <code>Toggle</code> 切换到当前的相反状态. 如果 <em>OnOffToggle</em> 是空白或省略, 默认为 <code>Toggle</code>. <strong>Topmost</strong> 可以代替 AlwaysOnTop.</p>
+<p>对于 <em>OnOffToggle</em>, 指定 <strong>On</strong> 打开此设置, <strong>Off</strong> 关闭, 而 <strong>Toggle</strong> 切换到当前的相反状态. 如果 <em>OnOffToggle</em> 是为空或省略, 默认为 Toggle. 单词 Topmost 可以代替 AlwaysOnTop.</p>
 <p><span class="ver">[v1.1.30+]</span>: 值 1(或 <code>true</code>), 0(或 <code>false</code>) 和 -1 可以分别用来代替 On, Off 和 Toggle.</p>
 
 <h3 id="Bottom">Bottom</h3>
@@ -57,7 +57,7 @@
 <h3 id="Top">Top</h3>
 <p>把窗口带回到堆栈的顶部而不进行<a href="WinActivate.htm">激活</a>.</p>
 <pre class="Syntax"><span class="func">WinSet</span>, Top <span class="optional">,, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>但是, 在大多数情况下系统默认设置会激活它. 此外, 当操作系统阻止应用程序从用户抢夺焦点时, 此命令可能没有效果(这可能取决于当前活动窗口的类型和用户当前正在进行的操作这些因素). 一个可能的解决方法是让窗口暂时 <a href="#AlwaysOnTop">AlwaysOnTop</a>, 然后关闭 AlwaysOnTop.</p>
+<p>但是, 在大多数情况下系统默认设置会激活它. 此外, 当操作系统阻止应用程序从用户抢夺焦点时, 此命令可能没有效果(这可能取决于当前活动窗口的类型和用户当前正在进行的操作这些因素). 一个可能的解决方法是让窗口暂时<a href="#AlwaysOnTop">窗口置顶</a>, 然后关闭窗口置顶.</p>
 
 <h3 id="Disable">Disable</h3>
 <p>禁用窗口.</p>
@@ -76,34 +76,32 @@
 <h3 id="Style">Style</h3>
 <p>改变窗口的样式.</p>
 <pre class="Syntax"><span class="func">WinSet</span>, Style, N <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>如果 <em>N</em> 的首个字符为加号或减号, 那么会分别的添加或移除 <em>N</em> 中的样式. 如果首个字符为脱字符(^),  那么 N 中的样式会被切换到相反的状态. 如果首个字符为数字, 则窗口样式会被完全覆盖为 <em>N</em>.</p>
+<p>如果 <em>N</em> 的首个字符为加号或减号, 那么会分别的添加或移除 <em>N</em> 中的样式. 如果首个字符为脱字符(^),  那么 <em>N</em> 中的样式会被切换到相反的状态. 如果首个字符为数字, 则窗口样式会被完全覆盖为 <em>N</em>.</p>
 <p>如果设置失败, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 成功则为 0. 没有找到目标窗口或无法应用此样式时会设置失败.</p>
-<p>改变可见窗口的某些样式后, 可能需要使用上面的 <a href="#Redraw">Redraw</a> 子命令对窗口进行重绘. 最后, <a href="../misc/Styles.htm">样式表</a>中列出了一些常用的样式编号. 例如:</p>
-<pre>WinSet, Style, -0xC00000, A  <em>; 移除活动窗口的标题栏(WS_CAPTION).</em></pre>
+<p>改变可见窗口的某些样式后, 可能需要使用上面的 <a href="#Redraw">Redraw</a> 子命令对窗口进行重绘. 最后, <a href="../misc/Styles.htm">样式表</a>中列出了一些常用的样式编号. 例如, 下面将移除窗口的窗口标题栏(WS_CAPTION): <code>WinSet, Style, -0xC00000</code>.</p>
 
 <h3 id="ExStyle">ExStyle</h3>
 <p>改变窗口的扩展样式.</p>
 <pre class="Syntax"><span class="func">WinSet</span>, ExStyle, N <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>有关细节, 请参阅 <a href="#Style">Style</a> 子命令. 例如:</p>
-<pre>WinSet, ExStyle, ^0x80, <i>WinTitle</i> <em>; 切换 WS_EX_TOOLWINDOW 属性, 它会移除/添加窗口到 alt-tab 列表.</em></pre>
+<p>有关细节, 请参阅 <a href="#Style">Style</a> 子命令. 例如, 下面将切换 WS_EX_TOOLWINDOW 属性, 它会移除/添加窗口到 alt-tab 列表: <code>WinSet, ExStyle, ^0x80</code>.</p>
 
 <div id="region">
   <h3 id="Region">Region</h3>
 </div>
 <p>改变窗口的形状为指定的矩形, 椭圆形或多边形.</p>
 <pre class="Syntax"><span class="func">WinSet</span>, Region <span class="optional">, Options, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>如果 <em>Options</em> 参数为空或忽略, 那么恢复窗口为原来/默认的形状. 否则, 可以指定一个或多个的下列选项, 选项之间使用空格分隔:</p>
-<p><strong>Wn:</strong> 矩形或椭圆形的宽度. 例如: <code>w200</code>.</p>
-<p><strong>Hn:</strong> 矩形或椭圆形的高度. 例如: <code>h200</code>.</p>
-<p><strong>X-Y:</strong> 这样的一对为 X/Y 坐标对. 例如, <code>200-0</code> 表示 X 坐标为 200, Y 坐标为 0.</p>
+<p>如果 <em>Options</em> 为空或省略, 那么恢复窗口为原来/默认的形状. 否则, 请指定一个或多个下列选项, 选项之间使用空格分隔:</p>
+<p><strong>W</strong><em>n</em>: 矩形或椭圆形的宽度. 例如: <code>w200</code>.</p>
+<p><strong>H</strong><em>n</em>: 矩形或椭圆形的高度. 例如: <code>h200</code>.</p>
+<p><strong>X-Y:</strong> 这样的一对为 X/Y 坐标对. 例如, <code class="no-highlight">200-0</code> 表示 X 坐标为 200, Y 坐标为 0.</p>
 <p><strong>E:</strong> 设置窗口形状为椭圆形而不是矩形. 此选项仅在同时指定了 <strong>W</strong> 和 <strong>H</strong> 时才有效.</p>
-<p><strong>R[w-h]:</strong> 设置窗口形状为圆角矩形. 例如, <code>R30-30</code> 表示每个角为 30x30 的椭圆. 如果 <strong>w-h</strong> 省略, 则使用 30-30. <strong>R</strong> 仅在同时指定了 <strong>W</strong> 和 <strong>H</strong> 时才有效.</p>
-<p><strong>矩形或椭圆形:</strong> 如果指定了 <strong>W</strong> 和 <strong>H</strong> 选项, 那么会设置新显示的区域为矩形, 且其左上角的坐标为首个(且唯一) <strong>X-Y</strong> 坐标对. 但是, 如果同时指定了 <strong>E</strong> 选项, 那么会设置窗口形状为椭圆形而不是矩形. 例如: <code>WinSet, Region, 50-0 W200 H250 E, WinTitle</code>.</p>
-<p><strong>多边形:</strong> 如果 <strong>W</strong> 和 <strong>H</strong> 选项都不存在, 新的显示区域将是一个由多对 <strong>X-Y</strong> 坐标对确定的多边形(每对坐标以窗口左上角为原点).  例如, 如果指定了三对坐标, 那么在多数时候窗口形状会被设置为三角形. 坐标对彼此间的相对顺序有时很重要. 此外, 可以在 <em>Options</em> 中指定单词 <strong>Wind</strong> 从而使用缠绕法代替变换方法来确定多边形的形状.</p>
+<p><strong>R</strong><em>w-h</em>: 设置窗口形状为圆角矩形. 例如, <code class="no-highlight">r30-30</code> 表示每个角为 30x30 的椭圆. 如果 <em>w-h</em> 省略, 则使用 30-30. R 仅在同时指定了 W 和 H 时才有效.</p>
+<p><strong>矩形或椭圆形:</strong> 如果指定了 W 和 H 选项, 那么会设置新显示的区域为矩形, 且其左上角的坐标为首个(且唯一) X-Y 坐标对. 但是, 如果同时指定了 E 选项, 那么会设置窗口形状为椭圆形而不是矩形. 例如: <code>WinSet, Region, 50-0 w200 h250 E, WinTitle</code>.</p>
+<p><strong>多边形:</strong> 如果 W 和 H 选项都不存在, 新的显示区域将是一个由多对 X-Y 坐标对确定的多边形(每对坐标以窗口左上角为原点).  例如, 如果指定了三对坐标, 那么在多数时候窗口形状会被设置为三角形. 坐标对彼此间的相对顺序有时很重要. 此外, 可以在 <em>Options</em> 中指定单词 <strong>Wind</strong> 从而使用缠绕法代替变换方法来确定多边形的形状.</p>
 <p>如果设置失败, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 成功则为 0. 出现以下情况时会设置失败: 1) 目标窗口不存在; 2) <em>Options</em> 有一个或多个选项无效; 3) 指定了超过 2000 对坐标; 4) 指定的形状是无效的或不适用于目标窗口.</p>
 <p>请参阅页面底部的<a href="#ExRegion">示例 #7</a>, 了解如何去使用此子命令.</p>
 <p>当为脚本所拥有的窗口设置了一个区域时, 系统可能会自动改变它用来渲染窗口框架的方法, 从而改变其外观. 其效果类似于下面所示的解决方法 #2, 但只影响窗口, 直到其区域被重置.</p>
-<p><strong>已知限制:</strong> 为不属于脚本的窗口设置一个区域可能会产生意想不到的结果, 如果该窗口有标题(标题栏), 并且系统启用了桌面合成. 这是因为可见的框架实际上并不是窗口的一部分, 而是由一个名为 "桌面窗口管理器" 的单独系统进程渲染的. 注意, 在 Windows 8 及以后的版本中, 桌面合成<a href="https://learn.microsoft.com/windows/compatibility/desktop-window-manager-is-always-on">始终处于启用状态</a>. 可以使用以下两种解决方法之一:</p>
+<p><strong>已知限制:</strong> 为不属于脚本的窗口设置一个区域可能会产生意想不到的结果, 如果该窗口有标题(标题栏), 并且系统启用了桌面合成. 这是因为可见的框架实际上并不是窗口的一部分, 而是由一个名为桌面窗口管理器(DWM) 的单独系统进程渲染的. 注意, 在 Windows 8 及以后的版本中, 桌面合成<a href="https://learn.microsoft.com/windows/compatibility/desktop-window-manager-is-always-on">始终处于启用状态</a>. 可以使用以下两种解决方法之一:</p>
 <pre><em>; #1: 移除窗口标题.</em>
 WinSet Style, -0xC00000, Window Title
 
@@ -123,8 +121,8 @@ DllCall("dwmapi\DwmSetWindowAttribute", "ptr", WinExist("Window Title")
 </div>
 <p>设置窗口为半透明状态.</p>
 <pre class="Syntax"><span class="func">WinSet</span>, Transparent <span class="optional">, N, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>指定 <em>N</em> 为介于 0 和 255 之间的数字来表示透明度: 0 表示完全透明, 255 表示完全不透明.</p>
-<p>指定单词 <code>Off</code> 可以完全关闭窗口的透明度. 这在功能上与 <code>WinSet, <a href="#TransColor">TransColor</a>, Off, <i>WinTitle</i></code> 相同. 指定 <code>Off</code> 与指定 255 的区别是, 这样可以提升性能并降低系统资源的占用.</p>
+<p>如果 <em>N</em> 为空或省略, 默认为 0. 否则, 请指定 <em>N</em> 为介于 0 和 255 之间的数字来表示透明度: 0 表示完全透明, 255 表示完全不透明.</p>
+<p>指定 <em>N</em> 为单词 <strong>Off</strong> 可以完全关闭窗口的透明度. 这在功能上与 <code>WinSet, <a href="#TransColor">TransColor</a>, Off</code> 相同. 指定 Off 与指定 255 的区别是, 这样可以提升性能并降低系统资源的占用.</p>
 <p>例如, 要使任务栏透明, 请使用 <code>WinSet, Transparent, 150, ahk_class Shell_TrayWnd</code>. 类似地, 要使经典的开始菜单透明, 请参见<a href="#ExTransStartMenu">示例 #5</a>. 要使开始菜单的子菜单透明, 还需要包含<a href="#ExTransMenu">示例 #6</a> 中的脚本.</p>
 <p>在使用 <code>Off</code> 之前, 将透明级别设置为 255, 可以避免窗口重绘问题, 比如黑色背景. 如果窗口仍无法正确重绘, 那么请参阅 <a href="#Redraw">Redraw</a> 了解可能的解决方法.</p>
 <p><span class="ver">[v1.1.24.05+]</span>: 这个子命令也适用于缺少标题(标题栏) 并且缺少<a href="#AlwaysOnTop">置顶</a>属性的窗口.</p>
@@ -132,10 +130,10 @@ DllCall("dwmapi\DwmSetWindowAttribute", "ptr", WinExist("Window Title")
 <h3 id="TransColor">TransColor</h3>
 <p>让目标窗口中指定颜色的所有像素透明.</p>
 <pre class="Syntax"><span class="func">WinSet</span>, TransColor, Color <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>这样可以让它后面的窗口内容显示出来. 如果用户点击透明部分, 那么点击会 "穿透" 到此窗口的后面. 指定 <em>Color</em> 为颜色名称或 RGB 值(请参阅<a href="Progress.htm#colors">颜色图表</a>进行了解或使用 <a href="PixelGetColor.htm">PixelGetColor</a> 的 RGB 模式). 此外, 要让目标窗口中符合指定颜色的部分半透明, 请在颜色参数后添加空格(不是逗号) 和透明度等级(0-255). 例如: <code>WinSet, TransColor, EEAA99 150, <i>WinTitle</i></code>.</p>
-<p>单词 <code>Off</code> 可以完全关闭窗口的透明度. 这与 <code>WinSet, <a href="#Transparent">Transparent</a>, Off, <i>WinTitle</i></code> 功能完全相同. 指定 <code>Off</code> 与指定 255 的区别是, 这样可以提升性能并降低系统资源的占用.</p>
+<p>这样可以让它后面的窗口内容显示出来. 如果用户点击透明部分, 那么点击会 "穿透" 到此窗口的后面. 指定 <em>Color</em> 为颜色名称或 RGB 值(请参阅<a href="Progress.htm#colors">颜色图表</a>进行了解或使用 <a href="PixelGetColor.htm">PixelGetColor</a> 的 RGB 模式). 此外, 要让目标窗口中符合指定颜色的部分半透明, 请在颜色参数后添加空格(不是逗号) 和透明度等级(0-255). 例如: <code>WinSet, TransColor, EEAA99 150</code>.</p>
+<p>单词 <strong>Off</strong> 可以完全关闭窗口的透明度. 这与 <code>WinSet, <a href="#Transparent">Transparent</a>, Off</code> 功能完全相同. 指定 Off 与指定 255 的区别是, 这样可以提升性能并降低系统资源的占用.</p>
 <p>TransColor 常用来创建屏幕显示(OSD) 和其他视觉效果. <a href="Gui.htm#OSD">在 Gui 页面的底部</a>有一个屏幕显示的例子.</p>
-<p>在使用 <code>Off</code> 之前, 将透明级别设置为 255, 可以避免窗口重绘问题, 比如黑色背景. 如果窗口仍无法正确重绘, 那么请参阅 <a href="#Redraw">Redraw</a> 了解可能的解决方法.</p>
+<p>在使用 Off 之前, 将透明级别设置为 255, 可以避免窗口重绘问题, 比如黑色背景. 如果窗口仍无法正确重绘, 那么请参阅 <a href="#Redraw">Redraw</a> 了解可能的解决方法.</p>
 <p>要改变窗口现有的 TransColor, 可能需要在改变前关闭透明度.</p>
 <p><span class="ver">[v1.1.24.05+]</span>: 这个子命令也适用于缺少标题(标题栏) 并且缺少<a href="#AlwaysOnTop">置顶</a>属性的窗口.</p>
 
@@ -210,11 +208,11 @@ return</pre>
 <div class="ex" id="ExRegion">
 <p><a class="ex_number" href="#ExRegion"></a> <a href="#Region">Region</a> 子命令的用法. 这些例子可能不适用于 Windows 11 或更高版本的新记事本.</p>
 <p>隐藏记事本在这矩形之外的所有部分.</p>
-<pre>WinSet, Region, 50-0 W200 H250, ahk_class Notepad</pre>
+<pre>WinSet, Region, 50-0 w200 h250, ahk_class Notepad</pre>
 <p>与上面相同, 不过带有 40x40 的圆角.</p>
-<pre>WinSet, Region, 50-0 W200 H250 R40-40, ahk_class Notepad</pre>
+<pre>WinSet, Region, 50-0 w200 h250 r40-40, ahk_class Notepad</pre>
 <p>创建椭圆形窗口.</p>
-<pre>WinSet, Region, 50-0 W200 H250 E, ahk_class Notepad</pre>
+<pre>WinSet, Region, 50-0 w200 h250 E, ahk_class Notepad</pre>
 <p>创建倒三角形窗口.</p>
 <pre>WinSet, Region, 50-0 250-0 150-250, ahk_class Notepad</pre>
 <p>将窗口恢复原来/默认的形状.</p>

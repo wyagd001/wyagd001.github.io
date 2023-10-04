@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>TrayTip | AutoHotkey</title>
-<meta name="description" content="The TrayTip command creates a balloon message window near the tray icon. On Windows 10, a toast notification may be shown instead." />
+<title>TrayTip | AutoHotkey v1</title>
+<meta name="description" content="The TrayTip command shows a balloon message window or, on Windows 10 and later, a toast notification near the tray icon." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,35 +12,34 @@
 
 <h1>TrayTip</h1>
 
-<p>在托盘图标附近创建气球提示窗口. 在 Windows 10 中, toast 通知将会替代显示.</p>
+<p>在<a href="../Program.htm#tray-icon">托盘图标</a>附近显示一个气球消息窗口, 在 Windows 10 中及更高版本中显示 toast 通知.</p>
 
-<pre class="Syntax"><span class="func">TrayTip</span> <span class="optional">, Title, Text, Seconds, Options</span></pre>
+<pre class="Syntax"><span class="func">TrayTip</span> <span class="optional">, Title, Text, Timeout, Options</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>Title</dt>
   <dd>
-    <p>窗口的标题, 仅显示前 73 个字符(超出此长度的字符不会显示出来).</p>
-    <p>如果 <em>Title</em> 为空, 则会移除气球窗口中的标题行, 这会让它垂直高度变短.</p>
-    <p class="warning"><strong>警告:</strong>  如果省略了 <em>Text</em> 参数, 那么即使指定了 <em>Title</em> 参数, 也不会显示该窗口.</p>
+    <p>如果为空或省略, 则会移除 traytip 的标题行, 这会让它垂直高度变短. 否则, 请指定 traytip 的标题. 仅显示前 73 个字符(超出此长度的字符不会显示出来).</p>
+    <p>如果省略了 <em>Text</em> 参数, 那么即使指定了 <em>Title</em> 参数, 也不会显示 traytip 窗口.</p>
   </dd>
 
   <dt>Text</dt>
   <dd>
-    <p>指定要显示的消息, 仅显示前 265 个字符. </p>
-    <p>如果此参数省略或为空, 则移除当前显示的任何托盘提示窗口. 然而, 要隐藏 Windows 10 toast 通知可能需要<a href="#Windows10">临时移除托盘图标</a>.</p>
+    <p>如果为空或省略, 则移除当前显示的任何托盘提示窗口. 否则, 请指定要显示的消息. 仅显示前 265 个字符. </p>
+    <p>在 Windows 10 中及更高版本中, 要隐藏 toast 通知, 可能需要<a href="#Windows10">临时移除托盘图标</a>.</p>
     <p>可以使用回车(`r) 或换行(`n) 来创建多行文本. 例如: <code>Line1`nLine2</code>.</p>
       <p>如果 <em>Text</em> 较长, 可以通过<a href="../Scripts.htm#continuation">延续片段</a>的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p>
   </dd>
 
-  <dt>Seconds</dt>
+  <dt>Timeout</dt>
   <dd><p class="note"><strong>注意:</strong> 这参数在 Windows Vista 及之后系统无效.</p>
-    <p>要窗口显示的近似秒数, 达到这时间后它会被操作系统自动移除. 指定小于 10 或大于 30 的数字时通常会使用最小(10) 或最大(30) 的显示时间代替. 如果为空或省略, 则一般使用最小的时间. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p>
+    <p>如果为空或省略, 默认为 10(最短显示时间). 否则, 请指定托盘提示显示的近似秒数, 达到这时间后它会被操作系统自动移除. 指定小于 10 或大于 30 的数字时通常会使用最小(10) 或最大(30) 的显示时间代替. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p>
     <p>真实的时间可能不同于指定的时间. 微软解释说, "如果用户貌似没有使用计算机(空闲状态), 那么系统不会以这个参数计算超时."(技术细节请参阅<a href="https://learn.microsoft.com/windows/win32/api/shellapi/ns-shellapi-notifyicondataa">这里</a>.) 因此, 要更精确地控制托盘提示显示的时间, 请使用 <a href="Sleep.htm">Sleep</a> 命令后面跟着不带参数的 TrayTip, 或像下面的示例中演示的那样使用 <a href="SetTimer.htm">SetTimer</a>.</p>
     </dd>
 
   <dt>Options</dt>
-  <dd><p>以下零个或多个选项的总和:</p>
+  <dd><p>如果为空或省略, 则默认为 0, 即无图标. 否则, 请指定以下零个或多个选项的组合(和):</p>
     <table class="info">
       <tr><th style="width:25em">功能</th><th abbr="Dec">十进制值</th><th abbr="Hex">十六进制值</th></tr>
       <tr><td>信息图标</td><td>1</td><td>0x1</td></tr>
@@ -49,15 +48,15 @@
       <tr><td>Windows XP 和之后的: 不发出提示声.</td><td>16</td><td>0x10</td></tr>
       <tr><td>Windows Vista 和之后的: 使用大图标.</td><td>32</td><td>0x20</td></tr>
     </table>
-    <p>如果省略, 则默认为 0, 即无图标. 如果提示窗口没有 <em>Title</em>(这不适用于 Windows 10 的 toast 通知), 同样不会显示图标.</p>
+    <p>如果提示消息没有 <em>Title</em>(这不适用于 Windows 10 及后续版本的 toast 通知), 则不会显示图标.</p>
     <p>此参数可为<a href="../Variables.htm#Expressions">表达式</a>.</p>
     </dd>
 
 </dl>
 <h2 id="Remarks">备注</h2>
-<p>在 Windows 10 中, 托盘提示窗口通常是这样的:</p>
+<p>在 Windows 10 中, 托盘提示通常是这样的:</p>
 <img src="../static/pics/dlg_traytip.png" alt="TrayTip" />
-<p id="Windows10"><strong>Windows 10</strong> 默认以 toast 通知替换气球提示窗口(这能通过主策略重置). TrayTip 多次调用通常会导致多个通知被放置在一个 "队列" 而不是每个通知取代最近的那个. 若要隐藏通知, 暂时移除托盘图标可能是有效的. 例如:</p>
+<p id="Windows10"><strong>Windows 10 及以后</strong> 默认以 toast 通知替换气球提示窗口(这能通过主策略重置). TrayTip 多次调用通常会导致多个通知被放置在一个 "队列" 而不是每个通知取代最近的那个. 若要隐藏通知, 暂时移除托盘图标可能是有效的. 例如:</p>
 <pre>TrayTip #1, This is TrayTip #1
 Sleep 3000   <em>; 让它显示 3 秒钟.</em>
 HideTrayTip()
@@ -88,9 +87,9 @@ HideTrayTip() {
 </div>
 
 <div class="ex" id="ExDisplayTime">
-<p><a class="ex_number" href="#ExDisplayTime"></a> 提供一个更精确的控制显示的时间的方法, 不要使用 Sleep(它会停止当前线程). 对于 Windows 10, 用<a href="#Hide">上面</a>定义的函数替换 HideTrayTip 函数.</p>
+<p><a class="ex_number" href="#ExDisplayTime"></a> 提供一个更精确的控制显示的时间的方法, 不要使用 Sleep(它会停止当前线程). 对于 Windows 10 及后续版本, 用<a href="#Hide">上面</a>定义的函数替换 HideTrayTip 函数.</p>
 <pre>#Persistent
-TrayTip, Timed TrayTip, This will be displayed for 5 seconds.
+TrayTip, Timed traytip, This will be displayed for 5 seconds.
 SetTimer, HideTrayTip, -5000
 
 HideTrayTip() {
@@ -100,14 +99,14 @@ HideTrayTip() {
 </div>
 
 <div class="ex" id="ExPermanent">
-<p><a class="ex_number" href="#ExPermanent"></a> 要永久显示托盘提示, 请使用计时器进行周期性的刷新. 注意: 由于<a href="#Windows10">上述原因</a>, 这可能无法很好地在 Windows 10 上运行.</p>
+<p><a class="ex_number" href="#ExPermanent"></a> 要永久显示托盘提示, 请使用计时器进行周期性的刷新. 注意: 由于<a href="#Windows10">上述原因</a>, 这可能无法很好地在 Windows 10 及后续版本上运行.</p>
 <pre>#Persistent
 SetTimer, RefreshTrayTip, 1000
 Gosub, RefreshTrayTip  <em>; 调用一次来让它立即开始.</em>
 return
 
 RefreshTrayTip:
-TrayTip, Refreshed TrayTip, This is a more permanent TrayTip., , 16
+TrayTip, Refreshed traytip, This is a more permanent traytip., , 16
 return</pre>
 </div>
 

@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>变更和新功能 | AutoHotkey</title>
-<meta name="description" content="Changes and new features introduced by the current branch of AutoHotkey development (a.k.a. AutoHotkey_L)." />
+<title>变更和新功能 | AutoHotkey v1</title>
+<meta name="description" content="Changes and new features introduced by the v1.1 branch of AutoHotkey development (formerly AutoHotkey_L)." />
 <meta name="ahk:equiv-v2" content="ChangeLog.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,10 +12,39 @@
 
 <body>
 <h1>变更和新功能</h1>
-<p>下面列出了 AutoHotkey 当前开发分支(也称为 AutoHotkey_L) 变更和新增功能介绍.</p>
+
+<p>下面列出了 AutoHotkey v1.1 开发分支(旧称为 AutoHotkey_L) 变更和新增功能介绍.</p>
 <p>对于较旧的变更, 请参阅<a href="ChangeLogHelp.htm">存档变更</a>.</p>
 
 <!--new revisions go here-->
+<h2 id="v1.1.37.01">1.1.37.01 - 2023 年 7 月 8 日</h2>
+<p>修复 热键由于竞争状态而无法触发的问题. 如果修饰符热键(如 <code>~*RWin::</code>) 太早调用 Send 或 GetKeyState, 操作系统可能会报告 RWin 没有按下, 因此修饰符的钩子的状态将被 "纠正", 热键将错误地触发或无法触发. 只有当另一个键盘钩子比脚本自己的钩子安装得更晚时才可能发生这种情况, 因为在这种情况下,操作系统不会更新按键的状态, 直到另一个钩子的线程恢复并返回.</p>
+<p>修复 热字串使用 #If 设置的最后找到的窗口.</p>
+<p>修复 MouseGetPos, ControlClick, ContextMenu Gui 事件和 DropFile Gui 事件错误地检测到位于控件下方或右侧一个像素的特定点的控件.</p>
+<p>修复 任何尝试重新安装键盘或鼠标钩子的问题, 如果操作系统已自动卸载该钩子. 在进行任何此类尝试之前, 仍有必要满足某些条件.</p>
+
+<h2 id="v1.1.37.00">1.1.37.00 - 2022 年 7 月 2 日</h2>
+<p>修改 COM 方法和属性调用, 将大整数作为 VT_I8, 而不是 VT_R8(浮点) 传递, 因此保留了原来的类型和精度. 32 位范围内的整数仍作为 VT_I4 传递.</p>
+<p>新增 对带有 IDispatch 包装的 AutoHotkey 对象的双变量枚举器(for-loops) 的支持. 调用对象的脚本和对象本身都必须运行在支持的 AutoHotkey 版本.</p>
+<p>新增 在传入的 COM 调用中, 对 ByRef VARIANT 的支持. 脚本不会收到具有 VT_BYREF|VT_VARIANT 变体类型的 ComObject 包装器, 而是收到一个与普通 ByRef 参数兼容的临时变量.</p>
+<p>修复 通过 IDispatch(COM) 调用 AutoHotkey 方法时, 省略的参数接收其默认值, 而不是 "可选参数标记" 的问题. 在以前的版本中, 调用 COM 方法时, 已经完成了反向转换.</p>
+<p>修复 <code>VerCompare(a, "&gt;" b)</code>, 并略微减少了代码大小.</p>
+<p>修复 AltTab 相关的加载时错误, 使之与其他错误一致.</p>
+<p>修复 由 ComObject 包装器抛出的错误, 如果它是通过对象/COM 调用的, 不会被正确传播.</p>
+<p>修复 热键 GUI 控件, 允许将符号 <code>^</code>, <code>!</code> 和 <code>+</code> 设置为热键.</p>
+<p>修复 热键控件, 当其值被设置为一个符号时, 包括修饰符.</p>
+<p>修复 Menu Add 覆盖由 Menu Insert 附加的项目.</p>
+<p>修复 InputHook.KeyOpt() 单字符的潜在错误行为.</p>
+<ul>
+<li>删除选项可能不会影响相应的 SC.</li>
+<li>选项可能也适用于 sc000.</li>
+</ul>
+<p>修复 自定义组合的错误, 即如果单独用 #If 禁用 <code>a::</code>, 一组热键如 <code>a &amp b::</code>, <code>a::</code> 和 <code>a up::</code> 将不能抑制 <kbd>a</kbd> 的释放.</p>
+<p>修复 一个错误, 即一个键按下事件能被热键正确抑制, 但在 SendLevel &gt; 0 的情况下, 发送一个额外的键按下, 会阻止随后的键松开被抑制, 即使由于 #InputLevel, 忽略发送的事件.</p>
+<p>修复 <code>a &amp; b up::</code> 在 <code>a &amp; b::</code> 存在, 但被 #If 禁用的情况下, 不会抑制 <kbd>b</kbd> 的问题.</p>
+<p>优化  COM 内置 IDispatch 的属性名缓存的分配.</p>
+<p>重构 代码以支持 AutoHotkey 作为 DLL 的构建配置.</p>
+
 <h2 id="v1.1.36.02">1.1.36.02 - 2022 年 12 月 7 日</h2>
 <p>改进 <a href="lib/ComObjConnect.htm">ComObjConnect()</a> 允许通过 __Delete 检测断开连接.</p>
 <p>修复 命令参数超过 4*1024*1024 个字符时的性能问题.</p>
@@ -178,7 +207,7 @@
 
 <h2 id="v1.1.33.03">1.1.33.03 - 2021 年 3 月 1 日</h2>
 <p>修复 当空的 SafeArray 被枚举时会崩溃的问题.</p>
-<p>修复 Button/Checkbox/Radio 使用 -Wrap 时高度不自动展开.</p>
+<p>修复 Button/CheckBox/Radio 使用 -Wrap 时高度不自动展开.</p>
 <p>修复 WM_DESTROY 绕过释放全局/静态变量中的对象的问题.</p>
 <p>修复 WinMenuSelectItem 二次尝试匹配能正确的处理 &amp;. 具体而言, 有实际文本的项目, 如 "a &amp;&amp; b" 显示为 "a &amp; b" 现在将匹配 "a &amp; b" 而不是 "a&nbsp; b".</p>
 <p>修复 在 Case/Default 行的断点中断在前一个案例的结束处.</p>

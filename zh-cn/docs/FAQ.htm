@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>常见问题(FAQ) | AutoHotkey</title>
+<title>常见问题(FAQ) | AutoHotkey v1</title>
 <meta name="description" content="This page lists questions and answers about language syntax, general troubleshooting, common tasks, hotkeys, hotstrings and remapping." />
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
 <script src="static/content.js" type="text/javascript"></script>
@@ -76,7 +76,7 @@
 <ul>
   <li>在参数中的输入或输出变量: <code><a href="lib/StringLen.htm">StringLen</a>, <strong>OutputVar</strong>, <strong>InputVar</strong></code></li>
   <li>在赋值的左侧: <code><strong>Var</strong> = 123abc</code></li>
-  <li>在<a href="lib/IfEqual.htm">传统(非表达式) if 语句</a>的左侧: <code>If <strong>Var1</strong> &lt; %Var2%</code></li>
+  <li>在<a href="lib/IfEqual.htm">遗留(非表达式) if 语句</a>的左侧: <code>If <strong>Var1</strong> &lt; %Var2%</code></li>
   <li>在<a href="Variables.htm#Expressions">表达式</a>中的任意位置. 例如:
   <pre>If (<strong>Var1</strong> &lt;&gt; <strong>Var2</strong>)
       <strong>Var1 <a href="lib/SetExpression.htm">:=</a> Var2</strong> + 100</pre></li>
@@ -166,10 +166,10 @@ return</pre>
 
 <h3 id="nonascii">为什么脚本中的非 ASCII 字符显示或发送不正确?</h3>
 <p>简短的回答: 将脚本保存为带有 BOM 的 UTF-8.</p>
-<p>虽然 AutoHotkey 支持 Unicode 文本, 但它是为了向后兼容而优化的, 这意味着默认为 ANSI 编码, 而不是国际上推荐的 UTF-8. 除非以字节顺序标记开始, 否则 AutoHotkey 不会自动识别 UTF-8 文件.</p>
-<p>换句话说, 缺少字节顺序标记的 UTF-8 文件被错误地解释, 导致非 ASCII 字符被错误地解码. 要解决此问题, 请将文件保存为带有 BOM 的 UTF-8 文件或<a href="Scripts.htm#cp">添加 /CP65001 命令行开关</a>.</p>
-<p>要在记事本中保存为带有 BOM 的 UTF-8 文件, 请在另存为对话框的 <em>编码</em> 下拉菜单中选择 <em>UTF-8</em>.</p>
-<p>要读取缺少字节顺序标记的其他 UTF-8 文件, 请使用 <code><a href="lib/FileEncoding.htm">FileEncoding</a> UTF-8-RAW</code>, <a href="lib/FileRead.htm">FileRead</a> 的 <code>*P65001</code> 选项, 或 <a href="lib/FileOpen.htm">FileOpen()</a> 的第三个参数 <code>"UTF-8-RAW"</code>. <code>-RAW</code> 后缀可以省略, 但是在这种情况下, 任何新创建的文件都会有一个字节顺序标记.</p>
+<p>虽然 AutoHotkey 支持 Unicode 文本, 但它是为了向后兼容而优化的, 这意味着默认为 ANSI 编码, 而不是国际上推荐的 UTF-8. 除非以字节顺序标记(BOM) 开始, 否则 AutoHotkey 不会自动识别 UTF-8 文件.</p>
+<p>换句话说, 缺少 BOM 的 UTF-8 文件被错误地解释, 导致非 ASCII 字符被错误地解码. 要解决此问题, 请将文件保存为带有 BOM 的 UTF-8 文件或<a href="Scripts.htm#cp">添加 /CP65001 命令行开关</a>.</p>
+<p>要在记事本中保存为带有 BOM 的 UTF-8 文件, 请在另存为对话框的 <em>编码</em> 下拉菜单中选择 <em>带有 BOM 的 UTF-8</em>(或版本早于 Windows 10 v1903 的系统中选择 <em>UTF-8</em>). 请注意, Windows 10 v1903 及以后版本的记事本默认为 <em>UTF-8</em>(没有 BOM)</p>
+<p>要读取缺少 BOM 的其他 UTF-8 文件, 请使用 <code><a href="lib/FileEncoding.htm">FileEncoding</a> UTF-8-RAW</code>, <a href="lib/FileRead.htm">FileRead</a> 的 <code>*P65001</code> 选项, 或 <a href="lib/FileOpen.htm">FileOpen()</a> 的第三个参数 <code>"UTF-8-RAW"</code>. <code>-RAW</code> 后缀可以省略, 但是在这种情况下, 任何创建的新文件都会有一个 BOM.</p>
 <p>请注意, 使用标准 INI 命令访问 INI 文件不支持 UTF-8; 它们必须保存为 ANSI 或 UTF-16.</p>
 
 <h3 id="games">为什么<a href="Hotstrings.htm">热字串</a>, <a href="lib/Send.htm">Send</a> 和 <a href="lib/Click.htm">Click</a> 在某些游戏中不起作用?</h3>
@@ -203,7 +203,7 @@ SetKeyDelay, 0, 50, Play</pre>
   <pre>Send {KEY down}{KEY up}</pre>
   </li>
   <li>
-  <p>试试在按键的按下事件和弹起事件之间使用 <a href="lib/ControlSend.htm">Sleep</a>:</p>
+  <p>试试在按键的按下事件和弹起事件之间使用 <a href="lib/Sleep.htm">Sleep</a>:</p>
   <pre>Send {KEY down}
 Sleep 10 <em>; 试试不同的毫秒数</em>
 Send {KEY up}</pre>

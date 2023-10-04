@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>变量和表达式 | AutoHotkey</title>
+<title>变量和表达式 | AutoHotkey v1</title>
 <meta name="description" content="Learn details about variables, expressions, operators, built-in variables and capacity and memory of variables." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,7 +52,7 @@ CopyOfVar := Var</pre>
     MsgBox The setting is too high or the wrong color is present.</pre>
 <p>在上面的例子中, 因为 "Blue" 是原义字符串, 所以包围在双引号中. 要在原义字符串中包含 <em>真实的</em> 引号字符, 请指定两个连续的引号, 如同此例中的两次演示: <code>"她说, <span class="red">""</span>一天一个苹果.<span class="red">""</span>"</code>.</p>
 <p class="warning"><strong>注意:</strong> 有几种类型的 <a href="Language.htm#if-statement">If 语句</a>看起来像表达式, 但实际上不是.</p>
-<p><strong>空字符串:</strong> 要在表达式中使用空字符串, 请指定一对空引号. 例如, 当 <em>MyVar</em> 非空时语句 <code>if (MyVar != "")</code> 的结果为真. 然而, 在<a href="lib/IfEqual.htm">传统 if 语句</a>中, 一对空引号会被视为原义的字符串. 例如, 当 <em>MyVar</em> 仅包含一对真实的引号时语句 <code>if MyVar = ""</code> 结果为真. 因此, 要使用传统的 if 语句判断变量是否为空, 则需要让 = 或 != 的右侧为空, 例如: <code>if Var =</code>.</p>
+<p><strong>空字符串:</strong> 要在表达式中使用空字符串, 请指定一对空引号. 例如, 当 <em>MyVar</em> 非空时语句 <code>if (MyVar != "")</code> 的结果为真. 然而, 在<a href="lib/IfEqual.htm">遗留 if 语句</a>中, 一对空引号会被视为原义的字符串. 例如, 当 <em>MyVar</em> 仅包含一对真实的引号时语句 <code>if MyVar = ""</code> 结果为真. 因此, 要使用遗留的 if 语句判断变量是否为空, 则需要让 = 或 != 的右侧为空, 例如: <code>if Var =</code>.</p>
 <p>相关提示, 任何无效的表达式例如 <code>(x +* 3)</code> 会产生空字符串.</p>
 <p><strong>保存表达式的结果:</strong> 要把结果赋值给变量, 请使用<a href="lib/SetExpression.htm">冒号等号运算符(:=)</a>. 例如:</p>
 <pre>NetPrice := Price * (1 - Discount/100)</pre>
@@ -65,7 +65,7 @@ CopyOfVar := Var</pre>
 ContinueSearch := true</pre>
 <p><strong>整数和浮点数:</strong> 在表达式中, 含有小数点的数字被视为浮点数; 否则视为整数. 对于大多数运算符(例如加法和乘法), 只要其中的一个输入是浮点数, 那么结果也将是浮点数.</p>
 <p>不论在表达式中还是在表达式外的其他地方, 整数都可以表示成十六进制或十进制. 十六进制数必须以前缀 0x 开头. 例如, <code>Sleep 0xFF</code> 等同于 <code>Sleep 255</code>. <span class="ver">[v1.0.46.11+]</span>: 可以识别用科学计数法表示的浮点数; 但只有在它们含有小数点时才行(例如 <code>1<strong>.</strong>0e4</code> 和 <code>-2<strong>.</strong>1E-4</code>).</p>
-<p id="percent-space"><strong>强制使用表达式:</strong> 通过在表达式前加上百分号和空格或 tab, 能把表达式用在不直接支持表达式的参数中(除了像 <a href="lib/StringLen.htm">StringLen</a> 的 OutputVar 和 InputVar 的那些参数). 这种技巧常用来访问<a href="misc/Arrays.htm">数组</a>. 例如:</p>
+<p id="percent-space"><strong>强制使用表达式:</strong> 通过在表达式前加上百分号和空格或 tab, 能把表达式用在不直接支持表达式的参数中(除了 OutputVar 参数). 在 <span class="ver">[v1.1.21+]</span> 中, 这个前缀可以在所有命令的 InputVar 参数中使用, 除了遗留的 IF 命令(使用 <a href="lib/IfExpression.htm">If (表达式)</a> 代替). 这种技巧常用来访问<a href="misc/Arrays.htm">数组</a>. 例如:</p>
 <pre><a href="lib/FileAppend.htm">FileAppend</a>, % MyArray%i%, My File.txt
 <a href="lib/FileAppend.htm">FileAppend</a>, % MyPseudoArray%i%, My File.txt
 <a href="lib/MsgBox.htm">MsgBox</a> % "The variable MyVar contains " . MyVar . "."
@@ -145,7 +145,7 @@ msgbox % (-2)**0.5 ; 结果为空
     </td>
     <td><p><strong>乘(*):</strong> 如果两个输入都为整数, 则结果为整数; 否则结果为浮点数.</p>
       <p id="divide"><strong>真除(/):</strong> 与 <a href="lib/EnvDiv.htm">EnvDiv</a> 不同, 即使两个输入都是整数, 真除的结果也为浮点数. 例如, <code>3/2</code> 结果为 1.5 而不是 1, 而 <code>4/2</code> 结果为 2.0 而不是 2.</p>
-      <p id="FloorDivide"><strong>向下舍除(//):</strong> 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点数, 则执行浮点除法并把结果往下取整到最近的整数. 例如, <code>5//3.0</code> 结果为 1.0 而 <code>5.0//-3</code> 结果为 -2.0. 尽管浮点除法的结果为整数, 但它被保存为浮点格式, 以便其他使用者能使用浮点格式. 关于求模运算, 请参阅 <a href="lib/Math.htm#Mod">mod()</a>.</p>
+      <p id="FloorDivide"><strong>向下舍除(//):</strong> 如果两个输入都是整数, 那么双斜杠运算符使用高效的整数除法. 例如, <code>5//3</code> 结果为 1 而 <code>5//-3</code> 结果为 -1. 如果任何一个输入为浮点数, 则执行浮点除法并把结果往下取整到最近的整数. 例如, <code>5//3.0</code> 结果为 1.0 而 <code>5.0//-3</code> 结果为 -2.0. 尽管浮点除法的结果为整数, 但它被保存为浮点格式, 以便其他使用者能使用浮点格式. 关于求模运算, 请参阅 <a href="lib/Math.htm#Mod">Mod()</a>.</p>
     <p><a href="#AssignOp">*= 和 /= 运算符</a>是用变量的值乘以或除以另一个值的一种简写形式. 例如, <code>Var*=2</code> 和 <code>Var:=Var*2</code> 会得到相同的结果(不过前者执行的更好).</p>
     <p>除数为零时结果为空(空字符串).</p></td>
   </tr>
@@ -155,7 +155,7 @@ msgbox % (-2)**0.5 ; 结果为空
     <td><p><strong>加(+)</strong> 和 <strong>减(-)</strong>. 相关提示, <a href="#AssignOp"><strong>+=</strong> 和 <strong>-=</strong></a> 运算符</a>是从变量中增加或减少值的一种简写形式. 例如, <code>Var+=2</code> 和 <code>Var:=Var+2</code> 会得到相同的结果(不过前者执行的更好). 同样地, 使用 <a href="#IncDec">Var++, Var--, ++Var 或 --Var</a> 可以让变量增加或减小 1.</p>
     </td>
   </tr>
-  <tr id="bitwise">
+  <tr id="bitshift">
     <td class="center bold">&lt;&lt;<br>
     &gt;&gt;<br>
     &gt;&gt;&gt;</td>
@@ -167,7 +167,7 @@ msgbox % (-2)**0.5 ; 结果为空
       <p class="note"><strong>译者注:</strong> 由于左移操作的运算速度比乘法的运算速度高很多, 因此在处理数据的乘法运算的时, 采用位移运算可以获得较快的速度(对 2 的乘法运算转换为位移运算, 可提高程序的运行效率).<br>实例过程演示: 例 5 &lt;&lt; 2(左移 2 位, 空出的位置上填 0, 最高位溢出则舍弃), 0000 0101(十进制 5) → 0001 0100(十进制 20). 右移与之相反, 对应除法(对 2 的整除运算).</p>
     </td>
   </tr>
-  <tr>
+  <tr id="bitwise">
     <td class="center bold">&amp;<br>
 	  ^<br>
 	  |
@@ -187,7 +187,7 @@ msgbox % (-2)**0.5 ; 结果为空
     <td class="center bold">.</td>
     <td><p><strong>连接</strong>. 句点运算符用于把两个项目组合成单个字符串(在句点的两边至少必须有一个空格). 省略句点也可以达到相同的目的(除非表达式中有不明确的关系, 例如 <code>x <strong>-</strong>y</code>, 或在右边的项目含有前导的 ++ 或 -- 运算符). 省略句点时, 合并的两个项目间应该至少有一个空格.<br>
 	  示例(表达式方法): <code>Var := "The color is " <strong>.</strong> FoundColor</code><br>
-	  示例(传统方法): <code>Var = The color is %FoundColor%</code></p>
+	  示例(遗留方法): <code>Var = The color is %FoundColor%</code></p>
         <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " <strong>.</strong> Price * (1 - Discount/100)</code>.</p>
         <p>以句点(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾.</p></td>
   </tr>
@@ -276,7 +276,9 @@ if (!str := "a"){            ; 效果同 if ! (str := "a")
     <td class="center bold">,</td>
     <td><p><strong>逗号(多语句)</strong> <span class="ver">[v1.0.46+]</span>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.
       <p class="note"><strong>注意:</strong> 以逗号(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾. 另请参阅: <a href="#CommaPerf">逗号的性能</a>.</p>
-      <p><span class="ver">[v1.0.46.01+]</span>: 当逗号后紧跟着变量和等号时, 则这个等号会被自动当成<a href="lib/SetExpression.htm">赋值(:=)</a>. 例如, 后面所有的都是赋值: <code>x:=1, y=2, a=b=c</code>. 新脚本不应该依赖于这种行为, 因为它可能会改变. 该规则只适用于无格式的变量而不是<a href="#ref">双重引用</a>, 所以下面的内容只有一个赋值: <code>x:=1, %y%=2</code></p></td>
+      <p><span class="ver">[v1.0.46.01+]</span>: 当逗号后紧跟着变量和等号时, 则这个等号会被自动当成<a href="lib/SetExpression.htm">赋值(:=)</a>. 例如, 后面所有的都是赋值: <code>x:=1, y=2, a=b=c</code>. 新脚本不应该依赖于这种行为, 因为它可能会改变. 该规则只适用于无格式的变量而不是<a href="#ref">双重引用</a>, 所以下面的内容只有一个赋值: <code>x:=1, %y%=2</code></p>
+      <p id="CommaPerf"><span class="ver">[v1.0.48+]</span>: 使用逗号运算符常常比分开写单独的表达式速度更快, 尤其是把一个变量的值赋给另一个变量时(例如: <code>x:=y, a:=b</code>). 当越多的表达式联合成单个表达式时, 性能会持续得到提升; 例如, 把五个或十个简单的表达式联合成单个表达式速度可能提升 35&nbsp;%.</p>
+    </td>
   </tr>
 </table>
 <p>下面列出的子表达式改变计算的优先级/顺序:</p>
@@ -293,9 +295,9 @@ if (!str := "a"){            ; 效果同 if ! (str := "a")
     </td>
 </tr>
   <tr>
-    <td class="center"><p><strong>mod()<br>
-	round()<br>
-	abs()</strong></p></td>
+    <td class="center"><p><strong>Mod()<br>
+	Round()<br>
+	Abs()</strong></p></td>
     <td><strong>函数调用</strong>. 函数名后面必须紧跟一个左圆括号, 没有任何空格或制表符插入其间. 相关详细信息, 查看<a href="Functions.htm">函数</a>.<br>内置数学函数在<a href="lib/Math.htm">这里</a>.</td>
   </tr>
   <tr>
@@ -325,8 +327,6 @@ if (!str := "a"){            ; 效果同 if ! (str := "a")
     <td><p><span class="ver">[v1.0.97+]</span>: <strong>对象标识符</strong>. 创建一个对象或关联数组. 例如, <code>x := {a: b}</code> 等同于 <code>x := Object("a", b)</code> 或者 <code>x := Object(), x.a := b</code>. 查看<a href="Objects.htm#Usage_Associative_Arrays">关联数组</a>以获取更多细节.</p></td>
   </tr>
 </table>
-<br>
-<p id="CommaPerf"><strong>性能:</strong> <span class="ver">[v1.0.48+]</span>: 使用逗号运算符常常比分开写单独的表达式速度更快, 尤其是把一个变量的值赋给另一个变量时(例如: <code>x:=y, a:=b</code>). 当越多的表达式联合成单个表达式时, 性能会持续得到提升; 例如, 把五个或十个简单的表达式联合成单个表达式速度可能提升 35%.</p>
 
 <h2 id="BuiltIn">内置变量</h2>
 <p>下面的变量被内置到程序中, 可以被任何脚本引用.</p>
@@ -555,12 +555,12 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
   <tr id="IsPaused">
     <td>A_IsPaused<br>
 	<span class="ver">[v1.0.48+]</span></td>
-    <td>当紧随当前线程的<a href="misc/Threads.htm">线程</a>被<a href="lib/Pause.htm">暂停</a>时值为 1. 否则为 0.</td>
+    <td>当紧随当前线程的<a href="misc/Threads.htm">线程</a>被<a href="lib/Pause.htm">暂停</a>时值为 1, 否则为 0.</td>
   </tr>
   <tr id="IsCritical">
     <td>A_IsCritical<br>
 	<span class="ver">[v1.0.48+]</span></td>
-    <td><a href="misc/Threads.htm">当前线程</a>的 <a href="lib/Critical.htm">Critical</a> 设置关闭时值为 0. 否则它包含大于零的整数, 即 Critical 使用的<a href="lib/Critical.htm#Interval">消息检查频率</a>. 因为 <code>Critical 0</code> 关闭了当前线程的关键性, 所以 Critical 的当前状态可以这样来保存和恢复: <code>Old_IsCritical := A_IsCritical</code>, 后来执行 <code>Critical %Old_IsCritical%</code>. </td>
+    <td><a href="misc/Threads.htm">当前线程</a>的 <a href="lib/Critical.htm">Critical</a> 设置关闭时值为 0. 否则它包含大于零的整数, 即 Critical 使用的<a href="lib/Critical.htm#Interval">消息检查间隔</a>. 因为 <code>Critical 0</code> 关闭了当前线程的关键性, 所以 Critical 的当前状态可以这样来保存和恢复: <code>Old_IsCritical := A_IsCritical</code>, 后来执行 <code>Critical %Old_IsCritical%</code>. </td>
   </tr>
   <tr id="BatchLines">
     <td>A_BatchLines</td>
@@ -568,15 +568,15 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="ListLines">
     <td>A_ListLines<br><span class="ver">[v1.1.28+]</span></td>
-    <td><a href="lib/ListLines.htm">ListLines</a> 激活时值为 1. 否则为 0.</td>
+    <td><a href="lib/ListLines.htm">ListLines</a> 激活时值为 1, 否则为 0.</td>
   </tr>
   <tr id="TitleMatchMode">
     <td>A_TitleMatchMode</td>
-    <td>由 <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a> 设置的当前模式: 1, 2, 3 或 RegEx.</td>
+    <td>由 <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a> 设置的当前模式(1, 2, 3 或 RegEx).</td>
   </tr>
   <tr id="TitleMatchModeSpeed">
     <td>A_TitleMatchModeSpeed</td>
-    <td>由 <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a> 设置的当前匹配速度(fast 或 slow).</td>
+    <td>由 <a href="lib/SetTitleMatchMode.htm">SetTitleMatchMode</a> 设置的当前匹配速度(Fast 或 Slow).</td>
   </tr>
   <tr id="DetectHiddenWindows">
     <td>A_DetectHiddenWindows</td>
@@ -682,7 +682,11 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
   </tr>
   <tr id="TimeIdle">
     <td>A_TimeIdle</td>
-    <td>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入(例如 <a href="lib/Send.htm">Send</a> 或 <a href="lib/MouseMove.htm">MouseMove</a> 命令) 会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如: <code>IfGreater, A_TimeIdle, 600000, MsgBox, The last keyboard or mouse activity was at least 10 minutes ago</code>. </td>
+    <td>
+    <p>从系统最后一次接收到键盘, 鼠标或其他输入后所经过的毫秒数. 这可以用来判断用户是否离开. 用户的物理输入和由 <strong>任何</strong> 程序或脚本生成的模拟输入(例如 <a href="lib/Send.htm">Send</a> 或 <a href="lib/MouseMove.htm">MouseMove</a> 命令) 会让此变量重置为零. 由于此变量的值趋向于以 10 的增量增加, 所以不应该判断它是否等于另一个值. 相反, 应该检查此变量是否大于或小于另一个值. 例如:</p>
+      <pre>If A_TimeIdle &gt; 600000
+    MsgBox, Last activity was 10 minutes ago</pre>
+    </td>
   </tr>
   <tr id="TimeIdlePhysical">
     <td>A_TimeIdlePhysical</td>
@@ -812,7 +816,7 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
     <td>ComSpec <span class="ver">[v1.0.43.08+]</span><br>
     A_ComSpec <span class="ver">[v1.1.28+]</span></td>
     <td>
-      <p>此变量的值与系统环境变量 ComSpec 一样. 常与 <a href="lib/Run.htm">Run/RunWait</a> 一起使用. 例如:</p>
+      <p>此变量的值与 ComSpec 环境变量一样, 这通常是命令提示符的可执行文件(cmd.exe) 的完全路径. 常与 <a href="lib/Run.htm">Run/RunWait</a> 一起使用. 例如:</p>
       <pre class="NoIndent no-highlight">C:\Windows\system32\cmd.exe</pre>
     </td>
   </tr>
@@ -960,7 +964,7 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空
   </tr>
   <tr id="IsAdmin">
     <td>A_IsAdmin</td>
-    <td><p>如果当前用户有管理员权限, 则此变量的值为 1. 否则为 0.</p>
+    <td><p>如果当前用户有管理员权限, 则值为 1, 否则为 0.</p>
     <p id="RequireAdmin">要使脚本以管理员权限重新启动(或显示提示向用户请求管理员权限), 请使用 <a href="lib/Run.htm#RunAs">Run *RunAs</a>. 但是请注意, 以管理员权限运行脚本会导致脚本启动的所有程序也以管理员权限运行. 对于可能的替代方案, 请参阅<a href="FAQ.htm#uac">常见问题(FAQ)</a>.</p>
     </td>
   </tr>

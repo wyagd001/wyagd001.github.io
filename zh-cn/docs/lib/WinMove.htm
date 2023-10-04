@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>WinMove | AutoHotkey</title>
+<title>WinMove | AutoHotkey v1</title>
 <meta name="description" content="The WinMove command changes the position and/or size of the specified window." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,36 +14,34 @@
 
 <p>改变指定窗口的位置和/或大小.</p>
 
-<pre class="Syntax">
-<span class="func">WinMove</span>, X, Y
-<span class="func">WinMove</span>, WinTitle, WinText, X, Y <span class="optional">, Width, Height, ExcludeTitle, ExcludeText</span>
-</pre>
+<pre class="Syntax"><span class="func">WinMove</span> <span class="optional">, X, Y</span>
+<span class="func">WinMove</span> <span class="optional">, WinTitle, WinText, X, Y, Width, Height, ExcludeTitle, ExcludeText</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>X, Y</dt>
-  <dd><p>目标窗口新位置的左上角的 X 和 Y 坐标(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>. 屏幕左上角坐标为 0, 0.</p>
+  <dd>
+    <p>如果其中一个为空或省略, 则不会更改该维度中的位置. 否则, 请指定目标窗口新位置的左上角的 X 和 Y 坐标(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>. 屏幕左上角坐标为 0, 0.</p>
     <p>如果只指定了这两个参数, 那么使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>为目标窗口.</p>
-    <p>或者可以省略 X 和/或 Y, 此时使用当前位置.</p></dd>
-
+  </dd>
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
     <p>另请参阅下面的<a href="#limitation">已知限制</a>.</p>
   </dd>
-
   <dt>Width, Height</dt>
-  <dd><p>目标窗口的新宽度和高度(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果其中一个省略, 为空或为单词 DEFAULT, 那么在这个维度中的大小将保持不变.</p></dd>
-
+  <dd>
+   <p>如果其中一个为空, 省略或者为单词 DEFAULT, 则不会更改该维度中的尺寸. 否则, 请指定目标窗口的新宽度和高度(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>.</p>
+   </dd>
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>如果 <em>Width</em> 和 <em>Height</em> 太小(或为负数), 那么大多数带标题栏的窗口最小尺寸不会小于 112 x 27 像素(不过, 有些类型的窗口的最小的尺寸可能有差异). 如果 <em>Width</em> 和 <em>Height</em> 太大, 那么大多数窗口最大尺寸不会大于超过桌面尺寸大约 12 像素.</p>
-<p>x 和 y 坐标中可以使用负数, 这样可以支持多显示器系统且可以让窗口被完全移出屏幕.</p>
+<p>如果 <em>Width</em> 或 <em>Height</em> 太小(或为负数), 那么大多数带标题栏的窗口最小尺寸不会小于 112 x 27 像素(不过, 有些类型的窗口的最小的尺寸可能有差异). 如果 <em>Width</em> 或 <em>Height</em> 太大, 那么大多数窗口最大尺寸不会大于超过桌面尺寸大约 12 像素.</p>
+<p>负的 X 和 Y 坐标允许使用, 来支持多显示器系统, 并将窗口完全移出屏幕.</p>
 <p>尽管 WinMove 不能移动最小化状态的窗口, 不过当 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置开启时它可以移动隐藏窗口.</p>
 <p>WinMove 移动窗口的速度受 <a href="SetWinDelay.htm">SetWinDelay</a> 影响.</p>
 <p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时, 才能检测到隐藏窗口.</p>
-<p id="limitation"><strong>已知限制:</strong> 如果 <em>WinTitle</em> 或 <em>WinText</em> 包含 <code>(</code>, <code>[</code> or <code>{</code>, 但是没有闭合对应的右半部分, 例如 <code>WinMove, KEDIT - [</code>, 参数自动解释为一个<a href="../Variables.htm#Expressions">表达式</a>, 从而导致错误消息. 为了避免这种情况, 可以使用<a href="../Variables.htm#percent-space">前导百分号标志</a>强制为原义字符串来代替, 例如 <code>WinMove, % "KEDIT - ["</code>.</p>
+<p id="limitation"><strong>已知限制:</strong> 如果 <em>WinTitle</em> 或 <em>WinText</em> 包含 <code>(</code>, <code>[</code> 或 <code>{</code>, 但是没有闭合对应的右半部分, 例如 <code>WinMove, KEDIT - [</code>, 参数自动解释为一个<a href="../Variables.htm#Expressions">表达式</a>, 从而导致错误消息. 为了避免这种情况, 可以使用<a href="../Variables.htm#percent-space">百分号空格前缀</a>强制表达式, 例如 <code>WinMove % "KEDIT - ["</code>.</p>
 <p>在具有不同 DPI 设置的多个屏幕的系统上, 由于<a href="../misc/DPIScaling.htm">操作系统 DPI 缩放</a>, 返回的位置和大小可能与预期不同.</p>
 
 <h3 id="Related">相关</h3>

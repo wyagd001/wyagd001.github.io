@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>WinGet | AutoHotkey</title>
+<title>WinGet | AutoHotkey v1</title>
 <meta name="description" content="The WinGet command retrieves the specified window's unique ID, process ID, process name, a list of its controls, or a list of windows." />
 <meta name="ahk:equiv-v2" content="lib/Win.htm" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -22,7 +22,7 @@
   <dd>用来保存 <em>SubCommand</em> 结果的输出变量的名称.</dd>
 
   <dt>SubCommand</dt>
-  <dd>要执行的操作, 如果为空默认为 <a href="#ID">ID</a> 子命令. 请参阅<a href="#SubCommands">子命令</a>.</dd>
+  <dd>如果为空或省略, 默认为 <a href="#ID">ID</a>(获取窗口的唯一 ID). 否则, 请指定要执行的<a href="#SubCommands">子命令</a>.</dd>
 
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
@@ -82,7 +82,7 @@
 <h3 id="List">List</h3>
 <p>与标题/文本参数相匹配的所有现有窗口的唯一 ID 号.</p>
 <pre class="Syntax"><span class="func">WinGet</span>, OutputVar, List <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>要获取整个系统的所有窗口, 省略所有的四个标题/文本参数. 每个 ID 号保存在名称以 <em>OutputVar</em> 自己的名字开头的变量中(构成一个<a href="../misc/Arrays.htm#pseudo">伪数组</a>), 而 <em>OutputVar</em> 自己则保存了获取的项目数量(没有则为 0). 例如, 如果 <em>OutputVar</em> 是 MyArray 且找到两个匹配的窗口, 那么 MyArray1 会被设置为首个窗口的 ID, MyArray2 被设置为第二个窗口的 ID 时, MyArray 自身被设置为数字 2. 窗口获取的顺序是从最上面到最下面(根据它们在桌面上的堆放顺序). 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时才会包括隐藏窗口. 在<a href="../Functions.htm">函数</a>中, 要创建全局而不是局部的伪数组, 必须在使用此命令前<a href="../Functions.htm#Global">声明</a> MyArray 为全局变量(对于<a href="../Functions.htm#AssumeGlobal">假设全局</a>函数, 反之亦然). 但是, 通常需要对每一个变量进行声明, 否则可能引起<a href="../Functions.htm#ArrayConfusion">混乱的根源</a>.</p>
+<p>要获取整个系统的所有窗口, 省略所有的四个标题/文本参数. 每个 ID 号保存在名称以 <em>OutputVar</em> 自己的名字开头的变量中(构成一个<a href="../misc/Arrays.htm#pseudo">伪数组</a>), 而 <em>OutputVar</em> 自己则保存了获取的 ID 数量(没有则为 0). 例如, 如果 <em>OutputVar</em> 是 MyArray 且找到两个匹配的窗口, 那么 MyArray1 会被设置为首个窗口的 ID, MyArray2 被设置为第二个窗口的 ID 时, MyArray 自身被设置为数字 2. 窗口获取的顺序是从最上面到最下面(根据它们在桌面上的堆放顺序). 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时才会包括隐藏窗口. 在<a href="../Functions.htm">函数</a>中, 要创建全局而不是局部的伪数组, 必须在使用此命令前<a href="../Functions.htm#Global">声明</a> MyArray 为全局变量(对于<a href="../Functions.htm#AssumeGlobal">假设全局</a>函数, 反之亦然). 但是, 通常需要对每一个变量进行声明, 否则可能引起<a href="../Functions.htm#ArrayConfusion">混乱的根源</a>.</p>
 
 <h3 id="MinMax">MinMax</h3>
 <p>获取窗口的最小化/最大化状态.</p>
@@ -97,14 +97,15 @@
 <h3 id="ControlList">ControlList</h3>
 <p>获取窗口中每个控件的控件名.</p>
 <pre class="Syntax"><span class="func">WinGet</span>, OutputVar, ControlList <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>如果没有匹配窗口或窗口中没有控件, 那么 <em>OutputVar</em> 被置空. 否则, 每个控件的名称都包含其类名, 紧接着序号(ClassNN), 如同 Window Spy 显示的那样.</p>
-<p>除最后一项外的其他项以换行符结束(`n). 要逐个检查每个控件的名称, 请使用<a href="LoopParse.htm">解析循环</a>, 如同下面的<a href="#ExControlList">示例 #3</a>.</p>
+<p>如果不存在匹配窗口或窗口中没有控件, 则 <em>OutputVar</em> 为空. 否则, 它将被设置为控件的名称列表. 每个名称由控件的类名紧接着其序号组成(ClassNN), 如同 Window Spy 显示的那样.</p>
+<p>除最后一项外的其他控件名称以换行符结束(`n). 要逐个检查每个控件的名称, 请使用<a href="LoopParse.htm">解析循环</a>, 如同下面的<a href="#ExControlList">示例 #3</a>.</p>
 <p>控件是按照 Z 轴顺序排序的, 如果窗口支持选项卡, Z 轴顺序通常与使用 <kbd>Tab</kbd> 的导航顺序相同.</p>
 
 <h3 id="ControlListHwnd">ControlListHwnd <span class="ver">[v1.0.43.06+]</span></h3>
 <p>获取窗口中每个控件的唯一 ID 号.</p>
 <pre class="Syntax"><span class="func">WinGet</span>, OutputVar, ControlListHwnd <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>如果没有匹配窗口或窗口中没有控件, 那么 <em>OutputVar</em> 被置空. 否则, 每个唯一 ID 都是控件的<a href="ControlGet.htm#Hwnd">窗口句柄(HWND)</a>. 除最后一项之外的每一项以换行符(`n) 结束.</p>
+<p>如果不存在匹配窗口或窗口中没有控件, 那么 <em>OutputVar</em> 被置空. 否则, 它将被设置成唯一 ID 的列表. 每个 ID 是控件的<a href="ControlGet.htm#Hwnd">窗口句柄(HWND)</a>.</p>
+<p>除最后一项之外的每一个 ID 都以换行符(`n) 结束. 要逐项检查单个 ID, 请使用如下面<a href="#ExControlList">示例 #3</a> 所示的<a href="LoopParse.htm">解析循环</a>.</p>
 <p>控件是按照 Z 轴顺序排序的, 如果窗口支持选项卡, Z 轴顺序通常与使用 <kbd>Tab</kbd> 的导航顺序相同.</p>
 
 <h3 id="Transparent">Transparent</h3>

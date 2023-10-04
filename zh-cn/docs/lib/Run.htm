@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Run / RunWait | AutoHotkey</title>
+<title>Run / RunWait | AutoHotkey v1</title>
 <meta name="description" content="The Run and RunWait commands run an external program. RunWait will wait until the program finishes before continuing." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,10 +25,10 @@
 <dl>
 
   <dt>Target</dt>
-  <dd><p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk) 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是本地文件且指定时没有包含路径, 则首先搜索 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 如果那里没有找到匹配的文件, 如果它集成在系统中("已知的"), 则系统会搜索并运行此文件, 例如包含在 PATH 环境变量的其中某个文件夹中.</p>
+  <dd><p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk), <a href="#CLSID">CLSID</a> 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是本地文件且指定时没有包含路径, 则首先搜索 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 如果那里没有找到匹配的文件, 如果它集成在系统中("已知的"), 则系统会搜索并运行此文件, 例如包含在 PATH 环境变量的其中某个文件夹中.</p>
       <p>要传递参数, 请让它们紧跟在程序或文档名的后面, 如下所示:</p>
       <pre>Run, MyProgram.exe Param1 Param2</pre>
-      <p>如果程序/文档名称或参数包含空格, 则把它们括在双引号中是最可靠的(虽然它在某些情况下没有括在双引号中也能工作)., 如下所示:</p>
+      <p>如果程序/文档名称或参数包含空格, 则把它们括在双引号中是最可靠的(虽然它在某些情况下没有括在双引号中也能工作), 如下所示:</p>
       <pre>Run, "My Program.exe" "param with spaces"</pre></dd>
 
   <dt>WorkingDir</dt>
@@ -44,7 +44,7 @@
       <p id="LastError">指定 UseErrorLevel 时, 内置变量 <strong>A_LastError</strong> 被设置为操作系统 GetLastError() 函数返回的结果. A_LastError 是一个介于 0 和 4294967295 之间的数字(总是为十进制而非十六进制). 零(0) 意味着成功, 但其他任何数字意味着运行失败. 每个数字对应一种特定的错误状态(要获取整个列表, 请在 <a href="https://www.microsoft.com">www.microsoft.com</a> 中搜索 "system error codes"). 像 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 一样, A_LastError 是与每个线程关联的设置, 即由其他<a href="../misc/Threads.htm">线程</a>产生的中断不会改变它. 然而, A_LastError 还可由 <a href="DllCall.htm#LastError">DllCall()</a> 设置.</p></dd>
 
   <dt>OutputVarPID</dt>
-  <dd><p>如果为空或省略, 不使用输出变量. 否则, 请指定用来存储新运行程序的唯一<a href="Process.htm">进程 ID(PID)</a>的输出变量的名称. 如果无法确定则 PID 被设置为空, 这经常发生在运行系统动词, 文档或快捷方式而不是直接的可执行文件时. RunWait 也支持此参数, 不过它获取的 <em>OutputVarPID</em> 必须在<a href="../misc/Threads.htm">另一个线程</a>中进行检查(否则, 这个 PID 将是无效的, 因为 RunWait 后的代码执行时相应的进程已经终止了).</p>
+  <dd><p>如果省略, 将不会存储对应的值. 否则, 请指定用来存储新运行程序的唯一<a href="Process.htm">进程 ID(PID)</a>的输出变量的名称. 如果无法确定则 PID 被设置为空, 这经常发生在运行系统动词, 文档或快捷方式而不是直接的可执行文件时. RunWait 也支持此参数, 不过它获取的 <em>OutputVarPID</em> 必须在<a href="../misc/Threads.htm">另一个线程</a>中进行检查(否则, 这个 PID 将是无效的, 因为 RunWait 后的代码执行时相应的进程已经终止了).</p>
       <p>在 Run 命令获取 PID, 此进程要创建的窗口可能还不存在. 要等待它至少创建一个窗口, 请使用 <code><a href="WinWait.htm">WinWait</a> ahk_pid %OutputVarPID%</code>.</p></dd>
 
 </dl>
@@ -60,9 +60,10 @@
 <pre>Run %comSpec% /c <span class="style3">"</span>"C:\My Utility.exe" "param 1" "second param" &gt;"C:\My File.txt"<span class="style3">"</span></pre>
 <p>如果无法启动 <em>目标</em>, 将显示包含此错误信息的窗口, 并结束当前线程, 除非在第 3 个参数中指定字符串 <u>UseErrorLevel</u>, 或者使用 <a href="Try.htm">Try</a>/<a href="Catch.htm">Catch</a> 语句进行捕获.</p>
 <p>当 <em>Target</em> 为准确路径时可轻微提升性能, 例如使用 <code>Run, C:\Windows\Notepad.exe "C:\My Documents\Test.txt"</code> 代替 <code>Run, C:\My Documents\Test.txt</code>.</p>
-<p>Run 还可以打开特殊的 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>. 例如:</p>
-<pre>Run ::{20d04fe0-3aea-1069-a2d8-08002b30309d}  <em>; 打开 "我的电脑" 文件夹.</em>
-Run ::{645ff040-5081-101b-9f08-00aa002f954e}  <em>; 打开回收站.</em></pre>
+<p id="CLSID">特殊的 <a href="../misc/CLSID-List.htm">CLSID</a> 可以通过 Run 打开. 它们中的大多数可以通过使用 shell: 前缀打开. 有些不用前缀也能打开. 例如:</p>
+<pre>Run shell:::{D20EA4E1-3957-11D2-A40B-0C5020524153} <em>; Windows Tools.</em>
+Run ::{20D04FE0-3AEA-1069-A2D8-08002B30309D}  <em>; 打开此电脑(以前是我的电脑或计算机).</em>
+Run ::{645FF040-5081-101B-9F08-00AA002F954E}  <em>; 打开回收站.</em></pre>
 <p id="verbs">系统动词对应于资源管理器中文件右键菜单的可用操作. 如果启动文件时没有指定动词, 则使用那种文件类型的默认动词(通常为 "打开"). 如果指定了, 则动词后应该跟着默认文件名. 目前支持下列动词:</p>
 <table class="info">
   <tr>
@@ -169,7 +170,7 @@ Run, properties C:\DirTest.txt</pre>
 <p><a class="ex_number" href="#ExCLSID"></a> Run 能够启动 <a href="../misc/CLSID-List.htm">CLSID</a>:</p>
 <p>下面打开回收站.</p>
 <pre>Run, ::{645ff040-5081-101b-9f08-00aa002f954e}</pre>
-<p>下面打开 "我的电脑" 目录.</p>
+<p>下面打开此电脑(以前是我的电脑或计算机).</p>
 <pre>Run, ::{20d04fe0-3aea-1069-a2d8-08002b30309d}</pre>
 </div>
 

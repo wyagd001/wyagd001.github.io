@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>ControlMove | AutoHotkey</title>
+<title>ControlMove | AutoHotkey v1</title>
 <meta name="description" content="The ControlMove command moves or resizes a control." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,35 +15,39 @@
 <p>移动控件或调整其大小.</p>
 
 <pre class="Syntax"><span class="func">ControlMove</span>, Control, X, Y, Width, Height <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+
 <h2 id="Parameters">参数</h2>
 <dl>
-
   <dt>Control</dt>
-  <dd><p>可以指定 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 如果此参数为空, 则使用目标窗口的顶层控件.</p>
-    <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code>ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p></dd>
-
+  <dd><p>如果为空或省略, 则使用目标窗口的顶层控件. 否则, 请指定 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
+    <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code>ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p>
+  </dd>
   <dt>X, Y</dt>
-  <dd><p><em>Control</em> 新位置的左上角的 X 和 Y 坐标(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果其中一个坐标为空, 那么 <em>Control</em> 在这个维度中的位置将保持不变. 这里的坐标相对于 <em>Control</em> 父窗口的左上角; 可以使用 <a href="ControlGetPos.htm">ControlGetPos</a> 或 Window Spy 来确定它们.</p></dd>
+  <dd>
+    <p>如果其中一个坐标为空, 则不会更改控件在该维度中的位置. 否则, 请指定控件新位置的左上角的 X 和 Y 坐标(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>. 这里的坐标相对于 <em>Control</em> 父窗口的左上角; 可以使用 <a href="ControlGetPos.htm">ControlGetPos</a> 或 Window Spy 来确定它们.</p>
+  </dd>
 
   <dt>Width, Height</dt>
-  <dd><p><em>Control</em> 的新宽度和高度(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>. 如果其中一个参数为空或省略, 那么 <em>Control</em> 在这个维度中的大小将保持不变.</p></dd>
-
+  <dd>
+    <p>如果其中一个坐标为空, 则不会更改控件在该维度中的尺寸. 否则, 请指定控件的新宽度和高度(单位为像素), 可以为<a href="../Variables.htm#Expressions">表达式</a>.</p>
+  </dd>
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
   </dd>
-
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
+
 <h2 id="Remarks">备注</h2>
 <p>要提高可靠性, 每次使用此命令后都会自动进行延迟. 这个延迟可以使用 <a href="SetControlDelay.htm">SetControlDelay</a> 进行改变.</p>
 <p>窗口标题和文本是区分大小写的. 只有在打开 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置时, 才能检测到隐藏窗口.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="ControlGetPos.htm">ControlGetPos</a>, <a href="WinMove.htm">WinMove</a>, <a href="SetControlDelay.htm">SetControlDelay</a>, <a href="Control.htm">Control</a>, <a href="ControlGet.htm">ControlGet</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlFocus.htm">ControlFocus</a>, <a href="ControlSend.htm">ControlSend</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExControlMoveTimer">
 <p><a class="ex_number" href="#ExControlMoveTimer"></a> 演示如何在脚本等待用户输入时操作输入框的 OK 按钮.</p>

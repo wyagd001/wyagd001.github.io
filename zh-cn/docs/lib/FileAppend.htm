@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>FileAppend | AutoHotkey</title>
+<title>FileAppend | AutoHotkey v1</title>
 <meta name="description" content="The FileAppend command writes text to the end of a file (first creating the file, if necessary)." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,12 +19,14 @@
 <dl>
 
   <dt>Text</dt>
-  <dd><p>要追加到文件的文本. 此文本可以包含换行符(`n) 来开始新行. 此外, 一个长行可以使用<a href="../Scripts.htm#continuation">延续片段</a>的方法分成较短的几行.</p>
-      <p>如果 <em>Text</em> 为空, 则创建一个文件名为 <em>Filename</em> 的空白文件(但如果文件已经存在, 则更新其修改时间).</p>
-    <p>如果 <em>Text</em> 为 <a href="../misc/Clipboard.htm#ClipboardAll">%ClipboardAll%</a> 或之前接受了 ClipboardAll 赋值的变量, 则用剪贴板的全部内容无条件覆盖 <em>Filename</em>(即不需要 <a href="FileDelete.htm">FileDelete</a>).</p></dd>
+  <dd>
+    <p>如果为空或省略, 则创建一个文件名为 <em>Filename</em> 的空文件(但如果文件已经存在, 则更新其修改时间). 否则, 请指定要追加到文件的文本. 此文本可以包含换行符(`n) 来开始新行. 此外, 一个长行可以使用<a href="../Scripts.htm#continuation">延续片段</a>的方法分成较短的几行.</p>
+    <p>如果 <em>Text</em> 为 <a href="../misc/Clipboard.htm#ClipboardAll">%ClipboardAll%</a> 或之前接受了 ClipboardAll 赋值的变量, 则用剪贴板的全部内容无条件覆盖 <em>Filename</em>(即不需要 <a href="FileDelete.htm">FileDelete</a>).</p>
+  </dd>
 
   <dt>Filename</dt>
-  <dd><p>要追加内容的文件名, 如果未指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中. 目标目录必须已经存在.</p>
+  <dd>
+    <p>如果省略该参数和 <em>Encoding</em> 参数, 则使用括在<a href="LoopReadFile.htm">文件读取循环</a>最内层的输出文件(如果可用). 否则, 请指定要追加内容的文件名, 如果未指定绝对路径, 则假定在 <a href="../Variables.htm#WorkingDir">%A_WorkingDir%</a> 中. 目标目录必须已经存在.</p>
     <p><strong>行结束符(EOL) 转换:</strong> 在文件名前面加个星号可以阻止 EOL 转换. 这使得每个换行符(`n) 被写作单个换行符(LF) 而不是 Windows 标准的 CR+LF. 例如: <code>*C:\My Unix File.txt</code></p>
     <p>如果文件尚未打开(由于在<a href="LoopReadFile.htm">文件读取循环</a>中), 且 <em>Text</em> 包含任意的回车和换行符对(`r`n), 则会自动禁用 EOL 转换. 换句话说, 前一段中描述的星号选项自动生效. 不过, 当 <em>Text</em> 包含 `r`n 如果指定星号可以改善性能, 因为程序不需要扫描 <em>Text</em> 检查其中是否包含 `r`n.</p>
      <p id="stdout"><strong>标准输出(stdout):</strong> 在 <em>Filename</em> 指定星号(*) 可以把 <em>Text</em> 发送到标准输出(stdout). 这样文本可以重定向到文件, 指向另一个 EXE 的管道或被<a href="_ErrorStdOut.htm">高级文本编辑器</a>捕获. 例如, 在命令提示符中输入后面的例子是有效的:</p>
@@ -35,8 +37,11 @@
     <p><span class="ver">[v1.1.20+]</span>: 在 <em>Filename</em> 指定两个星号(**) 可以把 <em>Text</em> 发送到标准错误输出(stderr).</p>
     </dd>
 
-  <dt>Encoding</dt>
-  <dd><p><span class="ver">[AHK_L 42+]</span>: 覆盖 <a href="FileEncoding.htm">FileEncoding</a> 的默认设置, 其中 <em>Encoding</em> 遵循相同的格式.</p></dd>
+  <dt>Encoding <span class="ver">[AHK_L 42+]</span></dt>
+  <dd>
+    <p>如果为空或省略, 则使用默认编码(由 <a href="FileEncoding.htm">FileEncoding</a> 或 CP0 设置). 否则, 请指定编码或编码页, 例如 <code class="no-highlight">UTF-8</code>, <code class="no-highlight">UTF-16</code> 或 <code class="no-highlight">CP936</code>.</p>
+    <p>如果文件包含 UTF-8 或 UTF-16 字节顺序标记(BOM), 则忽略此参数和默认编码.</p>
+  </dd>
 
 </dl>
 
@@ -49,8 +54,10 @@
 <p>要覆盖现有的文件, 请在使用 FileAppend 前用 <a href="FileDelete.htm">FileDelete</a> 删除它.</p>
 <p>追加文本后目标文件会自动关闭(除非在<a href="LoopReadFile.htm">文件读取/写入循环</a>中以单参数模式使用 FileAppend 时).</p>
 <p><span class="ver">[AHK_L 42+]</span>: 追加模式的 <a href="FileOpen.htm">FileOpen()</a> 比 FileAppend 提供了更多的控制性并且允许文件保持打开状态而不是每次打开关闭文件. 一旦以追加模式打开文件后, 请使用 <code>file.<a href="File.htm#Write">Write</a>(string)</code> 来追加字符串. 文件对象通过 <a href="File.htm#RawWrite">RawWrite</a>/<a href="File.htm#RawRead">RawRead</a> 或 <a href="File.htm#WriteNum">Write<i>Num</i></a>/<a href="File.htm#ReadNum">Read<i>Num</i></a> 还支持二进制 I/O, 然而 FileAppend 仅支持文本.</p>
+
 <h2 id="Related">相关</h2>
-<p><a href="FileOpen.htm">FileOpen()</a> / <a href="File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="FileReadLine.htm">FileReadLine</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="FileDelete.htm">FileDelete</a>, <a href="OutputDebug.htm">OutputDebug</a>, <a href="../Scripts.htm#continuation">延续片段</a></p>
+<p><a href="FileEncoding.htm">FileEncoding</a>, <a href="FileOpen.htm">FileOpen()</a> / <a href="File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a>, <a href="LoopReadFile.htm">文件读取循环</a>, <a href="FileReadLine.htm">FileReadLine</a>, <a href="IniWrite.htm">IniWrite</a>, <a href="FileDelete.htm">FileDelete</a>, <a href="OutputDebug.htm">OutputDebug</a>, <a href="../Scripts.htm#continuation">延续片段</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 必要时创建一个文件, 并附加一行.</p>

@@ -1,8 +1,7 @@
 <!DOCTYPE HTML>
-<!DOCTYPE HTML>
 <html>
 <head>
-<title>ListView (GUI) | AutoHotkey</title>
+<title>ListView (GUI) | AutoHotkey v1</title>
 <meta name="description" content="In its most recognizable form, the ListView control displays a tabular view of rows and columns. This page contains the functions to modify it." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +25,7 @@
 </ul>
 
 <h2 id="Intro">入门和简单示例</h2>
-<p>List-View 是由操作系统提供的最精心设计的控件之一. 在其最容易识别的形式中, 它显示一个多行多列组成的表格视图, 最常见的例子是资源管理器的文件和文件夹列表(详细信息视图).</p>
+<p>ListView 是由操作系统提供的最精心设计的控件之一. 在其最容易识别的形式中, 它显示一个多行多列组成的表格视图, 最常见的例子是资源管理器的文件和文件夹列表(详细信息视图).</p>
 <p>ListView 通常是这样的:</p>
 <img src="../static/pics/ctrl_listview.png" alt="ListView" />
 <p>尽管它可能是精细的, 但 ListView 的基本功能也易于使用. 创建 ListView 的语法为:</p>
@@ -87,117 +86,219 @@ ExitApp</pre>
 <p><strong>Report:</strong> 切换回报告视图, 这是最初的默认模式. 例如: <code>GuiControl, +Report, MyListView</code>.</p>
 
 <h2 id="BuiltIn">ListView 中的内置函数</h2>
-<p>所有的 ListView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <code><a href="Gui.htm#Default">Gui, 2:Default</a></code> 进行改变). 如果默认窗口不存在或不含有 ListView 控件, 则所有函数返回零来表明此问题.</p>
+<p>以下所有的 ListView 函数操作于当前线程的<a href="Gui.htm#DefaultWin">默认 GUI 窗口</a>(这可以使用 <code><a href="Gui.htm#Default">Gui, 2:Default</a></code> 进行改变). 如果默认窗口不存在或不含有 ListView 控件, 则所有函数返回零来表明此问题.</p>
 <p id="GuiLV">如果窗口含有多个 ListView 控件, 默认情况下函数操作于最近添加的那个. 要改变这种情况, 请指定 <code>Gui, ListView, ListViewName</code>, 其中 <em>ListViewName</em> 为 ListView 的<a href="Gui.htm#var">关联变量</a>的名称或 Window Spy 中显示的其 ClassNN 或在 <span class="ver">[v1.1.04+]</span> 其 HWND. 一旦改变后, 所有现有和将来的<a href="../misc/Threads.htm">线程</a>将使用指定的 ListView. <span class="ver">[v1.1.23+]</span>: <a href="../Variables.htm#DefaultListView">A_DefaultListView</a> 包含了当前的设置.</p>
 <p id="RowNumber">当在此页面使用短语 "row number(行号)", 它指的是 ListView 中行的当前位置. 最上面一行为 1, 第二行为 2, 依此类推. 添加一行后, 其行号会因为排序, 删除和插入其他行而发生变化. 因此, 要根据内容查找特定的一行或多行, 通常最好在循环中使用 <a href="#LV_GetText">LV_GetText()</a>.</p>
 
-<p id="bifRow"><strong>行函数</strong></p>
+<p id="bifRow">行函数:</p>
 <ul>
-    <li><a href="#LV_Add">LV_Add</a>: 添加新行到列表底部.</li>
-    <li><a href="#LV_Insert">LV_Insert</a>: 在指定的行号插入一个新行.</li>
-    <li><a href="#LV_Modify">LV_Modify</a>: 修改行的属性和/或文本.</li>
-    <li><a href="#LV_Delete">LV_Delete</a>: 删除指定行或所有行.</li>
+  <li><a href="#LV_Add">LV_Add</a>: 添加新行到列表底部.</li>
+  <li><a href="#LV_Insert">LV_Insert</a>: 在指定的行号插入一个新行.</li>
+  <li><a href="#LV_Modify">LV_Modify</a>: 修改行的属性和/或文本.</li>
+  <li><a href="#LV_Delete">LV_Delete</a>: 删除指定行或所有行.</li>
 </ul>
 
-<p id="bifCol"><strong>列函数</strong></p>
+<p id="bifCol">列函数:</p>
 <ul>
-    <li><a href="#LV_ModifyCol">LV_ModifyCol</a>: 修改指定列和标题的属性和/或文本.</li>
-    <li><a href="#LV_InsertCol">LV_InsertCol</a>: 在指定列号插入一个新列.</li>
-    <li><a href="#LV_DeleteCol">LV_DeleteCol</a>: 删除指定的列及其中所有内容.</li>
+  <li><a href="#LV_ModifyCol">LV_ModifyCol</a>: 修改指定列和标题的属性和/或文本.</li>
+  <li><a href="#LV_InsertCol">LV_InsertCol</a>: 在指定列号插入一个新列.</li>
+  <li><a href="#LV_DeleteCol">LV_DeleteCol</a>: 删除指定的列及其中所有内容.</li>
 </ul>
 
-<p id="bifGet"><strong>检索函数</strong></p>
+<p id="bifGet">检索函数:</p>
 <ul>
-    <li><a href="#LV_GetCount">LV_GetCount</a>: 返回行或列的总数, 或只返回选定行数.</li>
-    <li><a href="#LV_GetNext">LV_GetNext</a>: 返回下一个选择的, 选中的或焦点行的行号.</li>
-    <li><a href="#LV_GetText">LV_GetText</a>: 检索指定行和列上的文本.</li>
+  <li><a href="#LV_GetCount">LV_GetCount</a>: 返回控件中的行数或列数.</li>
+  <li><a href="#LV_GetNext">LV_GetNext</a>: 返回下一个选择的, 选中的或焦点行的行号.</li>
+  <li><a href="#LV_GetText">LV_GetText</a>: 检索指定行和列上的文本.</li>
 </ul>
 
-<p id="bifIcon"><strong>其他函数:</strong></p>
+<p id="bifIcon">其他函数:</p>
 <ul>
-    <li><a href="#LV_SetImageList">LV_SetImageList</a>: 设置或替换用于显示图标的 ImageList.</li>
+  <li><a href="#LV_SetImageList">LV_SetImageList</a>: 设置或替换用于显示图标的 ImageList.</li>
 </ul>
 
 <h3 id="LV_Add">LV_Add</h3>
 <p>添加新行到列表底部.</p>
-<pre class="Syntax"><span class="func">LV_Add</span>(<span class="optional">Options, Field1, Field2, ...</span>)</pre>
-<p>参数 <em>Field1</em> 和其后的字段是新行的列内容, 可以是文本或数字(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). 要让任何字段为空, 请指定 <code>""</code> 或等价物. 如果参数中太少字段而无法填满所有列, 则留空后面剩下的列. 如果太多字段, 则忽略后面多出的字段.</p>
-<p>失败时, LV_Add() 返回 0. 成功时它返回新<a href="#RowNumber">行号</a>, 如果 ListView 含有 <a href="#Sort">Sort</a> 或 <a href="#SortDesc">SortDesc</a> 样式则此行不一定是最后一行.</p>
-
-<h4 id="RowOptions">行选项</h4>
-<p><em>Options</em> 参数是一个包含零个或多个下表中选项的字符串(不区分大小写). 选项间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
-<p id="Check"><strong>Check:</strong> 在行中显示选中标记(需要 ListView 含有<a href="#Checked">复选框</a>). 以后要取消选中它, 请使用 <code>LV_Modify(RowNumber, "-Check")</code>.</p>
-<p id="ColN"><strong>ColN:</strong> 指定单词 <em>Col</em> 后紧跟着列号, 从此列开始往后应用参数 <em>Col1</em> 和其后参数的内容. 此选项通常和 <a href="#LV_Modify">LV_Modify()</a> 一起使用来修改行中的个别字段, 而不会影响其他字段.</p>
-<p id="Focus"><strong>Focus:</strong> 设置键盘焦点到此行(通常和下面的 <a href="#Select">Select</a> 选项一起使用). 以后要取消它的焦点, 请使用 <code>LV_Modify(RowNumber, "-Focus")</code>.</p>
-<p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着这行图标的编号, 这行图标显示在首列的左侧. 如果此选项不存在, 则使用<a href="#IL">图像列表</a>中的首个图标. 要显示空白图标, 请指定 -1 或一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则<a href="#View">报告视图</a>中既不显示图标也不为其保留空间.</p>
-<p>该选项接受基于 1 开始的的图标编号, 但在内部转换为基于 0 开始的索引; 因此, <code>Icon0</code> 对应于常数 <a href="https://learn.microsoft.com/windows/win32/controls/list-view-controls-overview#callback-items-and-the-callback-mask">I_IMAGECALLBACK</a>, 它通常被定义为 -1, 而 <code class="no-highlight">Icon-1</code> 对应于 I_IMAGENONE. 其他超出范围的值也可能导致图标所在位置出现空白.</p>
-<p id="Select"><strong>Select:</strong> 选择行. 以后要取消选择, 请使用 <code>LV_Modify(RowNumber, "-Select")</code>. 当选择行时, 通常最好确保至少有一行总含有<a href="#Focus">焦点属性</a>, 因为这样允许 Apps 键在焦点行附近显示其<a href="Gui.htm#GuiContextMenu">上下文菜单</a>(如果有). 单词 <em>Select</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Select"</code> 和 <code>"Select" <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>). 这种技术也适用于上面的 <a href="#Focus">Focus</a> 和 <a href="#Check">Check</a> 选项.</p>
-<p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>: 必要时通过滚动 ListView 来确保指定行完全可见. 此参数仅对 <a href="#LV_Modify">LV_Modify()</a> 有效; 例如: <code>LV_Modify(RowNumber, "Vis")</code>.</p>
+<pre class="Syntax">RowNumber := <span class="func">LV_Add</span>(<span class="optional">Options, Col1, Col2, ...</span>)</pre>
+<h4 class="func_section" id="LV_Add_Parameters">参数</h4>
+<dl>
+  <dt id="RowOptions">Options</dt>
+  <dd>
+    <p>如果为空或省略, 则默认为无选项. 否则, 从下面的列表中指定一个或多个选项(不区分大小写). 用空格或制表符将每个选项与下一个选项分开. 若要删除某个选项, 请在其前面加一个减号. 要添加一个选项, 允许使用加号, 但不是必需的.</p>
+    <p id="Check"><strong>Check:</strong> 在行中显示选中标记(需要 ListView 含有<a href="#Checked">复选框</a>). 以后要取消选中它, 请使用 <code>LV_Modify(RowNumber, "-Check")</code>.</p>
+    <p id="ColN"><strong>ColN:</strong> 指定单词 <em>Col</em> 后紧跟着列号, 从此列开始往后应用参数 <em>Col1</em> 和其后参数的内容. 此选项通常和 <a href="#LV_Modify">LV_Modify()</a> 一起使用来修改行中的个别字段, 而不会影响其左侧的字段.</p>
+    <p id="Focus"><strong>Focus:</strong> 设置键盘焦点到此行(通常和下面的 <a href="#Select">Select</a> 选项一起使用). 以后要取消焦点, 请使用 <code>LV_Modify(RowNumber, "-Focus")</code>.</p>
+    <p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着该行图标的编号, 显示在首列的左侧. 如果此选项不存在, 则使用<a href="#IL">图像列表</a>中的首个图标. 要显示空白图标, 请指定 -1 或一个大于图像列表中图标数目的数字. 如果控件没有小图标的图像列表, 则<a href="#View">报告视图</a>中既不显示图标, 也不为其保留空间.</p>
+    <p>Icon 选项接受基于 1 开始的的图标编号, 但在内部转换为基于 0 开始的索引; 因此, <code>Icon0</code> 对应于常数 <a href="https://learn.microsoft.com/windows/win32/controls/list-view-controls-overview#callback-items-and-the-callback-mask">I_IMAGECALLBACK</a>, 它通常被定义为 -1, 而 <code class="no-highlight">Icon-1</code> 对应于 I_IMAGENONE. 其他超出范围的值也可能导致图标所在位置出现空白.</p>
+    <p id="Select"><strong>Select:</strong> 选择行. 以后要取消选择, 请使用 <code>LV_Modify(RowNumber, "-Select")</code>. 当选择行时, 通常最好确保至少有一行总具有<a href="#Focus">焦点属性</a>, 因为这样允许 Apps 键在焦点行附近显示其<a href="Gui.htm#GuiContextMenu">上下文菜单</a>(如果有). 单词 <em>Select</em> 后可以紧跟着 0 或 1 来表示初始状态. 换句话说, <code>"Select"</code> 和 <code>"Select" <strong>.</strong> VarContainingOne</code> 是一样的(此处的句点是<a href="../Variables.htm#concat">连接运算符</a>). 这种技术也适用于上面的 <a href="#Focus">Focus</a> 和 <a href="#Check">Check</a> 选项.</p>
+    <p id="Vis"><strong>Vis</strong> <span class="ver">[v1.0.44+]</span>: 必要时通过滚动 ListView 来确保指定行完全可见. 这仅对 <a href="#LV_Modify">LV_Modify()</a> 有效; 例如: <code>LV_Modify(RowNumber, "Vis")</code>.</p>
+  </dd>
+  <dt>Col1, Col2, ...</dt>
+  <dd>
+    <p>新行的列内容, 可以是文本或数字(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). 要让任何字段为空, 请指定 <code>""</code> 或等价物. 如果参数中太少字段而无法填满所有列, 则留空后面剩下的列. 如果太多字段, 则忽略后面多出的字段.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_Add_Return_Value">返回值</h4>
+<p>成功时, 函数返回新<a href="#RowNumber">行号</a>, 如果 ListView 具有 <a href="#Sort">Sort</a> 或 <a href="#SortDesc">SortDesc</a> 样式, 则此行不一定是最后一行. 失败时, 返回 0.</p>
 
 <h3 id="LV_Insert">LV_Insert</h3>
 <p>在指定行号插入一个新行.</p>
-<pre class="Syntax"><span class="func">LV_Insert</span>(RowNumber <span class="optional">, Options, Col1, Col2, ...</span>)</pre>
-<p>除了它的不同的第一个参数(它为新插入的行指定行号) 之外, 它的行为与 <a href="#LV_Add">LV_Add()</a> 相同. 在 <em>RowNumber</em> 下或下面的任何行都向下移动, 为新行腾出空间. 如果 <em>RowNumber</em> 大于列表中行的数目(甚至可以高至 2147483647), 则新行被添加到列表的底部. 要了解 <em>Options</em>, 请参阅<a href="#RowOptions">行选项</a>.</p>
+<pre class="Syntax">RowNumber := <span class="func">LV_Insert</span>(RowNumber <span class="optional">, Options, Col1, Col2, ...</span>)</pre>
+<h4 class="func_section" id="LV_Insert_Parameters">参数</h4>
+<dl>
+  <dt>RowNumber</dt>
+  <dd>
+    <p>新插入行的行号. 在 <em>RowNumber</em> 或其下面的任何行都向下移动, 为新行腾出空间. 如果 <em>RowNumber</em> 大于列表中行数(甚至可以高至 2147483647), 则新行被添加到列表的底部.</p>
+    </dd>
+  <dt>Options</dt>
+  <dd>
+    <p>如果为空或省略, 则默认为无选项. 否则, 请指定<a href="#RowOptions">上表</a>中的一个或多个选项.</p>
+  </dd>
+  <dt>Col1, Col2, ...</dt>
+  <dd>
+    <p>新行的列内容, 可以是文本或数字(包括数值的<a href="../Variables.htm#Expressions">表达式</a>结果). 要让任何字段为空, 请指定 <code>""</code> 或等价物. 如果参数中太少字段而无法填满所有列, 则留空后面剩下的列. 如果太多字段, 则忽略后面多出的字段.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_Insert_Return_Value">返回值</h4>
+<p>成功时, 函数返回指定的行号. 失败时, 返回 0.</p>
 
 <h3 id="LV_Modify">LV_Modify</h3>
 <p>修改行的属性和/或文本.</p>
-<pre class="Syntax"><span class="func">LV_Modify</span>(RowNumber <span class="optional">, Options, NewCol1, NewCol2, ...</span>)</pre>
-<p>成功时返回 1, 而失败时返回 0. 如果 <em>RowNumber</em> 为 0, 则修改控件中<u>所有</u>行(此时如果操作完全成功时返回 1 而部分失败时返回 0). 如果只存在前两个参数, 则仅修改行的属性而不改变其文本. 同样, 如果参数太少导致无法覆盖所有列, 则后面剩下的列保持不变. <a href="#ColN">列选项</a>可用于更新特定的列, 而不影响其他列. 有关其他选项, 请参阅<a href="#RowOptions">行选项</a>.</p>
+<pre class="Syntax">RowNumber := <span class="func">LV_Modify</span>(RowNumber <span class="optional">, Options, NewCol1, NewCol2, ...</span>)</pre>
+<h4 class="func_section" id="LV_Modify_Parameters">参数</h4>
+<dl>
+  <dt>RowNumber</dt>
+  <dd>
+    <p>要修改行的行号. 如果为 0, 则修改控件中的 <u>所有</u> 行.</p>
+  </dd>
+  <dt>Options</dt>
+  <dd>
+    <p>如果为空或省略, 则默认没有选项. 否则, 请指定<a href="#RowOptions">上表</a>中的一个或多个选项. <a href="#ColN">Col 选项</a>可用于更新特定的列, 而不影响其他列.</p>
+  </dd>
+  <dt>NewCol1, NewCol2, ...</dt>
+  <dd>
+    <p>指定行的新列, 可以是文本或数字(包括数字<a href="../Variables.htm#Expressions">表达式</a>结果). 若要使任何字段为空, 指定 <code>""</code> 或等价的值. 如果参数太少导致无法覆盖所有列, 则后面剩下的列保持不变. 如果字段太多, 则末尾的字段会被完全忽略.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_Modify_Return_Value">返回值</h4>
+<p>成功时, 函数返回指定的行号. 失败时, 返回 0. 如果 <em>RowNumber</em> 为 0, 则修改所有行, 如果操作完全成功时, 返回 1, 而部分失败时, 返回 0.</p>
+<h4 class="func_section" id="LV_Modify_Remarks">备注</h4>
+<p>如果只存在前两个参数, 则仅修改行的属性而不改变其文本.</p>
 
 <h3 id="LV_Delete">LV_Delete</h3>
 <p>删除指定行或所有行.</p>
-<pre class="Syntax"><span class="func">LV_Delete</span>(<span class="optional">RowNumber</span>)</pre>
-<p>如果省略此参数, 则删除 ListView 中<u>所有</u>行. 否则, 仅删除指定 <em>RowNumber</em> 所在的行. 成功时返回 1 而失败时返回 0.</p>
+<pre class="Syntax">IsDeleted := <span class="func">LV_Delete</span>(<span class="optional">RowNumber</span>)</pre>
+<h4 class="func_section" id="LV_Delete_Parameters">参数</h4>
+<dl>
+  <dt>RowNumber</dt>
+  <dd>
+    <p>如果省略, 则删除 ListView 中<u>所有</u>行. 否则, 请指定要删除的行号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_Delete_Return_Value">返回值</h4>
+<p>成功时, 函数返回 1. 失败时, 返回 0.</p>
 
 <h3 id="LV_ModifyCol">LV_ModifyCol</h3>
 <p>修改指定列和标题的属性和/或文本.</p>
-<pre class="Syntax"><span class="func">LV_ModifyCol</span>(<span class="optional">ColumnNumber, Options, ColumnTitle</span>)</pre>
-<p>首列编号为 1(不是 0). 如果省略所有参数, 则调整所有列的宽度以适应行的内容. 如果仅存在首个参数, 则仅调整指定列的大小. 只有在<a href="#View">报告(详细信息) 视图</a>中自动调整大小才有效果. 此函数成功时返回 1 而失败时返回 0.</p>
-
-<h4 id="ColOptions">列选项</h4>
-<p><em>Options</em> 参数是一个包含零个或多个下表中选项的字符串(不区分大小写). 选项间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 在选项前的正号可以省略.</p>
-
-<h4 id="Column_Options_General">列选项: 常规</h4>
-<p><strong>N:</strong> 指定 <em>N</em> 为列的新宽度, 单位为像素. 如果这是唯一的选项, 则此数字可以不加引号. 例如, 后面两种形式都是有效的: <code>LV_ModifyCol(1, 50)</code> 和 <code>LV_ModifyCol(1, "50 Integer")</code>.</p>
-<p><strong>Auto:</strong> 调整列宽来适应其内容. 只有在<a href="#View">报告(详细信息) 视图</a>中此选项才有效果.</p>
-<p><strong>AutoHdr:</strong> 调整列宽来适应其内容和列标题的文本, 以其中较宽的为准. 当应用于最后一列时, 它将被设置为至少和 ListView 中剩余空间的宽度一样. 通常最好仅在行已经添加后才应用此设置, 因为这样允许当调整最后一列的大小时考虑到可能新增加的垂直滚动栏. 只有在<a href="#View">报告(详细信息) 视图</a>中此选项才有效果.</p>
-<p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着<a href="#IL">图像列表</a>中要显示在列标题文本后的图标的编号. 指定 <code>-Icon</code>(负 icon) 来移除任何现有的图标.</p>
-<p><strong>IconRight:</strong> 把图标放在列的右边而不是左边.</p>
-
-<h4 id="Column_Options_Data_Type">列选项: 数据类型</h4>
-<p><strong>Float:</strong> 为了进行排序, 指明此列包含浮点数(不支持十六进制格式). 浮点数和文本列的排序性能最多可能比整数列的慢 25 倍.</p>
-<p id="Integer"><strong>Integer:</strong> 为了进行排序, 指明此列包含整数. 要正确排序, 每个整数必须是 32 位的; 即在范围 -2147483648 到 2147483647 内. 任何非整数的值在排序时将被视为零(不过如果这些值以一个数字开头, 则使用这个数字). 数字格式可以为十进制或十六进制(例如 <code>0xF9E0</code>).</p>
-<p id="Text"><strong>Text:</strong> 更改列返回到文本模式进行排序, 这是每列初始默认的排序方式. 在排序时只有文本开始的 8190 个字符是有意义的(如果如果使用了 <a href="#Logical"><em>Logical</em> 选项</a>, 此时限制为 4094).</p>
-
-<h4 id="Column_Options_Alignment">列选项: 对齐 / 字距调整</h4>
-<p><strong>Center:</strong> 让文本居于列中央. 要让 Integer 或 Float 列居中, 请把单词 <em>Center</em> 加到 <em>Integer</em> 或 <em>Float</em> 后.</p>
-<p><strong>Left:</strong> 让列文本左对齐, 这是每列初始默认的对齐方式. 在较旧的操作系统中, 首列可能会强制进行左对齐.</p>
-<p><strong>Right:</strong> 让列文本右对齐. 对于 Integer 和 Float 数列不需要指定此属性, 因为它们默认是右对齐的. 通过指定例如 <code>"Integer Left"</code> 或 <code>"Float Center"</code> 的字符串可以覆盖此默认的对齐方式.</p>
-
-<h4 id="Column_Options_Sorting">列选项: 排序</h4>
-<p id="Case"><strong>Case:</strong> 让列排序区分大小写(仅影响<a href="#Text">文本</a>列). 如果 <em>Case</em>, <em>CaseLocale</em> 以及 <em>Logical</em> 选项都省略, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
-<p><strong>CaseLocale</strong> <span class="ver">[v1.0.43.03+]</span>: 让列排序基于当前用户的区域设置且不区分大小写(仅影响<a href="#Text">文本</a>列). 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 &Auml; 和 &Uuml; 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起.</p>
-<p id="Desc"><strong>Desc:</strong> 降序排列. 用户首次对此列排序时使用下降的顺序.</p>
-<p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]</span>: 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如, 字符串 "T33" 将被视为大于 "T4". <em>Logical</em> 需要 Windows XP 或更高版本(在较旧的操作系统中, 会自动使用 <em>CaseLocale</em> 代替). 此外, <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
-<p><strong>NoSort:</strong> 避免用户点击此列对自动排序产生的影响. 要禁用所有列的排序而不仅是其中的子集, 请在 ListView 的选项中包含 <a href="#NoSort">NoSort</a>. 如果 ListView 含有 g-标签, 则当用户点击 no-sort 的列时仍会接收到 <a href="#ColClick">ColClick 通知</a>.</p>
-<p><strong>Sort:</strong> 立即对列按升序排列(即使它含有 <a href="#Desc">Desc</a> 选项).</p>
-<p><strong>SortDesc:</strong> 立即对列按降序排列.</p>
-<p><strong>Uni:</strong> 单向排序. 此选项防止在相同列进行第二次点击来反转排序方向.</p>
+<pre class="Syntax">IsModified := <span class="func">LV_ModifyCol</span>(<span class="optional">ColumnNumber, Options, ColumnTitle</span>)</pre>
+<h4 class="func_section" id="LV_ModifyCol_Parameters">参数</h4>
+<dl>
+  <dt>ColumnNumber</dt>
+  <dd>
+    <p>如果这个参数和其他参数都被省略, 则调整所有列的宽度以适应行内容. 只有在<a href="#View">报告(详细信息) 视图</a>中才有效果.</p>
+    <p>否则, 请指定要修改的列的编号. 首列的列号为 1(而不是 0).</p>
+  </dd>
+  <dt id="ColOptions">Options</dt>
+  <dd>
+    <p>如果省略, 则默认为 Auto(则调整列的宽度以适应其的内容). 否则, 请指定下表中一个或多个选项(不区分大小写). 选项间使用空格或 tab 分隔. 要移除选项, 请在选项前加上负号. 要添加选项, 允许使用加号, 但不是必需的.</p>
+    <hr>
+    <p id="Column_Options_General"><strong><em>常规选项:</em></strong></p>
+    <p><strong>N:</strong> 指定 <em>N</em> 为列的新宽度, 单位为像素. 如果这是唯一的选项, 则此数字可以不加引号. 例如, 后面两种形式都是有效的: <code>LV_ModifyCol(1, 50)</code> 和 <code>LV_ModifyCol(1, "50 Integer")</code>.</p>
+    <p><strong>Auto:</strong> 调整列宽来适应其内容. 只有在<a href="#View">报告(详细信息) 视图</a>中此选项才有效果.</p>
+    <p><strong>AutoHdr:</strong> 调整列宽来适应其内容和列标题的文本, 以其中较宽的为准. 当应用于最后一列时, 它将被设置为至少和 ListView 中剩余空间的宽度一样. 通常最好仅在行已经添加后才应用此设置, 因为这样允许当调整最后一列的大小时考虑到可能新增加的垂直滚动栏. 只有在<a href="#View">报告(详细信息) 视图</a>中此选项才有效果.</p>
+    <p><strong>Icon:</strong> 指定单词 <em>Icon</em> 后紧跟着<a href="#IL">图像列表</a>中要显示在列标题文本后的图标的编号. 指定 <code>-Icon</code>(负 icon) 来移除任何现有的图标.</p>
+    <p><strong>IconRight:</strong> 把图标放在列的右边而不是左边.</p>
+    <hr>
+    <p id="Column_Options_Data_Type"><strong><em>数据类型选项:</em></strong></p>
+    <p><strong>Float:</strong> 为了进行排序, 指明此列包含浮点数(不支持十六进制格式). 浮点数和文本列的排序性能最多可能比整数列的慢 25 倍.</p>
+    <p id="Integer"><strong>Integer:</strong> 为了进行排序, 指明此列包含整数. 要正确排序, 每个整数必须是 32 位的; 即在范围 -2147483648 到 2147483647 内. 任何非整数的值在排序时将被视为零(不过如果这些值以一个数字开头, 则使用这个数字). 数字格式可以为十进制或十六进制(例如 <code>0xF9E0</code>).</p>
+    <p id="Text"><strong>Text:</strong> 更改列返回到文本模式进行排序, 这是每列初始默认的排序方式. 在排序时只有文本开始的 8190 个字符是有意义的(如果如果使用了 <a href="#Logical"><em>Logical</em> 选项</a>, 此时限制为 4094).</p>
+    <hr>
+    <p id="Column_Options_Alignment"><strong><em>对齐选项:</em></strong></p>
+    <p><strong>Center:</strong> 让文本居于列中央. 要让 Integer 或 Float 列居中, 请把单词 <em>Center</em> 加到 <em>Integer</em> 或 <em>Float</em> 后.</p>
+    <p><strong>Left:</strong> 让列文本左对齐, 这是每列初始默认的对齐方式. 在较旧的操作系统中, 首列可能会强制进行左对齐.</p>
+    <p><strong>Right:</strong> 让列文本右对齐. 对于 Integer 和 Float 数列不需要指定此属性, 因为它们默认是右对齐的. 通过指定例如 <code>"Integer Left"</code> 或 <code>"Float Center"</code> 的字符串可以覆盖此默认的对齐方式.</p>
+    <hr>
+    <p id="Column_Options_Sorting"><strong><em>排序选项:</em></strong></p>
+    <p id="Case"><strong>Case:</strong> 让列排序区分大小写(仅影响<a href="#Text">文本</a>列). 如果 <em>Case</em>, <em>CaseLocale</em> 以及 <em>Logical</em> 选项都省略, 则在排序中大写字母 A-Z 被视为等同于它们相应的小写形式.</p>
+    <p><strong>CaseLocale</strong> <span class="ver">[v1.0.43.03+]</span>: 让列排序基于当前用户的区域设置且不区分大小写(仅影响<a href="#Text">文本</a>列). 例如, 大多数英语和西欧地区把字母 A-Z 和 ANSI 字母例如 &Auml; 和 &Uuml; 等同于它们的小写形式. 这种方法也使用 "单词排序", 它把单词中的连字符和撇号例如 "coop" 和 "co-op" 保持在一起.</p>
+    <p id="Desc"><strong>Desc:</strong> 降序排列. 用户首次对此列排序时使用下降的顺序.</p>
+    <p id="Logical"><strong>Logical</strong> <span class="ver">[v1.0.44.12+]</span>: 与 <em>CaseLocale</em> 相同, 除了把文本中的任何数字位序列看成真正的数字而不仅仅字符. 例如, 字符串 "T33" 将被视为大于 "T4". <em>Logical</em> 需要 Windows XP 或更高版本(在较旧的操作系统中, 会自动使用 <em>CaseLocale</em> 代替). 此外, <em>Logical</em> 和 <em>Case</em> 是互斥的: 只有最近指定的那个才有效.</p>
+    <p><strong>NoSort:</strong> 避免用户点击此列对自动排序产生的影响. 要禁用所有列的排序而不仅是其中的子集, 请在 ListView 的选项中包含 <a href="#NoSort">NoSort</a>. 如果 ListView 含有 g-标签, 则当用户点击 no-sort 的列时仍会接收到 <a href="#ColClick">ColClick 通知</a>.</p>
+    <p><strong>Sort:</strong> 立即对列按升序排列(即使它含有 <a href="#Desc">Desc</a> 选项).</p>
+    <p><strong>SortDesc:</strong> 立即对列按降序排列.</p>
+    <p><strong>Uni:</strong> 单向排序. 此选项防止在相同列进行第二次点击来反转排序方向.</p>
+  </dd>
+  <dt>ColumnTitle</dt>
+  <dd>
+    <p>如果省略, 当前标题保持不变. 否则, 请指定列的新标题.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_ModifyCol_Return_Value">返回值</h4>
+<p>成功时, 函数返回 1. 失败时, 返回 0.</p>
 
 <h3 id="LV_InsertCol">LV_InsertCol</h3>
 <p>在指定列号插入一个新列.</p>
-<pre class="Syntax"><span class="func">LV_InsertCol</span>(ColumnNumber <span class="optional">, Options, ColumnTitle</span>)</pre>
-<p>创建新列, 插入到指定的 <em>ColumnNumber</em>(移动其他的列到右边来腾出空间). 首列编号为 1(不是 0). 如果 <em>ColumnNumber</em> 大于当前控件中列的数目, 则新列被添加到列表的末尾(最右边). 新插入的列初始内容为空, 然而如果它是首列则会继承原来首列的内容, 同时原来首列的内容变为空的. 新列的属性(例如是否使用<a href="#Integer">整数排序</a>) 开始时总为它们的默认值, 不过可以使用<em><a href="#ColOptions">选项</a></em>改变. 此函数返回新列的位置编号(失败时为 0). ListView 中的最大列数为 200.</p>
+<pre class="Syntax">ColumnNumber := <span class="func">LV_InsertCol</span>(ColumnNumber <span class="optional">, Options, ColumnTitle</span>)</pre>
+<h4 class="func_section" id="LV_InsertCol_Parameters">参数</h4>
+<dl>
+  <dt>ColumnNumber</dt>
+  <dd>
+    <p>新插入列的列号. 任何位于 <em>ColumnNumber</em> 或在其右侧的列都会向右移动, 为新列腾出空间. 首列编号为 1(不是 0). 如果 <em>ColumnNumber</em> 大于当前控件中列的数目, 则新列被添加到右侧最后一列的旁边(最右边).</p>
+  </dd>
+  <dt>Options</dt>
+  <dd>
+    <p>如果省略, 列总是以默认值开始, 例如是否使用<a href="#Integer">整数排序</a>. 否则, 请指定<a href="#ColOptions">上表</a>中一个或多个选项.</p>
+  </dd>
+  <dt>ColumnTitle</dt>
+  <dd>
+    <p>如果为空或省略, 则默认为空的标题. 否则, 请指定列的标题.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_InsertCol_Return_Value">返回值</h4>
+<p>成功时, 函数返回新列的位置编号. 失败时, 返回 0.</p>
+<h4 class="func_section" id="LV_InsertCol_Remarks">备注</h4>
+<p>新插入列的初始内容为空, 除非它是首列, 在这种情况下, 会继承原来首列的内容, 同时原来首列的内容变为空白.</p>
+<p>ListView 中的最大列数为 200.</p>
 
 <h3 id="LV_DeleteCol">LV_DeleteCol</h3>
 <p>删除指定的列及其中所有内容.</p>
-<pre class="Syntax"><span class="func">LV_DeleteCol</span>(ColumnNumber)</pre>
-<p>成功时返回 1 而失败时返回 0. 当一个列被删除后, 在此列右边的任何列的编号减小 1. 因此, 调用 <code>LV_DeleteCol(2)</code> 两次将删除第二列和第三列. 在比 Windows XP 旧的操作系统中, 试图删除原始的首列可能会失败并返回 0.</p>
+<pre class="Syntax">IsDeleted := <span class="func">LV_DeleteCol</span>(ColumnNumber)</pre>
+<h4 class="func_section" id="LV_DeleteCol_Parameters">参数</h4>
+<dl>
+  <dt>ColumnNumber</dt>
+  <dd>
+    <p>要删除列的编号. 当一个列被删除后, 在此列右边的任何列的编号减小 1. 因此, 调用 <code>LV_DeleteCol(2)</code> 两次, 将删除第二列和第三列.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_DeleteCol_Return_Value">返回值</h4>
+<p>成功时, 函数返回 1. 失败时, 返回 0. 在比 Windows XP 旧的操作系统中, 试图删除原始的首列可能会失败并返回 0.</p>
 
 <h3 id="LV_GetCount">LV_GetCount</h3>
-<p>返回行或列的总数, 或只返回选定行数.</p>
-<pre class="Syntax"><span class="func">LV_GetCount</span>(<span class="optional">Mode</span>)</pre>
-<p>省略参数时, 函数返回控件中的总行数. 当参数为 <code>"S"</code> 或 <code>"Selected"</code> 时, 计数仅包括选择的/高亮的行. 当参数为 <code>"Col"</code> 或 <code>"Column"</code>, 函数返回控件中的列数. 此函数总是即时的, 因为控件会跟踪这些计数.</p>
+<p>返回行或列的总数.</p>
+<pre class="Syntax">Count := <span class="func">LV_GetCount</span>(<span class="optional">Mode</span>)</pre>
+<h4 class="func_section" id="LV_GetCount_Parameters">参数</h4>
+<dl>
+  <dt>Mode</dt>
+  <dd>
+    <p>如果为空或省略, 函数返回控件中的总行数. 否则, 请指定以下字符串之一:</p>
+    <p><strong>S</strong> 或 <strong>Selected</strong>: 计数仅包括选择的/高亮的行.</p>
+    <p><strong>Col</strong> 或 <strong>Column</strong>: 函数返回控件中的列数.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_GetCount_Return_Value">返回值</h4>
+<p>此函数返回控件的行数或列数. 该值总是即时返回的, 因为控件会跟踪这些计数.</p>
+<h4 class="func_section" id="LV_GetCount_Remarks">备注</h4>
 <p>此函数常用在一个 <a href="Loop.htm">Loop</a> 的顶行, 此时将仅调用一次函数(在首次循环前). 例如:</p>
 <pre>Loop % LV_GetCount()
 {
@@ -215,8 +316,24 @@ Loop % LV_GetCount("Column")
 
 <h3 id="LV_GetNext">LV_GetNext</h3>
 <p>返回下一个选择的, 选中的或焦点行的行号.</p>
-<pre class="Syntax"><span class="func">LV_GetNext</span>(<span class="optional">StartingRowNumber, RowType</span>)</pre>
-<p>如果没有找到, 则返回零. 如果 <em>StartingRowNumber</em> 省略或小于 1, 则从列表的顶部开始搜索. 否则, 从 <em>StartingRowNumber</em> 行后开始搜索. 如果省略 <em>RowType</em>, 则函数搜索下一个选择的/高亮的行. 否则, 指定 <code>"C"</code> 或 <code>"Checked"</code> 来寻找下一个选中的行; 或指定 <code>"F"</code> 或 <code>"Focused"</code> 来寻找焦点行(在整个列表中不可能有多个焦点行, 且有时甚至没有). 下面的例子, 报告 ListView 中所有选择的行:</p>
+<pre class="Syntax">RowNumber := <span class="func">LV_GetNext</span>(<span class="optional">StartingRowNumber, RowType</span>)</pre>
+<h4 class="func_section" id="LV_GetNext_Parameters">参数</h4>
+<dl>
+  <dt>StartingRowNumber</dt>
+  <dd>
+    <p>如果空白, 省略或小于 1, 则从列表的顶部开始搜索. 否则, 请指定开始搜索的行号.</p>
+  </dd>
+  <dt>RowType</dt>
+  <dd>
+    <p>如果为空或省略, 则函数搜索下一个选择的/高亮的行(请参阅下面的例子). 否则, 请指定以下字符串之一:</p>
+    <p><strong>C</strong> 或 <strong>Checked</strong>: 寻找下一个选中的行.</p>
+    <p><strong>F</strong> 或 <strong>Focused</strong>: 寻找焦点行. 在整个列表中不可能有多个焦点行, 且有时甚至没有.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_GetNext_Return_Value">返回值</h4>
+<p>函数返回下一个选择, 选中或聚焦的行的行号. 如果没有找到, 则返回 0.</p>
+<h4 class="func_section" id="LV_GetNext_Remarks">备注</h4>
+<p>下面的例子, 报告 ListView 中所有选择的行:</p>
 <pre>RowNumber := 0  <em>; 这样使得首次循环从列表的顶部开始搜索.</em>
 Loop
 {
@@ -232,18 +349,48 @@ SendMessage, 0x102C, <i>RowNumber</i> - 1, 0xF000, SysListView321  <em>; 0x102C 
 IsChecked := (ErrorLevel &gt;&gt; 12) - 1  <em>; 如果 <i>RowNumber</i> 为选中的则设置 IsChecked 为真, 否则为假.</em></pre>
 
 <h3 id="LV_GetText">LV_GetText</h3>
-<p>检索指定 <em>RowNumber</em> 和 <em>ColumnNumber</em> 上的文本并保存到 <em>OutputVar</em>.</p>
-<pre class="Syntax"><span class="func">LV_GetText</span>(OutputVar, RowNumber <span class="optional">, ColumnNumber</span>)</pre>
-<p>如果省略 <em>ColumnNumber</em>, 则它默认为 1(首列的文本). 如果 <em>RowNumber</em> 为 0, 则获取列标题的文本.  如果文本长度超过 8191, 则仅获取前 8191 个字符. 此函数成功时返回 1 而失败时返回 0. 失败时, <em>OutputVar</em> 也被置空.</p>
+<p>检索指定行和列上的文本.</p>
+<pre class="Syntax">IsRetrieved := <span class="func">LV_GetText</span>(OutputVar, RowNumber <span class="optional">, ColumnNumber</span>)</pre>
+<h4 class="func_section" id="LV_GetText_Parameters">参数</h4>
+<dl>
+  <dt>OutputVar</dt>
+  <dd>
+    <p>输出变量的名称, 该变量储存了检索到的文本. 最多只能检索 8191 个字符. 失败时, 变量被置空.</p>
+  </dd>
+  <dt>RowNumber</dt>
+  <dd>
+    <p>要检索其文本的行号. 如果为空或为 0, 则检索列的标题文本.</p>
+  </dd>
+  <dt>ColumnNumber</dt>
+  <dd>
+    <p>如果省略, 默认为 1(首列的文本). 否则, 请指定  <em>RowNumber</em> 所在的行中的列号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_GetText_Return_Value">返回值</h4>
+<p>成功时, 函数返回 1. 失败时, 返回 0.</p>
+<h4 class="func_section" id="LV_GetText_Remarks">备注</h4>
 <p>脚本中看到的列编号不会因为用户所做的拖放而改变. 例如, 即使用户已经把它拖到其他列的右边, 最初首列的编号仍是 1.</p>
 
 <h3 id="LV_SetImageList">LV_SetImageList</h3>
 <p>设置或替换用于图标显示的 <a href="#IL">ImageList(图像列表)</a>.</p>
-<pre class="Syntax"><span class="func">LV_SetImageList</span>(ImageListID <span class="optional">, IconType</span>)</pre>
-<p>此函数一般在 ListView 添加行之前调用. 它设置 <a href="#IL">ImageList</a>, 其中的图标会显示在 ListView 的行中(可选的, 以及列). <em>ImageListID</em> 为前面调用 <a href="#IL_Create">IL_Create()</a> 返回的数字. 如果省略 <em>IconType</em>, 则自动检测图像列表中的图标为大图标还是小图标. 否则, 对于大图标指定 0, 对于小图标指定 1, 而状态图标则为 2(还没有直接支持状态图标, 不过可以通过 <a href="PostMessage.htm">SendMessage</a> 使用).</p>
+<pre class="Syntax">PrevImageListID := <span class="func">LV_SetImageList</span>(ImageListID <span class="optional">, IconType</span>)</pre>
+<h4 class="func_section" id="LV_SetImageList_Parameters">参数</h4>
+<dl>
+  <dt>ImageListID</dt>
+  <dd>
+    <p>之前调用 <a href="#IL_Create">IL_Create()</a> 返回的 ID 号.</p>
+  </dd>
+  <dt>IconType</dt>
+  <dd>
+    <p>如果省略, 则自动检测 ImageList(图像列表) 中的图标为大图标还是小图标. 否则, 请指定 0 表示大图标, 1 表示小图标, 或 2 表示状态图标(目前还不直接支持, 但可以通过 <a href="PostMessage.htm">SendMessage</a> 来使用).</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="LV_SetImageList_Return_Value">返回值</h4>
+<p>成功时, 函数返回先前与 ListView 关联的 ImageList ID. 失败时, 返回 0. 任何这样分离的 ImageList 通常应该通过 <a href="#IL_Destroy">IL_Destroy()</a> 来销毁.</p>
+<h4 class="func_section" id="LV_SetImageList_Remarks">备注</h4>
+<p>此函数一般在 ListView 添加行之前调用. 它设置 <a href="#IL">ImageList</a>, 其中的图标会显示在 ListView 的行中(可选的, 以及列).</p>
 <p>一个 ListView 最多可以关联两个图像列表: 小图标和/或大图标. 当脚本允许用户在大图标视图和其他视之间切换的时候, 这是很有用的. 要再关联一个图像列表到 ListView, 请再次调用 LV_SetImageList(), 其中指定第二个列表的 <em>ImageListID</em>. 同时关联有大图标和小图标图像列表的 ListView 应该确保两个列表中包含图标的顺序相同. 这是因为使用一个指定图标的大小版本时, 会引用相同的 ID 编号.</p>
 <p>尽管除了图标模式和平铺模式外, 传统的所有的<a href="#View">视图模式</a>都显示小图标, 但可以通过传递一个大图标列表到 LV_SetImageList() 并且在第二个参数中指定 1(小图标) 覆盖此行为. 这也增加了 ListView 中每行的高度以适合大图标.</p>
-<p>如果成功, 则 LV_SetImageList() 返回之前与 ListView 关联的 <em>ImageListID</em>(如果没有则为 0). 任何分离的图像列表一般应通过 <a href="#IL_Destroy">IL_Destroy()</a> 进行销毁.</p>
 
 <h2 id="notify">G-标签通知(主要)</h2>
 <p><a href="Gui.htm#label">g-标签</a>例如 <code><strong>g</strong>MySubroutine</code> 可以使用在此控件的选项中. 这使得当用户在控件中执行动作时 <em>MySubroutine</em> 标签会自动运行. 此子程序中可引用内置变量 <a href="../Variables.htm#Gui">A_Gui</a> 和 <a href="../Variables.htm#GuiControl">A_GuiControl</a> 来找出产生事件的是哪个窗口和 ListView. 更重要的是, 它可以参考 <strong>A_GuiEvent</strong>, 其包含下列字符串或字母的其中一个(考虑到和未来版本的兼容性, 脚本不应假定这些字符串或字母是唯一可能的值):</p>
@@ -270,7 +417,7 @@ return</pre>
 <p><strong>E:</strong> 用户开始编辑一行的首个字段(只有在 ListView 选项中含有 <a href="#ReadOnly">-ReadOnly</a> 时用户才可以进行编辑). 变量 A_EventInfo 包含目标行号.</p>
 <p><strong>F:</strong> ListView 接收到键盘焦点.</p>
 <p><strong>f</strong>(小写的 F): ListView 失去了键盘焦点.</p>
-<p id="ItemChanged"><strong>I:</strong> 项目发生了变化. 通过变成选择的/未选择的, 选中的/未选中的等让一行改变了. 如果用户选择了一个新行, 则至少会接收到两个这样的通知: 一个是在取消之前的行时, 而另一个是在选择新行时. <span class="ver">[v1.0.44+]</span>: 变量 A_EventInfo 包含目标行号. <span class="ver">[v1.0.46.10+]</span>: ErrorLevel 包含零个或多个下列字母来表示项目发生的变化: S(选择) 或 s(取消选择), 和/或 F(成为焦点) 或 f(失去焦点), 和/或 C(选中) 或 c(取消选中). 例如, SF 表示此行被选择且成为了焦点. 要检查是否存在一个特定的字母, 请使用<a href="LoopParse.htm">解析循环</a>或带区分大小写选项的 <a href="InStr.htm">InStr()</a>; 例如: <code>InStr(ErrorLevel, "S", true)</code>. 注: 考虑到和未来版本的兼容性, 脚本不应假定 "SsFfCc" 包含了所有可能的字母或字母组合. 此外, 指定 <a href="Critical.htm">Critical</a> 作为 <a href="Gui.htm#label">g-标签</a> 子程序的首行来确保接收到所有的 "I" 通知(否则, 如果脚本无法跟上, 则它们其中一些可能会丢失).</p>
+<p id="ItemChanged"><strong>I:</strong> 项目发生了变化. 通过行变成选择的/未选择的, 选中的/未选中的等方式发生更改. 如果用户选择了新行, 则至少会接收到两个这样的通知: 一个是取消前一行的选择, 而另一个是选择新行. <span class="ver">[v1.0.44+]</span>: 变量 A_EventInfo 包含目标行号. <span class="ver">[v1.0.46.10+]</span>: ErrorLevel 包含零个或多个以下字母来表示项目发生的变化: S(选择) 或 s(取消选择), 和/或 F(成为焦点) 或 f(失去焦点), 和/或 C(选中) 或 c(取消选中). 例如, SF 表示此行被选择且成为了焦点. 要检查是否存在一个特定的字母, 请使用<a href="LoopParse.htm">解析循环</a>或带区分大小写选项的 <a href="InStr.htm">InStr()</a>; 例如: <code>InStr(ErrorLevel, "S", true)</code>. 注: 考虑到和未来版本的兼容性, 脚本不应假定 "SsFfCc" 包含了所有可能的字母或字母组合. 此外, 指定 <a href="Critical.htm">Critical</a> 作为 <a href="Gui.htm#label">g-标签</a> 子程序的首行来确保接收到所有的 "I" 通知(否则, 如果脚本无法跟上, 则它们其中一些可能会丢失).</p>
 <p id="NotifyK"><strong>K:</strong> 当 ListView 拥有焦点时用户按下了一个键. A_EventInfo 包含此键的虚拟按键代码, 这是介于 1 和 255 之间的数字. 然后可以通过 <a href="GetKey.htm">GetKeyName()</a> 转换为按键名称或字符. 例如, <code>key := GetKeyName(<a href="Format.htm">Format</a>("vk{:x}", A_EventInfo))</code>. 在大多数键盘布局中, A-Z 键都可以通过 <code><a href="Chr.htm">Chr</a>(A_EventInfo)</code> 转换为相应的字符. <kbd>F2</kbd> 的按键动作总是被接收且不会被 <a href="#WantF2">WantF2</a> 影响. 但是, <kbd>Enter</kbd> 不会被接收; 除非按照下面的方法设置为默认按钮.</p>
 <p><strong>M:</strong> 选取框. 用户开始在一组行或图标周围拖动一个矩形选区.</p>
 <p><strong>S:</strong> 用户开始滚动 ListView.</p>
@@ -293,21 +440,75 @@ GuiClose:  <em>; 当用户关闭 ListView 所在 GUI 窗口时退出脚本.</em>
 ExitApp</pre>
 
 <h3 id="IL_Create">IL_Create</h3>
-<p>创建新的初始为空的图像列表, 并返回图像列表的唯一 ID(失败时为 0).</p>
-<pre class="Syntax"><span class="func">IL_Create</span>(<span class="optional">InitialCount, GrowCount, LargeIcons</span>)</pre>
-<p><em>InitialCount</em> 为希望马上放入列表的图标数(如果省略, 则它默认为 2). <em>GrowCount</em> 为列表每次将增长时超出当前列表容量的图标数(如果省略, 则它默认为 5). <em>LargeIcons</em> 应该为数值: 如果不为零, 则图像列表将包含大图标. 如果为零, 则它包含小图标(这是省略时的默认情况). 会按比例对添加到列表中的图标自动进行缩放以符合系统中大图标和小图标的尺寸.</p>
+<p>创建一个新的初始为空的图像列表.</p>
+<pre class="Syntax">ImageListID := <span class="func">IL_Create</span>(<span class="optional">InitialCount, GrowCount, LargeIcons</span>)</pre>
+<h4 class="func_section" id="IL_Create_Parameters">参数</h4>
+<dl>
+  <dt>InitialCount</dt>
+  <dd>
+    <p>如果省略, 默认为 2. 否则, 请指定希望立即放入列表的图标数量.</p>
+  </dd>
+  <dt>GrowCount</dt>
+  <dd>
+    <p>如果省略, 默认为 5. 否则, 请指定每次超过当前列表容量时, 列表将增加的图标数量.</p>
+  </dd>
+  <dt>LargeIcons</dt>
+  <dd>
+    <p>如果省略, 默认为 0, 这意味着 ImageList 将包含小图标. 否则, 请指定一个非零值, 使 ImageList 包含大图. 会按比例对添加到列表中的图标自动进行缩放以符合系统中大图标和小图标的尺寸.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="IL_Create_Return_Value">返回值</h4>
+<p>成功时, 函数返回新创建的图像列表的唯一 ID. 失败时, 返回 0.</p>
 
 <h3 id="IL_Add">IL_Add</h3>
-<p>添加图标或图片到指定的 <em>ImageListID</em> 并返回新图标的索引(首个图标索引为 1, 第二个为 2, 依此类推).</p>
-<pre class="Syntax"><span class="func">IL_Add</span>(ImageListID, Filename <span class="optional">, IconNumber, ResizeNonIcon</span>)</pre>
-<p><em>Filename</em> 为图标(.ICO), 光标(.CUR) 或动画光标(.ANI) 文件的名称(动画光标在 ListView 中显示时实际将不会动). 图标的其他来源包含下列类型的文件: EXE, DLL, CPL, SCR, 以及包含图标资源的其他类型. 要使用文件中第一个以外的图标组, 请在 <em>IconNumber</em> 指定它的编号. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID. 在下面的例子中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
-<p>还可以加载非图标图像, 例如 BMP, GIF 和 JPG. 然而, 此时应该指定最后两个参数以确保正确执行: <em>IconNumber</em> 应该为屏蔽的/透明的颜色编码(对于大多数图片 0xFFFFFF [白色] 可能是最佳的); 而 <em>ResizeNonIcon</em> 应该为非零值来缩放图片为单个图标, 或者为零来把图像分割为多个可以匹配实际宽度的图标.</p>
-<p>在所有的操作系统中都支持 GIF, JPG, BMP, ICO, CUR 和 ANI 图像. 在 Windows XP 或更高版本中, 还支持其他图像格式, 例如 PNG, TIF, Exif, WMF 和 EMF. 比 XP 早的操作系统可以通过复制微软免费的 GDI+ DLL 到 AutoHotkey.exe 文件夹中来提供支持(但如果是<a href="Scripts.htm#ahk2exe">已编译脚本</a>, 则复制此 DLL 到脚本的文件夹). 要下载这个 DLL, 请在 <a href="https://www.microsoft.com">www.microsoft.com</a> 搜索下列短语: gdi redistributable</p>
-<p><span class="ver">[v1.1.23+]</span>: <a href="../misc/ImageHandles.htm">位图或图标句柄</a>可用于替代文件名称. 例如, <code>HBITMAP:%handle%</code>.</p>
+<p>添加图标或图片到指定的 ImageList.</p>
+<pre class="Syntax">IconIndex := <span class="func">IL_Add</span>(ImageListID, IconFileName <span class="optional">, IconNumber</span>)
+IconIndex := <span class="func">IL_Add</span>(ImageListID, PicFileName, MaskColor, Resize)</pre>
+<h4 class="func_section" id="IL_Add_Parameters">参数</h4>
+<dl>
+  <dt>ImageListID</dt>
+  <dd>
+    <p>之前调用 <a href="#IL_Create">IL_Create()</a> 返回的 ID 号.</p>
+  </dd>
+  <dt>IconFileName</dt>
+  <dd>
+    <p>图标(.ICO), 光标(.CUR) 或动画光标(.ANI)(动画光标在 ListView 中显示时, 实际将不会动) 文件的名称. 图标的其他来源包括以下类型的文件: EXE, DLL, CPL, SCR 和其他包含图标资源的文件类型.</p>
+    <p><span class="ver">[v1.1.23+]</span>: <a href="../misc/ImageHandles.htm">图标句柄</a>可用于替代文件名称, 例如 <code>HICON:%handle%</code>.</p>
+  </dd>
+  <dt>IconNumber</dt>
+  <dd>
+    <p>如果省略, 默认为 1(第一个图标组). 否则, 请指定文件中要使用的图标组的编号. 如果数字为负数, 其绝对值将被假定为可执行文件中图标的资源 ID. 在下面的示例中, 将使用第二个图标组中的默认图标: <code>IL_Add(ImageListID, "C:\My Application.exe", 2)</code>.</p>
+  </dd>
+  <dt>PicFileName</dt>
+  <dd>
+    <p>非图标图像的名称, 例如 BMP, GIF 和 JPG. 在 Windows XP 或更高版本中, 还支持其他图像格式, 如 PNG, TIF, Exif, WMF 和 EMF. 比 XP 早的操作系统可以通过复制微软免费的 GDI+ DLL 到 AutoHotkey.exe 文件夹中来提供支持(但如果是<a href="Scripts.htm#ahk2exe">已编译脚本</a>, 则复制此 DLL 到脚本的文件夹). 要下载这个 DLL, 请在 <a href="https://www.microsoft.com">www.microsoft.com</a> 搜索下列短语: gdi redistributable</p>
+    <p><span class="ver">[v1.1.23+]</span>: <a href="../misc/ImageHandles.htm">位图句柄</a>可用于替代文件名称, 例如 <code>HBITMAP:%handle%</code>.</p>
+  </dd>
+  <dt>MaskColor</dt>
+  <dd>
+    <p>屏蔽的/透明的颜色编码. 对于大多数图片, 0xFFFFFF(白色) 可能是最佳的.</p>
+  </dd>
+  <dt>Resize</dt>
+  <dd>
+    <p>指定非零值来缩放图片为单个图标, 或者为零来把图像分割为多个可以匹配实际宽度的图标.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="IL_Add_Return_Value">返回值</h4>
+<p>成功时, 函数返回新图标的索引(首个图标索引为 1, 第二个为 2, 依此类推). 失败时, 返回 0.</p>
 
 <h3 id="IL_Destroy">IL_Destroy</h3>
-<p>删除指定的图像列表, 成功时返回 1, 而失败返回 0.</p>
-<pre class="Syntax"><span class="func">IL_Destroy</span>(ImageListID)</pre>
+<p>删除指定的图像列表.</p>
+<pre class="Syntax">IsDestroyed := <span class="func">IL_Destroy</span>(ImageListID)</pre>
+<h4 class="func_section" id="IL_Destroy_Parameters">参数</h4>
+<dl>
+  <dt>ImageListID</dt>
+  <dd>
+    <p>之前调用 <a href="#IL_Create">IL_Create()</a> 返回的 ID 号.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="IL_Destroy_Return_Value">返回值</h4>
+<p>成功时, 函数返回 1. 失败时, 返回 0.</p>
+<h4 class="func_section" id="IL_Destroy_Remarks">备注</h4>
 <p>通常没必要销毁图像列表, 因为一旦关联到 ListView, 当 ListView 或其父窗口销毁时它们会被自动销毁. 但是, 如果一个 ListView 和其他 ListView 共享图像列表(通过在选项中包含 0x40),  在所有使用此图像列表的 ListView 销毁后脚本应该明确地销毁它. 同样地, 如果脚本使用一个新的图像列表代替 ListView 中原来的, 则应该明确销毁原来的图像列表.</p>
 
 <h2 id="Remarks">ListView 备注</h2>
@@ -335,7 +536,6 @@ return</pre>
 <p><a href="TreeView.htm">TreeView</a>, <a href="GuiControls.htm">其他控件类型</a>, <a href="Gui.htm">Gui</a>, <a href="Gui.htm#GuiContextMenu">GuiContextMenu</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="GuiControlGet.htm">GuiControlGet</a>, <a href="../misc/Styles.htm#ListView">ListView 样式表</a></p>
 
 <h2 id="Examples">示例</h2>
-
 <div class="ex" id="ExAllRows">
 <p><a class="ex_number" href="#ExAllRows"></a> 通过指定 0 作为行号来选择或取消选择所有的行.</p>
 <pre><a href="#LV_Modify">LV_Modify</a>(0, "Select")   <em>; 选择所有.</em>

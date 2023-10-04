@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>ComObjType() | AutoHotkey</title>
+<title>ComObjType() | AutoHotkey v1</title>
 <meta name="description" content="The ComObjType function retrieves type information from a COM object." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,11 +15,7 @@
 <p>从 COM 对象获取类型信息.</p>
 
 <pre class="Syntax">
-VarType := <span class="func">ComObjType</span>(ComObject)           <em>; 需要 <span class="ver">[v1.0.91+]</span></em>
-Name    := <span class="func">ComObjType</span>(ComObject, "Name")
-IID     := <span class="func">ComObjType</span>(ComObject, "IID")
-Class   := <span class="func">ComObjType</span>(ComObject, "Class")  <em>; 需要 <span class="ver">[v1.1.26+]</span></em>
-CLSID   := <span class="func">ComObjType</span>(ComObject, "CLSID")  <em>; 需要 <span class="ver">[v1.1.26+]</span></em></pre>
+Info := <span class="func">ComObjType</span>(ComObject <span class="optional">, InfoType</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -27,22 +23,20 @@ CLSID   := <span class="func">ComObjType</span>(ComObject, "CLSID")  <em>; 需�
   <dt>ComObject</dt>
   <dd><p>包含 COM 对象或类型化值的包装器对象.</p></dd>
 
-<dt>参数2</dt>
-<dd><p>第二个参数是指示返回的类型信息的字符串.</p></dd>
+  <dt>InfoType</dt>
+  <dd>
+    <p><span class="ver">[v1.0.91+]</span>: 如果省略, 整数<a href="#vt">变量类型码</a>, 其指示了 COM 包装器对象包含的值的类型.</p>
+    <p>否则, 请指定以下字符串之一, 指示要检索的类型信息:</p>
+    <p><strong>Name:</strong> 对象默认接口的名称.</p>
+    <p><strong>IID:</strong> 对象默认接口的全局唯一标识符(GUID).</p>
+    <p><strong>Class</strong> <span class="ver">[v1.1.26+]</span>: 对象的类名. 请注意, Class 与 Prog ID 是不一样的(Prog ID 是一个在系统注册表或 <a href="ComObjCreate.htm">ComObjCreate</a> 中用于识别的类名称)..</p>
+    <p><strong>CLSID</strong> <span class="ver">[v1.1.26+]</span>: 对象的类的全局唯一标示符(GUID). 类经常以 CLSID 的形式注册, 位于 <code>HKCR\CLSID</code> 注册表键下.</p>
+  </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
-<p>返回值依赖于 <em>参数2</em> 的值:</p>
-<table class="info">
-<tr><th style="white-space: 5em;">参数2</th><th abbr="Return">返回值</th></tr>
-<tr><td>省略</td><td><span class="ver">[v1.0.91+]</span>: 整数<a href="#vt">变量类型码</a>, 其指示了 COM 包装器对象包含的值的类型.</td></tr>
-<tr><td><code>"Name"</code></td><td>对象默认接口的名称.</td></tr>
-<tr><td><code>"IID"</code></td><td>对象默认接口的全局唯一标识符(GUID).</td></tr>
-<tr><td><code>"Class"</code></td><td><span class="ver">[v1.1.26+]</span>: 对象的类名. 请注意, Class 与 Prog ID 是不一样的(Prog ID 是一个在系统注册表或 <a href="ComObjCreate.htm">ComObjCreate</a> 中用于识别的类名称).</td></tr>
-<tr><td><code>"CLSID"</code></td><td><span class="ver">[v1.1.26+]</span>: 对象的类的全局唯一标示符(GUID). 类经常以 CLSID 的形式注册, 位于 <code>HKCR\CLSID</code> 注册表键下.</td></tr>
-</table>
-<p>如果参数无效或指定的类型信息无法取回, 则返回空字符串.</p>
+<p>返回值依赖于 <em>InfoType</em> 的值. 如果参数无效或指定的类型信息无法取回, 则返回空字符串.</p>
 
 <h2 id="vt">变量类型的常量值</h2>
 <pre>
@@ -82,8 +76,8 @@ VT_BYREF     := 0x4000  <em>; 到另一种值的指针</em>
 <h2 id="General_Remarks">一般说明</h2>
 <p>在通常情况下, COM 对象的方法或属性的返回值会被转换成 AutoHotkey 支持的适合的数据类型. 没有明确处理的类型通过 <a href="https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-variantchangetype">VariantChangeType</a> 强制转换成字符串; 如果转换失败或变量类型包含 VT_ARRAY 或 VT_BYREF 标志, 则返回包含此值和其类型的对象.</p>
 <p>对于任意变量 <i>x</i>, 如果 <code>ComObjType(x)</code> 返回整数, 则 <i>x</i> 包含 COM 对象包装器.</p>
-<p>如果 <em>参数2</em> 是 <code>"Name"</code> 或 <code>"IID"</code>, 类型信息是通过 <a href="https://learn.microsoft.com/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo">IDispatch::GetTypeInfo</a> 接口方法取回的. <em>ComObject</em> 的变量类型必须是 VT_DISPATCH.</p>
- <p>如果 <em>参数2</em> 是 <code>"Class"</code> 或 <code>"CLSID"</code>, 类型信息是通过 <a href="https://learn.microsoft.com/windows/win32/api/ocidl/nf-ocidl-iprovideclassinfo-getclassinfo">IProvideClassInfo::GetClassInfo</a> 接口方法取回的. <em>ComObject</em> 的变量类型必须是 VT_DISPATCH 或 VT_UNKNOWN, 并且对象必须执行 iprovideclassinfo 接口(一些对象不需要).</p>
+<p>如果 <em>InfoType</em> 是 <code>"Name"</code> 或 <code>"IID"</code>, 类型信息是通过 <a href="https://learn.microsoft.com/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo">IDispatch::GetTypeInfo</a> 接口方法取回的. <em>ComObject</em> 的变量类型必须是 VT_DISPATCH.</p>
+ <p>如果 <em>InfoType</em> 是 <code>"Class"</code> 或 <code>"CLSID"</code>, 类型信息是通过 <a href="https://learn.microsoft.com/windows/win32/api/ocidl/nf-ocidl-iprovideclassinfo-getclassinfo">IProvideClassInfo::GetClassInfo</a> 接口方法取回的. <em>ComObject</em> 的变量类型必须是 VT_DISPATCH 或 VT_UNKNOWN, 并且对象必须执行 iprovideclassinfo 接口(一些对象不需要).</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="ComObjValue.htm">ComObjValue()</a>, <a href="ComObjCreate.htm">ComObjCreate()</a>, <a href="ComObjGet.htm">ComObjGet()</a>, <a href="ComObjActive.htm">ComObjActive()</a></p>

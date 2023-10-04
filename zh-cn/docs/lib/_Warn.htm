@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>#Warn | AutoHotkey</title>
+<title>#Warn | AutoHotkey v1</title>
 <meta name="description" content="The #Warn directive enables or disables warnings for specific conditions which may indicate an error, such as a typo or missing "global" declaration." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,13 +21,13 @@
 
   <dt>WarningType</dt>
   <dd>
-      <p>要启用或禁用的警告类型. 如果省略, 默认为 <i>All</i>.</p>
+      <p>如果省略, 默认为 <em>All</em>. 否则, 请指定要启用或禁用的警告类型.</p>
       <p id="UseUnset"><strong>UseUnsetLocal</strong> 或 <strong>UseUnsetGlobal</strong>: 在读取之前没有赋值或使用 <a href="VarSetCapacity.htm">VarSetCapacity()</a> 初始化的变量时产生警告. 如果这种变量计划为空的, 则可以为它赋值空字符串来屏蔽这样的警告. <a href="IsSet.htm">IsSet()</a> 可用于确定读取变量是否会引发此警告.</p>
       <p>对于用于局部和全局变量的这种警告被分成两种单独的类型, 这是由于全局变量的持久, 脚本范围作用域的性质, 使用全局变量而不预先初始化更常见. 因此, 一些脚本作者会希望对局部变量启用这种类型的警告, 但禁用全局的.</p>
       <pre>#Warn
 <em>;y := ""  ; 这样将屏蔽警告.</em>
 x := y    <em>; y 还不含有值.</em></pre>
-      <p id="UseEnv"><strong>UseEnv:</strong> 在自动使用环境变量代替空的脚本变量时产生警告. 当环境变量名意外地与脚本中使用的某个变量名相同时会发生这种情况. 这种警告会在访问变量时会产生, 但如果脚本使用了 <a href="_NoEnv.htm">#NoEnv</a>(由于多种原因而推荐使用) 则可以避免.</p>
+      <p id="UseEnv"><strong>UseEnv:</strong> 在自动使用<a href="../Concepts.htm#environment-variables">环境变量</a>代替空的脚本变量时产生警告. 当环境变量名意外地与脚本中使用的某个变量名相同时会发生这种情况. 这种警告会在访问变量时会产生, 但如果脚本使用了 <a href="_NoEnv.htm">#NoEnv</a>(由于多种原因而推荐使用) 则可以避免.</p>
       <pre>#Warn
 <em>;#NoEnv             ; 如果 "temp" 不是计划为环境变量则添加这行.</em>
 <em>;EnvGet temp, TEMP  ; 这里将复制环境变量的值到脚本变量中.</em>
@@ -53,7 +53,7 @@ ShowG() {       <em>; 即使从未调用这个函数也会显示警告.</em>
 
   <dt>WarningMode</dt>
   <dd>
-      <p>表示警告方式的值. 如果省略, 默认为 <em>MsgBox</em>.</p>
+      <p>如果省略, 默认为 <em>MsgBox</em>. 否则, 请指定表示警告方式的值.</p>
       <p><strong>MsgBox:</strong> 显示描述警告的消息框. 注意当这种消息框解除后, 脚本将照常继续.</p>
       <p><strong>StdOut</strong> <span class="ver">[v1.1.04+]</span>: 把警告的描述以及相应的文件名和行号发送到 <em>stdout</em>(程序的标准输出流). 这样可以让类似 SciTE 的高级编辑器在不干扰脚本的同时捕获警告, 之后用户可以通过编辑器的控制面板跳转到各个出错行.</p>
       <p><strong>OutputDebug:</strong> 把警告的描述发送到调试器显示出来. 如果没有活动的调试器, 则这个值没有效果. 想了解更多细节, 请参阅 <a href="OutputDebug.htm">OutputDebug</a>.</p>
@@ -62,7 +62,7 @@ ShowG() {       <em>; 即使从未调用这个函数也会显示警告.</em>
 
 </dl>
 <h2 id="Remarks">备注</h2>
-	<p>默认情况下, 所有的警告都是关闭的.</p>
+	<p>如果在脚本中未指定此指令, 所有的警告都是关闭的.</p>
 	<p>无法在运行时启用或禁用警告, 这个设置是在脚本加载时确定的. 因此, 它在脚本中的位置是不重要的(并且与其他的指令一样, #Warn 不能根据条件执行).</p>
 	<p>然而, 多个 #Warn 指令的顺序是有意义的: 最近一次设置指定警告的指令决定了这种警告的模式. 所以, 例如下面的两个语句会启用除 UseEnv 之外的所有警告的组合效果:</p>
 <pre>#Warn All
