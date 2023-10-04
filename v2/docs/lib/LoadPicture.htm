@@ -13,7 +13,7 @@
 <h1>LoadPicture</h1>
 
 <p>载入图像文件并返回位图或图标句柄.</p>
-<pre class="Syntax">Handle := <span class="func">LoadPicture</span>(Filename <span class="optional">, Options, &amp;ImageType</span>)</pre>
+<pre class="Syntax">Handle := <span class="func">LoadPicture</span>(Filename <span class="optional">, Options, &amp;OutImageType</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -27,33 +27,33 @@
   <dt>Options</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>以下选项中的零个或多个字符串, 每个选项之间以空格或制表符分隔::</p>
+    <p>如果为空或省略, 则默认为无选项. 否则, 指定以下一个或多个选项组成的字符串, 选项之间以空格或制表符分隔::</p>
     <p><strong>W</strong><em>n</em> 和 <strong>H</strong><em>n</em>: 待载入图像的宽度和高度, <em>n</em> 为整数. 如果省略某个尺寸或指定为 -1, 该尺寸将在保持宽高比的情况下根据另一个尺寸进行计算. 如果两个尺寸都被省略, 将使用图像的原始尺寸. 如果任一尺寸被指定为 0, 则该尺寸仍会使用原始尺寸. 例如: <code>"w80 h50"</code>, <code>"w48 h-1"</code> 或 <code>"w48"</code>(保持宽高比), <code>"h0 w100"</code>(使用原始高度但覆盖宽度).</p>
-    <p><strong>Icon</strong><em>n</em>: 指代多图标文件(一般是 EXE 或 DLL 文件) 中待载入图标的序号. 例如, <code>"Icon2"</code> 载入文件的第二个图标. 任何支持的图像格式都可以通过指定 <code>"Icon1"</code> 来转换为图标. 但是, 如果省略 <em>ImageType</em> 参数, 图标将转换回位图.</p>
-    <p><strong>GDI+</strong>: 尝试使用 GDI+ 的方式载入图像. 例如, <code>"GDI+ w100"</code>.</p>
+    <p><strong>Icon</strong><em>n</em>: 指代多图标文件(一般是 EXE 或 DLL 文件) 中待载入图标的序号. 例如, <code>"Icon2"</code> 载入文件的第二个图标. 任何支持的图像格式都可以通过指定 <code>"Icon1"</code> 来转换为图标. 但是, 如果省略 <em>OutImageType</em> 参数, 图标将转换回位图.</p>
+    <p><strong>GDI+:</strong> 尝试使用 GDI+ 的方式载入图像. 例如, <code>"GDI+ w100"</code>.</p>
   </dd>
   
-  <dt>&amp;ImageType</dt>
+  <dt>&amp;OutImageType</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
-    <p>变量的引用, 在这个变量中存储了一个表示返回句柄类型的数字: 0(IMAGE_BITMAP), 1(IMAGE_ICON) 或 2(IMAGE_CURSOR).</p>
-    <p>如果忽略该参数, 则返回值始终是位图句柄(图标/光标类型会按需转换). 这是因为可靠地使用或删除位图/图标/光标句柄需要知道它是哪种类型.</p>
+    <p>如果省略, 将不存储相应的值, 并且返回值始终是位图句柄(图标/光标类型会按需转换). 这是因为可靠地使用或删除位图/图标/光标句柄需要知道它是哪种类型. 否则, 指定一个变量的引用, 在这个变量中存储了一个表示返回句柄类型的数字: 0(IMAGE_BITMAP), 1(IMAGE_ICON) 或 2(IMAGE_CURSOR).</p>
+    <p></p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>函数根据指定的图片或图标返回<a href="../misc/ImageHandles.htm">位图或图标句柄</a>.</p>
+<p>这个函数返回一个<a href="../misc/ImageHandles.htm">位图或图标句柄</a>, 这取决于是否指定了图片或图标, 以及是否存在 <em>&amp;OutImageType</em> 参数.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>LoadPicture 也支持<a href="../misc/ImageHandles.htm">句柄语法</a>, 如从一个已载入到内存中的图标或位图创建一个可调整大小的图像, 或将一个图标通过忽略 <em>ImageType</em> 转换成位图.</p>
+<p>LoadPicture 也支持<a href="../misc/ImageHandles.htm">句柄语法</a>, 如从一个已载入到内存中的图标或位图创建一个可调整大小的图像, 或将一个图标通过忽略 <em>&amp;OutImageType</em> 转换成位图.</p>
 <p>如果图像需要从内存中释放, 请调用任何适合于句柄类型的函数.</p>
-<pre>if (not ImageType)  <em>; IMAGE_BITMAP(0) 或 ImageType 参数省略.</em>
+<pre>if (not OutImageType)  <em>; IMAGE_BITMAP(0) 或 OutImageType 参数省略.</em>
     DllCall("DeleteObject", "ptr", Handle)
-else if (ImageType = 1)  <em>; IMAGE_ICON</em>
+else if (OutImageType = 1)  <em>; IMAGE_ICON</em>
     DllCall("DestroyIcon", "ptr", Handle)
-else if (ImageType = 2)  <em>; IMAGE_CURSOR</em>
+else if (OutImageType = 2)  <em>; IMAGE_CURSOR</em>
     DllCall("DestroyCursor", "ptr", Handle)</pre>
 
 <h2 id="Related">相关</h2>

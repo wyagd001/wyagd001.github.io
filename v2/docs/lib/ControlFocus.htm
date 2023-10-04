@@ -15,37 +15,18 @@
 <p>设置输入焦点到窗口的指定控件上.</p>
 
 <pre class="Syntax"><span class="func">ControlFocus</span> Control <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+
 <h2 id="Parameters">参数</h2>
 <dl>
-
   <dt>Control</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
     <p>控件的 ClassNN, 文本或 HWND, 或具有 <code>Hwnd</code> 属性的对象. 有关详情, 请参阅 <a href="Control.htm#Parameter">Control 参数</a>.</p>
   </dd>
-
-  <dt>WinTitle</dt>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>识别目标窗口的窗口标题或其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
-  </dd>
-
-  <dt>WinText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>如果存在, 此参数必须是目标窗口的单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON, 那么会检测隐藏文本元素.</p>
-  </dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>标题中含有此参数值的窗口将被排除.</p>
-  </dd>
-
-  <dt>ExcludeText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>文本中含有此参数值的窗口将被排除.</p>
+    <p>如果这些都为空或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
   </dd>
 
 </dl>
@@ -55,7 +36,7 @@
 
 <h2 id="Remarks">备注</h2>
 <p>要让设置生效, 控件所在的窗口一般不能处于最小化或隐藏状态.</p>
-<p>为了提高可靠性, 每次使用此函数后都会自动执行延迟. 该延迟可以通过 <a href="SetControlDelay.htm">SetControlDelay</a> 来更改.</p>
+<p>为了提高可靠性, 每次使用此函数后都会自动执行延迟. 该延迟可以通过 <a href="SetControlDelay.htm">SetControlDelay</a> 或者给 <a href="../Variables.htm#ControlDelay">A_ControlDelay</a> 赋值来更改. 有关详情, 请参阅 <a href="SetControlDelay.htm#Remarks">SetControlDelay 备注</a>.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
 <p id="WM_NEXTDLGCTL">当控件被聚焦以响应用户输入(例如按 Tab 键) 时, 对话管理器应用附加效果, 这些效果独立于具有焦点的控件. 这些效果不是由 ControlFocus 应用的, 因此以下限制适用:</p>
 <ul>
@@ -65,8 +46,8 @@
 </ul>
 <p><a href="https://learn.microsoft.com/windows/win32/dlgbox/wm-nextdlgctl">WM_NEXTDLGCTL</a> 消息可以用来聚焦控件并应用这些附加效果. 例如:</p>
 <pre>WinExist("A") <em>; 将最后找到的窗口设置为活动窗口</em>
-ControlGet, hWndControl, Hwnd,, Button1  <em>; 获取第一个按钮的 HWND</em>
-SendMessage, 0x0028, hWndControl, True  <em>; 0x0028 对应 WM_NEXTDLGCTL</em></pre>
+hWndControl := ControlGetHwnd("Button1")  <em>; 获取第一个按钮的 HWND</em>
+SendMessage 0x0028, hWndControl, True  <em>; 0x0028 对应 WM_NEXTDLGCTL</em></pre>
 
 <h2 id="Related">相关</h2>
 <p><a href="SetControlDelay.htm">SetControlDelay</a>, <a href="ControlGetFocus.htm">ControlGetFocus</a>, <a href="Control.htm">控件函数</a></p>
@@ -74,7 +55,7 @@ SendMessage, 0x0028, hWndControl, True  <em>; 0x0028 对应 WM_NEXTDLGCTL</em></
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 设置焦点到 OK 按钮上.</p>
-<pre>ControlFocus "OK", "Some Window Title"  <em>; 设置焦点到 OK 按钮上</em></pre>
+<pre>ControlFocus "OK", "Some Window Title"</pre>
 </div>
 
 </body>

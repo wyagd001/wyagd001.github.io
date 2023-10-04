@@ -22,7 +22,7 @@
   <dt>StartingFolder</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>如果为空或省略, 则对话框的初始选择为用户的我的文档文件夹(或可能是我的电脑). 可以指定 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>, 如 <code>"::{20d04fe0-3aea-1069-a2d8-08002b30309d}"</code>(即我的电脑) 来从特定的专用文件夹开始导航.</p>
+      <p>如果为空或省略, 则对话框的初始选择为用户的我的文档文件夹或可能是此电脑(以前是我的电脑或计算机)). 可以指定 <a href="../misc/CLSID-List.htm">CLSID 文件夹</a>, 如 <code>"::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"</code>(即此电脑) 来从特定的专用文件夹开始导航.</p>
       <p>否则, 此参数最常见的用法是星号后面紧跟着初始选择的驱动器或文件夹的绝对路径. 例如, <code>"*C:\"</code> 会初始选择 C 驱动器. 同样地, <code>"*C:\My Folder"</code> 会初始选择这个特殊的文件夹.</p>
       <p>星号表示允许用户从起始文件夹向上导航(接近根目录). 如果没有星号, 则强制用户在 <em>StartingFolder</em>(或 <em>StartingFolder</em> 自身) 中选择文件夹. 省略星号的一个好处是最初 <em>StartingFolder</em> 会显示为树形展开状态, 这样可以节省用户点击前面加号的时间.</p>
       <p>如果有星号, 向上导航也可以选择限制在桌面以外的文件夹中. 这是通过在星号前面加上最顶层文件夹的绝对路径, 后面正好是一个空格或制表符来实现的. 例如, <code>"C:\My Folder *C:\My Folder\Projects"</code> 将不允许用户导航到比 C:\My Folder 更上级的文件夹(不过初始选择可以是 C:\My Folder\Projects):</p>
@@ -31,9 +31,9 @@
   <dt>Options</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-      <p>下列数字的其中一个:</p>
-      <p><strong>0</strong>: 禁用下面所有选项.</p>
-      <p><strong>1</strong>(默认): 提供允许用户新建文件夹的按钮.</p>
+      <p>如果省略, 则默认为 1. 否则, 请指定下列数字的之一:</p>
+      <p><strong>0:</strong> 禁用下面所有选项.</p>
+      <p><strong>1:</strong> 提供允许用户新建文件夹的按钮.</p>
       <p><strong>加 2</strong> 到上面的数字来提供允许用户输入文件夹名称的编辑区域. 例如, 此参数值为 3 表示同时提供编辑区域和 "新建文件夹" 按钮.</p>
       <p id="NewDialog"><strong>加 4</strong> 到上面的数字来忽略 BIF_NEWDIALOGSTYLE 属性. 加 4 确保了 DirSelect 即使在像 WinPE 或 BartPE 这样的预安装环境中也能正常工作. 然而, 这样阻止了 "新建文件夹" 按钮的出现.</p>
       <p>如果用户在编辑区域中输入了无效的文件夹名称, 则 <em>SelectedFolder</em> 会被设置为在导航树中选择的文件夹而不是用户输入的内容.</p>
@@ -42,7 +42,7 @@
   <dt>Prompt</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>显示在窗口中用来提示用户操作的文本. 如果省略或为空, 则它默认为 <code>"Select Folder - " <a href="../Variables.htm#ScriptName">A_ScriptName</a></code>(即当前脚本的名称).</p>
+      <p>如果为空或省略, 则默认为 <code>"Select Folder - " <a href="../Variables.htm#ScriptName">A_ScriptName</a></code>(即当前脚本的名称). 否则, 指定显示在窗口中用来提示用户操作的文本. </p>
   </dd>
 
 </dl>
@@ -60,7 +60,8 @@
 
 <h2 id="Related">相关</h2>
 <p><a href="FileSelect.htm">FileSelect</a>, <a href="MsgBox.htm">MsgBox</a>, <a href="InputBox.htm">InputBox</a>, <a href="ToolTip.htm">ToolTip</a>, <a href="Gui.htm">GUI</a>, <a href="../misc/CLSID-List.htm">CLSID List</a>, <a href="DirCopy.htm">DirCopy</a>, <a href="DirMove.htm">DirMove</a>, <a href="SplitPath.htm">SplitPath</a></p>
-<p>此外, 操作系统提供了标准的对话框让用户选取字体, 颜色或图标. 使用 <a href="DllCall.htm">DllCall</a> 可以显示这些对话框, 如 <a href="https://github.com/majkinetor/mm-autohotkey/tree/master/Dlg">GitHub</a> 所示.</p>
+<p>此外, 操作系统提供了标准的对话框让用户选取字体, 颜色或图标. 这些对话框可以通过 <a href="DllCall.htm">DllCall</a> 与 <a href="https://learn.microsoft.com/previous-versions/windows/desktop/legacy/ms646914(v=vs.85)">comdlg32\ChooseFont</a>, <a href="https://learn.microsoft.com/previous-versions/windows/desktop/legacy/ms646912(v=vs.85)">comdlg32\ChooseColor</a> 或 <a href="https://learn.microsoft.com/windows/win32/api/shlobj_core/nf-shlobj_core-pickicondlg">shell32\PickIconDlg</a> 的组合来显示. 请在论坛中搜索示例.</p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 允许用户选择一个文件夹, 并提供一个编辑字段和 "新建文件夹" 按钮.</p>
@@ -72,8 +73,8 @@ else
 </div>
 
 <div class="ex" id="ExCLSID">
-<p><a class="ex_number" href="#ExCLSID"></a> <a href="../misc/CLSID-List.htm">CLSID</a> 例子. 允许用户选择 "我的电脑" 目录下的文件夹.</p>
-<pre>SelectedFolder := DirSelect("::{20d04fe0-3aea-1069-a2d8-08002b30309d}")  <em>; 我的电脑.</em></pre>
+<p><a class="ex_number" href="#ExCLSID"></a> <a href="../misc/CLSID-List.htm">CLSID</a> 例子. 允许用户选择此电脑(以前是我的电脑或计算机) 目录下的文件夹.</p>
+<pre>SelectedFolder := DirSelect("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}")  <em>; 我的电脑.</em></pre>
 </div>
 
 </body>

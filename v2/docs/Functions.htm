@@ -16,14 +16,36 @@
 <ul>
   <li><a href="#intro">介绍和简单示例</a></li>
   <li><a href="#param">参数</a></li>
-  <li><a href="#optional">可选参数</a></li>
+  <li><a href="#ByRef">ByRef 参数</a></li>
+  <li><a href="#optional">可选参数</a>
+    <ul>
+      <li><a href="#unset">Unset 参数</a></li>
+    </ul>
+  </li>
   <li><a href="#return">返回值给调用者</a></li>
-  <li><a href="#Variadic">可变参数函数</a></li>
+  <li><a href="#Variadic">可变参数函数</a>
+    <ul>
+      <li><a href="#VariadicCall">可变参数函数调用</a></li>
+    </ul>
+  </li>
+  <li><a href="#Locals">局部和全局变量</a>
+    <ul>
   <li><a href="#Local">局部变量</a></li>
+      <li><a href="#Global">全局变量</a></li>
+      <li><a href="#static">静态变量</a></li>
+      <li><a href="#More_about_locals_and_globals">更多关于局部和全局</a></li>
+    </ul>
+  </li>
   <li><a href="#DynCall">动态调用函数</a></li>
   <li><a href="#ShortCircuit">短路型布尔值的计算</a></li>
-  <li><a href="#nested">嵌套函数</a></li>
+  <li><a href="#nested">嵌套函数</a>
+    <ul>
+      <li><a href="#static-functions">静态函数</a></li>
+      <li><a href="#closures">闭包</a></li>
+    </ul>
+  </li>
   <li><a href="#remarks">Return, Exit 及一般说明</a></li>
+  <li><a href="#Style_and_Naming_Conventions">样式和命名约定</a></li>
   <li><a href="#include">使用 #Include 在多个脚本间共享函数</a></li>
   <li><a href="#BuiltIn">内置函数</a></li>
 </ul>
@@ -45,7 +67,13 @@ Add 2, 3  <em>; 如果在行的开头使用, 括号可以省略.</em></pre>
 
 <h2 id="param">参数</h2>
 <p>定义函数时, 函数的参数都在其名称后的括号中列出(函数名和左括号之间不能有空格). 如果函数不接受任何参数, 请把括号内留空; 例如: <code>GetCurrentTimestamp()</code>.</p>
-<p id="ByRef"><strong>ByRef 参数</strong>: 从函数的角度看, 参数本质上是<a href="#Local">局部变量</a>, 除非它们被定义为 <em>ByRef</em> 如下例所示:</p>
+<p>已知限制:</p>
+<ul>
+  <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>MyFunc(Var, Var++)</code> 会意外地传递 1 和 0, 因为在函数调用执行之前, 第一个 <em>Var</em> 不会被解引用. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
+</ul>
+
+<h2 id="ByRef">ByRef 参数</h2>
+<p>从函数的角度看, 参数本质上是<a href="#Local">局部变量</a>, 除非它们被定义为 <em>ByRef</em> 如下例所示:</p>
 <pre>a := 1, b := 2
 Swap(&amp;a, &amp;b)
 MsgBox a ',' b
@@ -69,8 +97,9 @@ Swap(&amp;Left, &amp;Right)
 <p>已知限制:</p>
 <ul>
   <li>不能将对象的属性(如 <code>foo.bar</code>), <a href="lib/A_Clipboard.htm">A_Clipboard</a>(剪贴板) 或任何其他<a href="Variables.htm#BuiltIn">内置变量</a>构造成一个 VarRef. 所以这些不能作为 <em>ByRef</em> 传递给函数.</li>
-  <li>如果一个参数在函数调用中被解析为一个变量(例如 <code>Var</code> 或 <code>++Var</code> 或 <code>Var*=2</code>), 它左边或右边的其他参数可能在它被传递给函数前修改这个变量. 例如, 当 <em>Var</em> 初始为 0 时 <code>MyFunc(Var, Var++)</code> 会意外地传递 1 和 0, 因为在函数调用执行之前, 第一个 Var 不会被解引用. 因为这种行为是违反常规的, 所以可能在将来的版本中改变.</li>
+  <li id="NoIsByRef">如果参数是可选的, 则无法确定参数引用的变量是新创建的局部变量还是调用者提供的变量. 一种替代方法是使用非 ByRef 参数, 但传递给它一个 <a href="Concepts.htm#variable-references">VarRef</a>, 并让函数<a href="Variables.htm#deref">显式地解引用它</a>或将其传递给另一个函数的 ByRef 参数(不使用 <code>&amp;</code> 操作符).</li>
 </ul>
+
 <h2 id="optional">可选参数</h2>
 <p>在定义函数时, 可以把它的一个或多个参数标记为可选的.</p>
 <p>在参数后追加 <code>:=</code> 后跟文本的数字, 加引号的/原义的字符串, 如 "fox" 或 "", 或一个表达式, 该表达式应该在每次需要初始化参数时使用其默认值. 例如, <code>X:=[]</code> 每次都会创建一个新的 Array(数组).</p>
@@ -216,7 +245,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
     <strong>global</strong> DataDir := Dir  <em>; 声明与赋值相结合, 如<a href="#DeclareInit">下</a>所述.</em>
 }
 </pre>
-<p id="AssumeGlobal"><strong>假定-全局模式</strong>: 如果函数需要访问或创建大量的全局变量, 通过在函数的首行使用单词 "global", 从而假定其所有变量都是全局的(参数除外). 例如:</p>
+<p id="AssumeGlobal"><strong>假定-全局模式:</strong> 如果函数需要访问或创建大量的全局变量, 通过在函数的首行使用单词 "global", 从而假定其所有变量都是全局的(参数除外). 例如:</p>
 <pre>SetDefaults()
 {
     <strong>global</strong>
@@ -235,7 +264,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 }</pre>
 <p id="InitStatic">静态变量可以在声明的同一行初始化, 方法是在它后面跟 <code>:=</code> 和任意<a href="Variables.htm#Expressions">表达式</a>. 例如: <code>static X:=0, Y:="fox"</code>. 静态声明的计算与 <a href="#Local">local</a> 声明相同, 只是在静态初始化器(或组合初始化器组) 被成功计算后, 它将有效地从控制流中移除, 并且不会再执行第二次.</p>
 <p>可以将套嵌函数<a href="#static-functions">声明为静态</a>, 以阻止他们捕获外部函数的非静态局部变量.</p>
-<p id="AssumeStatic"><strong>假定-静态模式</strong>: 函数的第一行是单词 "static", 将函数定义为假定-静态模式, 假定其所有未声明变量都是静态的(参数除外). 例如:</p>
+<p id="AssumeStatic"><strong>假定-静态模式:</strong> 函数的第一行是单词 "static", 将函数定义为假定-静态模式, 假定其所有未声明变量都是静态的(参数除外). 例如:</p>
 <pre>GetFromStaticArray(WhichItemNumber)
 {
     <strong>static</strong>
@@ -265,8 +294,8 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>其他表达式也可以作为函数调用的目标, 包括<a href="Variables.htm#deref">双重解引</a>. 例如, <code>MyArray[1]()</code> 将调用 MyArray 的第一个元素所包含的函数, 而 <code>%MyVar%()</code> 将调用变量, 其 <em>名称</em> 包含在 MyVar 中. 换句话说, 首先对参数列表前面的表达式进行计算, 得到<a href="misc/Functor.htm">函数对象</a>, 然后调用该对象.</p>
 <p>如果目标值不是可以被调用的类型, 则抛出 <a href="lib/Error.htm">Error</a>:</p>
 <ul>
-  <li>如果目标值不是可以被调用的类型, 则抛出 <a href="lib/Error.htm#MethodError">MethodError</a>. 任何带有 Call 方法的值都可以被调用, 所以可以使用 <code>HasMethod(value, "Call")</code> 来避免这个错误.</li>
-  <li>传递过少或太多的参数, 这通常可以通过检查函数的 <a href="lib/Func.htm#MinParams">MinParams</a>, <a href="lib/Func.htm#MaxParams">MaxParams</a> 和 <a href="lib/Func.htm#IsVariadic">IsVariadic</a> 属性来避免.</li>
+  <li>如果目标值不是可以被调用的类型, 则抛出 <a href="lib/Error.htm#MethodError">MethodError</a>. 任何带有 Call 方法的值都可以被调用, 所以可以使用 <code>HasMethod(value, "Call")</code> 或 <code>HasMethod(value)</code> 来避免这个错误.</li>
+  <li>传递过少或太多的参数, 这通常可以直接或通过调用 <code>HasMethod(value,, N)</code> 来检查函数的 <a href="lib/Func.htm#MinParams">MinParams</a>, <a href="lib/Func.htm#MaxParams">MaxParams</a> 和 <a href="lib/Func.htm#IsVariadic">IsVariadic</a> 属性来避免, 其中 <em>N</em> 是将传递给函数的参数的数量.</li>
   <li>传递<a href="Concepts.htm#variable-references">变量引用(VarRef)</a> 以外的东西给 <a href="#ByRef">ByRef</a> 或 OutputVar 参数, 这可以通过使用 <a href="lib/Func.htm#IsByRef">IsByRef 方法</a>来避免.</li>
 </ul>
 <p>在调用函数之前, 函数的调用者一般应该知道每个参数的含义以及有多少个参数. 但是, 对于动态调用来说, 函数通常是为了适应函数调用而编写的, 在这种情况下, 失败的原因可能是函数定义的错误而不是参数值的错误.</p>

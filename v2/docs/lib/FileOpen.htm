@@ -44,8 +44,8 @@ FileOpen("**", "w")  <em>; 标准错误</em></pre>
   <dt>Encoding</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-    <p>如果文件没有 UTF-8 或 UTF-16 <a href="https://en.wikipedia.org/wiki/Byte_order_mark">字节顺序标记</a>, 或者使用了 <code>h</code>(handle) 标志, 读写文件时使用的代码页(带字节顺序标记的文件 AutoHotkey 自动识别, 指定的 <i>Encoding</i> 无效). 如果省略本参数, 则使用 <a href="../Variables.htm#FileEncoding">A_FileEncoding</a> 的当前值.</p>
-   <p>有关可能值的列表, 请参阅 <a href="FileEncoding.htm">FileEncoding</a>.</p>
+    <p>如果省略, 将使用默认编码(由 <a href="FileEncoding.htm">FileEncoding</a> 或 CP0 设置). 如果为空, 则默认为 CP0(系统默认的 ANSI 代码页). 否则, 指定用于文本 I/O 的编码或代码页, 例如 <code>"UTF-8"</code>, <code>"UTF-16"</code>, <code>"CP936"</code> 或 <code>936</code>.</p>
+   <p>如果文件包含 UTF-8 或 UTF-16 字节顺序标记(BOM), 或者如果使用 <code>h</code>(句柄) 标记, 则该参数和默认编码将被忽略, 除非文件以只写访问方式打开(即文件的先前内容被丢弃).</p>
   </dd>
 
 </dl>
@@ -88,7 +88,7 @@ FileOpen("**", "w")  <em>; 标准错误</em></pre>
     <td class="center">h</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
-    <td>表示 <i>Filename</i> 是包装在对象中的文件句柄. 忽略共享模式标志, 并且不检查句柄表示的文件或流的字节顺序标记. 当文件对象销毁时, 当文件对象销毁时, 文件句柄 <b>不会</b> 自动关闭并且调用 <a href="File.htm#Close">Close</a> 没有效果. 注意当 <i>Filename</i> 是非搜寻设备(例如管道或通信设备) 的句柄时, 不应该使用 <a href="File.htm#Seek">Seek</a>, <a href="File.htm#Pos">Pos</a> 和 <a href="File.htm#Length">Length</a>.</td>
+    <td>表示 <i>Filename</i> 是包装在对象中的文件句柄. 忽略共享模式标志, 并且不检查句柄表示的文件或流的字节顺序标记. 当文件对象销毁时, 当文件对象销毁时, 文件句柄 <u>不会</u> 自动关闭并且调用 <a href="File.htm#Close">Close</a> 没有效果. 注意当 <i>Filename</i> 是非搜寻设备(例如管道或通信设备) 的句柄时, 不应该使用 <a href="File.htm#Seek">Seek</a>, <a href="File.htm#Pos">Pos</a> 和 <a href="File.htm#Length">Length</a>.</td>
   </tr>
 </table>
 
@@ -163,8 +163,8 @@ FileOpen("**", "w")  <em>; 标准错误</em></pre>
 
 <h2 id="Remarks">备注</h2>
 <p><a href="File.htm#ReadLine">File.ReadLine</a> 始终支持 <code>`n</code>, <code>`r`n</code> 和 <code>`r</code> 作为行结束符, 并且不将它们包含在返回值中, 无论是否使用 <code>`r</code> 或 <code>`n</code> 选项. 这些选项仅影响 <a href="File.htm#Read">File.Read</a> 返回的或由 <a href="File.htm#Write">File.Write</a> 或 <a href="File.htm#WriteLine">File.WriteLine</a> 写入的文本中的行结束符的转换.</p>
-<p>当创建 UTF-8 或 UTF-16 文件时, 会写入字节顺序标记到文件中, <b>除非</b> <i>Encoding</i>(或当参数 <i>Encoding</i> 省略时, 则使用 <a href="FileEncoding.htm">A_FileEncoding</a>) 包含 <code>UTF-8-RAW</code> 或 <code>UTF-16-RAW</code>.</p>
-<p>当以读取方式打开含有 UTF-8 或 UTF-16 字节顺序标记(BOM) 的文件时, 会把文件指针放置到这个标志后, 来从输出中排除 BOM. 因此, 在刚刚打开这样的文件时 <code>File.Pos</code> 可能为 3 或 2.</p>
+<p>当创建 UTF-8 或 UTF-16 文件时, 会写入字节顺序标记(BOM) 到文件中, <u>除非</u> <em>Encoding</em> or the default encoding (as set by <a href="FileEncoding.htm">FileEncoding</a>) is <code>"UTF-8-RAW"</code> or <code>"UTF-16-RAW"</code>.</p>
+<p>当以读取方式打开含有 UTF-8 或 UTF-16 字节顺序标记(BOM) 的文件时, 会把文件指针放置到这个标志后, 来从输出中排除 BOM. 因此, 在刚刚打开这样的文件时 <a href="File.htm#Pos">File.Pos</a> 可能为 3 或 2.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="FileEncoding.htm">FileEncoding</a>, <a href="File.htm">文件对象</a>, <a href="FileRead.htm">FileRead</a></p>

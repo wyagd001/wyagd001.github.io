@@ -30,16 +30,16 @@
   <dt>Options</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>指定零个或多个下列选项. 在选项间使用空格分隔(例如 <code>"C Fast"</code>).</p>
-    <p id="Fast"><strong>Fast</strong> 或 <strong>F</strong>: 避免每次调用 <em>Function</em> 时都启动新的<a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, 但必须避免调用 <em>Address</em> 的线程发生变化(例如当回调函数被传入的消息触发). 这是因为 <em>Function</em> 能改变在它被调用时正在运行的线程的全局设置(例如 <a href="../Variables.htm#LastError">A_LastError</a> 和<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>). 有关详情, 请参阅<a href="#Threads">备注</a>.</p>
-    <p><strong>CDecl</strong> 或 <strong>C</strong>: 让 <em>Address</em> 遵循 "C" 调用约定. 此选项通常省略, 因为在回调函数中使用标准调用约定更为常用. 64 位版本的 AutoHotkey 会忽略这个选项, 它使用 x64 调用约定.</p>
-    <p><strong>&amp;</strong>: 将参数列表的地址(单个整数) 传递给 <em>Function</em>, 而不是传递给各个参数. 可以使用 <a href="NumGet.htm">NumGet</a> 检索参数值. 当使用标准的 32 位调用约定时, <em>ParamCount</em> 必须以 DWORDs 指定参数列表的大小(字节数除以 4).</p>
+    <p>如果为空或省略, 每次调用 <em>Function</em> 时, 都会启动一个新<a href="../misc/Threads.htm">线程</a>, 使用标准调用约定, 并将参数单独传递给 <em>Function</em>. 否则, 请指定一个或多个下列选项. 在选项间使用空格分隔(例如 <code>"C Fast"</code>).</p>
+    <p id="Fast"><strong>Fast</strong> 或 <strong>F:</strong> 避免每次调用 <em>Function</em> 时都启动新的<a href="../misc/Threads.htm">线程</a>. 尽管这样执行的更好, 但必须避免调用 <em>Address</em> 的线程发生变化(例如当回调函数被传入的消息触发). 这是因为 <em>Function</em> 能改变在它被调用时正在运行的线程的全局设置(例如 <a href="../Variables.htm#LastError">A_LastError</a> 和<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>). 有关详情, 请参阅<a href="#Threads">备注</a>.</p>
+    <p><strong>CDecl</strong> 或 <strong>C:</strong> 让 <em>Address</em> 遵循 "C" 调用约定. 此选项通常省略, 因为在回调函数中使用标准调用约定更为常用. 64 位版本的 AutoHotkey 会忽略这个选项, 它使用 x64 调用约定.</p>
+    <p><strong>&amp;:</strong> 将参数列表的地址(单个整数) 传递给 <em>Function</em>, 而不是传递给各个参数. 可以使用 <a href="NumGet.htm">NumGet</a> 检索参数值. 当使用标准的 32 位调用约定时, <em>ParamCount</em> 必须以 DWORDs 指定参数列表的大小(字节数除以 4).</p>
   </dd>
 
   <dt>ParamCount</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p><em>Address</em> 的调用者会传递给它的参数数目. 如果省略, 则它默认为 <code><i>Function</i>.<a href="Func.htm#MinParams">MinParams</a></code>, 这通常是 <em>Function</em> <a href="../Functions.htm#define">定义</a>中强制参数的数目. 在这两种情况中, 必须确保调用者准确传递此数目的参数.</p>
+    <p>如果为空或省略, 则它默认为 <code><i>Function</i>.<a href="Func.htm#MinParams">MinParams</a></code>, 这通常是 <em>Function</em> <a href="../Functions.htm#define">定义</a>中强制参数的数目. 否则, 请指定 <em>Address</em> 的调用者会传递给它的参数数目. 在这两种情况中, 必须确保调用者准确传递此数目的参数.</p>
   </dd>
 
 </dl>
@@ -57,12 +57,13 @@
   <li><em>ParamCount</em> 省略, 并且: 1) <em>Function</em> 没有 <code>MinParams</code> 属性; 或 2) <code>&amp;</code> 选项与标准 32 位调用约定一起使用.</li>
 </ul>
 
-<h2 id="The_Callback_Functions_Parameters">回调函数的参数</h2>
-<p>分配给回调地址的<a href="../Functions.htm">函数</a>最多可以接受 31 个参数.  允许使用<a href="../Functions.htm#optional">可选参数</a>, 当多个调用者调用该函数时, 这非常有用.</p>
+<a id="The_Callback_Functions_Parameters"></a>
+<h2 id="The_Functions_Parameters"><em>Function</em> 的参数</h2>
+<p>分配给回调地址的<a href="../Functions.htm">函数</a>最多可以接受 31 个参数. 允许使用<a href="../Functions.htm#optional">可选参数</a>, 当多个调用者调用 <em>Function</em> 时, 这非常有用.</p>
 <p>正确地解析参数需要了解 x86 调用约定是如何工作的. 由于 AutoHotkey 没有类型化参数, 因此假定回调的参数列表由整数组成, 可能需要进行一些重新解释.</p>
 
 <p><strong>AutoHotkey 32-bit:</strong> 所有传入参数都是无符号 32 位整数. 较小的类型被填充为 32 位, 而较大的类型被分割为一系列 32 位的参数.</p>
-<p>如果传入的参数是一个有符号整数, 任何负数都可以通过下面的例子来表示:</p>
+<p>如果传入的参数是一个有符号整数, 任何负数都可以通过下面的方法来表示:</p>
 <pre><em>; 方法 #1</em>
 if (wParam &gt; 0x7FFFFFFF)
     wParam := -(~wParam) - 1
@@ -83,7 +84,7 @@ wParam := wParam &lt;&lt; 32 &gt;&gt; 32</pre>
 <pre>MyString := StrGet(MyParameter)</pre>
 <p>如果某个传入参数为结构的地址, 则可以参照 <a href="DllCall.htm#struct">DllCall 结构</a>中描述的步骤提取其中的各个成员.</p>
 
-<p id="Indirect"><strong>按址接收参数:</strong> 如果使用 <code>&amp;</code> 选项, 函数接收第一个回调参数的 <i>地址</i>. 例如:</p>
+<p id="Indirect"><strong>按址接收参数:</strong> 如果使用 <code>&amp;</code> 选项, <em>Function</em> 接收第一个回调参数的 <i>地址</i>. 例如:</p>
 <pre>
 callback := CallbackCreate(TheFunc, "F&amp;", 3)  <em>; 32 位中必须指定参数列表的大小.</em>
 DllCall(callback, "float", 10.5, "int64", 42)
@@ -92,13 +93,14 @@ TheFunc(params) {
 }</pre>
 <p>32 位程序中的大多数回调都使用 <em>stdcall</em> 调用约定, 该约定需要固定数量的参数. 在这种情况下, 必须将 <em>ParamCount</em> 设置为参数列表的大小, 其中 Int64 和 Double 都计为两个 32 位参数. 使用 <em>Cdecl</em> 或 64 位调用约定时, <em>ParamCount</em> 无效.</p>
 
-<h2 id="What_the_Function_Should_Return">函数应该 <em>Return</em> 什么</h2>
-<p>如果函数使用不带任何参数的 <a href="Return.htm">Return</a>, 或者指定空白值, 如 ""(或者根本不使用 Return), 则将 0 返回给回调的调用者. 否则, 函数应该返回一个整数, 然后将其返回给调用者. AutoHotkey 32-bit 将返回值截断为 32 位, 而 AutoHotkey 64-bit 则支持 64 位返回值. 不支持返回大于此值的结构(按值).</p>
+<a id="What_the_Function_Should_Return"></a>
+<h2 id="What_Function_Should_Return"><em>Function</em> 应该返回什么</h2>
+<p>如果 <em>Function</em> 使用不带任何参数的 <a href="Return.htm">Return</a>, 或者指定空白值, 如 ""(或者根本不使用 Return), 则将 0 返回给回调的调用者. 否则, 函数应该返回一个整数, 然后将其返回给调用者. AutoHotkey 32-bit 将返回值截断为 32 位, 而 AutoHotkey 64-bit 则支持 64 位返回值. 不支持返回大于此值的结构(按值).</p>
 
 <h2 id="Threads">Fast vs. Slow</h2>
-<p>默认/慢速模式使该函数以默认值(如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>) 重新启动. 这些默认值可以在<a href="../Scripts.htm#auto">脚本启动</a>中更改.</p>
-<p>与之相比, <a href="#Fast">快速模式</a>会继承在调用函数时正在运行的<a href="../misc/Threads.htm">线程</a>的全局设置. 而且, 函数对全局设置的任何修改(包括<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在<a href="../misc/Threads.htm">当前线程</a>生效. 因此, 快速模式应该只在确切知道函数会被哪个线程调用时才使用.</p>
-<p>要避免被自己(或其他任何线程) 中断, 回调可以在它的首行使用 <a href="Critical.htm">Critical</a>. 但是, 通过小于 0x0312 消息达到的间接调用函数时, 这并不是完全有效的(增加 Critical 的 <a href="Critical.htm#Interval">interval</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止执行一些可能导致间接调用它自己的动作, 例如调用 <a href="SendMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
+<p>默认/慢速模式使该 <em>Function</em> 以默认值(如 <a href="SendMode.htm">SendMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a>) 重新启动. 这些默认值可以在<a href="../Scripts.htm#auto">脚本启动</a>中更改.</p>
+<p>与之相比, <a href="#Fast">快速模式</a>会继承在调用 <em>Function</em> 时正在运行的<a href="../misc/Threads.htm">线程</a>的全局设置. 而且, <em>Function</em> 对全局设置的任何修改(包括<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>) 都会在<a href="../misc/Threads.htm">当前线程</a>生效. 因此, 快速模式应该只在确切知道 <em>Function</em> 会被哪个线程调用时才使用.</p>
+<p>要避免被自己(或其他任何线程) 中断, 回调可以在它的首行使用 <a href="Critical.htm">Critical</a>. 但是, 通过小于 0x0312 消息达到的间接调用 <em>Function</em> 时, 这并不是完全有效的(增加 Critical 的 <a href="Critical.htm#Interval">interval</a> 也许有帮助). 而且, <a href="Critical.htm">Critical</a> 不会阻止 <em>Function</em> 执行一些可能导致间接调用它自己的动作, 例如调用 <a href="SendMessage.htm">SendMessage</a> 或 <a href="DllCall.htm">DllCall</a>.</p>
 
 <h2 id="CallbackFree">CallbackFree</h2>
 <p>删除回调函数并释放它对函数对象的引用.</p>
@@ -107,7 +109,7 @@ TheFunc(params) {
 <p>但是, 如果回调函数持有的函数对象是动态的(例如, <a href="../Functions.htm#closures">闭包</a>或<a href="../misc/Functor.htm#BoundFunc">绑定函数</a>), 当不再需要回调函数时, 释放回调函数可能是特别重要的; 否则, 函数对象将不会被释放.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="DllCall.htm">DllCall</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort 回调</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">窗口消息列表</a>, <a href="../misc/Threads.htm">线程</a></p>
+<p><a href="DllCall.htm">DllCall</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="OnExit.htm">OnExit</a>, <a href="OnClipboardChange.htm">OnClipboardChange</a>, <a href="Sort.htm#callback">Sort 回调</a>, <a href="Critical.htm">Critical</a>, <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, <a href="../Functions.htm">函数</a>, <a href="../misc/SendMessageList.htm">Windows 消息</a>, <a href="../misc/Threads.htm">线程</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExWinList">

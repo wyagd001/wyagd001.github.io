@@ -15,45 +15,25 @@
 <p>改变指定窗口的位置和/或大小.</p>
 
 <pre class="Syntax"><span class="func">WinMove</span> <span class="optional">X, Y, Width, Height, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+
 <h2 id="Parameters">参数</h2>
 <dl>
-
   <dt>X, Y</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>目标窗口新位置的左上角的 X 和 Y 坐标(单位为像素). 屏幕左上角坐标为 0, 0.</p>
-    <p>如果这些是函数给出的唯一参数, 那么使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>为目标窗口.</p>
-    <p>或者, 可以省略 X 和/或 Y, 此时使用当前位置.</p>
+    <p>如果其中一个为空或省略, 则不会更改该维度中的位置. 否则, 请指定目标窗口新位置的左上角的 X 和 Y 坐标(单位为像素). 屏幕左上角坐标为 0, 0.</p>
   </dd>
 
   <dt>Width, Height</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>目标窗口的新宽度和高度(单位为像素). 如果其中一个省略或为空, 那么在这个维度中的大小将保持不变.</p>
+    <p>如果其中一个省略, 则不会更改该维度中的尺寸. 否则, 请指定目标窗口的新宽度和高度(单位为像素).</p>
   </dd>
 
-  <dt>WinTitle</dt>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>识别目标窗口的窗口标题或其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
-  </dd>
-
-  <dt>WinText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>如果存在, 此参数必须是目标窗口的单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON, 那么会检测隐藏文本元素.</p>
-  </dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>标题中含有此参数值的窗口将被排除.</p>
-  </dd>
-
-  <dt>ExcludeText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>文本中含有此参数值的窗口将被排除.</p>
+    <p>如果这些都为空或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
   </dd>
 
 </dl>
@@ -63,8 +43,8 @@
 <p>如果内部函数调用报告失败, 则抛出 <a href="Error.htm#OSError">OSError</a>. 但是, 即使窗口没有移动, 也可能报告成功, 例如, 如果窗口限制了自己的移动.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>如果 <em>Width</em> 和 <em>Height</em> 太小(或为负数), 那么大多数带标题栏的窗口最小尺寸不会小于 112 x 27 像素(不过, 有些类型的窗口的最小的尺寸可能有差异). 如果 <em>Width</em> 和 <em>Height</em> 太大, 那么大多数窗口最大尺寸不会大于超过桌面尺寸大约 12 像素.</p>
-<p>x 和 y 坐标中可以使用负数, 这样可以支持多显示器系统且可以让窗口被完全移出屏幕.</p>
+<p>如果 <em>Width</em> 或 <em>Height</em> 太小(或为负数), 那么大多数带标题栏的窗口最小尺寸不会小于 112 x 27 像素(不过, 有些类型的窗口的最小的尺寸可能有差异). 如果 <em>Width</em> 或 <em>Height</em> 太大, 那么大多数窗口最大尺寸不会大于超过桌面尺寸大约 12 像素.</p>
+<p>X 和 Y 坐标允许使用负数, 这样可以支持多显示器系统, 并将窗口完全移出屏幕.</p>
 <p>尽管 WinMove 不能移动最小化状态的窗口, 不过当 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置开启时它可以移动隐藏窗口.</p>
 <p>WinMove 移动窗口的速度受 <a href="SetWinDelay.htm">SetWinDelay</a> 影响.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>

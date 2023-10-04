@@ -18,35 +18,16 @@
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>WinTitle</dt>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>识别目标窗口的窗口标题或其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
-    <p><em>WinTitle</em> 只有在 <em>WinText</em>, <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 都存在时, 才能为空.</p>
-  </dd>
-
-  <dt>WinText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>如果存在, 此参数必须是目标窗口的单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON, 那么会检测隐藏文本元素.</p>
+    <p>至少需要其中的一个. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
   </dd>
 
   <dt>Timeout</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
-    <p>超时并返回 0 前等待的秒数. 留空以允许函数无限期等待.</p>
-  </dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>标题中含有此参数值的窗口将被排除.</p>
-  </dd>
-
-  <dt>ExcludeText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>文本中含有此参数值的窗口将被排除.</p>
+    <p>如果省略, 函数将会无限期等待. 否则, 指定在超时之前等待的秒数. 若要等待零点几秒, 请指定一个浮点数, 例如, 0.25 表示最多等待 250 毫秒.</p>
   </dd>
 
 </dl>
@@ -57,8 +38,10 @@
 
 <h2 id="Remarks">备注</h2>
 <p>如果匹配窗口存在, 函数不会等待到 <em>Timeout</em> 过期. 相反, 它会更新<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>和返回, 并让脚本继续执行.</p>
+<p>如果 <em>WinTitle</em> 指定了一个无效的 HWND(作为一个整数或通过一个对象的 HWND 属性), t该函数立即返回, 而不等待 <em>Timeout</em> 超时. 等待另一个具有相同 HWND 值的窗口创建是没有意义的, 因为两个窗口之间可能没有关系.</p>
 <p>当函数处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
 <p>如果另一个<a href="../misc/Threads.htm">线程</a>更改了用于该函数参数的任何变量的内容, 该函数将不会看到更改 -- 它将继续使用在函数首次开始等待时最初出现在变量中的标题和文本.</p>
+<p>与 <a href="WinWaitActive.htm">WinWaitActive</a> 不同, 不能使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 所以, 至少有一个窗口参数(<em>WinTitle</em>, <em>WinText</em>, <em>ExcludeTitle</em>, <em>ExcludeText</em>) 必须是非空的.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口, even if <em>WinTitle</em> is a HWND or object.</p>
 
 <h2 id="Related">相关</h2>

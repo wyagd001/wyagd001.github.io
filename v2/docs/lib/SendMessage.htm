@@ -15,11 +15,11 @@
 
 <p>发送消息到窗口或控件并等待回复.</p>
 
-<pre class="Syntax">Result := <span class="func">SendMessage</span>(Msg <span class="optional">, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText, Timeout</span>)</pre>
+<pre class="Syntax">Result := <span class="func">SendMessage</span>(MsgNumber <span class="optional">, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText, Timeout</span>)</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>Msg</dt>
+  <dt>MsgNumber</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>要发送的消息的编号. 请参阅<a href="../misc/SendMessageList.htm">消息列表</a>来确定编号.</p>
@@ -28,7 +28,7 @@
   <dt>wParam, lParam</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>消息的参数. 如果省略, 每个参数默认为 0.</p>
+    <p>如果省略其中一个, 则发送 0. 否则, 请指定消息的第一个和第二个组件.</p>
     <p>每个参数必须是一个<a href="../Concepts.htm#numbers">整数</a>或一个具有 <a href="Buffer.htm#Ptr">Ptr</a> 属性的对象, 比如 <a href="Buffer.htm">Buffer</a>. 对于需要指向字符串指针的消息, 使用 Buffer 或 <a href="StrPtr.htm">StrPtr</a> 函数. 如果通过将变量的地址传递给 SendMessage 来改变变量所包含的字符串, 那么之后必须通过调用 <a href="VarSetStrCapacity.htm#neg1">VarSetStrCapacity(&amp;MyVar, -1)</a> 来更新变量的长度.</p>
     <p>如果 AutoHotkey 或目标窗口是 32 位的, 则只使用参数的低 32 位; 也就是说, 如果超出了有符号值的范围 -2147483648 到 2147483647(-0x80000000 to 0x7FFFFFFF), 或者超出了无符号值的范围 0 到 4294967295(0xFFFFFFFF), 则值会被截断. 如果 AutoHotkey 和目标窗口都是 64 位的, 可以使用 <a href="../Concepts.htm#pure-numbers">AutoHotkey 所支持的</a>任何整数值.</p>
   </dd>
@@ -36,38 +36,20 @@
   <dt>Control</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>如果省略此参数, 则消息会被直接发送到目标窗口而不是它的某个控件. 否则, 这个参数可以是控件的 ClassNN, 文本或 HWND, 或者是一个具有 <code>Hwnd</code> 属性的对象. 有关详情, 请参阅<a href="Control.htm#Parameter">控件参数</a>.</p>
+    <p>如果省略, 则消息会被直接发送到目标窗口而不是它的某个控件. 否则, 指定控件的 ClassNN, 文本或 HWND, 或者是一个具有 <code>Hwnd</code> 属性的对象. 有关详情, 请参阅<a href="Control.htm#Parameter">控件参数</a>.</p>
     <p>如果这个参数指定了一个 HWND(作为一个整数或对象), 那么它不需要是一个控件(子窗口) 的 HWND. 也就是说, 它也可以是一个顶层窗口的 HWND.</p>
   </dd>
 
-  <dt>WinTitle</dt>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>识别目标窗口的窗口标题或其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
-  </dd>
-
-  <dt>WinText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>如果存在, 此参数必须是目标窗口的单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON, 那么会检测隐藏文本元素.</p>
-  </dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>标题中含有此参数值的窗口将被排除.</p>
-  </dd>
-
-  <dt>ExcludeText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>文本中含有此参数值的窗口将被排除.</p>
+    <p>如果这些都为空或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
   </dd>
 
   <dt>Timeout</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>等待目标窗口处理消息的最大毫秒数. 如果省略, 默认为 5000(ms). 如果消息在这段时间内没有被处理, 则会抛出 <a href="Error.htm#TimeoutError">TimeoutError</a>.</p>
+    <p>如果省略, 默认为 5000. 否则, 请指定 the等待目标窗口处理消息的最大毫秒数. 如果消息在这段时间内没有被处理, 则会抛出 <a href="Error.htm#TimeoutError">TimeoutError</a>.</p>
   </dd>
 
 </dl>
@@ -102,7 +84,6 @@ SendMessage 0x000C, 0, StrPtr("New Title")  <em>; 0X000C is WM_SETTEXT</em></pre
 <p><a href="PostMessage.htm">PostMessage</a>, <a href="../misc/SendMessageList.htm">消息列表</a>, <a href="../misc/SendMessage.htm">消息指导</a>, <a href="OnMessage.htm">OnMessage</a>, <a href="../misc/Winamp.htm">Automating Winamp</a>, <a href="DllCall.htm">DllCall</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="MenuSelect.htm">MenuSelect</a></p>
 
 <h2 id="Examples">示例</h2>
-
 <div class="ex" id="ExMonitorPower">
 <p><a class="ex_number" href="#ExMonitorPower"></a> 通过热键关闭显示器. 在 SendMessage 行中, 将数字 2 替换为 -1 以打开显示器, 或将其替换为 1 以激活显示器的低功耗模式.</p>
 <pre>#o::  <em>; Win+O 热键</em>

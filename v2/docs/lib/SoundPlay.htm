@@ -30,14 +30,15 @@
       <li>*48 = 感叹声</li>
       <li>*64 = 星号(消息声)</li>
     </ul>
-    <p>已知限制: 由于 Windows 系统的限制, 路径超过 127 个字符的 WAV 文件将不会被播放. 要解决这个问题, 可以使用其他文件类型如 MP3(路径长度最多可以有 255 个字符) 或使用 8.3 短路径(如何检索这些路径, 请参阅 <a href="LoopFiles.htm#LoopFileShortPath">A_LoopFileShortPath</a>).</p>
   </dd>
 
   <dt>Wait</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>如果省略, 则在播放文件时, 脚本的<a href="../misc/Threads.htm">当前线程</a>会移动到下一个语句. 要避免这种情况, 请指定 1 或单词 WAIT, 这会使得当前线程会等到文件播放结束后才继续执行. 即使在等待时, 新的<a href="../misc/Threads.htm">线程</a>可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单</a>或<a href="SetTimer.htm">计时器</a>来启动.</p>
-    <p>已知限制: 如果省略 <em>WAIT</em> 参数, 则操作系统可能认为播放的文件 "正在使用中", 直到脚本关闭或播放另一个文件(甚至是不存在的文件).</p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#strings">字符串</a></p>
+    <p>如果为空或省略, 则默认为 0(false). 否则, 指定下列值之一:</p>
+    <p><code>0</code> 或 <code>False</code>: 在播放文件时, <a href="../misc/Threads.htm">当前线程</a>会移动到下一个语句.</p>
+    <p><code>1</code>, <code>True</code> 或 <code>"Wait"</code>(不区分大小写): 当前线程会等到文件播放结束后才继续执行. 但在等待时, 新线程可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单</a>或<a href="SetTimer.htm">计时器</a>来启动.</p>
+    <p>已知限制: 如果没有使用 <em>Wait</em> 参数, 则操作系统可能认为播放的文件 "正在使用中", 直到脚本关闭或播放另一个文件(甚至是不存在的文件).</p>
   </dd>
 
 </dl>
@@ -47,6 +48,7 @@
 
 <h2 id="Remarks">备注</h2>
 <p>所有 Windows 操作系统应该都能播放 .wav 文件. 不过, 如果操作系统中没有安装正确的解码器或功能, 那么其他文件(.mp3, .avi, 等等) 可能无法播放.</p>
+<p>已知限制: 由于 Windows 系统的限制, 路径超过 127 个字符的 WAV 文件将不会被播放. 要解决这个问题, 可以使用其他文件类型如 MP3(路径长度最多可以有 255 个字符) 或使用 8.3 短路径(如何检索这些路径, 请参阅 <a href="LoopFiles.htm#LoopFileShortPath">A_LoopFileShortPath</a>).</p>
 <p>如果在播放一个文件时当前脚本播放了第二个文件, 那么第一个文件会被停止后才可以播放第二个. 在一些系统中, 即使在另一个完全独立的脚本中播放新文件时, 某些文件类型也可能停止播放.</p>
 <p>要停止当前正在播放的文件, 请对不存在的文件使用 SoundPlay, 例如: <code>try SoundPlay "Nonexistent.avi"</code>.</p>
 <p>如果脚本退出了, 那么任何由它启动的当前正在播放的文件将会停止.</p>
@@ -55,12 +57,12 @@
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 播放位于 Windows 目录下的声音文件.</p>
+<p><a class="ex_number" href="#ExBasic"></a> 播放位于 Windows 目录下的 .wav 文件.</p>
 <pre>SoundPlay A_WinDir "\Media\ding.wav"</pre>
 </div>
 
 <div class="ex" id="ExStandardSound">
-<p><a class="ex_number" href="#ExStandardSound"></a> 产生一个简单的哔哔声. 如果没有声卡, 则使用扬声器产生声音.</p>
+<p><a class="ex_number" href="#ExStandardSound"></a> 产生一个简单的哔哔声.</p>
 <pre>SoundPlay "*-1"</pre>
 </div>
 

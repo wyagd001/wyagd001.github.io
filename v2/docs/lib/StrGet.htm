@@ -14,7 +14,8 @@
 
 <p>从内存地址或缓冲中复制字符串, 可选地从给定的代码页进行转换.</p>
 
-<pre class="Syntax">String := <span class="func">StrGet</span>(Source <span class="optional">, Length</span> <span class="optional">, Encoding</span>)</pre>
+<pre class="Syntax">String := <span class="func">StrGet</span>(Source <span class="optional">, Length, Encoding</span>)
+String := <span class="func">StrGet</span>(Source <span class="optional">, Encoding</span>)</pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -23,13 +24,13 @@
     <p>类型: <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#numbers">整数</a></p>
     <p>包含字符串的类<a href="Buffer.htm">缓冲</a>对象, 或字符串的内存地址.</p>
     <p>可以使用任何实现 <a href="Buffer.htm#Ptr">Ptr</a> 和 <a href="Buffer.htm#Size">Size</a> 属性的对象, 但此函数针对原生的<a href="Buffer.htm">缓冲</a>对象进行了优化. 传递具有这些属性的对象可确保函数不会从无效位置读取内存; 这样做可能会导致崩溃或其他不可预测的行为.</p>
-    <p>如果提供了类缓冲对象, 或者指定了 <em>Length</em> 参数, 则字符串不需要以<a href="../Concepts.htm#null-termination">空终止符</a>结尾.</p>
+    <p>如果提供了类缓冲对象, 或者如果指定了 <em>Length</em>, 则字符串不需要以<a href="../Concepts.htm#null-termination">空终止符</a>结尾.</p>
   </dd>
 
   <dt>Length</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>需读取的最大<a href="../Concepts.htm#character">字符</a>数. 如果字符串以<a href="../Concepts.htm#null-termination">空终止符</a>结尾, 则可以省略.</p>
+    <p>如果省略(或使用 2 参数模式时), 则默认为字符串的当前长度, 前提是字符串以<a href="../Concepts.htm#null-termination">空终止符</a>结尾. 否则, 请指定需读取的最大<a href="../Concepts.htm#character">字符</a>数.</p>
     <p>默认情况下, 只复制到第一个二进制零. 如果 <em>Length</em> 为负数, 则它的绝对值指示要转换的确切字符数, 包括字符串可能包含的任何二进制零 - 换句话说, 结果始终是具有该长度的字符串.</p>
     <p class="warning"><strong>注意:</strong> 如果字符串不是以空终止符结尾的, 则省略 <em>Length</em> 可能会造成访问冲突, 从而导致程序终止或其他一些不希望的结果. 指定不正确的长度可能会产生意外的行为.</p>
 </dd>
@@ -37,7 +38,7 @@
   <dt>Encoding</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>源编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在指定 <em>Length</em> 时, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码页.</p>
+    <p>如果省略, 那么将简单地复制字符串, 而不进行任何转换. 否则, 请指定源编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在 3 参数模式中, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码页.</p>
   </dd>
 
 </dl>

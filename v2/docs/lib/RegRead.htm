@@ -22,21 +22,22 @@
   <dt>KeyName</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>注册表键的全名.</p>
-    <p>必须以 HKEY_LOCAL_MACHINE, HKEY_USERS, HKEY_CURRENT_USER, HKEY_CLASSES_ROOT 或 HKEY_CURRENT_CONFIG(或各自的缩写, 如 HKLM) 开始. 要访问<a href="LoopReg.htm#remote">远程注册表</a>, 请在前面加上计算机名和斜杠, 就像在本例中一样: \\workstation01\HKEY_LOCAL_MACHINE</p>
+    <p>注册表键的全名, 例如 <code>"HKLM\Software\SomeApplication"</code>.</p>
+    <p>必须以 HKEY_LOCAL_MACHINE(或 HKLM), HKEY_USERS(或 HKU), HKEY_CURRENT_USER(或 HKCU), HKEY_CLASSES_ROOT(或 HKCR) 或 HKEY_CURRENT_CONFIG(或 HKCC) 开始.</p>
+    <p>要访问<a href="#remote">远程注册表</a>, 请在前面加上计算机名和反斜杠, 例如 <code>"\\workstation01\HKLM"</code>.</p>
     <p>只有在<a href="LoopReg.htm">注册表循环</a>时, 才能省略 <em>KeyName</em>, 在这种情况下, 默认为当前循环项目的键. 如果项目是子键, 则默认使用该子键的全名. 如果项目是值, 则 <em>ValueName</em> 默认为该值的名称, 但是可以被重写.</p>
   </dd>
 
   <dt>ValueName</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>要检索的值的名称. 如果为空或省略, 将删除键的默认值(除了上面提到的). 默认值在 RegEdit 中显示为 "(默认)". 如果没有默认值(即注册表中显示 "数值未设置"), 则抛出一个 <a href="Error.htm#OSError">OSError</a>.</p>
+    <p>如果为空或省略, 将删除键的默认值(除了上面提到的), 这是 RegEdit 中显示为 "(默认)". 否则, 请指定将检索值的名称. 如果没有默认值(即注册表中显示 "数值未设置"), 则抛出一个 <a href="Error.htm#OSError">OSError</a>.</p>
   </dd>
 
   <dt>Default</dt>
   <dd>
     <p>类型: Any</p>
-    <p>如果指定的键或值不存在, 将要返回的值. 如果省略, 则抛出 <a href="Error.htm#OSError">OSError</a>, 而不是返回默认值.</p>
+    <p>如果省略, 则抛出 <a href="Error.htm#OSError">OSError</a>, 而不是返回默认值. 否则, 如果指定的键或值不存在, 请指定要返回的值.</p>
   </dd>
 
 </dl>
@@ -51,15 +52,16 @@
 
 <h2 id="Remarks">备注</h2>
 <p>目前只支持以下值类型: REG_SZ, REG_EXPAND_SZ, REG_MULTI_SZ, REG_DWORD 和 REG_BINARY.</p>
-<p>REG_DWORD 值总是被转换为正十进制数. 如果数字是负数, 则使用 <code>OutputVar := OutputVar &lt;&lt; 32 &gt;&gt; 32</code> 或类似的方法将其转换为有符号的 32 位整数.</p>
+<p>在注册表中, REG_DWORD 值总是被转换为正十进制数. 如果数字是负数, 则使用 <code>OutputVar := OutputVar &lt;&lt; 32 &gt;&gt; 32</code> 或类似的方法将其转换为有符号的 32 位整数.</p>
 <p>读取 REG_BINARY 键时, 结果是一串十六进制字符. 例如, REG_BINARY 值 01,a9,ff,77 的读取结果为字符串 01A9FF77.</p>
-<p>读取 REG_MULTI_SZ 值的每个部分会以换行符结束(`n). 如果值为空, 则返回空字符串. 请参阅 <a href="FileSelect.htm">FileSelect</a> 中的示例了解如何从返回值中逐个提取单独的部分.</p>
+<p>读取 REG_MULTI_SZ 值的每个部分会以换行符结束(`n). 如果值为空, 则返回空字符串. 从返回值中逐个提取单独的部分, use a <a href="LoopParse.htm">parsing loop</a>.</p>
 <p>要检索和操作多个注册表键或值, 请考虑使用<a href="LoopReg.htm">注册表循环</a>.</p>
 <p>有关如何访问远程计算机注册表的详情, 请参阅<a href="LoopReg.htm#remote">注册表循环</a>中的备注.</p>
 <p>从 32 位脚本中读取或写入注册表的 64 位部分中的条目, 反之亦然, 请使用 <a href="SetRegView.htm">SetRegView</a>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="RegCreateKey.htm">RegCreateKey</a>, <a href="RegDelete.htm">RegDelete</a>, <a href="RegDeleteKey.htm">RegDeleteKey</a>, <a href="RegWrite.htm">RegWrite</a>, <a href="LoopReg.htm">注册表循环</a>, <a href="SetRegView.htm">SetRegView</a>, <a href="IniRead.htm">IniRead</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 从注册表中读取一个值并将其存储在 <var>TestValue</var>.</p>

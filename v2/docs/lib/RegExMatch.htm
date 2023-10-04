@@ -33,15 +33,15 @@
 
   <dt>&amp;OutputVar</dt>
   <dd>
-        <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
-    <p>指定一个变量引用, 在其中存储<a href="#MatchObject">匹配对象</a>, 可以用来获取整体匹配和每个<a href="../misc/RegEx-QuickRef.htm#subpat">捕获子模式</a>(如果存在) 的位置, 长度和值.</p>
+    <p>类型: <a href="../Concepts.htm#variable-references">VarRef</a></p>
+    <p>如果省略, 没有使用输出变量. 否则, 请指定指定一个变量引用, 在其中存储<a href="#MatchObject">匹配对象</a>, 可以用来获取整体匹配和每个<a href="../misc/RegEx-QuickRef.htm#subpat">捕获子模式</a>(如果存在) 的位置, 长度和值.</p>
     <p>如果没有找到模式(也就是说, 如果函数返回 0), 这个变量将被置空.</p>
   </dd>
 
   <dt>StartingPos</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>如果省略 <em>StartingPos</em>, 则它默认为 1(<em>Haystack</em> 的开始位置). 否则, 指定 2 从第二个字符开始, 3 从第三个字符开始, 以此类推. 如果 <em>StartingPos</em> 的长度超过 <em>Haystack</em> 的长度, 那么搜索将从 <em>Haystack</em> 末尾的空字符串开始(常结果是不匹配).</p>
+    <p>如果省略, 则它默认为 1(<em>Haystack</em> 的开始位置). 否则, 指定 2 从第二个字符开始, 3 从第三个字符开始, 以此类推. 如果 <em>StartingPos</em> 的长度超过 <em>Haystack</em> 的长度, 那么搜索将从 <em>Haystack</em> 末尾的空字符串开始(常结果是不匹配).</p>
     <p>指定负值的 <em>StartingPos</em>, 从右边的位置开始搜索. 例如, -1 从最后一个字符开始, -2 从倒数第二个字符开始. 如果 <em>StartingPos</em> 试图超出 <em>Haystack</em> 的左端, 则会搜索整个 <em>Haystack</em>.</p>
     <p>指定 0, 从 <em>Haystack</em> 的末尾开始; 即最后一个字符的右边的位置. 这可以用于零宽度的断言, 如 <code>(?&lt;=a)</code>.</p>
     <p>不论 <em>StartingPos</em> 的值是多少, 返回的值总是相对于 <em>Haystack</em> 的第一个字符. 例如, "abc" 在 "123abc789" 中的位置总是 4.</p>
@@ -58,23 +58,23 @@
 <p><strong>执行错误:</strong> 如果在 <em>执行</em> 正则表达式的过程中发生错误, 则抛出 <a href="Error.htm">Error</a>. 错误对象的 <em>Extra</em> 属性包含了 PCRE 的错误编号. 虽然这种错误很少发生, 但最有可能发生的是 ""太多空字符串匹配"(-22), "递归太深"(-21), 和 "达到匹配限制"(-8). 如果出现这些情况, 请尝试重新设计更严格的匹配模式, 例如无论是否可行都把每个 * 替换为 ?, + 或像 {0,3} 这样的限制.</p>
 
 <h2 id="Options">选项</h2>
-<p>请参阅<a href="../misc/RegEx-QuickRef.htm#Options">选项</a>了解修饰符, 例如 <span class="regex"><span class="red">i)</span>abc</span>, 它关闭了模式 "abc" 的区分大小写.</p>
+<p>请参阅 <a href="../misc/RegEx-QuickRef.htm#Options">RegEx 快速参考</a>中的选项, 例如 <span class="regex"><span class="red">i)</span>abc</span>, 它关闭了区分大小写.</p>
 
 <h2 id="MatchObject">匹配对象(RegExMatchInfo)</h2>
 <p>如果找到了匹配, 一个包含匹配信息的对象将被存储在 <em>OutputVar</em>. 这个对象有以下方法和属性:</p>
-<p><strong>Match.Pos</strong>, <strong>Match.Pos[N]</strong> or <strong>Match.Pos(N)</strong>: 返回整个匹配或捕获子模式的位置.</p>
-<p><strong>Match.Len</strong>, <strong>Match.Len[N]</strong> or <strong>Match.Len(N)</strong>: 返回整个匹配或捕获子模式的长度.</p>
-<p><strong>Match.Name[N]</strong> or <strong>Match.Name(N)</strong>: 返回指定的子模式的名称(如果它含有).</p>
-<p><strong>Match.Count</strong>: 返回所有子模式的数目(捕获组), 这也是 <em>N</em> 的最大值.</p>
-<p><strong>Match.Mark</strong>: 适用时返回上次遇到 <span class="regex">(*MARK:NAME)</span> 的 <em>NAME</em>.</p>
-<p><strong>Match[]</strong> 或 <strong>Match[N]</strong>: 返回整个匹配或捕获子模式.</p>
+<p><strong>Match.Pos</strong>, <strong>Match.Pos[N]</strong> 或 <strong>Match.Pos(N):</strong> 返回整个匹配或捕获子模式的位置.</p>
+<p><strong>Match.Len</strong>, <strong>Match.Len[N]</strong> 或 <strong>Match.Len(N):</strong> 返回整个匹配或捕获子模式的长度.</p>
+<p><strong>Match.Name[N]</strong> 或 <strong>Match.Name(N):</strong> 返回指定的子模式的名称(如果它含有).</p>
+<p><strong>Match.Count:</strong> 返回所有子模式的数目(捕获组), 这也是 <em>N</em> 的最大值.</p>
+<p><strong>Match.Mark:</strong> 适用时返回上次遇到 <span class="regex">(*MARK:NAME)</span> 的 <em>NAME</em>.</p>
+<p><strong>Match[]</strong> 或 <strong>Match[N]:</strong> 返回整个匹配或捕获子模式.</p>
 <p>对于上面的所有, <em>N</em> 可以为下列值:</p>
 <ul>
   <li>0 表示整个匹配.</li>
   <li>子模式的编号, 包括含有名称的子模式.</li>
   <li>子模式的名称.</li>
 </ul>
-<p><strong>Match.N</strong>: <strong>Match["N"]</strong> 的简写, 其中 <em>N</em> 是任何未加引号的名称或数字, 其不能与定义的属性(上面列出) 冲突. 例如, <code>match.1</code> 或 <code>match.Year</code>.</p>
+<p><strong>Match.N:</strong> <strong>Match["N"]</strong> 的简写, 其中 <em>N</em> 是任何未加引号的名称或数字, 其不能与定义的属性(上面列出) 冲突. 例如, <code>match.1</code> 或 <code>match.Year</code>.</p>
 <p>该对象还支持枚举; 也就是说, 支持 <a href="For.htm">for-loop</a>. 或者, 可以使用 <code><a href="Loop.htm">Loop</a> Match.Count</code>.</p>
 
 <h2 id="Performance">性能</h2>
@@ -84,11 +84,12 @@
 
 <h2 id="Remarks">备注</h2>
 <p id="NamedSubPat">可以为子模式指定名称, 例如模式 <span class="regex">(?P&lt;Year&gt;\d{4})</span> 中的单词 <em>Year</em>. 这种名称最多可以由 32 个字母数字和下划线组成. 请注意, 命名的子模式也是有编号的, 如果在 "Year" 后出现了一个<a href="../misc/RegEx-QuickRef.htm#subpat">未命名的子模式</a>, 它将被存储在 <code>OutputVar[2]</code> 中, 而不是 <code>OutputVar[1]</code> 中.</p>
-<p>大多数字符, 如 abc123 可以原义使用在正则表达式中. 然而, <strong>\.*?+[{|()^$</strong> 这些字符则必须在其前面加上反斜杠才能被视为原义. 例如, <strong>\.</strong> 表示一个原义的句点, 而 <strong>\\</strong> 表示一个原义的反斜杠. 使用 \Q...\E 能避免转义. 例如: <span class="regex">\QLiteral Text\E</span>.</p>
-<p>在正则表达式中, 特殊字符(如制表符和换行符) 可以使用一个重音符(`) 或反斜杠(\) 进行转义. 例如, 在不使用 <b>x</b> 选项时, `t 等同于 \t.</p>
+<p>大多数字符, 如 abc123 可以原义使用在正则表达式中. 然而, 集合 <code>\.*?+[{|()^$</code> 中的任何字符则必须在其前面加上反斜杠才能被视为原义. 例如, <span class="regex">\.</span> 表示一个原义的句点, 而 <span class="regex">\\</span> 表示一个原义的反斜杠. 使用 \Q...\E 能避免转义. 例如: <span class="regex">\QLiteral Text\E</span>.</p>
+<p>在正则表达式中, 特殊字符(如制表符和换行符) 可以使用一个重音符(`) 或反斜杠(\) 进行转义. 例如, 在不使用 <a href="../misc/RegEx-QuickRef.htm#opt_x">x 选项</a>时, <span class="regex">`t</span> 等同于 <span class="regex">\t</span>.</p>
 <p>要了解正则表达式的基础(或复习正则表达式的语法), 请参阅<a href="../misc/RegEx-QuickRef.htm">正则表达式快速参考</a>.</p>
 <p>AutoHotkey 的正则表达式是使用 <a href="http://www.pcre.org/">www.pcre.org</a> 的兼容 Perl Regular Expressions(PCRE) 实现的.</p>
-<p>在<a href="../Variables.htm#Expressions">表达式</a>中, <code>a <a href="../Variables.htm#regex">~=</a> b</code> 能被当作 <code>RegExMatch(a, b)</code> 的缩写.</p>
+<p>在<a href="../Variables.htm#Expressions">表达式</a>中, <code>a ~= b</code> 能被当作 <code>RegExMatch(a, b)</code> 的缩写.</p>
+
 <h2 id="Related">相关</h2>
 <p><a href="RegExReplace.htm">RegExReplace</a>, <a href="../misc/RegEx-QuickRef.htm">RegEx 快速参考</a>, <a href="../misc/RegExCallout.htm">Regular Expression Callouts</a>, <a href="InStr.htm">InStr</a>, <a href="SubStr.htm">SubStr</a>, <a href="SetTitleMatchMode.htm#RegEx">SetTitleMatchMode RegEx</a>, <a href="https://www.autohotkey.com/forum/topic16164.html">Global matching and Grep (forum link)</a></p>
 <p>文本数据的常见来源: <a href="FileRead.htm">FileRead</a>, <a href="Download.htm">Download</a>, <a href="A_Clipboard.htm">A_Clipboard</a>, <a href="GuiControls.htm#Edit">GUI Edit 控件</a></p>

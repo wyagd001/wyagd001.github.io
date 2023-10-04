@@ -21,50 +21,32 @@
   <dt>BarText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>此函数所等待的文本或部分文本. 默认为空, 这意味着等待状态栏变成空的. 此文本是区分大小写的, 且匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定, 类似于下面的 <em>WinTitle</em>.</p>
+    <p>如果为空或省略, 函数等待状态栏变成空白. 否则, 请指定函数所等待的文本或部分文本. 此文本是区分大小写的, 且匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定, 类似于下面的 <em>WinTitle</em>.</p>
     <p>若要等待状态栏是否发生了 <em>改变</em>, 可以在循环中使用 <a href="StatusBarGetText.htm">StatusBarGetText</a>, 或像本页底部的例子那样使用 RegEx.</p>
   </dd>
   
   <dt>Timeout</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#numbers">浮点数</a></p>
-    <p>在超时前等待的秒数(可以是小数), 在这种情况下返回 0(false). 默认为空, 这意味着命令将会无限期等待.</p>
+    <p>如果省略, 函数将会无限期等待. 否则, 等待的时间不会超过这个秒数. 若要等待零点几秒, 请指定一个浮点数, 例如, 0.25 表示最多等待 250 毫秒.</p>
   </dd>
   
   <dt>Part#</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>要获取的状态栏的那一部分的编号. 默认为 1, 这部分通常包含了我们感兴趣的文本.</p>
+    <p>如果省略, 默认为 1, 这部分通常包含了我们感兴趣的文本. 否则, 请指定要获取的状态栏那一部分的编号.</p>
   </dd>
 
-  <dt>WinTitle</dt>
+  <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a></p>
-    <p>识别目标窗口的窗口标题或其他条件. 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
-  </dd>
-
-  <dt>WinText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>如果存在, 此参数必须是目标窗口的单个文本元素的子字符串(和内置的 Window Spy 工具显示的一样). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 为 ON, 那么会检测隐藏文本元素.</p>
+    <p>如果这些都为空或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示). 如果 <a href="DetectHiddenText.htm">DetectHiddenText</a> 已经打开, 则检测隐藏文本元素. 标题或文本包含 <em>ExcludeTitle</em> 或 <em>ExcludeText</em> 的窗口将不被考虑.</p>
   </dd>
 
   <dt>Interval</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>此函数在等待时对状态栏进行检查的时间间隔(单位为毫秒). 默认为 50. </p>
-  </dd>
-
-  <dt>ExcludeTitle</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>标题中含有此参数值的窗口将被排除.</p>
-  </dd>
-
-  <dt>ExcludeText</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>文本中含有此参数值的窗口将被排除.</p>
+    <p>如果省略, 默认为 50. 否则, 请指定此函数在等待时对状态栏进行检查的时间间隔(单位为毫秒).</p>
   </dd>
 
 </dl>
@@ -77,19 +59,20 @@
 <p>在以下任何一种情况下, 都会抛出异常:</p>
 <ul>
   <li><a href="Error.htm#TargetError">TargetError</a>: 找不到目标窗口或不包含标准状态栏.</li>
-  <li><a href="Error.htm#OSError">OSError</a>: 在发送 SB_GETPARTS 消息时出现了问题, 或者在 2000 ms 内没有收到回复.</li>
+  <li><a href="Error.htm#OSError">OSError</a>: 在发送 SB_GETPARTS 消息时出现了问题, 或者在 2000&nbsp;ms 内没有收到回复.</li>
   <li><a href="Error.htm#OSError">OSError</a>: 在拥有状态栏的进程中无法分配内存.</li>
 </ul>
 
 <h2 id="Remarks">备注</h2>
-<p>StatusBarWait 尝试读取窗口中首个 <em>standard</em> 状态栏(类名 msctls_statusbar32). 某些程序使用它们自己的状态栏或微软通用控件的特殊版本. 不支持这样的状态栏.</p>
-<p>在大多数时候, 与其在循环中使用 <a href="StatusBarGetText.htm">StatusBarGetText</a>, 不如使用 StatusBarWait 来的有效率, 因为它包含了优化, 以避免重复调用 <a href="StatusBarGetText.htm">StatusBarGetText</a> 所带来的开销.</p>
+<p>该函数尝试读取窗口中首个 <em>标准</em> 状态栏(Microsoft 通用控件: msctls_statusbar32). 某些程序使用它们自己的状态栏或微软通用控件的特殊版本. 不支持这样的状态栏.</p>
+<p>在大多数时候, 与其在循环中使用 <a href="StatusBarGetText.htm">StatusBarGetText</a>, 不如使用 StatusBarWait 来得有效率, 因为它避免重复调用 <a href="StatusBarGetText.htm">StatusBarGetText</a> 所带来的开销.</p>
 <p>StatusBarWait 在开始等待匹配前会确定它的目标窗口. 如果那个目标窗口关闭了, 那么此命令会停止等待, 即使存在另一个匹配指定 <em>WinTitle</em> 和 <em>WinText</em> 的窗口.</p>
 <p>当函数处于等待状态时, 可以通过<a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">计时器</a>启动新的<a href="../misc/Threads.htm">线程</a>.</p>
 <p>窗口标题和文本是区分大小写的. 除非 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 被打开, 否则不会检测隐藏窗口.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="StatusBarGetText.htm">StatusBarGetText</a>, <a href="WinGetTitle.htm">WinGetTitle</a>, <a href="WinGetText.htm">WinGetText</a>, <a href="ControlGetText.htm">ControlGetText</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExSearch">
 <p><a class="ex_number" href="#ExSearch"></a> 在现有的资源管理器/搜索窗口中输入新的搜索模式.</p>
@@ -106,12 +89,12 @@
 </div>
 
 <div class="ex" id="ExChange">
-<p><a class="ex_number" href="#ExChange"></a> 等待活动窗口的状态栏 <strong>发生变化</strong>.</p>
+<p><a class="ex_number" href="#ExChange"></a> 等待活动窗口的状态栏发生变化.</p>
 <pre>SetTitleMatchMode "RegEx"  <em>; 接受<a href="SetTitleMatchMode.htm#RegEx">正则表达式</a>, 以便在下面使用.</em>
 if WinExist("A")  <em>; 设置上次找到的窗口为活动窗口(供下面使用).</em>
 {
-    <span class="red">OrigText</span> := StatusBarGetText()
-    StatusBarWait "^(?!^\Q" <span class="red">OrigText</span> "\E$)"  <em>; 该正则表达式等待文本发生任何变化.</em>
+    OrigText := StatusBarGetText()
+    StatusBarWait "^(?!^\Q" OrigText "\E$)"  <em>; 该正则表达式等待文本发生任何变化.</em>
 }</pre>
 </div>
 

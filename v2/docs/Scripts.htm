@@ -49,7 +49,7 @@
   <li><a href="#continuation-expr">延续闭环</a>(延续表达式): 在大多数情况下, 括在 (), [] 或 {} 中的子表达式可以自动跨越多行.</li>
   <li><a href="#continuation-section">延续片段</a>: 标记一组要合并在一起的行, 并添加其他选项, 例如在行之间插入什么文本(或代码).</li>
 </ul>
-<p id="continuation-line"><strong>延续运算符</strong>: 以逗号或任何其他<a href="Variables.htm#Operators">表达式运算符</a>(除了 ++ 和 --) 开头的行会自动与其正上方的行合并. 同样, 以表达式运算符结尾的行会自动与它下面的行合并. 在以下示例中, 第二行被附加到第一行, 因为它以逗号开头:</p>
+<p id="continuation-line"><strong>延续运算符:</strong> 以逗号或任何其他<a href="Variables.htm#Operators">表达式运算符</a>(除了 ++ 和 --) 开头的行会自动与其正上方的行合并. 同样, 以表达式运算符结尾的行会自动与它下面的行合并. 在以下示例中, 第二行被附加到第一行, 因为它以逗号开头:</p>
 <pre>FileAppend "This is the text to append.`n"   <em>; 这里可以使用注释.</em>
     <strong>,</strong> A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; 注释.</em></pre>
 <p>同样地, 下列几行也会合并成单行, 因为最后两行以 "and" 或 "or" 开始:</p>
@@ -73,7 +73,7 @@ ProductIsAvailable := (Color = "Red") <strong>?</strong>
     ProductIsAvailableInColor(Product, Color)</pre>
 <p>虽然上面示例中使用的缩进是可选的, 但它可以显示出哪些行属于上一行从而提高代码清晰度. 此外, 可以在上述示例中的任何行的末尾或行与行之间添加空行或<a href="Language.htm#comments">注释</a>.</p>
 <p>延续操作符不能与自动替换热字符或 <a href="lib/_HotIf.htm">#HotIf</a> 以外的指令一起使用.</p>
-<p id="continuation-expr"><strong>延续闭环</strong>: 如果一行中包含一个带有未闭合 <code>(</code>/<code>[</code>/<code>{</code>  的表达式或函数/属性定义, 那么它将与后续的行连接, 直到左, 右括号的数量平衡为止. 换句话说, 在大多数情况下, 用小括号(圆括号), 中括号(方括号), 大括号(花括号) 括起来的子表达式可以自动跨越多行. 例如:</p>
+<p id="continuation-expr"><strong>延续闭环:</strong> 如果一行中包含一个带有未闭合 <code>(</code>/<code>[</code>/<code>{</code>  的表达式或函数/属性定义, 那么它将与后续的行连接, 直到左, 右括号的数量平衡为止. 换句话说, 在大多数情况下, 用小括号(圆括号), 中括号(方括号), 大括号(花括号) 括起来的子表达式可以自动跨越多行. 例如:</p>
 <pre>
 myarray := [
   "item 1",
@@ -106,7 +106,7 @@ MsgBox(
         key: "value"
     }
 }</pre>
-<p id="continuation-section"><strong>延续片段</strong>: 此方法应该用于合并大量行或当这些行不适合其他方法时. 虽然这个方法对于<a href="Hotstrings.htm">自动替换热字符串</a>特别有用, 但是它也可以用于任何<a href="Variables.htm#Expressions">表达式</a>. 例如:</p>
+<p id="continuation-section"><strong>延续片段:</strong> 此方法应该用于合并大量行或当这些行不适合其他方法时. 虽然这个方法对于<a href="Hotstrings.htm">自动替换热字符串</a>特别有用, 但是它也可以用于任何<a href="Variables.htm#Expressions">表达式</a>. 例如:</p>
 <pre><em>; 示例 #1:</em>
 Var := "
 (
@@ -127,13 +127,15 @@ FileAppend "
 <p id="continuation_quotes">如果延续片段以引号开始, 引号将自动转义(即它们被解释为原义字符), 如上面的示例所示. 否则, 引号的作用与正常情况相同; 也就是说, 延续片段可以包含带引号字符串的表达式.</p>
 <p id="continuation_defaults">默认情况下, 根据延续片段中第一行的缩进, 省略前导空格或制表符. 如果第一行混合有空格和制表符, 则只将第一种类型的字符视为缩进. 如果任何行缩进小于第一行或使用不同的字符, 则该行上的所有前导空格都保持原样.</p>
 <p>延续片段的默认行为可以通过在该片段的左括号的右侧包含以下一个或多个选项来覆盖改写. 如果存在多个选项, 请使用空格将每个选项与前一个选项分开. 例如: <code>( LTrim Join|</code>.</p>
-<p id="Join"><strong>Join</strong>: 指定行与行之间连接的方式. 如果省略此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果指定单词 <em>Join</em> 自身, 则行与行之间直接连接而不添加任何字符. 否则, 单词 <em>Join</em> 后面可以紧跟最多 15 个字符. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格. 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以连接字符串结尾, 请在它的右括号上方添加一个空行.</p>
-<p id="LTrim"><strong>LTrim</strong>: 删除每行开头的所有的空格和制表符. 由于<a href="#continuation_defaults">默认的 "智能" 行为</a>, 这通常是不必要的.</p>
+<p id="Join"><strong>Join</strong><em>String</em>: 指定行与行之间连接的方式. 如果没有使用此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果省略 <em>String</em>, 则行与行之间直接连接而不添加任何字符. 否则, 为 <em>String</em> 指定一个最多 15 个字符的字符串. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格. 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以 <em>String</em> 结尾, 请在它的右括号上方添加一个空行.</p>
+<p id="LTrim"><strong>LTrim:</strong> 删除每行开头的所有的空格和制表符. 由于<a href="#continuation_defaults">默认的 "智能" 行为</a>, 这通常是不必要的.</p>
 <p id="LTrim0"><strong>LTrim0</strong> (LTrim 后跟一个 0): 关闭每行开头的空格和制表符的删除.</p>
 <p id="RTrim0"><strong>RTrim0</strong> (RTrim 后跟一个 0): 关闭每行末尾的空格和制表符的删除.</p>
 <p id="CommentOption"><strong>Comments</strong> (或 <strong>Comment</strong> 或 <strong>Com</strong> 或 <strong>C</strong>): 在延续片段中允许<a href="Language.htm#comments">分号注释</a>(但不允许 <code>/*..*/</code>). 这些注释(以及它们左边的任何空格和制表符) 将完全从连接结果中省略, 而不是作为文本处理. 每个注释可以出现在一行的右侧, 也可以单独出现在新行上.</p>
 <p id="accent"><strong>`</strong>(重音): 按按原义处理反引号, 而不是作为<a href="misc/EscapeChar.htm">转义字符</a>. 这还可以防止任何显式指定的转义序列(<code>`r</code> 和 <code>`t</code>) 的转换.</p>
-<p id="non-continuation"><strong>(</strong> 或 <strong>)</strong>: 如果左括号或右括号出现在初始左括号的右侧(作为 <a href="#Join">Join</a> 选项的参数除外), 则该行将被重新解释为表达式, 而不是延续片段的开头. 这允许在行的开头使用 <code>(x.y)[z]()</code> 之类的表达式, 并且还允许<a href="#continuation-expr">多行表达式</a>以 <code>((</code> 或 <code>(MyFunc(</code> 在行的开头.</p>
+<p id="non-continuation"><strong>(</strong> 或 <strong>):</strong> 如果左括号或右括号出现在初始左括号的右侧(作为 <a href="#Join">Join</a> 选项的参数除外), 则该行将被重新解释为表达式, 而不是延续片段的开头. 这允许在行的开头使用 <code>(x.y)[z]()</code> 之类的表达式, 并且还允许<a href="#continuation-expr">多行表达式</a>以 <code>((</code> 或 <code>(MyFunc(</code> 在行的开头.</p>
+
+<h3 id="continuation-remarks">备注</h3>
 <p>除非指定了<a href="#accent">重音(`) 选项</a>, 否则在延续片段内部支持诸如 `n(换行符) 和 `t(制表符) 之类的<a href="misc/EscapeChar.htm">转义序列</a>.</p>
 <p>当 <a href="#CommentOption">comment 选项</a>不存在时, 分号和 /*..*/ 注释在延续片段的内部不受支持, 因为它们被视为原义文本. 但是, 注释可以包含在延续片段的底部和顶部行. 例如:</p>
 <pre>FileAppend "   <em>; 注释.
@@ -171,13 +173,13 @@ FileAppend "
 <p>Ahk2Exe 的使用方法如下:</p>
 <ul>
   <li>
-    <p><strong>GUI 界面</strong>: 运行开始菜单中的 "Convert .ahk to .exe" 项目. (调用 GUI 后, 在窗口显示之前可能会有一个停顿; 有关详情, 请参阅<a href="#information">背景信息</a>.)</p>
+    <p><strong>GUI 界面:</strong> 运行开始菜单中的 "Convert .ahk to .exe" 项目. (调用 GUI 后, 在窗口显示之前可能会有一个停顿; 有关详情, 请参阅<a href="#information">背景信息</a>.)</p>
   </li>
   <li>
-    <p><strong>右键点击</strong>: 在资源管理器中, 在任何一个 .ahk 文件上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器选项时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它稍后会出现在同一目录下. 注: EXE 文件的生成使用的是前面的方法 #1 中最后保存的自定义图标, .bin 文件以及<a href="#mpress">压缩</a>设置, 或者由脚本中任何相关的<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>指定.</p>
+    <p><strong>右键点击:</strong> 在资源管理器中, 在任何一个 .ahk 文件上右键点击并选择 "Compile Script"(只有在安装 AutoHotkey 时选择了脚本编译器选项时才可用). 这样创建了与脚本具有相同的主文件名的 EXE 文件, 它稍后会出现在同一目录下. 注: EXE 文件的生成使用的是前面的方法 #1 中最后保存的自定义图标, .bin 文件以及<a href="#mpress">压缩</a>设置, 或者由脚本中任何相关的<a href="misc/Ahk2ExeDirectives.htm">编译器指令</a>指定.</p>
   </li>
   <li id="ahk2exeCmd">
-    <p><strong>命令行</strong>: 编译器可以通过使用下面展示的参数从命令行中运行. 如果使用了任何命令行参数, 除非使用了 <code class="no-highlight">/gui</code>, 否则脚本会立即编译. 除了必须的 <code class="no-highlight">/gui</code> 或 <code class="no-highlight">/in</code> 参数外(二选一), 所有参数都是可选的.</p>
+    <p><strong>命令行:</strong> 编译器可以通过使用下面展示的参数从命令行中运行. 如果使用了任何命令行参数, 除非使用了 <code class="no-highlight">/gui</code>, 否则脚本会立即编译. 除了必须的 <code class="no-highlight">/gui</code> 或 <code class="no-highlight">/in</code> 参数外(二选一), 所有参数都是可选的.</p>
     <style>
       #param_pairs td:not(:last-child) {
         white-space: nowrap;
@@ -246,7 +248,7 @@ FileAppend "
   <li>包含空格的参数必须用双引号括起来.</li>
   <li>编译通常不会提高脚本的性能.</li>
   <li><a href="lib/_NoTrayIcon.htm">#NoTrayIcon</a> 和 <a href="Variables.htm#AllowMainWindow">A_AllowMainWindow</a> 会影响已编译脚本的行为.</li>
-  <li>如果脚本以编译的形式运行, 则内置变量 <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 的值为 1. 否则为空.</li>
+  <li>如果脚本以编译的形式运行, 则内置变量 <a href="Variables.htm#IsCompiled">A_IsCompiled</a> 的值为 1. 否则为 0.</li>
   <li>传递参数到 Ahk2Exe 后, 它会在标准输出中写入表示编译过程成功与否的消息. 尽管此消息不会显示在命令提示符中, 但可以通过像重定向输出到文件的方法 "捕获".</li>
   <li>此外, 当编译出错时, Ahk2Exe 还能返回退出代码, 它可以指示编译的错误类型. 这些错误代码可以在 <a href="https://github.com/AutoHotkey/Ahk2Exe/blob/master/ErrorCodes.md">GitHub (ErrorCodes.md)</a> 上找到.</li>
 </ul>
@@ -374,7 +376,7 @@ FileAppend "
 <p id="defaultfile"><strong>Script Filename:</strong> 如果不含 <em>Script Parameters</em>, 那么此参数可以省略. 如果省略, 它默认为 <a href="Variables.htm#AhkPath">AutoHotkey 可执行文件</a>的路径和名称, 将 ".exe" 替换为 ".ahk". 例如, 如果将 AutoHotkey.exe 重命名为 MyScript.exe, 它将尝试加载 MyScript.ahk. 如果你不带参数地运行 AutoHotkey32.exe, 它将尝试加载 AutoHotkey32.ahk.</p>
 <p id="stdin">为文件名指定星号(*) 以从标准输入(stdin) 读取脚本文本. 这也使以下内容生效:</p>
 <ul>
-  <li><a href="Variables.htm#InitialWorkingDir">初始工作目录</a>用作 <a href="Variables.htm#ScriptDir">A_ScriptDir</a> 并定位<a href="Scripts.htm#lib">本地库文件夹</a>.</li>
+  <li><a href="Variables.htm#InitialWorkingDir">初始工作目录</a>用作 <a href="Variables.htm#ScriptDir">A_ScriptDir</a> 并定位<a href="#lib">本地库文件夹</a>.</li>
   <li><a href="Variables.htm#ScriptName">A_ScriptName</a> 和 <a href="Variables.htm#ScriptFullPath">A_ScriptFullPath</a> 都包含 "*".</li>
   <li><a href="lib/_SingleInstance.htm">#SingleInstance</a> 默认是关闭的.</li>
 </ul>

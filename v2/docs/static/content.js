@@ -165,7 +165,8 @@ var isPhone = (document.documentElement.clientWidth <= 600);
       if (cache.fontSize != 1)
         $('head').append('<style>body {font-size:' + cache.fontSize + 'em}</style>');
       normalizeParentURL = function() {
-        postMessageToParent('normalizeURL', [$.extend({}, window.location), document.title, supportsHistory ? history.state : null, equivPath]);
+        var url = getUrlParameter('url');
+        postMessageToParent('normalizeURL', [url ? {"href": url} : $.extend({}, window.location), document.title, supportsHistory ? history.state : null, equivPath]);
         if (cache.toc_clickItemTemp)
           if (supportsHistory)
             history.replaceState($.extend(history.state, {toc_clickItemTemp: cache.toc_clickItemTemp}), null, null);
@@ -449,24 +450,32 @@ function ctor_index()
   var self = this;
   self.dataPath = scriptDir + '/source/data_index.js';
   self.create = function(input, filter) { // Create and add the index links.
-    var output = '';
+    var output = '', label, path, type;
+    var type_name = {2: T("function"), 6: T("class")};
     input.sort(function(a, b) {
       var textA = a[0].toLowerCase(), textB = b[0].toLowerCase()
       return textA.localeCompare(textB);
     });
     for (var i = 0, len = input.length; i < len; i++)
     {
-      if (filter != -1 && input[i][2] != filter)
+      label = input[i][0];
+      path = input[i][1];
+      type = input[i][2];
+      if (filter != -1 && type != filter)
         continue;
+      // Append type name for ambiguities:
+      if (filter == -1 && type && type_name[type])
+        if (input[i-1] && input[i-1][0] == label || input[i+1] && input[i+1][0] == label)
+          label += ' (' + type_name[type] + ')'
       var a = document.createElement("a");
-      a.href = workingDir + input[i][1];
+      a.href = workingDir + path;
       a.setAttribute("tabindex", "-1");
       if (isIE8)
-        a.innerHTML = input[i][0];
+        a.innerHTML = label;
       else
       {
-        a.setAttribute("data-content", input[i][0]);
-        a.setAttribute("aria-label", input[i][0]);
+        a.setAttribute("data-content", label);
+        a.setAttribute("aria-label", label);
       }
       output += a.outerHTML;
     }
@@ -1665,20 +1674,11 @@ function ctor_features()
     for(var i = 0; i < spans.length; i++) {
       var span = spans[i], m, title, href;
       var text = span.textContent || span.innerText;
-      if (m = /AHK_L (\d+)\+/.exec(text)) {
-        title = T("Applies to:\nAutoHotkey_L Revision {0} and later\nAutoHotkey v1.0.90.00 and later").format(m[1]);
-        href = 'AHKL_ChangeLog.htm#L' + m[1];
-        text = text.replace(m[0], 'v1.0.90+'); // For users who don't know what AHK_L was.
-      } else if (m = /(v\d\.\d\.(\d+\.)?\d+)(\+)?/.exec(text)) {
+      if (m = /(v\d\.(\d+\.)?\d+)(\+)?/.exec(text)) {
         title = m[3] ? T("Applies to AutoHotkey {0} and later").format(m[1]) : "";
         if (!m[2])
-          m[1] = m[1] + '.00';
-        if (m[1] < 'v1.0.45.00')
-          href = 'ChangeLogHelp.htm#Older_Changes';
-        else if (m[1] <= 'v1.0.48.05')
-          href = 'ChangeLogHelp.htm#' + m[1];
-        else
-          href = 'AHKL_ChangeLog.htm#' + m[1];
+          m[1] = m[1] + '.0';
+        href = 'ChangeLog.htm#' + m[1];
       } else continue;
       // outerHTML/innerHTML not possible here because IE8 doesn't allow nested links:
       $(span).html('<a href="' + workingDir + href + '" title="' + title + '">' + text + '</a>');
@@ -1979,19 +1979,19 @@ function ctor_features()
         els.dir.push(out);
         return '<dir></dir>';
       });
-      // built-in functions:
-      els.order.push('bif'); els.bif = [];
-      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[2].single.join('|') + ')\\b(?=$|\\(|\\s(?!\\s*' + assignOp + '))', 'gi'), function(_, BIF) {
-        out = wrap(BIF, 'bif', 2);
-        els.bif.push(out);
-        return '<bif></bif>';
-      });
       // built-in classes:
       els.order.push('cls'); els.cls = [];
       innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[6].single.join('|') + ')\\b', 'gi'), function(_, CLS) {
         out = wrap(CLS, 'cls', 6);
         els.cls.push(out);
         return '<cls></cls>';
+      });
+      // built-in functions:
+      els.order.push('bif'); els.bif = [];
+      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[2].single.join('|') + ')\\b(?=$|\\(|\\s(?!\\s*' + assignOp + '))', 'gi'), function(_, BIF) {
+        out = wrap(BIF, 'bif', 2);
+        els.bif.push(out);
+        return '<bif></bif>';
       });
       // control flow statements:
       els.order.push('cfs'); els.cfs = [];

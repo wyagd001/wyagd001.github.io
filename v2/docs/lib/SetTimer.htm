@@ -23,29 +23,26 @@
     <p>类型: <a href="../misc/Functor.htm">函数对象</a></p>
     <p>要调用的函数对象.</p>
     <p>函数对象的<a href="../Concepts.htm#references-to-objects">引用</a>保存在脚本的计时器列表中, 除非删除计时器, 否则不会释放该引用. 对于<a href="#once">只运行一次</a>的计时器, 此操作会自动发生, 但是也可以通过调用 <em>Period(周期)</em> 为 0 的 SetTimer 来完成.</p>
-    <p id="OmitCallback">如果省略 <em>Function</em>, 如果有的话, SetTimer 将在启动当前线程的定时器上运行. 例如, <code>SetTimer , 0</code> 可以在一个定时器函数中用于标记要删除的定时器, 而 <code>SetTimer , 1000</code> 将更新当前定时器的 <em>Period</em>.</p>
+    <p id="OmitCallback">如果 <em>Function</em> 省略, 如果有的话, SetTimer 将在启动当前线程的定时器上运行. 例如, <code>SetTimer , 0</code> 可以在一个定时器函数中用于标记要删除的定时器, 而 <code>SetTimer , 1000</code> 将更新当前定时器的 <em>Period</em>.</p>
     <p class="warning"><strong>注意:</strong> 传递空变量或返回空值的表达式被看做一个错误. 这个参数必须为非空的值或完全忽略.</p>
   </dd>
 
   <dt>Period</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>参数的绝对值被用作在执行计时器之前必须经过的<a href="#Precision">大约</a>毫秒数. 定时器将被自动<a href="#reset">重置</a>. 可以设置为自动重复或只运行一次:</p>
+    <p>如果省略, 并且计时器不存在, 将创建一个周期为 250 的计时器. 如果省略, 并且计时器已经存在, 将<a href="#reset">重置</a>之前的周期, 除非指定了 <em>Priority</em>. 否则, 参数的绝对值被用作在执行计时器之前必须经过的<a href="#Precision">大约</a>毫秒数. 定时器将被自动<a href="#reset">重置</a>. 可以设置为自动重复或只运行一次:</p>
     <ul>
       <li>如果 <em>Period</em> 大于 0, 定时器将自动重复, 直到脚本明确禁用.</li>
-      <li id="once">如果 <em>Period</em> 小于 0, 定时器将只运行一次. 例如, 指定 -100 将在 100 ms 后调用 <em>Function</em>, 然后删除定时器, 就像使用 <code>SetTimer <i>Function</i>, 0</code> 一样.</li>
+      <li id="once">如果 <em>Period</em> 小于 0, 定时器将只运行一次. 例如, 指定 -100 将在 100&nbsp;ms 后调用 <em>Function</em>, 然后删除定时器, 就像使用 <code>SetTimer <i>Function</i>, 0</code> 一样.</li>
       <li>如果 <em>Period</em> 为 0, 定时器被标记为删除. 如果由这个定时器启动的线程还在运行, 那么在线程结束后, 定时器就会被删除(除非它被重新启用); 否则, 它会被立即删除. 在任何情况下, 定时器之前的 <em>Period</em> 和 <em>Priority</em> 都不会被保留.</li>
     </ul>
-    <p><em>Period</em> 的绝对值不能大于 4294967295 ms(49.7 天).</p>
-    <p><strong>默认值</strong>: 如果此参数为空并且:<br>
-    1) 计时器不存在: 则使用 250 的周期进行创建.<br>
-    2) 计时器已经存在: 则以原来的 <em>period</em> 进行<a href="#reset">重置</a>, 除非指定了 <em>Priority(优先级)</em>.</p>
+    <p><em>Period</em> 的绝对值不能大于 4294967295&nbsp;ms (49.7 天).</p>
   </dd>
 
   <dt>Priority</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>这个可选参数是一个介于 -2147483648 和 2147483647 之间的整数(或为<a href="../Variables.htm#Expressions">表达式</a>) 来表示计时器的优先级. 如果省略, 则使用 0. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
+    <p>如果省略, 默认为 0. 否则, 请指定一个介于 -2147483648 和 2147483647 之间的整数(或为<a href="../Variables.htm#Expressions">表达式</a>) 来表示计时器的优先级. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
     <p>要改变现有计时器的优先级而不以任何其他方式影响它, 请省略 <em>Period</em>.</p>
   </dd>
 
@@ -54,10 +51,10 @@
 <h2 id="Remarks">备注</h2>
 <p>计时器很有用, 因为它们是异步运行的, 这意味着它们会以指定的频率(间隔) 运行, 即使脚本正等待窗口, 显示对话框或忙于其他任务的时候. 它们的许多应用实例包括了当用户空闲时(如 <a href="../Variables.htm#TimeIdle">A_TimeIdle</a> 反映的那样) 执行一些动作或在不需要的窗口出现时关闭它们.</p>
 <p>尽管计时器给人一种脚本同时执行多个任务的错觉, 实际并非如此. 相反地, 定时子程序只是被当作其他线程来处理: 它们可以中断另一个线程或被另一个线程中断, 例如 <a href="../Hotkeys.htm">热键子程序</a>. 有关详情, 请参阅<a href="../misc/Threads.htm">线程</a>.</p>
-<p>每当创建或重新启用计时器或用新的 <em>period</em> 更新计时器时, 它的函数不会立即被调用; 必须先经过它的 <em>period</em> 时间. 如果您希望立即开始计时器的首次执行, 请直接调用计时器的函数(但是, 这不会像定时器本身那样启动一个新的线程; 所以像 <a href="SendMode.htm">SendMode</a> 这样的设置不会以其默认值启动).</p>
-<p id="reset"><strong>重置</strong>: 如果 SetTimer 被用在一个已经存在的计时器上, 那么这个计时器会被重置(除非指定了 <em>Priority</em> 并且省略了 <em>Period</em>); 换句话说, 在经过它的整个周期后函数才会再次被调用.</p>
-<p id="Precision"><strong>计时器精度</strong>: 由于操作系统中计时系统的精确度, <em>Period</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于安装的硬件和驱动程序的类型). 可以通过 Loop+Sleep 实现更短的延迟, 如 <a href="Sleep.htm#ExShorterSleep">DllCall+timeBeginPeriod+Sleep</a> 所示.</p>
-<p id="Reliability"><strong>可靠性</strong>: 在以下情况下, 计时器可能无法按预期时间运行:</p>
+<p>每当创建或重新启用计时器或用新的 period 更新计时器时, 它的函数不会立即被调用; 必须先经过它的 period 时间. 如果您希望立即开始计时器的首次执行, 请直接调用计时器的函数(但是, 这不会像定时器本身那样启动一个新的线程; 所以像 <a href="SendMode.htm">SendMode</a> 这样的设置不会以其默认值启动).</p>
+<p id="reset"><strong>重置:</strong> 如果 SetTimer 被用在一个已经存在的计时器上, 那么这个计时器会被重置(除非指定了 <em>Priority</em> 并且省略了 <em>Period</em>); 换句话说, 在经过它的整个周期后函数才会再次被调用.</p>
+<p id="Precision"><strong>计时器精度:</strong> 由于操作系统中计时系统的精确度, <em>Period</em> 通常会被向上取整到最近的 10 或 15.6 毫秒的倍数(取决于安装的硬件和驱动程序的类型). 可以通过 Loop+Sleep 实现更短的延迟, 如 <a href="Sleep.htm#ExShorterSleep">DllCall+timeBeginPeriod+Sleep</a> 所示.</p>
+<p id="Reliability"><strong>可靠性:</strong> 在以下情况下, 计时器可能无法按预期时间运行:</p>
 <ol>
   <li>其他应用程序对 CPU 造成了很大的负荷.</li>
   <li>计时器函数在计时器周期到期时仍在运行.</li>
@@ -67,10 +64,10 @@
 </ol>
 <p>虽然当脚本被<a href="Suspend.htm">挂起</a>时, 计时器会运行, 但如果<a href="../misc/Threads.htm">当前线程</a>的 <a href="Thread.htm#NoTimers">Thread NoTimers</a> 正在生效或任何线程<a href="Pause.htm">暂停</a>时, 计时器都不会运行. 此外, 当用户正在浏览脚本的某个菜单(如<a href="../Program.htm#tray-icon">托盘图标</a>菜单或菜单栏) 时, 它们也不会运行.</p>
 <p>因为定时器是通过临时中断脚本的当前线程来运行的, 所以当长时间的中断是不可取的, 它们的函数应该保持短暂的(以便快速完成).</p>
-<p id="otherremarks"><strong>其他备注</strong>: 临时的计时器经常可以在它自己的函数中禁用(请参阅此页面底部的示例).</p>
+<p id="otherremarks"><strong>其他备注:</strong> 临时的计时器经常可以在它自己的函数中禁用(请参阅此页面底部的示例).</p>
 <p>每当函数被定时器调用时, 它都会以默认的设置值(如 <a href="SendMode.htm">SendMode</a>) 重新开始. 这些默认值可以在<a href="../Scripts.htm#auto">脚本启动</a>中更改.</p>
 <p>如果<a href="../Hotkeys.htm">热键</a>的响应时间非常重要(如在游戏中) 并且脚本中包含的任何计时器, 其函数的执行时间超过 5 毫秒, 请使用下面的函数来避免 15 毫秒的延迟. 否则, 如果在计时器线程处于不中断期的时候按下热键, 就会出现这样的延迟:</p>
-<pre><a href="Thread.htm">Thread</a> "interrupt", 0  <em>; 使所有线程始终处于不可中断状态.</em></pre>
+<pre><a href="Thread.htm">Thread</a> "Interrupt", 0  <em>; 使所有线程始终处于可中断状态.</em></pre>
 <p>如果一个计时器的函数正在运行时被禁用, 那么该函数将继续运行, 直到完成.</p>
 <p><a href="KeyHistory.htm">KeyHistory</a> 功能显示存在的计时器数目, 以及当前启用的数目.</p>
 

@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Switch - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The Switch statement executes one case from a list of mutually exclusive candidates." />
+<meta name="description" content="The Switch statement compares a value with multiple cases and executes the statements of the first match." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
 
 <h1>Switch</h1>
 
-<p>从互斥候选项列表中执行其中一个实例.</p>
+<p>将一个值与多个实例进行比较, 并执行第一个匹配的<a href="../Concepts.htm#statement">语句</a>.</p>
 
 <pre class="Syntax"><span class="func">Switch</span> <span class="optional">SwitchValue, CaseSense</span>
 {
@@ -27,9 +27,10 @@
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>SwitchValue, CaseValue...</dt>
+  <dt>SwitchValue</dt>
   <dd>
-    <p>要比较的值, 如下面的<a href="#Remarks">备注</a>所述.</p>
+    <p>如果 <em>CaseSense</em> 省略, 将执行第一个计算为 <a href="../Concepts.htm#boolean">true</a>(非零和非空) 的实例. 否则, 对 <em>SwitchValue</em> 进行一次计算并与每个实例值进行比较, 直到找到匹配为止, 然后执行该实例.</p>
+    <p>如果没有匹配的实例并且存在 <em>Default</em>, 则执行它.</p>
   </dd>
 
   <dt>CaseSense</dt>
@@ -40,23 +41,46 @@
     <p><code>"Off"</code> 或 <code>0</code>(<code>False</code>): 字母 A-Z 被视为等同于其小写字母.</p>
     <p id="Locale"><code>"Locale"</code>: 根据当前用户地区的规则, 每次比较都是不区分大小写的. 有关详情, 请参阅 <a href="StrCompare.htm">StrCompare</a>.</p>
   </dd>
-
+  <dt>CaseValueN</dt>
+  <dd>
+    <p>要检查或比较的值, 取决于 <em>SwitchValue</em> 是否存在.</p>
+  </dd>
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>如果存在, 则对 <em>SwitchValue</em> 进行一次计算并与每个实例值进行比较, 直到找到匹配为止, 然后执行该实例. 否则, 将执行第一个计算为 <a href="../Concepts.htm#boolean">true</a>(非零和非空) 的实例. 如果没有匹配的实例并且存在 <code>Default</code>, 则执行它.</p>
 <p>与 <code>=</code> 和 <code>==</code> 运算符一样, 当省略 <em>CaseSense</em> 时, 如果 <em>SwitchValue</em> 和实例值都是纯数字, 或者其中一个是纯数字而另一个是数字字符串, 则会执行数字比较. 每个实例值都是单独考虑的, 并不影响用于其他实例值的比较类型.</p>
 <p>如果 <em>CaseSense</em> 参数存在, 所有的值都作为字符串而不是数字进行比较, 如果 <em>SwitchValue</em> 或 <em>CaseValue</em> 被计算为一个对象, 则会抛出一个 <a href="Error.htm#TypeError">TypeError</a>.</p>
 <p>如果忽略 <em>CaseSense</em> 参数, 默认情况下字符串比较是区分大小写的.</p>
-<p>每个实例最多可以列出 20 个值. 每个值必须是一个<a href="../Language.htm#expressions">表达式</a>, 但可以是一个原义数字, 加引号的字符串或变量. <code>Case</code> 和 <code>Default</code> 必须以冒号 <code>:</code> 终止.</p>
-<p>每个实例的第一个语句可以在 <code>Case</code> 下面, 也可以在同一行, 挨着冒号. 每个实例都隐式地以下一个 <code>Case</code>/<code>Default</code> 或右大括号结束. 与在其他一些语言中找到的 switch 语句不同, 没有隐式的落下直通和不使用 <a href="Break.htm">Break</a>(除非用于跳出封闭循环).</p>
-<p>由于所有实例都包含在同一个块中, 因此在一个实例中定义的标签可以是另一个案例的 <a href="Goto.htm">Goto</a> 的目标. 但是, 如果标签位于 <code>Case</code> 或 <code>Default</code> 的正上方, 则它将指向前一个实例的结尾, 而不是下一个实例的开头.</p>
-<p><code>Default</code> 不需要列在最后.</p>
+<p>每个实例最多可以列出 20 个值. 每个值必须是一个<a href="../Language.htm#expressions">表达式</a>, 但可以是一个原义数字, 加引号的字符串或变量. <em>Case</em> 和 <em>Default</em> 必须以冒号(:) 终止.</p>
+<p>每个实例的第一个语句可以在 <code>Case</code> 下面, 也可以在同一行, 挨着冒号. 每个实例都隐式地以下一个 <em>Case</em>/<em>Default</em> 或右大括号结束. 与在其他一些语言中找到的 switch 语句不同, 没有隐式的落下直通和不使用 <a href="Break.htm">Break</a>(除非用于跳出封闭循环).</p>
+<p>由于所有实例都包含在同一个块中, 因此在一个实例中定义的标签可以是另一个案例的 <a href="Goto.htm">Goto</a> 的目标. 但是, 如果标签位于 <em>Case</em> 或 <em>Default</em> 的正上方, 则它将指向前一个实例的结尾, 而不是下一个实例的开头.</p>
+<p><em>Default</em> 不需要列在最后.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="If.htm">If</a>, <a href="Else.htm">Else</a>, <a href="Block.htm">区块</a></p>
 
 <h2 id="examples">示例</h2>
+<div class="ex" id="ExBasic">
+<p><a class="ex_number" href="#ExBasic"></a> 将一个数字与多个实例进行比较, 并显示第一个匹配的消息框.</p>
+<pre>switch 2
+{
+case 1: MsgBox "no match"
+case 2: MsgBox "match"
+case 3: MsgBox "no match"
+}</pre>
+</div>
+
+<div class="ex" id="ExBasicOmitted">
+<p><a class="ex_number" href="#ExBasicOmitted"></a> <em>SwitchValue</em> 参数可以省略, 以执行第一个计算结果为 true 的情况.</p>
+<pre>str := "the red fox jumps over the lazy brown dog"
+switch
+{
+case InStr(str, "blue"):  MsgBox "false"
+case InStr(str, "red"):   MsgBox "true"
+case InStr(str, "green"): MsgBox "false"
+}</pre>
+</div>
+
 <div class="ex" id="ExInput">
 <p><a class="ex_number" href="#ExInput"></a> 要测试这个例子, 输入 <kbd>[</kbd> 后面跟着下面列出的一个缩写, 任何其他 5 个字符, 或 Enter/Esc/Tab/<kbd>.</kbd>; 或等待 4 秒.</p>
 <pre>~[::

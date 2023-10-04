@@ -14,8 +14,10 @@
 
 <p>复制字符串到内存地址或缓冲, 可选地将字符串转换到给定的代码页.</p>
 
-<pre class="Syntax"><span class="func">StrPut</span> String <span class="optional">, Encoding := <i>None</i></span> 
-<span class="func">StrPut</span> String, Target <span class="optional">, Length</span> <span class="optional">, Encoding := <i>None</i></span>
+<pre class="Syntax">
+BytesWritten := <span class="func">StrPut</span>(String, Target <span class="optional">, Length, Encoding</span>)
+BytesWritten := <span class="func">StrPut</span>(String, Target <span class="optional">, Encoding</span>)
+ReqBufSize   := <span class="func">StrPut</span>(String <span class="optional">, Encoding</span>)
 </pre>
 <h2 id="Parameters">参数</h2>
 <dl>
@@ -38,9 +40,9 @@
   <dt>Length</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>要写入的最大<a href="../Concepts.htm#character">字符</a>数, 需要时包含<a href="../Concepts.htm#null-termination">空终止符</a>.</p>
+    <p>要写入的最大<a href="../Concepts.htm#character">字符</a>数, 如果需要, 请包含<a href="../Concepts.htm#null-termination">空终止符</a>.</p>
     <p>如果 <em>Length</em> 为 0 或小于转换后的计划长度(或不需要转换时, 源字符串的长度), 则抛出异常.</p>
-    <p>当 <em>Target</em> 是一个普通的内存地址时, 不能省略 <em>Length</em>, 除非已知缓冲的大小足够大, 例如, 如果缓冲是基于先前调用的 StrPut 而分配的, 具有相同的 <em>Source</em> 和 <em>Encoding</em>.</p>
+    <p><em>Length</em> 不能被省略, 除非已知缓冲大小足够, 例如, 如果缓冲是基于先前使用相同的 <em>String</em> 和 <em>Encoding</em> 调用 StrPut 分配的.</p>
     <p>如果 <em>Target</em> 是一个对象, 指定一个超过 <code><i>Target</i>.Size</code> 计算出的缓冲大小的 <em>Length</em> 被认为是一个错误, 即使转换后的字符串大小在缓冲内.</p>
     <p class="warning"><strong>注意:</strong> 当指定 <em>Encoding</em> 时, <em>Length</em> 应该是缓冲的大小(以字符为单位), <strong>而不是</strong> <em>String</em> 或子字符串的长度, 因为转换可能会增加其长度.</p>
     <p class="warning"><strong>注意:</strong> <em>Length</em> 是以字符数来计算的, 而缓冲大小通常以字节度量, StrPut 的返回值也是如此. 若要以字节为单位来指定缓冲大小, 请在 <em>Target</em> 参数中使用类<a href="Buffer.htm">缓冲</a>对象.</p>
@@ -49,22 +51,22 @@
   <dt>Encoding</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-    <p>目标编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在指定 <em>Length</em> 时, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码.</p>
+    <p>如果省略, 那么将简单地复制或测量字符串, 而不进行任何转换. 否则, 请指定目标编码; 例如, <code>"UTF-8"</code>, <code>"UTF-16"</code> 或 <code>"CP936"</code>. 对于数字标识符, 只有在 4 参数模式中, 才可以省略前缀 "CP". 指定空字符串或 <code>"CP0"</code> 则使用系统默认 ANSI 代码.</p>
   </dd>
 
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>如果省略了 <em>Target</em>, 函数返回以字节数表示的所需的缓冲大小, 包含了空终止符.</p>
-<p>如果指定了 <em>Target</em>, 函数返回写入的字节数. 只有当有足够的空间时, 才会写入空终止符并包含在返回值中; 也就是说, 当 <em>Length</em> 或 <code><i>Target</i>.Size</code>(乘以一个字符的大小) 正好等于转换后的字符串的长度时, 则会省略空终止符.</p>
+<p>在 4 或 3 参数模式下, 函数返回写入的的字节数. 只有当有足够的空间时, 才会写入空终止符并包含在返回值中; 也就是说, 当 <em>Length</em> 或 <code><i>Target</i>.Size</code>(乘以一个字符的大小) 正好等于转换后的字符串的长度时, 则会省略空终止符.</p>
+<p>在 2 参数模式下, 函数返回以字节数表示的所需的缓冲大小, 其中包含了空终止符.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
 <p>如果检测到无效参数, 则抛出 <a href="Error.htm#ValueError">ValueError</a>, 例如转换后的字符串会超过 <em>Length</em> 或 <code><i>Target</i>.Size</code> 所允许的长度.</p>
 <p>如果转换无法执行, 则抛出 <a href="Error.htm#OSError">OSError</a>.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>注意, <i>String</i> 参数总是假定使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定写入给定 <i>Target</i> 的字符串的编码. 如果没有指定 <em>Encoding</em>, 则只测量或复制字符串, 而不进行任何转换.</p>
+<p>注意, <i>String</i> 参数总是假定使用当前可执行文件的<a href="../Concepts.htm#string-encoding">原生编码</a>, 而 <i>Encoding</i> 指定写入给定 <i>Target</i> 的字符串的编码. 如果没有指定 <em>Encoding</em>, 则只复制或测量字符串, 而不进行任何转换.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../Concepts.htm#string-encoding">字符编码</a>, <a href="StrGet.htm">StrGet</a>, <a href="../Compat.htm">二进制兼容性</a>, <a href="FileEncoding.htm">FileEncoding</a>, <a href="DllCall.htm">DllCall</a>, <a href="Buffer.htm">缓冲对象</a>, <a href="VarSetStrCapacity.htm">VarSetStrCapacity</a></p>
