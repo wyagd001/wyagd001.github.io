@@ -116,7 +116,7 @@ layout: default
 |1105|e19b|灰度图像|选中文件|将选中的图形文件转换为灰度图像|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像变灰度.ahk" "%CandySel%"|
 |1106|e16d|放入剪贴板|选中文件|将选中的图形文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像内容放入剪贴板.ahk" "%CandySel%"|
 |1107|e124|品质压缩|选中文件|将选中的图形文件品质缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像质量压缩一半.ahk" "%CandySel%"|
-|1108|e1a5|移动到Music|选中文件|移动选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\移动文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
+|1108|e1a5|[移动到Music](/Actions/1108.md)|选中文件|移动选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\移动文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
 |1109|e8c8|发送到打开的|选中文件|复制/移动选中文件到当前打开的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\选中文件到打开的文件夹.ahk" "%CandySel%"|
 |1110|f093|搜索帮助|选中文本|打开ahk中文帮助文件并跳转到选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Ahk脚本查帮助.ahk" "%CandySel%"|
 |1111|f093|搜索v2帮助|选中文本|打开ahkv2中文帮助文件并跳转到选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Ahk2脚本查帮助.ahk" "%CandySel%"|
@@ -179,7 +179,7 @@ layout: default
 |[1168](http://127.0.0.1:5151/runcom?aabb=1168)|eb55|关闭显示器|无条件|关闭显示器屏幕(黑屏)|canfunc&#124;CF_CloseScreen|
 |1169|E71B|复制路径|注册表|复制注册表窗口打开的路径到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\注册表定位.ahk"|
 |1170|e16d|复制内容|选中文件|复制文本文件内容到剪贴板|canfunc&#124;CF_FileToClip&#124;%CandySel%|
-|1171|e9a6|截取窗口|任意窗口|截取窗口并存入脚本所在目录的截图目录中(客户区域不带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "窗口截图"|
+|1171|e9a6|截取窗口|任意窗口|截取窗口并存入脚本所在目录的截图目录中(客户区域不带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "Window"|
 |[1172](http://127.0.0.1:5151/runcom?aabb=1172)|f617|截取屏幕|无条件|截取显示器屏幕并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk"|
 |1173|ed14|二维码|选中文本|选中文字生成二维码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\生成二维码.ahk" "%CandySel%"|
 |1174|ec5c|更改盘符|选中驱动器|更改选中驱动器的盘符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_更改盘符.ahk" "%CandySel%"|
@@ -437,7 +437,7 @@ layout: default
 |1426|EDE3|通用4|子面板|选中文件的通用动作的子面板|Gui&#124;文件通用4|
 |1427|EDE3|Ahk通用|菜单|选中ahk文件通用动作的菜单|Menu&#124;ahk文件通用|
 |[1428](http://127.0.0.1:5151/runcom?aabb=1428)|e775|输入法指示|无条件|工具: 在鼠标旁边显示当前窗口输入法状态(A, 中, 英)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\输入法指示器.ahk"|
-|[1429](http://127.0.0.1:5151/runcom?aabb=1429)|e8d2|脚本管理器|无条件|Ahk 脚本管理器|Cando&#124;ScriptManager|
+|[1429](http://127.0.0.1:5151/runcom?aabb=1429)|e8d2|[脚本管理器](/Actions/1429.md)|无条件|Ahk 脚本管理器|Cando&#124;ScriptManager|
 |[1430](http://127.0.0.1:5151/runcom?aabb=1430)|f597|托盘图标管理|无条件|显示隐藏系统托盘区域中图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\托盘图标管理器.ahk"|
 |[1431](http://127.0.0.1:5151/runcom?aabb=1431)|e1e0|普通权限|无条件|使用标准用户的权限创建任务计划,通过打开计划来打开文件(普通用户下以管理员权限运行如意以普通权限来打开文件)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\通过当前用户的权限新建任务计划并执行打开文件.ahk" "c:\windows\system32\cmd.exe"|
 |[1432](http://127.0.0.1:5151/runcom?aabb=1432)|e1e0|普通权限|无条件|使用当前 Shell 的权限(正常情况下为登录用户的权限) 打开文件(以管理员权限运行如意时想以普通用户的权限打开文件)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\通过桌面权限打开文件(ShellRun).ahk"  "cmd.exe"|
@@ -511,7 +511,7 @@ layout: default
 |[1500](http://127.0.0.1:5151/runcom?aabb=1500)|ed25|最近的文档|无条件|打开最近的文档目录|run&#124;shell:Recent|
 |[1501](http://127.0.0.1:5151/runcom?aabb=1501)|ed25|用户目录|无条件|打开用户目录|run&#124;shell:Profile|
 |[1502](http://127.0.0.1:5151/runcom?aabb=1502)|e839|桌面图标|无条件|打开桌面图标设置|run&#124;Rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0|
-|[1503](http://127.0.0.1:5151/runcom?aabb=1503)|e9a6|截取窗口|任意窗口|窗口截图并存入脚本所在目录的截图目录中(带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_截图并自动保存.ahk" "%Windy_CurWin_Id%"|
+|[1503](http://127.0.0.1:5151/runcom?aabb=1503)|e9a6|[截取窗口](/Actions/1503.md)|任意窗口|窗口截图并存入脚本所在目录的截图目录中(带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图并自动保存.ahk" "" "Window" "%Windy_CurWin_Id%" "1"|
 |1504|e982|文本编辑|子面板|文本编辑子面板|gui&#124;文本编辑|
 |1505|e982|去除空行|选中文本|如果有选中文本,去除选中文本中的空行(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空白行.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1506|e982|整理序号|选中文本|如果有选中文本,按数字顺序整理选中文本的行号(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_数字序号整理.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
