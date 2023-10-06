@@ -100,7 +100,7 @@ layout: default
 |[1089](http://127.0.0.1:5151/runcom?aabb=1089)|e89a|[同步如意](/Actions/1087.md)|无条件|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱 - 发布版本\RuYi-Ahk"|
 |1090|E734|网址收藏夹|子面板||gui&#124;网址收藏夹|
 |1091|e728|网址收藏夹|菜单||menu&#124;网址收藏夹|
-|1092|e8c1|查看编码|选中文本|查看选中文本的编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查看字符编码.ahk" "%CandySel%"|
+|1092|e8c1|[查看编码](/Actions/1092.md)|选中文本|查看选中文本的编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查看字符编码.ahk" "%CandySel%"|
 |1093|e8a3|搜索文件夹|资源管理器|使用文件名搜索资源管理器窗口当前文件夹中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹中搜索文件.ahk" "%Windy_CurWin_FolderPath%"|
 |[1094](http://127.0.0.1:5151/runcom?aabb=1094)|ec27|IP设置|无条件|网络适配器的IP设置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\网络连接IP设置.ahk"|
 |1095|e928|Hash|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\HashCalc.ahk" "%CandySel%"|
