@@ -2,7 +2,7 @@
 layout: default
 ---
 
-[返回主页](http://wyagd001.github.io)
+[返回主页](index.md)
 
 # [](#header-2) 如意百宝箱-Ahk 内置动作列表
 
@@ -94,7 +94,7 @@ layout: default
 |1083|EDE3|窗口通用2|菜单|当前窗口的通用动作的菜单2|Menu&#124;窗口通用2|
 |1084|e908|透明关|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
 |1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
-|1086|e126|复制到Music|选中文件|复制选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
+|1086|e126|[复制到Music](/Actions/1086.md)|选中文件|复制选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
 |1087|e89a|[同步文件夹](/Actions/1087.md)|资源管理器|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "%Windy_CurWin_FolderPath%"|
 |1088|e89a|[同步文件夹2](/Actions/1087.md)|资源管理器|左侧文件夹同步到右侧(左→右)|canfunc&#124;ExecSend&#124;%Windy_CurWin_FolderPath%&#124;文件夹同步 ahk_class AutoHotkeyGUI|
 |[1089](http://127.0.0.1:5151/runcom?aabb=1089)|e89a|[同步如意](/Actions/1087.md)|无条件|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱" "C:\Users\Administrator\Desktop\Ahk\如意百宝箱 - 发布版本\RuYi-Ahk"|
@@ -200,7 +200,7 @@ layout: default
 |1189|e72a|[右半前进](/Actions/1189.md)|任意窗口|浏览器发送前进快捷键, 其他窗口为移到右半屏幕|Cando&#124;右半前进|
 |1190|e74b|[最小化](/Actions/1190.md)|任意窗口|窗口最小化|Cando&#124;窗口最小化|
 |1191|e74a|[最大化](/Actions/1191.md)|任意窗口|窗口最大化|Cando&#124;窗口最大化|
-|[1192](http://127.0.0.1:5151/runcom?aabb=1192)|ee92|动作管理|无条件|动作管理|Cando&#124;TM_ActionM|
+|[1192](http://127.0.0.1:5151/runcom?aabb=1192)|ee92|[动作管理](/Actions/1182.md)|无条件|动作管理|Cando&#124;TM_ActionM|
 |[1193](http://127.0.0.1:5151/runcom?aabb=1193)|e1ce|最多运行|无条件|最多运行动作的子面板|canfunc&#124;ShowDBData&#124;execcount&#124;面板|
 |[1194](http://127.0.0.1:5151/runcom?aabb=1194)|e728|最多运行|无条件|最多运行动作的菜单|canfunc&#124;ShowDBData&#124;execcount&#124;菜单|
 |[1195](http://127.0.0.1:5151/runcom?aabb=1195)|e1cf|最近运行|无条件|最近运行动作的子面板|canfunc&#124;ShowDBData&#124;lastexectime&#124;面板|
@@ -350,7 +350,7 @@ layout: default
 |1339|e790|转Base64|选中文件|将选中图片文件转为Base64编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像转为Base64.ahk" "%CandySel%"|
 |1340|eb41|B64转HTML|剪贴板|将剪贴板中的 Base64 码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转html后粘贴.ahk"|
 |1341|e790|B64转图片|剪贴板|将剪贴板中的 Base64 码转换为图片后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转图片后粘贴.ahk"|
-|[1342](http://127.0.0.1:5151/runcom?aabb=1342)|f10d|添加到菜单|无条件|添加指定的如意的动作到资源管理器选中文件的右键菜单中|Cando&#124;AddtoMenu|
+|[1342](http://127.0.0.1:5151/runcom?aabb=1342)|f10d|[添加到菜单](/Actions/1342.md)|无条件|添加指定的如意的动作到资源管理器选中文件的右键菜单中|Cando&#124;AddtoMenu|
 |[1343](http://127.0.0.1:5151/runcom?aabb=1343)|f78a|退出如意|无条件|退出如意|Cando&#124;TM_Exit|
 |1344|e16d|FileToClip|剪贴板|将路径对应的文件复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\根据路径将文件复制到剪贴板.ahk"  "%CandySel%"|
 |[1345](http://127.0.0.1:5151/runcom?aabb=1345)|E70F|写字板|无条件|打开系统写字板|run&#124;wordpad.exe|

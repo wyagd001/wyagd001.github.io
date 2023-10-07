@@ -2,7 +2,7 @@
 layout: default
 ---
 
-[返回主页](http://wyagd001.github.io)
+[返回主页](./index.md)
 
 # [](#header-2) 如意百宝箱-Ahk 更新历史
 
