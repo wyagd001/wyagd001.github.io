@@ -52,7 +52,7 @@ layout: default
 |1041|E735|收藏夹|子面板|以当前窗口打开指定文件夹|GUI&#124;收藏夹_当前窗口|
 |1042|E838|C:\ |资源管理器|在当前资源管理器窗口打开动作中指定的目录 C:\ |run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\当前窗口打开.ahk" "C:\"|
 |[1043](http://127.0.0.1:5151/runcom?aabb=1043)|eb41|百度|无条件|打开百度的网页|run&#124;https://www.baidu.com|
-|1044|f17f|转码|选中文件|将选中的文本文件转换编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件转码.ahk" "%candysel%"|
+|1044|f17f|[转码](/Actions/1044.md)|选中文件|将选中的文本文件转换编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件转码.ahk" "%candysel%"|
 |1045|eafc|创建软硬链接|选中文件|为选中的文件创建软硬链接|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件创建软硬链接.ahk" "%candysel%"|
 |1046|ed2b|文件属性|选中文件|修改选中的文件的属性(只读, 系统, 隐藏, 修改时间等)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件属性.ahk" "%candysel%"|
 |1047|e7ad|运行窗口进程|任意窗口|运行一次窗口同名的进程|run&#124;%Windy_CurWin_Fullpath%|
@@ -324,7 +324,7 @@ layout: default
 |[1313](http://127.0.0.1:5151/runcom?aabb=1313)|e8ec|点击托盘|无条件|点击如意托盘图标显示的面板(窗口为桌面, 未选中状态, 剪贴板获取为空)|Cando&#124;TM_ShowMG|
 |1314|E77F|水平对齐|ET|将当前选中的单元格对齐方式复制到所有以数字为名称的工作表的相同位置的单元格中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_当前单元格水平对齐方式复制到所有数字名称的工作表相同位置.ahk"|
 |1315|e9d5|剪贴板|子面板|剪贴板子面板|Gui&#124;剪贴板通用|
-|1316|f17f|管理编码|选中文件夹|列出选中文件夹中文本文件编码, 批量转码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文本文件编码.ahk" "%CandySel%"|
+|1316|f17f|[管理编码](/Actions/1316.md)|选中文件夹|列出选中文件夹中文本文件编码, 批量转码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文本文件编码.ahk" "%CandySel%"|
 |[1317](http://127.0.0.1:5151/runcom?aabb=1317)|e1e4|[Ini_Fav](/Actions/1317.md)|无条件|Ini 文件显示为 Gui 面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹界面.ahk"|
 |1318|E77F|插入列|ET|所有以数字为名称的工作表的相同位置的右侧插入一列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表相同位置右边批量插入一列.ahk"|
 |1319|E77F|删除列|ET|所有以数字为名称的工作表批量删除选中列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表批量删除选中列.ahk"|
@@ -341,7 +341,7 @@ layout: default
 |[1330](http://127.0.0.1:5151/runcom?aabb=1330)|f739|节日提醒|无条件|节日提醒|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_节日提醒.ahk"|
 |1331|e97c|设为壁纸|选中文件|将选中图片文件设置为桌面壁纸(第一块屏幕)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_设置壁纸.ahk" "%CandySel%"|
 |[1332](http://127.0.0.1:5151/runcom?aabb=1332)|e97c|随机壁纸|无条件|将下载Bing背景图片的随机缓存文件设置为桌面壁纸|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\将指定文件设为壁纸.ahk"|
-|1333|f17f|文本批量|选中文件夹|对文件夹中文本文件进行批量操作(替换, 开头(/结尾)新增(/删除)一行)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文本文件批量操作.ahk" "%CandySel%"|
+|1333|f17f|[文本批量](/Actions/1333.md)|选中文件夹|对文件夹中文本文件进行批量操作(替换, 开头(/结尾)新增(/删除)一行)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文本文件批量操作.ahk" "%CandySel%"|
 |[1334](http://127.0.0.1:5151/runcom?aabb=1334)|f384|重启以太网|无条件|禁用以太网后重新启用(Win7 中显示为本地连接)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\禁用启用网络连接.ahk"|
 |[1335](http://127.0.0.1:5151/runcom?aabb=1335)|f385|重启以太网|无条件|禁用以太网后重新启用(Win7 中显示为本地连接)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\禁用启用网络连接2.ahk"|
 |1336|e164|Base64解|选中文本|将选中的Base64文本解密, 显示加密前的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Base64解密.ahk" "%CandySel%"|
@@ -360,7 +360,7 @@ layout: default
 |[1349](http://127.0.0.1:5151/runcom?aabb=1349)|e12e|放大镜|无条件|打开系统放大镜|run&#124;Magnify.exe|
 |1350|e164|文本对比|选中对象|网页版的文本对比|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\文本对比(WebView2).ahk2" "%CandySel%"|
 |1351|f5a6|文本比较2|选中对象|将选中对象放入文本对比的右侧界面|canfunc&#124;ExecSend&#124;%CandySel%&#124;文本对比 ahk_class AutoHotkey|
-|1352|f17f|批量重命名|选中文件夹|对文件夹中的文件进行批量重命名操作|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\批量重命名.ahk" "%CandySel%"|
+|1352|f17f|[批量重命名](/Actions/1352.md)|选中文件夹|对文件夹中的文件进行批量重命名操作|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\批量重命名.ahk" "%CandySel%"|
 |[1353](http://127.0.0.1:5151/runcom?aabb=1353)|e992|静音切换|无条件|系统静音切换|canfunc&#124;CF_静音|
 |[1354](http://127.0.0.1:5151/runcom?aabb=1354)|e198|静音|无条件|系统静音|canfunc&#124;CF_静音&#124;1|
 |[1355](http://127.0.0.1:5151/runcom?aabb=1355)|e995|取消静音|无条件|系统取消静音|canfunc&#124;CF_静音&#124;0|
@@ -421,7 +421,7 @@ layout: default
 |[1410](http://127.0.0.1:5151/runcom?aabb=1410)|edb4|暂停如意|无条件|暂停如意|Cando&#124;TM_Pause|
 |[1411](http://127.0.0.1:5151/runcom?aabb=1411)|e149|重启如意|无条件|重启如意|Cando&#124;TM_Reload|
 |[1412](http://127.0.0.1:5151/runcom?aabb=1412)|e8ec|如意托盘菜单|无条件|显示如意的托盘菜单(右击托盘图标显示的菜单)|Cando&#124;TM_show|
-|[1413](http://127.0.0.1:5151/runcom?aabb=1413)|e8ec|如意设置|无条件|显示如意的设置界面|Cando&#124;TM_SettingsM|
+|[1413](http://127.0.0.1:5151/runcom?aabb=1413)|e8ec|[如意设置](/Actions/1413.md)|无条件|显示如意的设置界面|Cando&#124;TM_SettingsM|
 |[1414](http://127.0.0.1:5151/runcom?aabb=1414)|e121|定时管理|无条件|定时动作管理界面|Cando&#124;TimingActionM|
 |1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免 QTTabBer 打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
 |[1416](http://127.0.0.1:5151/runcom?aabb=1416)|f8af|移动鼠标|无条件|移动鼠标到指定坐标并点击鼠标左键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\移动鼠标.ahk" "%CandySel%"|
