@@ -57,7 +57,7 @@ layout: default
 |1046|ed2b|文件属性|选中文件|修改选中的文件的属性(只读, 系统, 隐藏, 修改时间等)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件属性.ahk" "%candysel%"|
 |1047|e7ad|运行窗口进程|任意窗口|运行一次窗口同名的进程|run&#124;%Windy_CurWin_Fullpath%|
 |1048|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录|run&#124;explorer.exe /select,%Windy_CurWin_Fullpath%|
-|1049|E70E|窗口置顶|任意窗口|将当前窗口置顶|canfunc&#124;CF_AlwaysOnTop&#124;%Windy_CurWin_id%|
+|1049|E70E|[窗口置顶](/Actions/1049.md)|任意窗口|将当前窗口置顶|canfunc&#124;CF_AlwaysOnTop&#124;%Windy_CurWin_id%|
 |1050|F413|复制标题|任意窗口|复制窗口的标题栏文字|setclip&#124;%Windy_CurWin_Title%|
 |1051|E894|结束同名所有|任意窗口|强制结束所有窗口同名进程|run&#124;%ComSpec% /c taskkill /im %Windy_CurWin_ProcName% /F&#124;&#124;hide|
 |1052|e16d|复制(路径)|选中对象|将选中文件的路径/选中文字放入剪贴板|setclip&#124;%CandySel%|
@@ -90,7 +90,7 @@ layout: default
 |[1079](http://127.0.0.1:5151/runcom?aabb=1079)|f608|取消关机|无条件|取消强制关机|run&#124;shutdown -a|
 |1080|f14a|MD5|选中文件|计算选中文件的MD5值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5_File.ahk" "%CandySel%"|
 |1081|e8b1|交换文件名|选中文件|将当前选中的两个文件交换文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\两个文件交换文件名.ahk" "%CandySel%"|
-|1082|e775|获取文本|任意窗口|获取任意窗口鼠标下的文本(例如 任务管理器的命令行)|cando&#124;获取鼠标下文本|
+|1082|e775|[获取文本](/Actions/1082.md)|任意窗口|获取任意窗口鼠标下的文本(例如 任务管理器的命令行)|cando&#124;获取鼠标下文本|
 |1083|EDE3|窗口通用2|菜单|当前窗口的通用动作的菜单2|Menu&#124;窗口通用2|
 |1084|e908|透明关|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
 |1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
@@ -117,7 +117,7 @@ layout: default
 |1106|e16d|放入剪贴板|选中文件|将选中的图形文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像内容放入剪贴板.ahk" "%CandySel%"|
 |1107|e124|品质压缩|选中文件|将选中的图形文件品质缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像质量压缩一半.ahk" "%CandySel%"|
 |1108|e1a5|[移动到Music](/Actions/1108.md)|选中文件|移动选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\移动文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
-|1109|e8c8|发送到打开的|选中文件|复制/移动选中文件到当前打开的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\选中文件到打开的文件夹.ahk" "%CandySel%"|
+|1109|e8c8|[发送到打开的](/Actions/1109.md)|选中文件|复制/移动选中文件到当前打开的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\选中文件到打开的文件夹.ahk" "%CandySel%"|
 |1110|f093|搜索帮助|选中文本|打开ahk中文帮助文件并跳转到选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Ahk脚本查帮助.ahk" "%CandySel%"|
 |1111|f093|搜索v2帮助|选中文本|打开ahkv2中文帮助文件并跳转到选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Ahk2脚本查帮助.ahk" "%CandySel%"|
 |1112|e982|有道翻译|选中文本|使用有道翻译选中的文本(官网已停用免费API)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\有道翻译.ahk" "%CandySel%"|
@@ -128,7 +128,7 @@ layout: default
 |[1117](http://127.0.0.1:5151/runcom?aabb=1117)|ea49|显示扩展名|无条件|资源管理器显示文件的扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\显示扩展名.ahk"|
 |[1118](http://127.0.0.1:5151/runcom?aabb=1118)|e89f|隐藏扩展名|无条件|资源管理器隐藏文件的扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\不显示扩展名.ahk"|
 |1119|e16d|多文件名|选中文件|将选中文件的文件名放入剪贴板(支持多文件)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\多文件仅复制文件名.ahk" "%CandySel%"|
-|1120|f17f|剪贴板至文件|资源管理器|剪贴板保存为文件到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\剪贴板保存为文件到当前文件夹.ahk" "%Windy_CurWin_FolderPath%"|
+|1120|f17f|[剪贴板至文件](/Actions/1120.md)|资源管理器|剪贴板保存为文件到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\剪贴板保存为文件到当前文件夹.ahk" "%Windy_CurWin_FolderPath%"|
 |1121|f19d|最近打开|特定窗口|显示系统最近打开的文档的菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\最近使用的文档.ahk"|
 |[1122](http://127.0.0.1:5151/runcom?aabb=1122)|f093|无线调试|无条件|开启手机无线adb调试|run&#124;%A_ComSpec% /k "%A_ScriptDir%\引用程序\adb.exe" tcpip 5555|
 |[1123](http://127.0.0.1:5151/runcom?aabb=1123)|f095|开启黑域|无条件|开启手机黑域|%A_ComSpec% /k "%A_ScriptDir%\引用程序\adb.exe" shell sh /data/data/me.piebridge.brevent/brevent.sh|
@@ -160,11 +160,11 @@ layout: default
 |1149|e16d|复制目标路径|选中Lnk文件|复制快捷方式的目标所在路径到剪贴板|Canfunc&#124;CF_FileGetShortcut&#124;%CandySel%|
 |[1150](http://127.0.0.1:5151/runcom?aabb=1150)|E756|PowerShell|无条件|打开 PowerShell|run&#124;powershell|
 |1151|e16d|复制命令行|当前窗口|复制窗口进程命令行到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制窗口命令行.ahk" "%Windy_CurWin_id%"|
-|1152|f6fa|Bing搜索|选中文本|Bing搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://cn.bing.com/search?q=%CandySel%|
+|1152|f6fa|[Bing搜索](/Actions/1152.md)|选中文本|Bing搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://cn.bing.com/search?q=%CandySel%|
 |1153|f6fa|Baidu/Bing|Chrome|百度 Bing 切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\百度Bing切换.ahk" "%Windy_CurWin_Class%"|
-|1154|f6fa|京东搜索|选中文本|京东搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.jd.com/Search?keyword=%CandySel%|
+|1154|f6fa|[京东搜索](/Actions/1154.md)|选中文本|京东搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.jd.com/Search?keyword=%CandySel%|
 |1155|f6fa|搜索引擎|菜单|搜索引擎集合的菜单|Menu&#124;搜索引擎|
-|1156|f6fa|B站搜索|选中文本|B站搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.bilibili.com/all?keyword=%CandySel%|
+|1156|f6fa|[B站搜索](/Actions/1156.md)|选中文本|B站搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.bilibili.com/all?keyword=%CandySel%|
 |[1157](http://127.0.0.1:5151/runcom?aabb=1157)|ed25|如意目录|无条件|打开脚本所在目录|run&#124;%A_ScriptDir%|
 |[1158](http://127.0.0.1:5151/runcom?aabb=1158)|ed25|AppData|无条件|打开 AppData 目录|run&#124;shell:AppData|
 |[1159](http://127.0.0.1:5151/runcom?aabb=1159)|ed25|Rencent|无条件|打开 Rencent 目录|run&#124;shell:Rencent|
@@ -446,7 +446,7 @@ layout: default
 |[1435](http://127.0.0.1:5151/runcom?aabb=1435)|ec77|恢复桌面位置|无条件|利用先前保存的文件恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复桌面图标位置.ahk" "restore"|
 |[1436](http://127.0.0.1:5151/runcom?aabb=1436)|ef3c|获取颜色|无条件|查看选中数字对应的颜色, 并带有取色功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\取色小程序.ahk" "%CandySel%"|
 |[1437](http://127.0.0.1:5151/runcom?aabb=1437)|f16a|暂时隐藏|任意窗口|将任意窗口暂时隐藏 3 秒后恢复显示(任务栏按钮会被放到同类的最右边)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\暂时隐藏窗口.ahk" "%Windy_CurWin_id%"|
-|1438|e8e7|保存并运行|选中文本|将选中 Ahk 保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun&#124;CandySel_Rich|
+|1438|e8e7|[保存并运行](/Actions/1438.md)|选中文本|将选中 Ahk 保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun&#124;CandySel_Rich|
 |1439|E70F|打开本地网页|Chrome|使用文本编辑器打开浏览器正在浏览的本地文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\记事本打开浏览器当前浏览的本地文件.ahk" "%Windy_CurWin_Class%"|
 |[1440](http://127.0.0.1:5151/runcom?aabb=1440)|E107|回收站预览|无条件|显示当前登录用户的回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\当前用户回收站中的文件信息.ahk"|
 |[1441](http://127.0.0.1:5151/runcom?aabb=1441)|f58b|系统切换任务|无条件|显示系统切换窗口界面|Keys&#124;^!{Tab}|
