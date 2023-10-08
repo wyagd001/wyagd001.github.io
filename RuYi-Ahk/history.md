@@ -1,12 +1,12 @@
 ---
 layout: default
-title: 更新历史
+title: 如意百宝箱-Ahk
 description: 如意百宝箱-Ahk 更新历史
 ---
 
 [返回主页](./index.md)
 
-# [](#header-2) 如意百宝箱-Ahk 更新历史
+# [](#header-2) 更新历史
 
 下面列出了如意百宝箱发布以来的变更和新增内容.  
 
