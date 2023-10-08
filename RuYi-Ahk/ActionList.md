@@ -73,9 +73,9 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1060](http://127.0.0.1:5151/runcom?aabb=1060)|ed25|上帝模式|无条件|使用资源管理器以新窗口方式打开上帝模式文件夹|run&#124;shell:::{ED7BA470-8E54-465E-825C-99712043E01C}|
 |1061|e1d1|[文档所在目录](/Actions/1061.md)|特定窗口|使用资源管理器以新窗口方式打开窗口编辑的文件所在的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件.ahk"|
 |1062|E838|AD_JS|菜单|Chrome 浏览器地址栏运行 JS 脚本|Menu&#124;Chrome_Js|
-|1063|f0f9|编辑模式|Chrome|Chrome 浏览器开启网页编辑模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:void((function(){document.body.contentEditable='true'; document.designMode='on'; void 0})())"|
-|1064|edb1|!编辑模式|Chrome|Chrome 浏览器关闭网页编辑模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.body.contentEditable=false"|
-|1065|f0f9|强制复制|Chrome|Chrome 浏览器强制打开网页的右键复制功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:alert(document.onselectstart = document.onbeforecopy = document.oncontextmenu = document.onmousedown = document.onkeydown = function(){return true;});void(document.body.onmousedown='');void(document.body.contextmenu=''); void(document.body.onselectstart=''); void(document.body.onmouseup=''); void(document.body.oncopy='');"|
+|1063|f0f9|[编辑模式](/Actions/1063.md)|Chrome|Chrome 浏览器开启网页编辑模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:void((function(){document.body.contentEditable='true'; document.designMode='on'; void 0})())"|
+|1064|edb1|[!编辑模式](/Actions/1064.md)|Chrome|Chrome 浏览器关闭网页编辑模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.body.contentEditable=false"|
+|1065|f0f9|[强制复制](/Actions/1065.md)|Chrome|Chrome 浏览器强制打开网页的右键复制功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:alert(document.onselectstart = document.onbeforecopy = document.oncontextmenu = document.onmousedown = document.onkeydown = function(){return true;});void(document.body.onmousedown='');void(document.body.contextmenu=''); void(document.body.onselectstart=''); void(document.body.onmouseup=''); void(document.body.oncopy='');"|
 |1066|f552|获取权限|选中文件|设置选中文件的权限为管理员组|run&#124;cmd.exe /c takeown /f "%CandySel%" && icacls "%CandySel%" /grant administrators:F|
 |1067|ed2b|合并文件|选中文件|将选中的多个文本文件合并为一个文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\合并文本文件.ahk" "%candysel%"|
 |1068|e907|透明75%|任意窗口|将当前窗口透明度设为75%|canfunc&#124;CF_WinSetTransparent&#124;192|
@@ -140,8 +140,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1127|e16d|复制进程路径|任意窗口|复制当前窗口的进程路径到剪贴板|setclip&#124;%Windy_CurWin_Fullpath%|
 |1128|e70f|其他编辑|子面板|使用指定的编辑器打开当前窗口打开的文本文件|Gui&#124;编辑器打开|
 |1129|E70F|记事本|特定窗口|使用记事本编辑当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "notepad.exe"|
-|1130|e99a|恐龙彩蛋|Chrome|Chrome 浏览器断网时的恐龙游戏彩蛋|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://dino/"|
-|1131|e12b|Chrome URLs|Chrome|Chrome 浏览器的各种 URLs|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://about/"|
+|1130|e99a|[恐龙彩蛋](/Actions/1130.md)|Chrome|Chrome 浏览器断网时的恐龙游戏彩蛋|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://dino/"|
+|1131|e12b|[Chrome URLs](/Actions/1131.md)|Chrome|Chrome 浏览器的各种 URLs|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://about/"|
 |1132|f0ae|下载内容|Chrome|按下Ctrl+J, 打开 Chrome 浏览器的下载记录|Keys&#124;^j|
 |1133|ee93|历史记录|Chrome|按下Ctrl+H, 打开 Chrome 浏览器的下载记录|Keys&#124;^h|
 |1134|ea8d|调试器|Chrome|按下F12,打开 Chrome 浏览器的调试器|Keys&#124;{F12}|
@@ -155,7 +155,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1142|e16d|复制全部网址|Chrome|获取 Chrome 浏览器所有打开标签页的网址|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\GetBrowserURL.ahk" "All"|
 |1143|f466|IE浏览器打开|Chrome|使用IE浏览器打开 Chrome 浏览器当前标签页的网址|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他浏览器打开.ahk" "iexplorer.exe"|
 |1144|f73d|快捷键|菜单|Chrome 浏览器的快捷键面板|Menu&#124;Chrome_快捷键|
-|1145|e713|Chrome 设置|Chrome|打开 Chrome 浏览器的设置页面|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://settings/"|
+|1145|e713|[Chrome 设置](/Actions/1145.md)|Chrome|打开 Chrome 浏览器的设置页面|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://settings/"|
 |1146|E70F|编辑器|子面板|文本编辑器子面板|Gui&#124;文本编辑器|
 |[1147](http://127.0.0.1:5151/runcom?aabb=1147)|e703|控制面板|无条件|打开控制面板|run&#124;::{26EE0668-A00A-44D7-9371-BEB064C98683}\0|
 |[1148](http://127.0.0.1:5151/runcom?aabb=1148)|e703|库|无条件|打开库|run&#124;::{031E4825-7B94-4DC3-B131-E946B44C8DD5}|
@@ -220,8 +220,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1207|eb9f|提取图标|选中文件|提取选中文件(exe, dll)中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\提取图标.ahk" "%CandySel%"|
 |1208|eb9f|关联图标|选中文件|保存选中文件关联的图标到文件所在文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\关联图标存为png文件.ahk" "%CandySel%" ".png"|
 |[1209](http://127.0.0.1:5151/runcom?aabb=1209)|eb9f|测试|无条件|测试插件脚本里的例子|canfunc&#124;ExecSendToDll&#124;%CandySel%|
-|1210|ed11|完整歌单|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.cookie='os=pc';f()"|
-|1211|ea47|下一页|Chrome|Chrome 浏览器自动下一页|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:var Re=new RegExp('(下~&#124;后)(一~&#124;\s)*(页~&#124;頁~&#124;章~&#124;篇~&#124;翻)','i');var a=document.getElementsByTagName('A');for(var i=0;i<a.length;i++){if(Re.test(a[i].innerHTML)){if(a[i].href.substr(0,11).toLowerCase()=='javascript:')a[i].click();else document.location.href=a[i].href;break}}"|
+|1210|ed11|[完整歌单](/Actions/1210.md)|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.cookie='os=pc';f()"|
+|1211|ea47|[下一页](/Actions/1211.md)|Chrome|Chrome 浏览器自动下一页|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:var Re=new RegExp('(下~&#124;后)(一~&#124;\s)*(页~&#124;頁~&#124;章~&#124;篇~&#124;翻)','i');var a=document.getElementsByTagName('A');for(var i=0;i<a.length;i++){if(Re.test(a[i].innerHTML)){if(a[i].href.substr(0,11).toLowerCase()=='javascript:')a[i].click();else document.location.href=a[i].href;break}}"|
 |1212|ed11|[Ini_Fav](/Actions/1212.md)|选中文件|Ini 文件显示为菜单(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹菜单.ahk" "%CandySel%"|
 |1213|ed11|[Ini_Opw](/Actions/1213.md)|选中文件|Ini 文件显示为程序菜单, 使用菜单中的程序打开选中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_程序打开选中文件.ahk" "%CandySel%"|
 |1214|f6fa|[百度搜索](/Actions/1214.md)|选中文件|百度搜索选中文件的文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel_FileName%|
@@ -240,7 +240,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1227](http://127.0.0.1:5151/runcom?aabb=1227)|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)|run&#124;sysdm.cpl|
 |1228|e982|搜狗翻译|选中文本|使用搜狗翻译选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\搜狗翻译.ahk" "%CandySel%"|
 |1229|e8b1|[查找重复](/Actions/1229.md)|选中文件夹|查找选中文件夹中的重复文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\查找重复文件.ahk" "%CandySel%"|
-|1230|E894|结束进程|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F&#124;&#124;hide|
+|1230|E894|[结束进程](/Actions/1230.md)|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F&#124;&#124;hide|
 |[1231](http://127.0.0.1:5151/runcom?aabb=1231)|ef58|环境变量|无条件|环境变量编辑备份脚本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\环境变量.ahk"|
 |1232|ef58|新增Path|资源管理器|将资源管理器当前打开的路径加入环境变量Path中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\Environment.ahk" "%Windy_CurWin_FolderPath%"|
 |[1233](http://127.0.0.1:5151/runcom?aabb=1233)|e11a|[搜索动作](/Actions/1233.md)|无条件|搜索和运行动作的界面|Cando&#124;ActionSR|
@@ -253,8 +253,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1240](http://127.0.0.1:5151/runcom?aabb=1240)|E7AC|测试动作|无条件|对话框显示动作中变量|msgbox&#124;你好啊~&#124;hello~&#124;Ahk|
 |1241|e8f9|任务栏按钮|任意窗口|移除或恢复窗口在任务栏的按钮|canfunc&#124;CF_WinRemoveTaskbarButton&#124;%Windy_CurWin_id%|
 |1242|e982|[文本处理](/Actions/1242.md)|选中文本|编辑选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\文本处理.ahk" "%CandySel%"|
-|1243|E894|结束进程|任意窗口|强制结束窗口进程|canfunc&#124;CF_WinKill&#124;%Windy_CurWin_id%|
-|1244|E894|结束进程|任意窗口|强制结束窗口进程|canfunc&#124;CF_ProcessClose&#124;%Windy_CurWin_Pid%|
+|1243|E894|[结束进程](/Actions/1243.md)|任意窗口|强制结束窗口进程|canfunc&#124;CF_WinKill&#124;%Windy_CurWin_id%|
+|1244|E894|[结束进程](/Actions/1244.md)|任意窗口|强制结束窗口进程|canfunc&#124;CF_ProcessClose&#124;%Windy_CurWin_Pid%|
 |1245|EDE3|通用3|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用3|
 |1246|EDE3|通用3|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用3|
 |1247|e8f9|[加入Ini_Fav](/Actions/1247.md)|任意窗口|将窗口的进程(exe) 加入 Ini收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247|

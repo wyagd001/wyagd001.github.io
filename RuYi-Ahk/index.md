@@ -105,9 +105,9 @@ description: 如意百宝箱-Ahk 简介
 |1045|是|[创建软硬链接](/Actions/1045.md)|选中文件|为选中的文件创建软硬链接|文件创建软硬链接.ahk|
 |1046|是|[文件属性](/Actions/1046.md)|选中文件|修改选中的文件的属性(系统, 隐藏, 修改时间等)|文件属性.ahk|
 |1061|是|[文档所在目录](/Actions/1061.md)|特定窗口|使用资源管理器以新窗口方式打开窗口编辑的文件所在的目录|打开的文件.ahk|
-|1063|是|编辑模式|Chrome|Chrome 浏览器开启网页编辑模式|Chrome地址栏打开.ahk|
-|1064|是|!编辑模式|Chrome|Chrome 浏览器关闭网页编辑模式|Chrome地址栏打开.ahk|
-|1065|是|强制复制|Chrome|Chrome 浏览器强制打开网页的右键复制功能|Chrome地址栏打开.ahk|
+|1063|是|[编辑模式](/Actions/1063.md)|Chrome|Chrome 浏览器开启网页编辑模式|Chrome地址栏打开.ahk|
+|1064|是|[!编辑模式](/Actions/1064.md)|Chrome|Chrome 浏览器关闭网页编辑模式|Chrome地址栏打开.ahk|
+|1065|是|[强制复制](/Actions/1065.md)|Chrome|Chrome 浏览器强制打开网页的右键复制功能|Chrome地址栏打开.ahk|
 |1067|是|合并文件|选中文件|将选中的多个文本文件合并为一个文件|合并文本文件.ahk|
 |1070|是|[预览文件](/Actions/1070.md)|选中文件|使用ahk预览选中的文件(文本, 图片, 压缩包...)|文件预览.ahk|
 |1071|是|打开方式|选中文件|弹出选中文件的打开方式菜单|文件打开方式.ahk|
@@ -146,12 +146,12 @@ description: 如意百宝箱-Ahk 简介
 |1125|是|[窗口静音](/Actions/1125.md)|任意窗口|任意窗口静音, 再次运行恢复|窗口静音.ahk|
 |1126|是|[浏览器打开](/Actions/1126.md)|特定窗口|使用(当前打开的)浏览器打开当前窗口打开的文本文件|其他编辑器打开.ahk|
 |1129|是|记事本|特定窗口|使用记事本编辑当前窗口打开的文本文件|其他编辑器打开.ahk|
-|1130|是|恐龙彩蛋|Chrome|Chrome 浏览器断网时的恐龙游戏彩蛋|Chrome地址栏打开.ahk|
-|1131|是|Chrome URLs|Chrome|Chrome 浏览器的各种 URLs|Chrome地址栏打开.ahk|
+|1130|是|[恐龙彩蛋](/Actions/1130.md)|Chrome|Chrome 浏览器断网时的恐龙游戏彩蛋|Chrome地址栏打开.ahk|
+|1131|是|[Chrome URLs](/Actions/1131.md)|Chrome|Chrome 浏览器的各种 URLs|Chrome地址栏打开.ahk|
 |1141|是|复制网址|Chrome|获取 Chrome 浏览器地址栏的网址|GetBrowserURL.ahk|
 |1142|是|复制全部网址|Chrome|获取 Chrome 浏览器所有打开标签页的网址|GetBrowserURL.ahk|
 |1143|是|IE浏览器打开|Chrome|使用IE浏览器打开 Chrome 浏览器当前标签页的网址|其他浏览器打开.ahk|
-|1145|是|Chrome 设置|Chrome|打开 Chrome 浏览器的设置页面|Chrome地址栏打开.ahk|
+|1145|是|[Chrome 设置](/Actions/1145.md)|Chrome|打开 Chrome 浏览器的设置页面|Chrome地址栏打开.ahk|
 |1151|是|复制命令行|当前窗口|复制窗口进程命令行到剪贴板|复制窗口命令行.ahk|
 |1152|是|[Bing搜索](/Actions/1152.md)|选中文本|Bing搜索选中文本|当前浏览器打开.ahk|
 |1153|是|Baidu/Bing|Chrome|百度 Bing切换|百度Bing切换.ahk|
@@ -178,8 +178,8 @@ description: 如意百宝箱-Ahk 简介
 |1206|是|还原图标|选中文件夹|将选中文件夹的图标还原为默认的图标|Exe图标设为文件夹图标.ahk|
 |1207|是|提取图标|选中文件|提取选中文件(exe, dll)中的图标|提取图标.ahk|
 |1208|是|关联图标|选中文件|保存选中文件关联的图标到文件所在文件夹|关联图标存为png文件.ahk|
-|1210|是|完整歌单|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|Chrome地址栏打开.ahk|
-|1211|是|下一页|Chrome|Chrome 浏览器自动下一页|Chrome地址栏打开.ahk|
+|1210|是|[完整歌单](/Actions/1210.md)|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|Chrome地址栏打开.ahk|
+|1211|是|[下一页](/Actions/1211.md)|Chrome|Chrome 浏览器自动下一页|Chrome地址栏打开.ahk|
 |1212|是|[Ini_Fav](/Actions/1212.md)|选中文件|Ini 文件式的收藏夹菜单|Ini_收藏夹菜单.ahk|
 |1213|是|[Ini_Opw](/Actions/1213.md)|选中文件|Ini 文件显示为程序菜单, 使用菜单中的程序打开选中的文件|Ini_程序打开选中文件.ahk|
 |1214|是|[百度搜索](/Actions/1214.md)|选中文件|百度搜索选中文件的文件名|发送文件到手机目录.ahk|
