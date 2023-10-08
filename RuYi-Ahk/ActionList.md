@@ -1,5 +1,7 @@
 ---
 layout: default
+title: 内置动作列表
+description: 如意百宝箱-Ahk 内置动作列表
 ---
 
 [返回主页](index.md)

@@ -1,5 +1,7 @@
 ---
 layout: default
+title: 如意百宝箱-Ahk
+description: 如意百宝箱-Ahk 简介
 ---
 
 [返回主页](http://wyagd001.github.io)
