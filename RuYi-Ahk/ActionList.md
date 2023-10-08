@@ -179,8 +179,8 @@ layout: default
 |[1168](http://127.0.0.1:5151/runcom?aabb=1168)|eb55|[关闭显示器](/Actions/1168.md)|无条件|关闭显示器屏幕(黑屏)|canfunc&#124;CF_CloseScreen|
 |1169|E71B|复制路径|注册表|复制注册表窗口打开的路径到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\注册表定位.ahk"|
 |1170|e16d|复制内容|选中文件|复制文本文件内容到剪贴板|canfunc&#124;CF_FileToClip&#124;%CandySel%|
-|1171|e9a6|截取窗口|任意窗口|截取窗口并存入脚本所在目录的截图目录中(客户区域不带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "Window"|
-|[1172](http://127.0.0.1:5151/runcom?aabb=1172)|f617|截取屏幕|无条件|截取显示器屏幕并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk"|
+|1171|e9a6|[截取窗口](/Actions/1171.md)|任意窗口|截取窗口并存入脚本所在目录的截图目录中(客户区域不带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "Window"|
+|[1172](http://127.0.0.1:5151/runcom?aabb=1172)|f617|[截取屏幕](/Actions/1172.md)|无条件|截取显示器屏幕并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk"|
 |1173|ed14|二维码|选中文本|选中文字生成二维码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\生成二维码.ahk" "%CandySel%"|
 |1174|ec5c|更改盘符|选中驱动器|更改选中驱动器的盘符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_更改盘符.ahk" "%CandySel%"|
 |1175|eda2|序列号|选中驱动器|读取选中驱动器的序列号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_读取序列号.ahk" "%CandySel%"|
@@ -261,12 +261,12 @@ layout: default
 |1250|e8c8|结构+空文件|选中文件夹|将选中文件夹的结构和空白文件复制到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 1|
 |1251|e16d|复制文件名|选中文件|将选中文件的文件名放入剪贴板|setclip&#124;%CandySel_FileName%|
 |1252|e8d3|Ahk控制|子面板|控制Ahk脚本的动作集|Gui&#124;A_脚本控制|
-|1253|f259|主窗口|Ahk窗口|主窗口|canfunc&#124;PostMessToAhk&#124;65300&#124;%Windy_CurWin_id%|
-|1254|e8ee|重启脚本|Ahk窗口|重启脚本|canfunc&#124;PostMessToAhk&#124;65303&#124;%Windy_CurWin_id%|
-|1255|e70f|编辑脚本|Ahk窗口|编辑脚本|canfunc&#124;PostMessToAhk&#124;65304&#124;%Windy_CurWin_id%|
-|1256|e1c4|挂起脚本|Ahk窗口|挂起脚本|canfunc&#124;PostMessToAhk&#124;65305&#124;%Windy_CurWin_id%|
-|1257|edb4|暂停脚本|Ahk窗口|暂停脚本|canfunc&#124;PostMessToAhk&#124;65306&#124;%Windy_CurWin_id%|
-|1258|ea39|退出脚本|Ahk窗口|退出脚本|canfunc&#124;PostMessToAhk&#124;65307&#124;%Windy_CurWin_id%|
+|1253|f259|[主窗口](/Actions/1253.md)|Ahk窗口|主窗口|canfunc&#124;PostMessToAhk&#124;65300&#124;%Windy_CurWin_id%|
+|1254|e8ee|[重启脚本](/Actions/1254.md)|Ahk窗口|重启脚本|canfunc&#124;PostMessToAhk&#124;65303&#124;%Windy_CurWin_id%|
+|1255|e70f|[编辑脚本](/Actions/1254.md)|Ahk窗口|编辑脚本|canfunc&#124;PostMessToAhk&#124;65304&#124;%Windy_CurWin_id%|
+|1256|e1c4|[挂起脚本](/Actions/1254.md)|Ahk窗口|挂起脚本|canfunc&#124;PostMessToAhk&#124;65305&#124;%Windy_CurWin_id%|
+|1257|edb4|[暂停脚本](/Actions/1254.md)|Ahk窗口|暂停脚本|canfunc&#124;PostMessToAhk&#124;65306&#124;%Windy_CurWin_id%|
+|1258|ea39|[退出脚本](/Actions/1254.md)|Ahk窗口|退出脚本|canfunc&#124;PostMessToAhk&#124;65307&#124;%Windy_CurWin_id%|
 |1259|e97b|窗口微缩0.5|任意窗口|隐藏窗口后以动态缩略图方式显示(原窗口的0.5)(启动后快捷键 Alt+q)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口微缩.ahk" "%Windy_CurWin_id%"|
 |1260|f19d|窗口微缩0.3|任意窗口|隐藏窗口后以动态缩略图方式显示(原窗口的0.3)(启动后快捷键 Alt+q)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口微缩.ahk" "%Windy_CurWin_id%" "0.3"
 |1261|f093|安装 Apk|选中文件|安装 Apk 文件到连接的手机|run&#124;%A_ComSpec% /k "%A_ScriptDir%\引用程序\adb.exe" install -r "%CandySel%"|
@@ -361,14 +361,14 @@ layout: default
 |1350|e164|文本对比|选中对象|网页版的文本对比|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\文本对比(WebView2).ahk2" "%CandySel%"|
 |1351|f5a6|文本比较2|选中对象|将选中对象放入文本对比的右侧界面|canfunc&#124;ExecSend&#124;%CandySel%&#124;文本对比 ahk_class AutoHotkey|
 |1352|f17f|[批量重命名](/Actions/1352.md)|选中文件夹|对文件夹中的文件进行批量重命名操作|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\批量重命名.ahk" "%CandySel%"|
-|[1353](http://127.0.0.1:5151/runcom?aabb=1353)|e992|静音切换|无条件|系统静音切换|canfunc&#124;CF_静音|
-|[1354](http://127.0.0.1:5151/runcom?aabb=1354)|e198|静音|无条件|系统静音|canfunc&#124;CF_静音&#124;1|
-|[1355](http://127.0.0.1:5151/runcom?aabb=1355)|e995|取消静音|无条件|系统取消静音|canfunc&#124;CF_静音&#124;0|
-|[1356](http://127.0.0.1:5151/runcom?aabb=1356)|e7e8|关机|无条件|关机|canfunc&#124;CF_关机|
-|[1357](http://127.0.0.1:5151/runcom?aabb=1357)|e7e8|强制关机|无条件|强制关机|canfunc&#124;CF_关机&#124;13|
-|[1358](http://127.0.0.1:5151/runcom?aabb=1358)|e8ee|重启|无条件|重启|canfunc&#124;CF_重启&#124;6|
-|[1359](http://127.0.0.1:5151/runcom?aabb=1359)|e8ee|强制重启|无条件|强制重启|canfunc&#124;CF_重启|
-|[1360](http://127.0.0.1:5151/runcom?aabb=1360)|f617|截取屏幕|无条件|截取显示器屏幕并保存到脚本指定的路径(网页控制使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "%A_ScriptDir%\临时目录\Screen.jpg"|
+|[1353](http://127.0.0.1:5151/runcom?aabb=1353)|e992|[静音切换](/Actions/1353.md)|无条件|系统静音切换|canfunc&#124;CF_静音|
+|[1354](http://127.0.0.1:5151/runcom?aabb=1354)|e198|[静音](/Actions/1353.md)|无条件|系统静音|canfunc&#124;CF_静音&#124;1|
+|[1355](http://127.0.0.1:5151/runcom?aabb=1355)|e995|[取消静音](/Actions/1353.md)|无条件|系统取消静音|canfunc&#124;CF_静音&#124;0|
+|[1356](http://127.0.0.1:5151/runcom?aabb=1356)|e7e8|[关机](/Actions/1356.md)|无条件|关机|canfunc&#124;CF_关机或重启|
+|[1357](http://127.0.0.1:5151/runcom?aabb=1357)|e7e8|[强制关机](/Actions/1356.md)|无条件|强制关机|canfunc&#124;CF_关机或重启&#124;13|
+|[1358](http://127.0.0.1:5151/runcom?aabb=1358)|e8ee|[重启](/Actions/1356.md)|无条件|重启|canfunc&#124;CF_关机或重启&#124;2|
+|[1359](http://127.0.0.1:5151/runcom?aabb=1359)|e8ee|[强制重启](/Actions/1356.md)|无条件|强制重启|canfunc&#124;CF_关机或重启&#124;6|
+|[1360](http://127.0.0.1:5151/runcom?aabb=1360)|f617|[截取屏幕](/Actions/1360.md)|无条件|截取显示器屏幕并保存到脚本指定的路径(网页控制使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "%A_ScriptDir%\临时目录\Screen.jpg"|
 |[1361](http://127.0.0.1:5151/runcom?aabb=1361)|e992|显示桌面|无条件|最小化所有窗口(显示桌面)|canfunc&#124;CF_WinMinimizeAll|
 |[1362](http://127.0.0.1:5151/runcom?aabb=1362)|E107|清空回收站|无条件|清空回收站|canfunc&#124;CF_FileRecycleEmpty|
 |[1363](http://127.0.0.1:5151/runcom?aabb=1363)|f8ac|上一首|无条件|播放器上一首(foobar2000, wmplayer, ttplayer, Winamp)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\播放器控制.ahk" "/prev"|
