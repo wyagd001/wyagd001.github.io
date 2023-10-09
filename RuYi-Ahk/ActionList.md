@@ -78,23 +78,23 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1065|f0f9|[强制复制](/Actions/1065.md)|Chrome|Chrome 浏览器强制打开网页的右键复制功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:alert(document.onselectstart = document.onbeforecopy = document.oncontextmenu = document.onmousedown = document.onkeydown = function(){return true;});void(document.body.onmousedown='');void(document.body.contextmenu=''); void(document.body.onselectstart=''); void(document.body.onmouseup=''); void(document.body.oncopy='');"|
 |1066|f552|获取权限|选中文件|设置选中文件的权限为管理员组|run&#124;cmd.exe /c takeown /f "%CandySel%" && icacls "%CandySel%" /grant administrators:F|
 |1067|ed2b|合并文件|选中文件|将选中的多个文本文件合并为一个文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\合并文本文件.ahk" "%candysel%"|
-|1068|e907|透明75%|任意窗口|将当前窗口透明度设为75%|canfunc&#124;CF_WinSetTransparent&#124;192|
-|1069|e906|透明50%|任意窗口|将当前窗口透明度设为50%|canfunc&#124;CF_WinSetTransparent&#124;128|
+|1068|e907|[透明75%](/Actions/1068.md)|任意窗口|将当前窗口透明度设为75%|canfunc&#124;CF_WinSetTransparent&#124;192|
+|1069|e906|[透明50%](/Actions/1068.md)|任意窗口|将当前窗口透明度设为50%|canfunc&#124;CF_WinSetTransparent&#124;128|
 |1070|ef3b|[预览文件](/Actions/1070.md)|选中文件|使用ahk预览选中的文件(文本, 图片, 压缩包...)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件预览.ahk" "%CandySel%"|
 |1071|e929|打开方式|选中文件|弹出选中文件的打开方式菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件打开方式.ahk" "%CandySel%"|
 |1072|EDE3|窗口通用|菜单|当前窗口的通用动作的菜单|menu&#124;窗口通用|
-|1073|E107|永久删除|选中文件|永久删除选中的文件, 无确认提示|canfunc&#124;CF_FileDelete&#124;%CandySel%|
+|1073|E107|[永久删除](/Actions/1073.md)|选中文件|永久删除选中的文件, 无确认提示|canfunc&#124;CF_FileDelete&#124;%CandySel%|
 |[1074](http://127.0.0.1:5151/runcom?aabb=1074)|e193|画图|无条件|打开系统自带画图程序|run&#124;mspaint|
 |1075|f69e|常用工具|子面板||Gui&#124;常用工具|
 |[1076](http://127.0.0.1:5151/runcom?aabb=1076)|ea39|隐藏图标|无条件|隐藏或恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\隐藏桌面所有图标.ahk"|
-|1077|E107|删空目录|资源管理器|删除资源管理器窗口当前文件夹下的所有空目录(每个文件夹只循环一次)|canfunc&#124;CF_FileRemoveBlankDir&#124;%Windy_CurWin_FolderPath%|
+|1077|E107|[删空目录](/Actions/1077.md)|资源管理器|删除资源管理器窗口当前文件夹下的所有空目录(每个文件夹只循环一次)|canfunc&#124;CF_FileRemoveBlankDir&#124;%Windy_CurWin_FolderPath%|
 |[1078](http://127.0.0.1:5151/runcom?aabb=1078)|f608|1h后关机|无条件|1 小时后强制关机|run&#124;shutdown -s -t 3600|
 |[1079](http://127.0.0.1:5151/runcom?aabb=1079)|f608|取消关机|无条件|取消强制关机|run&#124;shutdown -a|
 |1080|f14a|MD5|选中文件|计算选中文件的MD5值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5_File.ahk" "%CandySel%"|
 |1081|e8b1|交换文件名|选中文件|将当前选中的两个文件交换文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\两个文件交换文件名.ahk" "%CandySel%"|
 |1082|e775|[获取文本](/Actions/1082.md)|任意窗口|获取任意窗口鼠标下的文本(例如 任务管理器的命令行)|cando&#124;获取鼠标下文本|
 |1083|EDE3|窗口通用2|菜单|当前窗口的通用动作的菜单2|Menu&#124;窗口通用2|
-|1084|e908|透明关|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
+|1084|e908|[透明关](/Actions/1068.md)|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
 |1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
 |1086|e126|[复制到Music](/Actions/1086.md)|选中文件|复制选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
 |1087|e89a|[同步文件夹](/Actions/1087.md)|资源管理器|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "%Windy_CurWin_FolderPath%"|
@@ -114,10 +114,10 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1101|f14a|[MD5对比1](/Actions/1101.md)|选中文件|将选中文件放入MD5计算界面的上部编辑框|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5.ahk" "%CandySel%"|
 |1102|f14a|[MD5对比2](/Actions/1101.md)|选中文件|将选中文件放入MD5计算界面的下部编辑框|canfunc&#124;ExecSend&#124;%CandySel%&#124;MD5验证 ahk_class AutoHotkeyGUI|
 |1103|e928|Hash2|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Hash_File.ahk" "%CandySel%"|
-|1104|e124|缩小50%|选中文件|将选中的图形文件尺寸缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%"|
-|1105|e19b|灰度图像|选中文件|将选中的图形文件转换为灰度图像|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像变灰度.ahk" "%CandySel%"|
-|1106|e16d|放入剪贴板|选中文件|将选中的图形文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像内容放入剪贴板.ahk" "%CandySel%"|
-|1107|e124|品质压缩|选中文件|将选中的图形文件品质缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像质量压缩一半.ahk" "%CandySel%"|
+|1104|e124|[缩小50%](/Actions/1104.md)|选中文件|将选中的图形文件尺寸缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%"|
+|1105|e19b|[灰度图像](/Actions/1105.md)|选中文件|将选中的图形文件转换为灰度图像|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像变灰度.ahk" "%CandySel%"|
+|1106|e16d|[放入剪贴板](/Actions/1106.md)|选中文件|将选中的图形文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像内容放入剪贴板.ahk" "%CandySel%"|
+|1107|e124|[品质压缩](/Actions/1107.md)|选中文件|将选中的图形文件品质缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像质量压缩一半.ahk" "%CandySel%"|
 |1108|e1a5|[移动到Music](/Actions/1108.md)|选中文件|移动选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\移动文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
 |1109|e8c8|[发送到打开的](/Actions/1109.md)|选中文件|复制/移动选中文件到当前打开的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\选中文件到打开的文件夹.ahk" "%CandySel%"|
 |1110|f093|[搜索帮助](/Actions/1110.md)|选中文本|打开ahk中文帮助文件并跳转到选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Ahk脚本查帮助.ahk" "%CandySel%"|
@@ -215,8 +215,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1202|EDE3|文本通用|子面板|短文本的通用动作的子面板|Gui&#124;短文本通用|
 |1203|EDE3|文本通用|菜单|选中短文本通用动作的菜单|Menu&#124;短文本通用|
 |1204|EDE3|数字通用|菜单|选中数字通用动作的菜单|Menu&#124;数字通用|
-|1205|e1df|Exe2目录图标|选中文件|将选中exe文件的图标设为所在文件夹的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Exe图标设为文件夹图标.ahk" "%CandySel%"|
-|1206|e8b7|还原图标|选中文件夹|将选中文件夹的图标设为默认的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Exe图标设为文件夹图标.ahk" "%CandySel%"|
+|1205|e1df|[Exe2目录图标](/Actions/1205.md)|选中文件|将选中exe文件的图标设为所在文件夹的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Exe图标设为文件夹图标.ahk" "%CandySel%"|
+|1206|e8b7|[还原图标](/Actions/1206.md)|选中文件夹|将选中文件夹的图标设为默认的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Exe图标设为文件夹图标.ahk" "%CandySel%"|
 |1207|eb9f|提取图标|选中文件|提取选中文件(exe, dll)中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\提取图标.ahk" "%CandySel%"|
 |1208|eb9f|关联图标|选中文件|保存选中文件关联的图标到文件所在文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\关联图标存为png文件.ahk" "%CandySel%" ".png"|
 |[1209](http://127.0.0.1:5151/runcom?aabb=1209)|eb9f|测试|无条件|测试插件脚本里的例子|canfunc&#124;ExecSendToDll&#124;%CandySel%|
@@ -392,18 +392,18 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1379|EDE3|目录通用2|菜单|选中文件夹的通用动作的菜单|Menu&#124;文件夹通用2|
 |1380|EDE3|目录通用2|子面板|选中文件夹的通用动作的菜单|Gui&#124;文件夹通用2|
 |1381|e8b7|彩色目录|子面板|彩色文件夹的子面板|Gui&#124;彩色目录|
-|1382|e188@DD3c4F|红色图标|选中文件夹|将文件夹的图标设置为红色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "红色"|
-|1383|e188@27BB27|绿色图标|选中文件夹|将文件夹的图标设置为绿色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "绿色"|
-|1384|e188@2242DF|蓝色图标|选中文件夹|将文件夹的图标设置为蓝色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝色"|
-|1385|e188@6C2490|蓝紫图标|选中文件夹|将文件夹的图标设置为蓝紫.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝紫"|
-|1386|e188@353535|黑色图标|选中文件夹|将文件夹的图标设置为黑色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "黑色"|
-|1387|e188@C74A90|紫色图标|选中文件夹|将文件夹的图标设置为紫色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "紫色"|
-|1388|e188@C3A81C|金色图标|选中文件夹|将文件夹的图标设置为金色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "金色"|
-|1389|e188@FB9A12|橘色图标|选中文件夹|将文件夹的图标设置为橘色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "橘色"|
-|1390|e188@BEBBB1|银灰图标|选中文件夹|将文件夹的图标设置为银灰.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "银灰"|
-|1391|e8b7@62CBB9|青色图标|选中文件夹|将文件夹的图标设置为青色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "青色"|
-|1392|e188@E9AAAA|粉红图标|选中文件夹|将文件夹的图标设置为粉红.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "粉红"|
-|1393|e188@8D5E2F|棕色图标|选中文件夹|将文件夹的图标设置为棕色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "棕色"|
+|1382|e188@DD3c4F|[红色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为红色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "红色"|
+|1383|e188@27BB27|[绿色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为绿色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "绿色"|
+|1384|e188@2242DF|[蓝色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为蓝色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝色"|
+|1385|e188@6C2490|[蓝紫图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为蓝紫.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "蓝紫"|
+|1386|e188@353535|[黑色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为黑色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "黑色"|
+|1387|e188@C74A90|[紫色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为紫色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "紫色"|
+|1388|e188@C3A81C|[金色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为金色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "金色"|
+|1389|e188@FB9A12|[橘色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为橘色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "橘色"|
+|1390|e188@BEBBB1|[银灰图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为银灰.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "银灰"|
+|1391|e8b7@62CBB9|[青色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为青色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "青色"|
+|1392|e188@E9AAAA|[粉红图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为粉红.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "粉红"|
+|1393|e188@8D5E2F|[棕色图标](/Actions/1382.md)|选中文件夹|将文件夹的图标设置为棕色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "棕色"|
 |1394|ef3b|测试|选中对象|测试插件脚本里的例子2|canfunc&#124;ExecSendToDll&#124;%CandySel%&#124;1394|
 |[1395](http://127.0.0.1:5151/runcom?aabb=1395)|e11a|Ahk Spy|无条件|第三方的 Autohotkey Spy|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\AhkSpy.ahk"|
 |1396|e11a|IconEx|选中文件|提取文件(Exe, Dll) 中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\IconEx.ahk" %CandySel%|
@@ -487,15 +487,15 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1474|f146|[移并跳桌面1](/Actions/1474.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面1, 并跳转到虚拟桌面1|SendMsgToATA&#124;&#124;0&#124;%Windy_CurWin_Id%|
 |1475|f147|[移并跳桌面2](/Actions/1474.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面2, 并跳转到虚拟桌面2|SendMsgToATA&#124;&#124;1&#124;%Windy_CurWin_Id%|
 |1476|f148|[移并跳桌面3](/Actions/1474.md)|任意窗口|将鼠标下的窗口移动到虚拟桌面3, 并跳转到虚拟桌面3|SendMsgToATA&#124;&#124;2&#124;%Windy_CurWin_Id%|
-|1477|f354|黑转透明|选中文件|将图片中的黑色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0x000000"|
-|1478|e790|白转透明|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0xFFFFFF"|
-|1479|f406|白转红|选中文件|将图片中的白色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0xFFFF0000"|
-|1480|e790|白转透明|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0x00000000"|
-|1481|f406|留白转红|选中文件|保留图片中的白色, 其他所有颜色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0xFFFFFF" "0xFF0000"|
-|1482|eb9f|转 Ico|选中文件|将选中的图片文件转为 Ico 文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_转为Ico文件.ahk" "%CandySel%"|
+|1477|f354|[黑转透明](/Actions/1477.md)|选中文件|将图片中的黑色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0x000000"|
+|1478|e790|[白转透明](/Actions/1478.md)|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0xFFFFFF"|
+|1479|f406|[白转红](/Actions/1479.md)|选中文件|将图片中的白色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0xFFFF0000"|
+|1480|e790|[白转透明](/Actions/1480.md)|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0x00000000"|
+|1481|f406|[留白转红](/Actions/1481.md)|选中文件|保留图片中的白色, 其他所有颜色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0xFFFFFF" "0xFF0000"|
+|1482|eb9f|[转 Ico](/Actions/1482.md)|选中文件|将选中的图片文件转为 Ico 文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_转为Ico文件.ahk" "%CandySel%"|
 |1483|eb3c|图片转换|子面板|图片转换动作子面板|Gui&#124;图片转换|
-|1484|eb9f|转为png|选中文件|将选中的图形文件转为png|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "png"|
-|1485|eb9f|转为jpg|选中文件|将选中的图形文件转为jpg|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "jpg"|
+|1484|eb9f|[转为png](/Actions/1484.md)|选中文件|将选中的图形文件转为png|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "png"|
+|1485|eb9f|[转为jpg](/Actions/1485.md)|选中文件|将选中的图形文件转为jpg|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "jpg"|
 |[1486](http://127.0.0.1:5151/runcom?aabb=1486)|e115|系统设置|无条件|打开系统设置(Win10)|run&#124;ms-settings:system|
 |[1487](http://127.0.0.1:5151/runcom?aabb=1487)|e783|系统关于|无条件|打开系统关于设置(Win10)|run&#124;ms-settings:about|
 |[1488](http://127.0.0.1:5151/runcom?aabb=1488)|e7f4|屏幕设置|无条件|打开系统屏幕设置(Win10)|run&#124;ms-settings:display|
@@ -517,7 +517,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1504|e982|文本编辑|子面板|文本编辑子面板|gui&#124;文本编辑|
 |1505|e982|去除空行|选中文本|如果有选中文本,去除选中文本中的空行(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空白行.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1506|e982|整理序号|选中文本|如果有选中文本,按数字顺序整理选中文本的行号(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_数字序号整理.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
-|1507|f406|留黑转白|选中文件|保留图片中的黑色, 其他所有颜色转为白色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0x000000" "0xFFFFFF"|
+|1507|f406|[留黑转白](/Actions/1507.md)|选中文件|保留图片中的黑色, 其他所有颜色转为白色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0x000000" "0xFFFFFF"|
 |[1508](http://127.0.0.1:5151/runcom?aabb=1508)|e7f4|屏保设置|无条件|打开屏幕保护程序设置|run&#124;rundll32.exe shell32.dll,Control_RunDLL desk.cpl,ScreenSaver,@ScreenSaver|
 |[1509](http://127.0.0.1:5151/runcom?aabb=1509)|e7f4|气泡屏保|无条件|打开气泡屏幕保护程序|run&#124;%windir%\system32\Bubbles.scr /s|
 |[1510](http://127.0.0.1:5151/runcom?aabb=1510)|e7f4|[启动屏保](/Actions/1510.md)|无条件|打开设置的屏幕保护程序(如果没有设置, 则没有效果)|Cando&#124;RunScreenSaver|
