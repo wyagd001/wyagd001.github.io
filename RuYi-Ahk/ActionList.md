@@ -43,8 +43,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1030|e728|通用目录|菜单|一些通用的目录面板(我的电脑,回收站等)|menu&#124;通用目录|
 |1031|E734|通用目录|子面板|一些通用的目录面板(我的电脑,回收站等)|GUI&#124;通用目录|
 |1032|E734|收藏夹|子面板|自定义的目录收藏夹|GUI&#124;自定义收藏夹|
-|1033|f617|水平最大化|任意窗口|水平最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "水平最大化"|
-|1034|f616|垂直最大化|任意窗口|垂直最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "垂直最大化"|
+|1033|f617|[水平最大化](/Actions/1033.md)|任意窗口|水平最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "水平最大化"|
+|1034|f616|[垂直最大化](/Actions/1034.md)|任意窗口|垂直最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "垂直最大化"|
 |1035|e728|通用2|子面板|选中文件的通用动作的子面板2|GUI&#124;文件通用2|
 |1036|efa5|文件改名|选中文件|修改选中的文本文件的名称和扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名修改.ahk" "%candysel%"|
 |1037|f87e|[打开选中](/Actions/1037.md)|选中对象|运行选中的文本(路径(程序, 文件, 目录), 网址, 注册表地址)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\运行选中的文本.ahk" "%CandySel%"|
@@ -86,11 +86,11 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1073|E107|[永久删除](/Actions/1073.md)|选中文件|永久删除选中的文件, 无确认提示|canfunc&#124;CF_FileDelete&#124;%CandySel%|
 |[1074](http://127.0.0.1:5151/runcom?aabb=1074)|e193|画图|无条件|打开系统自带画图程序|run&#124;mspaint|
 |1075|f69e|常用工具|子面板||Gui&#124;常用工具|
-|[1076](http://127.0.0.1:5151/runcom?aabb=1076)|ea39|隐藏图标|无条件|隐藏或恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\隐藏桌面所有图标.ahk"|
+|[1076](http://127.0.0.1:5151/runcom?aabb=1076)|ea39|[隐藏图标](/Actions/1076.md)|无条件|隐藏或恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\隐藏桌面所有图标.ahk"|
 |1077|E107|[删空目录](/Actions/1077.md)|资源管理器|删除资源管理器窗口当前文件夹下的所有空目录(每个文件夹只循环一次)|canfunc&#124;CF_FileRemoveBlankDir&#124;%Windy_CurWin_FolderPath%|
 |[1078](http://127.0.0.1:5151/runcom?aabb=1078)|f608|1h后关机|无条件|1 小时后强制关机|run&#124;shutdown -s -t 3600|
 |[1079](http://127.0.0.1:5151/runcom?aabb=1079)|f608|取消关机|无条件|取消强制关机|run&#124;shutdown -a|
-|1080|f14a|MD5|选中文件|计算选中文件的MD5值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5_File.ahk" "%CandySel%"|
+|1080|f14a|[MD5](/Actions/1080.md)|选中文件|计算选中文件的MD5值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5_File.ahk" "%CandySel%"|
 |1081|e8b1|交换文件名|选中文件|将当前选中的两个文件交换文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\两个文件交换文件名.ahk" "%CandySel%"|
 |1082|e775|[获取文本](/Actions/1082.md)|任意窗口|获取任意窗口鼠标下的文本(例如 任务管理器的命令行)|cando&#124;获取鼠标下文本|
 |1083|EDE3|窗口通用2|菜单|当前窗口的通用动作的菜单2|Menu&#124;窗口通用2|
@@ -105,7 +105,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1092|e8c1|[查看编码](/Actions/1092.md)|选中文本|查看选中文本的编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查看字符编码.ahk" "%CandySel%"|
 |1093|e8a3|搜索文件夹|资源管理器|使用文件名搜索资源管理器窗口当前文件夹中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹中搜索文件.ahk" "%Windy_CurWin_FolderPath%"|
 |[1094](http://127.0.0.1:5151/runcom?aabb=1094)|ec27|IP设置|无条件|网络适配器的IP设置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\网络连接IP设置.ahk"|
-|1095|e928|Hash|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\HashCalc.ahk" "%CandySel%"|
+|1095|e928|[Hash](/Actions/1095.md)|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\HashCalc.ahk" "%CandySel%"|
 |1096|ede4|[搜索文件内容](/Actions/1096.md)|资源管理器|搜索资源管理器窗口当前文件夹中文本文件中的内容|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文本文件中查找字符.ahk" "%Windy_CurWin_FolderPath%"|
 |1097|f6fa|[百度搜索](/Actions/1097.md)|选中文本|百度搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel%|
 |1098|f5a5|[文本比较1](/Actions/1098.md)|选中对象|将选中对象(选中的文件或文本)放入文本对比的左侧界面|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本比较.ahk" "%CandySel%"|
@@ -113,7 +113,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1100|f5a6|[文本比较2](/Actions/1098.md)|选中对象|将选中对象放入文本对比的右侧编辑框|canfunc&#124;ExecSend&#124;%CandySel%&#124;文本比较 ahk_class AutoHotkeyGUI|
 |1101|f14a|[MD5对比1](/Actions/1101.md)|选中文件|将选中文件放入MD5计算界面的上部编辑框|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5.ahk" "%CandySel%"|
 |1102|f14a|[MD5对比2](/Actions/1101.md)|选中文件|将选中文件放入MD5计算界面的下部编辑框|canfunc&#124;ExecSend&#124;%CandySel%&#124;MD5验证 ahk_class AutoHotkeyGUI|
-|1103|e928|Hash2|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Hash_File.ahk" "%CandySel%"|
+|1103|e928|[Hash2](/Actions/1103.md)|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Hash_File.ahk" "%CandySel%"|
 |1104|e124|[缩小50%](/Actions/1104.md)|选中文件|将选中的图形文件尺寸缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%"|
 |1105|e19b|[灰度图像](/Actions/1105.md)|选中文件|将选中的图形文件转换为灰度图像|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像变灰度.ahk" "%CandySel%"|
 |1106|e16d|[放入剪贴板](/Actions/1106.md)|选中文件|将选中的图形文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像内容放入剪贴板.ahk" "%CandySel%"|
