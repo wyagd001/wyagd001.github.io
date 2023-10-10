@@ -16,13 +16,13 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1003](http://127.0.0.1:5151/runcom?aabb=1003)|E71D|导航栏|无条件|资源管理器左侧导航栏中项目的设置(收藏夹, 库, 快速启动..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\导航栏项目设置.ahk"|
 |[1004](http://127.0.0.1:5151/runcom?aabb=1004)|E7AC|打开方式|无条件|查看扩展名的打开方式, 更改图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\文件打开方式查看.ahk"|
 |[1005](http://127.0.0.1:5151/runcom?aabb=1005)|E703|电脑桌面图标|无条件|我的电脑和桌面添加自定义的链接图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\我的电脑和桌面添加特殊链接.ahk"|
-|[1006](http://127.0.0.1:5151/runcom?aabb=1006)|E8AD|快捷方式|无条件|设置快捷方式的小箭头图标和快捷方式字样|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\快捷方式箭头图标设置.ahk"|
+|[1006](http://127.0.0.1:5151/runcom?aabb=1006)|E8AD|[快捷方式](/Actions/1006.md)|无条件|设置快捷方式的小箭头图标和快捷方式字样|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\快捷方式箭头图标设置.ahk"|
 |1007|f19d|资源管理器|菜单|资源管理器动作面板|menu&#124;资源管理器|
 |1008|F8B0|注册表相关|子面板||gui&#124;系统优化|
 |1009|e16d|复制路径|资源管理器|复制资源管理器当前窗口路径|setclip&#124;%Windy_CurWin_FolderPath%|
 |1010|EDE3|通用菜单|菜单|选中文件的通用动作菜单|menu&#124;文件通用|
 |1011|E70F|记事本打开|选中文件|使用记事本打开选定文件|openwith&#124;Notepad.exe|
-|1012|E756|CMD|资源管理器|打开cmd, 并跳转到当前资源管理器窗口路径|run&#124;cmd.exe /k cd /d "%Windy_CurWin_FolderPath%"|
+|1012|E756|[CMD](/Actions/1012.md)|资源管理器|打开cmd, 并跳转到当前资源管理器窗口路径|run&#124;cmd.exe /k cd /d "%Windy_CurWin_FolderPath%"|
 |[1013](http://127.0.0.1:5151/runcom?aabb=1013)|f0b2|程序和功能|无条件|打开系统的程序管理删除界面|run&#124;appwiz.cpl|
 |[1014](http://127.0.0.1:5151/runcom?aabb=1014)|ea6c|计算机管理|无条件|打开计算机管理(任务计划, 事件查看, 共享文件夹, 用户和组, 设备管理器, 磁盘管理, 服务管理)|run&#124;compmgmt.msc|
 |[1015](http://127.0.0.1:5151/runcom?aabb=1015)|e9f5|服务管理|无条件|打开服务管理|run&#124;services.msc|
@@ -52,7 +52,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1039|e896|[放入同名](/Actions/1039.md)|选中文件|将选中的文件放入同名的文件夹中(自动创建目录)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\放入同名文件夹.ahk" "%CandySel%"|
 |1040|E8DE|[解散目录](/Actions/1040.md)|选中文件|将选中文件夹中的文件移动到当前目录后, 删除选中文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\解散文件夹.ahk" "%CandySel%"|
 |1041|E735|收藏夹|子面板|以当前窗口打开指定文件夹|GUI&#124;收藏夹_当前窗口|
-|1042|E838|C:\ |资源管理器|在当前资源管理器窗口打开动作中指定的目录 C:\ |run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\当前窗口打开.ahk" "C:\"|
+|1042|E838|[C:\\](/Actions/1042.md)|资源管理器|在当前资源管理器窗口打开动作中指定的目录 C:\ |run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\当前窗口打开.ahk" "C:\"|
 |[1043](http://127.0.0.1:5151/runcom?aabb=1043)|eb41|百度|无条件|打开百度的网页|run&#124;https://www.baidu.com|
 |1044|f17f|[转码](/Actions/1044.md)|选中文件|将选中的文本文件转换编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件转码.ahk" "%candysel%"|
 |1045|eafc|[创建软硬链接](/Actions/1045.md)|选中文件|为选中的文件创建软硬链接|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件创建软硬链接.ahk" "%candysel%"|
@@ -91,11 +91,11 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1078](http://127.0.0.1:5151/runcom?aabb=1078)|f608|1h后关机|无条件|1 小时后强制关机|run&#124;shutdown -s -t 3600|
 |[1079](http://127.0.0.1:5151/runcom?aabb=1079)|f608|取消关机|无条件|取消强制关机|run&#124;shutdown -a|
 |1080|f14a|[MD5](/Actions/1080.md)|选中文件|计算选中文件的MD5值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5_File.ahk" "%CandySel%"|
-|1081|e8b1|交换文件名|选中文件|将当前选中的两个文件交换文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\两个文件交换文件名.ahk" "%CandySel%"|
+|1081|e8b1|[交换文件名](/Actions/1081.md)|选中文件|将当前选中的两个文件交换文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\两个文件交换文件名.ahk" "%CandySel%"|
 |1082|e775|[获取文本](/Actions/1082.md)|任意窗口|获取任意窗口鼠标下的文本(例如 任务管理器的命令行)|cando&#124;获取鼠标下文本|
 |1083|EDE3|窗口通用2|菜单|当前窗口的通用动作的菜单2|Menu&#124;窗口通用2|
 |1084|e908|[透明关](/Actions/1068.md)|任意窗口|将当前窗口透明度关闭|canfunc&#124;CF_WinSetTransparent&#124;255|
-|1085|e8fc|快捷方式到桌面|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
+|1085|e8fc|[快捷方式到桌面](/Actions/1085.md)|选中文件|创建文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%CandySel%|
 |1086|e126|[复制到Music](/Actions/1086.md)|选中文件|复制选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
 |1087|e89a|[同步文件夹](/Actions/1087.md)|资源管理器|左侧文件夹同步到右侧(左→右)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开的文件夹同步.ahk" "%Windy_CurWin_FolderPath%"|
 |1088|e89a|[同步文件夹2](/Actions/1087.md)|资源管理器|左侧文件夹同步到右侧(左→右)|canfunc&#124;ExecSend&#124;%Windy_CurWin_FolderPath%&#124;文件夹同步 ahk_class AutoHotkeyGUI|
@@ -103,7 +103,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1090|E734|网址收藏夹|子面板||gui&#124;网址收藏夹|
 |1091|e728|网址收藏夹|菜单||menu&#124;网址收藏夹|
 |1092|e8c1|[查看编码](/Actions/1092.md)|选中文本|查看选中文本的编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查看字符编码.ahk" "%CandySel%"|
-|1093|e8a3|搜索文件夹|资源管理器|使用文件名搜索资源管理器窗口当前文件夹中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹中搜索文件.ahk" "%Windy_CurWin_FolderPath%"|
+|1093|e8a3|[搜索文件夹](/Actions/1093.md)|资源管理器|使用文件名搜索资源管理器窗口当前文件夹中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹中搜索文件.ahk" "%Windy_CurWin_FolderPath%"|
 |[1094](http://127.0.0.1:5151/runcom?aabb=1094)|ec27|IP设置|无条件|网络适配器的IP设置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\网络连接IP设置.ahk"|
 |1095|e928|[Hash](/Actions/1095.md)|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\HashCalc.ahk" "%CandySel%"|
 |1096|ede4|[搜索文件内容](/Actions/1096.md)|资源管理器|搜索资源管理器窗口当前文件夹中文本文件中的内容|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文本文件中查找字符.ahk" "%Windy_CurWin_FolderPath%"|
@@ -139,7 +139,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1126|E70F|[浏览器打开](/Actions/1126.md)|特定窗口|使用(当前打开的)浏览器打开当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "当前浏览器"|
 |1127|e16d|复制进程路径|任意窗口|复制当前窗口的进程路径到剪贴板|setclip&#124;%Windy_CurWin_Fullpath%|
 |1128|e70f|其他编辑|子面板|使用指定的编辑器打开当前窗口打开的文本文件|Gui&#124;编辑器打开|
-|1129|E70F|记事本|特定窗口|使用记事本编辑当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "notepad.exe"|
+|1129|E70F|[记事本](/Actions/1129.md)|特定窗口|使用记事本编辑当前窗口打开的文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "notepad.exe"|
 |1130|e99a|[恐龙彩蛋](/Actions/1130.md)|Chrome|Chrome 浏览器断网时的恐龙游戏彩蛋|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://dino/"|
 |1131|e12b|[Chrome URLs](/Actions/1131.md)|Chrome|Chrome 浏览器的各种 URLs|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://about/"|
 |1132|f0ae|下载内容|Chrome|按下Ctrl+J, 打开 Chrome 浏览器的下载记录|Keys&#124;^j|
@@ -153,17 +153,17 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1140|e16e|筛选|WPS 表格|Excel, WPS 表格快捷键,按下 Ctrl+Shift+L, 进行筛选|Keys&#124;^+l|
 |1141|e16d|复制网址|Chrome|获取 Chrome 浏览器地址栏的网址|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\GetBrowserURL.ahk"|
 |1142|e16d|复制全部网址|Chrome|获取 Chrome 浏览器所有打开标签页的网址|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\GetBrowserURL.ahk" "All"|
-|1143|f466|IE浏览器打开|Chrome|使用IE浏览器打开 Chrome 浏览器当前标签页的网址|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他浏览器打开.ahk" "iexplorer.exe"|
+|1143|f466|[IE浏览器打开](/Actions/1143.md)|Chrome|使用IE浏览器打开 Chrome 浏览器当前标签页的网址|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他浏览器打开.ahk" "iexplorer.exe"|
 |1144|f73d|快捷键|菜单|Chrome 浏览器的快捷键面板|Menu&#124;Chrome_快捷键|
 |1145|e713|[Chrome 设置](/Actions/1145.md)|Chrome|打开 Chrome 浏览器的设置页面|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://settings/"|
 |1146|E70F|编辑器|子面板|文本编辑器子面板|Gui&#124;文本编辑器|
 |[1147](http://127.0.0.1:5151/runcom?aabb=1147)|e703|控制面板|无条件|打开控制面板|run&#124;::{26EE0668-A00A-44D7-9371-BEB064C98683}\0|
 |[1148](http://127.0.0.1:5151/runcom?aabb=1148)|e703|库|无条件|打开库|run&#124;::{031E4825-7B94-4DC3-B131-E946B44C8DD5}|
-|1149|e16d|复制目标路径|选中Lnk文件|复制快捷方式的目标所在路径到剪贴板|Canfunc&#124;CF_FileGetShortcut&#124;%CandySel%|
+|1149|e16d|[复制目标路径](/Actions/1149.md)|选中Lnk文件|复制快捷方式的目标路径到剪贴板|Canfunc&#124;CF_FileGetShortcut&#124;%CandySel%|
 |[1150](http://127.0.0.1:5151/runcom?aabb=1150)|E756|PowerShell|无条件|打开 PowerShell|run&#124;powershell|
 |1151|e16d|复制命令行|当前窗口|复制窗口进程命令行到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制窗口命令行.ahk" "%Windy_CurWin_id%"|
 |1152|f6fa|[Bing搜索](/Actions/1152.md)|选中文本|Bing搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://cn.bing.com/search?q=%CandySel%|
-|1153|f6fa|Baidu/Bing|Chrome|百度 Bing 切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\百度Bing切换.ahk" "%Windy_CurWin_Class%"|
+|1153|f6fa|[Baidu/Bing](/Actions/1153.md)|Chrome|百度 Bing 切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\百度Bing切换.ahk" "%Windy_CurWin_Class%"|
 |1154|f6fa|[京东搜索](/Actions/1154.md)|选中文本|京东搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.jd.com/Search?keyword=%CandySel%|
 |1155|f6fa|搜索引擎|菜单|搜索引擎集合的菜单|Menu&#124;搜索引擎|
 |1156|f6fa|[B站搜索](/Actions/1156.md)|选中文本|B站搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.bilibili.com/all?keyword=%CandySel%|
@@ -184,9 +184,9 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1171|e9a6|[截取窗口](/Actions/1171.md)|任意窗口|截取窗口并存入脚本所在目录的截图目录中(客户区域不带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "Window"|
 |[1172](http://127.0.0.1:5151/runcom?aabb=1172)|f617|[截取屏幕](/Actions/1172.md)|无条件|截取显示器屏幕并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk"|
 |1173|ed14|[二维码](/Actions/1173.md)|选中文本|选中文字生成二维码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\生成二维码.ahk" "%CandySel%"|
-|1174|ec5c|更改盘符|选中驱动器|更改选中驱动器的盘符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_更改盘符.ahk" "%CandySel%"|
-|1175|eda2|序列号|选中驱动器|读取选中驱动器的序列号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_读取序列号.ahk" "%CandySel%"|
-|1176|ea5b|AppId|任意窗口|更改窗口的AppId, 将窗口从当前任务栏分组中移除|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\更改appid.ahk" "%Windy_CurWin_id%"|
+|1174|ec5c|[更改盘符](/Actions/1174.md)|选中驱动器|更改选中驱动器的盘符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_更改盘符.ahk" "%CandySel%"|
+|1175|eda2|[序列号](/Actions/1175.md)|选中驱动器|读取选中驱动器的序列号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_读取序列号.ahk" "%CandySel%"|
+|1176|ea5b|[AppId](/Actions/1176.md)|任意窗口|更改窗口的AppId, 将窗口从当前任务栏分组中移除|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\更改appid.ahk" "%Windy_CurWin_id%"|
 |1177|EDE3|[FolderMenu](/Actions/1177.md)|选中文件夹|将选中文件夹以菜单形式显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\FolderMenu.ahk" "%CandySel%"|
 |1178|EDE3|[FolderMenu](/Actions/1178.md)|资源管理器|将资源管理器当前打开的文件夹以菜单形式显示|run#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\FolderMenu.ahk" "%Windy_CurWin_FolderPath%"|
 |1179|EDE3|当前文件夹|子面板|资源管理器当前打开文件夹的相关动作集合的子面板|Gui&#124;资源管理器_当前文件夹|
@@ -207,10 +207,10 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1194](http://127.0.0.1:5151/runcom?aabb=1194)|e728|最多运行|无条件|最多运行动作的菜单|canfunc&#124;ShowDBData&#124;execcount&#124;菜单|
 |[1195](http://127.0.0.1:5151/runcom?aabb=1195)|e1cf|最近运行|无条件|最近运行动作的子面板|canfunc&#124;ShowDBData&#124;lastexectime&#124;面板|
 |[1196](http://127.0.0.1:5151/runcom?aabb=1196)|f0e9|最近运行|无条件|最近运行动作的菜单|canfunc&#124;ShowDBData&#124;lastexectime&#124;菜单|
-|1197|f2b7|DllFunc|选中文件|查看选中Dll文件中的函数|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Dll文件中的函数.ahk" "%CandySel%"|
+|1197|f2b7|[DllFunc](/Actions/1197.md)|选中文件|查看选中Dll文件中的函数|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Dll文件中的函数.ahk" "%CandySel%"|
 |1198|e74c|[智能解压](/Actions/1198.md)|选中文件|将选中的压缩文件解压到当前文件夹,并且只有一层文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\压缩文件智能解压.ahk" "%CandySel%"|
 |[1199](http://127.0.0.1:5151/runcom?aabb=1199)|f5ed|窗口列表|无条件|列出系统中的所有窗口, 可以隐藏和显示|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_显示或隐藏.ahk"|
-|1200|f2b7|进制转换|选中文本|将选中的10进数字转换为16进制, 或将选中的16进数字转换为10进制|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_十进制十六进制转换.ahk" "%CandySel%"|
+|1200|f2b7|[进制转换](/Actions/1200.md)|选中文本|将选中的10进数字转换为16进制, 或将选中的16进数字转换为10进制|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_十进制十六进制转换.ahk" "%CandySel%"|
 |1201|f2b7|[对应颜色](/Actions/1201.md)|选中文本|查看选中数字对应的颜色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_查看代码对应的颜色.ahk" "%CandySel%"|
 |1202|EDE3|文本通用|子面板|短文本的通用动作的子面板|Gui&#124;短文本通用|
 |1203|EDE3|文本通用|菜单|选中短文本通用动作的菜单|Menu&#124;短文本通用|
@@ -341,7 +341,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1328](http://127.0.0.1:5151/runcom?aabb=1328)|e97c|壁纸路径|无条件|获取桌面壁纸的文件路径|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\壁纸路径.ahk"|
 |[1329](http://127.0.0.1:5151/runcom?aabb=1329)|f738|整点敲钟|无条件|整点半点敲钟|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_整点半点敲钟.ahk"|
 |[1330](http://127.0.0.1:5151/runcom?aabb=1330)|f739|节日提醒|无条件|节日提醒|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_节日提醒.ahk"|
-|1331|e97c|设为壁纸|选中文件|将选中图片文件设置为桌面壁纸(第一块屏幕)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_设置壁纸.ahk" "%CandySel%"|
+|1331|e97c|[设为壁纸](/Actions/1331.md)|选中文件|将选中图片文件设置为桌面壁纸(第一块屏幕)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_设置壁纸.ahk" "%CandySel%"|
 |[1332](http://127.0.0.1:5151/runcom?aabb=1332)|e97c|随机壁纸|无条件|将下载Bing背景图片的随机缓存文件设置为桌面壁纸|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\将指定文件设为壁纸.ahk"|
 |1333|f17f|[文本批量](/Actions/1333.md)|选中文件夹|对文件夹中文本文件进行批量操作(替换, 开头(/结尾)新增(/删除)一行)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文本文件批量操作.ahk" "%CandySel%"|
 |[1334](http://127.0.0.1:5151/runcom?aabb=1334)|f384|重启以太网|无条件|禁用以太网后重新启用(Win7 中显示为本地连接)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\禁用启用网络连接.ahk"|
