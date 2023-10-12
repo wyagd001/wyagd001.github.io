@@ -230,13 +230,13 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1217](http://127.0.0.1:5151/runcom?aabb=1217)|e89a|到手机|无条件|同步电脑文件夹到手机文件夹(参数指定文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\同步文件夹到手机.ahk" "H:\备份\同步文件夹" "/storage/emulated/0/1_文档/资料/同步文件夹"|
 |[1218](http://127.0.0.1:5151/runcom?aabb=1218)|e952|连接手机|无条件|使用adb连接到手机|run&#124;%A_ComSpec% /k "%A_ScriptDir%\引用程序\adb.exe" connect 192.168.1.109:5555|
 |1219|e89a|到手机|选中文件|发送电脑选中文件到手机的根目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\发送文件到手机目录.ahk" "%CandySel%"|
-|1220|e16d|放入剪贴板|选中文件|将选中的文本文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件内容放入剪贴板.ahk" "%CandySel%"|
+|1220|e16d|[放入剪贴板](/Actions/1220.md)|选中文件|将选中的文本文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件内容放入剪贴板.ahk" "%CandySel%"|
 |1221|E734|收藏夹|子面板|浏览器收藏夹菜单的子面板|Gui&#124;浏览器收藏夹|
-|[1222](http://127.0.0.1:5151/runcom?aabb=1222)|E734|360收藏夹|无条件|将360浏览器的收藏夹显示为菜单(只支持一级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\360浏览器收藏夹.ahk" "%CandySel%"|
-|[1223](http://127.0.0.1:5151/runcom?aabb=1223)|E734|Chrome收藏夹|无条件|将Chrome浏览器的收藏夹显示为菜单(只支持两级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk" "%CandySel%"|
-|[1224](http://127.0.0.1:5151/runcom?aabb=1224)|e16d|Edge收藏夹|无条件|将Edge浏览器的收藏夹显示为菜单(只支持两级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MsEdge收藏夹.ahk" "%CandySel%"|
+|[1222](http://127.0.0.1:5151/runcom?aabb=1222)|E734|[360收藏夹](/Actions/1222.md)|无条件|将360浏览器的收藏夹显示为菜单(只支持一级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\360浏览器收藏夹.ahk" "%CandySel%"|
+|[1223](http://127.0.0.1:5151/runcom?aabb=1223)|E734|[Chrome收藏夹](/Actions/1223.md)|无条件|将Chrome浏览器的收藏夹显示为菜单(只支持两级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk" "%CandySel%"|
+|[1224](http://127.0.0.1:5151/runcom?aabb=1224)|e16d|[Edge收藏夹](/Actions/1223.md)|无条件|将Edge浏览器的收藏夹显示为菜单(只支持两级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk" "%A_AppData%\..\Local\Microsoft\Edge\User Data\Default\bookmarks"|
 |1225|e8a3|文件库搜索|选中对象|使用选中对象在文件库中搜索文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\数据库_文件库中搜索文件.ahk" "%CandySel%"|
-|1226|e184|打开目录|对话框|显示一个菜单, 对话框跳转到选择的项目|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框_打开目录.ahk" "%Windy_CurWin_id%"|
+|1226|e184|[打开目录](/Actions/1226.md)|对话框|显示一个菜单, 对话框跳转到选择的项目|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框_打开目录.ahk" "%Windy_CurWin_id%"|
 |[1227](http://127.0.0.1:5151/runcom?aabb=1227)|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)|run&#124;sysdm.cpl|
 |1228|e982|搜狗翻译|选中文本|使用搜狗翻译选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\搜狗翻译.ahk" "%CandySel%"|
 |1229|e8b1|[查找重复](/Actions/1229.md)|选中文件夹|查找选中文件夹中的重复文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\查找重复文件.ahk" "%CandySel%"|
@@ -249,16 +249,16 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1236|e74c|Msi解压|选中文件|将选中的msi文件解压|run&#124;msiexec.exe /a "%CandySel%" /qb TARGETDIR="%CandySel_ParentPath%\%CandySel_FileNameNoExt%"|
 |1237|e74c|chm解压|选中文件|解压缩选中的chm文件|run&#124;hh.exe -decompile %CandySel_FileNameNoExt% %CandySel_FileName%&#124;%CandySel_ParentPath%|
 |1238|e8b1|前后交换|选中文件|重命名文件, 将文件名使用分隔符分为前后两部分,然后交换其位置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名前后交换.ahk" "%CandySel%"|
-|1239|E734|收藏夹|对话框|对话框跳转到ini文件中预设的文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框_收藏夹.ahk" "%Windy_CurWin_id%"|
+|1239|E734|[收藏夹](/Actions/1239.md)|对话框|对话框跳转到ini文件中预设的文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框_收藏夹.ahk" "%Windy_CurWin_id%"|
 |[1240](http://127.0.0.1:5151/runcom?aabb=1240)|E7AC|测试动作|无条件|对话框显示动作中变量|msgbox&#124;你好啊~&#124;hello~&#124;Ahk|
-|1241|e8f9|任务栏按钮|任意窗口|移除或恢复窗口在任务栏的按钮|canfunc&#124;CF_WinRemoveTaskbarButton&#124;%Windy_CurWin_id%|
+|1241|e8f9|[任务栏按钮](/Actions/1241.md)|任意窗口|移除或恢复窗口在任务栏的按钮|canfunc&#124;CF_WinRemoveTaskbarButton&#124;%Windy_CurWin_id%|
 |1242|e982|[文本处理](/Actions/1242.md)|选中文本|编辑选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\文本处理.ahk" "%CandySel%"|
 |1243|E894|[结束进程](/Actions/1243.md)|任意窗口|强制结束窗口进程|canfunc&#124;CF_WinKill&#124;%Windy_CurWin_id%|
 |1244|E894|[结束进程](/Actions/1244.md)|任意窗口|强制结束窗口进程|canfunc&#124;CF_ProcessClose&#124;%Windy_CurWin_Pid%|
 |1245|EDE3|通用3|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用3|
 |1246|EDE3|通用3|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用3|
 |1247|e8f9|[加入Ini_Fav](/Actions/1247.md)|任意窗口|将窗口的进程(exe) 加入 Ini收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247|
-|1248|eda4|快捷方式到桌面|任意窗口|创建窗口的进程文件的文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%Windy_CurWin_Fullpath%|
+|1248|eda4|[快捷方式到桌面](/Actions/1248.md)|任意窗口|创建窗口的进程文件的文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%Windy_CurWin_Fullpath%|
 |1249|e8c8|文件夹结构|选中文件夹|将选中文件夹的结构复制到当前文件夹(仅复制选中文件夹及其下的子文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%"|
 |1250|e8c8|结构+空文件|选中文件夹|将选中文件夹的结构和空白文件复制到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 1|
 |1251|e16d|复制文件名|选中文件|将选中文件的文件名放入剪贴板|setclip&#124;%CandySel_FileName%|
@@ -307,16 +307,16 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1294](http://127.0.0.1:5151/runcom?aabb=1294)|e775|区域和语言|无条件|打开控制面板区域和语言选项|run&#124;intl.cpl|
 |[1295](http://127.0.0.1:5151/runcom?aabb=1295)|f8b0|任务栏设置|无条件|打开任务栏设置|run&#124;rundll32.exe shell32.dll, Options_RunDLL 1|
 |1296|ed5a|[时间戳](/Actions/1296.md)|选中文本|选中的文本进行时间戳和日期时间的互相转换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_时间戳转换.ahk" "%CandySel%"|
-|1297|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(整合版)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(整合版).ahk" "%CandySel%"|
-|1298|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按 Ahk 遍历顺序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表.ahk" "%CandySel%"|
-|1299|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按创建时间降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按创建时间降序).ahk" "%CandySel%"|
-|1300|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按最近修改时间降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按最近修改时间降序).ahk" "%CandySel%"|
-|1301|e71d|文件列表|选中文件夹|显示选中文件夹中的所有文件的路径列表(按文件大小降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按文件大小降序).ahk" "%CandySel%"|
+|1297|e71d|[文件列表](/Actions/1297.md)|选中文件夹|显示选中文件夹中的所有文件的路径列表(整合版)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(整合版).ahk" "%CandySel%"|
+|1298|e71d|[文件列表](/Actions/1298.md)|选中文件夹|显示选中文件夹中的所有文件的路径列表(按 Ahk 遍历顺序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表.ahk" "%CandySel%"|
+|1299|e71d|[文件列表](/Actions/1299.md)|选中文件夹|显示选中文件夹中的所有文件的路径列表(按创建时间降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按创建时间降序).ahk" "%CandySel%"|
+|1300|e71d|[文件列表](/Actions/1300.md)|选中文件夹|显示选中文件夹中的所有文件的路径列表(按最近修改时间降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按最近修改时间降序).ahk" "%CandySel%"|
+|1301|e71d|[文件列表](/Actions/1301.md)|选中文件夹|显示选中文件夹中的所有文件的路径列表(按文件大小降序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(按文件大小降序).ahk" "%CandySel%"|
 |1302|e16d|[复制信息](/Actions/1302.md)|选中文件|将资源管理器选中文件各列显示的信息复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制资源管理器各列的信息.ahk" "%CandySel%"|
 |1303|e8c8|[ADS管理](/Actions/1303.md)|选中文件夹|列出选中文件夹中带有ADS数据的文件, 并可以对ADS数据进行管理(新建, 删除, 另存为)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件ADS.ahk" "%CandySel%"|
 |1304|f16c|[添加 ADS](/Actions/1304.md)|选中文件|为选中的文件添加文本的 ADS 流(流名称为 ADS1, ADS2)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\添加文本到 ADS 流.ahk" "%CandySel%"|
 |1305|ed5a|[HTML转文本](/Actions/1305.md)|剪贴板|将剪贴板中的 HTML 源代码去掉标签转换为纯文本后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转纯文本后粘贴.ahk"|
-|1306|ed5a|文本转HTML|剪贴板|将剪贴板中的 HTML 源代码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转html后粘贴.ahk"|
+|1306|ed5a|[文本转HTML](/Actions/1306.md)|剪贴板|将剪贴板中的 HTML 源代码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转html后粘贴.ahk"|
 |1307|ed5a|[中英符号](/Actions/1307.md)|选中文本|选中的标点符号中英互转(没选中时光标在标点后也可以进行转换)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中英文符号转换.ahk" "%CandySel%"|
 |1308|E77F|粘贴All|ET|将当前选中的单元格内容复制到所有以数字为名称的工作表的相同位置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_当前单元格内容复制到所有数字名称的工作表相同位置.ahk"|
 |1309|f32a|软链接管理|选中文件夹|列出选中文件夹的软链接文件和文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件软链接.ahk" "%CandySel%"|
@@ -335,8 +335,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1322](http://127.0.0.1:5151/runcom?aabb=1322)|e11a|Ahk Spy|无条件|Autohotkey Spy|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\引用程序\WindowSpy.ahk"|
 |1323|EDE3|窗口通用3|子面板|当前窗口的通用动作主面板3|Gui&#124;窗口通用3|
 |1324|EDE3|窗口通用3|菜单|当前窗口的通用动作的菜单3|Menu&#124;窗口通用3|
-|1325|e947|关闭其他|任意窗口|关闭除当前窗口外的同进程名的所有其他窗口(拥有标题栏和最大化按钮的窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\关闭同进程所有其他窗口.ahk"|
-|1326|e947|关闭其他|任意窗口|关闭除当前窗口外的所有其他窗口(只包括任务上可见的活动窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\关闭所有其他窗口.ahk"|
+|1325|e947|[关闭其他](/Actions/1325.md)|任意窗口|关闭除当前窗口外的同进程名的所有其他窗口(拥有标题栏和最大化按钮的窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\关闭同进程所有其他窗口.ahk"|
+|1326|e947|[关闭其他](/Actions/1326.md)|任意窗口|关闭除当前窗口外的所有其他窗口(只包括任务栏上可见的活动窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\关闭所有其他窗口.ahk"|
 |[1327](http://127.0.0.1:5151/runcom?aabb=1327)|e97c|[Bing壁纸](/Actions/1327.md)|无条件|将Bing背景图片设置为桌面壁纸|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\Bing壁纸.ahk"|
 |[1328](http://127.0.0.1:5151/runcom?aabb=1328)|e97c|壁纸路径|无条件|获取桌面壁纸的文件路径|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\壁纸路径.ahk"|
 |[1329](http://127.0.0.1:5151/runcom?aabb=1329)|f738|整点敲钟|无条件|整点半点敲钟|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_整点半点敲钟.ahk"|
@@ -350,8 +350,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1337|e8dd|[Base64加](/Actions/1337.md)|选中文本|将选中的文本进行Base64加密|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Base64加密.ahk" "%CandySel%"|
 |1338|e790|[Base64解](/Actions/1338.md)|选中文本|将选中的Base64解密, 显示加密前的图片|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Base64解密为图片.ahk" "%CandySel%"|
 |1339|e790|[转Base64](/Actions/1339.md)|选中文件|将选中图片文件转为Base64编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像转为Base64.ahk" "%CandySel%"|
-|1340|eb41|B64转HTML|剪贴板|将剪贴板中的 Base64 码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转html后粘贴.ahk"|
-|1341|e790|B64转图片|剪贴板|将剪贴板中的 Base64 码转换为图片后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转图片后粘贴.ahk"|
+|1340|eb41|[B64转HTML](/Actions/1340.md)|剪贴板|将剪贴板中的 Base64 码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转html后粘贴.ahk"|
+|1341|e790|[B64转图片](/Actions/1341.md)|剪贴板|将剪贴板中的 Base64 码转换为图片后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转图片后粘贴.ahk"|
 |[1342](http://127.0.0.1:5151/runcom?aabb=1342)|f10d|[添加到菜单](/Actions/1342.md)|无条件|添加指定的如意的动作到资源管理器选中文件的右键菜单中|Cando&#124;AddtoMenu|
 |[1343](http://127.0.0.1:5151/runcom?aabb=1343)|f78a|[退出如意](/Actions/1343.md)|无条件|退出如意|Cando&#124;TM_Exit|
 |1344|e16d|[FileToClip](/Actions/1344.md)|剪贴板|将路径对应的文件复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\根据路径将文件复制到剪贴板.ahk"  "%CandySel%"|
@@ -425,7 +425,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1412](http://127.0.0.1:5151/runcom?aabb=1412)|e8ec|[如意托盘菜单](/Actions/1412.md)|无条件|显示如意的托盘菜单(右击托盘图标显示的菜单)|Cando&#124;TM_show|
 |[1413](http://127.0.0.1:5151/runcom?aabb=1413)|e8ec|[如意设置](/Actions/1413.md)|无条件|显示如意的设置界面|Cando&#124;TM_SettingsM|
 |[1414](http://127.0.0.1:5151/runcom?aabb=1414)|e121|定时管理|无条件|跟随动作和定时动作管理界面|Cando&#124;TimingActionM|
-|1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免 QTTabBer 打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
+|1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免 QTTabBar 打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
 |[1416](http://127.0.0.1:5151/runcom?aabb=1416)|f8af|移动鼠标|无条件|移动鼠标到指定坐标并点击鼠标左键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\移动鼠标.ahk" "%CandySel%"|
 |[1417](http://127.0.0.1:5151/runcom?aabb=1417)|e961|屏蔽键盘|无条件|临时屏蔽键盘按键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\屏蔽键盘.ahk"|
 |[1418](http://127.0.0.1:5151/runcom?aabb=1418)|E756|CMD|无条件|标准用户下以管理员权限打开 CMD|run&#124;runas /user:administrator cmd|
@@ -433,8 +433,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1420](http://127.0.0.1:5151/runcom?aabb=1420)|E756|UAC|无条件|打开 UAC 通知管理(以管理员身份打开)|run&#124;runas /user:administrator C:\WINDOWS\System32\UserAccountControlSettings.exe|
 |1421|f19d|[文件属性](/Actions/1421.md)|选中文件|打开选中文件系统属性对话框|CanFunc&#124;CF_OpenProp&#124;%CandySel%|
 |[1422](http://127.0.0.1:5151/runcom?aabb=1422)|E756|远程协助|无条件|工具: 系统远程协助|run&#124;msra.exe|
-|[1423](http://127.0.0.1:5151/runcom?aabb=1423)|E107|回收站预览|无条件|显示回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件预览.ahk" "::{645FF040-5081-101B-9F08-00AA002F954E}"|
-|[1424](http://127.0.0.1:5151/runcom?aabb=1424)|f5a9|同时编辑|无条件|同时使用记事本打开两个文件夹下(当前打开的文件夹) 的同名文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\同时编辑两个同名的文件.ahk" "%CandySel%"|
+|[1423](http://127.0.0.1:5151/runcom?aabb=1423)|E107|[回收站预览](/Actions/1423.md)|无条件|显示回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件预览.ahk" "::{645FF040-5081-101B-9F08-00AA002F954E}"|
+|[1424](http://127.0.0.1:5151/runcom?aabb=1424)|f5a9|[同时编辑](/Actions/1424.md)|选中文件|同时使用记事本打开两个文件夹下(当前打开的文件夹) 的同名文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\同时编辑两个同名的文件.ahk" "%CandySel%"|
 |1425|EDE3|通用4|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用4|
 |1426|EDE3|通用4|子面板|选中文件的通用动作的子面板|Gui&#124;文件通用4|
 |1427|EDE3|Ahk通用|菜单|选中ahk文件通用动作的菜单|Menu&#124;ahk文件通用|
@@ -446,10 +446,10 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1433](http://127.0.0.1:5151/runcom?aabb=1433)|e198|[隐藏静音](/Actions/1433.md)|无条件|将任意窗口隐藏并静音, 再次运行恢复|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\隐藏窗口并静音.ahk" "%Windy_CurWin_id%"|
 |[1434](http://127.0.0.1:5151/runcom?aabb=1434)|ec80|保存桌面位置|无条件|将桌面图标位置信息保存到临时文件夹, 并删除7天前保存的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复桌面图标位置.ahk"|
 |[1435](http://127.0.0.1:5151/runcom?aabb=1435)|ec77|恢复桌面位置|无条件|利用先前保存的文件恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复桌面图标位置.ahk" "restore"|
-|[1436](http://127.0.0.1:5151/runcom?aabb=1436)|ef3c|获取颜色|无条件|查看选中数字对应的颜色, 并带有取色功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\取色小程序.ahk" "%CandySel%"|
-|[1437](http://127.0.0.1:5151/runcom?aabb=1437)|f16a|暂时隐藏|任意窗口|将任意窗口暂时隐藏 3 秒后恢复显示(任务栏按钮会被放到同类的最右边)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\暂时隐藏窗口.ahk" "%Windy_CurWin_id%"|
+|[1436](http://127.0.0.1:5151/runcom?aabb=1436)|ef3c|[获取颜色](/Actions/1436.md)|无条件|查看选中数字对应的颜色, 并带有取色功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\取色小程序.ahk" "%CandySel%"|
+|[1437](http://127.0.0.1:5151/runcom?aabb=1437)|f16a|[暂时隐藏](/Actions/1437.md)|任意窗口|将任意窗口暂时隐藏 3 秒后恢复显示(任务栏按钮会被放到同类的最右边)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\暂时隐藏窗口.ahk" "%Windy_CurWin_id%"|
 |1438|e8e7|[保存并运行](/Actions/1438.md)|选中文本|将选中 Ahk 保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun&#124;CandySel_Rich|
-|1439|E70F|打开本地网页|Chrome|使用文本编辑器打开浏览器正在浏览的本地文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\记事本打开浏览器当前浏览的本地文件.ahk" "%Windy_CurWin_Class%"|
+|1439|E70F|[打开本地网页](/Actions/1439.md)|Chrome|使用文本编辑器打开浏览器正在浏览的本地文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\记事本打开浏览器当前浏览的本地文件.ahk" "%Windy_CurWin_Class%"|
 |[1440](http://127.0.0.1:5151/runcom?aabb=1440)|E107|[回收站预览](/Actions/1440.md)|无条件|显示当前登录用户的回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\当前用户回收站中的文件信息.ahk"|
 |[1441](http://127.0.0.1:5151/runcom?aabb=1441)|f58b|系统切换任务|无条件|显示系统切换窗口界面|Keys&#124;^!{Tab}|
 |1442|f61b|[新建文本文件](/Actions/1442.md)|特定窗口|在当前打开的目录新建文本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_新建.ahk" "%Windy_CurWin_FolderPath%" "文本文件"|
