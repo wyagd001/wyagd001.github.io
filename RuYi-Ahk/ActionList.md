@@ -161,7 +161,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1148](http://127.0.0.1:5151/runcom?aabb=1148)|e703|库|无条件|打开库|run&#124;::{031E4825-7B94-4DC3-B131-E946B44C8DD5}|
 |1149|e16d|[复制目标路径](/Actions/1149.md)|选中Lnk文件|复制快捷方式的目标路径到剪贴板|Canfunc&#124;CF_FileGetShortcut&#124;%CandySel%|
 |[1150](http://127.0.0.1:5151/runcom?aabb=1150)|E756|PowerShell|无条件|打开 PowerShell|run&#124;powershell|
-|1151|e16d|[复制命令行](/Actions/1151.md)|当前窗口|复制窗口进程命令行到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制窗口命令行.ahk" "%Windy_CurWin_id%"|
+|1151|e16d|[复制命令行](/Actions/1151.md)|任意窗口|复制窗口进程命令行到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制窗口命令行.ahk" "%Windy_CurWin_id%"|
 |1152|f6fa|[Bing搜索](/Actions/1152.md)|选中文本|Bing搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://cn.bing.com/search?q=%CandySel%|
 |1153|f6fa|[Baidu/Bing](/Actions/1153.md)|Chrome|百度 Bing 切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\百度Bing切换.ahk" "%Windy_CurWin_Class%"|
 |1154|f6fa|[京东搜索](/Actions/1154.md)|选中文本|京东搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.jd.com/Search?keyword=%CandySel%|
@@ -202,7 +202,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1189|e72a|[右半前进](/Actions/1189.md)|任意窗口|浏览器发送前进快捷键, 其他窗口为移到右半屏幕|Cando&#124;右半前进|
 |1190|e74b|[最小化](/Actions/1190.md)|任意窗口|窗口最小化|Cando&#124;窗口最小化|
 |1191|e74a|[最大化](/Actions/1191.md)|任意窗口|窗口最大化|Cando&#124;窗口最大化|
-|[1192](http://127.0.0.1:5151/runcom?aabb=1192)|ee92|[动作管理](/Actions/1182.md)|无条件|动作管理|Cando&#124;TM_ActionM|
+|[1192](http://127.0.0.1:5151/runcom?aabb=1192)|ee92|[动作管理](/Actions/1192.md)|无条件|动作管理|Cando&#124;TM_ActionM|
 |[1193](http://127.0.0.1:5151/runcom?aabb=1193)|e1ce|最多运行|无条件|最多运行动作的子面板|canfunc&#124;ShowDBData&#124;execcount&#124;面板|
 |[1194](http://127.0.0.1:5151/runcom?aabb=1194)|e728|最多运行|无条件|最多运行动作的菜单|canfunc&#124;ShowDBData&#124;execcount&#124;菜单|
 |[1195](http://127.0.0.1:5151/runcom?aabb=1195)|e1cf|最近运行|无条件|最近运行动作的子面板|canfunc&#124;ShowDBData&#124;lastexectime&#124;面板|
@@ -230,7 +230,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1217](http://127.0.0.1:5151/runcom?aabb=1217)|e89a|到手机|无条件|同步电脑文件夹到手机文件夹(参数指定文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\同步文件夹到手机.ahk" "H:\备份\同步文件夹" "/storage/emulated/0/1_文档/资料/同步文件夹"|
 |[1218](http://127.0.0.1:5151/runcom?aabb=1218)|e952|连接手机|无条件|使用adb连接到手机|run&#124;%A_ComSpec% /k "%A_ScriptDir%\引用程序\adb.exe" connect 192.168.1.109:5555|
 |1219|e89a|到手机|选中文件|发送电脑选中文件到手机的根目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\发送文件到手机目录.ahk" "%CandySel%"|
-|1220|e16d|[放入剪贴板](/Actions/1220.md)|选中文件|将选中的文本文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文本文件内容放入剪贴板.ahk" "%CandySel%"|
+|[1220](http://127.0.0.1:5151/runcom?aabb=1220)|e9d2|股票行情|无条件|显示自定义股票当天的涨跌|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\股票当天行情.ahk"|
 |1221|E734|收藏夹|子面板|浏览器收藏夹菜单的子面板|Gui&#124;浏览器收藏夹|
 |[1222](http://127.0.0.1:5151/runcom?aabb=1222)|E734|[360收藏夹](/Actions/1222.md)|无条件|将360浏览器的收藏夹显示为菜单(只支持一级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\360浏览器收藏夹.ahk" "%CandySel%"|
 |[1223](http://127.0.0.1:5151/runcom?aabb=1223)|E734|[Chrome收藏夹](/Actions/1223.md)|无条件|将Chrome浏览器的收藏夹显示为菜单(只支持两级文件夹, 参数 CandySel 请替换为收藏夹文件的路径)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Chrome收藏夹.ahk" "%CandySel%"|
@@ -317,7 +317,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1304|f16c|[添加 ADS](/Actions/1304.md)|选中文件|为选中的文件添加文本的 ADS 流(流名称为 ADS1, ADS2)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\添加文本到 ADS 流.ahk" "%CandySel%"|
 |1305|ed5a|[HTML转文本](/Actions/1305.md)|剪贴板|将剪贴板中的 HTML 源代码去掉标签转换为纯文本后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转纯文本后粘贴.ahk"|
 |1306|ed5a|[文本转HTML](/Actions/1306.md)|剪贴板|将剪贴板中的 HTML 源代码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转html后粘贴.ahk"|
-|1307|ed5a|[中英符号](/Actions/1307.md)|选中文本|选中的标点符号中英互转(没选中时光标在标点后也可以进行转换)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中英文符号转换.ahk" "%CandySel%"|
+|1307|e844|[中英符号](/Actions/1307.md)|选中文本|选中的单个标点符号中英互转(没选中时光标在标点后也可以进行转换)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中英文符号转换.ahk" "%CandySel%"|
 |1308|E77F|粘贴All|ET|将当前选中的单元格内容复制到所有以数字为名称的工作表的相同位置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_当前单元格内容复制到所有数字名称的工作表相同位置.ahk"|
 |1309|f32a|软链接管理|选中文件夹|列出选中文件夹的软链接文件和文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件软链接.ahk" "%CandySel%"|
 |1310|f32a|硬链接管理|选中文件夹|列出选中文件夹的硬链接文件和文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件硬链接.ahk" "%CandySel%"|
@@ -328,8 +328,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1315|e9d5|剪贴板|子面板|剪贴板子面板|Gui&#124;剪贴板通用|
 |1316|f17f|[管理编码](/Actions/1316.md)|选中文件夹|列出选中文件夹中文本文件编码, 批量转码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文本文件编码.ahk" "%CandySel%"|
 |[1317](http://127.0.0.1:5151/runcom?aabb=1317)|e1e4|[Ini_Fav](/Actions/1317.md)|无条件|Ini 文件显示为 Gui 面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹界面.ahk"|
-|1318|E77F|插入列|ET|所有以数字为名称的工作表的相同位置的右侧插入一列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表相同位置右边批量插入一列.ahk"|
-|1319|E77F|删除列|ET|所有以数字为名称的工作表批量删除选中列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表批量删除选中列.ahk"|
+|1318|e802|插入列|ET|所有以数字为名称的工作表的相同位置的右侧插入一列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表相同位置右边批量插入一列.ahk"|
+|1319|E803|删除列|ET|所有以数字为名称的工作表批量删除选中列|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_数字名称的工作表批量删除选中列.ahk"|
 |1320|f151|数字分表|子面板|ET_批量子面板|Gui&#124;ET_批量|
 |[1321](http://127.0.0.1:5151/runcom?aabb=1321)|f142|Ahk 帮助|无条件|Autohotkey 帮助文件|run&#124;"%A_ScriptDir%\引用程序\AutoHotkeyLCN.chm"|
 |[1322](http://127.0.0.1:5151/runcom?aabb=1322)|e11a|Ahk Spy|无条件|Autohotkey Spy|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\引用程序\WindowSpy.ahk"|
@@ -515,8 +515,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1502](http://127.0.0.1:5151/runcom?aabb=1502)|e839|桌面图标|无条件|打开桌面图标设置|run&#124;Rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0|
 |[1503](http://127.0.0.1:5151/runcom?aabb=1503)|e9a6|[截取窗口](/Actions/1503.md)|任意窗口|窗口截图并存入脚本所在目录的截图目录中(带窗口标题栏和鼠标光标)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图并自动保存.ahk" "" "Window" "%Windy_CurWin_Id%" "1"|
 |1504|e982|文本编辑|子面板|文本编辑子面板|gui&#124;文本编辑|
-|1505|e982|[去除空行](/Actions/1505.md)|选中文本|如果有选中文本,去除选中文本中的空行(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空白行.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
-|1506|e982|[整理序号](/Actions/1506.md)|选中文本|如果有选中文本,按数字顺序整理选中文本的行号(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_数字序号整理.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1505|e700|[去除空行](/Actions/1505.md)|选中文本|如果有选中文本,去除选中文本中的空行(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空白行.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1506|e762|[整理序号](/Actions/1506.md)|选中文本|如果有选中文本,按数字顺序整理选中文本的行号(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_数字序号整理.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1507|f406|[留黑转白](/Actions/1507.md)|选中文件|保留图片中的黑色, 其他所有颜色转为白色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0x000000" "0xFFFFFF"|
 |[1508](http://127.0.0.1:5151/runcom?aabb=1508)|e7f4|屏保设置|无条件|打开屏幕保护程序设置|run&#124;rundll32.exe shell32.dll,Control_RunDLL desk.cpl,ScreenSaver,@ScreenSaver|
 |[1509](http://127.0.0.1:5151/runcom?aabb=1509)|e7f4|气泡屏保|无条件|打开气泡屏幕保护程序|run&#124;%windir%\system32\Bubbles.scr /s|
@@ -525,9 +525,21 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1512](http://127.0.0.1:5151/runcom?aabb=1512)|f354|[深色模式](/Actions/1512.md)|无条件|打开系统深色模式(Win10+)|Cando&#124;DarkTheme|
 |[1513](http://127.0.0.1:5151/runcom?aabb=1513)|e18d|启动文件夹|无条件|打开开始菜单启动文件夹|run&#124;shell:startup|
 |[1514](http://127.0.0.1:5151/runcom?aabb=1514)|ec27|网络设置|无条件|打开系统网络设置(Win10)|run&#124;ms-settings:network|
-|1515|e982|[去除空格](/Actions/1515.md)|选中文本|如果有选中文本, 去除选中文本中的所有空格(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空格.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1515|f7b6|[去除空格](/Actions/1515.md)|选中文本|如果有选中文本, 去除选中文本中的所有空格(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空格.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1516|f5ad|[Ini_Fav](/Actions/1516.md)|无条件|Ini 文件显示为列表面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹列表.ahk"|
 |1517|e1e4|Ini_Fav|子面板|Ini_Fav相关动作的子面板|Gui&#124;Ini_Fav|
 
-
+|1518|E894|结束进程|选中文件|根据选中exe文件的名称来结束同名的进程|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\结束文件同名进程.ahk" "%CandySel%"|
+|1519|e18d|锁定电脑|无条件|锁定电脑|run&#124;rundll32.exe user32.dll LockWorkStation|
+|1520|e18d|关屏锁定|无条件|关闭屏幕并锁定电脑|CombActions&#124;1519-1168|
+|1521|f617|截取屏幕|无条件|截取屏幕并存入脚本所在目录的截图目录中(带鼠标光标)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图并自动保存.ahk" "" "Screen" "0" "1"|
+|1522|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)第三个选项卡@控制面板|run&#124;sysdm.cpl ,3|
+|1523|f577|额外任务栏|无条件|打开额外任务栏|Cando&#124;CreateAppBar|
+|1524|f577|任务栏自动隐藏|无条件|切换任务栏的自动隐藏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\设置任务栏自动隐藏.ahk"|
+|1525|f16d|按钮颜色|无条件|更改额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
+|1526|f16b|按钮颜色还原|无条件|重置额外任务栏上按钮的颜色|Cando&#124;ABBReSet|
+|1527|f13f|更改文本|无条件|更改额外任务栏最上面文本的内容和颜色|Cando&#124;ABTSetTextAndColor|
+|1528|eda8|摸鱼看股|无条件|更改额外任务栏最上面文本为上证指数当天价格和涨幅|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\摸鱼看股.ahk" "000001"|
+|1529|f5b0|随机播放|无条件|随机播放指定文件夹(列表) 中的音频文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\随机播放.ahk" "G:\music,G:\music\英文,G:\music\中文,G:\music\中文,G:\music\中文\G:\music\中文,G:\music\中文"|
+|1530|f408|区域截图|无条件|拖动鼠标区域截图|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\区域截图.ahk"|
 
