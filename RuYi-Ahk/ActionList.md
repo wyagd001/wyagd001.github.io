@@ -243,7 +243,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1230|E894|[结束进程](/Actions/1230.md)|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F&#124;&#124;hide|
 |[1231](http://127.0.0.1:5151/runcom?aabb=1231)|ef58|环境变量|无条件|环境变量编辑备份脚本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\环境变量.ahk"|
 |1232|ef58|新增Path|资源管理器|将资源管理器当前打开的路径加入环境变量Path中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\Environment.ahk" "%Windy_CurWin_FolderPath%"|
-|[1233](http://127.0.0.1:5151/runcom?aabb=1233)|e11a|[搜索动作](/Actions/1233.md)|无条件|搜索和运行动作的界面|Cando&#124;ActionSR|
+|[1233](http://127.0.0.1:5151/runcom?aabb=1233)|e1a4|[搜索动作](/Actions/1233.md)|无条件|搜索和运行动作的界面|Cando&#124;ActionSR|
 |1234|ec24|Dll注册|选中文件|注册选中的dll文件|run&#124;regsvr32.exe "%CandySel%"|
 |1235|e789|Dll卸载|选中文件|卸载选中的dll文件|run&#124;regsvr32.exe /u "%CandySel%"|
 |1236|e74c|Msi解压|选中文件|将选中的msi文件解压|run&#124;msiexec.exe /a "%CandySel%" /qb TARGETDIR="%CandySel_ParentPath%\%CandySel_FileNameNoExt%"|
@@ -526,20 +526,20 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1513](http://127.0.0.1:5151/runcom?aabb=1513)|e18d|启动文件夹|无条件|打开开始菜单启动文件夹|run&#124;shell:startup|
 |[1514](http://127.0.0.1:5151/runcom?aabb=1514)|ec27|网络设置|无条件|打开系统网络设置(Win10)|run&#124;ms-settings:network|
 |1515|f7b6|[去除空格](/Actions/1515.md)|选中文本|如果有选中文本, 去除选中文本中的所有空格(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_去除空格.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
-|1516|f5ad|[Ini_Fav](/Actions/1516.md)|无条件|Ini 文件显示为列表面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹列表.ahk"|
+|1516|f5ad|[Ini_Fav](/Actions/1516.md)|无条件|Ini 文件显示为列表面板(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹列表.ahk" "%Windy_CurWin_Id%"|
 |1517|e1e4|Ini_Fav|子面板|Ini_Fav相关动作的子面板|Gui&#124;Ini_Fav|
-
-|1518|E894|结束进程|选中文件|根据选中exe文件的名称来结束同名的进程|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\结束文件同名进程.ahk" "%CandySel%"|
-|1519|e18d|锁定电脑|无条件|锁定电脑|run&#124;rundll32.exe user32.dll LockWorkStation|
-|1520|e18d|关屏锁定|无条件|关闭屏幕并锁定电脑|CombActions&#124;1519-1168|
-|1521|f617|截取屏幕|无条件|截取屏幕并存入脚本所在目录的截图目录中(带鼠标光标)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图并自动保存.ahk" "" "Screen" "0" "1"|
-|1522|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)第三个选项卡@控制面板|run&#124;sysdm.cpl ,3|
-|1523|f577|额外任务栏|无条件|打开额外任务栏|Cando&#124;CreateAppBar|
-|1524|f577|任务栏自动隐藏|无条件|切换任务栏的自动隐藏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\设置任务栏自动隐藏.ahk"|
-|1525|f16d|按钮颜色|无条件|更改额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
+|1518|E894|[结束进程](/Actions/1518.md)|选中文件|根据选中exe文件的名称来结束同名的进程|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\结束文件同名进程.ahk" "%CandySel%"|
+|[1519](http://127.0.0.1:5151/runcom?aabb=1519)|e18d|锁定电脑|无条件|锁定电脑|run&#124;rundll32.exe user32.dll LockWorkStation|
+|[1520](http://127.0.0.1:5151/runcom?aabb=1520)|e18d|[关屏锁定](/Actions/1520.md)|无条件|关闭屏幕并锁定电脑|CombActions&#124;1519-1168|
+|[1521](http://127.0.0.1:5151/runcom?aabb=1521)|f617|[截取屏幕](/Actions/1521.md)|无条件|截取屏幕并存入脚本所在目录的截图目录中(带鼠标光标)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图并自动保存.ahk" "" "Screen" "0" "1"|
+|[1522](http://127.0.0.1:5151/runcom?aabb=1522)|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)第三个选项卡@控制面板|run&#124;sysdm.cpl ,3|
+|[1523](http://127.0.0.1:5151/runcom?aabb=1523)|f577|额外任务栏(/Actions/1523.md)|无条件|打开额外任务栏|Cando&#124;CreateAppBar|
+|[1524](http://127.0.0.1:5151/runcom?aabb=1524)|f577|任务栏自动隐藏|无条件|切换任务栏的自动隐藏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\设置任务栏自动隐藏.ahk"|
+|1525|f16d|[按钮颜色](/Actions/1525.md)|无条件|更改额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
 |1526|f16b|按钮颜色还原|无条件|重置额外任务栏上按钮的颜色|Cando&#124;ABBReSet|
 |1527|f13f|更改文本|无条件|更改额外任务栏最上面文本的内容和颜色|Cando&#124;ABTSetTextAndColor|
-|1528|eda8|摸鱼看股|无条件|更改额外任务栏最上面文本为上证指数当天价格和涨幅|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\摸鱼看股.ahk" "000001"|
-|1529|f5b0|随机播放|无条件|随机播放指定文件夹(列表) 中的音频文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\随机播放.ahk" "G:\music,G:\music\英文,G:\music\中文,G:\music\中文,G:\music\中文\G:\music\中文,G:\music\中文"|
+|[1528](http://127.0.0.1:5151/runcom?aabb=1528)|eda8|摸鱼看股|无条件|更改额外任务栏最上面文本为上证指数当天价格和涨幅|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\摸鱼看股.ahk" "000001"|
+|[1529](http://127.0.0.1:5151/runcom?aabb=1529)|f5b0|[随机播放](/Actions/1529.md)|无条件|随机播放指定文件夹(列表) 中的音频文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\随机播放.ahk" "G:\music,G:\music\英文,G:\music\中文,G:\music\中文,G:\music\中文\G:\music\中文,G:\music\中文"|
 |1530|f408|区域截图|无条件|拖动鼠标区域截图|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\区域截图.ahk"|
-
+|1531|f408|搜狗截图|无条件|运行搜狗输入法的截图(带OCR)|Keys&#124;^!w|
+|1532|f7b0|[中英分隔](/Actions/1532.md)|编辑器窗口|如果有选中文本, 将选中部分的中英文字符使用空格分隔(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_中英文隔开.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
