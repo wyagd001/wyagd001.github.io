@@ -533,7 +533,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1520](http://127.0.0.1:5151/runcom?aabb=1520)|e18d|[关屏锁定](/Actions/1520.md)|无条件|关闭屏幕并锁定电脑|CombActions&#124;1519-1168|
 |[1521](http://127.0.0.1:5151/runcom?aabb=1521)|f617|[截取屏幕](/Actions/1521.md)|无条件|截取屏幕并存入脚本所在目录的截图目录中(带鼠标光标)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图并自动保存.ahk" "" "Screen" "0" "1"|
 |[1522](http://127.0.0.1:5151/runcom?aabb=1522)|ef58|系统属性|无条件|打开系统属性界面(高级系统设置)第三个选项卡@控制面板|run&#124;sysdm.cpl ,3|
-|[1523](http://127.0.0.1:5151/runcom?aabb=1523)|f577|额外任务栏(/Actions/1523.md)|无条件|打开额外任务栏|Cando&#124;CreateAppBar|
+|[1523](http://127.0.0.1:5151/runcom?aabb=1523)|f577|[额外任务栏](/Actions/1523.md)|无条件|打开额外任务栏|Cando&#124;CreateAppBar|
 |[1524](http://127.0.0.1:5151/runcom?aabb=1524)|f577|任务栏自动隐藏|无条件|切换任务栏的自动隐藏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\设置任务栏自动隐藏.ahk"|
 |1525|f16d|[按钮颜色](/Actions/1525.md)|无条件|更改额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
 |1526|f16b|按钮颜色还原|无条件|重置额外任务栏上按钮的颜色|Cando&#124;ABBReSet|
