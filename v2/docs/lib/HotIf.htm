@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE HTML>
 <html lang="zh">
 <head>
-<title>HotIf - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The HotIf function specifies the criteria for subsequently created or modified hotkey variants." />
+<title>HotIf / HotIfWin... - 语法 &amp; 使用 | AutoHotkey v2</title>
+<meta name="description" content="The HotIf and HotIfWin functions specify the criteria for subsequently created or modified hotkey variants and hotstring variants." />
 	<meta name="ahk:equiv-v1" content="lib/Hotkey.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,42 +11,38 @@
 </head>
 <body>
 
-<h1>HotIf / HotIfWin</h1>
+<h1>HotIf / HotIfWin...</h1>
 
-<p>指定后续创建或修改热键<a href="Hotkey.htm#variant">变体</a>的条件.</p>
+<p>指定后续创建或修改<a href="Hotkey.htm#variant">热键变体</a>和<a href="Hotstring.htm#variant">热字串变体</a>的条件.</p>
 <p>目录:</p>
-<ul>
-  <li><a href="#If">HotIf</a></li>
-  <li><a href="#IfWin">HotIfWin...</a></li>
-  <li><a href="#remarks">备注</a></li>
-  <li><a href="#examples">示例</a></li>
-</ul>
 
 <h2 id="If">HotIf</h2>
 <pre class="Syntax">
 <span class="func">HotIf</span> <span class="optional">"Expression"</span>
-<span class="func">HotIf</span> <span class="optional">Function</span>
+<span class="func">HotIf</span> <span class="optional">Callback</span>
 </pre>
 
 <h3 id="Parameters">参数</h3>
 <dl>
 
-  <dt id="if-blank">(省略参数)</dt>
-  <dd><p>设置空白条件(关闭上下文相关性).</p></dd>
-
-  <dt id="if-expr">"Expression"</dt>
+  <dt>"Expression"</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>为现有的 <a href="_HotIf.htm">#HotIf</a> 表达式设置条件. <em>Expression</em> 通常写成一个<a href="../Language.htm#strings">加引号字符串</a>, 但也可以是一个变量或表达式, 返回与 #HotIf 表达式匹配的文本. 虽然这个函数不能创建新的表达式, 但它可以使用现有的表达式创建新的热键. 请参阅 <a href="_HotIf.htm#ExDynamic">#HotIf 示例 5</a>.</p>
+    <p>如果省略, 将设置空白条件(关闭上下文相关性). 否则, 条件将被设置为现有的 <a href="_HotIf.htm">#HotIf</a> 表达式. 表达式通常写成一个<a href="../Language.htm#strings">加引号字符串</a>, 但也可以是一个返回与 #HotIf 表达式匹配的文本的变量或表达式.</p>
     <p class="note"><strong>注意:</strong> HotIf 函数使用你传递给它的字符串, 而不是原始源代码. 当脚本加载时, <a href="../misc/EscapeChar.htm">转义序列</a>会被解析, 所以只考虑结果字符; 例如, <code>HotIf 'x = "`t"'</code> 和 <code>HotIf 'x = "' A_Tab '"'</code> 都对应于 <code>#HotIf x = "`t"</code>.</p>
+    <p>有关示例, 请参阅 <a href="_HotIf.htm#ExDynamic">#HotIf 示例 #5</a>.</p>
   </dd>
 
-  <dt id="if-func">Function</dt>
+  <dt>Callback</dt>
   <dd>
     <p>类型: <a href="../misc/Functor.htm">函数对象</a></p>
-    <p>为给定的函数对象设置条件. 随后创建的热键只有在调用给定的函数对象产生一个非零的数字时才会执行. 这类似于 <code>HotIf "Expression"</code>, 只不过每个热键可以有很多<a href="Hotkey.htm#variant">变体</a>(每个对象一个). <em>Function</em> 必须是具有一个 <em>call</em> 方法的对象, 该方法接受一个参数, 即热键的<a href="../Hotkeys.htm#ThisHotkey">名称</a>.</p>
+    <p>如果省略, 设置空白条件(关闭上下文相关性). 否则, 为给定的函数对象设置条件. 随后创建的热键和热字串只有在调用给定的函数对象产生一个非零的数字时才会执行. 这类似于 <code>HotIf "Expression"</code>, 只不过每个热键和热字串可以有很多<a href="Hotkey.htm#variant">热键变体</a>或<a href="Hotstring.htm#variant">热字串变体</a>(每个对象一个).</p>
+    <p>回调函数接受一个参数, <a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(HotkeyName) { ...</pre>
+    <p>尽管您给参数的名称并不重要, 但它被赋值为<a href="../Hotkeys.htm#ThisHotkey">热键名称</a>或<a href="../Hotstrings.htm#ThisHotkey">热字串名称</a>.</p>
+    <p>如果不需要相应的信息, 可以省略回调参数, 但在这种情况下必须指定星号, 例如 <code>MyCallback(*)</code>.</p>
     <p>一旦传递给 HotIf 函数, 该对象将永远不会被删除(但进程退出时, 内存将被操作系统回收).</p>
-    <p><a href="Hotkey.htm#ExampleIfFn">"三键组合" 热键的例子</a>使用了 HotIf 这种模式.</p>
+    <p>有关示例, 请参阅下面的<a href="#ExHotIfCallback">示例 #2</a> 或 <a href="Hotkey.htm#ExampleIfFn">Hotkey 的示例 #6</a>.</p>
   </dd>
 
 </dl>
@@ -62,37 +58,71 @@
 <h3 id="HotIfWin_Parameters">参数</h3>
 <dl>
 
-  <dt>(省略所有参数)</dt>
-  <dd><p>设置空白条件(关闭上下文相关性).</p></dd>
-
   <dt>WinTitle, WinText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>指定用于识别窗口的窗口标题和其他条件. 根据所调用的函数, 受影响的热键和热字符串只有在匹配的窗口处于活动状态, 存在, 不活动, 或不存在时才会被激活.</p>
-    <p>由于参数在函数被调用之前就已经被计算了, 因此任何变量引用都会在那一刻成为永久性的. 换句话说, 变量内容的后续变化不会被现有的热键看到.</p>
-    <p><em>WinTitle</em> 和 <em>WinText</em> 的含义与 <a href="WinActive.htm">WinActive</a> 或 <a href="WinExist.htm">WinExist</a> 中的相同, 但只能使用字符串, 并且它们的计算与<a href="../Scripts.htm#auto">自动执行线程</a>设置的 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 的默认设置一致. 有关详情, 请参阅 <a href="../misc/WinTitle.htm">WinTitle</a>.</p>
+    <p>如果省略这两个选项, 将设置空白条件(关闭上下文相关性). 否则, 为 <em>WinTitle</em> 指定 <a href="../misc/WinTitle.htm">窗口标题和其他条件</a>, 以标识目标窗口和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(如同包含的 window Spy 实用程序显示的那样). 根据所调用的函数, 受影响的热键和热字串仅在目标窗口处于活动状态, 存在, 处于不活动状态, 或不存在时才有效.</p>
+    <p>由于参数在函数被调用之前就已经被计算了, 因此任何变量引用都会在那一刻成为永久性的. 换句话说, 变量内容的后续变化不会被现有的热键和热字串看到.</p>
+    <p><em>WinTitle</em> 和 <em>WinText</em> 的含义与 <a href="WinActive.htm">WinActive</a> 或 <a href="WinExist.htm">WinExist</a> 中的相同, 但是只能使用字符串, 并且它们的计算与<a href="../Scripts.htm#auto">自动执行线程</a>设置的 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 和 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 的默认设置一致.</p>
+    <p>有关示例, 请参阅下面的<a href="#ExHotIfWin">示例 #1</a>.</p>
+
   </dd>
 
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>如果 HotIf 的参数无效, 例如它不匹配现有的表达式, 并且不是一个有效的回调函数, 则抛出异常.</p>
+<p>如果 HotIf 的参数无效, 例如它不匹配现有的表达式, 或不是一个有效的回调函数, 则抛出异常.</p>
 
 <h2 id="remarks">备注</h2>
-<p>HotIf 允许在脚本运行时创建和修改上下文相关的<a href="../Hotkeys.htm">热键</a>(相比之下, <a href="_HotIf.htm">#HotIf</a> 指令是位置性的, 在脚本开始执行前生效). 例如:</p>
+<p>HotIf 和 HotIfWin 函数允许在脚本运行时创建和修改上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>(相比之下, <a href="_HotIf.htm">#HotIf</a> 指令是位置性的, 在脚本开始执行前生效). 例如:</p>
 <pre>HotIfWinActive "ahk_class Notepad"
 Hotkey "^!e", MyFuncForNotepad  <em>; 创建一个只在记事本中工作的热键.</em></pre>
-<p>使用 HotIf 会使当前<a href="../misc/Threads.htm">线程</a>中把所有随后创建或修改的<a href="../Hotkeys.htm">热键</a>都变成上下文相关的, 并影响 <a href="Hotkey.htm">Hotkey</a> 函数修改哪些热键变体. 只有最近一次对当前线程中任何 HotIf 函数的调用才会生效.</p>
-<p>要关闭上下文相关性(也就是说, 使后续创建的热键在所有窗口中工作), 调用任意
- HotIf 函数, 但省略参数. 例如: <code>HotIf</code> 或 <code>HotIfWinActive</code>.</p>
-<p>在热键或热字串<a href="../misc/Threads.htm">线程</a>中使用 HotIf 之前, 热键和热串函数默认与启动该线程的热键或热串的上下文相同. 换句话说, <code>Hotkey A_ThisHotkey, "Off"</code> 关闭当前热键, 即使它是上下文相关的. 所有其他线程都默认创建或修改全局热键, 除非在<a href="../Scripts.htm#auto">脚本启动时</a>使用 HotIf 覆盖了该默认值.</p>
-<p>使用 HotIf 函数或指令禁用鼠标或键盘热键后, 它会执行其原来的功能; 也就是说, 它传递到活动窗口, 就好像不存在热键一样. 然而, 控制器热键总是有效, 无论禁用与否.</p>
+<p>使用 HotIf 或其中一个 HotIfWin 函数会使当前<a href="../misc/Threads.htm">线程</a>中把所有随后创建或修改的<a href="../Hotkeys.htm">热键</a>都变成上下文相关的, 并影响 <a href="Hotkey.htm">Hotkey</a> 函数修改哪些热键变体和 <a href="Hotstring.htm">Hotstring</a> 函数修改的热字串变体. 只有最近一次对当前线程中任何 HotIf 或 HotIfWin 函数的调用才会生效.</p>
+<p>要关闭上下文相关性(也就是说, 使后续创建的热键和 热字串在所有窗口中工作), 调用任意
+ HotIf 或其中一个 HotIfWin 函数, 但省略参数. 例如: <code>HotIf</code> 或 <code>HotIfWinActive</code>.</p>
+<p>在热键或热字串<a href="../misc/Threads.htm">线程</a>中使用 HotIf 或其中一个 HotIfWin 之前, <a href="Hotkey.htm">Hotkey</a> 和 <a href="Hotstring.htm">Hotstring</a> 函数默认与启动该线程的热键或热串的上下文相同. 换句话说, <code>Hotkey A_ThisHotkey, "Off"</code> 关闭当前热键, 即使它是上下文相关的. 所有其他线程都默认创建或修改全局热键或热字串, 除非在<a href="../Scripts.htm#auto">脚本启动时</a>使用 HotIf 或其中一个 HotIfWin 覆盖了该默认值.</p>
+<p>使用 HotIf, 其中一个 HotIfWin, 或 <a href="_HotIf.htm">#HotIf</a> 指令禁用鼠标或键盘热键后, 它会执行其原来的功能; 也就是说, 它传递到活动窗口, 就好像不存在热键一样. 然而, 控制器热键总是有效, 无论禁用与否.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="Hotkey.htm">Hotkey</a>(函数), <a href="../Hotkeys.htm">热键</a>(描述), <a href="_HotIf.htm">#HotIf</a>, <a href="../misc/Threads.htm">线程</a></p>
+<p><a href="../Hotkeys.htm">热键</a>, <a href="../Hotstrings.htm">热字串</a>, <a href="Hotkey.htm">Hotkey 函数</a>, <a href="Hotstring.htm">Hotstring 函数</a>, <a href="_HotIf.htm">#HotIf</a>, <a href="../misc/Threads.htm">线程</a></p>
 
 <h2 id="examples">示例</h2>
-<p>有关示例, 请参阅 <a href="Hotkey.htm#examples">Hotkey</a>.</p>
+<div class="ex" id="ExHotIfWin">
+<p><a class="ex_number" href="#ExHotIfWin"></a> 与 <a href="_HotIf.htm#ExBasic">#HotIf 的示例 #1</a> 类似, 这创建了两个热键和一个热字串, 一个热键仅在记事本处于活动状态时有效, 另一个热键适用于除记事本以外的任何窗口. 主要区别在于, 这个示例在运行时创建了与上下文相关的热键和热字串, 而 #HotIf 的示例在加载时创建它们.</p>
+<pre>HotIfWinActive "ahk_class Notepad"
+Hotkey "^!a", ShowMsgBox
+Hotkey "#c", ShowMsgBox
+Hotstring "::btw", "This replacement text will occur only in Notepad."
+HotIfWinActive
+Hotkey "#c", (*) =&gt; MsgBox("You pressed Win-C in a window other than Notepad.")
+
+ShowMsgBox(HotkeyName)
+{
+    MsgBox "You pressed " HotkeyName " while Notepad is active."
+}</pre>
+</div>
+<div class="ex" id="ExHotIfCallback">
+<p><a class="ex_number" href="#ExHotIfCallback"></a> 与上面的例子类似, 但是使用了回调.</p>
+<pre>HotIf MyCallback
+Hotkey "^!a", ShowMsgBox
+Hotkey "#c", ShowMsgBox
+Hotstring "::btw", "This replacement text will occur only in Notepad."
+HotIf
+Hotkey "#c", (*) =&gt; MsgBox("You pressed Win-C in a window other than Notepad.")
+
+MyCallback(*)
+{
+    if WinActive("ahk_class Notepad")
+        return true
+    else
+        return false
+}
+
+ShowMsgBox(HotkeyName)
+{
+    MsgBox "You pressed " HotkeyName " while Notepad is active."
+}</pre>
+</div>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Func 对象 | AutoHotkey v1</title>
-<meta name="description" content="The Func object provides an interface for a function to retrieve values, such as the number of parameters, or to perform actions, such as calling." />
+<meta name="description" content="The Func object represents a user-defined or built-in function and provides an interface to call it, bind parameters to it, and retrieve information about it or its parameters." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
 
 <h1>Func 对象<span class="ver">[v1.1.00+]</span></h1>
 
-<p>表示可以被脚本调用的自定义或内置的函数. <a href="#Func">Func()</a> 返回这种类型的对象.</p>
+<p>表示自定义或内置的函数, 并提供一个接口来调用, 将参数与其绑定, 以及检索它或它的参数的信息. <a href="#Func">Func()</a> 返回这种类型的对象.</p>
 
 <p>有关其他可以像函数一样调用的对象的信息, 请参阅<a href="../misc/Functor.htm">函数对象</a>.</p>
 
@@ -28,7 +28,7 @@ MsgBox % fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
   <li><a href="#Methods">方法</a>:
     <ul>
       <li><a href="#Call">Call</a>: 调用函数.</li>
-      <li><a href="#Bind">Bind</a>: 为函数绑定参数并返回绑定函数对象.</li>
+      <li><a href="#Bind">Bind</a>: 绑定参数到函数.</li>
       <li><a href="#IsByRef">IsByRef</a>: 确定一个参数是否为 ByRef 类型.</li>
       <li><a href="#IsOptional">IsOptional</a>: 确定一个参数是否是可选的.</li>
     </ul>
@@ -42,9 +42,9 @@ MsgBox % fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
       <li><a href="#MaxParams">MaxParams</a>: 对于用户定义函数返回正式声明的参数数目, 对于内置函数返回最大的参数数目.</li>
     </ul>
   </li>
-  <li><a href="#Functions">Functions</a>:
+  <li><a href="#Functions">函数</a>:
     <ul>
-      <li><a href="#Func">Func</a>: Retrieves a reference to a function.</li>
+      <li><a href="#Func">Func</a>: 检索对函数的引用.</li>
     </ul>
   </li>
 </ul>
@@ -52,80 +52,103 @@ MsgBox % fn.Name "() is " (fn.IsBuiltIn ? "built-in." : "user-defined.")</pre>
 <h2 id="Methods">方法</h2>
 <div class="methodShort" id="Call"><h3>Call</h3>
 <p>调用函数.</p>
-<pre class="Syntax">
-Func.<span class="func">Call</span>(Param1, Param2, ...)  <em>; 需要 <span class="ver">[v1.1.19+]</span></em>
-Func.(Param1, Param2, ...)  <em>; 旧的样式 - 不推荐</em>
-</pre>
+<pre class="Syntax">Func.<span class="func">Call</span>(Param1, Param2, ...)  <em>; 需要 <span class="ver">[v1.1.19+]</span></em>
+Func.(Param1, Param2, ...)  <em>; 旧的样式 - 不推荐</em></pre>
+<h4 id="Call_Parameters">参数</h4>
 <dl>
   <dt>Param1, Param2, ...</dt>
-  <dd>参数和返回值由函数定义.</dd>
+  <dd>
+    <p>参数和返回值由函数定义.</p>
+  </dd>
 </dl>
+<h4 id="Call_Remarks">备注</h4>
 <p><span class="ver">[v1.1.07+]</span>: <code><a href="../Functions.htm#DynCall">%Func%()</a></code> 可通过名称或引用来调用一个函数, 或者通过调用对象的 __Call <a href="../Objects.htm#Meta_Functions">元函数</a>. 应该尽量使用这种语法来替代 <code>Func.()</code> 这种旧的语法.</p>
 </div>
 
 <div class="methodShort" id="Bind"><h3>Bind <span class="ver">[v1.1.20+]</span></h3>
-<p>为函数绑定参数并返回<a href="../misc/Functor.htm#BoundFunc">绑定函数对象</a>.</p>
+<p>为函数绑定参数.</p>
 <pre class="Syntax">BoundFunc := Func.<span class="func">Bind</span>(Param1, Param2, ...)</pre>
+<h4 id="Bind_Parameters">参数</h4>
 <dl>
   <dt>Param1, Param2, ...</dt>
-  <dd>任意数量的参数.</dd>
+  <dd>
+    <p>任意数量的参数.</p>
+   </dd>
 </dl>
-<p>详情和例子, 请参阅<a href="../misc/Functor.htm#BoundFunc">绑定函数对象</a>.</p>
+<h4 id="Bind_Return_Value">返回值</h4>
+<p>此方法返回<a href="../misc/Functor.htm#BoundFunc">绑定函数对象</a>.</p>
 </div>
 
 <div class="methodShort" id="IsByRef"><h3>IsByRef</h3>
 <p>确定一个参数是否为 ByRef(按地址传递) 类型.</p>
 <pre class="Syntax">Boolean := Func.<span class="func">IsByRef</span>(<span class="optional">ParamIndex</span>)</pre>
+<h4 id="IsByRef_Parameters">参数</h4>
 <dl>
   <dt>ParamIndex</dt>
-  <dd>可选: 基于 1 的参数索引. 如果省略, <em>Boolean</em> 表示此函数是否含有 ByRef 参数.</dd>
+  <dd>
+    <p>如果省略, <em>Boolean</em> 表示此函数是否含有 ByRef 参数. 否则, 请指定基于 1 的参数索引. </p>
+  </dd>
 </dl>
-<p>如果函数为内置函数或 <i>ParamIndex</i> 无效时返回空字符串; 否则返回布尔值表示此参数是否为 ByRef 类型.</p>
+<h4 id="IsByRef_Return_Value">返回值</h4>
+<p>如果函数为内置函数或 <i>ParamIndex</i> 无效时, 此方法返回空字符串; 否则返回一个布尔值, 表示此参数是否为 ByRef 类型.</p>
 </div>
 
 <div class="methodShort" id="IsOptional"><h3>IsOptional</h3>
 <p>确定一个参数是否是可选的.</p>
 <pre class="Syntax">Boolean := Func.<span class="func">IsOptional</span>(<span class="optional">ParamIndex</span>)</pre>
+<h4 id="IsOptional_Parameters">参数</h4>
 <dl>
   <dt>ParamIndex</dt>
-  <dd>可选: 基于 1 的参数索引. 如果省略, <em>Boolean</em> 表示此函数是否含有可选参数.</dd>
+  <dd>
+    <p>如果省略, <em>Boolean</em> 表示此函数是否含有可选参数. 否则, 请指定基于 1 的参数索引.</p>
+  </dd>
 </dl>
-<p>如果 <i>ParamIndex</i> 无效则返回空字符串; 否则返回布尔值(true / false) 表示此参数是否可选.</p>
+<h4 id="IsOptional_Return_Value">返回值</h4>
+<p>如果 <i>ParamIndex</i> 无效, 此方法返回空字符串; 否则返回布尔值(true / false) 表示此参数是否可选.</p>
+<h4 id="IsOptional_Remarks">备注</h4>
 <p>如果此函数是可变参数的, 那么参数可以不进行正式声明. 支持内置函数.</p></div>
 
 <h2 id="Properties">属性</h2>
 <div class="methodShort" id="Name"><h3>Name</h3>
 <p>返回函数的名称.</p>
-<pre class="Syntax">FunctionName := Func.Name</pre>
+<pre class="Syntax">FunctionName := Func.<span class="func">Name</span></pre>
 </div>
 
 <div class="methodShort" id="IsBuiltIn"><h3>IsBuiltIn</h3>
 <p><a href="../Functions.htm#BuiltIn">内置函数</a>返回 1(true), 否则返回 0(false).</p>
-<pre class="Syntax">Boolean := Func.IsBuiltIn</pre>
+<pre class="Syntax">Boolean := Func.<span class="func">IsBuiltIn</span></pre>
 </div>
 
 <div class="methodShort" id="IsVariadic"><h3>IsVariadic</h3>
 <p>当函数为<a href="../Functions.htm#Variadic">可变参数</a>返回 1(true), 否则返回 0(false).</p>
-<pre class="Syntax">Boolean := Func.IsVariadic</pre>
+<pre class="Syntax">Boolean := Func.<span class="func">IsVariadic</span></pre>
 </div>
 
 <div class="methodShort" id="MinParams"><h3>MinParams</h3>
 <p>返回函数必要参数的数目.</p>
-<pre class="Syntax">ParamCount := Func.MinParams</pre>
+<pre class="Syntax">ParamCount := Func.<span class="func">MinParams</span></pre>
 </div>
 
 <div class="methodShort" id="MaxParams"><h3>MaxParams</h3>
 <p>对于用户定义函数返回正式声明的参数数目, 对于内置函数返回最大的参数数目.</p>
-<pre class="Syntax">ParamCount := Func.MaxParams</pre>
+<pre class="Syntax">ParamCount := Func.<span class="func">MaxParams</span></pre>
 <p>如果函数是<a href="../Functions.htm#Variadic">可变参数</a>的, <em>ParamCount</em> 表示函数在不考虑 "variadic*" 可变参数的情况下可接受的最大参数数目.</p></div>
 
 <h2 id="Functions">函数</h2>
 <h3 id="Func">Func <span class="ver">[v1.1.00+]</span></h3>
 <p>获取一个函数的引用.</p>
 <pre class="Syntax">FunctionReference := <span class="func">Func</span>(FunctionName)</pre>
-<p><em>FunctionName</em> 为要获取引用的函数名称, 并且必须真实存在于脚本中.</p>
-<p>函数返回对 <em>FunctionName</em> 的<a href="../Objects.htm#Function_References">函数引用</a>. 如果 <em>FunctionName</em> 不显式存在于脚本中(通过 <a href="_Include.htm">#Include</a> 或非动态调用的<a href="../Functions.htm#lib">库函数</a>等方式), 则返回 0.</p>
-<p>本函数可用于调用函数或获取函数的信息, 比如函数参数的最小和最大数目等.</p>
+<h4 class="func_section" id="Func_Parameters">参数</h4>
+<dl>
+  <dt>FunctionName</dt>
+  <dd>
+    <p>要获取引用的函数名称. 此函数必须显式存在于脚本中.</p>
+  </dd>
+</dl>
+<h4 class="func_section" id="Func_Return_Value">返回值</h4>
+<p>Func 返回<a href="../Objects.htm#Function_References">对 <em>FunctionName</em> 的引用</a>.如果 <em>FunctionName</em> 不显式存在于脚本中(通过 <a href="_Include.htm">#Include</a> 或非动态调用的<a href="../Functions.htm#lib">库函数</a>等方式), 则返回 0.</p>
+<h4 class="func_section" id="Func_Remarks">备注</h4>
+<p>Func 可用于调用函数或获取函数的信息, 比如函数参数的最小和最大数目等.</p>
 <p>下面的示例检索一个函数的引用, 并显示其相关信息:</p>
 <pre>fn := Func("StrLen")
 MsgBox % fn.Name "() 是 " (fn.IsBuiltIn ? "内置函数." : "用户定义的函数.")</pre>

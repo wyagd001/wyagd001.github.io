@@ -339,6 +339,8 @@ function ctor_toc()
       return;
     if (!retrieveData(deprecate.dataPath, "deprecate_data", "deprecateData", self.modify))
       return;
+    if (!retrieveData(translate.dataPath, "translate_data", "translateData", self.modify))
+      return;
 
     $toc = $('#left div.toc').html(self.create(cache.toc_data));
     $tocList = $toc.find('li > span');
@@ -450,8 +452,12 @@ function ctor_index()
   var self = this;
   self.dataPath = scriptDir + '/source/data_index.js';
   self.create = function(input, filter) { // Create and add the index links.
+
+    if (!retrieveData(translate.dataPath, "translate_data", "translateData", self.create.bind(null, input, filter)))
+      return;
+
     var output = '', label, path, type;
-    var type_name = {2: T("function"), 6: T("class")};
+    var type_name = {2: T("function"), 4: T("operator"), 6: T("class")};
     input.sort(function(a, b) {
       var textA = a[0].toLowerCase(), textB = b[0].toLowerCase()
       return textA.localeCompare(textB);

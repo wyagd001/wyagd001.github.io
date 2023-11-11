@@ -48,6 +48,7 @@
 <p>强制关闭第一个匹配的进程.</p>
 <pre class="Syntax"><span class="func">Process</span>, Close, PIDOrName</pre>
 <p>如果成功终止一个匹配的进程, 则设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为此进程原来的进程 ID(PID). 否则(例如, 没有找到匹配的进程或在终止匹配进程的过程中出现了问题) 它被设置为 0. 因为进程会被突然终止(可能在一个关键点中断它的工作或导致窗口中未保存数据的丢失), 因此只有当无法使用 <a href="WinClose.htm">WinClose</a> 作用于它的窗口来关闭相应进程时才使用这个子命令.</p>
+<p>若要强制关闭 <u>所有</u> 匹配的进程, 请参阅<a href="#ExCloseAll">示例 #6</a>.</p>
 
 <h3 id="List">List</h3>
 <p>虽然这个子命令还没有得到支持, <a href="#ListEx">示例 #4</a> 演示了如何通过 <a href="DllCall.htm">DllCall()</a> 检索进程列表.</p>
@@ -86,7 +87,7 @@ MsgBox The newly launched Notepad's PID is %NewPID%.</pre>
 </div>
 
 <div class="ex" id="ExAdvanced">
-<p><a class="ex_number" href="#ExAdvanced"></a> 等待记事本进程出现, 如果在 5.5 秒内出现, 则其优先级设置为 Low, 而脚本自己的优先级设置为 High.</p>
+<p><a class="ex_number" href="#ExAdvanced"></a> 等待记事本进程出现, 如果在 5.5 秒内出现, 则其优先级设置为 Low, 而脚本自己的优先级设置为 High. 之后, 会尝试在 5 秒内关闭进程.</p>
 <pre>Process, Wait, notepad.exe, 5.5
 NewPID := ErrorLevel  <em>; 由于 ErrorLevel 会经常发生改变, 所以要立即保存这个值.</em>
 if not NewPID
@@ -187,6 +188,23 @@ MsgBox, 0, %c% Processes, %l%</pre>
 for proc in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process")
     LV_Add("", proc.Name, proc.CommandLine)
 Gui, Show,, Process List</pre>
+</div>
+
+<div class="ex" id="ExCloseAll">
+<p><a class="ex_number" href="#ExCloseAll"></a> 强制关闭 <u>所有</u> 匹配的进程.</p>
+<pre>ProcessCloseAll(PIDOrName)
+{
+    Loop {
+        Process, Close, % PIDOrName
+        Process, Exist, % PIDOrName  <em>; 在一些情况下提高稳定性.</em>
+    } Until not ErrorLevel
+}
+
+<em>; 示例:</em>
+Loop 3
+    Run, notepad.exe
+Sleep 3000
+ProcessCloseAll("notepad.exe")</pre>
 </div>
 
 </body>

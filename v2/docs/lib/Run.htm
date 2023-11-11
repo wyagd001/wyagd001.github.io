@@ -27,7 +27,7 @@ ExitCode := <span class="func">RunWait</span>(Target <span class="optional">, Wo
   <dt>Target</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk), <a href="#CLSID">CLSID</a>, 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是一个本地文件, 并且没有指定路径, 则首先搜索 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a>. 在没有找到匹配的文件时, 如果该文件被集成在系统中("已知的"), 例如包含在 PATH 文件夹中的一个文件夹中, 系统将搜索并启动该文件.</p>
+      <p>要运行的文档, URL, 可执行文件(.exe, .com, .bat, 等等), 快捷方式(.lnk), <a href="#CLSID">CLSID</a>, 或<a href="#verbs">系统动词</a>(请参阅备注). 如果 <em>Target</em> 是一个本地文件, 并且没有指定路径, 如何定位文件通常取决于文件的类型和其他条件. 有关详情, 请参阅 <a href="#Interpretation_of_Target">Target 的解释</a>.</p>
       <p>要传递参数, 请让它们紧跟在程序或文档名的后面, 如下所示:</p>
       <pre>Run 'MyProgram.exe Param1 Param2'</pre>
       <p>如果程序/文档名称或参数包含空格, 则把它们括在双引号中是最可靠的(虽然它在某些情况下没有括在双引号中也能工作), 如下所示:</p>
@@ -37,7 +37,7 @@ ExitCode := <span class="func">RunWait</span>(Target <span class="optional">, Wo
   <dt>WorkingDir</dt>
   <dd>
       <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-      <p>如果为空或省略, 则使用脚本自己的工作目录(<a href="../Variables.htm#WorkingDir">A_WorkingDir</a>). 否则, 请指定 <em>Target</em> 的工作目录.</p>
+      <p>如果为空或省略, 则使用脚本自己的工作目录(<a href="../Variables.htm#WorkingDir">A_WorkingDir</a>). 否则, 请指定新进程要使用的初始工作目录. 这通常也会影响 <em>Target</em> 中的相对路径, 但是命令行参数的解释取决于目标程序.</p>
   </dd>
 
   <dt>Options</dt>
@@ -71,6 +71,21 @@ catch
     MsgBox "File does not exist."
 </pre>
 <p>内置变量 <a href="../Variables.htm#LastError">A_LastError</a> 被设置为操作系统的 GetLastError() 函数的结果.</p>
+
+<h2 id="Interpretation_of_Target">Target 的解释</h2>
+<p>Run/RunWait 本身不解释命令行参数或搜索目标文件. 相反, 它尝试执行目标, 如下所示:</p>
+<ul>
+  <li>如果没有指定动词, <em>Target</em> 将按原样传递给 <a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcess</a> 的参数 <em>lpCommandLine</em>.</li>
+  <li>如果指定了动词或 CreateProcess 失败, 并且 <a href="RunAs.htm">RunAs</a> 没有生效, 则尝试 <a href="https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw">ShellExecuteEx</a>.</li>
+</ul>
+<p>如果 <em>Target</em> 指定了名称, 但没有指定目录, 如果它是集成的("已知的"), 例如包含在 PATH 的文件夹之一中, 系统将搜索并启动该文件. 确切的搜索顺序取决于是否调用 CreateProcess 和/或 ShellExecuteEx. 如果调用 CreateProcess, 应用程序目录(其中包含 AutoHotkey 解释器或编译的脚本) 优先于 <em>WorkingDir</em> 指定的工作目录. 要避免这种情况, 请指定目录; 例如 <code>.\program.exe</code>.</p>
+<p>当尝试 ShellExecuteEx 时, <em>Target</em> 被解释如下:</p>
+<ul>
+  <li>以第一个空格或制表符结尾的 <em>Target</em> 子字符串可以是<a href="#verbs">预定义的动词名称</a>, 也可以是星号后面跟着动词词名称. 如果存在, 则排除可选的星号, 动词名称和单个分隔空格或制表符. 动词名称不支持包含空格或制表符, 但允许使用连字符等符号.</li>
+  <li>如果存在前置双引号, 则将其与下一个双引号之间的子字符串视为目标文件或动作.</li>
+  <li>否则, 第一个子字符串以空格结尾, 并且是一个现有文件(由绝对路径或相对于 <em>WorkingDir</em> 指定), 或以 .exe, .bat, .com, .cmd 或 .hta 结尾被认为是动作. 这允许文件类型 .ahk, .vbs 或 .lnk 接受参数, 同时仍然允许 "已知的" 的可执行文件(如 wordpad.exe) 在没有绝对路径的情况下启动.</li>
+  <li>如果存在单个分隔空格, 则忽略, <em>Target</em> 其余部分将按原样传递给 CreateProcess 或 ShellExecuteEx 作为命令行参数.</li>
+</ul>
 
 <h2 id="Remarks">备注</h2>
 <p>当通过 <a href="../Variables.htm#ComSpec">ComSpec</a>(cmd.exe) 运行程序时 -- 也许是因为你需要重定向程序的输入或输出 -- 如果可执行文件的路径或名称中包含空格, 那么整个字符串应该用一对外置引号来括起. 在下面的例子中, 外部的引号用黄色高亮显示:</p>
@@ -232,7 +247,7 @@ RunWaitMany(commands) {
 {
     shell := ComObject("WScript.Shell")
     exec := shell.Exec("AutoHotkey.exe /ErrorStdOut *")
-    exec.StdIn.Write(script)
+    exec.StdIn.Write(Script)
     exec.StdIn.Close()
     if Wait
         return exec.StdOut.ReadAll()

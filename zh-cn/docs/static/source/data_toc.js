@@ -265,7 +265,7 @@
     ["SetMouseDelay","lib/SetMouseDelay.htm"],
     ["SetNumLockState","lib/SetNumScrollCapsLockState.htm"],
     ["SetScrollLockState","lib/SetNumScrollCapsLockState.htm"],
-    ["SetStoreCapsLockMode","lib/SetStoreCapslockMode.htm"]
+    ["SetStoreCapsLockMode","lib/SetStoreCapsLockMode.htm"]
   ]],
   ["杂项","",
   [

@@ -12,7 +12,7 @@
 <body>
 
 <h1>OnCommand</h1>
-<p>注册一个函数或方法, 当通过 <a href="https://learn.microsoft.com/windows/win32/menurc/wm-command">WM_COMMAND</a> 消息接收到控件通知时调用.</p>
+<p>注册一个函数或方法, 当通过 <a href="#WM_COMMAND">WM_COMMAND</a> 消息接收到控件通知时调用.</p>
 <pre class="Syntax"><a href="GuiControl.htm">GuiCtrl</a>.<span class="func">OnCommand</span>(NotifyCode, Callback <span class="optional">, AddRemove</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
@@ -27,14 +27,20 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../misc/Functor.htm">函数对象</a></p>
     <p>事件发生时要调用的函数, 方法或对象.</p>
-    <p>如果 GUI 有事件接收器(即, 如果指定了 <a href="Gui.htm#Call">Gui()</a> 的 <em>EventObj</em> 参数), 那么这个参数可能是属于事件接收器的方法的名称.</p>
-    <p>否则, 这个参数必须是一个<a href="../misc/Functor.htm">函数对象</a>.</p>
+    <p>如果 GUI 有事件接收器(即, 如果指定了 <a href="Gui.htm#Call">Gui()</a> 的 <em>EventObj</em> 参数), 那么这个参数可能是属于事件接收器的方法的名称. 否则, 这个参数必须是一个<a href="../misc/Functor.htm">函数对象</a>.</p>
+    <p id="Callback_Parameters">回调函数接受一个参数, <a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(GuiCtrl) { ...</pre>
+    <p>虽然你给参数的名字并不重要, 但它被赋值为当前 GUI 控件的 <a href="GuiControl.htm">GuiControl 对象</a>.</p>
+    <p>如果不需要相应的信息, 可以省略回调参数, 但在这种情况下必须指定星号, 例如 <code>MyCallback(*)</code>.</p>
+    <p>The <a href="GuiOnEvent.htm#Callback_Parameters">OnEvent 注释中</a>关于 <code>this</code> 和绑定函数的内容也适用于 OnCommand.</p>
+    <p id="Callback_Return_Value">I如果一个事件注册了多个回调函数, 则回调函数可能返回一个非空值, 以防止调用任何剩余的回调函数.</p>
+    <p>回调的返回值被 GUI 控件忽略.</p>
   </dd>
   
   <dt>AddRemove</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>如果省略, 则默认为 1(在任何先前注册的回调之后调用回调). 否则, 指定下列数字之一:</p>
+    <p>如果省略, 则默认为 1. 否则, 指定下列数字之一:</p>
     <ul>
       <li>1 = 在任何先前注册的回调之后调用回调.</li>
       <li>-1 = 在任何先前注册的回调之前调用回调.</li>
@@ -45,16 +51,7 @@
 <h2 id="WM_COMMAND">WM_COMMAND</h2>
 <p>某些类型的控件在发生要监控事件时, 会发送一条 <a href="https://learn.microsoft.com/windows/win32/menurc/wm-command">WM_COMMAND</a> 消息. 这些通常是标准的 Windows 控件, 它们已经存在很长时间了, 因为新的控件使用 WM_NOTIFY 消息(请参阅 <a href="GuiOnNotify.htm">OnNotify</a>). 常用的通知代码被转换成事件, 脚本可以用 <a href="GuiOnEvent.htm">OnEvent</a> 来监视.</p>
 <p>消息的参数包含控件 ID, HWND 和通知代码, AutoHotkey 使用这些参数将通知发送到相应的回调. 没有额外的参数.</p>
-<p>要确定哪些通知是可用的(如果有的话), 请参考控件的文档. <a href="https://learn.microsoft.com/windows/win32/controls/individual-control-info">Control Library (Microsoft Docs)</a> 包含了每个 Windows 常用控件的链接(然而, 只有少数控件使用 WM_COMMAND). 通知代码(编号) 可以在 Windows SDK 中找到, 或者在互联网上搜索.</p>
-
-<h2 id="Callback_Parameters">Callback 参数</h2>
-<p><a href="GuiOnEvent.htm#Callback_Parameters">OnEvent</a> 中关于 <code>this</code> 和绑定函数的说明, 也适用于 OnCommand.</p>
-<p>回调接收一个参数:</p>
-<pre class="Syntax"><i>Callback</i>(GuiControl)</pre>
-
-<h2 id="Callback_Return_Value">Callback 返回值</h2>
-<p>如果一个事件已经注册了多个回调, 回调可以返回一个非空值, 以防止任何剩余的回调被调用.</p>
-<p>返回值会被控件忽略.</p>
+<p>要确定哪些通知可用(如果有的话), 请参阅控件的文档. <a href="https://learn.microsoft.com/windows/win32/controls/individual-control-info">Control Library (Microsoft Docs)</a> 包含了每个 Windows 常用控件的链接(然而, 只有少数控件使用 WM_COMMAND). 通知代码(编号) 可以在 Windows SDK 中找到, 或者在互联网上搜索.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="GuiOnEvent.htm">OnEvent</a> 的说明也适用于 OnCommand: <a href="GuiOnEvent.htm#Threads">线程</a>, <a href="GuiOnEvent.htm#Destroying_the_GUI">销毁 GUI</a>.</p>

@@ -126,7 +126,7 @@ MyBtn.OnEvent("Click", MyBtn_Click)  <em>; 当点击时, 调用 MyBtn_Click.</em
 <p>AutoHotkey 不直接支持的控件也可以嵌入到 GUI 窗口. 要实现这样的操作, 在 <em>Options</em> 中包含单词 <strong>Class</strong> 后跟所需控件的 Win32 类名. 例如:</p>
 <pre>MyGui.Add("Custom", "ClassComboBoxEx32")  <em>; 添加 <a href="https://learn.microsoft.com/windows/win32/controls/comboboxex-control-reference">ComboBoxEx</a> 控件.</em>
 MyGui.Add("Custom", "ClassScintilla")  <em>; 添加 <a href="https://scintilla.org/">Scintilla</a> 控件. 注意必须加载 SciLexer.dll 库后才能添加此控件.</em></pre>
-<p>AutoHotkey 通过 <code>MyGui.Add</code> 或 <code>GuiCtrl.Value</code> 使用标准的 Windows 操作方法来获取或替换控件中的文本.</p>
+<p>AutoHotkey 通过 <a href="Gui.htm#Add">MyGui.Add</a> 或 <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 使用标准的 Windows 操作方法来获取或替换控件中的文本.</p>
 <p><strong>Events:</strong> 由于每个通知代码的含义取决于发送它的控件, 因此 <a href="GuiOnEvent.htm">OnEvent</a>不支持自定义控件. 然而, 如果控件以 WM_NOTIFY 或 WM_COMMAND 消息的形式发送通知, 脚本可以使用 <a href="GuiOnNotify.htm">OnNotify</a> 或 <a href="GuiOnCommand.htm">OnCommand</a> 来检测它们.</p>
 <p>下面这个例子演示了如何添加和使用 <a href="https://learn.microsoft.com/windows/win32/controls/ip-address-control-reference">IP 地址控件</a>:</p>
 <pre>MyGui := Gui()
@@ -196,15 +196,18 @@ IPCtrlGetAddress(GuiCtrl)
 <pre>MyGui.AddDateTime("vMyDateTime", "LongDate")</pre>
 <p>外观:</p>
 <img src="../static/ctrl_datetime.png" alt="DateTime" />
-<p>最后一个参数可以为下列的其中一个.</p>
-<div class="methodShort" id="DateTimeFormat">
+<p>最后一个参数是一个格式字符串, 如下面的 SetFormat 方法所述. 此方法允许在创建 DateTime 控件之后更改显示格式.</p>
+
+<h3 id="DateTime_Methods">DateTime 方法</h3>
+<div class="methodShort" id="DateTime_SetFormat">
 <h3>SetFormat</h3>
 <p>设置 DateTime 控件的显示格式.</p>
 <pre class="Syntax">DateTime.<span class="func">SetFormat</span>(<span class="optional">Format</span>)</pre>
-<dl><dt>Format</dt><dd>
+<h4 id="DateTime_Parameters">参数</h4>
+<dl><dt>Format</dt><dd id="DateTimeFormat">
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>下列之一:</p>
-<p><strong>ShortDate</strong>(或省略/空白): 使用区域设置的短日期格式. 例如, 在某些区域设置中它看起来像这样: 6/1/2005</p>
+<p>如果为空或省略, 则默认为 <em>ShortDate</em>. 否则, 请指定以下格式之一:</p>
+<p><strong>ShortDate:</strong> 使用区域设置的短日期格式. 例如, 在某些区域设置中它看起来像这样: 6/1/2005</p>
 <p><strong>LongDate:</strong> 使用区域设置的长日期格式. 例如, 在某些区域设置中它看起来像这样: Wednesday, June 01, 2005</p>
 <p><strong>Time:</strong> 仅显示时间, 使用区域设置的时间格式. 尽管不显示日期, 但它仍然存在于控件中并且与 <a href="FileSetTime.htm#YYYYMMDD">YYYYMMDDHH24MISS</a> 格式的时间一起被获取. 例如, 在某些区域它看起来像这样: 9:37:45 PM</p>
 <p><strong>(自定义格式):</strong> 指定<a href="FormatTime.htm">日期和时间格式</a>的任意组合. 例如, <code>"M/d/yy HH:mm"</code> 显示的时间看起来像 6/1/05 21:37. 同样, <code>"dddd MMMM d, yyyy hh:mm:ss tt"</code> 显示的时间看起来像  June 1, 2005 09:37:45 PM. 想要原义显示的字母和数字应该括在一对单引号中, 如此例所示: <code>"'Date:' MM/dd/yy 'Time:' hh:mm:ss tt"</code>. 与之相比, 非字母数字字符(例如空格, tab, 斜杠, 冒号, 逗号和其他标点) 不需要包围在单引号中. 例外情况是单引号字符本身: 要产生原义的单引号, 请使用四个连续的单引号(''''), 不过如果它们已经包含在一对外部引号中则仅使用连续的两个就行了.</p>
@@ -306,7 +309,7 @@ MyEdit.Value := FileRead("C:\My File.txt")</pre>
 <p class="note"><strong>注意:</strong> 一些按键即使它们作为不同的名称获取也显示为相同的名称. 例如, <code>^Numpad7</code> 和 <code>^NumpadHome</code> 都可能显示为 Ctrl + Num 7.</p>
 <p>默认情况下, 控件在初始时不含有热键. 要让控件含有默认的热键, 请在最后一个参数中指定热键修饰符和按键名称, 如此例所示: <code>MyGui.Add("Hotkey", "vChosenHotkey", "^!p")</code>. 支持的修饰符仅包含 ^(Control), !(Alt) 和 +(Shift). 请参阅<a href="../KeyList.htm">按键列表</a>了解可用的按键名称.</p>
 <p>每当用户改变控件的内容时(通过按键), 则将触发 <a href="GuiOnEvent.htm#Change">Change</a> 事件.</p>
-<p class="note"><strong>注意:</strong> 即使存在不完整的热键, 该事件也会被触发. 例如, 如果用户按住 <kbd>Ctrl</kbd>, 该事件就会被触发一次, <a href="GuiControl.htm#Value">Value</a> 只返回一个抑扬符(^). 当用户完成热键时, 事件再次被触发, <a href="GuiControl.htm#Value">Value</a> 返回完整的热键.</p>
+<p class="note"><strong>注意:</strong> 即使存在不完整的热键, 该事件也会被触发. 例如, 如果用户按住 <kbd>Ctrl</kbd>, 该事件就会被触发一次, <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 只返回一个抑扬符(^). 当用户完成热键时, 事件再次被触发, <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 返回完整的热键.</p>
 <p>要限制用户可以使用的热键类型, 请在选项中包含单词 <strong>Limit</strong> 接着一个或多个下列数字的和:</p>
 <ul>
   <li>1: 阻止不带有修饰符的按键</li>
@@ -334,13 +337,19 @@ MyGui.AddLink(, 'Links may be used anywhere in the text like &lt;a id="A"&gt;thi
 
 <p>每当用户点击一个链接, 就会触发 <a href="GuiOnEvent.htm#Click">Click</a> 事件. 如果控件没有 Click 回调(通过调用 <a href="GuiOnEvent.htm">OnEvent</a> 注册), 链接的 HREF 会自动执行, 就像传递给 <a href="Run.htm">Run</a> 函数一样.</p>
 <pre>Gui := Gui()
-Link := MyGui.Add("Link",
-    , 'Click to run &lt;a href="notepad" id="notepad"&gt;Notepad&lt;/a&gt; or open '
-    . '&lt;a id="help" href="https://www.autohotkey.com/docs/"&gt;online help&lt;/a&gt;.')
+LinkText := 'Click to run &lt;a href="notepad" id="notepad"&gt;Notepad&lt;/a&gt; or open &lt;a id="help" href="https://www.autohotkey.com/docs/"&gt;online help&lt;/a&gt;.'
+Link := MyGui.Add("Link", "w200", LinkText)
 Link.OnEvent("Click", Link_Click)
 Link_Click(Ctrl, ID, HREF)
 {
-    if MsgBox("ID: " ID "`nHREF: " HREF "`n`nExecute this link?",, "y/n") = "yes"
+    MsgText := Format("
+    (
+        ID: {1}
+        HREF: {2}
+
+        Execute this link?
+    )", ID, HREF)
+    if MsgBox(MsgText,, "y/n") = "yes"
         Run(HREF)
 }
 MyGui.Show()</pre>
@@ -355,7 +364,7 @@ MyGui.Show()</pre>
 <img src="../static/ctrl_list.png" alt="ListBox" />
 <p id="ChooseLB">要在窗口第一次出现时预选其中一个项目, 请在 <em>Options</em> 中加入单词 <strong>Choose</strong> 后面紧跟着要预选的项目编号. 例如, <code>Choose5</code> 会预选第五项. 若要预选多个项目, 可多次使用 <a href="GuiControl.htm#Choose">GuiCtrl.Choose</a>(需要 <a href="#ListBoxMulti">Multi</a> 选项). 在控件创建后, 请使用 <a href="GuiControl.htm#Value">GuiCtrl.Value</a>, <a href="GuiControl.htm#Text">GuiCtrl.Text</a> 或 <a href="GuiControl.htm#Choose">GuiCtrl.Choose</a> 来改变选择, 和使用 <a href="GuiControl.htm#Add">GuiCtrl.Add</a> 或 <a href="GuiControl.htm#Delete">GuiCtrl.Delete</a> 来添加或移除列表中的条目.</p>
 <p>如果没有 <a href="#ListBoxMulti">Multi</a> 选项, <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 返回当前所选项目的位置编号(第一个项目为 1, 第二个项目为 2, 等等.), 如果没有选择项目, 则返回 0. 如果要获取所选项目的文本, 则使用 <a href="GuiControl.htm#Text">GuiCtrl.Text</a>. 如果使用 <a href="#ListBoxMulti">Multi</a> 选项, <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 和 <a href="GuiControl.htm#Text">GuiCtrl.Text</a> 将返回一个项目数组, 而不是单个项目.</p>
-<p><a href="Gui.htm#Submit">MyGui.Submit</a> 默认存储 <a href="GuiControl.htm#Text">GuiCtrl.Text</a>, 但如果控件的 <em>Options</em> 中包含单词 <strong>AltSubmit</strong>, 则存储 <a href="GuiControl.htm#Value">GuiCtrl.Value</a>.</p>
+<p><a href="Gui.htm#Submit">MyGui.Submit</a> 存储 <a href="GuiControl.htm#Text">GuiCtrl.Text</a>, 除非控件的 <em>Options</em> 中有 <strong>AltSubmit</strong>, 在这种情况下, 存储 <a href="GuiControl.htm#Value">GuiCtrl.Value</a>.</p>
 <p>每当用户选择或取消选择一个或多个项目时, 就会触发 <a href="GuiOnEvent.htm#Change">Change</a> 事件. 同时也支持 <a href="GuiOnEvent.htm#DoubleClick">DoubleClick</a>, <a href="GuiOnEvent.htm#Focus">Focus</a> 和 <a href="GuiOnEvent.htm#LoseFocus">LoseFocus</a> 事件.</p>
 <p id="LBRedraw">当在 ListBox 中添加大量的项目时, 在操作之前使用 <code>MyListBox.Opt("-Redraw")</code>, 在操作之后使用 <code>MyListBox.Opt("+Redraw")</code>, 可以提高性能. 有关详情, 请参阅 <a href="GuiControl.htm#redraw-remarks">Redraw</a>.</p>
 
@@ -528,57 +537,60 @@ SB.SetText("There are " . RowCount . " rows selected.")</pre>
 SB.SetText("There are " . RowCount . " rows selected.")</pre>
 <p>外观:</p>
 <img src="../static/ctrl_status.png" alt="StatusBar" />
-<p>状态栏最简单的用法是每当应该报告给用户一些状态改变时调用 <a href="#SB_SetText">SB.SetText</a>. 要报告多片的信息, 请使用 <a href="#SB_SetParts">SB.SetParts</a> 把状态栏分成多段. 要在状态栏中显示图标, 请调用 <a href="#SB_SetIcon">SB.SetIcon</a>.</p>
+<p>状态栏最简单的用法是每当应该报告给用户一些状态改变时调用 <a href="#SB_SetText">SetText 方法</a>. 要报告多片的信息, 请使用 <a href="#SB_SetParts">SetParts 方法</a>把状态栏分成多段. 要在状态栏中显示图标, 请调用 <a href="#SB_SetIcon">SetIcon 方法</a>.</p>
 
 <h3 id="StatusBar_Methods">StatusBar 方法</h3>
 
 <div class="methodShort" id="SB_SetText">
 <h3>SetText</h3>
 <p>在状态栏指定部分显示 <em>NewText</em>.</p>
-<pre class="Syntax">Success := SB.<span class="func">SetText</span>(NewText <span class="optional">, PartNumber, Style</span>)</pre>
+<pre class="Syntax">SB.<span class="func">SetText</span>(NewText <span class="optional">, PartNumber, Style</span>)</pre>
+<h4 id="SB_SetText_Parameters">参数</h4>
 <dl><dt>NewText</dt><dd>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
 <p>在 <em>NewText</em> 中的任意地方可以使用最多两个两个制表符(`t): 第一个制表符右边的任何东西在该部分中居中, 而第二个制表符右边的任何东西是右对齐的.</p></dd><dt>PartNumber</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>如果省略 <em>PartNumber</em>, 则使用默认值 1. 否则, 请指定介于 1 和 256 之间的整数.</p></dd><dt>Style</dt><dd>
+<p>如果省略, 则默认为 1. 否则, 请指定介于 1 和 256 之间的整数.</p></dd><dt>Style</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>如果省略 <em>Style</em>, 则使用默认值 0, 此时使用让状态栏那部分看起来凹陷的传统边界. 否则, 指定 1 为无边框, 2 为带边框, 让状态栏看起来是凸起的.</p></dd></dl>
+<p>如果省略, 则默认为 0, 此时使用让状态栏那部分看起来凹陷的传统边界. 否则, 指定 1 为无边框, 2 为带边框, 让状态栏看起来是凸起的.</p></dd></dl>
 </div>
 
 <div class="methodShort" id="SB_SetParts">
 <h3>SetParts</h3>
-<p>根据指定的宽度(单位为像素) 把状态栏分成多个部分, 并返回非零值(状态栏的 <a href="GuiControl.htm#Hwnd">HWND</a>).</p>
-<pre class="Syntax">Hwnd := SB.<span class="func">SetParts</span>(<span class="optional">Width1, Width2, ... Width255</span>)</pre>
+<p>根据指定的宽度(单位为像素) 把状态栏分成多个部分.</p>
+<pre class="Syntax">SB.<span class="func">SetParts</span>(<span class="optional">Width1, Width2, ... Width255</span>)</pre>
+<h4 id="SB_SetParts_Parameters">参数</h4>
 <dl><dt>Width1 ... Width255</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
 <p>如果省略所有参数, 则状态栏恢复为只有一个很长的部分. 否则, 指定除了最后一部分外的其他每个部分的宽度(最后一部分将填充状态栏的剩余宽度). 例如, <code>SB.SetParts(50, 50)</code> 将创建三个部分: 前两个部分的宽度都为 50, 而最后一部分占据剩余的所有宽度.</p></dd></dl>
-<p>注意: 通过 <code>SB.SetParts()</code> "删除" 的任何部分下次显示时都不会显示文本(而且它们的图标会自动销毁).</p></div>
+<h4 id="SB_SetParts_Return_Value">返回值</h4>
+<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
+<p>This method returns the status bar's window handle (HWND). A control's HWND is often used with <a href="PostMessage.htm">PostMessage</a>, <a href="SendMessage.htm">SendMessage</a>, and <a href="DllCall.htm">DllCall</a>. It can also be used directly in a <a href="Control.htm#Parameter">Control parameter</a>.</p>
+<h4 id="SB_SetParts_Remarks">备注</h4>
+<p>通过该方法 "删除" 的任何部分下次显示时都不会显示文本(而且它们的图标会自动销毁).</p></div>
 
 <div class="methodShort" id="SB_SetIcon">
 <h3>SetIcon</h3>
-<p>在指定部分的文本左边显示一个小图标, 并返回图标的句柄.</p>
-<pre class="Syntax">HICON := SB.<span class="func">SetIcon</span>(Filename <span class="optional">, IconNumber, PartNumber</span>)</pre>
+<p>在指定部分的文本左边显示一个小图标.</p>
+<pre class="Syntax">SB.<span class="func">SetIcon</span>(FileName <span class="optional">, IconNumber, PartNumber</span>)</pre>
+<h4 id="SB_SetIcon_Parameters">参数</h4>
 <dl><dt>FileName</dt><dd>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>图标或图像文件的路径. 关于支持的格式列表, 请参阅<a href="#IconSupport">图片控件</a>.</p>
-<p>可以使用<a href="../misc/ImageHandles.htm">位图或图标句柄</a>来代替文件名. 例如, <code>SB.SetIcon("HICON:" handle)</code>.</p></dd>
+<p>图标或图像文件的路径, 或<a href="../misc/ImageHandles.htm">位图或图标句柄</a>, 如 <code>SB.SetIcon("HICON:" handle)</code>. 关于支持的格式列表, 请参阅<a href="#IconSupport">图片控件</a>.</p>
 <dt>IconNumber</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>要使用文件中第一个以外的图标组, 请为 <em>IconNumber</em> 指定其编号. 例如, <code>SB.SetIcon("Shell32.dll", 2)</code> 将使用第二个图标组中的默认图标. 如果 <em>IconNumber</em> 为负数, 则假定其绝对值表示可执行文件中图标的资源 ID.</p></dd><dt>PartNumber</dt><dd>
+<p>如果省略, 默认为 1(第一图标组). 否则, 请指定文件中使用的图标组编号. 例如, <code>SB.SetIcon("Shell32.dll", 2)</code> 将使用第二个图标组中的默认图标. 如果为负数, 则假定其绝对值表示可执行文件中图标的资源 ID.</p></dd><dt>PartNumber</dt><dd>
 <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>如果省略 <em>PartNumber</em>, 则默认为 1. 否则, 请指定介于 1 和 256 之间的整数.</p></dd></dl>
-<p>注意: 是一种系统资源, 它可以被大多数脚本安全地忽略, 因为当状态栏的窗口被销毁时它会被自动销毁. 同样, 当 <code>SB.SetIcon()</code> 用新图标替换旧图标时会销毁旧图标. 这种情况可以使用以下方法避免:</p>
-<pre>MyGui.Opt("+LastFound")
-<a href="SendMessage.htm">SendMessage</a>(0x40F, part_number - 1, my_hIcon, "msctls_statusbar321")  <em>; 0x40F is SB_SETICON.</em></pre></div>
-
-<div class="methodShort" id="SB_SetProgress">
-<h3>SetProgress</h3>
-<p>创建和控制状态栏中的进度条. 此函数可以从 <a href="https://www.autohotkey.com/forum/topic37754.html">www.autohotkey.com/forum/topic37754.html</a> 获取.</p></div>
+<p>如果省略, 则默认为 1. 否则, 请指定介于 1 和 256 之间的整数.</p></dd></dl>
+<h4 id="SB_SetIcon_Return_Value">返回值</h4>
+<p>Type: <a href="../Concepts.htm#numbers">Integer</a></p>
+<p>这个方法返回图标的句柄(HICON). HICON 是一种系统资源, 大多数脚本可以安全地忽略它, 因为当状态栏的窗口被销毁时它会被自动销毁. 类似地, 当此方法用新图标替换旧图标时, 旧图标将被销毁. 这可以通过以下方式避免:</p>
+<pre><a href="SendMessage.htm">SendMessage</a>(0x040F, PartNumber - 1, HICON, SB)  <em>; 0x040F is SB_SETICON.</em></pre></div>
 
 <h3 id="StatusBar_Usage">StatusBar 的使用</h3>
 <p><strong>对鼠标点击做出反应:</strong> 每当用户点击状态栏时, <a href="GuiOnEvent.htm#Click">Click</a>, <a href="GuiOnEvent.htm#DoubleClick">DoubleClick</a> 或 <a href="GuiOnEvent.htm#ContextMenu">ContextMenu</a> 事件都会被触发, <em>Info</em> 或 <em>Item</em> 参数包含状态栏部分的编号. 但是, 如果用户点击状态栏右边靠近大小调整手柄的地方时, 目标部分的编号可能是很大的整数.</p>
 <p><strong>字体和颜色:</strong> 尽管字体大小, 外观和样式可以使用 <a href="Gui.htm#SetFont">MyGui.SetFont</a> 来设置(像普通控件一样), 但是无法改变文本颜色. 状态栏的背景颜色可以通过在 <em>Options</em> 中指定单词 <strong>Background</strong> 后紧跟颜色名称(请参阅<a href="../misc/Colors.htm">颜色表</a>) 或 RGB 值(0x 前缀是可选的). 例如: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>, <code>BackgroundDefault</code>. 注意, 控件必须具有经典主题外观. 因此, <code>-Theme</code> 选项必须与 Background 选项一起指定, 例如 <code>-Theme BackgroundSilver</code>.</p>
-<p><strong>隐藏状态栏:</strong> 创建时, 可以使用 <code>MyStatusBar := MyGui.Add("StatusBar", "Hidden")</code> 隐藏状态栏. 要在创建后某个时候隐藏它, 请使用 <code>MyStatusBar.Visible := false</code>. 要显示, 请使用 <code>MyStatusBar.Visible := true</code>. 注意: 隐藏状态栏不会降低窗口的高度. 如果希望这样, 一个简便的方法是 <code>MyGui.Show("<a href="Gui.htm#AutoSize">AutoSize</a>")</code>.</p>
+<p><strong>隐藏状态栏:</strong> 创建时, 可以使用 <code>SB := MyGui.Add("StatusBar", "Hidden")</code> 隐藏状态栏. 要在创建后某个时候隐藏它, 请使用 <code>SB.Visible := false</code>. 要显示, 请使用 <code>SB.Visible := true</code>. 注意: 隐藏状态栏不会降低窗口的高度. 如果希望这样, 一个简便的方法是 <code>MyGui.Show("<a href="Gui.htm#AutoSize">AutoSize</a>")</code>.</p>
 <p><strong>样式(很少使用):</strong> 请参阅<a href="../misc/Styles.htm#StatusBar">状态栏样式表</a>.</p>
 <p><strong>已知限制:</strong> 1) 如果某个控件的位置和状态栏重叠, 那么它有可能会被绘制在状态栏的上方. 避免这种情况的一种方法是通过 <a href="GuiOnEvent.htm#Size">Size</a> 事件动态地缩小这样的控件. 2) 每个窗口只允许有一个状态栏控件.</p>
 <p><strong>示例:</strong> <a href="TreeView.htm#ExAdvanced">示例 #1</a> 在 TreeView 页面底部演示了一个多部分的状态栏.</p>
@@ -597,16 +609,40 @@ SB.SetText("There are " . RowCount . " rows selected.")</pre>
 <pre>MyGui.AddTab3(, ["General","View","Settings"])</pre>
 <p>外观:</p>
 <img src="../static/ctrl_tab.png" alt="Tab" />
-<p id="ChooseTab">上面的最后一个参数是一个标签页名称的<a href="../lib/Array.htm">数组</a>. 要在窗口初次出现时预选其中的某个选项卡, 请在 <em>Options</em> 中包含单词 <strong>Choose</strong> 紧跟着想预选的选项卡的编号. 例如, <code>Choose5</code> 会预选第五个选项卡(和其他选项一样, 它也可以为变量, 例如 <code>"Choose" Var</code>). 要在控件创建后改变选择的选项卡, 请使用 <a href="GuiControl.htm#Value">Value</a>, <a href="GuiControl.htm#Text">Text</a> 或 <a href="GuiControl.htm#Choose">Choose</a> 和 <a href="GuiControl.htm#Add">Add</a> 或 <a href="GuiControl.htm#Delete">Delete</a> 来添加或删除选项卡.</p>
-<p id="TabCmd">创建选项卡控件后, 随后添加的控件自动属于其首个选项卡. 这可以在任何时候改变, 请参照这些例子(在本例中, <em>Tab</em>  是第一个选项卡控件的 <a href="GuiControl.htm">GuiControl 对象</a>, 而 <em>Tab2</em> 是第二个标签控件的 GuiControl 对象):</p>
-<pre>Tab.<a href="GuiControl.htm#UseTab">UseTab</a>()  <em>; 随后的控件不属于任何选项卡控件的一部分.</em>
+<p>上面的最后一个参数是一个标签页名称的<a href="Array.htm">数组</a>. 创建 Tab 控件后, 随后添加的控件自动属于其第一个选项卡. 要更改这一点, 请使用下面的 UseTab 方法. 有关详细信息和示例, 请参阅 <a href="#Tab_Usage">Tab 的用法</a>.</p>
+
+<h3 id="Tab_Methods">Tab 方法</h3>
+<div class="methodShort" id="Tab_UseTab">
+<h3>UseTab</h3>
+<p>指定随后创建的控件将被添加到的选项卡.</p>
+<pre class="Syntax">Tab.<span class="func">UseTab</span>(<span class="optional">Value, ExactMatch</span>)</pre>
+<h4 id="Tab_UseTab_Parameters">参数</h4>
+<dl>
+  <dt>Value</dt><dd>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#strings">字符串</a></p>
+    <p>如果为空或省略, 则默认为 0, 随后的创建的控件将被添加到 Tab 控件之外. 否则, 指定 1 表示第一个选项卡, 2 表示第二个, 等等.</p>
+    <p>如果 <em>Value</em> 字符串(即使是数字字符串), 前面部分与 <em>Value</em> 匹配的标签将被使用. 搜索不区分大小写. 例如, 如果一个控件包含 "UNIX Text" 标签, 指定单词 unix(小写) 就可以使用它. Use <em>ExactMatch</em> to change this matching behavior.</p>
+  </dd>
+  <dt>ExactMatch</dt><dd>
+    <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
+    <p>如果省略, 则默认为 false</p>
+    <p>如果为 <strong>false</strong>, 则使用其前导名称部分与 <em>Value</em> 匹配的选项卡.</p>
+    <p>如果为 <strong>true</strong>, <em>Value</em> 必须完全匹配(不区分大小写).</p>
+  </dd>
+</dl>
+</div>
+
+<h3 id="Tab_Usage">Tab 的用法</h3>
+<p id="ChooseTab">要在窗口初次出现时预选其中的某个选项卡, 请在 <em>Options</em> 中包含单词 <strong>Choose</strong> 紧跟着想预选的选项卡的编号. 例如, <code>Choose5</code> 会预选第五个选项卡(和其他选项一样, 它也可以为变量, 例如 <code>"Choose" Var</code>. 要在控件创建后改变选择的选项卡, 请使用 <a href="GuiControl.htm#Value">GuiCtrl.Value</a>, <a href="GuiControl.htm#Text">GuiCtrl.Text</a> 或 <a href="GuiControl.htm#Choose">GuiCtrl.Choose</a>, 而 <a href="GuiControl.htm#Add">GuiCtrl.Add</a> 和 <a href="GuiControl.htm#Delete">GuiCtrl.Delete</a> 来添加或删除选项卡.</p>
+<p id="UseTab_Usage">创建选项卡控件后, 随后添加的控件自动属于其首个选项卡. 这可以通过使用 href="#Tab_UseTab">UseTab 方法</a>随时更改, 如下所示(在本例中, <em>Tab</em> 是第一个选项卡控件的 <a href="GuiControl.htm">GuiControl 对象</a>, 而 <em>Tab2</em> 是第二个标签控件的):</p>
+<pre>Tab.UseTab()  <em>; 随后的控件不属于任何选项卡控件的一部分.</em>
 Tab.UseTab(3)  <em>; 随后的控件属于当前选项卡控件的第三个选项卡.</em>
 Tab2.UseTab(3)  <em>; 随后的控件属于第二个选项卡控件的第三个选项卡.</em>
 Tab.UseTab("Name")  <em>; 随后的控件属于名称以 <i>Name</i>(不区分大小写) 开始的选项卡.</em>
 Tab.UseTab("Name", true)  <em>; 与上面相同, 不过这里需要准确匹配(并区分大小写).</em></pre>
 <p>还可以使用上面的每个例子分配控件到还不存在的选项卡或选项卡控件(不包括使用 <em>Name</em> 方法的情况). 但在此情况下, 不支持下面描述的相对位置选项.</p>
 <p id="Tab_Positioning1"><strong>位置:</strong> 当一个选项卡控件的每个选项卡接收到其首个子控件, 此子控件在下列情况下将具有特殊的默认位置: 1) 同时省略 X 和 Y 坐标, 此时首个子控件放在选项卡控件内部的左上角(带有标准的<a href="Gui.htm#MarginX">边距</a>), 而首个子控件后的其他子控件放在之前控件的下面; 2) 指定了 <a href="Gui.htm#PosPlus">X+n 和/或 Y+n</a> 位置选项, 此时子控件放在相对于选项卡控件内部的左上角的位置. 例如, 指定 <code class="no-highlight">x+10 y+10</code> 会把控件放置在左上角往右和往下各 10 个像素的位置.</p>
-<p><strong>当前标签页:</strong> <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 返回当前选中的标签页的位置编号(第一个标签页是 1, 第一个标签页是 2, 等等.). 要获取其文本, 请使用 <a href="GuiControl.htm#Text">GuiCtrl.Text</a>. <a href="Gui.htm#Submit">MyGui.Submit</a> 默认存储 <a href="GuiControl.htm#Text">GuiCtrl.Text</a>, 但如果控件的 <em>Options</em> 中含有单词 <strong>AltSubmit</strong>, 则存储 <a href="GuiControl.htm#Value">GuiCtrl.Value</a>.</p>
+<p><strong>当前标签页:</strong> <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 返回当前选中的标签页的位置编号(第一个标签页是 1, 第一个标签页是 2, 等等.). 要获取其文本, 请使用 <a href="GuiControl.htm#Text">GuiCtrl.Text</a>. <a href="Gui.htm#Submit">MyGui.Submit</a> 存储 <a href="GuiControl.htm#Text">GuiCtrl.Text</a>, 但如果控件的 <em>Options</em> 中含有单词 <strong>AltSubmit</strong>, 则存储 <a href="GuiControl.htm#Value">GuiCtrl.Value</a>.</p>
 <p><strong>检测标签页选择:</strong> 每当用户切换标签页时, <a href="GuiOnEvent.htm#Change">Change</a> 事件就会被触发.</p>
 <p id="Tab_Keyboard"><strong>键盘导航:</strong> 用户可以按下 <kbd>Ctrl</kbd>+<kbd>PgDn</kbd>/<kbd>PgUp</kbd> 来在选项卡控件的页面间导航; 如果键盘焦点在不属于选项卡的控件上, 则会导航到窗口的首个选项卡控件. 也可以使用 <kbd>Ctrl</kbd>+<kbd>Tab</kbd> 和 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Tab</kbd>, 除非当前焦点控件在多行编辑控件中(此时它们不起作用).</p>
 <p id="Tab_Limits"><strong>限制:</strong> 每个窗口的选项卡控件不能超过 255 个. 每个选项卡控件不能含有超过 256 个选项卡(页面). 此外, 选项卡控件不能包含其他选项卡控件.</p>
@@ -619,7 +655,7 @@ Tab.UseTab("Name", true)  <em>; 与上面相同, 不过这里需要准确匹配(
 <p>在极少数情况下, <a href="WinMove.htm">WinMove</a>(或等效的 DllCall) 用于移动控件, 坐标必须相对于控件的父窗口, 而不是 Gui(参阅<a href="#Tab_Parent">上面的信息)</a>). 相比之下, <a href="GuiControl.htm#Move">GuiCtrl.Move</a> 采用 GUI 坐标, <a href="ControlMove.htm">ControlMove</a> 采用窗口坐标, 与控件的父窗口无关.</p>
 <p id="Tab_Autosize"><strong>自动尺寸:</strong> 如果脚本没有指定, 在下列情况下 Tab3 控件的宽度 和/或 高度将会自动计算(在控件创建后以先到者为准):</p>
 <ul>
-  <li>第一次 Tab3 控件不再是当前标签页控件. 这可能是调用了 <a href="#TabCmd">GuiCtrl.UseTab</a>(有或没有参数) 或创建另一个标签页控件所导致的.</li>
+  <li>第一次 Tab3 控件不再是当前标签页控件. 这可能是调用了 <a href="#Tab_UseTab">UseTab 方法</a>(有或没有参数) 或创建另一个标签页控件所导致的.</li>
   <li>对于特定的 Gui, 首次调用 <a href="Gui.htm#Show">MyGui.Show</a>.</li>
 </ul>
 <p>存在的子控件计算尺寸时, 自动调整的尺寸再加上默认边距. 尺寸只计算一次, 即使添加控件也不会重新计算. 如果 Tab3 控件是空的, 与 Tab 或 Tab2 控件相同的默认大小.</p>
@@ -716,7 +752,7 @@ MyGui.AddUpDown("vMyUpDown Range1-10", 5)</pre>
 <p><strong>Left:</strong> 把 UpDown 放在其伙伴控件的左边而不是右边.</p>
 <p><strong>Range:</strong> 使用 0 到 100 外的其他范围. 在单词 Range 后指定最小值, 破折号和最大值. 例如, <code class="no-highlight">Range1-1000</code> 将允许选择一个介于 1 和 1000 之间的数字; <code class="no-highlight">Range-50-50</code> 将允许介于 -50 和 50 之间的数字; 而 <code class="no-highlight">Range-10--5</code> 将允许介于 -10 和 -5 之间的数字. 交换最小值和最大值可以让箭头往与正常方向相反的方向移动. 最大的允许范围是 -2147483648-2147483647. 最后, 如果伙伴控件为 <a href="#ListBox">ListBox</a>, 那么垂直的默认范围是 32767-0, 而水平的则反向(<a href="#Horz">Horz</a>).</p>
 <p><strong>Wrap:</strong> 当用户试图超出最小值或最大值时使得控件返回到其范围的另一端. 如果没有 <em>Wrap</em>, 当达到最小值或最大值时控件会停止.</p>
-<p><strong>-16</strong>(负 16): 让垂直的 UpDown 成为孤立的; 即让它没有伙伴控件. 这还可以让控件符合任何指定的宽度, 高度和位置而不是适应于其伙伴控件的大小. 此外, 孤立的 UpDown 会内部跟踪它自己的位置. 使用如 <a href="Gui.htm#Submit">MyGui.Submit</a> 可以正常获取此位置.</p>
+<p><strong>-16</strong>(负 16): 让垂直的 UpDown 成为孤立的; 即让它没有伙伴控件. 这还可以让控件符合任何指定的宽度, 高度和位置而不是适应于其伙伴控件的大小. 此外, 孤立的 UpDown 会内部跟踪它自己的位置. 使用如 <a href="Gui.htm#Submit">MyGui.Submit</a> 或 <a href="GuiControl.htm#Value">GuiCtrl.Value</a> 可以正常获取此位置.</p>
 <p id="UpDownSep"><strong>0x80:</strong> 在 <em>Options</em> 中包含 0x80 来省略伙伴控件中正常出现在每三位十进制数间的千位分隔符. 然而, 通常不使用此样式, 因为当脚本从 UpDown 控件(而不是其伙伴控件) 获取的数字中不包含分隔符.</p>
 <p><strong>使用 1 以外的其他增量:</strong> 在<a href="http://numeric.nerim.net/AutoHotkey/Scripts/UpDown%20-%20Non-unitary%20increments.ahk">此脚本</a>中, 演示了如何改变 UpDown 增量为 1 以外的其他值(例如 5 或 0.1).</p>
 <p><strong>十六进制数字格式:</strong> 在伙伴控件中显示的数字格式可以通过以下示例从十进制改为十六进制:</p>

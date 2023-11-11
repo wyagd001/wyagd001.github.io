@@ -55,12 +55,14 @@
 <div class="methodShort" id="InsertAt"><h3>InsertAt <span class="ver">[v1.1.21+]</span></h3>
 <p>插入一个或多个值到线性数组中的给定序号位置中.</p>
 <pre class="Syntax">Object.<span class="func">InsertAt</span>(Pos, Value1 <span class="optional">, Value2, ... Value<i>N</i></span>)</pre>
+<h4 id="InsertAt_Parameters">参数</h4>
 <dl>
   <dt>Pos</dt>
   <dd><p>要将 <em>Value1</em> 插入到数组中的序号数字. 随后的值将插入到 Pos+1, Pos+2, 等等.</p></dd>
   <dt>Value1 ...</dt>
   <dd><p>要插入数组的一个或多个值. 要将另一个数组中的值一次性插入, 传递 <code><a href="../Functions.htm#VariadicCall">theArray*</a></code> 作为最后一个参数.</p></dd>
 </dl>
+<h4 id="InsertAt_Remarks">备注</h4>
 <p>InsertAt 对应的是 <a href="#RemoveAt">RemoveAt</a>.</p>
 <p>作为关联数组对象, <em>Pos</em> 的整数值同时也成为 <em>Value1</em> 在数组对象中的键名. 位于 <em>Pos</em> 之前或之后的键值对都会被自动改为正确的对应关系数值, 哪怕键对应的值不存在也是如此(因为对象是稀疏数组). 例如:</p>
 <pre>x := []
@@ -85,16 +87,19 @@ MsgBox % x[handleX+1]  <em>; 这是 "A" 新的 "位置"</em></pre>
 
 <div class="methodShort" id="RemoveAt"><h3>RemoveAt <span class="ver">[v1.1.21+]</span></h3>
 <p>从线性数组的指定位置移除键值对.</p>
-<pre class="Syntax">Object.<span class="func">RemoveAt</span>(Pos <span class="optional">, Length</span>)</pre>
+<pre class="Syntax">RemovedValue := Object.<span class="func">RemoveAt</span>(Pos)
+RemovedItemsCount := Object.<span class="func">RemoveAt</span>(Pos, Length)</pre>
+<h4 id="RemoveAt_Parameters">参数</h4>
 <dl>
   <dt>Pos</dt>
   <dd><p>表示要从此处开始删除一个或多个值.</p></dd>
   
   <dt>Length</dt>
-  <dd><p>要删除值的范围. 从 <code>Pos</code> 到 <code>Pos+Length-1</code> 之间的所有值将被删除. 如果省略则仅删除 Pos 位置的值.</p></dd>
-  
+  <dd><p>如果省略, 则移除一个项目. 否则, 请指定要删除值的范围. 从 <code>Pos</code> 到 <code>Pos+Length-1</code> 之间的所有值将被删除.</p></dd>
 </dl>
+<h4 id="RemoveAt_Return_Value">返回值</h4>
 <p>如果省略 <em>Length</em>, 则返回从 <em>Pos</em> 删除的值(如果没有则为空). 否则, 返回值是已删除的有值项的数量, 它可以不同于稀疏数组中的 <em>Length</em>, 但它总是在 0 和 <em>Length</em>(包括) 之间.</p>
+<h4 id="RemoveAt_Remarks">备注</h4>
 <p>RemoveAt 对应于 <a href="#InsertAt">InsertAt</a>.</p>
 <p>剩下的那些位于 <em>Pos</em> 前后的键值对会根据 <em>Length</em>(或者省略时为 1) 长度强制对齐, 哪怕被删除的范围中不包含任何值. 例如:</p>
 <pre>x := ["A", "B"]
@@ -114,36 +119,40 @@ MsgBox % x[0x4321-1]        <em>; A</em></pre>
 
 <div class="methodShort" id="Push"><h3>Push <span class="ver">[v1.1.21+]</span></h3>
 <p>追加一个或多个值到数组的尾部.</p>
-<pre class="Syntax">Object.<span class="func">Push</span>(<span class="optional"> Value, Value2, ..., Value<i>N</i> </span>)</pre>
+<pre class="Syntax">Index := Object.<span class="func">Push</span>(<span class="optional">Value, Value2, ..., Value<i>N</i></span>)</pre>
+<h4 id="Push_Parameters">参数</h4>
 <dl>
   <dt>Value ...</dt>
   <dd><p>要插入数组的一个或多个值. 要将另一个数组中的值一次性插入, 传递 <code><a href="../Functions.htm#VariadicCall">theArray*</a></code> 作为最后一个参数.</p></dd>
 </dl>
-<p>插入的最后一个值的位置(因为可能同时插入了多个值). 当数组仅包含负索引时可能为负数.</p>
+<h4 id="Push_Return_Value">返回值</h4>
+<p>此方法返回最后插入值的位置编号. 如果数组只包含负数索引的元素, 这个数字可以是负数.</p>
+<h4 id="Push_Remarks">备注</h4>
 <p>如果数组为空或仅包含字符串或对象键时, 第一个插入的值的位置(索引) 为 1.</p>
 <p>其他情况下, 插入的第一个值位于 <code>Object.MaxIndex() + 1</code>, 哪怕那个位置是负数或零. 如果这不是您预期的结果, 对于含有负数键的对象也可以这样 <code>Object.InsertAt(Object.Length() + 1, ...)</code> .</p>
 </div>
 
 <div class="methodShort" id="Pop"><h3>Pop <span class="ver">[v1.1.21+]</span></h3>
 <p>删除并返回数组中最后一个数组元素.</p>
-<pre class="Syntax">Value := Object.<span class="func">Pop</span>()</pre>
+<pre class="Syntax">RemovedValue := Object.<span class="func">Pop</span>()</pre>
 <p>如果该数组中不含有任何元素, 返回值为空字符串. 其他情况下, 它相当于:</p>
-<pre>Value := Object.RemoveAt(Object.Length())</pre>
+<pre>RemovedValue := Object.RemoveAt(Object.Length())</pre>
 </div>
 
 <div class="methodShort" id="Delete"><h3>Delete <span class="ver">[v1.1.21+]</span></h3>
 <p>删除对象中的键-值对.</p>
-<pre class="Syntax">
-Object.<span class="func">Delete</span>(Key)
-Object.<span class="func">Delete</span>(FirstKey, LastKey)
-</pre>
+<pre class="Syntax">RemovedValue := Object.<span class="func">Delete</span>(Key)
+RemovedItemsCount := Object.<span class="func">Delete</span>(FirstKey, LastKey)</pre>
+<h4 id="Delete_Parameters">参数</h4>
 <dl>
   <dt>Key</dt>
   <dd><p>任意一个键.</p></dd>
   <dt>FirstKey, LastKey</dt>
   <dd><p>任意有效的整数范围或字符串键, 其中 <em>FirstKey</em> &lt;= <em>LastKey</em>. 两个键必须是相同的类型.</p></dd>
 </dl>
+<h4 id="Delete_Return_Value">返回值</h4>
 <p>如果只有一个参数, 将返回被删除的值(如果不存在则返回空值). 其他情况将返回范围中存在并被删除的键的计数.</p>
+<h4 id="Delete_Remarks">备注</h4>
 <p>与 <a href="#RemoveAt">RemoveAt</a> 不同的是, Delete 不会影响任何没有被删除的键-值对(译者注: 仅删除值, 而保留键位). 例如:</p>
 <pre>x := ["A", "B"]
 MsgBox % x.RemoveAt(1)  <em>; A</em>
@@ -186,10 +195,9 @@ MsgBox % ["A",    , "C"].Count()  <em>;  2</em>
 
 <div class="methodShort" id="SetCapacity"><h3>SetCapacity <span class="ver">[AHK_L 31+]</span></h3>
 <p>调整对象或其一个字段占用的内存空间.</p>
-<pre class="Syntax">
-Object.<span class="func">SetCapacity</span>(MaxItems)
-Object.<span class="func">SetCapacity</span>(Key, ByteSize)
-</pre>
+<pre class="Syntax">MaxItems := Object.<span class="func">SetCapacity</span>(MaxItems)
+ByteSize := Object.<span class="func">SetCapacity</span>(Key, ByteSize)</pre>
+<h4 id="SetCapacity_Parameters">参数</h4>
 <dl>
 	<dt>MaxItems</dt>
 	<dd><p>对象在必须自动扩展前可以包含的键值对的最大数目. 如果少于键值对的当前数目, 则使用该数目并释放未使用的内存.</p></dd>
@@ -198,9 +206,10 @@ Object.<span class="func">SetCapacity</span>(Key, ByteSize)
 	<dt>ByteSize</dt>
 	<dd><p>为目标字段字符串缓存设置新的大小, 不包括空终止符, 单位为字节. 如果字段不存在, 则创建它. 如果 <i>ByteSize</i> 为零, 则清空缓存但不移除空字段. 如果 <i>ByteSize</i> 小于当前大小, 则移除额外的数据; 否则保留所有现有的数据.</p></dd>
 </dl>
-<p>成功时返回新设置的内存空间, 否则为空字符串.</p>
+<h4 id="SetCapacity_Return_Value">返回值</h4>
+<p>成功时, 此方法返回新设置的内存空间, 否则为空字符串.</p>
 </div>
- 	 
+
 <div class="methodShort" id="GetCapacity"><h3>GetCapacity <span class="ver">[AHK_L 31+]</span></h3>
 <p>返回对象或其一个字段当前占用的内存空间.</p>
 <pre class="Syntax">
@@ -221,7 +230,7 @@ ByteSize := Object.<span class="func">GetCapacity</span>(Key)
 
 <div class="methodShort" id="HasKey"><h3>HasKey <span class="ver">[AHK_L 53+]</span></h3>
 <p>如果指定的键在对象中存在(定义) 关联的值(即使值为 ""), 则返回 1(true), 否则为 0(false).</p>
-<pre class="Syntax">Object.<span class="func">HasKey</span>(Key)</pre></div>
+<pre class="Syntax">HasKey := Object.<span class="func">HasKey</span>(Key)</pre></div>
 
 <div class="methodShort" id="Clone"><h3>Clone <span class="ver">[AHK_L 60+]</span></h3>
 <p>返回对象的一个浅拷贝(拷贝对象的指针, 而不是对象本身, 引用的内存地址资源相同, 对象引用加 1).</p>
@@ -261,8 +270,8 @@ Object.<span class="func">Insert</span>(StringOrObjectKey, Value)
 <h2 id="Properties">属性</h2>
 <div class="methodShort" id="Base"><h3>Base</h3>
 <p>检索或设置对象的<a href="../Objects.htm#Custom_Objects">基对象</a>.</p>
-<pre class="Syntax">BaseObject := Object.Base</pre>
-<pre class="Syntax">Object.Base := BaseObject</pre>
+<pre class="Syntax">BaseObject := Object.<span class="func">Base</span></pre>
+<pre class="Syntax">Object.<span class="func">Base</span> := BaseObject</pre>
 <p><em>BaseObject</em> 必须是对象或空字符串.</p>
 <p>基对象定义的属性和方法只有在使用该基对象时才可访问. 因此, 更改 <em>对象</em>  的 base 也会改变可用属性和方法的集合.</p>
 <p>参见: <a href="#GetBase">ObjGetBase()</a>, <a href="#SetBase">ObjSetBase</a></p>

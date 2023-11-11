@@ -28,7 +28,7 @@
   <li><a href="#like">类缓冲对象</a></li>
   <li><a href="#StaticMethods">静态方法</a>:
     <ul>
-      <li><a href="#Call">Call</a>: 创建缓冲.</li>
+      <li><a href="#Call">Call</a>: 创建新的缓冲对象.</li>
     </ul>
   </li>
   <li><a href="#Methods">方法</a>:
@@ -52,8 +52,10 @@
 
 <h2 id="StaticMethods">静态方法</h2>
 <div class="methodShort" id="Call"><h3>Call</h3>
-<p>创建缓冲.</p>
-<pre class="Syntax">BufferObj := <span class="func">Buffer</span>(<span class="optional">ByteCount, FillByte</span>)</pre>
+<p>创建新的缓冲对象.</p>
+<pre class="Syntax">BufferObj := Buffer(<span class="optional">ByteCount, FillByte</span>)
+BufferObj := Buffer.<span class="func">Call</span>(<span class="optional">ByteCount, FillByte</span>)</pre>
+<h4 id="Call_Parameters">参数</h4>
 <dl>
   <dt>ByteCount</dt>
   <dd>
@@ -68,6 +70,10 @@
     <p>在不需要先读取缓冲而直接写入的情况下, 通常应将其省略, 因为它的时间开销与字节数成正比. 如果省略, 则不初始化缓冲的内存; 每个字节的值是任意的.</p>
   </dd>
 </dl>
+<h4 id="Call_Return_Value">返回值</h4>
+<p>类型: <a href="../Concepts.htm#objects">Object</a></p>
+<p>方法或函数返回一个 Buffer 对象.</p>
+<h4 id="Call_Remarks">备注</h4>
 <p>如果无法分配内存, 例如 <em>ByteCount</em> 意外地大, 或者系统虚拟内存不足, 则抛出 <a href="Error.htm#MemoryError">MemoryError</a>.</p>
 <p>参数是由 <a href="#__New">__New</a> 定义的.</p>
 </div>
@@ -85,17 +91,19 @@
 <h2 id="Properties">属性</h2>
 <div class="methodShort" id="Ptr"><h3>Ptr</h3>
 <p>检索缓冲区的当前内存地址.</p>
-<pre class="Syntax">Ptr := BufferObj.Ptr</pre>
-<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>当释放或重新分配缓冲区时, 此属性返回的任何地址都将无效. 不能使用无效地址. 缓冲区在缓冲对象的<a href="../Objects.htm#Reference_Counting">引用计数</a>达到零之前不会被释放, 但是当它的<a href="#Size">大小</a>更改时会重新分配缓冲区.</p>
+<pre class="Syntax">CurrentPtr := BufferObj.<span class="func">Ptr</span></pre>
+<p><em>CurrentPtr</em> 是一个代表缓冲当前内存地址的<a href="../Concepts.htm#numbers">整数</a>. 当释放或重新分配给缓冲时, 此地址将变为无效. 不能使用无效地址. 在缓冲对象的<a href="../Objects.htm#Reference_Counting">引用计数</a>达到零之前, 缓冲不会被释放, 但是当它的<a href="#Size">大小</a>更改时, 会重新分配缓冲.</p>
 </div>
 
 <div class="methodShort" id="Size"><h3>Size</h3>
 <p>检索或设置缓冲区的大小, 以字节为单位.</p>
-<pre class="Syntax">ByteCount := BufferObj.Size</pre>
-<pre class="Syntax">BufferObj.Size := ByteCount</pre>
-<p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-<p>缓冲区的地址通常会随着大小的改变而改变. 如果减小大小, 则缓冲区中的数据将被截断, 但保留剩余的字节. 如果增加大小, 则保留所有数据并且任何新字节的值都是任意的(由于性能原因, 它们未初始化).</p>
+<pre class="Syntax">CurrentByteCount := BufferObj.<span class="func">Size</span></pre>
+<pre class="Syntax">BufferObj.<span class="func">Size</span> := NewByteCount</pre>
+<p><em>CurrentByteCount</em> 和 <em>NewByteCount</em> 是<a href="../Concepts.htm#numbers">整数</a>, 代表缓冲的大小(单元为字节). 缓冲的地址通常会随着大小的改变而改变. 如果减小大小, 则缓冲中的数据将被截断, 但保留剩余的字节. 如果增加大小, 则保留所有数据并且任何新字节的值都是任意的(由于性能原因, 它们未初始化).</p>
+<p>如果无法分配内存, 例如 <em>NewByteCount</em> 意外地大, 或者系统虚拟内存不足, 则抛出 <a href="Error.htm#MemoryError">MemoryError</a>.</p>
+<p><em>CurrentByteCount</em> 总是它被赋予的确切值, 无论是由 <a href="#__New">__New</a> 还是由以前的赋值.</p>
+
+<p>缓冲的地址通常会随着大小的改变而改变. 如果减小大小, 则缓冲区中的数据将被截断, 但保留剩余的字节. 如果增加大小, 则保留所有数据并且任何新字节的值都是任意的(由于性能原因, 它们未初始化).</p>
 <p>如果无法分配内存, 例如 <em>ByteCount</em> 意外地大, 或者系统虚拟内存不足, 则抛出 <a href="Error.htm#MemoryError">MemoryError</a>.</p>
 <p>这个属性总是返回它被赋予的确切值, 无论是由 <a href="#__New">__New</a> 还是由以前的赋值.</p>
 </div>

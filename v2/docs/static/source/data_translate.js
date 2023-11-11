@@ -14,6 +14,7 @@
   "Control Flow Statements":"控制流语句",
   "Declarations":"声明",
   "Operators":"运算符",
+  "operator":"运算符",
   "Built-in Classes":"内置类",
   "class":"类",
   "Built-in Methods/Properties":"内置方法/属性",

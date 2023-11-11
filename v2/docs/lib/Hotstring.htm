@@ -16,10 +16,7 @@
 
 <pre class="Syntax"><span class="func">Hotstring</span> String <span class="optional">, Replacement, OnOffToggle</span>
 <span class="func">Hotstring</span> <a href="#NewOptions">NewOptions</a>
-OldValue := <span class="func">Hotstring</span>("<a href="#EndChars">EndChars</a>" <span class="optional">, NewValue</span>)
-OldValue := <span class="func">Hotstring</span>("<a href="#MouseReset">MouseReset</a>" <span class="optional">, NewValue</span>)
-<span class="func">Hotstring</span> "Reset"
-</pre>
+<span class="func">Hotstring</span> <a href="#SubFunctions">SubFunction</a> <span class="optional">, Value1</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -27,7 +24,7 @@ OldValue := <span class="func">Hotstring</span>("<a href="#MouseReset">MouseRese
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>热字串的触发字符串, 前面是<a href="../Hotstrings.htm">常用的冒号对</a>和<a href="../Hotstrings.htm#Options">选项字符</a>. 例如, <code>"::btw"</code> 或 <code>":*:]d"</code>.</p>
-    <p><em>String</em> 可以考虑通过<a href="../Hotstrings.htm#C">区分大小写(C)</a>, <a href="../Hotstrings.htm#Question">单词敏感性(?)</a>, 激活条件(如 <a href="_HotIf.htm">#HotIf</a> 或 <a href="HotIf.htm">HotIf</a> 设置) 和触发字符串来匹配现有的热字符串. 例如, <code>"::btw"</code> 和 <code>"::BTW"</code> 只有在区分大小写模式作为默认值开启时才匹配, 而 <code>":C:btw"</code> 和 <code>":C:BTW"</code> 永远不匹配. <code>C</code> 和 <code>?</code> 选项可能包含在 <em>String</em> 中或者通过 <a href="_Hotstring.htm">#Hotstring</a> 指令或之前对<a href="#NewOptions">此函数</a>的调用设为默认值.</p>
+    <p><em>String</em> 可以考虑通过<a href="../Hotstrings.htm#C">区分大小写(C)</a>, <a href="../Hotstrings.htm#Question">单词敏感性(?)</a>, 激活条件(如 <a href="_HotIf.htm">#HotIf</a> 或 <a href="HotIf.htm">HotIf</a> 设置) 和触发字符串来匹配现有的热字符串. 例如, <code>"::btw"</code> 和 <code>"::BTW"</code> 只有在区分大小写模式作为默认值开启时才匹配, 而 <code>":C:btw"</code> 和 <code>":C:BTW"</code> 永远不匹配. <code>C</code> 和 <code>?</code> 选项可能包含在 <em>String</em> 中, 也可以通过 <a href="_Hotstring.htm">#Hotstring</a> 指令或之前使用的 <em>NewOptions</em> 设为默认值.</p>
     <p>如果热字串已经存在, 那么在 <em>String</em> 中指定的所有选项都会生效, 而其他所有选项都保持原样. 但是, 由于带有 <code>C</code> 或 <code>?</code> 的热字串被认为是与其他热字串不一样的, 所以不可能添加或删除这些选项. 作为代替, 关闭现有热字串并创建一个新的.</p>
     <p>当热字串第一次被创建时 -- 无论是通过热字串函数还是脚本中的<a href="../Hotstrings.htm">双冒号语法</a> -- 其触发字符串和选项字符序列都将成为热字串的固定名称, 正如 <a href="../Hotstrings.htm#ThisHotkey">ThisHotkey</a> 中显示的名称. 即使热字串函数稍后使用不同的选项字符访问热字串, 这个名称也不会改变.</p>
   </dd>
@@ -35,11 +32,15 @@ OldValue := <span class="func">Hotstring</span>("<a href="#MouseReset">MouseRese
   <dt>Replacement</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../misc/Functor.htm">函数对象</a></p>
-    <p>当热字串触发时, 替换字符串, 或调用的<a href="../Functions.htm">函数</a>或<a href="../misc/Functor.htm">函数对象</a>(作为新<a href="../misc/Threads.htm">线程</a>).</p>
-    <p>如果 <em>Replacement</em> 是一个函数, 则调用它时使用一个参数, 即热字串的<a href="../Hotstrings.htm#ThisHotkey">名称</a>. 使用<a href="../Hotstrings.htm">双冒号语法</a>定义的热字串自动使用参数名称 <code>ThisHotkey</code>. 热字串也可以在没有 Hotstring 函数的情况下<a href="../Hotstrings.htm#Function">指定函数名</a>.</p>
-    <p>所有字符串都作为替换文本处理. 当热字串触发时要调用函数, 请传递函数引用. 请注意, 在重新指定热字符串函数后, 只有在<a href="../Hotstrings.htm#Function">给定名称</a>的情况下, 才能恢复其原来的函数.</p>
-    <p>如果热字串已经存在, 则该参数可以省略, 在这种情况下, 它的替换不会被改变. 这对于只更改热字串的选项, 或打开或关闭热字串它是有用的.</p>
-    <p class="note"><strong>注意:</strong> 如果指定了这个参数, 但是由于之前使用此函数而禁用了热字串, 那么热字串将继续禁用. 为了避免这种情况, 请在 <em>OnOffToggle</em> 中包含单词 <code>"On"</code>.</p>
+    <p>如果省略, 并且 <em>String</em> 已经作为热字串存在, 则不会更改其替换. 这用于只更改热字串的选项, 或打开或关闭热字串. 否则, 请指定替换字符串或回调.</p>
+    <p>如果 <em>Replacement</em> 是一个函数, 则在热字串触发时调用它(作为一个新<a href="../misc/Threads.htm">线程</a>).</p>
+    <p>回调函数接受一个参数, <a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(HotstringName) { ...</pre>
+    <p>尽管您给参数的名称并不重要, 但它被赋值为<a href="../Hotstrings.htm#ThisHotkey">热字串的名称</a>.</p>
+    <p>如果不需要相应的信息, 可以省略回调参数, 但在这种情况下必须指定星号, 例如 <code>MyCallback(*)</code>.</p>
+    <p><a href="../Hotstrings.htm">双冒号语法</a>定义的热字串自动使用参数名称 <code>ThisHotkey</code>. 也可以在没有 Hotstring 函数的情况下, 为热字串<a href="../Hotstrings.htm#Function">指定一个函数名</a>.</p>
+    <p>在重新指定热字符串的函数后, 只有在<a href="../Hotstrings.htm#Function">给定名称</a>的情况下, 才能恢复其原始函数.</p>
+    <p class="note"><strong>注意:</strong> 如果指定了这个参数, 但是由于之前使用此函数而禁用了热字串, 那么热字串将继续禁用. 为了避免这种情况, 请为 <em>OnOffToggle</em> 指定 <code>"On"</code>.</p>
   </dd>
 
   <dt>OnOffToggle</dt>
@@ -51,7 +52,49 @@ OldValue := <span class="func">Hotstring</span>("<a href="#MouseReset">MouseRese
     <p><strong>Toggle</strong> 或 <strong>-1:</strong> 设置热字串到相反的状态(启用或禁用).</p>
   </dd>
 
+  <dt>NewOptions</dt>
+  <dd id="NewOptions">
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>要为随后创建的热字串设置新的默认选项, 请将这些选项传递给 Hotstring 函数, 不带任何前导或尾随冒号. 例如: <code>Hotstring "T"</code>.</p>
+    <p>打开<a href="../Hotstrings.htm#C">大小写敏感(C)</a> 或<a href="../Hotstrings.htm#Question">单词敏感(?)</a> 也会影响对 Hotstring 函数的任何后续调用将找到哪些现有的热字符串. 例如, 默认情况下, <code>Hotstring ":T:btw"</code> 会找到 <code>::BTW</code>, 但如果 <code>Hotstring "C"</code> 或 <code><a href="_Hotstring.htm">#Hotstring</a> C</code> 生效时, 则不会. 这可以通过传递互斥选项来撤消或重写; 例如, <code>C0</code> 和 <code>C1</code> 覆盖 <code>C</code>.</p>
+  </dd>
+
+  <dt>SubFunction, Value1</dt>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
+    <p>这些参数相互依赖, 它们的用法如下所述.</p>
+  </dd>
+
 </dl>
+
+<h2 id="SubFunctions">子函数</h2>
+<p>对于 <em>SubFunction</em>, 指定以下参数之一:</p>
+<ul>
+  <li><a href="#EndChars">EndChars</a>: 检索或修改结束字符集.</li>
+  <li><a href="#MouseReset">MouseReset</a>: 控制鼠标点击是否重置热字串识别器.</li>
+  <li><a href="#Reset">Reset</a>: 立即复位热字串识别器.</li>
+</ul>
+
+<h3 id="EndChars">EndChars</h3>
+<p>检索或修改由热字串识别器用作<a href="../Hotstrings.htm#EndChars">终止符</a>的字符集.</p>
+<pre class="Syntax">OldValue := <span class="func">Hotstring</span>("EndChars" <span class="optional">, NewValue</span>)</pre>
+<p>例如:</p>
+<pre>prev_chars := Hotstring("EndChars", "-()[]{}':;`"/\,.?!`n`s`t")
+MsgBox "The previous value was: " prev_chars</pre>
+<p><a href="#EndChars">#Hotstring EndChars</a> 也会影响这个设置.</p>
+<p>目前不能为每一个热字串指定不同的终止符字符集.</p>
+
+<h3 id="MouseReset">MouseReset</h3>
+<p>检索或修改全局设置, 该设置控制鼠标单击是否重置热字串识别器, 如<a href="../Hotstrings.htm#NoMouse">这里</a>所描述的那样.</p>
+<pre class="Syntax">OldValue := <span class="func">Hotstring</span>("MouseReset" <span class="optional">, NewValue</span>)</pre>
+<p><em>NewValue</em> 为 1(true) 以启用鼠标点击检测和重置热字串识别器, 或者 0(false) 来禁用. 返回值是在调用函数之前生效的设置.</p>
+<p>如果此函数所做的更改有需要, 将安装或删除<a href="_InstallMouseHook.htm">鼠标</a>钩子.</p>
+<p><a href="_Hotstring.htm">#Hotstring NoMouse</a> 也会影响此设置, 等同于将 <em>NewValue</em> 指定为 <code>false</code>.</p>
+
+<h3 id="Reset">Reset</h3>
+<p>立即重置热字串识别器.</p>
+<pre class="Syntax"><span class="func">Hotstring</span> "Reset"</pre>
+<p>换句话说, 脚本将开始等待一个全新热字串, 不再考虑之前键入的任何内容.</p>
 
 <h2 id="Errors">错误</h2>
 <p>如果参数无效或内存分配失败, 则函数抛出 <a href="Error.htm#TargetError">TargetError</a>.</p>
@@ -59,14 +102,14 @@ OldValue := <span class="func">Hotstring</span>("<a href="#MouseReset">MouseRese
 <pre>try
     Hotstring "::btw"
 catch TargetError
-    MsgBox "The hotstring does not exist or it has no variant for the current IfWin criteria."</pre>
+    MsgBox "The hotstring does not exist or it has no variant for the current HotIf criteria."</pre>
 
 <h2 id="Remarks">备注</h2>
 <p><a href="HotIf.htm">当前 HotIf 设置</a>决定了哪一个热字串函数的<a href="#variant">变体</a>将会运行.</p>
 <p>如果该脚本被<a href="Suspend.htm">挂起</a>, 新添加/启用的热字串也将挂起, 直到挂起关闭(<a href="Suspend.htm">Suspend</a> 页面中所描述的豁免除外).</p>
 <p>如果此函数所做的更改有需要, 将安装或删除<a href="InstallKeybdHook.htm">键盘</a>和/或<a href="InstallMouseHook.htm">鼠标</a>钩子.</p>
 <p>此函数不能直接启用或禁用本身以外的脚本中的热字串.</p>
-<p>一旦脚本具有至少一个热字符串, 它将成为持续运行脚本, 这意味着应该使用 <a href="ExitApp.htm">ExitApp</a> 而不是 <a href="Exit.htm">Exit</a> 来退出(终止) 脚本. 除非指定了 <code>#SingleInstance Off</code>, 否则热字串脚本也会自动执行 <a href="_SingleInstance.htm">#SingleInstance</a>.</p>
+<p>一旦脚本具有至少一个热字符串, 它将成为<a href="../Scripts.htm#persistent">持续运行的</a>脚本, 这意味着应该使用 <a href="ExitApp.htm">ExitApp</a> 而不是 <a href="Exit.htm">Exit</a> 来退出(终止) 脚本.</p>
 
 <h2 id="variant">变体(副本) 热字串</h2>
 <p>一个特定的热字符串可以创建多次, 如果每个定义具有不同的 <a href="HotIf.htm">HotIf</a> 条件, <a href="../Hotstrings.htm#C">区分大小写</a>(<code>C</code> vs. <code>C0</code>/<code>C1</code>), 或<a href="../Hotstrings.htm#Question">单词敏感性</a>(<code>?</code>). 这些被称为 <em>热字串变体</em>. 例如:</p>
@@ -77,30 +120,7 @@ Hotstring "::btw", "back to work"
 HotIfWinActive
 Hotstring "::btw", "by the way"</pre>
 <p>如果一个热字串的多个变体能被触发, 那么只有最早创建的将会触发.</p>
-<p>有关 IfWin 的更多信息, 请参阅 <a href="_HotIf.htm#general-remarks">#_HotIf 的备注</a>.</p>
-
-<h2 id="EndChars">EndChars</h2>
-<pre class="Syntax">OldValue := <span class="func">Hotstring</span>("EndChars" <span class="optional">, NewValue</span>)</pre>
-<p>检索或修改由热字串识别器用作<a href="../Hotstrings.htm#EndChars">终止符</a>的字符集. 例如:</p>
-<pre>prev_chars := Hotstring("EndChars", "-()[]{}':;`"/\,.?!`n `t")
-MsgBox "The previous value was: " prev_chars</pre>
-<p><a href="#EndChars">#Hotstring EndChars</a> 也会影响这个设置.</p>
-<p>目前不能为每个热字串指定不同的终止符字符集.</p>
-
-<h2 id="MouseReset">MouseReset</h2>
-<pre class="Syntax">OldValue := <span class="func">Hotstring</span>("MouseReset" <span class="optional">, NewValue</span>)</pre>
-<p>检索或修改全局设置, 该设置控制鼠标单击是否重置热字串识别器, 如<a href="../Hotstrings.htm#NoMouse">这里</a>所描述的那样. <em>NewValue</em> 为 1(true), 以启用鼠标点击检测和重置热字串识别器, 或者 0(false) 来禁用. 返回值是在调用函数之前生效的设置.</p>
-<p>如果此函数所做的更改有需要, 将安装或删除<a href="_InstallMouseHook.htm">鼠标</a>钩子.</p>
-<p><a href="_Hotstring.htm">#Hotstring NoMouse</a> 也会影响此设置, 等同于将 <em>NewValue</em> 指定为 <code>false</code>.</p>
-
-<h2 id="Reset">Reset</h2>
-<pre class="Syntax"><span class="func">Hotstring</span> "Reset"</pre>
-<p>立即重置热字串识别器. 换句话说, 脚本将开始等待一个全新热字串, 不再考虑之前键入的任何内容.</p>
-
-<h2 id="NewOptions">设置默认选项</h2>
-<pre class="Syntax"><span class="func">Hotstring</span> NewOptions</pre>
-<p>要为随后创建的热字串设置新的默认选项, 请将选项传递给热字串函数, 而不使用任何前导或尾随冒号. 例如: <code>Hotstring "T"</code>.</p>
-<p>启用<a href="../Hotstrings.htm#C">大小写敏感(C)</a> 或<a href="../Hotstrings.htm#Question">单词敏感性(?)</a> 也会影响后续调用 Hotstring 函数时将找到哪些现有的热字串. 例如, 默认情况下, <code>Hotstring ":T:btw"</code> 将会匹配 <code>::BTW</code>, 但是如果 <code>Hotstring "C"</code> 或 <code><a href="_Hotstring.htm">#Hotstring</a> C</code> 生效, 则不会. 这可以通过传递互斥的选项来撤销或覆盖; 例如, <code>C0</code> 和 <code>C1</code> 将覆盖 <code>C</code>.</p>
+<p>有关详情, 请参阅 <a href="HotIf.htm">HotIf</a>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="../Hotstrings.htm">热字串</a>, <a href="_HotIf.htm">#HotIf</a>, <a href="../Variables.htm#ThisHotkey">A_ThisHotkey</a>, <a href="_MaxThreadsPerHotkey.htm">#MaxThreadsPerHotkey</a>, <a href="Suspend.htm">Suspend</a>, <a href="../misc/Threads.htm">线程</a>, <a href="Thread.htm">Thread</a>, <a href="Critical.htm">Critical</a></p>

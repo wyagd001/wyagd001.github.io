@@ -42,7 +42,7 @@ for clr in Array("Blue", "Green")
       <li><a href="#Get">Get</a>: 返回键关联的值, 或者一个默认值.</li>
       <li><a href="#Has">Has</a>: 如果 Key 在映射中有关联的值, 则返回 true.</li>
       <li><a href="#Set">Set</a>: 设置零个或多个项目.</li>
-      <li><a href="#__Enum">__Enum</a>: E枚举键-值对.</li>
+      <li><a href="#__Enum">__Enum</a>: 枚举键-值对.</li>
       <li><a href="#__New">__New</a>: 设置项目. 等同于 Set.</li>
     </ul>
   </li>
@@ -61,7 +61,8 @@ for clr in Array("Blue", "Green")
 
 <div class="methodShort" id="Call"><h3>Call</h3>
 <p>创建一个 Map 并设置项目.</p>
-<pre class="Syntax">MapObj := <span class="func">Map</span>(Key1, Value1, Key2, Value2, ...)</pre>
+<pre class="Syntax">MapObj := Map(Key1, Value1, Key2, Value2, ...)
+MapObj := Map.<span class="func">Call</span>(Key1, Value1, Key2, Value2, ...)</pre>
 <p>这等同于使用用 <code>MapObj[Key] := Value</code> 来设置每个项目, 除了 <a href="#__Item">__Item</a> 没有被调用, 而且 <a href="#Capacity">Capacity</a> 会被自动调整以避免在一次调用中多次扩展.</p>
 <p>参数由 <a href="#__New">__New</a> 定义.</p>
 </div>
@@ -82,15 +83,18 @@ for clr in Array("Blue", "Green")
 
 <div class="methodShort" id="Delete"><h3>Delete</h3>
 <p>从映射中删除键-值对.</p>
-<pre class="Syntax">MapObj.<span class="func">Delete</span>(Key)</pre>
+<pre class="Syntax">RemovedValue := MapObj.<span class="func">Delete</span>(Key)</pre>
+<h4 id="Delete_Parameters">参数</h4>
 <dl>
   <dt>Key</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a>, <a href="../Objects.htm">对象</a>或<a href="../Concepts.htm#strings">字符串</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a>, <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#strings">字符串</a></p>
     <p>任意一个键. 如果映射不包含此键, 则抛出 <a href="Error.htm#UnsetError">UnsetItemError</a>.</p>
   </dd>
 </dl>
-<p>返回删除的值.</p>
+<h4 id="Delete_Return_Value">返回值</h4>
+<p>类型: <a href="../Concepts.htm#values">Any</a></p>
+<p>此方法返回删除的值.</p>
 </div>
 
 <div class="methodShort" id="Get"><h3>Get</h3>
@@ -115,7 +119,9 @@ for clr in Array("Blue", "Green")
 <p>设置零个或多个项目.</p>
 <pre class="Syntax">MapObj.<span class="func">Set</span>(<span class="optional">Key, Value, Key2, Value2, ...</span>)</pre>
 <p>这相当于用 <code>MapObj[Key] := Value</code> 来设置每个项目, 除了 <a href="#__Item">__Item</a> 没有被调用和 <a href="#Capacity">Capacity</a> 会被自动调整, 以避免在一次调用中扩展多次.</p>
-<p>返回 map 对象.</p>
+<h4 id="Set_Return_Value">返回值</h4>
+<p>类型: <a href="../Concepts.htm#objects">Object</a></p>
+<p>此方法返回 map 对象.</p>
 </div>
 
 <div class="methodShort" id="__Enum"><h3>__Enum</h3>
@@ -125,11 +131,12 @@ for clr in Array("Blue", "Green")
 <dl>
   <dt>Key</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a>, <a href="../Objects.htm">对象</a>或<a href="../Concepts.htm#strings">字符串</a></p>
+    <p>类型: <a href="../Concepts.htm#numbers">整数</a>, <a href="../Concepts.htm#objects">对象</a>或<a href="../Concepts.htm#strings">字符串</a></p>
     <p>键.</p>
   </dd>
   <dt>Value</dt>
   <dd>
+    <p>类型: <a href="../Concepts.htm#values">Any</a></p>
     <p>值.</p>
   </dd>
 </dl>
@@ -150,54 +157,37 @@ for clr in Array("Blue", "Green")
 
 <div class="methodShort" id="Capacity"><h3>Capacity</h3>
 <p>检索或设置映射的当前容量.</p>
-<pre class="Syntax">MapObj.<span class="func">Capacity</span> := MaxItems</pre>
 <pre class="Syntax">MaxItems := MapObj.<span class="func">Capacity</span></pre>
-<dl>
-	<dt>MaxItems</dt>
-	<dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>在必须自动扩展前, 映射可以包含的最大键-值对数量. 如果设置的值小于当前键-值对数量, 则使用设置的值并释放未使用的空间.</p>
-  </dd>
-</dl>
+<pre class="Syntax">MapObj.<span class="func">Capacity</span> := MaxItems</pre>
+<p><em>MaxItems</em> 是一个<a href="../Concepts.htm#numbers">整数</a>, 表示在必须自动扩展前, 映射可以包含的最大键-值对数量. 如果设置的值小于当前键-值对数量, 则使用设置的值并释放未使用的空间.</p>
 </div>
 
 <div class="methodShort" id="CaseSense"><h3>CaseSense</h3>
 <p>检索或设置映射的大小写敏感性设置.</p>
-<pre class="Syntax">MapObj.<span class="func">CaseSense</span> := Setting</pre>
-<pre class="Syntax">Setting := MapObj.<span class="func">CaseSense</span></pre>
-<dl>
-	<dt>Setting</dt>
-	<dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>以下值之一:</p>
-    <p><code>"On"</code>: 键查询区分大小写. 这是默认设置.</p>
-    <p><code>"Off"</code>: 字母 A-Z 被视为与其小写字母相同.</p>
-    <p><code>"Locale"</code>: 根据当前用户的区域设置规则, 键查询不区分大小写. 例如, 在大多数英语和西欧地区, 不仅将字母 A-Z 视为与其小写字母相同, 而且也将非 ASCII 字母如 &Auml; 和 &Uuml; 视为与其小写字母相同. 根据被比较字符串的性质, <em>Locale</em> 比 <em>Off</em> 慢 1 到 8 倍.</p>
-    <p>在赋值时, 也可以使用字符串 <code>"1"</code> 和 <code>"0"</code>.</p>
-  </dd>
-</dl>
+<pre class="Syntax">CurrentSetting := MapObj.<span class="func">CaseSense</span></pre>
+<pre class="Syntax">MapObj.<span class="func">CaseSense</span> := NewSetting</pre>
+<p>如果已经赋值, <em>CurrentSetting</em> 为 <em>NewSetting</em>, 否则默认为 On(但请注意, 该属性只能检索当前设置的字符串变量).</p>
+<p><em>NewSetting</em> 是以下<a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#boolean">整数(布尔值)</a> 之一:</p>
+<p><strong>On</strong> 或 <strong>1</strong>(true): 键查找区分大小写. 这是默认设置.</p>
+<p><strong>Off</strong> 或 <strong>0</strong>(false): 键查找不区分大小写, 即字母 A-Z 被认为与对应小写字母相同.</p>
+<p><strong>Locale:</strong> 根据当前用户的区域设置规则, 键查找不区分大小写. 例如, 大多数英语和西欧地区不仅将字母 A-Z视为与其对应的小写字母相同, 而且将非 ASCII 字母(如 &Auml; 和 &Uuml;) 视为与其对应的字母相同. <em>Locale</em> 比 <em>Off</em> 慢 1 到 8 倍, 具体取决于所比较字符串的性质.</p>
 <p>如果 Map 不是空的, 尝试为该属性赋值将导致抛出异常.</p>
 </div>
 
 <div class="methodShort" id="Default"><h3>Default</h3>
 <p>定义当没有找到键时返回的默认值.</p>
 <pre class="Syntax">MapObj.<span class="func">Default</span> := Value</pre>
-<p>默认情况下, 这个属性实际上并不存在, 但可以由脚本定义. If defined, its value is returned by <a href="#__Item">__Item</a> or <a href="#Get">Get</a> if the requested item cannot be found, instead of throwing an <a href="Error.htm#UnsetError">UnsetItemError</a>. 它可以通过任何正常的方式来实现, 包括<a href="Object.htm#DefineProp">动态属性</a>或<a href="../Objects.htm#Meta_Functions">元函数</a>, 但确定哪个键被查询到, 需要覆盖 <a href="#__Item">__Item</a> 或 <a href="#Get">Get</a> 来代替.</p>
+<p>默认情况下, 这个属性实际上并不存在, 但可以由脚本定义. 如果定义了, 如果无法找到请求的项, 则由 <a href="#__Item">__Item</a> 或 <a href="#Get">Get</a> 返回其值, 而不是抛出 <a href="Error.htm#UnsetError">UnsetItemError</a>. 它可以通过任何正常的方式来实现, 包括<a href="Object.htm#DefineProp">动态属性</a>或<a href="../Objects.htm#Meta_Functions">元函数</a>, 但确定哪个键被查询到, 需要覆盖 <a href="#__Item">__Item</a> 或 <a href="#Get">Get</a> 来代替.</p>
 </div>
 
 <div class="methodShort" id="__Item"><h3>__Item</h3>
 <p>检索或设置键-值对的值.</p>
-<pre class="Syntax">Value := MapObj[Key]</pre>
-<pre class="Syntax">MapObj[Key] := Value</pre>
-<dl>
-  <dt>Key</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a>, <a href="../Objects.htm">对象</a>或<a href="../Concepts.htm#strings">字符串</a></p>
-    <p>检索值时, <em>Key</em> 必须是先前与另一个值相关联的唯一值. 如果 <em>Key</em> 在映射中没有关联的值, 则抛出 <a href="Error.htm#UnsetError">UnsetItemError</a>,  除非定义了 <a href="#Default">Default</a> 属性, 在这种情况下, 将返回其值.</p>
-    <p>当赋值时, <em>Key</em> 可以是与 <em>Value</em> 相关联的任何值; 换句话说, <em>key</em> 用于以后访问 <em>Value</em>. <a href="../Concepts.htm#numbers">浮点数</a>键被自动转换成字符串.</p>
-  </dd>
-</dl>
-<p></p>
+<pre class="Syntax">Value := MapObj[Key]
+Value := MapObj.<span class="func">__Item</span>[Key]</pre>
+<pre class="Syntax">MapObj[Key] := Value
+MapObj.<span class="func">__Item</span>[Key] := Value</pre>
+<p>检索值时, <em>Key</em> 必须是先前与另一个值关联的唯一值. 如果 <em>Key</em> 在映射中没有关联的值, 则抛出 <a href="Error.htm#UnsetError">UnsetItemError</a>, 除非定义了 <a href="#Default">Default</a> 属性, 在这种情况下返回其值.</p>
+<p>赋值时, 与 <em>Value</em> 关联的 <em>Key</em> 可以是任何值; 换句话说, <em>key</em> 用于以后访问 <em>Value</em>. <a href="../Concepts.htm#numbers">浮点</a>键会自动转换为字符串.</p>
 <p>如上所示, 属性名 __Item 通常被省略, 但在覆盖属性时使用.</p>
 </div>
 

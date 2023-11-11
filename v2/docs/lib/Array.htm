@@ -40,7 +40,7 @@ MsgBox users[1]</pre>
       <li><a href="#Clone">Clone</a>: 返回对象的一个浅拷贝.</li>
       <li><a href="#Delete">Delete</a>: 删除数组元素的值, 使索引不包含值.</li>
       <li><a href="#Get">Get</a>: 返回给定索引的值或默认值.</li>
-      <li><a href="#Has">Has</a>: 如果 Index 有效且在该位置有一个值, 则返回 true.</li>
+      <li><a href="#Has">Has</a>: 如果 Index 有效且在该位置有一个值, 则返回非零数字.</li>
       <li><a href="#InsertAt">InsertAt</a>: 插入一个或多个值到给定位置.</li>
       <li><a href="#Pop">Pop</a>: 删除并返回最后的数组元素.</li>
       <li><a href="#Push">Push</a>: 追加值到数组的末尾.</li>
@@ -63,7 +63,8 @@ MsgBox users[1]</pre>
 
 <div class="methodShort" id="Call"><h3>Call</h3>
 <p>创建一个包含指定值的新数组.</p>
-<pre class="Syntax">ArrayObj := <span class="func">Array</span>(<span class="optional">Value, Value2, ..., Value<i>N</i></span>)</pre>
+<pre class="Syntax">ArrayObj := Array(<span class="optional">Value, Value2, ..., Value<i>N</i></span>)
+ArrayObj := Array.<span class="func">Call</span>(<span class="optional">Value, Value2, ..., Value<i>N</i></span>)</pre>
 <p>参数由 <a href="#__New">__New</a> 定义.</p>
 </div>
 
@@ -78,7 +79,8 @@ MsgBox users[1]</pre>
 
 <div class="methodShort" id="Delete"><h3>Delete</h3>
 <p>删除数组元素的值, 使索引不包含值.</p>
-<pre class="Syntax">ArrayObj.<span class="func">Delete</span>(Index)</pre>
+<pre class="Syntax">RemovedValue := ArrayObj.<span class="func">Delete</span>(Index)</pre>
+<h4 id="Delete_Parameters">参数</h4>
 <dl>
   <dt>Index</dt>
   <dd>
@@ -86,8 +88,12 @@ MsgBox users[1]</pre>
     <p>一个有效的数组索引.</p>
   </dd>
 </dl>
-<p>返回删除的值(如果没有, 则为空).</p>
+<h4 id="Delete_Return_Value">返回值</h4>
+<p>类型: <a href="../Concepts.htm#values">Any</a></p>
+<p>此方法返回删除的值(如果没有, 则为空).</p>
 <p>Delete 不影响数组的 <a href="#Length">Length(长度)</a>.</p>
+<h4 id="Delete_Remarks">备注</h4>
+<p>此方法不影响数组的 <a href="#Length">Length</a>.</p>
 <p>如果 <em>Index</em> 超出范围, 则抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
 </div>
 
@@ -106,13 +112,14 @@ MsgBox users[1]</pre>
 </div>
 
 <div class="methodShort" id="Has"><h3>Has</h3>
-<p>如果 <i>Index</i> 有效且在该位置有一个值, 则返回 true, 否则返回 false.</p>
-<pre class="Syntax">ArrayObj.<span class="func">Has</span>(Index)</pre>
+<p>如果 <i>Index</i> 有效且在该位置有一个值, 则返回返回一个非零数字.</p>
+<pre class="Syntax">HasIndex := ArrayObj.<span class="func">Has</span>(Index)</pre>
 </div>
 
 <div class="methodShort" id="InsertAt"><h3>InsertAt</h3>
 <p>插入一个或多个值到给定位置.</p>
 <pre class="Syntax">ArrayObj.<span class="func">InsertAt</span>(Index, Value1 <span class="optional">, Value2, ... Value<i>N</i></span>)</pre>
+<h4 id="InsertAt_Parameters">参数</h4>
 <dl>
   <dt>Index</dt>
   <dd>
@@ -121,9 +128,11 @@ MsgBox users[1]</pre>
   </dd>
   <dt>Value1 ...</dt>
   <dd>
+    <p>类型: <a href="../Concepts.htm#values">Any</a></p>
     <p>要插入的一个或多个值. 要插入数组值, 请将 <code><a href="../Functions.htm#VariadicCall">theArray*</a></code> 作为最后一个参数传递.</p>
   </dd>
 </dl>
+<h4 id="InsertAt_Remarks">备注</h4>
 <p>InsertAt 对应 <a href="#RemoveAt">RemoveAt</a>.</p>
 <p>先前位于 <em>Index</em> 的项目或 <em>Index</em> 右侧的所有项目都移到右侧. 缺失的参数也会被插入, 但没有值. 例如:</p>
 <pre>x := []
@@ -141,26 +150,32 @@ x.InsertAt(1, , "B")    <em>; =&gt;  [   , "B", "C"]</em></pre>
 
 <div class="methodShort" id="Pop"><h3>Pop</h3>
 <p>删除并返回最后的数组元素.</p>
-<pre class="Syntax">Value := ArrayObj.<span class="func">Pop</span>()</pre>
+<pre class="Syntax">RemovedValue := ArrayObj.<span class="func">Pop</span>()</pre>
 <p>下面这些都是等同的:</p>
-<pre>Value := ArrayObj.Pop()
-Value := ArrayObj.RemoveAt(ArrayObj.Length)
-Value := ArrayObj.RemoveAt(-1)</pre>
+<pre>RemovedValue := ArrayObj.Pop()
+RemovedValue := ArrayObj.RemoveAt(ArrayObj.Length)
+RemovedValue := ArrayObj.RemoveAt(-1)</pre>
 <p>如果数组为空(<a href="#Length">Length</a> 为 0), 则抛出 <a href="Error.htm">Error</a>.</p>
 </div>
 
 <div class="methodShort" id="Push"><h3>Push</h3>
 <p>追加值到数组的末尾.</p>
 <pre class="Syntax">ArrayObj.<span class="func">Push</span>(<span class="optional">Value, Value2, ..., Value<i>N</i></span>)</pre>
+<h4 id="Push_Parameters">参数</h4>
 <dl>
   <dt>Value ...</dt>
-  <dd><p>要插入一个或多个值. 要插入数组值, 请将 <code><a href="../Functions.htm#VariadicCall">theArray*</a></code> 作为最后一个参数传递.</p></dd>
+  <dd>
+    <p>类型: <a href="../Concepts.htm#values">Any</a></p>
+    <p>要插入一个或多个值. 要插入数组值, 请将 <code><a href="../Functions.htm#VariadicCall">theArray*</a></code> 作为最后一个参数传递.</p>
+  </dd>
 </dl>
 </div>
 
 <div class="methodShort" id="RemoveAt"><h3>RemoveAt</h3>
 <p>从数组中移除项目.</p>
-<pre class="Syntax">ArrayObj.<span class="func">RemoveAt</span>(Index <span class="optional">, Length</span>)</pre>
+<pre class="Syntax">RemovedValue := ArrayObj.<span class="func">RemoveAt</span>(Index)
+ArrayObj.<span class="func">RemoveAt</span>(Index, Length)</pre>
+<h4 id="RemoveAt_Parameters">参数</h4>
 <dl>
   <dt>Index</dt>
   <dd>
@@ -171,10 +186,13 @@ Value := ArrayObj.RemoveAt(-1)</pre>
   <dt>Length</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>要删除的值的范围的长度. 如果省略, 则删除一项.</p>
+    <p>如果省略, 则删除一个项目. 否则, 请指定要删除的值的范围的长度. </p>
   </dd>
 </dl>
+<h4 id="RemoveAt_Return_Value">返回值</h4>
+<p>类型: <a href="../Concepts.htm#values">Any</a></p>
 <p>如果省略 <em>Length</em>, 返回删除的值(如果没有, 则返回空值). 否则就没有返回值.</p>
+<h4 id="RemoveAt_Remarks">备注</h4>
 <p>RemoveAt 对应 <a href="#InsertAt">InsertAt</a>.</p>
 <p>如果 <em>Index</em> 和 <em>Length</em> 所表示的范围不完全在数组的当前范围内, 则抛出 <a href="Error.htm#ValueError">ValueError</a>.</p>
 <p><em>Pos</em> 侧的其余项将根据 <em>Length</em> 向左移动(如果省略则为 1). 例如:</p>
@@ -206,6 +224,7 @@ MsgBox x[1]              <em>; C</em></pre>
   </dd>
   <dt>Value</dt>
   <dd>
+    <p>类型: <a href="../Concepts.htm#values">Any</a></p>
     <p>值(如果没有, 则 <em>Value</em> 为<a href="../Concepts.htm#uninitialized-variables">未初始化值</a>).</p>
   </dd>
 </dl>
@@ -217,7 +236,7 @@ MsgBox x[1]              <em>; C</em></pre>
 <p>检索或设置数组的长度.</p>
 <pre class="Syntax">Length := ArrayObj.<span class="func">Length</span></pre>
 <pre class="Syntax">ArrayObj.<span class="func">Length</span> := Length</pre>
-<p>长度包含没有值的元素. 因增加长度而产生的索引是有效的, 但是新元素没有值(由 <a href="#Has">Has</a> 反映出来). Decreasing the length truncates the array.</p>
+<p>长度包含没有值的元素. 因增加长度而产生的索引是有效的, 但是新元素没有值(由 <a href="#Has">Has</a> 反映出来). 减小长度将截断数组.</p>
 <pre>
 MsgBox ["A", "B", "C"].Length  <em>;  3</em>
 MsgBox ["A",    , "C"].Length  <em>;  3</em>
@@ -226,15 +245,10 @@ MsgBox ["A",    , "C"].Length  <em>;  3</em>
 
 <div class="methodShort" id="Capacity"><h3>Capacity</h3>
 <p>检索或设置数组的当前容量.</p>
-<pre class="Syntax">ArrayObj.<span class="func">Capacity</span> := MaxItems</pre>
 <pre class="Syntax">MaxItems := ArrayObj.<span class="func">Capacity</span></pre>
-<dl>
-	<dt>MaxItems</dt>
-	<dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>在必须自动扩展前, 数组可以包含最大元素数量. 如果设置的值小于 <a href="#Length">Length</a>, 则删除多的元素.</p>
-  </dd>
-</dl>
+<pre class="Syntax">ArrayObj.<span class="func">Capacity</span> := MaxItems</pre>
+<p><em>MaxItems</em> 是一个<a href="../Concepts.htm#numbers">整数</a>, 表示数组在必须自动扩展之前可以包含的最大元素数量. 如果设置的值小于 <a href="#Length">Length</a>, 则删除多的元素.</p>
+
 <pre>
 x := ["A", "B", "C"]
 x.push("D")
@@ -251,23 +265,17 @@ MsgBox  x.Capacity  <em>;  7</em>
 <div class="methodShort" id="Default"><h3>Default</h3>
 <p>定义请求没有值的元素时返回的默认值.</p>
 <pre class="Syntax">ArrayObj.<span class="func">Default</span> := Value</pre>
-<p>默认情况下, 该属性实际上不存在, 但是可以由脚本定义. If defined, its value is returned by <a href="#__Item">__Item</a> or <a href="#Get">Get</a> if the requested element has no value, instead of throwing an <a href="Error.htm#UnsetError">UnsetItemError</a>. 它可以通过任何常规方法实现, 包括<a href="Object.htm#DefineProp">动态属性</a>或<a href="../Objects.htm#Meta_Functions">元函数</a>, 但要确定查询的是哪个键, 则需要重写 <a href="#__Item">__Item</a> 或 <a href="#Get">Get</a>.</p>
+<p>默认情况下, 该属性实际上不存在, 但是可以由脚本定义. 如果被定义, 如果请求的元素没有值, 它的值将由 <a href="#__Item">__Item</a> 或 <a href="#Get">Get</a> 返回, 而不是抛出 <a href="Error.htm#UnsetError">UnsetItemError</a>. 它可以通过任何常规方法实现, 包括<a href="Object.htm#DefineProp">动态属性</a>或<a href="../Objects.htm#Meta_Functions">元函数</a>, 但要确定查询的是哪个键, 则需要重写 <a href="#__Item">__Item</a> 或 <a href="#Get">Get</a>.</p>
 <p>设置默认值并不会在索引超出范围时防止抛出错误.</p>
 </div>
 
 <div class="methodShort" id="__Item"><h3>__Item</h3>
 <p>检索或设置数组元素的值.</p>
-<pre class="Syntax">Value := ArrayObj[Index]</pre>
-<pre class="Syntax">ArrayObj[Index] := Value</pre>
-<dl>
-  <dt>Index</dt>
-  <dd>
-    <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>一个有效的数组索引; 也就是说, 一个绝对值在 1 和 <a href="#Length">Length</a>(包括) 之间的整数.</p>
-    <p>负索引可用于反向处理元素, 因此 -1 是最后一个元素, -2 是倒数第二个元素, 依此类推.</p>
-    <p>尝试使用超出范围的数组索引(例如零, 或者其绝对值大于数组的 <a href="#Length">Length(长度)</a>) 被视为错误, 并将导致抛出 <a href="Error.htm#IndexError">IndexError</a>.</p>
-  </dd>
-</dl>
+<pre class="Syntax">Value := ArrayObj[Index]
+Value := ArrayObj.<span class="func">__Item</span>[Index]</pre>
+<pre class="Syntax">ArrayObj[Index] := Value
+ArrayObj.<span class="func">__Item</span>[Index] := Value</pre>
+<p><em>Index</em> 是一个表示有效的数组索引的<a href="../Concepts.htm#numbers">整数</a>; 即, 一个绝对值在 1 和 <a href="#Length">Length</a>(包括) 之间的整数. 负索引可用于反向处理元素, 因此 -1 是最后一个元素, -2 是倒数第二个元素, 依此类推. 尝试使用超出范围的数组索引(例如零, 或者其绝对值大于数组的 <a href="#Length">Length(长度)</a>) 被视为错误, 并将导致抛出 <a href="Error.htm#IndexError">IndexError</a>.</p>
 <p>如上所示, 属性名 __Item 通常被省略, 但在覆盖属性时使用.</p>
 </div>
 

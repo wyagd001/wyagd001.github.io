@@ -28,14 +28,14 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../misc/Functor.htm">函数对象</a></p>
     <p>事件发生时要调用的函数, 方法或对象.</p>
-    <p>如果 GUI 有事件接收器(即, 如果指定了 <a href="Gui.htm#Call">Gui()</a> 的 <em>EventObj</em> 参数), 那么这个参数可能是属于事件接收器的方法的名称.</p>
-    <p>否则, 这个参数必须是一个<a href="../misc/Functor.htm">函数对象</a>.</p>
+    <p>如果 GUI 有事件接收器(即, 如果指定了 <a href="Gui.htm#Call">Gui()</a> 的 <em>EventObj</em> 参数), 那么这个参数可能是属于事件接收器的方法的名称. 否则, 这个参数必须是一个<a href="../misc/Functor.htm">函数对象</a>.</p>
+    <p>有关参数, 返回值, 命名等详细信息, 请参阅以下章节.</p>
   </dd>
   
   <dt>AddRemove</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>如果省略, 则默认为 1(在任何先前注册的回调之后调用回调). 否则, 指定下列数字之一:</p>
+    <p>如果省略, 则默认为 1. 否则, 指定下列数字之一:</p>
     <ul>
       <li>1 = 在任何先前注册的回调之后调用回调.</li>
       <li>-1 = 在任何先前注册的回调之前调用回调.</li>
@@ -49,7 +49,7 @@
 <p>由于 <em>Callback</em> 可以是一个对象, 它可以是一个 <a href="../misc/Functor.htm#BoundFunc">BoundFunc 对象</a>, 在参数列表的开头插入额外的参数, 然后调用另一个函数. 这是一种通用的技术, 不是 OnEvent 所特有的, 所以一般被本文档的其他部分忽略.</p>
 <p>回调的第一个显式参数是触发事件的 <a href="Gui.htm">Gui</a> 或 <a href="GuiControl.htm">GuiControl</a> 对象. 唯一的例外是, 当 Gui <a href="Gui.htm#EventObj">处理自己的事件</a>时, this 参数会被省略, 因为 <code>this</code> 已经包含了对 Gui 的引用.</p>
 <p>许多事件都传递了关于事件的附加参数, 每个事件都有描述.</p>
-<p>与所有动态调用的方法或函数一样, 回调不需要声明回调本身不需要的参数, 但在这种情况下, 必须指定一个星号作为最终参数. 如果一个事件的参数多于回调声明的参数, 那么这些参数将被忽略(除非回调是<a href="../Functions.htm#Variadic">可变参数的</a>).</p>
+<p>与所有动态调用的方法或函数一样, 回调不需要声明回调本身不需要的参数, 但在这种情况下, 必须指定一个星号作为最终参数, 例如 <code>MyCallback(Param1, *)</code>. 如果一个事件的参数多于回调声明的参数, 那么这些参数将被忽略(除非回调是<a href="../Functions.htm#Variadic">可变参数的</a>).</p>
 <p>回调可以声明比事件提供的参数更多的参数, 如果(而且只有当) 额外的参数被声明为可选参数. 然而, 不建议使用可选参数, 因为未来的程序版本可能会用额外的参数来扩展一个事件, 在这种情况下, 可选参数将停止接收它们的默认值.</p>
 
 <h2 id="Callback_Return_Value">Callback 返回值</h2>
@@ -99,32 +99,35 @@
 <h3 id="Close">Close</h3>
 <p>当用户或其他程序试图关闭窗口时, 如按下标题栏中的 X 按钮, 从系统菜单中选择 "关闭", 或调用 <a href="../lib/WinClose.htm">WinClose</a>, 则启动该函数.</p>
 <pre class="Syntax">Gui_<span class="func">Close</span>(GuiObj)</pre>
-<p>默认情况下, 回调返回后或者没有注册回调, 窗口会自动隐藏. 回调可以通过返回 1(或 <code>true</code>) 来阻止这种情况, 这也将阻止任何剩余的回调被调用. 回调可以通过调用 <a href="Gui.htm#Hide">Gui.Hide</a> 立即隐藏窗口, 或者通过调用 <a href="Gui.htm#Destroy">Gui.Destroy</a> 销毁窗口.</p>
+<p>默认情况下, 回调返回后或者没有注册回调, 窗口会自动隐藏. 回调可以通过返回 1(或 <code>true</code>) 来阻止这种情况, 这也将阻止任何剩余的回调被调用. 回调可以通过调用 <a href="Gui.htm#Hide">GuiObj.Hide</a> 立即隐藏窗口, 或者通过调用 <a href="GuiObj.htm#Destroy">Gui.Destroy</a> 销毁窗口.</p>
 <p>例如, 这个 GUI 在关闭前会显示一个确认提示:</p>
-<pre>myGui := Gui()
-myGui.AddText("", "Press Alt+F4 or the X button in the title bar.")
-myGui.OnEvent("Close", myGui_Close)
-myGui_Close(thisGui) {  <em>; 声明中 this 参数是可选的.</em>
+<pre>MyGui := Gui()
+MyGui.AddText("", "Press Alt+F4 or the X button in the title bar.")
+MyGui.OnEvent("Close", MyGui_Close)
+MyGui_Close(thisGui) {  <em>; 声明中 this 参数是可选的.</em>
     if MsgBox("Are you sure you want to close the GUI?",, "y/n") = "No"
         return true  <em>; true = 1</em>
 }
-myGui.Show</pre>
+MyGui.Show</pre>
 
 <h3 id="ContextMenu">ContextMenu</h3>
 <p>每当用户在窗口中除标题栏和菜单栏外的任何地方单击右键时就会启动. 当按下 <kbd>Menu</kbd> 或 <kbd>Shift</kbd>+<kbd>F10</kbd> 时, 也会启动.</p>
 <pre class="Syntax">Gui_<span class="func">ContextMenu</span>(GuiObj, GuiCtrlObj, Item, IsRightClick, X, Y)</pre>
 <dl><dt>GuiCtrlObj</dt><dd>
-<p>类型: <a href="GuiControl.htm">GuiControl</a> 或 <a href="../Concepts.htm#nothing">字符串(空值)</a></p>
+<p>类型: <a href="../Concepts.htm#objects">Object</a> 或<a href="../Concepts.htm#nothing">字符串(空)</a></p>
 <p>接收事件的控件的 <a href="GuiControl.htm">GuiControl 对象</a>(如果没有则为空白).</p></dd>
   <dt>Item</dt><dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>当 ListBox, ListView 或 TreeView 是上下文菜单的目标时(由 <em>GuiCtrlObj</em> 决定), <em>Item</em> 指定控件的哪个项目是目标.</p>
-    <p><a href="../lib/GuiControls.htm#ListBox">ListBox</a>: 当前焦点行的编号. 请注意, 标准的 ListBox 在右键单击时不会聚焦一个项目, 所以这可能不是被单击的项目.</p>
-    <p><a href="../lib/ListView.htm">ListView</a> 和 <a href="../lib/TreeView.htm">TreeView</a>: 对于右键点击, <em>Item</em> 包含被点击的项目的 ID 或行号(如果用户点击的不是项目, 则为 0). 对于 AppsKey 和 Shift-F10, <em>Item</em> 包含所选项目的 ID 或行号.</p></dd>
+    <p><a href="../lib/GuiControls.htm#ListBox">ListBox</a>: 当前焦点项目的位置编号. 请注意, 标准的 ListBox 在右键单击时不会聚焦一个项目, 所以这可能不是被单击的项目.</p>
+    <p><a href="../lib/ListView.htm">ListView</a> 和 <a href="../lib/TreeView.htm">TreeView</a>: 对于右键点击, <em>Item</em> 包含被点击的项目的行号或 ID(如果用户点击的不是项目, 则为 0). 对于 <kbd>Menu</kbd> 和 <kbd>Shift</kbd>+<kbd>F10</kbd>, <em>Item</em> 包含所选项目的行号或 ID.</p></dd>
   <dt>IsRightClick</dt><dd>
     <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-    <p>如果用户点击了鼠标右键, 则为 <code>True</code>.<br>
-    如果用户按下了 <kbd>Menu</kbd> 键或 <kbd>Shift</kbd>+<kbd>F10</kbd>, 则为 <code>False</code>.</p></dd>
+    <p>One of the following values:</p>
+    <ul>
+      <li>1 (true) = 如果用户点击了鼠标右键.</li>
+      <li>0 (false) = 用户按下了 <kbd>Menu</kbd> 键或 <kbd>Shift</kbd>+<kbd>F10</kbd>.</li>
+    </ul></dd>
   <dt>X, Y</dt><dd>
   <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
   <p>脚本应该显示菜单的 X 和 Y 坐标(例如 <code>MyContextMenu.<a href="Menu.htm#Show">Show</a> X, Y</code>). 坐标是相对于窗口客户端区域的左上角.</p></dd>
@@ -139,12 +142,12 @@ myGui.Show</pre>
 <dl>
   <dt>GuiCtrlObj</dt>
   <dd>
-    <p>类型: <a href="GuiControl.htm">GuiControl</a> 或 <a href="../Concepts.htm#nothing">字符串(空值)</a></p>
+    <p>类型: <a href="../Concepts.htm#objects">Object</a> 或 <a href="../Concepts.htm#nothing">字符串(空值)</a></p>
     <p>文件被拖拽到的控件的 <a href="GuiControl.htm">GuiControl 对象</a>(如果没有则为空白).</p></dd>
 
   <dt>FileArray</dt>
   <dd>
-    <p>类型: <a href="../Concepts.htm#strings">字符串</a>的<a href="Array.htm">数组</a></p>
+    <p>类型: <a href="Array.htm">Array</a></p>
     <p>一个文件名的<a href="../Objects.htm#Usage_Simple_Arrays">数组(对象)</a>, 其中 <code>FileArray[1]</code> 是第一个文件, <code>FileArray.Length</code> 返回文件的数量. 可以使用 <a href="../lib/For.htm">for-loop</a> 来迭代文件:</p>
 <pre>Gui_DropFiles(GuiObj, GuiCtrlObj, FileArray, X, Y) {
     for i, DroppedFile in FileArray
@@ -195,7 +198,7 @@ myGui.Show</pre>
   <dt>Info</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>对于 <a href="../lib/GuiControls.htm#Slider">Slider</a> 控件, <em>Info</em> 是一个数值, 表示滑块如何移动. 有关详情, 请参阅<a href="../lib/GuiControls.htm#slider-change">检测变化(Slider)</a>.</p>
+    <p><a href="../lib/GuiControls.htm#Slider">Slider</a>: 一个表示滑块如何移动的数值. 有关详情, 请参阅<a href="../lib/GuiControls.htm#slider-change">检测变化</a>.</p>
     <p>对于所有其他控件, <em>Info</em> 目前没有任何意义.</p>
   </dd>
 </dl>
@@ -210,16 +213,16 @@ Link_<span class="func">Click</span>(GuiCtrlObj, Info, Href)</pre>
   <dt>Info</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>ListView: 点击的项目的行号, 如果鼠标没有在项目上, 则为 0.</p>
-    <p>TreeView: 点击的项目的 ID, 如果鼠标没有放在项目上, 则为 0.</p>
-    <p>Link: 如果有的话, 链接的 ID 属性(字符串), 否则为链接的索引(整数).</p>
-    <p>StatusBar: 点击的部分的编号(然而, 如果用户点击在栏右边的大小抓手附近, 编号可能是一个很大的整数).</p>
+    <p><a href="GuiControls.htm#ListView">ListView</a>: 点击的项目的行号, 如果鼠标没有在项目上, 则为 0.</p>
+    <p><a href="GuiControls.htm#TreeView">TreeView</a>: 点击的项目的 ID, 如果鼠标没有放在项目上, 则为 0.</p>
+    <p><a href="GuiControls.htm#Link">Link</a>: 如果有的话, 链接的 ID 属性(字符串), 否则为链接的索引(整数).</p>
+    <p><a href="GuiControls.htm#StatusBar">StatusBar</a>: 点击的部分的编号(然而, 如果用户点击在栏右边的大小抓手附近, 编号可能是一个很大的整数).</p>
     <p>对于所有其他控件, <em>Info</em> 目前没有任何意义.</p>
   </dd>
   <dt>Href</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>Link: 链接的 HREF 属性. 注意, 如果注册了 Click 事件回调, HREF 属性不会自动执行.</p></dd>
+    <p><a href="GuiControls.htm#Link">Link</a>: 链接的 HREF 属性. 注意, 如果注册了 Click 事件回调, HREF 属性不会自动执行.</p></dd>
 </dl>
 <p>适用于: <a href="../lib/GuiControls.htm#Text">Text</a>, <a href="../lib/GuiControls.htm#Pic">Pic</a>, <a href="../lib/GuiControls.htm#Button">Button</a>, <a href="../lib/GuiControls.htm#CheckBox">CheckBox</a>, <a href="../lib/GuiControls.htm#Radio">Radio</a>, <a href="../lib/ListView.htm">ListView</a>, <a href="../lib/TreeView.htm">TreeView</a>, <a href="../lib/GuiControls.htm#Link">Link</a>, <a href="../lib/GuiControls.htm#StatusBar">StatusBar</a>.</p>
 
@@ -230,8 +233,8 @@ Link_<span class="func">Click</span>(GuiCtrlObj, Info, Href)</pre>
   <dt>Info</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p>ListView, TreeView 和 StatusBar: 与 <a href="#Click">Click</a> 事件相同.</p>
-    <p>ListBox: 聚焦项的位置. 双击最后一个项目下面的空白处, 通常会聚焦最后一个项目, 并保持原样.</p>
+    <p><a href="GuiControls.htm#ListView">ListView</a>, <a href="GuiControls.htm#TreeView">TreeView</a> 和 <a href="GuiControls.htm#StatusBar">StatusBar</a>: 与 <a href="#Click">Click</a> 事件相同.</p>
+    <p><a href="GuiControls.htm#ListBox">ListBox</a>: 当前聚焦项的位置编号. 双击最后一个项目下面的空白处, 通常会聚焦最后一个项目, 并保持原样.</p>
   </dd>
 </dl>
 <p>适用于: <a href="../lib/GuiControls.htm#Text">Text</a>, <a href="../lib/GuiControls.htm#Pic">Pic</a>, <a href="../lib/GuiControls.htm#Button">Button</a>, <a href="../lib/GuiControls.htm#CheckBox">CheckBox</a>, <a href="../lib/GuiControls.htm#Radio">Radio</a>, <a href="../lib/GuiControls.htm#ComboBox">ComboBox</a>, <a href="../lib/GuiControls.htm#ListBox">ListBox</a>, <a href="../lib/ListView.htm">ListView</a>, <a href="../lib/TreeView.htm">TreeView</a>, <a href="../lib/GuiControls.htm#StatusBar">StatusBar</a>.</p>
@@ -251,7 +254,7 @@ Link_<span class="func">Click</span>(GuiCtrlObj, Info, Href)</pre>
 <p>当控件具有键盘焦点时, 用户右键单击控件或按下 <kbd>Menu</kbd> 或 <kbd>Shift</kbd>+<kbd>F10</kbd> 时触发该事件.</p>
 <pre class="Syntax">Ctrl_<span class="func">ContextMenu</span>(GuiCtrlObj, Item, IsRightClick, X, Y)</pre>
 <p>有关详情, 请参阅 <a href="#ContextMenu">ContextMenu</a>.</p>
-<p>适用于: 除了 Edit 和 MonthCal(以及 ComboBox 内的 Edit 控件)(他们都有自己的标准上下文菜单) 外的所有控件,.</p>
+<p>适用于: 除了 <a href="GuiControls.htm#Edit">Edit</a> 和 <a href="GuiControls.htm#MonthCal">MonthCal</a>(以及 <a href="GuiControls.htm#ComboBox">ComboBox</a> 内的 Edit 控件)(他们都有自己的标准上下文菜单) 外的所有控件,.</p>
 
 <span id="LoseFocus"></span><h3 id="Focus">Focus / LoseFocus</h3>
 <p>控件获得或失去键盘焦点时触发该事件.</p>
