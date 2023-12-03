@@ -44,13 +44,19 @@
   <dt>Options</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../Concepts.htm#numbers">整数</a></p>
-    <p><p>如果为空或省略, 则默认为 0, 即无图标. 否则, 请指定一个整数值(由加法或按位或的组合), 也可以是一个由至少一个空格或制表符分隔的不区分大小写的零或多个选项字符串. 字符串中还可以包含一个或多个数字选项.</p>
+    <p><p>如果为空或省略, 则默认为 0. 否则, 请指定一个整数值(由加法或按位或的组合), 也可以是一个由至少一个空格或制表符分隔的不区分大小写的零或多个选项字符串. 字符串中还可以包含一个或多个数字选项.</p>
     <table class="info">
       <tr>
         <th class="sized1">功能</th>
         <th class="sized2 right">十进制值</th>
         <th class="sized2 right">十六进制值</th>
         <th>字符串</th>
+      </tr>
+      <tr>
+        <td>No icon</td>
+        <td class="right">0</td>
+        <td class="right">0x0</td>
+        <td>N/A</td>
       </tr>
       <tr>
         <td>信息图标</td>
@@ -98,7 +104,12 @@
 <h2 id="To_Hide_the_Window">隐藏窗口</h2>
 <p>要隐藏气球窗口, 同时省略 <em>Text</em> 和 <em>Title</em>. 例如:</p>
 <pre>TrayTip</pre>
-<p>要隐藏 Windows 10 及后续版本的 toast 通知, 临时移除<a href="../Program.htm#tray-icon">托盘图标</a>. 例如:</p>
+<p>要隐藏 Windows 10 的 toast 通知, 临时移除<a href="../Program.htm#tray-icon">托盘图标</a>. 例如:</p>
+
+<h2 id="Hiding_the_Traytip">Hiding the Traytip</h2>
+<p>To hide the traytip, omit all parameters (or at least the <em>Text</em> and <em>Title</em> parameters). For example:</p>
+<pre>TrayTip</pre>
+<p>To hide the traytip on Windows 10, temporarily remove the <a href="../Program.htm#tray-icon">tray icon</a> (which not always work, according to at least one report). For example:</p>
 <pre>TrayTip "#1", "This is TrayTip #1"
 Sleep 3000   <em>; 让它显示 3 秒钟.</em>
 HideTrayTip
@@ -115,7 +126,6 @@ HideTrayTip() {
     }
 }
 </pre>
-<p>根据至少一份报告, 这可能并不总是有效的.</p>
 
 <h2 id="Remarks">备注</h2>
 <p>在 Windows 10 中, 托盘提示窗口通常是这样的:</p>
@@ -135,12 +145,15 @@ HideTrayTip() {
 </div>
 
 <div class="ex" id="ExDisplayTime">
-<p><a class="ex_number" href="#ExDisplayTime"></a> 提供更精确的控制显示的时间, 没有使用 Sleep(它会停止当前线程). 对于 Windows 10 及后续版本, 用<a href="#Hide">上面</a>定义的函数替换 HideTrayTip 函数.</p>
-<pre>#Persistent
+<p><a class="ex_number" href="#ExDisplayTime"></a> 提供更精确的控制显示的时间, 没有使用 Sleep(它会停止当前线程).</p>
+<pre>TrayTip "This will be displayed for 5 seconds.", "Timed traytip"
+SetTimer () =&gt; TrayTip(), -5000</pre>
+<p>The following does the same, but allows you to replace the HideTrayTip function definition with the one defined <a href="#Hide">above</a> for Windows 10.</p>
+<pre>
 TrayTip "This will be displayed for 5 seconds.", "Timed traytip"
 SetTimer HideTrayTip, -5000
 
-HideTrayTip() {  <em>; 注意: 对于 Windows 10, 用<a href="#Hide">上面</a>定义的函数替换这个函数.</em>
+HideTrayTip() {
     TrayTip
 }
 </pre>
