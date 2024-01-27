@@ -543,3 +543,21 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1530|f408|区域截图|无条件|拖动鼠标区域截图|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\区域截图.ahk"|
 |1531|f408|搜狗截图|无条件|运行搜狗输入法的截图(带OCR)|Keys&#124;^!w|
 |1532|f7b0|[中英分隔](/Actions/1532.md)|编辑器窗口|如果有选中文本, 将选中部分的中英文字符使用空格分隔(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_中英文隔开.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1533|f110|[中标转英](/Actions/1533.md)|选中文本|如果有选中文本, 将选中部分的中文标点符号转为英文标点(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中文标点转英文.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1534|f111|[英标转中](/Actions/1534.md)|选中文本|如果有选中文本, 将选中部分的英文标点符号转为中文标点(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\英文标点转中文.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1535|E77F|粘贴|无条件|发送粘贴快捷键|Keys&#124;^v|
+|1536|e1c7|添加到自定义|选中对象|将选中(文件,文件夹,文本) 添加为自定义动作|Cando&#124;AddToCustomA|
+|1537|e921|设置标题|选中文本|WPS_设置标题格式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\WPS_设置标题格式.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1538|e8e3|设置正文|选中文本|WPS_设置正文格式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\WPS_设置正文格式.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1539|e191|单元格底色|选中文本|ET_设置单元格底色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_设置单元格底色.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1540|e72d|发送到Lnk|选中文件|发送选中文件的快捷方式到如意的 Lnk 文件夹|Cando&#124;addToLnkFolder|
+|1541|e8b0|移动窗口|任意窗口|移动窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "移动窗口"  "%Windy_CurWin_Id%"|
+|1542|e92d|窗口大小|任意窗口|拖动右键,改变窗口的大小|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "窗口大小"|
+|1543|e8f4|[批量文件](/Actions/1543.md)|选中文件夹|在选中文件夹下批量创建文件(文件夹), 一行一个|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_批量创建文件.ahk" "%CandySel%" "X"|
+
+
+
+
+
+
+
