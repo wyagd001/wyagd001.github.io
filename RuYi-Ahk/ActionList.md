@@ -545,7 +545,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1532|f7b0|[中英分隔](/Actions/1532.md)|编辑器窗口|如果有选中文本, 将选中部分的中英文字符使用空格分隔(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_中英文隔开.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1533|f110|[中标转英](/Actions/1533.md)|选中文本|如果有选中文本, 将选中部分的中文标点符号转为英文标点(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中文标点转英文.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1534|f111|[英标转中](/Actions/1534.md)|选中文本|如果有选中文本, 将选中部分的英文标点符号转为中文标点(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\英文标点转中文.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
-|1535|E77F|粘贴|无条件|发送粘贴快捷键|Keys&#124;^v|
+|[1535](http://127.0.0.1:5151/runcom?aabb=1524)|E77F|粘贴|无条件|发送粘贴快捷键|Keys&#124;^v|
 |1536|e1c7|添加到自定义|选中对象|将选中(文件,文件夹,文本) 添加为自定义动作|Cando&#124;AddToCustomA|
 |1537|e921|设置标题|选中文本|WPS_设置标题格式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\WPS_设置标题格式.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1538|e8e3|设置正文|选中文本|WPS_设置正文格式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\WPS_设置正文格式.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
