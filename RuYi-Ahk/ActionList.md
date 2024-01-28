@@ -554,8 +554,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1541|e8b0|移动窗口|任意窗口|移动窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "移动窗口"  "%Windy_CurWin_Id%"|
 |1542|e92d|窗口大小|任意窗口|拖动右键,改变窗口的大小|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "窗口大小"|
 |1543|e8f4|[批量文件](/Actions/1543.md)|选中文件夹|在选中文件夹下批量创建文件(文件夹), 一行一个|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_批量创建文件.ahk" "%CandySel%" "X"|
-
-
+|1544|e7b3|[验证身份证](/Actions/1544.md)|选中文本|选中身份证号码, 验证是否有效|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\验证身份证号码.ahk" "%CandySel%"|
+|1545|e12b|密码管理|Chrome|Chrome 浏览器密码管理器|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://password-manager/passwords"|
 
 
 
