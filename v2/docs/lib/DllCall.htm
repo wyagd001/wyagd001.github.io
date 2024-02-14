@@ -61,7 +61,7 @@
 <td>
 <p>一个字符串, 如 <code>"Blue"</code> 或 <code>MyVar</code>, 或 <a href="../Concepts.htm#variable-references">VarRef</a>(如 <code>&amp;MyVar</code>). 如果被调用的函数修改了字符串, 并且参数是裸变量或 VarRef, 那么它的内容将被更新. 例如, 下面的调用将把 <em>MyVar</em> 的内容转换为大写字母: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
   <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议创建一个<a href="Buffer.htm">缓冲</a>, 使用 <a href="#ptr">Ptr</a> 类型传递, 然后使用 <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串, 如 <a href="#ExWsprintf">wsprintf 示例</a>所示.</p>
-  <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
+  <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(&amp;MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出 <a href="Error.htm#TypeError">TypeError</a>.</p>
   <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量, if a <a href="../Concepts.htm#variable-references">VarRef</a> was passed. 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
   <p class="note"><strong>注意:</strong> 在将字符串传递给函数时, 请注意函数所期望的字符串的 <a href="../Compat.htm#DllCall"><i>type</i>(类型).</p></td>
@@ -183,7 +183,7 @@ Loop 500
 <p>有关实际用法, 请参阅<a href="#ExStruct">结构示例</a>.</p>
 
 <h2 id="limits">已知限制</h2>
-<p>当一个变量的字符串地址(例如 <code>StrPtr(MyVar)</code>) 被传递给一个函数, 并且该函数改变了变量内容的长度时, 那么后面使用这个变量可能出现错误. 要解决此问题, 有下面几种方法: 1) 将 <em>MyVar</em> 作为 <a href="#str">"Str"</a> 参数传递, 而不是 Ptr/地址; 2) 在调用 DllCall 后, 调用 <code><a href="VarSetStrCapacity.htm#neg1">VarSetStrCapacity</a>(MyVar, -1)</code> 来更新变量的内部存储长度.</p>
+<p>当一个变量的字符串地址(例如 <code>StrPtr(MyVar)</code>) 被传递给一个函数, 并且该函数改变了变量内容的长度时, 那么后面使用这个变量可能出现错误. 要解决此问题, 有下面几种方法: 1) 将 <em>MyVar</em> 作为 <a href="#str">"Str"</a> 参数传递, 而不是 Ptr/地址; 2) 在调用 DllCall 后, 调用 <code><a href="VarSetStrCapacity.htm#neg1">VarSetStrCapacity</a>(&amp;MyVar, -1)</code> 来更新变量的内部存储长度.</p>
 <p>由函数保存到变量中的任何二进制零都可以作为终止符, 防止大多数内置函数访问或更改零右边的所有数据. 但是, 这样的数据可以使用 <a href="StrPtr.htm">StrPtr</a> 检索字符串的地址, 并将其传递给其他函数, 例如 <a href="NumPut.htm">NumPut</a>, <a href="NumGet.htm">NumGet</a>, <a href="StrGet.htm">StrGet</a>, <a href="StrPut.htm">StrPut</a>, 以及 DllCall 本身进行操作.</p>
 <p>当一个字符串传递给一个返回此字符串地址的函数后, 此函数可能会在与预期不同的内存地址中返回相同的字符串. 例如在编程语言中调用 <code>CharLower(CharUpper(MyVar))</code> 将把 <em>MyVar</em> 的内容转换成小写形式, 但当使用 DllCall 进行相同操作时, 在后面的调用操作后 <em>MyVar</em> 将是小写的, 因为 CharLower 对一个内容与 <em>MyVar</em> 相同而地址不同的临时字符串进行操作:</p>
 <pre>MyVar := "ABC"

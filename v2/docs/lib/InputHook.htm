@@ -117,7 +117,10 @@ if (ih.Input = CtrlC)
   <dd>
   <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
   <p>按键列表. 大括号用于括起按键名称, 虚拟键码或扫描码, 类似于 <a href="Send.htm">Send</a> 函数. 例如, <code>{Enter}.{{}</code> 将应用于 <kbd>Enter</kbd>, <kbd>.</kbd> 和 <kbd>{</kbd>. 按名称, 按 <code>{vkNN}</code> 或按 <code>{scNNN}</code> 指定按键可能会产生三种不同的结果; 有关详情, 请参阅下文.</p>
-  <p id="all-keys">单独指定字符串 <code>{All}</code>(不区分大小写) 以便将 <em>KeyOptions</em> 应用于所有 VK 和所有 SC. 然后可以再次调用 KeyOpt 从特定按键中删除选项.</p></dd>
+  <p id="all-keys">单独指定字符串 <code>{All}</code>(不区分大小写) 以便将 <em>KeyOptions</em> 应用于所有 VK 和所有 SC, including <code>{vkE7}</code> and <code>{sc000}</code> as described below. 然后可以再次调用 KeyOpt 从特定按键中删除选项.</p>
+  <p id="sc000">指定 <code>{sc000}</code> 将 <em>KeyOptions</em> 应用于所有缺乏扫描码的事件.</p>
+  <p id="vke7">指定 <code>{vkE7}</code> 将 <em>KeyOptions</em> 应用于 Unicode 事件, 例如由 <code>SendEvent "{U+221e}"</code> 或 <code>SendEvent "{Text}&infin;"</code> 发送的事件.</p>
+  </dd>
   <dt>KeyOptions</dt>
   <dd>
   <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
@@ -135,7 +138,10 @@ if (ih.Input = CtrlC)
 <p>选项可以通过虚拟键码和扫描码来设置, 并且是累加的.</p>
 <p>当按名称指定一个键时, 选项通过 VK 或 SC 来设置. 如果两个物理键共享相同的 VK, 但 SC 不同(如 <kbd>Up</kbd> 和 <kbd>NumpadUp</kbd>), 则由 SC 处理. 相反, 如果使用 VK 码, 则它将应用于产生该 VK 的任何物理键(这可能会随着时间的推移而变化, 这取决于活动键盘布局).</p>
 <p>通过 VK 码删除选项不会影响 SC 设置的任何选项, 反之亦然. 但是, 当按键名删除一个选项并且该名称由 VK 处理时, 对应的 SC 也会删除该选项(根据脚本的键盘布局). 这允许在对<a href="#all-keys">所有按键</a>应用一个选项后按名称排除按键.</p>
-<p>如果通过 VK 设置 <code>+V</code>, 而通过 SC 设置 <code>+S</code>(反之亦然), 则 <code>+V</code> 优先.</p>
+<p>为了防止一个选项影响按键, 必须从该按键的 VK 和 SC 中删除该选项, 或 sc000 如果按键没有 SC.</p>
+<p id="U">Unicode 事件, 例如由 <code>SendEvent "{U+221e}"</code> 或 <code>SendEvent "{Text}&infin;"</code> 发送的事件, 会受到 <a href="#vke7">vkE7</a> 或 <a href="#sc000">sc000</a> 设置的选项的影响. 应用于 <a href="#all-keys">{All}</a> 的任何选项都将应用于 vkE7 和 sc000, 因此要排除 Unicode 事件, 请从两者中删除该选项. 例如:</p>
+<pre>InputHookObj.KeyOpt("{All}", "+I")  <em>; 忽略任何事件产生的文本</em>
+InputHookObj.KeyOpt("{vkE7}{sc000}", "-I")  <em>; Unicode 事件除外.</em></pre>
 </div>
 
 <div class="methodShort" id="Start"><h3>Start</h3>
