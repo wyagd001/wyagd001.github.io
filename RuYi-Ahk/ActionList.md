@@ -556,6 +556,13 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1543|e8f4|[批量文件](/Actions/1543.md)|选中文件夹|在选中文件夹下批量创建文件(文件夹), 一行一个|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_批量创建文件.ahk" "%CandySel%" "X"|
 |1544|e7b3|[验证身份证](/Actions/1544.md)|选中文本|选中身份证号码, 验证是否有效|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\验证身份证号码.ahk" "%CandySel%"|
 |1545|e12b|密码管理|Chrome|Chrome 浏览器密码管理器|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://password-manager/passwords"|
+|1546|e12b|360密码|360浏览器|打开360浏览器密码管理页面|run&#124;%360se% "se://login-manager/"|
+|1547|f716|发送到对话框|选中文本|将选中文本发送到 #32770 对话框窗口|canfunc&#124;SendTo32770&#124;%CandySel%&#124;{Enter}|
+|1548|f156|文件合并|选中文件夹|列出选中文件夹中文本文件, 将选中文件合并|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\多文件合并.ahk" "%CandySel%"|
+|1549|f1ad|搜狗输入法|任意窗口|激活搜狗拼音输入法|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\激活指定输入法.ahk" "搜狗拼音输入法" %Windy_CurWin_id%|
+|1550|E77F|显示剪贴板|剪贴板|显示剪贴板当前的内容|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\显示剪贴板内容.ahk"|
+|1551|f408|设置权限EO|选中文件|设置选中文件(夹)的权限|run&#124;cmd.exe /c takeown /f "%candysel%" && icacls "%candysel%" /grant EveryOne:F|
+|1552|e8c1|语言设置|无条件|打开系统语言设置(Win7+)@控制面板|run&#124;rundll32.exe shell32.dll`,Control_RunDLL input.dll|
 
 
 
