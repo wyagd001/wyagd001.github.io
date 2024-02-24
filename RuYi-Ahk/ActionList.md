@@ -563,7 +563,9 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1550|E77F|显示剪贴板|剪贴板|显示剪贴板当前的内容|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\显示剪贴板内容.ahk"|
 |1551|f408|设置权限EO|选中文件|设置选中文件(夹)的权限|run&#124;cmd.exe /c takeown /f "%candysel%" && icacls "%candysel%" /grant EveryOne:F|
 |1552|e8c1|语言设置|无条件|打开系统语言设置(Win7+)@控制面板|run&#124;rundll32.exe shell32.dll`,Control_RunDLL input.dll|
-
+|1553|e759|OCR|选中文件|使用本地OCR识别本地图片|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\本地OCR(Vis2).ahk" "%CandySel%"|
+|1554|E753|天气|无条件|利用免费的天气api显示当天气温|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\天气.ahk" "101300501"|
+|1555|e121|农历时间|无条件|显示农历时间|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_显示农历.ahk"|
 
 
 
