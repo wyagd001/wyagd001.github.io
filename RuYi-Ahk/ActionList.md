@@ -566,7 +566,13 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1553|e759|OCR|选中文件|使用本地OCR识别本地图片|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\本地OCR(Vis2).ahk" "%CandySel%"|
 |1554|E753|天气|无条件|利用免费的天气api显示当天气温|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\天气.ahk" "101300501"|
 |1555|e121|农历时间|无条件|显示农历时间|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_显示农历.ahk"|
-
-
-
-
+|1556|e7b3|验证身份证|选中文本|选中身份证号码, 验证是否有效|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\验证身份证号码(ToolTip).ahk" "%CandySel%"|
+|1557|e947|关闭窗口|无条件|关闭当前鼠标下的窗口|canfunc&#124;CF_WinClose&#124;%Windy_CurWin_id%|
+|1558|e1e3|移动窗口|无条件|移动当前鼠标下的窗口|canfunc&#124;CF_WinMove&#124;%Windy_CurWin_id%&#124;0~&#124;0~&#124;720~&#124;870|
+|1559|e720|语音动作|无条件|开始语音识别,按说出的动作名称执行动作|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\语音动作.ahk2"|
+|1560|e775|输入法指示|无条件|工具: 在鼠标旁边显示当前窗口输入法状态(A, 中, 英)|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\显示输入法状态.ahk2"|
+|1561|e895|检测更新|无条件|检测如意主程序更新|Cando&#124;TM_UpdateCheck|
+|1562|e895|更新脚本|无条件|检测如意外部脚本更新|Cando&#124;TM_updatewbscript|
+|1563|e895|更新引用|无条件|检测如意引用程序更新|Cando&#124;TM_updateYYpro|
+|1564|e8c8|提取文件|无条件|将选中文件夹中的所有文件(不包括文件夹) 复制到同级文件夹中(可指定扩展名)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹下的所有文件到同级目录.ahk" "%CandySel%" "jpg"|
+|1565|e121|天数计算|无条件|计算两个日期之间的天数, 或指定日期加上或减去指定天数得到的日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_天数计算.ahk"|
