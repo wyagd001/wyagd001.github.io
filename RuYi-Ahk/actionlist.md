@@ -424,7 +424,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1411](http://127.0.0.1:5151/runcom?aabb=1411)|e149|[重启如意](/actions/1411.md)|无条件|重启如意|Cando&#124;TM_Reload|
 |[1412](http://127.0.0.1:5151/runcom?aabb=1412)|e8ec|[如意托盘菜单](/actions/1412.md)|无条件|显示如意的托盘菜单(右击托盘图标显示的菜单)|Cando&#124;TM_show|
 |[1413](http://127.0.0.1:5151/runcom?aabb=1413)|e8ec|[如意设置](/actions/1413.md)|无条件|显示如意的设置界面|Cando&#124;TM_SettingsM|
-|[1414](http://127.0.0.1:5151/runcom?aabb=1414)|e121|定时管理|无条件|跟随动作和定时动作管理界面|Cando&#124;TimingActionM|
+|[1414](http://127.0.0.1:5151/runcom?aabb=1414)|e121|定时管理|无条件|自动运行动作的管理界面(启动跟随,定时动作,监控剪贴板,监控文件夹,监控窗口)|Cando&#124;TimingActionM|
 |1415|f71c|窗口进程目录|任意窗口|打开窗口进程文件所在的目录(避免 QTTabBar 打开新窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\打开窗口进程目录.ahk" "%Windy_CurWin_Fullpath%"|
 |[1416](http://127.0.0.1:5151/runcom?aabb=1416)|f8af|移动鼠标|无条件|移动鼠标到指定坐标并点击鼠标左键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\移动鼠标.ahk" "%CandySel%"|
 |[1417](http://127.0.0.1:5151/runcom?aabb=1417)|e961|屏蔽键盘|无条件|临时屏蔽键盘按键|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\屏蔽键盘.ahk"|
