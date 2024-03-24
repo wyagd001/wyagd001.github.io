@@ -10,9 +10,9 @@ description: 如意百宝箱-Ahk 简介
 
 **如意百宝箱-Ahk**: 如意百宝箱是一款针对不同窗口和选中文件显示一个定制的动作面板的快捷启动工具. 动作面板由热键或鼠标手势来显示, 然后点击动作按钮来执行动作, 也可以由单独的热键或鼠标手势直接执行动作. 软件可以自由新增动作(如改写内置动作, 添加外部 ahk 脚本).  
 
-**脚本下载**: [https://wyagd001.github.io/RuYi-Ahk/RuYi.zip_2.4](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
+**脚本下载**: [https://wyagd001.github.io/RuYi-Ahk/RuYi.zip_2.5](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [2.5 - 2024/03/20](history.md)
+**当前版本**: [2.5 - 2024/03/24](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
@@ -85,7 +85,7 @@ description: 如意百宝箱-Ahk 简介
      -  .13 [\[2.5+\]](./history.md#2.5)监控剪贴板变化, 监控文件夹变化, 监控窗口变化, 满足条件时自动运行指定的动作
     
 #### <span id="script">外部脚本</span>
-  - 许多动作是由外部的 ahk 脚本来完成的, 它们统一放在 "外部脚本" 目录. 外部脚本在动作中最多支持 3 个命令行参数, 并且支持如意内置的[变量](./var.md). 现在内置的外部动作脚本有 222 个.  
+  - 许多动作是由外部的 ahk 脚本来完成的, 它们统一放在 "外部脚本" 目录. 外部脚本在动作中最多支持 3 个命令行参数, 并且支持如意内置的[变量](./var.md). 现在内置的外部动作脚本有 224 个.  
     [完整的外部脚本列表](scriptlist.md)  
     下面列出了一些内置的外部脚本动作, 第二列为外部动作脚本是否集成在 AnyToAhk.exe(ATA) 中.  
 
