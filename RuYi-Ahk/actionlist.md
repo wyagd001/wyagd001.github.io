@@ -119,7 +119,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1106|e16d|[放入剪贴板](/actions/1106.md)|选中文件|将选中的图形文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像内容放入剪贴板.ahk" "%CandySel%"|
 |1107|e124|[品质压缩](/actions/1107.md)|选中文件|将选中的图形文件品质降低50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像质量压缩一半.ahk" "%CandySel%"|
 |1108|e1a5|[移动到Music](/actions/1108.md)|选中文件|移动选中的文件到动作中指定的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\移动文件到指定文件夹.ahk" "%CandySel%" "G:\Music"|
-|1109|e8c8|[发送到打开的](/actions/1109.md)|选中文件|复制/移动选中文件到当前打开的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\选中文件到打开的文件夹.ahk" "%CandySel%"|
+|1109|e8c8|[发送到打开的](/actions/1109.md)|选中文件|复制/移动选中文件到当前打开的目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\选中文件到打开的文件夹.ahk" "%CandySel%" "c:\123,d:\1 2\345"|
 |1110|f093|[搜索帮助](/actions/1110.md)|选中文本|打开ahk中文帮助文件并跳转到选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Ahk脚本查帮助.ahk" "%CandySel%"|
 |1111|f093|[搜索v2帮助](/actions/1111.md)|选中文本|打开ahkv2中文帮助文件并跳转到选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Ahk2脚本查帮助.ahk" "%CandySel%"|
 |1112|e982|有道翻译|选中文本|使用有道翻译选中的文本(官网已停用免费API)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\有道翻译.ahk" "%CandySel%"|
@@ -576,3 +576,5 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1563|e895|更新引用|无条件|检测如意引用程序更新|Cando&#124;TM_updateYYpro|
 |1564|e8c8|提取文件|选中文件夹|将选中文件夹中的所有文件(不包括文件夹) 复制到同级文件夹中(可指定扩展名)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹下的所有文件到同级目录.ahk" "%CandySel%" "jpg"|
 |1565|e121|天数计算|无条件|计算两个日期之间的天数, 或指定日期加上或减去指定天数得到的日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_天数计算.ahk"|
+|1566|e8c8|发送到|选中文件|复制/移动选中文件到指定的目录, 如果参数2没有指定文件夹则默认为桌面.|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\复制选中文件到指定的文件夹.ahk" "%CandySel%"|
+|1567|eb56|文件头|选中文件|通过文件头判断文件真实扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件头分析文件格式.ahk" "%CandySel%"|
