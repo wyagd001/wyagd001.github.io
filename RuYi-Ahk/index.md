@@ -12,7 +12,7 @@ description: 如意百宝箱-Ahk 简介
 
 **脚本下载**: [https://wyagd001.github.io/RuYi-Ahk/RuYi.zip_2.5](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [2.5 - 2024/03/24](history.md)
+**当前版本**: [2.6 - 2024/04/12](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
@@ -85,7 +85,7 @@ description: 如意百宝箱-Ahk 简介
      -  .13 [\[2.5+\]](./history.md#2.5)监控剪贴板变化, 监控文件夹变化, 监控窗口变化, 满足条件时自动运行指定的动作
     
 #### <span id="script">外部脚本</span>
-  - 许多动作是由外部的 ahk 脚本来完成的, 它们统一放在 "外部脚本" 目录. 外部脚本在动作中最多支持 3 个命令行参数, 并且支持如意内置的[变量](./var.md). 现在内置的外部动作脚本有 224 个.  
+  - 许多动作是由外部的 ahk 脚本来完成的, 它们统一放在 "外部脚本" 目录. 外部脚本在动作中最多支持 3 个命令行参数, 并且支持如意内置的[变量](./var.md). 现在内置的外部动作脚本有 228 个.  
     [完整的外部脚本列表](scriptlist.md)  
     下面列出了一些内置的外部脚本动作, 第二列为外部动作脚本是否集成在 AnyToAhk.exe(ATA) 中.  
 
