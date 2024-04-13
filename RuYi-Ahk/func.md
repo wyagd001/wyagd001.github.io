@@ -39,8 +39,8 @@ description: 如意百宝箱-Ahk 内置函数
 |25|SendTo32770|(Val, key := "")|设置对话框窗口中的 Edit1 控件的值, 并发送指定的按键|动作1547: canfunc&#124;SendTo32770&#124;%CandySel%&#124;{Enter}|
 |26|ShowDBData|(Dtype := "execcount", Stype := "面板", Dnum := 12)|以面板或菜单形式显示动作数据库中运行次数或最近运行的动作|[动作1193](/actions/1193.md): canfunc&#124;ShowDBData&#124;execcount&#124;菜单|
 |27|ABBReSet|字符串: 按钮动作编号|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 重置额外任务栏上按钮的颜色|Cando&#124;ABBReSet|
-|28|ABBSetColor|字符串: 按钮动作编号|背景色|文本颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
-|29|ABTSetTextAndColor|字符串: 文本|颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏顶部区域的文字和颜色|Cando&#124;ABTSetTextAndColor|
+|28|ABBSetColor|字符串: 按钮动作编号\|背景色\|文本颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
+|29|ABTSetTextAndColor|字符串: 文本\|颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏顶部区域的文字和颜色|Cando&#124;ABTSetTextAndColor|
 |30|ActionsR||显示搜索和运行动作的界面|[动作1233](/actions/1233.md): Cando&#124;ActionSR|
 |31|AddToCustomA|选中内容|将指定内容(文件,文件夹,文本) 添加为自定义动作|[动作1536](/actions/1536.md): Cando&#124;AddToCustomA|
 |32|addToLnkFolder|选中文件|发送指定文件的快捷方式到如意的 Lnk 文件夹|Cando&#124;addToLnkFolder|
