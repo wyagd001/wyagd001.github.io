@@ -44,7 +44,7 @@
   </dd>
 
   <dt>Timeout <span class="ver">[AHK_L 42+]</span></dt>
-  <dd><p>如果为空或省略, 默认为 5000, 这同时也是不支持此参数的 AutoHotkey 旧版本的默认行为. 否则, 请指定等待目标窗口处理消息的最大毫秒数. 如果在这时间内消息没有被处理, 则命令结束并设置 ErrorLevel 为单词 FAIL. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
+  <dd><p>如果为空或省略, 默认为 5000, 这同时也是不支持此参数的旧版本 AutoHotkey 的默认行为. 否则, 请指定等待目标窗口处理消息的最大毫秒数. 如果在这时间内消息没有被处理, 则命令结束并设置 ErrorLevel 为单词 FAIL. 指定为 0 表示无限等待. 负数会导致 SendMessage 立即超时. 此参数可以为<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
 
 </dl>
 
@@ -63,7 +63,7 @@
 <p><em>wParam</em> 和 <em>lParam</em> 必须为整数. 如果 AutoHotkey 或目标窗体为 32 位, 那么只有低 32 位被使用; 也就是说, 值将是 -2147483648 到 4294967295(0xFFFFFFFF) 之间. 如果 AutoHotkey 和目标窗体都是 64 位, 那么 <a href="../Variables.htm#cap">AutoHotkey 支持的</a>任何整数值都可以使用. 与 AutoHotkey 支持的所有整数值一样, 前缀 0x 表示一个十六进制值. 例如, 0xFF 等同于 255.</p>
 <p>字符串可以通过 <em>wParam</em> 或 <em>lParam</em> 来传递变量地址(实现传递字符串的效果). 下面的例子演示了通过<a href="../Variables.htm#amp">地址操作符(&amp;)</a> 实现这一效果:</p>
 <pre>SendMessage, 0x000C, 0, <strong>&amp;MyVar</strong>, ClassNN, WinTitle  <em>; 0X000C 为 WM_SETTEXT</em></pre>
-<p><span class="ver">[v1.0.43.06+]</span>: 由消息的接收者放入 <em>MyVar</em> 的字符串可以正确识别而不需要额外的步骤. 不过, 只有在参数的首个字符为和符号(&amp;) 时才可以; 例如, <code>&amp;MyVar</code> 或 <code>&amp;MyVar+5</code> 可以正常工作, 单 <code>5+&amp;MyVar</code> 不能.</p>
+<p><span class="ver">[v1.0.43.06+]</span>: 由消息的接收者放入 <em>MyVar</em> 的字符串可以正确识别而不需要额外的步骤. 不过, 只有在参数的首个字符为和符号(&amp;) 时才可以; 例如, <code>&amp;MyVar</code> 或 <code>&amp;MyVar+5</code> 可以正常工作, 但 <code>5+&amp;MyVar</code> 不能.</p>
 <p>引号包围的(原义) 字符串也可以发送, 例如下面这个可运行示例(此时不应该使用 &amp; 运算符):</p>
 <pre>#Persistent
 ListVars

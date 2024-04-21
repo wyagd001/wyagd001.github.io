@@ -26,8 +26,8 @@
 
   <dt>Text</dt>
   <dd>
-    <p>如果为空或省略, 则移除当前显示的任何托盘提示窗口. 否则, 请指定要显示的消息. 仅显示前 265 个字符. </p>
-    <p>在 Windows 10 中及更高版本中, 要隐藏 toast 通知, 可能需要<a href="#Windows10">临时移除托盘图标</a>.</p>
+    <p>如果为空或省略, 则隐藏当前显示的任何托盘提示窗口. 否则, 请指定要显示的消息. 仅显示前 265 个字符. </p>
+    <p>在 Windows 10 中, 要隐藏 toast 通知, 可能需要<a href="#Windows10">临时移除托盘图标</a>.</p>
     <p>可以使用回车(`r) 或换行(`n) 来创建多行文本. 例如: <code>Line1`nLine2</code>.</p>
       <p>如果 <em>Text</em> 较长, 可以通过<a href="../Scripts.htm#continuation">延续片段</a>的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p>
   </dd>
@@ -39,9 +39,10 @@
     </dd>
 
   <dt>Options</dt>
-  <dd><p>如果为空或省略, 则默认为 0, 即无图标. 否则, 请指定以下零个或多个选项的组合(和):</p>
+  <dd><p>如果为空或省略, 则默认为 0. 否则, 请指定以下零个或多个选项的组合(和):</p>
     <table class="info">
       <tr><th style="width:25em">功能</th><th abbr="Dec">十进制值</th><th abbr="Hex">十六进制值</th></tr>
+      <tr><td>无图标</td><td>0</td><td>0x0</td></tr>
       <tr><td>信息图标</td><td>1</td><td>0x1</td></tr>
       <tr><td>警告图标</td><td>2</td><td>0x2</td></tr>
       <tr><td>错误图标</td><td>3</td><td>0x3</td></tr>
@@ -53,10 +54,11 @@
     </dd>
 
 </dl>
-<h2 id="Remarks">备注</h2>
-<p>在 Windows 10 中, 托盘提示通常是这样的:</p>
-<img src="../static/pics/dlg_traytip.png" alt="TrayTip" />
-<p id="Windows10"><strong>Windows 10 及以后</strong> 默认以 toast 通知替换气球提示窗口(这能通过主策略重置). TrayTip 多次调用通常会导致多个通知被放置在一个 "队列" 而不是每个通知取代最近的那个. 若要隐藏通知, 暂时移除托盘图标可能是有效的. 例如:</p>
+
+<h2 id="Hiding_the_Traytip">隐藏托盘提示</h2>
+<p>若要隐藏托盘提示, 请省略所有参数(或至少省略 <em>Text</em> 参数). 例如:</p>
+<pre>TrayTip</pre>
+<p>要在 Windows 10 上隐藏托盘提示, 临时移除<a href="../Program.htm#tray-icon">托盘图标</a>(根据至少一个报告, 这并不总是工作). 例如:</p>
 <pre>TrayTip #1, This is TrayTip #1
 Sleep 3000   <em>; 让它显示 3 秒钟.</em>
 HideTrayTip()
@@ -73,6 +75,12 @@ HideTrayTip() {
     }
 }
 </pre>
+
+<h2 id="Remarks">备注</h2>
+<p>在 Windows 10 中, 托盘提示通常是这样的:</p>
+<img src="../static/pics/dlg_traytip.png" alt="TrayTip" />
+<p id="Windows10"><strong>Windows 10 及以后</strong> 默认以 toast 通知替换气球提示窗口(这能通过主策略重置). TrayTip 多次调用通常会导致多个通知被放置在一个 "队列" 而不是每个通知取代最近的那个.</p>
+
 <p>如果脚本没有托盘图标(使用 <a href="_NoTrayIcon.htm">#NoTrayIcon</a> 或 <code><a href="Menu.htm">Menu</a>, tray, NoIcon</code>), 则不会显示托盘提示的气球窗口. 同样地, 如果下列的 REG_DWORD 值已经存在且被设置为 0, 则 TrayTip 不起作用:</p>
 <pre>HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced &gt;&gt; EnableBalloonTips</pre>
 <p>相关提示, 每当用户把鼠标悬停在脚本托盘图标上时会显示工具提示. 此工具提示的内容可以使用这样的方法改变: <code><a href="Menu.htm">Menu</a>, Tray, Tip, My New Text</code>.</p>
@@ -87,7 +95,7 @@ HideTrayTip() {
 </div>
 
 <div class="ex" id="ExDisplayTime">
-<p><a class="ex_number" href="#ExDisplayTime"></a> 提供一个更精确的控制显示的时间的方法, 不要使用 Sleep(它会停止当前线程). 对于 Windows 10 及后续版本, 用<a href="#Hide">上面</a>定义的函数替换 HideTrayTip 函数.</p>
+<p><a class="ex_number" href="#ExDisplayTime"></a> 提供一个更精确的控制显示的时间的方法, 不要使用 Sleep(它会停止当前线程). 对于 Windows 10, 用<a href="#Hide">上面</a>定义的函数替换 HideTrayTip 函数.</p>
 <pre>#Persistent
 TrayTip, Timed traytip, This will be displayed for 5 seconds.
 SetTimer, HideTrayTip, -5000

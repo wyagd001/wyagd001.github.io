@@ -292,7 +292,7 @@
   </tr>
   <tr id="asc">
     <td>{ASC nnnnn}</td>
-    <td><p>发送 <kbd>Alt</kbd>+nnnnn 小键盘上的按键组合, 可以用来生成键盘上不存在的特殊字符. 要生成 ASCII 字符, 请指定一个介于 1 和 255 之间的数字. 要生成 ANSI 字符(在大多数语言中的标准), 请指定一个介于 128 和 255 之间的数字, 但需要在数字前加上一个前导零, 例如 {Asc 0133}.</p>
+    <td><p>发送 <kbd>Alt</kbd>+nnnnn 小键盘上的按键组合, 可以用来生成键盘上不存在的特殊字符. 若要从<a href="https://en.wikipedia.org/wiki/Code_page_437">代码页 437</a> 生成可打印的 ASCII 字符或其他字符, 请指定一个介于 1 和 255 之间的数字. 要生成 ANSI 字符(在大多数语言中的标准), 请指定一个介于 128 和 255 之间的数字, 但需要在数字前加上一个前导零, 例如 {Asc 0133}.</p>
     <p>要生成 Unicode 字符, 请指定一个介于 256 和 65535 之间的数字(不带前导零). 但是, 有些应用程序不支持这种方法. 对于替代方法, 请参阅下面的部分.</p></td>
   </tr>
   <tr id="Unicode">
@@ -538,6 +538,7 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <p>由于 SendInput 突出的速度和可靠性, 通常为发送键击和鼠标点击的首选方法. 在大多数情况下, SendInput 是近乎瞬时发送的, 即使在发送长字符串也是如此. 由于 SendInput 如此快速, 所以也更可靠, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断正发送的键击. 可靠性进一步提升是通过把用户在 SendInput 发送期间输入的内容推迟的情况而言.</p>
 <p>与其他发送模式不同, 操作系统限制 SendInput 每次只能发送大约 5000 个字符(此限制可能因操作系统版本和性能设置而有所不同). 超过此限制的字符和事件不会被发送.</p>
 <p class="note"><strong>注意:</strong> SendInput 会忽略 SetKeyDelay, 因为在这种发送模式中操作系统不支持延迟. 但是, 在后面描述的情况中当 SendInput 恢复到 <a href="#SendEvent">SendEvent</a> 时, 它会使用 <code><a href="SetKeyDelay.htm">SetKeyDelay</a> -1, 0</code>(但如果 SendEvent 的按键延迟为 <code>-1, -1</code> 时, 则使用 <code>-1, -1</code>). 当 SendInput 恢复为 <a href="#SendPlayDetail">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
+<p id="SendInputHook">如果脚本安装了<a href="_InstallKeybdHook.htm">底层键盘钩子</a>, SendInput 会在执行之前自动卸载它, 然后重新安装它. 因此, SendInput 通常不能触发脚本自己的钩子热键或 <a href="InputHook.htm">InputHook</a>. 钩子被暂时卸载, 因为它的存在会禁用 SendInput 的所有优点, 使其不如 SendPlay 和 SendEvent. 然而, 这只能对脚本自己的钩子执行, 如果检测到外部钩子, 则不会执行, 如下所述.</p>
 <p id="SendInputUnavail">如果执行 SendInput 脚本外的 <em>其他</em> 脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或 <a href="#SendPlayDetail">SendPlay</a>, 当 <code><a href="SendMode.htm">SendMode</a> InputThenPlay</code> 有效的时候). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 在 <span class="ver">[AutoHotkey v1.0.43+]</span> 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下将不会自动恢复使得比 SendPlay/Event 更不可靠.</p>
 <p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <code><a href="SetMouseDelay.htm">CoordMode</a> Mouse, Relative</code> 有效时(默认), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
 

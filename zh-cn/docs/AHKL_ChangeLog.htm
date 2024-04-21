@@ -17,6 +17,20 @@
 <p>对于较旧的变更, 请参阅<a href="ChangeLogHelp.htm">存档变更</a>.</p>
 
 <!--new revisions go here-->
+<h2 id="v1.1.37.02">1.1.37.02 - 2024 年 3 月 16 日</h2>
+<p>修复 <code>LWin::Alt</code> 无法用于激活某些  Alt-组合键的问题.</p>
+<p>修复 鼠标 AltTab 热键不抑制前缀热键的执行, 例如 <code>1::</code> 对于 <code>1 &amp; WheelDown::AltTab</code>. (由 v1.1.37.00 引入)</p>
+<p>修复 钩子热键不能识别由 SendInput 按下的修饰符的问题.</p>
+<p>修复 一些影响 Alt/Ctrl/Shift/Win 热键被抑制的问题, 例如:</p>
+<ul>
+  <li><code>*LCtrl::</code> 从活动窗口阻止 LCtrl, 但发送 Alt 组合键会失败, 因为系统认为 Ctrl 键已按下, 因此会发送 WM_KEYDOWN 而不是 WM_SYSKEYDOWN.</li>
+  <li><code>*LAlt::</code> 会导致系统忘记任何先前的 <code>{LAlt DownR}</code>, 因此当 LAlt 被物理按下时, 即使 LAlt 被抑制, <code>LCtrl::LAlt</code> 这样的重映射也无法正常运行.</li>
+  <li>系统对修饰符键的底层跟踪与逻辑状态不匹配的其他潜在问题.</li>
+</ul>
+<p>修复 A_Clipboard 忽略纯数值赋值的问题.</p>
+<p>修复 SendInput 在释放 RAlt 后释放 LCtrl 失败的问题(如果它不是 AltGr).</p>
+<p>修复 新线程无法阻止消息检查的问题 with Critical.</p>
+
 <h2 id="v1.1.37.01">1.1.37.01 - 2023 年 7 月 8 日</h2>
 <p>修复 热键由于竞争状态而无法触发的问题. 如果修饰符热键(如 <code>~*RWin::</code>) 太早调用 Send 或 GetKeyState, 操作系统可能会报告 RWin 没有按下, 因此修饰符的钩子的状态将被 "纠正", 热键将错误地触发或无法触发. 只有当另一个键盘钩子比脚本自己的钩子安装得更晚时才可能发生这种情况, 因为在这种情况下,操作系统不会更新按键的状态, 直到另一个钩子的线程恢复并返回.</p>
 <p>修复 热字串使用 #If 设置的最后找到的窗口.</p>

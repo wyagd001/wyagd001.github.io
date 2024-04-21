@@ -632,6 +632,7 @@
   ["GroupClose","lib/GroupClose.htm",6,"SS"],
   ["GroupDeactivate","lib/GroupDeactivate.htm",6,"SS"],
   ["Gui","lib/Gui.htm",6,"SSSS"],
+  ["Gui control options","lib/Gui.htm#ControlOptions"],
   ["Gui control types","lib/GuiControls.htm"],
   ["Gui styles reference","misc/Styles.htm"],
   ["GuiClose (label)","lib/Gui.htm#GuiClose"],
@@ -1304,5 +1305,6 @@
   ["WriteNumType method (File)","lib/File.htm#WriteNum",8],
   ["WS_* (GUI styles)","misc/Styles.htm"],
   ["XButton","KeyList.htm#mouse-advanced"],
-  ["YYYYMMDDHH24MISS","lib/FileSetTime.htm#YYYYMMDD"]
+  ["YYYYMMDDHH24MISS","lib/FileSetTime.htm#YYYYMMDD"],
+  ["ZIP files (copying their contents)","lib/FileCopyDir.htm"]
 ];
