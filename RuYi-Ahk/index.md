@@ -16,6 +16,8 @@ description: 如意百宝箱-Ahk 简介
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
+**其他页面**:  [感谢名单](thanks.md)  
+
 **关键词及目录**: AutoHotkey [快捷键与模式](#hotkey) [面板](#board)  [动作](#action)  [外部脚本](#script)
 
 ### [](#header-3)功能介绍
