@@ -239,8 +239,7 @@ Msgbox Obj2.Var  ; 显示结果 123
 <li><code>base</code> 是一个预定义的属性, 用于获取或设置对象的直接基对象(如 <a href="lib/Any.htm#GetBase">ObjGetBase</a>/<a href="lib/Object.htm#SetBase">ObjSetBase</a>). 它只是一个普通的属性名, 而不是保留的.</li>
 <li>当超类没有定义 x 时, 调用<code>super.x</code> 会产生一个错误, 而以前 <code>base.x</code> 是被忽略的(即使它是一个赋值).</li>
 </ul>
-<p>Calling a user-defined object without explicitly specifying a method name now results in a call to the "Call" method instead of the "" method. For example, <code>%Fn%()</code> previously resulted in a call to <code>Fn.()</code>, but the v2 expression <code>Fn()</code> results in a call to <code>Fn.Call()</code>. <a href="lib/Func.htm">Func</a> objects no longer implement the nameless method. It is no longer valid to omit the method name in a method call, but <code>Fn.%""%()</code> works in place of <code>Fn.()</code>.</p>
-ddddd<p>当 Fn 是一个对象时, <code>Fn()</code>(以前写成 <code>%Fn%()</code>) 现在调用  <code>Fn.Call()</code> 而不是 <code>Fn.()</code>(现在只能写成 <code>Fn.%""%()</code>). 函数不再支持没有名称的方法.</p>
+<p>调用用户定义的对象而不显式指定方法名现在会调用 "Call" 方法而不是 "" 方法. 例如, <code>%Fn%()</code> 以前调用 <code>Fn.()</code>, 但 v2 表达式 <code>Fn()</code> 调用 <code>Fn.Call()</code>. <a href="lib/Func.htm">Func</a> 对象不再实现无名方法. 在方法调用中省略方法名不再有效, 但是 <code>Fn.%""%()</code> 可以代替 <code>Fn.()</code>.</p>
 <p><code>this.Method()</code> 调用 <code>Fn.Call(this)</code>(其中 <em>Fn</em> 是实现该方法的函数对象) 而不是 <code>Fn[this]()</code>(在 v1 中, 这将导致调用 <code>Fn.__Call(this)</code> 除非 <code>Fn[this]</code> 包含一个函数). 函数对象应该实现一个 <em>Call</em> 方法, 而不是 <em>__Call</em>, 后者只用于显式方法调用.</p>
 <p>如果定义了 <em>__New</em>  方法但无法调用它(例如因为参数计数不正确), 或者如果传递了参数但没有定义 <em>__New</em>, <code><i>Classname</i>()</code>(以前的 <code>new <i>Classname</i>()</code>) 现在不能创建对象.</p>
 <p>在表达式中创建的对象或从函数返回的对象现在被保留到表达式计算完成, 然后释放. 这稍微提高了性能, 并允许在表达式中使用临时对象进行内存管理, 而不必担心对象被过早释放.</p>
@@ -1157,6 +1156,7 @@ Gui GuiName: Default</p>
 <p>Progress Gui 控件不再具有默认的 PBS_SMOOTH 样式, 因此它们现在是根据系统的视觉样式来设计的.</p>
 <p>当 DPI 大于 100&nbsp;% 时, 默认的边距和控件尺寸(尤其是 Button 控件) 可能与 v1 版略有不同.</p>
 <p>当图片控件无法通过 <code>GuiCtrl.Value := "new image.png"</code> 设置新图片时, 不再删除当前图片. 但是, 允许通过 <code>GuiCtrl.Value := ""</code> 删除当前图像.</p>
+<p>现在可以省略 <a href="lib/ListView.htm#InsertCol">ListView.InsertCol()</a> 的 <em>ColumnNumber</em> 参数, 这与指定比控件中当前列数更大的列数具有相同的效果.</p>
 <h2 id="error-handling">错误处理</h2>
 <p>在退出脚本之前, <a href="lib/OnError.htm">OnError</a> 现在被调用来处理关键性的错误. 尽管脚本可能不处于安全的执行状态, 但仍会进行尝试, 这与 OnExit 一致.</p>
 <p>运行时错误不再将 <code>Exception.What</code> 设置为当前正在运行的用户定义的函数或子函数(但在调用 <code>Error()</code> 时仍会这样做, 但没有第二个参数). 这给了 <code>What</code> 一个更明确的目的: 函数名称表示该函数的失败(而不是调用该函数或计算其参数的失败). 对于表达式计算和控制流错误, <code>What</code> 是空白的(其他一些也可能是空白).</p>

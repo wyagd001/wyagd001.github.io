@@ -305,7 +305,7 @@ other.test()</pre>
 <p>支持形如 <code>x.y := z</code> 的声明, 但前提是 <code>x</code> 已在类中定义. 如: <code>static x:={},x.y:=42</code> 声明了 <code>x</code> 并初始化了<code><i>ClassName</i>.x.y</code>. 因为 <a href="lib/Class.htm#Prototype">Prototype</a> 是在每个类中隐式定义的, <code>static Prototype.sharedValue := 1</code> 可以用来设置由类的所有实例动态继承的值(直到被实例本身的一个属性所覆盖)</p>
 
 <h4 id="Custom_Classes_class">嵌套类</h4>
-<p>嵌套类定义允许类对象与外部类的静态/类变量关联, 而不是与单独的全局变量关联. 在上面的例子中, <code>class NestedClass</code> 构造了一个<a href="lib/Class.htm">类</a>对象并将其存储在 <code>ClassName.NestedClass</code>. 子类可以继承 <em>NestedClass</em> 也可以用自己的嵌套类覆盖它(在这种情况下, 可以使用 <code>(<i>WhichClass</i>.NestedClass)()</code> 实例化任何合适的类).</p>
+<p>嵌套类定义允许类对象与外部类的静态/类变量关联, 而不是与单独的全局变量关联. 在上面的例子中, <code>class NestedClass</code> 构造了一个<a href="lib/Class.htm">类</a>对象并将其存储在 <code>ClassName.NestedClass</code>. 子类可以继承 <em>NestedClass</em> 也可以用自己的嵌套类覆盖它(在这种情况下, 可以使用 <code><i>WhichClass</i>.NestedClass()</code> 实例化任何合适的类).</p>
 <pre>
 class NestedClass
 {
@@ -313,7 +313,12 @@ class NestedClass
 }
 </pre>
 <p>嵌套一个类并不意味着与外部类有任何特殊的关系. 嵌套类不会自动实例化, 嵌套类的实例也不会与外部类的实例有任何连接, 除非脚本显式地建立连接.</p>
-<p>然而, 由于 <a href="lib/Object.htm">Object</a> 方法的工作方式, <code><i>WhichClass</i>.NestedClass()</code> 隐式传递 <em>WhichClass</em> 为第一个参数, 等同于 <code><i>WhichClass</i>.NestedClass.Call(<i>WhichClass</i>)</code>. 除非 <code>static Call()</code> 被重写, 否则此参数会自动传递给 <a href="#Custom_NewDelete">__New</a>.</p>
+<p>每个嵌套类定义都使用 <em>get</em> 和 <em>call</em> 访问函数生成动态属性, 而不是简单的值属性. 这是为了支持以下行为(其中类 X 包含嵌套类 Y):</p>
+<ul>
+<li><code>X.Y()</code> 不会将 X 传递给 <code>X.Y.Call</code>, 并最终传递给 <code>__New</code>, 否则会发生这种情况, 因为这是作为方法调用的函数对象的正常行为(这就是这里使用嵌套类的方式).</li>
+<li><code>X.Y := 1</code> 默认为错误(该属性为只读).</li>
+<li>第一次引用或调用类会使其初始化.</li>
+</ul>
 
 <h4 id="Custom_Classes_method">方法</h4>
 <p>方法定义看起来和函数定义相同. 每个方法定义都会创建一个 <a href="lib/Func.htm">Func</a>, 带有名为 <code>this</code> 的隐藏的第一个参数, 同时还定义了一个属性, 用于调用该方法或检索其函数对象.</p>
@@ -431,7 +436,7 @@ class GMem<span id="GMem"></span>
 }</pre>
 <p>__Delete 不可被任何具有属性名 "__Class" 的对象所调用. <a href="lib/Class.htm#Prototype">原型对象</a>默认包含该属性.</p>
 <p>如果在 __Delete 执行时抛出了异常或运行时错误, 并且未在 __Delete 中处理, 则它就像从一个新<a href="misc/Threads.htm">线程</a>调用 __Delete. 也就是说, 显示一个错误对话框并 __Delete 返回, 但是线程不会退出(除非它已经退出).</p>
-<p>如果脚本被任何方式直接终止, 包括托盘菜单或 <a href="lib/ExitApp.htm">ExitApp</a>, 任何尚未返回的函数都没有机会返回. 因此, 这些函数的局部变量所引用的任何对象都不会被释放, 所以 __Delete 也不会被调用.</p>
+<p>如果脚本被任何方式直接终止, 包括托盘菜单或 <a href="lib/ExitApp.htm">ExitApp</a>, 任何尚未返回的函数都没有机会返回. 因此, 这些函数的局部变量所引用的任何对象都不会被释放, 所以 __Delete 也不会被调用. Temporary references on the expression evaluation stack are also not released under such circumstances.</p>
 <p>当脚本退出时, 全局变量和静态变量所包含的对象会按照任意的, 实现定义的顺序自动释放. 当 __Delete 在这个过程中被调用时, 一些全局变量或静态变量可能已经被释放, 但对象本身包含的任何引用仍然有效. 因此 __Delete 最好是完全自包含的, 而不依赖于任何全局变量或静态变量.</p>
 
 <h4 id="static__New">类初始化</h4>
@@ -521,19 +526,103 @@ MsgBox "".test  <em>; 1</em>
 
 <h2 id="Implementation">实现</h2>
 <span id="Refs"></span><h3 id="Reference_Counting">引用计数</h3>
-<p>当脚本不再引用对象时, AutoHotkey 使用基本引用计数机制来自动释放对象使用的资源. 脚本作者不应该显式地调用这种机制, 除非打算直接处理未托管的<a href="#ObjPtr">对象的指针</a>.</p>
+<p>当脚本不再引用对象时, AutoHotkey 使用基本的引用计数机制来自动释放对象所使用的资源. 理解这种机制对于正确管理对象的生命周期至关重要, 从而允许在不再需要时删除对象, 而不是在此之前删除对象.</p>
+<p>每当存储引用时, 对象的引用计数就会增加. 当一个引用被释放时, 计数用于确定该引用是否是最后一个引用. 如果是, 则删除该对象; 否则, 计数递减. 下面的例子展示了在一些简单的情况下如何计算引用:</p>
+<pre>
+a := {Name: "Bob"}  <em>; Bob 的引用计数为 1</em>
+b := [a]            <em>; Bob 的引用计数增加到 2</em>
+a := ""             <em>; Bob 的引用计数减为 1</em>
+c := b.Pop()        <em>; Bob 被转换, 引用计数仍为 1</em>
+c := ""             <em>; Bob 被删除...</em>
+</pre>
 <p>表达式中的函数, 方法或运算符返回的临时引用在表达式的计算完成或中止后释放. 在下面的例子中, 新的 GMem 对象只有在 MsgBox 返回后才被释放.</p>
 <pre>MsgBox <a href="lib/DllCall.htm">DllCall</a>("GlobalSize", "ptr", GMem(0, 20).ptr, "ptr")  <em>; 20</em></pre>
 <p class="note"><strong>注意:</strong> 在本例中, <code>.ptr</code> 可以省略, 因为 <a href="lib/DllCall.htm#ptr">Ptr</a> 参数类型允许对象具有 <code>Ptr</code> 属性. 但是, 上面显示的模式甚至可以用于其他属性名.</p>
 <p>如果希望在对象的最后一个引用被释放后运行一段代码, 可通过 <a href="#Custom_NewDelete">__Delete</a> 元函数实现.</p>
-<p><b>已知限制:</b></p>
+<h4 id="refs-problems">引用计数的问题</h4>
+<p>仅仅依赖引用计数有时会造成 catch-22 的情况: 对象被设计为在删除时释放其资源, 但只有在其资源首次被释放时才会被删除. 具体来说, 当这些资源是其他对象或函数时, 通常会间接地保留对对象的引用.</p>
+<p><em>循环引用</em> 或 <em>引用循环</em> 是指对象直接或间接地引用自身. 如果作为循环一部分的每个引用都包含在计数中, 那么除非手动中断循环, 否则无法删除该对象. 例如, 下面的代码创建了一个引用循环:</p>
+<pre>parent := {}  <em>; parent: 1(引用计数)</em>
+child := {parent: parent}  <em>; parent: 2, child: 1</em>
+parent.child := child  <em>; parent: 2, child: 2</em></pre>
+<p>如果变量 <code>parent</code> 和 <code>child</code> 被重新赋值, 每个对象的引用计数将递减为 1. 脚本将无法访问这两个对象, 但不会删除它们, 因为最后的引用没有被释放.</p>
+<p>循环通常不那么明显, 并且可能涉及多个对象. 例如, <a href="lib/Gui.htm#ExRefCycle">ShowRefCycleGui</a> 演示了一个包含 Gui, MenuBar, Menu 和 closures 的循环. 如果处理程序对象有对图形用户界面的引用, 使用单独的对象处理图形用户界面事件也容易造成循环.</p>
+<p>对对象的非循环引用也可能造成问题. 例如, 依赖于 SetTimer 或 OnMessage 等内置函数的对象通常会导致程序持有对该对象的间接引用. 这将防止对象被删除，这意味着它不能使用 __New 和 __Delete 来管理计时器或消息监视器.</p>
+<p>下面是解决上述问题的几个策略.</p>
+<p id="ref-avoid-cycles"><strong>避免循环</strong>: 如果引用循环有问题, 请避免创建它们. 例如, 不设置 <code>parent.child</code> 或 <code>child.parent</code>. 这往往不切实际, 因为相关对象可能需要一种相互引用的方法.</p>
+<p>当为 <a href="lib/GuiOnEvent.htm">OnEvent(Gui)</a> 定义事件处理程序时, 避免在闭包或绑定函数中捕获源 Gui, 而是利用 Gui 或 Gui.Control 参数. 对于 <a href="lib/Menu.htm#Add">Add(Menu)</a> 和回调的 Menu 参数也是如此, 当然, 需要引用 Gui 的菜单项不能使用这种方法.</p>
+<p>在某些情况下, 可以通过不依赖于计数引用的间接方法检索另一个对象. 例如, 保留一个 HWND 并使用 <code>GuiFromHwnd(hwnd)</code> 来检索一个 <a href="lib/Gui.htm">Gui</a> 对象. 在窗口可见时, 保留引用对于防止删除是不必要的, 因为 Gui 本身可以处理这个问题.</p>
+<p id="ref-break-cycles"><strong>中断循环</strong>: 如果脚本可以避免依赖引用计数, 而是直接管理对象的生命周期, 那么它只需要在对象被删除时打破这个循环:</p>
+<pre>child.parent := unset  <em>; parent: 1, child: 2</em>
+child := unset  <em>; parent: 1, child: 1</em>
+parent := unset  <em>; both deleted</em></pre>
+<p id="ref-dispose"><strong>Dispose</strong>: __Delete 在最后一个引用被释放时被调用, 因此人们可能会认为像 <code>myGui := ""</code> 这样的简单赋值是触发对象删除的清理步骤. 有时, 当不再需要对象时, 我们会显式地执行此操作, 但它既不可靠, 也不能真正显示代码的意图. 另一种模式是定义一个释放对象资源的 Dispose 或 Destroy 方法, 并将其设计为在第二次调用时不做任何事情. 然后也可以从 __Delete 调用它, 作为保护措施.</p>
+<p>遵循此模式的对象在被 <em>disposed</em> 时仍然需要打破任何引用循环, 否则一些内存将不会被回收, 而且该对象引用的其他对象也不会调用 __Delete 方法.</p>
+<p>在调用 <a href="lib/Gui.htm#Destroy">Destroy</a> 时, 由 Gui 对象的事件处理程序, 菜单栏或事件接收对象引起的循环会自动 "中断", 因为它释放了这些对象. (在 <a href="lib/Gui.htm#ExRefCycle">ShowRefCycleGui 示例</a>中演示了这一点.) 然而, 这不会破坏脚本添加的新属性引起的循环, 因为 Destroy 并不会删除它们.</p>
+<p>与 Dispose 模式类似, <a href="lib/InputHook.htm">InputHook</a> 有一个必须显式调用的 Stop 方法, 因此它不依赖于 __Delete 来表示其操作何时应该结束. 在操作时, 程序实际上保留了对对象的引用, 以防止对象被删除, 但这成为一种优势而不是缺陷: 事件回调仍然可以被调用, 并将接收 InputHook 作为参数. 当操作结束时, 如果脚本没有对 InputHook 的引用，则释放内部引用, 并删除 InputHook.</p>
+<p id="ref-ptr"><strong>指针</strong>: 存储任意数量的指针值都不会影响对象的引用计数, 因为指针只是一个整数. 使用 <a href="#ObjPtr">ObjPtr</a> 获取的指针可以通过将其传递给 <a href="#ObjFromPtr">ObjFromPtrAddRef</a> 来生成引用. 必须使用该函数的 AddRef 版本, 因为当临时引用自动释放时, 引用计数将递减.</p>
+<p>例如, 假设一个对象需要每秒更新一些属性. 计时器保存对回调函数的引用, 该回调函数将对象绑定为参数. 通常, 这将防止在删除计时器之前删除对象. 存储指针而不是引用允许对象在不考虑计时器的情况下被删除, 因此它可以通过 __New 和 __Delete 自动管理.</p>
+<pre>a := SomeClass()
+Sleep 5500  <em>; 让计时器运行 5 次.</em>
+a := ""
+Sleep 3500  <em>; 防止暂时退出以显示计时器已停止.</em>
+
+class SomeClass {
+	__New() {
+        <em>; 必须存储闭包, 以便以后可以删除计时器.
+        ; 每次需要调用方法时, 合成一个计数引用.</em>
+        this.Timer := (p =&gt; ObjFromPtrAddRef(p).Update()).Bind(ObjPtr(this))
+        SetTimer this.Timer, 1000
+    }
+	__Delete() {
+        SetTimer this.Timer, 0
+        <em>; 如果该对象被真正删除, 则所有属性将被删除
+        ; 并调用以下 __Delete 方法.
+        ; 这只是为了确认, 通常不会使用.</em>
+        this.Test := {__Delete: test =&gt; ToolTip("object deleted")}
+    }
+    <em>; 这只是为了演示计时器正在运行.
+    ; 假设这个类还有其他用途.</em>
+    count := 0
+	Update() =&gt; ToolTip(++this.count)
+}</pre>
+<p>这种方法的缺点是指针不能直接作为对象使用, 并且不能被 <a href="lib/Type.htm">Type</a> 或<a href="AHKL_DBGPClients.htm">调试器</a>识别为对象. 脚本必须绝对确定在对象删除后不使用指针, 因为这样做是无效的, 并且结果将是不确定的.</p>
+<p>如果在多个地方都需要指针引用, 那么封装它可能是有意义的. 例如, <code>b := ObjFromPtrAddRef.Bind(ObjPtr(this))</code> 将产生一个 <a href="misc/Functor.htm#BoundFunc">BoundFunc</a>, 可以调用(<code>b()</code>) 来检索引用, 而 <code>((this, p) =&gt; ObjFromPtrAddRef(p)).Bind(ObjPtr(this))</code> 可以用作属性 getter(属性将返回一个引用).</p>
+<p id="ref-uncounted"><strong>未计数引用</strong>: 如果对象的引用计数包含引用, 则称其为 <em>计数引用</em>, 否则称其为 <em>未计数引用</em>. 后者的思想是允许脚本存储一个引用, 但不妨碍对象被删除.</p>
+<p class="note"><strong>注意:</strong> 这是关于对象的引用计数如何根据脚本的逻辑与给定引用相关, 并且不影响引用本身的性质. 程序仍然会尝试在正常情况下自动释放引用, 因此 <em>弱引用</em> 和 <em>强引用</em> 这两个术语并不合适.</p>
+<p>计数引用可以通过简单地递减对象的引用计数变成未计数引用. 这 <strong>必须</strong> 在释放引用之前反转, 而释放引用 <strong>必须</strong> 在对象被删除之前发生. 由于未计数引用的目的是允许在不首先手动取消引用的情况下删除对象, 因此通常必须在该对象自己的 <a href="#Custom_NewDelete">__Delete</a> 方法中纠正计数.</p>
+<p>例如, 上一个示例中的 __New 和 __Delete 可以用下面的方法代替.</p>
+<pre>	__New() {
+        <em>; The BoundFunc must be stored so that the timer can be deleted later.</em>
+        SetTimer this.Timer := this.Update.Bind(this), 1000
+        <em>; Decrement ref count to compensate for the AddRef done by Bind.</em>
+        ObjRelease(ObjPtr(this))
+    }
+	__Delete() {
+        <em>; Increment ref count so that the ref within the BoundFunc
+        ; can be safely released.</em>
+        ObjPtrAddRef(this)
+        <em>; Delete the timer to release its reference to the BoundFunc.</em>
+        SetTimer this.Timer, 0
+        <em>; Release the BoundFunc. This may not happen automatically
+        ; due to the reference cycle which exists now that the ref
+        ; in the BoundFunc is counted again.</em>
+        this.Timer := unset
+        <em>; If this object is truly deleted, all properties will be
+        ; deleted and the following __Delete method will be called.
+        ; This is just for confirmation and wouldn't normally be used.</em>
+        this.Test := {__Delete: test =&gt; ToolTip("object deleted")}
+    }</pre>
+<p>无论未计数的引用存储在何处以及它的用途如何, 通常都可以应用此方法. 关键是:</p>
 <ul>
-  <li>循环引用必须被打破, 对象才能被释放. 有关详情和示例, 请参阅<a href="#Circular_References">释放对象</a>.</li>
-  <li>虽然程序退出时, 静态和全局变量中的引用会自动释放, 但非静态局部变量或表达式求值堆栈中的引用不会. 只有在函数或表达式能够正常完成时, 才会释放这些引用.</li>
+  <li>存储引用 <em>后</em> 减少引用计数(释放).</li>
+  <li>在取消引用 <em>前</em> 增加引用计数(AddRef).</li>
+  <li>在 __Delete 返回之前显式取消对引用的设置(在调用它之前这样做是可以的).</li>
 </ul>
-<p>虽然当程序退出时, 操作系统会回收对象占用的内存, 但是除非释放了对对象的所有引用, 否则不会调用 <a href="#Custom_NewDelete">__Delete</a>. 如果它释放了操作系统不能自动回收的其他资源, 比如临时文件, 那么这一点很重要.</p>
+<p>引用计数的递增和递减次数必须与未计数的引用次数相同. 如果脚本不能准确地预测某个函数将存储多少引用, 那么这样做可能是不切实际的.</p>
 
 <h3 id="ObjPtr">对象的指针</h3>
+<p>作为创建对象的一部分, 分配一些内存来保存对象的基本结构. 这个结构体本质上就是对象本身, 所以我们称它的地址为 <em>指向对象的指针</em>. 地址是一个整数值, 它对应于当前进程的虚拟内存中的一个位置, 并且只在对象被删除之前有效.</p>
 <p>在一些罕见的情况中, 可能需要通过 DllCall 传递对象到外部代码或把它存储到二进制数据结构以供以后检索. 可以通过 <code>address := ObjPtr(myObject)</code> 来检索对象的地址; 不过, 这样实际上创建了一个对象的两个引用, 但程序只知道对象中的一个. 如果对象的最后一个 <em>已知</em> 引用被释放, 该对象将被删除. 因此, 脚本必须设法通知对象它的引用增加了. 可以这样做(下面两行是等同的):</p>
 <pre>
 ObjAddRef(address := ObjPtr(myObject))

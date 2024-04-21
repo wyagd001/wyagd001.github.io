@@ -30,11 +30,11 @@ CopyOfVar := Var</pre>
 <pre>MyVar := ""</pre>
 <p>变量也可以间接赋值, 通过<a href="#ref">获取它的引用</a>, 并使用<a href="#deref">双重解引</a>或将其传递给一个函数. 例如:</p>
 <pre><a href="lib/MouseGetPos.htm">MouseGetPos</a> &amp;x, &amp;y</pre>
-<p>读取一个没有赋值的变量的值被视为一个错误. <a href="lib/IsSet.htm">IsSet</a> 可以用来检测这种情况.</p>
+<p>读取一个未赋值的变量的值被视为一个错误. <a href="lib/IsSet.htm">IsSet</a> 可以用来检测这种情况.</p>
 <p id="retrieving"><strong>检索变量的内容:</strong> 若要将变量的内容包含在字符串中, 请使用<a href="#concat">连接</a>或 <a href="lib/Format.htm">Format</a>. 例如:</p>
 <pre><a href="lib/MsgBox.htm">MsgBox</a> "变量的值是 " . Var . "."
-MsgBox "变量 Var 中的值为 " Var "."
-MsgBox Format("Var has the value {1}.", Var)
+MsgBox "变量 Var 的值为 " Var "."
+MsgBox Format("Var 的值为 {1}.", Var)
 </pre>
 <p>子表达式可以以同样的方式与字符串组合. 例如:</p>
 <pre>MsgBox("X 和 Y 的和是 " . (X + Y))
@@ -158,9 +158,10 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
       <p><strong>按位左移(&lt;&lt;)</strong>. 使用示例: <code>Value1 &lt;&lt; Value2</code>. 这相当于 <em>Value1</em> 乘以 "2 的 <em>Value2</em> 次幂".</p>
       <p><strong>算术位右移(&gt;&gt;)</strong>. 使用示例: <code>Value1 &gt;&gt; Value2</code>. 这相当于 <em>Value1</em> 除以 "2 的 <em>Value2</em> 次幂" 并将结果四舍五入到数轴左侧最接近的整数; 例如, <code>-3&gt;&gt;1</code> 结果为 -2.</p>
       <p><strong>逻辑位右移(&gt;&gt;&gt;)</strong>. 使用示例: <code>Value1 &gt;&gt;&gt; Value2</code>. 与算术位右移不同, 这并不保留数字的符号. 例如, -1 与无符号的 64 位整数 0xffffffffffffffff 拥有相同的位表示, 因此 <code>-1 &gt;&gt;&gt; 1</code> 结果为 0x7fffffffffffffff.</p>
-      <p>下面的内容适用于所有三个运算符:</p>
+      <p>下面的内容适用于这三个运算符:</p>
       <ul>
         <li>如果任何一个输入是浮点数, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</li>
+        <li>执行 64 位运算, 结果为 64 位有符号整数.</li>
         <li>如果 <em>Value2</em> 小于 0 或大于 63, 则抛出异常.</li>
       </ul>
     </td>
@@ -172,7 +173,11 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     </td>
     <td>
       <p><strong>按位与(&amp;)</strong>, <strong>按位异或(^)</strong> 和 <strong>按位或(|)</strong>. 这三个运算符中, <strong>&amp;</strong> 优先级最高, 而 <strong>|</strong> 优先级最低.</p>
-      <p>如果其中一个输入是浮点数, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</p>
+      <p>下面的内容适用于这三个运算符:</p>
+      <ul>
+        <li>如果其中一个输入是浮点数, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</li>
+        <li>执行 64 位运算, 结果为 64 位有符号整数.</li>
+      </ul>
       <p>相关: <a href="#unary">按位非(~)</a></p>
     </td>
   </tr>
@@ -226,8 +231,7 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
       <td class="center bold">AND<br>
       &amp;&amp;</td>
       <td><p>这两个运算符都是<strong>逻辑与</strong>. 例如: <code>x &gt; 3 and x &lt; 10</code>.</p>
-        dddddd<p>在表达式中, <strong>所有</strong> 运算元都解析为 <em>True</em>, 则返回 <strong>最后</strong >解析为 <em>True</em> 的运算元. 否则, 返回 <strong>第一个</strong> 解析为 <em>False</em> 的运算元. 实际上, 只有当所有运算元都为 true 时, 结果才为 true. 布尔表达式需要进行<a href="Functions.htm#ShortCircuit">求值优化</a>(从左到右) 以提高性能.</p>
-        <p>In an expression where all operands are true, the <u>last</u> operand is returned. Otherwise, the <u>first</u> operand that is false is returned. In other words, the result is true only if all operands are true. Boolean expressions are subject to <a href="Functions.htm#ShortCircuit">short-circuit evaluation</a> (from left to right) to improve performance.</p>
+        <p>在表达式中, 所有运算元都为 true, 则返回 <u>最后的</u> 运算元. 否则, 返回 <u>第一个</u> 为 false 的运算元. 换句话说, 只有当所有运算元都为 true 时, 结果才为 true. 布尔表达式需要进行<a href="Functions.htm#ShortCircuit">求值优化</a>(从左到右) 以提高性能.</p>
         <p>在下面的例子中, 所有运算元都为真, 并都要进行计算:</p>
         <pre>A := 1, B := {}, C := 20, D := true, E := "str"
 MsgBox(A &amp;&amp; B &amp;&amp; C &amp;&amp; D &amp;&amp; E) <em>; 显示 "str"(E).</em></pre>
@@ -240,8 +244,7 @@ MsgBox(A &amp;&amp; B &amp;&amp; ++C &amp;&amp; D &amp;&amp; E) <em>; 显示 ""(
       <td class="center bold">OR<br>
       ||</td>
       <td><p>这两个运算符都是<strong>逻辑或</strong>. 例如: <code>x &lt;= 3 or x &gt;= 10</code>.</p>
-        dddddd<p>在表达式中 <strong>至少</strong> 有一个运算元为 <em>True</em>, 则返回 <strong>第一个</strong> 解析为 <em>True</em> 的运算元. 否则, 则返回 <strong>最后</strong> 解析为 <em>False</em> 的运算元. 实际上, 只要有一个运算元为真, 结果就为真. 布尔表达式需要进行<a href="Functions.htm#ShortCircuit">求值优化</a>(从左到右) 以提高性能.</p>
-        <p>In an expression where at least one operand is true, the <u>first</u> operand that is true is returned. Otherwise, the <u>last</u> operand that is false is returned. In other words, if at least one operand is true, the result is true. Boolean expressions are subject to <a href="Functions.htm#ShortCircuit">short-circuit evaluation</a> (from left to right) to improve performance.</p>
+        <p>在表达式中, 至少有一个运算元为 true, 则返回 <u>第一个</u> 为 true 的运算元. 否则, 返回 <u>最后一个</u> 为 false 的运算元. 换句话说, 只要有一个运算元为真, 结果就为真. 布尔表达式需要进行<a href="Functions.htm#ShortCircuit">求值优化</a>(从左到右) 以提高性能.</p>
         <p>在下面的示例中, 至少有一个运算元为真. 直到 D(包括) 的所有运算元都要进行计算. E 被忽略, 并始终不会自增:</p>
         <pre>A := "", B := false, C := 0, D := "str", E := 20
 MsgBox(A || B || C || D || ++E) <em>; 显示 "str"(D).</em></pre>
@@ -314,7 +317,7 @@ sumfn := Sum</pre>
     <td><p><strong>逗号(多语句)</strong>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.</p>
       <p class="note"><strong>注意:</strong> 以逗号(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾. 另请参阅: <a href="#CommaPerf">逗号的性能</a>.</p>
       <p>逗号还用于分隔函数调用的或控制流语句的参数. 若要在参数列表中包含多语句表达式, 请用一组额外的圆括号将其括起来. 例如, <code>MyFn((x, y))</code> 计算 x 和 y, 但传递 y 作为 MyFn 的第一个也是唯一一个参数.</p>
-      <p id="CommaPerf">逗号运算符通常比单独编写的表达式执行得更好, 特别是当将一个变量赋值给另一个变量时(例如 <code>x:=y, a:=b</code>). 随着越来越多的表达式被组合成单个表达式, 性能不断提高; 例如, 将五个或十个简单表达式组合成一个表达式可能会快 35&nbsp;%.</p>
+      <p id="CommaPerf">与 AutoHotkey v1 相比, 逗号运算符的性能通常不如编写单独的表达式. 随着越来越多的表达式被组合成单个表达式, 性能不断降低; 例如, 将五个或十个简单表达式组合成一个表达式可能会慢 35&nbsp;%. 在组合函数调用时可能会出现例外.</p>
     </td>
   </tr>
 </table>
@@ -405,12 +408,9 @@ sumfn := Sum</pre>
   </tr>
   <tr id="WorkingDir">
     <td>A_WorkingDir</td>
-    dddddd<td><p>可以用来获取或设置脚本当前工作目录, 这是访问文件的默认路径. 除非是根目录, 否则路径末尾不包含反斜杠. 两个示例: <code>C:\</code> 和 <code>C:\My Documents</code>.</p>
-    <p>使用 <a href="lib/SetWorkingDir.htm">SetWorkingDir</a> 或赋值路径到 A_WorkingDir 可以改变当前工作目录.</p>
-    <p>无论脚本是如何启动的, 脚本的工作目录默认为 A_ScriptDir.</p>dddddd</td>
-<td><p>Can be used to get or set the script's current working directory, which is where files will be accessed by default. The final backslash is not included unless it is the root directory. Two examples: C:\ and C:\My Documents.</p>
-    <p><a href="lib/SetWorkingDir.htm">SetWorkingDir</a> can also be used to change the working directory.</p>
-    <p>The script's working directory defaults to <a href="#ScriptDir">A_ScriptDir</a>, regardless of how the script was launched.</p></td>
+    <td><p>可以用来获取或设置脚本当前工作目录, 这是访问文件的默认路径. 除非是根目录, 否则不包含路径末尾的反斜杠. 两个示例: C:\ 和 C:\My Documents.</p>
+    <p><a href="lib/SetWorkingDir.htm">SetWorkingDir</a> 也可以用来改变工作目录.</p>
+    <p>无论脚本是如何启动的, 脚本的工作目录默认为 <a href="#ScriptDir">A_ScriptDir</a>.</p></td>
   </tr>
   <tr id="InitialWorkingDir">
     <td>A_InitialWorkingDir</td>
@@ -425,10 +425,8 @@ sumfn := Sum</pre>
   <tr id="ScriptName">
     <td>A_ScriptName</td>
     <td>
-      dddddd<p>可以用来获取或设置 MsgBox, InputBox, FileSelect, DirSelect 和 Gui 的默认标题. 如果脚本没有设置, 它默认为当前脚本的文件名, 不包括路径, 例如 MyScript.ahk.</p>
-      <p>如果脚本文字是从<a href="Scripts.htm#stdin">标准输入中读取的</a>而不是从文件中读取的, 默认值为 "*".dddddd</p>
- <p>Can be used to get or set the default title for <a href="lib/MsgBox.htm">MsgBox</a>, <a href="lib/InputBox.htm">InputBox</a>, <a href="lib/FileSelect.htm">FileSelect</a>, <a href="lib/DirSelect.htm">DirSelect</a> and <a href="lib/Gui.htm">Gui</a>. If not set by the script, it defaults to the file name of the current script, without its path, e.g. MyScript.ahk.</p>
-      <p>If the script text is <a href="Scripts.htm#stdin">read from stdin</a> rather than from file, this variable contains an asterisk (*).</p>
+      <p>可用于获取或设置 <a href="lib/MsgBox.htm">MsgBox</a>, <a href="lib/InputBox.htm">InputBox</a>, <a href="lib/FileSelect.htm">FileSelect</a>, <a href="lib/DirSelect.htm">DirSelect</a> 和 <a href="lib/Gui.htm">Gui</a> 的默认标题. 如果脚本没有设置, 则默认为当前脚本的文件名, 不包括路径, 例如 MyScript.ahk.</p>
+      <p>如果<a href="Scripts.htm#stdin">从标准输入中读取</a>而不是从文件中读取的脚本文本, 则该变量包含一个星号(*).</p>
       <p>如果脚本是<a href="Scripts.htm#ahk2exe">编译的</a>或<a href="Program.htm#embedded-scripts">嵌入的</a>, 这就是当前可执行文件的名称.</p>
     </td>
   </tr>
@@ -582,7 +580,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="IsCritical">
     <td>A_IsCritical</td>
-    dddddd<td>如果<a href="misc/Threads.htm">当前线程</a>的 <a href="lib/Critical.htm">Critical</a> 是关闭时值为 0. 否则值为大于零的整数, 即为 Critical 使用的<a href="lib/Critical.htm#Interval">消息检查间隔</a>. Critical 的当前状态可以通过 <code>Old_IsCritical := A_IsCritical</code> 然后是 <code>Critical := Old_IsCritical</code> 来保存和恢复.dddddd</td>
+    <td>如果<a href="misc/Threads.htm">当前线程</a>的 <a href="lib/Critical.htm">Critical</a> 关闭时, 则值为 0. 否则值为大于零的整数, 即为 Critical 使用的<a href="lib/Critical.htm#Interval">消息检查间隔</a>. Critical 的当前状态可以通过 <code>Old_IsCritical := A_IsCritical</code> 然后是 <code>Critical Old_IsCritical</code> 来保存和恢复.</td>
   </tr>
   <tr id="ListLines">
     <td>A_ListLines</td>

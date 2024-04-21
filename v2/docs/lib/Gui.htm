@@ -518,6 +518,7 @@ MyGui.SetFont(, "Verdana")  <em>; 优选字体.</em></pre></dd>
 <p>构造一个新的 Gui 实例.</p>
 <pre class="Syntax">MyGui.<span class="func">__New</span>(<span class="optional">Options, Title, EventObj</span>)</pre>
 <p>Gui 子类可以覆盖 __New 并调用 <code>super.__New(Options, Title, this)</code>  来处理它自己的事件. 在这种情况下, 主窗口的事件(如关闭) 不会传递一个显式的 Gui 参数, 因为 <code>this</code> 已经包含了对 Gui 的引用.</p>
+<p>The Gui retains a reference to <em>EventObj</em> for the purpose of calling event handlers, and releases it when the window is destroyed. If <em>EventObj</em> itself contains a reference to the Gui, this would typically create a circular reference which prevents the Gui from being <a href="#Destroy">automatically destroyed</a>. However, an exception is made for when <em>EventObj</em> is the Gui itself, to avoid a circular reference in that case.</p>
 <p>如果窗口已经被构造或销毁, 则抛出异常.</p>
 </div>
 
@@ -777,7 +778,7 @@ MyGui.Show()
 
 MoveBar(*)
 {
-    Loop Files, A_WinDir "\*.*"
+    Loop Files, A_WinDir "\*.*", "R"
     {
         if (A_Index &gt; 100)
             break
@@ -954,5 +955,37 @@ Gui_Size(thisGui, MinMax, Width, Height)
     MainEdit.Move(,, Width-20, Height-20)
 }</pre>
 </div>
+
+<div class="ex" id="ExRefCycle">
+<p><a class="ex_number" href="#ExRefCycle"></a> Demonstrates <a href="../Objects.htm#refs-problems">problems caused by reference cycles</a>.</p>
+<pre>
+; Click Open or double-click tray icon to show another GUI.
+; Use the menu items, Escape or Close button to see how it responds.
+A_TrayMenu.Add("&amp;Open", ShowRefCycleGui)
+Persistent
+
+ShowRefCycleGui(*) {
+    static n := 0
+    g := Gui(, "GUI #" (++n)), g.n := n
+    g.MenuBar := mb := MenuBar()   <em>; g -&gt; mb</em>
+    mb.Add("Gui", m := Menu())     <em>; mb -&gt; m</em>
+    m.Add("Hide", (*) =&gt; g.Hide()) <em>; (*) -&gt; g</em>
+    m.Add("Destroy", (*) =&gt; g.Destroy())
+    <em>; For a GUI event, the callback parameter can be used to avoid a
+    ; reference cycle (using the same name prevents accidental capture).
+    ; However, Hide() doesn't break the *other* reference cycles.</em>
+    g.OnEvent("Escape", (g, *) =&gt; g.Hide())
+    <em>; Capturing the variable can work out in our favour.</em>
+    g.OnEvent("Close", (*) =&gt; g := unset)
+    g.Show("w300 h200")
+    <em>; __Delete is not called due to the reference cycle:
+    ;   g -&gt; mb -&gt; m -&gt; (*) -&gt; g
+    ; unless g is unset by triggering the Close event,
+    ; or MenuBar and event handlers are released by Destroy.</em>
+    g.__Delete := this =&gt; MsgBox("GUI #" this.n " deleted")
+}
+</pre>
+</div>
+
 </body>
 </html>
