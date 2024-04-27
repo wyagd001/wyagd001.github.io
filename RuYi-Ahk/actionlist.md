@@ -406,7 +406,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1393|e188@8D5E2F|[棕色图标](/actions/1382.md)|选中文件夹|将文件夹的图标设置为棕色.ico|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\彩色文件夹.ahk" "%CandySel%" "棕色"|
 |1394|ef3b|测试|选中对象|测试插件脚本里的例子2|canfunc&#124;ExecSendToDll&#124;%CandySel%&#124;1394|
 |[1395](http://127.0.0.1:5151/runcom?aabb=1395)|e11a|Ahk Spy|无条件|第三方的 Autohotkey Spy|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\AhkSpy.ahk"|
-|1396|e11a|IconEx|选中文件|提取文件(Exe, Dll) 中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\IconEx.ahk" %CandySel%|
+|1396|e11a|IconEx|选中文件|提取文件(Exe, Dll) 中的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\IconEx.ahk" "%CandySel%"|
 |1397|e8c1|Id3v2|选中文件|读取修改音频文件的标签|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\音频文件标签.ahk" "%CandySel%"|
 |1398|e8c1|deepl|选中文本|使用deepl翻译选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Deepl翻译.ahk" "%CandySel%"|
 |1399|e97c|[设为壁纸](/actions/1399.md)|选中文件|将选中图片文件设置为桌面壁纸(第二块屏幕)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_设置壁纸.ahk" "%CandySel%" "2"|
@@ -448,7 +448,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1435](http://127.0.0.1:5151/runcom?aabb=1435)|ec77|恢复桌面位置|无条件|利用先前保存的文件恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复桌面图标位置.ahk" "restore"|
 |[1436](http://127.0.0.1:5151/runcom?aabb=1436)|ef3c|[获取颜色](/actions/1436.md)|无条件|查看选中数字对应的颜色, 并带有取色功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\取色小程序.ahk" "%CandySel%"|
 |[1437](http://127.0.0.1:5151/runcom?aabb=1437)|f16a|[暂时隐藏](/actions/1437.md)|任意窗口|将任意窗口暂时隐藏 3 秒后恢复显示(任务栏按钮会被放到同类的最右边)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\暂时隐藏窗口.ahk" "%Windy_CurWin_id%"|
-|1438|e8e7|[保存并运行](/actions/1438.md)|选中文本|将选中 Ahk 保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun&#124;CandySel_Rich|
+|1438|e8e7|[保存并运行](/actions/1438.md)|选中文本|将选中 Ahk 代码文本保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun&#124;CandySel_Rich|
 |1439|E70F|[打开本地网页](/actions/1439.md)|Chrome|使用文本编辑器打开浏览器正在浏览的本地文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\记事本打开浏览器当前浏览的本地文件.ahk" "%Windy_CurWin_Class%"|
 |[1440](http://127.0.0.1:5151/runcom?aabb=1440)|E107|[回收站预览](/actions/1440.md)|无条件|显示当前登录用户的回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\当前用户回收站中的文件信息.ahk"|
 |[1441](http://127.0.0.1:5151/runcom?aabb=1441)|f58b|系统切换任务|无条件|显示系统切换窗口界面|Keys&#124;^!{Tab}|
@@ -581,3 +581,15 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1568|ea5b|贴边隐藏|任意窗口|窗口贴边隐藏, 参数为上下左右,鼠标移到边缘后自动显示隐藏窗口,鼠标移开后继续自动隐藏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_贴边隐藏.ahk" "%Windy_CurWin_id%" "左"|
 |1569|e995|音量控制|无条件|控制扬声器,麦克风等播放录制设备的音量|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\音量控制.ahk"|
 |1570|e1d6|麦克风静音|无条件|所有麦克风静音切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\麦克风静音.ahk"|
+|1571|e812|转上标|选中文本|如果有选中文本, 将选中字符转为上标,如果没有选中字符, 则选择前一个字符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\字符转上标.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1572|e813|转下标|选中文本|如果有选中文本, 将选中字符转为下标,如果没有选中字符, 则选择前一个字符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\字符转下标.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1573|e164|ASCII|无条件|ASCII 字符表和网络字符表|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\ASCII.ahk" "%CandySel%"|
+|1574|e823|世界时钟|无条件|世界时钟|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_世界时钟.ahk"|
+|1575|e916|倒计时|无条件|倒计时, 默认为 5 分钟倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_倒计时.ahk" "300"|
+|1576|e916|距离高考|无条件|距离高考天数倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_距离天数.ahk" "20240607" "高考" "1"|
+|1577|e916|金额大写|选中文本|数字金额转中文大写|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\金额大写.ahk" "%CandySel%"|
+|1578|e916|启动服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Start"|
+|1579|e916|停止服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Stop"|
+|1580|e916|服务列表|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Active" "List"|
+|1581|e916|服务信息|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Info"|
+|1582|e916|禁用服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "4"|
