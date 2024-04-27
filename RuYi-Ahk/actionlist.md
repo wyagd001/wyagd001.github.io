@@ -587,9 +587,9 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1574|e823|世界时钟|无条件|世界时钟|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_世界时钟.ahk"|
 |1575|e916|倒计时|无条件|倒计时, 默认为 5 分钟倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_倒计时.ahk" "300"|
 |1576|e916|距离高考|无条件|距离高考天数倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_距离天数.ahk" "20240607" "高考" "1"|
-|1577|e916|金额大写|选中文本|数字金额转中文大写|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\金额大写.ahk" "%CandySel%"|
-|1578|e916|启动服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Start"|
-|1579|e916|停止服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Stop"|
-|1580|e916|服务列表|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Active" "List"|
-|1581|e916|服务信息|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Info"|
-|1582|e916|禁用服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "4"|
+|1577|e713|金额大写|选中文本|数字金额转中文大写|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\金额大写.ahk" "%CandySel%"|
+|1578|e713|启动服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Start"|
+|1579|e713|停止服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Stop"|
+|1580|e713|服务列表|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Active" "List"|
+|1581|e713|服务信息|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Info"|
+|1582|e713|禁用服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "4"|
