@@ -581,8 +581,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1568|ea5b|贴边隐藏|任意窗口|窗口贴边隐藏, 参数为上下左右,鼠标移到边缘后自动显示隐藏窗口,鼠标移开后继续自动隐藏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_贴边隐藏.ahk" "%Windy_CurWin_id%" "左"|
 |1569|e995|音量控制|无条件|控制扬声器,麦克风等播放录制设备的音量|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\音量控制.ahk"|
 |1570|e1d6|麦克风静音|无条件|所有麦克风静音切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\麦克风静音.ahk"|
-|1571|e812|转上标|选中文本|如果有选中文本, 将选中字符转为上标,如果没有选中字符, 则选择前一个字符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\字符转上标.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
-|1572|e813|转下标|选中文本|如果有选中文本, 将选中字符转为下标,如果没有选中字符, 则选择前一个字符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\字符转下标.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1571|e812|[转上标](/actions/1571.md)|选中文本|如果有选中文本, 将选中字符转为上标,如果没有选中字符, 则选择前一个字符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\字符转上标.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1572|e813|[转下标](/actions/1572.md)|选中文本|如果有选中文本, 将选中字符转为下标,如果没有选中字符, 则选择前一个字符|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\字符转下标.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1573|e164|ASCII|无条件|ASCII 字符表和网络字符表|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\ASCII.ahk" "%CandySel%"|
 |1574|e823|世界时钟|无条件|世界时钟|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_世界时钟.ahk"|
 |1575|e916|倒计时|无条件|倒计时, 默认为 5 分钟倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_倒计时.ahk" "300"|
