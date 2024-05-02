@@ -180,7 +180,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1167|E8FF|打印预览|WPS 表格|Excel, WPS 表格快捷键, 按下 Ctrl+F2, 打印预览|Keys&#124;^{F2}|
 |[1168](http://127.0.0.1:5151/runcom?aabb=1168)|eb55|[关闭显示器](/actions/1168.md)|无条件|关闭显示器屏幕(黑屏)|canfunc&#124;CF_CloseScreen|
 |1169|E71B|[复制路径](/actions/1169.md)|注册表|复制注册表窗口打开的路径到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\注册表定位.ahk"|
-|1170|e16d|复制内容|选中文件|复制文本文件内容到剪贴板|canfunc&#124;CF_FileToClip&#124;%CandySel%|
+|1170|e16d|[复制内容](/actions/1170.md)|选中文件|复制文本文件内容到剪贴板|canfunc&#124;CF_FileToClip&#124;%CandySel%|
 |1171|e9a6|[截取窗口](/actions/1171.md)|任意窗口|截取窗口并存入脚本所在目录的截图目录中(客户区域不带窗口标题栏)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk" "" "Window"|
 |[1172](http://127.0.0.1:5151/runcom?aabb=1172)|f617|[截取屏幕](/actions/1172.md)|无条件|截取显示器屏幕并存入脚本所在目录的截图目录中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\截图.ahk"|
 |1173|ed14|[二维码](/actions/1173.md)|选中文本|选中文字生成二维码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\生成二维码.ahk" "%CandySel%"|
@@ -593,3 +593,9 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1580|e713|服务列表|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Active" "List"|
 |1581|e713|服务信息|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Info"|
 |1582|e713|禁用服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "4"|
+|1583|e713|启动服务|选中文本|启动选中的服务|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "%CandySel%" "Start"|
+|1584|e713|嵌入桌面|任意窗口|将选中的窗口嵌入桌面(将桌面设为窗口的父窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_嵌入桌面.ahk" "%Windy_CurWin_id%"|
+|1585|e713|修改计算机名|无条件|修改计算机名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\修改计算机名.ahk"|
+|1586|e93c|窗口穿透|无条件|当前窗口透明并穿透,使鼠标能操作下层窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口穿透.ahk" "%Windy_CurWin_Id%"|
+|1587|e750|系统错误|无条件|查询系统错误编号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查询系统错误编号.ahk" "%CandySel%"|
+|1588|edc6|一键替换|选中文本|将选中文本一键替换为预设的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\一键替换.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
