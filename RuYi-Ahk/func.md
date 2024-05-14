@@ -72,4 +72,5 @@ description: 如意百宝箱-Ahk 内置函数
 |58|TM_UpdateCheck||检测如意主程序更新|Cando&#124;TM_UpdateCheck|
 |59|TM_updatewbscript||检测如意外部脚本更新|Cando&#124;TM_updatewbscript|
 |60|TM_updateYYpro||检测如意引用程序更新|Cando&#124;TM_updateYYpro|
-
+|61|CF_WinMoveBottom|(WinId)|传入窗口句柄, 使窗口置底|[动作1594](/Actions/1594.md): canfunc&#124;CF_WinMoveBottom&#124;%Windy_CurWin_id%|
+|62|CF_WinSetTitle|(WinId)|传入窗口句柄, 修改窗口标题|[动作1595](/Actions/1595.md): canfunc&#124;CF_WinSetTitle#124;%Windy_CurWin_id%|

@@ -43,8 +43,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1030|e728|通用目录|菜单|一些通用的目录面板(我的电脑,回收站等)|menu&#124;通用目录|
 |1031|E734|通用目录|子面板|一些通用的目录面板(我的电脑,回收站等)|GUI&#124;通用目录|
 |1032|E734|收藏夹|子面板|自定义的目录收藏夹|GUI&#124;自定义收藏夹|
-|1033|f617|[水平最大化](/actions/1033.md)|任意窗口|水平最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "水平最大化"|
-|1034|f616|[垂直最大化](/actions/1034.md)|任意窗口|垂直最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "垂直最大化"|
+|1033|f617|[水平最大化](/actions/1033.md)|任意窗口|水平最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "%Windy_CurWin_id%" "水平最大化"|
+|1034|f616|[垂直最大化](/actions/1034.md)|任意窗口|垂直最大化|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口移动.ahk" "%Windy_CurWin_id%" "垂直最大化"|
 |1035|e728|通用2|子面板|选中文件的通用动作的子面板2|GUI&#124;文件通用2|
 |1036|efa5|文件改名|选中文件|修改选中的文本文件的名称和扩展名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名修改.ahk" "%candysel%"|
 |1037|f87e|[打开选中](/actions/1037.md)|选中对象|运行选中的文本(路径(程序, 文件, 目录), 网址, 注册表地址)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\运行选中的文本.ahk" "%CandySel%"|
@@ -161,7 +161,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1148](http://127.0.0.1:5151/runcom?aabb=1148)|e703|库|无条件|打开库|run&#124;::{031E4825-7B94-4DC3-B131-E946B44C8DD5}|
 |1149|e16d|[复制目标路径](/actions/1149.md)|选中Lnk文件|复制快捷方式的目标路径到剪贴板|Canfunc&#124;CF_FileGetShortcut&#124;%CandySel%|
 |[1150](http://127.0.0.1:5151/runcom?aabb=1150)|E756|PowerShell|无条件|打开 PowerShell|run&#124;powershell|
-|1151|e16d|[复制命令行](/actions/1151.md)|任意窗口|复制窗口进程命令行到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制窗口命令行.ahk" "%Windy_CurWin_id%"|
+|1151|e16d|[复制命令行](/actions/1151.md)|任意窗口|复制窗口进程命令行到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\复制窗口命令行.ahk" "%Windy_CurWin_Pid%"|
 |1152|f6fa|[Bing搜索](/actions/1152.md)|选中文本|Bing搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://cn.bing.com/search?q=%CandySel%|
 |1153|f6fa|[Baidu/Bing](/actions/1153.md)|Chrome|百度 Bing 切换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\百度Bing切换.ahk" "%Windy_CurWin_Class%"|
 |1154|f6fa|[京东搜索](/actions/1154.md)|选中文本|京东搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.jd.com/Search?keyword=%CandySel%|
@@ -221,7 +221,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1208|eb9f|关联图标|选中文件|保存选中文件关联的图标到文件所在文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\关联图标存为png文件.ahk" "%CandySel%" ".png"|
 |[1209](http://127.0.0.1:5151/runcom?aabb=1209)|eb9f|测试|无条件|测试插件脚本里的例子|canfunc&#124;ExecSendToDll&#124;%CandySel%|
 |1210|ed11|[完整歌单](/actions/1210.md)|Chrome|Chrome 浏览器开启网页端网易云的完整歌单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:document.cookie='os=pc';f()"|
-|1211|ea47|[下一页](/actions/1211.md)|Chrome|Chrome 浏览器自动下一页|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:var Re=new RegExp('(下~&#124;后)(一~&#124;\s)*(页~&#124;頁~&#124;章~&#124;篇~&#124;翻)','i');var a=document.getElementsByTagName('A');for(var i=0;i<a.length;i++){if(Re.test(a[i].innerHTML)){if(a[i].href.substr(0,11).toLowerCase()=='javascript:')a[i].click();else document.location.href=a[i].href;break}}"|
+|1211|ea47|[下一页](/actions/1211.md)|Chrome|Chrome 浏览器自动下一页|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "javascript:var Re=new RegExp('(下~&#124;后)(一~&#124;\s)&#42;(页~&#124;頁~&#124;章~&#124;篇~&#124;翻)','i');var a=document.getElementsByTagName('A');for(var i=0;i<a.length;i++){if(Re.test(a[i].innerHTML)){if(a[i].href.substr(0,11).toLowerCase()=='javascript:')a[i].click();else document.location.href=a[i].href;break}}"|
 |1212|ed11|[Ini_Fav](/actions/1212.md)|选中文件|Ini 文件显示为菜单(作为收藏夹使用)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_收藏夹菜单.ahk" "%CandySel%"|
 |1213|ed11|[Ini_Opw](/actions/1213.md)|选中文件|Ini 文件显示为程序菜单, 使用菜单中的程序打开选中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\Ini_程序打开选中文件.ahk" "%CandySel%"|
 |1214|f6fa|[百度搜索](/actions/1214.md)|选中文件|百度搜索选中文件的文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel_FileName%|
@@ -317,7 +317,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1304|f16c|[添加 ADS](/actions/1304.md)|选中文件|为选中的文件添加文本的 ADS 流(流名称为 ADS1, ADS2)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\添加文本到 ADS 流.ahk" "%CandySel%"|
 |1305|ed5a|[HTML转文本](/actions/1305.md)|剪贴板|将剪贴板中的 HTML 源代码去掉标签转换为纯文本后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转纯文本后粘贴.ahk"|
 |1306|ed5a|[文本转HTML](/actions/1306.md)|剪贴板|将剪贴板中的 HTML 源代码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中源代码转html后粘贴.ahk"|
-|1307|e844|[中英符号](/actions/1307.md)|选中文本|选中的单个标点符号中英互转(没选中时光标在标点后也可以进行转换)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中英文符号转换.ahk" "%CandySel%"|
+|1307|e844|[中英符号](/actions/1307.md)|选中文本|选中的单个标点符号中英互转(没选中时光标在标点后也可以进行转换)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\中英文符号转换.ahk" "%CandySel%" "%Windy_CurWin_id%"|
 |1308|E77F|粘贴All|ET|将当前选中的单元格内容复制到所有以数字为名称的工作表的相同位置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_当前单元格内容复制到所有数字名称的工作表相同位置.ahk"|
 |1309|f32a|软链接管理|选中文件夹|列出选中文件夹的软链接文件和文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件软链接.ahk" "%CandySel%"|
 |1310|f32a|硬链接管理|选中文件夹|列出选中文件夹的硬链接文件和文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\管理文件硬链接.ahk" "%CandySel%"|
@@ -551,8 +551,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1538|e8e3|设置正文|选中文本|WPS_设置正文格式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\WPS_设置正文格式.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1539|e191|单元格底色|选中文本|ET_设置单元格底色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_设置单元格底色.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1540|e72d|发送到Lnk|选中文件|发送选中文件的快捷方式到如意的 Lnk 文件夹|Cando&#124;addToLnkFolder|
-|1541|e8b0|移动窗口|任意窗口|移动窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "移动窗口"  "%Windy_CurWin_Id%"|
-|1542|e92d|窗口大小|任意窗口|拖动右键,改变窗口的大小|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "窗口大小"|
+|1541|e8b0|移动窗口|任意窗口|移动窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "%Windy_CurWin_Id%" "移动窗口"|
+|1542|e92d|窗口大小|任意窗口|拖动右键,改变窗口的大小|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\任意位置移动窗口.ahk" "%Windy_CurWin_Id%" "窗口大小"|
 |1543|e8f4|[批量文件](/actions/1543.md)|选中文件夹|在选中文件夹下批量创建文件(文件夹), 一行一个|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_批量创建文件.ahk" "%CandySel%" "X"|
 |1544|e7b3|[验证身份证](/actions/1544.md)|选中文本|选中身份证号码, 验证是否有效|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\验证身份证号码.ahk" "%CandySel%"|
 |1545|e12b|密码管理|Chrome|Chrome 浏览器密码管理器|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\Chrome地址栏打开.ahk" "chrome://password-manager/passwords"|
@@ -562,7 +562,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1549|f1ad|搜狗输入法|任意窗口|激活搜狗拼音输入法|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\激活指定输入法.ahk" "搜狗拼音输入法" %Windy_CurWin_id%|
 |1550|E77F|显示剪贴板|剪贴板|显示剪贴板当前的内容|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\显示剪贴板内容.ahk"|
 |1551|f408|设置权限EO|选中文件|设置选中文件(夹)的权限|run&#124;cmd.exe /c takeown /f "%candysel%" && icacls "%candysel%" /grant EveryOne:F|
-|1552|e8c1|语言设置|无条件|打开系统语言设置(Win7+)@控制面板|run&#124;rundll32.exe shell32.dll`,Control_RunDLL input.dll|
+|1552|e8c1|语言设置|无条件|打开系统语言设置(Win7+)@控制面板|run&#124;rundll32.exe shell32.dll,Control_RunDLL input.dll|
 |1553|e759|OCR|选中文件|使用本地OCR识别本地图片|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\本地OCR(Vis2).ahk" "%CandySel%"|
 |1554|E753|天气|无条件|利用免费的天气api显示当天气温|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\天气.ahk" "101300501"|
 |1555|e121|农历时间|无条件|显示农历时间|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_显示农历.ahk"|
@@ -594,8 +594,19 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1581|e713|服务信息|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Info"|
 |1582|e713|禁用服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "4"|
 |1583|e713|启动服务|选中文本|启动选中的服务|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "%CandySel%" "Start"|
-|1584|e713|嵌入桌面|任意窗口|将选中的窗口嵌入桌面(将桌面设为窗口的父窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_嵌入桌面.ahk" "%Windy_CurWin_id%"|
+|1584|f71c|嵌入桌面|任意窗口|将选中的窗口嵌入桌面(将桌面设为窗口的父窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_嵌入桌面.ahk" "%Windy_CurWin_id%"|
 |1585|e713|修改计算机名|无条件|修改计算机名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\修改计算机名.ahk"|
 |1586|e93c|窗口穿透|无条件|当前窗口透明并穿透,使鼠标能操作下层窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口穿透.ahk" "%Windy_CurWin_Id%"|
 |1587|e750|系统错误|无条件|查询系统错误编号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查询系统错误编号.ahk" "%CandySel%"|
 |1588|edc6|一键替换|选中文本|将选中文本一键替换为预设的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\一键替换.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1589|e74e|TC启动|任意窗口|TC 文件管理器启动后自动点击数字按钮|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\TC启动后自动点击进入.ahk"|
+|1590|f128|鼠标轨迹|无条件|工具: 鼠标轨迹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\鼠标轨迹.ahk"|
+|1591|e957|数字语音|无条件|工具: 小键盘按键带语音|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\语音数字.ahk"|
+|1592|e706|屏幕亮度|无条件|增加屏幕亮度, 参数1为亮度值, 参数2为对比度值|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\屏幕亮度.ahk2" "+10" "50"|
+|1593|e706|屏幕亮度|无条件|降低屏幕亮度, 参数1为亮度值, 参数2为对比度值|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\屏幕亮度.ahk2" "-10" "50"|
+|1594|e8b9|置底|任意窗口|将窗口放到底部(类似按下 Alt+Esc)|canfunc&#124;CF_WinMoveBottom&#124;%Windy_CurWin_id%|
+|1595|f742|修改标题|任意窗口|修改窗口标题|canfunc&#124;CF_WinSetTitle&#124;%Windy_CurWin_id%|
+|1596|ede5|中键增强|任意窗口|中键增强|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\鼠标中键增强.ahk" %Windy_CurWin_id%|
+|1597|e8c8|复制结构|选中文件夹|将选中文件夹的结构复制到剪贴板中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 0|
+|1598|f45e|公式助手|无条件|WPS 表格公式助手|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\公式助手.ahk"|
+|1599|e7b3|验证银行卡|选中文本|选中银行卡号, 验证是否有效|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\验证银行卡.ahk" "%CandySel%"|
