@@ -588,15 +588,15 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1575|e916|倒计时|无条件|倒计时, 默认为 5 分钟倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_倒计时.ahk" "300"|
 |1576|e916|距离高考|无条件|距离高考天数倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_距离天数.ahk" "20240607" "高考" "1"|
 |1577|e713|金额大写|选中文本|数字金额转中文大写|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\金额大写.ahk" "%CandySel%"|
-|1578|e713|启动服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Start"|
-|1579|e713|停止服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Stop"|
-|1580|e713|服务列表|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Active" "List"|
-|1581|e713|服务信息|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "Info"|
-|1582|e713|禁用服务|无条件|系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "XLServicePlatform" "4"|
+|1578|e713|启动服务|无条件|启动打印服务,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Spooler" "Start"|
+|1579|e713|停止服务|无条件|停止打印服务,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Spooler" "Stop"|
+|1580|e713|服务列表|无条件|获取活动的系统服务列表,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Active" "List"|
+|1581|e713|服务信息|无条件|打印服务信息,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Spooler" "Info"|
+|1582|e713|禁用服务|无条件|禁用打印服务,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Spooler" "4"|
 |1583|e713|启动服务|选中文本|启动选中的服务|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "%CandySel%" "Start"|
 |1584|f71c|嵌入桌面|任意窗口|将选中的窗口嵌入桌面(将桌面设为窗口的父窗口)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口_嵌入桌面.ahk" "%Windy_CurWin_id%"|
 |1585|e713|修改计算机名|无条件|修改计算机名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\修改计算机名.ahk"|
-|1586|e93c|窗口穿透|无条件|当前窗口透明并穿透,使鼠标能操作下层窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口穿透.ahk" "%Windy_CurWin_Id%"|
+|1586|e93c|窗口穿透|无条件|当前窗口部分区域透明并穿透,使鼠标能操作下层窗口|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口穿透.ahk" "%Windy_CurWin_Id%"|
 |1587|e750|系统错误|无条件|查询系统错误编号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查询系统错误编号.ahk" "%CandySel%"|
 |1588|edc6|一键替换|选中文本|将选中文本一键替换为预设的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\一键替换.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
 |1589|e74e|TC启动|任意窗口|TC 文件管理器启动后自动点击数字按钮|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\TC启动后自动点击进入.ahk"|
@@ -610,3 +610,9 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1597|e8c8|复制结构|选中文件夹|将选中文件夹的结构复制到剪贴板中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 0|
 |1598|f45e|公式助手|无条件|WPS 表格公式助手|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\公式助手.ahk"|
 |1599|e7b3|验证银行卡|选中文本|选中银行卡号, 验证是否有效|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\验证银行卡.ahk" "%CandySel%"|
+|1600|f56d|设备和打印机|无条件|打开设备和打印机页面@控制面板|run&#124;control printers|
+|1601|e713|服务改手动|无条件|启用打印服务改为手动模式,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Spooler" "3"|
+|1602|f56d|默认打印机|无条件|设置默认打印机|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\设置默认打印机.ahk"|
+|1603|f10d|Win11菜单|无条件|win11右键菜单变为传统菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\Win11右键菜单.ahk"|
+|1604|e16d|隐藏文件|选中文件|切换选中文件的隐藏属性|canfunc&#124;CF_FileSetAttrib&#124;%CandySel%&#124;^H|
+|1605|E753|天气2|无条件|利用免费的天气api显示当天气温|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\天气2.ahk"|
