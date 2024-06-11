@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+﻿	<!DOCTYPE HTML>
 <html lang="zh">
 <head>
 <title>变更 &amp; 新功能 | AutoHotkey v2</title>
@@ -14,7 +14,59 @@
 <p><a href="v2-changes.htm">v1.1 到 v2.0 的更改</a>涵盖了 v1.1 和 v2.0 之间的差异.</p>
 <p>有关更改的全部技术细节, 请参阅 <a href="https://github.com/AutoHotkey/AutoHotkey/tree/alpha">GitHub</a>.</p>
 
-<h2 id="v2.0.13">2.0.13 - 2023 年 4 月 20 日</h2>
+<h2 id="v2.0.17">2.0.17 - 2024 年 6 月 5 日</h2>
+<p>优化 WinText 参数.[<a href="https://github.com/AutoHotkey/AutoHotkey/pull/335">PR #335</a> (Descolada)]</p>
+<p>变更 UnsetError 消息, 建议使用全局声明, 而不是在变量名后添加 "(与全局名称相同)".</p>
+<p>变更 VarUnset 的警告信息, 使其与 UnsetError 一致.</p>
+<p>修复 自增/自减操作符在 var 未设置时抛出 UnsetError, 而不是 TypeError.</p>
+<p>修复 OwnProps 在属性删除自己的情况下安全地分配属性名称的问题.</p>
+<p>修复 在没有块的控制流语句下的箭头函数中工作的断点.</p>
+<p>修复 在步出函数时, 调试器在调用行中断的问题.(此行为在版本 31 中添加，并在 v1.1.30.00 中被打破.)</p>
+<p>从作为新线程调用的函数中跳出, 现在在被中断的行中断, 而不是等到到达下一行.</p>
+<p>修复 调试器不删除临时断点, 这些断点在计算 DBGp property_get 或 context_get 时被忽略.</p>
+
+<h2 id="v2.0.16">2.0.16 - 2024 年 5 月 30 日</h2>
+<p>修复 在某些情况下发送到标准输出的加载时错误, 显示不正确的文件/行号.</p>
+<p>修复 ExitApp 在加载时错误/警告对话框使用退出码 2 的问题.</p>
+<p>修复 在当前用户(非管理员) 安装中定位 WindowSpy.ahk 的问题.</p>
+<p>修复 DBGp property_get 分页项错误(再次).</p>
+<p>修复 如果指定了 Length/Buffer 并且 <a href="https://learn.microsoft.com/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar">MultiByteToWideChar</a> 不支持目标代码页的 WC_NO_BEST_FIT_CHARS 标志时, StrPut 失败的问题.</p>
+<p>修复 如果服务器请求客户端身份验证, Download 尝试匿名身份验证.</p>
+
+<h2 id="v2.0.15">2.0.15 - 2024 年 5 月 16 日</h2>
+<p>修复 DBGp property_get 由于分页错误而无法检索属性的问题(自 v2.0.14 起).</p>
+<p>修复 DBGp 属性计算导致没有 Catch 的 Try 失败的问题(自 v2.0.14 起).</p>
+<p>修复 &lt;base&gt; 调试器伪属性泄漏引用的问题(自 v2.0.14 起).</p>
+
+<h2 id="v2.0.14">2.0.14 - 2024 年 5 月 6 日</h2>
+<p>修复 错误对话框以便在文本聚焦时也能处理字母快捷键.</p>
+<p>修复 MonthCal W-<em>n</em>(月份) 宽度值不受 DPI 缩放的影响.</p>
+<p>修复 Click 不返回整数的问题.</p>
+<p>修复 将 <code><i>key</i>::try {</code> 检测为错误的问题.</p>
+<p>修复 <code>:B0*O:XY::Z</code> 以产生 XYZ, 而非 XZ(抑制了 Y).</p>
+<p>修复 Send 使任何先前的 <code>{<i>modifier</i> Down}</code> 即使在物理按键被按住的情况下仍然有效.</p>
+<p>改进 在弹出菜单时脚本获取焦点的可靠性.</p>
+
+<p><strong>调试器改进:</strong></p>
+<p>修复 在处理另一条命令期间发送的 stdout/stderr 数据包, 以免破坏待处理的响应.</p>
+<p>修复 <code>property_get -n &lt;exception&gt;.message</code> 及类似问题.</p>
+<p>修复 当属性返回带有字符串的临时对象(如 <code>x.y.z</code> where <code>y =&gt; {z:"a"}</code>) 时, property_get 的结果被破坏的问题.</p>
+<p>修复 在处理另一条命令时收到异步命令而导致崩溃的问题.</p>
+<p>修复 通过 property_set 抑制异常后, 不被删除的问题.</p>
+<p>修复 <code>property_get -c 0 -d 0</code> 允许使用全局变量, 因为 <code>-d 1</code> 已允许使用全局变量.</p>
+<p>修复 property_get 无法正确分页枚举项的问题.</p>
+
+<p>改进 property_get 使其支持带一个参数的属性获取器(以前只有隐式 __Item property 属性支持此功能).</p>
+<p>改进 property_get 以支持原始值属性. 值仍必须包含在变量中或从属性中返回.</p>
+<p>改进 property_get 允许调用 &lt;=1 个参数的函数.</p>
+<p>改进 property_get to 以支持浮点键/参数.</p>
+
+<p>变更 调试器以抑制属性计算过程中的异常.</p>
+<p>变更 调试器忽略由 __Enum 引发的错误(视为无项目).</p>
+<p>变更 &lt;enum&gt; 伪属性使其需要 __Enum. 这可防止对象本身作为枚举器被调用.</p>
+<p>在调试器中优化了少量代码.</p>
+
+<h2 id="v2.0.13">2.0.13 - 2024 年 4 月 20 日</h2>
 <p>更改 热键函数, 如果选项包含无效选项则抛出 ValueError.</p>
 <p>修复 在退格键作为撤销操作时, InputHook 遵守 +S 选项.</p>
 <p>修复 调试器, 在枚举期间安全地处理属性删除.</p>
@@ -24,7 +76,7 @@
 <p>修复 #Include 正确地 "关闭" 它读取的任何内置变量(对实际脚本没有已知影响).</p>
 <p>修复 具有两个不同 ahk_id 值的 WinTitles 无法匹配.</p>
 
-<h2 id="v2.0.12">2.0.12 - 2023 年 3 月 23 日</h2>
+<h2 id="v2.0.12">2.0.12 - 2024 年 3 月 23 日</h2>
 <p>修复 当 Gui 拥有所有者窗口或 +DPIScale 属性时, Gui 的 GetPos/GetClientPos.</p>
 <p>修复 在文件循环中, Until 阻止子文件夹递归.</p>
 <p>修复 当参数类型为 UStr 时, DllCall 抛出错误的问题.</p>
@@ -50,7 +102,7 @@
 <p>修复 <code>#include &lt;x&gt;</code> 在函数内部使用会导致加载时崩溃的问题.</p>
 <p>修复 <code>ListView.Opt("NoSort")</code>.</p>
 <p>修复 克隆没有自有属性的对象时发生的内存泄漏.</p>
-<p>修复 #include 和 FileInstall(未编译) 按<a href="https://learn.microsoft.com/en-us/windows/win32/intl/handling-sorting-in-your-applications#sort-strings-ordinally">顺序</a>比较文件名, 而不是按语言比较文件名的问题.</p>
+<p>修复 #include 和 FileInstall(未编译) 按<a href="https://learn.microsoft.com/windows/win32/intl/handling-sorting-in-your-applications#sort-strings-ordinally">顺序</a>比较文件名, 而不是按语言比较文件名的问题.</p>
 
 <h2 id="v2.0.10">2.0.10 - 2023 年 9 月 24 日</h2>
 <p>修复 在 #HotIf 之后使用命名函数热键时崩溃的问题.</p>

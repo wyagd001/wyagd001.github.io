@@ -31,8 +31,7 @@
 </ul>
 
 <a id="Matching"></a>
-<h2 id="Matching">匹配行为</h2>
-<h2 id="WinTitle">Window Title &amp; Matching Behaviour</h2>
+<h2 id="WinTitle">窗口标题 &amp; 匹配行为</h2>
 <p>为 <var>WinTitle</var> 指定任意字符串, 以通过其标题标识窗口. 窗口的标题通常以文本的形式出现在窗口顶部的标题栏中. 如果不可见或只有部分可见, 完整的窗口标题可以通过 <a href="../lib/WinGetTitle.htm">WinGetTitle</a> 或 Window Spy 显示.</p>
 <p>下面的例子激活计算器:</p>
 <pre>WinActivate "计算器"</pre>
@@ -56,7 +55,7 @@
 <h3 id="ahk_class">ahk_class(窗口类)</h3>
 <p>在 <var>WinTitle</var> 中使用 <code>ahk_class <var>ClassName</var></code> 通过其窗口类来识别窗口.</p>
 <p>窗口类是系统用来创建窗口的模板的属性集. 换句话说, 窗口类表示窗口的 <em>类型</em>. 窗口类可以通过 Window Spy 来显示或通过 <a href="../lib/WinGetClass.htm">WinGetClass</a> 获取. 如果 RegEx <a href="../lib/SetTitleMatchMode.htm">标题匹配模式</a>被激活, <var>ClassName</var> 接受<a href="RegEx-QuickRef.htm">正则表达式</a>.</p>
-<p>Window classes are case-sensitive, except when using the <a href="RegEx-QuickRef.htm#opt_i">i) modifier</a> in a RegEx pattern.</p>
+<p>窗口类区分大小写, 但在 RegEx 模式中使用 <a href="RegEx-QuickRef.htm#opt_i">i) 修饰符</a>时除外.</p>
 <p>下面的例子激活了一个控制台窗口(例如 cmd.exe):</p>
 <pre>WinActivate "ahk_class ConsoleWindowClass"</pre>
 <p>下面的示例与上面的相同, 但使用了<a href="RegEx-QuickRef.htm">正则表达式</a>(注意必须事先打开 RegEx <a href="../lib/SetTitleMatchMode.htm">标题匹配模式</a>才行):</p>
@@ -64,10 +63,9 @@
 
 <h3 id="ahk_id">ahk_id(唯一 ID / HWND)</h3>
 <p>每个窗口或控件都有一个唯一 ID, 也被称为 HWND(即窗口句柄的缩写). 即使其标题或文本更改了, 此 ID 也可用于标识窗口或控件.</p>
-<p>在 <var>WinTitle</var> 中使用 <code>ahk_id <var>HWND</var></code>, <code><var>HWND</var></code>(即, 没有 ahk_id 关键字的<a href="../Concepts.htm#numbers">整数</a>) 或一个具有 HWND 属性的<a href="../Objects.htm">对象</a>, 通过其唯一的 ID 来识别窗口或控件.</p>
-<p><a href="../lib/DetectHiddenWindows.htm">DetectHiddenWindows</a> 影响 ahk_id 条件是否检测到隐藏的顶级窗口, 但始终能检测到隐藏的控件. 它还会影响是否检测到由 HWND 标识的隐藏窗口(作为 Object 属性或 Integer), 但只有在与 <a href="../lib/WinWait.htm">WinWait</a> 或 <a href="../lib/WinWaitClose.htm">WinWaitClose</a> 一起使用时才会如此.</p>
-<p><a href="../lib/DetectHiddenWindows.htm">DetectHiddenWindows</a> 会影响 ahk_id 条件是否检测隐藏的顶层窗口, 但隐藏的控件总是会被检测到. 如果传递了一个有效的<a href="../Concepts.htm#numbers">整数</a>或<a href="../Objects.htm">对象</a>, 则隐藏的窗口总是能被检测到.</p>
-<p>ahk_id 条件也可以和给定窗口必须匹配的其他条件相结合. 例如, <code>WinExist("ahk_id " ahwnd " ahk_class " aclass)</code> 在窗口被 "检测到"(根据 DetectHiddenWindows) 且其窗口类别与 <var>aclass</var> 所包含的字符串相匹配时, 返回 <var>ahwnd</var>.</p>
+<p>在 <var>WinTitle</var> 中使用 <code>ahk_id <var>HWND</var></code> 或纯 HWND(作为一个<a href="../Concepts.htm#numbers">整数</a>或带有 HWND 属性的<a href="../Objects.htm">对象</a>) 通过其唯一的 ID 来识别窗口或控件.</p>
+<p>当使用 <code>ahk_id <var>HWND</var></code> 时, <a href="../lib/DetectHiddenWindows.htm">DetectHiddenWindows</a> 影响是否检测隐藏的顶级窗口, 但总是检测隐藏的控件. 当使用纯 HWND 时, 无论 DetectHiddenWindows 是否存在, 都会检测隐藏窗口. <a href="../lib/WinWait.htm">WinWait</a> 和 <a href="../lib/WinWaitClose.htm">WinWaitClose</a> 是一个例外, 其中 <code>ahk_id <var>HWND</var></code> 和纯 HWND 都受到 DetectHiddenWindows 的影响.</p>
+<p><code>ahk_id <var>HWND</var></code> 条件也可以和给定窗口必须匹配的其他条件相结合. 例如, <code>WinExist("ahk_id " ahwnd " ahk_class " aclass)</code> 在窗口被 "检测到"(根据 DetectHiddenWindows) 且其窗口类别与 <var>aclass</var> 所包含的字符串相匹配时, 返回 <var>ahwnd</var>.</p>
 <p>窗口的 ID 通常通过 <a href="../lib/WinExist.htm">WinExist</a> 或 <a href="../lib/WinGetID.htm">WinGetID</a> 来检索. 控件的 ID 通常通过 <a href="../lib/ControlGetHwnd.htm">ControlGetHwnd</a>, <a href="../lib/MouseGetPos.htm">MouseGetPos</a> 或 <a href="../lib/DllCall.htm">DllCall</a> 来检索. <a href="../lib/Gui.htm">Gui</a> 和 <a href="../lib/GuiControl.htm">GuiControl</a> 对象具有 <code>Hwnd</code> 属性, 因此可以直接在 <var>WinTitle</var> 中使用.</p>
 <p>下面的示例通过存储在 <var>VarContainingID</var> 中的唯一 ID 对窗口进行操作:</p>
 <pre><em>; 传递一个<a href="../Concepts.htm#numbers">整数</a>.</em>
