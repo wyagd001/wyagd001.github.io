@@ -74,3 +74,4 @@ description: 如意百宝箱-Ahk 内置函数
 |60|TM_updateYYpro||检测如意引用程序更新|Cando&#124;TM_updateYYpro|
 |61|CF_WinMoveBottom|(WinId)|传入窗口句柄, 使窗口置底|[动作1594](/Actions/1594.md): canfunc&#124;CF_WinMoveBottom&#124;%Windy_CurWin_id%|
 |62|CF_WinSetTitle|(WinId)|传入窗口句柄, 修改窗口标题|[动作1595](/Actions/1595.md): canfunc&#124;CF_WinSetTitle#124;%Windy_CurWin_id%|
+|62|InvokeVerb|(菜单名和选中文件路径)|传入右键菜单名称执行文件右键菜单动作|动作1613: canfunc&#124;InvokeVerb&#124;复制|

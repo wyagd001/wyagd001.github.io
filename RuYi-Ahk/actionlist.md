@@ -242,7 +242,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1229|e8b1|[查找重复](/actions/1229.md)|选中文件夹|查找选中文件夹中的重复文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\查找重复文件.ahk" "%CandySel%"|
 |1230|E894|[结束进程](/actions/1230.md)|任意窗口|强制结束窗口进程|run&#124;%ComSpec% /c taskkill /pid %Windy_CurWin_Pid% /F&#124;&#124;hide|
 |[1231](http://127.0.0.1:5151/runcom?aabb=1231)|ef58|环境变量|无条件|环境变量编辑备份脚本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\环境变量.ahk"|
-|1232|ef58|新增Path|资源管理器|将资源管理器当前打开的路径加入环境变量Path中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\Environment.ahk" "%Windy_CurWin_FolderPath%"|
+|1232|ef58|新增Path|资源管理器|将资源管理器当前打开的路径添加到环境变量Path中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\环境变量\Environment.ahk" "%Windy_CurWin_FolderPath%"|
 |[1233](http://127.0.0.1:5151/runcom?aabb=1233)|e1a4|[搜索动作](/actions/1233.md)|无条件|搜索和运行动作的界面|Cando&#124;ActionSR|
 |1234|ec24|Dll注册|选中文件|注册选中的dll文件|run&#124;regsvr32.exe "%CandySel%"|
 |1235|e789|Dll卸载|选中文件|卸载选中的dll文件|run&#124;regsvr32.exe /u "%CandySel%"|
@@ -257,7 +257,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1244|E894|[结束进程](/actions/1244.md)|任意窗口|强制结束窗口进程|canfunc&#124;CF_ProcessClose&#124;%Windy_CurWin_Pid%|
 |1245|EDE3|通用3|菜单|选中文件的通用动作的菜单|Menu&#124;文件通用3|
 |1246|EDE3|通用3|子面板|当前窗口的通用动作的子面板|Gui&#124;窗口通用3|
-|1247|e8f9|[加入Ini_Fav](/actions/1247.md)|任意窗口|将窗口的进程(exe) 加入 Ini收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247|
+|1247|e8f9|[加入Ini_Fav](/actions/1247.md)|任意窗口|将窗口的进程(exe) 添加到 Ini收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247|
 |1248|eda4|[快捷方式到桌面](/actions/1248.md)|任意窗口|创建窗口的进程文件的文件快捷方式到桌面|canfunc&#124;CF_FileShortcutToDesk&#124;%Windy_CurWin_Fullpath%|
 |1249|e8c8|文件夹结构|选中文件夹|将选中文件夹的结构复制到当前文件夹(仅复制选中文件夹及其下的子文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%"|
 |1250|e8c8|结构+空文件|选中文件夹|将选中文件夹的结构和空白文件复制到当前文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\复制文件夹结构到当前目录.ahk" "%CandySel%" 1|
@@ -419,7 +419,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1406|e159|[取消挂载](/actions/1406.md)|选中文件夹|将选中文件夹(分区挂载的文件夹) 取消挂载|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_取消挂载.ahk" "%CandySel%"|
 |1407|e8c1|Bing词典|选中文本|使用Bing网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Bing词典.ahk" "%CandySel%"|
 |1408|e8c1|有道词典|选中文本|使用有道网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\有道词典.ahk" "%CandySel%"|
-|1409|ed11|[加入Ini_Fav](/actions/1409.md)|选中对象|将选中对象(文件, 网址) 加入 Ini 收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247&#124;%CandySel%|
+|1409|ed11|[加入Ini_Fav](/actions/1409.md)|选中对象|将选中对象(文件, 网址) 添加到 Ini 收藏夹(向 ATA 发送动作编号)|SendMsgToATA&#124;1247&#124;%CandySel%|
 |[1410](http://127.0.0.1:5151/runcom?aabb=1410)|edb4|[暂停如意](/actions/1410.md)|无条件|暂停如意|Cando&#124;TM_Pause|
 |[1411](http://127.0.0.1:5151/runcom?aabb=1411)|e149|[重启如意](/actions/1411.md)|无条件|重启如意|Cando&#124;TM_Reload|
 |[1412](http://127.0.0.1:5151/runcom?aabb=1412)|e8ec|[如意托盘菜单](/actions/1412.md)|无条件|显示如意的托盘菜单(右击托盘图标显示的菜单)|Cando&#124;TM_show|
@@ -616,3 +616,13 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1603|f10d|Win11菜单|无条件|win11右键菜单变为传统菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\Win11右键菜单.ahk"|
 |1604|e16d|隐藏文件|选中文件|切换选中文件的隐藏属性|canfunc&#124;CF_FileSetAttrib&#124;%CandySel%&#124;^H|
 |1605|E753|天气2|无条件|利用免费的天气api显示当天气温|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\天气2.ahk"|
+|1612|e191|高亮线|ET|ET_在当前选中的单元格下显示一条线|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\ET_设置高亮线.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
+|1613|f22c|复制文件|资源管理器|执行资源管理器选中文件的右键菜单(剪贴,复制,删除,属性等)|canfunc&#124;InvokeVerb&#124;复制|
+|1614|e8c6|剪切文件|资源管理器|执行资源管理器选中文件的右键菜单(剪贴,复制,删除,属性等)|canfunc&#124;InvokeVerb&#124;剪切|
+|1615|ed2b|文件属性|资源管理器|执行资源管理器选中文件的右键菜单(剪贴,复制,删除,属性等)|canfunc&#124;InvokeVerb&#124;属性|
+|1616|f22c|复制文件|选中文件|执行指定文件的右键菜单(剪贴,复制,删除,属性等)|canfunc&#124;InvokeVerb&#124;复制&#124;%CandySel%|
+|1617|e8c6|剪切文件|选中文件|执行指定文件的右键菜单(剪贴,复制,删除,属性等)|canfunc&#124;InvokeVerb&#124;剪切&#124;%CandySel%|
+|1618|ed2b|文件属性|选中文件|执行指定文件的右键菜单(剪贴,复制,删除,属性等)|canfunc&#124;InvokeVerb&#124;属性&#124;%CandySel%|
+|1619|f22c|网络和共享|无条件|网络和共享中心|run&#124;control /name Microsoft.NetworkAndSharingCenter|
+|1620|f22c|网络和共享|无条件|网络和共享中心|run&#124;shell:::{8E908FC9-BECC-40F6-915B-F4CA0E70D03D}|
+|1621|e1c6|添加到替换|选中文本|将选中文本添加到一键替换配置文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\添加单词到一键替换文件.ahk" "%CandySel%"|
