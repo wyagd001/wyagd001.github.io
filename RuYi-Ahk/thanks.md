@@ -16,3 +16,4 @@ description: 如意百宝箱-Ahk 感谢名单
 | L*n | 2023/4/13 | ----------- | ----------- | 机器码生成算法更改, 原注册码不再适用于后续版本 | 
 | z*Z | 2023/11/19 | 1CB4XXXXXXXXA67B | 1F2F5DC1B866C9BD |  | 
 | *英 | 2024/4/18 | E4B1XXXXXXXXB2BF | F93BD33A38949FA4 |  | 
+| G*W | 2024/7/6 |  70DCXXXXXXXX36F9 | CC280F28B4CEBC9F | |

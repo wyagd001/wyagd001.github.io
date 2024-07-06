@@ -626,3 +626,19 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1619|f22c|网络和共享|无条件|网络和共享中心|run&#124;control /name Microsoft.NetworkAndSharingCenter|
 |1620|f22c|网络和共享|无条件|网络和共享中心|run&#124;shell:::{8E908FC9-BECC-40F6-915B-F4CA0E70D03D}|
 |1621|e1c6|添加到替换|选中文本|将选中文本添加到一键替换配置文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\添加单词到一键替换文件.ahk" "%CandySel%"|
+|1622|e70a|清理托盘|无条件|清理强制结束进程后残留的系统托盘图标|canfunc&#124;TrayIcon_Clean|
+|1623|e7c4|文件拆分|无条件|将动作1548合并的文本文件拆分到桌面|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\合并的文本文件拆分到桌面.ahk" "%CandySel%"|
+|1624|f13f|更改图标|指定参数|更改额外任务栏最上面文本的图标|Cando&#124;ABPSetPic|
+|1625|f61f|可视化声音|无条件|当系统播放声音时,通过更改额外任务栏的图标可视化音量|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\AudioVisualizer.ahk"|
+|1626|E70F|NotePad2打开|选中文件|使用 NotePad2 打开选定文件|openwith&#124;%Notepad2%|
+|1627|E70F|Hex打开|选中文件|使用 HexEditor 打开选定文件|openwith&#124;%A_ScriptDir%\引用程序\x32\MiTeC_Hexadecimal_Editor.exe|
+|1628|ed2a|新建菜单|无条件|显示资源管理器新建菜单|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\新建菜单.ahk" "%Windy_CurWin_id%"|
+|1629|f0ee|文本转语音|选中文本|利用微软的语音API程序tts.exe实现文本转语音的功能(Win8+)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\文本转语音.ahk" "%CandySel%"|
+|1630|f26e|小键盘鼠标|无条件|使用小键盘区域实现鼠标的移动,点击|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\小键盘鼠标.ahk"|
+|1631|e8c1|查看编码|选中文本|查看选中文本的编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\查看字符编码2.ahk" "%CandySel%"|
+|1632|e110|上半屏幕|任意窗口|窗口移到上半屏幕|Cando&#124;窗口上半屏幕|
+|1633|e74b|下半屏幕|任意窗口|窗口移到下半屏幕|Cando&#124;窗口下半屏幕|
+|1634|e742|左上屏幕|任意窗口|窗口移到屏幕左上角(1/4)|Cando&#124;窗口左上角屏幕|
+|1635|e143|右上屏幕|任意窗口|窗口移到屏幕右上角(1/4)|Cando&#124;窗口右上角屏幕|
+|1636|e1d9|左下屏幕|任意窗口|窗口移到屏幕左下角(1/4)|Cando&#124;窗口左下角屏幕|
+|1637|e741|右下屏幕|任意窗口|窗口移到屏幕右下角(1/4)|Cando&#124;窗口右下角屏幕|
