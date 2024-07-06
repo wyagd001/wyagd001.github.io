@@ -75,3 +75,11 @@ description: 如意百宝箱-Ahk 内置函数
 |61|CF_WinMoveBottom|(WinId)|传入窗口句柄, 使窗口置底|[动作1594](/Actions/1594.md): canfunc&#124;CF_WinMoveBottom&#124;%Windy_CurWin_id%|
 |62|CF_WinSetTitle|(WinId)|传入窗口句柄, 修改窗口标题|[动作1595](/Actions/1595.md): canfunc&#124;CF_WinSetTitle#124;%Windy_CurWin_id%|
 |62|InvokeVerb|(菜单名和选中文件路径)|传入右键菜单名称执行文件右键菜单动作|动作1613: canfunc&#124;InvokeVerb&#124;复制|
+|63|TrayIcon_Clean||清理强制结束进程后残留在系统托盘的图标|动作1622: canfunc&#124;TrayIcon_Clean|
+|64|窗口上半屏幕||窗口移到上半屏幕|动作1632: Cando&#124;窗口上半屏幕|
+|65|窗口下半屏幕||窗口移到下半屏幕|动作1633: Cando&#124;窗口下半屏幕|
+|66|窗口左上角屏幕||窗口移到屏幕左上角(1/4)|动作1634: Cando&#124;窗口左上角屏幕|
+|67|窗口右上角屏幕||窗口移到屏幕右上角(1/4)|动作1635: Cando&#124;窗口右上角屏幕|
+|68|窗口左下角屏幕||窗口移到屏幕左下角(1/4)|动作1636: Cando&#124;窗口左下角屏幕|
+|69|窗口右下角屏幕||窗口移到屏幕右下角(1/4)|动作1637: Cando&#124;窗口右下角屏幕|
+|70|ABPSetPic|图标句柄|更改设置额外任务栏最上面的图标|动作1625: ExecSendToRuyi("HICON:\*" hIcon,, 1624)|
