@@ -10,7 +10,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 
 | 动作编号 | 图标码 | 按钮名称 | 动作对象 | 描述 | 动作 |
 | ----------- | ----------- | ----------- | ----------- | ----------- |----------- |
-|999|E710|添加按钮|无条件|为界面的按钮指定要执行的动作|Cando&#124;BAdd|
+|999|E710|添加按钮|无条件|为面板的按钮指定要执行的动作|Cando&#124;BAdd|
 |[1001](http://127.0.0.1:5151/runcom?aabb=1001)|E703|电脑图标|无条件|设置我的电脑中显示的图标(视频, 图片等六个文件夹..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\此电脑图标设置.ahk"|
 |[1002](http://127.0.0.1:5151/runcom?aabb=1002)|EE3F|桌面图标|无条件|设置桌面中显示的图标(此电脑, 回收站, 网络..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\桌面图标设置.ahk"|
 |[1003](http://127.0.0.1:5151/runcom?aabb=1003)|E71D|导航栏|无条件|资源管理器左侧导航栏中项目的设置(收藏夹, 库, 快速启动..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\导航栏项目设置.ahk"|
@@ -642,3 +642,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1635|e143|右上屏幕|任意窗口|窗口移到屏幕右上角(1/4)|Cando&#124;窗口右上角屏幕|
 |1636|e1d9|左下屏幕|任意窗口|窗口移到屏幕左下角(1/4)|Cando&#124;窗口左下角屏幕|
 |1637|e741|右下屏幕|任意窗口|窗口移到屏幕右下角(1/4)|Cando&#124;窗口右下角屏幕|
+|1638|E70F|Pdf(WV2)|选中文件|使用 WebView2 打开选定 Pdf 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\pdf(WebView2).ahk2" "%CandySel%"|
+|1639|E70F|Docx(WV2)|选中文件|使用 WebView2 打开选定 Docx 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\Docx(WebView2).ahk2" "%CandySel%"|
+|1640|E70F|Pdfjs(WV2)|选中文件|使用 WebView2(pdfjs) 打开选定 Pdf 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\pdfjs(WebView2).ahk2" "%CandySel%"|
+|1641|e71e|搜索List|特定窗口|在拥有 SysListView 控件的窗口(如任务管理器, 服务管理, 程序管理),搜索列表第一列并定位|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\窗口处理\SysListView搜索和定位.ahk2" "%Windy_CurWin_Id%"|

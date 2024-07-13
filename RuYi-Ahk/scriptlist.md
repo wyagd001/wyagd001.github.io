@@ -311,3 +311,7 @@ description: 如意百宝箱-Ahk 内置外部脚本
 |1629|否|文本转语音|选中文本|利用微软的语音API程序tts.exe实现文本转语音的功能(Win8+)|文本转语音.ahk|
 |1630|否|小键盘鼠标|无条件|使用小键盘区域实现鼠标的移动,点击|小键盘鼠标.ahk|
 |1631|否|查看编码|选中文本|查看选中文本的编码|查看字符编码2.ahk|
+|1638|否|Pdf(WV2)|选中文件|使用 WebView2 打开选定 Pdf 文件|pdf(WebView2).ahk2|
+|1639|否|Docx(WV2)|选中文件|使用 WebView2 打开选定 Docx 文件|Docx(WebView2).ahk2|
+|1640|否|Pdfjs(WV2)|选中文件|使用 WebView2(pdfjs) 打开选定 Pdf 文件|pdfjs(WebView2).ahk2|
+|1641|否|搜索List|特定窗口|在拥有 SysListView 控件的窗口(如任务管理器, 服务管理, 程序管理),搜索列表第一列并定位|SysListView搜索和定位.ahk2|
