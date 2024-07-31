@@ -27,14 +27,15 @@
     <p id="option-i"><strong>I:</strong> 设置 <a href="#MinSendLevel">MinSendLevel</a> 为 1 或给定值, 使任何<a href="SendLevel.htm">输入级别</a>低于该值的输入被忽略. 例如, <code>I2</code> 将忽略级别为 0(默认值) 或 1 的任何输入, 但将捕获级别为 2 的输入.</p>
     <p id="option-l"><strong>L:</strong> 长度限制(例如 <code>L5</code>). 输入的最大允许长度. 当文本达到这个长度时, 输入被终止, <a href="#EndReason">EndReason</a> 被设置为单词 Max(除非文本匹配 <em>MatchList</em> 中的一个短语, 在这种情况下 <a href="#EndReason">EndReason</a> 被设置为单词 Match). 如果未指定, 则长度限制为 1023.</p>
     <p>指定 <code>L0</code> 禁用文本的收集和长度限制, 但并不影响按键生成的文本的统计(请参阅 <a href="#VisibleText">VisibleText</a>). 这可以与 <a href="#OnChar">OnChar</a>, <a href="#OnKeyDown">OnKeyDown</a>, <a href="#KeyOpt">KeyOpt</a> 或 <em><a href="#EndKeys">EndKeys</a></em> 参数组合使用.</p>
-    <p id="option-m"><strong>M:</strong> 将修饰键击对应于真正的 ASCII 字符, 识别并转录修饰键击(如 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>). 参考这个例子, 它识别 <kbd>Ctrl</kbd>+<kbd>C</kbd>:</p>
+    <p id="option-m"><strong>M:</strong> 允许在更大范围内使修饰键击生成文本. 通常情况下, <em>除了</em> <kbd>Shift</kbd>, <kbd>Ctrl</kbd>+<kbd>Alt</kbd>(即 <kbd>AltGr</kbd>) 或 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>(即 <kbd>AltGr</kbd>+<kbd>Shift</kbd>), 按键和其他修饰键组合将被视为非文本. 该选项会尝试翻译其他修饰键组合. 参考这个例子, 它识别 <kbd>Ctrl</kbd>+<kbd>C</kbd>:</p>
     <pre>CtrlC := Chr(3) <em>; 将 Ctrl-C 对应的字符存储在 CtrlC 变量中.</em>
 ih := InputHook("L1 M")
 ih.Start()
 ih.Wait()
 if (ih.Input = CtrlC)
     MsgBox "You pressed Control-C."</pre>
-    <p class="note"><strong>注意:</strong> 字符 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd> 对应于 <a href="Chr.htm">Chr(1)</a> 到 <a href="Chr.htm">Chr(26)</a>. 此外, M 选项可能会导致某些键盘快捷键(如 <kbd>Ctrl</kbd>+<kbd>&larr;</kbd>) 在输入正在进行时出现异常.</p>
+    <p>默认情况下, 系统将 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd> 映射为 ASCII 控制字符 <a href="Chr.htm">Chr(1)</a> 到 <a href="Chr.htm">Chr(26)</a>. 系统或活动窗口的键盘布局可定义其他转换. 对于键盘布局未定义修饰符位掩码的修饰符键, 转换可能会忽略. 例如, 如果使用 M 选项, <kbd>Win</kbd>+<kbd>E</kbd> 通常会转写为 "e".</p>
+    <p>M 选项可能会导致某些键盘快捷键, 如 <kbd>Ctrl</kbd>+<kbd>&larr;</kbd> 在 Input 正在进行时出现异常.</p>
     <p id="option-t"><strong>T:</strong> 设置 <a href="#Timeout">Timeout</a> (例如 <code>T3</code> 或 <code class="no-highlight">T2.5</code>).</p>
     <p id="vis"><strong>V:</strong> 设置 <a href="#VisibleText">VisibleText</a> 和 <a href="#VisibleNonText">VisibleNonText</a> 为 1(true). 通常, 用户的输入被阻止(对系统隐藏). 使用此选项可将用户的击键发送到活动窗口.</p>
     <p id="asterisk"><strong>*:</strong> 通配符. 设置 <a href="#FindAnywhere">FindAnywhere</a> 为 1(true), 允许在用户键入的任何位置找到匹配项.</p>

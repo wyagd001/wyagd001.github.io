@@ -14,6 +14,10 @@
 <p><a href="v2-changes.htm">v1.1 到 v2.0 的更改</a>涵盖了 v1.1 和 v2.0 之间的差异.</p>
 <p>有关更改的全部技术细节, 请参阅 <a href="https://github.com/AutoHotkey/AutoHotkey/tree/alpha">GitHub</a>.</p>
 
+<h2 id="v2.0.18">2.0.18 - 2024 年 7 月 6 日</h2>
+<p>修复 当 GetClipboardData 返回 NULL 时, A_Clipboard 静默退出的问题.</p>
+<p>修复 <code>a.b[c] := d</code>, 以便 <code>a.b</code> 在没有 setter 的情况下调用 getter.</p>
+
 <h2 id="v2.0.17">2.0.17 - 2024 年 6 月 5 日</h2>
 <p>优化 WinText 参数.[<a href="https://github.com/AutoHotkey/AutoHotkey/pull/335">PR #335</a> (Descolada)]</p>
 <p>变更 UnsetError 消息, 建议使用全局声明, 而不是在变量名后添加 "(与全局名称相同)".</p>
@@ -187,7 +191,7 @@
 <li>删除选项可能不会影响相应的 SC.</li>
 <li>选项可能也适用于 sc000.</li>
 </ul>
-<p>修复 自定义组合的错误, 即如果单独用 #HotIf 禁用 <code>a::</code>, 一组热键如 <code>a &amp b::</code>, <code>a::</code> 和 <code>a up::</code> 将不能抑制 <kbd>a</kbd> 的释放.</p>
+<p>修复 自定义组合的错误, 即如果单独用 #HotIf 禁用 <code>a::</code>, 一组热键如 <code>a &amp; b::</code>, <code>a::</code> 和 <code>a up::</code> 将不能抑制 <kbd>a</kbd> 的释放.</p>
 <p>修复 一个错误, 即一个键按下事件能被热键正确抑制, 但在 SendLevel &gt; 0 的情况下, 发送一个额外的键按下, 会阻止随后的键松开被抑制, 即使由于 #InputLevel, 忽略发送的事件.</p>
 <p>修复 <code>a &amp; b up::</code> 在 <code>a &amp; b::</code> 存在, 但被 #HotIf 禁用的情况下, 不会抑制 <kbd>b</kbd> 的问题.</p>
 <p>修复 热键由于竞争状态而无法触发的问题. 如果修饰符热键(如 <code>~*RWin::</code>) 太早调用 Send 或 GetKeyState, 操作系统可能会报告 RWin 没有按下, 因此修饰符的钩子的状态将被 "纠正", 热键将错误地触发或无法触发. 只有当另一个键盘钩子比脚本自己的钩子安装得更晚时才可能发生这种情况, 因为在这种情况下,操作系统不会更新按键的状态, 直到另一个钩子的线程恢复并返回..</p>
