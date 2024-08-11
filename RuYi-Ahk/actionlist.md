@@ -644,14 +644,19 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1637|e741|右下屏幕|任意窗口|窗口移到屏幕右下角(1/4)|Cando&#124;窗口右下角屏幕|
 |1638|E70F|WV2打开|选中文件|使用 WebView2 打开选定文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\WebView2打开.ahk2" "%CandySel%"|
 |1639|E70F|Docx(WV2)|选中文件|使用 WebView2 打开选定 Docx 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\Docx(WebView2).ahk2" "%CandySel%"|
-|1640|E70F|Pdfjs(WV2)|选中文件|使用 WebView2(pdfjs) 打开选定 Pdf 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\pdfjs(WebView2).ahk2" "%CandySel%"|
+|1640|ea90|Pdfjs(WV2)|选中文件|使用 WebView2(pdfjs) 打开选定 Pdf 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\pdfjs(WebView2).ahk2" "%CandySel%"|
 |1641|e71e|搜索List|特定窗口|在拥有 SysListView 控件的窗口(如任务管理器, 服务管理, 程序管理),搜索列表第一列并定位|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\窗口处理\SysListView搜索和定位.ahk2" "%Windy_CurWin_Id%"|
-|1642|ed2b|隐藏窗口|选中文件|隐藏窗口不再显示|canfunc&#124;CF_WinHide&#124;%Windy_CurWin_id%
-|1643|e87a|主屏幕|无条件|双屏幕时将光标移动到主屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "主"
-|1644|e87b|副屏幕|无条件|双屏幕时将光标移动到副屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "副"
-|1645|E70F|动态桌面|无条件|使用 WebView2 打开指定网页文件实现动态桌面的效果|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\动态桌面(WebView2).ahk2"
-|1646|E70F|编辑帮助|剪贴板|复制 Ahk 帮助文件路径时, 自动编辑当前复制路径的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\自动编辑帮助文件.ahk"
-|1647|e8b9|透明|任意窗口|将窗口中的指定颜色透明|canfunc&#124;CF_WinSetTransColor&#124;FFFFFF
-|1648|e8b9|取消透明|任意窗口|取消窗口中的指定颜色透明|canfunc&#124;CF_WinSetTransColor
-|1649|e8b9|设为桌面|任意窗口|将窗口设为桌面(将窗口放到桌面层)|canfunc&#124;AttachToDesktop&#124;%Windy_CurWin_id%&#124;1
-|1650|e8b9|恢复正常|任意窗口|将设为桌面的窗口恢复正常|canfunc&#124;AttachToDesktop
+|1642|ed2b|隐藏窗口|选中文件|隐藏窗口不再显示|canfunc&#124;CF_WinHide&#124;%Windy_CurWin_id%|
+|1643|e87a|主屏幕|无条件|双屏幕时将光标移动到主屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "主"|
+|1644|e87b|副屏幕|无条件|双屏幕时将光标移动到副屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "副"|
+|1645|eda4|动态桌面|无条件|使用 WebView2 打开指定网页文件实现动态桌面的效果|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\动态桌面(WebView2).ahk2"|
+|1646|E70F|编辑帮助|剪贴板|复制 Ahk 帮助文件路径时, 自动编辑当前复制路径的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\自动编辑帮助文件.ahk"|
+|1647|e8b9|透明|任意窗口|将窗口中的指定颜色透明|canfunc&#124;CF_WinSetTransColor&#124;FFFFFF|
+|1648|e8b9|取消透明|任意窗口|取消窗口中的指定颜色透明|canfunc&#124;CF_WinSetTransColor|
+|1649|e8b9|设为桌面|任意窗口|将窗口设为桌面(将窗口放到桌面层)|canfunc&#124;AttachToDesktop&#124;%Windy_CurWin_id%&#124;1|
+|1650|e8b9|恢复正常|任意窗口|将设为桌面的窗口恢复正常|canfunc&#124;AttachToDesktop|
+|1651|ea86|查看图片|选中文件|使用系统的照片查看器打开图片|canfunc&#124;viewpic&#124;%CandySel%|
+|1652|e768|自定义用户文件夹|无条件|自定义注册表中的用户文件夹(User Shell Folders)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\自定义User Shell Folders.ahk"|
+|1653|f408|文字识别|无条件|拖动鼠标区域截图并文字识别(64位系统,需自行下载 PaddleOCR 或 RapidOCR 模块)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\小区域文字识别.ahk"|
+|1654|e80a|数字华容道|无条件|1-15 的数字单滑块拼图游戏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\游戏\数字华容道.ahk"|
+|1655|e74b|运行动作|指定参数|指定参数运行指定的动作|Cando&#124;SpecifyOptRun&#124;1216&#124;{Space}|
