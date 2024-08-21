@@ -660,3 +660,6 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1653|f408|文字识别|无条件|拖动鼠标区域截图并文字识别(64位系统,需自行下载 PaddleOCR 或 RapidOCR 模块)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\小区域文字识别.ahk"|
 |1654|e80a|数字华容道|无条件|1-15 的数字单滑块拼图游戏|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\游戏\数字华容道.ahk"|
 |1655|e74b|运行动作|指定参数|指定参数运行指定的动作|Cando&#124;SpecifyOptRun&#124;1216&#124;{Space}|
+|1656|e71e|进程打开的文件|特定窗口|查看窗口进程打开占用的文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\窗口处理\GetOpenedFiles.ahk2" "%Windy_CurWin_Id%"|
+|1657|ec16|FTP|无条件|打开FTP服务器共享如意目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\打开FTP服务器共享如意目录.ahk"|
+|1658|ede4|查找大文件|选中文件夹|列出选中文件夹中的最大文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\查找大文件.ahk" "%CandySel%"|
