@@ -11,7 +11,7 @@ description: 如意百宝箱-Ahk 更新历史
 下面列出了如意百宝箱发布以来的变更和新增内容.  
 
 ### <span id="2.8">2.8 - 2024/09/04</span>
-1. 预览文件支持运行命令调用第三方软件打开, 例如 Run|"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Apk信息.ahk" "%Prew_File%"  
+1. 预览文件支持运行命令调用第三方软件打开, 例如 Run;&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Apk信息.ahk" "%Prew_File%"  
 2. 新增 外部脚本动作  
 .01 查找大文件夹.ahk  
 .02 Apk信息.ahk(引入aapt.exe)  
