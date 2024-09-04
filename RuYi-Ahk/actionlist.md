@@ -114,7 +114,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1101|f14a|[MD5对比1](/actions/1101.md)|选中文件|将选中文件放入MD5计算界面的上部编辑框|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\MD5.ahk" "%CandySel%"|
 |1102|f14a|[MD5对比2](/actions/1101.md)|选中文件|将选中文件放入MD5计算界面的下部编辑框|canfunc&#124;ExecSend&#124;%CandySel%&#124;MD5验证 ahk_class AutoHotkeyGUI|
 |1103|e928|[Hash2](/actions/1103.md)|选中文件|计算选中文件的Hash值|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Hash_File.ahk" "%CandySel%"|
-|1104|e124|[缩小50%](/actions/1104.md)|选中文件|将选中的图形文件尺寸缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%"|
+|1104|e124|[缩小50%](/actions/1104.md)|选中文件|将选中的图形文件尺寸缩小50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "50"|
 |1105|e19b|[灰度图像](/actions/1105.md)|选中文件|将选中的图形文件转换为灰度图像|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像变灰度.ahk" "%CandySel%"|
 |1106|e16d|[放入剪贴板](/actions/1106.md)|选中文件|将选中的图形文件内容复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像内容放入剪贴板.ahk" "%CandySel%"|
 |1107|e124|[品质压缩](/actions/1107.md)|选中文件|将选中的图形文件品质降低50%|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像质量压缩一半.ahk" "%CandySel%"|
@@ -227,7 +227,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1214|f6fa|[百度搜索](/actions/1214.md)|选中文件|百度搜索选中文件的文件名|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://www.baidu.com/s?wd=%CandySel_FileName%|
 |1215|f093|Adb|子面板|手机Adb的子面板|Gui&#124;Adb|
 |1216|e898|收藏夹|Chrome|快捷键打开Chrome的收藏夹|Keys&#124;^+o|
-|[1217](http://127.0.0.1:5151/runcom?aabb=1217)|e89a|到手机|无条件|同步电脑文件夹到手机文件夹(参数指定文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\同步文件夹到手机.ahk" "H:\备份\同步文件夹" "/storage/emulated/0/1_文档/资料/同步文件夹"|
+|[1217](http://127.0.0.1:5151/runcom?aabb=1217)|e89a|到手机|无条件|同步电脑文件夹到手机文件夹(参数指定文件夹)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\同步文件夹到手机.ahk" "H:\备份\同步文件夹" "/storage/emulated/0/1_文档/资料/同步文件夹"|
 |[1218](http://127.0.0.1:5151/runcom?aabb=1218)|e952|连接手机|无条件|使用adb连接到手机|run&#124;%A_ComSpec% /k "%A_ScriptDir%\引用程序\adb.exe" connect 192.168.1.109:5555|
 |1219|e89a|到手机|选中文件|发送电脑选中文件到手机的根目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\发送文件到手机目录.ahk" "%CandySel%"|
 |[1220](http://127.0.0.1:5151/runcom?aabb=1220)|e9d2|股票行情|无条件|显示自定义股票当天的涨跌|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\股票当天行情.ahk"|
@@ -250,7 +250,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1237|e74c|chm解压|选中文件|解压缩选中的chm文件|run&#124;hh.exe -decompile %CandySel_FileNameNoExt% %CandySel_FileName%&#124;%CandySel_ParentPath%|
 |1238|e8b1|前后交换|选中文件|重命名文件, 将文件名使用分隔符分为前后两部分,然后交换其位置|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件名前后交换.ahk" "%CandySel%"|
 |1239|E734|[收藏夹](/actions/1239.md)|对话框|对话框跳转到ini文件中预设的文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\对话框_收藏夹.ahk" "%Windy_CurWin_id%"|
-|[1240](http://127.0.0.1:5151/runcom?aabb=1240)|E7AC|测试动作|无条件|对话框显示动作中变量|msgbox&#124;你好啊~&#124;hello~&#124;Ahk|
+|[1240](http://127.0.0.1:5151/runcom?aabb=1240)|E7AC|测试动作|无条件|对话框显示动作中变量|msgbox&#124;你好啊~&#124;hello~&#124;Ahk&#124;%A_OSversion%|
 |1241|e8f9|[任务栏按钮](/actions/1241.md)|任意窗口|移除或恢复窗口在任务栏的按钮|canfunc&#124;CF_WinRemoveTaskbarButton&#124;%Windy_CurWin_id%|
 |1242|e982|[文本处理](/actions/1242.md)|选中文本|编辑选中的文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\文本处理.ahk" "%CandySel%"|
 |1243|E894|[结束进程](/actions/1243.md)|任意窗口|强制结束窗口进程|canfunc&#124;CF_WinKill&#124;%Windy_CurWin_id%|
@@ -305,7 +305,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1292](http://127.0.0.1:5151/runcom?aabb=1292)|ed5a|日期时间|无条件|打开控制面板日期和时间设置|run&#124;timedate.cpl|
 |[1293](http://127.0.0.1:5151/runcom?aabb=1293)|e962|鼠标属性|无条件|打开控制面板鼠标属性|run&#124;main.cpl|
 |[1294](http://127.0.0.1:5151/runcom?aabb=1294)|e775|区域和语言|无条件|打开控制面板区域和语言选项|run&#124;intl.cpl|
-|[1295](http://127.0.0.1:5151/runcom?aabb=1295)|f8b0|任务栏设置|无条件|打开任务栏设置|run&#124;rundll32.exe shell32.dll, Options_RunDLL 1|
+|[1295](http://127.0.0.1:5151/runcom?aabb=1295)|f8b0|任务栏设置|无条件|打开任务栏设置|run&#124;rundll32.exe shell32.dll,Options_RunDLL 1|
 |1296|ed5a|[时间戳](/actions/1296.md)|选中文本|选中的文本进行时间戳和日期时间的互相转换|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_时间戳转换.ahk" "%CandySel%"|
 |1297|e71d|[文件列表](/actions/1297.md)|选中文件夹|显示选中文件夹中的所有文件的路径列表(整合版)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表(整合版).ahk" "%CandySel%"|
 |1298|e71d|[文件列表](/actions/1298.md)|选中文件夹|显示选中文件夹中的所有文件的路径列表(按 Ahk 遍历顺序)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_文件列表.ahk" "%CandySel%"|
@@ -448,7 +448,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |[1435](http://127.0.0.1:5151/runcom?aabb=1435)|ec77|恢复桌面位置|无条件|利用先前保存的文件恢复桌面图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\保存和恢复桌面图标位置.ahk" "restore"|
 |[1436](http://127.0.0.1:5151/runcom?aabb=1436)|ef3c|[获取颜色](/actions/1436.md)|无条件|查看选中数字对应的颜色, 并带有取色功能|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\取色小程序.ahk" "%CandySel%"|
 |[1437](http://127.0.0.1:5151/runcom?aabb=1437)|f16a|[暂时隐藏](/actions/1437.md)|任意窗口|将任意窗口暂时隐藏 3 秒后恢复显示(任务栏按钮会被放到同类的最右边)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\暂时隐藏窗口.ahk" "%Windy_CurWin_id%"|
-|1438|e8e7|[保存并运行](/actions/1438.md)|选中文本|将选中 Ahk 代码文本保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun&#124;CandySel_Rich|
+|1438|e8e7|[保存并运行](/actions/1438.md)|选中文本|将选中 Ahk 代码文本保存到当前用户的桌面并运行|canfunc&#124;CF_CopyToDesktopAndRun|
 |1439|E70F|[打开本地网页](/actions/1439.md)|Chrome|使用文本编辑器打开浏览器正在浏览的本地文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\记事本打开浏览器当前浏览的本地文件.ahk" "%Windy_CurWin_Class%"|
 |[1440](http://127.0.0.1:5151/runcom?aabb=1440)|E107|[回收站预览](/actions/1440.md)|无条件|显示当前登录用户的回收站中的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\当前用户回收站中的文件信息.ahk"|
 |[1441](http://127.0.0.1:5151/runcom?aabb=1441)|f58b|系统切换任务|无条件|显示系统切换窗口界面|Keys&#124;^!{Tab}|
@@ -491,7 +491,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1478|e790|[白转透明](/actions/1478.md)|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_指定颜色变透明.ahk" "%CandySel%" "0xFFFFFF"|
 |1479|f406|[白转红](/actions/1479.md)|选中文件|将图片中的白色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0xFFFF0000"|
 |1480|e790|[白转透明](/actions/1480.md)|选中文件|将图片中的白色转为透明|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_颜色替换.ahk" "%CandySel%" "0xFFFFFFFF" "0x00000000"|
-|1481|f406|[留白转红](/actions/1481.md)|选中文件|保留图片中的白色, 其他所有颜色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0xFFFFFF" "0xFF0000"|
+|1481|f406|[留白转红](/actions/1481.md)|选中文件|保留图片中的白色, 其他所有颜色转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_保留指定颜色.ahk" "%CandySel%" "0xFFFFFFFF" "0xFFFF0000"|
 |1482|eb9f|[转 Ico](/actions/1482.md)|选中文件|将选中的图片文件转为 Ico 文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_转为Ico文件.ahk" "%CandySel%"|
 |1483|eb3c|图片转换|子面板|图片转换动作子面板|Gui&#124;图片转换|
 |1484|eb9f|[转为png](/actions/1484.md)|选中文件|将选中的图形文件转为png|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像缩小一半.ahk" "%CandySel%" "png"|
@@ -602,8 +602,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1589|e74e|TC启动|任意窗口|TC 文件管理器启动后自动点击数字按钮|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\TC启动后自动点击进入.ahk"|
 |1590|f128|鼠标轨迹|无条件|工具: 鼠标轨迹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\鼠标轨迹.ahk"|
 |1591|e957|数字语音|无条件|工具: 小键盘按键带语音|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\语音数字.ahk"|
-|1592|e706|屏幕亮度|无条件|增加屏幕亮度, 参数1为亮度值, 参数2为对比度值|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\屏幕亮度.ahk2" "+10" "50"|
-|1593|e706|屏幕亮度|无条件|降低屏幕亮度, 参数1为亮度值, 参数2为对比度值|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\屏幕亮度.ahk2" "-10" "50"|
+|1592|e706|屏幕亮度|无条件|设置屏幕亮度为85, 参数1为亮度值(如"+10"/85), 参数2为对比度值(如"+10"/85)|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\屏幕亮度.ahk2" "85" "0"|
+|1593|e706|屏幕对比度|无条件|设置屏幕对比度为60, 参数1为亮度值(如"-10"/85), 参数2为对比度值(如"-10"/85)|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\屏幕亮度.ahk2" "0" "60"|
 |1594|e8b9|置底|任意窗口|将窗口放到底部(类似按下 Alt+Esc)|canfunc&#124;CF_WinMoveBottom&#124;%Windy_CurWin_id%|
 |1595|f742|修改标题|任意窗口|修改窗口标题|canfunc&#124;CF_WinSetTitle&#124;%Windy_CurWin_id%|
 |1596|ede5|中键增强|任意窗口|中键增强|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\鼠标中键增强.ahk" %Windy_CurWin_id%|
