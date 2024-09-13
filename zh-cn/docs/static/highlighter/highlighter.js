@@ -3,7 +3,7 @@ function ctor_highlighter()
 {
   var self = this;
   self.syntax = [];
-  self.assignOp = "(?:&lt;&lt;|<<|&gt;&gt;|>>|\\/\\/|\\^|&amp;|&|\\||\\.|\\/|\\*|-|\\+|:)=";
+  self.assignOp = "(?:&lt;&lt;|<<|&gt;&gt;|>>|\\/\\/|\\^|&amp;|&|\\||\\.|\\/|\\*|-|\\+|:|)=";
   self.addSyntaxColors = function(codes, index_data, docs_path, new_tab)
   {
     // Add syntax highlighting for AutoHotkey code.
@@ -16,8 +16,9 @@ function ctor_highlighter()
         3 - control flow statement
         4 - operator
         5 - declaration
-        6 - built-in class
-        7 - built-in method/property
+        6 - command
+        7 - sub-command
+        8 - built-in method/property
         99 - Ahk2Exe compiler
     */
     if (!-[1,]) // Exclude Internet Explorer 8 or below
@@ -86,7 +87,7 @@ function ctor_highlighter()
         return PRE + '<sct></sct>';
       });
       els.order.push('mct'); els.mct = [];
-      innerHTML = innerHTML.replace(/(^\s*\/\*[\s\S]*?(^\s*\*\/|\*\/\s*$|$(?![\r\n])))/gm, function(COMMENT)
+      innerHTML = innerHTML.replace(/(^\s*\/\*[\s\S]*?^\s*(\*\/|$(?![\r\n])))/gm, function(COMMENT)
       {
         out = wrap(COMMENT, 'cmt', null);
         els.mct.push(out);
@@ -102,13 +103,13 @@ function ctor_highlighter()
       });
       // function definitions:
       els.order.push('fun'); els.fun = [];
-      innerHTML = innerHTML.replace(/^(\s*?static\s*?|\s*?)([A-Za-z0-9_\u00A0-\uFFFF]+?)(?=\(.*?\)\s*(<(em|sct)><\/(em|sct)>\s*)*{)/mg, function(ASIS, PRE, DEFINITION)
+      innerHTML = innerHTML.replace(/^(\s*?)([A-Za-z0-9_\#@\$\u00A0-\uFFFF]+?)(?=\(.*?\)\s*(<(em|sct)><\/(em|sct)>\s*)*{)/mg, function(ASIS, PRE, DEFINITION)
       {
         if (DEFINITION.match(/^(while|if)$/i))
           return ASIS;
-        out = wrap(DEFINITION, 'fun', null);
+        out = PRE + wrap(DEFINITION, 'fun', null);
         els.fun.push(out);
-        return PRE + '<fun></fun>';
+        return '<fun></fun>';
       });
       // numeric values:
       els.order.push('num'); els.num = [];
@@ -118,29 +119,33 @@ function ctor_highlighter()
         els.num.push(out);
         return '<num></num>';
       });
-      // continuation section inside a string "(...)"
-      els.order.push('cont1'); els.cont1 = [];
-      innerHTML = innerHTML.replace(/('|")([<\/em>\s]*?^\s*\([\s\S]*?^\s*\).*?)\1/gm, function(_, QUOTE, SECTION)
+      // continuation sections:
+      els.order.push('cont'); els.cont = [];
+      innerHTML = innerHTML.replace(/(^.*?(.)(?:\s*?<(?:em|sct)><\/(?:em|sct)>|$)[\r\n]*?^\s*)(\((?!.*?\))[\s\S]*?^\s*\))/gm, function(ASIS, PRE, QUOTE, SECTION)
       {
+        if (QUOTE == '"')
+          return ASIS;
         out = processStrParam(SECTION);
-        els.cont1.push(out);
-        return QUOTE + '<cont1></cont1>' + QUOTE;
-      });
-      // continuation section for hotstrings ::(...)
-      els.order.push('cont2'); els.cont2 = [];
-      innerHTML = innerHTML.replace(/(^\s*:.*?:.*?::)([<\/em>\s]*?^\s*\([\s\S]*?^\s*\).*?)/gm, function(_, PRE, SECTION)
-      {
-        out = processStrParam(SECTION);
-        els.cont2.push(out);
-        return PRE + '<cont2></cont2>';
+        els.cont.push(out);
+        return PRE + '<cont></cont>';
       });
       // strings:
       els.order.push('str'); els.str = [];
-      innerHTML = innerHTML.replace(/(("|')[\s\S]*?\2)/gm, function(_, STRING)
+      innerHTML = innerHTML.replace(/((")[\s\S]*?\2)/gm, function(_, STRING)
       {
         out = wrap(STRING, 'str', null);
         index = els.str.push(out) - 1;
         return '<str ' + index + '></str>';
+      });
+      // legacy assignments:
+      els.order.push('assign'); els.assign = [];
+      innerHTML = innerHTML.replace(/^([ \t]*[^(,\s]*?)([ \t]*=[ \t]*)(.*?)(?=<(?:em|sct)><\/(?:em|sct)>|$)/gim, function(ASIS, VAR, OP, VAL)
+      {
+        if ('^:!*/&^+-|~.='.indexOf(VAR.slice(-1)) != -1)
+          return ASIS;
+        out = processStrParam(VAL);
+        els.assign.push(out);
+        return VAR + OP + '<assign></assign>';
       });
       // methods:
       els.order.push('met'); els.met = [];
@@ -183,19 +188,28 @@ function ctor_highlighter()
         els.dec.push(out);
         return PRE + '<dec></dec>';
       });
+      // ByRef:
+      els.order.push('byref'); els.byref = [];
+      innerHTML = innerHTML.replace(/(.+?)\b(byref)\b(?=(.+?)\))/gim, function(_, PRE, BYREF)
+      {
+        out = PRE + wrap(BYREF, 'cfs', 'Functions.htm#ByRef');
+        els.byref.push(out);
+        return '<byref></byref>';
+      });
+      // built-in functions:
+      els.order.push('bif'); els.bif = [];
+      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[2].single.join('|').replace('()', '') + ')(?=\\()', 'gi'), function(_, BIF)
+      {
+        out = wrap(BIF, 'bif', 2);
+        els.bif.push(out);
+        return '<bif></bif>';
+      });
       // directives:
       els.order.push('dir'); els.dir = [];
       innerHTML = innerHTML.replace(new RegExp('(' + syntax[0].single.join('|') + ')\\b($|[\\s,])(.*?)(?=<(?:em|sct)></(?:em|sct)>|$)', 'gim'), function(_, DIR, SEP, PARAMS)
       {
         // Get type of every parameter:
         var types = index_data[syntax[0].dict[DIR.toLowerCase()]][3];
-        // Skip param processing if first param is an expression:
-        if (types[0] == 'E')
-        {
-          out = wrap(DIR, 'dir', 0);
-          els.dir.push(out);
-          return '<dir></dir>' + SEP + PARAMS;
-        }
         // Temporary exclude (...), {...} and [...]:
         sub = [];
         PARAMS = PARAMS.replace(/[({\[][^({\[]*[\]})]/g, function(c)
@@ -226,50 +240,12 @@ function ctor_highlighter()
         els.dir.push(out);
         return '<dir></dir>';
       });
-      // built-in classes:
-      els.order.push('cls'); els.cls = [];
-      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[6].single.join('|') + ')\\b', 'gi'), function(_, CLS)
+      // commands:
+      els.order.push('cmd'); els.cmd = [];
+      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[6].single.join('|') + ')\\b(\\s*,|\\s*<(?:em|sct)><\\/(?:em|sct)>\\s*,|$|,|\\s(?!\\s*' + self.assignOp + '))(.*?$(?:(?:\\s*?(,|<cont>).*?$))*)', "gim"), function(_, CMD, SEP, PARAMS)
       {
-        out = wrap(CLS, 'cls', 6);
-        els.cls.push(out);
-        return '<cls></cls>';
-      });
-      // built-in functions:
-      els.order.push('bif'); els.bif = [];
-      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[2].single.join('|') + ')\\b(?=$|\\(|\\s(?!\\s*' + self.assignOp + '))', 'gi'), function(_, BIF)
-      {
-        out = wrap(BIF, 'bif', 2);
-        els.bif.push(out);
-        return '<bif></bif>';
-      });
-      // 2-word control flow statements (e.g. for ... in):
-      els.order.push('cfs_2w'); els.cfs_2w = [];
-      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[3][0].join('|') + ')(\\s+(?:\\S+|\\S*(?:\\s*,\\s*\\S*)*)\\s+|\\s+)(' + syntax[3][1].join('|') + ')(\\s+.+?)(?=<(?:em|sct)></(?:em|sct)>|$|{)', 'gim'), function(ASIS, WORD1, INPUT1, WORD2, INPUT2)
-      {
-        var cfs = index_data[syntax[3].dict[(WORD1 + ' ... ' + WORD2).toLowerCase()]];
-        if (!cfs)
-          return ASIS;
-        out = wrap(WORD1, 'cfs', cfs[1]) + INPUT1 + wrap(WORD2, 'cfs', cfs[1]) + INPUT2;
-        els.cfs_2w.push(out);
-        return '<cfs_2w></cfs_2w>';
-      });
-      // 1-word control flow statements (e.g. if):
-      els.order.push('cfs_1w'); els.cfs_1w = [];
-      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[3].single.join('|') + ')\\b($|,|{|(?=\\()|\\s(?!\\s*' + self.assignOp + '))(.*?)(?=<(?:em|sct)></(?:em|sct)>|$|{|\\b(' + syntax[3].single.join('|') + ')\\b)', 'gim'), function(ASIS, CFS, SEP, PARAMS)
-      {
-        var cfs = CFS.toLowerCase();
-        // Skip switch's case or default (will be handled below):
-        if (cfs == 'case' || cfs == 'default')
-          return ASIS;
-        // Skip param processing if the statement uses parentheses:
-        if (PARAMS.charAt(0) == '(')
-        {
-          out = wrap(CFS, 'cfs', 3);
-          els.cfs_1w.push(out);
-          return '<cfs_1w></cfs_1w>' + SEP + PARAMS;
-        }
         // Get type of every parameter:
-        var types = index_data[syntax[3].dict[cfs]][3];
+        var types = index_data[syntax[6].dict[CMD.toLowerCase()]][3];
         // Temporary exclude (...), {...} and [...]:
         sub = [];
         PARAMS = PARAMS.replace(/[({\[][^({\[]*[\]})]/g, function(c)
@@ -279,6 +255,17 @@ function ctor_highlighter()
         });
         // Split params:
         PARAMS = PARAMS.split(',');
+        // Detect smart comma handling:
+        if (PARAMS.length > types.length) // For the last param of any command.
+          PARAMS.push(PARAMS.splice(types.length - 1).join(','));
+
+        if (CMD.toLowerCase() == "msgbox") // For MsgBox.
+        {
+          if (PARAMS[0] && !PARAMS[0].match(/^(\s*(<(em|sct)><\/\3>|$)|\s*<num><\/num>)/)) // 1-parameter mode
+            PARAMS.push(PARAMS.splice(0).join(','));
+          if (PARAMS[3] && !PARAMS[3].match(/^(\s*(<(em|sct)><\/\3>|$)|\s*<num><\/num>)/)) // 3-parameter mode
+            PARAMS.push(PARAMS.splice(2).join(','));
+        }
         // Iterate params and recompose them:
         for (n in PARAMS)
         {
@@ -287,29 +274,89 @@ function ctor_highlighter()
           {
             return sub[index];
           });
-          if (PARAMS[n].match(/^\s*%\s/)) // Skip forced expression parameter:
+          p = /([\s\S]*?)(\s*<(?:em|sct)><\/(?:em|sct)>[\s\S]*|)$/.exec(PARAMS[n]);
+          if (p[1].match(/^\s*%\s/)) // Skip forced expression parameter:
+            continue;
+          if (p[1].match(/<cont>/)) // Skip continuation section:
             continue;
           if (types[n] == 'S') // string
-            PARAMS[n] = processStrParam(PARAMS[n]);
+            PARAMS[n] = processStrParam(p[1]) + p[2];
         }
         PARAMS = PARAMS.join(',');
-        out = wrap(CFS, 'cfs', 3) + SEP + PARAMS;
-        els.cfs_1w.push(out);
-        return '<cfs_1w></cfs_1w>';
+        out = wrap(CMD, 'cmd', 6) + SEP + PARAMS;
+        els.cmd.push(out);
+        return '<cmd></cmd>';
       });
-      // case/default control flow statements:
-      els.order.push('cfs_switch'); els.cfs_switch = [];
-      innerHTML = innerHTML.replace(/^(\s*)(case|default)\b(?=.*?:)/gim, function(_, PRE, CFS)
+      // control flow statements:
+      els.order.push('cfs'); els.cfs = [];
+      innerHTML = innerHTML.replace(new RegExp('\\b(' + syntax[3][0].join('|') + ') (\\S+|\\S+, \\S+) (' + syntax[3][1].join('|') + ') ((.+) (' + syntax[3][2].join('|') + ') (.+?)|.+?)(?=<(?:em|sct)></(?:em|sct)>|$|{)|\\b(' + syntax[3].single.join('|') + ')\\b($|,|{|(?=\\()|\\s(?!\\s*' + self.assignOp + '))(.*?)(?=<(?:em|sct)></(?:em|sct)>|$|{|\\b(' + syntax[3].single.join('|') + ')\\b)', 'gim'), function(ASIS, IF, INPUT, BETWEEN, VAL, VAL1, AND, VAL2, CFS, SEP, PARAMS)
       {
-        out = PRE + wrap(CFS, 'cfs', 3);
-        els.cfs_switch.push(out);
-        return '<cfs_switch></cfs_switch>';
+        if (IF)
+        {
+          if (VAL1)
+          {
+            var cfs = index_data[syntax[3].dict[(IF + ' ... ' + BETWEEN + ' ... ' + AND).toLowerCase()]];
+            if (cfs)
+              out = wrap(IF, 'cfs', cfs[1]) + ' ' + INPUT + ' ' + wrap(BETWEEN, 'cfs', cfs[1]) + ' ' + processStrParam(VAL1) + ' ' + wrap(AND, 'cfs', cfs[1]) + ' ' + processStrParam(VAL2);
+            else
+              out = ASIS;
+          }
+          else if (INPUT)
+          {
+            var cfs = index_data[syntax[3].dict[(IF + ' ... ' + BETWEEN).toLowerCase()]];
+            if (cfs)
+              out = wrap(IF, 'cfs', cfs[1]) + ' ' + INPUT + ' ' + wrap(BETWEEN, 'cfs', cfs[1]) + ' ' + ((cfs[3][1] == "S") ? processStrParam(VAL) : VAL);
+            else
+              out = ASIS;
+          }
+        }
+        else
+        {
+          var cfs = CFS.toLowerCase();
+          // Get type of every parameter:
+          var types = index_data[syntax[3].dict[cfs]][3];
+          // legacy if-statement:
+          if (cfs == 'if')
+            if (m = PARAMS.match(/^([^.(:]+?)(&gt;=|&gt;|&lt;&gt;|&lt;=|&lt;|!=|=)(.*)$/))
+            {
+              var VAR = m[1], OP = m[2], VAL = m[3];
+              out = wrap(CFS, 'cfs', 'lib/IfEqual.htm') + SEP + VAR + OP + processStrParam(VAL);
+              els.cfs.push(out);
+              return '<cfs></cfs>';
+            }
+          // Temporary exclude (...), {...} and [...]:
+          sub = [];
+          PARAMS = PARAMS.replace(/[({\[][^({\[]*[\]})]/g, function(c)
+          {
+            index = sub.push(c) - 1;
+            return '<sub ' + index + '></sub>';
+          });
+          // Split params:
+          PARAMS = PARAMS.split(',');
+          // Iterate params and recompose them:
+          for (n in PARAMS)
+          {
+            // Restore (...), {...} and [...] previously excluded:
+            PARAMS[n] = PARAMS[n].replace(/<sub (\d+)><\/sub>/g, function(_, index)
+            {
+              return sub[index];
+            });
+            if (PARAMS[n].match(/^\s*%\s/)) // Skip forced expression parameter:
+              continue;
+            if (types[n] == 'S') // string
+              PARAMS[n] = processStrParam(PARAMS[n]);
+          }
+          PARAMS = PARAMS.join(',');
+          out = wrap(CFS, 'cfs', 3) + SEP + PARAMS;
+        }
+        els.cfs.push(out);
+        return '<cfs></cfs>';
       });
       // hotstrings:
       els.order.push('hotstr'); els.hotstr = [];
       innerHTML = innerHTML.replace(/^(\s*)(:.*?:)(.*?)(::)(.*)/mg, function(_, PRE, HOTSTR1, ABBR, HOTSTR2, REPL)
       {
-        out = PRE + wrap(HOTSTR1, 'lab', null) + wrap(ABBR, 'str', null) + wrap(HOTSTR2, 'lab', null) + ((HOTSTR1.match(/x/i) || (REPL.match(/^\s*\{\s*(?=<(?:em|sct)><\/(?:em|sct)>|$)/i))) ? REPL : wrap(REPL, 'str', null));
+        out = PRE + wrap(HOTSTR1, 'lab', null) + wrap(ABBR, 'str', null) + wrap(HOTSTR2, 'lab', null) + (HOTSTR1.match(/x/i) ? REPL : wrap(REPL, 'str', null));
         els.hotstr.push(out);
         return '<hotstr></hotstr>';
       });
@@ -323,10 +370,8 @@ function ctor_highlighter()
       });
       // labels:
       els.order.push('lab'); els.lab = [];
-      innerHTML = innerHTML.replace(/^(\s*)([^\s{(]+?:)(?=\s*(<(em|sct)><\/(em|sct)>|$))/mg, function(ASIS, PRE, LABEL)
+      innerHTML = innerHTML.replace(/^(\s*)([^\s{(]+?:)(?=\s*(<(em|sct)><\/(em|sct)>|$))/mg, function(_, PRE, LABEL)
       {
-        if (LABEL == '<cfs_switch></cfs_switch>:')
-          return ASIS;
         out = PRE + wrap(LABEL, 'lab', null);
         els.lab.push(out);
         return '<lab></lab>';
@@ -407,6 +452,8 @@ function ctor_highlighter()
         if (typeof type == 'undefined')
           continue;
         syntax[type] = syntax[type] || [];
+        if (entry.substr(entry.length - 2) == '()')
+          entry = entry.substr(0, entry.length - 2);
         if (entry.indexOf(' ... ') != -1)
         {
           part = entry.split(' ... ');
@@ -420,6 +467,12 @@ function ctor_highlighter()
         else
           (syntax[type].single = syntax[type].single || []).push(entry);
         (syntax[type].dict = syntax[type].dict || {})[entry.toLowerCase()] = i;
+        if (entry.indexOf(', ') != -1)
+        {
+          entry = entry.toLowerCase().replace(', ', ' ');
+          syntax[type].single.push(entry);
+          (syntax[type].dict = syntax[type].dict || {})[entry] = i;
+        }
       }
       return syntax;
     }

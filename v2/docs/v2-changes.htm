@@ -49,8 +49,9 @@
   </li>
   <li><a href="#library">库</a>
     <ul>
-      <li><a href="#removed-details">删除的命令</a></li>
-      <li><a href="#modified-commandsfunctions">修改的命令/函数</a></li>
+      <li><a href="#lib-removed">删除的命令, 函数 &amp; 指令</a></li>
+      <li><a href="#lib-renamed">重命名的命令, 函数 &amp; 指令</a></li>
+      <li><a href="#lib-modified">修改的命令, 函数 &amp; 指令</a></li>
       <li><a href="#new-functions">新函数</a></li>
       <li><a href="#staticclass-variables">Static/Class 变量</a></li>
       <li><a href="#new-directives">新指令</a></li>
@@ -461,114 +462,393 @@ this.__set(name, args, value)</pre>
 <p>一个函数/方法可以通过声明参数 ByRef(用 <code>&amp;</code>) 或显式解引来赋值.</p>
 <p>例如, <code>VT_BYREF|VT_BOOL</code> 类型的参数以前会收到一个 ComObjRef 对象, 并且会被赋值, 如 <code>pbCancel[] := true</code> 或 <code>NumPut(-1, ComObjValue(pbCancel), "short")</code>. 现在, 这个参数可以被定义为 <code>&amp;bCancel</code> 并像 <code>bCancel := true</code> 那样赋值; 或者可以被定义为 <code>pbCancel</code> 并像 <code>%pbCancel% := true</code> 那样赋值.</p>
 <h2 id="library">库</h2>
-<p>删除的:</p>
-<ul>
-<li>Asc() (使用 <a href="lib/Ord.htm">Ord</a>)</li>
-<li>AutoTrim (使用 <a href="lib/Trim.htm">Trim</a>)</li>
-<li>ComObjMissing() (改为连续写两个逗号)</li>
-<li>ComObjUnwrap() (如果需要, 使用 <a href="lib/ComObjValue.htm">ComObjValue</a> 和 <a href="lib/ObjAddRef.htm">ObjAddRef</a>)</li>
-<li>ComObjEnwrap() (如果需要, 使用 <a href="lib/ComObjFromPtr.htm">ComObjFromPtr</a> 和 <a href="lib/ObjAddRef.htm">ObjAddRef</a> 代替)</li>
-<li>ComObjError()</li>
-<li>ComObjXXX() 其中 XXX 是显式定义的 ComObj 函数以外的任何东西(使用 <a href="lib/ComObjActive.htm">ComObjActive</a>, <a href="lib/ComValue.htm">ComValue</a> 或 <a href="lib/ComObjFromPtr.htm">ComObjFromPtr</a> 代替).</li>
-<li>ControlSendRaw (使用 <code>ControlSend "{Raw}"</code> 或 <a href="lib/ControlSend.htm">ControlSendText</a> 代替)</li>
-<li>EnvDiv</li>
-<li>EnvMult</li>
-<li>EnvUpdate (它的用处非常有限, 可以用一个简单的 <a href="lib/SendMessage.htm">SendMessage</a> 代替)</li>
-<li>Exception (使用 <a href="lib/Error.htm">Error</a> 或一个适当的子类)</li>
-<li>FileReadLine (使用<a href="lib/LoopFiles.htm">文件读取循环</a>或 <a href="lib/FileOpen.htm">FileOpen</a>)</li>
-<li>Func (使用像 <code>MyFunc</code> 这样的直接引用)</li>
-<li>Gosub</li>
-<li>Gui, GuiControl, GuiControlGet (请参阅 <a href="#gui">Gui</a>)</li>
-<li>IfEqual</li>
-<li>IfExist</li>
-<li>IfGreater</li>
-<li>IfGreaterOrEqual</li>
-<li>IfInString</li>
-<li>IfLess</li>
-<li>IfLessOrEqual</li>
-<li>IfMsgBox (<a href="lib/MsgBox.htm">MsgBox</a> 现在返回按钮名称)</li>
-<li>IfNotEqual</li>
-<li>IfNotExist</li>
-<li>IfNotInString</li>
-<li>IfWinActive</li>
-<li>IfWinExist</li>
-<li>IfWinNotActive</li>
-<li>IfWinNotExist</li>
-<li>If between/is/in/contains (但请参阅 <a href="#isXXX">isXXX</a>)</li>
-<li>Input (使用 <a href="lib/InputHook.htm">InputHook</a>)</li>
-<li>IsByRef(请参阅 <a href="Functions.htm#NoIsByRef">ByRef 限制</a>)</li>
-<li>IsFunc</li>
-<li>Menu (使用 <a href="lib/Menu.htm">Menu/MenuBar 类</a>, <a href="lib/TraySetIcon.htm">TraySetIcon</a>, <a href="Variables.htm#IconTip">A_IconTip</a>, <a href="Variables.htm#IconHidden">A_IconHidden</a> 和 <a href="Variables.htm#AllowMainWindow">A_AllowMainWindow</a>)</li>
-<li>MenuGetHandle (使用 <a href="lib/Menu.htm#Handle">Menu.Handle</a>)</li>
-<li>MenuGetName (没有菜单名称; <a href="lib/MenuFromHandle.htm">MenuFromHandle</a> 是最接近的替代方法)</li>
-<li>Progress (使用 <a href="lib/Gui.htm">Gui</a>)</li>
-<li>SendRaw (使用 <code>Send "{Raw}"</code> 或 <a href="lib/Send.htm#SendText">SendText</a> 代替)</li>
-<li>SetBatchLines (-1 现在是默认行为)</li>
-<li>SetEnv</li>
-<li>SetFormat (<a href="lib/Format.htm">Format</a> 可以用来格式化一个字符串)</li>
-<li>SoundGet/SoundSet(请参阅 <a href="#Sound">Sound 函数</a>)</li>
-<li>SoundGetWaveVolume/SoundSetWaveVolume (在平衡方面与 SoundGet/SoundSet 的行为略有不同, 但都没有保留平衡)</li>
-<li>SplashImage (使用 <a href="lib/Gui.htm">Gui</a>)</li>
-<li>SplashTextOn/Off (使用 <a href="lib/Gui.htm">Gui</a>)</li>
-<li>StringCaseSense (使用各种参数)</li>
-<li>StringGetPos (使用 <a href="lib/InStr.htm">InStr</a>)</li>
-<li>StringLeft<br>
-StringLen<br>
-StringMid<br>
-StringRight<br>
-StringTrimLeft<br>
-StringTrimRight  -- 使用 <a href="lib/SubStr.htm">SubStr</a> 来代替这些命令.</li>
-<li>StringReplace (使用 <a href="lib/StrReplace.htm">StrReplace</a> 代替)</li>
-<li>StringSplit (使用 <a href="lib/StrSplit.htm">StrSplit</a> 代替)</li>
-<li>Transform</li>
-<li>VarSetCapacity (对二进制数据/结构使用 <a href="lib/Buffer.htm">Buffer 对象</a>, 对 UTF-16 字符串使用 <a href="lib/VarSetStrCapacity.htm">VarSetStrCapacity</a>)</li>
-<li>WinGetActiveStats</li>
-<li>WinGetActiveTitle</li>
-<li>#CommentFlag</li>
-<li>#Delimiter</li>
-<li>#DerefChar</li>
-<li>#EscapeChar</li>
-<li>#HotkeyInterval (使用 <a href="Variables.htm#HotkeyInterval">A_HotkeyInterval</a>)</li>
-<li>#HotkeyModifierTimeout (使用 <a href="lib/A_HotkeyModifierTimeout.htm">A_HotkeyModifierTimeout</a>)</li>
-<li>#IfWinActive, #IfWinExist, #IfWinNotActive, #IfWinNotExist (请参阅 <a href="lib/_HotIf.htm#optimization">#HotIf Optimization</a>)</li>
-<li>#InstallKeybdHook (使用 <a href="lib/InstallKeybdHook.htm">InstallKeybdHook</a> 函数)</li>
-<li>#InstallMouseHook (使用 <a href="lib/InstallMouseHook.htm">InstallMouseHook</a> 函数)</li>
-<li>#KeyHistory (使用 <code>KeyHistory N</code>)</li>
-<li>#LTrim</li>
-<li>#MaxHotkeysPerInterval (使用 <a href="lib/A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a>)</li>
-<li>#MaxMem(每个变量的最大容量现在没有限制)</li>
-<li>#MenuMaskKey (使用 <a href="lib/A_MenuMaskKey.htm">A_MenuMaskKey</a>)</li>
-<li>#NoEnv (现在是默认行为)</li>
-</ul>
-<p>重命名的:</p>
-<ul>
-<li>ComObjCreate() → <a href="lib/ComObject.htm">ComObject</a>, 它现在是一个类</li>
-<li>ComObjParameter() → <a href="lib/ComValue.htm">ComValue</a>, 它现在是一个类</li>
-<li>DriveSpaceFree → <a href="lib/DriveGetSpaceFree.htm">DriveGetSpaceFree</a></li>
-<li>EnvAdd → <a href="lib/DateAdd.htm">DateAdd</a></li>
-<li>EnvSub → <a href="lib/DateDiff.htm">DateDiff</a></li>
-<li>FileCopyDir → <a href="lib/DirCopy.htm">DirCopy</a></li>
-<li>FileCreateDir → <a href="lib/DirCreate.htm">DirCreate</a></li>
-<li>FileMoveDir → <a href="lib/DirMove.htm">DirMove</a></li>
-<li>FileRemoveDir → <a href="lib/DirDelete.htm">DirDelete</a></li>
-<li>FileSelectFile → <a href="lib/FileSelect.htm">FileSelect</a></li>
-<li>FileSelectFolder → <a href="lib/DirSelect.htm">DirSelect</a></li>
-<li>#If → <a href="lib/_HotIf.htm">#HotIf</a></li>
-<li>#IfTimeout → <a href="lib/_HotIfTimeout.htm">HotIfTimeout</a></li>
-<li>StringLower → <a href="lib/StrLower.htm">StrLower</a> 和 <a href="lib/StrLower.htm">StrTitle</a></li>
-<li>StringUpper → <a href="lib/StrLower.htm">StrUpper</a> 和 <a href="lib/StrLower.htm">StrTitle</a></li>
-<li>UrlDownloadToFile → <a href="lib/Download.htm">Download</a></li>
-<li>WinMenuSelectItem → <a href="lib/MenuSelect.htm">MenuSelect</a></li>
-<li>LV, TV 和 SB 函数 → <a href="lib/GuiControl.htm">GuiControl</a> 的方法</li>
-<li>File.__Handle → <a href="lib/File.htm#Handle">File.Handle</a></li>
-</ul>
-<h3 id="removed-details">删除的命令(详细信息)</h3>
-<p>请参见上面的完整列表.</p>
-<p id="EnvUpdate">EnvUpdate 被删除了, 但是可以用一个简单的 SendMessage 调用来代替, 如下所示:</p>
-<pre>SendMessage(0x1A, 0, StrPtr("Environment"), 0xFFFF)</pre>
-<p id="StringCaseSense">StringCaseSense 被删除, 因此 <code>!=</code> 始终是大小写不敏感的(但是 <code>!==</code> 被添加为大小写敏感的不相等), 并且 <code>=</code> 和 <code>!=</code> 只忽略 ASCII 字符的大小写. 添加 <a href="lib/StrCompare.htm">StrCompare</a> 用于使用任何模式比较字符串. 各种字符串函数现在都有一个 <em>CaseSense</em> 参数, 可用于指定大小写敏感性或区域设置模式.</p>
-<h3 id="modified-commandsfunctions">修改的命令/函数</h3>
-<p class="note">关于这一节的标题: v2 中没有命令, 只有函数. 标题引用这两个概念.</p>
+<span id="removed-details"></span><h3 id="lib-removed">删除的命令, 函数 &amp; 指令</h3>
+<table class="info">
+  <tr>
+    <th style="width:13em">删除的</th>
+    <th>备注</th>
+  </tr>
+  <tr>
+    <td>Asc()</td>
+    <td>请使用 <a href="lib/Ord.htm">Ord</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>AutoTrim</td>
+    <td>请使用 <a href="lib/Trim.htm">Trim</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>ComObjMissing()</td>
+    <td>改为连续写两个逗号.</td>
+  </tr>
+  <tr>
+    <td>ComObjUnwrap()</td>
+    <td>(如果需要, 请使用 <a href="lib/ComObjValue.htm">ComObjValue</a> 和 <a href="lib/ObjAddRef.htm">ObjAddRef</a>.</td>
+  </tr>
+  <tr>
+    <td>ComObjEnwrap()</td>
+    <td>如果需要, 请使用 <a href="lib/ComObjFromPtr.htm">ComObjFromPtr</a> 和 <a href="lib/ObjAddRef.htm">ObjAddRef</a>.</td>
+  </tr>
+  <tr>
+    <td>ComObjError()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ComObjXXX()</td>
+    <td>如果 XXX 是显式定义的 ComObj 函数以外的任何东西, 请使用 <a href="lib/ComObjActive.htm">ComObjActive</a>, <a href="lib/ComValue.htm">ComValue</a> 或 <a href="lib/ComObjFromPtr.htm">ComObjFromPtr</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>ControlSendRaw</td>
+    <td>请使用 <code>ControlSend "{Raw}"</code> 或 <a href="lib/ControlSend.htm">ControlSendText</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>EnvDiv</td>
+    <td>请使用 <a href="Variables.htm#MulDiv"><code>/</code></a> 或 <a href="Variables.htm#AssignOp"><code>/=</code></a> 代替, 例如 <code>a /= b</code>.</td>
+  </tr>
+  <tr>
+    <td>EnvMult</td>
+    <td>请使用 <a href="Variables.htm#MulDiv"><code>*</code></a> 或 <a href="Variables.htm#AssignOp"><code>*=</code></a> 代替, 例如 <code>a *= b</code>.</td>
+  </tr>
+  <tr id="EnvUpdate">
+    <td>EnvUpdate</td>
+    <td>它的用处非常有限, 可以用一个简单的 <a href="lib/SendMessage.htm">SendMessage</a> 代替: <code>SendMessage(0x1A, 0, StrPtr("Environment"), 0xFFFF)</code>.</td>
+  </tr>
+  <tr>
+    <td>Exception</td>
+    <td>请使用 <a href="lib/Error.htm">Error</a> 或一个适当的子类.</td>
+  </tr>
+  <tr>
+    <td>FileReadLine</td>
+    <td>请使用 <a href="lib/LoopFiles.htm">文件读取循环</a>或 <a href="lib/FileOpen.htm">FileOpen</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>Func</td>
+    <td>请使用 <code>MyFunc</code> 这样的直接引用代替.</td>
+  </tr>
+  <tr>
+    <td>Gosub</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Gui<br>GuiControl<br>GuiControlGet</td>
+    <td>请参阅 <a href="#gui">Gui</a>.</td>
+  </tr>
+  <tr>
+    <td>IfEqual</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="Variables.htm#equal"><code>=</code></a> 代替, 例如 <code>if a = b</code>.</td>
+  </tr>
+  <tr>
+    <td>IfExist</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="lib/FileExist.htm">FileExist</a> 代替, 例如 <code>if FileExist(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>IfGreater</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="Variables.htm#compare"><code>&gt;</code></a> 代替, 例如 <code>if a &gt; b</code>.</td>
+  </tr>
+  <tr>
+    <td>IfGreaterOrEqual</td>
+    <td>Use <a href="lib/If.htm">If</a> 和 <a href="Variables.htm#compare"><code>&gt;=</code></a> 代替, 例如 <code>if a &gt;= b</code>.</td>
+  </tr>
+  <tr>
+    <td>IfInString</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="lib/InStr.htm">InStr</a> 代替, 例如 <code>if InStr(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>IfLess</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="Variables.htm#compare"><code>&lt;</code></a> 代替, 例如 <code>if a &lt; b</code>.</td>
+  </tr>
+  <tr>
+    <td>IfLessOrEqual</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="Variables.htm#compare"><code>&lt;=</code></a> 代替, 例如 <code>if a &lt;= b</code>.</td>
+  </tr>
+  <tr>
+    <td>IfMsgBox</td>
+    <td><a href="lib/MsgBox.htm">MsgBox</a> 现在返回按钮名称.</td>
+  </tr>
+  <tr>
+    <td>IfNotEqual</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="Variables.htm#equal"><code>!=</code></a> 代替, 例如 <code>if a != b</code>.</td>
+  </tr>
+  <tr>
+    <td>IfNotExist</td>
+    <td>Use <a href="lib/If.htm">If</a> 和 <a href="lib/FileExist.htm">FileExist</a> 代替, 例如 <code>if not FileExist(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>IfNotInString</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="lib/InStr.htm">InStr</a> 代替, 例如 <code>if not InStr(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>IfWinActive</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="lib/WinActive.htm">WinActive</a> 代替, 例如 <code>if WinActive(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>IfWinExist</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="lib/WinExist.htm">WinExist</a> 代替, 例如 <code>if WinExist(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>IfWinNotActive</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="lib/WinActive.htm">WinActive</a> 代替, 例如 <code>if not WinActive(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>IfWinNotExist</td>
+    <td>请使用 <a href="lib/If.htm">If</a> 和 <a href="lib/WinExist.htm">WinExist</a> 代替, 例如 <code>if not WinExist(...)</code>.</td>
+  </tr>
+  <tr>
+    <td>If between</td>
+    <td>请参阅 <a href="lib/If.htm#ExIfBetween">If 示例 #5</a>.</td>
+  </tr>
+  <tr>
+    <td>If in/contains</td>
+    <td>请参阅 <a href="lib/If.htm#ExIfInContains">If 示例 #6</a>.</td>
+  </tr>
+  <tr>
+    <td>If is</td>
+    <td>请参阅 <a href="#isXXX">isXXX</a>.</td>
+  </tr>
+  <tr>
+    <td>Input</td>
+    <td>请使用 <a href="lib/InputHook.htm">InputHook</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>IsByRef</td>
+    <td>请参阅 <a href="Functions.htm#NoIsByRef">ByRef 限制</a>.</td>
+  </tr>
+  <tr>
+    <td>IsFunc</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Menu</td>
+    <td>请使用 <a href="lib/Menu.htm">Menu/MenuBar 类</a>, <a href="lib/TraySetIcon.htm">TraySetIcon</a>, <a href="Variables.htm#IconTip">A_IconTip</a>, <a href="Variables.htm#IconHidden">A_IconHidden</a> 和 <a href="Variables.htm#AllowMainWindow">A_AllowMainWindow</a>.</td>
+  </tr>
+  <tr>
+    <td>MenuGetHandle</td>
+    <td>请使用 <a href="lib/Menu.htm#Handle">Menu.Handle</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>MenuGetName</td>
+    <td>没有菜单名称; <a href="lib/MenuFromHandle.htm">MenuFromHandle</a> 是最接近的替代方法.</td>
+  </tr>
+  <tr>
+    <td>Progress</td>
+    <td>请使用 <a href="lib/Gui.htm">Gui</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>SendRaw</td>
+    <td>请使用 <code>Send "{Raw}"</code> 或 <a href="lib/Send.htm#SendText">SendText</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>SetBatchLines</td>
+    <td>-1 现在是默认行为.</td>
+  </tr>
+  <tr>
+    <td>SetEnv</td>
+    <td>请使用 <a href="Variables.htm#AssignOp"><code>:=</code></a> 代替.</td>
+  </tr>
+  <tr>
+    <td>SetFormat</td>
+    <td><a href="lib/Format.htm">Format</a> 可以用来格式化字符串.</td>
+  </tr>
+  <tr>
+    <td>SoundGet<br>SoundSet</td>
+    <td>请参阅 <a href="#Sound">Sound 函数</a>.</td>
+  </tr>
+  <tr>
+    <td>SoundGetWaveVolume<br>SoundSetWaveVolume</td>
+    <td>在平衡方面与 SoundGet 和 SoundSet 的行为略有不同, 但都没有保留平衡.</td>
+  </tr>
+  <tr>
+    <td>SplashImage</td>
+    <td>请使用 <a href="lib/Gui.htm">Gui</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>SplashTextOn/Off</td>
+    <td>请使用 <a href="lib/Gui.htm">Gui</a> 代替.</td>
+  </tr>
+  <tr id="StringCaseSense">
+    <td>StringCaseSense</td>
+    <td><code>!=</code> 不区分大小写(
+但 <code>!==</code> 被添加为区分大小写的不相等), 并且 <code>=</code> 和 <code>!=</code> 只忽略 ASCII 字符的大小写. 添加 <a href="lib/StrCompare.htm">StrCompare</a> 用于使用任何模式比较字符串. 各种字符串函数现在都有一个 <em>CaseSense</em> 参数, 可用于指定是否区分大小写或区域设置模式.</td>
+  </tr>
+  <tr>
+    <td>StringGetPos</td>
+    <td>请使用 <a href="lib/InStr.htm">InStr</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>StringLeft<br>StringLen<br>StringMid<br>StringRight<br>StringTrimLeft<br>StringTrimRight</td>
+    <td>请使用 <a href="lib/SubStr.htm">SubStr</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>StringReplace</td>
+    <td>Use <a href="lib/StrReplace.htm">StrReplace</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>StringSplit</td>
+    <td>请使用 <a href="lib/StrSplit.htm">StrSplit</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>Transform</td>
+    <td>请使用<a href="lib/Math.htm">数学函数</a>和<a href="Variables.htm#Operators">运算符</a>代替. 有关 Transform Deref, 请参阅 <a href="lib/RegExMatch.htm#ExDeref">RegExMatch 示例 #8</a>. 有关 Transform HTML, 请参阅 <a href="scripts/index.htm#HTML_Entities_Encoding">HTML Entities Encoding</a>.</td>
+  </tr>
+  <tr>
+    <td>VarSetCapacity</td>
+    <td>对二进制数据/结构, 请使用 <a href="lib/Buffer.htm">Buffer 对象</a>, 对 UTF-16 字符串, 请使用<a href="lib/VarSetStrCapacity.htm">VarSetStrCapacity</a>.</td>
+  </tr>
+  <tr>
+    <td>WinGetActiveStats</td>
+    <td>请使用 <a href="lib/WinGetTitle.htm">WinGetTitle</a> 和 <a href="lib/WinGetPos.htm">WinGetPos</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>WinGetActiveTitle</td>
+    <td>请使用 <a href="lib/WinGetTitle.htm">WinGetTitle</a> 代替, 例如 <code>WinGetTitle "A"</code>.</td>
+  </tr>
+  <tr>
+    <td>#CommentFlag</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>#Delimiter</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>#DerefChar</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>#EscapeChar</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>#HotkeyInterval</td>
+    <td>请使用 <a href="Variables.htm#HotkeyInterval">A_HotkeyInterval</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>#HotkeyModifierTimeout</td>
+    <td>请使用 <a href="lib/A_HotkeyModifierTimeout.htm">A_HotkeyModifierTimeout</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>#IfWinActive<br>#IfWinExist<br>#IfWinNotActive<br>#IfWinNotExist</td>
+    <td>请参阅 <a href="lib/_HotIf.htm#optimization">#HotIf 优化</a>.</td>
+  </tr>
+  <tr>
+    <td>#InstallKeybdHook</td>
+    <td>请使用 <a href="lib/InstallKeybdHook.htm">InstallKeybdHook</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>#InstallMouseHook</td>
+    <td>请使用 <a href="lib/InstallMouseHook.htm">InstallMouseHook</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>#KeyHistory</td>
+    <td>请使用 <code>KeyHistory N</code> 代替.</td>
+  </tr>
+  <tr>
+    <td>#LTrim</td>
+    <td>如果需要, 请使用 <a href="Scripts.htm#LTrim">LTrim</a> 选项.</td>
+  </tr>
+  <tr>
+    <td>#MaxHotkeysPerInterval</td>
+    <td>请使用 <a href="lib/A_MaxHotkeysPerInterval.htm">A_MaxHotkeysPerInterval</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>#MaxMem</td>
+    <td>每个变量的最大容量现在没有限制.</td>
+  </tr>
+  <tr>
+    <td>#MenuMaskKey</td>
+    <td>请使用 <a href="lib/A_MenuMaskKey.htm">A_MenuMaskKey</a> 代替.</td>
+  </tr>
+  <tr>
+    <td>#NoEnv</td>
+    <td>现在是默认行为.</td>
+  </tr>
+</table>
+
+<h3 id="lib-renamed">重命名的命令, 函数 &amp; 指令</h3>
+<table class="info">
+  <tr>
+    <th style="width:13em">v1 Name</th>
+    <th>v2 Name</th>
+  </tr>
+  <tr>
+    <td>ComObjCreate()</td>
+    <td><a href="lib/ComObject.htm">ComObject</a>, 它现在是一个类</td>
+  </tr>
+  <tr>
+    <td>ComObjParameter()</td>
+    <td><a href="lib/ComValue.htm">ComValue</a>, 它现在是一个类</td>
+  </tr>
+  <tr>
+    <td>DriveSpaceFree</td>
+    <td><a href="lib/DriveGetSpaceFree.htm">DriveGetSpaceFree</a></td>
+  </tr>
+  <tr>
+    <td>EnvAdd</td>
+    <td><a href="lib/DateAdd.htm">DateAdd</a></td>
+  </tr>
+  <tr>
+    <td>EnvSub</td>
+    <td><a href="lib/DateDiff.htm">DateDiff</a></td>
+  </tr>
+  <tr>
+    <td>FileCopyDir</td>
+    <td><a href="lib/DirCopy.htm">DirCopy</a></td>
+  </tr>
+  <tr>
+    <td>FileCreateDir</td>
+    <td><a href="lib/DirCreate.htm">DirCreate</a></td>
+  </tr>
+  <tr>
+    <td>FileMoveDir</td>
+    <td><a href="lib/DirMove.htm">DirMove</a></td>
+  </tr>
+  <tr>
+    <td>FileRemoveDir</td>
+    <td><a href="lib/DirDelete.htm">DirDelete</a></td>
+  </tr>
+  <tr>
+    <td>FileSelectFile</td>
+    <td><a href="lib/FileSelect.htm">FileSelect</a></td>
+  </tr>
+  <tr>
+    <td>FileSelectFolder</td>
+    <td><a href="lib/DirSelect.htm">DirSelect</a></td>
+  </tr>
+  <tr>
+    <td>#If</td>
+    <td><a href="lib/_HotIf.htm">#HotIf</a></td>
+  </tr>
+  <tr>
+    <td>#IfTimeout</td>
+    <td><a href="lib/_HotIfTimeout.htm">HotIfTimeout</a></td>
+  </tr>
+  <tr>
+    <td>StringLower</td>
+    <td><a href="lib/StrLower.htm">StrLower</a> 和 <a href="lib/StrLower.htm">StrTitle</a></td>
+  </tr>
+  <tr>
+    <td>StringUpper</td>
+    <td><a href="lib/StrLower.htm">StrUpper</a> 和 <a href="lib/StrLower.htm">StrTitle</a></td>
+  </tr>
+  <tr>
+    <td>UrlDownloadToFile</td>
+    <td><a href="lib/Download.htm">Download</a></td>
+  </tr>
+  <tr>
+    <td>WinMenuSelectItem</td>
+    <td><a href="lib/MenuSelect.htm">MenuSelect</a></td>
+  </tr>
+  <tr>
+    <td>LV, TV 和 SB 函数</td>
+    <td><a href="lib/GuiControl.htm">GuiControl</a> 的方法</td>
+  </tr>
+  <tr>
+    <td>File.__Handle</td>
+    <td><a href="lib/File.htm#Handle">File.Handle</a></td>
+  </tr>
+</table>
+
+<span id="modified-commandsfunctions"></span><h3 id="lib-modified">修改的命令, 函数 &amp; 指令</h3>
+<p class="note">关于这一节的标题: v2 中没有命令, 只有函数. 标题涉及两个版本.</p>
 <p>当使用 SendEvent 方法发送 Alt 事件时, <a href="lib/BlockInput.htm">BlockInput</a> 不再临时禁用. 这最初是为了解决 Windows XP 某些版本中的一个 bug, 其中 BlockInput 阻止了人工 Alt 事件.</p>
 <p><code>Chr(0)</code> 返回一个长度为 1 的字符串, 包含一个二进制零. 这是改进了对字符串中二进制零的支持的结果.</p>
 <p>如果等待期过了, <a href="lib/ClipWait.htm">ClipWait</a> 现在返回 0(false), 否则返回 1(true). ErrorLevel 被删除. 指定 0 不再等同于指定 0.5; 相反, 它产生尽可能短的等待.</p>
@@ -923,7 +1203,7 @@ Name    := MonitorGetName([N])
 <p><a href="lib/ControlSend.htm">ControlSendText</a> 等同于 ControlSendRaw 但使用 Text 模式而不是 Raw 模式.</p>
 <p><code>DirExist(FilePattern)</code> 用法类似于 FileExist. 注意 通配符检查, 如 <code>InStr(FileExist("MyFolder\*"), "D")</code>, 其中 <em>MyFolder</em> 包含文件和子文件夹, 只告诉你 <u>第一个</u> 匹配的文件是否是一个文件夹, 而不是一个文件夹是否存在.</p>
 <p><code>Float(Value)</code>: 请参阅<a href="#types">类型</a>.</p>
-<p><code>InstallKeybdHook([Install, Force])</code> and <code>InstallMouseHook([Install, Force])</code> 替换相应的指令, 为了提高稳定性.</p>
+<p><code>InstallKeybdHook([Install, Force])</code> 和 <code>InstallMouseHook([Install, Force])</code> 替换相应的指令, 为了提高稳定性.</p>
 <p><code>Integer(Value)</code>: 请参阅<a href="#types">类型</a>.</p>
 <p id="isXXX"><a href="lib/Is.htm">IsXXX</a>: 传统的命令 "if Var is Type" 已经被一系列的函数取代: IsAlnum, IsAlpha, IsDigit, IsFloat, IsInteger, IsLower, IsNumber, IsSpace, IsUpper, IsXDigit. 除了 sFloat, IsInteger 和 IsNumber 外, 如果参数不是字符串, 则会抛出异常, 因为隐式转换为字符串可能会导致反直觉的结果.</p>
 <p><code>IsSet(Var)</code>, <code>IsSetRef(&amp;Ref)</code>: 如果变量已经被分配了一个值(即使该值是一个空字符串), 则返回 1(true), 否则返回 0(false). 如果是 0(false), 试图在表达式中读取该变量会出现错误.</p>

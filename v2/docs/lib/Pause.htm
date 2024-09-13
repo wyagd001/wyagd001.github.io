@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>Pause - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The Pause function pauses the script's current thread." />
+<meta name="description" content="The Pause function pauses the script's current thread or sets the pause state of the underlying thread." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -12,19 +12,19 @@
 
 <h1>Pause</h1>
 
-<p>暂停脚本的<a href="../misc/Threads.htm">当前线程</a>.</p>
+<p>暂停脚本的<a href="../misc/Threads.htm">当前线程</a>或设置底层线程的暂停状态.</p>
 
 <pre class="Syntax">
-<span class="func">Pause</span> <span class="optional">NewState</span>
+<span class="func">Pause</span> <span class="optional">UnderlyingThreadState</span>
 </pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>NewState</dt>
+  <dt>UnderlyingThreadState</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
     <p>如果省略, 暂停<a href="../misc/Threads.htm">当前线程</a>. 否则, 请指定以下值之一:</p>
-    <p><code>1</code> 或 <code>True</code>: 将当前线程下面的线程标记为暂停, 然后进入暂停状态, 这样当它恢复时, 它将完成正在运行的函数(如果有). 如果当前线程下面没有线程, 脚本本身就会被暂停, 这将阻止<a href="SetTimer.htm">计时器</a>运行(这个效果与在脚本没有线程时使用菜单项 "Pause Script" 的效果是一样的).</p>
+    <p><code>1</code> 或 <code>True</code>: 将底层线程标记为暂停. 当前线程不会暂停并继续运行. 当前线程结束后, 底层线程会恢复在底层线程运行时任何中断的函数. 一旦底层线程完成函数(如果有), 就会进入暂停状态. 如果当前线程下面没有线程, 脚本本身就会被暂停, 这将阻止<a href="SetTimer.htm">计时器</a>运行(这个效果与脚本没有线程时使用菜单项 "Pause Script" 的效果一样).</p>
     <p><code>0</code> 或 <code>False</code>: 取消底层线程的暂停.</p>
     <p><code>-1</code>: 切换底层线程的暂停状态.</p>
   </dd>
@@ -33,8 +33,8 @@
 
 <h2 id="Remarks">备注</h2>
 <p>默认情况下, 脚本也可以通过它的<a href="../Program.htm#tray-icon">托盘图标</a>或<a href="../Program.htm#main-window">主窗口</a>来暂停.</p>
-<p>与 <a href="Suspend.htm">Suspend</a> 禁用<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>不同, 开启暂停状态会冻结线程(如果省略了 <em>NewState</em>, 冻结<a href="../misc/Threads.htm">当前线程</a>, 否则是底层线程). 副作用是, 在它下面的任何被中断线程也将处于睡眠状态.</p>
-<p>暂停任意线程后, <a href="SetTimer.htm">计时器</a>不会运行. 与之相比, 显式启动的线程(如 <a href="../Hotkeys.htm">热键</a>和<a href="Menu.htm">菜单项</a>) 仍然可以运行; 但当它们的<a href="../misc/Threads.htm">线程</a>结束时, 底层线程仍会被暂停. 换句话说, 每个线程都能独立于其他线程被暂停.</p>
+<p>与 <a href="Suspend.htm">Suspend</a> 禁用<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>不同, 开启暂停状态会冻结线程(如果省略了 <em>UnderlyingThreadState</em>, 则冻结<a href="../misc/Threads.htm">当前线程</a>, 否则冻结底层线程). 副作用是, 在它下面的任何被中断线程都将处于休眠状态, 直到当前线程取消暂停并结束.</p>
+<p>暂停任意线程或脚本本身后, <a href="SetTimer.htm">计时器</a>不会运行. 与之相比, 显式启动的线程(如 <a href="../Hotkeys.htm">热键</a>和<a href="Menu.htm">菜单项</a>) 仍然可以运行; 但当它们的<a href="../misc/Threads.htm">线程</a>结束时, 底层线程仍会被暂停. 换句话说, 每个线程都能独立于其他线程被暂停.</p>
 <p>每当脚本的<a href="../misc/Threads.htm">当前线程</a>处于暂停状态时, <a href="../Program.htm#tray-icon">托盘图标</a>变为 <img src="../static/ahk16_pause.png" alt="a green icon with a Pause symbol" style="vertical-align:-.2em;">(或为 <img src="../static/ahk16_pause_suspend.png" alt="a green icon with a transparent Pause symbol" style="vertical-align:-.2em;">, 如果脚本同时也被<a href="Suspend.htm">挂起</a>). 可以通过冻结图标来避免图标更改, 这通过使用 <code><a href="TraySetIcon.htm">TraySetIcon</a>(,, true)</code> 来实现.</p>
 <p>要禁用<a href="SetTimer.htm">计时器</a>而不暂停脚本, 请使用 <a href="Thread.htm#NoTimers">Thread NoTimers</a>.</p>
 <p>当脚本显示任意类型的<a href="Menu.htm">菜单</a>(托盘菜单, 菜单栏, GUI 上下文菜单, 等) 时, 脚本总是处于停顿状态(虽然不是正式地暂停).</p>
