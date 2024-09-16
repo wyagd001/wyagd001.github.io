@@ -11,9 +11,9 @@ description: 如意百宝箱-Ahk 更新历史
 下面列出了如意百宝箱发布以来的变更和新增内容.  
 
 ### <span id="2.8">2.8 - 2024/09/16</span>
-1. 新增 自动运行动作管理中新增进程监控 例: 无窗口的进程的自动关闭  
+1. 新增 自动运行动作管理中新增进程监控, 例: 无窗口的进程的自动关闭  
 2. 新增 拖拽文件到主面板或子面板中自动形成自定义动作  
-3. 预览文件支持运行命令调用第三方软件打开, 例如 Run;&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Apk信息.ahk" "%Prew_File%"  
+3. 新增 预览文件支持运行命令调用第三方软件打开, 例如 Run;&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Apk信息.ahk" "%Prew_File%"  
 4. 新增 显示最近运行动作(最多记录 12 个) 面板的快捷键(内置不可修改 ^!F3 和 ^#F3)
 5. 新增 如意内置函数和标签  
 .01 内置标签 showcopymenu 弹出复制选中的文件路径或名称的菜单  
@@ -53,7 +53,7 @@ description: 如意百宝箱-Ahk 更新历史
 .09 内置标签 ABPSetPic 设置额外任务栏顶部文本区域的图标  
 .10 内置函数 CF_WinHide  
 .11 内置函数 CF_WinSetTransColor  
-.12 内置函数 AttachToDesktop
+.12 内置函数 AttachToDesktop  
 .13 内置标签 SpecifyOptRun  
 5. 新增 ATA 内置动作  
 .01 额外任务栏文本区 显示网速  
