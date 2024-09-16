@@ -10,7 +10,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 
 | 动作编号 | 图标码 | 按钮名称 | 动作对象 | 描述 | 动作 |
 | ----------- | ----------- | ----------- | ----------- | ----------- |----------- |
-|999|E710|添加按钮|无条件|为面板的按钮指定要执行的动作|Cando&#124;BAdd|
+|999|E710|添加按钮|如意面板|为面板的按钮指定要执行的动作|Cando&#124;BAdd|
 |[1001](http://127.0.0.1:5151/runcom?aabb=1001)|E703|电脑图标|无条件|设置我的电脑中显示的图标(视频, 图片等六个文件夹..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\此电脑图标设置.ahk"|
 |[1002](http://127.0.0.1:5151/runcom?aabb=1002)|EE3F|桌面图标|无条件|设置桌面中显示的图标(此电脑, 回收站, 网络..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\桌面图标设置.ahk"|
 |[1003](http://127.0.0.1:5151/runcom?aabb=1003)|E71D|导航栏|无条件|资源管理器左侧导航栏中项目的设置(收藏夹, 库, 快速启动..)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\导航栏项目设置.ahk"|
@@ -167,7 +167,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1154|f6fa|[京东搜索](/actions/1154.md)|选中文本|京东搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.jd.com/Search?keyword=%CandySel%|
 |1155|f6fa|搜索引擎|菜单|搜索引擎集合的菜单|Menu&#124;搜索引擎|
 |1156|f6fa|[B站搜索](/actions/1156.md)|选中文本|B站搜索选中文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\当前浏览器打开.ahk" https://search.bilibili.com/all?keyword=%CandySel%|
-|[1157](http://127.0.0.1:5151/runcom?aabb=1157)|ed25|如意目录|无条件|打开脚本所在目录|run&#124;%A_ScriptDir%|
+|[1157](http://127.0.0.1:5151/runcom?aabb=1157)|ed25|如意目录|无条件|打开脚本所在目录|run&#124;"%A_ScriptDir%"|
 |[1158](http://127.0.0.1:5151/runcom?aabb=1158)|ed25|AppData|无条件|打开 AppData 目录|run&#124;shell:AppData|
 |[1159](http://127.0.0.1:5151/runcom?aabb=1159)|ed25|Rencent|无条件|打开 Rencent 目录|run&#124;shell:Rencent|
 |1160|E734|收藏夹|子面板|注册表收藏夹, 打开动作中指定的注册表地址|Gui&#124;注册表_收藏夹|
@@ -352,7 +352,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1339|e790|[转Base64](/actions/1339.md)|选中文件|将选中图片文件转为Base64编码|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像转为Base64.ahk" "%CandySel%"|
 |1340|eb41|[B64转HTML](/actions/1340.md)|剪贴板|将剪贴板中的 Base64 码转换为 HTML 后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转html后粘贴.ahk"|
 |1341|e790|[B64转图片](/actions/1341.md)|剪贴板|将剪贴板中的 Base64 码转换为图片后粘贴|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\剪贴板中的Base64转图片后粘贴.ahk"|
-|[1342](http://127.0.0.1:5151/runcom?aabb=1342)|f10d|[添加到菜单](/actions/1342.md)|无条件|添加指定的如意的动作到资源管理器选中文件的右键菜单中|Cando&#124;AddtoMenu|
+|[1342](http://127.0.0.1:5151/runcom?aabb=1342)|f10d|[菜单管理](/actions/1342.md)|无条件|管理如意在资源管理器选中文件右键菜单中要显示的项目(添加,删除,备份,恢复)|Cando&#124;AddtoMenu|
 |[1343](http://127.0.0.1:5151/runcom?aabb=1343)|f78a|[退出如意](/actions/1343.md)|无条件|退出如意|Cando&#124;TM_Exit|
 |1344|e16d|[FileToClip](/actions/1344.md)|剪贴板|将路径对应的文件复制到剪贴板|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\根据路径将文件复制到剪贴板.ahk"  "%CandySel%"|
 |[1345](http://127.0.0.1:5151/runcom?aabb=1345)|E70F|写字板|无条件|打开系统写字板|run&#124;wordpad.exe|
@@ -663,3 +663,20 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1656|e71e|进程打开的文件|特定窗口|查看窗口进程打开占用的文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\窗口处理\GetOpenedFiles.ahk2" "%Windy_CurWin_Id%"|
 |1657|ec16|FTP|无条件|打开FTP服务器共享如意目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\打开FTP服务器共享如意目录.ahk"|
 |1658|ede4|查找大文件|选中文件夹|列出选中文件夹中的最大文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\查找大文件.ahk" "%CandySel%"|
+|1659|ede4|查找大文件夹|选中文件夹|列出选中文件夹中的最大文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\查找大文件夹.ahk" "%CandySel%"|
+|1660|E70F|APK解析|选中文件|查看选中的Apk的包名和版本号|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Apk信息.ahk" "%CandySel%"|
+|1661|e713|服务管理|无条件|将收藏的服务以列表形式显示并可管理和设置自启动方式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\收藏服务管理(收藏列表).ahk"|
+|1662|e1c8|ahk关联|无条件|将 Ahk 文件关联到 Autohotkey.exe|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\AHK 脚本关联工具.ahk"|
+|1663|e1c8|ahk关联|无条件|将 Ahk 文件关联到如意下的 AutoHotkeyU32/64.exe|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\AHK 脚本一键关联.ahk"|
+|1664|e1c8|ahk2关联|无条件|将 Ahk2 文件关联到如意下的 AutoHotkey32/64.exe|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\AHK 脚本一键关联.ahk" "ahk2"|
+|1665|e9d2|股价查询|无条件|股票和基金当天价格查询|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\股票计算器.ahk"|
+|1666|e71e|AppId|任意窗口|查看窗口进程的 AppId|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\GetAppId.ahk" "%Windy_CurWin_Id%"|
+|1667|ede4|EV搜索|选中对象|使用 Everything 搜索关键字|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\Everything搜索.ahk" "%CandySel%"|
+|1668|ea86|取消只读|选中文件|取消文件的只读属性|canfunc&#124;CF_FileSetAttrib&#124;%CandySel%&#124;-R|
+|1669|e737|桌面便签|无条件|桌面便签|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\Sticky Notes.ahk"|
+|1670|e736|单行阅读|无条件|单行载入文本文件(单词本,小说阅读)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\单行阅读器.ahk"|
+|1671|E703|自启动管理|无条件|电脑自启动项目管理|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\注册表\自启动程序管理.ahk"|
+|1672|f193|扫描到|无条件|打开打印机的扫描功能|run&#124;wiaacmgr|
+|1673|e16d|复制菜单|选中文件|弹出菜单来复制选中文件的路径和名称|Cando&#124;showcopymenu|
+|1674|e713|进程监控|无条件|监控进程的打开与终止并记录到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\进程监控.ahk"|
+|1675|e713|窗口监控|无条件|监控窗口的创建与关闭并记录显示到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口监控.ahk"|
