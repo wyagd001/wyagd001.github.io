@@ -680,3 +680,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1673|e16d|复制菜单|选中文件|弹出菜单来复制选中文件的路径和名称|Cando&#124;showcopymenu|
 |1674|e713|进程监控|无条件|监控进程的打开与终止并记录到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\进程监控.ahk"|
 |1675|e713|窗口监控|无条件|监控窗口的创建与关闭并记录显示到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口监控.ahk"|
+|1676|e802|Github下载|无条件|科学下载Github文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\github.ahk" "%CandySel%"|
+|1677|f4aa|Md(WV2)|选中文件|使用 WebView2(mdeditor) 打开选定 md 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\md(WebView2).ahk2" "%CandySel%"|
+|1678|e8e7|运行选中代码|选中文本|将选中 Ahk 代码直接运行|canfunc&#124;RunAhkCode&#124;%CandySel%|
+|1679|e121|退休日期计算|无条件|根据身份证或出生日期计算退休日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\计算退休日期.ahk" "%CandySel%"|
