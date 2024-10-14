@@ -341,3 +341,4 @@ description: 如意百宝箱-Ahk 内置外部脚本
 |1676|否|Github下载|无条件|科学下载Github文件|github.ahk|
 |1677|否|Md(WV2)|选中文件|使用 WebView2(mdeditor) 打开选定 md 文件|md(WebView2).ahk2|
 |1679|否|退休日期计算|无条件|根据身份证或出生日期计算退休日期计算退休日期.ahk|
+|1680|否|桌面画图|无条件|桌面画图工具|桌面画图.ahk|

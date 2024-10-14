@@ -586,7 +586,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1573|e164|ASCII|无条件|ASCII 字符表和网络字符表|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\ASCII.ahk" "%CandySel%"|
 |1574|e823|世界时钟|无条件|世界时钟|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_世界时钟.ahk"|
 |1575|e916|倒计时|无条件|倒计时, 默认为 5 分钟倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_倒计时.ahk" "300"|
-|1576|e916|距离高考|无条件|距离高考天数倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_距离天数.ahk" "20240607" "高考" "1"|
+|1576|e916|距离高考|无条件|距离高考天数倒计时|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\时间_距离天数.ahk" "20250607" "高考" "1"|
 |1577|e713|金额大写|选中文本|数字金额转中文大写|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\金额大写.ahk" "%CandySel%"|
 |1578|e713|启动服务|无条件|启动打印服务,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Spooler" "Start"|
 |1579|e713|停止服务|无条件|停止打印服务,系统服务管理(启动,停止,获取列表,获取服务信息)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\服务管理.ahk" "Spooler" "Stop"|
@@ -684,3 +684,4 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1677|f4aa|Md(WV2)|选中文件|使用 WebView2(mdeditor) 打开选定 md 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\md(WebView2).ahk2" "%CandySel%"|
 |1678|e8e7|运行选中代码|选中文本|将选中 Ahk 代码直接运行|canfunc&#124;RunAhkCode&#124;%CandySel%|
 |1679|e121|退休日期计算|无条件|根据身份证或出生日期计算退休日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\计算退休日期.ahk" "%CandySel%"|
+|1680|e121|桌面画图|无条件|桌面画图工具|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\桌面画图.ahk"|
