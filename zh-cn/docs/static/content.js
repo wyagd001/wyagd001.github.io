@@ -1702,8 +1702,6 @@ function ctor_features()
       if (!m[2])
         m[1] = m[1] + '.00';
       if (m[1] < 'v1.0.45.00')
-        href = 'ChangeLogHelp.htm#Older_Changes';
-      else if (m[1] <= 'v1.0.48.05')
         href = 'ChangeLogHelp.htm#' + m[1];
       else
         href = 'AHKL_ChangeLog.htm#' + m[1];

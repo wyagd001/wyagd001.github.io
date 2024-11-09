@@ -13,7 +13,7 @@
 
 <h1>#IfWinActive / #IfWinNotActive / #IfWinExist / #IfWinNotExist</h1>
 
-<p>创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>. 这样的热键会根据窗口是否活动或存在的情况执行不同的动作(或什么都不做).</p>
+<p>创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>. 这样的热键会根据窗口是否活动或存在的情况执行不同的动作(或什么都不做).</p>
 
 <pre class="Syntax">
 <span class="func">#IfWinActive</span> <span class="optional">WinTitle, WinText</span>
@@ -36,13 +36,13 @@
 </dl>
 
 <h2 id="Basic_Operation">基本操作</h2>
-<p>#IfWin 指令可以简单地创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>. 例如:</p>
+<p>#IfWin 指令可以简单地创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
 #space::MsgBox You pressed Win+Spacebar in Notepad.</pre>
 <p>#IfWin 指令是与位置有关的: 它们会影响脚本中实际在它们后面的所有热键和热字串. 它们也是互斥的; 即只有最近的那个会起作用.</p>
 <p>要关闭上下文相关性, 请指定任一 #IfWin 指令但省略所有参数. 例如:</p>
 <pre>#IfWinActive</pre>
-<p>当 #IfWin 关闭时(或从未在脚本中使用), 所有的<a href="../Hotkeys.htm">热键</a>和<a href="Hotstrings.htm">热字串</a>对所有的窗口有效(除非使用 <a href="Suspend.htm">Suspend</a> 或 <a href="Hotkey.htm">Hotkey 命令</a>进行禁用).</p>
+<p>当 #IfWin 关闭时(或从未在脚本中使用), 所有的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>对所有的窗口有效(除非使用 <a href="Suspend.htm">Suspend</a> 或 <a href="Hotkey.htm">Hotkey 命令</a>进行禁用).</p>
 <p>使用 #IfWin 禁用鼠标或键盘热键后, 它会执行它原来的功能, 即会直接被传递到活动窗口, 就像不存在这样的热键. 有一种情况例外: 对于控制器热键, 尽管 #IfWin 有效, 但它不能阻止其他程序探测到按钮的按下动作.</p>
 <p>#IfWin 还可以用来改变普通按键的行为, 例如 <kbd>Enter</kbd> 或 <kbd>Space</kbd>. 这可以用于特殊的窗口忽略那个按键或执行您不希望的其他动作时. 例如:</p>
 <pre>#IfWinActive Reminders ahk_class #32770  <em>; Outlook 中的 "提醒" 窗口.</em>
@@ -50,14 +50,14 @@ Enter::Send !o  <em>; 让 "Enter" 键打开选择的提醒.</em>
 #IfWinActive</pre>
 <p>和其他指令一样, #IfWin 不能有条件地执行.</p>
 <h2 id="variant">变体(副本) 热键</h2>
-<p>在脚本中特殊的<a href="../Hotkeys.htm">热键</a>或<a href="Hotstrings.htm">热字串</a>可以使用不同的 #IfWin 条件定义多次. 这被称为 <em>热键变体</em>. 例如:</p>
+<p>在脚本中特殊的<a href="../Hotkeys.htm">热键</a>或<a href="../Hotstrings.htm">热字串</a>可以使用不同的 #IfWin 条件定义多次. 这被称为 <em>热键变体</em>. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
 ^!c::MsgBox You pressed Control+Alt+C in Notepad.
 #IfWinActive ahk_class WordPadClass
 ^!c::MsgBox You pressed Control+Alt+C in WordPad.
 #IfWinActive
 ^!c::MsgBox You pressed Control+Alt+C in a window other than Notepad/WordPad.</pre>
-<p>如果有多个变体符合触发条件, 那么只有最接近脚本顶部的那个会触发. 例外的情况是全局变体(不含 #IfWin 条件的变体): 它的优先级总是最低; 因此, 只有在没有其他变体符合条件时才会触发它(这种例外情况不适用于<a href="Hotstrings.htm">热字串</a>).</p>
+<p>如果有多个变体符合触发条件, 那么只有最接近脚本顶部的那个会触发. 例外的情况是全局变体(不含 #IfWin 条件的变体): 它的优先级总是最低; 因此, 只有在没有其他变体符合条件时才会触发它(这种例外情况不适用于<a href="../Hotstrings.htm">热字串</a>).</p>
 <p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序例如 <code>^!+#</code> 没有关系. 例如: <code>^!c</code> 等效于 <code>!^c</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时 <em>Esc</em> 与 <em>Escape</em> 是有区别的(尽管不会受大小写形式的影响). 同样, 含<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不含通配符的是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 每个都有自己的变体集.</p>
 <p>要让多个变体执行相同的热键子程序, 最简单的方法是把同个热键的变体叠放在一起, 其中在每个的前面使用不同的 #IfWin 指令. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
