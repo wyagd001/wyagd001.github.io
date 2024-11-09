@@ -6,3 +6,4 @@
 
 PS. 编译好的chm文件下载地址: https://github.com/wyagd001/RuYi-Ahk/blob/main/%E5%BC%95%E7%94%A8%E7%A8%8B%E5%BA%8F/AutoHotkeyLCN.chm   
 https://github.com/wyagd001/RuYi-Ahk/raw/main/%E5%BC%95%E7%94%A8%E7%A8%8B%E5%BA%8F/AutoHotkeyLCN.chm   
+下载链接:  [github](https://raw.githubusercontent.com/wyagd001/RuYi-Ahk/main/%E5%BC%95%E7%94%A8%E7%A8%8B%E5%BA%8F/AutoHotkeyLCN.chm) 或 [gitee](https://gitee.com/wyagd001/RuYi-Ahk/raw/main/%E5%BC%95%E7%94%A8%E7%A8%8B%E5%BA%8F/AutoHotkeyLCN.chm)  
