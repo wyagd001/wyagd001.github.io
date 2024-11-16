@@ -414,7 +414,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1401|f19d|[详细信息](/actions/1401.md)|选中文件|获取选中文件的额外属性|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_额外的属性(ExtendedProperty).ahk" "%CandySel%"|
 |1402|f19d|[查看属性](/actions/1402.md)|选中文件|获取选中文件的资源管理器详细信息列中能列出的属性|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件_额外的属性(GetDetailsOf).ahk" "%CandySel%"|
 |1403|e197|[虚拟为磁盘 X](/actions/1403.md)|选中文件夹|将选中文件夹挂载为虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_虚拟磁盘.ahk" "%CandySel%" "X"|
-|1404|e159|[卸载磁盘 X](/actions/1404.md)|选中驱动器|卸载虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_卸载虚拟磁盘.ahk" "%CandySel%"|
+|1404|e159|[卸载磁盘](/actions/1404.md)|选中驱动器|卸载文件夹挂载的虚拟磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_虚拟磁盘.ahk" "%CandySel%"|
 |1405|e197|[载为目录](/actions/1405.md)|选中磁盘|将选中磁盘挂载到指定文件夹|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\磁盘_挂载为文件夹.ahk" "%CandySel%" "C:\123"|
 |1406|e159|[取消挂载](/actions/1406.md)|选中文件夹|将选中文件夹(分区挂载的文件夹) 取消挂载|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_取消挂载.ahk" "%CandySel%"|
 |1407|e8c1|Bing词典|选中文本|使用Bing网络词典翻译选中的单词文本|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\Bing词典.ahk" "%CandySel%"|
@@ -647,8 +647,8 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1640|ea90|Pdfjs(WV2)|选中文件|使用 WebView2(pdfjs) 打开选定 Pdf 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\pdfjs(WebView2).ahk2" "%CandySel%"|
 |1641|e71e|搜索List|特定窗口|在拥有 SysListView 控件的窗口(如任务管理器, 服务管理, 程序管理),搜索列表第一列并定位|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\窗口处理\SysListView搜索和定位.ahk2" "%Windy_CurWin_Id%"|
 |1642|ed2b|隐藏窗口|选中文件|隐藏窗口不再显示|canfunc&#124;CF_WinHide&#124;%Windy_CurWin_id%|
-|1643|e87a|主屏幕|无条件|双屏幕时将光标移动到主屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "主"|
-|1644|e87b|副屏幕|无条件|双屏幕时将光标移动到副屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "副"|
+|1643|e87a|主屏幕|无条件或任意窗口|双屏幕时将光标移动到主屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "主"|
+|1644|e87b|副屏幕|无条件或任意窗口|双屏幕时将光标移动到副屏幕|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\双屏幕鼠标助手.ahk" "副"|
 |1645|eda4|动态桌面|无条件|使用 WebView2 打开指定网页文件实现动态桌面的效果|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\动态桌面(WebView2).ahk2"|
 |1646|E70F|编辑帮助|剪贴板|复制 Ahk 帮助文件路径时, 自动编辑当前复制路径的文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\自动编辑帮助文件.ahk"|
 |1647|e8b9|透明|任意窗口|将窗口中的指定颜色透明|canfunc&#124;CF_WinSetTransColor&#124;FFFFFF|
@@ -680,8 +680,16 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1673|e16d|复制菜单|选中文件|弹出菜单来复制选中文件的路径和名称|Cando&#124;showcopymenu|
 |1674|e713|进程监控|无条件|监控进程的打开与终止并记录到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\系统设置\进程监控.ahk"|
 |1675|e713|窗口监控|无条件|监控窗口的创建与关闭并记录显示到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口监控.ahk"|
-|1676|e802|Github下载|无条件|科学下载Github文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\github.ahk" "%CandySel%"|
+|1676|e12b★EBA1☆codicon|Github下载|无条件|科学下载Github文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\github.ahk" "%CandySel%"|
 |1677|f4aa|Md(WV2)|选中文件|使用 WebView2(mdeditor) 打开选定 md 文件|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\md(WebView2).ahk2" "%CandySel%"|
 |1678|e8e7|运行选中代码|选中文本|将选中 Ahk 代码直接运行|canfunc&#124;RunAhkCode&#124;%CandySel%|
 |1679|e121|退休日期计算|无条件|根据身份证或出生日期计算退休日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\计算退休日期.ahk" "%CandySel%"|
-|1680|e121|桌面画图|无条件|桌面画图工具|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\桌面画图.ahk"|
+|1680|f69e|桌面画图|无条件|桌面画图工具|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\桌面画图.ahk"|
+|1681|e713|窗口监控|无条件|监控窗口的创建与关闭并记录显示到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口监控.ahk"|
+|1682|e197|挂载为磁盘 X|选中文件夹|将选中网络文件夹挂载为虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\网络文件夹_本地磁盘.ahk" "%CandySel%" "X"|
+|1683|e159|卸载磁盘|选中驱动器|卸载网络文件夹挂载的虚拟磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\网络文件夹_本地磁盘.ahk" "%CandySel%"|
+|1684|e197|挂载网络共享|无条件|挂载或卸载网络文件夹虚拟的磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\网络文件夹_本地磁盘.ahk" "%CandySel%"|
+|1685|e197|挂载文件夹|无条件|挂载或卸载本地文件夹虚拟的磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_虚拟磁盘.ahk" "%CandySel%"|
+|1686|e790|透明转红|选中文件|将图片中的透明像素转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_透明像素转指定颜色.ahk" "%CandySel%" "0xFFFF0000"|
+|1687|f8af★eb4d☆codicon|无限鼠标|无条件|鼠标移到边缘从对面边缘出来|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\无界鼠标.ahk"|
+
