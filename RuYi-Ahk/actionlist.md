@@ -691,5 +691,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1684|e197|挂载网络共享|无条件|挂载或卸载网络文件夹虚拟的磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\网络文件夹_本地磁盘.ahk" "%CandySel%"|
 |1685|e197|挂载文件夹|无条件|挂载或卸载本地文件夹虚拟的磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_虚拟磁盘.ahk" "%CandySel%"|
 |1686|e790|透明转红|选中文件|将图片中的透明像素转为红色|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\图像文件_透明像素转指定颜色.ahk" "%CandySel%" "0xFFFF0000"|
-|1687|f8af★eb4d☆codicon|无限鼠标|无条件|鼠标移到边缘从对面边缘出来|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\无界鼠标.ahk"|
-
+|1687|f8af★eb4d☆codicon|无界鼠标|无条件|鼠标移到边缘从对面边缘出来|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\无界鼠标.ahk"|
+|1688|ea61|深色模式|任意窗口|切换窗口的深色模式与浅色模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\深色模式.ahk" "%Windy_CurWin_Id%"|
+|1689|e754|聚光灯|无条件|激活窗口正常亮度, 窗口外区域变暗|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\聚光灯.ahk"|
+|1690|e121|插入日期|无条件|插入日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\插入日期.ahk" "%CandySel%"|
