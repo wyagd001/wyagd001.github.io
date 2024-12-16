@@ -695,3 +695,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1688|ea61|深色模式|任意窗口|切换窗口的深色模式与浅色模式|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\深色模式.ahk" "%Windy_CurWin_Id%"|
 |1689|e754|聚光灯|无条件|激活窗口正常亮度, 窗口外区域变暗|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\聚光灯.ahk"|
 |1690|e121|插入日期|无条件|插入日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\插入日期.ahk" "%CandySel%"|
+|1691|e8ec|最近选中|无条件@如意|显示最近选中列表管理界面|Cando&#124;CandySelListM|
+|1692|e8ec|临时热键|无条件@如意|显示临时热键管理界面|Cando&#124;TempHotkeyM|
+|1693|E70F|U32打开|特定窗口|使用 AHK 运行当前窗口打开的脚本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "%AutoHotkeyU32%"|
+|1694|eda8|股价提醒|无条件@股票|监控当前股价满足指定条件时提醒|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\股价提醒.ahk"|
