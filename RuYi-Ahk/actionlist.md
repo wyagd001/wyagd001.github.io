@@ -699,3 +699,4 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1692|e8ec|临时热键|无条件@如意|显示临时热键管理界面|Cando&#124;TempHotkeyM|
 |1693|E70F|U32打开|特定窗口|使用 AHK 运行当前窗口打开的脚本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "%AutoHotkeyU32%"|
 |1694|eda8|股价提醒|无条件@股票|监控当前股价满足指定条件时提醒|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\股价提醒.ahk"|
+|1695|e952|设备属性|无条件|设备管理器窗口设备属性窗口详细信息标签页获取所有信息|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\设备属性窗口获取详细信息.ahk"|
