@@ -134,12 +134,12 @@ function ctor_highlighter()
     function comments(innerHTML)
     {
       // single-line comments:
-      innerHTML = innerHTML.replace(/(\s|^)(;.*?)$/gm, function(_, PRE, COMMENT)
+      innerHTML = innerHTML.replace(/([ \t]|^)(;.*?)$/gm, function(_, PRE, COMMENT)
       {
         return PRE + ph('sct', wrap(COMMENT, 'cmt', null), COMMENT);
       });
       // multi-line comments:
-      innerHTML = innerHTML.replace(/(^\s*\/\*[\s\S]*?^\s*(\*\/|$(?![\r\n])))/gm, function(COMMENT)
+      innerHTML = innerHTML.replace(/(^[ \t]*\/\*[\s\S]*?(^\s*\*\/|$(?![\r\n])))/gm, function(COMMENT)
       {
         return ph('mct', wrap(COMMENT, 'cmt', null));
       });
@@ -156,7 +156,7 @@ function ctor_highlighter()
     /** Searches for function definitions, formats them and replaces them with placeholders. */
     function function_definitions(innerHTML)
     {
-      return innerHTML.replace(/^(\s*?)([A-Za-z0-9_\#@\$\u00A0-\uFFFF]+?)(\(.*?\))(?=\s*(<(em|sct)\d+><\/(em|sct)\d+>\s*)*{)/mg, function(ASIS, PRE, NAME, PARAMS)
+      return innerHTML.replace(/^([ \t]*?)([A-Za-z0-9_\#@\$\u00A0-\uFFFF]+?)(\(.*?\))(?=\s*(<(em|sct)\d+><\/(em|sct)\d+>\s*)*{)/mg, function(ASIS, PRE, NAME, PARAMS)
       {
         if (NAME.match(/^(while|if)$/i)) // Ignore while and if statements with open parenthesis
           return ASIS;
@@ -170,10 +170,10 @@ function ctor_highlighter()
     /** Searches for continuation sections, formats them and replaces them with placeholders. */
     function continuation_sections(innerHTML, forced_opts, is_inside_quotes, is_literal)
     {
-      return innerHTML.replace(/([\r\n]*?^\s*\()(.*)([\s\S]*?)(^\s*\))/gm, function(ASIS, OPEN, OPTS, CONT, CLOSE)
+      return innerHTML.replace(/([\r\n]*?^[ \t]*\()(.*)([\s\S]*?)(^[ \t]*\))/gm, function(ASIS, OPEN, OPTS, CONT, CLOSE)
       {
         var opts = OPTS + (forced_opts ? ' ' + forced_opts : '');
-        opts = opts.replace(/(^|\s+)(join\S*|(l|r)trim0?|<(em|sct)\d+><\/(em|sct)\d+>)|/gi, '');
+        opts = opts.replace(/(^|[ \t]+)(join\S*|(l|r)trim0?|<(em|sct)\d+><\/(em|sct)\d+>)|/gi, '');
         if (opts.indexOf(')') != -1)
           return OPEN + OPTS + continuation_sections(CONT + CLOSE);
         var allow_comments = (opts.indexOf('c') != -1 || opts.indexOf('C') != -1);
@@ -211,11 +211,11 @@ function ctor_highlighter()
     /** Searches for declarations, formats them and replaces them with placeholders. */
     function declarations(innerHTML)
     {
-      return innerHTML.replace(new RegExp('(^\\s*[{}]?\\s*)\\b(' + syntax[5].join('|') + ')(?:[ \\t]*$|([ \\t]+)(.+?)(?=[ \\t]+<(?:em|sct)\\d+></(?:em|sct)\\d+>|$))', 'gim'), function(_, PRE, DEC, SEP, VARS)
+      return innerHTML.replace(new RegExp('(^[ \\t]*[{}]?[ \\t]*)\\b(' + syntax[5].join('|') + ')(?:[ \\t]*$|([ \\t]+)(.+?)(?=[ \\t]+<(?:em|sct)\\d+></(?:em|sct)\\d+>|$))', 'gim'), function(_, PRE, DEC, SEP, VARS)
       {
         var dec = DEC.toLowerCase();
         if (dec == 'class' && VARS) // class statements:
-          if (m = VARS.match(/^([a-z0-9_\#@\$\u00A0-\uFFFF]+)(?:(\s+?)(extends)(\s+?)([a-z0-9_\#@\$\u00A0-\uFFFF]+))?(.*)$/i))
+          if (m = VARS.match(/^([a-z0-9_\#@\$\u00A0-\uFFFF]+)(?:([ \t]+?)(extends)([ \t]+?)([a-z0-9_\#@\$\u00A0-\uFFFF]+))?(.*)$/i))
           {
             var link = index_data[syntax[5].dict['class']][1];
             var out = wrap(DEC, 'dec', link) + SEP + expressions(m[1]);
@@ -229,11 +229,11 @@ function ctor_highlighter()
     /** Searches for directives, formats them and replaces them with placeholders. */
     function directives(innerHTML)
     {
-      return innerHTML.replace(new RegExp('(^\\s*[{}]?\\s*)(' + syntax[0].join('|') + ')\\b($|[\\s,])(.*?)(?=<(?:em|sct)\\d+></(?:em|sct)\\d+>|$)', 'gim'), function(_, PRE, DIR, SEP, PARAMS)
+      return innerHTML.replace(new RegExp('(^[ \\t]*[{}]?[ \\t]*)(' + syntax[0].join('|') + ')\\b($|[\\t ,])(.*?)(?=<(?:em|sct)\\d+></(?:em|sct)\\d+>|$)', 'gim'), function(_, PRE, DIR, SEP, PARAMS)
       {
         var dir = DIR.toLowerCase();
         var types = index_data[syntax[0].dict[dir]][3]; // parameter types
-        PARAMS = param_list_to_array(PARAMS);
+        PARAMS = param_list_to_array(PARAMS, types.indexOf('E') != -1);
         PARAMS = merge_excess_params(PARAMS, types);
         PARAMS = param_array_to_list(PARAMS, types);
         return PRE + ph('dir', wrap(DIR, 'dir', 0) + SEP + PARAMS);
@@ -242,7 +242,7 @@ function ctor_highlighter()
     /** Searches for control flow statements and commands, formats them and replaces them with placeholders. */
     function command_alikes(innerHTML)
     {
-      innerHTML = innerHTML.replace(new RegExp('(^\\s*[{}]?\\s*)\\b(?:(' + syntax[3].join('|') + ')|(' + syntax[6].join('|') + '))\\b(\\s*,|\\s*<(?:em|sct)\\d+></(?:em|sct)\\d+>\\s*,|\\(|\\{|$|\\s(?!\\s*' + self.assignOp + '))(.*?(?=\\s*<(?:em|sct)\\d+></(?:em|sct)\\d+>(?!<cont\\d+>)|$)(?:(?:.*[\\n\\r]\\s*?(?:,|<sct\\d+>|<cont\\d+>).*?(?=\\s*<(?:em|sct)\\d+></(?:em|sct)\\d+>|$)))*)', 'gim'), function(ASIS, PRE, CFS, CMD, SEP, PARAMS)
+      innerHTML = innerHTML.replace(new RegExp('(^[ \\t]*[{}]?[ \\t]*)\\b(?:(' + syntax[3].join('|') + ')|(' + syntax[6].join('|') + '))\\b([ \\t]*,|\\(|\\{|$|[ \\t](?![ \\t]*' + self.assignOp + '))(.*?(?=[ \\t]*<(?:em|sct)\\d+></(?:em|sct)\\d+>(?!<cont\\d+>)|$)(?:(?:.*[\\n\\r][ \\t]*?(?:,|<(?:em|sct)\\d+></(?:em|sct)\\d+>(?:\\s*,)?|<cont\\d+>).+?(?=[ \\t]*<(?:em|sct)\\d+></(?:em|sct)\\d+>|$)))*)', 'gim'), function(ASIS, PRE, CFS, CMD, SEP, PARAMS)
       {
         if (CFS) // control flow statements:
         {
@@ -260,29 +260,29 @@ function ctor_highlighter()
           // legacy if statements:
           if (cfs == 'if')
           {
-            if (m = PARAMS.match(/^([a-z0-9_\#@\$%\u00A0-\uFFFF]+?)(\s*?)(&gt;=|>=|&gt;|>|&lt;&gt;|<>|&lt;=|<=|&lt;|<|!=|=)(\s*?)(.*?)$/i))
+            if (m = PARAMS.match(/^([a-z0-9_\#@\$%\u00A0-\uFFFF]+?)([ \t]*?)(&gt;=|>=|&gt;|>|&lt;&gt;|<>|&lt;=|<=|&lt;|<|!=|=)([ \t]*?)(.*?)$/i))
             {
               link = index_data[syntax[3].dict['ifequal']][1];
-              out = wrap(CFS, 'cfs', link) + SEP + expressions(m[1]) + m[2] + m[3] + m[4] + string_param(m[5]);
+              out = wrap(CFS, 'cfs', link) + SEP + expressions(m[1]) + m[2] + m[3] + m[4] + param_array_to_list([m[5]], 'S');
               return PRE + ph('cfs', out);
             }
-            else if (m = PARAMS.match(/^([a-z0-9_\#@\$%\u00A0-\uFFFF]+?)(\s+?)((?:not\s+?)?(?:between))(\s+?)(.*?)(\s+?)(and)(\s+?)(.*?)$/i))
+            else if (m = PARAMS.match(/^([a-z0-9_\#@\$%\u00A0-\uFFFF]+?)([ \t]+?)((?:not[ \t]+?)?(?:between))([ \t]+?)(.*?)([ \t]+?)(and)([ \t]+?)(.*?)$/i))
             {
               link = index_data[syntax[3].dict['if between']][1];
-              out = wrap(CFS, 'cfs', link) + SEP + expressions(m[1]) + m[2] + wrap(m[3], 'cfs', link) + m[4] + string_param(m[5]) + m[6] + wrap(m[7], 'cfs', link) + m[8] + string_param(m[9]);
+              out = wrap(CFS, 'cfs', link) + SEP + expressions(m[1]) + m[2] + wrap(m[3], 'cfs', link) + m[4] + param_array_to_list([m[5]], 'S') + m[6] + wrap(m[7], 'cfs', link) + m[8] + param_array_to_list([m[9]], 'S');
               return PRE + ph('cfs', out);
             }
-            else if (m = PARAMS.match(/^([a-z0-9_\#@\$%\u00A0-\uFFFF]+?)(\s+?)((?:not\s+?)?(in|contains)|(is)(?:\s+?not)?)(\s+?)(.*?)$/i))
+            else if (m = PARAMS.match(/^([a-z0-9_\#@\$%\u00A0-\uFFFF]+?)([ \t]+?)((?:not[ \t]+?)?(in|contains)|(is)(?:[ \t]+?not)?)([ \t]+?)(.*?)$/i))
             {
               link = index_data[syntax[3].dict['if ' + (m[4] || m[5]).toLowerCase()]][1];
-              out = wrap(CFS, 'cfs', link) + SEP + expressions(m[1]) + m[2] + wrap(m[3], 'cfs', link) + m[6] + string_param(m[7]);
+              out = wrap(CFS, 'cfs', link) + SEP + expressions(m[1]) + m[2] + wrap(m[3], 'cfs', link) + m[6] + param_array_to_list([m[7]], 'S');
               return PRE + ph('cfs', out);
             }
           }
           // named if statements:
           else if (cfs == 'ifmsgbox' || cfs == 'ifexist' || cfs == 'ifnotexist' || cfs == 'ifinstring' || cfs == 'ifnotinstring' || cfs == 'ifwinactive' || cfs == 'ifnotwinactive' || cfs == 'ifwinexist' || cfs == 'ifnotwinexist' || cfs == 'ifequal' || cfs == 'ifnotequal' || cfs == 'ifless' || cfs == 'iflessorequal' || cfs == 'ifgreater' || cfs == 'ifgreaterorequal')
           {
-            PARAMS = param_list_to_array(PARAMS);
+            PARAMS = param_list_to_array(PARAMS, types.indexOf('E') != -1);
             if (PARAMS.length > types.length)
               PARAMS.push(statements(PARAMS.splice(types.length).join(',')));
             PARAMS = param_array_to_list(PARAMS, types);
@@ -291,20 +291,20 @@ function ctor_highlighter()
           // for statements:
           else if (cfs == 'for')
           {
-            if (m = PARAMS.match(/^(\s*(?:,\s*)?[a-z0-9_\#@\$\u00A0-\uFFFF]+?(?:\s*,\s*[a-z0-9_\#@\$\u00A0-\uFFFF]+?)*(?:\s*,)?)(\s+)(in)(\s)(.+)$/i))
+            if (m = PARAMS.match(/^([ \t]*(?:,[ \t]*)?[a-z0-9_\#@\$\u00A0-\uFFFF]+?(?:[ \t]*,[ \t]*[a-z0-9_\#@\$\u00A0-\uFFFF]+?)*(?:[ \t]*,)?)([ \t]+)(in)([ \t])(.+)$/i))
             {
               link = index_data[syntax[3].dict['for']][1];
               out = wrap(CFS, 'cfs', link) + SEP + m[1] + m[2] + wrap(m[3], 'cfs', link) + m[4] + expressions(m[5]);
               return PRE + ph('cfs', out);
             }
           }
-          PARAMS = param_list_to_array(PARAMS);
+          PARAMS = param_list_to_array(PARAMS, types.indexOf('E') != -1);
           PARAMS = merge_excess_params(PARAMS, types);
           // loop statements:
           if (cfs == 'loop')
           {
             // specialized loops:
-            if (PARAMS.length > 1 && (m = PARAMS[0].match(/^\s*(files|parse|read|reg)\s*$/i)))
+            if (PARAMS.length > 1 && (m = PARAMS[0].match(/^[ \t]*(files|parse|read|reg)[ \t]*$/i)))
             {
               var subcfs = PARAMS.shift();
               var entry = index_data[syntax[3].dict['loop, ' + m[1].toLowerCase()]];
@@ -313,7 +313,7 @@ function ctor_highlighter()
               return PRE + ph('cfs', out);
             }
             // OTB:
-            else if (PARAMS.length == 1 && (m = PARAMS[0].match(/^(\s*%\s|)(.*?)(\s*\{[\s\S]*)/)))
+            else if (PARAMS.length == 1 && (m = PARAMS[0].match(/^([ \t]*%[ \t]|)(.*?)([ \t]*\{[\s\S]*)/)))
             {
               PARAMS = m[1] + (m[1] ? expressions : string_param)(m[2]) + m[3];
               return PRE + ph('cfs', wrap(CFS, 'cfs', 3) + SEP + PARAMS);
@@ -328,35 +328,37 @@ function ctor_highlighter()
           var types = index_data[syntax[6].dict[cmd]][3]; // parameter types
           if (SEP == '(')
             return ASIS;
-          PARAMS = param_list_to_array(PARAMS);
+          PARAMS = param_list_to_array(PARAMS, types.indexOf('E') != -1);
           PARAMS = merge_excess_params(PARAMS, types);
           // MsgBox commands:
           if (cmd == 'msgbox' && PARAMS.length > 1)
           {
-            var p1_isNum = PARAMS[0].match(new RegExp('^\\s*\\+?(\\b(' + self.num + ')\\b)?\\s*$', 'm'));
-            var p1_isExp = PARAMS[0].match(/^\s*%\s/);
+            var p1_isNum = PARAMS[0].match(new RegExp('^[ \\t]*\\+?(\\b(' + self.num + ')\\b)?[ \\t]*$', 'm'));
+            var p1_isExp = PARAMS[0].match(/^[ \t]*%[ \t]/);
             var p1_isOptions = p1_isNum || (p1_isExp && PARAMS[1]);
-            var p4_isNum = PARAMS[3] && PARAMS[3].match(new RegExp('^\\s*(\\b(' + self.num + ')\\b)?\\s*($|<(em|sct)\\d+></(em|sct)\\d+>)', 'm'));
-            var p4_isExp = PARAMS[3] && PARAMS[3].match(/^\s*%/);
+            var p4_isNum = PARAMS[3] && PARAMS[3].match(new RegExp('^[ \\t]*(\\b(' + self.num + ')\\b)?[ \\t]*($|<(em|sct)\\d+></(em|sct)\\d+>)', 'm'));
+            var p4_isExp = PARAMS[3] && PARAMS[3].match(/^[ \t]*%/);
             var p4_isTimeout = p1_isOptions && (p4_isNum || p4_isExp);
             if (!p1_isOptions) // 1-parameter mode
               PARAMS.push(PARAMS.splice(0).join(','));
             else if (PARAMS[3] && !p4_isTimeout) // 3-parameter mode
               PARAMS.push(PARAMS.splice(2).join(','));
           }
+          else if (cmd == 'winmove' && PARAMS.length <= 2)
+            types = 'EE';
           PARAMS = param_array_to_list(PARAMS, types);
           return PRE + ph('cmd', wrap(CMD, 'cmd', 6) + SEP + PARAMS);
         }
       });
       // switch's case keyword:
-      innerHTML = innerHTML.replace(new RegExp('(^\\s*[{}]?\\s*)\\b(case)\\b(\\s*,\\s*|\\s+)(.*?:(?!=).*?)(?=\\s*<(?:em|sct)\\d+><\/(?:em|sct)\\d+>|$)', 'gim'), function(ASIS, PRE, CFS, SEP, PARAMS)
+      innerHTML = innerHTML.replace(new RegExp('(^[ \\t]*[{}]?[ \\t]*)\\b(case)\\b([ \\t]*,[ \\t]*|[ \\t]+)(.*?:(?!=).*?)(?=[ \\t]*<(?:em|sct)\\d+><\/(?:em|sct)\\d+>|$)', 'gim'), function(ASIS, PRE, CFS, SEP, PARAMS)
       {
         // Temporarily exclude colon-using elements:
         var temp = {order: []};
         PARAMS = temp_exclude(temp, PARAMS, /".*?"/g);
-        PARAMS = temp_exclude(temp, PARAMS, /\([^(]*\)|\[[^[]*\]|\{[^{]*\}/g);
+        PARAMS = temp_exclude(temp, PARAMS, /\([^()]*\)|\[[^[]]*\]|\{[^{}]*\}/g);
         PARAMS = temp_exclude(temp, PARAMS, /:=/g);
-        PARAMS = temp_exclude(temp, PARAMS, /.*?\?.*?:/g);
+        PARAMS = temp_exclude(temp, PARAMS, /\?.*?:/g);
         // Separate case value from statement:
         var i = PARAMS.indexOf(':');
         if (i == -1)
@@ -370,7 +372,7 @@ function ctor_highlighter()
         return PRE + ph('cfs', wrap(CFS, 'cfs', 3) + SEP + parts.join(':'));
       });
       // switch's default keyword:
-      innerHTML = innerHTML.replace(new RegExp('(^\\s*[{}]?\\s*)\\b(default)\\b(\\s*:(?!=))([^\\r\\n]+?)(?=\\s*<(?:em|sct)\\d+><\/(?:em|sct)\\d+>|$)', 'gim'), function(_, PRE, CFS, COLON, PARAMS)
+      innerHTML = innerHTML.replace(new RegExp('(^[ \\t]*[{}]?[ \\t]*)\\b(default)\\b([ \\t]*:(?!=))([^\\r\\n]+?)(?=[ \\t]*<(?:em|sct)\\d+><\/(?:em|sct)\\d+>|$)', 'gim'), function(_, PRE, CFS, COLON, PARAMS)
       {
         return PRE + ph('cfs', wrap(CFS, 'cfs', 3) + COLON + statements(PARAMS));
       });
@@ -379,7 +381,7 @@ function ctor_highlighter()
     /** Searches for hotstrings, formats them and replaces them with placeholders. */
     function hotstrings(innerHTML)
     {
-      return innerHTML.replace(/^(\s*)(:.*?:)(.*)(::)(.*?(?=\s+<(?:em|sct)\d+><\/(?:em|sct)\d+>(?!<cont\d+>)|\s*$)(?:(?:.*[\n\r]\s*?(?:<sct\d+>|<cont\d+>).*?(?=\s*<(?:em|sct)\d+><\/(?:em|sct)\d+>|$)))*)/mg, function(ASIS, PRE, HS1, ABBR, HS2, REPL)
+      return innerHTML.replace(/^([ \t]*)(:.*?:)(.*)(::)(.*?(?=[ \t]+<(?:em|sct)\d+><\/(?:em|sct)\d+>(?!<cont\d+>)|[ \t]*$)(?:(?:.*[\n\r][ \t]*?(?:<sct\d+>|<cont\d+>).*?(?=[ \t]*<(?:em|sct)\d+><\/(?:em|sct)\d+>|$)))*)/mg, function(ASIS, PRE, HS1, ABBR, HS2, REPL)
       {
         if (ASIS.indexOf('`::') != -1)
           return hotstrings(escape_sequences(ASIS, '`(::|.)'));
@@ -399,8 +401,8 @@ function ctor_highlighter()
     /** Searches for hotkeys, formats them and replaces them with placeholders. */
     function hotkeys(innerHTML)
     {
-      var key_names = '(?:L|R|M)Button|XButton[1-2]|Wheel(?:Down|Up|Left|Right)|CapsLock|Space|Tab|Enter|Return|Escape|Esc|Backspace|BS|ScrollLock|Delete|Del|Insert|Ins|Home|End|PgUp|PgDn|Up|Down|Left|Right|Numpad(?:[0-9]|Dot|Ins|End|Down|PgDn|Left|Clear|Right|Home|Up|PgUp|Del|Div|Mult|Add|Sub|Enter)|NumLock|F(?:2[0-4]|1[0-9]|[1-9])|LWin|RWin|(?:L|R)?(?:Control|Ctrl|Shift|Alt)|Browser_(?:Back|Forward|Refresh|Stop|Search|Favorites|Home)|Volume_(?:Mute|Down|Up)|Media_(?:Next|Prev|Stop|Play_Pause)|Launch_(?:Mail|Media|App1|App2)|AppsKey|PrintScreen|CtrlBreak|Pause|Break|Help|Sleep|SC[0-9a-f]{1,3}|VK[0-9a-f]{1,2}|Joy(?:3[0-2]|2[0-9]|1[0-9]|[1-9])|\\S|`\\S|&.+?;';
-      return innerHTML.replace(new RegExp('^(\\s*)((?:(?:[#!^+*~$]|&lt;|&gt;)*(?:' + key_names + ')(?:\\s+up)?|~?(?:' + key_names + ')\\s+&amp;\\s+~?(?:' + key_names + ')(?:\\s+up)?))::([\\t ]*)(.*)(?=\\s+<(?:em|sct)\\d+></(?:em|sct)\\d+>|$)', 'gim'), function(ASIS, PRE, HK, SPACE, ACTION)
+      var key_names = '(?:L|R|M)Button|XButton[1-2]|Wheel(?:Down|Up|Left|Right)|CapsLock|Space|Tab|Enter|Return|Escape|Esc|Backspace|BS|ScrollLock|Delete|Del|Insert|Ins|Home|End|PgUp|PgDn|Up|Down|Left|Right|Numpad(?:[0-9]|Dot|Ins|End|Down|PgDn|Left|Clear|Right|Home|Up|PgUp|Del|Div|Mult|Add|Sub|Enter)|NumLock|F(?:2[0-4]|1[0-9]|[1-9])|LWin|RWin|(?:L|R)?(?:Control|Ctrl|Shift|Alt)|Browser_(?:Back|Forward|Refresh|Stop|Search|Favorites|Home)|Volume_(?:Mute|Down|Up)|Media_(?:Next|Prev|Stop|Play_Pause)|Launch_(?:Mail|Media|App1|App2)|AppsKey|PrintScreen|CtrlBreak|Pause|Break|Help|Sleep|SC[0-9a-f]{1,3}|VK[0-9a-f]{1,2}|(?:1[0-6]|[1-9])?Joy(?:3[0-2]|2[0-9]|1[0-9]|[1-9])|\\S|`\\S|&.+?;';
+      return innerHTML.replace(new RegExp('^([ \\t]*)((?:(?:[#!^+*~$]|&lt;|&gt;)*(?:' + key_names + ')(?:[ \\t]+up)?|~?(?:' + key_names + ')[ \\t]+&amp;[ \\t]+~?(?:' + key_names + ')(?:[ \\t]+up)?))::([ \\t]*)(.*)(?=[ \\t]+<(?:em|sct)\\d+></(?:em|sct)\\d+>|$)', 'gim'), function(ASIS, PRE, HK, SPACE, ACTION)
       {
         var out = wrap(escape_sequences(HK) + '::', 'lab', null) + SPACE;
         if (ACTION != '')
@@ -418,7 +420,7 @@ function ctor_highlighter()
     /** Searches for labels, formats them and replaces them with placeholders. */
     function labels(innerHTML)
     {
-      return innerHTML.replace(/^(\s*)([^\s,]+?:)(?=\s*(<(em|sct)\d+><\/(em|sct)\d+>|$))/mg, function(_, PRE, LABEL)
+      return innerHTML.replace(/^([ \t]*)([^\s,]+?:)(?=[ \t]*(<(em|sct)\d+><\/(em|sct)\d+>|$))/mg, function(_, PRE, LABEL)
       {
         return PRE + ph('lab', wrap(escape_sequences(LABEL), 'lab', null));
       });
@@ -426,10 +428,12 @@ function ctor_highlighter()
     /** Searches for legacy assignments, formats them and replaces them with placeholders. */
     function legacy_assignments(innerHTML)
     {
-      return innerHTML.replace(/(^\s*[{}]?\s*)([a-z0-9_\#@\$%\u00A0-\uFFFF]+?[ \t]*((?:\+|-)?=)[ \t]*)(.*?(?=\s*<(?:em|sct)\d+><\/(?:em|sct)\d+>(?!<cont\d+>)|$)(?:(?:.*[\n\r]\s*?(?:,|<sct\d+>|<cont\d+>).*?(?=\s*<(?:em|sct)\d+><\/(?:em|sct)\d+>|$)))*)/gim, function(_, PRE, VAR_OP, OP, PARAMS)
+      return innerHTML.replace(/(^[ \t]*[{}]?[ \t]*)([a-z0-9_\#@\$%\u00A0-\uFFFF]+?[ \t]*([+-]?=)[ \t]*)(.*?(?=[ \t]*<(?:em|sct)\d+><\/(?:em|sct)\d+>(?!<cont\d+>)|$)(?:(?:.*[\n\r][ \t]*?(?:,|<(em|sct)\d+><\/(em|sct)\d+>(\s*,)?|<cont\d+>).+?(?=[ \t]*<(?:em|sct)\d+><\/(?:em|sct)\d+>|$)))*)/gim, function(_, PRE, VAR_OP, OP, PARAMS)
       {
-        var types = (OP == '+=' || OP == '-=') ? 'ES' : 'S'; // parameter types
-        PARAMS = param_list_to_array(PARAMS);
+        var types = 'S', is_not_equal = (OP != '=');
+        PARAMS = param_list_to_array(PARAMS, is_not_equal);
+        if (is_not_equal) // -= or +=
+          types = (PARAMS.length == 2 && PARAMS[1].match(/^\s*[smhd]\S*\s*$/i)) ? 'ES' : 'E';
         PARAMS = merge_excess_params(PARAMS, types);
         PARAMS = param_array_to_list(PARAMS, types);
         return PRE + expressions(VAR_OP) + ph('assign', PARAMS);
@@ -516,44 +520,42 @@ function ctor_highlighter()
     }
     /** Converts a comma-separated list of parameters to an array.
      * @param {string} params - A comma-separated list of parameters.
+     * @param {boolean} all_exprs - If true, treat each parameter as expression.
      * @returns {array} An array of parameters.
      */
-    function param_list_to_array(params)
+    function param_list_to_array(params, all_exprs)
     {
       params = escape_sequences(params);
-      // Temporarily exclude comma-using elements:
-      var temp = {order: []};
-      params = temp_exclude(temp, params, /".*?"/g);
-      params = temp_exclude(temp, params, /\([^(]*\)|\[[^[]*\]|\{[^{]*\}/g);
-      // Split parameters:
-      params = params.split(',');
-      // Search for forced expressions and adjust param list:
-      var params_new = [];
-      var merge_next_param = false;
-      for (n in params)
+      var arr = [], index_start, mark = 0;
+      while (mark <= params.length)
       {
-        var forced_exp = params[n].match(/^\s*%\s/);
-        params_new.push(params[n]);
-        if (merge_next_param)
+        index_start = mark;
+        while (params[mark] == ' ' || params[mark] == '\t') mark++;
+        if (params[mark] == '%' && (params[mark + 1] == ' ' || params[mark + 1] == '\t') || all_exprs)
+          mark = find_next_delimiter(params, ',', index_start);
+        else while (params[mark] && params[mark] !== ',') mark++;
+        arr.push(params.substring(index_start, mark));
+        mark++;
+      }
+      return arr;
+
+      /** https://github.com/AutoHotkey/AutoHotkey/blob/v1.1/source/util.cpp#L2743 */
+      function find_next_delimiter(string, delimiter, index_start)
+      {
+        var in_quotes = false, open_parens = 0;
+        for (var mark = index_start; mark < string.length; ++mark)
         {
-          merge_next_param = false;
-          if (!forced_exp)
+          if (string[mark] == delimiter && !in_quotes && open_parens <= 0)
+            return mark;
+          switch (string[mark])
           {
-            params_new.splice(-2, 2, params_new.slice(-2).join(','));
-            forced_exp = true;
+            case '"': in_quotes = !in_quotes; break;
+            case '(': case '[': case '{': if (!in_quotes) ++open_parens; break;
+            case ')': case ']': case '}': if (!in_quotes) --open_parens; break;
           }
         }
-        if (forced_exp)
-        {
-          var quote_count = params_new[params_new.length - 1].split('"').length - 1;
-          if (quote_count % 2) // odd number of quotes
-            merge_next_param = true;
-        }
+        return mark;
       }
-      // Restore excluded elements:
-      for (n in params_new)
-        params_new[n] = temp_restore(temp, params_new[n]);
-      return params_new;
     }
     /** Merges excess parameters with the last valid parameter.
      * @param {array} params - An array of parameters.
@@ -577,9 +579,9 @@ function ctor_highlighter()
       {
         var param = params[n];
         var param_type = types[n];
-        var forced_exp = param.match(/^\s*%\s/);
+        var forced_exp = param.match(/^[ \t]*%[ \t]/);
         var out = '', lastIndex = 0, m, part;
-        var regex = /\s*<((?:sct|mct|em)\d+)><\/\1>/g;
+        var regex = /[ \t]*<((?:sct|mct|em)\d+)><\/\1>/g;
         while (m = regex.exec(param))
         {
           if ((part = param.slice(lastIndex, m.index)) != '')
@@ -674,11 +676,16 @@ function ctor_highlighter()
      */
     function temp_exclude(temp, syntax, regex)
     {
-      return syntax.replace(regex, function(c) {
-        var name = 'temp' + temp.order.length;
-        temp[name] = c; temp.order.push(name);
-        return '<' + name + '>';
-      });
+      var syntax_old;
+      while (syntax != syntax_old) {
+        syntax_old = syntax;
+        syntax = syntax.replace(regex, function(c) {
+          var name = 'temp' + temp.order.length;
+          temp[name] = c; temp.order.push(name);
+          return '<' + name + '>';
+        });
+      }
+      return syntax;
     }
     /**
      * Restore syntax parts excluded via temp_exclude function.
@@ -704,7 +711,7 @@ function ctor_highlighter()
     {
       var m;
       param = escape_sequences(param);
-      if (m = param.match(new RegExp('^(\\s*(?:\\+|-)?\\s*)\\b(' + self.num + ')\\b(\\s*)$'))) // number
+      if (m = param.match(new RegExp('^([ \\t]*(?:\\+|-)?[ \\t]*)\\b(' + self.num + ')\\b([ \\t]*)$'))) // number
         return m[1] + wrap(m[2], 'num', null) + m[3];
       if (param.match(/<cont\d+>/)) // continuation section
         param = string_with_cont_sections(param);
