@@ -539,7 +539,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1526|f16b|按钮颜色还原|无条件|重置额外任务栏上按钮的颜色|Cando&#124;ABBReSet|
 |1527|f13f|更改文本|无条件|更改额外任务栏最上面文本的内容和颜色|Cando&#124;ABTSetTextAndColor|
 |[1528](http://127.0.0.1:5151/runcom?aabb=1528)|eda8|摸鱼看股|无条件|更改额外任务栏最上面文本为上证指数当天价格和涨幅|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\摸鱼看股.ahk" "000001"|
-|[1529](http://127.0.0.1:5151/runcom?aabb=1529)|f5b0|[随机播放](/actions/1529.md)|无条件|随机播放指定文件夹(列表) 中的音频文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\随机播放.ahk" "G:\music,G:\music\英文,G:\music\中文,G:\music\中文,G:\music\中文\G:\music\中文,G:\music\中文"|
+|[1529](http://127.0.0.1:5151/runcom?aabb=1529)|f5b0|[随机播放](/actions/1529.md)|无条件|随机播放指定文件夹(列表) 中的音频文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\随机播放.ahk" "G:\music,G:\music\英文,G:\music\中文,G:\music\中文,G:\music\中文,G:\music\中文,G:\music\中文"|
 |1530|f408|区域截图|无条件|拖动鼠标区域截图|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\区域截图.ahk"|
 |1531|f408|搜狗截图|无条件|运行搜狗输入法的截图(带OCR)|Keys&#124;^!w|
 |1532|f7b0|[中英分隔](/actions/1532.md)|编辑器窗口|如果有选中文本, 将选中部分的中英文字符使用空格分隔(否则为全选文本)|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\文本处理_中英文隔开.ahk" "%CandySel%" "%Windy_CurWin_Id%"|
@@ -685,7 +685,7 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1678|e8e7|运行选中代码|选中文本|将选中 Ahk 代码直接运行|canfunc&#124;RunAhkCode&#124;%CandySel%|
 |1679|e121|退休日期计算|无条件|根据身份证或出生日期计算退休日期|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\计算退休日期.ahk" "%CandySel%"|
 |1680|f69e|桌面画图|无条件|桌面画图工具|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\桌面画图.ahk"|
-|1681|e713|窗口监控|无条件|监控窗口的创建与关闭并记录显示到列表中|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口监控.ahk"|
+|1681|e713|转农历|选中文本|查看选中日期的农历时间|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文本处理\数字_时间转农历.ahk" "%CandySel%"|
 |1682|e197|挂载为磁盘 X|选中文件夹|将选中网络文件夹挂载为虚拟磁盘 X:|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\网络文件夹_本地磁盘.ahk" "%CandySel%" "X"|
 |1683|e159|卸载磁盘|选中驱动器|卸载网络文件夹挂载的虚拟磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\网络文件夹_本地磁盘.ahk" "%CandySel%"|
 |1684|e197|挂载网络共享|无条件|挂载或卸载网络文件夹虚拟的磁盘|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\网络文件夹_本地磁盘.ahk" "%CandySel%"|
@@ -699,7 +699,11 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1692|e8ec|临时热键|无条件@如意|显示临时热键管理界面|Cando&#124;TempHotkeyM|
 |1693|E70F|U32打开|特定窗口|使用 AHK 运行当前窗口打开的脚本文件|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\其他编辑器打开.ahk" "%AutoHotkeyU32%"|
 |1694|eda8|股价提醒|无条件@股票|监控当前股价满足指定条件时提醒|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\股价提醒.ahk"|
-|1695|e952|设备属性|无条件|设备管理器窗口设备属性窗口详细信息标签页获取所有信息|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\设备属性窗口获取详细信息.ahk"|
+|1695|e952|设备属性|无条件|设备管理器窗口设备属性窗口详细信息标签页获取所有信息|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\设备属性窗口获取详细信息.ahk" "%Windy_CurWin_id%"|
 |1696|e76c|下一首|无条件|文件夹随机播放下一首|SendMsgToATA&#124;1696|
 |1697|e8b7|设置图标|选中文件夹|设置选中文件夹的图标|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\设置文件夹图标.ahk" "%CandySel%"|
 |1698|EDE3|所有动作|子面板|一键运行子面板中的所有动作的示例子面板|Gui&#124;打开子面板所有动作|
+|1699|ecaa|微信下载|无条件|打开微信的下载目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\微信下载目录.ahk"|
+|1700|ecaa|QQ下载|无条件|打开QQ的下载目录|run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\QQ下载目录.ahk"|
+|1701|ecaa|选取整列|WPS 表格|Excel, WPS 表格快捷键 Ctrl + Shift + ↓|Keys&#124;^+{Down}|
+|1702|f4aa|拼音(WV2)|选中文件|使用 WebView2 显示选中文本的拼音|run&#124;"%B_Autohotkey2%" "%A_ScriptDir%\外部脚本\V2\汉字显示拼音(WebView2).ahk2" "%CandySel%"|
