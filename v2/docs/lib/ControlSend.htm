@@ -46,9 +46,10 @@
 <p>如果找不到窗口或控件, 则抛出 <a href="Error.htm#TargetError">TargetError</a>.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>ControlSendText 发送 <em>Keys</em> 参数中的单个字符, 不将 <code>{Enter}</code> 转换为 <kbd>Enter</kbd>, <code>^c</code> 转换为 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 有关详情, 请参阅 <a href="Send.htm#SendText">Text 模式</a>. 也可以在 ControlSend 中使用 <a href="Send.htm#Raw">{Raw}</a> 或 <a href="Send.htm#Text">{Text}</a>.</p>
+<p>不像 <a href="Send.htm">Send</a>, ControlSend 忽略 <a href="SendMode.htm">SendMode</a>. 它使用操作系统的 PostMessage 函数来发布键盘消息.</p>
+<p>ControlSendText 类似于 ControlSend, 除了它发送 <em>Keys</em> 参数中的单个字符, 而不把 <code>{Enter}</code> 转换成 <kbd>Enter</kbd>, 把 <code>^c</code> 转换成 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 有关详情, 请参阅<a href="Send.htm#SendRaw">文本模式</a>. 在 ControlSend 中, 使用 <a href="Send.htm#Raw">{Raw}</a> 或 <a href="Send.htm#Text">{Text}</a> 也是有效的.</p>
 <p>如果省略 <em>Control</em> 参数, 该函数将尝试直接发送至目标窗口的最上面的控件(通常是正确的控件), 如果没有控件, 则发送至窗口本身. 如果一个窗口看起来根本没有任何控件, 或者只是为了方便且不必担心发送到哪个控件, 那么这个函数就很有用.</p>
-<p>默认情况下, 修饰键(Ctrl, Alt, Shift 和 Win) 会像正常情况下一样由 Send 函数发送. 这使得命令提示符和其他控制台窗口能够正确检测大写字母, 控制字符等. 它还可以在其他方面提高可靠性.</p>
+<p>默认情况下, 修饰键(Ctrl, Alt, Shift 和 Win) 会像正常情况下一样由 <a href="Send.htm#SendEvent">SendEvent</a> 函数发送. 这使得命令提示符和其他控制台窗口能够正确检测大写字母, 控制字符等. 它还可以在其他方面提高可靠性.</p>
 <p>然而, 在某些情况下, 这些修饰符事件可能会干扰活动窗口, 特别是当用户在 ControlSend 期间正在进行输入, 或者正在发送 <kbd>Alt</kbd> 键时(因为 <kbd>Alt</kbd> 会激活活动窗口的菜单栏). 可以通过显式发送修饰符按下和弹起事件来避免这种情况, 如本例所示:</p>
 <pre>ControlSend "{Alt down}f{Alt up}", "Edit1", "Untitled - Notepad"</pre>
 <p>上面的方法也允许在工作站被锁定(由登录提示保护) 时发送修饰键(Ctrl, Alt, Shift 和 Win).</p>

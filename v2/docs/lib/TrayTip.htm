@@ -32,7 +32,6 @@
     <p>如果为空或省略, 则会移除托盘提示中的文本, 这会让它垂直高度变短. 否则, 请指定请托盘提示要显示的消息. 仅显示前 255 个字符.</p>
     <p>可以使用回车(`r) 或换行(`n) 来创建多行文本. 例如: <code>Line1`nLine2</code>.</p>
     <p>如果 <em>Text</em> 较长, 可以通过<a href="../Scripts.htm#continuation">延续片段</a>的方法将其分解成较短的几行, 这样可以增加可读性和可维护性.</p>
-    <p>可以通过留空 <em>Text</em> 来显示只有标题的窗口.</p>
   </dd>
 
   <dt>Title</dt>
@@ -101,11 +100,6 @@
 
 </dl>
 
-<h2 id="To_Hide_the_Window">隐藏窗口</h2>
-<p>要隐藏气球窗口, 同时省略 <em>Text</em> 和 <em>Title</em>. 例如:</p>
-<pre>TrayTip</pre>
-<p>要隐藏 Windows 10 的 toast 通知, 临时移除<a href="../Program.htm#tray-icon">托盘图标</a>. 例如:</p>
-
 <h2 id="Hiding_the_Traytip">隐藏托盘提示</h2>
 <p>若要隐藏托盘提示, 请省略所有参数(或至少省略 <em>Text</em> 和 <em>Title</em> 参数). 例如:</p>
 <pre>TrayTip</pre>
@@ -168,6 +162,27 @@ RefreshTrayTip  <em>; 调用一次来让它立即开始.</em>
 RefreshTrayTip()
 {
     TrayTip "This is a more permanent traytip.", "Refreshed traytip", "Mute"
+}</pre>
+</div>
+
+<div class="ex" id="ExOnMessage">
+<p><a class="ex_number" href="#ExOnMessage"></a> 每当托盘提示被左键单击, 超时, 关闭, 显示, 排队或消失时, 显示一个消息框. 按 <kbd>F1</kbd> 测试这个示例. 有关详情, 请参阅 <a href="https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shell_notifyicona">Shell_NotifyIcon (Microsoft Docs)</a>.</p>
+<pre>OnMessage 0x404, AHK_NOTIFYICON
+
+F1::TrayTip("foo", "bar")
+
+AHK_NOTIFYICON(wParam, lParam, msg, hwnd)
+{
+    if (hwnd != A_ScriptHwnd)
+        return
+    if (lParam = 1029) ; NIN_BALLOONUSERCLICK
+        MsgBox "Traytip was left-clicked."
+    if (lParam = 1028) ; NIN_BALLOONTIMEOUT
+        MsgBox "Traytip timed out or was closed or right-clicked."
+    if (lParam = 1026) ; NIN_BALLOONSHOW
+        MsgBox "Traytip was shown or queued."
+    if (lParam = 1027) ; NIN_BALLOONHIDE
+        MsgBox "Traytip disappeared, but not due to timeout or user interaction."
 }</pre>
 </div>
 

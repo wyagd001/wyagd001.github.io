@@ -182,10 +182,10 @@ Run("notepad.exe", , , &amp;notepadPID)
 <h3 id="operators-for-objects">对象的运算符</h3>
 <p>这里表达式中使用的其他符号不完全符合上面定义的任何类别, 或影响表达式其他部分的含义, 如下所述. 这些都以某种方式与 <em>对象</em> 有关. 对于每个构造所做的事情提供一个完整的解释, 需要引入更多的概念, 而这不属于本节的范围.</p>
 <p><code>Alpha.Beta</code> 通常称为 <em>成员访问</em>. <em>Alpha</em> 是一个普通变量, 可以用函数调用或其他一些返回对象的子表达式替换. 当计算时, 对象发送一个请求 "给我属性 <em>Beta</em> 的值", "在属性 <em>Beta</em> 中存储这个值" 或 "调用名为 <em>Beta</em> 的方法". 换句话说, <em>Beta</em> 是一个对对象有意义的名字; 它不是一个局部或全局变量.</p>
-<p><code>Alpha.Beta()</code> 是一个 <em>方法调用</em>, 如上所述. 括号可在特定情况下省略; 请参阅<a href="#function-call-statements">函数调用语句</a>.</p>
+<p><code>Alpha.Beta()</code> 是一个 <em>方法调用</em>. <em>Alpha</em> 作为参数隐式传递, 但这通常是隐藏的, 因为每个方法定义都隐式地定义了一个名为 <code>this</code> 的参数. 括号可在特定情况下省略; 请参阅<a href="#function-call-statements">函数调用语句</a>.</p>
 <p><code>Alpha.Beta[Param]</code> 是成员访问的一种特殊形式, 其中包括了请求中的附加参数. <em>Beta</em> 只是一个简单的名称, <em>Param</em> 是一个普通的变量或子表达式, 或者是由逗号分隔的子表达式列表(与函数的参数列表中相同). 允许<a href="Functions.htm#VariadicCall">可变参数调用</a>.</p>
 <p><code>Alpha.%vBeta%</code>, <code>Alpha.%vBeta%[Param]</code> 和 <code>Alpha.%vBeta%()</code> 也是成员访问, 但 <em>vBeta</em> 是一个变量或子表达式. 这允许在脚本运行时确定属性或方法的名称. 以这种方式调用方法时需要括号.</p>
-<p><code>Alpha[Index]</code> 访问 <code>Alpha</code> 的 <em>默认属性</em>, 将 <code>Index</code> 作为参数. 在这种情况下, <em>Alpha</em> 和 <em>Index</em> 都是变量, 几乎可以用任何子表达式替换. 此语法通常用于检索<a href="lib/Array.htm">数组</a>或 <a href="lib/Map.htm">Map</a> 中的元素.</p>
+<p><code>Alpha[Index]</code> 通常调用 <code>Alpha</code> 的 <a href="Objects.htm#__Item">__Item</a> 属性, 将 <code>Index</code> 作为参数. 在这种情况下, <em>Alpha</em> 和 <em>Index</em> 都是变量, 几乎可以用任何子表达式替换. 此语法通常用于检索<a href="lib/Array.htm">数组</a>或 <a href="lib/Map.htm">Map</a> 中的元素. 对于 COM 对象, 按 ID(DISPID_VALUE) 调用 <em>默认属性</em>, 因此与显式指定 __Item 属性不同.</p>
 <p id="array-literal"><code>[A, B, C]</code> 创建一个初始内容为 A, B 和 C(本例中的所有变量) 的<a href="lib/Array.htm">数组</a>, 其中 A 是元素 1.</p>
 <p id="object-literal"><code>{Prop1: Value1, Prop2: Value2}</code> 创建一个<a href="lib/Object.htm">对象</a>, 其中 <em>Prop1</em> 和 <em>Prop2</em> 为原义的属性名. 稍后可以使用上面描述的 <em>成员访问</em> 语法检索值. 要将属性名作为表达式进行计算, 请用百分号将其括起来. 例如: <code>{%NameVar%: ValueVar}</code>.</p></p>
 <p><code>MyFunc(Params*)</code> 是一个<a href="Functions.htm#VariadicCall">可变函数调用</a>. 星号必须紧接在函数参数列表末尾的右括号之前. <em>Params</em> 必须是返回<a href="lib/Array.htm">数组</a>或其他可枚举对象的变量或子表达式. 虽然在任何地方使用 <code>Params*</code> 都是无效的, 但它可以用在数组标识符(<code>[A, B, C, ArrayToAppend*]</code>) 或属性参数列表(<code>Alpha.Beta[Params*]</code> 或 <code>Alpha[Params*]</code>) 中.</p>

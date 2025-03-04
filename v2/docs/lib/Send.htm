@@ -293,7 +293,9 @@
   </tr>
   <tr id="asc">
     <td>{ASC nnnnn}</td>
-    <td><p>发送 <kbd>Alt</kbd>+nnnnn 小键盘上的按键组合, 可以用来生成键盘上不存在的特殊字符. 若要从<a href="https://en.wikipedia.org/wiki/Code_page_437">代码页 437</a> 生成可打印的 ASCII 字符或其他字符, , 请指定一个介于 1 和 255 之间的数字. 要生成 ANSI 字符(在大多数语言中的标准), 请指定一个介于 128 和 255 之间的数字, 但需要在数字前加上一个前导零, 例如 {Asc 0133}..</p>
+    <td><p>发送 <kbd>Alt</kbd>+nnnnn 小键盘按键组合, ，可用于生成键盘上不存在的特殊字符.</p>
+    <p>要生成可打印 ASCII 字符或系统的 OEM(DOS) 代码页中的其他字符, 请指定一个介于 1 和 255 之间的数字. <code>DllCall("GetOEMCP", "UInt")</code> 返回当前 OEM 代码页编号, 如 <a href="https://en.wikipedia.org/wiki/Code_page_437">437(美国)</a> 货 <a href="https://en.wikipedia.org/wiki/Code_page_850">850(西欧)</a>.</p>
+    <p>要生成 ANSI 字符(大多数语言中的标准), 请指定一个介于 128 和 255 之间的数字, 但需要在数字前加上一个前导零, 例如 <code class="no-highlight">{Asc 0133}</code>. <code>DllCall("GetACP", "UInt")</code> 返回当前 ANSI 代码页编号, 如 <a href="https://en.wikipedia.org/wiki/Windows-1252">1252(美国, 西欧等.)</a>.</p>
     <p>要生成 Unicode 字符, 请指定一个介于 256 和 65535 之间的数字(不带前导零). 但是, 有些应用程序不支持这种方法. 对于替代方法, 请参阅下面的部分.</p></td>
   </tr>
   <tr id="Unicode">
@@ -542,7 +544,7 @@ Send "{Tab up}"  <em>; 松开按键.</em></pre>
 <p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <code><a href="CoordMode.htm">CoordMode</a> "Mouse", "Window"</code> 或 <code>CoordMode "Mouse", "Client"</code> 有效时(默认的), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
 
 <h2 id="SendPlayDetail">SendPlay</h2>
-<p class="warning"><strong>不推荐的:</strong> 如果启用了 <a href="https://en.wikipedia.org/wiki/User_Account_Control">User Account Control (UAC)</a>, 即使脚本以管理员身份运行, SendPlay 可能在 Windows 11 或较新的系统中没有效果, 有关详情, 请参阅 <a href="../FAQ.htm#uac">FAQ</a>.</p>
+<p class="warning"><strong>不推荐的:</strong> 在 Windows 11 或较新的系统中, 或者如果启用了<a href="https://en.wikipedia.org/wiki/User_Account_Control">用户账户控制(UAC)</a>, 即使脚本以管理员身份运行, SendPlay 可能没有效果(有关详情, 请参阅 <a href="../FAQ.htm#uac">FAQ</a>).</p>
 <p>SendPlay 最大的优势在于它能在更多的游戏中 "回放" 按键和鼠标点击. 例如, 某款游戏只有在有 <a href="../Hotstrings.htm#SendMode">SendPlay 选项</a>的情况下才能接受<a href="../Hotstrings.htm#SendMode">热字串</a>.</p>
 <p>在这三种发送模式中, SendPlay 是最特别的, 因为它本身并不模拟按键和鼠标点击. 相反, 它创建了一系列的事件(消息), 直接流向活动窗口(类似于 <a href="ControlSend.htm">ControlSend</a>, 但级别较低). 因此, 不会触发热键或热字串.</p>
 <p>和 <a href="#SendInputDetail">SendInput</a> 一样, SendPlay 的按键与用户键入的按键互不干扰. 因此, 如果用户在 SendPlay 期间碰巧输入了一些东西, 这些键程会被推迟到之后.</p>

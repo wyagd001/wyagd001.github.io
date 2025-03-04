@@ -39,7 +39,7 @@ P2C1 := TV.Add("Parent 2's first child", P2)
 P2C2 := TV.Add("Parent 2's second child", P2)
 P2C2C1 := TV.Add("Child 2's first child", P2C2)
 
-MyGui.Show  <em>; 显示窗口和 TreeView.</em></pre>
+MyGui.Show()  <em>; 显示窗口和 TreeView.</em></pre>
 <h2 id="Options">Options 参数的选项和样式</h2>
 <p><strong>Background:</strong> 指定单词 <em>Background</em> 后面紧跟着颜色名称(请参阅<a href="../misc/Colors.htm">颜色图表</a>) 或 RGB 值(0x 前缀可以省略). 例如: <code>BackgroundSilver</code>, <code>BackgroundFFDD99</code>. 如果此选项不存在, 则 TreeView 初始的背景颜色默认为系统默认的背景颜色. 指定 <code>BackgroundDefault</code> 或 <code>-Background</code> 来应用系统的默认背景颜色(通常为白色). 例如, 使用 <code>TV.Opt("+BackgroundDefault")</code> 可以把 TreeView 恢复为默认的颜色.</p>
 <p><strong>Buttons:</strong> 指定 <code>-Buttons</code>(负 Buttons) 来避免在每个含有子项目的项目左边显示加号或减号按钮.</p>
@@ -53,7 +53,7 @@ Loop 10  <em>; 加载一些标准系统图标到图像列表中.</em>
     <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, "shell32.dll", A_Index)
 TV := MyGui.Add("TreeView", "ImageList" . ImageListID)
 <a href="#Add">TV.Add</a>("Name of Item", 0, "Icon4")  <em>; 添加项目到 TreeView 并给它分配文件夹图标.</em>
-MyGui.Show</pre>
+MyGui.Show()</pre>
 <p><strong>Lines:</strong> 指定 <code>-Lines</code>(负 Lines) 来避免显示连接父项目和它们的子项目之间的网状线. 但是, 移除这些线也阻止了顶级项目坐标加号/减号按钮的显示.</p>
 <p id="ReadOnly"><strong>ReadOnly:</strong> 指定 <code>-ReadOnly</code>(负 ReadOnly) 来允许编辑每项的文本/名称. 要编辑某项, 请选择它接着按下 <kbd>F2</kbd>(请参阅下面的 <a href="#WantF2">WantF2</a> 选项). 或者, 您可以对某个项目点击一次来选择它, 至少等半秒, 然后再次点击同一项目进行编辑. 编辑后, 可以对一个项目在其同级项目之间按字母顺序进行重新定位, 请参考下面的例子:</p>
 <pre>TV := MyGui.Add("TreeView", "-ReadOnly")
@@ -393,7 +393,7 @@ Loop 5
     <a href="ListView.htm#IL_Add">IL_Add</a>(ImageListID, "shell32.dll", A_Index)
 <em>; 创建 <a href="#GuiAdd">TreeView</a> 和 ListView, 让它们像在 Windows 资源管理器中那样靠在一起:</em>
 TV := <a href="#GuiAdd">MyGui.Add</a>("TreeView", "r20 w" TreeViewWidth " <a href="#ImageList">ImageList</a>" ImageListID)
-LV := MyGui.Add("ListView", "r20 w" ListViewWidth " x+10", ["Name","Modified"])
+LV := MyGui.Add("ListView", "r20 w" ListViewWidth " x+10", ["Name", "Modified"])
 
 <em>; 创建<a href="GuiControls.htm#StatusBar">状态栏</a>/, 显示文件夹数及其总大小的信息:</em>
 SB := MyGui.Add("StatusBar")
@@ -416,7 +416,7 @@ LV.ModifyCol(1, ListViewWidth - Col2Width - 30)  <em>; 允许垂直滚动条.</e
 LV.ModifyCol(2, Col2Width)
 
 <em>; 显示窗口并返回. 每当用户执行符合条件的动作时, 操作系统会通知脚本:</em>
-MyGui.Show
+MyGui.Show()
 
 AddSubFoldersToTree(Folder, DirList, ParentItemID := 0)
 {
@@ -435,7 +435,7 @@ AddSubFoldersToTree(Folder, DirList, ParentItemID := 0)
 TV_ItemSelect(thisCtrl, Item)  <em>; 当选择一个新的项目时, 该函数被调用.</em>
 {
     <em>; 将文件放入 ListView 中:</em>
-    LV.Delete  <em>; 清除所有行.</em>
+    LV.Delete()  <em>; 清除所有行.</em>
     LV.Opt("-Redraw")  <em>; 通过在加载过程中禁止重绘来提高性能.</em>
     TotalSize := 0  <em>; 在下面循环之前初始化.</em>
     Loop Files, DirList[Item] "\*.*"  <em>; 为了简化, 这里省略了文件夹, 所以只在 ListView 中显示文件.</em>

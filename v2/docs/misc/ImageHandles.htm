@@ -18,7 +18,7 @@ HICON:<i>IconHandle</i></pre>
 <p>用实际句柄值替换 <em>BitmapHandle</em> 或 <em>IconHandle</em>. 例如, <code>"hicon:" handle</code>, 其中 <em>handle</em> 是包含图标句柄的变量.</p>
 <p>以下内容支持此语法:</p>
 <ul>
-  <li><a href="../lib/GuiControls.htm#Picture">Gui.AddPicture</a>(和设置图片控件的内容时的 <a href="../lib/GuiControl.htm#Value">GuiCtrl.Value</a>).</li>
+  <li><a href="../lib/GuiControls.htm#Picture">Gui.AddPicture</a>(和设置图片控件的内容时的 <a href="../lib/GuiControl.htm#Value">GuiControl.Value</a>).</li>
   <li><a href="../lib/ListView.htm#IL_Add">IL_Add</a></li>
   <li><a href="../lib/LoadPicture.htm">LoadPicture</a></li>
   <li><a href="../lib/GuiControls.htm#SB_SetIcon">SB.SetIcon</a></li>
@@ -43,7 +43,7 @@ fileinfo := Buffer(fisize := A_PtrSize + 688)
 Loop Files, pattern, "FD"
 {
     <em>; 为每个文件添加一个菜单项.</em>
-    Fmenu.Add A_LoopFileName, (*) =&gt; "" <em>; 什么也不做.</em>
+    Fmenu.Add(A_LoopFileName, (*) =&gt; "") <em>; 什么也不做.</em>
     
     <em>; 获取文件的图标.</em>
     if DllCall("shell32\SHGetFileInfoW", "WStr", A_LoopFileFullPath
@@ -51,13 +51,13 @@ Loop Files, pattern, "FD"
     {
         hicon := NumGet(fileinfo, 0, "Ptr")
         <em>; 设置菜单项的图标.</em>
-        Fmenu.SetIcon A_Index "&amp;", "HICON:" hicon
+        Fmenu.SetIcon A_Index("&amp;", "HICON:" hicon)
         <em>; 因为我们使用了 ":" 而不是 ":*", 在程序退出或菜单被删除时
         ; 这些图标也会被自动释放.</em>
     }
 }
 until A_Index = n
-Fmenu.Show
+Fmenu.Show()
 </pre>
 </div>
 <p>另请参阅: <a href="../lib/LoadPicture.htm#ExSlideShow">LoadPicture 的示例 #1</a>.</p>
