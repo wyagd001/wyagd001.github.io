@@ -26,7 +26,7 @@
       <p>如果使用指定的名称无法找到函数, 则自动附加 "W"(Unicode) 前缀. 例如, <code>"MessageBox"</code> 等同于 <code>"MessageBoxW"</code>.</p>
       <p>当 <em>重复 </em> 调用 DLL 时, 通过<a href="#load">预先加载此 DLL 文件</a>可以显著改善执行效率.</p>
       <p>此参数也可以仅是一个表示需调用函数的内存地址的整数. 如 <a href="#COM">COM</a> 和 <a href="CallbackCreate.htm">CallbackCreate</a> 提供的地址.</p>
-      <p>如果该参数是一个对象, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在这样的属性, 则抛出 <a href="Error.htm#PropertyError">PropertyError</a>.</p>
+      <p>如果该参数是一个对象, 则使用该对象的 <code class="no-highlight">Ptr</code> 属性的值. 如果不存在这样的属性, 则抛出 <a href="Error.htm#PropertyError">PropertyError</a>.</p>
   </dd>
 
   <dt>Type1, Arg1</dt>
@@ -63,7 +63,7 @@
   <p>如果函数的设计存储长度大于参数的输入值(或者参数仅用于输出), 建议创建一个<a href="Buffer.htm">缓冲</a>, 使用 <a href="#ptr">Ptr</a> 类型传递, 然后使用 <a href="StrGet.htm">StrGet</a> 在函数返回后检索字符串, 如 <a href="#ExWsprintf">wsprintf 示例</a>所示.</p>
   <p>否则, 请在调用函数之前确保变量足够大. 这可以通过调用 <code><a href="VarSetStrCapacity.htm">VarSetStrCapacity</a>(&amp;MyVar, 123)</code> 来实现, 其中 123 是 <em>MyVar</em> 肯定能够容纳的 16 位单位(通俗地讲就是字符) 的数量. 如果变量返回时不是以空终止符结尾的, 则会显示一条错误消息, 并且由于内存可能由于缓冲溢出而损坏导致程序退出. 这通常表明变量的容量不足.</p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 这样的<a href="../Variables.htm#Expressions">表达式</a>. 如果如此, 则不会调用函数并抛出 <a href="Error.htm#TypeError">TypeError</a>.</p>
-  <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量, if a <a href="../Concepts.htm#variable-references">VarRef</a> was passed. 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code>Ptr*</code> 参数类型.</p>
+  <p id="strp">很少使用的 <a href="#asterisk">Str*</a> 参数类型传递包含字符串地址的临时变量的地址. 如果传递了 <a href="../Concepts.htm#variable-references">VarRef</a>, 如果函数将新地址写入临时变量, 则将新字符串复制到脚本变量. 它可以用在期望 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中. 但是, 如果函数分配了内存并希望调用者释放它(例如通过调用 <a href="https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree">CoTaskMemFree</a>), 则必须改用 <code class="no-highlight">Ptr*</code> 参数类型.</p>
   <p class="note"><strong>注意:</strong> 在将字符串传递给函数时, 请注意函数所期望的字符串的 <a href="../Compat.htm#DllCall"><i>type</i>(类型).</p></td>
 </tr>
 <tr>
@@ -111,8 +111,8 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 <tr id="ptr">
   <td>Ptr</td>
   <td><p><a href="../Variables.htm#PtrSize">指针大小</a>的整数, 等同于 Int 或 Int64, 具体取决于运行脚本的 exe 是 32 位还是 64 位. <i>Ptr</i> 应该用于指向数组或结构(如 RECT* 或 LPPOINT) 以及几乎所有句柄(如 HWND, HBRUSH 或 HBITMAP) 的指针. 如果参数是指向简单数值的指针( 如 LPDWORD 或 int*), 通常应该使用 * 或 P 后缀代替 "Ptr".</p>
-  <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code>Ptr</code> 属性的值. 如果不存在此类属性, 则抛出 <a href="Error.htm#PropertyError">PropertyError</a>. 通常, 该对象是 <a href="Buffer.htm">Buffer</a> 对象.</p>
-  <p>如果将对象传递给 Ptr* 参数, 则在调用之前将检索对象的 <code>Ptr</code> 属性值, 并将包含该值的临时变量的地址传递给函数. 函数返回后, 新值将分配回该对象的 <code>Ptr</code> 属性.</p>
+  <p>如果将对象传递给 Ptr 参数, 则使用该对象的 <code class="no-highlight">Ptr</code> 属性的值. 如果不存在此类属性, 则抛出 <a href="Error.htm#PropertyError">PropertyError</a>. 通常, 该对象是 <a href="Buffer.htm">Buffer</a> 对象.</p>
+  <p>如果将对象传递给 Ptr* 参数, 则在调用之前将检索对象的 <code class="no-highlight">Ptr</code> 属性值, 并将包含该值的临时变量的地址传递给函数. 函数返回后, 新值将分配回该对象的 <code class="no-highlight">Ptr</code> 属性.</p>
   <p><i>Ptr</i> 也可以和 * 或 P 后缀一起使用; 此时它应该用在通过 LPVOID* 或类似类型输出指针的函数中.</p>
   <p><i>UPtr</i> 也是有效的, 但有以下限制:</p>
   <ul>
@@ -165,15 +165,15 @@ str := StrGet(buf, "cp0")  <em>; 从缓冲接收 ANSI 字符串.</em>
 
 <h2 id="load">性能</h2>
 <p>当需要重复调用一个 DLL 时, 预先明确装载它可以显著提高执行效率(<em>对于<a href="#std">标准的 DLL</a> 文件如 User32 这是没有必要的, 因为它是常驻的</em>). 这种做法避免了 DllCall 每次都需要在内部调用 LoadLibrary 和 FreeLibrary. 例如:</p>
-<pre>hModule := DllCall("<strong>LoadLibrary</strong>", "Str", "MyFunctions.dll", "Ptr")  <em>; 避免在循环中使用 DllCall 来加载库.</em>
+<pre>hModule := DllCall("LoadLibrary", "Str", "MyFunctions.dll", "Ptr")  <em>; 避免在循环中使用 DllCall 来加载库.</em>
 Loop Files, "C:\My Documents\*.*", "R"
     result := DllCall("MyFunctions\BackupFile", "Str", A_LoopFilePath)
-DllCall("<strong>FreeLibrary</strong>", "Ptr", hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
+DllCall("FreeLibrary", "Ptr", hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
 <p>通过预先查找函数的地址甚至可以获得更快的性能. 例如:</p>
 <pre><em>; 在下面的示例中, 如果 DLL 还没有装载, 使用 LoadLibrary 代替 GetModuleHandle.</em>
-<strong>MulDivProc</strong> := DllCall("GetProcAddress", "Ptr", DllCall("GetModuleHandle", "Str", "<strong>kernel32</strong>", "Ptr"), "AStr", "<strong>MulDiv</strong>", "Ptr")
+MulDivProc := DllCall("GetProcAddress", "Ptr", DllCall("GetModuleHandle", "Str", "kernel32", "Ptr"), "AStr", "MulDiv", "Ptr")
 Loop 500
-    DllCall(<strong>MulDivProc</strong>, "Int", 3, "Int", 4, "Int", 3)</pre>
+    DllCall(MulDivProc, "Int", 3, "Int", 4, "Int", 3)</pre>
 <p>如果 DllCall 的首个参数是原义的字符串如 <code>"MulDiv"</code> 并且包含了函数的 DLL 在脚本开始前已正常装载了, 或者已成功通过 <a href="_DllLoad.htm">#DllLoad</a> 加载, 那么此字符串会自动被解析为函数地址. 这种内置的优化比上面显示的示例更有效.</p>
 <p>最后, 当将字符串变量传递给不会改变字符串长度的函数时, 通过将变量按地址传递(例如 <code>StrPtr(MyVar)</code>), 而不是以 "<a href="#str">str</a>" 的形式传递, 可以提高性能(特别是当字符串很长时). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", "<strong>Ptr</strong>", StrPtr(MyVar), "Ptr")</code>.</p>
 
@@ -215,7 +215,7 @@ MsgBox "You pressed button #" WhichButton</pre>
 
 <div class="ex" id="ExWallpaper">
 <p><a class="ex_number" href="#ExWallpaper"></a> 将桌面墙纸更改为指定的位图(.bmp) 文件.</p>
-<pre>DllCall("SystemParametersInfo", "UInt", 0x14, "UInt", 0, "Str", A_WinDir <strong>.</strong> "\winnt.bmp", "UInt", 1)</pre>
+<pre>DllCall("SystemParametersInfo", "UInt", 0x14, "UInt", 0, "Str", A_WinDir . "\winnt.bmp", "UInt", 1)</pre>
 </div>
 
 <div class="ex" id="ExIsWindowVisible">

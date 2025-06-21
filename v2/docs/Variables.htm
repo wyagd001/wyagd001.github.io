@@ -125,7 +125,7 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
     <td>
       <p><strong>一元负号(-):</strong> 反转其运算元的符号.</p>
       <p><strong>一元正号(+):</strong> <code>+N</code> 等同于 <code>-(-N)</code>. 应用于纯数字时无效, 但可用于将数字字符串转换为纯数字.</p>
-      <p><strong>逻辑非(!):</strong> 如果运算元为空或 0, 那么逻辑非的结果为 1, 这表示 "true". 否则, 结果为 0(false). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
+      <p><strong>逻辑非(!):</strong> 如果运算元为空或 0, 那么逻辑非的结果为 1, 这表示 "true". 否则, 结果为 0(false). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. 允许使用连续的一元运算符, 例如 <code>!!Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~):</strong> 此运算符对运算元按位取反. 当使用 64 位有符号整数时, 正的输入值始终给出负的结果, 反之亦然. 例如, <code>~0xf0f</code> 等于 -0xf10(-3856), 二进制等于 0xfffffffffffff0f0. 如果希望使用无符号的 32 位值, 可以使用 <code><i>result</i> &amp; 0xffffffff</code> 截断结果. 如果操作数是一个浮点值, 则抛出 <a href="lib/Error.htm#TypeError">TypeError</a>.</p>
       <p id="ref"><strong>引用(&amp;):</strong> 创建一个 VarRef, 它是一个代表变量引用的值. VarRef 可以用来间接访问目标变量. 例如, <code>ref := &amp;target</code> 接着的 <code>%ref% := 1</code> 将把值 1 赋值给 <em>target</em>. VarRef 通常会被传递给一个函数, 但也可以存储在一个数组或属性中. 另请参阅: <a href="#deref">Dereference</a>, <a href="Functions.htm#ByRef">ByRef</a>.</p>
       <p>目前不支持对内置变量(如 <a href="lib/A_Clipboard.htm">A_Clipboard</a>) 的引用, 除非是直接传递给内置函数的 <em>OutputVar</em> 参数.</p>
@@ -184,11 +184,11 @@ MsgBox(1.00)  <em>; 显示 1.0</em></pre>
   <tr id="concat">
     <td class="center bold">.</td>
     <td>
-      <p><strong>连接</strong>. 每边至少有一个空格或制表符的句点(点) 用于将两个项组合成单个字符串. 您还可以省略句点以获得相同的结果(除非有歧义, 如 <code>x <strong>-</strong>y</code>, 或者右边的项有一个前导的 ++ 或 --). 当省略点时, 要合并的项之间必须至少有一个空格或制表符.</p>
-      <pre>Var := "The color is " <strong>.</strong> FoundColor  <em>; 显式连接</em>
+      <p><strong>连接</strong>. 每边至少有一个空格或制表符的句点(点) 用于将两个项组合成单个字符串. 您还可以省略句点以获得相同的结果(除非有歧义, 如 <code>x -y</code>, 或者右边的项有一个前导的 ++ 或 --). 当省略点时, 要合并的项之间必须至少有一个空格或制表符.</p>
+      <pre>Var := "The color is " . FoundColor  <em>; 显式连接</em>
 Var := "The color is " FoundColor    <em>; 自动连接</em>
 </pre>
-      <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " <strong>.</strong>  Price * (1 - Discount/100)</code>.</p>
+      <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " . Price * (1 - Discount/100)</code>.</p>
       <p>以句点(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾.</p>
       <p>每个输入的整个<a href="lib/StrLen.htm">长度</a>会被使用, 即使它包含二进制零. 例如, <code>Chr(0x2010) Chr(0x0000) Chr(0x4030)</code> 生成以下字节的字符串(由于 UTF-16-LE 编码): 0x10, 0x20, 0, 0, 0x30, 0x40. 结果有一个额外的空结束符(二进制零), 它不包含在长度中.</p>
       <p><strong>其他用途:</strong> 如果句点右侧没有空格或制表符, 则将其解释为原义<a href="#numbers">浮点数</a>或<a href="#objdot">成员访问</a>. 例如, <code>1.1</code> 和 <code>(.5)</code> 是数字, <code>A_Args.Has(3)</code> 方法调用, 而 <code>A_Args.Length</code> 是一个属性访问.</p>
@@ -219,13 +219,13 @@ Var := "The color is " FoundColor    <em>; 自动连接</em>
   <tr>
     <td class="center bold">IS<br>IN<br>CONTAINS</td>
     <td id="is">
-      <p>如果 <em>Value</em> 是 <em>Class</em> 的实例, 那么 <code><i>Value</i> <strong>is</strong> <i>Class</i></code> 结果为 1(true), 否则为 0(false). <em>Class</em> 必须是一个<a href="lib/Object.htm">对象</a>, 并具有自有 <a href="lib/Class.htm#Prototype">Prototype</a> 属性, 但通常该属性是由类定义隐式定义的. 这个操作一般等同于 <code>HasBase(<i>Value</i>, <i>Class</i>.Prototype)</code>.</p>
-      <p><code id="in"><strong>in</strong></code> 和 <code id="contains"><strong>contains</strong></code> 保留给将来使用.</p>
+      <p>如果 <em>Value</em> 是 <em>Class</em> 的实例, 那么 <code><i>Value</i> is <i>Class</i></code> 结果为 1(true), 否则为 0(false). <em>Class</em> 必须是一个<a href="lib/Object.htm">对象</a>, 并具有自有 <a href="lib/Class.htm#Prototype">Prototype</a> 属性, 但通常该属性是由类定义隐式定义的. 这个操作一般等同于 <code>HasBase(<i>Value</i>, <i>Class</i>.Prototype)</code>.</p>
+      <p><code id="in" class="no-highlight">in</code> 和 <code id="contains" class="no-highlight">contains</code> 保留给将来使用.</p>
     </td>
   </tr>
   <tr id="not">
     <td class="center bold">NOT</td>
-    <td><strong>逻辑非</strong>. 除了优先级较低外, 其他的与 <strong>!</strong> 运算符相同. 例如, <code>not (x = 3 or y = 3)</code> 等同于 <code><strong>!</strong>(x = 3 or y = 3)</code>.</td>
+    <td><strong>逻辑非</strong>. 除了优先级较低外, 其他的与 <strong>!</strong> 运算符相同. 例如, <code>not (x = 3 or y = 3)</code> 等同于 <code>!(x = 3 or y = 3)</code>.</td>
   </tr>
     <tr id="and">
       <td class="center bold">AND<br>
@@ -285,7 +285,7 @@ MsgBox(A || B || C) <em>; 显示 "0"(C).</em></pre>
         &lt;&lt;=<br>
         &gt;&gt;&gt;=
     </td>
-    <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中. 最简单的赋值运算符为冒号等号(:=), 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#IntegerDivide">整数除法</a>把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 类似的, <code>Var <strong>.=</strong> "abc"</code> 为 <code>Var := Var <strong>.</strong> "abc"</code> 的一种简写形式.</p>
+    <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中. 最简单的赋值运算符为冒号等号(:=), 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#IntegerDivide">整数除法</a>把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 类似的, <code>Var .= "abc"</code> 为 <code>Var := Var . "abc"</code> 的一种简写形式.</p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>.</p>
     <p>如果赋值作为某些其他运算符的输入, 它的值是变量本身. 例如, 如果 <em>Var</em> 的新增值大于 50, 表达式 <code>(Var+=2) &gt; 50</code> 为真. 将赋值与<a href="#ref">引用操作符</a>结合起来也是有效的, 如 <code>&amp;(Var := "initial value")</code>.</p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 另外, <code class="no-highlight">x==y &amp;&amp; z:=1</code> 计算为 <code class="no-highlight">x==y &amp;&amp; (z:=1)</code>, 当 x 不等于 y 时进行<a href="Functions.htm#ShortCircuit">短路</a>计算. 例如: <code>not x:=y</code> 等同于 <code>not (x:=y)</code>. 类似的, <code>++Var := X</code> 等同于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等同于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
@@ -314,7 +314,7 @@ sumfn := Sum</pre>
   </tr>
   <tr id="comma">
     <td class="center bold">,</td>
-    <td><p><strong>逗号(多语句)</strong>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.</p>
+    <td><p><strong>逗号(多语句)</strong>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1, y+=2, ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.</p>
       <p class="note"><strong>注意:</strong> 以逗号(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>上一行的末尾.</p>
       <p>逗号还用于分隔函数调用的或控制流语句的参数. 若要在参数列表中包含多语句表达式, 请用一组额外的圆括号将其括起来. 例如, <code>MyFn((x, y))</code> 计算 x 和 y, 但传递 y 作为 MyFn 的第一个也是唯一一个参数.</p>
     </td>
@@ -818,12 +818,12 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   </tr>
   <tr id="WinDir">
     <td>A_WinDir</td>
-    <td>Windows 目录. 例如: <code>C:\Windows</code></td>
+    <td>Windows 目录. 例如: <code class="no-highlight">C:\Windows</code></td>
   </tr>
   <tr id="ProgramFiles">
     <td>A_ProgramFiles</td>
     <td>
-      <p>Program Files 目录(例如 <code>C:\Program Files</code> 或 <code>C:\Program Files (x86)</code>). 这通常与 <em>ProgramFiles</em> <a href="Concepts.htm#environment-variables">环境变量</a>相同.</p>
+      <p>Program Files 目录(例如 <code class="no-highlight">C:\Program Files</code> 或 <code class="no-highlight">C:\Program Files (x86)</code>). 这通常与 <em>ProgramFiles</em> <a href="Concepts.htm#environment-variables">环境变量</a>相同.</p>
       <p>在 <a href="#Is64bitOS">64-位系统</a>(和非 32-位系统), 适用于下列内容:</p>
       <ul>
         <li>如果可执行文件(EXE) 以 32 位脚本运行的时候, A_ProgramFiles 返回路径为 "Program Files (x86)" 目录.</li>
@@ -905,7 +905,7 @@ MsgBox ElapsedTime " milliseconds have elapsed."</pre>
   <tr id="MyDocuments">
     <td>A_MyDocuments</td>
     <td>
-      <p>当前用户 "我的文档" 文件夹的完整路径和名称. 与大多数类似变量不同, 当此文件夹为驱动器的根目录时, 此变量的值不包含最后的反斜杠(例如, 它的值是 <code>M:</code> 而不是 <code>M:\</code>). 例如:</p>
+      <p>当前用户 "我的文档" 文件夹的完整路径和名称. 与大多数类似变量不同, 当此文件夹为驱动器的根目录时, 此变量的值不包含最后的反斜杠(例如, 它的值是 <code class="no-highlight">M:</code> 而不是 <code class="no-highlight">M:\</code>). 例如:</p>
       <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\Documents</pre>
   </td>
   </tr>

@@ -22,7 +22,7 @@
    <dt>FileOrDirName</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>文件或目录的路径, 如下所述. <u>不得</u> 包含双引号(除了参数周围的一对可选双引号), 通配符或除分号(<strong>`;</strong>) 外的<a href="../misc/EscapeChar.htm">转义序列</a>.</p>
+    <p>文件或目录的路径, 如下所述. <u>不得</u> 包含双引号(除了参数周围的一对可选双引号), 通配符(<code class="no-highlight">*</code> 和 <code class="no-highlight">?</code>) 或除分号(<code class="no-highlight">`;</code>) 外的<a href="../misc/EscapeChar.htm">转义序列</a>.</p>
     <p>内置变量可以用百分号括起来(例如, <code>#DllLoad "%A_ScriptDir%"</code>). 不属于有效变量引用的百分号按原义解释. 除了 <a href="../Variables.htm#Args">A_Args</a> 和内置类外, 所有内置变量都是有效的.</p>
     <p>已知限制: 当编译脚本时, 变量由编译器计算, 结果可能与脚本最终执行时的返回值不同. 支持以下变量: <a href="../Variables.htm#AhkPath">A_AhkPath</a>, <a href="../Variables.htm#AppData">A_AppData</a>, <a href="../Variables.htm#AppDataCommon">A_AppDataCommon</a>, <a href="../Variables.htm#ComputerName">A_ComputerName</a>, <a href="../Variables.htm#ComSpec">A_ComSpec</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#DesktopCommon">A_DesktopCommon</a>, <a href="../Variables.htm#IsCompiled">A_IsCompiled</a>, <a href="../Variables.htm#LineFile">A_LineFile</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#ProgramsCommon">A_ProgramsCommon</a>, <a href="../Variables.htm#ScriptDir">A_ScriptDir</a>, <a href="../Variables.htm#ScriptFullPath">A_ScriptFullPath</a>, <a href="../Variables.htm#ScriptName">A_ScriptName</a>, <a href="../Variables.htm#Space">A_Space</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#StartMenuCommon">A_StartMenuCommon</a>, <a href="../Variables.htm#Startup">A_Startup</a>, <a href="../Variables.htm#StartupCommon">A_StartupCommon</a>, <a href="../Variables.htm#Tab">A_Tab</a>, <a href="../Variables.htm#Temp">A_Temp</a>, <a href="../Variables.htm#UserName">A_UserName</a>, <a href="../Variables.htm#WinDir">A_WinDir</a>.</p>
     <p><strong>文件:</strong> 要加载的 DLL 或 EXE 文件的绝对或相对路径. 如果指定了一个相对路径, 指令将使用与系统函数 <a href="https://learn.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw">LoadLibraryW</a> 相同的搜索策略来搜索文件. 注意: <a href="SetWorkingDir.htm">SetWorkingDir</a> 对 #DllLoad 没有影响, 因为 #DllLoad 是在脚本开始执行之前处理的.</p>
@@ -33,7 +33,7 @@
 
 <h2 id="Remarks">备注</h2>
 <p>一旦 DLL 或 EXE 已由该指令加载, 它不能通过调用系统的函数 <a href="https://learn.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary">FreeLibrary</a> 卸载. 当脚本终止时, 所有加载的文件都会自动卸载.</p>
-<p>文件路径前面可以有选择地使用 <code>*i</code> 和一个空格, 这将导致程序忽略加载文件的任何失败. 只有当脚本在失败的情况下仍然能够执行时, 才应该使用这个选项, 例如, 如果 DLL 或 EXE 是非必要的, 或者如果脚本被设计为检测失败, 例如:</p>
+<p>文件路径前面可以有选择地使用 <code class="no-highlight">*i</code> 和一个空格, 这将导致程序忽略加载文件的任何失败. 只有当脚本在失败的情况下仍然能够执行时, 才应该使用这个选项, 例如, 如果 DLL 或 EXE 是非必要的, 或者如果脚本被设计为检测失败, 例如:</p>
 <pre>#DllLoad "*i MyDLL"
 if !DllCall("GetModuleHandle", "str", "MyDLL")
     MsgBox "Failed to load MyDLL!"</pre>

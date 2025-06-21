@@ -83,4 +83,4 @@ description: 如意百宝箱-Ahk 内置函数
 |68|窗口左下角屏幕||窗口移到屏幕左下角(1/4)|动作1636: Cando&#124;窗口左下角屏幕|
 |69|窗口右下角屏幕||窗口移到屏幕右下角(1/4)|动作1637: Cando&#124;窗口右下角屏幕|
 |70|ABPSetPic|图标句柄|更改设置额外任务栏最上面的图标|动作1625: ExecSendToRuyi("HICON:\*" hIcon,, 1624)|
-|71|CF_WinSetTransparentAndPenetrate|(WinId)+透明度数值|窗口半透明并置顶并点击穿透|动作1709: CF_WinSetTransparentAndPenetrate&#124;%Windy_CurWin_id%&#124;128|
+|71|CF_WinSetTransparentAndPenetrate|(WinId, 透明度数值)|窗口半透明并置顶并点击穿透|动作1709: CF_WinSetTransparentAndPenetrate&#124;%Windy_CurWin_id%&#124;128|

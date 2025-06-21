@@ -13,30 +13,79 @@
 <h1>DPI 缩放</h1>
 
 <p>DPI 缩放是一种由操作系统或应用程序执行的功能, 用于根据显示器的 "每英寸点数" 设置以增加内容的可视大小. 一般来说, 它允许内容在具有不同显示分辨率的系统上以相同的物理大小显示, 或者至少可以在非常高分辨率的显示器上使用. 有时, 用户可能会增加 DPI 设置, 只是为了使内容更大, 阅读更舒服.</p>
-<p><a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 返回主屏幕的 DPI 设置.</p>
+<p><a href="../Variables.htm#ScreenDPI">A_ScreenDPI</a> 通常返回脚本启动时主显示器的 DPI 设置. 这就是所谓的 "系统 DPI", 尽管在不同时间启动的进程可以有不同的值.</p>
 <p>有两种类型的 DPI 缩放与 AutoHotkey 相关: Gui DPI 缩放和系统 DPI 缩放.</p>
 
 <h2 id="Gui_DPI_Scaling">Gui DPI 缩放</h2>
-<p>默认情况下, Gui 命令执行自动缩放, 因此具有硬编码位置, 大小和边距的 Gui 脚本将在高 DPI 屏幕上根据需要进行缩放. 如果这干扰了脚本, 或者脚本将自己进行缩放, 那么可以禁用自动缩放. 有关详情, 请参阅 <a href="../lib/Gui.htm#DPIScale">-DPIScale</a> 选项.</p>
+<p>默认情况下, 自动缩放由 Gui 和 GuiControl 方法/属性执行, 因此具有硬编码位置, 大小和边距的 Gui 脚本将在高 DPI 屏幕上根据需要进行缩放. 如果这干扰了脚本, 或者脚本将自己进行缩放, 那么可以禁用自动缩放. 有关详情, 请参阅 <a href="../lib/Gui.htm#DPIScale">-DPIScale</a> 选项.</p>
 
 <h2 id="OS_DPI_Scaling">系统 DPI 缩放</h2>
-<p>对于不支持 dpi 的应用程序, 操作系统会自动缩放传递给某些系统函数和从某些系统函数返回的坐标. 这种类型的缩放只影响具有多个屏幕且并非所有屏幕都具有相同 DPI 设置的系统上的 AutoHotkey.</p>
+<p>对于不支持 dpi 的应用程序, 操作系统会自动缩放传递给某些系统函数和从某些系统函数返回的坐标. 这种类型的缩放通常在两种情况下影响 AutoHotkey:</p>
+<ul>
+  <li>具有多个监视器的系统, 其中并非所有监视器都设置为相同的缩放比例.</li>
+  <li>每当显示缩放设置不同于程序启动时.</li>
+</ul>
+<p>所完成的精确缩放取决于正在调用的系统函数, 脚本的 DPI 感知以及目标窗口的潜在 DPI 感知.</p>
 
 <h3 id="Per-Monitor_DPI_Awareness">每台监视器 DPI 感知</h3>
-<p>在 Windows 8.1 和更高版本上, 辅助屏幕可以有不同的 DPI 设置, "每监视器 DPI-感知" 应用程序可以根据它们当前所处屏幕的 DPI 来缩放它们的窗口, 当窗口在屏幕之间移动时动态调整.</p>
+<p>在 Windows 8.1 和更高版本中, 副屏幕可以有不同的 DPI 设置, "每监视器 DPI-感知" 应用程序可以根据它们当前所处屏幕的 DPI 来缩放它们的窗口, 当窗口在屏幕之间移动时动态调整.</p>
 <p>对于不支持感知每个监视器 DPI 的应用程序, 系统执行位图缩放, 以允许窗口在屏幕之间移动时改变大小. 并通过报告缩放到应用程序预期的全局 DPI 设置的坐标和大小来向应用程序隐藏这一点. 例如, 在一个 11 英寸的 4K 屏幕上, 一个设计成 96 dpi(100&nbsp;%) 显示的 GUI 几乎不可能使用，而将其放大 200&nbsp;% 就可以使用了.</p>
-<p>AutoHotkey 不是设计来执行每监视器缩放的, 因此没有被标记为每监视器 dpi 感知的. 这是一个好处, 例如, 当在一个 100&nbsp;% DPI 的外部大屏幕和一个 200&nbsp;% DPI 的小屏幕之间移动一个 GUI 窗口时. 然而, 自动缩放确实有负面影响.</p>
+<p>AutoHotkey v2.0 不是设计来执行每监视器缩放的, 因此没有被标记为每监视器 DPI 感知的. 这是一个好处, 例如, 当在一个 100&nbsp;% DPI 的外部大屏幕和一个 200&nbsp;% DPI 的小屏幕之间移动一个 GUI 窗口时. 然而, 自动缩放确实有负面影响.</p>
 <p>为了使系统的自动缩放工作, 系统函数如 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-movewindow">MoveWindow</a> 和 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowrect">GetWindowRect</a> 会自动缩放它们接受或返回的坐标. 当 AutoHotkey 使用这些函数处理外部窗口时, 如果坐标不在主屏幕上, 这通常会产生意外的结果. 更加令人困惑的是, 一些函数根据脚本最后一个活动窗口显示在哪个屏幕上来缩放坐标.</p>
 
 <h2 id="Workarounds">解决办法</h2>
-<p>在 Windows 10 1607 及更高版本上, 可以使用 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setthreaddpiawarenesscontext">SetThreadDpiAwarenessContext</a> 系统函数在运行时更改程序的 DPI 感知设置. 例如, 启用每监视器 DPI 感知将禁用系统执行的缩放, 因此诸如 <a href="../lib/WinMove.htm">WinMove</a> 和 <a href="../lib/WinGetPos.htm">WinGetPos</a> 之类的命令将接受或返回像素坐标, 不受 DPI 缩放的影响. 然而, 如果一个 GUI 的大小适合于 100&nbsp;% DPI 的屏幕, 然后移动到 200&nbsp;% DPI 的屏幕, 它将不会自动调整, 并且可能会非常难以使用.</p>
+<p>在 Windows 10 1607 及更高版本中, 可以使用 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setthreaddpiawarenesscontext">SetThreadDpiAwarenessContext</a> 系统函数在运行时更改程序的 DPI 感知设置. 例如, 启用每监视器 DPI 感知将禁用系统执行的缩放, 因此诸如 <a href="../lib/WinMove.htm">WinMove</a> 和 <a href="../lib/WinGetPos.htm">WinGetPos</a> 之类的命令将接受或返回像素坐标, 不受 DPI 缩放的影响. 然而, 如果一个 GUI 的大小适合于 100&nbsp;% DPI 的屏幕, 然后移动到 200&nbsp;% DPI 的屏幕, 它将不会自动调整, 并且可能会非常难以使用.</p>
 <p>要启用每个监视器的 DPI 感知, 请在使用通常受 DPI 缩放影响的函数之前调用以下函数:</p>
 <pre>DllCall("SetThreadDpiAwarenessContext", "ptr", -3, "ptr")</pre>
-<p>在 Windows 10 1703 及更高版本上, 可以使用 -4 替换 -3 以启用 "Per Monitor v2" 模式. 样就可以缩放对话框, 菜单, 工具提示和其他一些东西. 然而, 它也会导致非客户端区域(标题栏) 的缩放, 这可能会导致窗口的客户端区域太小, 除非脚本被设计为对此进行调整(例如通过响应 <a href="https://learn.microsoft.com/windows/win32/hidpi/wm-dpichanged">WM_DPICHANGED 消息</a>). 可以在创建 GUI 之前将上下文设置为 -3, 而在创建任何工具提示, 菜单或对话框之前将上下文设置为 -4 来避免这种情况.</p>
-<p>当用户移动脚本的一个窗口或脚本显示对话框时, 线程的 DPI 感知可能会临时更改. 因此, 在使用依赖 DPI 感知的任何函数之前, 立即设置 DPI 感知是最安全的.</p>
+<p>在 Windows 10 1703 及更高版本中, 可以使用 -4 替换 -3 以启用 "Per Monitor v2" 模式. 样就可以缩放对话框, 菜单, 工具提示和其他一些东西. 然而, 它也会导致非客户端区域(标题栏) 的缩放, 这可能会导致窗口的客户端区域太小, 除非脚本被设计为对此进行调整(例如通过响应 <a href="https://learn.microsoft.com/windows/win32/hidpi/wm-dpichanged">WM_DPICHANGED 消息</a>). 可以在创建 GUI 之前将上下文设置为 -3, 而在创建任何工具提示, 菜单或对话框之前将上下文设置为 -4 来避免这种情况.</p>
+
+<h3 id="New_Threads">新线程</h3>
+<p>当系统调用窗口的<a href="https://learn.microsoft.com/windows/win32/winmsg/window-procedures">窗口过程</a>时, 它会自动将当前DPI感知上下文设置为创建窗口时正在使用的上下文. 因此, 新<a href="Threads.htm">脚本线程</a>的上下文取决于它是直接从 AutoHotkey 的消息循环启动还是通过窗口过程启动.</p>
+<ul>
+  <li>在典型的情况下, 发布的消息直接从 AutoHotkey 的消息循环处理, 这意味着任何上下文已经生效并仍然有效. 这包括大多数启动新脚本线程的事件, 如热键, 热字串和计时器.</li>
+  <li>与发送(非发布) 消息相对应的脚本线程是从窗口过程中启动的, 这意味着上下文始终是基于目标窗口设置的.</li>
+  <li>如果在模态消息循环期间接收到已发布的消息, 则通常将其分派给窗口过程. 模态消息循环(例如) 用于模态对话框和菜单, 或者在用户移动窗口或执行拖放时使用.</li>
+  <li>非 GUI 事件与脚本的<a href="../Program.htm#main-window">主窗口</a>相关联, 因此接收程序默认的 DPI 感知上下文. 这通常是在程序的清单中设置的, 但可以被应用程序兼容性设置覆盖.</li>
+</ul>
+
+<h3 id="Mixed_Settings">混合设置</h3>
+<p>当接收到 <a href="https://learn.microsoft.com/windows/win32/hidpi/wm-dpichanged">WM_DPICHANGED 消息</a>时, 每个监视器的 DPI 感知 GUI 窗口会按预期自动调整. 默认情况下, AutoHotkey v2.0 GUI 窗口不会响应此消息. 如果正确实现这种类型的动态缩放太困难, 一个更简单的替代方法是在创建 GUI 之前立即暂时禁用每个监视器的 DPI 感知. 例如:</p>
+<pre><em>; Set the "system DPI aware" mode which is the default in AutoHotkey v2.0:</em>
+try dac := DllCall("SetThreadDpiAwarenessContext", 'ptr', -2, 'ptr')
+<em>; Create the GUI, which will permanently be "system DPI aware":</em>
+MyGui := Gui()
+<em>; Restore the previous mode for any subsequent function calls:</em>
+IsSet(dac) &amp;&amp; DllCall("SetThreadDpiAwarenessContext", 'ptr', dac, 'ptr')
+</pre>
+<p>如果操作系统不支持 SetThreadDpiAwarenessContext 或程序已经处于系统 DPI 感知模式, 则额外的行没有作用.</p>
+<p>如果只有一些 GUI 控件不能很好地缩放, 系统 DPI 感知(或不支持 DPI 感知) 控件可以托管在每个监视器的 DPI 感知窗口上. 在创建窗口之前必须启用混合托管(需要 Windows 10 1803 版本或更高版本):</p>
+<pre><em>; Create a GUI window which can host less-aware child windows:</em>
+try dhb := DllCall("SetThreadDpiHostingBehavior", 'int', 1)
+MyGui := Gui()
+IsSet(dhb) &amp;&amp; DllCall("SetThreadDpiHostingBehavior", 'int', dhb)
+
+<em>; Add a "system DPI aware" control:</em>
+try dac := DllCall("SetThreadDpiAwarenessContext", 'ptr', -2, 'ptr')
+MyListView := MyGui.AddListView()
+IsSet(dac) &amp;&amp; DllCall("SetThreadDpiAwarenessContext", 'ptr', dac, 'ptr')
+</pre>
 
 <h3 id="Compiled_Scripts">编译脚本</h3>
-<p>通过将已编译脚本清单资源的 <code>&lt;dpiAware&gt;</code> 元素的内容从 <code>true</code>(基础 AutoHotkey 可执行文件中的默认设置) 更改为 <code>true/pm</code>, 可以在整个过程中启用每监视器 DPI 感知.</p>
+<p>通过在编译脚本的清单(一个嵌入式 XML 资源) 中设置 "dpiAware" 和 "dpiAwareness" 元素, 可以在整个流程范围内启用每个监视器的 DPI 感知. 有关这些设置的正确使用和效果的详细信息, 请参阅<a href="https://learn.microsoft.com/windows/win32/hidpi/setting-the-default-dpi-awareness-for-a-process#setting-default-awareness-with-the-application-manifest">使用应用程序清单设置默认感知</a>. 例如, AutoHotkey v2.0.19 中的清单包括以下内容:</p>
+<pre class="no-highlight">&lt;v3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings"
+                 xmlns:ws2="http://schemas.microsoft.com/SMI/2016/WindowsSettings"&gt;
+  &lt;dpiAware&gt;true&lt;/dpiAware&gt;
+  &lt;ws2:longPathAware&gt;true&lt;/ws2:longPathAware&gt;
+&lt;/v3:windowsSettings&gt;</pre>
+<p>正如 Microsoft 文档中所解释的, 可能需要同时包含 "dpiAware" 和 "dpiAwareness", 它们属于不同的 XML 名称空间. 因为 "longPathAware" 和 "dpiAwareness" 属于同一个名称空间, 所以可以通过移动一些东西来优化 XML. 以下启用每个监视器的 DPI 感知(如果可用, 则为 v2, 否则为 v1):</p>
+<pre class="no-highlight">&lt;v3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings"&gt;
+  &lt;dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings"&gt;true/pm&lt;/dpiAware&gt;
+  &lt;dpiAwareness&gt;PerMonitorV2&lt;/dpiAwareness&gt;
+  &lt;longPathAware&gt;true&lt;/longPathAware&gt;
+&lt;/v3:windowsSettings&gt;</pre>
+
+<h3 id="Compatibility_Settings">兼容性设置</h3>
+<p>程序的默认 DPI 感知可以通过兼容性设置来覆盖, 这可以在 AutoHotkey 可执行文件的属性中设置, 在快捷文件的属性中设置, 或者通过设置 <code class="no-highlight">__COMPAT_LAYER</code> 环境变量来包含关键字 <code class="no-highlight">DpiUnaware</code> 或关键字 <code class="no-highlight">HighDpiAware</code>. 使用这种方法启用 DPI 感知可能会产生不必要的影响; 特别是, MsgBox 窗口在屏幕之间移动时可能无法自动调整.</p>
 
 </body>
 </html>

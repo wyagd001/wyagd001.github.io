@@ -22,13 +22,21 @@
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>单个文件或文件夹的名称, 或通配符模式(如 <code>"C:\Temp\*.tmp"</code>). 如果未指定绝对路径, 则假定 <em>SourcePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
+    <p>支持星号(<code class="no-highlight">*</code>) 和问号(<code class="no-highlight">?</code>) 作为通配符. <code class="no-highlight">*</code> 匹配零个或多个字符, 而 <code class="no-highlight">?</code> 匹配任何单个字符. 使用示例:</p>
+    <ul>
+      <li><code class="no-highlight">*.*</code> 或 <code class="no-highlight">*</code> 匹配所有文件.</li>
+      <li><code class="no-highlight">*.htm</code> 匹配扩展名为 .htm, .html 等的文件.</li>
+      <li><code class="no-highlight">*.</code> 匹配没有扩展名的文件.</li>
+      <li><code class="no-highlight">log?.txt</code> 匹配如 log1.txt 但不匹配 log10.txt.</li>
+      <li><code class="no-highlight">*report*</code> 匹配任何包含单词 "report" 的文件名.</li>
+    </ul>
   </dd>
 
   <dt>DestPattern</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
     <p>目标的名称或模式, 如果未指定绝对路径, 则假定 <em>SourcePattern</em> 在 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 中.</p>
-    <p>如果星号存在, 则将文件名中的第一个星号(<code>*</code>) 替换为不包含其扩展名的源文件名, 而将最后一个句号 (<code>.</code>) 后的第一个星号替换为源文件的扩展名. 如果有星号, 但省略了扩展名, 则使用源文件的扩展名.</p>
+    <p>如果星号存在, 则将文件名中的第一个星号(<code class="no-highlight">*</code>) 替换为不包含其扩展名的源文件名, 而将最后一个句号 (<code class="no-highlight">.</code>) 后的第一个星号替换为源文件的扩展名. 如果有星号, 但省略了扩展名, 则使用源文件的扩展名.</p>
     <p>要执行简单地复制 -- 保留现有的文件名 -- 只需指定文件夹名, 如下面功能几乎等同的两个例子所示:</p>
     <pre>FileCopy "C:\*.txt", "C:\My Folder"</pre>
     <pre>FileCopy "C:\*.txt", "C:\My Folder\*.*"</pre>
@@ -46,7 +54,7 @@
 </dl>
 
 <h2 id="Error_Handling">错误处理</h2>
-<p>如果有文件复制失败, 则抛出 <a href="Error.htm">Error</a>, 并且它的 <a href="Error.htm#Extra">Extra</a> 属性设置为失败次数. 如果没有找到文件, 只有当 <em>SourcePattern</em> 缺少通配符 <code>*</code> 和 <code>?</code> 时, 才会抛出错误. 换句话说, 复制一个通配符模式, 如 <code>"*.txt"</code>, 当它不与任何文件匹配时, 被视为成功.</p>
+<p>如果有文件复制失败, 则抛出 <a href="Error.htm">Error</a>, 并且它的 <a href="Error.htm#Extra">Extra</a> 属性设置为失败次数. 如果没有找到文件, 只有当 <em>SourcePattern</em> 缺少通配符 <code class="no-highlight">*</code> 和 <code class="no-highlight">?</code> 时, 才会抛出错误. 换句话说, 复制一个通配符模式, 如 <code>"*.txt"</code>, 当它不与任何文件匹配时, 被视为成功.</p>
 <p>与 <a href="FileMove.htm">FileMove</a> 不同, 即使在覆盖模式生效的情况下, 复制一个文件来覆盖它自己始终被视为错误.</p>
 <p>如果找到了文件, 则 <a href="../Variables.htm#LastError">A_LastError</a> 会被设置为 0(零) 或最近一次操作失败时调用操作系统 GetLastError() 函数的结果. 否则 A_LastError  包含了没有找到文件原因的错误码.</p>
 

@@ -50,13 +50,13 @@ Run "notepad C:\Program Files\AutoHotkey\license.txt"
 <p>通常, 在向程序传递命令行参数时, 如果参数中包含空格, 则需要将每个参数用引号括起来. 这对于记事本来说是不必要的, 但是记事本是一般规则的一个例外. 一种天真的解决方法可能是简单地添加更多的引号:</p>
 <pre>Run "wordpad.exe "C:\Program Files\AutoHotkey\license.txt""</pre>
 <p>但这行不通, 因为默认情况下, 引号是用来表示原义文本的开始和结束. 那么, 我们如何在命令行中包含一个文字引号, 而不是让它结束命令行呢?</p>
-<p><strong>方法 1:</strong> 在每个文字引号前面加上 <code>`</code>(back-tick, 反引号或重音). 这被称为<a href="../misc/EscapeChar.htm">转义序列</a>. 然后引号被包含在命令行中(即传递给 Run 函数的字符串), 而反勾号, 完成了它的目的, 被省略了.</p>
+<p><strong>方法 1:</strong> 在每个文字引号前面加上 <code class="no-highlight">`</code>(back-tick, 反引号或重音). 这被称为<a href="../misc/EscapeChar.htm">转义序列</a>. 然后引号被包含在命令行中(即传递给 Run 函数的字符串), 而反勾号, 完成了它的目的, 被省略了.</p>
 <pre>Run "wordpad.exe `"C:\Program Files\AutoHotkey\license.txt`""</pre>
 <p><strong>方法 2:</strong> 将命令行括在单引号而不是双引号中.</p>
 <pre>Run 'wordpad.exe "C:\Program Files\AutoHotkey\license.txt"'</pre>
-<p>当然, 在这种情况下, 文本中的任何 <em>原义</em> 单引号(或撇号) 都需要转义(<code>`'</code>).</p>
-<p>编写代码的方式会影响到 Run 函数中实际使用的引号. 在上面的两个例子中, the Run 函数接收字符串 <code>wordpad.exe "C:\Program Files\AutoHotkey\license.txt"</code>. Run 函数要么将其拆分为 <em>程序名</em> 和 <em>参数</em>(其他所有内容), 要么将其留给系统. 在任何一种情况下, 如何解释剩余的引号完全取决于目标程序.</p>
-<p>如果引号前面有反斜杠, 许多程序将其视为参数的一部分. 例如, <code>Run 'my.exe "A\" B'</code> 可能会生成一个值为 <code>A" B</code> 的参数, 而不是两个参数. 这取决于程序, 通常可以通过双反斜杠来避免, 如在 <code>Run 'my.exe "A\\" B'</code>, 通常会产生两个参数(<code>A\</code> 和 <code>B</code>).</p>
+<p>当然, 在这种情况下, 文本中的任何 <em>原义</em> 单引号(或撇号) 都需要转义(<code class="no-highlight">`'</code>).</p>
+<p>编写代码的方式会影响到 Run 函数中实际使用的引号. 在上面的两个例子中, the Run 函数接收字符串 <code class="no-highlight">wordpad.exe "C:\Program Files\AutoHotkey\license.txt"</code>. Run 函数要么将其拆分为 <em>程序名</em> 和 <em>参数</em>(其他所有内容), 要么将其留给系统. 在任何一种情况下, 如何解释剩余的引号完全取决于目标程序.</p>
+<p>如果引号前面有反斜杠, 许多程序将其视为参数的一部分. 例如, <code>Run 'my.exe "A\" B'</code> 可能会生成一个值为 <code class="no-highlight">A" B</code> 的参数, 而不是两个参数. 这取决于程序, 通常可以通过双反斜杠来避免, 如在 <code>Run 'my.exe "A\\" B'</code>, 通常会产生两个参数(<code class="no-highlight">A\</code> 和 <code class="no-highlight">B</code>).</p>
 <p>大多数程序将引号解释为一种切换, 在 "空格结束参数" 和 "空格包含在参数中" 之间切换模式. 换句话说, <code>Run 'my.exe "A B"'</code> 通常相当于运行 <code>Run 'my.exe A" "B'</code>. 因此, 另一种避免使用斜杠的方法是引用 <em>空格</em> 而不是整个参数, 或者在斜杠之前结束引号, 如 <code>Run 'my.exe "A"\ B'</code>.</p>
 
 <h2 id="Including_Variables">包括变量</h2>
@@ -92,7 +92,7 @@ Send "^e" <em>; Ctrl+E 打开映像属性对话框.</em></pre>
 <p>在某些情况下, 可以在启动程序之前使用 <a href="../lib/EnvSet.htm">EnvSet</a> 设置环境变量以影响程序的行为, 或将信息传递给程序. 脚本还可以使用 <a href="../lib/EnvGet.htm">EnvGet</a> 读取它可能从其父进程继承的环境变量.</p>
 <p>在 64 位系统上, 脚本自身的环境很大程度上取决于运行它的 EXE 是 32 位还是 64 位. 32 位进程不仅具有不同的环境变量, 而且出于兼容性原因还具有<a href="https://learn.microsoft.com/windows/win32/winprog64/file-system-redirector">文件系统重定向</a>.</p>
 <pre>Run "cmd /k set pro"</pre>
-<p>上面的例子显示了一个命令提示符, 它打印所有以 "pro" 开头的环境变量. 如果您从 32 位脚本运行它, 您可能会看到 <code>PROCESSOR_ARCHITECTURE=x86</code> 和 <code>ProgramFiles=C:\Program Files (x86)</code>. 虽然标题显示类似于 "C:\Windows\System32\cmd.exe", 这是一个谎言; 它实际上是 32 位版本, 它实际上位于 "C:\Windows\SysWow64\cmd.exe" 中.</p>
+<p>上面的例子显示了一个命令提示符, 它打印所有以 "pro" 开头的环境变量. 如果您从 32 位脚本运行它, 您可能会看到 <code class="no-highlight">PROCESSOR_ARCHITECTURE=x86</code> 和 <code class="no-highlight">ProgramFiles=C:\Program Files (x86)</code>. 虽然标题显示类似于 "C:\Windows\System32\cmd.exe", 这是一个谎言; 它实际上是 32 位版本, 它实际上位于 "C:\Windows\SysWow64\cmd.exe" 中.</p>
 <p>在这种简单的情况下, 绕过 "System32" 重定向的最简单方法是使用 "SysNative". 但是, 这只能在 64 位系统上的 32 位进程中工作, 因此必须有条件地完成. 当以下示例在 64 位系统上执行时, 即使脚本是 32 位的, 它也会显示 64 位命令提示符:</p>
 <pre>if FileExist(A_WinDir "\SysNative")
     Run A_WinDir "\SysNative\cmd.exe /k set pro"

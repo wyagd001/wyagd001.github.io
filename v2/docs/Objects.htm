@@ -315,7 +315,7 @@ other.test()</pre>
      ShorterProperty =&gt; <i>计算属性值的表达式</i>
 }
 </pre>
-<p>加载脚本时, 它构造一个<a href="lib/Class.htm">类</a>对象并将其存储在<a href="Functions.htm#Global">全局</a>常量(只读变量) <i>ClassName</i> 中. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的全名. 每个类的全名存储在 <code><i>ClassName</i>.Prototype.__Class</code>.</p>
+<p>加载脚本时, 它构造一个<a href="lib/Class.htm">类</a>对象并将其存储在<a href="Functions.htm#Global">全局</a>常量(只读变量) <i>ClassName</i> 中. 如果存在 <code class="no-highlight">extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的全名. 每个类的全名存储在 <code><i>ClassName</i>.Prototype.__Class</code>.</p>
 <p>因为类本身是通过一个变量来访问的, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := Box()</code> 将无法工作, 因为 <code>box</code> 和 <code>Box</code> 都解析为同一事物. 试图以这种方式重新分配一个顶层(非嵌套) 类会导致加载时错误.</p>
 <p>在本文档中, 单词 "class" 本身通常表示用 <code>class</code> 关键字构造的类对象.</p>
 <p>类定义可以包含变量声明, 方法定义和嵌套的类定义.</p>
@@ -347,7 +347,7 @@ class NestedClass
 <p>嵌套一个类并不意味着与外部类有任何特殊的关系. 嵌套类不会自动实例化, 嵌套类的实例也不会与外部类的实例有任何连接, 除非脚本显式地建立连接.</p>
 <p>每个嵌套类定义都使用 <em>get</em> 和 <em>call</em> 访问函数生成动态属性, 而不是简单的值属性. 这是为了支持以下行为(其中类 X 包含嵌套类 Y):</p>
 <ul>
-<li><code>X.Y()</code> 不会将 X 传递给 <code>X.Y.Call</code>, 并最终传递给 <code>__New</code>, 否则会发生这种情况, 因为这是作为方法调用的函数对象的正常行为(这就是这里使用嵌套类的方式).</li>
+<li><code>X.Y()</code> 不会将 X 传递给 <code>X.Y.Call</code>, 并最终传递给 <code class="no-highlight">__New</code>, 否则会发生这种情况, 因为这是作为方法调用的函数对象的正常行为(这就是这里使用嵌套类的方式).</li>
 <li><code>X.Y := 1</code> 默认为错误(该属性为只读).</li>
 <li>第一次引用或调用类会使其初始化.</li>
 </ul>
@@ -429,7 +429,7 @@ Method()
 
  Env["PATH"] .= ";" A_ScriptDir  <em>; 只影响此脚本和子进程.</em>
 MsgBox Env["PATH"]</pre>
-<p><code>__Item</code> 实际上是一个默认属性名(如果已经定义了这样一个属性):</p>
+<p><code class="no-highlight">__Item</code> 实际上是一个默认属性名(如果已经定义了这样一个属性):</p>
 <ul>
   <li>当有参数时 <code><i>object</i>[<i>params</i>]</code> 等同于 <code><i>object</i>.__Item[<i>params</i>]</code>.</li>
   <li><code><i>object</i>[]</code> 等同于 <code><i>object</i>.__Item</code>.</li>
@@ -445,7 +445,7 @@ MsgBox obj["base"]                  <em>; 10</em>
 <p class="note"><strong>注意:</strong> 当显式属性名与空括号组合时, 如 <code>obj.prop[]</code>, 它是作为两个独立的操作来处理的: 首先检索 <code>obj.prop</code>, 然后调用结果的默认属性. 这是语言语法的一部分, 所以不依赖于对象.</p>
 
 <h3 id="Custom_NewDelete">创建和销毁</h3>
-<p>每当使用 <a href="lib/Class.htm#Call"><em>ClassName</em>()</a> 的默认实现创建对象时, 都会调用新对象的 <code>__New</code> 方法, 以便允许自定义初始化. 传递给 <code><i>ClassName</i>()</code> 的任何参数都会被转发到 <code>__New</code>, 因此可能会影响对象的初始内容或如何构造它. 销毁对象时, 则调用 <code>__Delete</code>. 例如:</p>
+<p>每当使用 <a href="lib/Class.htm#Call"><em>ClassName</em>()</a> 的默认实现创建对象时, 都会调用新对象的 __New 方法, 以便允许自定义初始化. 传递给 <code><i>ClassName</i>()</code> 的任何参数都会被转发到 __New, 因此可能会影响对象的初始内容或如何构造它. 销毁对象时, 则调用 __Delete. 例如:</p>
 <pre>m1 := GMem(0, 10)
 m2 := {base: GMem.Prototype}, m2.__New(0, 30)
 
@@ -520,8 +520,8 @@ class <i>ClassName</i> {
 <p>在以下情况下, 不调用元函数:</p>
 <ul>
   <li><code>x[y]</code>: 使用不带属性名称的方括号仅会调用 <a href="#__Item">__Item</a> 属性.</li>
-  <li><code>x()</code>: 调用对象本身仅会调用 <code>Call</code> 方法. 这包括内置函数(如 <a href="lib/SetTimer.htm">SetTimer</a> 和 <a href="lib/Hotkey.htm">Hotkey</a>) 进行的内部调用.</li>
-  <li>对其他元函数或双下划线方法的内部调用不会触发 <code>__Call</code>.</li>
+  <li><code>x()</code>: 调用对象本身仅会调用 Call 方法. 这包括内置函数(如 <a href="lib/SetTimer.htm">SetTimer</a> 和 <a href="lib/Hotkey.htm">Hotkey</a>) 进行的内部调用.</li>
+  <li>对其他元函数或双下划线方法的内部调用不会触发 <code class="no-highlight">__Call</code>.</li>
 </ul>
 
 <h4 id="Dynamic_Properties">动态属性</h4>
@@ -569,7 +569,7 @@ c := ""             <em>; Bob 被删除...</em>
 </pre>
 <p>表达式中的函数, 方法或运算符返回的临时引用在表达式的计算完成或中止后释放. 在下面的例子中, 新的 GMem 对象只有在 MsgBox 返回后才被释放.</p>
 <pre>MsgBox <a href="lib/DllCall.htm">DllCall</a>("GlobalSize", "ptr", GMem(0, 20).ptr, "ptr")  <em>; 20</em></pre>
-<p class="note"><strong>注意:</strong> 在本例中, <code>.ptr</code> 可以省略, 因为 <a href="lib/DllCall.htm#ptr">Ptr</a> 参数类型允许对象具有 <code>Ptr</code> 属性. 但是, 上面显示的模式甚至可以用于其他属性名.</p>
+<p class="note"><strong>注意:</strong> 在本例中, <code>.ptr</code> 可以省略, 因为 <a href="lib/DllCall.htm#ptr">Ptr</a> 参数类型允许对象具有 Ptr 属性. 但是, 上面显示的模式甚至可以用于其他属性名.</p>
 <p>如果希望在对象的最后一个引用被释放后运行一段代码, 可通过 <a href="#Custom_NewDelete">__Delete</a> 元函数实现.</p>
 <h4 id="refs-problems">引用计数的问题</h4>
 <p>仅仅依赖引用计数有时会造成 catch-22 的情况: 对象被设计为在删除时释放其资源, 但只有在其资源首次被释放时才会被删除. 具体来说, 当这些资源是其他对象或函数时, 通常会间接地保留对对象的引用.</p>

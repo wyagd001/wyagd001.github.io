@@ -78,7 +78,7 @@ catch
   <li>如果没有指定动词, <em>Target</em> 将按原样传递给 <a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcess</a> 的参数 <em>lpCommandLine</em>.</li>
   <li>如果指定了动词或 CreateProcess 失败, 并且 <a href="RunAs.htm">RunAs</a> 没有生效, 则尝试 <a href="https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw">ShellExecuteEx</a>.</li>
 </ul>
-<p>如果 <em>Target</em> 指定了名称, 但没有指定目录, 如果它是集成的("已知的"), 例如包含在 PATH 的文件夹之一中, 系统将搜索并启动该文件. 确切的搜索顺序取决于是否调用 CreateProcess 和/或 ShellExecuteEx. 如果调用 CreateProcess, 应用程序目录(其中包含 AutoHotkey 解释器或编译的脚本) 优先于 <em>WorkingDir</em> 指定的工作目录. 要避免这种情况, 请指定目录; 例如 <code>.\program.exe</code>.</p>
+<p>如果 <em>Target</em> 指定了名称, 但没有指定目录, 如果它是集成的("已知的"), 例如包含在 PATH 的文件夹之一中, 系统将搜索并启动该文件. 确切的搜索顺序取决于是否调用 CreateProcess 和/或 ShellExecuteEx. 如果调用 CreateProcess, 应用程序目录(其中包含 AutoHotkey 解释器或编译的脚本) 优先于 <em>WorkingDir</em> 指定的工作目录. 要避免这种情况, 请指定目录; 例如 <code class="no-highlight">.\program.exe</code>.</p>
 <p>当尝试 ShellExecuteEx 时, <em>Target</em> 被解释如下:</p>
 <ul>
   <li>以第一个空格或制表符结尾的 <em>Target</em> 子字符串可以是<a href="#verbs">预定义的动词名称</a>, 也可以是星号后面跟着动词词名称. 如果存在, 则排除可选的星号, 动词名称和单个分隔空格或制表符. 动词名称不支持包含空格或制表符, 但允许使用连字符等符号.</li>
@@ -154,12 +154,12 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
 MsgBox "A_IsAdmin: " A_IsAdmin "`nCommand line: " full_command_line</pre>
 <p>如果用户取消了 <a href="https://en.wikipedia.org/wiki/User_Account_Control">User Account Control (UAC)</a> 对话框, 或者由于其他原因启动失败, 脚本就会直接退出.</p>
 <p>如果在调用 ExitApp 之前启动新的脚本实例, 使用 <a href="../Scripts.htm#SlashR">/restart</a> 可以确保不显示<a href="_SingleInstance.htm">单一实例</a>的提示弹窗.</p>
-<p>如果禁用了 UAC, <em>*RunAs</em> 将不会提权启动进程. 在命令行中检查 <code>/restart</code> 可以确保在这种情况下脚本不会进入失控循环. 注意 <code>/restart</code> 是一个内置的开关, 所以其不包括在<a href="../Scripts.htm#cmd_args">命令行参数数组</a>中.</p>
+<p>如果禁用了 UAC, <em>*RunAs</em> 将不会提权启动进程. 在命令行中检查 <code class="no-highlight">/restart</code> 可以确保在这种情况下脚本不会进入失控循环. 注意 <code class="no-highlight">/restart</code> 是一个内置的开关, 所以其不包括在<a href="../Scripts.htm#cmd_args">命令行参数数组</a>中.</p>
 <p>可以根据脚本的需要修改上面的例子:</p>
 <ul>
   <li>如果脚本的确需要管理员权限, 在 <em>*RunAs</em> 未能提升脚本权限的情况下(例如, 因为 UAC 被禁用), 第二次检查 <a href="../Variables.htm#IsAdmin">A_IsAdmin</a>.</li>
   <li>在用户取消了 UAC 提示的情况下, 为了保持脚本的运行, 可以将 ExitApp 移到 try 块中.</li>
-  <li>在重新启动失败的情况下, 为了保持脚本的运行(比如脚本文件已被重命名或删除), 移除 <a href="ExitApp.htm">ExitApp</a> 并且使用 RunWait 代替 Run. 若是成功, <code>/restart</code> 使新实例终止旧实例. 若是失败, 新实例的退出及 RunWait 返回.</li>
+  <li>在重新启动失败的情况下, 为了保持脚本的运行(比如脚本文件已被重命名或删除), 移除 <a href="ExitApp.htm">ExitApp</a> 并且使用 RunWait 代替 Run. 若是成功, <code class="no-highlight">/restart</code> 使新实例终止旧实例. 若是失败, 新实例的退出及 RunWait 返回.</li>
 </ul>
 <p>AutoHotkey 的安装程序为 <em>.ahk</em> 文件注册 <em>RunAs</em> 动词, 这允许 <code>Run "*RunAs script.ahk"</code> 以管理员权限启动脚本.</p>
 

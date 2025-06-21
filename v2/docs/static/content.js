@@ -1705,7 +1705,7 @@ function ctor_features()
       var span = spans[i], m, title, href;
       var text = span.textContent || span.innerText;
       if (m = /(v\d\.(\d+\.)?\d+)(\+)?/.exec(text)) {
-        title = m[3] ? T("Applies to AutoHotkey {0} and later").format(m[1]) : "";
+        title = m[3] ? T("Applies to AutoHotkey {0} and later").format(m[1]) : "AutoHotkey {0}".format(m[1]);
         if (!m[2])
           m[1] = m[1] + '.0';
         href = 'ChangeLog.htm#' + m[1];

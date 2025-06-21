@@ -51,25 +51,25 @@
 </ul>
 <p id="continuation-line"><strong>延续运算符:</strong> 以逗号或任何其他<a href="Variables.htm#Operators">表达式运算符</a>(除了 ++ 和 --) 开头的行会自动与其正上方的行合并. 同样, 以表达式运算符结尾的行会自动与它下面的行合并. 在以下示例中, 第二行被附加到第一行, 因为它以逗号开头:</p>
 <pre>FileAppend "This is the text to append.`n"   <em>; 这里可以使用注释.</em>
-    <strong>,</strong> A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; 注释.</em></pre>
+    , A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; 注释.</em></pre>
 <p>同样地, 下列几行也会合并成单行, 因为最后两行以 "and" 或 "or" 开始:</p>
 <pre>if Color = "Red" or Color = "Green"  or Color = "Blue"   <em>; 注释.</em>
-    <strong>or</strong> Color = "Black" or Color = "Gray" or Color = "White"   <em>; 注释.</em>
-    <strong>and</strong> ProductIsAvailableInColor(Product, Color)   <em>; 注释.</em></pre>
+    or Color = "Black" or Color = "Gray" or Color = "White"   <em>; 注释.</em>
+    and ProductIsAvailableInColor(Product, Color)   <em>; 注释.</em></pre>
 <p><a href="Variables.htm#ternary">三元运算符</a>也是个不错的选择:</p>
 <pre>ProductIsAvailable := (Color = "Red")
-    <strong>?</strong> false  <em>; 我们没有任何红色产品, 所以不用那么麻烦去调用函数.</em>
-    <strong>:</strong> ProductIsAvailableInColor(Product, Color)</pre>
+    ? false  <em>; 我们没有任何红色产品, 所以不用那么麻烦去调用函数.</em>
+    : ProductIsAvailableInColor(Product, Color)</pre>
 <p>下面的例子等同于上面的例子:</p>
-<pre>FileAppend "This is the text to append.`n"<strong>,</strong>   <em>; 这里允许注释.</em>
+<pre>FileAppend "This is the text to append.`n",   <em>; 这里允许注释.</em>
     A_ProgramFiles "\SomeApplication\LogFile.txt"  <em>; 注释.</em>
 
-if Color = "Red" or Color = "Green"  or Color = "Blue" <strong>or</strong>   <em>; 注释.</em>
-    Color = "Black" or Color = "Gray" or Color = "White" <strong>and</strong>   <em>; 注释.</em>
+if Color = "Red" or Color = "Green" or Color = "Blue" or   <em>; 注释.</em>
+    Color = "Black" or Color = "Gray" or Color = "White" and   <em>; 注释.</em>
     ProductIsAvailableInColor(Product, Color)   <em>; 注释.</em>
 
-ProductIsAvailable := (Color = "Red") <strong>?</strong>
-    false <strong>:</strong> <em>;  我们没有任何红色产品, 所以不用那么麻烦去调用函数.</em>
+ProductIsAvailable := (Color = "Red") ?
+    false : <em>;  我们没有任何红色产品, 所以不用那么麻烦去调用函数.</em>
     ProductIsAvailableInColor(Product, Color)</pre>
 <p>虽然上面示例中使用的缩进是可选的, 但它可以显示出哪些行属于上一行从而提高代码清晰度. 此外, 可以在上述示例中的任何行的末尾或行与行之间添加空行或<a href="Language.htm#comments">注释</a>.</p>
 <p>延续操作符不能与自动替换热字符或 <a href="lib/_HotIf.htm">#HotIf</a> 以外的指令一起使用.</p>
@@ -96,9 +96,9 @@ MsgBox(
 ]</pre>
 <p>如果程序判定行末尾的大括号(<code>{</code>) 应该被解释为块(<a href="lib/Block.htm#otb">OTB 样式</a>) 的开头而不是<a href="Language.htm#object-literal">对象标识符</a>的开头, 则行末尾的大括号不会导致延续. 具体来说(按优先级降序排列):</p>
 <ul>
-  <li>如果一个大括号前面有一个未闭合的 <code>(</code>/<code>[</code>/<code>{</code>, 那么它永远不会被解释为一个块的开始, 因为这会产生一个无效的表达式. 例如, 大括号在 <code>If ({</code> 中是对象标识符的开始.</li>
+  <li>如果一个大括号前面有一个未闭合的 <code>(</code>/<code>[</code>/<code>{</code>, 那么它永远不会被解释为一个块的开始, 因为这会产生一个无效的表达式. 例如, 大括号在 <code class="no-highlight">If ({</code> 中是对象标识符的开始.</li>
   <li>对象标识符不能合法地跟随 <code>)</code> 或 <code>]</code>, 因此, 如果大括号跟随这些符号中的任何一个(不包括空格), 它将被解释为块的开始(例如用于函数或属性定义).</li>
-  <li>对于需要正文(主体)(因此支持 OTB) 的<a href="Language.htm#control-flow">控制流语句</a>, 仅当大括号前面有运算符时, 大括号才能成为对象标识符的开始, 如 <code>:= {</code> 或 <code>for x <strong>in</strong> {</code>. 特别是, 大括号在 <code>Loop {</code> 中始终是块的开始, 而 <code>If {</code> 和 <code>While {</code> 始终是错误.</li>
+  <li>对于需要正文(主体)(因此支持 OTB) 的<a href="Language.htm#control-flow">控制流语句</a>, 仅当大括号前面有运算符时, 大括号才能成为对象标识符的开始, 如 <code>:= {</code> 或 <code class="no-highlight">for x <strong>in</strong> {</code>. 特别是, 大括号在 <code class="no-highlight">Loop {</code> 中始终是块的开始, 而 <code class="no-highlight">If {</code> 和 <code class="no-highlight">While {</code> 始终是错误.</li>
 </ul>
 <p>大括号可以安全地在任何不需要正文的函数调用, 表达式或控制流语句的行延续中使用. 例如:</p>
 <pre>myfn() {
@@ -145,12 +145,12 @@ MsgBox Format(FormatStr, A_TickCount, A_Now)</pre>
 <p id="continuation_defaults">默认情况下, 根据延续片段中第一行的缩进, 省略前导空格或制表符. 如果第一行混合有空格和制表符, 则只将第一种类型的字符视为缩进. 如果任何行缩进小于第一行或使用不同的字符, 则该行上的所有前导空格都保持原样.</p>
 <p>默认情况下, 将忽略尾随空格或制表符.</p>
 <p> 延续片段的默认行为可以通过在该片段的左括号的右侧包含以下一个或多个选项来覆盖改写. 如果存在多个选项, 请使用空格将每个选项与前一个选项分开. 例如: <code>( LTrim Join|</code>.</p>
-<p id="Join"><strong>Join</strong><em>String</em>: 指定行与行之间连接的方式. 如果没有使用此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果省略 <em>String</em>, 则行与行之间直接连接而不添加任何字符. 否则, 为 <em>String</em> 指定一个最多 15 个字符的字符串. 例如, <code>Join`s</code> 会在除最后一行外的每行末尾插入一个空格. 另一个例子是 <code>Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code>Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以 <em>String</em> 结尾, 请在它的右括号上方添加一个空行.</p>
+<p id="Join"><strong>Join</strong><em>String</em>: 指定行与行之间连接的方式. 如果没有使用此选项, 那么除最后一行外的其他行后面都会跟一个换行符(`n). 如果省略 <em>String</em>, 则行与行之间直接连接而不添加任何字符. 否则, 为 <em>String</em> 指定一个最多 15 个字符的字符串. 例如, <code class="no-highlight">Join`s</code> 会在除最后一行外的每行末尾插入一个空格. 另一个例子是 <code class="no-highlight">Join`r`n</code>, 它会在行与行之间插入 CR+LF. 同样地, <code class="no-highlight">Join|</code> 会在行之间插入管道符. 要让延续片段的最后一行也以 <em>String</em> 结尾, 请在它的右括号上方添加一个空行.</p>
 <p id="LTrim"><strong>LTrim:</strong> 删除每行开头的所有的空格和制表符. 由于<a href="#continuation_defaults">默认的 "智能" 行为</a>, 这通常是不必要的.</p>
 <p id="LTrim0"><strong>LTrim0</strong> (LTrim 后跟一个 0): 关闭每行开头的空格和制表符的删除.</p>
 <p id="RTrim0"><strong>RTrim0</strong> (RTrim 后跟一个 0): 关闭每行末尾的空格和制表符的删除.</p>
 <p id="CommentOption"><strong>Comments</strong> (或 <strong>Comment</strong> 或 <strong>Com</strong> 或 <strong>C</strong>): 在延续片段中允许<a href="Language.htm#comments">分号注释</a>(但不允许 <code>/*..*/</code>). 这些注释(以及它们左边的任何空格和制表符) 将完全从连接结果中省略, 而不是作为文本处理. 每个注释可以出现在一行的右侧, 也可以单独出现在新行上.</p>
-<p id="accent"><strong>`</strong>(重音): 按按原义处理反引号, 而不是作为<a href="misc/EscapeChar.htm">转义字符</a>. 这还可以防止任何显式指定的转义序列(<code>`r</code> 和 <code>`t</code>) 的转换.</p>
+<p id="accent"><strong>`</strong>(重音): 按按原义处理反引号, 而不是作为<a href="misc/EscapeChar.htm">转义字符</a>. 这还可以防止任何显式指定的转义序列(<code class="no-highlight">`r</code> 和 <code class="no-highlight">`t</code>) 的转换.</p>
 <p id="non-continuation"><strong>(</strong> 或 <strong>):</strong> 如果左括号或右括号出现在初始左括号的右侧(作为 <a href="#Join">Join</a> 选项的参数除外), 则该行将被重新解释为表达式, 而不是延续片段的开头. 这允许在行的开头使用 <code>(x.y)[z]()</code> 之类的表达式, 并且还允许<a href="#continuation-expr">多行表达式</a>以 <code>((</code> 或 <code>(MyFunc(</code> 在行的开头.</p>
 
 <h3 id="continuation-remarks">备注</h3>
@@ -162,7 +162,7 @@ MsgBox Format(FormatStr, A_TickCount, A_Now)</pre>
     &nbsp;; 本行 <strong>不是</strong> 注释; 它是原义的文字. 上面行包含 <i>注释</i> 的部分都是注释.
 )", "C:\File.txt"   <em>; 注释.</em></pre>
 <p>由上面可知, 延续片段中的分号不需要进行<a href="misc/EscapeChar.htm">转义</a>.</p>
-<p>因为右括号表示延续片段的结束, 所以要让某一行以原义的右括号开头, 需要在其前面加上重音符/反引号: <code>`)</code>. 然而, 这不能与<a href="#accent">重音(`) 选项</a>结合使用.</p>
+<p>因为右括号表示延续片段的结束, 所以要让某一行以原义的右括号开头, 需要在其前面加上重音符/反引号: <code class="no-highlight">`)</code>. 然而, 这不能与<a href="#accent">重音(`) 选项</a>结合使用.</p>
 <p>一个延续片段后面可以紧跟着包含另一个延续片段的左括号的一行. 这样使得上面提到的选项可以在创建单行的过程中进行改变.</p>
 <p>不支持通过 <a href="lib/_Include.htm">#Include</a> 的方法把延续片段各部分连接起来.</p>
 
@@ -172,7 +172,7 @@ MsgBox Format(FormatStr, A_TickCount, A_Now)</pre>
 <a href="Variables.htm#MyDocuments">A_MyDocuments</a> "\AutoHotkey\Lib\"  <em>; 用户库.</em>
 "directory-of-the-currently-running-AutoHotkey.exe\Lib\"  <em>; 标准库.</em></pre>
 <p>库文件夹按照上面显示的顺序进行搜索.</p>
-<p>例如, 如果一个脚本包含行 <code>#Include &lt;MyLib&gt;</code>, 程序就会在本地库中搜索一个名为 "MyLib.ahk" 的文件. 如果在那里没有找到, 它就会在用户库中搜索它, 直至在标准库中搜索. 如果仍然没有找到匹配, 并且库的名称包含下划线(例如 <code>MyPrefix_MyFunc</code>), 则程序只使用前缀(例如 <code>MyPrefix.ahk</code>) 再次搜索.</p>
+<p>例如, 如果一个脚本包含行 <code>#Include &lt;MyLib&gt;</code>, 程序就会在本地库中搜索一个名为 "MyLib.ahk" 的文件. 如果在那里没有找到, 它就会在用户库中搜索它, 直至在标准库中搜索. 如果仍然没有找到匹配, 并且库的名称包含下划线(例如 <code class="no-highlight">MyPrefix_MyFunc</code>), 则程序只使用前缀(例如 <code class="no-highlight">MyPrefix.ahk</code>) 再次搜索.</p>
 <p>虽然按照惯例, 一个库文件通常只包含一个与其文件名同名的函数或类, 但它也可能包含只被它调用的私有函数. 然而, 这些函数应该有相当不同的名字, 因为它们仍然在全局命名空间中; 也就是说, 它们可以在脚本的任何地方被调用.</p>
 
 <h2 id="ahk2exe">把脚本转换成 EXE(Ahk2Exe)</h2>
@@ -238,11 +238,11 @@ MsgBox Format(FormatStr, A_TickCount, A_Now)</pre>
       </tr>
       <tr id="SlashGui">
         <td>/gui</td>
-        <td>显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中保存的设置. <code>/in</code> 在这种情况下是可选的.</td>
+        <td>显示 GUI 而不是立即编译. 其他参数可以用来覆盖上次在 GUI 中保存的设置. <code class="no-highlight">/in</code> 在这种情况下是可选的.</td>
       </tr>
       <tr id="SlashGuiSilent">
         <td>/silent [verbose]</td>
-        <td>禁用所有的消息框并将错误输出到标准错误流(stderr); 如果 stderr 失败, 则输出到标准输出流(stdout). 其他信息也会输出到 stdout. 可以选择输入 <code>verbose</code> 这个单词, 把状态信息也输出到 stdout.</td>
+        <td>禁用所有的消息框并将错误输出到标准错误流(stderr); 如果 stderr 失败, 则输出到标准输出流(stdout). 其他信息也会输出到 stdout. 可以选择输入 <code class="no-highlight">verbose</code> 这个单词, 把状态信息也输出到 stdout.</td>
       </tr>
       <tr id="SlashAhk">
         <td class="warning"><strong>不推荐:</strong><br>/ahk <i>file_name</i></td>
@@ -287,13 +287,13 @@ MsgBox Format(FormatStr, A_TickCount, A_Now)</pre>
 <p>有关详情, 请参阅<a href="misc/Ahk2ExeDirectives.htm">脚本编译器指令</a>.</p>
 
 <h3 id="mpress">压缩编译的脚本</h3>
-<p>Ahk2Exe 可以选择使用 MPRESS 或 UPX 这两款免费软件来压缩编译后的脚本. 如果 <strong>MPRESS.exe</strong> 和/或 <strong>UPX.exe</strong> 已被复制到安装 AutoHotkey 的 "Compiler" 子文件夹中, 则可以通过 <code>/compress</code> 参数或 GUI 设置来压缩 .exe 文件.</p>
+<p>Ahk2Exe 可以选择使用 MPRESS 或 UPX 这两款免费软件来压缩编译后的脚本. 如果 <strong>MPRESS.exe</strong> 和/或 <strong>UPX.exe</strong> 已被复制到安装 AutoHotkey 的 "Compiler" 子文件夹中, 则可以通过 <code class="no-highlight">/compress</code> 参数或 GUI 设置来压缩 .exe 文件.</p>
 <p><strong>MPRESS</strong> 官网(介绍与下载): <a href="http://www.matcode.com/mpress.htm">http://www.matcode.com/mpress.htm</a><br>MPRESS 镜像: <a href="https://www.autohotkey.com/mpress/">https://www.autohotkey.com/mpress/</a></p>
 <p><strong>UPX</strong> 官网(介绍与下载): <a href="https://upx.github.io/">https://upx.github.io/</a></p>
 <p><strong>注意:</strong> 压缩编译脚本可以保护脚本不被诸如记事本或 PE 编辑器这类的工具随意查看, 但并不能保护脚本源码不被专用的提取工具提取.</p>
 
 <h3 id="information">背景信息</h3>
- <p>支持以下文件夹结构, 其中 <code>Ahk2Exe.exe</code> 的运行版本在下面所示的第一个 \Compiler 目录中:</p>
+ <p>支持以下文件夹结构, 其中 <code class="no-highlight">Ahk2Exe.exe</code> 的运行版本在下面所示的第一个 \Compiler 目录中:</p>
 <pre class="no-highlight">\AutoHotkey 
    AutoHotkeyA32.exe 
    AutoHotkeyU32.exe
@@ -311,14 +311,14 @@ MsgBox Format(FormatStr, A_TickCount, A_Now)</pre>
       AutoHotkey32.exe
       AutoHotkey64.exe</pre>
 <p>当 Ahk2Exe 启动时, 基文件搜索算法会运行很短的时间, 其工作原理如下:</p>
-<p>在编译器的目录, 编译器的父目录和任何编译器同级的以 <code>AutoHotkey</code> 或 <code>V</code> 开头的目录中搜索符合的 AutoHotkey .exe 文件和所有的 .bin 文件, 但不在以 <code>AutoHotkey_H</code> 开头的目录中搜索. 递归搜索所选的目录. 任何找到的 AutoHotkey.exe 文件都被排除在外, 只留下诸如 AutoHotkeyA32.exe, AutoHotkey64.exe 等文件以及所有发现的 .bin 文件. 所有保留的 .exe 文件名称必须以 <code>AutoHotkey</code> 开头和文件描述包含 <code>AutoHotkey</code> 单词, 并且版本号必须 <code class="no-highlight">1.1.34+</code> 或 <code class="no-highlight">2.0-a135+</code>.</p>
+<p>在编译器的目录, 编译器的父目录和任何编译器同级的以 <code class="no-highlight">AutoHotkey</code> 或 <code class="no-highlight">V</code> 开头的目录中搜索符合的 AutoHotkey .exe 文件和所有的 .bin 文件, 但不在以 <code class="no-highlight">AutoHotkey_H</code> 开头的目录中搜索. 递归搜索所选的目录. 任何找到的 AutoHotkey.exe 文件都被排除在外, 只留下诸如 AutoHotkeyA32.exe, AutoHotkey64.exe 等文件以及所有发现的 .bin 文件. 所有保留的 .exe 文件名称必须以 <code class="no-highlight">AutoHotkey</code> 开头和文件描述包含 <code class="no-highlight">AutoHotkey</code> 单词, 并且版本号必须 <code class="no-highlight">1.1.34+</code> 或 <code class="no-highlight">2.0-a135+</code>.</p>
 <p>一个成功的编译还需要一个 AutoHotkey 解释器的版本(作为一个工具), 并且使用类似的算法来选择一个版本. 在大多数情况下, 所使用的解释器的版本将与用户为编译所选择的基文件的版本相匹配.</p>
 
 <h2 id="cmd">向脚本传递命令行参数</h2>
 <p>脚本支持命令行参数. 格式为:</p>
-<pre>AutoHotkey.exe [<i>Switches</i>] [<i>Script Filename</i>] [<i>Script Parameters</i>]</pre>
+<pre class="no-highlight">AutoHotkey.exe [<i>Switches</i>] [<i>Script Filename</i>] [<i>Script Parameters</i>]</pre>
 <p>对于已编译脚本, 格式为:</p>
-<pre>CompiledScript.exe [<i>Switches</i>] [<i>Script Parameters</i>]</pre>
+<pre class="no-highlight">CompiledScript.exe [<i>Switches</i>] [<i>Script Parameters</i>]</pre>
 <p><strong>Switches</strong>(开关): 下列零个或多个:</p>
 <table class="info">
   <tr><th width="10%">开关</th><th>意义</th><th class="wrap" abbr="Compiled?" width="8%">支持编译脚本?</th></tr>
@@ -397,7 +397,7 @@ MsgBox Format(FormatStr, A_TickCount, A_Now)</pre>
   <li><a href="lib/_SingleInstance.htm">#SingleInstance</a> 默认是关闭的.</li>
 </ul>
 <p>有关示例, 请参阅 <a href="lib/Run.htm#ExecScript">ExecScript()</a>.</p>
-<p>如果当前可执行文件有<a href="Program.htm#embedded-scripts">嵌入脚本</a>, 此参数可以是星号, 后面跟着嵌入脚本的资源名或 ID. 对于编译脚本(例如, 如果存在 ID 为 #1 的嵌入式脚本), 此参数前必须有 <code>/script</code> 开关.</p>
+<p>如果当前可执行文件有<a href="Program.htm#embedded-scripts">嵌入脚本</a>, 此参数可以是星号, 后面跟着嵌入脚本的资源名或 ID. 对于编译脚本(例如, 如果存在 ID 为 #1 的嵌入式脚本), 此参数前必须有 <code class="no-highlight">/script</code> 开关.</p>
 <p><strong>Script Parameters</strong>(脚本参数): 要传递给脚本的字符串, 每个参数用空格分隔. 任何包含空格的参数都应该用引号括起来. 如果要将空字符串作为参数传递, 请指定两个连续的引号. 原义引号可以通过在它前面加上反斜杠(\") 来传递. 因此, 任何在加引号参数的末尾的反斜杠(如 "C:\My Documents<span class="red">\"</span>) 都被当作原义的引号(就是说, 脚本将接收到字符串 C:\My Documents<span class="red">"</span>). 要移除引号, 使用 <code>A_Args[1] := <a href="lib/StrReplace.htm">StrReplace</a>(A_Args[1], '"')</code></p>
 <p id="cmd_args">传入参数, 如果存在, 作为数组存储在内置变量 <strong>A_Args</strong> 中, 可以使用<a href="Objects.htm#Usage_Simple_Arrays">数组语法</a>来访问. <code>A_Args[1]</code> 包含第一个参数. 下面的示例在传递给它的参数太少时退出脚本:</p>
 <pre>if A_Args.Length &lt; 3

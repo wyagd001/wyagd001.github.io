@@ -240,15 +240,15 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 <p>否则, 如果要在函数中引用一个现有的全局变量(或者创建一个新的变量), 在使用它之前先声明这个变量为全局变量. 例如:</p>
 <pre>SetDataDir(Dir)
 {
-    <strong>global</strong> LogFileName
+    global LogFileName
     LogFileName := Dir . "\My.log"
-    <strong>global</strong> DataDir := Dir  <em>; 声明与赋值相结合, 如<a href="#DeclareInit">下</a>所述.</em>
+    global DataDir := Dir  <em>; 声明与赋值相结合, 如<a href="#DeclareInit">下</a>所述.</em>
 }
 </pre>
 <p id="AssumeGlobal"><strong>假定-全局模式:</strong> 如果函数需要访问或创建大量的全局变量, 通过在函数的首行使用单词 "global", 从而假定其所有变量都是全局的(参数除外). 例如:</p>
 <pre>SetDefaults()
 {
-    <strong>global</strong>
+    global
     MyGlobal := 33  <em>; 把 33 赋值给全局变量, 必要时首先创建这个变量.</em>
     local x, y:=0, z  <em>; 在这种模式中局部变量必须进行声明, 否则会假设它们为全局的.</em>
 }</pre>
@@ -257,7 +257,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 <p>静态变量总是隐式的局部变量, 但和局部变量的区别是它们的值在多次调用期间是记住的. 例如:</p>
 <pre>LogToFile(TextToLog)
 {
-    <strong>static</strong> LoggedLines := 0
+    static LoggedLines := 0
     LoggedLines += 1  <em>; 保持局部的计数(它的值在多次调用期间是记住的).</em>
     global LogFileName
     FileAppend LoggedLines ": " TextToLog "`n", LogFileName
@@ -267,7 +267,7 @@ MsgBox Join("`n", <b class="blue">substrings*</b>)</pre>
 <p id="AssumeStatic"><strong>假定-静态模式:</strong> 函数的第一行是单词 "static", 将函数定义为假定-静态模式, 假定其所有未声明变量都是静态的(参数除外). 例如:</p>
 <pre>GetFromStaticArray(WhichItemNumber)
 {
-    <strong>static</strong>
+    static
     static FirstCallToUs := true  <em>; 每个静态声明初始化仍然只运行一次.</em>
     if FirstCallToUs  <em>; 在首次调用时创建静态数组, 后续的调用时不再创建.</em>
     {
@@ -307,7 +307,7 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>在上面的例子中, 如果 <em>ColorName</em> 变量为空, 则永远不会调用 FindColor() 函数. 这是由于 <em>AND</em> 的左侧结果为 <em>false</em>, 因此其右边不可能让最终的结果为 <em>true</em>.</p>
 <p>由于此特性, 所以需要注意到, 如果在 <em>AND</em> 或 <em>OR</em> 的右侧调用函数, 那么该函数产生的任何副作用(例如改变全局变量的内容) 可能永远不会发生.</p>
 <p>还需要注意在嵌套的 <em>AND</em> 和 <em>OR</em> 串联表达式的求值短路. 例如, 在下面的表达式中每当 <em>ColorName</em> 为空时, 只会进行最左边的比较. 这是因为此时最左边的比较已经足以确定最终的结果:</p>
-<pre>if (ColorName = "" <u>OR</u> FindColor(ColorName, Region1) <u>OR</u> FindColor(ColorName, Region2))
+<pre>if (ColorName = "" OR FindColor(ColorName, Region1) OR FindColor(ColorName, Region2))
     break   <em>; 搜索内容为空或找到了匹配.</em></pre>
 <p>从上面的例子可以看出, 任何耗时的函数一般应该在 <em>AND</em> 或 <em>OR</em> 的右侧调用从而提高性能. 这种技术也可以用来防止一个函数在它的一个参数会被传递一个它认为不合适的值(如空字符串) 时被调用.</p>
 <p><a href="Variables.htm#ternary">三元条件运算符(?:)</a> 也通过不计算丢弃的分支来实现短路.</p>

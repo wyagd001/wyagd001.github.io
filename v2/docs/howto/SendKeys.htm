@@ -31,9 +31,9 @@
 <p>从技术上讲, SendText 实际上发送的是 Unicode 字符包, 而不是击键, 这使得它对于通常使用组合键(如 <kbd>Shift</kbd>+<kbd>2</kbd> 或 <kbd>AltGr</kbd>+<kbd>a</kbd>) 键入的字符更加可靠.</p>
 
 <h3 id="Rules_of_quoted_strings">带引号的字符串的规则</h3>
-<p>SendText 逐字发送文本, 但请记住<a href="../Language.htm">语言</a>规则. 例如, <a href="../Language.htm#strings">原义文本</a>必须括在引号中(双引号 <code>"</code> 或单引号 <code>'</code>), 并且引号本身不会被 SendText 函数 "看到". 若要发送原义引号, 可以将其括在相反类型的引号中. 例如:</p>
+<p>SendText 逐字发送文本, 但请记住<a href="../Language.htm">语言</a>规则. 例如, <a href="../Language.htm#strings">原义文本</a>必须括在引号中(双引号 <code class="no-highlight">"</code> 或单引号 <code class="no-highlight">'</code>), 并且引号本身不会被 SendText 函数 "看到". 若要发送原义引号, 可以将其括在相反类型的引号中. 例如:</p>
 <pre>^2::SendText 'Quote marks are also known as "quotes".'</pre>
-<p>或者, 使用<a href="../misc/EscapeChar.htm">转义序列</a>. 在带引号的字符串中, <code>`"</code> 转换为原义的 <code>"</code>, 而 <code>`'</code> 转换为原义的 <code>'</code>. 例如:</p>
+<p>或者, 使用<a href="../misc/EscapeChar.htm">转义序列</a>. 在带引号的字符串中, <code class="no-highlight">`"</code> 转换为原义的 <code class="no-highlight">"</code>, 而 <code class="no-highlight">`'</code> 转换为原义的 <code class="no-highlight">'</code>. 例如:</p>
 <pre>^3::{
     SendText "Double quote (`")"
     SendText 'Single quote (`')'
@@ -41,20 +41,20 @@
 <p>您还可以交替使用两种引号:</p>
 <pre>^4::SendText 'Double (") and' . " single (') quote"</pre>
 <p>这两个字符串在传递给 SendText 函数之前连接在一起(<a href="../Variables.htm#concat">连接</a>). 点(<code>.</code>) 可以省略, 但这会使一个结束和另一个开始的位置更难看到.</p>
-<p>正如您在上面看到的, 转义字符 <code>`</code>(被称为 <em>backquote</em>, <em>backtick</em>, <em>grave accent</em> 和其他名称) 具有特殊含义, 因此如果您想发送该原义字符(或发送相应的按键), 则需要将其加倍, 如发送 <code>Send "``"</code>. 其他常见的转义序列包括 <code>`n</code> 表示换行符(Enter) 和 <code>`t</code> 表示制表符. 有关详情, 请参阅<a href="../misc/EscapeChar.htm">转义序列</a>.</p>
+<p>正如您在上面看到的, 转义字符 <code class="no-highlight">`</code>(被称为 <em>backquote</em>, <em>backtick</em>, <em>grave accent</em> 和其他名称) 具有特殊含义, 因此如果您想发送该原义字符(或发送相应的按键), 则需要将其加倍, 如发送 <code>Send "``"</code>. 其他常见的转义序列包括 <code class="no-highlight">`n</code> 表示换行符(Enter) 和 <code class="no-highlight">`t</code> 表示制表符. 有关详情, 请参阅<a href="../misc/EscapeChar.htm">转义序列</a>.</p>
 
 <h3 id="Sending_keys_and_key_combinations">发送键和组合键</h3>
-<p><a href="../lib/Send.htm">SendText</a> 最适合逐字发送文本, 但它不能发送不生成文本的键, 如 <kbd>Left</kbd> 或 <kbd>Home</kbd>. <a href="../lib/Send.htm">Send</a>, <a href="../lib/Send.htm#SendInput">SendInput</a>, <a href="../lib/Send.htm#SendPlay">SendPlay</a>, <a href="../lib/Send.htm#SendEvent">SendEvent</a> 和 <a href="../lib/ControlSend.htm">ControlSend</a> 可以发送文本和组合键, 或者不产生文本的键. 为了完成所有这些操作, 它们为以下符号添加了特殊含义: <code>^!+#{}</code></p>
-<p>前四个符号对应于标准修键, Ctrl(<code>^</code>), Alt(<code>!</code>), Shift(<code>+</code>) 和 Win(<code>#</code>). 它们可以组合使用, 但仅影响下一个键.</p>
+<p><a href="../lib/Send.htm">SendText</a> 最适合逐字发送文本, 但它不能发送不生成文本的键, 如 <kbd>Left</kbd> 或 <kbd>Home</kbd>. <a href="../lib/Send.htm">Send</a>, <a href="../lib/Send.htm#SendInput">SendInput</a>, <a href="../lib/Send.htm#SendPlay">SendPlay</a>, <a href="../lib/Send.htm#SendEvent">SendEvent</a> 和 <a href="../lib/ControlSend.htm">ControlSend</a> 可以发送文本和组合键, 或者不产生文本的键. 为了完成所有这些操作, 它们为以下符号添加了特殊含义: <code class="no-highlight">^!+#{}</code></p>
+<p>前四个符号对应于标准修键, Ctrl(<code class="no-highlight">^</code>), Alt(<code class="no-highlight">!</code>), Shift(<code class="no-highlight">+</code>) 和 Win(<code class="no-highlight">#</code>). 它们可以组合使用, 但仅影响下一个键.</p>
 <p>要按名称发送按键, 或发送上述任一符号的原义文本, 请将其括在大括号中. 例如:</p>
 <ul>
-  <li><code>^+{Left}</code> 生成 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Left</kbd></li>
-  <li><code>^{+}{Left}</code> 生成 <kbd>Ctrl</kbd>+<kbd>+</kbd> 后跟字母 <kbd>Left</kbd></li>
-  <li><code>^+Left</code> 生成 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> 后跟原义字母 <code>eft</code></li>
+  <li><code class="no-highlight">^+{Left}</code> 生成 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Left</kbd></li>
+  <li><code class="no-highlight">^{+}{Left}</code> 生成 <kbd>Ctrl</kbd>+<kbd>+</kbd> 后跟字母 <kbd>Left</kbd></li>
+  <li><code class="no-highlight">^+Left</code> 生成 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> 后跟原义字母 <code class="no-highlight">eft</code></li>
 </ul>
 <p>当按下 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>"</kbd> 时, 下面的示例发送两个引号, 然后将插入点向左移动, 准备在引号内键入内容:</p>
 <pre>^+"::Send '""{Left}'</pre>
-<p>对于 <code>^!+#{}</code> 以外的任何单个字符, Send 将其转换为相应的组合键, 并按下并释放该组合键. 例如, <code>Send "aB"</code> 按下并释放 <kbd>A</kbd>, 然后按下并释放 <kbd>Shift</kbd>+<kbd>B</kbd>. 类似地, 在默认情况下, 用大括号括起来的任何键名都会被按下并释放. 例如, <code>Send "{Ctrl}a"</code> 会按下并释放 <kbd>Ctrl</kbd>, 然后按下并释放 <kbd>A</kbd>; 可能这并不是你想要的.</p>
+<p>对于 <code class="no-highlight">^!+#{}</code> 以外的任何单个字符, Send 将其转换为相应的组合键, 并按下并释放该组合键. 例如, <code>Send "aB"</code> 按下并释放 <kbd>A</kbd>, 然后按下并释放 <kbd>Shift</kbd>+<kbd>B</kbd>. 类似地, 在默认情况下, 用大括号括起来的任何键名都会被按下并释放. 例如, <code>Send "{Ctrl}a"</code> 会按下并释放 <kbd>Ctrl</kbd>, 然后按下并释放 <kbd>A</kbd>; 可能这并不是你想要的.</p>
 <p>若要只按下(按住) 或释放某个键, 请将键名用大括号括起来, 后面跟着空格, 然后是单词 "down" 或 "up". 下面的例子使 <kbd>Ctrl</kbd>+<kbd>CapsLock</kbd> 切换 <kbd>Shift</kbd>:</p>
 <pre>*^CapsLock::{
     if GetKeyState("Shift")
@@ -65,28 +65,28 @@
 
 <h3 id="Hotkeys_vs_Send">热键 vs. Send</h3>
 <p class="warning"><strong>警告:</strong> 热键和发送有一些您应该注意的差异.</p>
-<p>尽管<a href="../Hotkeys.htm">热键</a>也使用符号 <code>^!+#</code> 和相同的按键名称, 但有几个重要的区别:</p>
+<p>尽管<a href="../Hotkeys.htm">热键</a>也使用符号 <code class="no-highlight">^!+#</code> 和相同的按键名称, 但有几个重要的区别:</p>
 <ul>
   <li>Send 不支持其他热键修饰符号. 例如, <code>&gt;^a::</code> 对应于 <kbd>RCtrl</kbd>+<kbd>A</kbd>, 但要发送该组合, 您需要完整拼写出键名, 如 <code>Send "{RCtrl down}a{RCtrl up}"</code>.</li>
   <li>按键名称从不括在热键中的大括号中, 但在 Send 中必须始终括在大括号中(如果长度超过一个字符).</li>
   <li>Send 区分大小写. 例如, <code>Send "^A"</code> 发送 <kbd>Ctrl</kbd> 和 <em>大写</em> "a" 的组合, 因此 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd>. 相比之下, <code>^a::</code> 和 <code>^A::</code> 是等价的.</li>
 </ul>
 <p>这是因为 Send 有多种用途, 而热键针对组合键进行了优化.</p>
-<p>在相关说明中, <a href="../Hotstrings.htm">热字符串</a>专门用于检测文本输入, 因此符号 <code>^!+#{}</code> 在热字符串触发文本中没有特殊含义. 但是, 热字符串的 <em>replacement</em> 文本使用与 Send 相同的语法(使用 <a href="../Hotstrings.htm#T">T 选项</a> 时除外). 每当在以下热字符串处于活动状态的情况下键入 "{" 时, 它都会发送 "}", 然后发送 <kbd>Left</kbd>, 以将插入点 移回括号之间:</p>
+<p>在相关说明中, <a href="../Hotstrings.htm">热字符串</a>专门用于检测文本输入, 因此符号 <code class="no-highlight">^!+#{}</code> 在热字符串触发文本中没有特殊含义. 但是, 热字符串的 <em>replacement</em> 文本使用与 Send 相同的语法(使用 <a href="../Hotstrings.htm#T">T 选项</a> 时除外). 每当在以下热字符串处于活动状态的情况下键入 "{" 时, 它都会发送 "}", 然后发送 <kbd>Left</kbd>, 以将插入点 移回括号之间:</p>
 <pre>:*?B0:{::{}}{Left}</pre>
 
 <h3 id="Blind_mode">Blind 模式</h3>
 <p>通常情况下, Send 假定您物理按住的任何修饰键都不应该与您要求它发送的键组合在一起. 例如, 如果你按住 <kbd>Ctrl</kbd> 并调用 <code>Send "Hi"</code>, Send 会在发送 "Hi" 之前自动释放 <kbd>Ctrl</kbd>, 然后再按下它.</p>
-<p>有时你想要的是将一些键与之前按下或发送的其他修饰符一起发送. 为此, 您可以使用 <code>{Blind}</code> 前缀. 在运行以下示例时, 尝试聚焦一个非空文本编辑器或输入字段, 并按住 <kbd>Ctrl</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Shift</kbd> 的同时按住 <kbd>1</kbd> 或 <kbd>2</kbd>:</p>
+<p>有时你想要的是将一些键与之前按下或发送的其他修饰符一起发送. 为此, 您可以使用 <code class="no-highlight">{Blind}</code> 前缀. 在运行以下示例时, 尝试聚焦一个非空文本编辑器或输入字段, 并按住 <kbd>Ctrl</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Shift</kbd> 的同时按住 <kbd>1</kbd> 或 <kbd>2</kbd>:</p>
 <pre>*^1::Send "{Blind}{Home}"
 *^2::Send "{Blind}{End}"</pre>
-<p>有关 <code>{Blind}</code> 的详细情况, 请参阅 <a href="../lib/Send.htm#Blind">Blind 模式</a>.</p>
+<p>有关 <code class="no-highlight">{Blind}</code> 的详细情况, 请参阅 <a href="../lib/Send.htm#Blind">Blind 模式</a>.</p>
 
 <h3 id="Others">其他</h3>
 <p>Send 支持其他一些特殊的结构, 如:</p>
 <ul>
-  <li><code>{U+00B5}</code> 按其序号值(字符代码)发送一个 Unicode 字符.</li>
-  <li><code>{ASC 0181}</code> 发送 Alt+Numpad 序列.</li>
+  <li><code class="no-highlight">{U+00B5}</code> 按其序号值(字符代码)发送一个 Unicode 字符.</li>
+  <li><code class="no-highlight">{ASC 0181}</code> 发送 Alt+Numpad 序列.</li>
   <li><code class="no-highlight">{Click <i>Options</i>}</code> 单击或移动鼠标.</li>
 </ul>
 <p>有关完整列表, 请参阅<a href="../lib/Send.htm#keynames">按键名称</a>.</p>
