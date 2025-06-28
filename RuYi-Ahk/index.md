@@ -12,7 +12,7 @@ description: 如意百宝箱-Ahk 简介
 
 **程序下载**: [RuYi_2.8.zip](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [2.9 - 2025/06/21](history.md)
+**当前版本**: [2.9 - 2025/06/28](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
