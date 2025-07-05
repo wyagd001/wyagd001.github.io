@@ -716,3 +716,10 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1709|e906|透明穿透|任意窗口|将当前窗口设为置顶,透明度设为50%,并点击穿透|Canfunc&#124;CF_WinSetTransparentAndPenetrate&#124;%Windy_CurWin_id%&#124;128|
 |1710|e906|穿透恢复|无条件|将设为置顶透明并点击穿透的窗口恢复原状|Canfunc&#124;CF_WinSetTransparentAndPenetrate&#124;&#124;256|
 |1711|e121|经纬度|无条件@数字|经纬度换算|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\经纬度转换.ahk" "%CandySel%"|
+|1712|E77C|录音机|无条件@系统程序|打开系统录音机(Win7)|Run&#124;SoundRecorder.exe|
+|1713|F466|IE|无条件@系统程序|打开系统IE浏览器|Run&#124;iexplore.exe|
+|1714|E121|中转站|无条件@剪贴板|显示一个置顶窗口,可以将复制的文本,位图,文件(也能拖拽文件到该窗口)暂存其中,通过拖拽将其在其他窗口打开|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\工具类\剪贴板中转站.ahk"|
+|1715|EA18|防火墙|无条件@系统程序|打开系统防火墙界面|Run&#124;firewall.cpl|
+|1716|EA18|防火墙开|无条件@系统程序|开启系统防火墙|Run&#124;cmd /c netsh advfirewall set allprofiles state on&#124;&#124;Hide|
+|1717|EA18|防火墙关|无条件@系统程序|关闭系统防火墙|Run&#124;cmd /c netsh advfirewall set allprofiles state off&#124;&#124;Hide|
+|1718|EB05|占用分析|无条件@第三方程序|打开Spacesniffer扫描选中文件夹|Run&#124;"%A_ScriptDir%\引用程序\x32\SpaceSniffer.exe" scan "%CandySel%"|
