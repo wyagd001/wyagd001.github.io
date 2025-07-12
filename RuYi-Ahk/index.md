@@ -10,9 +10,9 @@ description: 如意百宝箱-Ahk 简介
 
 **如意百宝箱-Ahk**: 如意百宝箱是一款针对不同窗口和选中文件显示一个定制的动作面板的快捷启动工具. 动作面板由热键或鼠标手势来显示, 然后点击动作按钮来执行动作, 也可以由单独的热键或鼠标手势直接执行动作. 软件可以自由新增动作(如改写内置动作, 添加外部 ahk 脚本).  
 
-**程序下载**: [RuYi_2.8.zip](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
+**程序下载**: [RuYi_2.9.zip](https://wyagd001.github.io/RuYi-Ahk/RuYi.zip)  
 
-**当前版本**: [2.9 - 2025/07/08](history.md)
+**当前版本**: [2.9 - 2025/07/12](history.md)
 
 **最新发布**: [https://github.com/wyagd001/RuYi-Ahk](https://github.com/wyagd001/RuYi-Ahk)  
 
