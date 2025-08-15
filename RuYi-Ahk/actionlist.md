@@ -726,3 +726,6 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1719|E8EC|动作网页|无条件@如意|生成无条件或任意窗口动作的网页 webaction.htm|Cando&#124;GenerateWebActionsPage|
 |1720|E8CB|粘贴到文件|选中文件|将剪贴板内容粘贴到选中的文件(先删除后粘贴)|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\粘贴到选中文件.ahk" "%CandySel%"|
 |1721|E139|GPS|选中文件夹|查看选中文件夹中图片文件中的GPS信息|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件_gps.ahk" "%CandySel%"|
+|1722|F5A9|对比1&2|将选中的文件使用 WinMerge 打开(左侧)或将文件路径放入右侧|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\WinMerge.ahk" "%CandySel%"|
+|1723|F5A5|对比1|将选中的文件使用 WinMerge 打开(左侧)|Run&#124;"%WinMerge%" "%CandySel%"|
+|1724|F5ED|WPS免登录|解决 WPS 强制要求登录,工具栏灰色的问题|CanFunc&#124;CF_RegWrite&#124;false&#124;Reg_SZ&#124;HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\6.0\plugins\officespace\flogin&#124;enableForceLoginForHasInstallDevice|

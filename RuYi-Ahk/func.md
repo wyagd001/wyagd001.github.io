@@ -84,3 +84,4 @@ description: 如意百宝箱-Ahk 内置函数
 |69|窗口右下角屏幕||窗口移到屏幕右下角(1/4)|动作1637: Cando&#124;窗口右下角屏幕|
 |70|ABPSetPic|图标句柄|更改设置额外任务栏最上面的图标|动作1625: ExecSendToRuyi("HICON:\*" hIcon,, 1624)|
 |71|CF_WinSetTransparentAndPenetrate|(WinId, 透明度数值)|窗口半透明并置顶并点击穿透|动作1709: CF_WinSetTransparentAndPenetrate&#124;%Windy_CurWin_id%&#124;128|
+|72|CF_RegWrite|(值, 值类型, 键名, 值名)|修改注册表|动作1724:CanFunc|CF_RegWrite&#124;false&#124;Reg_SZ&#124;HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\6.0\plugins\officespace\flogin&#124;enableForceLoginForHasInstallDevice|
