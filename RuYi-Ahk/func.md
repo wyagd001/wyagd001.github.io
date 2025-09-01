@@ -39,8 +39,8 @@ description: 如意百宝箱-Ahk 内置函数
 |25|SendTo32770|(Val, key := "")|设置对话框窗口中的 Edit1 控件的值, 并发送指定的按键|动作1547: canfunc&#124;SendTo32770&#124;%CandySel%&#124;{Enter}|
 |26|ShowDBData|(Dtype := "execcount", Stype := "面板", Dnum := 12)|以面板或菜单形式显示动作数据库中运行次数或最近运行的动作|[动作1193](/actions/1193.md): canfunc&#124;ShowDBData&#124;execcount&#124;菜单|
 |27|ABBReSet|字符串: 按钮动作编号|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 重置额外任务栏上按钮的颜色|Cando&#124;ABBReSet|
-|28|ABBSetColor|字符串: 按钮动作编号\|背景色\|文本颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
-|29|ABTSetTextAndColor|字符串: 文本\|颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏顶部区域的文字和颜色|Cando&#124;ABTSetTextAndColor|
+|28|ABBSetColor|字符串: 按钮动作编号&#124;背景色&#124;文本颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏上按钮的颜色|Cando&#124;ABBSetColor|
+|29|ABTSetTextAndColor|字符串: 文本&#124;颜色|接收外部脚本函数 ExecSendToRuyi 发送来的字符串, 设置额外任务栏顶部区域的文字和颜色|Cando&#124;ABTSetTextAndColor|
 |30|ActionsR||显示搜索和运行动作的界面|[动作1233](/actions/1233.md): Cando&#124;ActionSR|
 |31|AddToCustomA|选中内容|将指定内容(文件,文件夹,文本) 添加为自定义动作|[动作1536](/actions/1536.md): Cando&#124;AddToCustomA|
 |32|addToLnkFolder|选中文件|发送指定文件的快捷方式到如意的 Lnk 文件夹|Cando&#124;addToLnkFolder|
@@ -84,4 +84,6 @@ description: 如意百宝箱-Ahk 内置函数
 |69|窗口右下角屏幕||窗口移到屏幕右下角(1/4)|动作1637: Cando&#124;窗口右下角屏幕|
 |70|ABPSetPic|图标句柄|更改设置额外任务栏最上面的图标|动作1625: ExecSendToRuyi("HICON:\*" hIcon,, 1624)|
 |71|CF_WinSetTransparentAndPenetrate|(WinId, 透明度数值)|窗口半透明并置顶并点击穿透|动作1709: CF_WinSetTransparentAndPenetrate&#124;%Windy_CurWin_id%&#124;128|
-|72|CF_RegWrite|(值, 值类型, 键名, 值名)|修改注册表|动作1724:CanFunc|CF_RegWrite&#124;false&#124;Reg_SZ&#124;HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\6.0\plugins\officespace\flogin&#124;enableForceLoginForHasInstallDevice|
+|72|CF_RegWrite|(值, 值类型, 键名, 值名)|修改注册表|动作1724:CanFunc&#124;CF_RegWrite&#124;false&#124;Reg_SZ&#124;HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\6.0\plugins\officespace\flogin&#124;enableForceLoginForHasInstallDevice|
+|73|ReloadAppBar||重载额外任务栏|动作1730: Cando&#124;ReloadAppBar|
+|74|CloseAppBar||临时关闭额外任务栏|动作1731: Cando&#124;CloseAppBar|

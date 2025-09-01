@@ -726,6 +726,14 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1719|E8EC|动作网页|无条件@如意|生成无条件或任意窗口动作的网页 webaction.htm|Cando&#124;GenerateWebActionsPage|
 |1720|E8CB|粘贴到文件|选中文件|将剪贴板内容粘贴到选中的文件(先删除后粘贴)|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\粘贴到选中文件.ahk" "%CandySel%"|
 |1721|E139|GPS|选中文件夹|查看选中文件夹中图片文件中的GPS信息|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件_gps.ahk" "%CandySel%"|
-|1722|F5A9|对比1&2|将选中的文件使用 WinMerge 打开(左侧)或将文件路径放入右侧|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\WinMerge.ahk" "%CandySel%"|
-|1723|F5A5|对比1|将选中的文件使用 WinMerge 打开(左侧)|Run&#124;"%WinMerge%" "%CandySel%"|
-|1724|F5ED|WPS免登录|解决 WPS 强制要求登录,工具栏灰色的问题|CanFunc&#124;CF_RegWrite&#124;false&#124;Reg_SZ&#124;HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\6.0\plugins\officespace\flogin&#124;enableForceLoginForHasInstallDevice|
+|1722|F5A9|对比1&2|选中文件|将选中的文件使用 WinMerge 打开(左侧)或将文件路径放入右侧|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\WinMerge.ahk" "%CandySel%"|
+|1723|F5A5|对比1|选中文件|将选中的文件使用 WinMerge 打开(左侧)|Run&#124;"%WinMerge%" "%CandySel%"|
+|1724|F5ED|WPS免登录|无条件|解决 WPS 强制要求登录,工具栏灰色的问题|CanFunc&#124;CF_RegWrite&#124;false&#124;Reg_SZ&#124;HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\6.0\plugins\officespace\flogin&#124;enableForceLoginForHasInstallDevice|
+|1725|E72D|共享|选中文件夹|局域网共享选中文件夹(完全)并设置文件权限为完全控制|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_局域网共享(Net Share).ahk" "%CandySel%"|
+|1726|F785|删除共享|选中文件夹|删除选中局域网共享文件夹的共享|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_删除局域网共享.ahk" "%CandySel%"|
+|1727|E72D|共享|选中文件夹|局域网共享选中文件夹(完全控制)并设置NTFS权限everyone 完全控制|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_局域网共享(API).ahk" "%CandySel%"|
+|1728|E72D|共享|选中文件夹|局域网共享选中文件夹(只读)并设置NTFS权限everyone完全控制|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_局域网共享(WMI).ahk" "%CandySel%"|
+|1729|F785|转到目录|选中文件夹|跳转到选中局域网共享文件夹的实际文件夹路径|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\文件夹处理\文件夹_局域网共享跳转.ahk" "%CandySel%"|
+|1730|F577|重载额外|无条件@如意|重载额外任务栏|Cando&#124;ReloadAppBar|
+|1731|F577|关闭额外|无条件@如意|暂时关闭额外任务栏|Cando&#124;CloseAppBar|
+|1732|E8EC|转新配置|选中文件|将选中的旧版如意自定义动作配置(3.0.0.2-)转为新版(3.0.0.3+)并存放在桌面|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\旧版如意自定义动作配置转新版.ahk" "%CandySel%"|
