@@ -737,3 +737,6 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1730|F577|重载额外|无条件@如意|重载额外任务栏|Cando&#124;ReloadAppBar|
 |1731|F577|关闭额外|无条件@如意|暂时关闭额外任务栏|Cando&#124;CloseAppBar|
 |1732|E8EC|转新配置|选中文件|将选中的旧版如意自定义动作配置(3.0.0.2-)转为新版(3.0.0.3+)并存放在桌面|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\文件处理\旧版如意自定义动作配置转新版.ahk" "%CandySel%"|
+|1733|F466|edge新|特定窗口|edge-chrome新标签页打开收藏|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\edge-chrome新标签页打开收藏.ahk"|
+|1734|F577|退出脚本|无条件@指定参数|指定ahk脚本的主窗口标题退出脚本|CanFunc&#124;CF_ScriptExit&#124;edge-chrome新标签页打开收藏.ahk|
+|1735|E8AC|结束改名|任意窗口|结束指定进程并改名|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\结束指定进程并改名.ahk" "%Windy_CurWin_Pid%"|

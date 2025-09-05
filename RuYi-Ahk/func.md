@@ -87,3 +87,4 @@ description: 如意百宝箱-Ahk 内置函数
 |72|CF_RegWrite|(值, 值类型, 键名, 值名)|修改注册表|动作1724:CanFunc&#124;CF_RegWrite&#124;false&#124;Reg_SZ&#124;HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\6.0\plugins\officespace\flogin&#124;enableForceLoginForHasInstallDevice|
 |73|ReloadAppBar||重载额外任务栏|动作1730: Cando&#124;ReloadAppBar|
 |74|CloseAppBar||临时关闭额外任务栏|动作1731: Cando&#124;CloseAppBar|
+|75|CF_ScriptExit|脚本文件名|指定ahk脚本的主窗口标题退出脚本|动作1734: canfunc&#124;CF_ScriptExit&#124;edge-chrome新标签页打开收藏.ahk|
