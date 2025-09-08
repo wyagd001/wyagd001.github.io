@@ -740,3 +740,4 @@ description: 如意百宝箱-Ahk 内置动作列表
 |1733|F466|edge新|特定窗口|edge-chrome新标签页打开收藏|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\edge-chrome新标签页打开收藏.ahk"|
 |1734|F577|退出脚本|无条件@指定参数|指定ahk脚本的主窗口标题退出脚本|CanFunc&#124;CF_ScriptExit&#124;edge-chrome新标签页打开收藏.ahk|
 |1735|E8AC|结束改名|任意窗口|结束指定进程并改名|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\结束指定进程并改名.ahk" "%Windy_CurWin_Pid%"|
+|1736|E87A|切换到屏幕|任意窗口|双屏幕时将窗口移动到另一个屏幕|Run&#124;"%B_Autohotkey%" "%A_ScriptDir%\外部脚本\窗口处理\窗口切换到另一个屏幕.ahk" "%Windy_CurWin_id%"|
