@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
+<link href="static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="static/content.js" type="text/javascript"></script>
 </head>
 
@@ -64,7 +65,7 @@ CopyOfVar := Var</pre>
 <pre>CaseSensitive := false
 ContinueSearch := true</pre>
 <p><strong>整数和浮点数:</strong> 在表达式中, 含有小数点的数字被视为浮点数; 否则视为整数. 对于大多数运算符(例如加法和乘法), 只要其中的一个输入是浮点数, 那么结果也将是浮点数.</p>
-<p>不论在表达式中还是在表达式外的其他地方, 整数都可以表示成十六进制或十进制. 十六进制数必须以前缀 0x 开头. 例如, <code>Sleep 0xFF</code> 等同于 <code>Sleep 255</code>. <span class="ver">[v1.0.46.11+]</span>: 可以识别用科学计数法表示的浮点数; 但只有在它们含有小数点时才行(例如 <code>1<strong>.</strong>0e4</code> 和 <code>-2<strong>.</strong>1E-4</code>).</p>
+<p>不论在表达式中还是在表达式外的其他地方, 整数都可以表示成十六进制或十进制. 十六进制数必须以前缀 0x 开头. 例如, <code>Sleep 0xFF</code> 等同于 <code>Sleep 255</code>. <span class="ver">[v1.0.46.11+]</span>: 可以识别用科学计数法表示的浮点数; 但只有在它们含有小数点时才行(例如 <code>1.0e4</code> 和 <code>-2.1E-4</code>).</p>
 <p id="percent-space"><strong>强制使用表达式:</strong> 通过在表达式前加上百分号和空格或 tab, 能把表达式用在不直接支持表达式的参数中(除了 OutputVar 参数). 在 <span class="ver">[v1.1.21+]</span> 中, 这个前缀可以在所有命令的 InputVar 参数中使用, 除了遗留的 IF 命令(使用 <a href="lib/IfExpression.htm">If (表达式)</a> 代替). 这种技巧常用来访问<a href="misc/Arrays.htm">数组</a>. 例如:</p>
 <pre><a href="lib/FileAppend.htm">FileAppend</a>, % MyArray%i%, My File.txt
 <a href="lib/FileAppend.htm">FileAppend</a>, % MyPseudoArray%i%, My File.txt
@@ -133,7 +134,7 @@ msgbox % (-2)**0.5 ; 结果为空
 	~<br>
 	&amp; *</td>
     <td><p><strong>一元负号(-):</strong> 尽管它和减运算符使用相同的符号, 但一元负号仅应用于单项或子表达式, 如此例中的两次演示: <code><strong>-</strong>(3 / <strong>-</strong>x)</code>. 相关提示, 表达式中的任何一元正号(+) 都会被忽略.</p>
-      <p><strong>逻辑非(!):</strong> 如果运算数为空或 0, 那么逻辑非的结果为 1, 这表示 "真". 否则, 结果为 0(假). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. <span class="ver">[v1.0.46+]</span>: 允许使用连续的一元运算符, 例如 <code><strong>!!</strong>Var</code>, 因为它们是按从右到左的顺序计算.</p>
+      <p><strong>逻辑非(!):</strong> 如果运算数为空或 0, 那么逻辑非的结果为 1, 这表示 "真". 否则, 结果为 0(假). 例如: <code>!x or !(y and z)</code>. 注意: 单词 NOT 和 <strong>!</strong> 含义相同, 但 <strong>!</strong> 优先级更高. <span class="ver">[v1.0.46+]</span>: 允许使用连续的一元运算符, 例如 <code>!!Var</code>, 因为它们是按从右到左的顺序计算.</p>
       <p><strong>按位非(~):</strong> 此运算符对运算数按位取反. 如果运算数为浮点数, 则在计算前把它截取成整数. 如果运算数介于 0 和 4294967295(0xffffffff) 之间, 那么它会被视为 <u>无符号的</u> 32 位值. 否则, 它被视为 <u>有符号的</u> 64 位值. 例如, <code>~0xf0f</code> 计算结果为 0xfffff0f0(4294963440).</p>
       <p id="amp"><strong>取址(&amp;):</strong> <code>&amp;MyVar</code> 获取 <em>MyVar</em> 的内容的内存地址, 此地址一般和 <a href="lib/DllCall.htm#struct">DllCall 结构</a>一起使用. 同时 <code>&amp;MyVar</code> 也禁用了此变量中的二进制数的缓存, 如果它经常用于数学或数值比较, 那么这会拖慢其性能. 每当变量的地址改变时会重新启用它的缓存(例如使用 <a href="lib/VarSetCapacity.htm">VarSetCapacity()</a>).</p>
       <p><strong>解除引用(*):</strong> <code>*Expression</code> 假定 <code>Expression</code> 解析为数字的内存地址; 它会获取在一个介于 0 和 255 之间的数字表示的内存地址中一个字节的内容(地址为 0 时获取的结果也总是 0; 但应该避免使用其他任何无效地址, 因为它可能会让脚本崩溃). 然而, 使用 <a href="lib/NumGet.htm">NumGet()</a> 获取二进制数通常会更好.</p></td>
@@ -185,10 +186,10 @@ msgbox % (-2)**0.5 ; 结果为空
   </tr>
   <tr id="concat">
     <td class="center bold">.</td>
-    <td><p><strong>连接</strong>. 句号(点) 两边都至少有一个空格或制表符, 用于将两个项目合并为单个字符串. 省略句点也可以达到相同的目的(除非表达式中有不明确的关系, 例如 <code>x <strong>-</strong>y</code>, 或在右边的项目含有前导的 ++ 或 -- 运算符). 省略句点时, 合并的两个项目间必须至少有一个空格或制表符.<br>
-    <pre>Var := "The color is " <strong>.</strong> FoundColor  <em>; Explicit concat</em>
-Var := "The color is " FoundColor    <em>; Auto-concat</em></pre>
-    <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " <strong>.</strong> Price * (1 - Discount/100)</code>.</p>
+    <td><p><strong>连接</strong>. 句号(点) 两边都至少有一个空格或制表符, 用于将两个项目合并为单个字符串. 省略句点也可以达到相同的目的(除非表达式中有不明确的关系, 例如 <code>x -y</code>, 或在右边的项目含有前导的 ++ 或 -- 运算符). 省略句点时, 合并的两个项目间必须至少有一个空格或制表符.<br>
+    <pre>Var := "The color is " . FoundColor  <em>; 显式连接</em>
+Var := "The color is " FoundColor    <em>; 自动连接</em></pre>
+    <p>还可以用来连接子表达式. 例如: <code>Var := "The net price is " . Price * (1 - Discount/100)</code>.</p>
     <p>以句点(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾.</p></td>
   </tr>
   <tr id="regex">
@@ -234,7 +235,7 @@ if (!str := "a"){            ; 效果同 if ! (str := "a")
   </tr>
   <tr id="not">
     <td class="center bold">NOT</td>
-    <td><strong>逻辑非</strong>. 除了优先级较低外, 其他的与 <strong>!</strong> 运算符相同. 例如, <code>not (x = 3 or y = 3)</code> 等同于 <code><strong>!</strong>(x = 3 or y = 3)</code>. </td>
+    <td><strong>逻辑非</strong>. 除了优先级较低外, 其他的与 <strong>!</strong> 运算符相同. 例如, <code>not (x = 3 or y = 3)</code> 等同于 <code>!(x = 3 or y = 3)</code>. </td>
   </tr>
   <tr id="and">
     <td class="center bold">AND<br>
@@ -265,7 +266,7 @@ if (!str := "a"){            ; 效果同 if ! (str := "a")
         &lt;&lt;=<br>
         &gt;&gt;&gt;=
     </td>
-    <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中(但在 1.0.46 之前的版本中, 这些运算符只能在一行中最左边使用, 且仅支持前五个运算符). 最简单的赋值运算符为<a href="lib/SetExpression.htm">冒号等号(:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#FloorDivide">向下舍除</a>, 把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 同样地, <code>Var <strong>.=</strong> "abc"</code> 为 <code>Var := Var <strong>.</strong> "abc"</code> 的一种简写形式. </p>
+    <td><p><strong>赋值</strong>. 对变量的内容进行运算, 然后把结果保存到同一个变量中(但在 1.0.46 之前的版本中, 这些运算符只能在一行中最左边使用, 且仅支持前五个运算符). 最简单的赋值运算符为<a href="lib/SetExpression.htm">冒号等号(:=)</a>, 它把表达式的结果保存到变量中. 关于其他运算符的功能说明, 请参阅这个表格中它们的相关条目. 例如, <code>Var //= 2</code> 执行<a href="#FloorDivide">向下舍除</a>, 把 <em>Var</em> 除以 2, 然后把结果保存回 <em>Var</em>. 同样地, <code>Var .= "abc"</code> 为 <code>Var := Var . "abc"</code> 的一种简写形式. </p>
       <p>与其他大多数运算符不同, 赋值运算是从右往左执行的. 因此, <code>Var1 := Var2 := 0</code> 这个语句中首先把 0 赋值给 <em>Var2</em>, 然后把 <em>Var2</em> 赋值给 <em>Var1</em>. </p>
     <p>如果使用赋值运算的结果作为其他某些运算符的输入, 那么输入的值是变量自身. 例如, 如果变量 <em>Var</em> 新增值后大于 50, 那么表达式 <code>(Var+=2) &gt; 50</code> 结果为真. 这样还允许赋值被作为 <a href="Functions.htm#ByRef">ByRef</a> 传递或获取它的<a href="#amp">地址</a>, 例如: <code>&amp;(x:="abc")</code>. </p>
     <p>需要避免语法错误或提供更直观的操作时, 会自动提升赋值运算符的优先级. 例如: <code>not x:=y</code> 等价于 <code>not (x:=y)</code>. 另外, <code class="no-highlight">x==y &amp;&amp; z:=1</code> 等同于 <code class="no-highlight">x==y &amp;&amp; (z:=1)</code>, 这是当 x 不等于 y 时的<a href="Functions.htm#ShortCircuit">短路计算</a>. 同样地, <code>++Var := X</code> 等价于 <code>++(Var := X)</code>; 而 <code>Z&gt;0 ? X:=2 : Y:=2</code> 等价于 <code>Z&gt;0 ? (X:=2) : (Y:=2)</code>.</p>
@@ -274,7 +275,7 @@ if (!str := "a"){            ; 效果同 if ! (str := "a")
   </tr>
   <tr id="comma">
     <td class="center bold">,</td>
-    <td><p><strong>逗号(多语句)</strong> <span class="ver">[v1.0.46+]</span>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1<strong>,</strong> y+=2<strong>,</strong> ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.
+    <td><p><strong>逗号(多语句)</strong> <span class="ver">[v1.0.46+]</span>. 逗号可以用来在单行中书写多个子表达式. 最常用于把多个赋值或函数调用聚集在一起. 例如: <code>x:=1, y+=2, ++index, MyFunc()</code>. 这样的语句按从左到右的顺序执行.
       <p class="note"><strong>注意:</strong> 以逗号(或其他任何运算符) 开始的行会自动<a href="Scripts.htm#continuation">附加到</a>前一行的末尾. 另请参阅: <a href="#CommaPerf">逗号的性能</a>.</p>
       <p><span class="ver">[v1.0.46.01+]</span>: 当逗号后紧跟着变量和等号时, 则这个等号会被自动当成<a href="lib/SetExpression.htm">赋值(:=)</a>. 例如, 后面所有的都是赋值: <code>x:=1, y=2, a=b=c</code>. 新脚本不应该依赖于这种行为, 因为它可能会改变. 该规则只适用于无格式的变量而不是<a href="#ref">双重引用</a>, 所以下面的内容只有一个赋值: <code>x:=1, %y%=2</code></p>
       <p id="CommaPerf"><span class="ver">[v1.0.48+]</span>: 使用逗号运算符常常比分开写单独的表达式速度更快, 尤其是把一个变量的值赋给另一个变量时(例如: <code>x:=y, a:=b</code>). 当越多的表达式联合成单个表达式时, 性能会持续得到提升; 例如, 把五个或十个简单的表达式联合成单个表达式速度可能提升 35&nbsp;%.</p>
@@ -835,7 +836,7 @@ MsgBox, %ElapsedTime% milliseconds have elapsed.</pre>
     <td>A_OSVersion</td>
     <td><p>下列字符串中的一个(如果存在): WIN_7 <span class="ver">[需要 AHK_L 42+]</span>, WIN_8 <span class="ver">[需要 v1.1.08+]</span>, WIN_8.1 <span class="ver">[需要 v1.1.15+]</span>, WIN_VISTA, WIN_2003, WIN_XP, WIN_2000.</p>
     <p>在 AutoHotKey 的可执行文件或编译后的脚本属性里应用兼容性设置会让操作系统报告不同的版本号, 该版本号由 A_OSVersion 反映.</p>
-    <p><span class="ver">[v1.1.20+]</span>: 如果系统版本没有被识别成上述版本, 会返回一个 "major.minor.build" 形式的字符串. 例如, <code>10.0.14393</code> 为 Windows 10 build 14393, 也称为 1607 版.</p>
+    <p><span class="ver">[v1.1.20+]</span>: 如果系统版本没有被识别成上述版本, 会返回一个 "major.minor.build" 形式的字符串. 例如, <code class="no-highlight">10.0.14393</code> 为 Windows 10 build 14393, 也称为 1607 版.</p>
       <pre><em>; 这个示例已过时了, 里面的这些操作系统都不再受支持. </em>
 if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空格. </em>
 {
@@ -866,13 +867,13 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空
   </tr>
   <tr id="WinDir">
     <td>A_WinDir</td>
-    <td>Windows 目录. 例如: <code>C:\Windows</code></td>
+    <td>Windows 目录. 例如: <code class="no-highlight">C:\Windows</code></td>
   </tr>
   <tr id="ProgramFiles">
     <td>A_ProgramFiles<br>
 	或 ProgramFiles</td>
     <td>
-      <p>Program Files 目录(例如 <code>C:\Program Files</code> 或者 <code>C:\Program Files (x86)</code>). 一般来说和<a href="Concepts.htm#environment-variables">环境变量</a> <em>ProgramFiles</em> 一样.</p>
+      <p>Program Files 目录(例如 <code class="no-highlight">C:\Program Files</code> 或者 <code class="no-highlight">C:\Program Files (x86)</code>). 一般来说和<a href="Concepts.htm#environment-variables">环境变量</a> <em>ProgramFiles</em> 一样.</p>
       <p>在 <a href="#Is64bitOS">64 位系统</a>(非 32 位系统) 上适用:</p>
       <ul>
         <li>如果可执行文件(EXE) 以 32 位脚本运行的时候, A_ProgramFiles 返回路径为 "Program Files (x86)" 目录.</li>
@@ -958,7 +959,7 @@ if A_OSVersion in WIN_NT4,WIN_95,WIN_98,WIN_ME  <em>; 注: 逗号两边没有空
   <tr id="MyDocuments">
     <td>A_MyDocuments</td>
     <td>
-      <p>当前用户 "我的文档" 文件夹的完整路径和名称. 与大多数类似变量不同, 当此文件夹为驱动器的根目录时, 此变量的值不包含最后的反斜杠(例如, 它的值是 <code>M:</code> 而不是 <code>M:\</code>). 例如:</p>
+      <p>当前用户 "我的文档" 文件夹的完整路径和名称. 与大多数类似变量不同, 当此文件夹为驱动器的根目录时, 此变量的值不包含最后的反斜杠(例如, 它的值是 <code class="no-highlight">M:</code> 而不是 <code class="no-highlight">M:\</code>). 例如:</p>
       <pre class="NoIndent no-highlight">C:\Users\&lt;UserName&gt;\Documents</pre>
     </td>
   </tr>

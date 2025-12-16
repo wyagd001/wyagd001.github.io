@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 <body>
@@ -23,9 +24,9 @@
     <p>由零个或多个下列选项组成的字符串(可任意顺序, 中间可选空格):</p>
     <p id="option-b"><strong>B:</strong> 设置 <a href="#BackspaceIsUndo">BackspaceIsUndo</a> 为 0(false), 这会导致 <kbd>Backspace</kbd> 被忽略.</p>
     <p id="option-c"><strong>C:</strong> 设置 <a href="#CaseSensitive">CaseSensitive</a> 为 true, 使 <em>MatchList</em> 区分大小写.</p>
-    <p id="option-i"><strong>I:</strong> 设置 <a href="#MinSendLevel">MinSendLevel</a> 为 1(true) 或给定值, 使任何<a href="SendLevel.htm">输入级别</a>低于该值的输入被忽略. 例如, <code>I2</code> 将忽略级别为 0(默认值) 或 1 的任何输入, 但将捕获级别为 2 的输入.</p>
-    <p id="option-l"><strong>L:</strong> 长度限制(例如 <code>L5</code>). 输入的最大允许长度. 当文本达到这个长度时, 输入被终止, <a href="#EndReason">EndReason</a> 被设置为单词 Max(除非文本匹配 <em>MatchList</em> 中的一个短语, 在这种情况下 <a href="#EndReason">EndReason</a> 被设置为单词 Match). 如果未指定, 则长度限制为 1023.</p>
-    <p>指定 <code>L0</code> 禁用文本的收集和长度限制, 但并不影响按键生成的文本的统计(请参阅 <a href="#VisibleText">VisibleText</a>). 这可以与 <a href="#OnChar">OnChar</a>, <a href="#OnKeyDown">OnKeyDown</a>, <a href="#KeyOpt">KeyOpt</a> 或 <em>EndKeys</em> 参数组合使用.</p>
+    <p id="option-i"><strong>I:</strong> 设置 <a href="#MinSendLevel">MinSendLevel</a> 为 1(true) 或给定值, 使任何<a href="SendLevel.htm">输入级别</a>低于该值的输入被忽略. 例如, <code class="no-highlight">I2</code> 将忽略级别为 0(默认值) 或 1 的任何输入, 但将捕获级别为 2 的输入.</p>
+    <p id="option-l"><strong>L:</strong> 长度限制(例如 <code class="no-highlight">L5</code>). 输入的最大允许长度. 当文本达到这个长度时, 输入被终止, <a href="#EndReason">EndReason</a> 被设置为单词 Max(除非文本匹配 <em>MatchList</em> 中的一个短语, 在这种情况下 <a href="#EndReason">EndReason</a> 被设置为单词 Match). 如果未指定, 则长度限制为 1023.</p>
+    <p>指定 <code class="no-highlight">L0</code> 禁用文本的收集和长度限制, 但并不影响按键生成的文本的统计(请参阅 <a href="#VisibleText">VisibleText</a>). 这可以与 <a href="#OnChar">OnChar</a>, <a href="#OnKeyDown">OnKeyDown</a>, <a href="#KeyOpt">KeyOpt</a> 或 <em>EndKeys</em> 参数组合使用.</p>
     <p id="option-m"><strong>M:</strong> 将修饰键击对应于真正的 ASCII 字符, 识别并转录修饰键击(如 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>). 参考这个例子, 它识别 <kbd>Ctrl</kbd>+<kbd>C</kbd>:</p>
     <pre>CtrlC := Chr(3) <em>; 将 Ctrl-C 对应的字符存储在 CtrlC 变量中.</em>
 ih := InputHook("L1 M")
@@ -34,7 +35,7 @@ ih.Wait()
 if (ih.Input = CtrlC)
     MsgBox, You pressed Control-C.</pre>
     <p class="note"><strong>注意:</strong> 字符 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd> 对应于 <a href="Chr.htm">Chr(1)</a> 到 <a href="Chr.htm">Chr(26)</a>. 此外, M 选项可能会导致某些键盘快捷键(如 <kbd>Ctrl</kbd>+<kbd>&larr;</kbd>) 在输入正在进行时出现异常.</p>
-    <p id="option-t"><strong>T:</strong> 设置 <a href="#Timeout">Timeout</a>(例如 <code>T3</code> 或 <code class="no-highlight">T2.5</code>).</p>
+    <p id="option-t"><strong>T:</strong> 设置 <a href="#Timeout">Timeout</a>(例如 <code class="no-highlight">T3</code> 或 <code class="no-highlight">T2.5</code>).</p>
     <p id="vis"><strong>V:</strong> 设置 <a href="#VisibleText">VisibleText</a> 和 <a href="#VisibleNonText">VisibleNonText</a> 为 1(true). 通常, 用户的输入会被阻止(对系统隐藏). 使用此选项可将用户的击键发送到活动窗口.</p>
     <p id="asterisk"><strong>*:</strong> 通配符. 设置 <a href="#FindAnywhere">FindAnywhere</a> 为 1(true), 允许在用户键入的任何位置找到匹配项.</p>
     <p id="E"><strong>E:</strong> 按字符代码而不是键码处理单字符结束键.  如果活动窗口的键盘布局与脚本的键盘布局不同, 则可以提供更一致的结果. 它还可以防止实际上不会产生给定结束字符的键组合结束输入; 例如, 如果 @ 是结束键, 则在美式键盘中 <kbd>Shift</kbd>+<kbd>2</kbd> 将触发它, 但 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd> 不会触发(在使用 <a href="#E">E 选项</a>时). 如果还使用 <a href="#option-c">C 选项</a>, 则结束字符区分大小写.</p>
@@ -43,17 +44,17 @@ if (ih.Input = CtrlC)
   <dt id="EndKeys">EndKeys</dt>
   <dd>
     <p>一个由零个或多个按键组成的列表, 其中任何一个键在按下时终止输入(结束键本身不会写入输入缓冲). 当 Input 以这种方式终止时, <a href="#EndReason">EndReason</a> 设置为单词 EndKey, <a href="#EndKey">EndKey</a> 属性设置为键的名称.</p>
-    <p><em>EndKeys</em> 使用类似于 <a href="Send.htm">Send</a> 命令的格式. 例如, 指定 <code>{Enter}.{Esc}</code> 将使 <kbd>Enter</kbd>, <kbd>.</kbd> 或 <kbd>Esc</kbd> 任一一个都能终止输入. 使用大括号本身作为结束键, 指定 <code>{{}</code> 和/或 <code>{}}</code>.</p>
-    <p>要使用 <kbd>Ctrl</kbd>, <kbd>Alt</kbd> 或 <kbd>Shift</kbd> 作为结束键, 请指定键的左和/或右的版本, 而不是中性版本. 例如, 指定 <code>{LControl}{RControl}</code> 而不是 <code>{Control}</code>.</p>
-    <p>尽管不支持诸如 <kbd>Alt</kbd>+<kbd>C</kbd>(!c) 这样的修饰键, 而非-字母数字字符(如 <code>?!:@&amp;{}</code>) 默认情况下需要 <kbd>Shift</kbd> 或 <kbd>AltGr</kbd> 按键按下与否, 取决于字符的正常输入方式. 如果有 <a href="#E">E 选项</a>, 则将单个字符键名解释为字符, 在这种情况下, 修饰符键必须处于正确的状态才能生成该字符. 当同时使用 <a href="#E">E 选项</a>和 <a href="#option-m">M 选项</a>时, 通过在 <em>EndKeys</em> 中包括相应的 ASCII 控制字符来支持 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</p>
-    <p>还可以指定明确的虚拟按键代码, 例如 <code>{vkFF}</code> 或 <code>{sc001}</code>. 这在键没有名称且按下时不产生可见字符的罕见情况下非常有用. 它的键码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p>
+    <p><em>EndKeys</em> 使用类似于 <a href="Send.htm">Send</a> 命令的格式. 例如, 指定 <code>"{Enter}.{Esc}"</code> 将使 <kbd>Enter</kbd>, <kbd>.</kbd> 或 <kbd>Esc</kbd> 任一一个都能终止输入. 使用大括号本身作为结束键, 指定 <code class="no-highlight">{{}</code> 和/或 <code class="no-highlight">{}}</code>.</p>
+    <p>要使用 <kbd>Ctrl</kbd>, <kbd>Alt</kbd> 或 <kbd>Shift</kbd> 作为结束键, 请指定键的左和/或右的版本, 而不是中性版本. 例如, 指定 <code>"{LControl}{RControl}"</code> 而不是 <code class="no-highlight">{Control}</code>.</p>
+    <p>尽管不支持诸如 <kbd>Alt</kbd>+<kbd>C</kbd>(!c) 这样的修饰键, 而非-字母数字字符(如 <code class="no-highlight">?!:@&amp;{}</code>) 默认情况下需要 <kbd>Shift</kbd> 或 <kbd>AltGr</kbd> 按键按下与否, 取决于字符的正常输入方式. 如果有 <a href="#E">E 选项</a>, 则将单个字符键名解释为字符, 在这种情况下, 修饰符键必须处于正确的状态才能生成该字符. 当同时使用 <a href="#E">E 选项</a>和 <a href="#option-m">M 选项</a>时, 通过在 <em>EndKeys</em> 中包括相应的 ASCII 控制字符来支持 <kbd>Ctrl</kbd>+<kbd>A</kbd> 到 <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</p>
+    <p>还可以指定明确的虚拟按键代码, 例如 <code class="no-highlight">{vkFF}</code> 或 <code class="no-highlight">{sc001}</code>. 这在键没有名称且按下时不产生可见字符的罕见情况下非常有用. 它的键码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p>
   </dd>
 
   <dt id="MatchList">MatchList</dt>
   <dd>
-    <p>以逗号分隔的关键词列表, 其中任何一个都将导致终止输入(在这种情况下, <a href="#EndReason">EndReason</a> 将被设置为单词 Match). 用户输入的内容必须完全匹配匹配列表中的某个词组(除非有 <a href="#asterisk">* 选项</a>). 此外, <strong>分隔符逗号周围的任何空格或制表符都是有意义的</strong>, 这意味着它们是匹配字符串的一部分. 例如, 如果 <em>MatchList</em> 为 <code>ABC , XYZ</code>, 则用户必须在 ABC 之后或 XYZ 之前键入空格以形成匹配.</p>
-    <p>两个连续的逗号产生单个原义逗号. 例如, 后面的匹配列表会在 string1 的末尾产生单个原义逗号: <code>string1,,,string2</code>. 类似的, 后面的匹配列表仅包含其中有一个原义逗号的单个项目: <code>single,,item</code>.</p>
-    <p>因为 <em>MatchList</em> 中的项目不被视为单独的参数, 所以列表可以完全包含在一个变量中. 事实上, 如果此列表的长度超过 16383, 那么列表的全部或部分必须包含在变量中, 因为这个长度是任何脚本行的最大长度. 例如, <em>MatchList</em> 可能由 <code>%List1%,%List2%,%List3%</code> 组成 -- 其中每个变量都包含匹配词组的子列表.</p>
+    <p>以逗号分隔的关键词列表, 其中任何一个都将导致终止输入(在这种情况下, <a href="#EndReason">EndReason</a> 将被设置为单词 Match). 用户输入的内容必须完全匹配匹配列表中的某个词组(除非有 <a href="#asterisk">* 选项</a>). 此外, <strong>分隔符逗号周围的任何空格或制表符都是有意义的</strong>, 这意味着它们是匹配字符串的一部分. 例如, 如果 <em>MatchList</em> 为 <code>"ABC , XYZ"</code>, 则用户必须在 ABC 之后或 XYZ 之前键入空格以形成匹配.</p>
+    <p>两个连续的逗号产生单个原义逗号. 例如, 后面的匹配列表会在 string1 的末尾产生单个原义逗号: <code>"string1,,,string2"</code>. 类似的, 后面的匹配列表仅包含其中有一个原义逗号的单个项目: <code>"single,,item"</code>.</p>
+    <p>因为 <em>MatchList</em> 中的项目不被视为单独的参数, 所以列表可以完全包含在一个变量中. 事实上, 如果此列表的长度超过 16383, 那么列表的全部或部分必须包含在变量中, 因为这个长度是任何脚本行的最大长度. 例如, <em>MatchList</em> 可能由 <code>List1 "," List2 "," List3</code> 组成 -- 其中每个变量都包含匹配词组的子列表.</p>
   </dd>
   
 </dl>
@@ -111,24 +112,24 @@ if (ih.Input = CtrlC)
 <h4 id="KeyOpt_Parameters">参数</h4>
 <dl>
   <dt>Keys</dt>
-  <dd><p>按键列表. 大括号用于括起按键名称, 虚拟键码或扫描码, 类似于 <a href="Send.htm">Send</a> 命令. 例如, <code>{Enter}.{{}</code> 将应用于 <kbd>Enter</kbd>, <kbd>.</kbd> 和 <kbd>{</kbd> 按键. 按名称, <code>{vkNN}</code> 或 <code>{scNNN}</code> 指定按键可能会产生三种不同的结果; 有关详情, 请参阅下文.</p>
-  <p id="all-keys">单独指定字符串 <code>{All}</code>(不区分大小写) 以便将 <em>KeyOptions</em> 应用于所有 VK 和所有 SC. 然后可以再次调用 KeyOpt 从特定按键中删除选项.</p></dd>
+  <dd><p>按键列表. 大括号用于括起按键名称, 虚拟键码或扫描码, 类似于 <a href="Send.htm">Send</a> 命令. 例如, <code>"{Enter}.{{}"</code> 将应用于 <kbd>Enter</kbd>, <kbd>.</kbd> 和 <kbd>{</kbd> 按键. 按名称, <code class="no-highlight">{vkNN}</code> 或 <code class="no-highlight">{scNNN}</code> 指定按键可能会产生三种不同的结果; 有关详情, 请参阅下文.</p>
+  <p id="all-keys">单独指定字符串 <code class="no-highlight">"{All}"</code>(不区分大小写) 以便将 <em>KeyOptions</em> 应用于所有 VK 和所有 SC. 然后可以再次调用 KeyOpt 从特定按键中删除选项.</p></dd>
   <dt>KeyOptions</dt>
   <dd><p>下列单字符选项中的一个或多个(空格和制表符将被忽略).</p>
-  <p id="KeyOpt-minus"><strong>-</strong>(减号): 删除 <code>-</code> 后面的任何选项, 直到下一个 <code>+</code>.</p>
-  <p id="KeyOpt-plus"><strong>+</strong>(加号): 取消任何先前的 <code>-</code>, 否则无效.</p>
-  <p id="KeyOpt-e"><strong>E:</strong> 结束键. 如果启用, 则按下键终止 Input, 将 <a href="#EndReason">EndReason</a> 设置为单词 EndKey, 将 <a href="#EndKey">EndKey</a> 设置为键的标准名称. 与 <em>EndKeys</em> 参数不同, <kbd>Shift</kbd> 或 <kbd>AltGr</kbd> 键的状态将被忽略. 例如, <code>@</code> 和 <code class="no-highlight">2</code> 在美式键盘布局中都相当于 <code>{vk32}</code>.</p>
+  <p id="KeyOpt-minus"><strong>-</strong>(减号): 删除 <code class="no-highlight">-</code> 后面的任何选项, 直到下一个 <code class="no-highlight">+</code>.</p>
+  <p id="KeyOpt-plus"><strong>+</strong>(加号): 取消任何先前的 <code class="no-highlight">-</code>, 否则无效.</p>
+  <p id="KeyOpt-e"><strong>E:</strong> 结束键. 如果启用, 则按下键终止 Input, 将 <a href="#EndReason">EndReason</a> 设置为单词 EndKey, 将 <a href="#EndKey">EndKey</a> 设置为键的标准名称. 与 <em>EndKeys</em> 参数不同, <kbd>Shift</kbd> 或 <kbd>AltGr</kbd> 键的状态将被忽略. 例如, <code class="no-highlight">@</code> 和 <code class="no-highlight">2</code> 在美式键盘布局中都相当于 <code class="no-highlight">{vk32}</code>.</p>
   <p id="KeyOpt-i"><strong>I:</strong> 忽略文本. 通常由该键生成的任何文本都将被忽略, 并且该键被视为非文本键(请参阅 <a href="#VisibleNonText">VisibleNonText</a>). 如果键通常不产生文本, 则没有效果.</p>
   <p id="KeyOpt-n"><strong>N:</strong> 通知. 在每次按下键时调用 <a href="#OnKeyDown">OnKeyDown</a> 和 <a href="#OnKeyUp">OnKeyUp</a> 回调.</p>
-  <p id="KeyOpt-s"><strong>S:</strong> 处理后抑制(阻塞) 键. 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code>-S</code>. <code>+S</code> 意味着 <code>-V</code>.</p>
-  <p id="KeyOpt-v"><strong>V:</strong> 可见. 防止键被抑制(阻塞). 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code>-V</code>. <code>+V</code> 意味着 <code>-S</code>.</p>
+  <p id="KeyOpt-s"><strong>S:</strong> 处理后抑制(阻塞) 键. 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code class="no-highlight">-S</code>. <code class="no-highlight">+S</code> 意味着 <code class="no-highlight">-V</code>.</p>
+  <p id="KeyOpt-v"><strong>V:</strong> 可见. 防止键被抑制(阻塞). 这将覆盖 <a href="#VisibleText">VisibleText</a> 或 <a href="#VisibleNonText">VisibleNonText</a> 直到使用 <code class="no-highlight">-V</code>. <code class="no-highlight">+V</code> 意味着 <code class="no-highlight">-S</code>.</p>
   </dd>
 </dl>
 <h4 id="KeyOpt_Remarks">备注</h4>
 <p>选项可以通过虚拟键码和扫描码来设置, 并且是累加的.</p>
 <p>当按名称指定一个键时, 选项通过 VK 或 SC 来设置. 如果两个物理键共享相同的 VK, 但 SC 不同(如 <kbd>Up</kbd> 和 <kbd>NumpadUp</kbd>), 则由 SC 处理. 相反, 如果使用 VK 码, 则它将应用于产生该 VK 的任何物理键(这可能会随着时间的推移而变化, 这取决于活动键盘布局).</p>
 <p>通过 VK 码删除选项不会影响 SC 设置的任何选项, 反之亦然. 但是, 当按键名删除一个选项并且该名称由 VK 处理时, 对应的 SC 也会删除该选项(根据脚本的键盘布局). 这允许在对<a href="#all-keys">所有按键</a>应用一个选项后按名称排除按键.</p>
-<p>如果通过 VK 设置 <code>+V</code>, 而通过 SC 设置 <code>+S</code>(反之亦然), 则 <code>+V</code> 优先.</p>
+<p>如果通过 VK 设置 <code class="no-highlight">+V</code>, 而通过 SC 设置 <code class="no-highlight">+S</code>(反之亦然), 则 <code class="no-highlight">+V</code> 优先.</p>
 </div>
 
 <div class="methodShort" id="Start"><h3>Start</h3>
@@ -161,7 +162,7 @@ if (ih.Input = CtrlC)
 <div class="methodShort" id="EndKey"><h3>EndKey</h3>
 <p>返回<a href="#EndKeys">结束键</a>的名称, 按下结束键以终止 Input.</p>
 <pre class="Syntax">KeyName := InputHook.<span class="func">EndKey</span></pre>
-<p>注意, EndKey 返回键的 "标准" 名称, 而不管它在 <em>EndKeys</em> 参数中是如何编写的. 例如, <code>{Esc}</code> 和 <code>{vk1B}</code> 都产生 <code>Escape</code>. <a href="GetKey.htm">GetKeyName()</a> 可用于检索标准名称.</p>
+<p>注意, EndKey 返回键的 "标准" 名称, 而不管它在 <em>EndKeys</em> 参数中是如何编写的. 例如, <code class="no-highlight">{Esc}</code> 和 <code class="no-highlight">{vk1B}</code> 都产生 <code class="no-highlight">Escape</code>. <a href="GetKey.htm">GetKeyName()</a> 可用于检索标准名称.</p>
 <p>如果使用 <a href="#E">E 选项</a>, EndKey 返回输入的实际字符(如果合适). 否则, 键名将根据脚本的活动键盘布局来确定.</p>
 <p>如果 <a href="#EndReason">EndReason</a> 不是 "EndKey", EndKey 返回一个空字符串.</p>
 </div>
@@ -170,9 +171,9 @@ if (ih.Input = CtrlC)
 <p>返回在 Input 终止时逻辑上是按下的修饰符的字符串.</p>
 <pre class="Syntax">Mods := InputHook.<span class="func">EndMods</span></pre>
 <p>如果所有修饰符在逻辑上都按下, 则完整的字符串为:</p>
-<pre>&lt;^&gt;^&lt;!&gt;!&lt;+&gt;+&lt;#&gt;#</pre>
+<pre class="no-highlight">&lt;^&gt;^&lt;!&gt;!&lt;+&gt;+&lt;#&gt;#</pre>
 <p>这些修饰符与<a href="../Hotkeys.htm">热键</a>的具有相同的含义. 每个修饰符总是用 &lt;(左) 或 &gt;(右) 限定. 对应的键名是: LCtrl, RCtrl, LAlt, RAlt, LShift, RShift, LWin, RWin.</p>
-<p><a href="InStr.htm">InStr()</a> 可以用来检查给定的修饰符(如 <code>&gt;!</code> 或 <code>^</code>) 是否存在的. 下面的行可以用来将 <em>Mods</em> 转换成中性修饰符的字符串, 如 <code>^!+#</code>:</p>
+<p><a href="InStr.htm">InStr()</a> 可以用来检查给定的修饰符(如 <code class="no-highlight">&gt;!</code> 或 <code class="no-highlight">^</code>) 是否存在的. 下面的行可以用来将 <em>Mods</em> 转换成中性修饰符的字符串, 如 <code class="no-highlight">^!+#</code>:</p>
 <pre>Mods := RegExReplace(Mods, "[&lt;&gt;](.)(?:&gt;\1)?", "$1")</pre>
 <p>由于这是瞬间发生的, 此属性可能比 <a href="GetKeyState.htm">GetKeyState</a> 更可靠, 即使在 Input 终止后立即调用 GetKeyState, 或者在 <a href="#OnEnd">OnEnd</a> 回调中.</p>
 </div>
@@ -227,7 +228,7 @@ if (ih.Input = CtrlC)
   <li>一个包含该字符(或多个字符, 有关详情, 请参阅下文) 的字符串.</li>
 </ol>
 <p>如果不需要相应的信息, 你可以从回调函数参数列表的末尾省略一个或多个参数.</p>
-<p>多个字符的存在表明在最后一次按键之前使用了一个死键, 但是这两个键不能转换为单个字符. 例如, 在一些键盘布局中 <kbd>`</kbd><kbd>e</kbd> 产生 <code>è</code>, 而 <kbd>`</kbd><kbd>z</kbd> 产生 <code>`z</code>.</p>
+<p>多个字符的存在表明在最后一次按键之前使用了一个死键, 但是这两个键不能转换为单个字符. 例如, 在一些键盘布局中 <kbd>`</kbd><kbd>e</kbd> 产生 <code class="no-highlight">è</code>, 而 <kbd>`</kbd><kbd>z</kbd> 产生 <code class="no-highlight">`z</code>.</p>
 <p>当按下结束键时, 该函数不会被调用.</p>
 </div>
 
@@ -428,9 +429,9 @@ OutputVar := ih.Input
 <p>在向后兼容性方面有一些不同之处:</p>
 <ul>
   <li>Input 命令以大写存储结束键 <kbd>A</kbd>-<kbd>Z</kbd>, 即使某些键盘布局中的一些字母是小写的. 将值传递给 <a href="Send.htm">Send</a> 会产生 Shift 的击键, 而不是普通的击键. 相比之下, InputHook 的 <a href="#EndKeys">EndKeys</a> 属性始终返回规范化的名称; 即按下该键而不按住 <kbd>Shift</kbd> 或其他修饰键时产生的字符.</li>
-  <li><p>如果 <em>EndKeys</em> 中使用的键的名称对应于两个物理键共享 VK(如 <kbd>NumpadUp</kbd> 和 <kbd>Up</kbd>), 则 Input 命令通过 VK 处理主键通过 SC 处理次要键, 而 InputHook 都通过 SC 来处理. <code>{vkNN}</code> 表示可以通过 VK 来处理按键.</p>
-  <p>当结束键由 VK 处理时, 两个物理键都可以终止输入. 例如, <code>{NumpadUp}</code> 将导致通过按下 <kbd>Up</kbd> 终止 Input 命令, 但是 ErrorLevel 将包含 <code>EndKey:NumpadUp</code>, 因为只考虑 VK.</p>
-  <p>当结束键由 SC 处理时, Input 命令将始终为任何给定 VK 的已知辅助 SC 生成名称, 并始终为任何其他键生成 <code>sc<i>NNN</i></code>. 与之相比, InputHook 产生按键名(如果有).</p></li>
+  <li><p>如果 <em>EndKeys</em> 中使用的键的名称对应于两个物理键共享 VK(如 <code class="no-highlight">NumpadUp</code> 和 <code class="no-highlight">Up</code>), 则 Input 命令通过 VK 处理主键通过 SC 处理次要键, 而 InputHook 都通过 SC 来处理. <code class="no-highlight">{vkNN}</code> 表示可以通过 VK 来处理按键.</p>
+  <p>当结束键由 VK 处理时, 两个物理键都可以终止输入. 例如, <code class="no-highlight">{NumpadUp}</code> 将导致通过按下主键盘上的 <kbd>&uarr;</kbd> 方向键 终止 Input 命令, 但是 ErrorLevel 将包含 <code class="no-highlight">EndKey:NumpadUp</code>, 因为只考虑 VK.</p>
+  <p>当结束键由 SC 处理时, Input 命令将始终为任何给定 VK 的已知辅助 SC 生成名称, 并始终为任何其他键生成 <code class="no-highlight">sc<i>NNN</i></code>. 与之相比, InputHook 产生按键名(如果有).</p></li>
 </ul>
 
 <h2 id="Related">相关</h2>

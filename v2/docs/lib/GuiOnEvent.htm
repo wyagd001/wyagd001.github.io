@@ -7,11 +7,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css">
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css">
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 <body>
 
-<h1>OnEvent</h1>
+<h1>OnEvent (GUI)</h1>
 <p>注册一个函数或方法, 当 GUI 窗口或控件发生给定事件时, 该函数或方法将被调用.</p>
 <pre class="Syntax"><a href="Gui.htm">Gui</a>.<span class="func">OnEvent</span>(EventName, Callback <span class="optional">, AddRemove</span>)
 <a href="GuiControl.htm">GuiCtrl</a>.<span class="func">OnEvent</span>(EventName, Callback <span class="optional">, AddRemove</span>)</pre>
@@ -21,7 +22,7 @@
   <dt>EventName</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>事件的名称. 请参阅下面的 <a href="#Events">Events</a>.</p>
+    <p>事件的名称. 请参阅下面的<a href="#Events">事件</a>.</p>
   </dd>
   
   <dt>Callback</dt>
@@ -29,7 +30,17 @@
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../misc/Functor.htm">函数对象</a></p>
     <p>事件发生时要调用的函数, 方法或对象.</p>
     <p>如果 GUI 有事件接收器(即, 如果指定了 <a href="Gui.htm#Call">Gui()</a> 的 <em>EventObj</em> 参数), 那么这个参数可能是属于事件接收器的方法的名称. 否则, 这个参数必须是一个<a href="../misc/Functor.htm">函数对象</a>.</p>
-    <p>有关参数, 返回值, 命名等详细信息, 请参阅以下章节.</p>
+    <p>该回调函数根据<a href="#Window_Events">窗口事件</a>和<a href="#Control_Events">控件事件</a>接受特定数量的参数, 可<a href="../Functions.htm#intro">定义</a>如下:</p>
+    <pre class="NoIndent">MyCallback(GuiOrCtrlObj, ...) { ...</pre>
+    <p>尽管为参数指定的名称并不重要, 但是下面的值会依次赋值给它们:</p>
+    <ol>
+      <li>引发事件的 GUI 窗口或控件的 <a href="Gui.htm">Gui</a> 或 <a href="GuiControl.htm">GuiControl</a> 对象. 这个值总是被传递.</li>
+      <li>零个或多个附加值, 具体取决于<a href="#Window_Events">窗口事件</a>和<a href="#Control_Events">控件事件</a>. 例如, 在 <a href="#Size">Size</a> 窗口事件的情况下, 这将是 <em>MinMax</em>(无论窗口是最小化还是最大化), <em>Width</em>(新宽度), 和 <em>Height</em>(其新高度).</li>
+    </ol>
+    <p>如果不需要相应的信息, 可以从回调参数列表的末尾省略一个或多个参数, 但在这种情况下, 必须指定星号作为最后一个参数, 例如 <code>MyCallback(Param1, *)</code>.</p>
+    <p id="Callback_Return_Value">如果一个事件已经注册了多个回调, 回调可以返回一个非空值, 以防止任何剩余的回调被调用.</p>
+    <p>对于特定的事件, 返回值可能有额外的意义. 例如, <a href="#Close">Close</a> 回调可以返回一个非零的数字(例如 <code>true</code>) 来防止 GUI 窗口关闭.</p>
+    <p>有关详细信息, 请参阅下面的章节.</p>
   </dd>
   
   <dt>AddRemove</dt>
@@ -51,10 +62,6 @@
 <p>许多事件都传递了关于事件的附加参数, 每个事件都有描述.</p>
 <p>与所有动态调用的方法或函数一样, 回调不需要声明回调本身不需要的参数, 但在这种情况下, 必须指定一个星号作为最终参数, 例如 <code>MyCallback(Param1, *)</code>. 如果一个事件的参数多于回调声明的参数, 那么这些参数将被忽略(除非回调是<a href="../Functions.htm#Variadic">可变参数的</a>).</p>
 <p>回调可以声明比事件提供的参数更多的参数, 如果(而且只有当) 额外的参数被声明为可选参数. 然而, 不建议使用可选参数, 因为未来的程序版本可能会用额外的参数来扩展一个事件, 在这种情况下, 可选参数将停止接收它们的默认值.</p>
-
-<h2 id="Callback_Return_Value">Callback 返回值</h2>
-<p>如果一个事件已经注册了多个回调, 回调可以返回一个非空值, 以防止任何剩余的回调被调用.</p>
-<p>对于特定的事件, 返回值可能有额外的意义. 例如, <a href="#Close">Close</a> 回调可以返回一个非零的数字(例如 <code>true</code>) 来防止 GUI 窗口关闭.</p>
 
 <h2 id="Callback_Name">Callback 名称</h2>
 <p>按照惯例, 为了清晰起见, 下面每个事件的语法都用 <code class="no-highlight"><i>ObjectType</i>_<i>EventName</i></code> 这种形式的函数名来显示. 脚本不需要遵循这个惯例, 可以使用任何有效的函数名.</p>

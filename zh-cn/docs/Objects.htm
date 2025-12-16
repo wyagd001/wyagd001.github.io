@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
+<link href="static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="static/content.js" type="text/javascript"></script>
 <style>
 ul.list_of_p p { margin: 0.5em 0; }
@@ -279,7 +280,7 @@ other.test()</pre>
 }
 </pre>
 <p>在加载脚本时, 这里会创建对象并将其存储到全局(或 <span class="ver">[v1.1.05]</span> <a href="Functions.htm#SuperGlobal">超级全局</a>) 变量 <i>ClassName</i>. 在<a href="Functions.htm#ForceLocal">强制局部模式</a>(或在 <span class="ver">[v1.1.05]</span> 之前, 假定局部模式或假定静态模式的函数) 的函数中引用此类
-, 那么需要进行声明, 例如 <code>global ClassName</code>. 如果存在 <code>extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的完整名称(从 <span class="ver">[v1.1.11]</span> 开始, 对于早期的版本它们所定义的无关紧要). 每个类的完整名称存储在 <code><i>object</i>.__Class</code>.</p>
+, 那么需要进行声明, 例如 <code>global ClassName</code>. 如果存在 <code class="no-highlight">extends BaseClassName</code>, 那么 <i>BaseClassName</i> 必须为另一个类的完整名称(从 <span class="ver">[v1.1.11]</span> 开始, 对于早期的版本它们所定义的无关紧要). 每个类的完整名称存储在 <code><i>object</i>.__Class</code>.</p>
 <p>因为类是通过变量引用的, 类名不能在同一个上下文中同时用于引用类和创建一个单独的变量(比如保存类的一个实例). 例如, <code>box := new Box</code> 将会用其本身的实例替换 <em>Box</em> 中的类对象. <span class="ver">[v1.1.27+]</span>: 每当尝试覆盖一个类时, <a href="lib/_Warn.htm#ClassOverwrite">#Warn ClassOverwrite</a> 允许在加载时显示一个警告.</p>
 <p>在本文档中, "class" 这个单词表示一个类对象是由 <code>class</code> 构造的.</p>
 <p>类定义可以包含变量声明, 方法定义和内嵌的类定义.</p>
@@ -342,7 +343,7 @@ Method()
 <p><a href="#Meta_Functions">Meta-functions(元方法) </a> 提供了广泛的控制属性访问, 方法调用的机制, 但更复杂及易错.</p>
 
 <h3 id="Custom_NewDelete">创建和销毁</h3>
-<p><span class="ver"> [v1.1.00+]</span> 每当使用 <code>new</code> 关键字创建派生对象时, 那么调用由其基对象定义的 <code>__New</code> 方法. 此方法可以接受参数, 初始化对象并通过返回值覆盖 <code>new</code> 运算符的结果. 销毁对象时, 则调用 <code>__Delete</code>. 例如:</p>
+<p><span class="ver"> [v1.1.00+]</span> 每当使用 <code>new</code> 关键字创建派生对象时, 那么调用由其基对象定义的 __New 方法. 此方法可以接受参数, 初始化对象并通过返回值覆盖 <code>new</code> 运算符的结果. 销毁对象时, 则调用 __Delete. 例如:</p>
 <pre>m1 := new GMem(0, 20)
 m2 := {base: GMem}.__New(0, 30)
 
@@ -516,7 +517,7 @@ class Color
 }</pre>
 
 <h4 id="Subclassing_aoa">子类化数组嵌套</h4>
-<p>在<a href="#Usage_Arrays_of_Arrays">多参数赋值</a>, 例如 <code>table[x, y] := content</code> 会隐式地创建一个新对象, 这个新对象一般不含基, 因此没有自定义方法或特殊行为. <code>__Set</code> 可以用来初始化这样的对象, 如下所示.</p>
+<p>在<a href="#Usage_Arrays_of_Arrays">多参数赋值</a>, 例如 <code>table[x, y] := content</code> 会隐式地创建一个新对象, 这个新对象一般不含基, 因此没有自定义方法或特殊行为. <code class="no-highlight">__Set</code> 可以用来初始化这样的对象, 如下所示.</p>
 <pre>x := {base: {addr: Func("x_Addr"), __Set: Func("x_Setter")}}
 
 <em>; 赋值, 隐式调用 x_Setter 来创建子对象.</em>
@@ -532,7 +533,7 @@ x_Setter(x, p1, p2, p3) {
 x_Addr(x) {
     return &amp;x
 }</pre>
-<p>由于 <code>x_Setter</code> 含有四个必需参数, 所以只有在有两个或更多键参数时才会调用它. 当上面的赋值出现时, 会发生下面的情况:</p>
+<p>由于 <code class="no-highlight">x_Setter</code> 含有四个必需参数, 所以只有在有两个或更多键参数时才会调用它. 当上面的赋值出现时, 会发生下面的情况:</p>
 <ul>
   <li><code>x[1]</code> 不存在, 所以调用 <code>x_Setter(x,1,2,3)</code>(由于参数过少所以 <code>"..."</code> 不会被传递).
   <ul>
@@ -544,7 +545,7 @@ x_Addr(x) {
     <li><code>x[1][2]</code> 被赋值为与 <code>x[1]</code> 含有相同基的新对象.</li>
     <li>不返回任何值 – 赋值继续.</li>
   </ul></li>
-  <li><code>x[1][2][3]</code> 不存在, 但由于 <code>x_Setter</code> 需要四个参数而这里只有三个(<code>x[1][2], 3, "..."</code>), 所以不会调用它且赋值正常完成.</li>
+  <li><code>x[1][2][3]</code> 不存在, 但由于 <code class="no-highlight">x_Setter</code> 需要四个参数而这里只有三个(<code>x[1][2], 3, "..."</code>), 所以不会调用它且赋值正常完成.</li>
 </ul>
 
 <h2 id="Default_Base_Object">默认基对象</h2>

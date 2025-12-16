@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 
@@ -17,21 +18,21 @@
   <li>操作系统提供的函数通常将路径限制为 259 个字符, 也有一些例外.</li>
   <li>处理程序内路径的代码可能依赖于第一个限制来简化代码, 从而有效地设置了另一个 259 个字符的限制.</li>
 </ol>
-<p>这些限制通常被称为 "MAX_PATH 限制", 常量 <code>MAX_PATH</code>, 其值为 260. 一般为空终止符保留一个字符, 为实际路径保留 259 个字符.</p>
+<p>这些限制通常被称为 "MAX_PATH 限制", 常量 <code class="no-highlight">MAX_PATH</code>, 其值为 260. 一般为空终止符保留一个字符, 为实际路径保留 259 个字符.</p>
 <p>AutoHotkey <span class="ver">[v1.1.31+]</span> (不包括 ANSI 版本) 在大多数情况下删除了第二种类型, 这使得脚本可以围绕第一种类型工作. 有两种方法可以做到这一点:</p>
 <ul>
   <li>长路径可以在 Windows 10 上为 AutoHotkey 和所有其他长路径感知程序启用. 有关详细信息, 请参阅 <a href="https://learn.microsoft.com/windows/win32/fileio/naming-a-file#enable-long-paths-in-windows-10-version-1607-and-later">Microsoft 文档</a>. 简而言之, 这使大多数命令和函数能够透明地处理长路径, 但需要 Windows 10 1607 版本或更高版本.</li>
-  <li>在很多情况下, 在路径前面加上前缀 <code>\\?\</code> 使其超过通常的限制. 但是, 有一些系统函数不支持(或者通常不支持长路径). 有关详细信息, 请参阅<a href="#limitations">已知限制</a>.</li>
+  <li>在很多情况下, 在路径前面加上前缀 <code class="no-highlight">\\?\</code> 使其超过通常的限制. 但是, 有一些系统函数不支持(或者通常不支持长路径). 有关详细信息, 请参阅<a href="#limitations">已知限制</a>.</li>
 </ul>
 
 <h2 id="prefix">长路径前缀</h2>
-<p>如果底层系统函数支持 <code>\\?\</code> 前缀 -- 例如, <code>\\?\C:\My Folder</code> -- 将限制增加到 32,767 个字符. 但是, 它通过跳过<a href="https://learn.microsoft.com/archive/blogs/jeremykuhne/path-normalization">路径规范化</a>来实现这一点. 路径的某些元素通常会被规范化删除或更改, 但它们会成为文件实际路径的一部分. 必须小心, 因为这允许创建 "正常" 程序无法访问的路径.</p>
+<p>如果底层系统函数支持 <code class="no-highlight">\\?\</code> 前缀 -- 例如, <code class="no-highlight">\\?\C:\My Folder</code> -- 将限制增加到 32,767 个字符. 但是, 它通过跳过<a href="https://learn.microsoft.com/archive/blogs/jeremykuhne/path-normalization">路径规范化</a>来实现这一点. 路径的某些元素通常会被规范化删除或更改, 但它们会成为文件实际路径的一部分. 必须小心, 因为这允许创建 "正常" 程序无法访问的路径.</p>
 <p>特别是, 规范化:</p>
 <ul>
-  <li>解析相对路径, 如 <code>dir\file.ext</code>, <code>\file.ext</code> 和 <code>C:file.ext</code>(注意没有反斜杠).</li>
-  <li>解析相关部分, 如 <code>\..</code> 和 <code>\.</code>.</li>
-  <li>规范化组件/目录分隔符, 用 <code>\</code> 替换 <code>/</code> 并消除多余的分隔符.</li>
-  <li>删除某些字符, 如组件末尾的单个句点(<code>dir.\file</code>) 或尾随空格和句点(<code>dir\filename . .</code>).</li>
+  <li>解析相对路径, 如 <code class="no-highlight">dir\file.ext</code>, <code class="no-highlight">\file.ext</code> 和 <code class="no-highlight">C:file.ext</code>(注意没有反斜杠).</li>
+  <li>解析相关部分, 如 <code class="no-highlight">\..</code> 和 <code class="no-highlight">\.</code>.</li>
+  <li>规范化组件/目录分隔符, 用 <code class="no-highlight">\</code> 替换 <code class="no-highlight">/</code> 并消除多余的分隔符.</li>
+  <li>删除某些字符, 如组件末尾的单个句点(<code class="no-highlight">dir.\file</code>) 或尾随空格和句点(<code class="no-highlight">dir\filename . .</code>).</li>
 </ul>
 <p>在应用前缀之前, 可以通过下面定义的函数将路径传递给 <a href="https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew">GetFullPathName</a>, 从而显式地规范化路径. 例如:</p>
 <pre>MsgBox % "\\?\" NormalizePath("..\file.ext")</pre>
@@ -41,7 +42,7 @@
     DllCall("GetFullPathName", "str", path, "uint", cc, "str", buf, "ptr", 0)
     return buf
 }</pre>
-<p>带有 <code>\\?\</code> 前缀的路径也可以被这个函数规范化. 但是, 在这种情况下, 永远不会使用工作目录, 而根目录是 <code>\\?\</code>(例如, <code>\\?\C:\..</code> 解析为 <code>\\?\</code>, 而 <code>C:\..</code> 解析为 <code>C:\</code>).</p>
+<p>带有 <code class="no-highlight">\\?\</code> 前缀的路径也可以被这个函数规范化. 但是, 在这种情况下, 永远不会使用工作目录, 而根目录是 <code class="no-highlight">\\?\</code>(例如, <code class="no-highlight">\\?\C:\..</code> 解析为 <code class="no-highlight">\\?\</code>, 而 <code class="no-highlight">C:\..</code> 解析为 <code class="no-highlight">C:\</code>).</p>
 
  <h2 id="limitations">已知限制</h2>
 <p>AutoHotkey 的 ANSI 版本不支持长路径.</p>
@@ -59,7 +60,7 @@
   <li><a href="../lib/Drive.htm#Label">Drive Label</a> 和 <a href="../lib/DriveGet.htm">DriveGet</a>(除了 Type)</li>
   <li>返回特殊的文件夹路径的内置变量(长路径可能始终无法实现):  <a href="../Variables.htm#AppData">A_AppData</a>, <a href="../Variables.htm#Desktop">A_Desktop</a>, <a href="../Variables.htm#MyDocuments">A_MyDocuments</a>, <a href="../Variables.htm#ProgramFiles">ProgramFiles</a>, <a href="../Variables.htm#ProgramFiles">A_ProgramFiles</a>, <a href="../Variables.htm#Programs">A_Programs</a>, <a href="../Variables.htm#StartMenu">A_StartMenu</a>, <a href="../Variables.htm#Startup">A_Startup</a> 和常见变量, <a href="../Variables.htm#Temp">A_Temp</a> 和 <a href="../Variables.htm#WinDir">A_WinDir</a></li>
 </ul>
-<p>仅在 Windows 10 启用长路径感知时, <a href="../lib/SetWorkingDir.htm">SetWorkingDir</a> 和 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 才支持长路径, 因为无法使用 <code>\\?\</code> 前缀. 如果工作目录超过 MAX_PATH, 则无法使用 <a href="../lib/Run.htm">Run</a> 来启动程序. 这些限制是由操作系统强加的.</p>
+<p>仅在 Windows 10 启用长路径感知时, <a href="../lib/SetWorkingDir.htm">SetWorkingDir</a> 和 <a href="../Variables.htm#WorkingDir">A_WorkingDir</a> 才支持长路径, 因为无法使用 <code class="no-highlight">\\?\</code> 前缀. 如果工作目录超过 MAX_PATH, 则无法使用 <a href="../lib/Run.htm">Run</a> 来启动程序. 这些限制是由操作系统强加的.</p>
 <p>似乎无法运行完整路径超过 MAX_PATH 的可执行文件. 在这种情况下, 就不可能完全测试旨在支持更长的可执行路径的任何更改. 因此, 已为以下各项保留了 MAX_PATH 限制:</p>
 <ul>
   <li><a href="WinTitle.htm#ahk_exe">ahk_exe</a></li>

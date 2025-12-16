@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="../static/content.js" type="text/javascript"></script>
 <style type="text/css">
 .style3 {color: #000; background: rgba(255, 255, 0, 0.4);}
@@ -59,7 +60,7 @@
   <li>如果没有指定动词, <em>Target</em> 将按原样传递给 <a href="https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcess</a> 的参数 <em>lpCommandLine</em>.</li>
   <li>如果指定了动词或 CreateProcess 失败, 并且 <a href="RunAs.htm">RunAs</a> 没有生效, 则尝试 <a href="https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw">ShellExecuteEx</a>.</li>
 </ul>
-<p>如果 <em>Target</em> 指定了名称, 但没有指定目录, 如果它是集成的("已知的"), 例如包含在 PATH 的文件夹之一中, 系统将搜索并启动该文件. 确切的搜索顺序取决于是否调用 CreateProcess 和/或 ShellExecuteEx. 如果调用 CreateProcess, 应用程序目录(其中包含 AutoHotkey 解释器或编译的脚本) 优先于 <em>WorkingDir</em> 指定的工作目录. 要避免这种情况, 请指定目录; 例如 <code>.\program.exe</code>.</p>
+<p>如果 <em>Target</em> 指定了名称, 但没有指定目录, 如果它是集成的("已知的"), 例如包含在 PATH 的文件夹之一中, 系统将搜索并启动该文件. 确切的搜索顺序取决于是否调用 CreateProcess 和/或 ShellExecuteEx. 如果调用 CreateProcess, 应用程序目录(其中包含 AutoHotkey 解释器或编译的脚本) 优先于 <em>WorkingDir</em> 指定的工作目录. 要避免这种情况, 请指定目录; 例如 <code class="no-highlight">.\program.exe</code>.</p>
 <p>当尝试 ShellExecuteEx 时, <em>Target</em> 被解释如下:</p>
 <ul>
   <li>以第一个空格或制表符结尾的 <em>Target</em> 子字符串可以是<a href="#verbs">预定义的动词名称</a>, 也可以是星号后面跟着动词词名称. 如果存在, 则排除可选的星号, 动词名称和单个分隔空格或制表符. 动词名称不支持包含空格或制表符, 但允许使用连字符等符号.</li>
@@ -139,12 +140,12 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
 MsgBox A_IsAdmin: %A_IsAdmin%`nCommand line: %full_command_line%</pre>
 <p>如果用户取消了 <a href="https://en.wikipedia.org/wiki/User_Account_Control">User Account Control (UAC)</a> 对话框或者是其他原因启动失败, 脚本就会直接退出.</p>
 <p>在使用了 <a href="../Scripts.htm#SlashR">/restart</a> 启动参数, 且启动新进程实例的语句在 ExitApp 之前的时候, 需要确保 <a href="_SingleInstance.htm">single instance(单一实例)</a> 提示弹窗没有关闭.</p>
-<p>如果 UAC 禁止了, <em>*RunAs</em> 将不提权启动进程. 在命令行检查 <code>/restart</code> 以防脚本进入无限重启的循环之中. 注意 <code>/restart</code> 为内置开关, 所以它没有列入<a href="../Scripts.htm#cmd_args">命令行参数之中</a>.</p>
+<p>如果 UAC 禁止了, <em>*RunAs</em> 将不提权启动进程. 在命令行检查 <code class="no-highlight">/restart</code> 以防脚本进入无限重启的循环之中. 注意 <code class="no-highlight">/restart</code> 为内置开关, 所以它没有列入<a href="../Scripts.htm#cmd_args">命令行参数之中</a>.</p>
 <p>可以修改该示例以适应脚本的需要:</p>
 <ul>
   <li>如果脚本的确需要管理员权限, 检查一次 <a href="../Variables.htm#IsAdmin">A_IsAdmin</a> 以免 <em>*RunAs</em> 提权脚本失败(比如因为被 UAC 禁止了).</li>
   <li>为保持脚本运行, 即使用户取消了 UAC 提示, 移动 <a href="ExitApp.htm">ExitApp</a> 到 try 区块.</li>
-  <li>为保持脚本运行, 即使重新启动失败(比如脚本文件已被重命名或删除), 移除 ExitApp 并且使用 RunWait 代替 Run. 若是成功, <code>/restart</code> 使新实例终止旧实例. 若是失败, 新实例的退出及 RunWait 返回.</li>
+  <li>为保持脚本运行, 即使重新启动失败(比如脚本文件已被重命名或删除), 移除 ExitApp 并且使用 RunWait 代替 Run. 若是成功, <code class="no-highlight">/restart</code> 使新实例终止旧实例. 若是失败, 新实例的退出及 RunWait 返回.</li>
 </ul>
 <p><span class="ver">[v1.0.92.01+]</span>: 如果 UAC 开启, AutoHotkey 安装程序为 <em>.ahk</em> 文件注册 <em>RunAs</em> 动作, 这允许 <code>Run *RunAs script.ahk</code> 默认以管理员权限启动脚本.</p>
 

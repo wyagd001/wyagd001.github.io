@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
+<link href="static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="static/content.js" type="text/javascript"></script>
 </head>
 <body>
@@ -106,6 +107,11 @@
 ~RButton &amp; C::MsgBox "You pressed C while holding down the right mouse button."</pre>
       <p>与其他前缀符号不同, 可以在热键的某些<a href="lib/_HotIf.htm#variant">变体</a>中使用颚化符(波浪号) 前缀而其他的不使用. 然而, 如果应用于颚化符(波浪号) <a href="#prefix">前缀</a>的任何自定义组合键没有被关闭或暂停, 它会影响那个前缀键在 <em>所有</em> 组合中的行为.</p>
       <p>用于替代 <a href="#alttab">alt-tab</a> 的特殊按键总是忽略颚化符(波浪号) 前缀.</p>
+      <p>If the tilde prefix is applied to a hotkey consisting only of a named modifier key without an L or R prefix (<code class="no-highlight">Control</code>/<code class="no-highlight">Ctrl</code>, <code class="no-highlight">Alt</code>, or <code class="no-highlight">Shift</code>), that hotkey will fire when the key is pressed instead of being delayed until the key is released. For example, <code>~Alt::</code>, <code>~LAlt::</code>, and <code>LAlt::</code> are fired as soon as the key is pressed, while <code>Alt::</code> is fired upon release of the key. Hotkeys consisting of any other key are fired as soon as the key is pressed, regardless of whether the tilde prefix is used.</p>
+      <p>If the tilde prefix is applied to a custom modifier key (<a href="#prefix">prefix key</a>) which is also used as its own hotkey, that hotkey will fire when the key is pressed instead of being delayed until the key is released.  For example, the <code>~RButton::</code> hotkey above is fired as soon as the button is pressed.</p>
+      <p>If the tilde prefix is applied only to the custom combination and not the non-combination hotkey, the key's native function will still be blocked. For example, in the script below, holding AppsKey will show the tooltip and will not trigger a context menu:</p>
+
+
       <p>如果把颚化符(<a href="#prefix">前缀键</a>) 用在自定义修饰键中且此修饰键自身也作为热键, 则在按下此修饰键时会触发热键而不会被延迟到按键释放的时候. 例如, 上文中 <em>~RButton</em> 热键在按下此按键时就会触发.</p>
       <p>如果颚化符前缀只应用于自定义组合键, 而不应用于非组合热键, 按键的原生功能将持续被屏蔽. 例如, 下面的脚本, 按住 <kbd>Menu</kbd> 键将会一直显示一个工具提示而不会触发上下文菜单:</p>
       <pre>AppsKey::ToolTip "Press &lt; or &gt; to cycle through windows."
@@ -236,6 +242,9 @@ Numpad1::
 <p>如果<a href="#Tilde">波浪号(~)</a> 与<a href="#prefix">前缀键</a>一起使用, 即使只是一次, 它会更改所有组合键的前缀键的行为. 例如, 在下面的两个热键中, 活动窗口都会接收到右键点击, 尽管只是其中一个热键使用了波浪号:</p>
 <pre>~RButton &amp; LButton::MsgBox "You pressed the left mouse button while holding down the right."
 RButton &amp; WheelUp::MsgBox "You turned the mouse wheel up while holding down the right button."</pre>
+<p>By default, a hotkey fires when its key is pressed down. In contrast, modifier key hotkeys (<code>Ctrl::</code>, <code>Control::</code>, <code>Alt::</code>, and <code>Shift::</code>), <a href="#prefix">prefix key</a> hotkeys, and <a href="#keyup">key-up</a> hotkeys fire upon release of the key. Use the <a href="#Tilde">tilde prefix</a> to make the modifier key hotkeys and prefix key hotkeys fire upon press-down rather than release.</p>
+
+
 <p><a href="lib/Suspend.htm">Suspend</a> 函数可以临时禁用所有的热键, 但不包括您要排除的那些. 要获得更高的选择性, 请使用 <a href="lib/_HotIf.htm">#HotIf</a>.</p>
 <p>通过使用 <a href="lib/Hotkey.htm">Hotkey</a> 函数, 可以在脚本运行时动态创建热键. Hotkey 函数还可以单独修改, 禁用或启用脚本的现有热键.</p>
 <p>控制器热键当前不支持修饰符前缀(如 ^(Ctrl) 和 #(Win)). 但是, 您可以使用 <a href="lib/GetKeyState.htm">GetKeyState</a> 来模拟此效果, 如下例所示:</p>

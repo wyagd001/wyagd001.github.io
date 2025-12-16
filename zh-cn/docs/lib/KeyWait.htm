@@ -6,6 +6,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 <body>
@@ -20,15 +21,14 @@
 
   <dt>KeyName</dt>
   <dd><p>此参数可以是键盘中任何的单个字符或<a href="../KeyList.htm">按键列表</a>中的其中一个键名, 例如鼠标/控制器按钮. 不支持除控制器按钮外的其他控制器属性.</p>
-      <p>还可以指定明确的虚拟按键代码, 例如 <code>vkFF</code>. 只有在一个按键没有指定名称且按下时不产生可见的字符这样少见的情况下, 这种方法才有用. 它的虚拟按键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p></dd>
+      <p>还可以指定明确的虚拟按键代码, 例如 <code class="no-highlight">vkFF</code>. 只有在一个按键没有指定名称且按下时不产生可见的字符这样少见的情况下, 这种方法才有用. 它的虚拟按键代码可以通过<a href="../KeyList.htm#SpecialKeys">按键列表页面</a>底部的步骤来确定.</p></dd>
 
   <dt>Options</dt>
   <dd><p>如果为空或省略, 则命令会无限期等待用户松开指定的按键或鼠标/控制器按钮. 不过, 如果没有安装<a href="_InstallKeybdHook.htm">键盘钩子</a>并且 <em>KeyName</em> 是使用类似 <a href="Send.htm">Send</a> 命令模拟释放的键盘按键, 则此按键会被视为物理松开了. 没有安装<a href="_InstallMouseHook.htm">鼠标钩子</a>时, 对鼠标按钮同样如此.</p>
       <p>否则, 请指定一个或多个下列选项组成的字符串(可任意顺序, 字母间可以用空格分隔):</p>
       <p><strong>D:</strong> 等待按键被按下.</p>
       <p><strong>L:</strong> 检测按键的逻辑状态, 这是操作系统和活动窗口所认为的按键所处的状态(可能和它的物理状态不一致). 对于控制器按钮会忽略此选项.</p>
-      <p><strong>T:</strong> 超时(例如 <code>T3</code>). 超时前等待的秒数, 超时后设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为 1. 如果按键或按钮达到指定的状态, 则命令不再等待超时时间到期. 相反地, 它会立即设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为 0 并让脚本继续执行.</p>
-      <p>此超时时间值可以为浮点数(例如 2.5), 但不能为十六进制值(例如 0x03).</p></dd>
+      <p><strong>T:</strong> 超时(例如 <code class="no-highlight">T3</code>). 超时前等待的秒数, 超时后设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为 1. 如果按键或按钮达到指定的状态, 则命令不再等待超时时间到期. 相反地, 它会立即设置 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 为 0 并让脚本继续执行. 此超时时间值可以为浮点数(例如 2.5), 但不能为十六进制值(例如 0x03).</p></dd>
 
 </dl>
 
@@ -41,6 +41,15 @@
 <pre>KeyWait Control  <em>; 等待 Control 和 Alt 被释放.</em>
 KeyWait Alt</pre>
 <p>要等待一组按键中的任意一个被按下, 请参阅 <a href="Input.htm#ExAnyKey">Input 的示例 #1</a>.</p>
+<p>修饰符热键(<code>Ctrl::</code>, <code>Control::</code>, <code>Alt::</code> 和 <code>Shift::</code>), <a href="../Hotkeys.htm#prefix">前缀型</a>热键, <a href="../Hotkeys.htm#keyup">松开型</a>热键在按键释放时触发, 而不是按下时触发. 因此, 当在定义中等待它们的触发键时, 结果可能与预期不同, 特别是在使用超时选项的情况下. 例如, 下面的代码不能按预期工作, 因为 KeyWait 只能感知 <kbd>Alt</kbd> 的释放, 所以它永远不会超时:</p>
+<pre>Alt::  <em>; 应使用 ~Alt:: 以使其按预期工作.</em>
+KeyWait Alt, T0.3
+if ErrorLevel
+    MsgBox Held
+else
+    MsgBox Pressed
+return</pre>
+<p>无论您按住键多长时间, 此代码总是显示 "Pressed(按下)". 为了解决这个问题, 您需要添加<a href="../Hotkeys.htm#Tilde">波浪号前缀(~)</a>, 以便在按下修饰符键时触发. 换句话说, 使用 <code>~Alt::</code> 替换 <code>Alt::</code> 以使其按预期工作.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="GetKeyState.htm">GetKeyState</a>, <a href="../KeyList.htm">按键列表</a>, <a href="Input.htm">Input</a>, <a href="KeyHistory.htm">KeyHistory</a>, <a href="_InstallKeybdHook.htm">#InstallKeybdHook</a>, <a href="_InstallMouseHook.htm">#InstallMouseHook</a>, <a href="ClipWait.htm">ClipWait</a>, <a href="WinWait.htm">WinWait</a></p>

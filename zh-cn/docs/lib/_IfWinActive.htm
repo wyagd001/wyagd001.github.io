@@ -2,18 +2,19 @@
 <html>
 <head>
 <title>#IfWinActive / #IfWinNotActive / #IfWinExist / #IfWinNotExist | AutoHotkey v1</title>
-<meta name="description" content="The #IfWinActive, #IfWinNotActive, #IfWinExist and #IfWinNotExist directives create context-sensitive hotkeys and hotstrings depending on the type of window that is active or exists." />
+<meta name="description" content="The #IfWinActive, #IfWinNotActive, #IfWinExist and #IfWinNotExist directives create context-sensitive hotkeys and hotstrings. They perform a different action (or none at all) depending on the type of window that is active or exists." />
 <meta name="ahk:equiv-v2" content="lib/_HotIf.htm" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 <body>
 
 <h1>#IfWinActive / #IfWinNotActive / #IfWinExist / #IfWinNotExist</h1>
 
-<p>创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>. 这样的热键会根据窗口是否活动或存在的情况执行不同的动作(或什么都不做).</p>
+<p>创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>. 它们会根据窗口是否活动或存在的情况执行不同的动作(或什么都不做).</p>
 
 <pre class="Syntax">
 <span class="func">#IfWinActive</span> <span class="optional">WinTitle, WinText</span>
@@ -27,10 +28,10 @@
 
   <dt>WinTitle, WinText</dt>
   <dd>
-    <p>如果省略. 则随后创建的热键和热字串对上下文不相关. 否则, 请为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
+    <p>如果省略. 则随后定义的热键/热字串对上下文不相关. 否则, 请为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
     <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非在<a href="../Scripts.htm#auto">自动执行段</a>(脚本的顶部) 中使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改. 默认情况下, 窗口标题必须以指定的 <em>WinTitle</em> 开头才能匹配, 除非在<a href="../Scripts.htm#auto">自动执行段</a>中使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行更改.</p>
     <p>和其他大多数指令一样, 不支持变量. 尽管可通过 <a href="../misc/WinTitle.htm#ahk_pid">ahk_pid</a> 和 <a href="../misc/WinTitle.htm#ahk_id">ahk_id</a> 使用硬编码的进程或窗口 ID, 不过直接通过 <a href="GroupAdd.htm">GroupAdd</a> 或 <a href="Hotkey.htm">Hotkey IfWin</a> 使用 #IfWin 更常见.</p>
-    <p>ExcludeTitle 和 ExcludeText 参数通常 <u>不</u> 支持窗口命令, 但它们可以间接使用, 通过为 <em>WinTitle</em> 指定 <code>ahk_group MyGroup</code>  (其中 <em>MyGroup</em> 是通过 <a href="GroupAdd.htm">GroupAdd</a> 创建的组, 它支持 ExcludeTitle 和 ExcludeText).</p>
+    <p>ExcludeTitle 和 ExcludeText 参数通常 <u>不</u> 支持窗口命令, 但它们可以间接使用, 通过为 <em>WinTitle</em> 指定 <code class="no-highlight">ahk_group MyGroup</code>  (其中 <em>MyGroup</em> 是通过 <a href="GroupAdd.htm">GroupAdd</a> 创建的组, 它支持 ExcludeTitle 和 ExcludeText).</p>
   </dd>
 
 </dl>
@@ -38,19 +39,21 @@
 <h2 id="Basic_Operation">基本操作</h2>
 <p>#IfWin 指令可以简单地创建上下文相关的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
-#space::MsgBox You pressed Win+Spacebar in Notepad.</pre>
-<p>#IfWin 指令是与位置有关的: 它们会影响脚本中实际在它们后面的所有热键和热字串. 它们也是互斥的; 即只有最近的那个会起作用.</p>
+#Space::MsgBox You pressed Win+Spacebar in Notepad.
+::btw::You typed btw in Notepad.</pre>
+<p>#IfWin 指令是与位置有关的: 它们会影响脚本中实际在它们后面的所有热键/热字串. 它们也是互斥的; 即只有最近的那个会起作用.</p>
+<p>#IfWin 指令用于通过双冒号语法定义的热键/热字串, 例如 <code>#Space::</code> 或 <code>::btw::</code>. 对于通过 <a href="Hotkey.htm">Hotkey</a> 命令或 <a href="Hotstring.htm">Hotstring</a> 函数创建的热键/热字串, 请使用 <a href="Hotkey.htm#IfWin">Hotkey If</a>. 但是, 如果 <em>Hotkey If</em> 从未在脚本中使用, 则最底部的 #If(如果有的话) 将对热键命令或 Hotstring 函数有效.</p>
 <p>要关闭上下文相关性, 请指定任一 #IfWin 指令但省略所有参数. 例如:</p>
 <pre>#IfWinActive</pre>
-<p>当 #IfWin 关闭时(或从未在脚本中使用), 所有的<a href="../Hotkeys.htm">热键</a>和<a href="../Hotstrings.htm">热字串</a>对所有的窗口有效(除非使用 <a href="Suspend.htm">Suspend</a> 或 <a href="Hotkey.htm">Hotkey 命令</a>进行禁用).</p>
+<p>当 #IfWin 关闭时(或从未在脚本中使用), 所有的热键/热字串对所有的窗口有效, 除非使用 <a href="Suspend.htm">Suspend</a> 或 <a href="Hotkey.htm">Hotkey 命令</a>或 <a href="Hotstring.htm">Hotstring()</a> 进行禁用.</p>
 <p>使用 #IfWin 禁用鼠标或键盘热键后, 它会执行它原来的功能, 即会直接被传递到活动窗口, 就像不存在这样的热键. 有一种情况例外: 对于控制器热键, 尽管 #IfWin 有效, 但它不能阻止其他程序探测到按钮的按下动作.</p>
 <p>#IfWin 还可以用来改变普通按键的行为, 例如 <kbd>Enter</kbd> 或 <kbd>Space</kbd>. 这可以用于特殊的窗口忽略那个按键或执行您不希望的其他动作时. 例如:</p>
 <pre>#IfWinActive Reminders ahk_class #32770  <em>; Outlook 中的 "提醒" 窗口.</em>
 Enter::Send !o  <em>; 让 "Enter" 键打开选择的提醒.</em>
 #IfWinActive</pre>
 <p>和其他指令一样, #IfWin 不能有条件地执行.</p>
-<h2 id="variant">变体(副本) 热键</h2>
-<p>在脚本中特殊的<a href="../Hotkeys.htm">热键</a>或<a href="../Hotstrings.htm">热字串</a>可以使用不同的 #IfWin 条件定义多次. 这被称为 <em>热键变体</em>. 例如:</p>
+<h2 id="variant">变体(副本)</h2>
+<p>在脚本中特殊的<a href="../Hotkeys.htm">热键</a>或<a href="../Hotstrings.htm">热字串</a>可以使用不同的 #IfWin 条件定义多次. 这被称为 <em>热键变体</em> 或 <em>热字串变体</em>. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
 ^!c::MsgBox You pressed Control+Alt+C in Notepad.
 #IfWinActive ahk_class WordPadClass
@@ -58,7 +61,7 @@ Enter::Send !o  <em>; 让 "Enter" 键打开选择的提醒.</em>
 #IfWinActive
 ^!c::MsgBox You pressed Control+Alt+C in a window other than Notepad/WordPad.</pre>
 <p>如果有多个变体符合触发条件, 那么只有最接近脚本顶部的那个会触发. 例外的情况是全局变体(不含 #IfWin 条件的变体): 它的优先级总是最低; 因此, 只有在没有其他变体符合条件时才会触发它(这种例外情况不适用于<a href="../Hotstrings.htm">热字串</a>).</p>
-<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序例如 <code>^!+#</code> 没有关系. 例如: <code>^!c</code> 等效于 <code>!^c</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时 <em>Esc</em> 与 <em>Escape</em> 是有区别的(尽管不会受大小写形式的影响). 同样, 含<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不含通配符的是完全独立的; 例如, <code>*F1</code> 和 <code>F1</code> 每个都有自己的变体集.</p>
+<p>创建重复热键时, <a href="../Hotkeys.htm#Symbols">修饰符</a>的顺序例如 <code class="no-highlight">^!+#</code> 没有关系. 例如: <code class="no-highlight">^!c</code> 等效于 <code class="no-highlight">!^c</code>. 但是, 按键必须拼写一致. 例如, 用于此目的时 <em>Esc</em> 与 <em>Escape</em> 是有区别的(尽管不会受大小写形式的影响). 同样, 含<a href="../Hotkeys.htm#wildcard">通配符前缀(*)</a> 的热键和不含通配符的是完全独立的; 例如, <code class="no-highlight">*F1</code> 和 <code class="no-highlight">F1</code> 每个都有自己的变体集.</p>
 <p>要让多个变体执行相同的热键子程序, 最简单的方法是把同个热键的变体叠放在一起, 其中在每个的前面使用不同的 #IfWin 指令. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
 #z::
@@ -67,10 +70,10 @@ Enter::Send !o  <em>; 让 "Enter" 键打开选择的提醒.</em>
 MsgBox You pressed Win+Z in either Notepad or WordPad.
 return</pre>
 <p>或者通过 <code>#IfWinActive ahk_group MyGroup</code> 使用<a href="GroupAdd.htm">窗口组</a>.</p>
-<p>要动态创建热键变体(在脚本运行时), 请参阅 <a href="Hotkey.htm#IfWin">"Hotkey IfWin"</a>.</p>
+<p>要动态创建热键变体或 <span class="ver">[v1.1.28+]</span>的热字串变体(在脚本运行时), 请参阅 <a href="Hotkey.htm#IfWin">"Hotkey IfWin"</a>.</p>
 <h2 id="gen">一般说明</h2>
 <p>#IfWin 还能在适当时恢复前缀键为它们原来的功能(在 "a &amp; b" 这样的热键中<a href="../Hotkeys.htm#prefix">前缀键</a>为 <kbd>A</kbd>). 每当组合键中给定的前缀没有启动热键时会发生这样的情况, 即前缀键恢复为原来的功能.</p>
-<p>当使用 Gosub 或 Goto 跳转到热键或热字串标签时, 它会跳转到最接近脚本顶部的变体.</p>
+<p>当使用 Gosub 或 Goto 跳转到热键/热字串标签时, 它会跳转到最接近脚本顶部的变体.</p>
 <p>当前被 #IfWin 禁用的热键, 其中的按键或鼠标按钮在 <a href="KeyHistory.htm">KeyHistory</a> 的 "Type" 列中显示时会带有 "#" 字符. 这样可以帮助<a href="../Scripts.htm#debug">调试脚本</a>.</p>
 <p>当前不支持变量引用, 例如 %Var%. 因此, 百分号必须<a href="../misc/EscapeChar.htm">转义</a>为 `% 以便在将来支持它们. 同样, 原义的逗号必须进行转义(为 `,) 以便在将来增加额外的参数. 如果您需要解决此限制, 请使用 <a href="GroupAdd.htm">GroupAdd</a> 和 <a href="../misc/WinTitle.htm#ahk_group">ahk_group</a>.</p>
 <p>由 <a href="Hotkey.htm">Hotkey 命令</a>设置的热键的标签不会直接受 #IfWin 影响. 相反地, 在靠近脚本的底部使用 #IfWin 会影响所有由 Hotkey 命令创建的热键(除非使用 <a href="Hotkey.htm#IfWin">"Hotkey IfWin"</a> 改变了这种行为).</p>
@@ -79,10 +82,10 @@ return</pre>
 <pre>#IfWinExist ahk_class Notepad
 #n::WinActivate  <em>; 激活由 #IfWin 找到的窗口.</em></pre>
 <p>如果 #IfWin 的某个参数中含有前导或尾随的空格/制表符, 需要使用<a href="../misc/EscapeChar.htm">转义序列</a> `s 和 `t 代替.</p>
-<p>由于性能的原因, #IfWin 不会持续监视指定窗口的激活或存在. 相反地, 它只会在您输入热键或热字串时检查匹配窗口. 如果匹配窗口不存在, 那么您的键击或鼠标点击会原样传递给活动窗口.</p>
+<p>由于性能的原因, #IfWin 不会持续监视指定窗口的激活或存在. 相反地, 它只会在您输入热键/热字串时检查匹配窗口. 如果匹配窗口不存在, 那么您的键击或鼠标点击会原样传递给活动窗口.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="_If.htm">#If <i>表达式</i></a>, <a href="Hotkey.htm">Hotkey 命令</a>, <a href="../Hotkeys.htm">热键</a>, <a href="../Hotstrings.htm">热字串</a>, <a href="Suspend.htm">Suspend</a>, <a href="WinActive.htm">WinActive()</a>, <a href="WinExist.htm">WinExist()</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a></p>
+<p><a href="_If.htm">#If <i>表达式</i></a>, <a href="Hotkey.htm">Hotkey 命令</a>, <a href="../Hotkeys.htm">热键</a>, <a href="Hotstring.htm">Hotstring 函数</a>, <a href="../Hotstrings.htm">热字串</a>, <a href="Suspend.htm">Suspend</a>, <a href="WinActive.htm">WinActive()</a>, <a href="WinExist.htm">WinExist()</a>, <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a>, <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">

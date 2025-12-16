@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 <body>
@@ -61,51 +62,31 @@
 <h2 id="Examples">示例</h2>
 
 <div class="ex" id="ExList">
-<p><a class="ex_number" href="#ExList"></a> 显示一个通过 <a href="DllCall.htm">DllCall</a> 获取的正在运行的进程列表.</p>
-<pre>d := "  |  "  <em>; 字符串分隔符</em>
-s := 4096  <em>; 缓冲和数组的大小(4 KB)</em>
+<p><a class="ex_number" href="#ExList"></a>显示通过 <a href="DllCall.htm">DllCall</a> 和 <a href="https://learn.microsoft.com/windows/win32/api/psapi/nf-psapi-enumprocesses">EnumProcesses</a> 获取的运行进程列表.</p>
+<pre>MyGui := Gui()
+LV := MyGui.Add("ListView", "w1300 r25", ["#", "PID", "Name", "Path"])
+for Index, Proc in GetProcessList()
+    LV.Add("", Index, Proc.PID, Proc.Name, Proc.Path)
+LV.ModifyCol()
+MyGui.Title := LV.GetCount() " Processes"
+MyGui.Show()
 
-ScriptPID := ProcessExist()  <em>; 正在运行脚本的 PID.</em>
-<em>; 使用 PROCESS_QUERY_INFORMATION(0x0400) 获取此脚本的句柄:</em>
-h := DllCall("OpenProcess", "UInt", 0x0400, "Int", false, "UInt", ScriptPID, "Ptr")
-<em>; 打开此进程的可调整的访问令牌(TOKEN_ADJUST_PRIVILEGES = 32):</em>
-DllCall("Advapi32.dll\OpenProcessToken", "Ptr", h, "UInt", 32, "PtrP", &amp;t := 0)
-<em>; 获取调试特权的本地唯一标识符:</em>
-DllCall("Advapi32.dll\LookupPrivilegeValue", "Ptr", 0, "Str", "SeDebugPrivilege", "Int64P", &amp;luid := 0)
-ti := Buffer(16, 0)  <em>; 特权结构</em>
-NumPut( "UInt", 1  <em>; 特权数组中的一个条目...</em>
-      , "Int64", luid
-      , "UInt", 2  <em>; 启用这个特权: SE_PRIVILEGE_ENABLED = 2</em>
-      , ti)
-<em>; 使用新的访问令牌更新此进程的特权:</em>
-r := DllCall("Advapi32.dll\AdjustTokenPrivileges", "Ptr", t, "Int", false, "Ptr", ti, "UInt", 0, "Ptr", 0, "Ptr", 0)
-DllCall("CloseHandle", "Ptr", t)  <em>; 关闭访问令牌句柄以节约内存.</em>
-DllCall("CloseHandle", "Ptr", h)  <em>; 关闭进程句柄以节约内存.</em>
-
-hModule := DllCall("LoadLibrary", "Str", "Psapi.dll")  <em>; 通过预加载来提升性能.</em>
-a := Buffer(s)  <em>; 接收进程列表标识符的数组:</em>
-c := 0  <em>; 用于进程标识符的计数器</em>
-l := ""
-DllCall("Psapi.dll\EnumProcesses", "Ptr", a, "UInt", s, "UIntP", &amp;r)
-Loop r // 4  <em>; 把数组解析为 DWORD(32 位) 的标识符:</em>
-{
-    id := NumGet(a, A_Index * 4, "UInt")
-    <em>; 打开进程: PROCESS_VM_READ (0x0010) | PROCESS_QUERY_INFORMATION (0x0400)</em>
-    h := DllCall("OpenProcess", "UInt", 0x0010 | 0x0400, "Int", false, "UInt", id, "Ptr")
-    if !h
-        continue
-    n := Buffer(s, 0)  <em>; 接收模块基础名称的缓冲:</em>
-    e := DllCall("Psapi.dll\GetModuleBaseName", "Ptr", h, "Ptr", 0, "Ptr", n, "UInt", s//2)
-    if !e    <em>; 用于 64 位进程在 32 位模式时的回退方法:</em>
-        e := DllCall("Psapi.dll\GetProcessImageFileName", "Ptr", h, "Ptr", n, "UInt", s//2)
-    SplitPath StrGet(n), &amp;n
-    DllCall("CloseHandle", "Ptr", h)  <em>; 关闭进程句柄以节约内存</em>
-    if (n &amp;&amp; e)  <em>; 如果映像不是空的, 则添加到列表:</em>
-        l .= n "`n", c++
-}
-DllCall("FreeLibrary", "Ptr", hModule)  <em>; 卸载库来释放内存.</em>
-<em>;l := Sort(l)  ; 取消注释这行来按字母顺序对列表进行排序.</em>
-MsgBox StrReplace(l, "`n", d), c " Processes", 0</pre>
+GetProcessList(MaxProcs := 1024) {
+    Arr := []  <em>; 用于存储进程信息的数组</em>
+    DllCall("Psapi.dll\EnumProcesses"
+        , "Ptr", Buf := Buffer(MaxProcs * 4)  <em>; 用于存储所有进程 ID 的缓冲</em>
+        , "UInt", Buf.Size
+        , "UIntP", &amp;ByteCnt := 0)  <em>; DllCall 返回的字节数</em>
+    Loop (ByteCnt // 4) {
+        PID := NumGet(Buf, (A_Index - 1) * 4, "UInt")
+        try Arr.Push({
+            Name: ProcessGetName(PID),
+            Path: ProcessGetPath(PID),
+            PID: PID
+        })
+    }
+    return Arr
+}</pre>
 </div>
 
 <div class="ex" id="ExListCOM">

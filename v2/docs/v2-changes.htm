@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8">
 <title>v1.1 到 v2.0 的更改 | AutoHotkey v2</title>
 <meta name="description" content="Changes between v1.1 and v2.0." />
 <meta name="ahk:equiv-v1" content="AHKL_ChangeLog.htm" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
+<link href="static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="static/content.js" type="text/javascript"></script>
 </head>
 <body>
@@ -150,8 +150,8 @@ return a+b
 </pre>
 </ul>
 <p>名称不能以数字开头, 也不能包含以前允许的下列字符: <code class="no-highlight">@ # $</code>. 只允许使用字母, 数字, 下划线和非 ASCII 字符.</p>
-<p><strong>保留关键字:</strong> 声明关键字和控制流语句的名称不能作为变量, 函数或类的名称. 这包括 <code class="no-highlight">local</code>, <code class="no-highlight">global</code>, <code class="no-highlight">static</code>, <code class="no-highlight">if</code>, <code class="no-highlight">else</code>, <code class="no-highlight">loop</code>, <code class="no-highlight">for</code>, <code class="no-highlight">while</code>, <code class="no-highlight">until</code>, <code class="no-highlight">break</code>, <code class="no-highlight">continue</code>, <code class="no-highlight">goto</code>, <code class="no-highlight">return</code>, <code class="no-highlight">switch</code>, <code class="no-highlight">case</code>, <code class="no-highlight">try</code>, <code class="no-highlight">catch</code>, <code class="no-highlight">finally</code> 和 <code class="no-highlight">throw</code>. 这样做的主要目的是为了检测错误, 如 <code class="no-highlight">if (ex) break</code>.</p>
-<p><strong>保留关键字:</strong> <code class="no-highlight">as</code>, <code class="no-highlight">and</code>, <code class="no-highlight">contains</code>, <code class="no-highlight">false</code>, <code class="no-highlight">in</code>, <code class="no-highlight">is</code>, <code class="no-highlight">IsSet</code>, <code class="no-highlight">not</code>, <code class="no-highlight">or</code>, <code class="no-highlight">super</code>, <code class="no-highlight">true</code>, <code class="no-highlight">unset</code>. 这些词是为将来使用或其他特定目的而保留的, 即使没有歧义, 也不允许作为变量或函数名. 这主要是为了保持一致性: 在 v1 版本中, <code class="no-highlight">and := 1</code> 被允许放在单独的行中, 但 <code class="no-highlight">(and := 1)</code> 就不行了.</p>
+<p><strong>保留关键字:</strong> 声明关键字和控制流语句的名称不能作为变量, 函数或类的名称. 这包括 <code>local</code>, <code>global</code>, <code>static</code>, <code>if</code>, <code>else</code>, <code>loop</code>, <code>for</code>, <code>while</code>, <code>until</code>, <code>break</code>, <code>continue</code>, <code>goto</code>, <code>return</code>, <code>switch</code>, <code>case</code>, <code>try</code>, <code>catch</code>, <code>finally</code> 和 <code>throw</code>. 这样做的主要目的是为了检测错误, 如 <code>if (ex) break</code>.</p>
+<p><strong>保留关键字:</strong> <code>as</code>, <code>and</code>, <code>contains</code>, <code>false</code>, <code>in</code>, <code>is</code>, <code>IsSet</code>, <code>not</code>, <code>or</code>, <code>super</code>, <code>true</code>, <code>unset</code>. 这些词是为将来使用或其他特定目的而保留的, 即使没有歧义, 也不允许作为变量或函数名. 这主要是为了保持一致性: 在 v1 版本中, <code class="no-highlight">and := 1</code> 被允许放在单独的行中, 但 <code class="no-highlight">(and := 1)</code> 就不行了.</p>
 <p>上面列出的词被允许作为属性或窗口组名称. 典型使用的属性名称前面都有 <code>.</code>, 这可以防止该词被解释为运算符. 相比之下, 关键字永远不会被解释为表达式中的变量或函数名. 例如, <code>not(x)</code> 等同于 <code>not (x)</code> 或 <code>(not x)</code>.</p>
 <p>许多类是预定义的, 与用户定义的类的方式相同, 这有效地保留了这些全局变量名. (然而, 下面描述的<a href="#scope">域的变更</a>缓解了由此产生的大部分问题.) 关于类的列表, 请参阅<a href="ObjList.htm">内置的类</a>.</p>
 <h3 id="scope">作用域</h3>
@@ -197,8 +197,8 @@ return a+b
 <p>当一个原义字符串后面跟了一个不确定的一元/二元运算符时, 在加载时就会报告错误. 例如, <code>"new counter:" ++Counter</code> 可能应该是递增和显示 <em>Counter</em>, 但从技术上讲, 它是无效的加法和一元加法.</p>
 <p><code>word ++</code> 和 <code>word --</code> 不再是表达式, 因为 <code>word</code> 可以是一个用户定义的函数(而且 ++/-- 后面可能有一个表达式, 产生一个变量引用). 要写一个独立的后增量或后减量表达式, 要么省略变量和运算符之间的空格, 要么用括号包住变量或表达式.</p>
 <p><code>word ? x : y</code> 仍然是一个三元表达式, 但是以单词开头的更复杂的情况, 如 <code>word1 word2 ? x : y</code>, 总是被解释为对 <em>word1</em> 的函数调用(即使不存在这样的函数). 要写一个具有复杂条件的独立的三元表达式, 请将条件放在括号里.</p>
-<p>新的 <a href="Variables.htm#is"><code>is</code> 运算符</a>, 如 <code>x is y</code> 可以用来检查值 <em>x</em> 是否是类 <em>y</em> 的实例, <em>y</em> 必须是一个具有 <em>Prototype</em> 属性的对象(即一个<a href="lib/Class.htm">类</a>). 这包括原始值, 如 <code>x is Integer</code>(这严格来说是一种类型检查, 而 <code>IsInteger(x)</code> 检查的是潜在的转换).</p>
-<p>关键词 <code class="no-highlight">contains</code> 和 <code class="no-highlight">in</code> 被保留下来供将来使用.</p>
+<p>新的 <a href="Variables.htm#is_in_contains"><code>is</code> 运算符</a>, 如 <code>x is y</code> 可以用来检查值 <em>x</em> 是否是类 <em>y</em> 的实例, <em>y</em> 必须是一个具有 <em>Prototype</em> 属性的对象(即一个<a href="lib/Class.htm">类</a>). 这包括原始值, 如 <code>x is Integer</code>(这严格来说是一种类型检查, 而 <code>IsInteger(x)</code> 检查的是潜在的转换).</p>
+<p>关键词 <code>contains</code> 和 <code>in</code> 被保留下来供将来使用.</p>
 <p><code>&amp;var</code>(取址) 已被 <code>StrPtr(var)</code> 和 <code>ObjPtr(obj)</code> 取代, 以更清楚地显示意图并加强错误检查. 在 v1 中, 取址返回 <em>var</em> 内部字符串缓冲的地址, 即使它包含一个数字(但不是一个对象). 它还用于检索一个对象的地址, 而得到一个错误类型的地址会产生可怕的后果.</p>
 <p><code>&amp;var</code> 现在是<a href="Variables.htm#ref">引用运算符</a>, 它与所有的 <a href="#byref">ByRef</a> 和 OutputVar 参数一起使用, 以提高清晰度和灵活性(并使其他语言变化成为可能). 有关详情, 请参阅<a href="Concepts.htm#variable-references">变量引用(VarRef)</a>.</p>
 <p>字符串长度现在在表达式计算期间被缓存. 这提高了性能, 并允许字符串包含二进制零. 特别是:</p>
@@ -317,7 +317,7 @@ else
 <h3 id="continuation-lines">延续行</h3>
 <p>现在, 对于将符号视为表达式运算符的上下文, 行延续更具选择性. 一般来说, 逗号和表达式运算符不能再用于文本上下文中的延续, 例如与热字符串或指令(除 #HotIf 外) 一起, 或在未封闭的引号字符串之后.</p>
 <p>行延续现在对行末的表达式运算符有效.</p>
-<p><code>is</code>, <code class="no-highlight">in</code> 和 <code class="no-highlight">contains</code> 可以用于行延续, 尽管 <code class="no-highlight">in</code> 和 <code class="no-highlight">contains</code> 仍然被保留/尚未作为运算符实现.</p>
+<p><code>is</code>, <code>in</code> 和 <code>contains</code> 可以用于行延续, 尽管 <code class="no-highlight">in</code> 和 <code class="no-highlight">contains</code> 仍然被保留/尚未作为运算符实现.</p>
 <p><code>and</code>, <code>or</code>, <code>is</code>, <code>in</code> 和 <code>contains</code> 可以作为行延续运算符, 即使后面是赋值或其他二进制运算符, 因为这些不再是有效的变量名. 相比之下, v1 版对 <code>and</code>/<code>or</code> 后跟以下任一项都有例外: <code>&lt;&gt;=/|^:,</code></p>
 <p>当 <code>.</code> 被用于延续时, 如果在一行开始时 <code>.</code> 右边没有空格或制表符, 那么这两行就不再自动用空格分隔, 如 <code>.VeryLongNestedClassName</code>. 请注意 <code class="no-highlight">x .123</code> 总是属性访问(而不是自动串联), 而 <code class="no-highlight">x+.123</code> 在有或没有空格的情况下都可以工作.</p>
 <h3 id="types">类型</h3>

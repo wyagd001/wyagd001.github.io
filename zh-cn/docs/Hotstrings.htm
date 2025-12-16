@@ -7,6 +7,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
+<link href="static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="static/content.js" type="text/javascript"></script>
 </head>
 <body>
@@ -98,7 +99,7 @@ return</pre>
 )</pre>
 <p>有关如何更改这些默认行为的信息, 请参阅<a href="Scripts.htm#continuation">延续片段</a>. 使用延续片段后也会使热字串默认为<a href="#raw">原始模式</a>. 覆盖此特性的唯一方法是在每个含延续片段的热字串中指定 <a href="#raw">r0 选项</a>(例如 <code>:r0:text1::</code>).</p>
 <h2 id="variant">上下文相关的热字串</h2>
-<p>使用 <a href="lib/_IfWinActive.htm">#IfWinActive/Exist</a> 指令可以让选择的热字串产生上下文相关性. 这样的热字串会根据窗口是否活动或存在的不同情况发送不同的替换, 执行不同的动作或什么都不做. 例如:</p>
+<p>使用 <a href="lib/_IfWinActive.htm">#IfWinActive/Exist</a> 指令和 <a href="lib/_If.htm">#If</a> 可以让选择的热字串产生上下文相关性. 这些热字串会根据特定的条件发送不同的替换, 执行不同的动作或什么都不做. 例如:</p>
 <pre>#IfWinActive ahk_class Notepad
 ::btw::This replacement text will appear only in Notepad.
 #IfWinActive
@@ -125,6 +126,7 @@ return</pre>
 <p id="label">可以 <a href="lib/Gosub.htm">Gosub</a> 或 <a href="lib/Goto.htm">Goto</a> 到热字串标签, 只需在热字串的标签名称前包含第一个双冒号(以及所有选项符号). 例如: <code>Gosub ::xyz</code>. 然而, 跳转到<a href="#auto">单行(自动替换) 热字串</a>会除了执行 <a href="lib/Return.htm">return</a> 外什么都不做.</p>
 <p>尽管不会监视热字串且在不可见的 <a href="lib/Input.htm">Input</a> 命令执行时也不会触发它们, 但是可见的 Input 却能触发它们.</p>
 <p id="InputLevel">默认情况下, 由任何 AutoHotkey 脚本生成的键击永远不会触发热字串. 这避免了热字串彼此反复地触发而形成的无限循环的可能性. 在 <span class="ver">[v1.1.06+]</span>, 此行为可以使用 <a href="lib/_InputLevel.htm">#InputLevel</a> 和 <a href="lib/SendLevel.htm">SendLevel</a> 进行控制. 然而, 自动替换型热字串的发送级别总为 0, 因此永远不会触发<a href="lib/_UseHook.htm">钩子热键</a>或热字串.</p>
+<p><a href="lib/Suspend.htm">Suspend</a> 命令可以暂时禁用所有热字串, 除了你豁免的字串. 对于更大的选择性, 可以使用 <a href="lib/_IfWinActive.htm">#IfWinActive/Exist</a> 或 <a href="lib/_If.htm">#If</a>.</p>
 <p><span class="ver">[v1.1.28+]</span>: 热字串可以通过<a href="lib/Hotstring.htm">热字串</a>函数动态创建, 它还可以单独修改, 禁用, 或启用脚本的现有的热字串.</p>
 <p>在某些时候 <a href="lib/Input.htm">Input</a> 命令比热字串更灵活. 例如, 它可以对活动窗口(例如游戏) 隐藏您的键击. 它还支持非字符型的终止键, 例如 <kbd>Esc</kbd>.</p>
 <p>任何包含热字串的脚本会自动使用<a href="lib/_InstallKeybdHook.htm">键盘钩子</a>.</p>
@@ -153,7 +155,9 @@ return</pre>
             Send by the way
     }
 </pre>
-<p>有关其他细节, 请参阅<a href="Hotkeys.htm#function-details">函数热键</a>.</p>
+<p><a href="Hotkeys.htm">热键</a>也可以这样定义. 可以将多个热键或热字串组合在一起, 以调用相同的函数.</p>
+<p>在热键/热字串标签和函数之间仅允许空白, 注释或者指令. 以这种方式定义的热键/热字串标签对 <a href="lib/IsLabel.htm">IsLabel()</a>, <a href="lib/Gosub.htm">Gosub</a> 或其他命令是不可见的; 然而, 即使关联了函数, <a href="Scripts.htm#auto">自动执行段</a>也会以第一个热键/热字串结束.</p>
+<p>使用函数的主要好处是可以使用局部变量, 当两个或多个热字串为了不同的目的使用相同的变量名时, 避免了冲突. 它也鼓励自我记录热字串, 就像上面的代码在函数内描述热字串一样.</p>
 <p>还可以使用<a href="lib/Hotstring.htm">热字串</a>函数将热字串关联到函数或函数对象.</p>
 
 <h2 id="Helper">热字串助手</h2>

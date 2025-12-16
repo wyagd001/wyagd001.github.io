@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="static/theme.css" rel="stylesheet" type="text/css" />
+<link href="static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="static/content.js" type="text/javascript"></script>
 </head>
 
@@ -224,7 +225,7 @@ MsgBox % Join("`n", <b class="blue">substrings*</b>)</pre>
 <p>静态变量总是隐式的局部变量, 但和局部变量的区别是它们的值在多次调用期间是记住的. 例如:</p>
 <pre>LogToFile(TextToLog)
 {
-    <strong>static</strong> LoggedLines := 0
+    static LoggedLines := 0
     LoggedLines += 1  <em>; 保持局部的计数(它的值在多次调用期间是记住的).</em>
     global LogFileName
     FileAppend, %LoggedLines%: %TextToLog%`n, %LogFileName%
@@ -234,7 +235,7 @@ MsgBox % Join("`n", <b class="blue">substrings*</b>)</pre>
 <p id="AssumeStatic"><strong>假设静态模式</strong> <span class="ver">[v1.0.48+]</span>: 通过在函数的首行使用单词 "static" 可以把函数定义为假设其所有的变量都是静态的(除了它的参数). 例如:</p>
 <pre>GetFromStaticArray(WhichItemNumber)
 {
-    <strong>static</strong>
+    static
     static FirstCallToUs := true  <em>; 静态声明初始化仍然只运行一次(在脚本执行前).</em>
     if FirstCallToUs  <em>; 在首次调用而不在后续的调用时创建静态数组.</em>
     {
@@ -283,7 +284,7 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>在上面的例子中, 如果 <em>ColorName</em> 变量为空则永远不会调用 FindColor() 函数. 这是由于 <em>AND</em> 的左侧结果将为 <em>false</em>, 因此其右边不可能让最终的结果为 <em>true</em>.</p>
 <p>由于此特性, 所以需要注意到, 如果在 <em>AND</em> 或 <em>OR</em> 的右侧调用函数, 那么函数可能永远不会产生副作用(例如改变全局变量的内容).</p>
 <p>还需要注意在嵌套的 <em>AND</em> 和 <em>OR</em> 串联表达式的求值优化. 例如, 在后面的表达式中每当 <em>ColorName</em> 为空时只会进行最左边的比较. 这是因为此时最左边的比较已经足以确定最终的结果:</p>
-<pre>if (ColorName = "" <u>OR</u> FindColor(ColorName, Region1) <u>OR</u> FindColor(ColorName, Region2))
+<pre>if (ColorName = "" OR FindColor(ColorName, Region1) OR FindColor(ColorName, Region2))
     break   <em>; 搜索内容为空或找到了匹配.</em></pre>
 <p>从上面的例子可以看出, 任何耗时的函数一般应该在 <em>AND</em> 或 <em>OR</em> 的右侧调用从而提高性能. 这种方法还能避免调用接受了一个不合适的值例如空字符串的函数.</p>
 <p><span class="ver">[v1.0.46+]</span>: <a href="Variables.htm#ternary">三元条件运算符(?:)</a> 也通过不计算丢弃的分支进行求值优化.</p>
@@ -318,10 +319,10 @@ static TotalAttempts := 0, PrevResult</pre>
 <p>说明: 当脚本的执行流遇到函数定义时, 它会跳过函数(使用一种瞬时的方法) 并在函数闭括号后恢复执行. 因此, 开始执行时执行流不会陷入函数中, 也不会因为在脚本的最顶部存在一个或多个函数而影响到<a href="Scripts.htm#auto">自动执行段</a>.</p>
 <h2 id="lib">函数库: 标准库和用户库 <span class="ver">[v1.0.47+]</span></h2>
 <p>脚本中可以不需要通过 <a href="lib/_Include.htm">#Include</a> 而调用外部文件中的函数. 要达到此目的, 必须在下面某个库文件夹中存在与函数同名的文件:</p>
-<pre><a href="Variables.htm#ScriptDir">%A_ScriptDir%</a>\Lib\  <em>; 本地库, 脚本所在目录中的 Lib 文件夹 - 需要 <span class="ver">[AHK_L 42+].</em>
+<pre class="no-highlight"><a href="Variables.htm#ScriptDir">%A_ScriptDir%</a>\Lib\  <em>; 本地库, 脚本所在目录中的 Lib 文件夹 - 需要 <span class="ver">[AHK_L 42+].</em>
 <a href="Variables.htm#MyDocuments">%A_MyDocuments%</a>\AutoHotkey\Lib\  <em>; 用户库.</em>
 directory-to-the-currently-running-AutoHotkey.exe\Lib\  <em>; 标准库, 当前运行的 AutoHotkey.exe 所在目录中的 Lib 文件夹.</em></pre>
-<p>例如, 当脚本调用不存在的函数 <code>MyFunc()</code> 时, 程序会在用户库中搜索名为 "MyFunc.ahk" 的文件. 如果没有找到, 会继续在标准库中搜索此文件. 如果仍然没有找到匹配的文件且函数的名称含有下划线(例如 <code>MyPrefix_MyFunc</code>), 那么程序会在两个库中搜索名为 <code>MyPrefix.ahk</code> 的文件, 如果找到则加载它. 这样使得 <code>MyPrefix.ahk</code> 可以同时包含 <code>MyPrefix_MyFunc</code> 函数和其他名称以 <code>MyPrefix_</code> 开始的相关函数.</p>
+<p>例如, 当脚本调用不存在的函数 <code>MyFunc()</code> 时, 程序会在用户库中搜索名为 "MyFunc.ahk" 的文件. 如果没有找到, 会继续在标准库中搜索此文件. 如果仍然没有找到匹配的文件且函数的名称含有下划线(例如 <code class="no-highlight">MyPrefix_MyFunc</code>), 那么程序会在两个库中搜索名为 <code class="no-highlight">MyPrefix.ahk</code> 的文件, 如果找到则加载它. 这样使得 <code class="no-highlight">MyPrefix.ahk</code> 可以同时包含 <code class="no-highlight">MyPrefix_MyFunc</code> 函数和其他名称以 <code class="no-highlight">MyPrefix_</code> 开始的相关函数.</p>
 <p><span class="ver">[AHK_L 42+]</span>: 支持本地库且本地库优先于用户库和标准库.</p>
 <p>只有如 <code>MyFunc()</code> 这样直接的函数调用才能自动导入库. 如果仅动态或间接调用该函数, 就像计时器或 GUI 事件, 那么库必须在脚本中明确的(显式) 导入, 例如: <code><a href="lib/_Include.htm">#Include</a> &lt;MyFunc&gt;</code></p>
 <p>虽然库文件通常只包含和它的文件名称相同的单个函数, 但它还可以包含仅被此函数调用的私有函数和子程序. 然而, 这样的函数应该使用相当明确清晰的名称, 因为它们仍属于全局命名空间; 也就是说, 可以在脚本的任意位置调用它们.</p>

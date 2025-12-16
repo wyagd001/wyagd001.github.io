@@ -6,6 +6,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
 <script src="../static/content.js" type="text/javascript"></script>
 </head>
 <body>
@@ -47,7 +48,7 @@
 </tr>
 <tr id="str">
 <td>Str</td>
-<td><p>例如 "Blue" 或 MyVar 这样的字符串型, 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall("CharUpper", "Str", <i>MyVar</i>)</code>.</p>
+<td><p>例如 "Blue" 或 MyVar 这样的字符串型, 如果被调用函数修改了字符串且此参数是个裸变量, 那么其内容将被更新. 例如, 后面的调用将把 <em>MyVar</em> 的内容转换成大写: <code>DllCall("CharUpper", "Str", MyVar)</code>.</p>
   <p>然而, 如果函数需要保存超过变量当前容量的字符串, 则在调用前必须确保此变量的容量足够大. 这可以通过调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyVar, 123)</code> 来实现, 其中 123 是为 <em>MyVar</em> 保留的容量.</p>
   <p><em>Str</em> 参数不能是计算结果为数字(例如 <code>i+1</code>) 的<a href="../Variables.htm#Expressions">表达式</a>. 如果这样, 则不会调用函数并设置 ErrorLevel 的值为 -2.</p>
   <p>支持<a href="#asterisk">星号变量</a> "Str*" 但极少使用. 它可以用在期望如 "TCHAR **" 或 "LPTSTR *" 类型参数的函数中.</p>
@@ -129,25 +130,25 @@ DllCall("DeleteFile", Ptr, &amp;filename) <em>; 省略 Ptr 两边的引号.</em>
 
 <h2 id="load">性能</h2>
 <p>当需要重复调用一个 DLL 时, 预先明确装载它可以显著提高执行效率(<em>对于<a href="#std">标准的 DLL</a> 文件如 User32 可以不需要, 因为它是常驻的</em>). 这样的实现避免了 DllCall 内部每次调用 LoadLibrary 和 FreeLibrary 的需要. 例如:</p>
-<pre>hModule := DllCall("<strong>LoadLibrary</strong>", "Str", "MyFunctions.dll", "Ptr")  <em>; 避免了在循环中每次都需要使用 DllCall() 装载库.</em>
+<pre>hModule := DllCall("LoadLibrary", "Str", "MyFunctions.dll", "Ptr")  <em>; 避免了在循环中每次都需要使用 DllCall() 装载库.</em>
 Loop, C:\My Documents\*.*, , 1
     result := DllCall("MyFunctions\BackupFile", "Str", A_LoopFileFullPath)
-DllCall("<strong>FreeLibrary</strong>", "Ptr", hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
+DllCall("FreeLibrary", "Ptr", hModule)  <em>; 为了释放内存, 在使用 DLL 后需要进行卸载.</em></pre>
 <p><span class="ver">[v1.0.46.08+]</span>: 通过预先查找函数的地址甚至可以获得更快的性能. 例如:</p>
 <pre><em>; 在下面的地址中, 如果 DLL 还没有装载, 则请使用 LoadLibrary 代替 GetModuleHandle.</em>
-<strong>MulDivProc</strong> := DllCall("GetProcAddress", "Ptr", DllCall("GetModuleHandle", "Str", "<strong>kernel32</strong>", "Ptr"), "AStr", "<strong>MulDiv</strong>", "Ptr")
+MulDivProc := DllCall("GetProcAddress", "Ptr", DllCall("GetModuleHandle", "Str", "kernel32", "Ptr"), "AStr", "MulDiv", "Ptr")
 Loop 500
-    DllCall(<strong>MulDivProc</strong>, "Int", 3, "Int", 4, "Int", 3)</pre>
+    DllCall(MulDivProc, "Int", 3, "Int", 4, "Int", 3)</pre>
 <p><span class="ver">[AHK_L 31+]</span>: 如果 DllCall 的首个参数是原义的字符串如 <code>"MulDiv"</code> 并且包含了函数的 DLL 在脚本开始前已正常装载了, 那么此字符串会自动被解析为函数地址. 这种内置的最优化比上述演示的例子执行地更高效.</p>
 <p>同时, 在脚本的任意位置添加 <a href="_NoEnv.htm">#NoEnv</a> 这行可以改善在使用了没有加引号的参数类型(例如 Int 与 "Int") 时 DllCall 的性能.</p>
-<p>最后, 当传递字符串变量给不会改变它长度的函数时, 传递变量的<a href="../Variables.htm#amp">地址</a>(例如 &amp;MyVar) 而不是作为 "<a href="#str">str</a>" 类型可以提升性能(尤其是当字符串很长的时候). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", "<strong>Ptr</strong>", <strong>&amp;</strong>MyVar, "Ptr")</code>.</p>
+<p>最后, 当传递字符串变量给不会改变它长度的函数时, 传递变量的<a href="../Variables.htm#amp">地址</a>(例如 &amp;MyVar) 而不是作为 "<a href="#str">str</a>" 类型可以提升性能(尤其是当字符串很长的时候). 后面的例子把字符串转换成大写: <code>DllCall("CharUpper", "Ptr", &amp;MyVar, "Ptr")</code>.</p>
 
 <h2 id="struct">结构和数组</h2>
 <p>结构是内存中连续的 <em>成员</em>(空间) 的集合. 大多数成员变量类型是整型.</p>
 <p>调用接受结构地址(或内存块数组) 的函数可以把结构中的原始二进制数据保存到普通变量中. 一般步骤如下:</p>
 <p>1) 调用 <code><a href="VarSetCapacity.htm">VarSetCapacity</a>(MyStruct, 123, 0)</code> 来确保目标变量足够大以便保存结构数据. 把 123 替换为至少和结构一样大小的数字. 最后一个参数零是可选的; 它会初始化所有成员变量为二进制零, 这样通常可以避免在下一步中频繁调用 NumPut().</p>
 <p>2) 如果目标函数需要初始化结构, 则调用 <code><a href="NumPut.htm">NumPut</a>(123, MyStruct, 4, "UInt")</code> 来初始化任意成员为非零数据. 把 <code>123</code> 替换为需要向目标成员存入的整数(或指定 <code>&amp;Var</code> 来存入变量的<a href="../Variables.htm#amp">地址</a>). 把 <code>4</code> 替换为目标成员的偏移(关于 "偏移" 的说明请参阅步骤 #4). 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
-<p>3) 调用目标函数, 把 <em>MyStruct</em> 的<a href="../Variables.htm#amp">地址</a>作为 UInt(或 Ptr 在 <span class="ver">[AHK_L 42+]</span> 时) 的参数传递过去. 例如, <code>DllCall("MyDll\MyFunc", "Ptr", <strong>&amp;</strong>MyStruct)</code>. 函数将检查和/或改变其中的某些成员变量.</p>
+<p>3) 调用目标函数, 把 <em>MyStruct</em> 的<a href="../Variables.htm#amp">地址</a>作为 UInt(或 Ptr 在 <span class="ver">[AHK_L 42+]</span> 时) 的参数传递过去. 例如, <code>DllCall("MyDll\MyFunc", "Ptr", &amp;MyStruct)</code>. 函数将检查和/或改变其中的某些成员变量.</p>
 <p>4) 使用 <code>MyInteger := <a href="NumGet.htm">NumGet</a>(MyStruct, 4, "UInt")</code> 从结构中获取任何想要的成员变量. 把 <code>4</code> 替换为结构中目标成员的偏移. 首个成员变量的偏移总为 0. 第二个成员的偏移为 0 加上首个成员的大小(一般为 4 字节). 后面成员的偏移等于它前一个成员的偏移加上前一个成员的大小. 大多数成员(例如 DWORD, Int 和<a href="#Int">其他的 32 位整型</a>) 大小为 4 个字节. 把 "UInt" 替换为合适的类型, 或当成员是指针或句柄时省略.</p>
 <p>请参阅<a href="#ExStruct">结构示例</a>了解实际用法.</p>
 <h2 id="limits">已知限制</h2>
@@ -178,7 +179,7 @@ MsgBox You pressed button #%WhichButton%.</pre>
 
 <div class="ex" id="ExWallpaper">
 <p><a class="ex_number" href="#ExWallpaper"></a> 将桌面墙纸更改为指定的位图(.bmp) 文件.</p>
-<pre>DllCall("SystemParametersInfo", "UInt", 0x14, "UInt", 0, "Str", A_WinDir <strong>.</strong> "\winnt.bmp", "UInt", 1)</pre>
+<pre>DllCall("SystemParametersInfo", "UInt", 0x14, "UInt", 0, "Str", A_WinDir . "\winnt.bmp", "UInt", 1)</pre>
 </div>
 
 <div class="ex" id="ExIsWindowVisible">
