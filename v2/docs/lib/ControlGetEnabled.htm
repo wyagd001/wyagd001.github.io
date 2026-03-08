@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>ControlGetEnabled - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The ControlGetEnabled function returns a non-zero value if the specified control is enabled." />
+<meta name="description" content="The ControlGetEnabled function returns 1 if a control is enabled, or 0 if disabled." />
 <meta name="ahk:equiv-v1" content="lib/ControlGet.htm#Enabled" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,23 +14,23 @@
 
 <h1>ControlGetEnabled</h1>
 
-<p>如果指定的控件是启用的, 则返回非零值.</p>
+<p>如果控件是启用的, 则返回 1, 或者禁用时, 返回 0.</p>
 
-<pre class="Syntax">IsEnabled := <span class="func">ControlGetEnabled</span>(Control <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
+<pre class="Syntax">IsEnabled := <span class="func">ControlGetEnabled</span>(ControlID <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
-    <dt>Control</dt>
+    <dt>ControlID</dt>
     <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
-        <p>控件的 ClassNN, 文本或 HWND, 或具有 <code class="no-highlight">Hwnd</code> 属性的对象. 有关详情, 请参阅 <a href="Control.htm#Parameter">Control 参数</a>.</p>
+        <p>控件的 ClassNN, 文本或 HWND, 或具有 Hwnd 属性的对象. 有关详情, 请参阅<a href="../misc/ControlID.htm">控件标识符</a>.</p>
     </dd>
     <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
     <dd>
         <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 <a href="../Program.htm#Window_Spy">Window Spy</a> 实用程序显示).</p>
     <p><em>ExcludeTitle</em> 和 <em>ExcludeText</em> 可用于根据标题或文本排除一个或多个窗口. 它们的规范类似于 <em>WinTitle</em> 和 <em>WinText</em>, 除了 <em>ExcludeTitle</em> 不识别除窗口标题之外的任何条件.</p>
-    <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改; 但是, 当使用<a href="../misc/WinTitle.htm#ahk_id">纯 HWND</a> 时, 无论 DetectHiddenWindows 怎样设置, 都会检测隐藏窗口. 默认情况下, 窗口标题的任意位置包含 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 就能形成匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行了更改.</p>
+    <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改; 当使用<a href="../misc/WinTitle.htm#ahk_id">纯 HWND</a> 时, 都会检测隐藏窗口. 默认情况下, 窗口标题的任意位置包含 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 就能形成匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行了更改.</p>
     </dd>
 </dl>
 
@@ -41,8 +41,11 @@
 <h2 id="Error_Handling">错误处理</h2>
 <p>如果找不到窗口或控件, 则抛出 <a href="Error.htm#TargetError">TargetError</a>.</p>
 
+<h2 id="Remarks">备注</h2>
+<p>此函数适用于非图形用户界面窗口中的控件, 即那些并非通过 <a href="Gui.htm#Call">Gui</a> 函数创建的窗口. 这个函数最适用于常见的或预定义的 Microsoft 控件; 而某些应用程序则使用自定义或修改后的控件, 在这种情况下, 函数可能无法按预期工作. 对于 <a href="GuiControls.htm">GUI 控件</a>, 通常使用 <a href="GuiControl.htm#Enabled">GuiControl.Enabled</a> 更方便.</p>
+
 <h2 id="Related">相关</h2>
-<p><a href="ControlSetEnabled.htm">ControlSetEnabled</a>, <a href="WinSetEnabled.htm">WinSetEnabled</a>, <a href="GuiControl.htm#Enabled">Enabled 属性(GuiControl 对象)</a>, <a href="Control.htm">控件函数</a></p>
+<p><a href="ControlSetEnabled.htm">ControlSetEnabled</a>, <a href="WinSetEnabled.htm">WinSetEnabled</a>, <a href="GuiControl.htm#Enabled">GuiControl.Enabled</a>, <a href="Control.htm">控件函数</a></p>
 
 </body>
 </html>

@@ -15,8 +15,8 @@
 
 <p>发送模拟键盘输入或文本到窗口或控件.</p>
 
-<pre class="Syntax"><span class="func">ControlSend</span> Keys <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
-<span class="func">ControlSendText</span> Keys <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<pre class="Syntax"><span class="func">ControlSend</span> Keys <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
+<span class="func">ControlSendText</span> Keys <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
@@ -27,18 +27,18 @@
     <p>与 <a href="Send.htm">Send</a> 函数不同, ControlSend 不能发送鼠标点击. 请使用 <a href="ControlClick.htm">ControlClick</a> 来发送.</p>
   </dd>
 
-  <dt>Control</dt>
+  <dt>ControlID</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>如果省略此参数, 击键将直接发送到目标窗口, 而不是它的一个控件(有关示例, 请参阅 <a href="../misc/Winamp.htm">Automating Winamp</a>). 否则, 请指定控件的 ClassNN, 文本或 HWND, 或具有 <code class="no-highlight">Hwnd</code> 属性的对象. 有关详情, 请参阅 <a href="Control.htm#Parameter">Control 参数</a>.</p>
+    <p>如果省略此参数, 击键将直接发送到目标窗口, 而不是它的一个控件. 否则, 请指定控件的 ClassNN, 文本或 HWND, 或具有 Hwnd 属性的对象. 有关详情, 请参阅<a href="../misc/ControlID.htm">控件标识符</a>.</p>
   </dd>
 
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>, <a href="../Concepts.htm#numbers">整数</a>或<a href="../Concepts.htm#objects">对象</a></p>
-    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 <a href="../Program.htm#Window_Spy">Window Spy</a> 实用程序显示).</p>
     <p><em>ExcludeTitle</em> 和 <em>ExcludeText</em> 可用于根据标题或文本排除一个或多个窗口. 它们的规范类似于 <em>WinTitle</em> 和 <em>WinText</em>, 除了 <em>ExcludeTitle</em> 不识别除窗口标题之外的任何条件.</p>
-    <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改; 但是, 当使用<a href="../misc/WinTitle.htm#ahk_id">纯 HWND</a> 时, 无论 DetectHiddenWindows 怎样设置, 都会检测隐藏窗口. 默认情况下, 窗口标题的任意位置包含 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 就能形成匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行了更改.</p>
+    <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改; 当使用<a href="../misc/WinTitle.htm#ahk_id">纯 HWND</a> 时, 都会检测隐藏窗口. 默认情况下, 窗口标题的任意位置包含 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 就能形成匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行了更改.</p>
   </dd>
 
 </dl>
@@ -47,9 +47,10 @@
 <p>如果找不到窗口或控件, 则抛出 <a href="Error.htm#TargetError">TargetError</a>.</p>
 
 <h2 id="Remarks">备注</h2>
+<p>此函数适用于非图形用户界面窗口中的控件, 即那些并非通过 <a href="Gui.htm#Call">Gui</a> 函数创建的窗口. 这个函数最适用于常见的或预定义的 Microsoft 控件; 而某些应用程序则使用自定义或修改后的控件, 在这种情况下, 函数可能无法按预期工作. 对于 <a href="GuiControls.htm">GUI 控件</a>, 如果存在相应的对应项, 通常通过其 <a href="GuiControl.htm">GuiControl</a> 对象来操作它们会更加方便.</p>
 <p>不像 <a href="Send.htm">Send</a>, ControlSend 忽略 <a href="SendMode.htm">SendMode</a>. 它使用操作系统的 PostMessage 函数来发布键盘消息.</p>
 <p>ControlSendText 类似于 ControlSend, 除了它发送 <em>Keys</em> 参数中的单个字符, 而不把 <code class="no-highlight">{Enter}</code> 转换成 <kbd>Enter</kbd>, 把 <code class="no-highlight">^c</code> 转换成 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 有关详情, 请参阅<a href="Send.htm#SendRaw">文本模式</a>. 在 ControlSend 中, 使用 <a href="Send.htm#Raw">{Raw}</a> 或 <a href="Send.htm#Text">{Text}</a> 也是有效的.</p>
-<p>如果省略 <em>Control</em> 参数, 该函数将尝试直接发送至目标窗口的最上面的控件(通常是正确的控件), 如果没有控件, 则发送至窗口本身. 如果一个窗口看起来根本没有任何控件, 或者只是为了方便且不必担心发送到哪个控件, 那么这个函数就很有用.</p>
+<p>如果省略 <em>ControlID</em> 参数, 该函数将尝试直接发送至目标窗口的最上面的控件(通常是正确的控件), 如果没有控件, 则发送至窗口本身. 如果一个窗口看起来根本没有任何控件, 或者只是为了方便且不必担心发送到哪个控件, 那么这个函数就很有用.</p>
 <p>默认情况下, 修饰键(Ctrl, Alt, Shift 和 Win) 会像正常情况下一样由 <a href="Send.htm#SendEvent">SendEvent</a> 函数发送. 这使得命令提示符和其他控制台窗口能够正确检测大写字母, 控制字符等. 它还可以在其他方面提高可靠性.</p>
 <p>然而, 在某些情况下, 这些修饰符事件可能会干扰活动窗口, 特别是当用户在 ControlSend 期间正在进行输入, 或者正在发送 <kbd>Alt</kbd> 键时(因为 <kbd>Alt</kbd> 会激活活动窗口的菜单栏). 可以通过显式发送修饰符按下和弹起事件来避免这种情况, 如本例所示:</p>
 <pre>ControlSend "{Alt down}f{Alt up}", "Edit1", "Untitled - Notepad"</pre>
@@ -59,9 +60,12 @@
 <pre>SetKeyDelay 10, 10
 SetKeyDelay 0, 10
 SetKeyDelay -1, 0</pre>
-<p>如果目标控件是一个 Edit 控件(或类似的控件), 下面的方法通常比 ControlSend 更可靠和更快:</p>
-<pre><a href="EditPaste.htm">EditPaste</a>("This text will be inserted at the caret position.", ControlName, WinTitle)</pre>
-<pre><a href="ControlSetText.htm">ControlSetText</a>("This text will entirely replace any current text.", ControlName, WinTitle)</pre>
+<p>如果目标控件是一个编辑控件(或类似的控件), 下面的方法通常比 ControlSend 更可靠和更快:</p>
+<ul>
+  <li><a href="EditPaste.htm">EditPaste</a> 在光标位置插入文本.</li>
+  <li><a href="ControlSetText.htm">ControlSetText</a> 则会完全替换当前的所有文本.</li>
+</ul>
+
 <p>ControlSend 通常不能操纵窗口的菜单栏. 要解决这个问题, 可以使用 <a href="MenuSelect.htm">MenuSelect</a>. 如果由于菜单栏的性质而无法做到这一点, 你可以尝试按照 <a href="../misc/SendMessage.htm">SendMessage 教程</a>来发现对应于所需菜单项的消息.</p>
 
 <h2 id="Related">相关</h2>

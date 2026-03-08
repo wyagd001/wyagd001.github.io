@@ -15,27 +15,26 @@
 <h1>Persistent</h1>
 
 <p>防止脚本在最后一个线程完成后自动退出, 允许它在空闲状态下运行.</p>
-<pre class="Syntax"><span class="func">Persistent</span> <span class="optional">Persist</span></pre>
+<pre class="Syntax">PrevSetting := <span class="func">Persistent</span>(<span class="optional">Setting</span>)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
-  <dt>Persist</dt>
+  <dt>Setting</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#boolean">布尔值</a></p>
     <p>如果省略, 则默认为 true.</p>
-    <p>如果为 <strong>true</strong>, 在所有线程退出后, 脚本将继续保持运行, 即使没有满足保持脚本运行的其他条件.</p>
+    <p>如果为 <strong>true</strong>, 那么在<a href="../Scripts.htm#auto">启动</a>完成且所有其他<a href="../misc/Threads.htm">线程</a>都退出之后, 脚本将继续保持运行, 即使没有满足保持脚本运行的其他条件.</p>
     <p>如果为 <strong>false</strong>, 则恢复默认行为.</p>
   </dd>
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#boolean">整数(布尔值)</a></p>
-<p>此函数返回先前的设置; 0(false) 或 1(true).</p>
+<p>此函数返回先前的设置; 0(false) 表示禁用或 1(true) 表示开启.</p>
 
 <h2 id="Remarks">备注</h2>
-<p>如果 Persistent 没有使用, 则默认设置为 0(false).</p>
-<p>如果脚本是 <em>持续运行的</em>, 它将在<a href="../Scripts.htm#auto">启动</a>完成和所有其他<a href="../misc/Threads.htm">线程</a>退出后继续运行. 通常没有必要调用这个函数, 因为在用户希望脚本持续运行的大多数常见情况下脚本都是<a href="../Scripts.htm#persistent">自动持续运行的</a>, 比如响应<a href="../Hotkeys.htm">热键</a>, 执行<a href="SetTimer.htm">计时器</a>或者显示 <a href="Gui.htm">GUI</a>.</p>
-<p>在某些情况下可能需要此函数(如果它打算在没有运行的线程或热键, 计时器, 等时保持运行) 包括:</p>
+<p>默认情况下, 脚本不是持续运行的. 但是, 在某些特定条件下, 脚本会<a href="../Scripts.htm#persistent">自动</a>变为持续运行的, 特别是在用户希望它保持运行的常见情况下, 比如响应<a href="../Hotkeys.htm">热键</a>, 执行<a href="SetTimer.htm">计时器</a>或者显示 <a href="Gui.htm">GUI</a>.</p>
+<p>通常没有必要调用这个函数, 但在某些情况下可能确实需要此函数:</p>
 <ul>
   <li>使用 <a href="OnMessage.htm">OnMessage</a> 或 <a href="CallbackCreate.htm">CallbackCreate</a> 和 <a href="DllCall.htm">DllCall</a> 来响应事件的脚本, 因为这些函数不会使脚本持续运行.</li>
   <li>通过选择一个自定义托盘菜单项来执行的脚本.</li>
@@ -51,7 +50,7 @@
 <p><a class="ex_number" href="#ExBasic"></a> 防止脚本自动退出.</p>
 <pre><em>; 这个脚本不会自动退出, 即使它没有任何事情要做.
 ; 但是, 你可以使用它的托盘图标在编辑器中打开脚本,
-; 或启动 Window Spy 或帮助文件.</em>
+; 或启动 <a href="../Program.htm#Window_Spy">Window Spy</a> 或帮助文件.</em>
 Persistent</pre>
 </div>
 

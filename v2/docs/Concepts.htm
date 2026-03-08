@@ -25,6 +25,7 @@
     <li><a href="#nothing">空值</a></li>
     <li><a href="#objects">对象</a></li>
     <li><a href="#object-protocol">对象协议</a></li>
+    <li><a href="#enumerable">枚举</a></li>
   </ul></li>
   <li><a href="#variables">变量</a>
   <ul>
@@ -146,6 +147,14 @@ myObj.name[arg1, arg2, ..., argN] := value
 myObj[arg1, arg2, ..., argN] := value
 </pre>
 
+<h3 id="enumerable">枚举</h3>
+<p>"可枚举" 值是指任何能够传递给 <a href="lib/For.htm">For-循环</a>以对一系列值进行操作的值. 要成为可枚举值, 值必须具有 <a href="Objects.htm#__Enum">__Enum 方法</a>或与 <a href="lib/Enumerator.htm#Call">枚举器兼容的 Call 方法</a>. 一些标准的可枚举值示例包括:</p>
+<ul>
+  <li><a href="lib/Array.htm">Arrays</a>, 每次迭代都会返回一个单独的元素.</li>
+  <li><a href="lib/Map.htm">Maps</a>, 每次迭代都会返回一个键和值.</li>
+  <li><a href="lib/Gui.htm">Gui</a>, 每次迭代都会返回界面中的一个控件.</li>
+</ul>
+
 <h2 id="variables">变量</h2>
 <p>一个变量允许您使用一个名称作为一个值的占位符. 在脚本运行期间, 这个值可能会重复更改. 例如, 一个热键可以使用一个变量 <code>press_count</code> 来计算它被按下的次数, 并且当 <code>press_count</code> 是 3 的倍数(每第三次按下) 时, 发送一个不同的键. 即使只有一次赋值的变量也是有用的. 例如, <code>WebBrowserTitle</code> 变量可用于在更改首选 Web 浏览器时, 或者由于软件更新而导致<a href="misc/WinTitle.htm">标题</a>或<a href="misc/WinTitle.htm#ahk_class">窗口类</a>发生更改时, 更容易更新代码.</p>
 <p>在 AutoHotkey 中, 创建变量仅需要使用它们即可. 每个变量都 <em>不是</em> 永久性地限制在一个<a href="#values">数据类型</a>中, 而是可以保存任何类型的值: 字符串, 数字或对象. 试图读取一个没有分配值的变量会被视为一个错误, 所以<a href="#uninitialized-variables">初始化变量</a>是很重要的.</p>
@@ -214,13 +223,13 @@ myObj[arg1, arg2, ..., argN] := value
   <dd><p>函数调用有时被称为 <em>命令</em>, 例如它 <em>命令</em> 程序执行特定操作. (由于历史原因, <em>命令</em> 可以指代调用函数的特定样式, 其中括号被省略并且丢弃返回值. 但是, 这在技术上是一个<a href="Language.htm#function-call-statements">函数调用语句</a>.)</p></dd>
 </dl>
 <p>函数通常期望参数以特定的顺序写入, 因此每个参数值的含义取决于它在逗号分隔的参数列表中的位置. 有些参数可以省略, 在这种情况下参数可以留空, 但是其后面的逗号只能在所有剩余的参数都省略的情况下才能省略. 例如, <a href="lib/ControlSend.htm">ControlSend</a> 的语法是:</p>
-<pre class="Syntax"><span class="func">ControlSend</span> Keys <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
+<pre class="Syntax"><span class="func">ControlSend</span> Keys <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span>
 </pre>
 <p>方括号表示所包含的参数是可选的(方括号本身不应出现在实际的代码中). 但是, 通常还必须指定目标窗口. 例如:</p>
 <pre>
-ControlSend "^{Home}", "Edit1", "A"  <em>; 正确. 指定了控件.</em>
+ControlSend "^{Home}", "Edit1", "A"  <em>; 正确. 指定了 ControlID.</em>
 ControlSend "^{Home}", "A"           <em>; 不正确: 参数不匹配.</em>
-ControlSend "^{Home}",, "A"          <em>; 正确. 省略控件.</em>
+ControlSend "^{Home}",, "A"          <em>; 正确. 省略了 ControlID.</em>
 </pre>
 
 <h3 id="methods">方法</h3>

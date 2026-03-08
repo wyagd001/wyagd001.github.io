@@ -853,7 +853,7 @@ this.__set(name, args, value)</pre>
 <p><code>Chr(0)</code> 返回一个长度为 1 的字符串, 包含一个二进制零. 这是改进了对字符串中二进制零的支持的结果.</p>
 <p>如果等待期过了, <a href="lib/ClipWait.htm">ClipWait</a> 现在返回 0(false), 否则返回 1(true). ErrorLevel 被删除. 指定 0 不再等同于指定 0.5; 相反, 它产生尽可能短的等待.</p>
 <p><code>ComObj()</code>: 这个函数有一种通配符的名字, 允许许多不同的后缀. 有些名字通常用于特定类型的参数, 如 <code>ComObjActive(CLSID)</code>, <code>ComObjParameter(vt, value)</code>, <code>ComObjEnwrap(dsp)</code>. 取而代之的是单独的函数/类, 不再有通配符名称. 有关详情, 请参阅 <a href="#com-objects-comobject">COM 对象(ComObject)</a>.</p>
-<p>Control: 对 <a href="lib/Control.htm">Control 函数</a>, <a href="lib/SendMessage.htm">SendMessage</a> 和 <a href="lib/PostMessage.htm">PostMessage</a> 使用的 <a href="lib/Control.htm#Parameter"><em>Control</em> 参数</a>做了一些修改:</p>
+<p>ControlID: 对 <a href="lib/Control.htm">Control 函数</a>, <a href="lib/SendMessage.htm">SendMessage</a> 和 <a href="lib/PostMessage.htm">PostMessage</a> 使用的 <a href="misc/ControlID.htm"><em>ControlID</em> 参数</a>做了一些修改:</p>
 <ul>
 <li>它现在可以接受 HWND(必须是一个纯整数) 或具有 <em>Hwnd</em> 属性的对象, 如 <a href="lib/GuiControl.htm">GuiControl 对象</a>. HWND 可以识别一个控件或一个顶级窗口, 尽管后者通常只对少数几个函数才有意义(见下文).</li>
 <li>它不再是可选的, 除了可以操作顶级窗口的函数(<a href="lib/ControlSend.htm">ControlSend[Text]</a>, <a href="lib/ControlClick.htm">ControlClick</a>, <a href="lib/SendMessage.htm">SendMessage</a>, <a href="lib/PostMessage.htm">PostMessage</a>) 或前面有其他可选的参数时(<a href="lib/ListViewGetContent.htm">ListViewGetContent</a>, <a href="lib/ControlGetPos.htm">ControlGetPos</a>, <a href="lib/ControlMove.htm">ControlMove</a>).</li>
@@ -862,7 +862,7 @@ this.__set(name, args, value)</pre>
 </ul>
 <p><a href="lib/ControlGetFocus.htm">ControlGetFocus</a> 现在返回控件的 HWND, 而不是其 ClassNN, 并且当它成功确定窗口没有焦点控件时, 不再认为有错误.</p>
 <p><a href="lib/ControlMove.htm">ControlMove</a>, <a href="lib/ControlGetPos.htm">ControlGetPos</a> 和 <a href="lib/ControlClick.htm">ControlClick</a> 现在使用客户端坐标(像 <a href="lib/GuiControl.htm">GuiControl</a>) 而不是窗口坐标. 客户端坐标是相对于客户端区域的左上方而言的, 它不包括窗口的标题栏和边框. (控件只在客户端区域内渲染.)</p>
-<p><a href="lib/ControlMove.htm">ControlMove</a>, <a href="lib/ControlSend.htm">ControlSend</a> 和 <a href="lib/ControlSetText.htm">ControlSetText</a> 现在使用与其他 Control 函数一致的参数顺序; 即 <em><strong>Control</strong>, WinTitle, WinText, ExcludeTitle, ExcludeText</em> 总是组合在一起(在参数列表的最后), 以帮助记忆.</p>
+<p><a href="lib/ControlMove.htm">ControlMove</a>, <a href="lib/ControlSend.htm">ControlSend</a> 和 <a href="lib/ControlSetText.htm">ControlSetText</a> 现在使用与其他 Control 函数一致的参数顺序; 即 <em><strong>ControlID</strong>, WinTitle, WinText, ExcludeTitle, ExcludeText</em> 总是组合在一起(在参数列表的最后), 以帮助记忆.</p>
 <p><a href="lib/CoordMode.htm">CoordMode</a> 不再接受 "Relative" 作为一种模式, 因为所有模式都是相对于某个东西的. 它与 "Window" 同义, 所以用它代替.</p>
 <p><a href="lib/DllCall.htm">DllCall</a>: 请参阅下面的 <a href="#dllcall">DllCall</a> 部分.</p>
 <p>如果没有被注册 "edit" shell 动词, <a href="lib/Edit.htm">Edit</a> 以前有针对 <code class="no-highlight">.ini</code> 文件类型的后备行为. 由于脚本文件不需要有 <code class="no-highlight">.ini</code> 扩展名. <code class="no-highlight">AutoHotkey.ini</code> 是旧版本 AutoHotkey 中的默认脚本名称.</p>
@@ -1087,7 +1087,7 @@ Loop Reg, KeyName [, Mode]
 <p>如果 <em>Title</em> 参数是一个空字符串, 标题将是空白. 只有当完全省略时, 它才默认为 <a href="Variables.htm#ScriptName">A_ScriptName</a>, 与用户定义的函数的可选参数一致.</p>
 <h4 id="sub-commands">子命令</h4>
 <p>Control, ControlGet, Drive, DriveGet, WinGet, WinSet 和 Process  的子命令已被替换为单独的函数, 而主命令已被删除. 一些函数的名称和用法已经改变. 新的用法如下所示:</p>
-<pre><em>; 其中 ... 表示可选的 Control, WinTitle, 等等.</em>
+<pre><em>; 其中 ... 表示可选的 ControlID, WinTitle, 等等.</em>
 
 Bool  := ControlGetChecked(...)
 Bool  := ControlGetEnabled(...)
@@ -1178,8 +1178,9 @@ PID   := ProcessWaitClose(PID_or_Name [, Timeout])
 <p><a href="lib/ProcessExist.htm">ProcessExist</a>, <a href="lib/ProcessClose.htm">ProcessClose</a>, <a href="lib/ProcessWait.htm">ProcessWait</a> 和 <a href="lib/ProcessWaitClose.htm">ProcessWaitClose</a> 不再设置 ErrorLevel; 相反, 它们返回 PID.</p>
 <p>其他函数都不设置 ErrorLevel. 相反, 它们在失败时抛出异常. 在大多数情况下, 失败是因为没有找到目标窗口或控件.</p>
 <p>HWND 和样式总是以纯整数形式返回, 而不是十六进制字符串.</p>
-<p><a href="lib/ControlChooseIndex.htm">ControlChooseIndex</a> 允许 0 来取消对当前项目/所有项目的选择. 它取代了控件选择, 但也支持 Tab 控件.</p>
-<p>ControlGet 被合并到 <a href="lib/ControlGetIndex.htm">ControlGetIndex</a>, 它也适用于 ListBox, ComboBox 和 DDL. 对于 Tab 控件, 如果没有选择 Tab, 它将返回 0(很少见, 但有效). <a href="lib/ControlChooseIndex.htm">ControlChooseIndex</a> 不允许 Tab 控件使用 0, 因为应用程序往往不会处理它.</p>
+<p><a href="lib/ControlChooseIndex.htm">ControlChooseIndex</a> 允许 0 来取消对当前项目/所有项目的选择. 它取代了 "Control Choose"(控件选择) 和 "Control TabLeft/TabRight", 因此它也支持 Tab 控件.</p>
+<p><a href="lib/ControlFindItem.htm">ControlFindItem</a> 取代了 "ControlGet FindString".</p>
+<p><a href="lib/ControlGetIndex.htm">ControlGetIndex</a> 取代了 "ControlGet Tab", 并且也适用于 ListBox, ComboBox 和 DDL. 对于 Tab 控件, 如果没有选择 Tab, 它将返回 0(很少见, 但有效). ControlChooseIndex 不允许 Tab 控件使用 0, 因为应用程序往往不会处理它.</p>
 <p><a href="lib/ControlGetItems.htm">ControlGetItems</a> 取代了 ListBox 和 ComboBox 的 ControlGet List. 它返回一个数组.</p>
 <p><a href="lib/DriveEject.htm">DriveEject</a> 和 <a href="lib/DriveEject.htm">DriveRetract</a> 现在使用 DeviceIoControl 而不是 mciSendString. DriveEject 能够弹出在资源管理器中有 "弹出" 选项的非 CD/DVD 驱动器(即可移动驱动器, 但不包括显示为固定磁盘的外部硬盘).</p>
 <p><a href="lib/ListViewGetContent.htm">ListViewGetContent</a> 取代了 ListView 的 ControlGet List, 目前的用法与以前相同.</p>
@@ -1339,7 +1340,7 @@ Name    := MonitorGetName([N])
 <p>ListView 的 Click, DoubleClick 和 ContextMenu(当由右键触发时) 事件现在报告被点击的项目(如果没有则为 0), 而不是焦点项目.</p>
 <p>ListView 的 I 事件被拆分为多个命名事件, 除了 f(取消焦点)事件, 因为它被 F(ItemFocus) 所隐含, 所以被排除.</p>
 <p>ListView 的 e(ItemEdit) 事件在用户取消时被忽略.</p>
-<p>Slider 的 Change 事件比 V1 的 g-label 事件更稳定地被引发; 也就是说, 它不再默认忽略鼠标滚轮的变化. 有关详情, 请参阅<a href="lib/GuiControls.htm#slider-change">检测更改(Slider)</a>.</p>
+<p>Slider 的 Change 事件比 V1 的 g-label 事件更稳定地被引发; 也就是说, 它不再默认忽略鼠标滚轮的变化. 有关详情, 请参阅 <a href="lib/GuiOnEvent.htm#Change">Change</a> 事件.</p>
 <p>BS_NOTIFY 样式现在会根据需要自动添加到 Button, CheckBox 和 Radio 控件. 它不再被默认应用于 Radio 控件.</p>
 <p>Focus(以前的 F) 和 LoseFocus(以前的 f) 支持更多的(但不是全部) 控件类型.</p>
 <p>使用 Edit.Value 或 Edit.Text 设置 Edit 控件的文本不会触发该控件的 Change 事件, 而 GuiControl 会触发该控件的 g-label.</p>
