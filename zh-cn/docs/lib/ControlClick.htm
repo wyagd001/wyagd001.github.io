@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>ControlClick | AutoHotkey v1</title>
-<meta name="description" content="The ControlClick command sends a mouse button or mouse wheel event to a control." />
+<meta name="description" content="The ControlClick command sends a mouse button or mouse wheel event to a window or control." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,23 +13,23 @@
 
 <h1>ControlClick</h1>
 
-<p>发送鼠标按钮或鼠标滚轮事件到控件.</p>
+<p>发送鼠标按钮或鼠标滚轮事件到窗口或控件.</p>
 
-<pre class="Syntax"><span class="func">ControlClick</span> <span class="optional">, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, Options, ExcludeTitle, ExcludeText</span></pre>
+<pre class="Syntax"><span class="func">ControlClick</span> <span class="optional">, ControlID-or-Pos, WinTitle, WinText, WhichButton, ClickCount, Options, ExcludeTitle, ExcludeText</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
-  <dt>Control-or-Pos</dt>
+  <dt>ControlID-or-Pos</dt>
   <dd><p>如果为空或省略, 则点击目标窗口的顶层控件(或如果窗口没有控件则点击窗口自身). 否则, 请使用以下模式之一.</p>
       <p><strong>模式 1(位置):</strong> 指定相对于目标窗口左上角的 X 和 Y 坐标. X 坐标必须在 Y 坐标前面, 且它们之间需要含有至少一个空格或 tab. 例如: <code class="no-highlight">X55 Y33</code>. 如果在指定的坐标存在控件, 则会发送点击事件到这个坐标处. 如果没有控件, 则发送事件到目标窗口自身(根据窗口的性质, 这可能不会产生效果).</p>
     <p class="note"><strong>注意:</strong> 在此模式中, 会忽略 <em>Options</em> 参数中的 X 和 Y 字母选项.</p>
-      <p><strong>模式 2(ClassNN 或文本):</strong> 可以指定 ClassNN(控件的类名和实例编号) 或控件的名称/文本, 它们都可以通过 Window Spy 获取. 使用名称/文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
+      <p><strong>模式 2(控件标识符):</strong> 指定控件的 ClassNN 或文本, 或参数置空并指定 <em>WinTitle</em> 参数为 <code class="no-highlight">ahk_id %ControlHwnd%</code> 以对控件的 HWND 进行操作. 有关详情, 请参阅<a href="../misc/ControlID.htm">控件标识符</a>.</p>
       <p>默认情况下, 模式 2 优先于模式 1. 例如, 在一种不太可能的情况中某个控件的文本或 ClassNN 格式为 "Xnnn Ynnn", 那么此时会使用模式 2. 要覆盖此行为而无条件使用模式 1, 请在 <em>Options</em> 中加上单词 Pos, 例如: <code>ControlClick, x255 y152, WinTitle,,,, Pos</code></p>
-      <p>要操作控件的 HWND(窗口句柄), 请将此参数留空同时在 <em>WinTitle</em> 参数中指定 <code class="no-highlight">ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p></dd>
+  </dd>
 
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
-    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 <a href="../Program.htm#Window_Spy">Window Spy</a> 实用程序显示).</p>
     <p><em>ExcludeTitle</em> 和 <em>ExcludeText</em> 可用于根据标题或文本排除一个或多个窗口. 它们的规范类似于 <em>WinTitle</em> 和 <em>WinText</em>, 除了 <em>ExcludeTitle</em> 不识别除窗口标题之外的任何条件.</p>
     <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改. 默认情况下, 窗口标题必须以指定的 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 开头才能匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行更改.</p>
   </dd>
@@ -45,14 +45,14 @@
   <dd><p>如果为空或省略, 默认为 1. 否则, 请指定单击鼠标按钮或转动鼠标滚轮的次数, 可以是<a href="../Variables.htm#Expressions">表达式</a>.</p></dd>
 
   <dt>Options(选项)</dt>
-  <dd><p>如果为空或省略, 每次单击都由一个向下事件和一个向上事件组成, 并且在模式 2 生效时发生在控件的中心. 否则, 请指定一个或多个下列选项组成的系列. 例如: <code class="no-highlight">d x50 y25</code>.</p>
+  <dd><p>如果为空或省略, 每次单击都由一个向下事件和一个向上事件组成, 并且在模式 2 生效时发生在控件的中心. 否则, 请指定一个或多个下列选项组成的系列, 每个选项之间用零个或多个空格或制表符隔开. 例如: <code class="no-highlight">d x50 y25</code>.</p>
       <p><strong>NA</strong> <span class="ver">[v1.0.45+]</span>: 也许可以提高可靠性. 请参阅后面的<a href="#Reliability">可靠性</a>.</p>
       <p><strong>D:</strong> 按住鼠标按钮不放(即生成按下事件). 如果 D 和 U 选项都没有包含, 则会发送完整的点击事件(按下事件和弹起事件).</p>
       <p><strong>U:</strong> 释放鼠标按钮(即生成弹起事件). 此选项不能和 D 选项同时使用.</p>
-      <p><strong>Pos:</strong> 在 <em>Options</em> 的任意位置指定单词 Pos, 这样会无条件使用在上面 <em>Control-or-Pos</em> 参数中描述的 X/Y 位置模式.</p>
+      <p><strong>Pos:</strong> 在 <em>Options</em> 的任意位置指定单词 Pos, 这样会无条件使用在上面 <em>ControlID-or-Pos</em> 参数中描述的 X/Y 位置模式.</p>
       <p><strong>X</strong><em>n</em>: 指定 <em>n</em> 为要点击的相对于控件左上角的 X 坐标. 如果未指定, 则在控件的水平中心点击.</p>
       <p><strong>Y</strong><em>n</em>: 指定 <em>n</em> 为要点击的相对于控件左上角的 Y 坐标. 如果未指定, 则在控件的垂直中心点击.</p>
-      <p>在 <strong>X</strong> 和 <strong>Y</strong> 选项中使用十进制数而不是十六进制数.</p></dd>
+      <p>在 <strong>X</strong> 和 <strong>Y</strong> 选项中使用十进制数而不是十六进制数. 这些数字是以像素为单位的.</p></dd>
 
 </dl>
 
@@ -68,26 +68,27 @@
 ControlClick, Toolbar321, WinTitle,,,, NA</pre>
 <p>NA 选项可以避免激活目标窗口, 同时避免混淆它和脚本的输入, 这样可以防止鼠标实际移动产生的冲突(但通常只在目标窗口不活动时). 然而, 此方法不是对所有的窗口和控件都有效.</p>
 <h2 id="Remarks">备注</h2>
+<p>此命令适用于非图形用户界面窗口中的控件, 即那些不是通过 <a href="Gui.htm">Gui</a> 命令创建的窗口. 它与常见的或预定义的微软控件配合使用效果最佳; 有些应用程序使用自定义或修改后的控件, 在这种情况下, 该命令可能无法按预期运行. 对于 <a href="GuiControls.htm">GUI 控件</a>, 通常更方便的做法是使用 <a href="GuiControl.htm">GuiControl</a>(假设存在相应的对应项) 或直接执行其 <a href="Gui.htm#label">g-标签</a>.</p>
 <p>在滚动鼠标滚轮时, 有些程序不会接受大于 1 的 <em>ClickCount</em>. 对于这些程序, 请使用循环来转动多个格数, 例如这个例子转动 5 格:</p>
 <pre>Loop, 5
-    ControlClick, <i>Control</i>, <i>WinTitle</i>, <i>WinText</i>, WheelUp</pre>
+    ControlClick, <i>ControlID</i>, <i>WinTitle</i>, <i>WinText</i>, WheelUp</pre>
 
 <h2 id="Related">相关</h2>
 <p><a href="SetControlDelay.htm">SetControlDelay</a>, <a href="Control.htm">Control</a>, <a href="ControlGet.htm">ControlGet</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlGetPos.htm">ControlGetPos</a>, <a href="ControlFocus.htm">ControlFocus</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="Click.htm">Click</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 点击 OK(确定) 按钮.</p>
+<p><a class="ex_number" href="#ExBasic"></a> 点击 OK(确定) 按钮在 Gui 或 非界面窗口.</p>
 <pre>ControlClick, OK, Some Window Title</pre>
 </div>
 
 <div class="ex" id="ExCoord">
-<p><a class="ex_number" href="#ExCoord"></a> 在坐标上进行点击. 注意 X 和 Y 之间没有逗号.</p>
+<p><a class="ex_number" href="#ExCoord"></a> 在 Gui 或 非界面窗口的指定坐标上进行点击. 注意 X 和 Y 之间没有逗号.</p>
 <pre>ControlClick, x55 y77, Some Window Title</pre>
 </div>
 
 <div class="ex" id="ExReliability">
-<p><a class="ex_number" href="#ExReliability"></a> 在 NA 模式下, 点击相对于命名控件的坐标.</p>
+<p><a class="ex_number" href="#ExReliability"></a> 相对于点击图形用户界面（GUI）或非图形用户界面窗口中的某个控件, 在指定坐标点击操作会更可靠.</p>
 <pre>SetControlDelay -1  <em>; 提升可靠性并减少副作用.</em>
 ControlClick, Toolbar321, Some Window Title,,,, NA x192 y10</pre>
 </div>

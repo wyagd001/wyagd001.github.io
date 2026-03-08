@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>ControlGetFocus | AutoHotkey v1</title>
-<meta name="description" content="The ControlGetFocus command retrieves which control of the target window has input focus, if any." />
+<meta name="description" content="The ControlGetFocus command retrieves which control of the target window has keyboard focus, if any." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,18 +13,18 @@
 
 <h1>ControlGetFocus</h1>
 
-<p>如果有, 则获取目标窗口中具有输入焦点的控件.</p>
+<p>如果有, 则获取目标窗口中具有键盘焦点的控件.</p>
 
 <pre class="Syntax"><span class="func">ControlGetFocus</span>, OutputVar <span class="optional">, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <h2 id="Parameters">参数</h2>
 <dl>
 
   <dt>OutputVar</dt>
-  <dd><p>用于保存控件标识符的输出变量的名称, 控件标识符由控件的类名以及在父窗口中的序列编号组成, 例如 Button12.</p></dd>
+  <dd><p>用于保存控件 <a href="../misc/ControlID.htm#ClassNN">ClassNN</a> 的输出变量的名称, 例如 Button12.</p></dd>
 
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
-    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 <a href="../Program.htm#Window_Spy">Window Spy</a> 实用程序显示).</p>
     <p><em>ExcludeTitle</em> 和 <em>ExcludeText</em> 可用于根据标题或文本排除一个或多个窗口. 它们的规范类似于 <em>WinTitle</em> 和 <em>WinText</em>, 除了 <em>ExcludeTitle</em> 不识别除窗口标题之外的任何条件.</p>
     <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改. 默认情况下, 窗口标题必须以指定的 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 开头才能匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行更改.</p>
   </dd>
@@ -33,24 +33,26 @@
 
 <h2 id="Error_Handling">错误处理</h2>
 <p><span class="ver">[v1.1.04+]</span>: 此命令失败时会抛出异常. 想了解更多信息, 请参阅<a href="Catch.htm#RuntimeErrors">运行时错误</a>.</p>
-<p>如果成功获取具有输入焦点的控件, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 0. 否则(例如目标窗口不存在或它所有的控件都不具有输入焦点) 被置为 1.</p>
+<p>如果成功获取具有键盘焦点的控件, 则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 0. 否则(例如目标窗口不存在或它所有的控件都不具有键盘焦点) 被置为 1.</p>
 
 <h2 id="Remarks">备注</h2>
+<p>此命令适用于非图形用户界面窗口中的控件, 即那些不是通过 <a href="Gui.htm">Gui</a> 命令创建的窗口. 它与常见的或预定义的微软控件配合使用效果最佳; 有些应用程序使用自定义或修改后的控件, 在这种情况下, 该命令可能无法按预期运行. 对于 <a href="GuiControls.htm">GUI 控件</a>, 通常更方便的做法是使用 <a href="GuiControlGet.htm#Focus">GuiControlGet Focus</a> 或在 <span class="ver">[v1.0.43.06+]</span> 中使用 <a href="GuiControlGet.htm#FocusV">GuiControlGet FocusV</a>.</p>
 <p>此命令获取的控件是含键盘焦点的那个, 即在用户输入时会接收到键击的那个.</p>
 <p>目标窗口必须是活动的, 才能含有焦点控件. 如果窗口不是活动的, 则 <em>OutputVar</em> 被置为空.</p>
 <p>在 <span class="ver">[v1.1.19.03]</span> 之前, 如果 ControlGetFocus 以较高频率运行(比如每 500&nbsp;ms 或更短的周期), 可能会让用户的双击操作失败. 目前已经修复.</p>
 
 <h2 id="Related">相关</h2>
-<p><a href="ControlFocus.htm">ControlFocus</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlSend.htm">ControlSend</a></p>
+<p><a href="ControlFocus.htm">ControlFocus</a>, <a href="GuiControlGet.htm#Focus">GuiControlGet Focus</a>, <a href="GuiControlGet.htm#FocusV">GuiControlGet FocusV</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlSend.htm">ControlSend</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 报告在记事本中输入焦点的控件的 ClassNN.</p>
-<pre>ControlGetFocus, OutputVar, Untitled - Notepad
+<p><a class="ex_number" href="#ExBasic"></a> 报告在记事本中键盘焦点的控件的 <a href="../misc/ControlID.htm#ClassNN">ClassNN</a>.</p>
+<pre>WinActivate, ahk_class Notepad
+ControlGetFocus, OutputVar, ahk_class Notepad
 if ErrorLevel
-    MsgBox, The target window doesn't exist or none of its controls has input focus.
+    MsgBox, The target window doesn't exist or none of its controls has keyboard focus.
 else
     MsgBox, Control with focus = %OutputVar%</pre>
-</div>
 
 </body>
 </html>

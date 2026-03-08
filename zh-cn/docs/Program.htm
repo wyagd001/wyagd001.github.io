@@ -29,6 +29,7 @@ return</pre>
   <li><a href="#run">运行脚本</a></li>
   <li><a href="#tray-icon">托盘图标</a></li>
   <li><a href="#main-window">主窗口</a></li>
+  <li><a href="#Window_Spy">Window Spy</a></li>
   <li><a href="#embedded-scripts">嵌入脚本</a></li>
   <li><a href="#cmd">命令行用法</a></li>
   <li><a href="#portability">AutoHotkey.exe 的可移植性</a></li>
@@ -94,7 +95,7 @@ margin-right: .2em;
 <ul>
 <li>Open - (打开) - 打开脚本的<a href="#main-window">主窗口</a>.</li>
 <li>Help - (帮助) - 打开 AutoHotkey 离线帮助文件.</li>
-<li>Window Spy - (窗口监视器) - 显示关于窗口的各种信息.</li>
+<li>Window Spy - (窗口监视器) - 启动 <a href="#Window_Spy">Window Spy</a> 以获取窗口的各种信息.</li>
 <li>Reload This Script - (重载这个脚本) - 请参阅 <a href="lib/Reload.htm">Reload</a>.</li>
 <li>Edit This Script - (编辑这个脚本) - 请参阅 <a href="lib/Edit.htm">Edit</a>.</li>
 <li>Suspend Hotkeys - (挂起热键) - <a href="lib/Suspend.htm">挂起</a>或取消挂起热键.</li>
@@ -152,6 +153,64 @@ if !A_IsCompiled
 else if SubStr(A_LineFile, 1, 1) = "*" &amp;&amp; A_LineFile != "*#1"
     title .= " - " A_LineFile
 </pre>
+
+<h2 id="Window_Spy">Window Spy</a></h2>
+<p>Window Spy 是一款与 AutoHotkey 集成在一起的小工具, 可以显示窗口的详细信息, 如标题, 坐标, 尺寸和控件数据. 此工具旨在为编写自动化脚本时提供快速参考, 并能帮助您获取用于常用命令所需的准确值.</p>
+<p>您可以通过系统<a href="#tray-icon">托盘图标</a>, 开始菜单或者  AutoHotkey 安装目录来启动 Window Spy.</p>
+<p>默认情况下, 信息是从当前活动窗口及其处于焦点状态的控件中检索的. 若要从鼠标光标下的窗口和控件中获取信息, 则需在右上角启用 "Follow Mouse" 选项.</p>
+<p>您可以通过按住 <kbd>Ctrl</kbd> 或 <kbd>Shift</kbd>, 激活 Window Spy, 或者将鼠标指针悬停在该区域来暂时停止信息更新.</p>
+<p>Window Spy 使用多个只读编辑控件分为以下几个部分:</p>
+<dl>
+  <dt>Window Title, Class and Process</dt>
+  <dd>
+    <pre class="no-highlight NoIndent">*Untitled - Notepad
+ahk_class Notepad
+ahk_exe notepad.exe
+ahk_pid 4624</pre>
+    <p>窗口的标题, 以及类, 进程路径, 进程 ID 和 前面带有<a href="misc/WinTitle.htm#ahk_">ahk_ 关键字</a>. 所有这些都可以在窗口命令和函数(如 <a href="lib/WinActivate.htm">WinActivate</a>, <a href="lib/WinWait.htm">WinWait</a> 和 <a href="lib/WinExist.htm">WinExist()</a>) 的 <a href="misc/WinTitle.htm">WinTitle 参数</a>中指定为条件(甚至组合).</p>
+  </dd>
+  <dt>Mouse Position</dt>
+  <dd>
+    <pre class="no-highlight NoIndent">Screen:  1017, 714 (less often used)
+Window:  733, 513 (default)
+Client:  724, 450 (recommended)
+Color:   FEFEFE (Red=FE Green=FE Blue=FE)</pre>
+<p>鼠标指针的坐标(相对于整个屏幕, 窗口以及窗口的客户端区域), 以及这些坐标处像素的 6 位 RGB 颜色. 对于诸如 <a href="lib/Click.htm">Click</a> 和 <a href="lib/PixelSearch.htm">PixelSearch</a> 之类的命令非常有用.</p>
+  </dd>
+  <dt>Focused Control</dt>
+  <dt>Control Under Mouse Position</dt>
+  <dd>
+    <pre class="no-highlight NoIndent">ClassNN: Edit1
+Text:    This is line 1. (...)
+         x: 9    y: 63   w: 997  h: 922
+Client:  x: 0    y: 0    w: 976  h: 922</pre>
+    <p>控件的 <a href="misc/ControlID.htm#ClassNN">ClassNN</a>, 文本内容(必要时会进行截断), 坐标(相对于整个屏幕), 大小, 以及其客户端区域的坐标和大小(该区域不包括滚动条和边框). 对于具有 <a href="misc/ControlID.htm">ControlID 参数</a>的命令(如 <a href="lib/ControlClick.htm">ControlClick</a> 和 <a href="lib/ControlSend.htm">ControlSend</a>) 非常有用. 如果无法检测到控件, 则编辑控件将为空.</p>
+  </dd>
+  <dt>Active Window Position</dt>
+  <dd>
+    <pre class="no-highlight NoIndent">         x: 781  y: 225  w: 1015 h: 1023
+Client:  x: 0    y: 0    w: 997  h: 951</pre>
+    <p>窗口的坐标及其大小, 以及其客户端区域(不包括标题栏, 菜单栏和边框) 的坐标和大小. 坐标相对于整个屏幕. 适用于诸如 as <a href="lib/WinMove.htm">WinMove</a> 等窗口命令.</p>
+  </dd>
+  <dt>Status Bar Text</dt>
+  <dd>
+    <pre class="no-highlight NoIndent">(1):     381 objects (Disk free space: 5.39 GB)
+(2):     15.1 MB
+(3):     My Computer</pre>
+    <p>窗口状态栏中的每一部分的文本(如果有). Window Spy 尝试读取窗口中的第一个 <em>标准</em> 状态栏(Microsoft 通用控件: msctls_statusbar32). 有些程序使用自己的状态栏或微软通用控件的特殊版本, 在这种情况下, 编辑控件将为空.</p>
+  </dd>
+  <dt>Visible Text</dt>
+  <dd>
+    <pre class="no-highlight NoIndent">&Yes
+&No
+Do you want to continue?</pre>
+    <p>窗口的可见文本. 启用 "Slow TitleMatchMode" 选项, 以使用可用于更广泛控件类型的替代文本检索模式.</p>
+  </dd>
+  <dt>All Text</dt>
+  <dd>
+    <p>与上面的类似, 但这里指的是窗口中可见和不可见的文本内容.</p>
+  </dd>
+</dl>
 
 <h2 id="embedded-scripts">嵌入脚本<span class="ver">[v1.1.34+]</span></h2>
 <p>通过使用 <a href="Scripts.htm#ahk2exe">Ahk2Exe 编译器</a>, 可以将脚本添加到 Win32(RCDATA) 资源嵌入到标准的 AutoHotkey .exe 文件中. 要添加其他脚本, 请参阅 <a href="misc/Ahk2ExeDirectives.htm#AddResource">AddResource</a> 编译器指令.</p>

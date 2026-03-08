@@ -364,6 +364,7 @@
   [
     ["控件操作","",
     [
+      ["Control Identifiers","misc/ControlID.htm"],
       ["Control","lib/Control.htm"],
       ["ControlClick","lib/ControlClick.htm"],
       ["ControlFocus","lib/ControlFocus.htm"],

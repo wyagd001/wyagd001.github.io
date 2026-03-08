@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>ControlFocus | AutoHotkey v1</title>
-<meta name="description" content="The ControlFocus command sets input focus to a given control on a window." />
+<meta name="description" content="The ControlFocus command sets keyboard focus to a control." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,19 +13,19 @@
 
 <h1>ControlFocus</h1>
 
-<p>设置输入焦点到窗口的指定控件上.</p>
+<p>设置键盘焦点到控件.</p>
 
-<pre class="Syntax"><span class="func">ControlFocus</span> <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<pre class="Syntax"><span class="func">ControlFocus</span> <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
-  <dt>Control</dt>
+  <dt>ControlID</dt>
   <dd>
-    <p>如果为空或省略, 则使用目标窗口中在最上面的控件. 否则, 请指定 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
-    <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code class="no-highlight">ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p></dd>
+    <p>如果为空或省略, 则将使用目标窗口的最顶层控件. 否则, 请指定控件的 ClassNN 或文本, 或者留空并指定 <code class="no-highlight">ahk_id %ControlHwnd%</code> 作为 <em>WinTitle</em> 参数, 以便针对该控件的 HWND 进行操作. 有关详情, 请参阅<a href="../misc/ControlID.htm">控件标识符</a>.</p>
+  </dd>
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
-    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 <a href="../Program.htm#Window_Spy">Window Spy</a> 实用程序显示).</p>
     <p><em>ExcludeTitle</em> 和 <em>ExcludeText</em> 可用于根据标题或文本排除一个或多个窗口. 它们的规范类似于 <em>WinTitle</em> 和 <em>WinText</em>, 除了 <em>ExcludeTitle</em> 不识别除窗口标题之外的任何条件.</p>
     <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改. 默认情况下, 窗口标题必须以指定的 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 开头才能匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行更改.</p>
   </dd>
@@ -37,13 +37,14 @@
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
 
 <h2 id="Remarks">备注</h2>
+<p>此命令适用于非图形用户界面窗口中的控件, 即那些不是通过 <a href="Gui.htm">Gui</a> 命令创建的窗口. 它与常见的或预定义的微软控件配合使用效果最佳; 有些应用程序使用自定义或修改后的控件, 在这种情况下, 该命令可能无法按预期运行. 对于 <a href="GuiControls.htm">GUI 控件</a>, 通常更方便的做法是使用 <a href="GuiControl.htm#Focus">GuiControl Focus</a>.</p>
 <p>要让设置生效, 控件所在的窗口一般不能处于最小化或隐藏状态.</p>
 <p>要提高可靠性, 每次使用此命令后都会自动进行延迟. 这个延迟可以使用 <a href="SetControlDelay.htm">SetControlDelay</a> 进行改变.</p>
-<p>要获取鼠标当前悬停的控件的 ClassNN 或 HWND, 请使用 <a href="MouseGetPos.htm">MouseGetPos</a>.</p>
-<p id="WM_NEXTDLGCTL">当控件被聚焦以响应用户输入(例如按 Tab 键) 时, 对话管理器应用附加效果, 这些效果独立于具有焦点的控件. 这些效果不是由 ControlFocus 应用的, 因此以下限制适用:</p>
+<p>要获取鼠标当前悬停的控件的 <a href="../misc/ControlID.htm#ClassNN">ClassNN</a> 或 <a href="../misc/ControlID.htm#HWND">HWND</a>, 请使用 <a href="MouseGetPos.htm">MouseGetPos</a>.</p>
+<p id="WM_NEXTDLGCTL">当控件被聚焦以响应用户输入(例如按 <kbd>Tab</kbd> 键) 时, 对话管理器应用附加效果, 这些效果独立于具有焦点的控件. 这些效果不是由 ControlFocus 应用的, 因此以下限制适用:</p>
 <ul>
-  <li>聚焦按钮不会自动使其成为默认按钮, 这与通过用户输入对焦按钮通常会发生的情况不同. 默认按钮通常可以通过按 Enter 来激活.</li>
-  <li>如果先前的用户输入导致默认按钮被临时更改, 聚焦非按钮控件不会自动将默认高亮显示恢复到实际的默认按钮. 按 Enter 键可以激活默认按钮, 即使它没有突出显示.</li>
+  <li>聚焦按钮不会自动使其成为默认按钮, 这与通过用户输入对焦按钮通常会发生的情况不同. 默认按钮通常可以通过按 <kbd>Enter</kbd> 来激活.</li>
+  <li>如果先前的用户输入导致默认按钮被临时更改, 聚焦非按钮控件不会自动将默认高亮显示恢复到实际的默认按钮. 按 <kbd>Enter</kbd> 键可以激活默认按钮, 即使它没有突出显示.</li>
   <li>聚焦编辑控件不会自动选择其文本. 相反, 插入点(插入) 通常位于控件上次有焦点时的位置.</li>
 </ul>
 <p><a href="https://learn.microsoft.com/windows/win32/dlgbox/wm-nextdlgctl">WM_NEXTDLGCTL</a> 消息可以用来聚焦控件并应用这些附加效果. 例如:</p>
@@ -52,10 +53,11 @@ ControlGet, hWndControl, Hwnd,, Button1  <em>; 获取第一个按钮的 HWND</em
 SendMessage, 0x0028, hWndControl, True  <em>; 0x0028 对应 WM_NEXTDLGCTL</em></pre>
 
 <h2 id="Related">相关</h2>
-<p><a href="SetControlDelay.htm">SetControlDelay</a>, <a href="ControlGetFocus.htm">ControlGetFocus</a>, <a href="Control.htm">Control</a>, <a href="ControlGet.htm">ControlGet</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlGetPos.htm">ControlGetPos</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlSend.htm">ControlSend</a></p>
+<p><a href="SetControlDelay.htm">SetControlDelay</a>, <a href="ControlGetFocus.htm">ControlGetFocus</a>, <a href="GuiControl.htm#Focus">GuiControl Focus</a>, <a href="Control.htm">Control</a>, <a href="ControlGet.htm">ControlGet</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlGetPos.htm">ControlGetPos</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlSend.htm">ControlSend</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 设置焦点到 OK 按钮上.</p>
+<p><a class="ex_number" href="#ExBasic"></a> 在 GUI 或 非-GUI 窗口中设置键盘焦点到 OK 按钮上.</p>
 <pre>ControlFocus, OK, Some Window Title</pre>
 </div>
 

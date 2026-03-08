@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>ControlID Parameter (Window Control Identifiers) | AutoHotkey v1</title>
+<meta name="description" content="This page lists identifiers that can be used in the ControlID parameter of commands to identify the target control." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="../static/theme.css" rel="stylesheet" type="text/css" />
+<link href="../static/dark.css" rel="stylesheet" type="text/css" media="(prefers-color-scheme: dark)" id="dark_css" />
+<script src="../static/content.js" type="text/javascript"></script>
+</head>
+<body>
+
+<h1>ControlID 参数<span class="headnote">(窗口控件标识符)</span></h1>
+
+<p>一些命令具有 <em>ControlID</em> 参数, 用于确定要操作的窗口中的哪个控件. 此参数可以是控件的文本内容, 也可以是本页面中描述的任何其他标识符.</p>
+
+<h2 id="toc">目录</h2>
+<ul>
+  <li><a href="#Control_Identifiers">Control 标识符</a>
+    <ul>
+      <li><a href="#HWND">HWND</a></li>
+      <li><a href="#Associated_Variable">关联变量</a></li>
+      <li><a href="#ClassNN">ClassNN</a></li>
+      <li><a href="#Text">Text</a></li>
+      <li><a href="#Omitted">留空</a></li>
+    </ul>
+  </li>
+  <li><a href="#Remarks">备注</a></li>
+  <li><a href="#Related">相关</a></li>
+</ul>
+
+<h2 id="Control_Identifiers">Control 标识符</h2>
+<p>以下标识符是按照降序优先级排列的. 在极少数出现歧义的情况下, 此细节非常重要. 例如, 如果一个窗口有两个编辑控件, 第一个的文本为 "Edit2" 第二个的类名 ClassNN 为 "Edit2", 而使用了 <code>Control, Hide,, Edit2</code>, 那么第二个控件将会被隐藏, 因为 ClassNN 具有更高的优先级.</p>
+
+<h3 id="HWND">HWND</h3>
+<p>控件的 HWND(窗口句柄的缩写) 在该控件存在期间唯一标识该控件. 要对其进行操作, 请将 <em>ControlID</em> 参数留空, 并指定 <code class="no-highlight">ahk_id %ControlHwnd%</code> 为 <a href="WinTitle.htm"><em>WinTitle</em> 参数</a>(即使在 <a href="../lib/DetectHiddenWindows.htm">DetectHiddenWindows</a> 关闭时, 此方法也能适用于隐藏控件.). <span class="ver">[v1.1.04+]</span>: <a href="../lib/GuiControl.htm">GuiControl</a> 和 <a href="../lib/GuiControlGet.htm">GuiControlGet</a> 允许直接在 <em>ControlID</em> 中指定 HWND.</p>
+<p>可以通过 <a href="../lib/DllCall.htm">DllCall()</a>, <span class="ver">[v1.0.43.06+]</span> 中通过 <a href="../lib/ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="../lib/WinGet.htm#ControlListHwnd">WinGet ControlListHwnd</a> 和 <a href="../lib/MouseGetPos.htm">MouseGetPos</a>, <span class="ver">[v1.0.46.01+]</span> 中通过 <a href="../lib/Gui.htm#HwndOutputVar">Gui Add 的 Hwnd 选项</a>, 和 <span class="ver">[v1.0.46.16+]</span> 中通过 <a href="../lib/GuiControlGet.htm#Hwnd">GuiControlGet Hwnd</a> 来获取控件的 HWND.</p>
+<p>当通过 <a href="../lib/PostMessage.htm">PostMessage</a>, <a href="../lib/SendMessage.htm">SendMessage</a>, 或者使用 <a href="../lib/DllCall.htm">DllCall</a> 调用原生 API 来直接向控件发送消息时, 使用 HWND 尤为有用. 此外, 当控件是动态创建或重新排列时, 使用 HWND 也很有帮助, 因为 HWND 在控件的整个生命周期内保持不变.</p>
+
+<h3 id="Associated_Variable">关联变量</h3>
+<p>一个图形用户界面控件可以通过与其相关联的变量的名称来识别. 这适用于使用 <a href="../lib/Gui.htm#Add">Gui Add</a> 带有 <a href="../lib/Gui.htm#var">V 选项</a>创建的控件(例如 <code class="no-highlight">vMyEdit</code>). 该变量名称将作为控件的标识符, 用于 <a href="../lib/GuiControl.htm">GuiControl</a> 和 <a href="../lib/GuiControlGet.htm">GuiControlGet</a>.</p>
+<p>使用关联变量通常是最便捷的方式来标识图形用户界面控件, 即便这些控件不具备输入功能(如 <a href="../lib/GuiControls.htm#Text">Text</a> 或 <a href="../lib/GuiControls.htm#GroupBox">GroupBox</a>). 在这些情况下, 该变量并不存储输入内容, 但仍能提供一个稳定且易于阅读的标识符.</p>
+
+<h3 id="ClassNN">ClassNN</h3>
+<p>控件的 ClassNN 是由其窗口类的名称后跟在包含它的顶层窗口中的序号. 该序号反映了该控件在同类控件中的位置, 即按照其创建的先后顺序排列. 例如, <code class="no-highlight">Edit1</code> 是一个窗口中的第一个编辑控件, 而 <code class="no-highlight">Button12</code> 则是第十二个按钮.</p>
+<p>有些类名包含不属于控件序号的数字. 例如, <code class="no-highlight">SysListView321</code> 示的是该窗口中的第一个 ListView 控件, 而非第 321 个. 若要获取不含序号的类名, 则需将控件的 HWND 传递给 <a href="../lib/WinGetClass.htm">WinGetClass</a>.</p>
+<p>可以通过 <a href="../Program.htm#Window_Spy">Window Spy</a> 来确定控件的 ClassNN. 一些命令, 如 <a href="../lib/ControlGetFocus.htm">ControlGetFocus</a>, <a href="../lib/GuiControlGet.htm#Focus">GuiControlGet Focus</a>, <a href="../lib/WinGet.htm#ControlList">WinGet ControlList</a> 和 <a href="../lib/MouseGetPos.htm">MouseGetPos</a> 也可获取 ClassNN.</p>
+<p>序号并非持久标识符. 如果应用程序重新创建控件, 改变其排列顺序, 或者使用动态或虚拟化用户界面元素, 该序号可能会发生变化. 一些现代框架(如 WPF 或 Electron) 可能根本不提供传统的 Win32 类名, 或者可能会为多个不相关的控件重复使用通用类名.</p>
+<p>在控件没有固定文本且控件顺序稳定的情况下, 使用 ClassNN 通常会比较方便. 但若无法保证稳定性时, 则应考虑使用 HWND 或其他标识符.</p>
+
+<h3 id="Text">Text</h3>
+<p>控件的文本可以作为标识符使用, 例如 <code class="no-highlight">OK</code> 用于 OK(确认) 按钮. 匹配行为由 <a href="../lib/SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定. 当文本唯一和稳定时, 可以使用文本; 许多控件会动态更新其内容或者根本不展示有意义的文本.</p>
+<p>可以通过 <a href="../Program.htm#Window_Spy">Window Spy</a> 来确定控件的文本内容. 一些命令, 如 <a href="../lib/ControlGetText.htm">ControlGetText</a> 和 <a href="../lib/GuiControlGet.htm">GuiControlGet</a> 也可用来获取这样的文本.</p>
+
+<h3 id="Omitted">留空</h3>
+<p>对于非图形用户界面命令, 若省略 <em>ControlID</em> 参数, 则这些命令将作用于目标窗口的最顶层控件. 然而, 其中有一些命令在省略此参数时会有特殊的行为:</p>
+<ul>
+  <li>如果不存在控件, <a href="../lib/ControlClick.htm">ControlClick</a> 点击目标窗口本身.</li>
+  <li>如果不存在控件, <a href="../lib/ControlSend.htm">ControlSend</a> 会将按键操作发送至目标窗口本身.</li>
+  <li><a href="../lib/PostMessage.htm">PostMessage</a> 和 <a href="../lib/PostMessage.htm">SendMessage</a> 直接将消息发送至目标窗口.</li>
+</ul>
+<p>对于 <a href="../lib/GuiControlGet.htm">GuiControlGet</a>, 如果省略了 <em>ControlID</em> 参数, 那么它就会像指定了与该控件相<a href="#Associated_Variable">关联的变量名</a>(如果有) 那样进行操作.</p>
+
+<h2 id="Remarks">备注</h2>
+<p>以下命令具有 <em>ControlID</em> 参数: <a href="../lib/Control.htm">Control</a>, <a href="../lib/ControlClick.htm">ControlClick</a>, <a href="../lib/ControlFocus.htm">ControlFocus</a>, <a href="../lib/ControlGet.htm">ControlGet</a>, <a href="../lib/ControlGetPos.htm">ControlGetPos</a>, <a href="../lib/ControlGetText.htm">ControlGetText</a>, <a href="../lib/ControlMove.htm">ControlMove</a>, <a href="../lib/ControlSend.htm">ControlSend</a>, <a href="../lib/ControlSetText.htm">ControlSetText</a>, <a href="../lib/GuiControl.htm">GuiControl</a>, <a href="../lib/GuiControlGet.htm">GuiControlGet</a>, <a href="../lib/PostMessage.htm">PostMessage</a>, <a href="../lib/PostMessage.htm">SendMessage</a>. 这些命令中的大多数在其对应的页面上都有示例, 这些示例展示了控件标识符的使用方法.</p>
+<p>当应用程序重新创建控件, 改变其顺序, 使用动态或虚拟化界面, 或者依赖那些未公开稳定 Win32 类名或文本的框架时, ClassNN 和控件文本可能会发生变化. 当标识符不可靠时, 应优先使用 HWND 进行生命周期稳定的寻址, 或者结合多个条件. 一般建议如下: 当控件文本是唯一且稳定的时, 使用控件文本; 当控件顺序一致且需要可读性时, 使用 ClassNN; 当需要最大稳定性时, 使用 HWND. 除非您控制目标应用程序, 否则在不同应用程序版本之间避免硬编码标识符.</p>
+
+<h2 id="Related">相关</h2>
+<p><a href="WinTitle.htm">WinTitle 参数 &amp; 上次找到的窗口</a></p>
+
+</body>
+</html>

@@ -14,22 +14,21 @@
 <h1>Control</h1>
 
 <p>对控件进行各种改变.</p>
-<pre class="Syntax"><span class="func">Control</span>, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<pre class="Syntax"><span class="func">Control</span>, <a href="#SubCommands">SubCommand</a> <span class="optional">, Value, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
   <dt>SubCommand, Value</dt>
   <dd>他们互相依赖, 其用法描述<a href="#SubCommands">如下</a>.</dd>
 
-  <dt>Control</dt>
+  <dt>ControlID</dt>
   <dd>
-    <p>如果为空或省略, 则使用在目标窗口顶层的控件. 否则, 请指定 ClassNN(控件的类名和实例编号) 或控件的文本, 它们都可以通过 Window Spy 获取. 使用文本时, 匹配行为由 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 决定.</p>
-    <p>要对控件的 HWND(窗口句柄) 进行操作, 请将 <em>Control</em> 参数留空同时在 <em>WinTitle</em> 参数中指定 <code class="no-highlight">ahk_id %ControlHwnd%</code>(即使在 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 设置关闭时, 这样也可以操作隐藏控件). 获取控件的 HWND 的一般方法是使用 <a href="ControlGet.htm#Hwnd">ControlGet Hwnd</a>, <a href="MouseGetPos.htm">MouseGetPos</a> 或 <a href="DllCall.htm">DllCall()</a>.</p>
+    <p>如果为空或省略, 则将使用目标窗口的最顶层控件. 否则, 请指定控件的 ClassNN 或文本, 或者留空并指定 <code class="no-highlight">ahk_id %ControlHwnd%</code> 作为 <em>WinTitle</em> 参数, 以便针对该控件的 HWND 进行操作. 有关详情, 请参阅<a href="../misc/ControlID.htm">控件标识符</a>.</p>
 </dd>
 
   <dt>WinTitle, WinText, ExcludeTitle, ExcludeText</dt>
   <dd>
-    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 Window Spy 实用程序显示).</p>
+    <p>如果这些都是空白或省略, 将使用<a href="../misc/WinTitle.htm#LastFoundWindow">上次找到的窗口</a>. 否则, 为 <em>WinTitle</em> 指定<a href="../misc/WinTitle.htm">窗口标题或其他条件</a>, 来标识目标窗口, 和/或为 <em>WinText</em> 指定目标窗口的单个文本元素的子字符串(由包含的 <a href="../Program.htm#Window_Spy">Window Spy</a> 实用程序显示).</p>
     <p><em>ExcludeTitle</em> 和 <em>ExcludeText</em> 可用于根据标题或文本排除一个或多个窗口. 它们的规范类似于 <em>WinTitle</em> 和 <em>WinText</em>, 除了 <em>ExcludeTitle</em> 不识别除窗口标题之外的任何条件.</p>
     <p>窗口标题和文本是区分大小写的. 默认情况下, 不检测隐藏窗口, 而检测隐藏文本元素, 除非使用 <a href="DetectHiddenWindows.htm">DetectHiddenWindows</a> 和 <a href="DetectHiddenText.htm">DetectHiddenText</a> 进行更改. 默认情况下, 窗口标题必须以指定的 <em>WinTitle</em> 或 <em>ExcludeTitle</em> 开头才能匹配, 除非使用 <a href="SetTitleMatchMode.htm">SetTitleMatchMode</a> 进行更改.</p>
   </dd>
@@ -39,108 +38,109 @@
 <h2 id="SubCommands">子命令</h2>
 <p>对于 <em>SubCommand</em>, 指定以下命令之一：</p>
 <ul>
-  <li><a href="#Check">Check</a>: 打开(选中) 单选框或复选框.</li>
-  <li><a href="#Uncheck">Uncheck</a>: 关闭单选框或复选框.</li>
+  <li><a href="#Check">Check</a>: 选中复选框或单选按钮.</li>
+  <li><a href="#Uncheck">Uncheck</a>: 取消选中复选框或单选按钮.</li>
+  <li><a href="#Disable">Disable</a>: 禁用(灰化) 控件.</li>
   <li><a href="#Enable">Enable</a>: 启用之前禁用的控件.</li>
-  <li><a href="#Disable">Disable</a>: 禁用或 "灰化" 控件.</li>
-  <li><a href="#Show">Show</a>: 显示之前隐藏的控件.</li>
   <li><a href="#Hide">Hide</a>: 隐藏控件.</li>
+  <li><a href="#Show">Show</a>: 显示之前隐藏的控件.</li>
   <li><a href="#Style">Style</a>: 改变控件的样式.</li>
   <li><a href="#ExStyle">ExStyle</a>: 改变控件的扩展样式.</li>
-  <li><a href="#ShowDropDown">ShowDropDown</a>: 显示 ComboBox 控件的下拉列表.</li>
-  <li><a href="#HideDropDown">HideDropDown</a>: 隐藏 ComboBox 控件的下拉列表.</li>
-  <li><a href="#TabLeft">TabLeft</a>: 在 SysTabControl32 中向左移动一个或多个选项卡.</li>
-  <li><a href="#TabRight">TabRight</a>: 在 SysTabControl32 中向右移动一个或多个选项卡.</li>
-  <li><a href="#Add">Add</a>: 把 String 作为新条目添加到列表框(ListBox) 或组合框(ComboBox)(以及其他适合的类型) 的底部.</li>
-  <li><a href="#Delete">Delete</a>: 删除列表框或组合框中指定的条目.</li>
-  <li><a href="#Choose">Choose</a>: 设置列表框或组合框中的选择为指定的条目.</li>
-  <li><a href="#ChooseString">ChooseString</a>: 将列表框或组合框中的选择设置为其前导部分与指定的字符串匹配的第一个条目.</li>
-  <li><a href="#EditPaste">EditPaste</a>: 在编辑控件的插入符号处粘贴指定的字符串.</li>
+  <li><a href="#ShowDropDown">ShowDropDown</a>: 显示组合框或下拉列表的弹出列表.</li>
+  <li><a href="#HideDropDown">HideDropDown</a>: 隐藏组合框或下拉列表的弹出列表.</li>
+  <li><a href="#TabLeft">TabLeft</a>: 在 Tab 控件中向左移动一个或多个页面.</li>
+  <li><a href="#TabRight">TabRight</a>: 在 Tab 控件中向右移动一个或多个页面.</li>
+  <li><a href="#Add">Add</a>: 在列表框, 组合框或下拉列表的底部添加一个新的条目.</li>
+  <li><a href="#Delete">Delete</a>: 通过索引从列表框, 组合框或下拉列表中删除一个条目.</li>
+  <li><a href="#Choose">Choose</a>: 通过索引在列表框, 组合框或下拉列表中选择一个条目.</li>
+  <li><a href="#ChooseString">ChooseString</a>: 通过字符串在列表框, 组合框或下拉列表中选择一个条目.</li>
+  <li><a href="#EditPaste">EditPaste</a>: 在编辑控件的光标处粘贴字符串.</li>
 </ul>
 
 <h3 id="Check">Check</h3>
-<p>打开(选中) 单选框或复选框.</p>
-<pre class="Syntax"><span class="func">Control</span>, Check <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>为确保功能正确, 此子命令还将设置输入焦点到控件上.</p>
+<p>选中复选框或单选按钮.</p>
+<pre class="Syntax"><span class="func">Control</span>, Check <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>为确保功能正确, 此子命令还将设置键盘焦点到控件上.</p>
 
 <h3 id="Uncheck">Uncheck</h3>
-<p>关闭(取消选中) 单选框或复选框.</p>
-<pre class="Syntax"><span class="func">Control</span>, Uncheck <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>为确保功能正确, 此子命令还将设置输入焦点到控件上.</p>
+<p>取消选中复选框或单选按钮.</p>
+<pre class="Syntax"><span class="func">Control</span>, Uncheck <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>为确保功能正确, 此子命令还将设置键盘焦点到控件上.</p>
+
+<h3 id="Disable">Disable</h3>
+<p>禁用(灰化) 控件.</p>
+<pre class="Syntax"><span class="func">Control</span>, Disable <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h3 id="Enable">Enable</h3>
 <p>启用之前禁用的控件.</p>
-<pre class="Syntax"><span class="func">Control</span>, Enable <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-
-<h3 id="Disable">Disable</h3>
-<p>禁用或 "灰化" 控件.</p>
-<pre class="Syntax"><span class="func">Control</span>, Disable <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-
-<h3 id="Show">Show</h3>
-<p>显示之前隐藏的控件.</p>
-<pre class="Syntax"><span class="func">Control</span>, Show <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<pre class="Syntax"><span class="func">Control</span>, Enable <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h3 id="Hide">Hide</h3>
 <p>隐藏控件.</p>
-<pre class="Syntax"><span class="func">Control</span>, Hide <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<pre class="Syntax"><span class="func">Control</span>, Hide <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>如果您还想同时禁用控件的快捷键(加下划线的字母), 使用 <a href="#Disable">Disable</a> 子命令来禁用控件.</p>
+
+<h3 id="Show">Show</h3>
+<p>显示之前隐藏的控件.</p>
+<pre class="Syntax"><span class="func">Control</span>, Show <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h3 id="Style">Style</h3>
 <p>改变控件的样式.</p>
-<pre class="Syntax"><span class="func">Control</span>, Style, N <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<pre class="Syntax"><span class="func">Control</span>, Style, N <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>如果 <em>N</em> 的首个字符为加号或减号, 那么会分别添加或移除 <em>N</em> 中的样式. 如果首个字符为脱字符(^), 那么 N 中的样式会被切换到相反的状态. 如果首个字符为数字, 则控件样式会被完全覆盖; 也就是说, 它变成了 <em>N</em>. 没有找到目标窗口/控件或无法应用此样式时, <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 设为 1.</p>
 <p>改变某些样式后需要使用 <a href="WinSet.htm">WinSet Redraw</a> 重绘整个窗口. 此外, <a href="../misc/Styles.htm">样式表</a>列出了一些样式编号. 例如:</p>
 <pre>Control, Style, ^0x800000, Edit1, WinTitle  <em>; 切换 WS_BORDER 样式到相反状态.</em></pre>
 
 <h3 id="ExStyle">ExStyle</h3>
 <p>改变控件的扩展样式.</p>
-<pre class="Syntax"><span class="func">Control</span>, ExStyle, N <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>详情请参阅上面的 <a href="#Style">Style</a> 子命令.</p>
+<pre class="Syntax"><span class="func">Control</span>, ExStyle, N <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>有关详情, 请参阅 <a href="#Style">Style</a> 子命令.</p>
 
 <h3 id="ShowDropDown">ShowDropDown</h3>
-<p>显示 ComboBox 控件的下拉列表.</p>
-<pre class="Syntax"><span class="func">Control</span>, ShowDropDown <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>显示组合框或下拉列表的弹出列表.</p>
+<pre class="Syntax"><span class="func">Control</span>, ShowDropDown <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h3 id="HideDropDown">HideDropDown</h3>
-<p>隐藏 ComboBox 控件的下拉列表.</p>
-<pre class="Syntax"><span class="func">Control</span>, HideDropDown <span class="optional">,, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>隐藏组合框或下拉列表的弹出列表.</p>
+<pre class="Syntax"><span class="func">Control</span>, HideDropDown <span class="optional">,, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h3 id="TabLeft">TabLeft</h3>
-<p>在 SysTabControl32 中向左移动一个或多个选项卡.</p>
-<pre class="Syntax"><span class="func">Control</span>, TabLeft <span class="optional">, Count, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>如果 <em>Count</em> 为空或省略, 则默认为 1. 要通过编号直接选择选项卡, 请把下面示例中的数字 5 替换为比您想要选择的选项卡的编号小 1 的数字. 换句话说, 使用 0 选择首个选项卡, 1 选择第二个, 依此类推:</p>
+<p>在 Tab 控件中向左移动一个或多个页面.</p>
+<pre class="Syntax"><span class="func">Control</span>, TabLeft <span class="optional">, Count, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>如果 <em>Count</em> 为空或省略, 则默认为 1. 要通过编号直接选择页面, 请把下面示例中的数字 5 替换为比您想要选择的页面的编号小 1 的数字. 换句话说, 使用 0 选择首个页面, 1 选择第二个, 依此类推:</p>
 <pre><a href="PostMessage.htm">SendMessage</a>, 0x1330, <span class="red">5</span>,, SysTabControl321, WinTitle  <em>; 0x1330 为 TCM_SETCURFOCUS.</em>
 Sleep 0  <em>; 此行和下一行只对于某些选项卡控件才需要.</em>
 SendMessage, 0x130C, <span class="red">5</span>,, SysTabControl321, WinTitle  <em>; 0x130C 为 TCM_SETCURSEL.</em></pre>
 
 <h3 id="TabRight">TabRight</h3>
-<p>在 SysTabControl32 中向右移动一个或多个选项卡.</p>
-<pre class="Syntax"><span class="func">Control</span>, TabRight <span class="optional">, Count, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
-<p>详情请参阅上面的 <a href="#Style">TabLeft</a> 子命令.</p>
+<p>在 Tab 控件中向右移动一个或多个页面.</p>
+<pre class="Syntax"><span class="func">Control</span>, TabRight <span class="optional">, Count, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>有关详情, 请参阅 <a href="#Style">TabLeft</a> 子命令.</p>
 
 <h3 id="Add">Add</h3>
-<p>把 <em>String</em> 作为新条目添加到列表框(ListBox) 或组合框(ComboBox)(以及其他适合的类型) 的底部.</p>
-<pre class="Syntax"><span class="func">Control</span>, Add, String <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>在列表框, 组合框或下拉列表的底部添加一个新的条目.</p>
+<pre class="Syntax"><span class="func">Control</span>, Add, String <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 
 <h3 id="Delete">Delete</h3>
-<p>删除列表框或组合框中的第 N 个条目.</p>
-<pre class="Syntax"><span class="func">Control</span>, Delete, N <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>通过索引从列表框, 组合框或下拉列表中删除一个条目.</p>
+<pre class="Syntax"><span class="func">Control</span>, Delete, N <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>对于首个条目 <em>N</em> 为 1, 对第二个则为 2, 等等.</p>
 
 <h3 id="Choose">Choose</h3>
-<p>设置列表框或组合框中的选择为第 N 个条目.</p>
-<pre class="Syntax"><span class="func">Control</span>, Choose, N <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>通过索引在列表框, 组合框或下拉列表中选择一个条目.</p>
+<pre class="Syntax"><span class="func">Control</span>, Choose, N <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>对于首个条目 <em>N</em> 为 1, 对第二个则为 2, 等等. 要选择或取消选择 <em>多选</em> 列表框中的所有项目, 请参照此例:</p>
 <pre><a href="PostMessage.htm">PostMessage</a>, 0x0185, 1, -1, ListBox1, WinTitle  <em>; 选择所有项目. 0x0185 为 LB_SETSEL.</em></pre>
 
 <h3 id="ChooseString">ChooseString</h3>
-<p>将列表框或组合框中的选择(选项) 设置为开头部分与指定的 <em>字符</em> 匹配的第一个条目.</p>
-<pre class="Syntax"><span class="func">Control</span>, ChooseString, String <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>通过字符串在列表框, 组合框或下拉列表中选择一个条目.</p>
+<pre class="Syntax"><span class="func">Control</span>, ChooseString, String <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>搜索在文本以指定字符串开头的第一个条目处停止. 换句话说, 如果 <em>String</em> 与多个条目匹配, 那么会选中第一个匹配的条目.</p>
 <p>搜索不区分大小写. 例如, 如果列表框/组合框包含条目 "UNIX Text", 那么指定单词 unix(小写) 也能选中它.</p>
 
 <h3 id="EditPaste">EditPaste</h3>
-<p>在编辑控件(Edit control) 的光标处/插入位置粘贴 <em>String</em>.</p>
-<pre class="Syntax"><span class="func">Control</span>, EditPaste, String <span class="optional">, Control, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
+<p>在编辑控件的光标处粘贴字符串.</p>
+<pre class="Syntax"><span class="func">Control</span>, EditPaste, String <span class="optional">, ControlID, WinTitle, WinText, ExcludeTitle, ExcludeText</span></pre>
 <p>这不会影响<a href="../misc/Clipboard.htm">剪贴板</a>中的内容.</p>
 
 <h2 id="Error_Handling">错误处理</h2>
@@ -148,15 +148,16 @@ SendMessage, 0x130C, <span class="red">5</span>,, SysTabControl321, WinTitle  <e
 <p>如果遇到问题则 <a href="../misc/ErrorLevel.htm">ErrorLevel</a> 被置为 1, 否则为 0.</p>
 
 <h2 id="Remarks">备注</h2>
+<p>此命令适用于非图形用户界面窗口中的控件, 即那些不是通过 <a href="Gui.htm">Gui</a> 命令创建的窗口. 它与常见的或预定义的微软控件配合使用效果最佳; 有些应用程序使用自定义或修改后的控件, 在这种情况下, 该命令可能无法按预期运行. 对于 <a href="GuiControls.htm">GUI 控件</a>, 通常更方便的做法是使用 <a href="GuiControl.htm">GuiControl</a>, 前提是存在相应的对应功能.</p>
 <p>为了提高可靠性, 每次使用此命令后都会自动进行延迟(不包括 <a href="#Style">Style</a> 和 <a href="#ExStyle">ExStyle</a> 子命令). 这个延迟可以通过设置 <a href="SetControlDelay.htm">SetControlDelay</a> 来调整.</p>
-<p>要获取鼠标当前悬停的控件的 ClassNN 或 HWND, 请使用 <a href="MouseGetPos.htm">MouseGetPos</a>.</p>
+<p>要获取鼠标当前悬停的控件的 <a href="../misc/ControlID.htm#ClassNN">ClassNN</a> 或 <a href="../misc/ControlID.htm#HWND">HWND</a>, 请使用 <a href="MouseGetPos.htm">MouseGetPos</a>.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="SetControlDelay.htm">SetControlDelay</a>, <a href="ControlGet.htm">ControlGet</a>, <a href="GuiControl.htm">GuiControl</a>, <a href="ControlGetText.htm">ControlGetText</a>, <a href="ControlSetText.htm">ControlSetText</a>, <a href="ControlMove.htm">ControlMove</a>, <a href="ControlGetPos.htm">ControlGetPos</a>, <a href="ControlClick.htm">ControlClick</a>, <a href="ControlFocus.htm">ControlFocus</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="WinSet.htm">WinSet</a></p>
 
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
-<p><a class="ex_number" href="#ExBasic"></a> 隐藏第一个 ComboBox 的下拉列表.</p>
+<p><a class="ex_number" href="#ExBasic"></a> 隐藏 Gui 或非  Gui 窗口中第一个组合框的下拉列表.</p>
 <pre>Control, HideDropDown,, ComboBox1, Some Window Title</pre>
 </div>
 
