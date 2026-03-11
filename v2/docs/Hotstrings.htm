@@ -72,7 +72,7 @@
 <p id="C1"><strong>C1:</strong> 不遵循输入的大小写形式. 使用此选项可以让<a href="#auto">自动替换热字串</a>不区分大小写且阻止它们遵循您实际输入字符的大小写形式. 遵循大小写形式的热字串(这是默认状态) 会在您输入的缩写都为大写时产生大写形式的的替换文本. 如果您的输入的首字母为大写, 那么替换的首字母也会为标题格式(大写, 如果首个字符是字母). 您按其他任何大小写形式输入时, 替换会准确按照定义进行发送. 如果在 <a href="lib/_Hotstring.htm">#Hotstring 指令</a>中含有此选项, 那么可以使用 <strong>C0</strong> 来关闭它, 这样可以让热字串重新遵循大小写.</p>
 <p id="Kn"><strong>Kn:</strong> 按键延迟: 这个较少使用的选项设置在自动退格或<a href="#auto">自动替换</a>产生的键击之间的延迟. 通过 <strong>n</strong> 指定新的延迟; 例如, 指定 k10 来设置 10&nbsp;ms 的延迟, 而 k-1 则取消延迟. 此选项的实际效果取决于当前生效的<a href="#SendMode">发送模式</a>:</p>
 <ul>
-  <li>SI (SendInput): 由于此模式是没有延迟的, 所以按键延迟会被忽略. 例外是当 SendInput <a href="lib/Send.htm#SendInputUnavail">不可用时</a>, 此时热字串会恢复到下面的 SendPlay 模式(它会遵循按键延迟).</li>
+  <li>SI (SendInput): 由于此模式是没有延迟的, 所以按键延迟会被忽略. 例外是当 SendInput <a href="lib/SendMode.htm#SendInputUnavail">不可用时</a>, 此时热字串会恢复到下面的 SendPlay 模式(它会遵循按键延迟).</li>
   <li>SP (SendPlay): 默认延迟为零, 这对于 SendPlay 相当于 -1(没有延迟). 此模式中, 这个延迟实际是<a href="lib/SetKeyDelay.htm#dur">按住时长</a>, 而不是键击之间的延迟.</li>
   <li>SE (SendEvent): 默认延迟为零. 在大多情况下建议使用零的延迟, 因为这样快速且与其他进程配合比较好(由于会内部执行 <a href="lib/Sleep.htm">Sleep 0</a>). 指定 k-1 则不使用延迟, 这样可以在您 CPU 经常高负荷运行时让自动替换更快速地进行. 设置为 -1 时, 脚本的进程优先级会成为键击发送速度的重要因素. 要提升脚本的优先级, 请使用 <code><a href="lib/ProcessSetPriority.htm">ProcessSetPriority</a> "High"</code>.</li>
 </ul>
@@ -83,9 +83,9 @@
 <p id="SuspendExempt"><strong>S</strong> 或 <strong>S0:</strong> 指定字母 S 使热字串<a href="lib/_SuspendExempt.htm">免于</a><a href="lib/Suspend.htm">挂起</a>. 指定 S0(S 与数字 0) 来移除豁免, 允许热字串被挂起. 当作为默认选项应用时, <code class="no-highlight">S</code> 或 <code>#SuspendExempt</code> 将使热字串豁免; 也就是说, 要覆盖该指令, 必须在热字串中显式使用 <code class="no-highlight">S0</code>.</p>
 <p id="SendMode"><strong>SI</strong>, <strong>SP</strong> 或 <strong>SE:</strong> 设置<a href="#auto">自动替换热字串</a>发送键击的方法. 这些选项是互相排斥的: 每次只有一个生效. 下面对每个选项进行说明:</p>
 <ul>
-  <li id="SI">SI 代表 <a href="lib/Send.htm#SendInputDetail">SendInput</a>, 它通常比其他模式拥有较好的速度和可靠性. 另一个好处是和下面的 SendPlay 一样, SendInput 会在热字串 <a href="#auto">自动替换文本</a>时延迟您输入的内容. 这样避免了您的键击穿插到替换的内容中. 当 SendInput <a href="lib/Send.htm#SendInputUnavail">不可用时</a>, 热字串会自动使用 SendPlay.</li>
-  <li id="SP">SP 代表 <a href="lib/Send.htm#SendPlayDetail">SendPlay</a>, 它可以让热字串在更大范围的游戏中运行.</li>
-  <li id="SE">SE 代表 <a href="lib/Send.htm#SendEvent">SendEvent</a>.</li>
+  <li id="SI">SI 代表 <a href="lib/SendMode.htm#Input">SendInput</a>, 它通常比其他模式拥有较好的速度和可靠性. 另一个好处是和下面的 SendPlay 一样, SendInput 会在热字串 <a href="#auto">自动替换文本</a>时延迟您输入的内容. 这样避免了您的键击穿插到替换的内容中. 当 SendInput  <a href="lib/SendMode.htm#SendInputUnavail">不可用时</a>, 热字串会自动使用 SendPlay.</li>
+  <li id="SP">SP 代表 <a href="lib/SendMode.htm#Play">SendPlay</a>, 它可以让热字串在更大范围的游戏中运行.</li>
+  <li id="SE">SE 代表 <a href="lib/SendMode.htm#Event">SendEvent</a>.</li>
 </ul>
 <p>如果未使用上面的任何一个选项, 则默认为 SendInput. 然而, 与 SI 选项不同的是, 在 SendInput 不可用时会使用 SendEvent 而不是 SendPlay.</p>
 <p id="T"><strong>T:</strong> 使用<a href="lib/Send.htm#SendText">文本模式</a> 发送替换文本. 也就是说, 按字符代码发送每个字符, 不转换 {Enter} 为 <kbd>Enter</kbd>, ^c 为 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 不需要将每个字符转换为击键. 对于具有<a href="#continuation">延续片段</a>的热字符串, 此选项将自动生效. 使用 <strong>T0</strong> 或 <strong>R0</strong> 来关闭此选项, 或使用 <strong>R</strong> 来覆盖.</p>
@@ -128,7 +128,7 @@
 <p>虽然热字符串定义中的单冒号不需要<a href="misc/EscapeChar.htm">转义</a>, 除非它们位于双冒号分隔符之前, 但那些左边有空格或制表符的反引号和分号必须始终被转义. 有关完整列表, 请参阅<a href="misc/EscapeChar.htm">转义序列</a>.</p>
 <p>尽管 <a href="lib/Send.htm">Send 函数</a>的特殊字符(如 {Enter}) 在<a href="#auto">自动替换文本</a>中受到支持(除非使用 <a href="#raw">raw 选项</a>), 但是热字串缩写本身并不使用此功能. 相反, 指定 `n 表示 <kbd>Enter</kbd> 键和 `t(或原义制表符) 表示 <kbd>Tab</kbd>(有关完整列表, 请参阅<a href="misc/EscapeChar.htm">转义序列</a>). 例如, 当您输入 "ab" 后跟着 tab 时, 会触发热字串 <code>:*:ab`t::</code>.</p>
 <p>热字串会原义地处理在它的定义中的空格和 tab. 例如, 后面的热字串会产生两种不同的效果: <code>::btw::by the way</code> 和 <code>::btw:: by the way</code>.</p>
-<p>每个热字串缩写的长度不能超过 40 个字符. 如果超过了这个长度, 程序会发出警告. 相比之下, 当<a href="#SendMode">发送模式</a>是默认的 SendInput 时, 热字串的替换文本的长度限制在 5000 个字符左右. 该限制可以通过切换到其他<a href="#SendMode">发送模式</a>来消除, 或者通过在热字符串的主体中使用 <a href="lib/Send.htm#SendPlayDetail">SendPlay</a> 或 <a href="lib/Send.htm#SendEvent">SendEvent</a>, 或者与 <a href="#X">X(执行) 选项</a>结合使用来消除.</p>
+<p>每个热字串缩写的长度不能超过 40 个字符. 如果超过了这个长度, 程序会发出警告. 相比之下, 当<a href="#SendMode">发送模式</a>是默认的 SendInput 时, 热字串的替换文本的长度限制在 5000 个字符左右. 该限制可以通过切换到其他<a href="#SendMode">发送模式</a>来消除, 或者通过在热字符串的主体中使用 <a href="lib/Send.htm">SendPlay</a> 或 <a href="lib/Send.htm">SendEvent</a>, 或者与 <a href="#X">X(执行) 选项</a>结合使用来消除.</p>
 <p>热字串的定义顺序决定了它们之间的优先级. 换句话说, 如果多个热字串匹配您输入的内容, 那么只有脚本中首先列出的那个会生效. 相关主题: <a href="#variant">上下文相关的热字串</a>.</p>
 <p>为了识别热字串, 您输入的所有退格都会被考虑在内. 但是, 使用 <kbd>&uarr;</kbd>, <kbd>&rarr;</kbd>, <kbd>&darr;</kbd>, <kbd>&larr;</kbd>, <kbd>PgUp</kbd>, <kbd>PgDn</kbd>, <kbd>Home</kbd> 和 <kbd>End</kbd> 在编辑器中导航会重置热字串识别进程. 换句话说, 它将开始等待一个全新的热字串.</p>
 <p>即使当前活动窗口忽略您的键击时也可以输入热字串. 换句话说, 即使触发的缩略词不可见时热字串仍会被触发. 此外, 您还可以使用 <kbd>Backspace</kbd> 键撤销最近输入的键击(尽管您无法看到效果).</p>

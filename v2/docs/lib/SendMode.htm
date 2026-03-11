@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <title>SendMode - 语法 &amp; 使用 | AutoHotkey v2</title>
-<meta name="description" content="The SendMode function causes Send, Click, MouseMove, MouseClick and MouseClickDrag to use the Event or Play mode rather than the default (Input)." />
+<meta name="description" content="The SendMode function makes Send synonymous with SendEvent or SendPlay rather than the default (SendInput). Also makes Click, MouseClick, MouseClickDrag, and MouseMove use the specified mode." />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -13,43 +13,76 @@
 
 <h1>SendMode</h1>
 
-<p>使 <a href="Send.htm">Send</a> 等同于 SendEvent 或 SendPlay, 而不是默认的(SendInput). 也使 Click 和 MouseMove/Click/Drag 使用指定的方法.</p>
+<p>使 <a href="Send.htm">Send</a> 等同于 SendEvent 或 SendPlay, 而不是默认的(SendInput). 也使 <a href="Click.htm">Click</a>, <a href="MouseClick.htm">MouseClick</a>, <a href="MouseClickDrag.htm">MouseClickDrag</a> 和 <a href="MouseMove.htm">MouseMove</a> 使用指定的模式.</p>
 
-<pre class="Syntax"><span class="func">SendMode</span> Mode</pre>
+<pre class="Syntax">PrevMode := <span class="func">SendMode</span>(Mode)</pre>
 
 <h2 id="Parameters">参数</h2>
 <dl>
   <dt>Mode</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-    <p>指定以下单词之一:</p>
-    <p id="Event"><strong>Event:</strong> 将 <a href="Send.htm">Send</a> 切换到 <a href="Send.htm#SendEvent">SendEvent</a> 方法, 适用于 <a href="Send.htm">SendText</a>, <a href="Click.htm">Click</a>, <a href="MouseMove.htm">MouseMove</a>, <a href="MouseClick.htm">MouseClick</a> 和 <a href="MouseClickDrag.htm">MouseClickDrag</a>.</p>
-    <p id="Input"><strong>Input:</strong> 使 <a href="Send.htm">Send</a>, <a href="Send.htm">SendText</a>, <a href="Click.htm">Click</a>, <a href="MouseMove.htm">MouseMove</a>, <a href="MouseClick.htm">MouseClick</a> 和 <a href="MouseClickDrag.htm">MouseClickDrag</a> 使用 <a href="Send.htm#SendInput">SendInput</a> 方法. 已知限制:</p>
-    <ul>
-      <li>Windows 资源管理器忽略 SendInput 的特定导航热键的模拟, 例如 <kbd>Alt</kbd>+<kbd>&larr;</kbd>. 要解决这个问题, 可以使用 <code>SendEvent "!{Left}"</code> 或 <code>SendInput "{Backspace}"</code>.</li>
-    </ul>
-    <p id="InputThenPlay"><strong>InputThenPlay:</strong> 与上面相同, 不同之处在于当 SendInput <a href="Send.htm#SendInputUnavail">不可用时</a>, 它并没有退回到 Event 模式, 而是恢复为 Play 模式(如下). 当 SendInput 不可用时, 这也会导致 <a href="Send.htm#SendInput">SendInput 函数</a>本身返回到 Play 模式.</p>
-    <p id="Play"><strong>Play:</strong> 切换到 <a href="Send.htm#SendPlay">SendPlay</a> 方法, 适用于 <a href="Send.htm">Send</a>, <a href="Send.htm">SendText</a>, <a href="Click.htm">Click</a>, <a href="MouseMove.htm">MouseMove</a>, <a href="MouseClick.htm">MouseClick</a> 和 <a href="MouseClickDrag.htm">MouseClickDrag</a>. 已知限制:</p>
-    <ul>
-      <li>不能发送在当前键盘布局上不存在的字符(例如英语中的 &Ocirc;). 为了解决这个问题, 请使用 <a href="Send.htm#SendEvent">SendEvent</a>.</li>
-      <li>在 RichEdit 控件(可能还有其他的, 例如 WordPad 和 Metapad), 模拟鼠标拖动可能没有效果. 要为特殊的拖动使用替换模式, 请参照此例: <code><a href="Send.htm#SendEvent">SendEvent</a> "{Click 6 52 Down}{Click 45 52 Up}"</code>.</li>
-      <li>模拟鼠标滚轮的滚动只进行一个方向上的移动(通常是向下, 但在一些程序中可能是向上). 此外, 滚轮的滚动在类似 MS Word 和 Notepad 的程序中可能没有效果. 要为特殊的滚动使用替换模式, 请参照此例: <code><a href="Send.htm#SendEvent">SendEvent</a> "{WheelDown 5}"</code>.</li>
-      <li>当在<a href="../Scripts.htm#auto">脚本启动</a>中使用 <code>SendMode "Play"</code> 时, 会影响所有的重映射按键并可能失去它们的某些功能. 有关详情, 请参阅 <a href="../misc/Remap.htm#SendPlay">SendPlay 重映射限制</a>.</li>
-      <li>SendPlay 不会触发 AutoHotkey 的热键或热字符串, 也不会触发其他程序或操作系统注册的全局热键.</li>
-    </ul>
+    <p>指定以下单词之一, 即可更改后续出现的 <a href="Send.htm">Send</a>, <a href="Send.htm">SendRaw</a>, <a href="Click.htm">Click</a>, <a href="MouseClick.htm">MouseClick</a>, <a href="MouseClickDrag.htm">MouseClickDrag</a> 和 <a href="MouseMove.htm">MouseMove</a> 的发送模式:</p>
+    <p><strong>Event:</strong> 切换到传统的 <a href="#Event">SendEvent 模式</a>.</p>
+    <p><strong>Input:</strong> 默认模式. 切换到 <a href="#Input">SendInput 模式</a>, 这是发送模拟按键操作和鼠标点击的最快且通常也是最可靠的方法.</p>
+    <p><strong>Play:</strong> 切换到 <a href="#Play" class="deprecated">SendPlay 模式</a>, 此模式比 SendEvent 更快, 并且在其他模式无法正常工作的情况下, 例如某些游戏或具有特殊输入处理方式的应用程序中, 仍能发挥作用.</p>
+    <p id="InputThenPlay"><strong>InputThenPlay:</strong> 与 <em>Input</em> 相同, 但当 <em>Input</em> <a href="#SendInputUnavail">不可用时</a>, 它并不会退回到 <em>Event</em>, 而是恢复为 <em>Play</em>. T这也会导致 <a href="Send.htm#SendInput">SendInput 函数</a>本身在 <em>Input</em> 不可用时, 会恢复到 <em>Play</em>.</p>
   </dd>
 </dl>
 
 <h2 id="Return_Value">返回值</h2>
 <p>类型: <a href="../Concepts.htm#strings">字符串</a></p>
-<p>函数返回以前的设置; Event, Input, InputThenPlay 或 Play.</p>
+<p>函数返回以前的设置.</p>
+
+<h2 id="Sending_Modes">发送模式</h2>
+<p>以下部分将介绍 AutoHotkey 使用的三种发送模拟按键操作和鼠标点击的操作方式: <a href="#Event">SendEvent</a>, <a href="#Input">SendInput</a> 和 <a href="#Play">SendPlay</a>. 每种模式都有其各自的优点和局限性, 且应用程序的响应方式也会因输入的生成方式而有所不同. 了解这些差异有助于为特定脚本或目标应用程序选择最有效的模式</p>
+
+<h3 id="Event">SendEvent</h3>
+<p>SendEvent 发送键击和鼠标点击的传统方法. 然而, 与其他发送模式相比, SendEvent 的速度较慢; 它永远无法达到 <a href="#Input">SendInput</a> 或 <a href="#Play">SendPlay</a> 的速度.</p>
+<p>SendEvent 会遵循由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 设置的延迟时间. 默认延迟时间为 10 毫秒.</p>
+<p>当 SendInput <a href="#SendInputUnavail">不可用时</a>, 也会自动使用 SendEvent, 除非 <a href="#InputThenPlay">InputThenPlay</a> 生效.</p>
+<p><a href="Send.htm">SendEvent</a> 函数可用于通过 SendEvent 模式显式地发送键击.</p>
+
+<h3 id="Input">SendInput</h3>
+<p>一般情况下, SendInput 是发送按键和鼠标点击的首选方法, 因为它的速度和可靠性都很高. 在大多数情况下, SendInput 几乎是瞬间完成的, 即使是发送长字符串时也是如此. 由于 SendInput 的速度如此之快, 它的可靠性也更高, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断按键. 用户在 SendInput 过程中输入的任何东西都会被推迟到之后再进行, 从而进一步提高了可靠性.</p>
+<p>与其他发送模式不同, 操作系统限制 SendInput 每次只能发送大约 5000 个字符(此限制可能因操作系统版本和性能设置而有所不同). 超过此限制的字符和事件不会被发送.</p>
+<p class="note"><strong>注意:</strong> SendInput 会忽略 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a>, 因为在这种发送模式中操作系统不支持延迟. 但是, 在后面描述的情况中, 当 SendInput 恢复到 <a href="#Event">SendEvent</a>时, 它会使用 <code>SetKeyDelay -1, 0</code>(但如果 SendEvent 的按键延迟为 <code>-1,-1</code> 时, 则使用 <code>-1,-1</code>). 当 SendInput 因为 <a href="#InputThenPlay">InputThenPlay</a> 的原因恢复为 <a href="#Play" class="deprecated">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
+<p id="SendInputHook">如果脚本安装了<a href="InstallKeybdHook.htm">底层键盘钩子</a>, SendInput 会在执行之前自动卸载它, 并在执行后重新安装. 因此, SendInput 通常不能触发脚本自己的钩子热键或 <a href="InputHook.htm">InputHooks</a>. 之所以暂时卸载钩子, 是因为它的存在会使 SendInput 的所有优势失效, 使其不如 <a href="#Play" class="deprecated">SendPlay</a> 和 <a href="#Event">SendEvent</a>. 然而, 这只能对脚本自己的钩子执行, 如果检测到外部钩子, 则不会执行, 如下所述.</p>
+<p id="SendInputUnavail">如果执行 SendInput 的脚本 <em>以外的</em> 脚本安装了<a href="InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#Event">SendEvent</a>(或当 <a href="#InputThenPlay">InputThenPlay</a> 生效时为 <a href="#Play" class="deprecated">SendPlay</a>). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 <a href="#Play" class="deprecated">SendPlay</a> 和 <a href="#Event">SendEvent</a>. 然而, 由于 SendInput 无法检测到除 AutoHotkey v1.0.43+ 以外的程序中的低级钩子, 所以在这些情况下它不会还原, 使得它的可靠性不如其他模式.</p>
+<p>当 SendInput 使用像 <a href="Send.htm#Click">{Click}</a>, 这样的方式发送鼠标点击, 并且 <code><a href="CoordMode.htm">CoordMode</a> "Mouse", "Window"</code> 或 <code>CoordMode "Mouse", "Client"</code> 有效时, 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
+<p><a href="Send.htm">SendInput</a> 函数可用于通过 SendInput 模式显式地发送键击.</p>
+<p>已知限制:</p>
+<ul>
+  <li>Windows 资源管理器会忽略 SendInput 模拟的某些导航的热键, 例如 <kbd>Alt</kbd>+<kbd>&larr;</kbd>. 要解决此问题, 请使用 <code>SendEvent "!{Left}"</code> 或 <code>SendInput "{Backspace}"</code>.</li>
+</ul>
+
+<h3 id="Play">SendPlay</h3>
+<p class="warning"><strong>过时的:</strong> 如果启用了<a href="https://en.wikipedia.org/wiki/User_Account_Control">用户账户控制(UAC)</a>, 即使脚本以管理员身份运行, SendPlay 无法正常工作. 有关详情, 请参阅 <a href="../FAQ.htm#uac">FAQ</a>. 在 Windows 11 或较新的系统中, SendPlay 可能根本没有效果.</p>
+<p>比起其他模式 SendPlay 最大的优势是具有在相当多种游戏中 "play back" 键击和鼠标点击能力. 例如, 某种特殊的游戏可能仅接受带有 <a href="../Hotstrings.htm#SendMode">SendPlay 选项</a>的 <a href="../Hotstrings.htm#SendMode">热字串</a>.</p>
+<p>在三种发送模式中, SendPlay 是最不常用的, 因为它本身并不模拟键击和鼠标点击. 作为替代, 它制造一系列事件(消息) 直接流向活动窗口(类似于 <a href="ControlSend.htm">ControlSend</a>, 但在更低的层面). 因此 SendPlay 不会触发热键或热字串.</p>
+<p>和 <a href="#Input">SendInput</a> 一样, SendPlay 的键击与用户键入的按键互不干扰. 因此, 如果用户在 SendPlay 期间碰巧输入了一些东西, 这些键击会被推迟到之后.</p>
+<p>A虽然 SendPlay 比 <a href="#Input">SendInput</a> 要慢很多, 但它通常比传统的 <a href="#Event">SendEvent</a> 模式要快(即使 <a href="SetKeyDelay.htm">KeyDelay</a> 为 -1 时, 也是如此).</p>
+<p>如果安装了<a href="InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 Windows 键(LWin 和 RWin). 这样避免了在发送期间当用户无意按了 Windows 键时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后(通过缓冲).</p>
+<p>如果 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 存在 <em>Play</em> 参数, 则 SendPlay 会遵循这些函数所设定的延迟时间. 与 <a href="#Event">SendEvent</a> 不一样, SendPlay 默认值为 -1(完全不设置延迟).</p>
+<p>SendPlay 无法打开或关闭 CapsLock, NumLock 或 ScrollLock 键. 同样, 它也无法改变 <a href="GetKeyState.htm">GetKeyState</a> 所看到的键的状态, 除非按键被发送到脚本自己的一个窗口. 即使如此, 任何对左/右修饰键(例如 RControl) 的改变也只能通过它们的中性对应键(例如 Control) 来检测.</p>
+<p>与 <a href="#Input">SendInput</a> 和 <a href="#Event">SendEvent</a> 不同, 用户可以通过按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Esc</kbd> 来中断 SendPlay. 当这种情况发生时, 剩余的按键不会被发送, 但是脚本会继续执行, 就像 SendPlay 已经正常完成一样.</p>
+<p>虽然 SendPlay 可以发送 LWin 和 RWin 事件, 但是它们会直接发送到活动窗口, 而不是执行它们的在操作系统中的原生功能. 要解决这个问题, 请使用 <a href="#Event">SendEvent</a>. 例如, <code>SendEvent "#r"</code> 将显示开始菜单的运行对话框.</p>
+<p><a href="Send.htm">SendPlay</a> 函数可用于通过 SendPlay 模式显式地发送键击.</p>
+<p>已知限制:</p>
+<ul>
+  <li>不能发送在当前键盘布局上不存在的字符(例如英语中的 &Ocirc;). 为了解决这个问题, 请使用 <a href="#Event">SendEvent</a>.</li>
+  <li>在 RichEdit 控件(可能还有其他的, 例如 WordPad 和 Metapad), 模拟鼠标拖动可能没有效果. 要为特殊的拖动使用替换模式, 请参照此例: <code><a href="Send.htm">SendEvent</a> "{Click 6 52 Down}{Click 45 52 Up}"</code>.</li>
+  <li>模拟鼠标滚轮的滚动只进行一个方向上的移动(通常是向下, 但在一些程序中可能是向上). 此外, 滚轮的滚动在类似 MS Word 和 Notepad 的程序中可能没有效果. 要为特殊的滚动使用替换模式, 请参照此例: <code><a href="Send.htm">SendEvent</a> "{WheelDown 5}"</code>.</li>
+  <li>当在<a href="../Scripts.htm#auto">脚本启动</a>中使用 <code>SendMode "Play"</code> 时, 会影响所有的重映射按键并可能失去它们的某些功能. 有关详情, 请参阅 <a href="../misc/Remap.htm#SendPlay">SendPlay 重映射限制</a>.</li>
+  <li>SendPlay 不会触发 AutoHotkey 的热键或热字符串, 也不会触发其他程序或操作系统注册的全局热键.</li>
+</ul>
 
 <h2 id="Remarks">备注</h2>
-<p>如果 SendMode 没有使用, 则默认的模式为 <em>Input</em>.</p>
+<p>默认的模式为 <em>Input</em>.</p>
 <p>由于 SendMode 也改变了 <a href="Click.htm">Click</a>, <a href="MouseMove.htm">MouseMove</a>, <a href="MouseClick.htm">MouseClick</a> 和 <a href="MouseClickDrag.htm">MouseClickDrag</a> 的模式, 所以您有机会为特殊的鼠标事件使用不同的模式. 实现这种操作最便捷的方法是使用 <a href="Send.htm#Click">{Click}</a>. 例如:</p>
 <pre>SendEvent "{Click 100 200}"  <em>; SendEvent 使用更老更传统的点击方法.</em></pre>
 <p>如果在<a href="../Scripts.htm#auto">脚本启动</a>中使用了 SendMode, 那么它还会影响<a href="../misc/Remap.htm">键盘和鼠标重映射</a>. 特别是, 如果你将 <code>SendMode "Play"</code> 与重新映射一起使用, 请参阅 <a href="../misc/Remap.htm#SendPlay">SendPlay 的重映射限制</a>.</p>
-<p>内置变量 <strong>A_SendMode</strong> 包含当前的设置.</p>
+<p>内置变量 <a href="../Variables.htm#SendMode">A_SendMode</a> 包含当前的设置, and can also be assigned a new value instead of calling SendMode.</p>
 <p>每个新运行的<a href="../misc/Threads.htm">线程</a>(如 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">定时</a>子程序) 都会以此函数的默认设置开始. 这个默认设置可以通过在<a href="../Scripts.htm#auto">脚本启动</a>中使用此函数来改变.</p>
 
 <h2 id="Related">相关</h2>

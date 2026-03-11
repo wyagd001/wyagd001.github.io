@@ -30,8 +30,9 @@
     <p>类型: <a href="../Concepts.htm#strings">字符串</a>或<a href="../misc/Functor.htm">函数对象</a></p>
     <p>事件发生时要调用的函数, 方法或对象.</p>
     <p>如果 GUI 有事件接收器(即, 如果指定了 <a href="Gui.htm#Call">Gui()</a> 的 <em>EventObj</em> 参数), 那么这个参数可能是属于事件接收器的方法的名称. 否则, 这个参数必须是一个<a href="../misc/Functor.htm">函数对象</a>.</p>
-    <p>该回调函数根据<a href="#Window_Events">窗口事件</a>和<a href="#Control_Events">控件事件</a>接受特定数量的参数, 可<a href="../Functions.htm#intro">定义</a>如下:</p>
+    <p>该回调函数根据<a href="#Window_Events">窗口事件</a>和<a href="#Control_Events">控件事件</a>接受特定数量的参数, 回调函数可<a href="../Functions.htm#intro">定义</a>如下:</p>
     <pre class="NoIndent">MyCallback(GuiOrCtrlObj, ...) { ...</pre>
+    <p class="note"><strong>注意:</strong> 如果回调函数是由<a href="../Objects.htm#Custom_Classes_method">方法定义</a>创建的, 那么它会有一个隐含的 <code>this</code> 参数, 这一点必须予以考虑.</p>
     <p>尽管为参数指定的名称并不重要, 但是下面的值会依次赋值给它们:</p>
     <ol>
       <li>引发事件的 GUI 窗口或控件的 <a href="Gui.htm">Gui</a> 或 <a href="GuiControl.htm">GuiControl</a> 对象. 这个值总是被传递.</li>
@@ -205,7 +206,7 @@ MyGui.Show()</pre>
   <dt>Info</dt>
   <dd>
     <p>类型: <a href="../Concepts.htm#numbers">整数</a></p>
-    <p><a href="GuiControls.htm#Slider">Slider</a>: One of the following numbers indicating how the slider was moved (note that number 5 and 8 require the <a href="Gui.htm#AltSubmit">AltSubmit</a> option): The number 0 for using <kbd>&larr;</kbd> or <kbd>&uarr;</kbd>, the number 1 for using <kbd>&rarr;</kbd> or <kbd>&darr;</kbd>, the number 2 for using <kbd>PgUp</kbd>, the number 3 for using <kbd>PgDn</kbd>, the number 4 for moving the slider via the mouse wheel or finishing a drag-and-drop to a new position, the number 5 for dragging the slider via the mouse (i.e. the mouse button is currently down), the number 6 for using <kbd>Home</kbd> to send the slider to the left or top side, the number 7 for using <kbd>End</kbd> to send the slider to the right or bottom side, or the number 8 for stopping the slider movement.</p>
+    <p><a href="GuiControls.htm#Slider">Slider</a>: 以下数字表示滑块移动的方式(请注意, 数字 5 和 8 需要使用 <a href="Gui.htm#AltSubmit">AltSubmit</a> 选项): 数字 0 表示使用 <kbd>&larr;</kbd> or <kbd>&uarr;</kbd>, 数字 1 表示使用 <kbd>&rarr;</kbd> or <kbd>&darr;</kbd>, 数字 2 表示使用 <kbd>PgUp</kbd>, 数字 3 表示使用 <kbd>PgDn</kbd>, 数字 4 表示通过鼠标滚轮移动滑块或完成从当前位置拖放到新位置的操作, 数字 5 表示通过鼠标拖动滑块(即鼠标按钮当前处于按下状态), 数字 6 表示使用 <kbd>Home</kbd>  键将滑块移动到左侧或顶部, 数字 7 表示使用 <kbd>End</kbd> 键将滑块移动到右侧或底部, 或者数字 8 表示停止滑块的移动.</p>
     <p>对于所有其他控件, <em>Info</em> 目前没有任何意义.</p>
   </dd>
 </dl>
@@ -305,9 +306,9 @@ TreeView_<span class="func">ItemSelect</span>(GuiCtrlObj, Item)</pre>
 <h2 id="Other_Events">其他事件</h2>
 <p>其他类型的 GUI 事件可以通过 <a href="GuiOnNotify.htm">OnNotify</a>, <a href="GuiOnCommand.htm">OnCommand</a> 或 <a href="../lib/OnMessage.htm">OnMessage</a> 来检测和处理. 例如, 每当用户将鼠标移动到窗口中的特定控件上时, 脚本可以通过 ToolTip 显示上下文相关的帮助. 这在 <a href="Gui.htm#ExToolTip">GUI ToolTip 的例子</a>中进行了演示.</p>
 
-<h2 id="Examples">Examples</h2>
+<h2 id="Examples">示例</h2>
 <div class="ex" id="ExClickLink">
-<p><a class="ex_number" href="#ExClickLink"></a> Demonstrates the <a href="#Click">Click</a> event handling for <a href="GuiControls.htm#Link">Link</a> controls. Each time a link is clicked, a confirmation dialog appears asking if the link should be executed. The first link opens Notepad, while the second opens the online docs in the default browser.</p>
+<p><a class="ex_number" href="#ExClickLink"></a> 展示了 <a href="GuiControls.htm#Link">Link</a> 控件的 <a href="#Click">Click</a> 事件处理方式. 每次点击链接时, 都会出现一个确认对话框, 询问是否执行该链接. 第一个链接会打开记事本, 而第二个链接会在默认浏览器中打开在线文档.</p>
 <pre>MyGui := Gui()
 LinkText := 'Click to run &lt;a href="notepad" id="notepad"&gt;Notepad&lt;/a&gt; or open &lt;a id="help" href="https://www.autohotkey.com/docs/"&gt;online help&lt;/a&gt;.'
 Link := MyGui.Add("Link", "w200", LinkText)
@@ -326,5 +327,87 @@ Link_Click(Ctrl, ID, HREF)
 }
 MyGui.Show()</pre>
 </div>
+
+<div class="ex" id="ExEventSink">
+<p><a class="ex_number" href="#ExEventSink"></a> 展示了两种通过方法而非函数来处理事件的方式. 这在功能上等同于<a href="#ExEventSinkThis">下一个示例</a>.</p>
+<pre>MyGui := Gui("-DPIScale",, MyGuiEvents)
+MyEdit := MyGui.AddEdit("vMyEdit")
+MyEdit.OnEvent("Focus", "CtrlFocused")
+MyEdit.OnEvent("LoseFocus", "CtrlUnfocused")
+MyGui.SetFont("s30")
+MyButton := MyGui.AddButton("vMyButton", "Test Button")
+MyButton.OnEvent("Focus", "CtrlFocused")
+MyButton.OnEvent("LoseFocus", "CtrlUnfocused")
+<em>; 如果该对象并非是 Gui 的事件接收器, 那么也可以按照如下方式来实现.
+; 使用 Bind 是必要的, 因为每个方法都有一个隐含的 "this" 参数.</em>
+MyButton.OnEvent("Click", MyGuiEvents.ButtonClicked.Bind(MyGuiEvents))
+MyGui.Show()
+
+class MyGuiEvents
+{
+    <em>; 这些是静态的, 因为我们使用的是 MyGuiEvents, 而不是 MyGuiEvents().</em>
+    static MessageFormat := "{1} was clicked."
+    
+    static CtrlFocused(Ctrl, *)
+    {
+        Ctrl.GetPos(&amp;X, &amp;Y, &amp;W)
+        ToolTip Ctrl.Name " has focus", X + W, Y
+    }
+    
+    static CtrlUnfocused(Ctrl, *)
+    {
+        ToolTip
+    }
+    
+    static ButtonClicked(Ctrl, *)
+    {
+        ToolTip
+        MsgBox Format(this.MessageFormat, Ctrl.Text)
+    }
+}</pre>
+</div>
+
+<div class="ex" id="ExEventSinkThis">
+<p><a class="ex_number" href="#ExEventSinkThis"></a> 展示了在 GUI 子类中处理事件的方法. 这在功能上等同于<a href="#ExEventSink">前面的示例</a>.</p>
+<pre>DemoGui().Show()  <em>; 这会创建一个 DemoGui 实例并将其显示出来.</em>
+
+class DemoGui extends Gui
+{
+    MessageFormat := "{1} was clicked."
+    
+    __New()
+    {
+        <em>; Pass "this" as the EventSink.</em>
+        super.__New("-DPIScale",, this)
+        
+        MyEdit := this.AddEdit("vMyEdit")
+        MyEdit.OnEvent("Focus", "CtrlFocused")
+        MyEdit.OnEvent("LoseFocus", "CtrlUnfocused")
+        this.SetFont("s30")
+        MyButton := this.AddButton("vMyButton", "Test Button")
+        MyButton.OnEvent("Focus", "CtrlFocused")
+        MyButton.OnEvent("LoseFocus", "CtrlUnfocused")
+        MyButton.OnEvent("Click", "ButtonClicked")
+    }
+    
+    CtrlFocused(Ctrl, *)
+    {
+        Ctrl.GetPos(&amp;X, &amp;Y, &amp;W)
+        ToolTip Ctrl.Name " has focus", X + W, Y
+    }
+    
+    CtrlUnfocused(Ctrl, *)
+    {
+        ToolTip
+    }
+    
+    ButtonClicked(Ctrl, *)
+    {
+        ToolTip
+        MsgBox Format(this.MessageFormat, Ctrl.Text)
+    }
+}</pre>
+</div>
+
 </body>
 </html>
