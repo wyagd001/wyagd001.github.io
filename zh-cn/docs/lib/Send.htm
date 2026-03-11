@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Send(发送按键和点击) | AutoHotkey v1</title>
-<meta name="description" content="The Send, SendRaw, SendInput, SendPlay and SendEvent commands send simulated keystrokes and mouse clicks to the active window." />
+<meta name="description" content="The Send command and its variants send simulated keystrokes and mouse clicks to the active window." />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link href="../static/theme.css" rel="stylesheet" type="text/css" />
@@ -11,16 +11,16 @@
 </head>
 <body>
 
-<h1>Send / SendRaw / SendInput / SendPlay / SendEvent</h1>
+<h1>Send / SendRaw / SendEvent / SendInput / SendPlay</h1>
 
 <p>发送模拟键击和鼠标点击到<a href="WinActivate.htm">活动</a>窗口.</p>
 
 <pre class="Syntax">
 <span class="func">Send</span> Keys
 <span class="func">SendRaw</span> Keys
+<span class="func">SendEvent</span> Keys
 <span class="func">SendInput</span> Keys
 <span class="func">SendPlay</span> Keys
-<span class="func">SendEvent</span> Keys
 </pre>
 
 <h2 id="Parameters">参数</h2>
@@ -81,14 +81,15 @@
 
 </dl>
 
-<h2 id="Send_variants">Send 的变体</h2>
-<p><strong>Send:</strong> 默认情况下, Send 等同于 SendEvent; 但是可以通过 <a href="SendMode.htm">SendMode</a> 使其等同于 SendInput 或 SendPlay.</p>
+<span id="Send_variants"></span><h2 id="Send_Variants">Send 的变体</h2>
+<p><strong>Send:</strong> 通过 <a href="SendMode.htm#Event">SendEvent 模式</a>发送键击, 但也可通过 <a href="SendMode.htm">SendMode</a> 使其成为 SendInput 或 SendPlay 的同义词.</p>
 <p><strong>SendRaw:</strong> 类似于 Send, 除了 <em>Keys</em> 中的所有字符都按原义解释和发送之外. 有关详情, 请参阅<a href="#Raw">原始模式</a>.</p>
-<p><strong id="SendInput">SendInput</strong> 和 <strong id="SendPlay">SendPlay</strong> <span class="ver">[v1.0.43+]</span>: SendInput 和 SendPlay 使用与 Send 相同的语法, 但通常更快更可靠. 此外, 它们在发送过程中缓冲任何物理键盘或鼠标活动, 这可以防止用户的击键与发送的击键穿插在一起. <a href="SendMode.htm">SendMode</a> 可用于使 Send 等同于 SendInput 或 SendPlay. 有关每种模式的更多信息, 请参阅下面的 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendPlayDetail">SendPlay</a>.</p>
-<p id="SendEvent"><strong>SendEvent</strong> <span class="ver">[v1.0.43+]</span>: SendEvent 使用与 1.0.43 之前的 <em>Send</em> 命令相同的方法发送击键. 发送击键的速率由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 决定.</p>
+<p id="SendEvent"><strong>SendEvent</strong> <span class="ver">[v1.0.43+]</span>: 通过传统的 <a href="SendMode.htm#Event">SendEvent 模式</a>显式发送键击.</p>
+<p id="SendInput"><strong>SendInput</strong> <span class="ver">[v1.0.43+]</span>: 通过 <a href="SendMode.htm#Input">SendInput 模式</a>显式发送键击, 这种方式比 SendEvent 和 SendPlay 更快且通常更可靠. 此外, 它在发送过程中会缓存任何物理键盘或鼠标活动, 从而避免用户的按键操作与正在发送的按键操作相互干扰.</p>
+<p id="SendPlay"><strong>SendPlay</strong> <span class="ver">[v1.0.43+]</span>:  通过 <a href="SendMode.htm#Play">SendPlay 模式</a>显式发送键击, 这种方式比 SendEvent 更快, 并且在其他模式无法正常工作的情况下, 尤其是在某些游戏或具有特殊输入处理方式的应用程序中, 也能发挥作用.</p>
 
-<h2 id="Special_modes">特殊模式</h2>
-<p>以下模式影响 <em>Keys</em> 中字符的解释或键发送命令(如 Send, SendInput, SendPlay, SendEvent 和 <a href="ControlSend.htm">ControlSend</a>) 的行为. 这些模式必须在 <em>Keys</em> 中指定为 <code class="no-highlight">{x}</code>, 其中 x 是 Raw, Text 或 Blind. 例如, <code class="no-highlight">{Raw}</code>.</p>
+<span id="Special_modes"></span><h2 id="Special_Modes">特殊模式</h2>
+<p>以下模式影响 <em>Keys</em> 中字符的解释或键发送命令(如 Send, <a href="ControlSend.htm">ControlSend</a> 和它们的变体) 的行为. 这些模式必须在 <em>Keys</em> 中指定为 <code class="no-highlight">{x}</code>, 其中 x 是 Raw, Text 或 Blind. 例如, <code class="no-highlight">{Raw}</code>.</p>
 
 <h3 id="Raw">原始模式</h3>
 <p id="SendRaw">可以使用 <code class="no-highlight">{Raw}</code>, SendRaw 或 <a href="ControlSend.htm">ControlSendRaw</a> 启用原始模式, 这会导致所有后续字符, 包括特殊字符 <code class="no-highlight">^+!#{}</code>, 都按原义进行解释, 如 <code class="no-highlight">{Enter}</code> 不会转换为 <kbd>Enter</kbd>, <code class="no-highlight">^c</code> 不会转换为 <kbd>Ctrl</kbd>+<kbd>C</kbd>, 等等. 例如, 发送 <code>Send {Raw}{Tab}</code> 和 <code>SendRaw {Tab}</code> 都发送 <code class="no-highlight">{Tab}</code>, 而不是 <kbd>Tab</kbd>.</p>
@@ -110,7 +111,7 @@
 </ul>
 <p>在<a href="../misc/Remap.htm">按键的重映射</a>时, 盲从模式可以在其内部使用. 例如, 重映射 <code>a::b</code> 会发生这样的情况: 1)  输入 "a" 时会映射为 "b"; 2) 输入大写字母 "A" 时映射为大写字母 "B"; 并且 3) 按下 <kbd>Ctrl</kbd>+<kbd>A</kbd> 时映射为按下 <kbd>Ctrl</kbd>+<kbd>B</kbd>.</p>
 <p>SendRaw 或 <a href="ControlSend.htm">ControlSendRaw</a> 不支持 <code class="no-highlight">{Blind}</code> ; 请使用 <code class="no-highlight">{Blind}{Raw}</code> 代替.</p>
-<p><a href="#SendPlayDetail">SendPlay</a> 不完全支持盲从模式, 尤其是在处理修饰键(Ctrl, Alt, Shift 和 Win) 时.</p>
+<p><a href="SendMode.htm#Play">SendPlay</a> 不完全支持盲从模式, 尤其是在处理修饰键(Ctrl, Alt, Shift 和 Win) 时.</p>
 
 <h2 id="keynames">Key 名称</h2>
 <p>下表中列出了可以发送的特殊按键(每个按键名称必须用大括号括起来):</p>
@@ -293,7 +294,7 @@
   </tr>
   <tr id="asc">
     <td>{ASC nnnnn}</td>
-    <td><p>发送 <kbd>Alt</kbd>+nnnnn 小键盘按键组合, ，可用于生成键盘上不存在的特殊字符.</p>
+    <td><p>发送 <kbd>Alt</kbd>+nnnnn 小键盘按键组合, 可用于生成键盘上不存在的特殊字符.</p>
     <p>要生成可打印 ASCII 字符或系统的 OEM(DOS) 代码页中的其他字符, 请指定一个介于 1 和 255 之间的数字. <code>DllCall("GetOEMCP", "UInt")</code> 返回当前 OEM 代码页编号, 如 <a href="https://en.wikipedia.org/wiki/Code_page_437">437(美国)</a> 货 <a href="https://en.wikipedia.org/wiki/Code_page_850">850(西欧)</a>.</p>
     <p>要生成 ANSI 字符(大多数语言中的标准), 请指定一个介于 128 和 255 之间的数字, 但需要在数字前加上一个前导零, 例如 <code class="no-highlight">{Asc 0133}</code>. <code>DllCall("GetACP", "UInt")</code> 返回当前 ANSI 代码页编号, 如 <a href="https://en.wikipedia.org/wiki/Windows-1252">1252(美国, 西欧等.)</a>.</p>
     <p>要生成 Unicode 字符, 请指定一个介于 256 和 65535 之间的数字(不带前导零). 但是, 有些应用程序不支持这种方法. 对于替代方法, 请参阅下面的部分.</p></td>
@@ -518,6 +519,7 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 <p>如果某个字符与当前键盘布局上的虚拟键不一致, 则不能 "按下" 或 "释放". 例如, <code>Send {μ up}</code> 对大多数键盘布局没有效果, 而 <code>Send {μ down}</code> 等同于 <code>Send μ</code>.</p>
 
 <h2 id="Remarks">一般说明</h2>
+<span id="SendPlayDetail"></span><p id="SendInputDetail">AutoHotkey 采用三种方法来发送模拟的按键和鼠标点击: <a href="SendMode.htm#Event">SendEvent</a>, <a href="SendMode.htm#Input">SendInput</a> 和 <a href="SendMode.htm#Play">SendPlay</a>. 每种模式都有其各自的优点和局限性, 并且应用程序的响应方式会因输入的生成方式而有所不同. 了解这些差异有助于根据特定的脚本或目标应用程序选择最有效的模式. 有关详情, 请参阅 <a href="SendMode.htm#Sending_Modes">Sending 模式</a>.</p>
 <p id="characters"><strong>字符 vs. 按键:</strong> 默认情况下, 先将字符转换为按键来发送字符. 如果这种转换是不可能的(即, 如果当前的键盘布局不包含产生该字符的键或键组合), 则通过以下备用方法之一发送字符:</p>
 <ul id="fallback">
   <li>SendEvent 和 SendInput 带有 <a href="https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-keybdinput#keyeventf_unicode">KEYEVENTF_UNICODE flag</a> 的 <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-sendinput">SendInput()</a>. <span class="ver">[v1.1.27+]</span>: 在发送之前, ANSI 版本的 AutoHotkey 将字符转换为 Unicode. 在 v1.1.27 之前, ANSI 版本使用了 Alt+nnnnn 方法.</li>
@@ -532,32 +534,10 @@ Send {Tab up}  <em>; 松开按键.</em></pre>
 </ul>
 <p>如果字母存在于当前的键盘布局中, 则始终以键盘布局与该字母关联的任何键码(除非使用<a href="#SendText">文本模式</a>, 在这种情况下该字符以其他方式发送) 的形式发送. 换句话说, 上面的部分只适用于非拉丁语的布局, 如俄语.</p>
 <p id="mask"><strong>修饰键状态:</strong> 当 Send 需要更改 <kbd>Win</kbd> 或 <kbd>Alt</kbd> 修饰键的状态时(例如, 如果用户正在按住其中一个键), 它可能会注入更多击键(默认情况下为 <kbd>Ctrl</kbd>), 以防止出现开始菜单或窗口菜单, 有关详细信息, 请参阅 <a href="_MenuMaskKey.htm">#MenuMaskKey</a>.</p>
-<p><strong>BlockInput 与 SendInput/SendPlay 的比较:</strong> 尽管可以使用 <a href="BlockInput.htm">BlockInput</a> 命令防止用户输入的任何键击扰乱模拟键击流, 但使用 <a href="#SendInputDetail">SendInput</a> 或 <a href="#SendPlayDetail">SendPlay</a> 通常更好, 这样键击和鼠标点击会保持连续. 这是由于与 BlockInput 不同, SendInput/Play 不会丢弃发送期间用户输入的内容; 作为替代, 这些键击被缓冲起来在之后发送.</p>
+<p><strong>BlockInput 与 SendInput/SendPlay 的比较:</strong> 尽管可以使用 <a href="BlockInput.htm">BlockInput</a> 命令防止用户输入的任何键击扰乱模拟键击流, 但使用 <a href="SendMode.htm#Input">SendInput</a> 或 <a href="SendMode.htm#Play">SendPlay</a> 通常更好, 这样键击和鼠标点击会保持连续. 这是由于与 BlockInput 不同, SendInput/Play 不会丢弃发送期间用户输入的内容; 作为替代, 这些键击被缓冲起来在之后发送.</p>
 <p>发送大量键击时, 使用<a href="../Scripts.htm#continuation">延续片段</a>可以提高可读性和可维护性.</p>
 <p>由于操作系统不允许程序模拟 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 组合键, 所以执行像 <code>Send ^!{Delete}</code> 的命令不会产生效果.</p>
 <p>当活动窗口以管理权限运行而当前脚本不是时, <b>Send 在 Windows Vista 或更高版本中可能没有效果</b>. 这是由于用户接口和特权分离的安全机制.</p>
-
-<h2 id="SendInputDetail">SendInput <span class="ver">[v1.0.43+]</span></h2>
-<p>由于 SendInput 突出的速度和可靠性, 通常为发送键击和鼠标点击的首选方法. 在大多数情况下, SendInput 是近乎瞬时发送的, 即使在发送长字符串也是如此. 由于 SendInput 如此快速, 所以也更可靠, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断正发送的键击. 可靠性进一步提升是通过把用户在 SendInput 发送期间输入的内容推迟的情况而言.</p>
-<p>与其他发送模式不同, 操作系统限制 SendInput 每次只能发送大约 5000 个字符(此限制可能因操作系统版本和性能设置而有所不同). 超过此限制的字符和事件不会被发送.</p>
-<p class="note"><strong>注意:</strong> SendInput 会忽略 SetKeyDelay, 因为在这种发送模式中操作系统不支持延迟. 但是, 在后面描述的情况中当 SendInput 恢复到 <a href="#SendEvent">SendEvent</a> 时, 它会使用 <code><a href="SetKeyDelay.htm">SetKeyDelay</a> -1, 0</code>(但如果 SendEvent 的按键延迟为 <code>-1, -1</code> 时, 则使用 <code>-1, -1</code>). 当 SendInput 恢复为 <a href="#SendPlayDetail">SendPlay</a> 时, 它使用 SendPlay 的按键延迟.</p>
-<p id="SendInputHook">如果脚本安装了<a href="_InstallKeybdHook.htm">底层键盘钩子</a>, SendInput 会在执行之前自动卸载它, 然后重新安装它. 因此, SendInput 通常不能触发脚本自己的钩子热键或 <a href="InputHook.htm">InputHook</a>. 钩子被暂时卸载, 因为它的存在会禁用 SendInput 的所有优点, 使其不如 SendPlay 和 SendEvent. 然而, 这只能对脚本自己的钩子执行, 如果检测到外部钩子, 则不会执行, 如下所述.</p>
-<p id="SendInputUnavail">如果执行 SendInput 脚本外的 <em>其他</em> 脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#SendEvent">SendEvent</a>(或 <a href="#SendPlayDetail">SendPlay</a>, 当 <code><a href="SendMode.htm">SendMode</a> InputThenPlay</code> 有效的时候). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 SendPlay 和 SendEvent 两者. 然而, 在 <span class="ver">[AutoHotkey v1.0.43+]</span> 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下将不会自动恢复使得比 SendPlay/Event 更不可靠.</p>
-<p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <code><a href="SetMouseDelay.htm">CoordMode</a> Mouse, Relative</code> 有效时(默认), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
-
-<h2 id="SendPlayDetail">SendPlay <span class="ver">[v1.0.43+]</span></h2>
-<p class="warning"><strong>警告:</strong> SendPlay 在 UAC 启用时完全失效, 即使是使用管理员权限运行脚本. 详情参见 <a href="../FAQ.htm#uac">FAQ</a>.</p>
-<p>比起其他模式 SendPlay 最大的优势是具有在相当多种游戏中 "play back" 键击和鼠标点击能力. 例如, 某种特殊的游戏可能仅接受 <a href="../Hotstrings.htm#SendMode">SendPlay 选项</a>的<a href="../Hotstrings.htm#SendMode">热字串</a>. 但是, SendPlay 在启用了用户账户控制的 Windows Vista 或更高版本中则可能没有效果, 即使以管理员运行脚本. 下面的脚本提供了此问题的变通解决方法: <a href="https://www.autohotkey.com/forum/topic75595.html">https://www.autohotkey.com/forum/topic75595.html</a>.</p>
-<p>在三种发送模式中, SendPlay 是最不常用的, 因为它本身并不模拟键击和鼠标点击. 作为替代, 它制造一系列事件(消息) 直接流向活动窗口(类似于 <a href="ControlSend.htm">ControlSend</a>, 但在更低的层面). 因此 SendPlay 不会触发热键或热字串.</p>
-<p>和 <a href="#SendInputDetail">SendInput</a> 一样, SendPlay 的键击不会夹杂用户输入的内容. 因此, 如果用户碰巧在 SendPlay 发送期间输入了一些内容, 则它们会被延迟到发送完后.</p>
-<p>尽管 SendPlay 明显比 SendInput 慢, 但它通常比传统的 <a href="#SendEvent">SendEvent</a> 模式更快(即使在 <a href="SetKeyDelay.htm">KeyDelay</a> 为 -1 时).</p>
-<p>如果安装了<a href="_InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 <kbd>Win</kbd>(LWin 和 RWin). 这样避免了在发送期间当用户无意按了 <kbd>Win</kbd> 时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后(通过缓冲).</p>
-<p>SendPlay 不使用 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 的标准设置. 作为替代, 它默认没有延迟, 这可以像下面例子演示的那样改变:</p>
-<pre><a href="SetKeyDelay.htm">SetKeyDelay</a>, 0, 10, <strong>Play</strong>  <em>; 请注意 0 和 -1 在 SendPlay 模式中是一样的.</em>
-<a href="SetMouseDelay.htm">SetMouseDelay</a>, 10, <strong>Play</strong></pre>
-<p>SendPlay 不能切换 <kbd>CapsLock</kbd>, <kbd>NumLock</kbd> 或 <kbd>ScrollLock</kbd> 按键的状态. 同样地, 如果键击发送到脚本自身的窗口时, 则它才能改变由 <a href="GetKeyState.htm">GetKeyState</a> 获取的按键状态. 即使在此时, 对左/右修饰键的任何改变(例如 RControl) 只能通过它们的中性副本检测到(例如 Control). 并且, SendPlay 还有在 <a href="SendMode.htm#Play">SendMode 页面</a>描述的其他限制.</p>
-<p>与 <a href="#SendInputDetail">SendInput</a> 和 <a href="#SendEvent">SendEvent</a> 不同, 用户通过按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Esc</kbd> 打断 SendPlay 的发送. 这种情况发生时, 剩余的键击不会被发送, 不过脚本会像 SendPlay 正常结束一样继续执行.</p>
-<p>尽管 SendPlay 能发送 LWin 和 RWin 事件, 但它们被直接发送到活动窗口而不执行它们原本的操作系统功能. 要变通解决此问题, 请使用 <a href="#SendEvent">SendEvent</a>. 例如, <code>SendEvent #r</code> 会显示开始菜单的运行对话框.</p>
 
 <h2 id="Related">相关</h2>
 <p><a href="SendMode.htm">SendMode</a>, <a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetStoreCapsLockMode.htm">SetStoreCapsLockMode</a>, <a href="../misc/EscapeChar.htm">转义序列(例如 `%)</a>, <a href="ControlSend.htm">ControlSend</a>, <a href="BlockInput.htm">BlockInput</a>, <a href="../Hotstrings.htm">热字串</a>, <a href="WinActivate.htm">WinActivate</a></p>

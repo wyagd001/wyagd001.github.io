@@ -16,6 +16,8 @@
   "lib/IfInString.htm":"InStr()",
   "lib/IfWinActive.htm":"WinActive()",
   "lib/IfWinExist.htm":"WinExist()",
+  "lib/Object.htm#Insert":"InsertAt, Push, ObjRawSet 或简单赋值",
+  "lib/Object.htm#Remove":"RemoveAt, Delete 或 Pop",
   "lib/OnClipboardChange.htm#label":"OnClipboardChange()",
   "lib/OnExit.htm#command":"OnExit()",
   "lib/Progress.htm":"Gui",

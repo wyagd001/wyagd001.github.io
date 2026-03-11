@@ -246,22 +246,22 @@ function ctor_highlighter()
           // legacy if statements:
           if (cfs == 'if')
           {
-            if (m = PARAMS.match(new RegExp('^([' + r_char + '%]+?)(' + r_s + '*?)(&gt;=|>=|&gt;|>|&lt;&gt;|<>|&lt;=|<=|&lt;|<|!=|=)(' + r_s + '*?)(.*?)$', 'i')))
+            if (m = PARAMS.match(new RegExp('^(' + r_s + '*?)([' + r_char + '%]+?)(' + r_s + '*?)(&gt;=|>=|&gt;|>|&lt;&gt;|<>|&lt;=|<=|&lt;|<|!=|=)(' + r_s + '*?)(.*?)$', 'i')))
             {
               link = index_data[syn[3].dict['ifequal']][1];
-              out = wrap(CFS, 'cfs', link) + SEP + expressions(m[1]) + m[2] + operators(m[3]) + m[4] + param_array_to_list([m[5]], 'S');
+              out = wrap(CFS, 'cfs', link) + SEP + m[1] + expressions(m[2]) + m[3] + operators(m[4]) + m[5] + param_array_to_list([m[6]], 'S');
               return PRE + ph('cfs', out);
             }
-            else if (m = PARAMS.match(new RegExp('^([' + r_char + '%]+?)(' + r_s + '+?)((?:not' + r_s + '+?)?(?:between))(' + r_s + '+?)(.*?)(' + r_s + '+?)(and)(' + r_s + '+?)(.*?)$', 'i')))
+            else if (m = PARAMS.match(new RegExp('^(' + r_s + '*?)([' + r_char + '%]+?)(' + r_s + '+?)((?:not' + r_s + '+?)?(?:between))(' + r_s + '+?)(.*?)(' + r_s + '+?)(and)(' + r_s + '+?)(.*?)$', 'i')))
             {
               link = index_data[syn[3].dict['if between']][1];
-              out = wrap(CFS, 'cfs', link) + operators(SEP) + expressions(m[1]) + m[2] + wrap(m[3], 'cfs', link) + m[4] + param_array_to_list([m[5]], 'S') + m[6] + wrap(m[7], 'cfs', link) + m[8] + param_array_to_list([m[9]], 'S');
+              out = wrap(CFS, 'cfs', link) + SEP + m[1] + expressions(m[2]) + m[3] + wrap(m[4], 'cfs', link) + m[5] + param_array_to_list([m[6]], 'S') + m[7] + wrap(m[8], 'cfs', link) + m[9] + param_array_to_list([m[10]], 'S');
               return PRE + ph('cfs', out);
             }
-            else if (m = PARAMS.match(new RegExp('^([' + r_char + '%]+?)(' + r_s + '+?)((?:not' + r_s + '+?)?(in|contains)|(is)(?:' + r_s + '+?not)?)(' + r_s + '+?)(.*?)$', 'i')))
+            else if (m = PARAMS.match(new RegExp('^(' + r_s + '*?)([' + r_char + '%]+?)(' + r_s + '+?)((?:not' + r_s + '+?)?(in|contains)|(is)(?:' + r_s + '+?not)?)(' + r_s + '+?)(.*?)$', 'i')))
             {
-              link = index_data[syn[3].dict['if ' + (m[4] || m[5]).toLowerCase()]][1];
-              out = wrap(CFS, 'cfs', link) + operators(SEP) + expressions(m[1]) + m[2] + wrap(m[3], 'cfs', link) + m[6] + param_array_to_list([m[7]], 'S');
+              link = index_data[syn[3].dict['if ' + (m[5] || m[6]).toLowerCase()]][1];
+              out = wrap(CFS, 'cfs', link) + SEP + m[1] + expressions(m[2]) + m[3] + wrap(m[4], 'cfs', link) + m[7] + param_array_to_list([m[8]], 'S');
               return PRE + ph('cfs', out);
             }
           }

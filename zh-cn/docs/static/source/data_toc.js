@@ -256,7 +256,7 @@
     ["MouseClickDrag","lib/MouseClickDrag.htm"],
     ["MouseGetPos","lib/MouseGetPos.htm"],
     ["MouseMove","lib/MouseMove.htm"],
-    ["Send[Raw|Input|Play|Event]","lib/Send.htm"],
+    ["Send[Raw|Event|Input|Play]","lib/Send.htm"],
     ["SendLevel","lib/SendLevel.htm"],
     ["SendMode","lib/SendMode.htm"],
     ["SetCapsLockState","lib/SetNumScrollCapsLockState.htm"],

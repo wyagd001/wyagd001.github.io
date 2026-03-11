@@ -20,19 +20,23 @@
 <dl>
 
   <dt>Delay</dt>
-  <dd><p>毫秒表示的时间, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 指定 -1 表示无延时, 或者 0 表示最小延时(然而如果使用了 <em>Play</em> 参数, 则 0 和 -1 都表示无延时).</p></dd>
+  <dd>
+    <p>毫秒表示的时间, 可以为<a href="../Variables.htm#Expressions">表达式</a>. 指定 -1 表示无延时, 或者 0 表示最小延时(然而如果使用了 <em>Play</em> 参数, 则 0 和 -1 都表示无延时).</p>
+  </dd>
 
   <dt>Play <span class="ver">[v1.0.43+]</span></dt>
-  <dd><p>如果为空或省略, 将延时应用于传统的 SendEvent 模式. 否则, 请指定单词 <strong>Play</strong> 会把上面的延时应用于 <a href="Send.htm#SendPlayDetail">SendPlay 模式</a>. 如果脚本没有使用此参数, 则 SendPlay 模式的延时总是为 -1.</p></dd>
+  <dd>
+    <p>如果为空或省略, 将延时应用于传统的 <a href="SendMode.htm#Event">SendEvent 模式</a>. 否则, 请指定单词 <strong>Play</strong> 会把上面的延时应用于 <a href="SendMode.htm#Play">SendPlay 模式</a>. 如果脚本没有使用此参数, 则 SendPlay 模式的延时总是为 -1.</p>
+  </dd>
 
 </dl>
 
 <h2 id="Remarks">备注</h2>
-<p>如果没有使用 SetMouseDelay, 则对于传统的 SendEvent 模式默认延时为 10 而对于 <a href="Send.htm#SendPlayDetail">SendPlay 模式</a>为 -1.</p>
-<p>在每次 <a href="Click.htm">Click</a>, <a href="MouseMove.htm">MouseMove</a>, <a href="MouseClick.htm">MouseClick</a> 和 <a href="MouseClickDrag.htm">MouseClickDrag</a> 生成的鼠标移动或点击后会自动进行短暂的延时(除非处于 <a href="SendMode.htm">SendInput 模式</a>). 这样做提高了脚本的可靠性, 因为窗口有时无法响应快速的鼠标事件流.</p>
+<p>默认情况下, 对于传统的 <a href="SendMode.htm#Event">SendEvent 模式</a>, 每次鼠标移动或由 <a href="Click.htm">Click</a>, <a href="MouseMove.htm">MouseMove</a>, <a href="MouseClick.htm">MouseClick</a> 和 <a href="MouseClickDrag.htm">MouseClickDrag</a> 产生的点击, 会自动进行 10 毫秒的短暂延迟(休眠). 这样做是为了提高脚本的可靠性, 因为有时窗口无法及时处理快速涌来的大量鼠标事件. 对于 <a href="SendMode.htm#Play">SendPlay 模式</a>, 默认延时为 -1.</p>
+<p>在使用 <a href="SendMode.htm#Input">SendInput 模式</a>时, SetMouseDelay 无法生效; 在该模式下, 鼠标移动或点击之间不会产生延迟.</p>
 <p>由于操作系统计时系统的精确度, 延时可能会被向上取整到最近的 10 或 15 的倍数. 例如, 在大部分 Windows XP 系统上介于 1 和 10(含边界) 的延时都相当于 10 或 15(可能也适用于 2k).</p>
-<p>延时为 0 时实际内部会执行 Sleep(0), 这样会将脚本时间片的剩余部分分配给其他需要的进程. 如果没有进程需要, 那么 Sleep(0) 相当于完全没有延时. 与之相比, 延时为 -1 则从不休眠.</p>
-<p>内置变量 <strong>A_MouseDelay</strong> 包含了 Send/SendEvent 模式的当前设置. <span class="ver">[v1.1.23+]</span>: <strong>A_MouseDelayPlay</strong> 包含当前 <a href="Send.htm#SendPlayDetail">SendPlay 模式</a>的设置.</p>
+<p>对于 <a href="SendMode.htm#Event">SendEvent 模式</a>,  延时为 0 时实际内部会执行 Sleep(0), 这样会将脚本时间片的剩余部分分配给其他需要的进程. 如果没有进程需要, 那么 Sleep(0) 相当于完全没有延时. 与之相比, 延时为 -1 则从不休眠.</p>
+<p>内置变量 <strong>A_MouseDelay</strong> 包含了 <a href="SendMode.htm#Event">SendEvent 模式</a>的当前设置. <span class="ver">[v1.1.23+]</span>: <strong>A_MouseDelayPlay</strong> 包含当前 <a href="SendMode.htm#Play">SendPlay 模式</a>的设置.</p>
 <p>每个新运行的<a href="../misc/Threads.htm">线程</a>(例如 <a href="../Hotkeys.htm">热键</a>, <a href="Menu.htm">自定义菜单项</a>或<a href="SetTimer.htm">定时</a>子程序) 都会以此命令的默认设置开始. 通过在脚本的<a href="../Scripts.htm#auto">自动执行段</a>(脚本的顶部) 使用此命令可以改变这个默认设置.</p>
 
 <h2 id="Related">相关</h2>
