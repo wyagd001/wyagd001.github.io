@@ -29,14 +29,14 @@
   </dd>
 </dl>
 
-<h2 id="Sending_Modes">Sending 模式</h2>
-<p>The following sections describe the three methods AutoHotkey uses to send simulated keystrokes and mouse clicks: <a href="#Event">SendEvent</a>, <a href="#Input">SendInput</a>, and <a href="#Play">SendPlay</a>. Each mode has different strengths and limitations, and applications may respond differently depending on how the input is generated. Understanding these differences helps in choosing the most effective mode for a particular script or target application.</p>
+<h2 id="Sending_Modes">发送模式</h2>
+<p>以下部分将介绍 AutoHotkey 使用的三种发送模拟按键操作和鼠标点击的操作方式: <a href="#Event">SendEvent</a>, <a href="#Input">SendInput</a> 和 <a href="#Play">SendPlay</a>. 每种模式都有其各自的优点和局限性, 且应用程序的响应方式也会因输入的生成方式而有所不同. 了解这些差异有助于为特定脚本或目标应用程序选择最有效的模式</p>
 
 <h3 id="Event">SendEvent</h3>
-<p>SendEvent is the traditional method to send keystrokes and mouse clicks. However, compared to the other sending modes, SendEvent is slower; it will never match the speed of <a href="#Input">SendInput</a> or <a href="#Play">SendPlay</a>.</p>
-<p>SendEvent obeys the delays set by <a href="SetKeyDelay.htm">SetKeyDelay</a> and <a href="SetMouseDelay.htm">SetMouseDelay</a>. The default delay is 10 milliseconds.</p>
-<p>SendEvent is also used automatically when SendInput is <a href="#SendInputUnavail">unavailable</a>, unless <a href="#InputThenPlay">InputThenPlay</a> is in effect.</p>
-<p>The <a href="Send.htm">SendEvent</a> command can be used to send keystrokes explicitly via SendEvent mode.</p>
+<p>SendEvent 发送键击和鼠标点击的传统方法. 然而, 与其他发送模式相比, SendEvent 的速度较慢; 它永远无法达到 <a href="#Input">SendInput</a> 或 <a href="#Play">SendPlay</a> 的速度.</p>
+<p>SendEvent 会遵循由 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 设置的延迟时间. 默认延迟时间为 10 毫秒.</p>
+<p>当 SendInput <a href="#SendInputUnavail">不可用时</a>, 也会自动使用 SendEvent, 除非 <a href="#InputThenPlay">InputThenPlay</a> 生效.</p>
+<p><a href="Send.htm">SendEvent</a> 命令可用于通过 SendEvent 模式显式地发送键击.</p>
 
 <h3 id="Input">SendInput</h3>
 <p>由于 SendInput 突出的速度和可靠性, 通常为发送键击和鼠标点击的首选方法. 在大多数情况下, SendInput 是近乎瞬时发送的, 即使在发送长字符串也是如此. 由于 SendInput 如此快速, 所以也更可靠, 因为这样其他一些窗口更没有机会出乎意料地弹出并打断正发送的键击. 可靠性进一步提升是通过把用户在 SendInput 发送期间输入的内容推迟的情况而言.</p>
@@ -45,10 +45,10 @@
 <p id="SendInputHook">如果脚本安装了<a href="_InstallKeybdHook.htm">底层键盘钩子</a>, SendInput 会在执行之前自动卸载它, 然后重新安装它. 因此, SendInput 通常不能触发脚本自己的钩子热键或 <a href="InputHook.htm">InputHook</a>. 钩子被暂时卸载, 因为它的存在会禁用 SendInput 的所有优点, 使其不如 <a href="#Play">SendPlay</a> 和 <a href="#Event">SendEvent</a>. 然而, 这只能对脚本自己的钩子执行, 如果检测到外部钩子, 则不会执行, 如下所述.</p>
 <p id="SendInputUnavail">如果执行 SendInput 脚本外的 <em>其他</em> 脚本安装了<a href="_InstallKeybdHook.htm">低级键盘钩子</a>, 则 SendInput 会自动恢复为 <a href="#Event">SendEvent</a>(或 <a href="#Play">SendPlay</a>, 当 <a href="#InputThenPlay">InputThenPlay</a> 生效时). 这是由于外部钩子的存在让 SendInput 失去了所有的优势, 使它不如 <a href="#Play">SendPlay</a> 和 <a href="#Event">SendEvent</a>.  然而, 在 <span class="ver">[AutoHotkey v1.0.43+]</span> 之前的版本中 SendInput 无法检测到底层键盘钩子, 在这种情况下, 将不会自动恢复, 比其他模式更不可靠.</p>
 <p>当 SendInput 使用像 <a href="#Click">{Click}</a> 这样的方法发送鼠标点击, 并且 <code><a href="SetMouseDelay.htm">CoordMode</a> Mouse, Relative</code> 有效时(默认), 则每次点击都会相对于发送开始时的那个活动窗口. 因此, 如果 SendInput 有意地激活另一个窗口(通过类似 alt-tab 的方法), 那么这个命令中后续点击的坐标将变成错误的, 因为它们仍然相对于原来的活动窗口而不是新的.</p>
-<p>The <a href="Send.htm">SendInput</a> command can be used to send keystrokes explicitly via SendInput mode.</p>
+<p>The <a href="Send.htm">SendInput</a> 命令可用于通过 SendInput 模式显式地发送键击.</p>
 <p>已知限制:</p>
 <ul>
-  <li>Windows 资源管理器会忽略 SendInput 模拟的某些导航的热键, 例如 <kbd>Alt</kbd>+<kbd>&larr;</kbd>. 要解决此问题, 请使用 either <code>SendEvent !{Left}</code> 或 <code>SendInput {Backspace}</code>.</li>
+  <li>Windows 资源管理器会忽略 SendInput 模拟的某些导航的热键, 例如 <kbd>Alt</kbd>+<kbd>&larr;</kbd>. 要解决此问题, 请使用 <code>SendEvent !{Left}</code> 或 <code>SendInput {Backspace}</code>.</li>
 </ul>
 
 <h3 id="Play">SendPlay</h3>
@@ -58,11 +58,11 @@
 <p>和 <a href="#Input">SendInput</a> 一样, SendPlay 的键击不会夹杂用户输入的内容. 因此, 如果用户碰巧在 SendPlay 发送期间输入了一些内容, 则它们会被延迟到发送完后.</p>
 <p>尽管 SendPlay 明显比 <a href="#Input">SendInput</a> 慢, 但它通常比传统的 <a href="#Event">SendEvent</a> 模式更快(即使在 <a href="SetKeyDelay.htm">KeyDelay</a> 为 -1 时).</p>
 <p>如果安装了<a href="_InstallKeybdHook.htm">键盘钩子</a>, 则在 SendPlay 发送期间会自动屏蔽 Win 键(LWin 和 RWin). 这样避免了在发送期间当用户无意按了 Win 键时显示开始菜单. 与之相比, LWin 和 RWin 之外的其他按键不需要屏蔽, 因为操作系统会自动把它们延迟到 SendPlay 执行完后(通过缓冲).</p>
-<p>SendPlay obeys the delays set by <a href="SetKeyDelay.htm">SetKeyDelay</a> and <a href="SetMouseDelay.htm">SetMouseDelay</a> if their <em>Play</em> parameter is present. Unlike <a href="#Event">SendEvent</a>, SendPlay defaults to -1 (no delay at all).</p>
+<p>如果 <a href="SetKeyDelay.htm">SetKeyDelay</a> 和 <a href="SetMouseDelay.htm">SetMouseDelay</a> 函数的 <em>Play</em> 参数存在, 则 SendPlay 会遵循这些函数所设定的延迟时间. 与 <a href="#Event">SendEvent</a> 不一样, SendPlay 默认值为 -1(完全不设置延迟).</p>
 <p>SendPlay 不能切换 CapsLock, NumLock 或 ScrollLock 按键的状态. 同样地, 如果键击发送到脚本自身的窗口时, 则它才能改变由 <a href="GetKeyState.htm">GetKeyState</a> 获取的按键状态. 即使在此时, 对左/右修饰键的任何改变(例如 RControl) 只能通过它们的中性副本检测到(例如 Control).</p>
 <p>与 <a href="#Input">SendInput</a> 和 <a href="#Event">SendEvent</a> 不同, 用户通过按下 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 或 <kbd>Ctrl</kbd>+<kbd>Esc</kbd> 可以打断 SendPlay 的发送. 这种情况发生时, 剩余的键击不会被发送, 不过脚本会像 SendPlay 正常结束一样继续执行.</p>
 <p>尽管 SendPlay 能发送 LWin 和 RWin 事件, 但它们被直接发送到活动窗口而不执行它们原本的操作系统功能. 要变通解决此问题, 请使用 <a href="#Event">SendEvent</a>. 例如, <code>SendEvent #r</code> 会显示开始菜单的运行对话框.</p>
-<p>The <a href="Send.htm">SendPlay</a> command can be used to send keystrokes explicitly via SendPlay mode.</p>
+<p>The <a href="Send.htm">SendPlay</a> 命令可用于通过 SendPlay 模式显式地发送键击.</p>
 <p>已知限制:</p>
 <ul>
   <li>不能发送在当前键盘布局上不存在的字符(例如英语中的 &Ocirc;). 要变通解决此问题, 请使用 <a href="#Event">SendEvent</a>.</li>
@@ -82,6 +82,7 @@
 
 <h2 id="Related">相关</h2>
 <p><a href="Send.htm">Send</a>, <a href="SetKeyDelay.htm">SetKeyDelay</a>, <a href="SetMouseDelay.htm">SetMouseDelay</a>, <a href="Click.htm">Click</a>, <a href="MouseClick.htm">MouseClick</a>, <a href="MouseClickDrag.htm">MouseClickDrag</a>, <a href="MouseMove.htm">MouseMove</a></p>
+
 <h2 id="Examples">示例</h2>
 <div class="ex" id="ExBasic">
 <p><a class="ex_number" href="#ExBasic"></a> 让 Send 与 SendInput 同义. 由于其卓越的速度和可靠性, 推荐新脚本使用.</p>
